@@ -33,7 +33,7 @@
  *  - sccb
  * */
 int
-duf_eval_sccbh_db_leaf_fd_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_db_leaf_fd_str_cb( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -65,7 +65,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *
  *  - sccb
  * */
 int
-duf_eval_sccbh_db_leaf_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_db_leaf_str_cb( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 

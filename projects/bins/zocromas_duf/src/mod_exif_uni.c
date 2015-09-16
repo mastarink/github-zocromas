@@ -51,7 +51,7 @@ TODO
 */
 
 /* ########################################################################################## */
-static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int dirent_contnt2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {
@@ -241,7 +241,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 }
 
 DUF_UNUSED static unsigned long long
-duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
+duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
                      int need_id, int *pr )
 {
   int lr = 0;
@@ -516,7 +516,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   return timeepoch;
 }
 
-static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

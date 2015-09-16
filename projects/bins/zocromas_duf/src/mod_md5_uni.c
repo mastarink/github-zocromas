@@ -39,7 +39,7 @@
 
 
 /* ########################################################################################## */
-static int md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = /* */
@@ -363,7 +363,7 @@ duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 }
 
 static int
-md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];

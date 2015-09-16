@@ -100,7 +100,7 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 }
 
 int
-duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt )
+duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 {
   DUF_STARTR( r );
 

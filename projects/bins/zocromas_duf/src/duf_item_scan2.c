@@ -37,7 +37,7 @@
 
 /* 20150819.132024 */
 static int
-duf_scan_db_row_with_str_cb( duf_sqlite_stmt_t * pstmt_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+duf_scan_db_row_with_str_cb( duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   DEBUG_STARTR( r );
 

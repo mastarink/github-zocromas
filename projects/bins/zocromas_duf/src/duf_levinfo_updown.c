@@ -134,7 +134,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, int is_leaf )
 
 /* 20150904.120835 */
 static int
-duf_levinfo_godown_db( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * pstmt )
+duf_levinfo_godown_db( duf_depthinfo_t * pdi, int is_leaf, duf_stmnt_t * pstmt )
 {
   DEBUG_STARTR( r );
   assert( pdi );
@@ -195,7 +195,7 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, int i
 /* XXX equal to duf_levinfo_godown_db ? XXX */
 /* 20150904.120814 */
 int
-duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * pstmt )
+duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, int is_leaf, duf_stmnt_t * pstmt )
 {
   DEBUG_STARTR( r );
   assert( pdi );

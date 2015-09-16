@@ -79,7 +79,7 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
 /* ########################################################################################## */
 
 static int
-tagit_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -89,7 +89,7 @@ tagit_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -107,7 +107,7 @@ tagit_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -126,7 +126,7 @@ tagit_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   if ( DUF_CONFIGG( tag.file ) )
@@ -146,7 +146,7 @@ tagit_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -159,7 +159,7 @@ tagit_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   if ( DUF_CONFIGG( tag.dir ) )
@@ -178,7 +178,7 @@ tagit_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -190,7 +190,7 @@ tagit_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -210,7 +210,7 @@ tagit_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -222,7 +222,7 @@ tagit_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -242,7 +242,7 @@ tagit_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -253,7 +253,7 @@ tagit_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -287,7 +287,7 @@ tagit_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

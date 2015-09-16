@@ -32,7 +32,7 @@ duf_info_from_db( int count, const char *sql )
   if ( count > 0 )
   {
     int r = 0;
-    duf_sqlite_stmt_t *pstmt = NULL;
+    duf_stmnt_t *pstmt = NULL;
 
     /* DUF_TRACE( explain, 0, "SQL:'%s'", sql ); */
     DOR( r, duf_sql_prepare( sql, &pstmt ) );

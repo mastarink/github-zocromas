@@ -91,7 +91,7 @@ duf_scan_callbacks_t duf_save_to_callbacks = {
 /* ########################################################################################## */
 
 static int
-save_to_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -203,7 +203,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
 }
 
 static int
-save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -276,7 +276,7 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -295,14 +295,14 @@ save_to_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
 }
 
 static int
-save_to_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -315,14 +315,14 @@ save_to_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
 }
 
 static int
-save_to_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -334,7 +334,7 @@ save_to_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -342,14 +342,14 @@ save_to_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
 }
 
 static int
-save_to_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -357,7 +357,7 @@ save_to_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -368,7 +368,7 @@ save_to_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-save_to_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -377,7 +377,7 @@ save_to_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi 
 }
 
 static int DUF_UNUSED
-save_to_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

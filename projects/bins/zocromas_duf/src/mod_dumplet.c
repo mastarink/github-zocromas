@@ -86,7 +86,7 @@ duf_scan_callbacks_t duf_dumplet_callbacks = {
 /* ########################################################################################## */
 
 static int
-dumplet_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dumplet_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -96,7 +96,7 @@ dumplet_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -109,7 +109,7 @@ dumplet_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -120,7 +120,7 @@ dumplet_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   const char *DUF_UNUSED rs = NULL;
@@ -135,7 +135,7 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -146,7 +146,7 @@ dumplet_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dumplet_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -156,7 +156,7 @@ dumplet_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -166,7 +166,7 @@ dumplet_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -176,7 +176,7 @@ dumplet_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -186,7 +186,7 @@ dumplet_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -196,7 +196,7 @@ dumplet_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dumplet_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -206,7 +206,7 @@ dumplet_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dumplet_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -216,7 +216,7 @@ dumplet_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi 
 }
 
 static int
-dumplet_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dumplet_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

@@ -40,8 +40,8 @@
 
 
 /* ########################################################################################## */
-static int print_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int print_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -80,7 +80,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
 /* ########################################################################################## */
 
 static int
-print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -202,7 +202,7 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

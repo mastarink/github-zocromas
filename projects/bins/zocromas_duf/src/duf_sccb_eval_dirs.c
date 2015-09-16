@@ -43,7 +43,7 @@
  * */
 
 DUF_WRAPSTATIC int
-duf_eval_sccbh_all( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   int nn = 0;
@@ -104,7 +104,7 @@ duf_eval_sccbh_all( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccb
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 

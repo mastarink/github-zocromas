@@ -35,7 +35,7 @@
 
 
 /* ########################################################################################## */
-static int register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -197,7 +197,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 /* ########################################################################################## */
 
 static int
-register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   return duf_pdistat2file( pdi );
 }

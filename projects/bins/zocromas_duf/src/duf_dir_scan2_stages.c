@@ -31,7 +31,7 @@
 #ifdef MAS_TRACING
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_sccbh_eval_db_node_## stagename( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
       unsigned long long diridpdi; \
@@ -80,7 +80,7 @@
 #else
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_sccbh_eval_db_node_## stagename( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
  \

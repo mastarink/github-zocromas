@@ -39,7 +39,7 @@
 
 
 /* ########################################################################################## */
-static int sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
@@ -311,7 +311,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
 
 /* 20150820.143755 */
 static int
-sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];

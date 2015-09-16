@@ -26,7 +26,7 @@
 
 #if 0
 static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
+duf_bind_ufilter( duf_stmnt_t * pstmt, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );

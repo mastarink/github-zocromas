@@ -44,7 +44,7 @@ typedef struct
 typedef struct
 {
   int *id;
-  duf_sqlite_stmt_t *pstmt;
+  duf_stmnt_t *pstmt;
 } duf_idstmt_t;
 
 /********************************************************************************************/
@@ -105,7 +105,7 @@ typedef struct duf_depthinfo_s
   const duf_ufilter_t *pup;
   duf_levinfo_context_t context;
   int num_idstatements;
-  /* duf_sqlite_stmt_t **statements; */
+  /* duf_stmnt_t **statements; */
   duf_idstmt_t *idstatements;
   /* int **xstatements; */
   duf_modcnts_t cnts;

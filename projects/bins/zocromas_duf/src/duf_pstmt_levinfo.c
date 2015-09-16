@@ -21,7 +21,7 @@
 
 /* 20150831.202009 */
 int
-duf_pstmt_levinfo_godown_dbopenat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, int is_leaf )
+duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, int is_leaf )
 {
   DEBUG_STARTR( r );
 

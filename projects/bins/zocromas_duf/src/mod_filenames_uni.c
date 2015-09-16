@@ -42,7 +42,7 @@
 
 /* ########################################################################################## */
 
-static int filenames_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
@@ -135,7 +135,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 /* ########################################################################################## */
 
 static int
-filenames_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   const char *fname = duf_levinfo_itemtruename( pdi );

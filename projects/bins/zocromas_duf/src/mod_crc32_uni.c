@@ -39,7 +39,7 @@
 
 
 /* ########################################################################################## */
-static int crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int crc32_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
@@ -308,7 +308,7 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
 
 
 static int
-crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long crc32sum = 0;

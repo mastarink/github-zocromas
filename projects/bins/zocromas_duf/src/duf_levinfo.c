@@ -88,7 +88,7 @@ duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned lo
 }
 
 int
-duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int is_leaf, int d )
+duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, int is_leaf, int d )
 {
   DEBUG_STARTR( r );
 

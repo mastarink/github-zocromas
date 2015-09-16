@@ -36,11 +36,11 @@ duf_pdi_find_idstmt( duf_depthinfo_t * pdi, int *pindex )
 }
 
 /* must be checked it's absent */
-duf_sqlite_stmt_t *
+duf_stmnt_t *
 duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, int *pr )
 {
   DEBUG_STARTR( r );
-  duf_sqlite_stmt_t *pstmt = NULL;
+  duf_stmnt_t *pstmt = NULL;
   duf_idstmt_t *is = NULL;
 
   assert( pdi );
@@ -80,7 +80,7 @@ duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, 
   DEBUG_END(  );
 }
 
-duf_sqlite_stmt_t *
+duf_stmnt_t *
 duf_pdi_find_statement( duf_depthinfo_t * pdi, int *pindex )
 {
   duf_idstmt_t *is = NULL;

@@ -5,7 +5,7 @@
 
 #  define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \
 	{ \
-  	  duf_sqlite_stmt_t *_pstmt_m = NULL; \
+  	  duf_stmnt_t *_pstmt_m = NULL; \
           if ( _rt >= 0 ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
           DUF_TEST_R( _rt )
@@ -26,7 +26,7 @@
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	{ \
-  	  duf_sqlite_stmt_t *_pstmt_m = NULL; \
+  	  duf_stmnt_t *_pstmt_m = NULL; \
           static int _name ## _index = -1; \
           if ( _rt >= 0 ) \
             _pstmt_m = duf_pdi_find_statement( _pdi, &_name ## _index ); \

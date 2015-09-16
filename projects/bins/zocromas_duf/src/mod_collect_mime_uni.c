@@ -42,7 +42,7 @@
 
 
 /* ########################################################################################## */
-static int dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
@@ -233,7 +233,7 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;

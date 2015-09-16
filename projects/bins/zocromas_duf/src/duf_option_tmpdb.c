@@ -21,7 +21,7 @@
 
 
 static int
-duf_bind_tmp( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu_unused, const duf_argvc_t * ttarg )
+duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )

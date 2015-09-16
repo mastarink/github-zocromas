@@ -57,7 +57,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
   DUF_TRACE( scan, 2, "scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DUF_TRACE( sccbh, 0, "eval sccbh all (%d)", sccbh ? 1 : 0 );
-  DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
+  DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_stmnt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( summary ) )
   {
@@ -146,7 +146,7 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
 
 /* 20150820.085615 */
 int
-duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_subnodes( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -165,7 +165,7 @@ duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh
  *  - sccb
  *  */
 int
-duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 /* duf_scan_files_by_pathid:
@@ -210,7 +210,7 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
  * fn of type: duf_str_cb2_t
  * */
 int
-duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_fs_items( duf_stmnt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
