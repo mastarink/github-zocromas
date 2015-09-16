@@ -33,7 +33,7 @@
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
-
+#define DUF_MOD_NAME dumplet
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( dumplet )
 /* ########################################################################################## */
@@ -129,60 +129,7 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_dbstat( pdi ) );
 
-#if 0
-  {
-    char *path = NULL;
-
-    path = duf_dirid2path( duf_levinfo_dirid( pdi ), &r );
-    DUF_TRACE( mod, 2, "@@dumplet       %s", path );
-    DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
-    DUF_TRACE( mod, 2, "@@@dumplet id2p: %s", path );
-    mas_free( path );
-    path = NULL;
-    assert( 0 );
-  }
-#elif 1
-  duf_depthinfo_t di = {
-    .pdi_name = "dumplet_pdi"
-  };
-  duf_ufilter_t uf = {
-    .md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ),
-    .same.flag = 1,.same.min = 2,.same.max = 0,
-  };
-#  if 0
-  DOR( r, duf_pdi_init_from_dirid( &di, &uf, duf_levinfo_dirid( pdi ), NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
-                                   0 /* opendir */  ) );
-#  else
-  if ( uf.md5id.min > 0 && DUF_GET_UFIELD2( nsame ) > 1 )
-  {
-    DOR( r,
-         DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ , 0 /* caninsert */ ,
-                                       1 /* recursive */ ,
-                                       0 /* opendir */  ) );
-    DUF_TEST_R( r );
-#  endif
-    /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
-    DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 1 /* is_leaf */  ) );
-    DUF_TEST_R( r );
-    if ( DUF_NOERROR( r ) )
-    {
-      DUF_TRACE( mod, 0, "@@@dumplet  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
-      /* "selected" tables should be different!? */
-      DOR_NOE( r, duf_evaluate_pdi_sccb_std( "listing", &di, &uf ), DUF_ERROR_NOT_IN_DB );
-      DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
-      DUF_TEST_R( r );
-      assert( di.pup == &uf );
-    }
-    rs = duf_error_name( r );
-    duf_pdi_shut( &di );
-  }
-#else
-  /*
-   * TODO
-   * 1. SELECT ... FROM .... LEFT JOIN .... LEFT JOIN .... WHERE fd.md5id=DUF_GET_UFIELD2(md5id)
-   * 2. dirid2path ...
-   * */
-#endif
+  DUF_TRACE( mod, 4, "dumplet %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
   DEBUG_ENDR( r );
 }

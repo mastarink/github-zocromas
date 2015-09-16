@@ -147,12 +147,12 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, c
 #endif
 
 int
-duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh, const duf_ufilter_t * pu )
+duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh /*, const duf_ufilter_t * pu_unused */  )
 {
   DEBUG_STARTR( r );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
   {
-    DOR( r, duf_scan_beginning_sql( SCCB, PDI->pdi_name, pu ) );
+    DOR( r, duf_scan_beginning_sql( SCCB, PDI->pdi_name, PU ) );
     if ( DUF_NOERROR( r ) )
     {
       duf_pdi_root( PDI )->sql_beginning_done = 1;
@@ -162,7 +162,8 @@ duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh, const duf_ufilter_t * 
 }
 
 duf_sccb_handle_t *
-duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, const duf_ufilter_t * pu, int *pr )
+duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv /*, const duf_ufilter_t * pu_unused */ ,
+                      int *pr )
 {
   duf_sccb_handle_t *sccbh = NULL;
   int rpr = 0;
@@ -176,8 +177,9 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
     PARGC = targc;
     PARGV = targv;
-
+#if 0
     PU = pu;
+#endif
 #if 1
     PDI = duf_pdi_clone( pdi );
     PDICLONED = 1;
@@ -190,7 +192,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #if 0
     DOR( rpr, duf_scan_beginning_sql( sccb, pdi->pdi_name, ( duf_ufilter_t * ) NULL /* pu */  ) );
 #else
-    DOR( rpr, duf_sccbh_beginning_sql( sccbh, pu ) );
+    DOR( rpr, duf_sccbh_beginning_sql( sccbh /* , PU */  ) );
 #endif
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )

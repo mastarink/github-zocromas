@@ -24,7 +24,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_pdi_sccb( DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ), DUF_CONFIGG( puz ), sccb );
+  return duf_evaluate_pdi_sccb( DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */ , sccb );
 }
 
 int
@@ -32,7 +32,7 @@ duf_evaluate_sccb_namen( const char *name, size_t len, const duf_action_table_t 
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_ev_pdi_sccb_namen( name, len, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ), DUF_CONFIGG( puz ) );
+  return duf_ev_pdi_sccb_namen( name, len, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 int
@@ -40,7 +40,7 @@ duf_evaluate_sccb_name( const char *name, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_pdi_sccb_name( name, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ), DUF_CONFIGG( puz ) );
+  return duf_evaluate_pdi_sccb_name( name, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 int
@@ -48,7 +48,7 @@ duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * tabl
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_ev_pdi_named_sccbs( names, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ), DUF_CONFIGG( puz ) );
+  return duf_ev_pdi_named_sccbs( names, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 #if 0

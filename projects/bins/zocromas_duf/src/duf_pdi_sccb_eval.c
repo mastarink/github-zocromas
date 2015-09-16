@@ -48,7 +48,7 @@ duf_find_sccb_by_namen( const char *name, size_t namelen, const duf_action_table
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int
-duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu, duf_scan_callbacks_t * sccb )
+duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg /* , const duf_ufilter_t * pu_unused */ , duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
@@ -56,7 +56,7 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufi
 
   DUF_TRACE( sccb, 0, "to open sccb handle %s", sccb->name );
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
-  sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv, pu, &r );
+  sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv /* , pu */ , &r );
   {
     DUF_TRACE( sccbh, 0, "opened(?) sccb handle (%d)", sccbh ? 1 : 0 );
     DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
@@ -72,8 +72,8 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufi
 }
 
 int
-duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
-                       const duf_ufilter_t * pu )
+duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi,
+                       duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
@@ -86,21 +86,24 @@ duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * 
   {
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
-    DOR( r, duf_evaluate_pdi_sccb( pdi, ptarg, pu, act->sccb ) ); /* XXX XXX XXX XXX */
+    DOR( r, duf_evaluate_pdi_sccb( pdi, ptarg /*, pu */ , act->sccb ) ); /* XXX XXX XXX XXX */
   }
   DEBUG_ENDR( r );
 }
 
 int
-duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu )
+duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi,
+                            duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
 {
+  DEBUG_STARTR( r );
   assert( pdi );
 
-  return duf_ev_pdi_sccb_namen( name, strlen( name ), table, pdi, ptarg, pu );
+  DOR( r, duf_ev_pdi_sccb_namen( name, strlen( name ), table, pdi, ptarg /*, pu */  ) );
+  DEBUG_ENDR( r );
 }
 
 int
-duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg, const duf_ufilter_t * pu )
+duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg/*, const duf_ufilter_t * pu */ )
 {
   DEBUG_STARTR( r );
 
@@ -112,14 +115,14 @@ duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * tabl
     arg = duf_levinfo_path( pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
 
-  DOR( r, duf_evaluate_pdi_sccb_name( name, table, pdi, &targ, pu ) );
+  DOR( r, duf_evaluate_pdi_sccb_name( name, table, pdi, &targ /*, pu */ ) );
 
   mas_del_argv( targ.argc, targ.argv, 0 );
   DEBUG_ENDR( r );
 }
 
 int
-duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu )
+duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg/*, const duf_ufilter_t * pu*/ )
 {
   DEBUG_STARTR( r );
 
@@ -127,7 +130,6 @@ duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf
   const char *pnames;
 
   assert( pdi );
-  assert( pdi->pup == pu );
 
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
@@ -143,7 +145,7 @@ duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf
       len = ename - pnames;
     else
       len = strlen( pnames );
-    DOR( r, duf_ev_pdi_sccb_namen( pnames, len, table, pdi, ptarg, pu ) );
+    DOR( r, duf_ev_pdi_sccb_namen( pnames, len, table, pdi, ptarg /*, pu */  ) );
     if ( DUF_NOERROR( r ) )
       ok++;
     /* DUF_SHOW_ERROR( "(%d) sccb not found: %s", r, names ); */

@@ -135,7 +135,9 @@ struct duf_sccb_handle_s
 #  else
   duf_cargvc_t parg;
 #  endif
+#if 0
   const duf_ufilter_t *pu_x;
+#endif
   int pdi_cloned;
   duf_depthinfo_t *pdi;
   unsigned long long changes;

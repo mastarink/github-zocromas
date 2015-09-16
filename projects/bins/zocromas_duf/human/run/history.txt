@@ -66566,3 +66566,1953 @@
 # run  '.' '-dfR' '--min-exifsame=0' '--evaluate=tree'
 # retcode:0
 # 20150916.130951 : 1442398191.524192350 ------------[r]--
+# 20150916.134041 : 1442400041.689163979 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134042 : 1442400042.444718779 ------------[r]--
+# 20150916.134109 : 1442400069.834664103 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:134
+# 20150916.134109 : 1442400069.960004151 ------------[r]--
+# 20150916.134119 : 1442400079.473088904 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:134
+# 20150916.134119 : 1442400079.575145715 ------------[r]--
+# 20150916.134149 : 1442400109.566251935 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134150 : 1442400110.289731331 ------------[r]--
+# 20150916.134308 : 1442400188.134100441 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# 20150916.134329 : 1442400209.868507096 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134330 : 1442400210.596671929 ------------[r]--
+# 20150916.134405 : 1442400245.769016278 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# 20150916.134413 : 1442400253.624451211 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134414 : 1442400254.349202807 ------------[r]--
+# 20150916.134534 : 1442400334.140713247 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# 20150916.134540 : 1442400340.945832837 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134541 : 1442400341.674505781 ------------[r]--
+# 20150916.134613 : 1442400373.004192919 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134613 : 1442400373.736715949 ------------[r]--
+# 20150916.134816 : 1442400496.437597406 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.134817 : 1442400497.168914600 ------------[r]--
+# 20150916.134822 : 1442400502.535462056 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '.' '-dfR' '--min-exifsame=0' '--evaluate=tree'
+# retcode:0
+# 20150916.134822 : 1442400502.692882669 ------------[r]--
+# 20150916.134929 : 1442400569.672888144 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# 20150916.134932 : 1442400572.922328522 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '.' '-dfR' '--min-exifsame=0' '--evaluate=tree'
+# retcode:0
+# 20150916.134933 : 1442400573.087030365 ------------[r]--
+# 20150916.134935 : 1442400575.470388375 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# 20150916.135224 : 1442400744.369859385 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.135225 : 1442400745.106775778 ------------[r]--
+# 20150916.135227 : 1442400747.163131072 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '.' '-dfR' '--min-exifsame=0' '--evaluate=tree'
+# retcode:0
+# 20150916.135227 : 1442400747.323522749 ------------[r]--
+# 20150916.140218 : 1442401338.735650722 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '.' '-dfR' '--min-exifsame=0' '--evaluate=tree'
+# retcode:0
+# 20150916.140218 : 1442401338.905018561 ------------[r]--
+# 20150916.140222 : 1442401342.179083890 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	trace-any=0
+# =>      3	trace-stderr
+# =>      4	trace-temp
+# =>      5	output-fun-width=27
+# =>      6	# uni-scan => obsolete
+# =>      7	sccbs
+# =>      8	
+# =>      9	# noopenat
+# =>     10	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     11	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>     12	# db-name=test${MSH_SHN_BASHPID}
+# =>     13	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     14	
+# =>     15	db-name=test25561
+# =>     16	db-name=testing
+# =>     17	db-adm-name=adm
+# =>     18	db-temp-name=temp
+# =>     19	db-selected-name=selected
+# =>     20	
+# =>     21	#################################
+# =>     22	#  %a : camera			#
+# =>     23	#  %h : depth			#
+# =>     24	#  %Q : seq			#
+# =>     25	#  %q : seq_nod			#
+# =>     26	#  %# : seq_leaf		#
+# =>     27	#  %M : md5id			#
+# =>     28	#  %S : nsame			#
+# =>     29	#  %P : prefix			#
+# =>     30	#  %I : dirid			#
+# =>     31	#  %F : nfiles			#
+# =>     32	#  %D : ndirs			#
+# =>     33	#  %A : dataid			#
+# =>     34	#  %~ : suffix			#
+# =>     35	#  %O : inode			#
+# =>     36	#  %m : mode (permissions)	#
+# =>     37	#  %n : nlink			#
+# =>     38	#  %u : user			#
+# =>     39	#  %g : group			#
+# =>     40	#  %Z : filesize		#
+# =>     41	#  %z : filesize in human fmt.	#
+# =>     42	#  %tm : mtime			#
+# =>     43	#  %tx : exif datetime		#
+# =>     44	#  %r : realpath		#
+# =>     45	#  %R : relative realpath	#
+# =>     46	#  %f : filename		#
+# =>     47	#  %@ : md5sum			#
+# =>     48	#  %X : exifid			#
+# =>     49	#  %E : mimeid			#
+# =>     50	#  %e : mime			#
+# =>     51	#  %N : nameid			#
+# =>     52	#  %s : << space >> >>		#
+# =>     53	#################################
+# =>     54	
+# =>     55	
+# =>     56	format-prefix-files-tree=#%5c%06M#%06A%c%3s=%6c%-4S%c%1s%P
+# =>     57	format-prefix-dirs-tree=%23s%P
+# =>     58	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     59	format-dirs-tree=@-- [%I] %f\n
+# =>     60	
+# =>     61	# format-files-list=%q.%Q.%#. %6M#%6A =%-4S  %f %4s%8z  %m / %tm / %tx\n
+# =>     62	format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p|%12Z %tm/%tx %e X%X,%a\n
+# =>     63	# format-files-list=%3#. #%-6M#%-6A =%-4S %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>     64	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>     65	
+# =>     66	
+# =>     67	use-format=2
+# =>     68	format-tree-files=%f\n
+# =>     69	format-tree-files=%7c%f%c%4s%8z  %m / %tm / %tx %e\n
+# =>     70	format-tree-dirs=%f\n
+# =>     71	format-tree-dirs=[%I] %f\n
+# =>     72	
+# =>     73	format-list-files=%f\n
+# =>     74	format-list-files=%3#. #%-6M#%-6A =%-4S %m %R%7c%f%c%125p|%12Z %tm/%tx %e X%X,%a\n
+# =>     75	format-list-files=%3#. #%-6M#%-6A =%-4S %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>     76	
+# =>     77	format-list-dirs=%f\n
+# =>     78	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     79	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>     80	
+# =>     81	
+# =>     82	history-file=test-history.txt
+# =>     83	
+# =>     84	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>     85	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>     86	# trace-stderr
+# =>     87	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     88	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>     89	# open-db
+# =>     90	
+# =>     91	# output-header=Wowoowowow
+# =>     92	output-header=c[?1000l[?25h
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-dfR' '--trace-mod=2' '--trace-pdi=0' '--trace-sql=0' '--trace-stdout' 'test/tree/' '--evaluate=dialog'
+# retcode:0
+# 20150916.140222 : 1442401342.904286273 ------------[r]--
