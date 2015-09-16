@@ -4,13 +4,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
-
 #include "duf_maintenance.h"
-
-
-
-#include "duf_config_ref.h"
 
 #include "duf_sql2.h"
 
@@ -18,10 +12,6 @@
 /* ###################################################################### */
 #include "duf_sql_field.h"
 /* ###################################################################### */
-
-
-
-
 
 int
 __duf_sql_pos_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )

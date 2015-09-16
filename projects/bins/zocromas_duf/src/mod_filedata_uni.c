@@ -22,7 +22,6 @@
 
 
 #include "duf_sql_defs.h"
-/* #include "duf_sql2.h" */
 
 
 

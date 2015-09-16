@@ -25,9 +25,11 @@
 
 
 #include "duf_sql_defs.h"
+#include "duf_sql_stmt_defs.h"
 #include "duf_sql_field.h"
 
 #include "duf_sql.h"
+#include "duf_sql_bind.h"
 #include "duf_sql2.h"
 
 /* #include "duf_dbg.h" */

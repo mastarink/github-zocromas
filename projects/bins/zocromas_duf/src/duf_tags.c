@@ -11,6 +11,8 @@
 #include "duf_pdi_stmt.h"
 
 #include "duf_sql.h"
+#include "duf_sql_stmt_defs.h"
+#include "duf_sql_bind.h"
 #include "duf_sql2.h"
 
 /* ###################################################################### */

@@ -13,6 +13,9 @@
 
 /* #include "duf_path2db.h" */
 #include "duf_path2dirid.h"
+
+#include "duf_sql_stmt_defs.h"
+#include "duf_sql_bind.h"
 #include "duf_sql2.h"
 
 
