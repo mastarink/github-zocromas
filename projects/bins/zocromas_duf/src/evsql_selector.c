@@ -5,23 +5,14 @@
 #include <assert.h>
 #include <unistd.h>
 
-#include <sys/types.h>
-#include <unistd.h>
-
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_config_ref.h"
-
 #include "duf_maintenance.h"
 
-/* #include "duf_sql.h" */
-
-#include "duf_hook_types.h"
-#include "duf_scan_types.h"
+#include "duf_config_ref.h"
 
 #include "std_fieldsets.h"
 #include "std_selectors.h"
@@ -104,7 +95,7 @@ duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
   return selector;
 }
 
-
+/* TODO : move to common place with general substitutions */
 static const char *
 duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
 {
@@ -124,7 +115,6 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
   {
     str = duf_config->db.main.name;
   }
-  DUF_TRACE( temp, 10, "@@%s :: %s => %s", name, arg, str );
   return str;
 }
 

@@ -2,19 +2,14 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/sqlite/mas_sqlite.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 
 #include "duf_maintenance.h"
 
-#include "duf_service.h"
-
-#include "duf_config_ref.h"
-
 #include "duf_sql_error.h"
-
-#include "duf_sqlite_select.h"
 
 /* ###################################################################### */
 #include "duf_sql_prepared.h"
