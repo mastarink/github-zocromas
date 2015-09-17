@@ -31,7 +31,8 @@
 
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
-#include "duf_sql2.h"
+/* #include "duf_sql2.h" */
+#include "duf_sql_prepared.h"
 
 
 
@@ -183,22 +184,26 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
     {
       const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
 
-      DUF_SQL_START_STMT( pdi, select_model, sql, lr, pstmt_select );
+      DUF_SQL_START_STMT( pdi, select_model, sql, lr, pstmt );
       DUF_TEST_R( lr );
-      DUF_SQL_BIND_S( Model, model, lr, pstmt_select );
+      DUF_SQL_BIND_S( Model, model, lr, pstmt );
       DUF_TEST_R( lr );
-      DUF_SQL_STEP( lr, pstmt_select );
+      DUF_SQL_STEP( lr, pstmt );
       /* DUF_TEST_R( lr ); */
       if ( lr == MAS_SQL_ROW )
       {
         DUF_TRACE( select, 0, "<selected>" );
-        modelid = duf_sql_column_long_long( pstmt_select, 0 );
+#if 0
+        modelid = duf_sql_column_long_long( pstmt, 0 );
+#else
+        modelid = DUF_GET_UFIELD2( modelid );
+#endif
         lr = 0;
       }
       if ( lr == MAS_SQL_DONE )
         lr = 0;
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_model, lr, pstmt_select );
+      DUF_SQL_END_STMT( select_model, lr, pstmt );
     }
 
     if ( !modelid && !DUF_CONFIGG( cli.disable.flag.insert ) )
@@ -258,27 +263,35 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
             "SELECT " DUF_SQL_IDNAME " AS exifid FROM " DUF_SQL_TABLES_EXIF_FULL " WHERE ( :modelID IS NULL OR modelid=:modelID ) "
             " AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
-      DUF_SQL_START_STMT( pdi, select_exif, sql, lr, pstmt_select );
+      DUF_SQL_START_STMT( pdi, select_exif, sql, lr, pstmt );
       DUF_TEST_R( lr );
       if ( modelid )
       {
-        DUF_SQL_BIND_LL( modelID, modelid, lr, pstmt_select );
+        DUF_SQL_BIND_LL( modelID, modelid, lr, pstmt );
         DUF_TEST_R( lr );
       }
-      DUF_SQL_BIND_LL( timeEpoch, timeepoch, lr, pstmt_select );
+      DUF_SQL_BIND_LL( timeEpoch, timeepoch, lr, pstmt );
       DUF_TEST_R( lr );
-      DUF_SQL_STEP( lr, pstmt_select );
+      DUF_SQL_STEP( lr, pstmt );
       /* DUF_TEST_R( lr ); */
       if ( lr == MAS_SQL_ROW )
       {
         DUF_TRACE( select, 0, "<selected>" );
-        exifid = duf_sql_column_long_long( pstmt_select, 0 );
+#if 0
+        exifid = duf_sql_column_long_long( pstmt, 0 );
+#else
+        exifid = DUF_GET_UFIELD2( exifid );
+#endif
         lr = 0;
       }
+#if 0
       if ( lr == MAS_SQL_DONE )
         lr = 0;
+#else
+      DUF_CLEAR_ERROR( lr, MAS_SQL_DONE );
+#endif
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_exif, lr, pstmt_select );
+      DUF_SQL_END_STMT( select_exif, lr, pstmt );
       /* if ( !exifid )                        */
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }

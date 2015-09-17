@@ -31,7 +31,7 @@
 #include "duf_ufilter_ref.h"
 
 
-#include "duf_sql2.h"
+/* #include "duf_sql2.h" */
 #include "duf_maindb.h"
 #include "duf_status_ref.h"
 

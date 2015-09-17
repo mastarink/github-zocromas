@@ -18,7 +18,10 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_stmt_defs.h"
-#include "duf_sql2.h"
+#include "duf_sql_prepared.h"
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
+/* #include "duf_sql2.h" */
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
@@ -77,7 +80,11 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       DUF_SQL_STEP( rpr, pstmt );
       if ( rpr == MAS_SQL_ROW )
       {
+#if 1
         cnt = duf_sql_column_long_long( pstmt, 0 );
+#else
+        cnt = DUF_GET_UFIELD2( CNT );
+#endif
         rpr = 0;
       }
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );

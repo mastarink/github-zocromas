@@ -18,9 +18,12 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql_stmt_defs.h"
+#include "duf_sql_prepared.h"
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
-#include "duf_sql2.h"
+#include "duf_sql_field.h"
+/* #include "duf_sql2.h" */
+#include "duf_sql_prepared.h"
 
 #include "sql_beginning_tables.h"
 
@@ -48,7 +51,11 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   if ( rpr == MAS_SQL_ROW )
   {
     DUF_TRACE( select, 10, "<selected>" );
+#if 0
     dataid = duf_sql_column_long_long( pstmt, 0 );
+#else
+    dataid = DUF_GET_UFIELD2( dataid );
+#endif
     rpr = 0;
   }
   else

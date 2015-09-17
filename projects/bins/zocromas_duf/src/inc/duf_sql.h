@@ -2,19 +2,16 @@
 #  define MAS_DUF_SQL_H
 
 /* #  include "duf_sql_const.h" */
-#  include <mastar/sqlite/mas_sqlite_const.h>
 
 
-int duf_sql_open( const char *dbpath );
-int duf_sql_close( void );
 
 /* char *duf_sql_vmprintf( const char *fmt, va_list args ); */
 char *duf_sql_mprintf( const char *fmt, ... );
 
 /* void duf_sql_free( char *s ); */
 
-unsigned long long duf_sql_last_insert_rowid( void );
 
-int duf_sql_changes( void );
+int duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, duf_sccb_handle_t * sccbh, const char *sqlfmt,
+                    ... );
 
 #endif

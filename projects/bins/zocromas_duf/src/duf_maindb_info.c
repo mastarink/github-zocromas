@@ -14,7 +14,7 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql.h"
-#include "duf_sql2.h"
+/* #include "duf_sql2.h" */
 
 /* #include "sql_beginning_tables.h" */
 

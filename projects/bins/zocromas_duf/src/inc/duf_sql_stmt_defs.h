@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_SQL_STMT_DEFS_H
 #  define MAS_DUF_SQL_STMT_DEFS_H
 
+#  include <mastar/sqlite/mas_sqlite_const.h>
 
 
 #  define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \

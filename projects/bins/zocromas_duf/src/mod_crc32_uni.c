@@ -31,6 +31,7 @@
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
 #include "duf_sql2.h"
+#include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
@@ -213,21 +214,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
-      {
-#if 0
-        duf_scan_callbacks_t sccb = {
-          .leaf.type = DUF_NODE_LEAF,
-          .leaf.fieldset = "crc32id"
-        };
-        duf_sccb_handle_t csccbh = {.sccb = &sccb };
-        /* TODO duf_sql_select -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
-        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
-                             &csccbh, /* */
-                             "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_SQL_TABLES_CRC32_FULL " WHERE crc32sum='%llu'", crc32sum );
-#else
         crc32id = duf_pdistat2file_crc32id_existed( pdi, crc32sum, &lr );
-#endif
-      }
     }
     else if ( !lr /* assume SQLITE_OK */  )
     {

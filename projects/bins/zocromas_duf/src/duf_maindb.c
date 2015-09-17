@@ -23,8 +23,7 @@
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_sql.h"
-#include "duf_sql2.h"
+#include "duf_sql_open.h"
 
 #include "duf_options.h"
 
@@ -296,87 +295,23 @@ duf_main_db_tune( void )
 #ifdef MAS_SPLIT_DB
   if ( DUF_CONFIGG( db.adm.fpath ) )
   {
-#  if 0
-    static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBADMALIAS;
-    char *sql;
-
-    sql = duf_sql_mprintf( sqlf, DUF_CONFIGG( db.adm.fpath ) );
-    DUF_TRACE( explain, 0, "attach adm database %s", DUF_CONFIGG( db.adm.fpath ) );
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    /* DUF_SQL_BIND_S( dbfPath, DUF_CONFIGG(db.adm.fpath), r, pstmt ); */
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    sqlite3_free( sql );
-#  else
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
-#  endif
   }
 
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
   if ( DUF_CONFIGG( db.tempo.fpath ) )
   {
-#    if 0
-    static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBTEMPALIAS;
-    char *sql;
-
-    sql = duf_sql_mprintf( sqlf, DUF_CONFIGG( db.tempo.fpath ) );
-    DUF_TRACE( explain, 0, "attach tempo database %s -- %s", DUF_CONFIGG( db.tempo.fpath ), sql );
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    /* DUF_SQL_BIND_S( dbfPath, DUF_CONFIGG(db.tempo.fpath), r, pstmt ); */
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    sqlite3_free( sql );
-#    else
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_TTABLES_PATTERN "temp.db' AS " DUF_DBTEMPALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
-#    endif
   }
 #  endif
 
-#  if 0
-  if ( DUF_CONFIGG( db.selected.fpath ) )
-  {
-    static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBSELECTEDALIAS;
-    char *sql;
-
-    sql = duf_sql_mprintf( sqlf, DUF_CONFIGG( db.selected.fpath ) );
-    DUF_TRACE( explain, 0, "attach selected database %s -- %s", DUF_CONFIGG( db.selected.fpath ), sql );
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    /* DUF_SQL_BIND_S( dbfPath, DUF_CONFIGG(db.selected.fpath), r, pstmt ); */
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    sqlite3_free( sql );
-  }
-#  endif
 
 #endif
 
-#if 0
-  {
-    static const char *sql = "PRAGMA synchronous = OFF";
-
-    DUF_TRACE( explain, 0, "PRAGMA synchronous = OFF" );
-
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  }
-
-  /* DOR( r, duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ) ); */
-  /* DUF_TEST_R( r );                                                      */
-  {
-    static const char *sql = "PRAGMA encoding = 'UTF-8'";
-
-    DUF_TRACE( explain, 0, "PRAGMA encoding = 'UTF-8'" );
-
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  }
-#endif
 /* TODO : part to only after possible tables creation */
   DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  ) ); /* PRAGMAs etc. */
   DEBUG_ENDR( r );

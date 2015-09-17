@@ -31,6 +31,7 @@
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
 #include "duf_sql2.h"
+#include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
@@ -104,7 +105,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            ", 0 AS ndirs, 0 AS nfiles" /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
            " , fd." DUF_SQL_IDNAME " AS dataid " /* */
-	   " , fd.inode AS inode " /* */
+           " , fd.inode AS inode " /* */
            " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
            " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , md.dup5cnt AS nsame " /* */
@@ -242,22 +243,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
-      {
-#if 0
-        duf_scan_callbacks_t sccb = {
-          .leaf.type = DUF_NODE_LEAF,
-          .leaf.fieldset = "md5id"
-        };
-        duf_sccb_handle_t csccbh = {.sccb = &sccb };
-        /* TODO duf_sql_select -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
-        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
-                             &csccbh, /* */
-                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_SQL_TABLES_MD5_FULL " WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1],
-                             md64[0] );
-#else
         md5id = duf_pdistat2file_md5id_existed( pdi, md64[1], md64[0], &lr );
-#endif
-      }
     }
     else if ( !lr /* assume SQLITE_OK */  )
     {
