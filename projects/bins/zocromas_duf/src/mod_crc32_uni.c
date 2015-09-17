@@ -89,6 +89,12 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            "#crc32"
 #endif
            ,
+           .fieldsets = {
+                         "#basic",
+                         "#plus",
+                         "#crc32x",
+                         NULL}
+           ,
            .selector2 =         /* */
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */

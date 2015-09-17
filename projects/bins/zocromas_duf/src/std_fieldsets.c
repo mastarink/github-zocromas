@@ -129,6 +129,17 @@ static duf_fieldset_t _all_fieldsets[] = {
    }
   ,
   {
+   .name = "crc32x",
+   .type = DUF_NODE_LEAF,
+   .set =
+   /* "'crc32x-leaf' AS fieldset_id, " (* *) */
+   " crc.dup32cnt          AS nsame " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", fd.crc32id            AS crc32id" /* */
+   ", crc.crc32sum "            /* */
+   }
+  ,
+  {
    .name = "crc32",
    .type = DUF_NODE_LEAF,
    .set =

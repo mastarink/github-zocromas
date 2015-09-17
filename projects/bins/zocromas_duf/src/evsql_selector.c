@@ -146,77 +146,85 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
       const char *selector = NULL;
       char *fieldset = NULL;
 
-      if ( sql_set->fieldsets[0] )
       {
         const char *const *pfs;
 
         pfs = sql_set->fieldsets;
-        while ( DUF_NOERROR( *pr ) && pfs && *pfs )
+        if ( *pfs )
         {
-          const char *fs;
-
-          fs = duf_unref_fieldset( *pfs, sql_set->type, pr );
-          assert( fs );
-          if ( fieldset )
+          while ( DUF_NOERROR( *pr ) && pfs && *pfs )
           {
-            fieldset = mas_strcat_x( fieldset, "," );
-            fieldset = mas_strcat_x( fieldset, fs );
+            const char *fs;
+
+            fs = duf_unref_fieldset( *pfs, sql_set->type, pr );
+            if ( DUF_NOERROR( *pr ) )
+            {
+              assert( fs );
+              if ( fieldset )
+              {
+                fieldset = mas_strcat_x( fieldset, "," );
+                fieldset = mas_strcat_x( fieldset, fs );
+              }
+              else
+              {
+                fieldset = mas_strdup( fs );
+              }
+            }
+            pfs++;
           }
-          else
-          {
-            fieldset = mas_strdup( fs );
-          }
-          pfs++;
-        }
-      }
-      else
-      {
-        const char *fs;
-
-        fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
-        fieldset = mas_strdup( fs );
-      }
-      selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
-      if ( selector && fieldset )
-      {
-        sql = mas_strdup( "SELECT " );
-        sql = mas_strcat_x( sql, fieldset );
-        sql = mas_strcat_x( sql, " " );
-
-        if ( sql_set->expand_sql )
-        {
-          char *tsql;
-
-          tsql = duf_expand_sql( selector, selected_db );
-          sql = mas_strcat_x( sql, tsql );
-          mas_free( tsql );
         }
         else
         {
-          sql = mas_strcat_x( sql, selector );
+          const char *fs;
+
+          fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
+          fieldset = mas_strdup( fs );
         }
-#if 1
-        if ( sql_set->filter )
+      }
+      if ( DUF_NOERROR( *pr ) )
+      {
+        selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
+        if ( selector && fieldset )
         {
-          if ( has_where )
-            sql = mas_strcat_x( sql, " aND " );
+          sql = mas_strdup( "SELECT " );
+          sql = mas_strcat_x( sql, fieldset );
+          sql = mas_strcat_x( sql, " " );
+
+          if ( sql_set->expand_sql )
+          {
+            char *tsql;
+
+            tsql = duf_expand_sql( selector, selected_db );
+            sql = mas_strcat_x( sql, tsql );
+            mas_free( tsql );
+          }
           else
-            sql = mas_strcat_x( sql, " wHERE " );
-          has_where = 1;
-          sql = mas_strcat_x( sql, sql_set->filter );
-        }
+          {
+            sql = mas_strcat_x( sql, selector );
+          }
+#if 1
+          if ( sql_set->filter )
+          {
+            if ( has_where )
+              sql = mas_strcat_x( sql, " aND " );
+            else
+              sql = mas_strcat_x( sql, " wHERE " );
+            has_where = 1;
+            sql = mas_strcat_x( sql, sql_set->filter );
+          }
 #endif
 #if 1
-        if ( sql_set->matcher )
-        {
-          if ( has_where )
-            sql = mas_strcat_x( sql, " AND " );
-          else
-            sql = mas_strcat_x( sql, " WHERE " );
-          has_where = 1;
-          sql = mas_strcat_x( sql, sql_set->matcher );
-        }
+          if ( sql_set->matcher )
+          {
+            if ( has_where )
+              sql = mas_strcat_x( sql, " AND " );
+            else
+              sql = mas_strcat_x( sql, " WHERE " );
+            has_where = 1;
+            sql = mas_strcat_x( sql, sql_set->matcher );
+          }
 #endif
+        }
       }
       mas_free( fieldset );
     }
