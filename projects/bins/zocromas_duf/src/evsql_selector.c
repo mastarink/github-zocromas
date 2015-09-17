@@ -18,7 +18,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_sql.h"
+/* #include "duf_sql.h" */
 
 #include "duf_hook_types.h"
 #include "duf_scan_types.h"

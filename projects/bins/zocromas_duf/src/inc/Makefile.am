@@ -65,7 +65,6 @@ noinst_HEADERS=duf.h \
 	duf_sql_bind.h \
 	duf_sql_field.h \
 	duf_sql_error.h \
-	duf_sql.h \
 	duf_sql_open.h \
 	duf_sql_positional.h \
 	duf_sql_prepared.h \

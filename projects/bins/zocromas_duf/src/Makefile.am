@@ -42,7 +42,7 @@ zocromas_duf_SOURCES=				   \
 	duf_dh.c duf_service.c duf_print.c duf_printb.c	duf_fileinfo.c	     \
 								      \
 	duf_sql_error.c duf_sqlite_select.c \
-	duf_sql.c duf_sql_open.c duf_sql_positional.c duf_sql_prepared.c duf_sql_field.c duf_sql_bind.c 	       \
+	duf_sql_open.c duf_sql_positional.c duf_sql_prepared.c duf_sql_field.c duf_sql_bind.c 	       \
 									\
 	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
 	mod_filenames_uni.c		mod_filedata_uni.c		    \
