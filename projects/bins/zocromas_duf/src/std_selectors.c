@@ -1,5 +1,3 @@
-#define DUF_SQL_PDI_STMT
-
 #include "duf_maintenance.h"
 
 #include "duf_sql_defs.h"

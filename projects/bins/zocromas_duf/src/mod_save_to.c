@@ -1,4 +1,3 @@
-#define DUF_SQL_PDI_STMT
 #include <string.h>
 
 #include <fcntl.h>              /* Definition of AT_* constants */

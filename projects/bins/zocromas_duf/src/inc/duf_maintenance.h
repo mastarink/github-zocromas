@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_MAINTENANCE_H
 #  define MAS_DUF_MAINTENANCE_H
 #  define DUF_T_NOIF
+#  define DUF_SQL_PDI_STMT
 
 #  include <assert.h>
 

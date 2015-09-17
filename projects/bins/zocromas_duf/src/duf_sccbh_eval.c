@@ -1,4 +1,3 @@
-#define DUF_SQL_PDI_STMT
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>

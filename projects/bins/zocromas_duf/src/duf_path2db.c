@@ -1,5 +1,3 @@
-#define DUF_SQL_PDI_STMT
-
 #include <unistd.h>
 #include <string.h>
 

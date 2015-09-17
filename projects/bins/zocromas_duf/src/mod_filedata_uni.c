@@ -1,5 +1,3 @@
-#define DUF_SQL_PDI_STMT
-
 #include <fcntl.h>              /* Definition of AT_* constants */
 
 #include <mastar/tools/mas_arg_tools.h>

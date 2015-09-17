@@ -36,9 +36,11 @@
           if ( _rt >= 0 && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
           DUF_TEST_R( _rt );
-#  else
+#  elif defined(DUF_SQL_NOPDI_STMT)
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m );
+#  else
+#    undef DUF_SQL_START_STMT
 #  endif
 
 
@@ -52,9 +54,11 @@
 	  { duf_sql_reset( _pstmt_m ); duf_sql_clear_bindings( _pstmt_m ); } \
 	  duf_pdi_finalize_statement(pdi, &_name ## _index ); \
 	}
-#  else
+#  elif defined(DUF_SQL_NOPDI_STMT)
 #    define DUF_SQL_END_STMT(_rt, _pstmt_m) \
 	DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m)
+#  else
+#    undef DUF_SQL_END_STMT
 #  endif
 
 
@@ -100,4 +104,3 @@
 
 
 #endif
-

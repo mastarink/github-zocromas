@@ -4,8 +4,6 @@
 #include "duf_context.h"
 /* ###################################################################### */
 
-
-
 void
 duf_clear_context( duf_levinfo_context_t * pcontext )
 {

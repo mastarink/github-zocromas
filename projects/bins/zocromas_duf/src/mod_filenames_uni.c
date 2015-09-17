@@ -1,4 +1,3 @@
-#define DUF_SQL_PDI_STMT
 
 
 

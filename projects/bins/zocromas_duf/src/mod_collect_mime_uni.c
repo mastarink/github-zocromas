@@ -1,5 +1,3 @@
-#define DUF_SQL_PDI_STMT
-
 #include <string.h>
 #include <errno.h>
 #include <magic.h>              /* man libmagic */
