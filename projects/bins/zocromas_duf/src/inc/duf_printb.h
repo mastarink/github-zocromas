@@ -13,4 +13,3 @@ int duf_print_bformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, du
                                  duf_pdi_cb_t suffix_cb );
 
 #endif
-

@@ -12,4 +12,3 @@ int duf_pdi_finalize_statement( duf_depthinfo_t * pdi, int *pindex );
 
 
 #endif
-

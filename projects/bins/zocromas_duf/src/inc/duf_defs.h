@@ -36,15 +36,15 @@
 #    define DUF_DBSELECTEDPREF DUF_DBPREF
 #  endif
 
-#if 0
-#  define DUF_DBTOSETALIAS "duf${SELECTED_DB}"
+#  if 0
+#    define DUF_DBTOSETALIAS "duf${SELECTED_DB}"
 
-#  ifdef MAS_SPLIT_DB
-#    define DUF_DBTOSETPREF DUF_DBTOSETALIAS "."
-#  else
-#    define DUF_DBTOSETPREF DUF_DBPREF
+#    ifdef MAS_SPLIT_DB
+#      define DUF_DBTOSETPREF DUF_DBTOSETALIAS "."
+#    else
+#      define DUF_DBTOSETPREF DUF_DBPREF
+#    endif
 #  endif
-#endif
 
 
 

@@ -45,8 +45,8 @@ static duf_sql_sequence_t final_sql = { /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
           " WHERE " DUF_SQL_TABLES_FILEDATAS_FULL "." DUF_SQL_IDNAME "=fd." DUF_SQL_IDNAME ")" /* */
-          , 
-	  NULL}
+          ,
+          NULL}
 };
 
 /* ########################################################################################## */

@@ -5,11 +5,11 @@
 extern duf_config_t *duf_config;
 
 #  define DUF_CONFIGX(_lo)  duf_config->_lo
-#ifdef MAS_TRACING
-#  define DUF_CONFIGG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGX(_lo))
-#else
-#  define DUF_CONFIGG(_lo)          DUF_CONFIGX(_lo)
-#endif
+#  ifdef MAS_TRACING
+#    define DUF_CONFIGG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGX(_lo))
+#  else
+#    define DUF_CONFIGG(_lo)          DUF_CONFIGX(_lo)
+#  endif
 #  define DUF_CONFIGG_F(_lo)        DUF_CONFIGG(_lo)
 #  define DUF_CONFIGG_N(_lo)        DUF_CONFIGG(_lo)
 #  define DUF_CONFIGG_A(_lo, _a)    DUF_CONFIGG(_lo)._a
@@ -25,4 +25,3 @@ extern duf_config_t *duf_config;
 #  define DUF_CONFIGW_A(_lo, _a)    DUF_CONFIGW(_lo)._a
 
 #endif
-

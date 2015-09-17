@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_TRACE_H
 #  define MAS_DUF_TRACE_H
 
-#include <stdio.h>
+#  include <stdio.h>
 
 /* duf_trace_mode_t */
 #  include "duf_trace_defs.h"

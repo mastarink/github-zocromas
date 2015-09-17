@@ -180,7 +180,7 @@ void duf_pi_set_topdepth( duf_pathinfo_t * pi );
 
 int duf_pi_topdepth( const duf_pathinfo_t * pi );
 int duf_pi_maxdepth( const duf_pathinfo_t * pi );
-duf_levinfo_t * duf_pi_levinfo( const duf_pathinfo_t * pi );
+duf_levinfo_t *duf_pi_levinfo( const duf_pathinfo_t * pi );
 
 int duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth( const duf_pathinfo_t * pi );

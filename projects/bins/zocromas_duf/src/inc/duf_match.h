@@ -14,4 +14,3 @@ int duf_lim_matchll( duf_limitsll_t lim, int filesame );
 
 
 #endif
-

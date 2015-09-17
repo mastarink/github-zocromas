@@ -273,7 +273,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   }
   bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
   bar.width = width * bar.percent;
-  if ( ( ( int ) ( bar.percent * 100. ) ) != ( ( int ) ( bar.prev_percent * 100. ) ) || bar.percent > .98  )
+  if ( ( ( int ) ( bar.percent * 100. ) ) != ( ( int ) ( bar.prev_percent * 100. ) ) || bar.percent > .98 )
     /* if ( bar.percent != bar.prev_percent ) */
   {
     char cur_time[128] = "??";

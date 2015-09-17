@@ -8,4 +8,3 @@ int duf_env_options( duf_option_stage_t istage );
 
 
 #endif
-

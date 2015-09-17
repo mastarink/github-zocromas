@@ -6,4 +6,3 @@ int duf_sqlite2r_error_code( int r3 );
 int duf_r2sqlite_error_code( int rt );
 
 #endif
-

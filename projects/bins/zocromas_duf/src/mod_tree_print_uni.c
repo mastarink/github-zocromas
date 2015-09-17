@@ -366,7 +366,8 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags ); );
+               DUF_PRINTF( 1, ".0x%02x]", flags );
+           );
     {
 #if 0
       {

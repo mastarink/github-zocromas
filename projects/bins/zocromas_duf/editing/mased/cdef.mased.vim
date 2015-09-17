@@ -1,4 +1,3 @@
-
 find   duf_optable_def.h
 tab sfind data_optable_flag.c
 tab sfind data_optable_flag_obsolete.c

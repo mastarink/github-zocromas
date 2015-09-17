@@ -90,7 +90,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            ,
            .selector2 =         /* */
 #if 0
-	     " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */

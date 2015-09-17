@@ -1,7 +1,7 @@
 #ifndef DUF_MOD_DEFS_H
-#define DUF_MOD_DEFS_H
+#  define DUF_MOD_DEFS_H
 
-#define DUF_MOD_DECLARE_ALL_FUNCS( _modname ) \
+#  define DUF_MOD_DECLARE_ALL_FUNCS( _modname ) \
 static int _modname ## _init(              duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi ); \
 static int _modname ## _node_before2(      duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi ); \
 static int _modname ## _node_before2_del(  duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi ); \

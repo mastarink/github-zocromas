@@ -29,15 +29,15 @@ typedef struct
 
   unsigned integrity:1;
   unsigned collect_obs:1;
-  
+
   unsigned progress:1;
   unsigned use_binformat:1;
 
   unsigned summary:1;
   unsigned interactive:1;
-#if 0
-  unsigned beginning_sql:1; /* do 'beginning' sql's again (first time mandatory!) */
-#endif
+#  if 0
+  unsigned beginning_sql:1;     /* do 'beginning' sql's again (first time mandatory!) */
+#  endif
   unsigned do_sccbs:1;
   unsigned fast:1;
 } duf_config_act_flags_t;

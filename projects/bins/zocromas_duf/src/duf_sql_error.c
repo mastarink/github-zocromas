@@ -24,5 +24,3 @@ duf_r2sqlite_error_code( int rt )
   r3 = ( rt == 0 ) ? SQLITE_OK : ( rt < 0 ? rt - MAS_SQLITE_ERROR_BASE : rt );
   return r3;
 }
-
-

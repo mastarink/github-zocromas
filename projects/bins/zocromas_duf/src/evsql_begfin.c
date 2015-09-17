@@ -41,7 +41,8 @@ duf_bind_ufilter( duf_stmnt_t * pstmt, const duf_argvc_t * ttarg )
  * 5. end statement
  * */
 int
-duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db, int *pchanges )
+duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db,
+                     int *pchanges )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -85,7 +86,7 @@ int
 duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const char *selected_db, int *pchanges )
 {
   DEBUG_STARTR( r );
-  DOR( r, duf_eval_sql_one_cb( sql, pu, NULL /* cb */, NULL /* ttarg */, selected_db, pchanges ) );
+  DOR( r, duf_eval_sql_one_cb( sql, pu, NULL /* cb */ , NULL /* ttarg */ , selected_db, pchanges ) );
   DEBUG_ENDR( r );
 }
 

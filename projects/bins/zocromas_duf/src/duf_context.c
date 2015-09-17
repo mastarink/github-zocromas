@@ -39,6 +39,3 @@ duf_set_context_destructor( duf_levinfo_context_t * pcontext, duf_void_voidp_t d
   assert( pcontext );
   pcontext->destructor = destr;
 }
-
-
-

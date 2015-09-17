@@ -86,7 +86,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", fd.md5id              AS md5id " /* */
 #else
-	   "#mime"
+           "#mime"
 #endif
            ,
            .selector2 =         /* */

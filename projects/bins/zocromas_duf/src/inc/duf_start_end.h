@@ -1,5 +1,5 @@
 #ifndef DUF_START_END_H
-#define DUF_START_END_H
+#  define DUF_START_END_H
 
 #  define DUF_START() {
 #  define DUF_STARTTYP(typ, _rt) typ _rt=(typ)0; DUF_START()

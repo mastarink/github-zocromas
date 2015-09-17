@@ -6,4 +6,3 @@ char *duf_realpath( const char *path, int *pr );
 
 
 #endif
-

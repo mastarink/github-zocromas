@@ -32,8 +32,8 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
-           ", md.dup5cnt            AS dup5cnt " /* */
-           ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -87,8 +87,8 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
-           ", md.dup5cnt            AS dup5cnt " /* */
-           ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */

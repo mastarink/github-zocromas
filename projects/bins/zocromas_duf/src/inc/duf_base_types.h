@@ -1,5 +1,5 @@
 #ifndef MAS_DUF_BASR_TYPES_H
-#define MAS_DUF_BASR_TYPES_H
+#  define MAS_DUF_BASR_TYPES_H
 
 typedef struct
 {
@@ -22,10 +22,11 @@ typedef struct
 typedef struct
 {
   int argc;
-  char *const*argv;
+  char *const *argv;
 } duf_cargvc_t;
 
-typedef struct {
+typedef struct
+{
   char *file;
   char *dir;
 } duf_itemtag_t;

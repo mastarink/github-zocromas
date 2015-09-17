@@ -14,4 +14,3 @@ int duf_levinfo_statat_dh_up( duf_depthinfo_t * pdi );
 
 
 #endif
-

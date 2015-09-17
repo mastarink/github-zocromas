@@ -112,7 +112,7 @@ typedef struct
   unsigned update;
   unsigned io;
   unsigned verbose;
-  
+
   unsigned sccb;
   unsigned sccbh;
   duf_config_output_t output;

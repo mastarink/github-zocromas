@@ -81,19 +81,19 @@ duf_sql_sequence_t sql_create_selected = {
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
           " GROUP BY fn.Pathid " /* */ , /* XXX */
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (Pathid)"
-                                /* */ ,
-                                /* XXX */
+          /* */ ,
+          /* XXX */
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES
           " (numfiles)"
-                                /* */ ,
-                                /* XXX */
+          /* */ ,
+          /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
-          " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) AS numdirs "        /* */
+          " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) AS numdirs " /* */
           " FROM "              /* */
 #if 0
           DUF_SQL_TABLES_PATHS_FULL " " /* */

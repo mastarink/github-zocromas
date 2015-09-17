@@ -174,7 +174,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, 0, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-	DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );
+        DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );
 
         DUF_TRACE( options, 0, "(%d) vtype NUM --%s='%s'", r, extended->o.name, optargg ? optargg : "" );
         break;

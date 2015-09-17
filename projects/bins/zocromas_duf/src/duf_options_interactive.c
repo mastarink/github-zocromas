@@ -79,7 +79,7 @@ duf_interactive_options( duf_option_stage_t istage )
         DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
       }
 #endif
-      while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) /* don't remove: this is for quit */ 
+      while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) /* don't remove: this is for quit */
               && isatty( STDIN_FILENO ) /* only when stdin is tty */  )
       {
         char *rl_buffer = NULL, *s = NULL;

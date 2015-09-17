@@ -52,7 +52,7 @@ static duf_selector_t _all_selectors[] = {
    " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL /*                     */ " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
    },
-    {
+  {
    .name = "sha-leaf",          /* ns: without selected table(s) */
    .type = DUF_NODE_LEAF,
    .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL /*       */ " AS fn " /* */

@@ -132,8 +132,7 @@ __attribute__ ( ( destructor( 101 ) ) )
                      "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
                      "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
                      "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
-                     "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m" ,
-                     "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
-		     );
+                     "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
+         );
 #endif
 }

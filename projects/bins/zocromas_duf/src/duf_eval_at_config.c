@@ -16,7 +16,7 @@
 /* ###################################################################### */
 
 
-#if 0 /* useless */
+#if 0                           /* useless */
 
 /* make/evaluate «duf_config» configured tasks
  *       - global variable duf_config must be created/inited and set
@@ -46,10 +46,10 @@ duf_eval_all_at_config( void )
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
 /* <body> */
-#if 0
+#  if 0
   if ( DUF_ACTG_FLAG( show_sccbs ) )
     DOR( r, duf_show_sccb_sequence( ppscan_callbacks, asteps ) );
-#endif
+#  endif
   if ( DUF_ACTG_FLAG( do_sccbs ) )
     DOR( r, duf_evaluate_sccb_array( ppscan_callbacks, asteps, &global_status.actions_done ) );
 /* </body> */
@@ -72,7 +72,7 @@ duf_eval_all_at_config( void )
  *         - evaluate ppscan_callbacks[astep] for each string  from DUF_CONFIGG(targ)[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  * */
-#ifdef MAS_WRAP_FUNC
+#  ifdef MAS_WRAP_FUNC
 int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
 {
   DEBUG_STARTR( r );
@@ -94,11 +94,11 @@ int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
     dirent_optnames = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
     DUF_TRACE( explain, 0, "to collect something   use %s", optnames );
     DUF_TRACE( explain, 0, "to collect directories use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_ALLOW_DIRS ), dirent_optnames );
-#  if 0
+#    if 0
     DUF_TRACE( explain, 0, "to collect file data   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILEDATA ), dirent_optnames );
     DUF_TRACE( explain, 0, "tO collect file names  use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILENAMES ), dirent_optnames );
     DUF_TRACE( explain, 0, "to collect md5 names   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_MD5 ), dirent_optnames );
-#  endif
+#    endif
     DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
     DUF_PUTSL( 0 );
     DUF_PUTSL( 0 );
@@ -112,6 +112,6 @@ int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
   /*   DUF_SHOW_ERROR( "code: %d", r );                */
   DEBUG_ENDR( r );
 }
-#endif
+#  endif
 
 #endif

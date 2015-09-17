@@ -10,7 +10,7 @@ extern duf_scan_callbacks_t     /* */
   duf_collect_openat_crc32_callbacks, /* */
   duf_collect_openat_sd5_callbacks, /* */
   duf_collect_openat_md5_callbacks, /* */
-  duf_sha_callbacks, /* */
+  duf_sha_callbacks,            /* */
   duf_collect_mime_callbacks, duf_collect_exif_callbacks, /* */
       /* duf_collect_mdpath_callbacks , */
       /* duf_print_md5_callbacks ,      */
@@ -18,7 +18,7 @@ extern duf_scan_callbacks_t     /* */
   duf_print_dir_callbacks,      /* */
   duf_dummy_callbacks,          /* */
   duf_dumplet_callbacks,        /* */
-  duf_dialog_callbacks,        /* */
+  duf_dialog_callbacks,         /* */
   duf_tagit_callbacks,          /* */
   duf_save_to_callbacks,        /* */
   duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );

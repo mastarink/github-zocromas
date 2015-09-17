@@ -19,4 +19,3 @@ int duf_pdi_reinit_min( duf_depthinfo_t * pdi );
 
 
 #endif
-

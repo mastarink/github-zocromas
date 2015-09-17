@@ -31,7 +31,7 @@ duf_longindex_extended_codeval( int longindex, int *pr )
 #endif
 
 const duf_longval_extended_t *
-duf_longindex2extended( int longindex, const duf_longval_extended_table_t **pxtable, int *pr )
+duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable, int *pr )
 {
   const duf_longval_extended_t *extended = NULL;
   int ntable = 0;

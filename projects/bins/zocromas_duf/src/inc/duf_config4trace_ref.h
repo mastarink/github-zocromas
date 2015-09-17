@@ -5,4 +5,3 @@
 extern const duf_config_t *duf_config4trace;
 
 #endif
-

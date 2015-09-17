@@ -17,4 +17,3 @@ extern char *errmsg;
   	re = sqlite3_exec( pDb, sql, NULL, NULL, &errmsg ); SQL_ERREQ_CO(re,sql,errmsg) ; sqlite3_free( sql );  }
 
 #endif
-

@@ -19,4 +19,3 @@ int duf_sql_column_count( duf_stmnt_t * stmt );
 unsigned long long duf_sql_last_insert_rowid( void );
 
 #endif
-

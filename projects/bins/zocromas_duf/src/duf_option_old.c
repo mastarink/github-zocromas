@@ -22,7 +22,7 @@
 
 int
 duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                           const duf_longval_extended_table_t * xtable )
+                      const duf_longval_extended_table_t * xtable )
 {
   DEBUG_STARTR( r );
 
@@ -355,7 +355,7 @@ duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optar
 
         if ( &mas_mem_disable_print_usage )
         {
-	  fprintf(stderr, "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#\n");
+          fprintf( stderr, "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#\n" );
           mas_mem_disable_print_usage = 0;
         }
       }

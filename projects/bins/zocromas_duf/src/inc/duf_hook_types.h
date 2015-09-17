@@ -2,7 +2,7 @@
 #  define MAS_DUF_HOOK_TYPES_H
 
 #  include "duf_record_types.h"
-#  include "duf_scan_types.h" /* duf_node_type_t */
+#  include "duf_scan_types.h"   /* duf_node_type_t */
 #  include "sql_beginning_types.h"
 
 
@@ -136,9 +136,9 @@ struct duf_sccb_handle_s
 #  else
   duf_cargvc_t parg;
 #  endif
-#if 0
+#  if 0
   const duf_ufilter_t *pu_x;
-#endif
+#  endif
   int pdi_cloned;
   duf_depthinfo_t *pdi;
   unsigned long long changes;
@@ -159,13 +159,15 @@ typedef struct
 } duf_action_table_t;
 
 
-typedef struct  {
+typedef struct
+{
   duf_node_type_t type;
   const char *name;
   const char *set;
 } duf_fieldset_t;
 
-typedef struct  {
+typedef struct
+{
   duf_node_type_t type;
   const char *name;
   const char *selector2;

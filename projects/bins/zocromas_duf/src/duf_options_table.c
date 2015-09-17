@@ -44,6 +44,7 @@ extern const duf_longval_extended_table_t optable_flag;
 extern const duf_longval_extended_table_t optable_sflag;
 extern const duf_longval_extended_table_t optable_uplus;
 extern const duf_longval_extended_table_t optable_help;
+
 #ifdef MAS_TRACING_OPTIONS
 extern const duf_longval_extended_table_t optable_trace;
 #endif

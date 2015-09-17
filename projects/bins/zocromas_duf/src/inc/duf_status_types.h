@@ -15,11 +15,11 @@ typedef struct
 
 typedef struct
 {
-   const duf_longval_extended_t * extended;
-   char *optargg;
-   duf_option_stage_t istage;
-   int no;
-   duf_option_source_t source;
+  const duf_longval_extended_t *extended;
+  char *optargg;
+  duf_option_stage_t istage;
+  int no;
+  duf_option_source_t source;
 } duf_xcmd_t;
 
 typedef struct
@@ -28,9 +28,9 @@ typedef struct
   char *db_attached_selected;
   char *db_opened_name;
   /* int selection_done; */
-#if 0
+#  if 0
   duf_ufilter_t *selection_bound_ufilter;
-#endif
+#  endif
   size_t alloc_xcmds;
   size_t n_xcmds;
   duf_xcmd_t *xcmds;

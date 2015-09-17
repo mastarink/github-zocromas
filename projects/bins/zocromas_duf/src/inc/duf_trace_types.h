@@ -9,10 +9,10 @@ typedef enum
   DUF_TRACE_MODE_flags,
   DUF_TRACE_MODE_dry_run,
   DUF_TRACE_MODE_explain,
-  
+
   DUF_TRACE_MODE_levinfo,
   DUF_TRACE_MODE_pdi,
-  
+
   DUF_TRACE_MODE_action,
   DUF_TRACE_MODE_any,
   DUF_TRACE_MODE_sccb,

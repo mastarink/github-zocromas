@@ -47,6 +47,7 @@ duf_info_from_db( int count, const char *sql )
 
   return tuple;
 }
+
 int
 duf_main_db_info( void )
 {
@@ -56,8 +57,8 @@ duf_main_db_info( void )
     duf_infodata_t infod[] = {
       {.title = "paths",.count = 5,.labels = {"num of paths", "max num dirs", "max num files", "@min inow", "@max inow", NULL}
        ,.sql =
-       "SELECT  count(*), max(numdirs), max(numfiles), strftime('%s',min(pt.inow)), strftime('%s',max(pt.inow)) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt."
-       DUF_SQL_IDNAME ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ")"}
+       "SELECT  count(*), max(numdirs), max(numfiles), strftime('%s',min(pt.inow)), strftime('%s',max(pt.inow)) FROM " DUF_SQL_TABLES_PATHS_FULL
+       " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ")"}
       ,
       {.title = "datas with reasonable date",.count = 5,.labels = {"#", "@min mtim", "@max mtim", "@min inow", "@max inow", NULL}
        ,.sql =
@@ -78,16 +79,17 @@ duf_main_db_info( void )
       ,
       {.title = "names 2",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME
-       "=fd.md5id)"}
+       "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
+       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)"}
       ,
       {.title = "distinct md5id",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md."
-       DUF_SQL_IDNAME "=fd.md5id)"}
+       "SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
+       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)"}
       ,
       {.title = "n/z Sizes",.count = 5,.labels = {"#", "min size", "max size", "@min inow", "@max inow", NULL}
-       ,.sql = "SELECT count(*), min(size), max(size), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_SIZES_FULL " where size>0"}
+       ,.sql =
+       "SELECT count(*), min(size), max(size), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_SIZES_FULL " where size>0"}
       ,
       {.title = "z Sizes",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
        ,.sql = "SELECT count(*), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_SIZES_FULL " where size=0"}

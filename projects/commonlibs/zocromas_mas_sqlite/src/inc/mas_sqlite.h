@@ -27,10 +27,10 @@ int mas_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_
 
 /* int mas_vsqlite_e( const char *fmt, int *pchanges, va_list args ); */
 
-#if 0
+#  if 0
 int mas_sqlite_vselect( mas_sel_cb_t sel_cb, void *sel_cb_udata, mas_str_cb_t str_cb, void *str_cb_udata,
                         mas_sccb_handle_t * sccbh, const char *sqlfmt, va_list args );
-#endif
+#  endif
 
 unsigned long long mas_sqlite_last_insert_rowid( void );
 

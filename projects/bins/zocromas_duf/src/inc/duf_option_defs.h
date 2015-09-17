@@ -1,13 +1,13 @@
 #ifndef MAS_DUF_OPTION_DEFS_H
 #  define MAS_DUF_OPTION_DEFS_H
 
-#include "duf_config_ref.h"
+#  include "duf_config_ref.h"
 /* */
-#ifdef MAS_TRACING
-#  define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
-#else
-#  define DUF_OPTIONG(_lo)          DUF_CONFIGG(_lo)
-#endif
+#  ifdef MAS_TRACING
+#    define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
+#  else
+#    define DUF_OPTIONG(_lo)          DUF_CONFIGG(_lo)
+#  endif
 #  define DUF_OPTIONG_F(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_N(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_A(_lo, _a)    DUF_OPTIONG(_lo)._a
@@ -64,13 +64,13 @@
 #  define DUF_OPTIONG_NUM(_lo, _pref) DUF_OPTIONG_N(_pref._lo)
 #  define DUF_OPTIONW_NUM(_lo, _pref) DUF_OPTIONW_N(_pref._lo)
 
-#if 0
-#define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) \
+#  if 0
+#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) \
 	  ( _istage == -1 || ( !_extended->use_stage || ( _extended->stage.min <= _istage && _extended->stage.max >= _istage ) ) \
        || ( _xtable && ( !_xtable->use_stage || ( _xtable->stage.min <= _istage && _xtable->stage.max >= _istage ) ) ) || _extended->stage.flag )
-#else
-#define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) duf_check_stage( _istage, _extended, _xtable)
-#endif
+#  else
+#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) duf_check_stage( _istage, _extended, _xtable)
+#  endif
 
 #endif
 
