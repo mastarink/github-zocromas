@@ -47,7 +47,7 @@ zocromas_duf_SOURCES=				   \
 	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
 	mod_filenames_uni.c		mod_filedata_uni.c		    \
 	mod_directories_uni.c						     \
-	mod_md5_uni.c	mod_sd5_uni.c					      \
+	mod_md5_uni.c mod_sd5_uni.c mod_sha_uni.c			      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_dummy_uni.c	\

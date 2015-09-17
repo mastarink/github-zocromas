@@ -52,6 +52,17 @@ static duf_selector_t _all_selectors[] = {
    " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL /*                     */ " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
    },
+    {
+   .name = "sha-leaf",          /* ns: without selected table(s) */
+   .type = DUF_NODE_LEAF,
+   .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL /*       */ " AS fn " /* */
+   /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
+   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL /*               */ " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL /*                   */ " AS sz ON (sz.size=fd.size)" /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SHA_FULL /*                     */ " AS sha ON (sha." DUF_SQL_IDNAME "=fd.shaid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL /*                     */ " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+   },
   {.name = NULL,.selector2 = NULL}
 };
 

@@ -88,6 +88,7 @@ typedef struct
   unsigned integrity;
   unsigned match;
   unsigned md5;
+  unsigned sha;
   unsigned mdpath;
   unsigned mime;
   unsigned nonew;

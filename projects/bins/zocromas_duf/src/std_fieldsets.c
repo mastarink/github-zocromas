@@ -105,6 +105,38 @@ static duf_fieldset_t _all_fieldsets[] = {
    }
   ,
   {
+   .name = "shax",
+   .type = DUF_NODE_LEAF,
+   .set =
+   /* "'shax-leaf' AS fieldset_id, " (* *) */
+   /* */
+   " sha.dupshacnt          AS nsame " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
+   }
+  ,
+  {
+   .name = "sha",
+   .type = DUF_NODE_LEAF,
+   .set =
+   /* "'sha-leaf' AS fieldset_id, " (* *) */
+   " fn.Pathid AS dirid "       /* */
+   ", 0 AS ndirs, 0 AS nfiles"  /* */
+   ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+   ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
+   ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
+   ", fd.mode               AS filemode " /* */
+   ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+   ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+   ", fd.shaid              AS shaid " /* */
+   ", sha.shasum1, sha.shasum2, sha.shasum3 " /* */
+   ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
+   ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+   /* */
+   ", sha.dupshacnt            AS nsame " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
+   }
+  ,
+  {
    .name = "sd5",
    .type = DUF_NODE_LEAF,
    .set =

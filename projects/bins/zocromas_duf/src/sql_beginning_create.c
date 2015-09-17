@@ -41,6 +41,7 @@ duf_sql_sequence_t sql_beginning_clear = /* */
 #endif
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_FILENAMES_FULL,
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_MD5_FULL,
+          "DROP TABLE IF EXISTS " DUF_SQL_TABLES_SHA_FULL,
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_MIME_FULL,
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHS_FULL,
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_SD5_FULL,
@@ -98,7 +99,7 @@ duf_sql_sequence_t sql_beginning_create = {
 #endif
           "dev INTEGER NOT NULL, rdev INTEGER, inode INTEGER NOT NULL" /* */
           ", mode INTEGER NOT NULL " /* */
-	  ", nlink INTEGER NOT NULL" /* */
+          ", nlink INTEGER NOT NULL" /* */
           ", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /* */
           ", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /* */
           ", size INTEGER NOT NULL" /* */
@@ -106,15 +107,17 @@ duf_sql_sequence_t sql_beginning_create = {
           ", mtim REAL NOT NULL, mtimn INTEGER NOT NULL" /* */
           ", ctim REAL NOT NULL, ctimn INTEGER NOT NULL" /* */
           ", md5id INTEGER"     /* */
+          ", shaid INTEGER"     /* */
           ", sd5id INTEGER"     /* */
           ", crc32id INTEGER"   /* */
           ", mimeid INTEGER"    /* */
           ", exifid INTEGER"    /* */
           ", filetype TEXT, filestatus INTEGER" /* */
-	  ", dupdatacnt INTEGER " /* */
+          ", dupdatacnt INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           ", FOREIGN KEY(md5id)   REFERENCES " DUF_SQL_TABLES_MD5 "  (" DUF_SQL_IDNAME ") " /* */
+          ", FOREIGN KEY(shaid)   REFERENCES " DUF_SQL_TABLES_SHA "  (" DUF_SQL_IDNAME ") " /* */
           ", FOREIGN KEY(sd5id)   REFERENCES " DUF_SQL_TABLES_SD5 "  (" DUF_SQL_IDNAME ") " /* */
           ", FOREIGN KEY(crc32id) REFERENCES " DUF_SQL_TABLES_CRC32 "(" DUF_SQL_IDNAME ") " /* */
           ", FOREIGN KEY(exifid)  REFERENCES " DUF_SQL_TABLES_EXIF " (" DUF_SQL_IDNAME ") " /* */
@@ -302,6 +305,23 @@ duf_sql_sequence_t sql_beginning_create = {
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_SHA_FULL /* */
+          " ("
+#ifdef DUF_USE_IDCOL
+          DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
+#endif
+          "shasum1 INTEGER NOT NULL, shasum2 INTEGER NOT NULL, shasum3 INTEGER NOT NULL, dupshacnt INTEGER" /* */
+          ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_SHA_FULL "_dup    ON " DUF_SQL_TABLES_SHA " (dupshacnt)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_SHA_FULL "_shasum ON " DUF_SQL_TABLES_SHA " (shasum1,shasum2,shasum3)",
+          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_SHA_FULL "_lastupdated " /* */
+          " AFTER UPDATE OF shasum1, shasum1 ON " DUF_SQL_TABLES_SHA /* */
+          " FOR EACH ROW BEGIN " /* */
+          "    UPDATE " DUF_SQL_TABLES_SHA " SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+
+/******************************************************************************************************/
+/***                                                                                             ******/
+/******************************************************************************************************/
           "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "mdpath ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, " /* */
@@ -390,13 +410,12 @@ duf_sql_sequence_t sql_beginning_create = {
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-	"CREATE  VIEW  IF NOT EXISTS " DUF_DBPREF "v_selected_filenames AS  SELECT fn.rowid AS rowid, fn.rowid AS nameid  "
-	  " FROM " DUF_DBPREF "filenames AS fn LEFT "
-	  " JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.rowid) "
-	  " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md.rowid=fd.md5id) "
-	  " LEFT JOIN " DUF_DBPREF "exif  AS x ON (x.rowid=fd.exifid) "
-	  " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm.rowid) "
-	  " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi.rowid )",
+          "CREATE  VIEW  IF NOT EXISTS " DUF_DBPREF "v_selected_filenames AS  SELECT fn.rowid AS rowid, fn.rowid AS nameid  "
+          " FROM " DUF_DBPREF "filenames AS fn LEFT "
+          " JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.rowid) "
+          " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md.rowid=fd.md5id) "
+          " LEFT JOIN " DUF_DBPREF "exif  AS x ON (x.rowid=fd.exifid) "
+          " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm.rowid) " " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi.rowid )",
 
           NULL}
 };

@@ -14,6 +14,7 @@ typedef struct
   /* obsolete */
   unsigned sd5_obs:1;
   unsigned md5_obs:1;
+  unsigned sha_obs:1;
   unsigned crc32_obs:1;
   unsigned mime_obs:1;
   unsigned exif_obs:1;

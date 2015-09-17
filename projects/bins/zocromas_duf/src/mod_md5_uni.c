@@ -226,6 +226,10 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
 #endif
 
   DEBUG_START(  );
+
+  assert( sizeof( unsigned long long ) == 8 );
+  assert( MD5_DIGEST_LENGTH == 2 * sizeof( unsigned long long ) );
+  assert( MD5_DIGEST_LENGTH == 2 * 64 / 8 );
   if ( md64 && md64[1] && md64[0] )
   {
     if ( !DUF_CONFIGG( cli.disable.flag.insert ) )

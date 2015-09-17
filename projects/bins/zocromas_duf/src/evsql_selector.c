@@ -178,13 +178,14 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
           const char *fs;
 
           fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
-          fieldset = mas_strdup( fs );
+          if ( DUF_NOERROR( *pr ) )
+            fieldset = mas_strdup( fs );
         }
       }
       if ( DUF_NOERROR( *pr ) )
       {
         selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
-        if ( selector && fieldset )
+        if ( DUF_NOERROR( *pr ) && selector && fieldset )
         {
           sql = mas_strdup( "SELECT " );
           sql = mas_strcat_x( sql, fieldset );
@@ -231,6 +232,11 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
   }
   else
     DUF_SHOW_ERROR( "Bad arg" );
+  if ( DUF_IS_ERROR( *pr ) && sql )
+  {
+    mas_free( sql );
+    sql = NULL;
+  }
   return sql;
 #undef  DUF_SELECTOR
 }

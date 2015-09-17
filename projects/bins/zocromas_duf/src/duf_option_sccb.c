@@ -63,7 +63,8 @@ duf_option_$_evaluate_sccb( const char *names )
 #else
   DOR( rt, duf_ev_evnamed_list_std( names ) );
 #endif
-  assert(rt>=0);
+  if ( rt < 0 )
+    T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
 }
 
 void
@@ -81,7 +82,8 @@ duf_option_$_db_open( void )
 
   DOR( rt, duf_main_db_open(  ) );
   DUF_TEST_R( rt );
-  assert(rt>=0);
+  if ( rt < 0 )
+    T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
 }
 
 void

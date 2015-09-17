@@ -130,8 +130,8 @@ duf_sql_bindn_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long lon
   }
   else if ( !r )
   {
+    DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
     DOR( r, DUF_ERROR_BIND_NAME );
-    /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   DEBUG_ENDR( r );
 }

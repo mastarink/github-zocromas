@@ -39,6 +39,10 @@ static duf_action_table_t actions_table[] = {
    .on.flag = {.collect_obs = 1,.md5_obs = 1}
    },
   {.tovector = 1,.in_use = 1,
+   .sccb = &duf_sha_callbacks,
+   .on.flag = {.collect_obs = 1,.sha_obs = 1}
+   },
+  {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_mime_callbacks,
    .on.flag = {.collect_obs = 1,.mime_obs = 1}
    },
