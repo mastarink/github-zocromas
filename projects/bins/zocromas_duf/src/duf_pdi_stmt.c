@@ -61,6 +61,8 @@ duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, 
   }
   DORF( r, duf_main_db_open );
   DOR( r, duf_sql_prepare( sql, &pstmt ) );
+  DUF_TRACE( sql, 2, "@@@@@%d: %s", r, sql );
+  assert(r>=0);
   if ( pstmt )
   {
     is->id = pindex;

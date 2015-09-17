@@ -181,12 +181,13 @@ mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
       r3 = mas_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE ); /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
       assert( mas_sqlite2r_error_code( r3 ) == DUF_ERROR_SQL_NO_TABLE );
 #endif
-      assert( 0 );
+      /* assert( 0 ); */
     }
     else
     {
-      assert( 0 );
+      /* assert( 0 ); */
     }
+    fprintf( stderr, "SQLITE ERROR %d: %s", r3, sqlite3_errmsg( pDb ) );
   }
   /* assert( r3 == 0 ); */
   /* assert( r3 != SQLITE_MISUSE ); */

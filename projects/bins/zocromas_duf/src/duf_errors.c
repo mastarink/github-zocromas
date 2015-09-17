@@ -210,7 +210,7 @@ duf_get_ereport( duf_error_code_t rtest )
     {
       DOCF( re, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
     }
-  }
+  }  
   return re;
 }
 

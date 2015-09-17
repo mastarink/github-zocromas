@@ -51,6 +51,7 @@ typedef struct
   duf_node_type_t type;
   const char *name;
   const char *fieldset;
+  const char *fieldsets[10];
   /* const char *selector; */
   const char *selector2;
   const char *matcher;

@@ -56,13 +56,14 @@ duf_option_$_list_sccb( int x )
 void
 duf_option_$_evaluate_sccb( const char *names )
 {
-  int r = 0;
+  int rt = 0;
 
 #if 0
-  DOR( r, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
+  DOR( rt, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
 #else
-  DOR( r, duf_ev_evnamed_list_std( names ) );
+  DOR( rt, duf_ev_evnamed_list_std( names ) );
 #endif
+  assert(rt>=0);
 }
 
 void
@@ -80,6 +81,7 @@ duf_option_$_db_open( void )
 
   DOR( rt, duf_main_db_open(  ) );
   DUF_TEST_R( rt );
+  assert(rt>=0);
 }
 
 void

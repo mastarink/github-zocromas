@@ -89,6 +89,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            .name = "md leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
+#if 0
            /* "'md5-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
@@ -104,14 +105,26 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            " , fd.md5id AS md5id" /* */
+#else
+           "#md5"
+#endif
+           ,
+           .fieldsets = {
+                         "#basic",
+                         "#plus",
+                         "#md5x",
+                         NULL}
            ,
            .selector2 =         /* */
-           /* "SELECT %s " */
+#if 0
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL /*        */ " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL /*   */ " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL /*       */ " AS sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*         */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL /*         */ " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+#else
+           "#md5-leaf"
+#endif
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */

@@ -144,9 +144,38 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
     {
       int has_where = 0;
       const char *selector = NULL;
-      const char *fieldset = NULL;
+      char *fieldset = NULL;
 
-      fieldset = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
+      if ( sql_set->fieldsets[0] )
+      {
+        const char *const *pfs;
+
+        pfs = sql_set->fieldsets;
+        while ( DUF_NOERROR( *pr ) && pfs && *pfs )
+        {
+          const char *fs;
+
+          fs = duf_unref_fieldset( *pfs, sql_set->type, pr );
+          assert( fs );
+          if ( fieldset )
+          {
+            fieldset = mas_strcat_x( fieldset, "," );
+            fieldset = mas_strcat_x( fieldset, fs );
+          }
+          else
+          {
+            fieldset = mas_strdup( fs );
+          }
+          pfs++;
+        }
+      }
+      else
+      {
+        const char *fs;
+
+        fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
+        fieldset = mas_strdup( fs );
+      }
       selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
       if ( selector && fieldset )
       {
@@ -189,6 +218,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         }
 #endif
       }
+      mas_free( fieldset );
     }
   }
   else

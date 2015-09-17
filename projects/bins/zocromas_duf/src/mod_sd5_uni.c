@@ -68,6 +68,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            .name = "sd leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
+#if 0
            /* "'sd5-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
@@ -75,22 +76,28 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " , fd." DUF_SQL_IDNAME " AS dataid " /* */
            " , fd.inode AS inode " /* */
            " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
-           " , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
-           " , md.dup5cnt AS nsame " /* */
-           ", md.dup5cnt            AS dup5cnt " /* */
-           ", sz.dupzcnt            AS dupzcnt " /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           " , sd.dup2cnt AS nsame " /* */
+           " , md.dup5cnt            AS dup5cnt " /* */
+           " , sz.dupzcnt            AS dupzcnt " /* */
            " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
-           ", fd.md5id AS md5id" /* */
+           " , fd.md5id AS md5id" /* */
+#else
+           "#sd5"
+#endif
            ,
            .selector2 =         /* */
-           /* "SELECT %s " */
-           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+#if 0
+	     " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+#else
+           "#md5-leaf"
+#endif
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */

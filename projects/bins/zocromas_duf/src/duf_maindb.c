@@ -497,7 +497,7 @@ duf_main_db( int argc, char **argv )
                                         1 /* opendir */  ) );
 #  else
   DOR( r, duf_pdi_init_at_config(  ) );
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
+  /* assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) ); */
 
 #  endif
 

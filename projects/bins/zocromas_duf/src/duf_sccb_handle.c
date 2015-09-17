@@ -71,7 +71,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       csql = sqlt;
       DUF_TRACE( temp, 5, "count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
-      duf_bind_ufilter_uni( pstmt, PU, NULL );
+      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, NULL ) );
       DUF_SQL_STEP( rpr, pstmt );
       if ( rpr == MAS_SQL_ROW )
       {
@@ -91,6 +91,13 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
   else
   {
     DUF_TRACE( explain, 0, "didn't count files in db" );
+  }
+  DUF_TEST_R( rpr );
+  if ( rpr < 0 )
+  {
+    T( "@@@@%s", duf_error_name( rpr ) );
+    T( "@@@@%s", duf_error_name( rpr ) );
+    T( "@@@@%s", duf_error_name( rpr ) );
   }
   if ( pr )
     *pr = rpr;
@@ -152,15 +159,13 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #endif
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
-    
+
     DOR( rpr, duf_sccbh_eval_sql_sequence( sccbh /* , PU */  ) );
-    
+
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
     {
-      int rt = 0;
-
-      TOTITEMS = duf_count_total_items( sccbh, &rt ); /* reference */
+      TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
       DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
       /* assert(TOTITEMS=38); */
@@ -173,17 +178,20 @@ TODO scan mode
   1. direct, like now
   2. place ID's to temporary table, then scan in certain order
 */
-    if ( sccb->init_scan )
+    if ( DUF_NOERROR( rpr ) )
     {
-      DUF_TRACE( explain, 0, "to init scan" );
-      DOR( rpr, sccb->init_scan( NULL /* pstmt */ , pdi ) );
+      if ( sccb->init_scan )
+      {
+        DUF_TRACE( explain, 0, "to init scan" );
+        DOR( rpr, sccb->init_scan( NULL /* pstmt */ , pdi ) );
+      }
+      else
+      {
+        DUF_TRACE( explain, 0, "no init scan" );
+      }
+      DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ ,
+                                        duf_pdi_recursive( PDI ) ) );
     }
-    else
-    {
-      DUF_TRACE( explain, 0, "no init scan" );
-    }
-    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ ,
-                                      duf_pdi_recursive( PDI ) ) );
   }
   if ( pr )
     *pr = rpr;

@@ -70,21 +70,24 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            .name = "mime leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
+#if 0
            /* "'mime-leaf' AS fieldset_id, " (* *) */
-           " fn.Pathid AS dirid, fn.name AS filename " /* */
-           ", fn.name AS dfname, fd.size AS filesize " /* */
+           " fn.Pathid AS dirid " /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
            " , fd." DUF_SQL_IDNAME " AS dataid " /* */
-           ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-           "  "                 /* */
-           ", STRFTIME('%s',fd.mtim)   AS mtime " /* */
+           " , fd.inode AS inode " /* */
+           " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", fd.mode               AS filemode " /* */
            ", mi.dupmimecnt         AS nsame " /* */
            ", sz.dupzcnt            AS dupzcnt " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", fd.md5id              AS md5id " /* */
+#else
+	   "#mime"
+#endif
            ,
            .selector2 =         /* */
            " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */

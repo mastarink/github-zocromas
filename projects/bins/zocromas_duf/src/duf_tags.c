@@ -4,7 +4,6 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
-/* #include "duf_sql.h" */
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 #include "duf_sql_stmt_defs.h"
