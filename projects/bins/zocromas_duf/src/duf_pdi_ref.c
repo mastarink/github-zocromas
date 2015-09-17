@@ -1,7 +1,3 @@
-#include <assert.h>
-
-#include <mastar/wrap/mas_std_def.h>
-
 #include "duf_maintenance.h"
 
 #include "duf_ufilter_ref.h"

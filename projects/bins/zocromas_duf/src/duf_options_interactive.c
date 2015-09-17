@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -6,9 +5,6 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 

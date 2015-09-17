@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,8 +8,6 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_maintenance.h"

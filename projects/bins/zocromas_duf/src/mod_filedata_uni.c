@@ -2,37 +2,19 @@
 
 #include <fcntl.h>              /* Definition of AT_* constants */
 
-
-
-
-
-#include <assert.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
 
-
 #include "duf_config_ref.h"
 
-
 #include "duf_levinfo_ref.h"
-
-
 #include "duf_sql_defs.h"
-
-
-
-
 #include "duf_filedata.h"
 
 /* #include "duf_dbg.h" */
 
-/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
-
 
 /* ########################################################################################## */
 static int register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );

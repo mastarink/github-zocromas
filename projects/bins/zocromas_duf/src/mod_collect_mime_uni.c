@@ -2,49 +2,40 @@
 
 #include <string.h>
 #include <errno.h>
+#include <magic.h>              /* man libmagic */
 
-/* man libmagic */
-#include <magic.h>
 
-#include <assert.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 
 #include "duf_maintenance.h"
 
-
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
 #include "duf_pdi_context.h"
-#include "duf_pdi_stmt.h"
 #include "duf_pdi_ref.h"
+#include "duf_pdi_stmt.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_context.h"
 
-#include "duf_sql_defs.h"
 #include "duf_sql_stmt_defs.h"
+
+#include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
-
-/* #include "duf_sql.h" */
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
 #include "sql_beginning_tables.h"
-
-
-
 /* ########################################################################################## */
 static int dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
-static duf_sql_sequence_t final_sql = { /* */
+static duf_sql_sequence_t final_sql = /* */
+{
   .name = "final @ ...",
   .done = 0,
   .sql = {

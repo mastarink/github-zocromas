@@ -6,17 +6,11 @@
 
 
 
-#include <assert.h>
 #include <string.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
 
 #include "duf_maintenance.h"
 
 
-#include "duf_pdi.h"
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 

@@ -22,8 +22,8 @@ sfind duf_sql_stmt_defs.h
 " tab sfind duf_sqlite.c
 " sfind duf_sqlite.h
 
-tab sfind duf_sqlite_select.c
-sfind duf_sqlite_select.h
+" tab sfind duf_sqlite_select.c
+" sfind duf_sqlite_select.h
 
 tab sfind duf_sql_bind.c
 sfind duf_sql_bind.h

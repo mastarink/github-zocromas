@@ -1,8 +1,4 @@
-#include <assert.h>
 #include <libgen.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include "duf_maintenance.h"
 

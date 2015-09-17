@@ -38,11 +38,7 @@
 */
 
 #include <time.h>
-#include <assert.h>
 #include <signal.h>
-
-
-#include <mastar/wrap/mas_std_def.h>
 
 #include "duf_maintenance.h"
 

@@ -1,17 +1,14 @@
 #define DUF_SQL_PDI_STMT
 
-#include <assert.h>
 #include <string.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref.h"
+
 #include "duf_sql_defs.h"
 
-#include "duf_path2db.h"        /* duf_dirname2dirid */
+#include "duf_path2db.h"        /* duf_levinfo_stat2dirid */
 
 
 #include "sql_beginning_selected.h"

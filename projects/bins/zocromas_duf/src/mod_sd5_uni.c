@@ -3,47 +3,41 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-
 #include <openssl/md5.h>
 
-#include <assert.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 
 #include "duf_maintenance.h"
 
-
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
+
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_levinfo_ref.h"
 
 
-#include "duf_sql_defs.h"
 #include "duf_sql_stmt_defs.h"
+
+#include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
-/* #include "duf_sql.h" */
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
-/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
-
-
 /* ########################################################################################## */
 static int sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
-static duf_sql_sequence_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = /* */
+{
   .name = "final @ sd5",
+  .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SD5_FULL " SET dup2cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_SD5_FULL " AS sd " /* */
@@ -210,7 +204,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
-       sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], &lr );
+        sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], &lr );
     }
     else if ( !lr /* assume SQLITE_OK */  )
     {

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <string.h>
 
 #include <sys/types.h>
@@ -6,8 +5,6 @@
 #include <unistd.h>
 
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 

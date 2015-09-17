@@ -1,10 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <assert.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include "duf_maintenance.h"
 

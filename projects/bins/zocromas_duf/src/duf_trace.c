@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
@@ -9,8 +8,7 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
+#include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
 #include "duf_print_defs.h"

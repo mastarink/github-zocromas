@@ -1,14 +1,9 @@
 #define DUF_SQL_PDI_STMT
 
 #include <string.h>
-#include <assert.h>
 #include <unistd.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
 #include <mastar/tools/mas_arg_tools.h>
-
 
 #include "duf_maintenance.h"
 

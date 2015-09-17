@@ -1,6 +1,3 @@
-#include <assert.h>
-
-#include <mastar/wrap/mas_std_def.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_maintenance.h"

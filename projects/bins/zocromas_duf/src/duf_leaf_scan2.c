@@ -1,14 +1,8 @@
 /* 20150820.085357 */
-#include <assert.h>
 #include <string.h>
 #include <stddef.h>
 
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
 #include "duf_maintenance.h"
-
-/* #include "duf_config_ref.h"     (* DUF_TRACE *) */
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"

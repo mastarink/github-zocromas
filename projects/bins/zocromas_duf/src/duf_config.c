@@ -1,10 +1,6 @@
 /* #include <stdarg.h> */
 #include <string.h>
 #include <sys/time.h>
-#include <assert.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 

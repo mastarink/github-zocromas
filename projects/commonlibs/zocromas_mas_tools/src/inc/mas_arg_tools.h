@@ -1,6 +1,8 @@
 #ifndef MAS_ARG_TOOLS_H
 #  define MAS_ARG_TOOLS_H
 
+#  include <sys/types.h>
+
 #  define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
 #  define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
 

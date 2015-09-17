@@ -1,10 +1,6 @@
-#include <assert.h>
 #include <string.h>
 #include <time.h>
 
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -14,7 +10,7 @@
 #include "duf_config_ref.h"
 
 
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_cmd.h"
 
 /* ###################################################################### */
