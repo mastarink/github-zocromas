@@ -1,9 +1,12 @@
 find duf_sql.c
 sfind duf_sql.h
-sfind duf_sql2.h
+" sfind duf_sql2.h
 
 tab sfind duf_sql_open.c
 sfind duf_sql_open.h
+
+tab sfind duf_sql_positional.c
+sfind duf_sql_positional.h
 
 tab sfind duf_sql_prepared.c
 sfind duf_sql_prepared.h

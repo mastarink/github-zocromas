@@ -11,10 +11,12 @@
 #include "duf_pdi_stmt.h"
 
 #include "duf_sql.h"
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_prepared.h"
 #include "duf_sql_bind.h"
-#include "duf_sql2.h"
+
 
 /* ###################################################################### */
 #include "duf_tags.h"
@@ -27,7 +29,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
   unsigned long long tagnameid = 0;
   int changes = 0;
   static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tagnames ( name ) VALUES (:tagName )";
-  static const char *sqlv = "SELECT rowid AS tagnameid FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
+  static const char *sqlv = "SELECT rowid AS tagnameId FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
 
   {
     DUF_SQL_START_STMT( pdi, insert_tagname, sql, rpr, pstmt );
@@ -48,7 +50,11 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
     {
       rpr = 0;
       DUF_TRACE( select, 0, "<selected>" );
+#if 0
       tagnameid = duf_sql_column_long_long( pstmt, 0 );
+#else
+      tagnameid = DUF_GET_UFIELD2( tagnameId );
+#endif
       DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
     }
 
@@ -72,7 +78,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
   unsigned long long tagnameid = 0;
   int changes = 0;
   static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tags ( tagnameid, itemtype, itemid ) VALUES (:tagNameID, :itemType, :itemID )";
-  static const char *sqlv = "SELECT rowid AS tagid FROM " DUF_DBPREF "tags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
+  static const char *sqlv = "SELECT rowid AS tagId FROM " DUF_DBPREF "tags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
 
   tagnameid = duf_add_tagname( pdi, tag_name, &rpr );
   {
@@ -98,7 +104,11 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     {
       rpr = 0;
       DUF_TRACE( select, 0, "<selected>" );
+#if 0
       tagid = duf_sql_column_long_long( pstmt, 0 );
+#else
+      tagid = DUF_GET_UFIELD2( tagId );
+#endif
       DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
     }
 

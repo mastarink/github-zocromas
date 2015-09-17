@@ -19,9 +19,11 @@
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_prepared.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-/* #include "duf_sql2.h" */
+
+#include "duf_sql_positional.h"
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"

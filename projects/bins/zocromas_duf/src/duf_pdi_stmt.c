@@ -7,7 +7,6 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_sql2.h"
 #include "duf_sql_prepared.h"
 #include "duf_maindb.h"
 

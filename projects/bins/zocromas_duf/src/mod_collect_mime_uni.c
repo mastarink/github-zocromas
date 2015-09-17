@@ -32,12 +32,10 @@
 
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
-#include "duf_sql2.h"
 #include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
-/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
 
 
@@ -164,25 +162,29 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
     if ( need_id )
     {
-      const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime";
+      const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime";
 
-      /* const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
+      /* const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
 
-      DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt_select );
-      DUF_SQL_BIND_S( Mime, mime, lr, pstmt_select );
-      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_select ); */
-      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_select ); */
-      DUF_SQL_STEP( lr, pstmt_select );
+      DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt );
+      DUF_SQL_BIND_S( Mime, mime, lr, pstmt );
+      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt ); */
+      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt ); */
+      DUF_SQL_STEP( lr, pstmt );
       if ( lr == MAS_SQL_ROW )
       {
         DUF_TRACE( mod, 0, "<selected>" );
-        mimeid = duf_sql_column_long_long( pstmt_select, 0 );
+#if 0
+        mimeid = duf_sql_column_long_long( pstmt, 0 );
+#else
+        mimeid = DUF_GET_UFIELD2( mimeId );
+#endif
         lr = 0;
       }
       if ( lr == MAS_SQL_DONE )
         lr = 0;
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_mime, lr, pstmt_select );
+      DUF_SQL_END_STMT( select_mime, lr, pstmt );
     }
 
     if ( !mimeid && !DUF_CONFIGG( cli.disable.flag.insert ) )

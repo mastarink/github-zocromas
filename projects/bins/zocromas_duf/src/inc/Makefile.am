@@ -59,7 +59,6 @@ noinst_HEADERS=duf.h \
 	std_mod_sets.h \
 	duf_mod_defs.h \
 	duf_print.h duf_printb.h duf_fileinfo.h duf_format_types.h \
-	duf_sql2.h \
 	std_selectors.h duf_sql_types.h \
 	duf_sql_defs.h \
 	duf_sql_stmt_defs.h \
@@ -68,6 +67,7 @@ noinst_HEADERS=duf.h \
 	duf_sql_error.h \
 	duf_sql.h \
 	duf_sql_open.h \
+	duf_sql_positional.h \
 	duf_sql_prepared.h \
 	duf_sqlite_select.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \

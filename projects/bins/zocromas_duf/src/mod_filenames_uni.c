@@ -27,7 +27,6 @@
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql.h"
 #include "duf_sql_bind.h"
-/* #include "duf_sql2.h" */
 #include "duf_sql_prepared.h"
 
 
@@ -37,7 +36,6 @@
 /* #include "duf_dbg.h" */
 #include "duf_mod_defs.h"
 
-/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
 
 

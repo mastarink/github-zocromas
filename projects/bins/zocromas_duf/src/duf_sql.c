@@ -109,24 +109,6 @@ duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, vo
   DEBUG_ENDR( r );
 }
 
-int
-duf_sql_column_int( mas_sqlite_stmt_t * stmt, int icol )
-{
-  return mas_sqlite_column_int( stmt, icol );
-}
-
-long long
-duf_sql_column_long_long( mas_sqlite_stmt_t * stmt, int icol )
-{
-  return mas_sqlite_column_long_long( stmt, icol );
-}
-
-const char *
-duf_sql_column_string( mas_sqlite_stmt_t * stmt, int icol )
-{
-  return mas_sqlite_column_string( stmt, icol );
-}
-
 static char *
 duf_sql_vmprintf( const char *fmt, va_list args )
 {
