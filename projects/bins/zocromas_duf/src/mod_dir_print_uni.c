@@ -185,9 +185,9 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_files_gen );
+          sformat = DUF_CONFIGG( cli.output.sformat.files_gen );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_files_list );
+          sformat = DUF_CONFIGG( cli.output.sformat.files_list );
       }
 
       if ( !sformat )
@@ -283,10 +283,10 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
           sformat = fmt->dirs.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_dirs_gen );
+          sformat = DUF_CONFIGG( cli.output.sformat.dirs_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_dirs_list );
+          sformat = DUF_CONFIGG( cli.output.sformat.dirs_list );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
 

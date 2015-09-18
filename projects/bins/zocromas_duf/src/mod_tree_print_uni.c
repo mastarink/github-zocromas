@@ -165,9 +165,9 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       const char *sformat = NULL;
       size_t slen = 0;
 
-      sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_gen_tree );
+      sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_gen_tree );
       if ( !sformat_pref )
-        sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_files_tree );
+        sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_files_tree );
 
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
@@ -187,10 +187,10 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           sformat = fmt->files.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_files_gen );
+          sformat = DUF_CONFIGG( cli.output.sformat.files_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat_files_tree );
+          sformat = DUF_CONFIGG( cli.output.sformat.files_tree );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
       if ( !sformat )
@@ -268,9 +268,9 @@ tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
     const char *sformat_pref = NULL;
     const char *sformat = NULL;
 
-    sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_gen_tree );
+    sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_gen_tree );
     if ( !sformat_pref )
-      sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_dirs_tree );
+      sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_dirs_tree );
 
     if ( !sformat_pref )
       sformat_pref = " %6s  %4s%P";
@@ -288,10 +288,10 @@ tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
         sformat = fmt->dirs.argv[use];
       DUF_TRACE( temp, 5, "sformat A: %s", sformat );
       if ( !sformat )
-        sformat = DUF_CONFIGG( cli.output.sformat_dirs_gen );
+        sformat = DUF_CONFIGG( cli.output.sformat.dirs_gen );
       DUF_TRACE( temp, 5, "sformat B: %s", sformat );
       if ( !sformat )
-        sformat = DUF_CONFIGG( cli.output.sformat_dirs_tree );
+        sformat = DUF_CONFIGG( cli.output.sformat.dirs_tree );
       DUF_TRACE( temp, 5, "sformat C: %s", sformat );
     }
 

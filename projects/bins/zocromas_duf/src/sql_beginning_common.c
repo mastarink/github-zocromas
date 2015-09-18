@@ -14,7 +14,8 @@ duf_sql_sequence_t sql_beginning_common = {.done = 0,
           "PRAGMA synchronous = OFF" /* */ ,
           "PRAGMA encoding = 'UTF-8'" /* */ ,
           "PRAGMA temp_store = 2" /* */ ,
-	  "PRAGMA locking_mode = EXCLUSIVE" /**/,
-
+          "PRAGMA locking_mode = EXCLUSIVE" /**/,
+          "PRAGMA automatic_index = 1" /* */ ,
+          /* "PRAGMA foreign_keys = 1" (* *) , */
           NULL}
 };

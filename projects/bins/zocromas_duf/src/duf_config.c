@@ -205,38 +205,38 @@ duf_cfg_delete( duf_config_t * cfg )
       mas_del_argv( cfg->cli.output.as_formats.gen.dirs.argc, cfg->cli.output.as_formats.gen.dirs.argv, 0 );
     }
     {
-      mas_free( cfg->cli.output.sformat_files_tree );
-      cfg->cli.output.sformat_files_tree = NULL;
+      mas_free( cfg->cli.output.sformat.files_tree );
+      cfg->cli.output.sformat.files_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat_dirs_tree );
-      cfg->cli.output.sformat_dirs_tree = NULL;
+      mas_free( cfg->cli.output.sformat.dirs_tree );
+      cfg->cli.output.sformat.dirs_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat_prefix_gen_tree );
-      cfg->cli.output.sformat_prefix_gen_tree = NULL;
+      mas_free( cfg->cli.output.sformat.prefix_gen_tree );
+      cfg->cli.output.sformat.prefix_gen_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat_prefix_files_tree );
-      cfg->cli.output.sformat_prefix_files_tree = NULL;
+      mas_free( cfg->cli.output.sformat.prefix_files_tree );
+      cfg->cli.output.sformat.prefix_files_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat_prefix_dirs_tree );
-      cfg->cli.output.sformat_prefix_dirs_tree = NULL;
+      mas_free( cfg->cli.output.sformat.prefix_dirs_tree );
+      cfg->cli.output.sformat.prefix_dirs_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat_files_list );
-      cfg->cli.output.sformat_files_list = NULL;
+      mas_free( cfg->cli.output.sformat.files_list );
+      cfg->cli.output.sformat.files_list = NULL;
 
-      mas_free( cfg->cli.output.sformat_dirs_list );
-      cfg->cli.output.sformat_dirs_list = NULL;
+      mas_free( cfg->cli.output.sformat.dirs_list );
+      cfg->cli.output.sformat.dirs_list = NULL;
 
-      mas_free( cfg->cli.output.sformat_files_gen );
-      cfg->cli.output.sformat_files_gen = NULL;
+      mas_free( cfg->cli.output.sformat.files_gen );
+      cfg->cli.output.sformat.files_gen = NULL;
+
+      mas_free( cfg->cli.output.sformat.dirs_gen );
+      cfg->cli.output.sformat.dirs_gen = NULL;
 
       mas_free( cfg->cli.output.history_filename );
       cfg->cli.output.history_filename = NULL;
 
       mas_free( cfg->cli.output.header );
       cfg->cli.output.header = NULL;
-
-      mas_free( cfg->cli.output.sformat_dirs_gen );
-      cfg->cli.output.sformat_dirs_gen = NULL;
     }
 
     mas_free( cfg );

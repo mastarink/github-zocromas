@@ -90,6 +90,29 @@ duf_sql_sequence_t sql_beginning_create = {
           " ON filefilter FOR EACH ROW BEGIN " /* */
           "   UPDATE filefilter SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 #endif
+
+/******************************************************************************************************/
+/***                                                                                             ******/
+/******************************************************************************************************/
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL " ("
+#ifdef DUF_USE_IDCOL
+          DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
+#endif
+          "mime text NOT NULL, dupmimecnt INTEGER" /* */
+          /*", charset text NOT NULL, tail text" *//* */
+          ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
+
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_uniq ON " DUF_SQL_TABLES_MIME " (mime" /* */
+          /* ", charset" */ " )",
+
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_dup ON " DUF_SQL_TABLES_MIME " (dupmimecnt)",
+
+          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_lastupdated " /* */
+          " AFTER UPDATE OF " DUF_SQL_TABLES_MIME /* */
+          /* ", charset, tail " *//* */
+          " ON " DUF_SQL_TABLES_MIME " FOR EACH ROW BEGIN " /* */
+          "   UPDATE " DUF_SQL_TABLES_MIME " SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+	  
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
@@ -191,7 +214,9 @@ duf_sql_sequence_t sql_beginning_create = {
           ", dirname TEXT, parentid INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-          ", FOREIGN KEY(parentid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") )",
+          /* ", FOREIGN KEY(parentid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") " (* *) */
+	  " ) "
+          ,
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dirname      ON " DUF_SQL_TABLES_PATHS " (dirname)",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev_uniq     ON " DUF_SQL_TABLES_PATHS " (dev,inode)",
 
@@ -230,27 +255,6 @@ duf_sql_sequence_t sql_beginning_create = {
           " ON " DUF_SQL_TABLES_SIZES " FOR EACH ROW BEGIN " /* */
           "   UPDATE " DUF_SQL_TABLES_SIZES " SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
-/******************************************************************************************************/
-/***                                                                                             ******/
-/******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL " ("
-#ifdef DUF_USE_IDCOL
-          DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
-#endif
-          "mime text NOT NULL, dupmimecnt INTEGER" /* */
-          /*", charset text NOT NULL, tail text" *//* */
-          ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
-
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_uniq ON " DUF_SQL_TABLES_MIME " (mime" /* */
-          /* ", charset" */ " )",
-
-          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_dup ON " DUF_SQL_TABLES_MIME " (dupmimecnt)",
-
-          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_lastupdated " /* */
-          " AFTER UPDATE OF " DUF_SQL_TABLES_MIME /* */
-          /* ", charset, tail " *//* */
-          " ON " DUF_SQL_TABLES_MIME " FOR EACH ROW BEGIN " /* */
-          "   UPDATE " DUF_SQL_TABLES_MIME " SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/

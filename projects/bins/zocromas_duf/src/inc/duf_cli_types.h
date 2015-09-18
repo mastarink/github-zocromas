@@ -39,11 +39,28 @@ typedef struct
 
 typedef struct
 {
+  char *dirs_tree;
+  char *files_tree;
+  
+  char *prefix_gen_tree;
+  char *prefix_files_tree;
+  char *prefix_dirs_tree;
+  
+  char *dirs_list;
+  char *files_list;
+
+  char *dirs_gen;
+  char *files_gen;
+} duf_sformats_t;
+
+typedef struct
+{
   unsigned level;
   unsigned fun_width;
   unsigned handleid;
   unsigned max_width;
   duf_asformats_t as_formats;
+#if 0
   char *sformat_dirs_tree;
   char *sformat_files_tree;
   char *sformat_prefix_gen_tree;
@@ -53,6 +70,9 @@ typedef struct
   char *sformat_files_list;
   char *sformat_dirs_gen;
   char *sformat_files_gen;
+#else
+  duf_sformats_t sformat;
+#endif
   char *file;
   FILE *out;
   char *history_filename;
