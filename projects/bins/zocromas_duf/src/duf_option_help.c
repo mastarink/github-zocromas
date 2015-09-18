@@ -700,6 +700,10 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run . -dfR --min-mimesame=2 --evaluate=tree	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR --min-exifsame=2 --evaluate=tree	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20150917.204538 ============" );
+  DUF_PRINTF( 0, "  run test/tree/ --drop-tables  -PO -dfR  --evaluate-sccb=sha --progress	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-md5=test/tree/t2.html 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-sha=test/tree/t2.html 	- %s", "-= \"\" =-" );
 
 
   DUF_PRINTF( 0, "=============================================================" );

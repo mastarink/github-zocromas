@@ -18,6 +18,7 @@ tab sfind mod_directories_uni.c
 " tab sfind mod_mdpath_uni.c
 
 tab sfind mod_md5_uni.c
+tab sfind mod_sha_uni.c
 " tab sfind mod_collect_noopenat_md5_uni.c
 tab sfind mod_sd5_uni.c
 tab sfind mod_crc32_uni.c

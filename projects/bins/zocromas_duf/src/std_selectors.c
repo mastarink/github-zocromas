@@ -29,6 +29,7 @@ static duf_selector_t _all_selectors[] = {
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL /*                    */ " AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SHA_FULL /*                     */ " AS sh ON (sh." DUF_SQL_IDNAME "=fd.shaid) " /* */
    },
   {
    .name = "std-ns-leaf",       /* ns: without selected table(s) */
@@ -41,6 +42,7 @@ static duf_selector_t _all_selectors[] = {
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL /*                    */ " AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SHA_FULL /*                     */ " AS sh ON (sh." DUF_SQL_IDNAME "=fd.shaid) " /* */
    },
   {
    .name = "md5-leaf",          /* ns: without selected table(s) */

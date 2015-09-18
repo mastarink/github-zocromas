@@ -266,6 +266,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd.md5id              AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
+   ", sh.shasum1, sh.shasum2, sh.shasum3 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */

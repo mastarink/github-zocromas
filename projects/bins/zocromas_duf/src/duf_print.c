@@ -83,6 +83,7 @@ typedef enum
 {
   DUF_SFMT_CHR_SUFFIX = /*             */ '~',
   DUF_SFMT_CHR_MD5SUM = /*             */ '@',
+  DUF_SFMT_CHR_SHASUM = /*             */ '.',
   DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',
   DUF_SFMT_CHR_UNDERLINE = /*          */ '_',
   DUF_SFMT_CHR_CAMERA = /*             */ 'a',
@@ -620,6 +621,13 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
     else
       snprintf( pbuffer, bfsz, "%-32s", "-" );
+    ok++;
+    break;
+  case DUF_SFMT_CHR_SHASUM:    /* shasum */
+    if ( pfi->shasum1 || pfi->shasum2 || pfi->shasum3 )
+      snprintf( pbuffer, bfsz, "%08llx:%016llx:%016llx", pfi->shasum1, pfi->shasum2, pfi->shasum3 );
+    else
+      snprintf( pbuffer, bfsz, "%-40s", "-" );
     ok++;
     break;
   case DUF_SFMT_CHR_EXIFID:    /* exifid */

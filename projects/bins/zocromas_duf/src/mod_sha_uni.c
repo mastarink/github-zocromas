@@ -174,7 +174,7 @@ duf_insert_sha_uni( duf_depthinfo_t * pdi, unsigned long long *sha, const char *
       static const char *sql =
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA_FULL " ( shasum1, shasum2, shasum3 ) VALUES ( :shasum1, :shasum2, :shasum3 )";
 
-      DUF_TRACE( sha, 0, "%016llx%016llx%016llx %s%s", sha[2], sha[1], sha[0], real_path, msg );
+      DUF_TRACE( sha, 0, "%08llx%016llx%016llx %s%s", sha[2], sha[1], sha[0], real_path, msg );
       DUF_SQL_START_STMT( pdi, insert_sha, sql, lr, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_BIND_LL( shasum1, sha[2], lr, pstmt );
@@ -231,7 +231,7 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( SHA_Init( &ctx ) != 1 ) )
+      if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( SHA1_Init( &ctx ) != 1 ) )
         DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
       DUF_TEST_R( r );
       {
@@ -255,7 +255,7 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
           }
           if ( ry > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
           {
-            if ( SHA_Update( &ctx, buffer, ry ) != 1 )
+            if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
               DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
           }
           if ( ry <= 0 )
@@ -270,7 +270,7 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && SHA_Final( pmd, &ctx ) != 1 )
+  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
   DEBUG_ENDR( r );
 }
@@ -297,15 +297,16 @@ static int
 sha_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  unsigned char ashar[SHA_DIGEST_LENGTH];
-
+#define ASHA_DELTA 4
+  unsigned char ashar[SHA_DIGEST_LENGTH + ASHA_DELTA];
 
   DUF_SFIELD2( filename );
   DUF_TRACE( sha, 0, "+ %s", filename );
-
+  memset( ashar, 0, sizeof( ashar ) );
   if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
     DOR( r, duf_make_shar_uni( pdi, ashar ) );
 
+  assert( sizeof( ashar ) == 20 + ASHA_DELTA );
   if ( DUF_NOERROR( r ) )
   {
     unsigned long long shaid = 0;
@@ -340,8 +341,11 @@ sha_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( sha, 0, "%016llx%016llx%016llx : shaid: %llu", pmd[3], pmd[1], pmd[0], shaid );
+    DUF_TRACE( sha, 4, "%02x:%2x:%2x:%2x:%2x:%2x", ashar[SHA_DIGEST_LENGTH - 0], ashar[SHA_DIGEST_LENGTH - 1], ashar[SHA_DIGEST_LENGTH - 2],
+               ashar[SHA_DIGEST_LENGTH - 3], ashar[SHA_DIGEST_LENGTH - 4], ashar[SHA_DIGEST_LENGTH - 5] );
+    DUF_TRACE( sha, 0, "%08llx%016llx%016llx : shaid: %llu", pmd[2], pmd[1], pmd[0], shaid );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], shaid ); */
   }
   DEBUG_ENDR( r );
+#undef  ASHA_DELTA
 }

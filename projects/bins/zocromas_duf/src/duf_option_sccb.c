@@ -65,6 +65,7 @@ duf_option_$_evaluate_sccb( const char *names )
 #endif
   if ( rt < 0 )
     T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
+  assert(rt>=0);
 }
 
 void
@@ -84,6 +85,7 @@ duf_option_$_db_open( void )
   DUF_TEST_R( rt );
   if ( rt < 0 )
     T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
+  assert(rt>=0);
 }
 
 void

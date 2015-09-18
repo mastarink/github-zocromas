@@ -42,8 +42,11 @@
         "    (:minDirID    IS NULL OR  fn.Pathid   >=:minDirID " /*                                 */ ") AND "  \
         "    (:maxDirID    IS NULL OR  fn.Pathid   <=:maxDirID " /*                                 */ ") AND "  \
 \
-        "    (:minSame     IS NULL OR  md.dup5cnt  >=:minSame " /*                                  */ ") AND "  \
-        "    (:maxSame     IS NULL OR  md.dup5cnt  <=:maxSame " /*                                  */ ") AND "  \
+        "    (:minMd5Same  IS NULL OR  md.dup5cnt  >=:minMd5Same " /*                               */ ") AND "  \
+        "    (:maxMd5Same  IS NULL OR  md.dup5cnt  <=:maxMd5Same " /*                               */ ") AND "  \
+\
+        "    (:minShaSame  IS NULL OR  sh.dupshacnt  >=:minShaSame " /*                             */ ") AND "  \
+        "    (:maxShaSame  IS NULL OR  sh.dupshacnt  <=:maxShaSame " /*                             */ ") AND "  \
 \
         "    (:minSizeSame IS NULL OR  sz.dupzcnt  >=:minSizeSame " /*                              */ ") AND "  \
         "    (:maxSizeSame IS NULL OR  sz.dupzcnt  <=:maxSizeSame " /*                              */ ") AND "  \
@@ -62,19 +65,25 @@
         "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
         "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
-        "                  ) " \
-	" AND ( " \
+        "    ) AND " \
+        "    (:Name        IS NULL OR fn.name      = :Name " /*                                     */ ") AND "  \
+        "    ( ( :GSameAsSha  IS NULL OR :GSameShaPathID IS NULL ) "  \
+        "                          OR sh." DUF_SQL_IDNAME "=(SELECT fdb.shaid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+        "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+        "                                     WHERE fnb.name = :GSameAsSha AND fnb.Pathid=:GSameShaPathID ) "  \
+        "    ) AND " \
+	"    ( " \
 	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
 	"         OR " \
 	"            fn.rowid IN (SELECT itemid FROM tags AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn.rowid) " \
 	"                         WHERE itemtype='filename' and tn.name IN " \
 	"                                          (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))  " \
-	"     ) " \
-	" AND " \
-        "  ( :Camera       IS NULL OR xm.model     LIKE :Camera                            ) AND "  \
-        "  ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
-        "  ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \
-        "  ( :GNameX       IS NULL OR fn.name  NOT GLOB :GNameX                            ) AND "  \
+	"    ) AND " \
+	" " \
+        "    ( :Camera       IS NULL OR xm.model     LIKE :Camera                            ) AND "  \
+        "    ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
+        "    ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \
+        "    ( :GNameX       IS NULL OR fn.name  NOT GLOB :GNameX                            ) AND "  \
 	" 1 "
 
 

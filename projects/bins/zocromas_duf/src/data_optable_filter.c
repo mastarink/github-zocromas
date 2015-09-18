@@ -22,12 +22,19 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_filter = {
   .table =                      /* */
   {
-   {.o = {DO_Q( "same" ) /*             */ , DO_A_O /* */ , DO_VUF( SAME )} /*             */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINMAXLL, same ),.call = {.value = {.u = 2}} /*                       */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "min-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MINSAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINLL, same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MAXSAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MAXLL, same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "same" ) /*             */ , DO_A_O /* */ , DO_VUF( MD5SAME )} /*             */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINMAXLL, md5same ),.call = {.value = {.u = 2}} /*                       */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MINMD5SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINLL, md5same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MAXMD5SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MAXLL, md5same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+
+   {.o = {DO_Q( "shasame" ) /*             */ , DO_A_O /* */ , DO_VUF( SHASAME )} /*             */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINMAXLL, shasame ),.call = {.value = {.u = 2}} /*                       */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-shasame" ) /*         */ , DO_A_R /* */ , DO_VUF( MINSHASAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINLL, shasame ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-shasame" ) /*         */ , DO_A_R /* */ , DO_VUF( MAXSHASAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MAXLL, shasame ) /*                                                      */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "exifsame" ) /*         */ , DO_A_O /* */ , DO_VUF( EXIFSAME )} /*         */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MINMAXLL, exifsame ),.call = {.value = {.u = 2}} /*                   */ , DO_H(  .... ) /*                            */ },
@@ -127,6 +134,13 @@ const duf_longval_extended_table_t optable_filter = {
    {.o = {DO_Q( "max-md5id" ) /*        */ , DO_A_R /* */ , DO_VUF( MAXMD5ID )} /*         */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MAXLL, md5id ) /*                                                     */ , DO_H(  .... ) /*                            */ },
 
+   {.o = {DO_Q( "shaid" ) /*            */ , DO_A_R /* */ , DO_VUF( SHAID )} /*            */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINMAXLL, shaid ) /*                                                  */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-shaid" ) /*        */ , DO_A_R /* */ , DO_VUF( MINSHAID )} /*         */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINLL, shaid ) /*                                                     */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-shaid" ) /*        */ , DO_A_R /* */ , DO_VUF( MAXSHAID )} /*         */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MAXLL, shaid ) /*                                                     */ , DO_H(  .... ) /*                            */ },
+
    {.o = {DO_Q( "sd5id" ) /*            */ , DO_A_R /* */ , DO_VUF( SD5ID )} /*            */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MINMAXLL, sd5id ) /*                                                  */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "min-sd5id" ) /*        */ , DO_A_R /* */ , DO_VUF( MINSD5ID )} /*         */ , DO_CL( FILTER ) /*   */ ,
@@ -183,6 +197,8 @@ const duf_longval_extended_table_t optable_filter = {
 
    {.o = {DO_Q( "same-as-md5" ) /*      */ , DO_A_R /* */ , DO_VUF( SAME_AS )} /*          */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, same_md5 ) /*                                                    */ , DO_H( same md5 ) /*                         */ },
+   {.o = {DO_Q( "same-as-sha" ) /*      */ , DO_A_R /* */ , DO_VUF( SAME_AS_SHA )} /*      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, same_sha ) /*                                                    */ , DO_H( same sha ) /*                         */ },
 
    {.o = {.name = NULL}}
    }

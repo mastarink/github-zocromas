@@ -81,6 +81,9 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( dataid );
   DUF_UFIELD2( md5sum1 );
   DUF_UFIELD2( md5sum2 );
+  DUF_UFIELD2( shasum1 );
+  DUF_UFIELD2( shasum2 );
+  DUF_UFIELD2( shasum3 );
   DUF_UFIELD2( mtime );
   DUF_UFIELD2( dev );
   DUF_UFIELD2( uid );
@@ -155,6 +158,9 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
+    fi.shasum1 = shasum1;
+    fi.shasum2 = shasum2;
+    fi.shasum3 = shasum3;
 
     if ( DUF_ACTG_FLAG( use_binformat ) )
     {
