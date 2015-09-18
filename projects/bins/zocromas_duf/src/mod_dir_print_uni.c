@@ -53,17 +53,19 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .init_scan = NULL,            /* */
   .no_progress = 1,
 #if 0
+#  if 0
   .beginning_sql_seq = &sql_create_selected,
-#else
+#  else
   .beginning_sql_seq = &sql_update_selected,
+#  endif
 #endif
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = print_node_before2,
   /* .leaf_scan = print_leaf, */
   .leaf_scan2 = print_leaf2,
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
 };
 
 /* ########################################################################################## */
@@ -81,9 +83,9 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( dataid );
   DUF_UFIELD2( md5sum1 );
   DUF_UFIELD2( md5sum2 );
-  DUF_UFIELD2( shasum1 );
-  DUF_UFIELD2( shasum2 );
-  DUF_UFIELD2( shasum3 );
+  DUF_UFIELD2( sha1sum1 );
+  DUF_UFIELD2( sha1sum2 );
+  DUF_UFIELD2( sha1sum3 );
   DUF_UFIELD2( mtime );
   DUF_UFIELD2( dev );
   DUF_UFIELD2( uid );
@@ -158,9 +160,9 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
-    fi.shasum1 = shasum1;
-    fi.shasum2 = shasum2;
-    fi.shasum3 = shasum3;
+    fi.sha1sum1 = sha1sum1;
+    fi.sha1sum2 = sha1sum2;
+    fi.sha1sum3 = sha1sum3;
 
     if ( DUF_ACTG_FLAG( use_binformat ) )
     {
@@ -172,6 +174,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     else
     {
       const char *sformat = NULL;
+      size_t slen = 0;
 
       {
         int use;
@@ -189,7 +192,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
+      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width - slen );
     }
   }
 
@@ -267,6 +270,7 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
     else
     {
       const char *sformat = NULL;
+      size_t slen = 0;
 
       {
         int use;
@@ -289,7 +293,7 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
       if ( !sformat )
         sformat = "%r\n";
       DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->pathinfo.topdepth ) );
-      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
+      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width - slen );
     }
   }
 

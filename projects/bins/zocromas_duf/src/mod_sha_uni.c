@@ -29,18 +29,20 @@
 
 #include "sql_beginning_tables.h"
 /* ########################################################################################## */
-static int sha_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+
+#define ASHA1_DELTA 4
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ sha",
+  .name = "final @ sha1",
   .done = 0,
   .sql = {
-          "UPDATE " DUF_SQL_TABLES_SHA_FULL " SET dupshacnt=(SELECT COUNT(*) " /* */
-          " FROM " DUF_SQL_TABLES_SHA_FULL " AS sh " /* */
-          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.shaid=sh." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_SQL_TABLES_SHA_FULL "." DUF_SQL_IDNAME "=sh." DUF_SQL_IDNAME ")" /* */
+          "UPDATE " DUF_SQL_TABLES_SHA1_FULL " SET dupsha1cnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_SQL_TABLES_SHA1_FULL " AS sh " /* */
+          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sha1id=sh." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_SQL_TABLES_SHA1_FULL "." DUF_SQL_IDNAME "=sh." DUF_SQL_IDNAME ")" /* */
           ,
           NULL,
           }
@@ -48,51 +50,52 @@ static duf_sql_sequence_t final_sql = /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_sha_callbacks = {
-  .title = "collect sha",
-  .name = "sha",
+duf_scan_callbacks_t duf_sha1_callbacks = {
+  .title = "collect sha1",
+  .name = "sha1",
   .init_scan = NULL,
   .def_opendir = 1,
   /* .dirent_dir_scan_before = NULL, */
   /* .dirent_file_scan_before = NULL, */
-  /* .node_scan_before = collect_openat_sha_node_before, */
-  /*  .leaf_scan =  collect_openat_sha_leaf, */
-  /* .leaf_scan_fd = duf_dirent_sha_content, */
-  .leaf_scan_fd2 = sha_dirent_content2,
+  /* .node_scan_before = collect_openat_sha1_node_before, */
+  /*  .leaf_scan =  collect_openat_sha1_leaf, */
+  /* .leaf_scan_fd = duf_dirent_sha1_content, */
+  .leaf_scan_fd2 = sha1_dirent_content2,
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {
-           .name = "sha leaf",
+           .name = "sha1 leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
-           "#sha",
+           "#sha1",
            .fieldsets = {
                          "#basic",
                          "#plus",
-                         "#shax",
+                         "#sha1x",
                          NULL}
            ,
            .selector2 =         /* */
-           "#sha-leaf",
+           "#sha1-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.shaid   IS NULL OR sha." DUF_SQL_IDNAME " IS NULL ) " /*                */ " AND " /* */
+           " ( fd.sha1id   IS NULL OR sh." DUF_SQL_IDNAME " IS NULL ) " /*                */ " AND " /* */
            " sz.size > 0 " /*                                                            */ " AND " /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                */ " AND " /* */
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
+           "(  :fFast IS NULL OR md." DUF_SQL_IDNAME " IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME}
   ,                             /* */
   .node = {                     /* */
-           .name = "sha node",
+           .name = "sha1 node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */
-           /* "'sha-node' AS fieldset_id, " (* *) */
+           /* "'sha1-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
@@ -115,28 +118,28 @@ duf_scan_callbacks_t duf_sha_callbacks = {
 
 /* ########################################################################################## */
 unsigned long long
-duf_pdistat2file_shaid_existed( duf_depthinfo_t * pdi, unsigned long shasum1, unsigned long shasum2, unsigned long shasum3, int *pr )
+duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, unsigned long sha1sum2, unsigned long sha1sum3, int *pr )
 {
   int rpr = 0;
-  unsigned long long shaid = 0;
+  unsigned long long sha1id = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDNAME " AS shaid FROM " DUF_SQL_TABLES_SHA_FULL " WHERE shasum1=:shaSum1 AND shasum2=:shaSum2 AND shasum3=:shaSum3"
-        /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  shasum1=:shaSum1 AND shasum2=:shaSum2 AND shasum3=:shaSum3 */
+        "SELECT " DUF_SQL_IDNAME " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
+        /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3 */
         ;
 
   DEBUG_START(  );
 
-  DUF_SQL_START_STMT( pdi, select_sha, sql, rpr, pstmt );
+  DUF_SQL_START_STMT( pdi, select_sha1, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
-  DUF_SQL_BIND_LL( shaSum1, shasum1, rpr, pstmt );
-  DUF_SQL_BIND_LL( shaSum2, shasum2, rpr, pstmt );
-  DUF_SQL_BIND_LL( shaSum3, shasum3, rpr, pstmt );
+  DUF_SQL_BIND_LL( sha1Sum1, sha1sum1, rpr, pstmt );
+  DUF_SQL_BIND_LL( sha1Sum2, sha1sum2, rpr, pstmt );
+  DUF_SQL_BIND_LL( sha1Sum3, sha1sum3, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
   if ( rpr == MAS_SQL_ROW )
   {
     DUF_TRACE( select, 10, "<selected>" );
-    /* shaid = duf_sql_column_long_long( pstmt, 0 ); */
-    shaid = DUF_GET_UFIELD2( shaid );
+    /* sha1id = duf_sql_column_long_long( pstmt, 0 ); */
+    sha1id = DUF_GET_UFIELD2( sha1id );
     rpr = 0;
   }
   else
@@ -145,16 +148,16 @@ duf_pdistat2file_shaid_existed( duf_depthinfo_t * pdi, unsigned long shasum1, un
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
   /* DUF_TEST_R( rpr ); */
-  DUF_SQL_END_STMT( select_sha, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, select_sha1, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDULL( shaid );
+  DEBUG_ENDULL( sha1id );
 }
 
 static unsigned long long
-duf_insert_sha_uni( duf_depthinfo_t * pdi, unsigned long long *sha, const char *msg, int need_id, int *pr )
+duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char *msg, int need_id, int *pr )
 {
-  unsigned long long shaid = -1;
+  unsigned long long sha1id = -1;
   int lr = 0;
   int changes = 0;
 
@@ -165,41 +168,41 @@ duf_insert_sha_uni( duf_depthinfo_t * pdi, unsigned long long *sha, const char *
   DEBUG_START(  );
 
   assert( sizeof( unsigned long long ) == 8 );
-  assert( SHA_DIGEST_LENGTH == 2 * sizeof( unsigned long long ) + 4 );
-  assert( SHA_DIGEST_LENGTH == 2 * 64 / 8 + 4 );
-  if ( sha && sha[2] && sha[1] && sha[0] )
+  assert( SHA_DIGEST_LENGTH == 2 * sizeof( unsigned long long ) + ASHA1_DELTA );
+  assert( SHA_DIGEST_LENGTH == 2 * 64 / 8 + ASHA1_DELTA );
+  if ( sha1 && sha1[2] && sha1[1] && sha1[0] )
   {
     if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
     {
       static const char *sql =
-            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA_FULL " ( shasum1, shasum2, shasum3 ) VALUES ( :shasum1, :shasum2, :shasum3 )";
+            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA1_FULL " ( sha1sum1, sha1sum2, sha1sum3 ) VALUES ( :sha1sum1, :sha1sum2, :sha1sum3 )";
 
-      DUF_TRACE( sha, 0, "%08llx%016llx%016llx %s%s", sha[2], sha[1], sha[0], real_path, msg );
-      DUF_SQL_START_STMT( pdi, insert_sha, sql, lr, pstmt );
+      DUF_TRACE( sha1, 0, "%08llx%016llx%016llx %s%s", sha1[2], sha1[1], sha1[0], real_path, msg );
+      DUF_SQL_START_STMT( pdi, insert_sha1, sql, lr, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
-      DUF_SQL_BIND_LL( shasum1, sha[2], lr, pstmt );
-      DUF_SQL_BIND_LL( shasum2, sha[1], lr, pstmt );
-      DUF_SQL_BIND_LL( shasum3, sha[0], lr, pstmt );
+      DUF_SQL_BIND_LL( sha1sum1, sha1[2], lr, pstmt );
+      DUF_SQL_BIND_LL( sha1sum2, sha1[1], lr, pstmt );
+      DUF_SQL_BIND_LL( sha1sum3, sha1[0], lr, pstmt );
       DUF_SQL_STEP( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
-      DUF_SQL_END_STMT( insert_sha, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, insert_sha1, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
-        shaid = duf_pdistat2file_shaid_existed( pdi, sha[2], sha[1], sha[0], &lr );
+        sha1id = duf_pdistat2file_sha1id_existed( pdi, sha1[2], sha1[1], sha1[0], &lr );
     }
     else if ( !lr /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
-        shaid = duf_sql_last_insert_rowid(  );
+        sha1id = duf_sql_last_insert_rowid(  );
       }
     }
     else
     {
-      DUF_SHOW_ERROR( "insert sha %d", lr );
+      DUF_SHOW_ERROR( "insert sha1 %d", lr );
     }
   }
   else
@@ -212,19 +215,19 @@ duf_insert_sha_uni( duf_depthinfo_t * pdi, unsigned long long *sha, const char *
   if ( pr )
     *pr = lr;
 
-  DEBUG_ENDULL( shaid );
-  return shaid;
+  DEBUG_ENDULL( sha1id );
+  return sha1id;
 }
 
 static int
-duf_make_sha_uni( int fd, unsigned char *pmd )
+duf_make_sha1_uni( int fd, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
   SHA_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );
-  DUF_TRACE( sha, 0, "make" );
+  DUF_TRACE( sha1, 0, "make" );
   {
     char *buffer;
 
@@ -232,7 +235,7 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
     if ( buffer )
     {
       if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( SHA1_Init( &ctx ) != 1 ) )
-        DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
+        DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
       DUF_TEST_R( r );
       {
         int maxcnt = 0;
@@ -242,9 +245,10 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
         {
           int ry;
 
-          DUF_TRACE( sha, 10, "read fd:%u", fd );
+          DUF_TRACE( sha1, 10, "read fd:%u", fd );
           ry = read( fd, buffer, bufsz );
-          DUF_TRACE( sha, 10, "read ry:%u", ry );
+	  /* TODO: if (ry>0)  sscbh->bytes+=ry */
+          DUF_TRACE( sha1, 10, "read ry:%u", ry );
           if ( ry < 0 )
           {
             DUF_ERRSYS( "read file" );
@@ -256,7 +260,7 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
           if ( ry > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
           {
             if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
-              DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
+              DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
           }
           if ( ry <= 0 )
             break;
@@ -271,52 +275,52 @@ duf_make_sha_uni( int fd, unsigned char *pmd )
     }
   }
   if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
-    DUF_MAKE_ERROR( r, DUF_ERROR_SHA );
+    DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
   DEBUG_ENDR( r );
 }
 
 static int
-duf_make_shar_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
+duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 {
   DEBUG_STARTR( r );
-  unsigned char asha[SHA_DIGEST_LENGTH];
+
+  unsigned char asha1[SHA_DIGEST_LENGTH];
   int fd;
 
-  memset( asha, 0, sizeof( asha ) );
+  memset( asha1, 0, sizeof( asha1 ) );
   fd = duf_levinfo_dfd( pdi );
-  DOR( r, duf_make_sha_uni( fd, asha ) );
+  DOR( r, duf_make_sha1_uni( fd, asha1 ) );
   /* reverse */
-  for ( int i = 0; i < sizeof( asha ) / sizeof( asha[0] ); i++ )
-    pmdr[i] = asha[sizeof( asha ) / sizeof( asha[0] ) - i - 1];
+  for ( int i = 0; i < sizeof( asha1 ) / sizeof( asha1[0] ); i++ )
+    pmdr[i] = asha1[sizeof( asha1 ) / sizeof( asha1[0] ) - i - 1];
 
 
   DEBUG_ENDR( r );
 }
 
 static int
-sha_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-#define ASHA_DELTA 4
-  unsigned char ashar[SHA_DIGEST_LENGTH + ASHA_DELTA];
+  unsigned char asha1r[SHA_DIGEST_LENGTH + ASHA1_DELTA];
 
   DUF_SFIELD2( filename );
-  DUF_TRACE( sha, 0, "+ %s", filename );
-  memset( ashar, 0, sizeof( ashar ) );
+  DUF_TRACE( sha1, 0, "+ %s", filename );
+  memset( asha1r, 0, sizeof( asha1r ) );
   if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
-    DOR( r, duf_make_shar_uni( pdi, ashar ) );
+    DOR( r, duf_make_sha1r_uni( pdi, asha1r ) );
 
-  assert( sizeof( ashar ) == 20 + ASHA_DELTA );
+  assert( sizeof( asha1r ) == 20 + ASHA1_DELTA );
   if ( DUF_NOERROR( r ) )
   {
-    unsigned long long shaid = 0;
-    unsigned long long *pmd = ( unsigned long long * ) &ashar;
+    unsigned long long sha1id = 0;
+    unsigned long long *pmd = ( unsigned long long * ) &asha1r;
 
-    DUF_TRACE( sha, 0, "insert %s", filename );
+    DUF_TRACE( sha1, 0, "insert %s", filename );
 
 
-    shaid = duf_insert_sha_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
-    if ( shaid )
+    sha1id = duf_insert_sha1_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+    if ( sha1id )
     {
       int changes = 0;
 
@@ -325,27 +329,26 @@ sha_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       {
         DUF_UFIELD2( filedataid );
 #if 0
-        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET shaid='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, shaid, filedataid ) );
+        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, sha1id, filedataid ) );
 #else
-        const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET shaid=:shaId WHERE " DUF_SQL_IDNAME " =:dataId ";
+        const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id=:sha1Id WHERE " DUF_SQL_IDNAME " =:dataId ";
 
-        DUF_SQL_START_STMT( pdi, update_shaid, sql, r, pstmt );
+        DUF_SQL_START_STMT( pdi, update_sha1id, sql, r, pstmt );
         DUF_TRACE( mod, 3, "S:%s", sql );
-        DUF_SQL_BIND_LL( shaId, shaid, r, pstmt );
+        DUF_SQL_BIND_LL( sha1Id, sha1id, r, pstmt );
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( update_shaid, r, pstmt );
+        DUF_SQL_END_STMT( pdi, update_sha1id, r, pstmt );
 #endif
       }
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( sha, 4, "%02x:%2x:%2x:%2x:%2x:%2x", ashar[SHA_DIGEST_LENGTH - 0], ashar[SHA_DIGEST_LENGTH - 1], ashar[SHA_DIGEST_LENGTH - 2],
-               ashar[SHA_DIGEST_LENGTH - 3], ashar[SHA_DIGEST_LENGTH - 4], ashar[SHA_DIGEST_LENGTH - 5] );
-    DUF_TRACE( sha, 0, "%08llx%016llx%016llx : shaid: %llu", pmd[2], pmd[1], pmd[0], shaid );
-    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], shaid ); */
+    DUF_TRACE( sha1, 4, "%02x:%2x:%2x:%2x:%2x:%2x", asha1r[SHA_DIGEST_LENGTH - 0], asha1r[SHA_DIGEST_LENGTH - 1], asha1r[SHA_DIGEST_LENGTH - 2],
+               asha1r[SHA_DIGEST_LENGTH - 3], asha1r[SHA_DIGEST_LENGTH - 4], asha1r[SHA_DIGEST_LENGTH - 5] );
+    DUF_TRACE( sha1, 0, "%08llx%016llx%016llx : sha1id: %llu", pmd[2], pmd[1], pmd[0], sha1id );
+    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sha1id ); */
   }
   DEBUG_ENDR( r );
-#undef  ASHA_DELTA
 }

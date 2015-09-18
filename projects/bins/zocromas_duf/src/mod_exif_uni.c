@@ -96,20 +96,22 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
            ", xm.model AS camera",
            .selector2 =         /* */
-           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
+           " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_MD5_FULL /*          */ " AS md ON ( fd.md5id  = md." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_MIME_FULL /*         */ " AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_FULL /*         */ " AS x  ON ( fd.exifid =  x." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_MODEL_FULL /*   */ " AS xm ON ( x.modelid = xm." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_SIZES_FULL /*        */ " AS sz ON ( sz.size   = fd.size)" /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
-           " sz.size > 0                                 AND" /* */
-           " mi.mime='image/jpeg'                        AND" /* */
+           " sz.size > 0 " /*                                                   */ " AND " /* */
+           " fd.noexif IS NULL " /*                                             */ " AND " /* */
+           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) " /*                   */ " AND" /* */
+           " ( " " mi.mime IS NULL OR " " mi.mime='image/jpeg' ) " /*           */ " AND" /* */
+           " ( :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*       */ " AND " /* */
            " 1 "                /* */
            ,                    /* */
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
@@ -195,7 +197,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       if ( lr == MAS_SQL_DONE )
         lr = 0;
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_model, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, select_model, lr, pstmt );
     }
 
     if ( !modelid && !DUF_CONFIGG( cli.disable.flag.insert ) )
@@ -218,7 +220,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
         modelid = duf_sql_last_insert_rowid(  );
         DUF_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
-      DUF_SQL_END_STMT( insert_model, lr, pstmt_insert );
+      DUF_SQL_END_STMT( pdi, insert_model, lr, pstmt_insert );
     }
     DUF_TEST_R( lr );
   }
@@ -283,7 +285,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       DUF_CLEAR_ERROR( lr, MAS_SQL_DONE );
 #endif
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_exif, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, select_exif, lr, pstmt );
       /* if ( !exifid )                        */
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }
@@ -342,7 +344,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), filename );
       }
 
-      DUF_SQL_END_STMT( insert_exif, lr, pstmt_insert );
+      DUF_SQL_END_STMT( pdi, insert_exif, lr, pstmt_insert );
     }
     DUF_TEST_R( lr );
   }
@@ -810,7 +812,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
                 DUF_SQL_STEP( r, pstmt_update );
                 /* DUF_TEST_R(r); */
                 DUF_SQL_CHANGES( changes, r, pstmt_update );
-                DUF_SQL_END_STMT( update_exif, r, pstmt_update );
+                DUF_SQL_END_STMT( pdi, update_exif, r, pstmt_update );
               }
               DUF_TEST_R( r );
             }

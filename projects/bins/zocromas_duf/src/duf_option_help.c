@@ -701,10 +701,37 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run . -dfR --min-exifsame=2 --evaluate=tree	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150917.204538 ============" );
-  DUF_PRINTF( 0, "  run test/tree/ --drop-tables  -PO -dfR  --evaluate-sccb=sha --progress	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run test/tree/ --drop-tables  -PO -dfR  --evaluate-sccb=sha1 --progress	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-md5=test/tree/t2.html 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-sha=test/tree/t2.html 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-sha1=test/tree/t2.html 	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20150918.092133 ============" );
+  DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
+  DUF_PRINTF( 0, "  run --fast --trace-md5=0 --trace-sha=0 test/tree/ --drop-tables  -PO -dfR "
+              " --evaluate-sccb=dirs,filedata,filenames,sd5,sha,md5 --progress 	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "[==========================] 100%%; 27 of 27; 0 to do; 0.155882 5.7734 ◁ file data ▷     	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 27 of 27; 0 to do; 0.138797 5.14062 ◁ file names ▷     	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 491 of 491; 0 to do; 0.121471 0.247395 ◁ collect sd5 ▷     	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 129 of 129; 0 to do; 0.0852289 0.660689 ◁ collect sha1 ▷    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 127 of 127; 0 to do; 0.0862439 0.679086 ◁ collect md5 ▷   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "2 same md5 different files included : 129 != 127	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
+  DUF_PRINTF( 0, "  run --fast --db-name=photo.db  --drop-tables  -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif --progress /home/mastar/big/misc/media/photo	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 1250 of 1250; 0 to do; 11.7811s avg:9.4249ms ◁ file data ▷       	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 1250 of 1250; 0 to do; 10.562s avg:8.44961ms ◁ file names ▷       	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 73504 of 73504; 0 to do; 175.329s avg:2.3853ms ◁ collect crc32 ▷   - %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 73504 of 73504; 0 to do; 13.6741s avg:0.186033ms ◁ collect sd5 ▷   - %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 70557 of 70557; 0 to do; 695.385s avg:9.85565ms ◁ collect md5 ▷    - %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 70288 of 70288; 0 to do; 690.397s avg:9.8224ms ◁ collect sha1 ▷    - %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 83474 of 83474; 0 to do; 617.98s avg:7.40327ms ◁ collect mime ▷    - %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "[==========================] 100%%; 54508 of 54508; 0 to do; 270.489s avg:4.96237ms ◁ collect exif ▷   - %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "shn:   exited with 0       	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "real 47m35.621s; user 8m38.055s; system 4m20.704s; cpu 27.27     	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

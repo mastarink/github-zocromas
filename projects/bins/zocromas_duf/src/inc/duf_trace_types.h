@@ -36,7 +36,7 @@ typedef enum
   DUF_TRACE_MODE_integrity,
   DUF_TRACE_MODE_match,
   DUF_TRACE_MODE_md5,
-  DUF_TRACE_MODE_sha,
+  DUF_TRACE_MODE_sha1,
   DUF_TRACE_MODE_mdpath,
   DUF_TRACE_MODE_mime,
   DUF_TRACE_MODE_nonew,

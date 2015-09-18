@@ -247,7 +247,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   int swidth;
   static duf_bar_t bar;
   const char *sc = getenv( "COLUMNS" );
-  double delta = 0;
+  double delta_sec = 0;
 
   /* assert( curval <= maxval ); */
   if ( sc && *sc )
@@ -269,7 +269,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
     }
     gettimeofday( &tv, NULL );
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-    delta = timec - time0;
+    delta_sec = timec - time0;
   }
   bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
   bar.width = width * bar.percent;
@@ -295,11 +295,11 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
         fputc( ' ', stderr );
     }
 #if 1
-    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %2g %2g %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval,
-             delta, delta * 1000. / ( ( float ) curval ), msg );
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %2gs avg:%2gms %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval,
+             delta_sec, delta_sec * 1000. / ( ( float ) curval ), msg );
 #else
     fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %2g %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time,
-             delta, msg );
+             delta_sec, msg );
 #endif
     bar.prev_percent = bar.percent;
     /* if ( bar.width == width ) */

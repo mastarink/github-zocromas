@@ -172,7 +172,7 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
   /* DUF_TEST_R( rpr ); */
-  DUF_SQL_END_STMT( select_sd5, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, select_sd5, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDULL( sd5id );
@@ -203,7 +203,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
       DUF_SQL_BIND_LL( sd5sum2, sd64[0], lr, pstmt );
       DUF_SQL_STEP( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
-      DUF_SQL_END_STMT( insert_sd5, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, insert_sd5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
@@ -346,7 +346,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( update_sd5id, r, pstmt );
+        DUF_SQL_END_STMT( pdi, update_sd5id, r, pstmt );
 #endif
 
       }

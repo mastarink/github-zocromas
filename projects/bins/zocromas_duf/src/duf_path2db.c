@@ -71,7 +71,7 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
 
   DUF_SQL_STEP( r, pstmt );
   DUF_SQL_CHANGES( changes, r, pstmt );
-  DUF_SQL_END_STMT( insert_path_table, r, pstmt );
+  DUF_SQL_END_STMT( pdi, insert_path_table, r, pstmt );
   if ( pchanges )
     *pchanges = changes;
   DUF_ENDR( r );
@@ -156,7 +156,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
     }
   }
   assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
-  DUF_SQL_END_STMT( select_path, r, pstmt );
+  DUF_SQL_END_STMT( pdi, select_path, r, pstmt );
   DEBUG_ENDR( r );
 }
 

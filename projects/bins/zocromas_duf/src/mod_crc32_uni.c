@@ -177,7 +177,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
   /* DUF_TEST_R( rpr ); */
-  DUF_SQL_END_STMT( select_crc32, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, select_crc32, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDULL( crc32id );
@@ -209,7 +209,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
       DUF_SQL_BIND_LL( crc32sum, crc32sum, lr, pstmt );
       DUF_SQL_STEP( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
-      DUF_SQL_END_STMT( insert_crc32, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, insert_crc32, lr, pstmt );
       insert_cnt++;
     }
     duf_pdi_reg_changes( pdi, changes );
@@ -345,7 +345,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( update_crc32id, r, pstmt );
+        DUF_SQL_END_STMT( pdi, update_crc32id, r, pstmt );
 #endif
       }
       duf_pdi_reg_changes( pdi, changes );

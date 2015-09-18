@@ -55,8 +55,9 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
 
   /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  /* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */
 };
 
 /* ########################################################################################## */
@@ -162,6 +163,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     {
       const char *sformat_pref = NULL;
       const char *sformat = NULL;
+      size_t slen = 0;
 
       sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_gen_tree );
       if ( !sformat_pref )
@@ -169,7 +171,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
-      duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+      slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                          duf_config->cli.output.max_width - slen );
 
 
 
@@ -192,7 +195,10 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       }
       if ( !sformat )
         sformat = "%f\n";
-      duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+
+
+      slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                          duf_config->cli.output.max_width - slen );
     }
   }
 
@@ -268,7 +274,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 
     if ( !sformat_pref )
       sformat_pref = " %6s  %4s%P";
-    duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+    duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width );
 
 
     {
@@ -291,7 +297,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 
     if ( !sformat )
       sformat = "%f\n";
-    duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+    duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width );
   }
 
 
@@ -366,8 +372,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags );
-           );
+               DUF_PRINTF( 1, ".0x%02x]", flags ); );
     {
 #if 0
       {

@@ -7,6 +7,8 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi_ref.h"
+#include "duf_pdi_stmt.h"
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_stmt_defs.h"
@@ -91,7 +93,14 @@ duf_scan_db_items_with_str_cb_sql( const char *sql_selector, duf_str_cb2_t str_c
 {
   DEBUG_STARTR( r );
 
+/* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
+#if 1
   DUF_SQL_START_STMT_NOPDI( sql_selector, r, pstmt_selector );
+#else
+  DUF_SQL_START_STMT_LOCAL( PDI, sql_selector, r, pstmt_selector );
+#endif
+
+/* TODO : sccbh->pstmt_selector = pstmt_selector OR via pdi */
   DUF_TRACE( select, 1, "S:%s", sql_selector );
 /* XXX With parent ! XXX */
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
@@ -100,12 +109,15 @@ duf_scan_db_items_with_str_cb_sql( const char *sql_selector, duf_str_cb2_t str_c
   /* cal one of duf_sel_cb2_(leaf|node) by node_type
    * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )
    * */
+
+  /* T("@@@@@@>>>>>>>>> %p %p - %p", &main_sql_selector_index, duf_pdi_find_statement( PDI, &main_sql_selector_index ) , pstmt_selector); */
+  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
+  /* T("@@@@@@<<<<<<<<< %p %p - %p", &main_sql_selector_index, duf_pdi_find_statement( PDI, &main_sql_selector_index ) , pstmt_selector); */
 #if 1
-  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
-#else
-  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
-#endif
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
+#else
+  DUF_SQL_END_STMT_LOCAL( PDI, r, pstmt_selector );
+#endif
   DEBUG_ENDR( r );
 }
 

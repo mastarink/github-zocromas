@@ -71,7 +71,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   /* T( "@@@@@@md5id: %llu:%llu", pu->md5id.min, pu->md5id.max ); */
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Md5Same, md5same );
-  DUF_SQL_BIND_PAIR( ShaSame, shasame );
+  DUF_SQL_BIND_PAIR( Sha1Same, sha1same );
   DUF_SQL_BIND_PAIR( ExifSame, exifsame );
   DUF_SQL_BIND_PAIR( SizeSame, sizesame );
   DUF_SQL_BIND_PAIR( DataSame, datasame );
@@ -131,13 +131,13 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
-  if ( pu->same_sha )
+  if ( pu->same_sha1 )
   {
     duf_filepath_t fp;
 
-    DOR( r, duf_init_filepath( &fp, pu->same_sha ) );
-    DUF_SQL_BIND_LL_NZ_OPT( GSameShaPathID, fp.dirid, r, pstmt );
-    DUF_SQL_BIND_S_OPT( GSameAsSha, fp.name, r, pstmt );
+    DOR( r, duf_init_filepath( &fp, pu->same_sha1 ) );
+    DUF_SQL_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );

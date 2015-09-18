@@ -133,6 +133,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " sz.size > 0 " /*                                                            */ " AND " /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                */ " AND " /* */
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
+           "(  :fFast IS NULL OR sh." DUF_SQL_IDNAME " IS NULL OR sh.dupsha1cnt > 1 ) " /**/ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
@@ -208,7 +209,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
   /* DUF_TEST_R( rpr ); */
-  DUF_SQL_END_STMT( select_md5, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, select_md5, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDULL( md5id );
@@ -243,7 +244,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
       DUF_SQL_STEP( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
-      DUF_SQL_END_STMT( insert_md5, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, insert_md5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
@@ -395,7 +396,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( update_md5id, r, pstmt );
+        DUF_SQL_END_STMT( pdi, update_md5id, r, pstmt );
 #endif
       }
       duf_pdi_reg_changes( pdi, changes );

@@ -44,7 +44,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh
     duf_scan_hook2_file_t scanner = duf_levinfo_item_deleted( PDI ) ? SCCB->leaf_scan_fd2_deleted : SCCB->leaf_scan_fd2;
 
     if ( scanner )
-      DOR_NOE( r, scanner( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+      DOR_NOE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
   }
   DEBUG_ENDR( r );
 }
@@ -71,7 +71,7 @@ duf_eval_sccbh_db_leaf_str_cb( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
     duf_scan_hook2_file_t scanner = duf_levinfo_item_deleted( PDI ) ? SCCB->leaf_scan2_deleted : SCCB->leaf_scan2;
 
     if ( scanner )
-      DOR_NOE( r, scanner( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+      DOR_NOE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
   }
   DEBUG_ENDR( r );
 }

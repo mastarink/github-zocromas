@@ -10,6 +10,7 @@
           if ( _rt >= 0 ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
           DUF_TEST_R( _rt )
+
 #  define DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m) \
 	  { \
 	    int __rf = duf_sql_finalize( _pstmt_m ); \
@@ -21,18 +22,15 @@
 	}
 
 
-/* DUF_SHOW_ERROR("%s_index: %d, %p s:%p", #name, name ## _index, (void*)pdi, (void*)(pdi?pdi->statements:NULL)); \ */
-/* DUF_SHOW_ERROR("%s_index: %d", #name, name ## _index); \                                                         */
-
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
-          static int _name ## _index = -1; \
+          /* TODO : static not always or never? */ \
           if ( _rt >= 0 ) \
-            _pstmt_m = duf_pdi_find_statement( _pdi, &_name ## _index ); \
+            _pstmt_m = duf_pdi_find_statement_by_id( _pdi, DUF_SQL_STMD_ID_ ## _name ); \
           if ( _rt>=0 && !_pstmt_m ) \
-            _pstmt_m = duf_pdi_prepare_statement( _pdi, _sql, &_name ## _index, &_rt ); \
+            _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql,  DUF_SQL_STMD_ID_ ## _name, &_rt ); \
           if ( _rt >= 0 && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
           DUF_TEST_R( _rt );
@@ -45,21 +43,55 @@
 
 
 #  ifdef DUF_SQL_PDI_STMT
-#    define DUF_SQL_END_STMT(_name, _rt, _pstmt_m) \
+#    define DUF_SQL_END_STMT(_pdi, _name, _rt, _pstmt_m) \
 	  if ( _rt == MAS_SQL_ROW || _rt == MAS_SQL_DONE ) \
 	      _rt = 0; \
           if ( _rt >= 0 && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
 	  if (_pstmt_m) \
 	  { duf_sql_reset( _pstmt_m ); duf_sql_clear_bindings( _pstmt_m ); } \
-	  duf_pdi_finalize_statement(pdi, &_name ## _index ); \
+	  duf_pdi_finalize_statement_by_id(_pdi, DUF_SQL_STMD_ID_ ## _name ); \
 	}
 #  elif defined(DUF_SQL_NOPDI_STMT)
-#    define DUF_SQL_END_STMT(_rt, _pstmt_m) \
+#    define DUF_SQL_END_STMT(_pdi, _rt, _pstmt_m) \
 	DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m)
 #  else
 #    undef DUF_SQL_END_STMT
 #  endif
+
+
+
+#  ifdef DUF_SQL_PDI_STMT
+#    define DUF_SQL_START_STMT_LOCAL( _pdi,  _sql, _rt, _pstmt_m ) \
+	{ \
+  	  duf_stmnt_t *_pstmt_m = NULL; \
+          /* TODO : static not always or never? */ \
+          if ( _rt>=0 && !_pstmt_m ) \
+            _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql, ( duf_stmt_ident_t ) 0, &_rt ); \
+          if ( _rt >= 0 && !_pstmt_m ) \
+            _rt = DUF_ERROR_PDI_SQL; \
+          DUF_TEST_R( _rt );
+#  else
+#    undef DUF_SQL_START_STMT_LOCAL
+#  endif
+
+
+#  ifdef DUF_SQL_PDI_STMT
+#    define DUF_SQL_END_STMT_LOCAL(_pdi, _rt, _pstmt_m) \
+	  if ( _rt == MAS_SQL_ROW || _rt == MAS_SQL_DONE ) \
+	      _rt = 0; \
+          if ( _rt >= 0 && !_pstmt_m ) \
+            _rt = DUF_ERROR_PDI_SQL; \
+	  if (_pstmt_m) \
+	  { duf_sql_reset( _pstmt_m ); duf_sql_clear_bindings( _pstmt_m ); } \
+	  duf_pdi_finalize_statement_by_stmt(_pdi, _pstmt_m ); \
+	}
+#  else
+#    undef DUF_SQL_END_STMT_LOCAL
+#  endif
+
+
+
 
 
 

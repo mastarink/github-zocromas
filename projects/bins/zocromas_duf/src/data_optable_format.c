@@ -62,6 +62,10 @@ const duf_longval_extended_table_t optable_format = {
     /*      */ DO_OC( ARGV, cli.output.as_formats.gen.dirs ) /*                                              */ , DO_H( format ) /*          */ },
    {.o = {DO_Q( "use-format" ) /*               */ , DO_A_R /* */ , DO_V( ASFORMAT_USE )} /*                */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OC( NUM, cli.output.as_formats.use ) /*                                                    */ , DO_H(  .... ) /*           */ },
+   
+   {.o = {DO_Q( "max-width" ) /*        */ , DO_A_R /* */ , DO_V( MAXWIDTH )} /*                            */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OC( NUM, cli.output.max_width ) /* */ , DO_AT_STAGE( SETUP ) /*                            */ , DO_H(  .... ) /*           */ },
+
 
    {.o = {.name = NULL}}
    }

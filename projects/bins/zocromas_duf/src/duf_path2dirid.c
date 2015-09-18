@@ -88,7 +88,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
       DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
     }
   }
-  DUF_SQL_END_STMT( dirid2name_existed, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, dirid2name_existed, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDS( name );

@@ -149,7 +149,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
     DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( insert_filename, r, pstmt );
+    DUF_SQL_END_STMT( pdi, insert_filename, r, pstmt );
   }
   else
   {

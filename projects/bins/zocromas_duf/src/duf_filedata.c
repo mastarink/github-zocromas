@@ -53,7 +53,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
   /* DUF_TEST_R( rpr ); */
-  DUF_SQL_END_STMT( select_filedata, rpr, pstmt );
+  DUF_SQL_END_STMT( pdi, select_filedata, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDULL( dataid );
@@ -106,7 +106,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 
       DUF_SQL_STEP( rpr, pstmt );
       DUF_SQL_CHANGES( changes, rpr, pstmt );
-      DUF_SQL_END_STMT( insert_filedata, rpr, pstmt );
+      DUF_SQL_END_STMT( pdi, insert_filedata, rpr, pstmt );
     }
     DUF_TRACE( select, 2, "<changes> : %d", changes );
     if ( need_id )

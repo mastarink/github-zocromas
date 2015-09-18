@@ -41,7 +41,7 @@ duf_sql_sequence_t sql_update_selected = {
           " SELECT fn." DUF_SQL_IDNAME " AS nameid " "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn LEFT " /* */
           "        JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
           "   LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_SHA_FULL "  AS sh ON (sh." DUF_SQL_IDNAME "=fd.shaid) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL "  AS sh ON (sh." DUF_SQL_IDNAME "=fd.sha1id) " /* */
           "   LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
           "   LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
           "   LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */

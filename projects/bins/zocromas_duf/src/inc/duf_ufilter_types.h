@@ -54,7 +54,7 @@ typedef struct
   /* unsigned long long exifid; */
   duf_limitsll_t size;
   duf_limitsll_t md5same;
-  duf_limitsll_t shasame;
+  duf_limitsll_t sha1same;
   duf_limitsll_t exifsame;
   duf_limitsll_t mimesame;
   duf_limitsll_t datasame;
@@ -68,7 +68,7 @@ typedef struct
   duf_limitsll_t exifdt;
   duf_limitsll_t inode;
   duf_limitsll_t md5id;
-  duf_limitsll_t shaid;
+  duf_limitsll_t sha1id;
   duf_limitsll_t sd5id;
   duf_limitsll_t crc32id;
   duf_limitsll_t mimeid;
@@ -79,7 +79,7 @@ typedef struct
   char *glob_db_include;
   char *glob_db_exclude;
   char *same_md5;
-  char *same_sha;
+  char *same_sha1;
   duf_ufilter_mime_t mime;
   duf_ufilter_exif_t exif;
   /* unsigned long long filter_id; */

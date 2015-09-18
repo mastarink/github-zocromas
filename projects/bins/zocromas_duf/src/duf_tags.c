@@ -30,7 +30,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
     DUF_SQL_BIND_S( tagName, tag_name, rpr, pstmt );
     DUF_SQL_STEP( rpr, pstmt );
     DUF_SQL_CHANGES( changes, rpr, pstmt );
-    DUF_SQL_END_STMT( insert_tagname, rpr, pstmt );
+    DUF_SQL_END_STMT( pdi, insert_tagname, rpr, pstmt );
   }
   DUF_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
   if ( ( rpr == MAS_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
@@ -51,7 +51,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
       DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
     }
 
-    DUF_SQL_END_STMT( select_tagname, rpr, pstmt );
+    DUF_SQL_END_STMT( pdi, select_tagname, rpr, pstmt );
   }
   else
   {
@@ -82,7 +82,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     DUF_SQL_BIND_LL( itemID, itemid, rpr, pstmt );
     DUF_SQL_STEP( rpr, pstmt );
     DUF_SQL_CHANGES( changes, rpr, pstmt );
-    DUF_SQL_END_STMT( insert_tag, rpr, pstmt );
+    DUF_SQL_END_STMT( pdi, insert_tag, rpr, pstmt );
   }
   DUF_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );
   if ( ( DUF_IS_ERROR_N( rpr, MAS_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) ) && !changes )
@@ -105,7 +105,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
       DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
     }
 
-    DUF_SQL_END_STMT( select_tag, rpr, pstmt );
+    DUF_SQL_END_STMT( pdi, select_tag, rpr, pstmt );
   }
   else
   {

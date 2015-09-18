@@ -1,5 +1,8 @@
 #include <string.h>
 #include <errno.h>
+
+/* TODO: see media-libs/libextractor */
+/* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
 #include <magic.h>              /* man libmagic */
 
 
@@ -176,7 +179,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       if ( lr == MAS_SQL_DONE )
         lr = 0;
       DUF_TEST_R( lr );
-      DUF_SQL_END_STMT( select_mime, lr, pstmt );
+      DUF_SQL_END_STMT( pdi, select_mime, lr, pstmt );
     }
 
     if ( !mimeid && !DUF_CONFIGG( cli.disable.flag.insert ) )
@@ -200,7 +203,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
         DUF_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_END_STMT( insert_mime, lr, pstmt_insert );
+      DUF_SQL_END_STMT( pdi, insert_mime, lr, pstmt_insert );
     }
     DUF_TEST_R( lr );
   }
@@ -303,7 +306,7 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
           DUF_SQL_STEP( r, pstmt_update );
           /* DUF_TEST_R(r); */
           DUF_SQL_CHANGES( changes, r, pstmt_update );
-          DUF_SQL_END_STMT( update_mime, r, pstmt_update );
+          DUF_SQL_END_STMT( pdi, update_mime, r, pstmt_update );
 
           duf_pdi_reg_changes( pdi, changes );
 

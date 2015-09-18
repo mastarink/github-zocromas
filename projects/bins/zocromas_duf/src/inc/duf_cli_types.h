@@ -42,6 +42,7 @@ typedef struct
   unsigned level;
   unsigned fun_width;
   unsigned handleid;
+  unsigned max_width;
   duf_asformats_t as_formats;
   char *sformat_dirs_tree;
   char *sformat_files_tree;
@@ -88,7 +89,7 @@ typedef struct
   unsigned integrity;
   unsigned match;
   unsigned md5;
-  unsigned sha;
+  unsigned sha1;
   unsigned mdpath;
   unsigned mime;
   unsigned nonew;

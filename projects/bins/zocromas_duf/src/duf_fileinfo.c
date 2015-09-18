@@ -30,9 +30,9 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi )
     DUF_UFIELD2( dataid );
     DUF_UFIELD2( md5sum1 );
     DUF_UFIELD2( md5sum2 );
-    DUF_UFIELD2( shasum1 );
-    DUF_UFIELD2( shasum2 );
-    DUF_UFIELD2( shasum3 );
+    DUF_UFIELD2( sha1sum1 );
+    DUF_UFIELD2( sha1sum2 );
+    DUF_UFIELD2( sha1sum3 );
     DUF_UFIELD2( mtime );
     DUF_UFIELD2( dev );
     DUF_UFIELD2( uid );
@@ -70,9 +70,9 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi )
     pfi->dataid = dataid;
     pfi->md5sum1 = md5sum1;
     pfi->md5sum2 = md5sum2;
-    pfi->shasum1 = shasum1;
-    pfi->shasum2 = shasum2;
-    pfi->shasum3 = shasum3;
+    pfi->sha1sum1 = sha1sum1;
+    pfi->sha1sum2 = sha1sum2;
+    pfi->sha1sum3 = sha1sum3;
   }
   DUF_ENDR( r );
 }

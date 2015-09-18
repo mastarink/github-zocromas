@@ -20,9 +20,9 @@ typedef struct
   unsigned long long dataid;
   unsigned long long sd5sum1;
   unsigned long long sd5sum2;
-  unsigned long long shasum1;
-  unsigned long long shasum2;
-  unsigned long long shasum3;
+  unsigned long long sha1sum1;
+  unsigned long long sha1sum2;
+  unsigned long long sha1sum3;
   unsigned long long crc32sum;
   unsigned long long md5sum1;
   unsigned long long md5sum2;

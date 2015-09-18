@@ -105,20 +105,20 @@ static duf_fieldset_t _all_fieldsets[] = {
    }
   ,
   {
-   .name = "shax",
+   .name = "sha1x",
    .type = DUF_NODE_LEAF,
    .set =
-   /* "'shax-leaf' AS fieldset_id, " (* *) */
+   /* "'sha1x-leaf' AS fieldset_id, " (* *) */
    /* */
-   " sha.dupshacnt          AS nsame " /* */
+   " sh.dupsha1cnt          AS nsame " /* */
    ", sz.dupzcnt            AS dupzcnt " /* */
    }
   ,
   {
-   .name = "sha",
+   .name = "sha1",
    .type = DUF_NODE_LEAF,
    .set =
-   /* "'sha-leaf' AS fieldset_id, " (* *) */
+   /* "'sha1-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
    ", 0 AS ndirs, 0 AS nfiles"  /* */
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
@@ -127,12 +127,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd.mode               AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.shaid              AS shaid " /* */
-   ", sha.shasum1, sha.shasum2, sha.shasum3 " /* */
+   ", fd.sha1id              AS sha1id " /* */
+   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 " /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", sha.dupshacnt            AS nsame " /* */
+   ", sh.dupsha1cnt            AS nsame " /* */
    ", sz.dupzcnt            AS dupzcnt " /* */
    }
   ,
@@ -266,7 +266,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd.md5id              AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
-   ", sh.shasum1, sh.shasum2, sh.shasum3 "  /* */
+   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
@@ -297,6 +297,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd.md5id              AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
+   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    ", sz.dupzcnt            AS dupzcnt " /* */

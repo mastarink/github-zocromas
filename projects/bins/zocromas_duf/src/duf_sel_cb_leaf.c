@@ -59,11 +59,6 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
   DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
   assert( PDI->pathinfo.depth >= 0 );
 
-  if ( 0 && DUF_GET_UFIELD2( md5id ) )
-  {
-    T( "@@@MD5:%llu - to take list of same files here", DUF_GET_UFIELD2( md5id ) );
-  }
-
   if ( DUF_NOERROR( r ) )       /* levinfo_down OK */
   {
 

@@ -93,9 +93,11 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 
   .count_nodes = 1,
 #if 0
+#if 0
   .beginning_sql_seq = &sql_create_selected,
 #else
   .beginning_sql_seq = &sql_update_selected,
+#endif
 #endif
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */

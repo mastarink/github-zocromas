@@ -45,8 +45,8 @@
         "    (:minMd5Same  IS NULL OR  md.dup5cnt  >=:minMd5Same " /*                               */ ") AND "  \
         "    (:maxMd5Same  IS NULL OR  md.dup5cnt  <=:maxMd5Same " /*                               */ ") AND "  \
 \
-        "    (:minShaSame  IS NULL OR  sh.dupshacnt  >=:minShaSame " /*                             */ ") AND "  \
-        "    (:maxShaSame  IS NULL OR  sh.dupshacnt  <=:maxShaSame " /*                             */ ") AND "  \
+        "    (:minSha1Same  IS NULL OR  sh.dupsha1cnt  >=:minSha1Same " /*                             */ ") AND "  \
+        "    (:maxSha1Same  IS NULL OR  sh.dupsha1cnt  <=:maxSha1Same " /*                             */ ") AND "  \
 \
         "    (:minSizeSame IS NULL OR  sz.dupzcnt  >=:minSizeSame " /*                              */ ") AND "  \
         "    (:maxSizeSame IS NULL OR  sz.dupzcnt  <=:maxSizeSame " /*                              */ ") AND "  \
@@ -67,10 +67,10 @@
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "    ) AND " \
         "    (:Name        IS NULL OR fn.name      = :Name " /*                                     */ ") AND "  \
-        "    ( ( :GSameAsSha  IS NULL OR :GSameShaPathID IS NULL ) "  \
-        "                          OR sh." DUF_SQL_IDNAME "=(SELECT fdb.shaid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+        "    ( ( :GSameAsSha1  IS NULL OR :GSameSha1PathID IS NULL ) "  \
+        "                          OR sh." DUF_SQL_IDNAME "=(SELECT fdb.sha1id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
         "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
-        "                                     WHERE fnb.name = :GSameAsSha AND fnb.Pathid=:GSameShaPathID ) "  \
+        "                                     WHERE fnb.name = :GSameAsSha1 AND fnb.Pathid=:GSameSha1PathID ) "  \
         "    ) AND " \
 	"    ( " \
 	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \

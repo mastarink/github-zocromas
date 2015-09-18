@@ -1,6 +1,8 @@
 #ifndef MOD_EXIF_H
 #  define MOD_EXIF_H
 
+/* file:///usr/share/doc/libexif-0.6.21-r1/libexif-api.html/index.html */
+
 #  include <libexif/exif-data.h>
 #  include <libexif/exif-loader.h>
 #  include <libexif/exif-byte-order.h>
