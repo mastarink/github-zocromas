@@ -8,8 +8,8 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b mod_dumplet.c:148
-# b duf_ufilter_bind.c:66
+b mod_dialog.c:149
+b duf_pdi_reinit.c:72
 
 run
 bt

@@ -67,8 +67,6 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   if ( !pu )
     return 0;
 #endif
-  /* T( "@@@@@same: %llu:%llu", pu->same.min, pu->same.max ); */
-  /* T( "@@@@@@md5id: %llu:%llu", pu->md5id.min, pu->md5id.max ); */
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Md5Same, md5same );
   DUF_SQL_BIND_PAIR( Sha1Same, sha1same );

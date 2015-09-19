@@ -28,7 +28,8 @@ duf_sql_step( mas_sqlite_stmt_t * stmt )
   DEBUG_STARTR( r );
 
   DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_step( stmt ) ), MAS_SQL_ROW, MAS_SQL_DONE );
-  DUF_TRACE( sql, 0, "(%s) [[%s]]", duf_error_name( r ), sqlite3_sql( stmt ) );
+  DUF_TRACE( sql, 3, "(%s) [[%s]]", duf_error_name( r ), sqlite3_sql( stmt ) );
+  DUF_TRACE( sql, 0, "(%s)", duf_error_name( r ) );
   DEBUG_ENDR( r );
 }
 

@@ -65,7 +65,7 @@ duf_option_$_evaluate_sccb( const char *names )
 #endif
   if ( rt < 0 )
     T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
-  assert(rt>=0);
+  assert( rt >= 0 );
 }
 
 void
@@ -85,7 +85,7 @@ duf_option_$_db_open( void )
   DUF_TEST_R( rt );
   if ( rt < 0 )
     T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
-  assert(rt>=0);
+  assert( rt >= 0 );
 }
 
 void
@@ -123,7 +123,10 @@ duf_option_$_cd( const char *s )
       int rt = 0;
 
       T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
-      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
+      /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
+
+      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
+                                       duf_pdi_recursive( DUF_CONFIGG( pdi ) ) /*  */  ) );
     }
     mas_free( new_path );
 #else

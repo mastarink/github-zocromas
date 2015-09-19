@@ -146,7 +146,9 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     {
       DUF_TRACE( mod, 0, "@@@dialog  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
       /* "selected" tables should be different!? */
-      DOR_NOE( r, duf_ev_pdi_evname_std( &di, "listing" /*, &uf */  ), DUF_ERROR_NOT_IN_DB );
+      DOR( r, duf_ev_pdi_evname_std( &di, "listing" /*, &uf */  ) );
+      /* DOR_NOE( r, duf_ev_pdi_evname_std( &di, "tree" (*, &uf *)  ), DUF_ERROR_NOT_IN_DB ); */
+      T("@@@@@============= %s", " ==================");
       DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
       DUF_TEST_R( r );
       assert( di.pup == &uf );

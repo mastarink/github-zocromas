@@ -189,8 +189,9 @@ TODO scan mode
       {
         DUF_TRACE( explain, 0, "no init scan" );
       }
-      DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ ,
-                                        duf_pdi_recursive( PDI ) ) );
+      DOR( rpr,
+           duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ), duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ),
+                                   0 /* caninsert */ , duf_pdi_recursive( PDI ) ) );
     }
   }
   if ( pr )

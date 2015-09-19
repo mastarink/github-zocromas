@@ -22,19 +22,19 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_filter = {
   .table =                      /* */
   {
-   {.o = {DO_Q( "same" ) /*             */ , DO_A_O /* */ , DO_VUF( MD5SAME )} /*             */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINMAXLL, md5same ),.call = {.value = {.u = 2}} /*                       */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "min-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MINMD5SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINLL, md5same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-same" ) /*         */ , DO_A_R /* */ , DO_VUF( MAXMD5SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MAXLL, md5same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "md5same" ) /*          */ , DO_A_O /* */ , DO_VUF( MD5SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINMAXLL, md5same ),.call = {.value = {.u = 2}} /*                    */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-md5same" ) /*      */ , DO_A_R /* */ , DO_VUF( MINMD5SAME )} /*       */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINLL, md5same ) /*                                                   */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-md5same" ) /*      */ , DO_A_R /* */ , DO_VUF( MAXMD5SAME )} /*       */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MAXLL, md5same ) /*                                                   */ , DO_H(  .... ) /*                            */ },
 
-   {.o = {DO_Q( "sha1same" ) /*             */ , DO_A_O /* */ , DO_VUF( SHA1SAME )} /*             */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINMAXLL, sha1same ),.call = {.value = {.u = 2}} /*                       */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "min-sha1same" ) /*         */ , DO_A_R /* */ , DO_VUF( MINSHA1SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MINLL, sha1same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-sha1same" ) /*         */ , DO_A_R /* */ , DO_VUF( MAXSHA1SAME )} /*          */ , DO_CL( FILTER ) /*   */ ,
-    /*      */ DO_OU( MAXLL, sha1same ) /*                                                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "sha1same" ) /*         */ , DO_A_O /* */ , DO_VUF( SHA1SAME )} /*         */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINMAXLL, sha1same ),.call = {.value = {.u = 2}} /*                   */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-sha1same" ) /*     */ , DO_A_R /* */ , DO_VUF( MINSHA1SAME )} /*      */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MINLL, sha1same ) /*                                                  */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-sha1same" ) /*     */ , DO_A_R /* */ , DO_VUF( MAXSHA1SAME )} /*      */ , DO_CL( FILTER ) /*   */ ,
+    /*      */ DO_OU( MAXLL, sha1same ) /*                                                  */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "exifsame" ) /*         */ , DO_A_O /* */ , DO_VUF( EXIFSAME )} /*         */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MINMAXLL, exifsame ),.call = {.value = {.u = 2}} /*                   */ , DO_H(  .... ) /*                            */ },
