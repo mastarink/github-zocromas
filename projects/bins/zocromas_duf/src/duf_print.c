@@ -223,6 +223,10 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
 	fmt++;
         ns = ( unsigned long long ) pfi->nsame_exif;
 	break;
+      case 's':
+	fmt++;
+        ns = ( unsigned long long ) pfi->nsame_sha1;
+	break;
       default:
         ns = ( unsigned long long ) pfi->nsame;
 	break;
