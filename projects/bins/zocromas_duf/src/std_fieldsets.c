@@ -295,6 +295,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
    ", fd.md5id              AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+   ", fd.sha1id             AS sha1id " /* */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
@@ -329,6 +330,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
    ", fd.md5id              AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+   ", fd.sha1id              AS sha1id " /* */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */

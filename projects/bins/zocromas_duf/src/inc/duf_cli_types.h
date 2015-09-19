@@ -31,7 +31,6 @@ typedef struct
 } duf_filedirformat_t;
 typedef struct
 {
-  int use;
   duf_filedirformat_t tree;
   duf_filedirformat_t list;
   duf_filedirformat_t gen;

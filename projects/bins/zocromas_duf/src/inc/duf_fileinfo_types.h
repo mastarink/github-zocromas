@@ -13,6 +13,7 @@ typedef struct
   unsigned long long nsame_exif;
   unsigned long long sd5id;
   unsigned long long md5id;
+  unsigned long long sha1id;
   unsigned long long crc32id;
   unsigned long long nameid;
   const char *mime;

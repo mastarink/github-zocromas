@@ -74,14 +74,17 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   DUF_SQL_BIND_PAIR( SizeSame, same.size );
   DUF_SQL_BIND_PAIR( DataSame, same.data );
   DUF_SQL_BIND_PAIR( MimeSame, same.mime );
+
   DUF_SQL_BIND_PAIR( NameID, nameid );
+  DUF_SQL_BIND_PAIR( Md5ID, md5id );
+  DUF_SQL_BIND_PAIR( Sha1ID, sha1id );
+  DUF_SQL_BIND_PAIR( Sd2ID, sd5id );
   DUF_SQL_BIND_PAIR( DataID, dataid );
   DUF_SQL_BIND_PAIR( DirID, dirid );
+
   DUF_SQL_BIND_PAIR( MTime, mtime );
   DUF_SQL_BIND_PAIR( ExifDT, exifdt );
   DUF_SQL_BIND_PAIR( Inode, inode );
-  DUF_SQL_BIND_PAIR( Md5ID, md5id );
-  DUF_SQL_BIND_PAIR( Sd2ID, sd5id );
   DUF_SQL_BIND_PAIR( MimeID, mimeid );
   DUF_SQL_BIND_PAIR( ExifID, exifid );
   if ( pu->mime.type )

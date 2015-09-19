@@ -150,6 +150,7 @@ duf_sql_sequence_t sql_beginning_create = {
           ")",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_md5id      ON " DUF_SQL_TABLES_FILEDATAS " (md5id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sha1id     ON " DUF_SQL_TABLES_FILEDATAS " (sha1id)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sha1md5id  ON " DUF_SQL_TABLES_FILEDATAS " (sha1id,md5id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sd5id      ON " DUF_SQL_TABLES_FILEDATAS " (sd5id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_crc32id    ON " DUF_SQL_TABLES_FILEDATAS " (crc32id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_exifid     ON " DUF_SQL_TABLES_FILEDATAS " (exifid)",

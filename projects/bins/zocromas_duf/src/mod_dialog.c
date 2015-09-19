@@ -128,10 +128,12 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     .pdi_name = "dialog_pdi"
   };
   duf_ufilter_t uf = {
+    .use_format = 4,
     .md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ),
+    .sha1id.flag = 1,.sha1id.min = DUF_GET_UFIELD2( sha1id ),.sha1id.max = DUF_GET_UFIELD2( sha1id ),
     .same.md5.flag = 1,.same.md5.min = 2,.same.md5.max = 0,
   };
-  if ( uf.md5id.min > 0 && DUF_GET_UFIELD2( nsame ) > 1 )
+  if ( uf.md5id.min > 0 && uf.sha1id.min > 0 && DUF_GET_UFIELD2( nsame_md5 ) > 1 && DUF_GET_UFIELD2( nsame_sha1 ) > 1 )
   {
     DOR( r,
          DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ , 0 /* caninsert */ ,
@@ -148,7 +150,15 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       /* "selected" tables should be different!? */
       DOR( r, duf_ev_pdi_evname_std( &di, "listing" /*, &uf */  ) );
       /* DOR_NOE( r, duf_ev_pdi_evname_std( &di, "tree" (*, &uf *)  ), DUF_ERROR_NOT_IN_DB ); */
-      T("@@@@@============= %s", " ==================");
+
+
+      /* DUF_PRINTF( 0, "@@@@@@ %s%s", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ) ); */
+      {
+        DOR( r, duf_find_sccb_by_evname_std( "listing" )->sccb->leaf_scan2( pstmt, pdi ) );
+      }
+/* TODO: call .leaf_scan2 from "listing" */
+
+
       DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
       DUF_TEST_R( r );
       assert( di.pup == &uf );

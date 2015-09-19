@@ -118,14 +118,15 @@ typedef struct
 
 typedef struct duf_depthinfo_s
 {
-  char *pdi_name;
   unsigned created_name:1;
   unsigned attached_copy:1;
-  char *db_attached_selected;
   unsigned inited:1;
   unsigned sql_beginning_done:1;
   unsigned opendir:1;
   unsigned recursive:1;
+
+  char *db_attached_selected;
+  char *pdi_name;
   /* unsigned maxdepth; */
 #  if 0
   int depth;                    /* signed !! */

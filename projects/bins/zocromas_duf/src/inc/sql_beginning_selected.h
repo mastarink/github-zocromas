@@ -17,6 +17,9 @@
         "    (:minMd5ID    IS NULL OR  fd.md5id    >=:minMd5ID " /*                                 */ ") AND "  \
         "    (:maxMd5ID    IS NULL OR  fd.md5id    <=:maxMd5ID " /*                                 */ ") AND "  \
 \
+        "    (:minSha1ID   IS NULL OR  fd.sha1id   >=:minSha1ID " /*                                */ ") AND "  \
+        "    (:maxSha1ID   IS NULL OR  fd.sha1id   <=:maxSha1ID " /*                                */ ") AND "  \
+\
         "    (:minSd2ID    IS NULL OR  fd.sd5id    >=:minSd2ID " /*                                 */ ") AND "  \
         "    (:maxSd2ID    IS NULL OR  fd.sd5id    <=:maxSd2ID " /*                                 */ ") AND "  \
 \

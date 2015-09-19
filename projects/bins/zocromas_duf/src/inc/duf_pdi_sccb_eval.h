@@ -3,6 +3,7 @@
 
 /* * see duf_sccb_eval.h for names explanation * */
 
+const duf_action_table_t *duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table );
 const duf_action_table_t *duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_table_t * table );
 
 

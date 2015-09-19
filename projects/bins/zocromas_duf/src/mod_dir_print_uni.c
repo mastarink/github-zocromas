@@ -80,6 +80,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( filesize );
   DUF_UFIELD2( filemode );
   DUF_UFIELD2( md5id );
+  DUF_UFIELD2( sha1id );
   DUF_UFIELD2( dataid );
   DUF_UFIELD2( md5sum1 );
   DUF_UFIELD2( md5sum2 );
@@ -132,6 +133,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  .filesize = 1,
                  .md5 = 1,
                  .md5id = 1,
+                 /* .sha1id = 1, */
                  .mtime = 1,
                  .dataid = 1,
                  /* .prefix = 1, */
@@ -166,6 +168,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.mime = mime;
     fi.mimeid = mimeid;
     fi.md5id = md5id;
+    fi.sha1id = sha1id;
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
@@ -189,7 +192,11 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         int use;
         duf_filedirformat_t *fmt;
 
+#if 0
         use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+#else
+        use = duf_pdi_pu( pdi )->use_format - 1;
+#endif
         fmt = DUF_CONFIGA( cli.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
@@ -242,6 +249,7 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
                  .filesize = 0,
                  .md5 = 0,
                  .md5id = 0,
+                 /* .sha1id = 0, */
                  .dataid = 0,
                  .mtime = 0,
                  .prefix = 1,
@@ -267,6 +275,7 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
     /* fi.st.st_size = ( off_t ) filesize; */
     fi.name = duf_levinfo_itemshowname( pdi );
     /* fi.md5id = md5id; */
+    /* fi.sha1id = sha1id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
     DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, DUF_CONFIGG( cli.bformat.v.bit ) ) );
@@ -289,9 +298,13 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
 
       {
         int use;
-        duf_filedirformat_t *fmt;
+        const duf_filedirformat_t *fmt;
 
-        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+#if 0
+	use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+#else
+	use = duf_pdi_pu( pdi )->use_format - 1;
+#endif
         fmt = DUF_CONFIGA( cli.output.as_formats.list );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
         if ( use >= 0 && use < fmt->dirs.argc && !sformat )

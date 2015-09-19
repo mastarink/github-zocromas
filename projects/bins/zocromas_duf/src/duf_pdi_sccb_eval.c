@@ -30,6 +30,14 @@ duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_tab
   return NULL;
 }
 
+const duf_action_table_t *
+duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table )
+{
+  const duf_action_table_t *act;
+
+  act = duf_find_sccb_by_evnamen( name, strlen( name ), table );
+  return act;
+}
 
 /*
  * make/evaluate sccb
@@ -80,6 +88,10 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
     DOR( r, duf_ev_pdi_sccb( pdi, act->sccb, ptarg /*, pu */  ) ); /* XXX XXX XXX XXX */
+  }
+  else
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_SCCB_NOT_FOUND );
   }
   DEBUG_ENDR( r );
 }

@@ -57,6 +57,7 @@ typedef struct
 
 typedef struct
 {
+  int use_format;
   duf_rfilter_flags_combo_t v;
   unsigned max_rel_depth;
   unsigned long long max_seq;

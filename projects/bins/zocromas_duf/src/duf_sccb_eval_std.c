@@ -10,6 +10,16 @@
 /* ###################################################################### */
 
 
+
+const duf_action_table_t *
+duf_find_sccb_by_evname_std( const char *name )
+{
+  const duf_action_table_t *act;
+
+  act = duf_find_sccb_by_evname( name, duf_action_table(  ) );
+  return act;
+}
+
 int
 duf_ev_evnamed_list_std( const char *names )
 {

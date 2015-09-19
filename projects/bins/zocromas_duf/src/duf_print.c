@@ -101,6 +101,7 @@ typedef enum
   DUF_SFMT_CHR_DIRID = /*              */ 'I',
   DUF_SFMT_CHR_MODE = /*               */ 'm',
   DUF_SFMT_CHR_MD5ID = /*              */ 'M',
+  DUF_SFMT_CHR_SHA1ID = /*             */ 'H',
   DUF_SFMT_CHR_NLINK = /*              */ 'n',
   DUF_SFMT_CHR_NAMEID = /*             */ 'N',
   DUF_SFMT_CHR_INODE = /*              */ 'O',
@@ -199,6 +200,17 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
 #endif
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     break;
+  case DUF_SFMT_CHR_SHA1ID:     /* sha1id */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
+    if ( v )
+      snprintf( format, fbsz, "%%%ldllu", v );
+    else
+      snprintf( format, fbsz, "%%llu" );
+#endif
+    snprintf( pbuffer, bfsz, format, pfi->sha1id );
+    break;    
   case DUF_SFMT_CHR_NSAME:     /* nsame */
     {
       char c2 = 0;
@@ -216,20 +228,20 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       switch ( c2 )
       {
       case 'm':
-	fmt++;
+        fmt++;
         ns = ( unsigned long long ) pfi->nsame_md5;
-	break;
+        break;
       case 'x':
-	fmt++;
+        fmt++;
         ns = ( unsigned long long ) pfi->nsame_exif;
-	break;
+        break;
       case 's':
-	fmt++;
+        fmt++;
         ns = ( unsigned long long ) pfi->nsame_sha1;
-	break;
+        break;
       default:
         ns = ( unsigned long long ) pfi->nsame;
-	break;
+        break;
       }
       snprintf( pbuffer, bfsz, format, ns );
     }
@@ -478,8 +490,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
   case DUF_SFMT_CHR_MTIME2:    /* time */
     {
       time_t timet;
-      struct tm time_tm, *ptime_tm;
-      char stime[128];
+      struct tm time_tm, *ptime_tm = NULL;
+      char stime[128]="-";
       char c2 = 0;
 
       timet = ( time_t ) 0;
@@ -503,11 +515,13 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
         timet = ( time_t ) pfi->st.st_mtim.tv_sec;
         fmt--;
       }
-      ptime_tm = localtime_r( &timet, &time_tm );
+      if ( timet )
+        ptime_tm = localtime_r( &timet, &time_tm );
       switch ( ( char ) c )
       {
       case DUF_SFMT_CHR_MTIME1:
-        strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
+        if ( ptime_tm )
+          strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
         break;
       case DUF_SFMT_CHR_MTIME2:
         {
@@ -529,7 +543,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
           }
           if ( !subfmt )
             subfmt = mas_strdup( "%Y/%m/%d/%H.%M.%S" );
-          if ( subfmt )
+          if ( subfmt && ptime_tm )
             strftime( stime, sizeof( stime ), subfmt, ptime_tm );
           mas_free( subfmt );
         }
@@ -686,7 +700,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( format, fbsz, "%%s" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pfi->mime );
+    snprintf( pbuffer, bfsz, format, pfi->mime ? pfi->mime : "?" );
     break;
   case DUF_SFMT_CHR_NAMEID:    /* nameid */
 #if 1
