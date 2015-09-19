@@ -38,6 +38,22 @@ typedef struct
   char *camera;
 } duf_ufilter_exif_t;
 
+typedef struct
+{
+  duf_limitsll_t md5;
+  duf_limitsll_t sha1;
+  duf_limitsll_t exif;
+  duf_limitsll_t mime;
+  duf_limitsll_t data;
+  duf_limitsll_t size;
+} duf_same_limits_t;
+
+typedef struct
+{
+  char *md5;
+  char *sha1;
+  char *exif;
+} duf_same_as_t;
 
 typedef struct
 {
@@ -53,12 +69,7 @@ typedef struct
   /* unsigned long long mimeid; */
   /* unsigned long long exifid; */
   duf_limitsll_t size;
-  duf_limitsll_t md5same;
-  duf_limitsll_t sha1same;
-  duf_limitsll_t exifsame;
-  duf_limitsll_t mimesame;
-  duf_limitsll_t datasame;
-  duf_limitsll_t sizesame;
+  duf_same_limits_t same;
   duf_limitsll_t nameid;
   duf_limitsll_t dataid;
   duf_limitsll_t dirid;
@@ -78,8 +89,7 @@ typedef struct
   char *glob_db;
   char *glob_db_include;
   char *glob_db_exclude;
-  char *same_md5;
-  char *same_sha1;
+  duf_same_as_t same_as;
   duf_ufilter_mime_t mime;
   duf_ufilter_exif_t exif;
   /* unsigned long long filter_id; */

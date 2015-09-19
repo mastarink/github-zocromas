@@ -518,6 +518,9 @@ duf_main_db( int argc, char **argv )
     }
   }
 #endif
+  if ( DUF_ACTG_FLAG( info ) )
+    DOR( r, duf_main_db_info(  ) );
+
   DORF( r, duf_main_db_close, r ); /* [@] */
   DEBUG_ENDR( r );
 }

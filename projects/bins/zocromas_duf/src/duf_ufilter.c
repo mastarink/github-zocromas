@@ -52,8 +52,14 @@ duf_ufilter_delete( duf_ufilter_t * pu )
     mas_free( pu->glob_db_exclude );
     pu->glob_db_exclude = NULL;
 
-    mas_free( pu->same_md5 );
-    pu->same_md5 = NULL;
+    mas_free( pu->same_as.md5 );
+    pu->same_as.md5 = NULL;
+
+    mas_free( pu->same_as.sha1 );
+    pu->same_as.sha1 = NULL;
+
+    mas_free( pu->same_as.exif );
+    pu->same_as.exif = NULL;
 
     mas_argv_delete( pu->globx.include_fs_files.argc, pu->globx.include_fs_files.argv );
     pu->globx.include_fs_files.argc = 0;
@@ -74,18 +80,19 @@ duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
     memcpy( pu, pusrc, sizeof( duf_ufilter_t ) );
     pu->tag.file = mas_strdup( pusrc->tag.file );
     pu->tag.dir = mas_strdup( pusrc->tag.dir );
-/*  */ assert( ( ( char * ) &pu->tag + sizeof( char * ) + sizeof( char * ) ) == ( ( char * ) &pu->glob_db ) );
 
     pu->glob_db = mas_strdup( pusrc->glob_db );
-/*  */ assert( ( ( char * ) &pu->glob_db + sizeof( char * ) ) == ( ( char * ) &pu->glob_db_include ) );
+
     pu->glob_db_include = mas_strdup( pusrc->glob_db_include );
-/*  */ assert( ( ( char * ) &pu->glob_db_include + sizeof( char * ) ) == ( ( char * ) &pu->glob_db_exclude ) );
+
     pu->glob_db_exclude = mas_strdup( pusrc->glob_db_exclude );
-/*  */ assert( ( ( char * ) &pu->glob_db_exclude + sizeof( char * ) ) == ( ( char * ) &pu->same_md5 ) );
-    pu->same_md5 = mas_strdup( pusrc->same_md5 );
-/*  */ assert( ( ( char * ) &pu->same_md5 + sizeof( char * ) ) == ( ( char * ) &pu->mime.type ) );
+
+    pu->same_as.md5 = mas_strdup( pusrc->same_as.md5 );
+    pu->same_as.sha1 = mas_strdup( pusrc->same_as.sha1 );
+    pu->same_as.exif = mas_strdup( pusrc->same_as.exif );
+
     pu->mime.type = mas_strdup( pusrc->mime.type );
-/*  */ assert( ( ( char * ) &pu->mime.type + sizeof( char * ) ) == ( ( char * ) &pu->exif.camera ) );
+
     pu->exif.camera = mas_strdup( pusrc->exif.camera );
 
     pu->globx.include_fs_files.argc = 0;

@@ -68,7 +68,7 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
    %r : realpath
    %R : relative realpath (relative to 'top level')
    %# : seq_leaf
-   %S : nsame
+   %S : nsame_md5
    %s : << space >>
    %~ : suffix
    %ta : mtime
@@ -200,16 +200,35 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     break;
   case DUF_SFMT_CHR_NSAME:     /* nsame */
-#if 1
-    duf_convert_fmt( format, fbsz, fmt0, "llu" );
-#else
-    if ( v )
-      snprintf( format, fbsz, "%%%ldllu", v );
-    else
-      snprintf( format, fbsz, "%%llu" );
-#endif
+    {
+      char c2 = 0;
+      unsigned long long ns = 0;
 
-    snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->nsame );
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
+      if ( v )
+        snprintf( format, fbsz, "%%%ldllu", v );
+      else
+        snprintf( format, fbsz, "%%llu" );
+#endif
+      c2 = *fmt;
+      switch ( c2 )
+      {
+      case 'm':
+	fmt++;
+        ns = ( unsigned long long ) pfi->nsame_md5;
+	break;
+      case 'x':
+	fmt++;
+        ns = ( unsigned long long ) pfi->nsame_exif;
+	break;
+      default:
+        ns = ( unsigned long long ) pfi->nsame;
+	break;
+      }
+      snprintf( pbuffer, bfsz, format, ns );
+    }
     break;
   case DUF_SFMT_CHR_UNDERLINE: /* underline */
     memset( pbuffer, '_', v > 0 ? v : ( v < 0 ? -v : 1 ) );

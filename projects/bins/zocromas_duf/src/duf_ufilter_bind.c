@@ -68,12 +68,12 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     return 0;
 #endif
   DUF_SQL_BIND_PAIR( Size, size );
-  DUF_SQL_BIND_PAIR( Md5Same, md5same );
-  DUF_SQL_BIND_PAIR( Sha1Same, sha1same );
-  DUF_SQL_BIND_PAIR( ExifSame, exifsame );
-  DUF_SQL_BIND_PAIR( SizeSame, sizesame );
-  DUF_SQL_BIND_PAIR( DataSame, datasame );
-  DUF_SQL_BIND_PAIR( MimeSame, mimesame );
+  DUF_SQL_BIND_PAIR( Md5Same, same.md5 );
+  DUF_SQL_BIND_PAIR( Sha1Same, same.sha1 );
+  DUF_SQL_BIND_PAIR( ExifSame, same.exif );
+  DUF_SQL_BIND_PAIR( SizeSame, same.size );
+  DUF_SQL_BIND_PAIR( DataSame, same.data );
+  DUF_SQL_BIND_PAIR( MimeSame, same.mime );
   DUF_SQL_BIND_PAIR( NameID, nameid );
   DUF_SQL_BIND_PAIR( DataID, dataid );
   DUF_SQL_BIND_PAIR( DirID, dirid );
@@ -118,28 +118,40 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
 
 
-  if ( pu->same_md5 )
+  if ( pu->same_as.md5 )
   {
     duf_filepath_t fp;
 
-    DOR( r, duf_init_filepath( &fp, pu->same_md5 ) );
-    DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
-    DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
+    DOR( r, duf_init_filepath( &fp, pu->same_as.md5 ) );
+    DUF_SQL_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
-  if ( pu->same_sha1 )
+  if ( pu->same_as.sha1 )
   {
     duf_filepath_t fp;
 
-    DOR( r, duf_init_filepath( &fp, pu->same_sha1 ) );
+    DOR( r, duf_init_filepath( &fp, pu->same_as.sha1 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
+  if ( pu->same_as.exif )
+  {
+    duf_filepath_t fp;
+
+    DOR( r, duf_init_filepath( &fp, pu->same_as.exif ) );
+    DUF_SQL_BIND_LL_NZ_OPT( GSameExifPathID, fp.dirid, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GSameAsExif, fp.name, r, pstmt );
+    duf_clear_filepath( &fp );
+    if ( DUF_NOERROR( r ) && !fp.dirid )
+      DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
+  }
+
 
 #if 1
   if ( pu->tag.file )

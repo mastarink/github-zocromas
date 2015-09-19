@@ -52,6 +52,9 @@ typedef struct
     unsigned long long bit;
   } v;
   unsigned nsame;
+  unsigned nsame_md5;
+  unsigned nsame_sha1;
+  unsigned nsame_exif;
   unsigned offset;
 } duf_bformat_combo_t;
 

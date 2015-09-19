@@ -81,7 +81,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-           ", md.dup5cnt AS nsame " /* */
+           ", x.dupexifcnt          AS nsame " /* */
+           ", md.dup5cnt            AS nsame_md5 " /* */
+           ", sh.dupsha1cnt         AS nsame_sha1 " /* */
+           ", x.dupexifcnt          AS nsame_exif " /* */
            ", md.dup5cnt            AS dup5cnt " /* */
            ", sz.dupzcnt            AS dupzcnt " /* */
            ", fd.md5id AS md5id" /* */

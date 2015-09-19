@@ -88,6 +88,9 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( mimeid );
   DUF_SFIELD2( mime );
   DUF_UFIELD2( nsame );
+  DUF_UFIELD2( nsame_md5 );
+  DUF_UFIELD2( nsame_sha1 );
+  DUF_UFIELD2( nsame_exif );
   /* DUF_SFIELD( mtimef ); */
   /* DUF_SFIELD( dowmtime ); */
   /* DUF_SFIELD( monthmtime ); */
@@ -124,10 +127,16 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  .suffix = 1,
                  },
       .nsame = 1,
+      .nsame_md5 = 1,
+      .nsame_sha1 = 1,
+      .nsame_exif = 1,
     };
     duf_fileinfo_t fi = { 0 };
 #if 0
     fi.nsame = nsame;
+    fi.nsame_md5 = nsame_md5;
+    fi.nsame_sha1 = nsame_sha1;
+    fi.nsame_exif = nsame_exif;
     fi.dirid = dirid;
     fi.st.st_mode = ( mode_t ) filemode;
     fi.st.st_ino = ( ino_t ) inode;
@@ -240,10 +249,16 @@ tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
                .suffix = 1,
                },
     .nsame = 1,
+    .nsame_md5 = 1,
+    .nsame_sha1 = 1,
+    .nsame_exif = 1,
   };
 
   duf_fileinfo_t fi = { 0 };
   /* fi.nsame = nsame; */
+  /* fi.nsame_md5 = nsame_md5;   */
+  /* fi.nsame_sha1 = nsame_sha1; */
+  /* fi.nsame_exif = nsame_exif; */
   /* fi.st.st_mode = ( mode_t ) filemode; */
   /* fi.st.st_ino = ( ino_t ) inode;      */
   /* fi.st.st_mtim.tv_sec = mtime;        */
@@ -372,7 +387,8 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags ); );
+               DUF_PRINTF( 1, ".0x%02x]", flags );
+           );
     {
 #if 0
       {

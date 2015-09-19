@@ -46,9 +46,15 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi )
     DUF_UFIELD2( mimeid );
     DUF_SFIELD2( mime );
     DUF_UFIELD2( nsame );
+    DUF_UFIELD2( nsame_md5 );
+    DUF_UFIELD2( nsame_sha1 );
+    DUF_UFIELD2( nsame_exif );
 
     memset( pfi, 0, sizeof( duf_fileinfo_t ) );
     pfi->nsame = nsame;
+    pfi->nsame_md5 = nsame_md5;
+    pfi->nsame_sha1 = nsame_sha1;
+    pfi->nsame_exif = nsame_exif;
     pfi->dirid = dirid;
     pfi->st.st_mode = ( mode_t ) filemode;
     pfi->st.st_ino = ( ino_t ) inode;

@@ -129,7 +129,7 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   };
   duf_ufilter_t uf = {
     .md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ),
-    .md5same.flag = 1,.md5same.min = 2,.md5same.max = 0,
+    .same.md5.flag = 1,.same.md5.min = 2,.same.md5.max = 0,
   };
   if ( uf.md5id.min > 0 && DUF_GET_UFIELD2( nsame ) > 1 )
   {

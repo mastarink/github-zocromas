@@ -8,6 +8,9 @@ typedef struct
   unsigned long long dirid;
   /* unsigned long long truedirid; */
   unsigned long long nsame;
+  unsigned long long nsame_md5;
+  unsigned long long nsame_sha1;
+  unsigned long long nsame_exif;
   unsigned long long sd5id;
   unsigned long long md5id;
   unsigned long long crc32id;

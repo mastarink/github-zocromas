@@ -64,13 +64,17 @@
         "    ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
         "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
         "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
-        "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
+        "                                     WHERE fnb.name = :GSameAsMd5 AND fnb.Pathid=:GSameMd5PathID ) "  \
         "    ) AND " \
-        "    (:Name        IS NULL OR fn.name      = :Name " /*                                     */ ") AND "  \
         "    ( ( :GSameAsSha1  IS NULL OR :GSameSha1PathID IS NULL ) "  \
         "                          OR sh." DUF_SQL_IDNAME "=(SELECT fdb.sha1id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
         "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
         "                                     WHERE fnb.name = :GSameAsSha1 AND fnb.Pathid=:GSameSha1PathID ) "  \
+        "    ) AND " \
+        "    ( ( :GSameAsExif  IS NULL OR :GSameExifPathID IS NULL ) "  \
+        "                          OR x." DUF_SQL_IDNAME "=(SELECT fdb.exifid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+        "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+        "                                     WHERE fnb.name = :GSameAsExif AND fnb.Pathid=:GSameExifPathID ) "  \
         "    ) AND " \
 	"    ( " \
 	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
