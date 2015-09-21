@@ -17,12 +17,12 @@ int duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const char *sel
 
 /* 20150913.101143
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END, with callback */
-int duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback,
+int duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback,
                               const duf_argvc_t * ttarg, const char *selected_db ) __attribute__ ( ( warn_unused_result ) );
 
 /* 20150913.101143
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END, without callback */
-int duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const char *selected_db )
+int duf_eval_sqlsq( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const char *selected_db )
       __attribute__ ( ( warn_unused_result ) );
 
 #endif

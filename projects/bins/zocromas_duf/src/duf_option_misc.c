@@ -27,9 +27,11 @@
 #include "duf_option_misc.h"
 /* ###################################################################### */
 
-void
+duf_error_code_t
 duf_option_$_history( void )
 {
+  DEBUG_STARTR( r );
+
   HISTORY_STATE *phstate;
 
   phstate = history_get_history_state(  );
@@ -51,11 +53,15 @@ duf_option_$_history( void )
     }
   }
   DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
+  
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
 {
+  DEBUG_STARTR( r );
+
   if ( ptargc && ptargv )
   {
     int targc = *ptargc;
@@ -67,24 +73,38 @@ duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
         DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targv[ia] );
       }
   }
+  
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_clear_targ( int *ptargc, char ***ptargv, long n )
 {
+  DEBUG_STARTR( r );
+
   if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
+
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
 {
+  DEBUG_STARTR( r );
+
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
+  
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_echo( const char *arg )
 {
+  DEBUG_STARTR( r );
+
   DUF_PRINTF( 0, "%s", arg );
+  
+  DEBUG_ENDR( r );
 }

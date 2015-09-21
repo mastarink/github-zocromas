@@ -8,4 +8,4 @@ add-path
 create-tables
 progress
 cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
-evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif

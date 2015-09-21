@@ -212,10 +212,16 @@ duf_main_db_create_tables( void )
   /* DOR( r, duf_check_tables(  ) ); */
   if ( DUF_CLIG_FLAG( dry_run ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
-  else
-    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
+  else{
+    DORF( r, duf_eval_sqlsq, &sql_beginning_create_one, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
           ( const char * ) NULL /* selected.db */  );
-
+    DORF( r, duf_eval_sqlsq, &sql_beginning_create_two, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
+          ( const char * ) NULL /* selected.db */  );
+    DORF( r, duf_eval_sqlsq, &sql_beginning_create_three, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
+          ( const char * ) NULL /* selected.db */  );
+    DORF( r, duf_eval_sqlsq, &sql_beginning_create_four, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
+          ( const char * ) NULL /* selected.db */  );
+  }
   DEBUG_ENDR( r );
 }
 
@@ -230,7 +236,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
+      DORF( r, duf_eval_sqlsq, &sql_beginning_clear, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
             NULL /* selected.db */  );
     global_status.actions_done++;
   }
@@ -246,7 +252,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  );
+      DORF( r, duf_eval_sqlsq, &sql_beginning_vacuum, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  );
     global_status.actions_done++;
   }
   else
@@ -263,7 +269,7 @@ duf_main_db_pre_action( void )
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  );
+  DORF( r, duf_eval_sqlsq, &sql_beginning_tables, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  );
 
   DEBUG_ENDR( r );
 }
@@ -309,7 +315,7 @@ duf_main_db_tune( void )
 #endif
 
 /* TODO : part to only after possible tables creation */
-  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  ) ); /* PRAGMAs etc. */
+  DOR( r, duf_eval_sqlsq( &sql_beginning_common, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , NULL /* selected.db */  ) ); /* PRAGMAs etc. */
   DEBUG_ENDR( r );
 }
 

@@ -83,7 +83,7 @@
 	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
 	"         OR " \
 	"            fn.rowid IN (SELECT itemid FROM tags AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn.rowid) " \
-	"                         WHERE itemtype='filename' and tn.name IN " \
+	"                         WHERE itemtype='filename' AND tn.name IN " \
 	"                                          (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))  " \
 	"    ) AND " \
 	" " \

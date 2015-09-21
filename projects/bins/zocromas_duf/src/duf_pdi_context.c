@@ -17,7 +17,7 @@ duf_pdi_set_context( duf_depthinfo_t * pdi, void *ctx )
 }
 
 void
-duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_t destr )
+duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_func_t destr )
 {
   assert( pdi );
   duf_set_context_destructor( &pdi->context, destr );

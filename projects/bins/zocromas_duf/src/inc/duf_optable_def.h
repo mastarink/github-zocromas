@@ -59,10 +59,10 @@
 #  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }} /**/
 #  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }} /**/
       /* */
-      /* void f( .via.arg ) -- *//* call with numeric (int) arg from table (VIA:void-int-arg) */
-#  define DO_VIA_CALL(_f, _a)		DO_SET_VTYPE( VIA_CALL ), DO_SET_CALLA(via, _f, _a) /**/
-#  define DO_VIA_CALLH(_cl)		DO_VIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl) /**/
-#  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl) /**/
+      /* void f( .eia.arg ) -- *//* call with numeric (int) arg from table (EIA:void-int-arg) */
+#  define DO_EIA_CALL(_f, _a)		DO_SET_VTYPE( EIA_CALL ), DO_SET_CALLA(eia, _f, _a) /**/
+#  define DO_EIA_CALLH(_cl)		DO_EIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl) /**/
+#  define DO_EIA_CALLCL(_f, _cl)	DO_EIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl) /**/
       /* */
       /* void f( int argc, char *const *argv ) *//* call with carg[cv] (A:argv) */
 #  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f) /**/
@@ -74,8 +74,8 @@
       /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) *//* call with targ[cv] + numeric optarg (TN: targ and numeric) */
 #  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f) /**/
       /* */
-      /* void f( void ) *//* call with nothing (VV:void-void) */
-#  define DO_VV_CALL(_f)        DO_SET_VTYPE( VV_CALL ), DO_SET_CALL(vv, _f) /**/
+      /* duf_error_code_t f( void ) *//* call with nothing (EV:errc-void) */
+#  define DO_EV_CALL(_f)        DO_SET_VTYPE( EV_CALL ), DO_SET_CALL(ev, _f) /**/
       /* */
       /* void f( duf_strtol_suff( optargg, &r ) ) *//* call with numeric optarg (N:numeric) */
 #  define DO_N_CALL(_f)         DO_SET_VTYPE( N_CALL ), DO_SET_CALL(n, _f) /**/
@@ -86,8 +86,8 @@
       /* void f( optargg ) *//* call with string optarg (S: string) */
 #  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f) /**/
       /* */
-      /* void f( .vsa.arg ) -- *//* call with constant string arg from table (VSA:void-string-arg) */
-#  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a) /**/
+      /* void f( .esa.arg ) -- *//* call with constant string arg from table (VSA:void-string-arg) */
+#  define DO_ESA_CALL(_f, _a)		DO_SET_VTYPE( ESA_CALL ), DO_SET_CALLA(esa, _f, _a) /**/
       /* */
 #  define DO_TDB( ) 	DO_SET_VTYPE( TDB ) /**/
       /* */

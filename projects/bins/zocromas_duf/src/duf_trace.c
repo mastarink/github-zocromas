@@ -151,17 +151,8 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
         DUF_FPRINTFNE( 0, out, " " );
     }
 #endif
-    if ( prefix && *prefix )
-    {
-      r_ = DUF_FPRINTFNE( 0, out, "%15s%s", prefix ? prefix : " ", prefix ? " " : "  " );
-    }
-    else
-    {
-      r_ = DUF_FPRINTFNE( 0, out, " " );
-    }
-    {
-      r_ = DUF_VFPRINTFNE( 0, out, fmt, args );
-    }
+    r_ = DUF_FPRINTFNE( 0, out, prefix?"%-16s ":"%s", prefix ? prefix : " " );
+    r_ = DUF_VFPRINTFNE( 0, out, fmt, args );
 #if 0
     if ( highlight )
       DUF_FPRINTFNE( 0, out, "\x1b[m" );

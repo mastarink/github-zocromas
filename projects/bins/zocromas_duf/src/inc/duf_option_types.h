@@ -88,14 +88,14 @@ typedef enum
   DUF_OPTION_VTYPE_MAXDATETIME,
   DUF_OPTION_VTYPE_MINMAXDATETIME,
 /******************************************/
-  DUF_OPTION_VTYPE_VIA_CALL,
-  DUF_OPTION_VTYPE_VV_CALL,
+  DUF_OPTION_VTYPE_EIA_CALL,
+  DUF_OPTION_VTYPE_EV_CALL,
   DUF_OPTION_VTYPE_A_CALL,
   DUF_OPTION_VTYPE_AA_CALL,
   DUF_OPTION_VTYPE_N_CALL,
   DUF_OPTION_VTYPE_TN_CALL,
   DUF_OPTION_VTYPE_S_CALL,
-  DUF_OPTION_VTYPE_VSA_CALL,
+  DUF_OPTION_VTYPE_ESA_CALL,
   DUF_OPTION_VTYPE_TS_CALL,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
@@ -111,59 +111,106 @@ typedef struct option duf_option_t;
 
 typedef struct
 {
-  duf_void_int_t func;
+  duf_void_int_func_t func;
   int arg;
 } duf_void_int_arg_funcpair_t;
 typedef struct
 {
-  duf_int_void_t func;
+  duf_errc_int_func_t func;
+  int arg;
+} duf_errc_int_arg_funcpair_t;
+
+typedef struct
+{
+  duf_int_void_func_t func;
 } duf_int_void_funcpair_t;
+
 typedef struct
 {
-  duf_void_argcv_t func;
+  duf_void_argcv_func_t func;
 } duf_void_argcv_funcpair_t;
+typedef struct
+{
+  duf_errc_argcv_func_t func;
+} duf_errc_argcv_funcpair_t;
 
 typedef struct
 {
-  duf_void_arg_t func;
+  duf_void_arg_func_t func;
 } duf_void_arg_funcpair_t;
+typedef struct
+{
+  duf_errc_arg_func_t func;
+} duf_errc_arg_funcpair_t;
 
 typedef struct
 {
-  duf_void_pargcv_t func;
+  duf_void_pargcv_func_t func;
 } duf_void_pargcv_funcpair_t;
+typedef struct
+{
+  duf_errc_pargcv_func_t func;
+} duf_errc_pargcv_funcpair_t;
 
 typedef struct
 {
-  duf_void_pnv_t func;
+  duf_void_pnv_func_t func;
 } duf_void_pnv_funcpair_t;
 typedef struct
 {
-  duf_void_pargcnv_t func;
-} duf_void_pargcnv_funcpair_t;
+  duf_errc_pnv_func_t func;
+} duf_errc_pnv_funcpair_t;
 
 typedef struct
 {
-  duf_void_psv_t func;
+  duf_void_pargcnv_func_t func;
+} duf_void_pargcnv_funcpair_t;
+typedef struct
+{
+  duf_errc_pargcnv_func_t func;
+} duf_errc_pargcnv_funcpair_t;
+
+typedef struct
+{
+  duf_void_psv_func_t func;
 } duf_void_psv_funcpair_t;
 typedef struct
 {
-  duf_void_psv_t func;
+  duf_errc_psv_func_t func;
+} duf_errc_psv_funcpair_t;
+
+typedef struct
+{
+  duf_void_psv_func_t func;
   const char *arg;
 } duf_void_psv_arg_funcpair_t;
+typedef struct
+{
+  duf_errc_psv_func_t func;
+  const char *arg;
+} duf_errc_psv_arg_funcpair_t;
 
 typedef struct
 {
-  duf_void_pargcsv_t func;
+  duf_void_pargcsv_func_t func;
 } duf_void_pargcsv_funcpair_t;
+typedef struct
+{
+  duf_errc_pargcsv_func_t func;
+} duf_errc_pargcsv_funcpair_t;
 
 typedef struct
 {
-  duf_void_void_t func;
+  duf_void_void_func_t func;
 } duf_void_void_funcpair_t;
 typedef struct
 {
-  duf_scan_hook2_item_t func;
+  duf_errc_void_func_t func;
+} duf_errc_void_funcpair_t;
+
+typedef struct
+{
+  duf_scan_hook2_item_func_t func;
   duf_scan_callbacks_t *sccb;
 } duf_scan_hook2_item_pair_t;
 
@@ -210,17 +257,17 @@ typedef struct
     duf_anynum_t value2;
     union
     {
-      duf_void_int_arg_funcpair_t via;
+      duf_errc_int_arg_funcpair_t eia;
       duf_int_void_funcpair_t iv;
-      duf_void_void_funcpair_t vv;
-      duf_void_argcv_funcpair_t a;
-      duf_void_arg_funcpair_t aa;
-      duf_void_pargcv_funcpair_t t;
-      duf_void_pnv_funcpair_t n;
-      duf_void_pargcnv_funcpair_t tn;
-      duf_void_pargcsv_funcpair_t ts;
-      duf_void_psv_funcpair_t s;
-      duf_void_psv_arg_funcpair_t vsa;
+      duf_errc_void_funcpair_t ev;
+      duf_errc_argcv_funcpair_t a;
+      duf_errc_arg_funcpair_t aa;
+      duf_errc_pargcv_funcpair_t t;
+      duf_errc_pnv_funcpair_t n;
+      duf_errc_pargcnv_funcpair_t tn;
+      duf_errc_pargcsv_funcpair_t ts;
+      duf_errc_psv_funcpair_t s;
+      duf_errc_psv_arg_funcpair_t esa;
       duf_scan_hook2_item_pair_t hi;
     } fdesc;
   } call;

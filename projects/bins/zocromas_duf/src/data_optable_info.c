@@ -22,11 +22,11 @@ const duf_longval_extended_table_t optable_info = {
   .table =                      /* */
   {
    {.o = {DO_Q( "version" ) /*           */ , DO_A_N /* */ } /*                            */ , DO_CL( REFERENCE ) /*  */ ,
-    /*      */ DO_VV_CALL( version ) /*     */  /*                                          */ , DO_H( version info ) /*                     */ },
+    /*      */ DO_EV_CALL( version ) /*     */  /*                                          */ , DO_H( version info ) /*                     */ },
    {.o = {DO_Q( "flags" ) /*             */ , DO_A_N /* */ } /*                            */ , DO_CL( REFERENCE ) /*  */ ,
-    /*      */ DO_VV_CALL( showflags ) /*   */  /*                                          */ , DO_H( version info ) /*                     */ },
+    /*      */ DO_EV_CALL( showflags ) /*   */  /*                                          */ , DO_H( version info ) /*                     */ },
    {.o = {DO_Q( "help-examples" ) /*     */ , DO_A_N /* */ , DO_V( EXAMPLES )} /*          */ , DO_CL( HELP ) /*      */ ,
-    /*      */ DO_VV_CALL( examples ) /*                                                    */ , DO_H( examples ) /*                         */ },
+    /*      */ DO_EV_CALL( examples ) /*                                                    */ , DO_H( examples ) /*                         */ },
    {.o = {DO_Q( "list-options" ) /*      */ , DO_A_O /* */ , DO_V( LIST_OPTIONS )} /*      */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( list_options ) /*                                                          */ , DO_H(  ... ) /*                             */ },
 

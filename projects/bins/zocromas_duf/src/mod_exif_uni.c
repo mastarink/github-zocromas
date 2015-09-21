@@ -72,6 +72,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .name = "exif leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
+#if 0
            /* "'exif-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
@@ -82,10 +83,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", x.dupexifcnt          AS nsame " /* */
-           ", md.dup5cnt            AS nsame_md5 " /* */
-           ", sh.dupsha1cnt         AS nsame_sha1 " /* */
-           ", x.dupexifcnt          AS nsame_exif " /* */
-           ", md.dup5cnt            AS dup5cnt " /* */
+           /* ", md.dup5cnt            AS nsame_md5 " (* *) */
+           /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
+           /* ", x.dupexifcnt          AS nsame_exif " (* *) */
+           /* ", md.dup5cnt            AS dup5cnt " (* *) */
            ", sz.dupzcnt            AS dupzcnt " /* */
            ", fd.md5id AS md5id" /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
@@ -97,7 +98,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", xm.model AS camera " /* */
            ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
            ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
-           ", xm.model AS camera",
+           ", xm.model AS camera"
+#else
+	   "#exif"
+#endif
+	   ,
            .selector2 =         /* */
            " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */

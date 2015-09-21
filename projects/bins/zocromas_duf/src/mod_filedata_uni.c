@@ -24,6 +24,8 @@ static duf_sql_sequence_t final_sql = /* */
 {
   .name = "final @ ...",
   .done = 0,
+  .beginend = 0,
+
   .sql = {
 #if 0
           "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */
@@ -38,10 +40,21 @@ static duf_sql_sequence_t final_sql = /* */
           " WHERE " DUF_SQL_TABLES_EXIF_FULL "." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
 #endif
-          "DELETE FROM " DUF_SQL_TABLES_SIZES_FULL "",
+          /* XXX Needless XXX "DELETE FROM " DUF_SQL_TABLES_SIZES_FULL (* *) , */
+#if 0
           "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SIZES_FULL " (size, dupzcnt) " /* */
-          "SELECT size, COUNT(*) " /* */
-          " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd GROUP BY fd.size" /* */
+          /*     */ "SELECT size, COUNT(*) "
+          /*     */ " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd GROUP BY fd.size"
+#else
+          "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SIZES_FULL " (size) SELECT size FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd" /* */ ,
+          "UPDATE " DUF_SQL_TABLES_SIZES_FULL " SET dupzcnt=( " /* */
+          /*   */ " SELECT COUNT(*) "
+          /*     */ " FROM " DUF_SQL_TABLES_SIZES_FULL " AS sz "
+          /*     */ " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fd.size=sz.size ) "
+          /*     */ " WHERE " DUF_SQL_TABLES_SIZES_FULL ".size=sz.size "
+          " )"                  /* */
+#endif
+          /* */
           ,
 
 

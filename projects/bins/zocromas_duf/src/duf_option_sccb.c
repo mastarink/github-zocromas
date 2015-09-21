@@ -32,9 +32,10 @@
 #include "duf_option_sccb.h"
 /* ###################################################################### */
 
-void
+duf_error_code_t
 duf_option_$_list_sccbs( void )
 {
+  DEBUG_STARTR( r );
   for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
   {
     duf_scan_callbacks_t *sccb = act->sccb;
@@ -42,55 +43,56 @@ duf_option_$_list_sccbs( void )
     /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
     DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
   }
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_list_sccb( int x )
 {
+  DEBUG_STARTR( r );
   for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
   {
     DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
   }
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_evaluate_sccb( const char *names )
 {
-  int rt = 0;
+  DEBUG_STARTR( r );
 
 #if 0
-  DOR( rt, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
+  DOR( r, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
 #else
-  DOR( rt, duf_ev_evnamed_list_std( names ) );
+  DOR( r, duf_ev_evnamed_list_std( names ) );
 #endif
-  if ( rt < 0 )
-    T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
-  assert( rt >= 0 );
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_call_file( const char *name )
 {
+  DEBUG_STARTR( r );
   int r DUF_UNUSED = 0;
 
   duf_infile_options_at_filepath( DUF_OPTION_STAGE_ANY, name );
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_db_open( void )
 {
-  int rt = 0;
+  DEBUG_STARTR( r );
 
-  DOR( rt, duf_main_db_open(  ) );
-  DUF_TEST_R( rt );
-  if ( rt < 0 )
-    T( "@@@@@@@@(%d:%s) Something should be done with passing error from here", rt, duf_error_name( rt ) );
-  assert( rt >= 0 );
+  DOR( r, duf_main_db_open(  ) );
+  DEBUG_ENDR( r );
 }
 
-void
+duf_error_code_t
 duf_option_$_cd( const char *s )
 {
+  DEBUG_STARTR( r );
   if ( s && *s )
   {
 #if 1
@@ -120,22 +122,20 @@ duf_option_$_cd( const char *s )
     }
     DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
     {
-      int rt = 0;
 
-      T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
       /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
 
-      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
-                                       duf_pdi_recursive( DUF_CONFIGG( pdi ) ) /*  */  ) );
+      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
+                                      duf_pdi_recursive( DUF_CONFIGG( pdi ) ) /*  */  ) );
     }
     mas_free( new_path );
 #else
     {
-      int rt = 0;
 
       T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
-      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
+      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
     }
 #endif
   }
+  DEBUG_ENDR( r );
 }

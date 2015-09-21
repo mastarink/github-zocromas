@@ -33,7 +33,7 @@ typedef struct duf_dirhandle_s
 typedef struct
 {
   void *ptr;
-  duf_void_voidp_t destructor;
+  duf_void_voidp_func_t destructor;
 } duf_levinfo_context_t;
 
 typedef struct

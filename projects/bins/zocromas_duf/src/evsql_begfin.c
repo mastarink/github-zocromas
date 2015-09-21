@@ -94,7 +94,7 @@ duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const char *selecte
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END
  * */
 int
-duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg,
+duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg,
                           const char *selected_db )
 {
   DEBUG_STARTR( r );
@@ -146,15 +146,15 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, const du
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END, without callback
  * */
 int
-duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const char *selected_db )
+duf_eval_sqlsq( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const char *selected_db )
 {
   DEBUG_STARTR( r );
 
 
 #if 0
-  DOR( r, duf_eval_sql_sequence_cb( ssql, title, pu, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
+  DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
 #else
-  DOR( r, duf_eval_sql_sequence_cb( ssql, title, pu, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db ) );
+  DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db ) );
 #endif
 
   DEBUG_ENDR( r );

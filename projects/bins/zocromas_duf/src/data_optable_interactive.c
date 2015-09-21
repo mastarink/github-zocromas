@@ -48,7 +48,7 @@ const duf_longval_extended_table_t optable_interactive = {
    {.o = {DO_Q( "add-targ" ) /*            */ , DO_A_O, DO_V( ADD_TARG )}, DO_TF( TS_CALL, add_targ ) /*                                      */ },
    {.o = {DO_Q( "clear-targ" ) /*          */ , DO_A_O, DO_V( CLEAR_TARG )}, DO_T( TN_CALL ), DO_TN_CALL( clear_targ ) /*                       */ },
 
-   {.o = {DO_Q( "history" ) /*           */ , DO_A_O, DO_V( HISTORY )}, DO_TF( VV_CALL, history ) /*                        */ },
+   {.o = {DO_Q( "history" ) /*           */ , DO_A_O, DO_V( HISTORY )}, DO_TF( EV_CALL, history ) /*                        */ },
 
    {.o = {.name = NULL}}
    }

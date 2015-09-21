@@ -34,7 +34,7 @@ duf_set_context( duf_levinfo_context_t * pcontext, void *ptr )
 }
 
 void
-duf_set_context_destructor( duf_levinfo_context_t * pcontext, duf_void_voidp_t destr )
+duf_set_context_destructor( duf_levinfo_context_t * pcontext, duf_void_voidp_func_t destr )
 {
   assert( pcontext );
   pcontext->destructor = destr;

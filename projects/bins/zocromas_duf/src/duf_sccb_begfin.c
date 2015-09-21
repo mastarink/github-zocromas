@@ -11,7 +11,7 @@
 /* ###################################################################### */
 
 int
-duf_sccb_eval_sql_sequence( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu, const char *selected_db )
+duf_sccb_eval_sqlsq( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu, const char *selected_db )
 {
   DEBUG_STARTR( r );
 
@@ -19,18 +19,18 @@ duf_sccb_eval_sql_sequence( const duf_scan_callbacks_t * sccb, const duf_ufilter
   DUF_TRACE( sql, 0, "beginning_sql '%s'",
              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
 
-  DOR( r, duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ ,
+  DOR( r, duf_eval_sqlsq( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ ,
                                  pu, selected_db ) );
 
   DEBUG_ENDR( r );
 }
 
 int
-duf_sccb_eval_final_sql_sequence( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu )
+duf_sccb_eval_final_sqlsq( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , pu,
+  DOR( r, duf_eval_sqlsq( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , pu,
                                  NULL /* selected.db */  ) );
   DEBUG_ENDR( r );
 }

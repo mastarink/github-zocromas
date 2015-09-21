@@ -42,83 +42,45 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
   strncpy( format, tail, fbsz );
 }
 
-/***
-   %A : camera
-   %a : camera
-   %& : dataid
-   %C : color
-   %D : ndirs
-   %e : mime
-   %E : mimeid
-   %f : filename
-   %F : nfiles
-   %g : group
-   %h : depth
-   %I : dirid
-   %@ : md5sum
-   %M : md5id
-   %m : mode
-   %N : nameid
-   %n : nlink
-   %O : inode
-   %p : move to position
-   %P : prefix
-   %Q : seq
-   %q : seq_node
-   %r : realpath
-   %R : relative realpath (relative to 'top level')
-   %# : seq_leaf
-   %S : nsame_md5
-   %s : << space >>
-   %~ : suffix
-   %ta : mtime
-   %tc : mtime
-   %tm : mtime
-   %tx : exif datetime
-   %u : user
-   %X : exifid
-   %z : filesize
-
-***/
 typedef enum
 {
-  DUF_SFMT_CHR_SUFFIX = /*             */ '~',
-  DUF_SFMT_CHR_MD5SUM = /*             */ '@',
-  DUF_SFMT_CHR_SHA1SUM = /*            */ '.',
-  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',
-  DUF_SFMT_CHR_UNDERLINE = /*          */ '_',
-  DUF_SFMT_CHR_CAMERAS = /*            */ 'a',
-  DUF_SFMT_CHR_CAMERA = /*             */ 'A',
-  DUF_SFMT_CHR_DATAID = /*             */ '&',
-  DUF_SFMT_CHR_COLOR = /*              */ 'c',
-  DUF_SFMT_CHR_NDIRS = /*              */ 'D',
-  DUF_SFMT_CHR_MIME = /*               */ 'e',
-  DUF_SFMT_CHR_MIMEID = /*             */ 'E',
-  DUF_SFMT_CHR_FILENAME = /*           */ 'f',
-  DUF_SFMT_CHR_NFILES = /*             */ 'F',
-  DUF_SFMT_CHR_GROUP = /*              */ 'g',
-  DUF_SFMT_CHR_DEPTH = /*              */ 'h',
-  DUF_SFMT_CHR_DIRID = /*              */ 'I',
-  DUF_SFMT_CHR_MODE = /*               */ 'm',
-  DUF_SFMT_CHR_MD5ID = /*              */ 'M',
-  DUF_SFMT_CHR_SHA1ID = /*             */ 'H',
-  DUF_SFMT_CHR_NLINK = /*              */ 'n',
-  DUF_SFMT_CHR_NAMEID = /*             */ 'N',
-  DUF_SFMT_CHR_INODE = /*              */ 'O',
-  DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p',
-  DUF_SFMT_CHR_PREFIX = /*             */ 'P',
-  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q',
-  DUF_SFMT_CHR_SEQ = /*                */ 'Q',
-  DUF_SFMT_CHR_REALPATH = /*           */ 'r',
-  DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R',
-  DUF_SFMT_CHR_SPACE = /*              */ 's',
-  DUF_SFMT_CHR_NSAME = /*              */ 'S',
-  DUF_SFMT_CHR_MTIME1 = /*             */ 't',
-  DUF_SFMT_CHR_MTIME2 = /*             */ 'T',
-  DUF_SFMT_CHR_USER = /*               */ 'u',
-  DUF_SFMT_CHR_EXIFID = /*             */ 'X',
-  DUF_SFMT_CHR_FILESIZEH = /*          */ 'z',
-  DUF_SFMT_CHR_FILESIZE = /*           */ 'Z',
+  DUF_SFMT_CHR_SUFFIX = /*             */ '~', /* suffix */
+  DUF_SFMT_CHR_UNDERLINE = /*          */ '_', /*  */
+  DUF_SFMT_CHR_SHA1SUM = /*            */ '.', /* sha1sum */
+  DUF_SFMT_CHR_MD5SUM = /*             */ '@', /* md5sum */
+  DUF_SFMT_CHR_DATAID = /*             */ '&', /*  */
+  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#', /* seq_leaf */
+  DUF_SFMT_CHR_CAMERAS = /*            */ 'a', /* camera */
+  DUF_SFMT_CHR_CAMERA = /*             */ 'A', /* camera */
+  DUF_SFMT_CHR_COLOR = /*              */ 'c', /*  */
+  DUF_SFMT_CHR_NDIRS = /*              */ 'D', /* ndirs */
+  DUF_SFMT_CHR_MIME = /*               */ 'e', /* mime */
+  DUF_SFMT_CHR_MIMEID = /*             */ 'E', /* mimeid */
+  DUF_SFMT_CHR_FILENAME = /*           */ 'f', /* filename */
+  DUF_SFMT_CHR_NFILES = /*             */ 'F', /* nfiles */
+  DUF_SFMT_CHR_GROUP = /*              */ 'g', /* group */
+  DUF_SFMT_CHR_DEPTH = /*              */ 'h', /* depth */
+  DUF_SFMT_CHR_SHA1ID = /*             */ 'H', /* sha1id */
+  DUF_SFMT_CHR_DIRID = /*              */ 'I', /* dirid */
+  DUF_SFMT_CHR_MODE = /*               */ 'm', /* mimeid */
+  DUF_SFMT_CHR_MD5ID = /*              */ 'M', /* md5id */
+  DUF_SFMT_CHR_NLINK = /*              */ 'n', /* nlink */
+  DUF_SFMT_CHR_NAMEID = /*             */ 'N', /* nameid */
+  DUF_SFMT_CHR_INODE = /*              */ 'O', /* inode */
+  DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p', /* move to position */
+  DUF_SFMT_CHR_PREFIX = /*             */ 'P', /* prefix */
+  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q', /* seq_node */
+  DUF_SFMT_CHR_SEQ = /*                */ 'Q', /* seq */
+  DUF_SFMT_CHR_REALPATH = /*           */ 'r', /* realpath */
+  DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R', /* relative realpath (relative to 'top level') */
+  DUF_SFMT_CHR_SPACE = /*              */ 's', /* << space >> */
+  DUF_SFMT_CHR_NSAME = /*              */ 'S', /* nsame_md5 */
+  DUF_SFMT_CHR_MTIME1 = /*             */ 't', /* tm,tc,ta: mtime */
+  DUF_SFMT_CHR_MTIME2 = /*             */ 'T', /*  */
+  DUF_SFMT_CHR_USER = /*               */ 'u', /* user */
+  DUF_SFMT_CHR_EXIFID = /*             */ 'X', /* exifid */
+  DUF_SFMT_CHR_FILESIZEH = /*          */ 'z', /* filesize */
+  DUF_SFMT_CHR_FILESIZE = /*           */ 'Z', /* filesize */
 } duf_sformat_char_t;
 
 static size_t

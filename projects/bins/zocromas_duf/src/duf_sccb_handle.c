@@ -105,12 +105,12 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 }
 
 static int
-duf_sccbh_eval_sql_sequence( const duf_sccb_handle_t * sccbh /*, const duf_ufilter_t * pu_unused */  )
+duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh /*, const duf_ufilter_t * pu_unused */  )
 {
   DEBUG_STARTR( r );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
   {
-    DOR( r, duf_sccb_eval_sql_sequence( SCCB, PU, PDI->pdi_name ) );
+    DOR( r, duf_sccb_eval_sqlsq( SCCB, PU, PDI->pdi_name ) );
     if ( DUF_NOERROR( r ) )
     {
       duf_pdi_root( PDI )->sql_beginning_done = 1;
@@ -160,7 +160,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
 
-    DOR( rpr, duf_sccbh_eval_sql_sequence( sccbh /* , PU */  ) );
+    DOR( rpr, duf_sccbh_eval_sqlsq( sccbh /* , PU */  ) );
 
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
@@ -207,7 +207,7 @@ duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
   {
     /* final */
     DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
-    DOR( r, duf_sccb_eval_final_sql_sequence( SCCB, ( duf_ufilter_t * ) NULL /* pu */  ) );
+    DOR( r, duf_sccb_eval_final_sqlsq( SCCB, ( duf_ufilter_t * ) NULL /* pu */  ) );
     if ( PDICLONED )
       duf_pdi_delete( PDI );
     mas_free( sccbh );

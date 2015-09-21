@@ -46,7 +46,7 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
   int changes = 0;
 
   static const char *sql =
-        "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL " ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentdirID )";
+        "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL " ( dev, inode, dirname, parentid )  VALUES (:Dev, :iNode, :dirName, :parentdirID )";
 
 
   DUF_SQL_START_STMT( pdi, insert_path_table, sql, r, pstmt );

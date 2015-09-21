@@ -16,8 +16,8 @@
 #  define DUF_MAKE_ERROR(_rval, _code) (_rval = duf_make_error(_code, FL))
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
-#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP(NULL, __VA_ARGS__)
-#  define DUF_SHOW_ERROR_TEST( _fmt, ... ) 		DUF_SHOW_ERROR_WP( "> > > > > > > ", _fmt,  __VA_ARGS__ )
+#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  FINAL ERROR", __VA_ARGS__)
+#  define DUF_SHOW_ERROR_TEST( _fmt, ... ) 		DUF_SHOW_ERROR_WP( "@@> > > > > > > ", "@@@@@@@@@"_fmt,  __VA_ARGS__ )
 
 /* #  ifdef DUF_T_NOIF                                                                            */
 /* #    define DUF_ERRORQ( _cond, ... )            ( ( _cond ) ? DUF_SHOW_ERROR(__VA_ARGS__) : 0) */

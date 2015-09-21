@@ -14,8 +14,8 @@ typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 /* typedef int ( *duf_scan_hook2_dir_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi ); */
 
 /* this is callback of type: duf_scan_hook_file_t : */
-typedef int ( *duf_scan_hook2_file_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
-typedef int ( *duf_scan_hook2_item_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+typedef int ( *duf_scan_hook2_file_func_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+typedef int ( *duf_scan_hook2_item_func_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_stmnt_t * pstmt, int fd, duf_depthinfo_t * pdi ); */
 

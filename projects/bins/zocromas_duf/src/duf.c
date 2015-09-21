@@ -162,8 +162,8 @@ duf_main( int argc, char **argv )
   DOR_NOE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
   if ( !DUF_NOERROR( r ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@(%d:%s) ", r, duf_error_name( r ) );
-    DUF_SHOW_ERROR( "@@@@@@         at %s", argv[0] );
+    DUF_SHOW_ERROR( "@@@@@@@@(%d:%s) ", r, duf_error_name( r ) );
+    DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
   }
 
   duf_config_delete(  );
