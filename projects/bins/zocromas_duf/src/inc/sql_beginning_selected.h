@@ -95,7 +95,7 @@
            " ( :GNameX "   " IS NULL OR fn.name  NOT GLOB :GNameX ) AND "  \
 	" 1 "
 
-/*
+/* --- XXX "has one of tags" XXX --- replaced with "has both tags"
   	    " ( " \
   	           " (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
   	        " OR " \
