@@ -28,6 +28,7 @@ duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused, const duf_ar
     DUF_SQL_BIND_S_OPT( optVal, ttarg->argv[0], r, pstmt );
     DUF_SQL_BIND_S_OPT( optName, ttarg->argv[1], r, pstmt );
     DUF_SQL_BIND_S_OPT( optArg, ttarg->argv[2], r, pstmt );
+    DUF_TRACE(sql,0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] );
   }
 
   DEBUG_ENDR( r );
@@ -37,15 +38,15 @@ int
 duf_tmpdb_add( int oval, const char *optname, const char *optargg )
 {
   DEBUG_STARTR( r );
-  static duf_sql_sequence_t DUF_UNUSED tmpseq = { /* */
+  static duf_sql_sequence_t tmpseq = { /* */
     .name = "tmpseq",
     .sql = {
-            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */
-            , NULL}
+            /* "DELETE FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " WHERE oval=:optVal AND name=:optName AND arg=:optArg" (* *) , */
+            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */ ,
+            NULL}
   };
   char optval[512];
   duf_argvc_t ttarg = {.argc = 0,.argv = NULL };
-
   snprintf( optval, sizeof( optval ), "%d", oval );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optval );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optname );

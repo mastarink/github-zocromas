@@ -22,12 +22,20 @@
 const duf_action_table_t *
 duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_table_t * table )
 {
-  for ( const duf_action_table_t * act = table; !act->end_of_table; act++ )
+  const duf_action_table_t *act = NULL;
+  char *n;
+
+  n = mas_strndup( name, namelen );
+  for ( act = table; !act->end_of_table; act++ )
   {
-    if ( act->sccb && act->in_use && 0 == strncmp( name, act->sccb->name, namelen ) )
-      return act;
+    if ( act->sccb && act->in_use && 0 == strcmp( n, act->sccb->name ) )
+      break;
   }
-  return NULL;
+  if ( !act || act->end_of_table || !act->sccb || !act->sccb->name )
+    act = NULL;
+  /* T( "@@@ %s", act && act->sccb ? act->sccb->name : "?" ); */
+  mas_free( n );
+  return act;
 }
 
 const duf_action_table_t *

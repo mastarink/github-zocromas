@@ -100,9 +100,9 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
            ", xm.model AS camera"
 #else
-	   "#exif"
+           "#exif"
 #endif
-	   ,
+           ,
            .selector2 =         /* */
            " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
@@ -171,7 +171,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 
 
 
-DUF_UNUSED static unsigned long long
+static unsigned long long
 duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int *pr )
 {
   int lr = 0;
@@ -247,7 +247,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
   DEBUG_ENDULL( modelid );
 }
 
-DUF_UNUSED static unsigned long long
+static unsigned long long
 duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
                      int need_id, int *pr )
 {

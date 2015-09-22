@@ -57,18 +57,18 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     int changes = 0;
 
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    T( "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
+    DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
     DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
   }
-  T( "%p post ATTACH %s", pdi, pdi->db_attached_selected );
+  DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   DEBUG_ENDR( r );
 }
 #endif
 
 /* 20150904.090641 */
-int DUF_UNUSED
+int
 duf_pdi_detach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );

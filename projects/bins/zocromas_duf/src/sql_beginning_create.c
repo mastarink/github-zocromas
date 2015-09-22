@@ -388,18 +388,17 @@ duf_sql_sequence_t sql_beginning_create_four = {
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "tagnames " /* */
-          "("
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_TAGNAMES_FULL " ( "
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
           " name TEXT NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tagnames_uniq ON tagnames (name)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TAGNAMES_FULL "_uniq ON " DUF_SQL_TABLES_TAGNAMES " (name)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "tags ("
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_TAGS_FULL " ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement,"
 #endif
@@ -411,7 +410,7 @@ duf_sql_sequence_t sql_beginning_create_four = {
           /* " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_FILENAMES "(" DUF_SQL_IDNAME ") " (* *) */
           /* " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") " (* *)     */
           " )",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tags_uniq ON tags (tagnameid, itemid)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TAGS_FULL "_uniq ON " DUF_SQL_TABLES_TAGS " (tagnameid, itemid)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/

@@ -28,7 +28,7 @@ duf_sql_sequence_t sql_create_selected = {
   .set_selected_db = 1,
   .sql = {
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ , /* XXX */
+          /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL (* *) , (* XXX *) */
 #endif
           "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE IF NOT EXISTS  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
           " AS "                /* */
@@ -46,9 +46,10 @@ duf_sql_sequence_t sql_create_selected = {
           /* " GROUP BY nameid " (* *) */
           ,                     /* XXX */
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_fnid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (nameid) " /* */ , /* XXX */
+          "DELETE FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ , /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
+          /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL (* *) , (* XXX *) */
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
           " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
@@ -65,10 +66,10 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_fid ON " DUF_SQL_SELECTED_TMP_PATHS " (fid)" /* */ ,
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_did ON " DUF_SQL_SELECTED_TMP_PATHS " (did)" /* */ ,
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ , /* XXX */
-
+          "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ ,
+          /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL (* *) , */
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
           " AS "                /* */
@@ -84,13 +85,12 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (Pathid)"
           /* */ ,
           /* XXX */
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-          " (numfiles)"
-          /* */ ,
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (numfiles)" /* */ , /* XXX */
+          "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ , /* XXX */
           /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
+          /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL (* *) , */
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
@@ -106,6 +106,6 @@ duf_sql_sequence_t sql_create_selected = {
           " GROUP BY parents." DUF_SQL_IDNAME " ", /* XXX */
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid)", /* XXX */
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)", /* XXX */
-
+          "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL, /* XXX */
           NULL}
 };
