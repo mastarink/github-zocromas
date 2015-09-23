@@ -80,22 +80,25 @@
                                            "  WHERE fnb.name = :GSameAsExif AND fnb.Pathid=:GSameExifPathID ) "  \
            " ) AND " \
 	   " ( " \
-	   "  SELECT COUNT(tg.itemid) icnt " \
+           "  (SELECT COUNT(*) AS c FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval=:Option_Val_With_Tag_File) == 0 " \
+	   " OR " \
+	   "  (SELECT COUNT(tg.itemid) icnt " \
 	        " FROM "      DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo " \
 	        " LEFT JOIN " DUF_SQL_TABLES_TAGNAMES_FULL        " AS tn  ON (tbo.arg=tn.name) " \
 	        " LEFT JOIN " DUF_SQL_TABLES_TAGS_FULL            " AS tg  ON (tg.tagnameid=tn.rowid) " \
 	        " WHERE tg.itemid=fn.rowid AND tg.itemtype='filename' " \
 	        " GROUP BY itemid " \
-	        " HAVING icnt=(SELECT count(*) FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tboc " \
+	        " HAVING icnt=(SELECT COUNT(*) AS c FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tboc " \
 		" WHERE tbo.oval=:Option_Val_With_Tag_File) " \
-	   " ) > 0 AND " \
+	   "  ) > 0 " \
+	   " ) AND " \
            " ( :Camera "   " IS NULL OR xm.model     LIKE :Camera ) AND "  \
            " ( :GName "    " IS NULL OR fn.name      GLOB :GName  ) AND "  \
            " ( :GNameI "   " IS NULL OR fn.name      GLOB :GNameI ) AND "  \
            " ( :GNameX "   " IS NULL OR fn.name  NOT GLOB :GNameX ) AND "  \
 	" 1 "
 
-/* --- XXX "has one of tags" XXX --- replaced with "has both tags"
+/*  20150922.120538 --- XXX "has one of tags" XXX --- replaced with "has both tags"
   	    " ( " \
   	           " (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
   	        " OR " \
@@ -104,6 +107,7 @@
   	                                         " (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))  " \
   	    " ) AND " \
 */
+
 
         /* "         OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))" \ */
 

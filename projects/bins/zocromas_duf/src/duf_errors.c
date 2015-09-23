@@ -66,6 +66,7 @@ duf_make_error( duf_error_code_t err, const char *funcid, int linid )
     global_error_list[_made_errors].funcid = funcid;
     global_error_list[_made_errors].linid = linid;
   }
+  DUF_TRACE( error, 5, "made error %d", err );
   _made_errors++;
   return err;
 }
@@ -79,12 +80,14 @@ duf_made_errors( duf_error_code_t err )
 int
 duf_errindex( duf_error_code_t rtest )
 {
+  DUF_TRACE( error, 5, "error %d / %d", rtest, rtest - DUF_ERROR_ERROR_BASE );
   return ( rtest - DUF_ERROR_ERROR_BASE );
 }
 
 int
 duf_errindex_sql( duf_error_code_t rtest )
 {
+  DUF_TRACE( error, 5, "error %d / %d", rtest, rtest - DUF_ERROR_ERROR_BASE );
   return ( rtest - MAS_SQLITE_ERROR_BASE );
 }
 
@@ -94,6 +97,8 @@ _duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest, int max
   if ( rtest < 0 )
   {
     int errindex = duf_errindex( rtest );
+
+    DUF_TRACE( error, 5, "set %d / %d", rtest, rtest - DUF_ERROR_ERROR_BASE );
 
     if ( errindex >= 0 && errindex < maxerr )
     {

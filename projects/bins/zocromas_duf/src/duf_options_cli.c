@@ -62,8 +62,8 @@ duf_reorder_at_sign( int argc, char *argv[] )
   return ra;
 }
 
-int
-duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
+static int
+duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
@@ -95,12 +95,12 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
   {
     DUF_TRACE( options, +2, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
- * duf_parse_exec_option return
+ * duf_clarify_opt return
  *        oclass (>0) for "help" options
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    DOR( r, duf_parse_exec_option( codeval, longindex, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
+    DOR( r, duf_clarify_opt( codeval, longindex, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
     if ( optind > 0 )
@@ -173,7 +173,7 @@ duf_cli_options( duf_option_stage_t istage )
 #endif
   DUF_TRACE( options, +2, "cli options..." );
 
-  DOR( r, duf_parse_exec_cli_options( DUF_CONFIGG( cli.shorts ), istage ) );
+  DOR( r, duf_clarify_cli_opts( DUF_CONFIGG( cli.shorts ), istage ) );
 
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0

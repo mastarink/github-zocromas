@@ -2,7 +2,7 @@
 #  define DUF_OPTION_H
 
 
-int duf_parse_exec_option( duf_option_code_t opt, int longindex, const char *optarg, duf_option_stage_t stage, duf_option_source_t source )
+int duf_clarify_opt( duf_option_code_t opt, int longindex, const char *optarg, duf_option_stage_t stage, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
 
 int DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t stage,

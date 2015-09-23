@@ -15,7 +15,7 @@
 #include "duf_option_extended.h"
 #include "duf_option_names.h"
 
-/* #include "duf_config_ref.h" */
+#include "duf_config_ref.h"
 /* ###################################################################### */
 #include "duf_config.h"
 /* ###################################################################### */
@@ -327,6 +327,78 @@ duf_config_optionally_show( void )
     mas_free( sif );
   }
 #endif
+
+  DEBUG_ENDR( r );
+}
+
+int
+duf_config_make_db_main_path( void )
+{
+  DEBUG_STARTR( r );
+
+  DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.main.name ) );
+  /* TODO move db.main.fpath and db.adm.fpath and db.tempo.fpath from duf_config to tmp etc. - it's not config values */
+  /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", DUF_CONFIGG(db.dir), DUF_CONFIGG(db.main.name) ); */
+  mas_free( DUF_CONFIGW( db.main.fpath ) );
+  /* TODO to use something like duf_expand_selected_db() here TODO */
+  DUF_CONFIGW( db.main.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
+  DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), "/" );
+  DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), DUF_CONFIGG( db.main.name ) );
+  if ( 0 != strcmp( DUF_CONFIGG( db.main.fpath + strlen( DUF_CONFIGG( db.main.fpath ) ) - 3 ), ".db" ) )
+    DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), ".db" );
+  DUF_TRACE( explain, 0, "config->db.main.fpath set: %s", DUF_CONFIGG( db.main.fpath ) );
+
+  DEBUG_ENDR( r );
+}
+
+int
+duf_config_make_db_adm_path( void )
+{
+  DEBUG_STARTR( r );
+
+  DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.adm.name ) );
+  mas_free( DUF_CONFIGW( db.adm.fpath ) );
+  DUF_CONFIGW( db.adm.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
+  DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), "/" );
+  {
+    char *n;
+
+    n = strchr( DUF_CONFIGG( db.main.name ), '.' );
+    if ( !n )
+      n = DUF_CONFIGG( db.main.name ) + strlen( DUF_CONFIGG( db.main.name ) );
+    DUF_CONFIGW( db.adm.fpath ) = mas_strncat_x( DUF_CONFIGG( db.adm.fpath ), DUF_CONFIGG( db.main.name ), n - DUF_CONFIGG( db.main.name ) );
+    DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), "_$_" );
+  }
+  DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), DUF_CONFIGG( db.adm.name ) );
+  if ( 0 != strcmp( DUF_CONFIGG( db.adm.fpath + strlen( DUF_CONFIGG( db.adm.fpath ) ) - 3 ), ".db" ) )
+    DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), ".db" );
+  DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", DUF_CONFIGG( db.adm.fpath ) );
+
+  DEBUG_ENDR( r );
+}
+
+int
+duf_config_make_db_temp_path( void )
+{
+  DEBUG_STARTR( r );
+
+  DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.tempo.name ) );
+  mas_free( DUF_CONFIGW( db.tempo.fpath ) );
+  DUF_CONFIGW( db.tempo.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
+  DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "////" );
+  {
+    char *n;
+
+    n = strchr( DUF_CONFIGG( db.main.name ), '.' );
+    if ( !n )
+      n = DUF_CONFIGG( db.main.name ) + strlen( DUF_CONFIGG( db.main.name ) );
+    DUF_CONFIGW( db.tempo.fpath ) = mas_strncat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.main.name ), n - DUF_CONFIGG( db.main.name ) );
+    DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "_$_" );
+  }
+  DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.tempo.name ) );
+  if ( 0 != strcmp( DUF_CONFIGG( db.tempo.fpath + strlen( DUF_CONFIGG( db.tempo.fpath ) ) - 3 ), ".db" ) )
+    DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), ".db" );
+  DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", DUF_CONFIGG( db.tempo.fpath ) );
 
   DEBUG_ENDR( r );
 }

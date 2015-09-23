@@ -71,6 +71,7 @@ duf_main_db_locate( void )
 
   if ( DUF_CONFIGG( db.dir ) && DUF_CONFIGG( db.main.name ) )
   {
+#if 0
     DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.main.name ) );
     /* TODO move db.main.fpath and db.adm.fpath and db.tempo.fpath from duf_config to tmp etc. - it's not config values */
     /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", DUF_CONFIGG(db.dir), DUF_CONFIGG(db.main.name) ); */
@@ -82,9 +83,14 @@ duf_main_db_locate( void )
     if ( 0 != strcmp( DUF_CONFIGG( db.main.fpath + strlen( DUF_CONFIGG( db.main.fpath ) ) - 3 ), ".db" ) )
       DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), ".db" );
     DUF_TRACE( explain, 0, "config->db.main.fpath set: %s", DUF_CONFIGG( db.main.fpath ) );
+#else
+    DOR( r, duf_config_make_db_main_path(  ) );
+#endif
+
 #ifdef MAS_SPLIT_DB
     if ( DUF_CONFIGG( db.adm.name ) )
     {
+#  if 0
       DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.adm.name ) );
       mas_free( DUF_CONFIGW( db.adm.fpath ) );
       DUF_CONFIGW( db.adm.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
@@ -102,10 +108,14 @@ duf_main_db_locate( void )
       if ( 0 != strcmp( DUF_CONFIGG( db.adm.fpath + strlen( DUF_CONFIGG( db.adm.fpath ) ) - 3 ), ".db" ) )
         DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), ".db" );
       DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", DUF_CONFIGG( db.adm.fpath ) );
+#  else
+      DOR( r, duf_config_make_db_adm_path(  ) );
+#  endif
     }
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
     if ( DUF_CONFIGG( db.tempo.name ) )
     {
+#  if 0
       DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", DUF_CONFIGG( db.dir ),
                  DUF_CONFIGG( db.tempo.name ) );
       mas_free( DUF_CONFIGW( db.tempo.fpath ) );
@@ -124,6 +134,9 @@ duf_main_db_locate( void )
       if ( 0 != strcmp( DUF_CONFIGG( db.tempo.fpath + strlen( DUF_CONFIGG( db.tempo.fpath ) ) - 3 ), ".db" ) )
         DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), ".db" );
       DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", DUF_CONFIGG( db.tempo.fpath ) );
+#else
+      DOR( r, duf_config_make_db_temp_path(  ) );
+#endif
     }
 #  endif
 #  if 0
@@ -212,7 +225,8 @@ duf_main_db_create_tables( void )
   /* DOR( r, duf_check_tables(  ) ); */
   if ( DUF_CLIG_FLAG( dry_run ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
-  else{
+  else
+  {
     DORF( r, duf_eval_sqlsq, &sql_beginning_create_one, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,
           ( const char * ) NULL /* selected.db */  );
     DORF( r, duf_eval_sqlsq, &sql_beginning_create_two, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ ,

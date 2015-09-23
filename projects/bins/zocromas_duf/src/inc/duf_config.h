@@ -10,5 +10,8 @@ void duf_config_delete( void );
 int duf_config_show( void ) __attribute__ ( ( warn_unused_result ) );
 int duf_config_optionally_show( void ) __attribute__ ( ( warn_unused_result ) );
 
+int duf_config_make_db_main_path( void );
+int duf_config_make_db_adm_path( void );
+int duf_config_make_db_temp_path( void );
 
 #endif

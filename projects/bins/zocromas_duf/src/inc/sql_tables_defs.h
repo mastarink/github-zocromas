@@ -10,7 +10,7 @@
 
 #  ifndef DUF_SQL_SELECTED_TEMPORARY
 #    define DUF_SQL_SELECTED_DROP
-#else
+#  else
 #    define DUF_SQL_SELECTED_DROP
 #  endif
 
@@ -42,23 +42,23 @@
 #    define DUF_SQL_TTABLES_TEMPORARY_STRING
 #  endif
 
-#  define DUF_SQL_TABLES_TMP_TDB_OPTIONS "t_tdb_options"
-#  define DUF_SQL_TABLES_TMP_PATHTOT_FILES "t_common_pathtot_files"
-#  define DUF_SQL_TABLES_TMP_PATHTOT_DIRS "t_common_pathtot_dirs"
+#  define DUF_SQL_TABLES_TMP_TDB_OPTIONS       "t_tdb_options"
+#  define DUF_SQL_TABLES_TMP_PATHTOT_FILES     "t_common_pathtot_files"
+#  define DUF_SQL_TABLES_TMP_PATHTOT_DIRS      "t_common_pathtot_dirs"
 
-#  define DUF_SQL_TABLES_FILENAMES  "filenames"
-#  define DUF_SQL_TABLES_FILEDATAS  "filedatas"
-#  define DUF_SQL_TABLES_SHA1  "sha1"
-#  define DUF_SQL_TABLES_MD5  "md5"
-#  define DUF_SQL_TABLES_SD5  "sd5"
-#  define DUF_SQL_TABLES_CRC32  "crc32"
-#  define DUF_SQL_TABLES_SIZES  "sizes"
-#  define DUF_SQL_TABLES_EXIF  "exif"
-#  define DUF_SQL_TABLES_EXIF_MODEL  "exif_model"
-#  define DUF_SQL_TABLES_MIME  "mime"
-#  define DUF_SQL_TABLES_PATHS "paths"
-#  define DUF_SQL_TABLES_TAGS "tags"
-#  define DUF_SQL_TABLES_TAGNAMES "tagnames"
+#  define DUF_SQL_TABLES_FILENAMES             "filenames"
+#  define DUF_SQL_TABLES_FILEDATAS             "filedatas"
+#  define DUF_SQL_TABLES_SHA1                  "sha1"
+#  define DUF_SQL_TABLES_MD5                   "md5"
+#  define DUF_SQL_TABLES_SD5                   "sd5"
+#  define DUF_SQL_TABLES_CRC32                 "crc32"
+#  define DUF_SQL_TABLES_SIZES                 "sizes"
+#  define DUF_SQL_TABLES_EXIF                  "exif"
+#  define DUF_SQL_TABLES_EXIF_MODEL            "exif_model"
+#  define DUF_SQL_TABLES_MIME                  "mime"
+#  define DUF_SQL_TABLES_PATHS                 "paths"
+#  define DUF_SQL_TABLES_TAGS                  "tags"
+#  define DUF_SQL_TABLES_TAGNAMES              "tagnames"
 
 #  if 1
 

@@ -47,7 +47,7 @@ duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table )
   return act;
 }
 
-/*
+/* 20150922.123744
  * make/evaluate sccb
  * ******************
  * 1. «open» sccb handle - incorporate argv to the handle - by calling duf_sccb_handle_open
@@ -57,7 +57,7 @@ duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table )
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int
-duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t * ptarg /* , const duf_ufilter_t * pu_unused */  )
+duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
 
@@ -80,9 +80,9 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
   DEBUG_ENDR( r );
 }
 
+/* 20150922.123731 */
 int
-duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table,
-                    duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
+duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
@@ -104,8 +104,9 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
   DEBUG_ENDR( r );
 }
 
+/* 20150922.123721 */
 int
-duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
+duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
   assert( pdi );
@@ -114,8 +115,9 @@ duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_tab
   DEBUG_ENDR( r );
 }
 
+/* 20150922.123718 */
 int
-duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg /*, const duf_ufilter_t * pu */  )
+duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg )
 {
   DEBUG_STARTR( r );
 
@@ -133,6 +135,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
   DEBUG_ENDR( r );
 }
 
+/* 20150922.123706 */
 int
 duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table,
                          duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
@@ -154,27 +157,13 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
     const char *ename = NULL;
 
     ename = strchr( pnames, ',' );
-#if 0
-    if ( ename )
-      len = ename - pnames;
-    else
-      len = strlen( pnames );
-#else
+
     len = ename ? ename - pnames : strlen( pnames );
-#endif
     DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, table, ptarg /*, pu */  ) );
     if ( DUF_NOERROR( r ) )
       ok++;
-    /* DUF_SHOW_ERROR( "(%d) sccb not found: %s", r, names ); */
-    /* DUF_PRINTF( 0, "pnames:%s; ename:%s", pnames, ename ); */
-#if 0
-    if ( ename && *ename )
-      pnames = ename + 1;
-    else
-      pnames = NULL;
-#else
+
     pnames = ( ename && *ename ) ? ename + 1 : NULL;
-#endif
     ename = NULL;
   }
   if ( !ok )

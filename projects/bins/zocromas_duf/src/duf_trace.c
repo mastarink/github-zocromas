@@ -112,15 +112,15 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
         *puname++ = toupper( name[i] );
       *puname = 0;
       DUF_FPRINTFNE( 0, out, "%c%2d:%2d ", signum, level, minlevel );
-      DUF_FPRINTFNE( 0, out, "[%-7s] ", uname );
-      DUF_FPRINTFNE( 0, out, "%3u:", linid );
+      DUF_FPRINTFNE( 0, out, "[\x1b[1;34m%-7s\x1b[m] ", uname );
+      DUF_FPRINTFNE( 0, out, "\x1b[1;33m%3u\x1b[m:", linid );
 #if 0
       DUF_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
 #else
       {
         char xfmt[128];
-
-        snprintf( xfmt, sizeof( xfmt ), "%%-%ds", duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN );
+/* \e[1;33m101\e[1;37m:duf_all_options\e[m */
+        snprintf( xfmt, sizeof( xfmt ), "\x1b[1;32m%%-%ds\x1b[m", duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN );
         DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
       }
 #endif

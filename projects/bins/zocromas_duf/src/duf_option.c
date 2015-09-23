@@ -78,7 +78,7 @@ DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, 
  * or errorcode (<0) for error
  * */
 int
-duf_parse_exec_option( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
+duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;

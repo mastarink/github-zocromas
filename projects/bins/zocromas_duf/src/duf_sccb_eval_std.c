@@ -42,28 +42,28 @@ duf_ev_evname_std( const char *name )
 }
 
 int
-duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, duf_argvc_t * ptarg /*, duf_ufilter_t * pu */  )
+duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, duf_argvc_t * ptarg )
 {
-  return duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg /*, pu */  );
+  return duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg );
 }
 
 int
-duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, duf_argvc_t * ptarg /*, duf_ufilter_t * pu */  )
+duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, duf_argvc_t * ptarg )
 {
-  return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg /*, pu */  );
+  return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg );
 }
 
 int
-duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg /*, duf_ufilter_t * pu */  )
+duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg )
 {
-  return duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), arg /*, pu */  );
+  return duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), arg );
 }
 
 int
-duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name /*, duf_ufilter_t * pu */  )
+duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), NULL /*, pu */  ) );
+  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), NULL ) );
   DEBUG_ENDR( r );
 }
