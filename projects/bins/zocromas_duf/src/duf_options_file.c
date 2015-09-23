@@ -9,6 +9,7 @@
 #include "duf_config_ref.h"
 #include "duf_option_cmd.h"
 
+#include "duf_utils_path.h"
 
 /* ###################################################################### */
 #include "duf_options.h"
@@ -32,7 +33,7 @@ duf_infilepath( const char *filepath, int *pr )
   f = fopen( filepath, "r" );
 
   mas_free( DUF_CONFIGG( config_path ) );
-  DUF_CONFIGW( config_path ) = mas_strdup( filepath );
+  DUF_CONFIGWS( config_path , mas_strdup( filepath ));
   DUF_TRACE( options, 0, "opened conf file %s %s", DUF_CONFIGG( config_path ), f ? "Ok" : "FAIL" );
   if ( !f && pr )
     *pr = errno;
@@ -48,7 +49,11 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   assert( duf_config );
   cfgpath = mas_strdup( at );
   assert( cfgpath );
+#if 0
   cfgpath = mas_strcat_x( cfgpath, "/" );
+#else
+  cfgpath = duf_normalize_path( cfgpath );
+#endif
   assert( cfgpath );
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
@@ -98,6 +103,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
       /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
       DUF_TRACE( explain, 0, "read config line %s", s );
       {
+#if 0
         char *xs;
 
         xs = mas_expand_string( s );
@@ -107,14 +113,17 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
  *   =0 for other option
  *   errorcode<0 for error
  * */
-#if 0
+#  if 0
         DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ? source : DUF_OPTION_SOURCE_STREAM ) );
-#else
+#  else
         DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
-#endif
+#  endif
 
         DUF_TRACE( options, 5, "executed cmd; r=%d; xs=%s", r, xs );
         mas_free( xs );
+#else
+        DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, s, 0 ) );
+#endif
       }
     }
   }

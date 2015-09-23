@@ -19,6 +19,7 @@
 
 
 /* ###################################################################### */
+#include "duf_options_string.h"
 #include "duf_options_interactive.h"
 /* ###################################################################### */
 
@@ -100,6 +101,7 @@ duf_interactive_options( duf_option_stage_t istage )
           /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
           DUF_TRACE( explain, 0, "read config line %s", s );
           {
+#if 0
             char *xs;
 
             xs = mas_expand_string( s );
@@ -114,6 +116,11 @@ duf_interactive_options( duf_option_stage_t istage )
             DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ),
                        DUF_CONFIGG( pdi ) ? 1 : 0 );
             mas_free( xs );
+#else
+            DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE_INTERACTIVE, s, 0 ) );
+            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s [i/a:%d] pdi:%d;", r, s, DUF_ACTG_FLAG( interactive ),
+                       DUF_CONFIGG( pdi ) ? 1 : 0 );
+#endif
           }
           free( rl_buffer );
           rl_buffer = NULL;

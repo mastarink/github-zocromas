@@ -17,28 +17,6 @@
 #include "duf_options_string.h"
 /* ###################################################################### */
 
-static const char *
-duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg )
-{
-  static char buf[256];
-  size_t len;
-  size_t llen;
-  const char *label = "TIME(";
-
-  llen = strlen( label );
-  *buf = 0;
-  len = strlen( name );
-  if ( len > llen && 0 == strncmp( name, "TIME(", llen ) && name[len - 1] == ')' )
-  {
-    /* strftime */
-    char *fmt;
-
-    fmt = mas_strndup( name + llen, len - llen - 1 );
-    mas_tstrflocaltime( buf, sizeof( buf ), fmt, time( NULL ) );
-    mas_free( fmt );
-  }
-  return buf;
-}
 
 /*
  * if DUF_CONFIGG(cli.option_delimiter) NOT set
@@ -85,8 +63,8 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
       }
       if ( s )
       {
-        char *xs;
 
+#if 0
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
         xs = mas_expand_string_cb_arg( s, duf_string_options_at_string_xsdb_getvar, NULL );
         {
@@ -96,11 +74,14 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
           mas_free( xs );
           xs = xs1;
         }
-        DUF_TRACE( explain, 0, "xs: \"%s\"", xs );
+#else
+        /* xs = _duf_string_options_expand( s, &expandable_later ); */
+        /* xs = duf_string_options_expand( s, '?' ); */
+#endif
+        DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
-        DOR( r, duf_exec_cmd_long_xtables_std( xs, vseparator, istage, source ) );
+        DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, source ) );
 
-        mas_free( xs );
       }
       mas_free( s );
       peo = e;

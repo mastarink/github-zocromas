@@ -3,6 +3,9 @@ sfind duf_config.h
 sfind duf_config_ref.h
 sfind duf_config4trace_ref.h
 
+tab sfind duf_config_util.c
+sfind duf_config_util.h
+
 tab sfind duf_options.c
 sfind duf_options.h
 

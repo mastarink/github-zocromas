@@ -69,113 +69,30 @@ duf_main_db_locate( void )
 {
   DEBUG_STARTR( r );
 
+#if 0
   if ( DUF_CONFIGG( db.dir ) && DUF_CONFIGG( db.main.name ) )
   {
-#if 0
-    DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.main.name ) );
-    /* TODO move db.main.fpath and db.adm.fpath and db.tempo.fpath from duf_config to tmp etc. - it's not config values */
-    /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", DUF_CONFIGG(db.dir), DUF_CONFIGG(db.main.name) ); */
-    mas_free( DUF_CONFIGW( db.main.fpath ) );
-    /* TODO to use something like duf_expand_selected_db() here TODO */
-    DUF_CONFIGW( db.main.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
-    DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), "/" );
-    DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), DUF_CONFIGG( db.main.name ) );
-    if ( 0 != strcmp( DUF_CONFIGG( db.main.fpath + strlen( DUF_CONFIGG( db.main.fpath ) ) - 3 ), ".db" ) )
-      DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), ".db" );
-    DUF_TRACE( explain, 0, "config->db.main.fpath set: %s", DUF_CONFIGG( db.main.fpath ) );
-#else
     DOR( r, duf_config_make_db_main_path(  ) );
-#endif
 
-#ifdef MAS_SPLIT_DB
+#  ifdef MAS_SPLIT_DB
     if ( DUF_CONFIGG( db.adm.name ) )
-    {
-#  if 0
-      DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", DUF_CONFIGG( db.dir ), DUF_CONFIGG( db.adm.name ) );
-      mas_free( DUF_CONFIGW( db.adm.fpath ) );
-      DUF_CONFIGW( db.adm.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
-      DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), "/" );
-      {
-        char *n;
-
-        n = strchr( DUF_CONFIGG( db.main.name ), '.' );
-        if ( !n )
-          n = DUF_CONFIGG( db.main.name ) + strlen( DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.adm.fpath ) = mas_strncat_x( DUF_CONFIGG( db.adm.fpath ), DUF_CONFIGG( db.main.name ), n - DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), "_$_" );
-      }
-      DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), DUF_CONFIGG( db.adm.name ) );
-      if ( 0 != strcmp( DUF_CONFIGG( db.adm.fpath + strlen( DUF_CONFIGG( db.adm.fpath ) ) - 3 ), ".db" ) )
-        DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), ".db" );
-      DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", DUF_CONFIGG( db.adm.fpath ) );
-#  else
       DOR( r, duf_config_make_db_adm_path(  ) );
-#  endif
-    }
-#  ifndef DUF_SQL_TTABLES_TEMPORARY
+#    ifndef DUF_SQL_TTABLES_TEMPORARY
     if ( DUF_CONFIGG( db.tempo.name ) )
-    {
-#  if 0
-      DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", DUF_CONFIGG( db.dir ),
-                 DUF_CONFIGG( db.tempo.name ) );
-      mas_free( DUF_CONFIGW( db.tempo.fpath ) );
-      DUF_CONFIGW( db.tempo.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
-      DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "////" );
-      {
-        char *n;
-
-        n = strchr( DUF_CONFIGG( db.main.name ), '.' );
-        if ( !n )
-          n = DUF_CONFIGG( db.main.name ) + strlen( DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.tempo.fpath ) = mas_strncat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.main.name ), n - DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "_$_" );
-      }
-      DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.tempo.name ) );
-      if ( 0 != strcmp( DUF_CONFIGG( db.tempo.fpath + strlen( DUF_CONFIGG( db.tempo.fpath ) ) - 3 ), ".db" ) )
-        DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), ".db" );
-      DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", DUF_CONFIGG( db.tempo.fpath ) );
-#else
       DOR( r, duf_config_make_db_temp_path(  ) );
-#endif
-    }
+#    endif
 #  endif
-#  if 0
-    if ( DUF_CONFIGG( db.selected.name ) )
-    {
-      DUF_TRACE( explain, 0, "setting config->db.selected.fpath by db.dir: %s and db.selected.name: %s", DUF_CONFIGG( db.dir ),
-                 DUF_CONFIGG( db.selected.name ) );
-      DUF_CONFIGW( db.selected.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
-      DUF_CONFIGW( db.selected.fpath ) = mas_strcat_x( DUF_CONFIGG( db.selected.fpath ), "/" );
-      {
-        char *n;
-
-        n = strchr( DUF_CONFIGG( db.main.name ), '.' );
-        if ( !n )
-          n = DUF_CONFIGG( db.main.name ) + strlen( DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.selected.fpath ) =
-              mas_strncat_x( DUF_CONFIGG( db.selected.fpath ), DUF_CONFIGG( db.main.name ), n - DUF_CONFIGG( db.main.name ) );
-        DUF_CONFIGW( db.selected.fpath ) = mas_strcat_x( DUF_CONFIGG( db.selected.fpath ), "_$_" );
-      }
-      DUF_CONFIGW( db.selected.fpath ) = mas_strcat_x( DUF_CONFIGG( db.selected.fpath ), DUF_CONFIGG( db.selected.name ) );
-      DUF_TRACE( explain, 0, "config->db.selected.fpath set: %s", DUF_CONFIGG( db.selected.fpath ) );
-    }
-#  endif
-
-#endif
-
-    if ( DUF_CONFIGG( db.main.fpath ) )
+    assert( DUF_CONFIGG( db.main.fpath ) );
     {
       DUF_TRACE( any, 0, "dbfile: %s", DUF_CONFIGG( db.main.fpath ) );
-#ifdef MAS_SPLIT_DB
+#  ifdef MAS_SPLIT_DB
       DUF_TRACE( any, 0, "adm dbfile: %s", DUF_CONFIGG( db.adm.fpath ) );
-#  ifndef DUF_SQL_TTABLES_TEMPORARY
+#    ifndef DUF_SQL_TTABLES_TEMPORARY
       DUF_TRACE( any, 0, "tempo dbfile: %s", DUF_CONFIGG( db.tempo.fpath ) );
-#  endif
+#    endif
       /* DUF_TRACE( any, 0, "selected dbfile: %s", DUF_CONFIGG(db.selected.fpath) ); */
-#endif
+#  endif
     }
-    else
-      DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
   }
   else if ( !DUF_CONFIGG( db.dir ) )
   {
@@ -189,6 +106,9 @@ duf_main_db_locate( void )
   }
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN );
+#else
+  DOR( r, duf_config_make_db_paths(  ) );
+#endif
   DEBUG_ENDR( r );
 }
 
@@ -314,6 +234,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
+    DUF_TRACE( db, 0, "(%d) %s",r, sql );
   }
 
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
@@ -322,6 +243,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_TTABLES_PATTERN "temp.db' AS " DUF_DBTEMPALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
+    DUF_TRACE( db, 0, "(%d) %s",r, sql );
   }
 #  endif
 
@@ -341,12 +263,12 @@ duf_main_db_open( void )
   /* global_status.db_opened_name */
 
   DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
-  DUF_TRACE( db, 5, "@@@@global_status.db_opened_name:%s => CFG->db.main.name:%s", global_status.db_opened_name, DUF_CONFIGG( db.main.name ) );
+  DUF_TRACE( db, 5, "@@@@global_status.db_opened_name:%s => CFG->db.main.name:%s", global_status.db_opened_name, DUF_CONFIGGSP( db.main.name ) );
 
-  /* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGG(db.main.name), global_status.db_opened_name ); */
-  if ( global_status.db_opened_name && 0 != strcmp( DUF_CONFIGG( db.main.name ), global_status.db_opened_name ) )
+  /* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db_opened_name ); */
+  if ( global_status.db_opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name ), global_status.db_opened_name ) )
   {
-    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db_opened_name, DUF_CONFIGG( db.main.name ) );
+    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db_opened_name, DUF_CONFIGGSP( db.main.name ) );
     DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
     DOR( r, duf_main_db_close( 0 ) );
     DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
@@ -359,15 +281,18 @@ duf_main_db_open( void )
 #endif
   {
     assert( !global_status.db_attached_selected );
-    DUF_TRACE( db, 0, "@@@@@to open db %s", DUF_CONFIGG( db.main.name ) );
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
-    DORF( r, duf_sql_open, DUF_CONFIGG( db.main.fpath ) );
+    DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name ), DUF_CONFIGGS( db.main.fpath ) );
+    if ( DUF_CONFIGGS( db.main.fpath ) )
+      DORF( r, duf_sql_open, DUF_CONFIGGS( db.main.fpath ) );
+    else
+      DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
 #if 0
-    DUF_CONFIGW( db.opened ) = ( DUF_NOERROR( r ) );
+    DUF_CONFIGWN( db.opened, ( DUF_NOERROR( r ) ) );
 #endif
     if ( DUF_NOERROR( r ) )
-      global_status.db_opened_name = mas_strdup( DUF_CONFIGG( db.main.name ) );
+      global_status.db_opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
     DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( pdi ) ) );
@@ -421,7 +346,7 @@ duf_main_db_close( int ra )
     if ( r == 0 && rt < 0 )
       DOR( r, rt );
 #if 0
-    DUF_CONFIGW( db.opened ) = !( DUF_NOERROR( r ) );
+    DUF_CONFIGWN( db.opened, !( DUF_NOERROR( r ) ) );
 #else
     mas_free( global_status.db_opened_name );
     global_status.db_opened_name = NULL;

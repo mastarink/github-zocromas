@@ -7,6 +7,7 @@
 #include "duf_config_ref.h"
 
 
+#include "duf_utils_path.h"
 
 #include "duf_action_table.h"
 
@@ -107,8 +108,12 @@ duf_option_$_cd( const char *s )
       else
       {
         new_path = mas_strdup( duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
+#  if 0
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
+#  else
+        new_path = duf_normalize_path( new_path );
+#  endif
         new_path = mas_strcat_x( new_path, s );
       }
     }

@@ -86,7 +86,7 @@ mas_expand_getenv( const char *name, const char *arg )
 }
 
 char *
-mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg )
+_mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg, int vvconst )
 {
   const char *doll = NULL;
   const char *beg = NULL;
@@ -154,6 +154,8 @@ mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *
         snew = mas_strncat_x( snew, doll, 1 );
         nxt = scstr = beg;
       }
+      if ( !vvconst )
+        mas_free( ( char * ) vv );
       mas_free( vn );
     }
     else
@@ -169,6 +171,18 @@ mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *
   /* fprintf( stderr, "@@@@@@@@@@ [%s] => [%s] ; start:[%s] ; end:[%s]\n", cstr, snew, start, end ); */
 
   return snew;
+}
+
+char *
+mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg )
+{
+  return _mas_expand_string_cb_arg( str, cb, arg, 1 );
+}
+
+char *
+mas_expand_string_cb_arg_alloc( const char *str, mas_arg_get_cb_arg_t cb, const char *arg )
+{
+  return _mas_expand_string_cb_arg( str, cb, arg, 0 );
 }
 
 char *

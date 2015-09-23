@@ -338,6 +338,25 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           }
         }
         break;
+      case DUF_OPTION_VTYPE_CSTR: /* stage SETUP */
+        DUF_TRACE( options, +0, "@@vtype CSTR for %s='%s'", extended->o.name, optargg ? optargg : "" );
+        if ( noo )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( DUF_NOERROR( r ) )
+        {
+          duf_config_string_t *pcs;
+
+          pcs = ( duf_config_string_t* ) byteptr;
+          if ( pcs && pcs->value )
+            mas_free( pcs->value );
+          pcs->value = NULL;
+          if ( optargg )
+          {
+            pcs->value = mas_strdup( optargg );
+            DUF_TRACE( options, +2, "string set:%s @%p", optargg, pcs->value );
+          }
+        }
+        break;	
 #if 0
       case DUF_OPTION_VTYPE_PSTR:
         /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */

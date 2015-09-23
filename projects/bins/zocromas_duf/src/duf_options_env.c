@@ -21,54 +21,16 @@ int
 duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
 {
   DEBUG_STARTR( r );
+  
   const char *eo = NULL;
 
   eo = getenv( envvarname );
 
   DUF_TRACE( options, 0, "@@@@(%d) source: env(%s='%s')", istage, envvarname, eo );
-#if 0
-  {
-    const char *peo, *e;
-
-    peo = eo;
-    while ( peo && *peo )
-    {
-      char *s;
-
-      s = NULL;
-      e = strchr( peo, ':' );
-      if ( e )
-      {
-        s = mas_strndup( peo, e - peo );
-        DUF_TRACE( explain, 0, "env option from \"%s\"", s );
-        e++;
-      }
-      else
-      {
-        s = mas_strdup( peo );
-        DUF_TRACE( explain, 0, "env option (last) from \"%s\"", s );
-      }
-      if ( s )
-      {
-        char *xs;
-
-        DUF_TRACE( explain, 0, "env s: \"%s\"", s );
-        xs = mas_expand_string( s );
-        DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
-
-        DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, DUF_OPTION_SOURCE_ENV ) );
-
-        mas_free( xs );
-      }
-      mas_free( s );
-      peo = e;
-      /* DUF_TRACE( explain, 0, "env peo \"%s\"", peo ); */
-    }
-  }
-#else
   DOR( r, duf_string_options_at_string( '=', istage, DUF_OPTION_SOURCE_ENV, eo, 0 ) );
-#endif
+  
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
+  
   DEBUG_ENDR( r );
 }
 

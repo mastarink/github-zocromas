@@ -7,14 +7,22 @@
 
 typedef struct
 {
-  char *name;
+  int expandable:1;
+  char *expanded;
+  char *value;
+} duf_config_string_t;
+
+typedef struct
+{
+  duf_config_string_t name;
   char *fpath;
 } duf_db_config_t;
 
 typedef struct
 {
   /* unsigned opened:1; */
-  char *dir;
+  duf_config_string_t dir;
+  duf_config_string_t subdir;
   duf_db_config_t main;
   duf_db_config_t adm;
   duf_db_config_t tempo;

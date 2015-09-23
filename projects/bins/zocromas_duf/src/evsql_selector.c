@@ -94,20 +94,23 @@ static const char *
 duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
 {
   char *str = NULL;
-  static char buf[1024];
+  char buf[1024];
 
   if ( 0 == strcmp( name, "PDI_NAME" ) )
-    str = ( char * ) arg;
+    str = mas_strdup( arg );
   else if ( 0 == strcmp( name, "DB_PATH" ) )
-    str = ( char * ) duf_config->db.dir;
+  {
+    str = mas_strdup( DUF_CONFIGGSP( db.dir ) );
+    str = duf_config_db_path_add_subdir( str, ( int * ) NULL /* &r */  );
+  }
   else if ( 0 == strcmp( name, "PID" ) )
   {
-    str = ( char * ) buf;
     snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
+    str = mas_strdup( buf );
   }
   else if ( 0 == strcmp( name, "DB_NAME" ) )
   {
-    str = duf_config->db.main.name;
+    str = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
   }
   return str;
 }
@@ -117,7 +120,7 @@ duf_expand_sql( const char *sql, const char *dbname )
 {
   char *nsql;
 
-  nsql = mas_expand_string_cb_arg( sql, duf_expand_sql_xsdb_getvar, dbname );
+  nsql = mas_expand_string_cb_arg_alloc( sql, duf_expand_sql_xsdb_getvar, dbname );
   /* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
   return nsql;
 }

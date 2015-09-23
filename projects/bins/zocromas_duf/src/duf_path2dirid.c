@@ -155,8 +155,11 @@ duf_dirid2path( unsigned long long dirid, int *pr )
       t = path;
       /* (name && !*name) means "/" */
       path = mas_strdup( name );
-
+#if 0
       path = mas_strcat_x( path, "/" );
+#else
+      path = duf_normalize_path( path );
+#endif
       path = mas_strcat_x( path, t );
       mas_free( t );
       depth++;

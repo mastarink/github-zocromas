@@ -232,8 +232,8 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
-  DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGG( db.main.name ) );
-  DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGG( db.dir ) );
+  DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
+  DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir ) );
   DUF_PRINTF( 0, "  --drop-tables		DANGEROUS!" );
   DUF_PRINTF( 0, "  --remove-database		DANGEROUS!" );
   DUF_PRINTF( 0, "  --create-tables" );

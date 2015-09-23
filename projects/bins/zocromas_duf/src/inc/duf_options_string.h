@@ -3,4 +3,6 @@
 
 int duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim );
 
+char *_duf_string_options_expand( const char *s, int *pexpandable_later );
+
 #endif

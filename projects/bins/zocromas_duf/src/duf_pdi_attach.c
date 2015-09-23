@@ -58,6 +58,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
     DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
+    DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
     DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );

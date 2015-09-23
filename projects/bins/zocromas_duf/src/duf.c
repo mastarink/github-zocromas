@@ -160,7 +160,7 @@ duf_main( int argc, char **argv )
 
   DUF_TRACE( explain, 1, "@main with config" );
   DOR_NOE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
-  if ( !DUF_NOERROR( r ) )
+  if ( DUF_IS_ERROR( r ) )
   {
     DUF_SHOW_ERROR( "@@@@@@@@(%d:%s) ", r, duf_error_name( r ) );
     DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );

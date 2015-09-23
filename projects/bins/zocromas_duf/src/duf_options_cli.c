@@ -8,7 +8,9 @@
 #include "duf_option_extended.h"
 #include "duf_option_names.h"
 
+#include "duf_config.h"
 /* ###################################################################### */
+#include "duf_options_string.h"
 #include "duf_options_cli.h"
 /* ###################################################################### */
 
@@ -100,7 +102,13 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    DOR( r, duf_clarify_opt( codeval, longindex, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
+    {
+      char *oa;
+
+      oa = duf_string_options_expand( optarg, '?' );
+      DOR( r, duf_clarify_opt( codeval, longindex, oa, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
+      mas_free( oa );
+    }
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
     if ( optind > 0 )
@@ -142,14 +150,15 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   if ( istage == 0 && optind < DUF_CONFIGG( carg.argc ) )
   {
     mas_del_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ), 0 );
-    DUF_CONFIGW( targ.argc ) = 0;
-    DUF_CONFIGW( targ.argv ) = NULL;
+    DUF_CONFIGWN( targ.argc, 0 );
+    DUF_CONFIGWP( targ.argv, NULL );
 
     DUF_TRACE( options, +2, "(for targ) carg.argv[%d]=\"%s\"", optind, DUF_CONFIGG( carg.argv )[optind] );
-    DUF_CONFIGW( targ.argc ) =
-          mas_add_argv_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGA( targ.argv ), DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ), optind );
+    DUF_CONFIGWN( targ.argc,
+                  mas_add_argv_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGA( targ.argv ), DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ),
+                                     optind ) );
 
-    DUF_CONFIGW( targ_offset ) = duf_reorder_at_sign( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ) );
+    DUF_CONFIGWN( targ_offset, duf_reorder_at_sign( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ) ) );
 
 
 

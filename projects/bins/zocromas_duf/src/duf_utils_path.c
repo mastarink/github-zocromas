@@ -1,5 +1,7 @@
 #include <string.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "duf_maintenance.h"
 
 
@@ -58,4 +60,26 @@ duf_realpath( const char *path, int *pr )
   if ( pr )
     *pr = r;
   return real_path;
+}
+
+char *
+duf_concat_path( char *path, const char *subpath )
+{
+  if ( path && subpath && *path && *subpath )
+  {
+    path = duf_normalize_path( path );
+    path = mas_strcat_x( path, subpath );
+  }
+  return path;
+}
+
+char *
+duf_normalize_path( char *path )
+{
+  if ( path && *path )
+  {
+    if ( path[strlen( path ) - 1] != '/' )
+      path = mas_strcat_x( path, "/" );
+  }
+  return path;
 }

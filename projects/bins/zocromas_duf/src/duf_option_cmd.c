@@ -10,6 +10,7 @@
 #include "duf_option_extended.h"
 #include "duf_option.h"
 
+#include "duf_config_util.h"
 /* ###################################################################### */
 #include "duf_options.h"
 #include "duf_option_cmd.h"
@@ -49,8 +50,12 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   else
     name = mas_strdup( string );
   if ( barg )
-    arg = mas_strdup( barg );
-
+  {
+    /* arg = mas_strdup( barg ); */
+    /* T( ">>>> barg:'%s'", barg ); */
+    arg = duf_string_options_expand( barg, '?' );
+    /* T( ">> arg:'%s' => %s", barg, arg ); */
+  }
   DUF_TRACE( options, 6, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
 
   extended = duf_find_name_long_no( name, arg ? 1 : 0, xtended, 1 /* soft */ , pno, &rpr );
