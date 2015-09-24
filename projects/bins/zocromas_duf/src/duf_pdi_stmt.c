@@ -54,8 +54,11 @@ duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 duf_stmnt_t *
 duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid /*, const int *pindex */ , int *pr )
 {
-  DEBUG_STARTR( r );
   duf_stmnt_t *pstmt = NULL;
+
+  DEBUG_START(  );
+
+  int rpr = 0;
   duf_idstmt_t *is = NULL;
 
   assert( pdi );
@@ -77,10 +80,10 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 #endif
     pdi->num_idstatements++;
   }
-  DORF( r, duf_main_db_open );
-  DOR( r, duf_sql_prepare( sql, &pstmt ) );
-  DUF_TRACE( sql, 4, "@@@@@%d: %s", r, sql );
-  assert( r >= 0 );
+  DORF( rpr, duf_main_db_open );
+  DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
+  DUF_TRACE( sql, 4, "@@@@@%d: %s", rpr, sql );
+  assert( rpr >= 0 );
   if ( pstmt )
   {
 #if 0
@@ -92,9 +95,9 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
   }
 
   if ( pr )
-    *pr = r;
-  return pstmt;
+    *pr = rpr;
   DEBUG_END(  );
+  return pstmt;
 }
 
 duf_stmnt_t *

@@ -32,6 +32,7 @@ duf_config_t *
 duf_cfg_create( void )
 {
   duf_config_t *cfg = NULL;
+  DEBUG_START(  );
 
   assert( !cfg );
   cfg = mas_malloc( sizeof( duf_config_t ) );
@@ -123,21 +124,26 @@ duf_cfg_create( void )
 
 
 
+  DEBUG_END(  );
   return cfg;
 }
 
 void
 duf_cfg_string_delete( duf_config_string_t * cs )
 {
+  DEBUG_START(  );
   mas_free( cs->value );
   cs->value = NULL;
   mas_free( cs->expanded );
   cs->expanded = NULL;
+  DEBUG_END(  );
 }
 
 void
 duf_cfg_delete( duf_config_t * cfg )
 {
+  DEBUG_START(  );
+
   if ( cfg )
   {
 /* xchanges = di.changes; --- needless!? */
@@ -268,11 +274,13 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg );
     cfg = NULL;
   }
+  DEBUG_END(  );
 }
 
 void
 duf_config_create( int argc, char **argv )
 {
+  DEBUG_START(  );
   duf_config = duf_cfg_create(  );
   assert( duf_config );
 #ifdef MAS_TRACING
@@ -288,15 +296,18 @@ duf_config_create( int argc, char **argv )
 
   assert( duf_config4trace );
 #endif
+  DEBUG_END(  );
 }
 
 void
 duf_config_delete( void )
 {
+  DEBUG_START(  );
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
   duf_config4trace = duf_config = NULL;
 #endif
+  DEBUG_END(  );
 }
 
 int
