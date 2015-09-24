@@ -22,31 +22,29 @@
 
 
 static FILE *
-duf_open_file_special( const char *pname, char **popenedname, int *pr )
+duf_open_file_special( const char *pname, char **popenedname, int overwrite, int *pr )
 {
   int rpr = 0;
   FILE *newfile = NULL;
   int overw = 0;
   const char *mode = "w";
   struct stat st;
+  int skipchar = 0;
 
   DUF_TRACE( io, 0, "to open %s", pname );
-  if ( *pname == '@' )
-  {
+  if ( ( skipchar = ( *pname == '@' ) ) || overwrite )
     overw = 1;
-    pname++;
-  }
-  else if ( *pname == '+' )
-  {
+  else if ( ( skipchar = ( *pname == '+' ) ) )
     mode = "a";
+  if ( skipchar )
     pname++;
-  }
   *popenedname = mas_strdup( pname );
+  fprintf( stderr, ">>>>>>>>>>>>> fopen %s <<<<<<<<<<<<<<\n", pname );
   if ( 0 == stat( pname, &st ) && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
   {
     DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-    DOR( rpr, DUF_ERROR_FILE_EXISTS );
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_FILE_EXISTS );
   }
   else
   {
@@ -62,14 +60,14 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
   return newfile;
 }
 
+/*  20150924.120214 for DUF_OUTPUTFILE DUF_OUTPUTFILE_A */
 static int
-duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
+duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
 {
   DEBUG_STARTR( r );
   FILE *newout;
 
   newout = defout;
-
   DUF_TRACE( io, 0, "to set file special %s", pname );
   if ( pfile )
   {
@@ -96,7 +94,7 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
       *pfilename = NULL;
     }
     if ( pname && *pname )
-      newout = duf_open_file_special( pname, pfilename, &r );
+      newout = duf_open_file_special( pname, pfilename, overwrite, &r );
     if ( !newout )
       newout = defout;
     if ( newout )
@@ -346,7 +344,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         {
           duf_config_string_t *pcs;
 
-          pcs = ( duf_config_string_t* ) byteptr;
+          pcs = ( duf_config_string_t * ) byteptr;
           if ( pcs && pcs->value )
             mas_free( pcs->value );
           pcs->value = NULL;
@@ -356,7 +354,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_TRACE( options, +2, "string set:%s @%p", optargg, pcs->value );
           }
         }
-        break;	
+        break;
 #if 0
       case DUF_OPTION_VTYPE_PSTR:
         /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */

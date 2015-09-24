@@ -112,15 +112,17 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
         *puname++ = toupper( name[i] );
       *puname = 0;
       DUF_FPRINTFNE( 0, out, "%c%2d:%2d ", signum, level, minlevel );
-      DUF_FPRINTFNE( 0, out, "[\x1b[1;34m%-7s\x1b[m] ", uname );
-      DUF_FPRINTFNE( 0, out, "\x1b[1;33m%3u\x1b[m:", linid );
+      DUF_FPRINTFNE( 0, out, "[%s%-7s%s] ", duf_color_s( out, "\x1b[1;34m" ), uname, duf_color_s( out, "\x1b[m" ) );
+      DUF_FPRINTFNE( 0, out, "%s%3u%s:", duf_color_s( out, "\x1b[1;33m" ), linid, duf_color_s( out, "\x1b[m" ) );
 #if 0
       DUF_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
 #else
       {
         char xfmt[128];
+
 /* \e[1;33m101\e[1;37m:duf_all_options\e[m */
-        snprintf( xfmt, sizeof( xfmt ), "\x1b[1;32m%%-%ds\x1b[m", duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN );
+        snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", duf_color_s( out, "\x1b[1;32m" ),
+                  duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN, duf_color_s( out, "\x1b[m" ) );
         DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
       }
 #endif
@@ -151,7 +153,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
         DUF_FPRINTFNE( 0, out, " " );
     }
 #endif
-    r_ = DUF_FPRINTFNE( 0, out, prefix?"%-16s ":"%s", prefix ? prefix : " " );
+    r_ = DUF_FPRINTFNE( 0, out, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
     r_ = DUF_VFPRINTFNE( 0, out, fmt, args );
 #if 0
     if ( highlight )

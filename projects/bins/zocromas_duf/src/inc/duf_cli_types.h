@@ -54,6 +54,7 @@ typedef struct
 
 typedef struct
 {
+  duf_config_output_flags_combo_t v;
   unsigned level;
   unsigned fun_width;
   unsigned handleid;
@@ -80,6 +81,8 @@ typedef struct
 
 typedef struct
 {
+  duf_config_output_t output;
+
   unsigned trace;
   unsigned dry_run;
   unsigned flags;
@@ -135,7 +138,6 @@ typedef struct
 
   unsigned sccb;
   unsigned sccbh;
-  duf_config_output_t output;
 } duf_config_cli_trace_t;
 
 typedef struct

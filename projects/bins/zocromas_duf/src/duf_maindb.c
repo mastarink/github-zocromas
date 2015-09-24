@@ -233,7 +233,7 @@ duf_main_db_tune( void )
   {
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
 
-    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBADMALIAS, NULL /* &changes */  ) );
     DUF_TRACE( db, 0, "(%d) %s",r, sql );
   }
 

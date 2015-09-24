@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <unistd.h>
+
 
 #include "duf_maintenance.h"
 
@@ -9,6 +11,62 @@
 #include "duf_utils_print.h"
 /* ###################################################################### */
 
+const char *
+duf_color_s( FILE * out, const char *s )
+{
+  return ( out && isatty( fileno( out ) ) ) ? s : "";
+}
+
+int
+duf_vsncolor_s( FILE * out, char *buf, size_t size, const char *fmt, va_list args )
+{
+  int ry = -1;
+
+  if ( buf && size > 0 )
+  {
+    *buf = 0;
+    if ( out && isatty( fileno( out ) ) )
+      ry = vsnprintf( buf, size, fmt, args );
+  }
+  return ry;
+}
+
+int
+duf_sncolor_s( FILE * out, char *buf, size_t size, const char *fmt, ... )
+{
+  int ry = 0;
+  va_list args;
+
+  va_start( args, fmt );
+  ry = duf_vsncolor_s( out, buf, size, fmt, args );
+  va_end( args );
+  return ry;
+}
+
+int
+duf_vprint_color_s( FILE * out, const char *fmt, va_list args )
+{
+  int ry = -1;
+  char buf[2048];
+
+  ry = duf_vsncolor_s( out, buf, sizeof( buf ), fmt, args );
+  if ( *buf )
+    ry = fputs( buf, out );
+  /* ry = fwrite( buf, 1, strlen( buf ), out ); */
+  return ry;
+}
+
+int
+duf_print_color_s( FILE * out, const char *fmt, ... )
+{
+  int ry = 0;
+  va_list args;
+
+  va_start( args, fmt );
+  ry = duf_vprint_color_s( out, fmt, args );
+  va_end( args );
+  return ry;
+}
 
 int
 duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
@@ -91,13 +149,25 @@ duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
           "1;39", "1;7;37;40", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47"
         };
         if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
+#  if 0
           fprintf( out, "\x1b[%sm", hls[highlight] );
+#  else
+          duf_print_color_s( out, "\x1b[%sm", hls[highlight] );
+#  endif
         else if ( highlight )
+#  if 0
           fprintf( out, "\x1b[%sm", hls[0] );
+#  else
+          duf_print_color_s( out, "\x1b[%sm", hls[0] );
+#  endif
         /* fprintf( out, "%s", pbuf ); */
         fwrite( pbuf, 1, strlen( pbuf ), out );
         if ( highlight )
+#  if 0
           fprintf( out, "\x1b[m" );
+#  else
+          duf_print_color_s( out, "\x1b[%sm", "" );
+#  endif
       }
 #endif
     }

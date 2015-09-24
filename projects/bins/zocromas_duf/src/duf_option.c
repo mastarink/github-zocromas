@@ -5,7 +5,7 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_ref.h" */
+#include "duf_config_ref.h"
 #include "duf_status.h"
 #include "duf_status_ref.h"
 
@@ -16,6 +16,7 @@
 #include "duf_option_typed.h"
 
 #include "duf_option_old.h"
+#include "duf_config_util.h"
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */
@@ -129,5 +130,33 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
         break;
       }
   }
+  DEBUG_ENDR( r );
+}
+
+/* 20150924.144106 */
+int
+duf_clarify_opt_x( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
+{
+  DEBUG_STARTR( r );
+  char *oa;
+
+  oa = duf_string_options_expand( optargg, '?' );
+  DOR( r, duf_clarify_opt( codeval, longindex, oa, istage, source ) ); /* => duf_clarify_xcmd_full */
+  mas_free( oa );
+  DEBUG_ENDR( r );
+}
+
+/* 20150924.144102 */
+int
+duf_clarify_argv( duf_argvc_t * ptarg, duf_cargvc_t * pcarg, int optindd )
+{
+  DEBUG_STARTR( r );
+  mas_del_argv( ptarg->argc, ptarg->argv, 0 );
+  ptarg->argc = 0;
+  ptarg->argv = NULL;
+
+  ptarg->argc = mas_add_argv_argv( ptarg->argc, &ptarg->argv, pcarg->argc, pcarg->argv, optindd );
+
+  /* targ.argv becomes valid here - may init pdi etc. */
   DEBUG_ENDR( r );
 }

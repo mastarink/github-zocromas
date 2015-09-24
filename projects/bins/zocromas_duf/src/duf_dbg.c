@@ -15,6 +15,8 @@
 
 int duf_dbgfunlevel = 0;
 int dbgfunc_enabled = 0;
+
+/* 20150924.144132 */
 int
 duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 {
@@ -25,14 +27,17 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
     static int inited = 0;
     static char pref[1024];
 
+#define DUF_PREF_ISIZE ((int)sizeof( pref ))
+
     if ( !inited )
     {
-      memset( pref, 0, sizeof( pref ) );
+      memset( pref, 0, DUF_PREF_ISIZE );
       inited = 1;
     }
-    if ( duf_dbgfunlevel > sizeof( pref ) - 1 )
-      duf_dbgfunlevel = sizeof( pref ) - 1;
+    if ( duf_dbgfunlevel > DUF_PREF_ISIZE - 1 )
+      duf_dbgfunlevel = DUF_PREF_ISIZE - 1;
 
+    assert( duf_dbgfunlevel < DUF_PREF_ISIZE );
     pref[duf_dbgfunlevel] = 0;
     if ( ( !DUF_CONFIGX( cli.dbg.max_line ) || DUF_CONFIGX( cli.dbg.lines ) < DUF_CONFIGX( cli.dbg.max_line ) )
          && ( DUF_CONFIGX( cli.dbg.lines ) >= DUF_CONFIGX( cli.dbg.min_line ) ) )
@@ -44,8 +49,10 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
       case DBG_START:
         /* if ( !DUF_CONFIGX(cli.trace.calls) || DUF_CONFIGX(cli.trace.calls) > duf_dbgfunlevel + 1 ) */
         /*   DUF_FPRINTFNE( 0,  out, "#%4lu. ", DUF_CONFIGX(cli.dbg.lines );                                  */
+        assert( duf_dbgfunlevel < DUF_PREF_ISIZE );
         pref[duf_dbgfunlevel++] = ' ';
         pref[duf_dbgfunlevel] = 0;
+        assert( duf_dbgfunlevel < DUF_PREF_ISIZE );
         break;
       case DBG_END:
       case DBG_ENDR:

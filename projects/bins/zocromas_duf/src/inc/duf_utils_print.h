@@ -3,6 +3,14 @@
 
 #  include "duf_print_defs.h"
 
+const char *duf_color_s( FILE * out, const char *s );
+int duf_vsncolor_s( FILE * out, char *buf, size_t size, const char *fmt, va_list args );
+int duf_sncolor_s( FILE * out, char *buf, size_t size, const char *fmt, ... );
+int duf_vprint_color_s( FILE * out, const char *fmt, va_list args );
+int duf_print_color_s( FILE * out, const char *fmt, ... );
+
+
+
 int duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args );
 int duf_printf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
       __attribute__ ( ( format( __printf__, 8, 9 ) ) );

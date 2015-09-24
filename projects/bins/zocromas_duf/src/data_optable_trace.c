@@ -125,6 +125,10 @@ const duf_longval_extended_table_t optable_trace = {
 
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( FILE, cli.trace.output ), DO_AT_STAGE( SETUP ) /*                     */ , DO_H( trace output to file ) /*             */ },
+   {.o = {DO_Q( "trace-overwrite" ) /*  */ , DO_A_N /* */ , DO_V( TRACE_FILE_OVERWRITE )} /**/, DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, overwrite ), DO_AT_STAGE( SETUP ) /**/, DO_H( trace output to file ) /*             */ },
+   {.o = {DO_Q( "trace-append" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_FILE_APPEND )} /*  */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( SETUP ) /*  */ , DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( FILE, cli.trace.output ),.call = {.value = {.u = 2}} /*               */ , DO_H( trace output to stderr ) /*           */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,

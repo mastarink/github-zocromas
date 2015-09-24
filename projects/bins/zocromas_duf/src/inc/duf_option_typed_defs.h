@@ -131,7 +131,7 @@
 	  mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_hasoff == 1 */ \
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
-	    DOR(__rl, duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u )); \
+	    DOR(__rl, duf_set_file_special( s, mm->v.flag.overwrite, &mm->file, &mm->out, _defout, extended->call.value.u )); \
 	    if (mm->out && mm->header) { fprintf( mm->out, mm->header ); } \
 	    if ( __rl < 0 ) \
 	    {  DOR(_rt, __rl); } \

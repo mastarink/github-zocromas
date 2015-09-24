@@ -304,12 +304,10 @@ duf_config_show( void )
 {
   DEBUG_STARTR( r );
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( duf_config )
     fprintf( stderr, "db.dir: %s\n", DUF_CONFIGGSP( db.dir ) );
   for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
     fprintf( stderr, "targ.argv[%d]: %s\n", ia, duf_config->targ.argv[ia] );
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
 
   DEBUG_ENDR( r );
 }

@@ -41,11 +41,23 @@ typedef struct
   unsigned do_sccbs:1;
   unsigned fast:1;
 } duf_config_act_flags_t;
+typedef struct
+{
+  unsigned overwrite:1;
+  unsigned append:1;
+} duf_config_output_flags_t;
+
 typedef union
 {
   duf_config_act_flags_t flag;
   unsigned bit;
 } duf_config_act_flags_combo_t;
+typedef union
+{
+  duf_config_output_flags_t flag;
+  unsigned bit;
+} duf_config_output_flags_combo_t;
+
 
 /* ######################################## */
 
@@ -95,6 +107,7 @@ typedef union
 typedef union
 {
   duf_config_act_flags_t act;
+  duf_config_output_flags_t output;
   duf_rfilter_flags_t rec_etc;
   duf_config_cli_flags_t cli;
   duf_config_cli_disable_flags_t disable;

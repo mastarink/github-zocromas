@@ -8,8 +8,8 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b mod_dialog.c:149
-b duf_pdi_reinit.c:72
+# watch duf_config->targ.argc
+watch duf_dbgfunlevel>1000
 
 run
 bt
