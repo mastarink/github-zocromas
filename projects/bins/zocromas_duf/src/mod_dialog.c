@@ -118,7 +118,6 @@ static int
 dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  const char *DUF_UNUSED rs = NULL;
 
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
@@ -163,7 +162,6 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       DUF_TEST_R( r );
       assert( di.pup == &uf );
     }
-    rs = duf_error_name( r );
     duf_pdi_shut( &di );
   }
   DEBUG_ENDR( r );

@@ -106,7 +106,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            ,                    /* */
            .filter =            /* */
            " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0                                              AND " /* */
+           " sz.size > 0 " /*                                     */ "AND " /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 )  AND " /* */
            " 1 "                /* */
            /*, .group=" fd." DUF_SQL_IDNAME */
@@ -164,7 +164,8 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   DUF_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Crc32sum, crc32sum, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == MAS_SQL_ROW )
+  T("@@(%d:%d)%s", rpr, duf_error_code_i(rpr), duf_error_name_i(rpr));
+  if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
     /* crc32id = duf_sql_column_long_long( pstmt, 0 ); */
@@ -213,7 +214,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
       insert_cnt++;
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || !lr ) && !changes )
     {
       if ( need_id )
         crc32id = duf_pdistat2file_crc32id_existed( pdi, crc32sum, &lr );

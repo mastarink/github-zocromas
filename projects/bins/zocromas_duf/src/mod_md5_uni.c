@@ -129,11 +129,11 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) " /*                */ " AND " /* */
-           " sz.size > 0 " /*                                                            */ " AND " /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                */ " AND " /* */
-           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
-           "(  :fFast IS NULL OR sh." DUF_SQL_IDNAME " IS NULL OR sh.dupsha1cnt > 1 ) " /**/ " AND " /* */
+           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) " /*                  */ " AND " /* */
+           " sz.size > 0 " /*                                                              */ " AND " /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                  */ " AND " /* */
+           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*    */ " AND " /* */
+           "(  :fFast IS NULL OR sh." DUF_SQL_IDNAME " IS NULL OR sh.dupsha1cnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
@@ -196,7 +196,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
   DUF_SQL_BIND_LL( md5Sum1, md5sum1, rpr, pstmt );
   DUF_SQL_BIND_LL( md5Sum2, md5sum2, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == MAS_SQL_ROW )
+  if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
     /* md5id = duf_sql_column_long_long( pstmt, 0 ); */
@@ -247,7 +247,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       DUF_SQL_END_STMT( pdi, insert_md5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || !lr ) && !changes )
     {
       if ( need_id )
         md5id = duf_pdistat2file_md5id_existed( pdi, md64[1], md64[0], &lr );

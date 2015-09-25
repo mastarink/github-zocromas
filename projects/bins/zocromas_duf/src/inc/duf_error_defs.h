@@ -13,7 +13,8 @@
 
 #  define DUF_EREPORT(r) (duf_get_ereport(r)>0)
 
-#  define DUF_MAKE_ERROR(_rval, _code) (_rval = duf_make_error(_code, FL))
+#  define DUF_MAKE_ERROR(_rval, _code)         (_rval=(DUF_IS_ERROR(_code) ? duf_make_error( _code, FL, NULL) : _rval))
+#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  (_rval=(DUF_IS_ERROR(_code) ? duf_make_error( _code, FL, _msg) :    0 ))
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
 #  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  FINAL ERROR", __VA_ARGS__)
@@ -31,14 +32,14 @@
 /* ###################################################################### */
 
 /* error message if arg is not 0 */
-/* #  define DUF_TEST_RX(_rval)         if (_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d)", _rval<0?duf_error_name(_rval):"+", _rval ) */
+/* #  define DUF_TEST_RX(_rval)         if (_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d)", _rval<0?duf_error_name_i(_rval):"+", _rval ) */
 
 #  define DUF_TEST_RX_END(_rval) }
 
 #  define DUF_SHOW_ERROR_TEST_WP_STD(_rval, _prefix) DUF_SHOW_ERROR_WP( _prefix, "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
 #  define DUF_SHOW_ERROR_TEST_STD(_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
 
 
 
@@ -85,8 +86,8 @@
 /* #  endif                                                                     */
 
 
-/* #  define DUF_TEST_RR(_rval)      if ( _rval!=DUF_SQL_ROW && _rval!=DUF_SQL_DONE ) DUF_TEST_R( _rval ) */
-/* #  define DUF_TEST_RR(_rval)    DUF_TEST_RQ(_rval, _rval==DUF_SQL_ROW || _rval==DUF_SQL_DONE ) */
+/* #  define DUF_TEST_RR(_rval)      if ( !DUF_IS_ERROR_N(_rval, DUF_SQL_ROW) && !DUF_IS_ERROR_N(_rval,DUF_SQL_DONE) ) DUF_TEST_R( _rval ) */
+/* #  define DUF_TEST_RR(_rval)    DUF_TEST_RQ(_rval, DUF_IS_ERROR_N(_rval, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rval,DUF_SQL_DONE) ) */
 
 /* ###################################################################### */
 
@@ -96,7 +97,7 @@
     			&& (_rval)!=SQLITE_DONE \
     					) ?		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
 					    DUF_SQLITE2R_ERROR_CODE(_rval) \
 					    ) : 0 )
 #    define DUF_TEST_R3S(_rval, _xstr) 	( (_rval \
@@ -104,7 +105,7 @@
     			&& (_rval)!=SQLITE_DONE \
     					) ?		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
 					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
 					    ) : 0 )
 #  else
@@ -113,7 +114,7 @@
     			&& (_rval)!=SQLITE_DONE \
     					)		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
 					    DUF_SQLITE2R_ERROR_CODE(_rval) \
 					    )
 #    define DUF_TEST_R3S(_rval, _xstr) 	if (_rval \
@@ -121,7 +122,7 @@
     			&& (_rval)!=SQLITE_DONE \
     					)		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
 					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
 					    )
 #  endif
@@ -132,9 +133,9 @@
 /* ###################################################################### */
 
 /* ###################################################################### */
-#  define DUF_CLEAR_ERROR(_rt, ...)  _rt=duf_clear_error( _rt, __VA_ARGS__, 0 )
-#  define DUF_CLEARED_ERROR(_rt, ...)  (0==(_rt=duf_clear_error( _rt, __VA_ARGS__, 0 )))
-#  define DUF_IS_ERROR_N(_rt, _er) ( _rt == _er )
+#  define DUF_CLEAR_ERROR(_rt, ...)  _rt=duf_clear_error_i( (_rt), __VA_ARGS__, 0 )
+#  define DUF_CLEARED_ERROR(_rt, ...)  (0==(_rt=duf_clear_error_i( (_rt), __VA_ARGS__, 0 )))
+#  define DUF_IS_ERROR_N(_rt, _er) ( duf_error_code_i( _rt ) == _er )
 #  define DUF_IS_ERROR(_rt) ( _rt < 0 )
 #  define DUF_NOERROR(_rt) ( _rt >= 0 )
 

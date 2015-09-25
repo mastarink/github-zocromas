@@ -67,6 +67,7 @@ duf_option_$_evaluate_sccb( const char *names )
   DOR( r, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
 #else
   DOR( r, duf_ev_evnamed_list_std( names ) );
+  assert(r>=0);
 #endif
   DEBUG_ENDR( r );
 }

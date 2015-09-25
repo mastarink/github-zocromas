@@ -166,7 +166,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt ); */
       /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt ); */
       DUF_SQL_STEP( lr, pstmt );
-      if ( lr == MAS_SQL_ROW )
+      if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
         DUF_TRACE( mod, 0, "<selected>" );
 #if 0
@@ -176,7 +176,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 #endif
         lr = 0;
       }
-      if ( lr == MAS_SQL_DONE )
+      if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) )
         lr = 0;
       DUF_TEST_R( lr );
       DUF_SQL_END_STMT( pdi, select_mime, lr, pstmt );

@@ -132,7 +132,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, int is_leaf, duf_stmnt_t * pstmt )
   assert( pdi );
 
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
-  DUF_TRACE( temp, 5, "@@(%s) maxdepth:%d;", duf_error_name( r ), duf_pdi_maxdepth( pdi ) );
+  DUF_TRACE( temp, 5, "@@(%s) maxdepth:%d;", duf_error_name_i( r ), duf_pdi_maxdepth( pdi ) );
   if ( DUF_NOERROR( r ) )
   {
     int d;

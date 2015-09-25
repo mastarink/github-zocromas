@@ -234,7 +234,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBADMALIAS, NULL /* &changes */  ) );
-    DUF_TRACE( db, 0, "(%d) %s",r, sql );
+    DUF_TRACE( db, 0, "(%d) %s", r, sql );
   }
 
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
@@ -243,7 +243,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_TTABLES_PATTERN "temp.db' AS " DUF_DBTEMPALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
-    DUF_TRACE( db, 0, "(%d) %s",r, sql );
+    DUF_TRACE( db, 0, "(%d) %s", r, sql );
   }
 #  endif
 
@@ -285,9 +285,13 @@ duf_main_db_open( void )
     DORF( r, duf_main_db_optionally_remove_files );
     DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name ), DUF_CONFIGGS( db.main.fpath ) );
     if ( DUF_CONFIGGS( db.main.fpath ) )
+    {
       DORF( r, duf_sql_open, DUF_CONFIGGS( db.main.fpath ) );
+    }
     else
+    {
       DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
+    }
 #if 0
     DUF_CONFIGWN( db.opened, ( DUF_NOERROR( r ) ) );
 #endif
@@ -295,11 +299,11 @@ duf_main_db_open( void )
       global_status.db_opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
+    DUF_TRACE( pdi, 0, "DUF_CONFIGG( pdi ) %s", duf_levinfo_path(DUF_CONFIGG( pdi )) );
     DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( pdi ) ) );
     if ( r == 0 )
       r++;
   }
-
   DEBUG_ENDR( r );
 }
 
@@ -423,7 +427,7 @@ duf_main_db( int argc, char **argv )
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
   DUF_TEST_RX_START( r );
-  /* > */ DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name( r ) );
+  /* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name_i( r ) ); */
   DUF_TEST_RX_END( r );
 
 #if 0

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SQL_STMT_DEFS_H
 #  define MAS_DUF_SQL_STMT_DEFS_H
 
-#  include <mastar/sqlite/mas_sqlite_const.h>
+#  include "duf_sql_types.h"
 
 
 #  define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \
@@ -15,7 +15,7 @@
 	  { \
 	    int __rf = duf_sql_finalize( _pstmt_m ); \
 	    _pstmt_m = NULL; \
-	    if ( _rt >= 0 || _rt == MAS_SQL_ROW || _rt == MAS_SQL_DONE ) \
+	    if ( _rt >= 0 || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE )) \
 	      _rt = __rf; \
 	    DUF_TEST_R( _rt ); \
 	  } \
@@ -44,7 +44,7 @@
 
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_END_STMT(_pdi, _name, _rt, _pstmt_m) \
-	  if ( _rt == MAS_SQL_ROW || _rt == MAS_SQL_DONE ) \
+	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
 	      _rt = 0; \
           if ( _rt >= 0 && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
@@ -78,7 +78,7 @@
 
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_END_STMT_LOCAL(_pdi, _rt, _pstmt_m) \
-	  if ( _rt == MAS_SQL_ROW || _rt == MAS_SQL_DONE ) \
+	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
 	      _rt = 0; \
           if ( _rt >= 0 && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
@@ -118,16 +118,20 @@
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
 		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
 		  }
+/* DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) */
 
-
-#  define DUF_SQL_STEP( _rt, _pstmt_m )		if ( _rt >= 0 || _rt==MAS_SQL_ROW ) DOR_NOE(_rt, duf_sql_step( _pstmt_m ), MAS_SQL_ROW, MAS_SQL_DONE)
-#  define DUF_SQL_CHANGES_NOPDI( _changes, _rt, _pstmt_m ) if ( _rt >= 0 || _rt==MAS_SQL_ROW || _rt==MAS_SQL_DONE ) _changes = duf_sql_changes(  )
+#  define DUF_SQL_STEP( _rt, _pstmt_m )		if ( _rt >= 0 || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) DOR_NOE(_rt, duf_sql_step( _pstmt_m ), DUF_SQL_ROW, DUF_SQL_DONE)
+#  define DUF_SQL_CHANGES_NOPDI( _changes, _rt, _pstmt_m ) \
+  	if ( _rt >= 0 || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
+	  _changes = duf_sql_changes(  )
 #  define DUF_SQL_CHANGES( _changes, _rt, _pstmt_m )  DUF_SQL_CHANGES_NOPDI( _changes, _rt, _pstmt_m );  duf_pdi_reg_changes( pdi, _changes )
 
-#  define DUF_SQL_EACH_ROW(_rt, _pstmt1, _ops) while ( _rt >= 0 && _rt != MAS_SQL_DONE ) \
+#  define DUF_SQL_EACH_ROW(_rt, _pstmt1, _ops) while ( DUF_NOERROR(_rt) && !DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
 	{ \
+	  DUF_TRACE(sql, 0, "EACH ROW:%s", duf_sql_stmt(_pstmt1)); \
 	  DUF_SQL_STEP( _rt, _pstmt1 ); \
-	  if ( _rt == MAS_SQL_ROW ) \
+	  DUF_TRACE(sql, 0, "(%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) \
 	  { \
 	    _rt = 0; \
 	    _ops ; \

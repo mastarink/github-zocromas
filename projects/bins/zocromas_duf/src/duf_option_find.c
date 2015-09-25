@@ -45,7 +45,8 @@ const duf_longval_extended_t *
 duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )
 {
   const duf_longval_extended_t *rxtended = NULL;
-  int rpr = DUF_ERROR_OPTION_NOT_FOUND;
+  int ok;
+  int rpr = 0;
   int ntable = 0;
   int tbcount = 0;
 
@@ -66,7 +67,7 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_exte
             if ( pxtable )
               *pxtable = xtable;
             DUF_TRACE( options, 2, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xtended->o.name );
-            rpr = 0;
+            ok = 1;
             break;              /* ? */
           }
         }
@@ -74,6 +75,8 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_exte
     }
     DUF_TRACE( options, 2, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
   }
+  if ( !ok )
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
   if ( pr )
     *pr = rpr;
   return rxtended;
@@ -84,7 +87,8 @@ static const duf_longval_extended_t *
 duf_find_name_long_exact( const char *name, int witharg, const duf_longval_extended_t * xtended, int *pr )
 {
   const duf_longval_extended_t *extended = NULL;
-  int rpr = DUF_ERROR_OPTION_NOT_FOUND;
+  int ok = 0;
+  int rpr = 0;
 
   if ( name && *name )
     for ( ; xtended->o.name; xtended++ )
@@ -93,17 +97,15 @@ duf_find_name_long_exact( const char *name, int witharg, const duf_longval_exten
       if ( 0 == strcmp( name, xtended->o.name ) )
       {
         DUF_TRACE( options, 3, "found name:`%s`", xtended->o.name );
-        rpr = 0;
+        ok = 1;
         extended = xtended;
-        if ( extended )
-          DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
         break;
       }
     }
+  if ( !ok )
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
   if ( pr )
     *pr = rpr;
-  if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
   return extended;
 }
 
@@ -115,7 +117,7 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
   const duf_longval_extended_t *extended = NULL;
   const duf_longval_extended_t *extended_soft = NULL;
   const duf_longval_extended_t *extended_exact = NULL;
-  int rpr = DUF_ERROR_OPTION_NOT_FOUND;
+  int rpr = 0;
 
   if ( name && *name )
     for ( ; xtended->o.name; xtended++ )
@@ -136,12 +138,10 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
           if ( !extended_soft ) /* find first!? */
           {
             extended_soft = xtended;
-            DUF_TRACE( options, 3, "@(%s) found soft name:`%s`", duf_error_name( rpr ), xtended->o.name );
           }
           if ( !tname[l] && !extended_exact )
           {
             extended_exact = xtended;
-            DUF_CLEAR_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
             DUF_TRACE( options, 3, "found exact name:`%s`", xtended->o.name );
           }
           cnt++;
@@ -153,19 +153,23 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
     if ( extended_exact )       /* several soft but one(first?) exact */
       extended = extended_exact;
     else
-      DOR( rpr, DUF_ERROR_OPTION_MULTIPLE );
+      DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_MULTIPLE );
   }
   else if ( cnt == 1 && extended_exact )
+  {
     extended = extended_exact;
+    /* DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_MULTIPLE ); XXX ?? XXX */
+  }
   else if ( cnt == 1 && extended_soft )
   {
     extended = extended_soft;
-    DUF_CLEAR_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
   }
+  if ( !extended && DUF_NOERROR( rpr ) )
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
+  if ( extended )
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
   if ( pr )
     *pr = rpr;
-  if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
   return extended;
 }
 
@@ -180,7 +184,7 @@ duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t 
   else
     extended = duf_find_name_long_exact( name, witharg, xtended, pr );
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( pr ? *pr : -1 ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( pr ? *pr : -1 ), extended->o.name );
   return extended;
 }
 
@@ -193,25 +197,24 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
   extended = duf_find_name_long( name, witharg, xtended, soft, &rpr );
   DUF_TRACE( options, 4, "@@name:%s; extended:%d", name, extended ? 1 : 0 );
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
   DUF_TRACE( options, 6, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
-  if ( pno && rpr == DUF_ERROR_OPTION_NOT_FOUND )
+  if ( pno && DUF_IS_ERROR_N( rpr, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     *pno = 0;
     DUF_TRACE( options, 6, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
-    if ( rpr == DUF_ERROR_OPTION_NOT_FOUND && 0 == strncmp( name, DUF_NO_PREFIX, strlen( DUF_NO_PREFIX ) )
-         && strlen( name ) > strlen( DUF_NO_PREFIX ) )
+    if ( 0 == strncmp( name, DUF_NO_PREFIX, strlen( DUF_NO_PREFIX ) ) && strlen( name ) > strlen( DUF_NO_PREFIX ) )
     {
       DUF_CLEAR_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
       extended = duf_find_name_long( name + strlen( DUF_NO_PREFIX ), witharg, xtended, soft, &rpr );
       if ( extended )
-        DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
+        DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
       *pno = 1;
     }
   }
   if ( pr )
     *pr = rpr;
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
   return extended;
 }

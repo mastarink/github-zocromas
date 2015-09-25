@@ -135,7 +135,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   DUF_SQL_BIND_LL( sha1Sum2, sha1sum2, rpr, pstmt );
   DUF_SQL_BIND_LL( sha1Sum3, sha1sum3, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == MAS_SQL_ROW )
+  if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
     /* sha1id = duf_sql_column_long_long( pstmt, 0 ); */
@@ -188,7 +188,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
       DUF_SQL_END_STMT( pdi, insert_sha1, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT )  || !lr ) && !changes )
     {
       if ( need_id )
         sha1id = duf_pdistat2file_sha1id_existed( pdi, sha1[2], sha1[1], sha1[0], &lr );

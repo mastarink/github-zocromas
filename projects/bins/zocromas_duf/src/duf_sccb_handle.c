@@ -59,6 +59,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
     else
       sql_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_LEAF );
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
+    assert( rpr >= 0 );
 #endif
     if ( DUF_NOERROR( rpr ) && sqlt )
     {
@@ -69,11 +70,13 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
  * for instance: selected_paths does NOT contain "fileless" directories
  */
       csql = sqlt;
-      DUF_TRACE( temp, 5, "count by %s", csql );
+      DUF_TRACE( temp, 10, "@@count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
+      assert( rpr >= 0 );
       DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, NULL ) );
+      assert( rpr >= 0 );
       DUF_SQL_STEP( rpr, pstmt );
-      if ( rpr == MAS_SQL_ROW )
+      if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
       {
 #if 1
         cnt = duf_sql_column_long_long( pstmt, 0 );
@@ -83,6 +86,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
         rpr = 0;
       }
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
+      assert( rpr >= 0 );
       DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
       DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }
@@ -93,12 +97,6 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
     DUF_TRACE( explain, 0, "didn't count files in db" );
   }
   DUF_TEST_R( rpr );
-  if ( rpr < 0 )
-  {
-    T( "@@@@%s", duf_error_name( rpr ) );
-    T( "@@@@%s", duf_error_name( rpr ) );
-    T( "@@@@%s", duf_error_name( rpr ) );
-  }
   if ( pr )
     *pr = rpr;
   DEBUG_ENDULL( cnt );

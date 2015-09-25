@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SQL_FIELD_H
 #  define MAS_DUF_SQL_FIELD_H
 
-#  include "duf_sql_defs.h"
+#  include "duf_sql_types.h"
 
 /* for DUF_GET_?FIELD2 */
 int __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name );

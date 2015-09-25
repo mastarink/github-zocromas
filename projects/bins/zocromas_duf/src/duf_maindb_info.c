@@ -30,7 +30,7 @@ duf_info_from_db( int count, const char *sql )
     DUF_SQL_START_STMT_NOPDI( sql, rpr, pstmt );
 
     DUF_SQL_STEP( rpr, pstmt );
-    if ( DUF_IS_ERROR_N( rpr, MAS_SQL_ROW ) )
+    if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
       tuple = mas_malloc( count * sizeof( unsigned long ) );
 

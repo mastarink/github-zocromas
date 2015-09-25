@@ -88,6 +88,7 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
   duf_levinfo_set_dirid( pdi, dirid );
   pli->numfile = nfiles;
   pli->numdir = ndirs;
+  assert( dirid == duf_levinfo_dirid( pdi ) );
   DUF_ENDR( r );
 }
 
@@ -97,6 +98,7 @@ duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
   DUF_STARTR( r );
 
   DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid ), DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs ) ) );
+  assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
 
   DUF_ENDR( r );
 }
@@ -125,9 +127,10 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 
     DUF_SQL_BIND_S( dirName, truedirname, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
-    if ( DUF_IS_ERROR_N( r, MAS_SQL_ROW ) )
+    assert( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) || DUF_IS_ERROR_N( r, DUF_SQL_DONE ) );
+    if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
     {
-      DUF_CLEAR_ERROR( r, MAS_SQL_ROW );
+      DUF_CLEAR_ERROR( r, DUF_SQL_ROW );
 
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
 
@@ -147,12 +150,18 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
       }
       assert( DUF_GET_UFIELD2( dirid ) );
       DOR( r, duf_set_dirid_and_nums_from_pstmt( pdi, pstmt ) );
+      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
-    else
+    else if ( DUF_IS_ERROR_N( r, DUF_SQL_DONE ) )
     {
       DUF_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
                  duf_levinfo_itemshowname( pdi ) );
       DUF_TRACE( select, 10, "<NOT selected> (%d)", r );
+      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+    }
+    else
+    {
+      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
   }
   assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
@@ -266,7 +275,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
       }
       else
       {
-        if ( DUF_IS_ERROR_N( r, MAS_SQL_CONSTRAINT ) )
+        if ( DUF_IS_ERROR_N( r, DUF_SQL_CONSTRAINT ) )
         {
           if ( caninsert )
           {

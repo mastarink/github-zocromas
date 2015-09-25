@@ -81,12 +81,13 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
         DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, source ) );
-
+  assert(r>=0);
       }
       mas_free( s );
       peo = e;
       /* DUF_TRACE( explain, 0, "peo \"%s\"", peo ); */
     }
   }
+  assert(r>=0);
   DEBUG_ENDR( r );
 }

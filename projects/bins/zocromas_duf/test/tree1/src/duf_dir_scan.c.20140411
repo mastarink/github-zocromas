@@ -1,0 +1,228 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+/* #include <unistd.h> */
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>
+
+#include "duf_types.h"
+#include "duf_config.h"
+
+/* #include "duf_sql.h" */
+/* #include "duf_utils.h" */
+#include "duf_path.h"
+/* #include "duf_file.h" */
+/* #include "duf_file_pathid.h" */
+#include "duf_file_scan.h"
+
+#include "duf_dbg.h"
+
+#include "duf_file_pathid.h"
+
+/* ###################################################################### */
+#include "duf_dir_scan.h"
+/* ###################################################################### */
+
+/*
+ * call str_cb with pdi for each dir at db with given parentID
+ * */
+int
+duf_scan_dirs_by_parentid( unsigned long long pathid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+{
+  int r = 0;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  if ( 0 )
+    printf( "+L%u\n", pdi->level );
+  pdi->level++;
+  if ( sccb && sccb->directory_scan )
+  {
+    /* actions on current dir */
+    sccb->directory_scan( pathid, pdi->name, 0 /* items */ , pdi, sccb );
+  }
+
+
+
+  /* 
+   * str_cb + pdi to be called for each record
+   * sql + ... must select pathid, ....
+   * */
+
+  {
+    if ( duf_config->verbose )
+      printf( "L%u items by %llu>\n", pdi->level , pathid );
+    r = duf_scan_items_sql( str_cb, pdi, pdi, sccb,
+                            "SELECT duf_paths.id, 0, duf_paths.dirname, items " " FROM duf_paths " " WHERE duf_paths.parentid='%llu'",
+                            pathid );
+    if ( duf_config->verbose )
+      printf( "L%u <items by %llu\n", pdi->level , pathid);
+  }
+
+  if ( duf_config->verbose )
+    printf( "** L%u >files by %llu\n", pdi->level, pathid );
+  if ( sccb && !r )
+  {
+    pdi->level++;
+    r = duf_scan_files_by_pathid( pathid, sccb->file_scan /* str_cb */ , pdi, sccb );
+    pdi->level--;
+  }
+  if ( duf_config->verbose )
+    printf( "** L%u <files by %llu\n", pdi->level, pathid );
+
+
+  pdi->level--;
+  if ( duf_config->verbose )
+    printf( "-L%u\n", pdi->level );
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int duf_print_dirs_by_parentid( unsigned long long parentid, duf_dirinfo_t * pdi, int tree );
+
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt) - see duf_scan_dirs_by_parentid
+ * this is callback of type: duf_scan_callback_file_t (second range):
+ * */
+static int
+duf_sql_scan_print_dir( int nrow, int nrows, unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                        const struct stat *st, void *str_cb_udata, duf_dirinfo_t * pdi1, duf_scan_callbacks_t * sccb,
+                        const char *const *presult )
+{
+  duf_dirinfo_t *pdi;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  pdi = ( duf_dirinfo_t * ) str_cb_udata;
+  /* printf( "%7llu: %s/%s\n", pathid, path, name ); */
+  if ( pdi )
+  {
+    char format[256];
+
+    if ( pdi->levinfo && !nrow )
+      pdi->levinfo[pdi->level] = nrows;
+    if ( 1 )
+    {
+      snprintf( format, sizeof( format ), "%%4llu: (%%7s) %%-%ds %%s : %%s\n", pdi->level * 2 + 1 );
+      printf( format, pathid, presult[2], pdi->level ? "" : "-", presult[2], path );
+    }
+    else
+    {
+      snprintf( format, sizeof( format ), "%%4llu: %%%ds %%-20s ##%%d##   %%s\n", pdi->level * 3 + 5 );
+      printf( format, pathid, "", path, pdi->level, presult[2] );
+    }
+    pdi->levinfo[pdi->level]--;
+    if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->level < pdi->u.maxdepth ) )
+    {
+      duf_print_dirs_by_parentid( pathid, pdi, 0 );
+    }
+  }
+  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  return 0;
+}
+
+/*
+ * this is callback of type: duf_scan_callback_file_t (second range):
+ * */
+static int
+duf_sql_scan_print_tree( int nrow, int nrows, unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                         const struct stat *st, void *str_cb_udata, duf_dirinfo_t * pdi1, duf_scan_callbacks_t * sccb,
+                         const char *const *presult )
+{
+  duf_dirinfo_t *pdi;
+  unsigned long long dbitems = 0;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  pdi = ( duf_dirinfo_t * ) str_cb_udata;
+  /* printf( "%7llu: %s/%s\n", pathid, path, name ); */
+  if ( presult[3] )
+    dbitems = strtoll( presult[3], NULL, 10 );
+  if ( pdi && ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) )
+  {
+    if ( pdi->levinfo && !nrow )
+      pdi->levinfo[pdi->level] = nrows;
+    pdi->seq++;
+    /* printf( "%4llu: (%7s) :", pathid, presult[2] ? presult[2] : "-" ); */
+    for ( int i = 0; i <= pdi->level; i++ )
+    {
+      if ( pdi->levinfo )
+      {
+        if ( i == 0 )
+          printf( "%3d ", pdi->seq );
+        if ( pdi->levinfo[i] == 1 && i == pdi->level )
+          printf( "└── " );
+        else if ( pdi->levinfo[i] && i == pdi->level )
+          printf( "├── " );
+        else if ( pdi->levinfo[i] )
+          printf( "│   " );
+        else
+          printf( "    " );
+      }
+      else
+      {
+      }
+    }
+    /* printf( "@@ %s :%s\n", presult[1], path ); */
+    printf( "%s [items=%llu]\n", presult[2], dbitems );
+    pdi->levinfo[pdi->level]--;
+    if ( pdi->u.recursive && pdi->level < pdi->u.maxdepth )
+    {
+      duf_print_dirs_by_parentid( pathid, pdi, 1 );
+    }
+  }
+  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  return 0;
+}
+
+static int
+duf_print_dirs_by_parentid( unsigned long long parentid, duf_dirinfo_t * pdi, int tree )
+{
+  int r = 0;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_scan_dirs_by_parentid( parentid, tree ? duf_sql_scan_print_tree : duf_sql_scan_print_dir, pdi, NULL );
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+int
+duf_print_dirs( const char *path, duf_ufilter_t u, int tree )
+{
+  int r = 0;
+  unsigned long long pathid;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  duf_dirinfo_t di = {.level = 0,
+    .seq = 0,
+    .levinfo = NULL,
+    .u = u
+  };
+  pathid = duf_path_to_pathid( path );
+  if ( pathid || !path )
+  {
+    if ( di.u.maxdepth && !di.levinfo )
+    {
+      size_t lsz = sizeof( di.levinfo[0] ) * ( di.u.maxdepth + 1 );
+
+      di.levinfo = mas_malloc( lsz );
+
+      memset( di.levinfo, 0, lsz );
+    }
+    {
+      char *top;
+
+      top = duf_pathid_to_path( pathid );
+      /* printf( "%s -- %llu\n", top?top:"/", pathid ); */
+      printf( "[%s]\n", top ? top : "/" );
+      mas_free( top );
+    }
+    r = duf_print_dirs_by_parentid( pathid, &di, tree );
+    mas_free( di.levinfo );
+  }
+  else
+  {
+    fprintf( stderr, "Path '%s' not in db\n", path );
+    r = -1;
+  }
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}

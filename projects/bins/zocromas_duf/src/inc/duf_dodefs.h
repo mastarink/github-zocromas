@@ -19,7 +19,7 @@
 #    define DUF_DO_TESTZ_R(_rval, _x)              ( _rval=0, DUF_DO_TEST_R_INTERNAL(_rval, _x)  )
 
 #  else
-#    define DUF_DO_TEST_R(_rval, _x)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_R(_rval); }
+#    define DUF_DO_TEST_R(_rval, _x)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_R(_rval); DUF_MAKE_ERROR(_rval,_rval); }
 #    define DUF_DO_TEST_R_NOE(_rval, _x, ...) DUF_E_NO(  __VA_ARGS__ );DUF_DO_TEST_R(_rval, _x);DUF_E_YES( __VA_ARGS__ )
 /* # define DUF_DO_TEST_RQ(_rval, _x, _cond)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_RQ(_rval, _cond); } */
 #    define DUF_DO_TEST_RN(_rval, _x)   if (_rval>=0) { (_rval=(_x)); DUF_TEST_RN(_rval); }

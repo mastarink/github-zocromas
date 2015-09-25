@@ -159,7 +159,7 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
   DUF_SQL_BIND_LL( sd5Sum1, sd5sum1, rpr, pstmt );
   DUF_SQL_BIND_LL( sd5Sum2, sd5sum2, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == MAS_SQL_ROW )
+  if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
     /* sd5id = duf_sql_column_long_long( pstmt, 0 ); */
@@ -206,7 +206,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
       DUF_SQL_END_STMT( pdi, insert_sd5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT )  || !lr ) && !changes )
     {
       if ( need_id )
         sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], &lr );

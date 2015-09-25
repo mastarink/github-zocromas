@@ -69,7 +69,7 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   if ( pr )
     *pr = rpr;
   if ( extended )
-    DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
+    DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
   return extended;
 }
 
@@ -93,9 +93,9 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
 
     if ( extended )
     {
-      DUF_TRACE( options, 1, "@(%s:%d) found cmd for %s", duf_error_name( r ), found, extended->o.name );
+      DUF_TRACE( options, 1, "@(%s:%d) found cmd for %s", duf_error_name_i( r ), found, extended->o.name );
       DORF( r, DUF_WRAPPED( duf_clarify_xcmd_full ), extended, arg, istage, xtable, no, source );
-      DUF_TRACE( options, 1, "@(%s:%d) full done for %s", duf_error_name( r ), found, extended->o.name );
+      DUF_TRACE( options, 1, "@(%s:%d) full done for %s", duf_error_name_i( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
     }
     else
@@ -110,7 +110,9 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
   }
   while ( xtended );
   if ( found )
+  {
     r = found;
+  }
   if ( found )
     DUF_TRACE( options, 3, "@executed" );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND );
@@ -129,13 +131,13 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
     /* PF0( "table %s; search %s", xtable->o.name, string ); */
     DOR( r, duf_exec_cmd_xtable( string, xtable, vseparator, istage, source ) );
-    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
-    if ( r > 0 )
+    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
+    if ( r > 0 )                /* DUF_NOERROR(r) equal to r>=0 ?? */
       found += r;
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
   }
-  DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
+  DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
   if ( found )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )

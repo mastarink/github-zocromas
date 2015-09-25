@@ -32,9 +32,9 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
   {
     const char *s = NULL;
 
-    s = duf_error_name( ern );
+    s = duf_error_name_i( ern );
     if ( ern < 0 && s )
-      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", duf_error_name( ern ), ern, duf_errindex( ern ) );
+      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, duf_errnumber( ern ) );
     else
       DUF_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
   }
@@ -122,7 +122,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
 
 /* \e[1;33m101\e[1;37m:duf_all_options\e[m */
         snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", duf_color_s( out, "\x1b[1;32m" ),
-                  duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN, duf_color_s( out, "\x1b[m" ) );
+                  duf_config && duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN, duf_color_s( out, "\x1b[m" ) );
         DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
       }
 #endif

@@ -135,7 +135,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
   unsigned long long dataid;
 
   DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
-
+  assert( dataid > 0 );
   if ( DUF_NOERROR( r ) && fname && duf_levinfo_dirid_up( pdi ) )
   {
     int changes = 0;

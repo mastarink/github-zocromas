@@ -3,9 +3,95 @@
 
 #  define DUF_SQLITE2R_ERROR_CODE(r3c) duf_sqlite2r_error_code(r3c)
 
+#  include <mastar/sqlite/mas_sqlite_const.h>
+
 typedef enum
 {
-  DUF_OK,
+  DUF_SQL_ERROR = MAS_SQL_ERROR,
+  DUF_SQL_INTERNAL = MAS_SQL_INTERNAL, /*    #define SQLITE_INTERNAL    2  Internal logic error in SQLite             */
+  DUF_SQL_PERM = MAS_SQL_PERM,  /*            #define SQLITE_PERM        3  Access permission denied                   */
+  DUF_SQL_ABORT = MAS_SQL_ABORT, /*          #define SQLITE_ABORT       4  Callback routine requested an abort        */
+  DUF_SQL_BUSY = MAS_SQL_BUSY,  /*            #define SQLITE_BUSY        5  The database file is locked                */
+  DUF_SQL_LOCKED = MAS_SQL_LOCKED, /*        #define SQLITE_LOCKED      6  A table in the database is locked          */
+  DUF_SQL_NOMEM = MAS_SQL_NOMEM, /*          #define SQLITE_NOMEM       7  A malloc() failed                          */
+  DUF_SQL_READONLY = MAS_SQL_READONLY, /*    #define SQLITE_READONLY    8  Attempt to write a readonly database       */
+  DUF_SQL_INTERRUPT = MAS_SQL_INTERRUPT, /*  #define SQLITE_INTERRUPT   9  Operation terminated by sqlite3_interrupt() */
+  DUF_SQL_IOERR = MAS_SQL_IOERR, /*          #define SQLITE_IOERR      10  Some kind of disk I/O error occurred       */
+  DUF_SQL_CORRUPT = MAS_SQL_CORRUPT, /*      #define SQLITE_CORRUPT    11  The database disk image is malformed       */
+  DUF_SQL_NOTFOUND = MAS_SQL_NOTFOUND, /*    #define SQLITE_NOTFOUND   12  Unknown opcode in sqlite3_file_control()   */
+  DUF_SQL_FULL = MAS_SQL_FULL,  /*            #define SQLITE_FULL       13  Insertion failed because database is full  */
+  DUF_SQL_CANTOPEN = MAS_SQL_CANTOPEN, /*    #define SQLITE_CANTOPEN   14  Unable to open the database file           */
+  DUF_SQL_PROTOCOL = MAS_SQL_PROTOCOL, /*    #define SQLITE_PROTOCOL   15  Database lock protocol error               */
+  DUF_SQL_EMPTY = MAS_SQL_EMPTY, /*          #define SQLITE_EMPTY      16  Database is empty                          */
+  DUF_SQL_SCHEMA = MAS_SQL_SCHEMA, /*        #define SQLITE_SCHEMA     17  The database schema changed                */
+  DUF_SQL_TOOBIG = MAS_SQL_TOOBIG, /*        #define SQLITE_TOOBIG     18  String or BLOB exceeds size limit          */
+  DUF_SQL_CONSTRAINT = MAS_SQL_CONSTRAINT, /*#define SQLITE_CONSTRAINT 19  Abort due to constraint violation          */
+  DUF_SQL_MISMATCH = MAS_SQL_MISMATCH, /*    #define SQLITE_MISMATCH   20  Data type mismatch                         */
+  DUF_SQL_MISUSE = MAS_SQL_MISUSE, /*        #define SQLITE_MISUSE     21  Library used incorrectly                   */
+  DUF_SQL_NOLFS = MAS_SQL_NOLFS, /*          #define SQLITE_NOLFS      22  Uses OS features not supported on host     */
+  DUF_SQL_AUTH = MAS_SQL_AUTH,  /*            #define SQLITE_AUTH       23  Authorization denied                       */
+  DUF_SQL_FORMAT = MAS_SQL_FORMAT, /*        #define SQLITE_FORMAT     24  Auxiliary database format error            */
+  DUF_SQL_RANGE = MAS_SQL_RANGE, /*          #define SQLITE_RANGE      25  2nd parameter to sqlite3_bind out of range */
+  DUF_SQL_NOTADB = MAS_SQL_NOTADB, /*        #define SQLITE_NOTADB     26  File opened that is not a database file    */
+  DUF_SQL_NOTICE = MAS_SQL_NOTICE, /*        #define SQLITE_NOTICE     27  Notifications from sqlite3_log()           */
+  DUF_SQL_WARNING = MAS_SQL_WARNING, /*      #define SQLITE_WARNING    28  Warnings from sqlite3_log()                */
+  DUF_SQL_ROW = MAS_SQL_ROW,    /*              #define SQLITE_ROW        100 sqlite3_step() has another row ready       */
+  DUF_SQL_DONE = MAS_SQL_DONE,  /*            #define SQLITE_DONE       101 sqlite3_step() has finished executing      */
+/*DUF  extended */
+  DUF_SQL_IOERR_READ = MAS_SQL_IOERR_READ,
+  DUF_SQL_IOERR_SHORT_READ = MAS_SQL_IOERR_SHORT_READ,
+  DUF_SQL_IOERR_WRITE = MAS_SQL_IOERR_WRITE,
+  DUF_SQL_IOERR_FSYNC = MAS_SQL_IOERR_FSYNC,
+  DUF_SQL_IOERR_DIR_FSYNC = MAS_SQL_IOERR_DIR_FSYNC,
+  DUF_SQL_IOERR_TRUNCATE = MAS_SQL_IOERR_TRUNCATE,
+  DUF_SQL_IOERR_FSTAT = MAS_SQL_IOERR_FSTAT,
+  DUF_SQL_IOERR_UNLOCK = MAS_SQL_IOERR_UNLOCK,
+  DUF_SQL_IOERR_RDLOCK = MAS_SQL_IOERR_RDLOCK,
+  DUF_SQL_IOERR_DELETE = MAS_SQL_IOERR_DELETE,
+  DUF_SQL_IOERR_BLOCKED = MAS_SQL_IOERR_BLOCKED,
+  DUF_SQL_IOERR_NOMEM = MAS_SQL_IOERR_NOMEM,
+  DUF_SQL_IOERR_ACCESS = MAS_SQL_IOERR_ACCESS,
+  DUF_SQL_IOERR_CHECKRESERVEDLOCK = MAS_SQL_IOERR_CHECKRESERVEDLOCK,
+  DUF_SQL_IOERR_LOCK = MAS_SQL_IOERR_LOCK,
+  DUF_SQL_IOERR_CLOSE = MAS_SQL_IOERR_CLOSE,
+  DUF_SQL_IOERR_DIR_CLOSE = MAS_SQL_IOERR_DIR_CLOSE,
+  DUF_SQL_IOERR_SHMOPEN = MAS_SQL_IOERR_SHMOPEN,
+  DUF_SQL_IOERR_SHMSIZE = MAS_SQL_IOERR_SHMSIZE,
+  DUF_SQL_IOERR_SHMLOCK = MAS_SQL_IOERR_SHMLOCK,
+  DUF_SQL_IOERR_SHMMAP = MAS_SQL_IOERR_SHMMAP,
+  DUF_SQL_IOERR_SEEK = MAS_SQL_IOERR_SEEK,
+  DUF_SQL_IOERR_DELETE_NOENT = MAS_SQL_IOERR_DELETE_NOENT,
+  DUF_SQL_IOERR_MMAP = MAS_SQL_IOERR_MMAP,
+  DUF_SQL_IOERR_GETTEMPPATH = MAS_SQL_IOERR_GETTEMPPATH,
+  DUF_SQL_IOERR_CONVPATH = MAS_SQL_IOERR_CONVPATH,
+  DUF_SQL_LOCKED_SHAREDCACHE = MAS_SQL_LOCKED_SHAREDCACHE,
+  DUF_SQL_BUSY_RECOVERY = MAS_SQL_BUSY_RECOVERY,
+  DUF_SQL_BUSY_SNAPSHOT = MAS_SQL_BUSY_SNAPSHOT,
+  DUF_SQL_CANTOPEN_NOTEMPDIR = MAS_SQL_CANTOPEN_NOTEMPDIR,
+  DUF_SQL_CANTOPEN_ISDIR = MAS_SQL_CANTOPEN_ISDIR,
+  DUF_SQL_CANTOPEN_FULLPATH = MAS_SQL_CANTOPEN_FULLPATH,
+  DUF_SQL_CANTOPEN_CONVPATH = MAS_SQL_CANTOPEN_CONVPATH,
+  DUF_SQL_CORRUPT_VTAB = MAS_SQL_CORRUPT_VTAB,
+  DUF_SQL_READONLY_RECOVERY = MAS_SQL_READONLY_RECOVERY,
+  DUF_SQL_READONLY_CANTLOCK = MAS_SQL_READONLY_CANTLOCK,
+  DUF_SQL_READONLY_ROLLBACK = MAS_SQL_READONLY_ROLLBACK,
+  DUF_SQL_READONLY_DBMOVED = MAS_SQL_READONLY_DBMOVED,
+  DUF_SQL_ABORT_ROLLBACK = MAS_SQL_ABORT_ROLLBACK,
+  DUF_SQL_CONSTRAINT_CHECK = MAS_SQL_CONSTRAINT_CHECK,
+  DUF_SQL_CONSTRAINT_COMMITHOOK = MAS_SQL_CONSTRAINT_COMMITHOOK,
+  DUF_SQL_CONSTRAINT_FOREIGNKEY = MAS_SQL_CONSTRAINT_FOREIGNKEY,
+  DUF_SQL_CONSTRAINT_FUNCTION = MAS_SQL_CONSTRAINT_FUNCTION,
+  DUF_SQL_CONSTRAINT_NOTNULL = MAS_SQL_CONSTRAINT_NOTNULL,
+  DUF_SQL_CONSTRAINT_PRIMARYKEY = MAS_SQL_CONSTRAINT_PRIMARYKEY,
+  DUF_SQL_CONSTRAINT_TRIGGER = MAS_SQL_CONSTRAINT_TRIGGER,
+  DUF_SQL_CONSTRAINT_UNIQUE = MAS_SQL_CONSTRAINT_UNIQUE,
+  DUF_SQL_CONSTRAINT_VTAB = MAS_SQL_CONSTRAINT_VTAB,
+  DUF_SQL_CONSTRAINT_ROWID = MAS_SQL_CONSTRAINT_ROWID,
+  DUF_SQL_NOTICE_RECOVER_WAL = MAS_SQL_NOTICE_RECOVER_WAL,
+  DUF_SQL_NOTICE_RECOVER_ROLLBACK = MAS_SQL_NOTICE_RECOVER_ROLLBACK,
+  DUF_SQL_WARNING_AUTOINDEX = MAS_SQL_WARNING_AUTOINDEX,
+
+  DUF_OK = 0,
   DUF_ERROR_ERROR_BASE = -30000,
   DUF_ERROR_UNKNOWN,
   DUF_ERROR_UNKNOWN_NODE,
@@ -73,6 +159,24 @@ typedef enum
   DUF_ERROR_SCCB_NOT_FOUND,
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
+
+typedef struct
+{
+  const char *name;
+  duf_error_code_t code;
+} duf_errdesc_t;
+
+typedef struct
+{
+  long made_id;
+  duf_error_code_t err;
+  const char *funcid;
+  int linid;
+  int shown;
+  const char *message;
+} duf_error_event_t;
+
+typedef int duf_error_index_t;
 
 #  define DUF_ERROR_COUNT ( DUF_ERROR_ERROR_MAX - DUF_ERROR_ERROR_BASE )
 

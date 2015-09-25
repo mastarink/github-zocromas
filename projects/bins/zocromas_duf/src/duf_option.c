@@ -38,24 +38,29 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
 /* TODO : register  extended + optargg for further use */
     global_status_register_xcmd( extended, optargg, istage, no, source );
     DOR( r, duf_clarify_xcmd_typed( extended, optargg, istage, xtable, no ) );
-    DUF_TRACE( options, +3, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
+    assert( r >= 0 );
+    DUF_TRACE( options, +3, "parsed typed:`%s`   %s", extended->o.name, duf_error_name_i( r ) );
 
 
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
       DUF_TRACE( explain, 1, "@old opt for %s", extended ? extended->o.name : NULL );
       DOZR( r, duf_clarify_xcmd_old( extended, optargg, istage, xtable ) );
+      assert( r >= 0 );
     }
     else
     {
       DUF_TRACE( explain, 1, "@no old opt for %s", extended ? extended->o.name : NULL );
     }
     DUF_TRACE( options, +4, "cli options r: %d", r );
-    DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
+    DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name_i( r ) );
+    assert( r >= 0 );
   }
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-  DUF_TRACE( options, 7, "@(%s) xname:%s; arg:%s; istage:%d; no:%d", duf_error_name( r ), extended ? extended->o.name : "?", optargg, istage, no );
+  assert( r >= 0 );
+  DUF_TRACE( options, 7, "@(%s) xname:%s; arg:%s; istage:%d; no:%d", duf_error_name_i( r ), extended ? extended->o.name : "?", optargg, istage, no );
+  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 
@@ -68,8 +73,10 @@ DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, 
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
   DOR( r, duf_clarify_xcmd_full( extended, optargg, istage, xtable, no, source ) );
+  assert( r >= 0 );
   DUF_TRACE( options, +2, "xname:%s; arg:%s; no:%d", extended ? extended->o.name : "?", optargg, no );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
+  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 #endif
@@ -91,45 +98,52 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   if ( longindex < 0 )
   {
     extended = duf_find_codeval_extended_std( codeval, &xtable, &r );
+    assert( r >= 0 );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +2, "@@%s found by codeval of option %d (%c) => [--%s] (%s)", extended ? "" : "not", codeval, codeval > ' '
-               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
+               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name_i( r ) );
   }
   else if ( !extended )
   {
     extended = duf_longindex2extended( longindex, &xtable, &r );
+    assert( r >= 0 );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +2, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
-               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
+               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name_i( r ) );
   }
   DUF_TRACE( options, +2, "parse option codeval: %d (%c) longindex:%d [--%s] (%s)", codeval, codeval > ' '
-             && codeval <= 'z' ? codeval : '?', longindex, extended ? extended->o.name : "?", duf_error_name( r ) );
+             && codeval <= 'z' ? codeval : '?', longindex, extended ? extended->o.name : "?", duf_error_name_i( r ) );
   if ( DUF_NOERROR( r ) )
   {
     if ( extended )
     {
       DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, 0 /* no */ , source ) );
+      assert( r >= 0 );
     }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )
       {
       case ':':
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_VALUE );
+        assert( r >= 0 );
         DUF_TEST_R( r );
         DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       case '?':
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
+        assert( r >= 0 );
         DUF_TEST_R( r );
         DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       default:
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
+        assert( r >= 0 );
         DUF_TEST_R( r );
         DUF_TRACE( options, +0, "* options r: %d; codeval:%d;", r, codeval );
         break;
       }
   }
+  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 
@@ -142,20 +156,22 @@ duf_clarify_opt_x( duf_option_code_t codeval, int longindex, const char *optargg
 
   oa = duf_string_options_expand( optargg, '?' );
   DOR( r, duf_clarify_opt( codeval, longindex, oa, istage, source ) ); /* => duf_clarify_xcmd_full */
+  assert( r >= 0 );
   mas_free( oa );
   DEBUG_ENDR( r );
 }
 
 /* 20150924.144102 */
 int
-duf_clarify_argv( duf_argvc_t * ptarg, duf_cargvc_t * pcarg, int optindd )
+duf_clarify_argv( duf_argvc_t * ptarg, duf_cargvc_t * pcarg, int pos )
 {
   DEBUG_STARTR( r );
   mas_del_argv( ptarg->argc, ptarg->argv, 0 );
   ptarg->argc = 0;
   ptarg->argv = NULL;
 
-  ptarg->argc = mas_add_argv_argv( ptarg->argc, &ptarg->argv, pcarg->argc, pcarg->argv, optindd );
+  ptarg->argc = mas_add_argv_argv( ptarg->argc, &ptarg->argv, pcarg->argc, pcarg->argv, pos );
+  DUF_TRACE( options, 0, "@@argc:%d", ptarg->argc );
 
   /* targ.argv becomes valid here - may init pdi etc. */
   DEBUG_ENDR( r );

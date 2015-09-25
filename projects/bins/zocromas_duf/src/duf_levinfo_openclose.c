@@ -79,14 +79,14 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       assert( DUF_IS_ERROR( r ) || pdhuplev->dfd );
 
       DOR_NOE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) ), DUF_ERROR_OPENAT_ENOENT );
-      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", duf_error_name( r ), duf_levinfo_path_d( pdi, d ),
+      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", duf_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
                  duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     assert( r <= 0 || pdhlev->dfd );
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) )
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
-      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", duf_error_name( r ), duf_levinfo_path_d( pdi, d ),
+      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", duf_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
                  duf_levinfo_itemshowname_d( pdi, d ), pdi->opendir );
       r = 0;
     }

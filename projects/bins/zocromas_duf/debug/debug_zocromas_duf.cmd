@@ -9,7 +9,9 @@ end
 handle SIGPIPE nostop noprint
 
 # watch duf_config->targ.argc
-watch duf_dbgfunlevel
+# watch duf_dbgfunlevel
+
+b duf_options_cli.c:150
 
 run
 bt

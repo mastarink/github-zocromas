@@ -1,0 +1,113 @@
+EXIF tags in '/mnt/new_media/media/photo/Pictures/date/2007-10-27/100_0784.JPG' ('Intel' byte order):
+--------------------+----------------------------------------------------------
+Tag                 |Value
+--------------------+----------------------------------------------------------
+Manufacturer        |EASTMAN KODAK COMPANY
+Model               |KODAK EASYSHARE C433 ZOOM DIGITAL CAMERA
+Orientation         |Top-left
+X-Resolution        |480
+Y-Resolution        |480
+Resolution Unit     |Inch
+YCbCr Positioning   |Co-sited
+Compression         |JPEG compression
+Orientation         |Top-left
+X-Resolution        |72
+Y-Resolution        |72
+Resolution Unit     |Inch
+Exposure Time       |1/60 sec.
+F-Number            |f/2.7
+Exposure Program    |Normal program
+ISO Speed Ratings   |80
+Exif Version        |Exif Version 2.21
+Date and Time (Origi|2007:10:27 13:10:52
+Date and Time (Digit|2007:10:27 13:10:52
+Components Configura|Y Cb Cr -
+Shutter Speed       |6.00 EV (1/64 sec.)
+Aperture            |3.00 EV (f/2.8)
+Exposure Bias       |0.00 EV
+Maximum Aperture Val|2.90 EV (f/2.7)
+Metering Mode       |Center-weighted average
+Light Source        |Unknown
+Flash               |Flash did not fire, compulsory flash mode
+Focal Length        |6.0 mm
+Maker Note          |4480 bytes undefined data
+FlashPixVersion     |FlashPix Version 1.0
+Color Space         |sRGB
+Pixel X Dimension   |2304
+Pixel Y Dimension   |1728
+Exposure Index      |80
+Sensing Method      |One-chip color area sensor
+File Source         |DSC
+Scene Type          |Directly photographed
+Custom Rendered     |Normal process
+Exposure Mode       |Auto exposure
+White Balance       |Auto white balance
+Digital Zoom Ratio  |0.00
+Focal Length in 35mm|36
+Scene Capture Type  |Standard
+Gain Control        |Normal
+Contrast            |Normal
+Saturation          |Normal
+Sharpness           |Normal
+Subject Distance Ran|Macro
+Interoperability Ind|R98
+Interoperability Ver|0100
+--------------------+----------------------------------------------------------
+EXIF data contains a thumbnail (4797 bytes).
+EXIF tags in '/mnt/new_media/media/photo/Pictures/unsorted/20080117.Pictures/2007-10-27/100_0784.JPG' ('Intel' byte order):
+--------------------+----------------------------------------------------------
+Tag                 |Value
+--------------------+----------------------------------------------------------
+Manufacturer        |EASTMAN KODAK COMPANY
+Model               |KODAK EASYSHARE C433 ZOOM DIGITAL CAMERA
+Orientation         |Top-left
+X-Resolution        |480
+Y-Resolution        |480
+Resolution Unit     |Inch
+Software            |digiKam-2.4.1
+YCbCr Positioning   |Co-sited
+Compression         |JPEG compression
+Orientation         |Top-left
+X-Resolution        |72
+Y-Resolution        |72
+Resolution Unit     |Inch
+Exposure Time       |1/60 sec.
+F-Number            |f/2.7
+Exposure Program    |Normal program
+ISO Speed Ratings   |80
+Exif Version        |Exif Version 2.21
+Date and Time (Origi|2007:10:27 13:10:52
+Date and Time (Digit|2007:10:27 13:10:52
+Components Configura|Y Cb Cr -
+Shutter Speed       |6.00 EV (1/64 sec.)
+Aperture            |3.00 EV (f/2.8)
+Exposure Bias       |0.00 EV
+Maximum Aperture Val|2.90 EV (f/2.7)
+Metering Mode       |Center-weighted average
+Light Source        |Unknown
+Flash               |Flash did not fire, compulsory flash mode
+Focal Length        |6.0 mm
+Maker Note          |4480 bytes undefined data
+FlashPixVersion     |FlashPix Version 1.0
+Color Space         |sRGB
+Pixel X Dimension   |2304
+Pixel Y Dimension   |1728
+Exposure Index      |80
+Sensing Method      |One-chip color area sensor
+File Source         |DSC
+Scene Type          |Directly photographed
+Custom Rendered     |Normal process
+Exposure Mode       |Auto exposure
+White Balance       |Auto white balance
+Digital Zoom Ratio  |0.00
+Focal Length in 35mm|36
+Scene Capture Type  |Standard
+Gain Control        |Normal
+Contrast            |Normal
+Saturation          |Normal
+Sharpness           |Normal
+Subject Distance Ran|Macro
+Interoperability Ind|R98
+Interoperability Ver|0100
+--------------------+----------------------------------------------------------
+EXIF data contains a thumbnail (4797 bytes).

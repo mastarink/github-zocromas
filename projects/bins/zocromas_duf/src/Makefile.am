@@ -38,7 +38,7 @@ zocromas_duf_SOURCES=				   \
 	duf_pdi.c duf_pdi_reinit.c duf_pdi_attach.c duf_pdi_credel.c duf_pdi_ref.c duf_pdi_context.c duf_pdi_stmt.c			\
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
-	duf_errors.c  duf_trace.c				      \
+	duf_errors.c duf_error_names.c  duf_trace.c				      \
 	duf_dh.c duf_service.c duf_print.c duf_printb.c	duf_fileinfo.c	     \
 								      \
 	duf_sql_error.c \

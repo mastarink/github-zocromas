@@ -53,14 +53,17 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, duf_bind_cb_t ca
 #if 0
   DORF( r, duf_main_db_open );
 #endif
+  assert( r >= 0 );
   if ( selected_db )
     worksql = tmpsql = duf_expand_sql( sql, selected_db );
   else
     worksql = sql;
   {
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+    assert(r>=0);
     if ( callback )
       DOR( r, ( callback ) ( pstmt, pu, ttarg ) );
+    assert(r>=0);
     if ( DUF_NOERROR( r ) )
     {
       DUF_SQL_STEP( r, pstmt );
@@ -95,7 +98,7 @@ duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const char *selecte
  * */
 int
 duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg,
-                          const char *selected_db )
+                   const char *selected_db )
 {
   DEBUG_STARTR( r );
 

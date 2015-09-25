@@ -118,7 +118,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " sz.size > 0 " /*                                                   */ " AND " /* */
            " fd.noexif IS NULL " /*                                             */ " AND " /* */
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) " /*                   */ " AND" /* */
-           " ( " " mi.mime IS NULL OR " " mi.mime='image/jpeg' ) " /*           */ " AND" /* */
+           " ( mi.mime IS NULL OR " " mi.mime='image/jpeg' ) " /*               */ " AND" /* */
            " ( :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*       */ " AND " /* */
            " 1 "                /* */
            ,                    /* */
@@ -192,7 +192,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       DUF_TEST_R( lr );
       DUF_SQL_STEP( lr, pstmt );
       /* DUF_TEST_R( lr ); */
-      if ( lr == MAS_SQL_ROW )
+      if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
         DUF_TRACE( select, 0, "<selected>" );
 #if 0
@@ -202,7 +202,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 #endif
         lr = 0;
       }
-      if ( lr == MAS_SQL_DONE )
+      if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) )
         lr = 0;
       DUF_TEST_R( lr );
       DUF_SQL_END_STMT( pdi, select_model, lr, pstmt );
@@ -276,7 +276,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       DUF_TEST_R( lr );
       DUF_SQL_STEP( lr, pstmt );
       /* DUF_TEST_R( lr ); */
-      if ( lr == MAS_SQL_ROW )
+      if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
         DUF_TRACE( select, 0, "<selected>" );
 #if 0
@@ -286,12 +286,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
 #endif
         lr = 0;
       }
-#if 0
-      if ( lr == MAS_SQL_DONE )
-        lr = 0;
-#else
-      DUF_CLEAR_ERROR( lr, MAS_SQL_DONE );
-#endif
+      DUF_CLEAR_ERROR( lr, DUF_SQL_DONE );
       DUF_TEST_R( lr );
       DUF_SQL_END_STMT( pdi, select_exif, lr, pstmt );
       /* if ( !exifid )                        */

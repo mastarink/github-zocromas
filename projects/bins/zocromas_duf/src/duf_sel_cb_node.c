@@ -50,7 +50,7 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
   {
     /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 0 /* is_leaf */  ) );
-    DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name( r ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
     if ( DUF_NOERROR( r ) )     /* levinfo_down OK */

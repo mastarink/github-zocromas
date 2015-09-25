@@ -1,0 +1,9 @@
+1	/mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f
+2	/mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=1
+3	/mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=2
+4	/mnt/new_media/media/photo/Pictures/photos/sel/ -pd -R -f --size=-500 --min-size=1
+5	/mnt/new_media/media/photo/  -Rpdf  --glob='*.avi'
+6	/mnt/new_media/media/photo/  -pRdf --same-as=/mnt/new_media/media/photo/Pictures/photos/sel/xtra/cat0016.psd
+7	/mnt/new_media/media/photo/ -Rpdf  --glob='*.avi' --size=+1800k
+8	/mnt/new_media/media/photo/ -Rpdf --format=exifdt --min-exifdt=20040801 --max-exifdt=20150101
+1.1	/mnt/new_media/media/photo/ -Rpdf  --min-mtime=20130126 --max-mtime=20141001

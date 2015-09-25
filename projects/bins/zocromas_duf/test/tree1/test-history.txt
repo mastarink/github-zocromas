@@ -1,0 +1,210 @@
+quit
+lsfiles
+cd /
+cd /
+ls
+use-format=1
+use-format 1
+ls
+q
+use-format 1
+cd /
+ls
+use-format 2
+ls
+use-format 3
+ls
+db-name downd
+db-name downd
+cd /
+db-name downd.db
+open-db
+cd /
+q
+q
+q
+q
+q
+q
+q
+q
+cd /
+ls
+q
+ls
+cd /
+max-seq 20
+ls
+q
+cd /
+max-seq 10
+ls
+q
+history
+q
+history
+history
+history
+history
+history
+history
+q
+history
+q
+cd /
+ls
+cd home/mastar/big/misc/develop/autotools/zoc/projects/bins
+ls
+tree
+db-name photo.db
+cd /
+cd /
+db-name photo.db
+cd /
+cd /
+db-name photo.db
+cd /
+q
+cd /
+q
+cd /
+db-name photo.db
+cd /
+q
+cd /
+db-name photo.db
+cd /
+q
+cd /
+db-name photo.db
+cd /
+cd /
+db-name photo.db
+cd /
+q
+cd /
+db-name photo.db
+cd /
+cd /
+ls
+db-name photo.db
+cd /
+ls
+min-same 10
+ls
+min-same 10
+max-same 300
+ls
+max-same 100
+ls
+use-format 2
+use-format 3
+ls
+use-format 1
+ls
+use-format 2
+ls
+cd home
+ls
+cd mastar
+ls
+cd big
+ls
+cd misc
+ls
+cd media
+ls
+cd photo
+ls
+q
+q
+cd /
+db-name photo.db
+cd /
+q
+cd /
+db-name photo.db
+cd /
+db-name photo.db
+cd /
+ls
+q
+cd /
+db-name photo.db
+cd /
+db-name photo.db
+cd /
+db-name photo.db
+q
+cd /
+ls
+tree
+q
+q
+q
+q
+ls
+q
+q
+q
+q
+q
+q
+ls
+tree
+cd /
+ls
+tree
+q
+cd .
+q
+q
+q
+q
+cd /
+ls
+db-name photo.db
+cd /
+ls
+q
+q
+cd /
+ls
+glob zoc*
+ls
+glob zoc*.c
+glob zoc*.c
+ls
+ls
+q
+q
+cd /
+ls
+glob zoc*.c
+ls
+q
+q
+q
+q
+q
+q
+q
+echo aaaaaaaaaaaaaa
+q
+q
+q
+g '1;7'
+q
+q
+q
+q
+q
+q
+q
+q
+q
+q
+q
+q
+q
+q

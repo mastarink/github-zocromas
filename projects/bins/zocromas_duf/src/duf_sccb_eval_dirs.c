@@ -9,7 +9,7 @@
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_dir_scan2_stages.h"
+#include "duf_dir_scan2_stages.h" /* rename to duf_dir_scan2_passes.h */
 /* #include "duf_item_scan2.h" */
 
 #include "duf_sccb.h"
@@ -25,7 +25,7 @@
 /* duf_eval_sccbh_all:
  *  -= Walk (scan) dirs from DB =-
  *
- * consecutively call various scanner stages with the sccb
+ * consecutively call various scanner passes with the sccb
  * on current dir from pdi
  * 
  * i.e. [ evaluate sccb for current dir ]
@@ -48,9 +48,9 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 /*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem
- *                                     -- see duf_dir_scan2_stages.c
+ *                                     -- see duf_dir_scan2_passs.c
  * */
-  duf_str_cb2_t stages[] = {
+  duf_str_cb2_t passes[] = {
     duf_sccbh_eval_fs_items,    /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
     duf_sccbh_eval_db_node_before,
     duf_sccbh_eval_db_leaves,
@@ -59,9 +59,9 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
     duf_sccbh_eval_db_node_after,
     NULL
   };
-  DUF_TRACE( scan, 3, "scan stages by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-  DUF_TRACE( sccbh, 4, "(pstmt:%d) stages (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
-  for ( duf_str_cb2_t * pstage = stages; *pstage; nn++, pstage++ )
+  DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+  DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
+  for ( duf_str_cb2_t * ppass = passes; *ppass; nn++, ppass++ )
   {
 #if 0
     DUF_TRACE( temp, 0, "%lu : %lu : %lu : %lu : %p : %p : %p @ %p : %p", ( offsetof( duf_scan_callbacks_t, leaf ) ),
@@ -73,17 +73,17 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
                *( ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ) ) );
 #endif
 
-    DUF_TRACE( scan, 4, "scan stage by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 4, "scan pass by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-    DUF_TRACE( sccbh, 5, "%d. stage (%s)", nn, duf_uni_scan_action_title( SCCB ) );
+    DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
     /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, ( *pstage ) ( pstmt_selector, sccbh ) );
+    DOR( r, ( *ppass ) ( pstmt_selector, sccbh ) );
     /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   }
-  DUF_TRACE( sccbh, 4, "(pstmt:%d) /stages (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
+  DUF_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
   DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
 
-  DUF_TRACE( scan, 3, "/scan stages by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+  DUF_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DEBUG_ENDR( r );
 }
@@ -105,6 +105,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_h
 
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
+  assert( sccbh );
   /* assert( pstmt_selector ); */
 
 #  ifdef MAS_TRACING
@@ -122,15 +123,20 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_h
   DUF_TRACE( explain, 2,
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( SCCB ) );
-  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
+
+  DUF_TRACE( sccbh, 0, "eval sccbh all %s at %llu:%s", SCCB->name, duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
 
 #  endif
   if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
     DOR( r, duf_eval_sccbh_all( pstmt_selector, sccbh ) );
   }
+  else{
+  DUF_TRACE( sccbh, 0, "@eval sccbh all disabled %s", SCCB->name );
+  }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
+
   DEBUG_ENDR( r );
 }
 #endif

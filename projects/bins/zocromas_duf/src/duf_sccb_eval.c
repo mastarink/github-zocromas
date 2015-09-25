@@ -17,6 +17,7 @@ int
 duf_ev_sccb( duf_scan_callbacks_t * sccb )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
+  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, DUF_CONFIGX( pdi )->pdi_name );
   return duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
@@ -31,6 +32,7 @@ int
 duf_ev_evname( const char *name, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
+  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, DUF_CONFIGX( pdi )->pdi_name );
   return duf_ev_pdi_evname( DUF_CONFIGG( pdi ), name, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
@@ -38,6 +40,7 @@ int
 duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
+  DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( pdi )->pdi_name );
   return duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
