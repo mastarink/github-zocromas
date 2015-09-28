@@ -70,7 +70,6 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
   {
     DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb?SCCB->name:"-" );
     DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-    assert( r >= 0 );
   }
   {
     int r1 = 0;
@@ -78,9 +77,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
     DOR( r1, duf_sccb_handle_close( sccbh ) );
     if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
       r = r1;
-    assert( r >= 0 );
   }
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 
@@ -101,12 +98,10 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
     DOR( r, duf_ev_pdi_sccb( pdi, act->sccb, ptarg /*, pu */  ) ); /* XXX XXX XXX XXX */
-    assert( r >= 0 );
   }
   else
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_SCCB_NOT_FOUND );
-    assert( r >= 0 );
   }
   DEBUG_ENDR( r );
 }
@@ -167,7 +162,6 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
 
     len = ename ? ename - pnames : strlen( pnames );
     DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, table, ptarg /*, pu */  ) );
-    assert( r >= 0 );
     if ( DUF_NOERROR( r ) )
       ok++;
 
@@ -178,6 +172,5 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
   {
     /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }

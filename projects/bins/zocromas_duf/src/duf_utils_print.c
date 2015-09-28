@@ -12,33 +12,39 @@
 /* ###################################################################### */
 
 const char *
-duf_color_s( FILE * out, const char *s )
+duf_color_s( int is_atty, const char *s )
 {
-  return ( out && isatty( fileno( out ) ) ) ? s : "";
+  return ( is_atty ) ? s : "";
+}
+
+const char *
+duf_fcolor_s( FILE * out, const char *s )
+{
+  return duf_color_s( isatty( fileno( out ) ), s );
 }
 
 int
-duf_vsncolor_s( FILE * out, char *buf, size_t size, const char *fmt, va_list args )
+duf_vsncolor_s( int is_atty, char *buf, size_t size, const char *fmt, va_list args )
 {
   int ry = -1;
 
   if ( buf && size > 0 )
   {
     *buf = 0;
-    if ( out && isatty( fileno( out ) ) )
+    if ( is_atty )
       ry = vsnprintf( buf, size, fmt, args );
   }
   return ry;
 }
 
 int
-duf_sncolor_s( FILE * out, char *buf, size_t size, const char *fmt, ... )
+duf_sncolor_s( int is_atty, char *buf, size_t size, const char *fmt, ... )
 {
   int ry = 0;
   va_list args;
 
   va_start( args, fmt );
-  ry = duf_vsncolor_s( out, buf, size, fmt, args );
+  ry = duf_vsncolor_s( is_atty, buf, size, fmt, args );
   va_end( args );
   return ry;
 }
@@ -49,7 +55,7 @@ duf_vprint_color_s( FILE * out, const char *fmt, va_list args )
   int ry = -1;
   char buf[2048];
 
-  ry = duf_vsncolor_s( out, buf, sizeof( buf ), fmt, args );
+  ry = duf_vsncolor_s( isatty( fileno( out ) ), buf, sizeof( buf ), fmt, args );
   if ( *buf )
     ry = fputs( buf, out );
   /* ry = fwrite( buf, 1, strlen( buf ), out ); */

@@ -94,31 +94,26 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   if ( pu->mime.type )
   {
     DUF_SQL_BIND_S_OPT( MimeType, pu->mime.type, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind MimeType: %s", pu->mime.type );
   }
   if ( pu->filename )
   {
     DUF_SQL_BIND_S_OPT( Name, pu->filename, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   if ( pu->glob_db )
   {
     DUF_SQL_BIND_S_OPT( GName, pu->glob_db, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   if ( pu->glob_db_include )
   {
     DUF_SQL_BIND_S_OPT( GNameI, pu->glob_db_include, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   if ( pu->glob_db_exclude )
   {
     DUF_SQL_BIND_S_OPT( GNameX, pu->glob_db_exclude, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   if ( pu->exif.camera )
@@ -129,12 +124,10 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     t = mas_strcat_x( t, pu->exif.camera );
     t = mas_strcat_x( t, "%" );
     DUF_SQL_BIND_S_OPT( Camera, t, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
     mas_free( t );
   }
 
-  assert( r >= 0 );
 
 
   if ( pu->same_as.md5 )
@@ -142,49 +135,36 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     duf_filepath_t fp;
 
     DOR( r, duf_init_filepath( &fp, pu->same_as.md5 ) );
-    assert( r >= 0 );
     DUF_SQL_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt );
-    assert( r >= 0 );
     DUF_SQL_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
-    assert( r >= 0 );
   }
   if ( pu->same_as.sha1 )
   {
     duf_filepath_t fp;
 
-    assert( r >= 0 );
     DOR( r, duf_init_filepath( &fp, pu->same_as.sha1 ) );
-    assert( r >= 0 );
     DUF_SQL_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
-    assert( r >= 0 );
     DUF_SQL_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
-    assert( r >= 0 );
   }
   if ( pu->same_as.exif )
   {
     duf_filepath_t fp;
 
     DOR( r, duf_init_filepath( &fp, pu->same_as.exif ) );
-    assert( r >= 0 );
     DUF_SQL_BIND_LL_NZ_OPT( GSameExifPathID, fp.dirid, r, pstmt );
-    assert( r >= 0 );
     DUF_SQL_BIND_S_OPT( GSameAsExif, fp.name, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
-    assert( r >= 0 );
   }
 
 
@@ -192,21 +172,16 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
   if ( pu->tag.file )
   {
     DUF_SQL_BIND_S_OPT( TagFile, pu->tag.file, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   if ( pu->tag.dir )
   {
     DUF_SQL_BIND_S_OPT( TagDir, pu->tag.dir, r, pstmt );
-    assert( r >= 0 );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
   DUF_SQL_BIND_LL_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
-  assert( r >= 0 );
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
-  assert( r >= 0 );
   DUF_TRACE( sql, 0, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }

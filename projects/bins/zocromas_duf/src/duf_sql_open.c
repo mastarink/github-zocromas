@@ -25,8 +25,7 @@ duf_sql_open( const char *dbpath )
 #else
 
   DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
-  DOR_SQL( r, ( r3 = mas_sqlite_open( dbpath ) ) );
-  assert( r >= 0 );
+  DOR_SQLITE( r, ( r3 = mas_sqlite_open( dbpath ) ) );
 #endif
   DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
   DUF_TRACE( explain, 0, "opened (?%d) database", r );
@@ -37,6 +36,6 @@ int
 duf_sql_close( void )
 {
   DEBUG_STARTR( r );
-  DOR_SQL( r, mas_sqlite_close(  ) );
+  DOR_SQLITE( r, mas_sqlite_close(  ) );
   DEBUG_ENDR( r );
 }

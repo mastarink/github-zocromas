@@ -1,6 +1,8 @@
 #ifndef DUF_OPTION_TYPED_DEFS_H
 #  define DUF_OPTION_TYPED_DEFS_H
 
+#include <unistd.h>
+
 #define DUF_NUMOPT( _no, _rt, _typ, _dopls, _conv) \
       if (_rt>=0) \
       { \
@@ -132,7 +134,7 @@
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
 	    DOR(__rl, duf_set_file_special( s, mm->v.flag.overwrite, &mm->file, &mm->out, _defout, extended->call.value.u )); \
-	    if (mm->out && mm->header) { fprintf( mm->out, mm->header ); } \
+	    if (mm->out && mm->header_tty && isatty(fileno(mm->out))) { fprintf( mm->out, mm->header_tty ); } \
 	    if ( __rl < 0 ) \
 	    {  DOR(_rt, __rl); } \
 	  } \

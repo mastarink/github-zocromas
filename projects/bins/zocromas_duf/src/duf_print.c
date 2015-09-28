@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+
 
 
 #include "duf_maintenance.h"
@@ -84,7 +86,7 @@ typedef enum
 } duf_sformat_char_t;
 
 static size_t
-duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
+duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
                 duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb )
 {
   size_t slen = 0;
@@ -162,7 +164,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
 #endif
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     break;
-  case DUF_SFMT_CHR_SHA1ID:     /* sha1id */
+  case DUF_SFMT_CHR_SHA1ID:    /* sha1id */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -172,7 +174,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( format, fbsz, "%%llu" );
 #endif
     snprintf( pbuffer, bfsz, format, pfi->sha1id );
-    break;    
+    break;
   case DUF_SFMT_CHR_NSAME:     /* nsame */
     {
       char c2 = 0;
@@ -282,10 +284,14 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     {
       static char *hls[] = { "", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
 
+#if 0
       if ( v > 0 && v < sizeof( hls ) )
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[v] );
       else
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
+#else
+      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && v < sizeof( hls ) ) ? hls[v] : hls[0] );
+#endif
     }
     break;
   case DUF_SFMT_CHR_SUFFIX:    /* suffix */
@@ -453,7 +459,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     {
       time_t timet;
       struct tm time_tm, *ptime_tm = NULL;
-      char stime[128]="-";
+      char stime[128] = "-";
       char c2 = 0;
 
       timet = ( time_t ) 0;
@@ -694,8 +700,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
 }
 
 char *
-duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
-                       size_t * pslen )
+duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty, const char *format, duf_pdi_scb_t prefix_scb,
+                       duf_pdi_scb_t suffix_scb, size_t * pslen )
 {
   size_t slen = 0;
   const char *fmt = format;
@@ -710,8 +716,8 @@ duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *
     if ( *fmt == '%' )
     {
       fmt++;
-      slen +=
-            duf_sformat_id( &fmt, &pbuffer, pbuffer - buffer, buffer + bfsz - pbuffer /* remaining bytes cnt */ , pdi, pfi, prefix_scb, suffix_scb );
+      slen += duf_sformat_id( is_atty, &fmt, &pbuffer, pbuffer - buffer, buffer + bfsz - pbuffer /* remaining bytes cnt */ , pdi, pfi, prefix_scb,
+                              suffix_scb );
     }
     else if ( *fmt == '\\' )
     {
@@ -745,8 +751,10 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
 {
   size_t slen = 0;
   char *buffer;
+  FILE *out;
 
-  buffer = duf_sformat_file_info( pdi, pfi, format, prefix_scb, suffix_scb, &slen );
+  out = duf_config && duf_config->cli.output.out ? duf_config->cli.output.out : stdout;
+  buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, &slen );
 #if 0
   {
     if ( max_width > 0 && buffer[slen - 1] == '\n' && max_width < slen )

@@ -73,7 +73,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
                *( ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ) ) );
 #endif
 
-    DUF_TRACE( scan, 4, "scan pass by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
     /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */

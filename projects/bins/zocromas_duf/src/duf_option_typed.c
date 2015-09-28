@@ -30,6 +30,7 @@ duf_open_file_special( const char *pname, char **popenedname, int overwrite, int
   const char *mode = "w";
   struct stat st;
   int skipchar = 0;
+  int ry;
 
   DUF_TRACE( io, 0, "to open %s", pname );
   if ( ( skipchar = ( *pname == '@' ) ) || overwrite )
@@ -39,8 +40,8 @@ duf_open_file_special( const char *pname, char **popenedname, int overwrite, int
   if ( skipchar )
     pname++;
   *popenedname = mas_strdup( pname );
-  fprintf( stderr, ">>>>>>>>>>>>> fopen %s <<<<<<<<<<<<<<\n", pname );
-  if ( 0 == stat( pname, &st ) && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
+  ry = stat( pname, &st );
+  if ( ry >= 0 && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
   {
     DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
@@ -113,10 +114,8 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 {
   DEBUG_STARTR( r );
 
-  assert( r >= 0 );
   if ( !extended )
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
-  assert( r >= 0 );
 
   DUF_TRACE( options, +2, "parsing typed:`%s`;   %s", extended->o.name, duf_error_name_i( r ) );
   DUF_TRACE( options, +2, "r:%d; xname:%s; noo:%d", r, extended ? extended->o.name : "?", noo );
@@ -168,16 +167,14 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, +3, "vtype UPLUS" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         if ( DUF_NOERROR( r ) )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM: /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
         DUF_TRACE( options, 0, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );
-  assert( r >= 0 );
+
 
         DUF_TRACE( options, 0, "(%d) vtype NUM --%s='%s'", r, extended->o.name, optargg ? optargg : "" );
         break;
@@ -185,67 +182,54 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, +3, "vtype NL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_NUMOPT( noo, r, unsigned long, 0, duf_strtol_suff );
-  assert( r >= 0 );
+
 
         break;
       case DUF_OPTION_VTYPE_NUMLL: /* stage SETUP *//* not used ?! */
         DUF_TRACE( options, +3, "vtype NLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_NUMOPT( noo, r, unsigned long long, 0, duf_strtoll_suff );
-  assert( r >= 0 );
+
 
         break;
       case DUF_OPTION_VTYPE_MIN: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MIN" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limits_t, min, duf_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAX: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MAX" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limits_t, max, duf_strtol_suff );
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MINMAX: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MINMAX" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MINMAXOPT( noo, r, duf_limits_t, duf_strtol_suff );
-  assert( r >= 0 );
         break;
 
       case DUF_OPTION_VTYPE_MINLL: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MINLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limitsll_t, min, duf_strtol_suff );
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MAXLL: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MAXLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limitsll_t, max, duf_strtoll_suff );
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MINMAXLL: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MINMAXLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MINMAXOPT( noo, r, duf_limitsll_t, duf_strtoll_suff );
-  assert( r >= 0 );
         break;
 
       case DUF_OPTION_VTYPE_NOFLAG: /* stage SETUP */
@@ -268,7 +252,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_TEST_R( r );
           }
         }
-  assert( r >= 0 );
         break;
 #if 0
       case DUF_OPTION_VTYPE_PFLAG:
@@ -283,7 +266,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DUF_PRINTF( 0, "%s is %s", extended->o.name, ( ( *pi ) & extended->afl.bit ) ? "ON" : "OFF" );
           /* DUF_TEST_R( r ); */
         }
-  assert( r >= 0 );
         break;
 #endif
       case DUF_OPTION_VTYPE_NOSFLAG: /* stage SETUP */
@@ -302,7 +284,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             ( *pis ) |= extended->afl.sbit;
           DUF_TEST_R( r );
         }
-  assert( r >= 0 );
         break;
 #if 0
       case DUF_OPTION_VTYPE_PSFLAG:
@@ -317,14 +298,12 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DUF_PRINTF( 0, "(s) %s is %s", extended->o.name, ( ( *pi ) & extended->afl.sbit ) ? "ON" : "OFF" );
           /* DUF_TEST_R( r ); */
         }
-  assert( r >= 0 );
         break;
 #endif
       case DUF_OPTION_VTYPE_XCHR: /* stage SETUP */
         DUF_TRACE( options, +0, "@@vtype XCHR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         if ( DUF_NOERROR( r ) )
         {
           char *pchr;
@@ -340,14 +319,12 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
                        pchr );
           }
         }
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_STR: /* stage SETUP */
         /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
         DUF_TRACE( options, +0, "@@vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         if ( DUF_NOERROR( r ) )
         {
           char **pstr;
@@ -362,13 +339,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_TRACE( options, +2, "string set:%s @%p", optargg, pstr );
           }
         }
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_CSTR: /* stage SETUP */
         DUF_TRACE( options, +0, "@@vtype CSTR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         if ( DUF_NOERROR( r ) )
         {
           duf_config_string_t *pcs;
@@ -383,7 +358,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_TRACE( options, +2, "string set:%s @%p", optargg, pcs->value );
           }
         }
-  assert( r >= 0 );
         break;
 #if 0
       case DUF_OPTION_VTYPE_PSTR:
@@ -414,7 +388,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_PRINTF( 0, "%s", ( *pstr ) );
           }
         }
-  assert( r >= 0 );
         break;
 #endif
       case DUF_OPTION_VTYPE_ARGV: /* stage SETUP */
@@ -443,7 +416,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             mas_free( str );
           }
         }
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_TDB: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype TDB" );
@@ -459,9 +431,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           else if ( optargg && *optargg )
             DOR( r, duf_tmpdb_add( extended->o.val, extended->o.name, optargg ) );
           T( "@@@@(%d) %s", r, duf_error_name_i( r ) );
-          assert( r >= 0 );
         }
-  assert( r >= 0 );
         break;
         /*
          * DATETIME, MINMAXDATETIME, MINDATETIME, MAXDATETIME
@@ -470,34 +440,26 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, +3, "vtype DATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_NUMOPT( noo, r, unsigned long long, 0, duf_strtime2long );
 
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MINMAXDATETIME: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MINMAXDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MINMAXOPT( noo, r, duf_limitsll_t, duf_strtime2long );
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MINDATETIME: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MINDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limitsll_t, min, duf_strtime2long );
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_MAXDATETIME: /* stage SETUP */
         DUF_TRACE( options, +3, "vtype MAXDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         DUF_MOPT( noo, r, duf_limitsll_t, max, duf_strtime2long );
-  assert( r >= 0 );
         break;
         /*
          * _CALL
@@ -506,7 +468,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, +3, "vtype EV_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -518,13 +479,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.ev.func );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_EIA_CALL: /* stage Not? SETUP *//* call with numeric (int) arg from table (EIA:void-int-arg) */
         DUF_TRACE( options, +3, "vtype EIA_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -536,13 +495,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_ESA_CALL: /* stage Not? SETUP *//* call with constant string arg from table (ESA:void-string-arg) */
         DUF_TRACE( options, +3, "vtype ESA_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -554,13 +511,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.esa.func, extended->call.fdesc.esa.arg );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_A_CALL: /* stage Not? SETUP *//* call with carg[cv] (A:argv) */
         DUF_TRACE( options, +3, "vtype A_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         assert( DUF_CONFIGG( carg.argv ) );
 #if 0
         if ( DUF_NOERROR( r ) )
@@ -573,13 +528,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.a.func, DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ) );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//* call with carg (AA:argv-argv) */
         DUF_TRACE( options, +3, "vtype AA_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         assert( DUF_CONFIGG( carg.argc ) );
         assert( DUF_CONFIGG( carg.argv ) );
 #if 0
@@ -593,14 +546,12 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.aa.func, DUF_CONFIGG( carg ) );
 #endif
-  assert( r >= 0 );
         break;
 
       case DUF_OPTION_VTYPE_N_CALL: /* stage Not? SETUP *//* call with numeric optarg (N:numeric) */
         DUF_TRACE( options, +3, "vtype N_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -612,13 +563,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.n.func, duf_strtol_suff( optargg, &r ) );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_S_CALL: /* stage Not? SETUP *//* call with string optarg (S: string) */
         DUF_TRACE( options, +3, "vtype S_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -630,13 +579,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.s.func, optargg );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_TN_CALL: /* stage Not? SETUP *//* call with targ[cv] + numeric optarg (TN: targ and numeric) */
         DUF_TRACE( options, +3, "vtype TN_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -648,13 +595,11 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.tn.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), duf_strtol_suff( optargg, &r ) );
 #endif
-  assert( r >= 0 );
         break;
       case DUF_OPTION_VTYPE_TS_CALL: /* stage Not? SETUP *//* call with targ[cv] + string optarg (TS: targ and string) */
         DUF_TRACE( options, +3, "vtype TS_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
@@ -666,7 +611,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #else
         IF_DORVF( r, extended->call.fdesc.ts.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), optargg );
 #endif
-  assert( r >= 0 );
         break;
         /* 
          * FILE
@@ -675,12 +619,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         DUF_TRACE( options, +3, "vtype FILE" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( r >= 0 );
         if ( DUF_NOERROR( r ) )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
           DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );
-  assert( r >= 0 );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */
           /*                                                                                   */
@@ -690,7 +632,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 
           /* DUF_MAKE_ERROR(r, DUF_ERROR_OPTION_NOT_PARSED); */
         }
-  assert( r >= 0 );
         break;
       }
       DUF_TRACE( options, 0, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", duf_error_name_i( r ),
@@ -703,7 +644,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
       /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
   }
-  assert( r >= 0 );
 
   DEBUG_ENDR( r );
   /* DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */

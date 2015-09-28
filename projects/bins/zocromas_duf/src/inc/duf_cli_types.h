@@ -76,7 +76,7 @@ typedef struct
   char *file;
   FILE *out;
   char *history_filename;
-  char *header;
+  char *header_tty;
 } duf_config_output_t;
 
 typedef struct

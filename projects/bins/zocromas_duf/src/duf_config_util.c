@@ -135,20 +135,21 @@ duf_config_db_path_add_subdir( char *path, int *pr )
           if ( errno == ENOENT )
           {
             ry = mkdir( path, S_IRWXU );
+
+            if ( ry < 0 )
             {
               char serr[1024] = "";
               char *s;
 
               s = strerror_r( errno, serr, sizeof( serr ) );
-              DUF_SHOW_ERROR( "(%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
-            }
-            if ( ry < 0 )
               DUF_MAKE_ERROR( r, DUF_ERROR_MKDIR );
+              DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
+            }
           }
         }
         else if ( !S_ISDIR( st.st_mode ) )
         {
-          DUF_MAKE_ERROR( r, DUF_ERROR_MKDIR );
+          DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
         }
       }
     }

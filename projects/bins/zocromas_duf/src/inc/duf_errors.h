@@ -16,7 +16,7 @@ long duf_made_errors( duf_error_code_t err );
 duf_error_code_t duf_vclear_error_c( duf_error_code_t r, va_list args );
 duf_error_code_t duf_clear_error_c( duf_error_code_t r, ... );
 
-duf_error_code_t duf_clear_error_i( duf_error_index_t e, ... );
+duf_error_index_t duf_clear_error_i( duf_error_index_t e, ... );
 
 int duf_errnumber( duf_error_code_t rtest );
 const char *duf_error_name_c( duf_error_code_t c );

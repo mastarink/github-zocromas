@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_SQL_STMT_DEFS_H
 #  define MAS_DUF_SQL_STMT_DEFS_H
 
+
 #  include "duf_sql_types.h"
 
 

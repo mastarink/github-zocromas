@@ -3,9 +3,11 @@
 
 #  include "duf_print_defs.h"
 
-const char *duf_color_s( FILE * out, const char *s );
-int duf_vsncolor_s( FILE * out, char *buf, size_t size, const char *fmt, va_list args );
-int duf_sncolor_s( FILE * out, char *buf, size_t size, const char *fmt, ... );
+const char *duf_color_s( int is_atty, const char *s );
+const char *duf_fcolor_s( FILE * out, const char *s );
+
+int duf_vsncolor_s( int is_atty, char *buf, size_t size, const char *fmt, va_list args );
+int duf_sncolor_s( int is_atty, char *buf, size_t size, const char *fmt, ... );
 int duf_vprint_color_s( FILE * out, const char *fmt, va_list args );
 int duf_print_color_s( FILE * out, const char *fmt, ... );
 

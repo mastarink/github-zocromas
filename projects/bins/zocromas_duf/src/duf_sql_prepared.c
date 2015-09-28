@@ -17,7 +17,7 @@ duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
   DEBUG_STARTR( r );
 
   DUF_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
-  DOR_SQL_NOE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DOR_SQLITE_NOE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
 
   /* assert( r >= 0 ); */
   DEBUG_ENDR( r );
@@ -30,11 +30,11 @@ duf_sql_step( mas_sqlite_stmt_t * stmt )
   int r3 = 0;
 
 #if 1
-  DOR_SQL_NOE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DOR_SQLITE_NOE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
 #else
   r3 = mas_sqlite_step( stmt );
    DUF_MAKE_ERROR( r, DUF_SQLITE2R_ERROR_CODE( r3 ) );
-  /* DOR_SQL_NOE( r, r3, DUF_SQL_ROW, DUF_SQL_DONE ); */
+  /* DOR_SQLITE_NOE( r, r3, DUF_SQL_ROW, DUF_SQL_DONE ); */
 #endif
   DUF_TRACE( sql, 3, "(%s) [[%s]]", duf_error_name_i( r ), sqlite3_sql( stmt ) );
   DUF_TRACE( sql, 3, "r3:%d %s r:%d (%s)", r3, duf_error_name_c( DUF_SQLITE2R_ERROR_CODE( r3 ) ), r, duf_error_name_i( r ) );
@@ -46,7 +46,7 @@ duf_sql_finalize( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DOR_SQL( r, mas_sqlite_finalize( stmt ) );
+  DOR_SQLITE( r, mas_sqlite_finalize( stmt ) );
   DUF_TRACE( sql, 6, "-" );
   DEBUG_ENDR( r );
 }
@@ -56,7 +56,7 @@ duf_sql_reset( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DOR_SQL( r, mas_sqlite_reset( stmt ) );
+  DOR_SQLITE( r, mas_sqlite_reset( stmt ) );
   DUF_TRACE( sql, 6, "-" );
   DEBUG_ENDR( r );
 }

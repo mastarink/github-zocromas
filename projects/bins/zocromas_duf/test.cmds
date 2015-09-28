@@ -1,3 +1,4 @@
+db-name test_tree
 recursive
 #files
 directories

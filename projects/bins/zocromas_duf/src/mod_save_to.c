@@ -217,7 +217,9 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
-    save_path = duf_sformat_file_info( pdi, &fi, duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, NULL /* pr / pok */  );
+    save_path =
+          duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
+                                 NULL /* pr / pok */  );
     DUF_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
     DUF_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     DUF_TRACE( mod, 2, "@to => %s", save_path );

@@ -123,12 +123,10 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
         mas_free( xs );
 #else
         DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, s, 0 ) );
-        assert( r >= 0 );
 #endif
       }
     }
   }
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 
@@ -144,7 +142,6 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath 
   if ( f )
   {
     DOR( r, duf_infile_options_at_stream( istage, f, DUF_OPTION_SOURCE_FILE ) );
-    assert( r >= 0 );
 
     fclose( f );
     DUF_TRACE( options, 0, "read config file %s", filepath );
@@ -183,7 +180,6 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
   if ( f )
   {
     DOR( r, duf_infile_options_at_stream( istage, f, DUF_OPTION_SOURCE_CFG ) );
-    assert( r >= 0 );
 
     fclose( f );
     DUF_TRACE( explain, 0, "read config file" );
@@ -193,7 +189,6 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
     DUF_TRACE( explain, 0, "read config file" );
     DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
   }
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 

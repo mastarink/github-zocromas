@@ -3,6 +3,7 @@
 recursive
 allow-files
 allow-directories
+db-name test_tree
 drop-tables
 add-path
 create-tables

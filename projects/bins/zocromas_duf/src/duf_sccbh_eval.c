@@ -50,7 +50,6 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
   DUF_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, SCCB->name );
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_stmnt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
   DUF_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", duf_error_name_i( r ), sccbh ? 1 : 0, SCCB->name );
-  assert( r >= 0 );
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( summary ) )
   {
@@ -65,7 +64,6 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
       DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
   DUF_E_YES( DUF_ERROR_TOO_DEEP );
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 
@@ -80,7 +78,6 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) 
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( sccbh, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
 
-    assert( r >= 0 );
     {
       HCHANGES = 0;
       if ( duf_levinfo_path( PDI ) )
@@ -91,15 +88,12 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) 
       {
         /* assert( 0 ); */
       }
-      assert( r >= 0 );
     }
   }
   else
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_SCCB );
-    assert( r >= 0 );
   }
-  assert( r >= 0 );
   DEBUG_ENDR( r );
 }
 #endif

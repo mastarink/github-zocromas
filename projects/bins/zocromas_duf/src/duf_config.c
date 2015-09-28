@@ -267,8 +267,8 @@ duf_cfg_delete( duf_config_t * cfg )
       mas_free( cfg->cli.output.history_filename );
       cfg->cli.output.history_filename = NULL;
 
-      mas_free( cfg->cli.output.header );
-      cfg->cli.output.header = NULL;
+      mas_free( cfg->cli.output.header_tty );
+      cfg->cli.output.header_tty = NULL;
     }
 
     mas_free( cfg );

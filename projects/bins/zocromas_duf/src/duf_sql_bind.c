@@ -12,9 +12,9 @@
 #include "duf_sql_bind.h"
 /* ###################################################################### */
 
-/* #define BI         DOR_SQL( r, (r3=mas_sqlite_bind_parameter_index( stmt, fldname ))) */
+/* #define BI         DOR_SQLITE( r, (r3=mas_sqlite_bind_parameter_index( stmt, fldname ))) */
 #define BI         mas_sqlite_bind_parameter_index( stmt, fldname )
-#define NUB(fun)   DOR_SQL( r, value?fun( stmt, pi, value ):mas_sqlite_bind_null( stmt, pi ) )
+#define NUB(fun)   DOR_SQLITE( r, value?fun( stmt, pi, value ):mas_sqlite_bind_null( stmt, pi ) )
 
 int
 duf_sql_bindu_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value )
@@ -25,7 +25,7 @@ duf_sql_bindu_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, 
     pi = BI;
   if ( pi > 0 )                 /*noerr */
   {
-    DOR_SQL( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
     DUF_TRACE( sql, 5, "long long %s='%lld'", fldname, value );
   }
   else if ( !r )
@@ -65,7 +65,7 @@ duf_sql_bindu_int( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int va
     pi = BI;
   if ( pi > 0 )
   {
-    DOR_SQL( r, mas_sqlite_bind_int( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_int( stmt, pi, value ) );
     DUF_TRACE( sql, 5, "int %s='%d'", fldname, value );
   }
   else if ( !r )
@@ -126,7 +126,7 @@ duf_sql_bindn_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long lon
     pi = BI;
   if ( pi > 0 )
   {
-    DOR_SQL( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
     DUF_TRACE( sql, 5, "long long %s='%lld'", fldname, value );
   }
   else if ( !r )
@@ -169,7 +169,7 @@ duf_sql_bindn_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value )
     pi = BI;
   if ( pi > 0 )
   {
-    DOR_SQL( r, mas_sqlite_bind_int( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_int( stmt, pi, value ) );
     DUF_TRACE( sql, 5, "int %s='%d'", fldname, value );
   }
   else if ( !r )
@@ -231,7 +231,7 @@ duf_sql_bind_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long
   pi = BI;
   if ( pi > 0 )
   {
-    DOR_SQL( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_long_long( stmt, pi, value ) );
     DUF_TRACE( sql, 5, "long long %s='%lld'", fldname, value );
   }
   else if ( !r )
@@ -271,7 +271,7 @@ duf_sql_bind_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value )
   pi = BI;
   if ( pi > 0 )
   {
-    DOR_SQL( r, mas_sqlite_bind_int( stmt, pi, value ) );
+    DOR_SQLITE( r, mas_sqlite_bind_int( stmt, pi, value ) );
     DUF_TRACE( sql, 0, "int %s='%d'", fldname, value );
   }
   else if ( !r )
