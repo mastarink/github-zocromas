@@ -14,5 +14,6 @@ tab sfind data_optable_trace.c
 tab sfind data_optable_format.c
 tab sfind data_optable_interactive.c
 tab sfind data_optable.c
+tab sfind data_optable_fs.c
 tab sfind data_optable_experimental.c
 tab sfind data_optable_io.c

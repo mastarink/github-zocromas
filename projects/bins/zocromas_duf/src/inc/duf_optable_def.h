@@ -86,8 +86,10 @@
       /* void f( optargg ) *//* call with string optarg (S: string) */
 #  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f) /**/
       /* */
-      /* void f( .esa.arg ) -- *//* call with constant string arg from table (VSA:void-string-arg) */
-#  define DO_ESA_CALL(_f, _a)		DO_SET_VTYPE( ESA_CALL ), DO_SET_CALLA(esa, _f, _a) /**/
+      /* void f( .sas.arg ) -- *//* call with constant string arg from table (SAS:void-string-sarg) */
+#  define DO_SAS_CALL(_f, _a)		DO_SET_VTYPE( SAS_CALL ), DO_SET_CALLA(sas, _f, _a) /**/
+      /* void f( .san.arg ) -- *//* call with constant string arg from table (SAS:void-string-narg) */
+#  define DO_SAN_CALL(_f, _a)		DO_SET_VTYPE( SAN_CALL ), DO_SET_CALLA(san, _f, _a) /**/
       /* */
 #  define DO_TDB( ) 	DO_SET_VTYPE( TDB ) /**/
       /* */

@@ -46,6 +46,10 @@ sfind duf_option_extended.h
 tab sfind duf_option_sccb.c
 sfind duf_option_sccb.h
 
+tab sfind duf_option_fs.c
+sfind duf_option_fs.h
+sfind duf_option_fs_types.h
+
 tab sfind duf_status.c
 sfind duf_status_ref.h
 sfind duf_status.h

@@ -96,7 +96,8 @@ typedef enum
   DUF_OPTION_VTYPE_N_CALL,
   DUF_OPTION_VTYPE_TN_CALL,
   DUF_OPTION_VTYPE_S_CALL,
-  DUF_OPTION_VTYPE_ESA_CALL,
+  DUF_OPTION_VTYPE_SAS_CALL,
+  DUF_OPTION_VTYPE_SAN_CALL,
   DUF_OPTION_VTYPE_TS_CALL,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
@@ -109,7 +110,7 @@ typedef enum
 /*   int val;          */
 /* };                  */
 typedef struct option duf_option_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_int_func_t func;
@@ -120,12 +121,12 @@ typedef struct
   duf_errc_int_func_t func;
   int arg;
 } duf_errc_int_arg_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_int_void_func_t func;
 } duf_int_void_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_argcv_func_t func;
@@ -134,7 +135,7 @@ typedef struct
 {
   duf_errc_argcv_func_t func;
 } duf_errc_argcv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_arg_func_t func;
@@ -143,7 +144,7 @@ typedef struct
 {
   duf_errc_arg_func_t func;
 } duf_errc_arg_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_pargcv_func_t func;
@@ -152,7 +153,7 @@ typedef struct
 {
   duf_errc_pargcv_func_t func;
 } duf_errc_pargcv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_pnv_func_t func;
@@ -161,7 +162,7 @@ typedef struct
 {
   duf_errc_pnv_func_t func;
 } duf_errc_pnv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_pargcnv_func_t func;
@@ -170,7 +171,7 @@ typedef struct
 {
   duf_errc_pargcnv_func_t func;
 } duf_errc_pargcnv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_psv_func_t func;
@@ -179,7 +180,7 @@ typedef struct
 {
   duf_errc_psv_func_t func;
 } duf_errc_psv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_psv_func_t func;
@@ -190,7 +191,18 @@ typedef struct
   duf_errc_psv_func_t func;
   const char *arg;
 } duf_errc_psv_arg_funcpair_t;
-
+/********************************************************************************************/
+typedef struct
+{
+  duf_void_psnv_func_t func;
+  long arg;
+} duf_void_psnv_arg_funcpair_t;
+typedef struct
+{
+  duf_errc_psnv_func_t func;
+  long arg;
+} duf_errc_psnv_arg_funcpair_t;
+/********************************************************************************************/
 typedef struct
 {
   duf_void_pargcsv_func_t func;
@@ -199,7 +211,7 @@ typedef struct
 {
   duf_errc_pargcsv_func_t func;
 } duf_errc_pargcsv_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_void_void_func_t func;
@@ -208,14 +220,14 @@ typedef struct
 {
   duf_errc_void_func_t func;
 } duf_errc_void_funcpair_t;
-
+/********************************************************************************************/
 typedef struct
 {
   duf_scan_hook2_item_func_t func;
   duf_scan_callbacks_t *sccb;
 } duf_scan_hook2_item_pair_t;
 
-
+/********************************************************************************************/
 
 typedef union
 {
@@ -259,7 +271,7 @@ typedef struct
     union
     {
       duf_errc_int_arg_funcpair_t eia;
-      duf_int_void_funcpair_t iv;
+      /* duf_int_void_funcpair_t iv; */
       duf_errc_void_funcpair_t ev;
       duf_errc_argcv_funcpair_t a;
       duf_errc_arg_funcpair_t aa;
@@ -268,8 +280,9 @@ typedef struct
       duf_errc_pargcnv_funcpair_t tn;
       duf_errc_pargcsv_funcpair_t ts;
       duf_errc_psv_funcpair_t s;
-      duf_errc_psv_arg_funcpair_t esa;
-      duf_scan_hook2_item_pair_t hi;
+      duf_errc_psv_arg_funcpair_t sas;
+      duf_errc_psnv_arg_funcpair_t san;
+      /* duf_scan_hook2_item_pair_t hi; */
     } fdesc;
   } call;
 } duf_longval_extended_t;

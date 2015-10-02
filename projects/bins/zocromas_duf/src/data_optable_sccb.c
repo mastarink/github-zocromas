@@ -31,9 +31,9 @@ const duf_longval_extended_table_t optable_sccb = {
    {.o = {DO_Q( "evaluate-sccb" ) /*    */ , DO_A_R /*  */ , DO_V( EVALUATE_SCCB )} /*     */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( evaluate_sccb ) /*       */ , DO_SET_STAGE( FIRST, LOOP ) /*               */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "lsfiles" ) /*               */ , DO_A_N /*  */ , DO_V( LSFILES )} /*      */ , DO_CL( NODESC ) /*  */
-    , DO_ESA_CALL( evaluate_sccb, "listing" ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /* */ , DO_H(  ... ) /*                             */ },
+    , DO_SAS_CALL( evaluate_sccb, "listing" ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*  */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "tree" ) /*             */ , DO_A_N /*  */ , DO_V( TREE )} /*              */ , DO_CL( NODESC ) /*  */
-    , DO_ESA_CALL( evaluate_sccb, "tree" ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  ... ) /*                             */ },
+    , DO_SAS_CALL( evaluate_sccb, "tree" ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*     */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "call-file" ) /*        */ , DO_A_R /*  */ , DO_V( CALL_FILE )} /*         */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( call_file ) /*         */ , DO_SET_STAGE( FIRST, LOOP ) /*                 */ , DO_H(  ... ) /*                             */ },

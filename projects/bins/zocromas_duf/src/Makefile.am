@@ -14,7 +14,7 @@ zocromas_duf_SOURCES=				   \
 	duf_option_descr.c		\
 	duf_options_cli.c duf_options_env.c duf_options_string.c duf_options_file.c duf_options_interactive.c \
 	duf_option_help.c duf_option_misc.c		\
-	duf_option_extended.c duf_option_sccb.c duf_option_names.c duf_option_cmd.c \
+	duf_option_extended.c duf_option_sccb.c duf_option_fs.c duf_option_names.c duf_option_cmd.c \
 							 \
 	duf_filedata.c					   \
 	duf_path2db.c    \
@@ -78,6 +78,7 @@ zocromas_duf_SOURCES=				   \
 	data_optable_info.c \
 	data_optable_interactive.c \
 	data_optable_io.c \
+	data_optable_fs.c \
 	data_optable_experimental.c \
 	data_optable.c
 

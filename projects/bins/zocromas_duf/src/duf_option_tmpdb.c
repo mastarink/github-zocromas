@@ -26,18 +26,10 @@ duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused, const duf_ar
     /* DUF_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] ); */
     /* DUF_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] ); */
     DUF_SQL_BIND_S_OPT( optVal, ttarg->argv[0], r, pstmt );
-    T( "@@@@(%d) as i:%s", r, duf_error_name_i( r ) );
-    T( "@@@@(%d) as c:%s", r, duf_error_name_c( r ) );
     DUF_SQL_BIND_S_OPT( optName, ttarg->argv[1], r, pstmt );
-    T( "@@@@(%d) as i:%s", r, duf_error_name_i( r ) );
-    T( "@@@@(%d) as c:%s", r, duf_error_name_c( r ) );
     DUF_SQL_BIND_S_OPT( optArg, ttarg->argv[2], r, pstmt );
-    T( "@@@@(%d) as i:%s", r, duf_error_name_i( r ) );
-    T( "@@@@(%d) as c:%s", r, duf_error_name_c( r ) );
     DUF_TRACE( sql, 0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] );
   }
-  T( "@@@@(%d) as i:%s", r, duf_error_name_i( r ) );
-  T( "@@@@(%d) as c:%s", r, duf_error_name_c( r ) );
   DEBUG_ENDR( r );
 }
 
@@ -60,7 +52,6 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optargg );
 
   DOR( r, duf_eval_sqlsq_cb( &tmpseq, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , duf_bind_tmp, &ttarg, NULL /* selected_db */  ) );
-  T( "@@@@(%d) %s", r, duf_error_name_i( r ) );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
   DEBUG_ENDR( r );
 }

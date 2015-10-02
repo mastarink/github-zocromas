@@ -1,0 +1,3 @@
+fs-ls=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg test/tree.no/1106_222036.r.jpg
+# fs-rm-ask=test/tree/1106_222036.r.jpg
+fs-cp-force=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg

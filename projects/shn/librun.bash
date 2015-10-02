@@ -58,7 +58,7 @@ function shn_run ()
 	    cat -n $MSH_SHN_PROJECT_DIR/${rname}.conf | sed -e 's@^@# => @'
 	    echo "# $bin"
 	    echo "# run $qargs"
-	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
+	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.$(/bin/date '+%Y%m%d').txt
 	fi
 	{
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
@@ -71,7 +71,7 @@ function shn_run ()
 	  {
 	    echo "# retcode:$retcode"
 	    echo "# `datemt` : `daten` ------------[r]--"
-	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
+	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.$(/bin/date '+%Y%m%d').txt
 	fi
 
       echo ; echo ; echo

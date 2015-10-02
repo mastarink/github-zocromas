@@ -46,7 +46,6 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
     dataid = DUF_GET_UFIELD2( dataid );
 #endif
     assert( dataid > 0 );
-    T( "@dataid:%llu", dataid );
     rpr = 0;
   }
   else

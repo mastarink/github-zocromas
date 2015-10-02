@@ -496,20 +496,36 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         IF_DORVF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg );
 #endif
         break;
-      case DUF_OPTION_VTYPE_ESA_CALL: /* stage Not? SETUP *//* call with constant string arg from table (ESA:void-string-arg) */
-        DUF_TRACE( options, +3, "vtype ESA_CALL" );
+      case DUF_OPTION_VTYPE_SAS_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
+        DUF_TRACE( options, +3, "vtype SAS_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
 #if 0
         if ( DUF_NOERROR( r ) )
         {
-          if ( extended->call.fdesc.esa.func )
-            DOR( r, ( extended->call.fdesc.esa.func ) ( extended->call.fdesc.esa.arg ) );
+          if ( extended->call.fdesc.sa.func )
+            DOR( r, ( extended->call.fdesc.sa.func ) ( extended->call.fdesc.sa.arg ) );
           else
             DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.esa.func, extended->call.fdesc.esa.arg );
+        IF_DORVF( r, extended->call.fdesc.sas.func, extended->call.fdesc.sas.arg );
+#endif
+        break;
+      case DUF_OPTION_VTYPE_SAN_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
+        DUF_TRACE( options, +3, "vtype SAS_CALL" );
+        if ( noo )
+          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+#if 0
+        if ( DUF_NOERROR( r ) )
+        {
+          if ( extended->call.fdesc.sa.func )
+            DOR( r, ( extended->call.fdesc.sa.func ) ( extended->call.fdesc.sa.arg ) );
+          else
+            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+        }
+#else
+        IF_DORVF( r, extended->call.fdesc.san.func, optargg, extended->call.fdesc.san.arg );
 #endif
         break;
       case DUF_OPTION_VTYPE_A_CALL: /* stage Not? SETUP *//* call with carg[cv] (A:argv) */

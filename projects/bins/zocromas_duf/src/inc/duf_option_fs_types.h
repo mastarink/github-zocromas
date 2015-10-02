@@ -1,0 +1,9 @@
+#ifndef MAS_DUF_OPTION_FS_TYPES_H
+#  define MAS_DUF_OPTION_FS_TYPES_H
+
+typedef enum
+{
+  DUF_OPTION_FS_MODE_NONE, DUF_OPTION_FS_MODE_IGNORE, DUF_OPTION_FS_MODE_FORCE, DUF_OPTION_FS_MODE_ASK
+} duf_option_fs_mode_t;
+
+#endif

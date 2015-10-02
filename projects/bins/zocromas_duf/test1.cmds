@@ -2,9 +2,9 @@
 recursive
 allow-files
 allow-directories
-output-file=/dev/pts/5
+# output-file=/dev/pts/26
 db-name test_tree
-trace-db 2
+trace-db 0
 set-max-seq 240
 cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/
 tree

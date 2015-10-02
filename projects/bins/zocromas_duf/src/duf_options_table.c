@@ -36,6 +36,7 @@ static const duf_longval_extended_t _lo_extended1[] = {
 extern const duf_longval_extended_table_t optable_main;
 extern const duf_longval_extended_table_t optable_io;
 extern const duf_longval_extended_table_t optable_experimental;
+extern const duf_longval_extended_table_t optable_fs;
 extern const duf_longval_extended_table_t optable_interactive;
 extern const duf_longval_extended_table_t optable_str;
 extern const duf_longval_extended_table_t optable_sccb;
@@ -56,6 +57,7 @@ extern const duf_longval_extended_table_t optable_redo_and_obsolete;
 static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
   &optable_main,
   &optable_experimental,
+  &optable_fs,
   &optable_io,
   &optable_interactive,
   &optable_str,

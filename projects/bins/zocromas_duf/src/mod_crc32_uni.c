@@ -164,7 +164,6 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   DUF_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Crc32sum, crc32sum, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  T("@@(%d:%d)%s", rpr, duf_error_code_i(rpr), duf_error_name_i(rpr));
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );

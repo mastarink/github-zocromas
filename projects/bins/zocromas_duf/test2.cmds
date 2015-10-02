@@ -2,9 +2,9 @@
 recursive
 allow-files
 allow-directories
-output-file=/dev/pts/6
+output-file=/dev/pts/24
 db-name test_tree
-trace-db 2
+trace-db 0
 set-max-seq 24
 cd /
 ls
