@@ -47,6 +47,8 @@ duf_scan_db_row_with_str_cb( duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2
                duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     DUF_TRACE( sccbh, 2, "@has cb(%d) n/t:%d (%s) %s", cb ? 1 : 0, node_type, duf_uni_scan_action_title( SCCB ), SCCB->name );
+
+
     if ( cb )
       DOR( r, ( cb ) ( pstmt_selector, str_cb2, sccbh ) );
     else

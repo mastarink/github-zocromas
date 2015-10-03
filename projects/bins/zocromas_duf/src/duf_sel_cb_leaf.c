@@ -53,7 +53,7 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
 
-  assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
+  assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb || str_cb2 == NULL );
 
 
   DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
@@ -67,13 +67,13 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
 
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( PDI ), PDI->opendir );
-#ifdef MAS_TRACING
+/* #ifdef MAS_ASSERT */
     {
-      DUF_SFIELD2( filename );
+      /* DUF_SFIELD2( filename ); */
       const char *dfn = duf_levinfo_itemshowname( PDI );
 
       /* filename from db same as duf_levinfo_itemname( pdi ) */
-      assert( 0 == strcmp( filename, dfn ) );
+      assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), dfn ) );
       /* DOR( r, duf_levinfo_pstmt2levinfo_dh( PDI, pstmt, 1 (* is_leaf *)  ) ); */
       {
         duf_levinfo_t *l = duf_levinfo_ptr( PDI );
@@ -84,7 +84,7 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
         assert( duf_levinfo_dbstat_inode( PDI ) );
       }
     }
-#endif
+/* #endif */
 
 
 
@@ -115,7 +115,11 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
         }
       }
 
-      DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
+      /* error to be removed at _is_deleted ... ? */
+
+
+      assert( !DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) && !DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) );
+
 #else
       DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );
 #endif

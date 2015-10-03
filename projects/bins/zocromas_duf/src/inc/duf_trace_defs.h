@@ -20,6 +20,7 @@
 #  define DUF_DEBUG(_lev, ...)  if ( DUF_IF_DEBUGN( _lev ) ) {  __VA_ARGS__ ; }
 
 #  define T(_fmt, ...) DUF_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
+#  define TR(_r) T("@@@@@@r:%s", duf_error_name_i(_r))
 
 
 #endif

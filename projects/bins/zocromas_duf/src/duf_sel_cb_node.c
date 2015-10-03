@@ -44,7 +44,7 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
-  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) );
+  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || str_cb2 == NULL );
 
   DUF_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
   {
@@ -65,11 +65,11 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
         long long m;
 
 #if 0
-	m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+        m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
 #else
-	m = TOTITEMS;
+        m = TOTITEMS;
 #endif
-	T("@@@@TOTITEMS:%llu;m:%llu;seq_node:%llu;", TOTITEMS, m, PDI->seq_node);
+        T( "@@@@TOTITEMS:%llu;m:%llu;seq_node:%llu;", TOTITEMS, m, PDI->seq_node );
         DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
         /* assert( PDI->seq_node <= m ); FIXME counters! */
         /*@ 2. progress bar */
