@@ -5,9 +5,12 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_stat.h"
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_ref.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
@@ -96,8 +99,8 @@ dialog_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_item_deleted( pdi ) );
-  assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
+  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
+  assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
   DUF_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
   DEBUG_ENDR( r );
@@ -134,10 +137,10 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   };
   if ( uf.md5id.min > 0 && uf.sha1id.min > 0 && DUF_GET_UFIELD2( nsame_md5 ) > 1 && DUF_GET_UFIELD2( nsame_sha1 ) > 1 )
   {
-    DOR( r,
-         DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ , 0 /* caninsert */ ,
-                                       1 /* recursive */ ,
-                                       0 /* opendir */  ) );
+    DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ ,
+                                          0 /* caninsert */ ,
+                                          1 /* recursive */ ,
+                                          0 /* opendir */  ) );
     assert( di.pup == &uf );
     DUF_TEST_R( r );
     /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */

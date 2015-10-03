@@ -88,7 +88,7 @@ duf_main_db_info( void )
       ,
       {.title = "distinct md5id",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
+       "SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
        DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)"}
       ,
       {.title = "n/z Sizes",.count = 5,.labels = {"#", "min size", "max size", "@min inow", "@max inow", NULL}
@@ -133,7 +133,7 @@ duf_main_db_info( void )
        SELECT COUNT(*) FROM " DUF_SQL_TABLES_SIZES_FULL " WHERE dupzcnt>1;
        SELECT COUNT(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md;   
        SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
-       SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
+       SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
      */
     for ( int iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {

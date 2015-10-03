@@ -130,8 +130,10 @@ duf_option_$_cd( const char *s )
 
       /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
 
-      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
-                                      duf_pdi_recursive( DUF_CONFIGG( pdi ) ) /*  */  ) );
+      DOR( r,
+           duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL,
+                                   ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
+                                   duf_pdi_recursive( DUF_CONFIGG( pdi ) ) /*  */  ) );
     }
     mas_free( new_path );
 #else

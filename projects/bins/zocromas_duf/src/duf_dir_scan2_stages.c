@@ -6,6 +6,7 @@
 /* #include "duf_config_ref.h"     (* DUF_ACTG_FLAG => DUF_OPTION *) */
 
 #include "duf_levinfo_ref.h"
+#include "duf_levinfo_stat.h"
 
 #include "duf_sccb.h"
 #include "duf_option_defs.h"
@@ -40,7 +41,7 @@
 	PDI->items.dirs++; \
  \
         DUF_TRACE( scan, 4, "? (dirs+) scan node [" #stagename "]2 by %5llu", diridpdi ); \
-	if ( duf_levinfo_item_deleted( PDI ) ) \
+	if ( duf_levinfo_if_deleted( PDI ) ) \
 	{ \
 	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
 	  { \

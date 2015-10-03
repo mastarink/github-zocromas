@@ -50,8 +50,8 @@ duf_pdi_reinit_min( duf_depthinfo_t * pdi )
 
   rpath = duf_levinfo_path( pdi );
   DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
-  DOR( r,
-       duf_pdi_reinit( pdi, rpath, duf_pdi_pu( pdi ), NULL /* sql_set */ , 0 /* caninsert */ , -1 /* recursive:auto */ , duf_pdi_opendir( pdi ) ) );
+  DOR( r, duf_pdi_reinit( pdi, rpath, duf_pdi_pu( pdi ), ( const duf_sql_set_t * ) NULL /* sql_set */ , 0 /* caninsert */ , -1 /* recursive:auto */ ,
+                          duf_pdi_opendir( pdi ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -60,8 +60,8 @@ duf_pdi_reinit_min( duf_depthinfo_t * pdi )
  * preserving opendir flag
  * */
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert,
-                        int frecursive )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set,
+                        int caninsert, int frecursive )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
@@ -101,7 +101,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set, in
       path = mas_strdup( cpath );
   }
   DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, ( const duf_ufilter_t * ) NULL /* pu */, sql_set , 0 /* canisert */ , frecursive ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, ( const duf_ufilter_t * ) NULL /* pu */ , sql_set, 0 /* canisert */ , frecursive ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

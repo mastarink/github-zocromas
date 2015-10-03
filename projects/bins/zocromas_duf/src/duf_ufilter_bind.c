@@ -46,7 +46,7 @@ duf_clear_filepath( duf_filepath_t * pfp )
 }
 
 int
-duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_argvc_t * ttarg_unused )
+duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const duf_argvc_t * ttarg_unused )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -65,12 +65,25 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, pu->_name.max, r, pstmt ); \
     DUF_TRACE(sql, 0, "@@@bind %s: %llu-%llu", # _name, pu->_name.min, pu->_name.max ); \
   }
+#endif
   if ( !pu )
   {
     DUF_TRACE( sql, 0, "@@@bind - no pu!" );
     return 0;
   }
-#endif
+
+  DUF_TRACE( sql, 0, "py:%d - %llu", py ? 1 : 0, py ? py->topdirid : 0 );
+  if ( py )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( topDirID, py->topdirid, r, pstmt );
+    assert( py->topdirid );
+  }
+  else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt ), 4 ) )
+  {
+    assert( 0 );
+  }
+
+
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Md5Same, same.md5 );
   DUF_SQL_BIND_PAIR( Sha1Same, same.sha1 );
@@ -179,8 +192,8 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_a
     DUF_SQL_BIND_S_OPT( TagDir, pu->tag.dir, r, pstmt );
     DUF_TRACE( sql, 0, "@@@bind " );
   }
-  DUF_SQL_BIND_LL_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
-  DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
+  DUF_SQL_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
+  DUF_SQL_BIND_I_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
   DUF_TRACE( sql, 0, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
   DEBUG_ENDR( r );

@@ -132,23 +132,28 @@ DUF_LEVINFO_DBST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
 /************************************************************************/
 
 /* int                                                              */
-/* duf_levinfo_item_deleted_d( const duf_depthinfo_t * pdi, int d ) */
+/* duf_levinfo_deleted_d( const duf_depthinfo_t * pdi, int d ) */
 /* {                                                                */
 /*                                                                  */
 /*   return duf_levinfo_ptr_d( pdi, d )->deleted ? 1 : 0;           */
 /* }                                                                */
 /*                                                                  */
-/* (* *INDENT-OFF*  *)                                              */
-/* DUF_LEVINFO_FC( int, item_deleted )                              */
-/* DUF_LEVINFO_FC_UP( int, item_deleted )                           */
-/* (* *INDENT-ON*  *)                                               */
 
 /* *INDENT-OFF*  */
-DUF_LEVINFO_3GET_BOOL( int, item_deleted, deleted )
+DUF_LEVINFO_3GET_BOOL( int, deleted, deleted )
 /* *INDENT-ON*  */
 
 /************************************************************************/
+/* *INDENT-OFF*  */
+DUF_LEVINFO_3GET_BOOL( int, deleted_tested, deleted_tested )
+/* *INDENT-ON*  */
 
+/************************************************************************/
+/* *INDENT-OFF*  */
+DUF_LEVINFO_3GET_BOOL( int, stat_tested, stat_tested )
+/* *INDENT-ON*  */
+
+/************************************************************************/
 const char *
 duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d )
 {

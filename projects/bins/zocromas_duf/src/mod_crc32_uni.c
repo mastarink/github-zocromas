@@ -105,9 +105,9 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 " /*                                     */ "AND " /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 )  AND " /* */
+           "( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) " /*                          */ " AND " /* */
+           "( sz.size    IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
+           "(  :fFast    IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            /*, .group=" fd." DUF_SQL_IDNAME */
            ,                    /* */

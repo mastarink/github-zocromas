@@ -54,7 +54,8 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
           " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
           "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDNAME " as parentid " /* */
-          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
+          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
           "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p." DUF_SQL_IDNAME "=fn.Pathid) " /* */
           " UNION "             /* */
           " SELECT fid, did, pp.parentid as parentid " /* */

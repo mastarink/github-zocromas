@@ -5,9 +5,12 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_stat.h"
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_ref.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
@@ -95,8 +98,8 @@ dumplet_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_item_deleted( pdi ) );
-  assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
+  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
+  assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
   DUF_TRACE( mod, 4, "dumplet %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
   DEBUG_ENDR( r );

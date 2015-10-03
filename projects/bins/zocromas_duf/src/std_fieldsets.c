@@ -25,21 +25,21 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -64,10 +64,10 @@ static duf_fieldset_t _all_fieldsets[] = {
    /* "'plus-leaf' AS fieldset_id, " (* *) */
    " fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    }
@@ -78,12 +78,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'md5x-leaf' AS fieldset_id, " (* *) */
    /* */
-   " md.dup5cnt            AS nsame " /* */
+   " md.dup5cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -96,21 +96,21 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -119,11 +119,11 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'sha1x-leaf' AS fieldset_id, " (* *) */
    /* */
-   " sh.dupsha1cnt          AS nsame " /* */
+   " sh.dupsha1cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -136,19 +136,19 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.sha1id              AS sha1id " /* */
+   ", fd.sha1id " /*    */ " AS sha1id " /* */
    ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 " /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", sh.dupsha1cnt            AS nsame " /* */
+   ", sh.dupsha1cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -161,21 +161,21 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", sd.dup2cnt            AS nsame " /* */
+   ", sd.dup2cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -183,12 +183,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .type = DUF_NODE_LEAF,
    .set =
    /* "'crc32x-leaf' AS fieldset_id, " (* *) */
-   " crc.dup32cnt          AS nsame " /* */
+   " crc.dup32cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", sz.dupzcnt            AS dupzcnt " /* */
-   ", fd.crc32id            AS crc32id" /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
+   ", fd.crc32id " /*    */ " AS crc32id" /* */
    ", crc.crc32sum "            /* */
    }
   ,
@@ -202,22 +202,22 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    /* ", md.md5sum1, md.md5sum2 "  (* *) */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", crc.dup32cnt          AS nsame " /* */
+   ", crc.dup32cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
    /* ", md.dup5cnt            AS dup5cnt " (* *) */
-   ", sz.dupzcnt            AS dupzcnt " /* */
-   ", fd.crc32id            AS crc32id" /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
+   ", fd.crc32id " /*    */ " AS crc32id" /* */
    ", crc.crc32sum "            /* */
    }
   ,
@@ -231,21 +231,21 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize  " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME('%s',fd.mtim)   AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    /* ", md.md5sum1, md.md5sum2 "  (* *) */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", mi.dupmimecnt         AS nsame " /* */
+   ", mi.dupmimecnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
    /* ", md.dup5cnt            AS dup5cnt " (* *) */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    }
   ,
   {
@@ -258,21 +258,21 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt " /*    */ " AS nsame " /* */
    /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
    /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
    /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -290,23 +290,23 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
-   ", fd.sha1id             AS sha1id " /* */
+   ", fd.sha1id " /*    */ " AS sha1id " /* */
    ", md.md5sum1, md.md5sum2 "  /* */
-   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
+   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 " /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
-   ", md.dup5cnt            AS nsame " /* */
-   ", md.dup5cnt            AS nsame_md5 " /* */
-   ", sh.dupsha1cnt         AS nsame_sha1 " /* */
-   ", x.dupexifcnt          AS nsame_exif " /* */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS nsame " /* */
+   ", md.dup5cnt " /*    */ " AS nsame_md5 " /* */
+   ", sh.dupsha1cnt " /*    */ " AS nsame_sha1 " /* */
+   ", x.dupexifcnt " /*    */ " AS nsame_exif " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -325,24 +325,24 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode               AS filemode " /* */
+   ", fd.mode " /*    */ " AS filemode " /* */
    ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
    ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-   ", fd.md5id              AS md5id " /* */
+   ", fd.md5id " /*    */ " AS md5id " /* */
    /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
-   ", fd.sha1id              AS sha1id " /* */
+   ", fd.sha1id " /*    */ " AS sha1id " /* */
    ", md.md5sum1, md.md5sum2 "  /* */
-   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 "  /* */
+   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 " /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    /* */
-   ", md.dup5cnt            AS nsame " /* */
-   ", md.dup5cnt            AS nsame_md5 " /* */
-   ", sh.dupsha1cnt         AS nsame_sha1 " /* */
-   ", x.dupexifcnt          AS nsame_exif " /* */
-   ", md.dup5cnt            AS dup5cnt " /* */
-   ", sz.dupzcnt            AS dupzcnt " /* */
+   ", md.dup5cnt " /*    */ " AS nsame " /* */
+   ", md.dup5cnt " /*    */ " AS nsame_md5 " /* */
+   ", sh.dupsha1cnt " /*    */ " AS nsame_sha1 " /* */
+   ", x.dupexifcnt " /*    */ " AS nsame_exif " /* */
+   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
+   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */

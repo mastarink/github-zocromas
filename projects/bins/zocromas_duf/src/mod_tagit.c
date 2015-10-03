@@ -14,7 +14,9 @@
 
 
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_stat.h"
 #include "duf_levinfo_ref.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
@@ -101,8 +103,8 @@ tagit_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_item_deleted( pdi ) );
-  assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
+  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
+  assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
 
 #endif
 

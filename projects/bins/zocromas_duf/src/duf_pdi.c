@@ -30,8 +30,8 @@
 
 /* 20150904.085609 */
 DUF_WRAPSTATIC int
-duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set, int caninsert, int frecursive,
-              int opendir )
+duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
+              int caninsert, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
@@ -104,6 +104,14 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
   DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
+  if ( !pdi->pyp )
+  {
+    pdi->pyp = mas_malloc( sizeof( *pdi->pyp ) );
+    pdi->pyp_created = 1;
+    memset( pdi->pyp, 0, sizeof( *pdi->pyp ) );
+    pdi->pyp->topdirid = duf_levinfo_dirid( pdi );
+  }
+  T( "@@@@@>>>>>>>>>>>>>>> %llu : %p", duf_levinfo_dirid( pdi ), pdi->pyp );
 
   DEBUG_ENDR( r );
 }
@@ -111,8 +119,8 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 #ifdef MAS_WRAP_FUNC
 /* 20150904.085443 */
 int
-DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set, int caninsert,
-                              int frecursive, int opendir )
+DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,
+                              const duf_sql_set_t * sql_set, int caninsert, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
@@ -135,7 +143,8 @@ duf_pdi_init_min( duf_depthinfo_t * pdi, const char *real_path )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, NULL /* pu */ , real_path, NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, ( duf_ufilter_t * ) NULL, real_path, NULL /* sql_set */ , 0 /* caninsert */ ,
+                                        1 /* recursive */ ,
                                         0 /* opendir */  ) );
 
   DEBUG_ENDR( r );
@@ -151,7 +160,8 @@ duf_pdi_init_at_config( void )
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #else
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( puz ), NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( puz ), NULL /* real_path */ , NULL /* sql_set */ ,
+                                        0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #endif
@@ -161,8 +171,8 @@ duf_pdi_init_at_config( void )
 
 /* 20150904.085510 */
 int
-duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid, const duf_sql_set_t * sql_set, int caninsert,
-                         int frecursive, int opendir )
+duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid,
+                         const duf_sql_set_t * sql_set, int caninsert, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -206,7 +216,14 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     DOR( r, duf_pi_shut( &pdi->pathinfo ) );
 #endif
     pdi->changes = 0;
-    pdi->pup = 0;
+    pdi->pup = NULL;
+    if ( pdi->pyp_created )
+    {
+      assert( pdi->pyp );
+      mas_free( pdi->pyp );
+    }
+    pdi->pyp_created = 0;
+    pdi->pyp = NULL;
     pdi->items.dirs = pdi->items.files = pdi->items.total = 0;
     pdi->seq = pdi->seq_node = pdi->seq_leaf = 0;
     assert( !pdi->inited );
@@ -223,6 +240,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     assert( !pdi->num_idstatements );
     assert( !pdi->idstatements );
     assert( !pdi->pup );
+    assert( !pdi->pyp );
   }
   DEBUG_ENDR( r );
 }

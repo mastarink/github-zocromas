@@ -81,11 +81,11 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.sha1id   IS NULL OR sh." DUF_SQL_IDNAME " IS NULL ) " /*                */ " AND " /* */
-           " sz.size > 0 " /*                                                            */ " AND " /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                */ " AND " /* */
-           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
-           "(  :fFast IS NULL OR md." DUF_SQL_IDNAME " IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
+           "( fd.sha1id IS NULL OR sh." DUF_SQL_IDNAME " IS NULL ) " /*                                          */ " AND " /* */
+           "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                            */ " AND " /* */
+           "(  :fFast   IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                                      */ " AND " /* */
+           "(  :fFast   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
+           "(  :fFast   IS NULL OR md." DUF_SQL_IDNAME " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME}

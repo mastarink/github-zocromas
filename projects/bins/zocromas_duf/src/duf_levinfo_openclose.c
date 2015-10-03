@@ -7,6 +7,7 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_levinfo_stat.h"
 /* ###################################################################### */
 #include "duf_levinfo_openclose.h"
 /* ###################################################################### */
@@ -21,10 +22,9 @@ duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
   if ( duf_levinfo_opened_dh_d( pdi, d ) <= 0 )
     DOR( r, duf_levinfo_openat_dh_d( pdi, d ) );
   DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
-  if ( !duf_levinfo_item_deleted_d( pdi, d ) )
-  {
-    assert( DUF_IS_ERROR( r ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
-  }
+  
+  assert( duf_levinfo_if_deleted_d( pdi, d ) || DUF_IS_ERROR( r ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
+
   DEBUG_ENDR( r );
 }
 /* *INDENT-OFF*  */
@@ -94,6 +94,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     {
       assert( DUF_IS_ERROR( r ) || !pdi->opendir || ( duf_levinfo_dfd_d( pdi, d ) > 0 ) );
     }
+    pdi->pathinfo.levinfo[d].deleted_tested = 1;
   }
   else
   {

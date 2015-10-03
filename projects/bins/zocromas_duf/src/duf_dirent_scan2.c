@@ -62,12 +62,13 @@ static int
 duf_scandirat_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
+  int ry = 0;
   struct dirent **list = NULL;
 
-  DOR( r, scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort ) );
-  if ( DUF_NOERROR( r ) )
+  ry = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
+  if ( ry >= 0 )
   {
-    int nlist = r;
+    int nlist = ry;
 
     for ( int il = 0; il < nlist; il++ )
     {
@@ -80,7 +81,6 @@ duf_scandirat_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent
     DUF_TRACE( scan, 10, "passed scandirat='.../%s'", duf_levinfo_itemshowname( pdi ) );
     if ( list )
       free( list );
-    DUF_TEST_R( r );
   }
   else
   {

@@ -51,6 +51,13 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
   pdidst->attached_copy = 1;
   pdidst->num_idstatements = 0;
   pdidst->idstatements = NULL;
+  if ( pdisrc->pyp_created )
+  {
+    assert( pdisrc->pyp );
+    pdidst->pyp_created = 1;
+    pdidst->pyp = mas_malloc( sizeof( *pdidst->pyp ) );
+    memcpy( pdidst->pyp, pdisrc->pyp, sizeof( *pdidst->pyp ) );
+  }
   /* assert( pdisrc->num_idstatements == 0 ); */
   /* assert( !pdisrc->idstatements ); */
 

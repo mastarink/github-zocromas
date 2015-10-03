@@ -39,7 +39,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     {
       if ( errno == ENOENT )
       {
-        DUF_SHOW_ERROR( "No such entry %s", path );
+        /* DUF_SHOW_ERROR( "No such entry %s", path ); */
         DUF_MAKE_ERROR( r, DUF_ERROR_STATAT_ENOENT );
       }
       else
@@ -184,7 +184,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     {
       pdhandle->dfd = ry;
       pdhandle->serial = ++open_serial;
-      DUF_TRACE( fs, 0, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      DUF_TRACE( fs, 5, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
 
       DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
@@ -255,7 +255,7 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     {
       pdhandle->dfd = ry;
       pdhandle->serial = ++open_serial;
-      DUF_TRACE( fs, 0, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      DUF_TRACE( fs, 5, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DOR( r, duf_stat_dh( pdhandle, path ) );
     }
     else
@@ -345,7 +345,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       int ry = 0;
 
       ry = close( pdhandle->dfd );
-      DUF_TRACE( fs, 0, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      DUF_TRACE( fs, 5, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
       if ( ry )
       {
@@ -375,7 +375,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       DUF_SHOW_ERROR( "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
     }
 
-    DUF_TRACE( fs, 0, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+    DUF_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
   }
   DEBUG_ENDR( r );

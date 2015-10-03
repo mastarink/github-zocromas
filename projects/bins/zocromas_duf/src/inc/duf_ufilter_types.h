@@ -96,6 +96,11 @@ typedef struct
   /* unsigned long long filter_id; */
 } duf_ufilter_t;
 
+typedef struct
+{
+  unsigned long long topdirid;
+} duf_yfilter_t;
+
 #endif
 
 /*

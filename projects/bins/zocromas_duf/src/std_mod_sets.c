@@ -144,6 +144,25 @@ duf_sql_set_t std_node_sets[] = { /* */
    "#std-node"
 #endif
    ,
+#if 1
+   .cte =                       /* */
+   "WITH RECURSIVE cte_paths(rowid,parentid) AS " /* */
+   " ( "                        /* */
+   "  SELECT paths.rowid,paths.parentid FROM paths " /* */
+   "   WHERE parentid=:topDirID " /* */
+   "  UNION "                   /* */
+   "   SELECT paths.rowid,paths.parentid " /* */
+   "    FROM cte_paths "        /* */
+   "    JOIN paths ON(paths.parentid=cte_paths.rowid) " /* */
+   " ) ",
+   .selector2_cte =             /* */
+   " FROM cte_paths " /*                                  */ " AS pte " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDNAME "=pt." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+   ,
+#endif
+
    .selector2 =                 /* */
 #if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */

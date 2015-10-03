@@ -31,7 +31,7 @@ static duf_sql_sequence_t final_sql = /* */
 #endif
           "DELETE FROM path_pairs" /* */
           ,
-          "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT count(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
+          "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT COUNT(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fna" /* */
           "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fda ON (fna.dataid=fda.rowid)" /* */
           "   JOIN " DUF_SQL_TABLES_MD5_FULL " AS mda ON (fda.md5id=mda.rowid)" /* */

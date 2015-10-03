@@ -34,6 +34,8 @@
 
 /* ########################################################################################## */
 
+static int filenames_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 static int filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
@@ -60,11 +62,13 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   /* .dirent_file_scan_before = filenames_entry_reg, */
   .dirent_file_scan_before2 = filenames_de_file_before2,
 
+  .leaf_scan2 = filenames_leaf2,
+  .leaf_scan2_deleted = filenames_leaf2_deleted,
 
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
   .leaf = {                     /* */
            .type = DUF_NODE_LEAF,
@@ -112,10 +116,42 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
+#if 1
+           .cte =               /* */
+           "WITH RECURSIVE cte_paths(rowid,parentid) AS " /* */
+           " ( "                /* */
+           "  SELECT paths.rowid,paths.parentid FROM paths " /* */
+           "   WHERE parentid=:topDirID " /* */
+           "  UNION "           /* */
+           "   SELECT paths.rowid,paths.parentid " /* */
+           "    FROM cte_paths " /* */
+           "    JOIN paths ON(paths.parentid=cte_paths.rowid) " /* */
+           " ) ",
+/*
+ WITH RECURSIVE cte_paths(rowid,parentid) AS 
+   (SELECT paths.rowid,paths.parentid FROM paths 
+      WHERE parentid=15 --------- matcher
+     UNION 
+     SELECT paths.rowid,paths.parentid 
+        FROM cte_paths 
+        JOIN paths ON(paths.parentid=cte_paths.rowid)
+   )
+   SELECT *
+      FROM cte_paths AS pte
+      LEFT JOIN paths AS pt ON(pte.rowid=pt.rowid)
+      LEFT JOIN t_common_pathtot_dirs AS td ON (td.Pathid=pt.rowid)
+      LEFT JOIN t_common_pathtot_files AS tf ON (tf.Pathid=pt.rowid) */
+           .selector2_cte =     /* */
+           " FROM cte_paths " /*                                  */ " AS pte " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDNAME "=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           ,
+#endif
            .selector2 =         /* */
-           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL /*                  */ " AS pt " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            ,
            .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            ,
@@ -125,6 +161,21 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 };
 
 /* ########################################################################################## */
+static int DUF_UNUSED
+filenames_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  /* T( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
+  DEBUG_ENDR( r );
+}
+
+static int DUF_UNUSED
+filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  T( "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  DEBUG_ENDR( r );
+}
 
 static int
 filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )

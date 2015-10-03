@@ -35,31 +35,35 @@ const duf_longval_extended_table_t optable_fs = {
     /*    */ DO_SAN_CALL( fs_rm, DUF_OPTION_FS_MODE_FORCE ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-rm-ask" ) /*            */ , DO_A_R /*  */ , DO_V( FS_RM )} /*         */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-rm-ask" ) /*        */ , DO_A_R /*  */ , DO_V( FS_RM )} /*         */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_rm, DUF_OPTION_FS_MODE_ASK ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-cp-ignore" ) /*            */ , DO_A_R /*  */ , DO_V( FS_CP )} /*      */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-cp-ignore" ) /*     */ , DO_A_R /*  */ , DO_V( FS_CP )} /*      */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_IGNORE ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-cp-force" ) /*            */ , DO_A_R /*  */ , DO_V( FS_CP )} /*       */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-cp-overwrite" ) /*  */ , DO_A_R /*  */ , DO_V( FS_CP )} /*       */ , DO_CL( CONTROL ) /*    */ ,
+    /*    */ DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_OVERWRITE ),
+    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
+
+   {.o = {DO_Q( "fs-cp-force" ) /*      */ , DO_A_R /*  */ , DO_V( FS_CP )} /*       */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_FORCE ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-cp-ask" ) /*            */ , DO_A_R /*  */ , DO_V( FS_CP )} /*         */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-cp-ask" ) /*        */ , DO_A_R /*  */ , DO_V( FS_CP )} /*         */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_ASK ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-mv-ignore" ) /*            */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-mv-ignore" ) /*     */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_IGNORE ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-mv-force" ) /*            */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-mv-force" ) /*      */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_FORCE ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
-   {.o = {DO_Q( "fs-mv-ask" ) /*            */ , DO_A_R /*  */ , DO_V( FS_MV )} /*         */ , DO_CL( CONTROL ) /*    */ ,
+   {.o = {DO_Q( "fs-mv-ask" ) /*        */ , DO_A_R /*  */ , DO_V( FS_MV )} /*         */ , DO_CL( CONTROL ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_ASK ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 

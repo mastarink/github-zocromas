@@ -78,11 +78,11 @@ typedef enum
 
 typedef struct
 {
-#if 0
-  const int *id; /* just as id */
-#else
+#  if 0
+  const int *id;                /* just as id */
+#  else
   duf_stmt_ident_t id;
-#endif
+#  endif
   duf_stmnt_t *pstmt;
 } duf_idstmt_t;
 
@@ -91,7 +91,9 @@ typedef struct
 typedef struct
 {
   unsigned is_leaf:1;
+  unsigned stat_tested:1;
   unsigned deleted:1;
+  unsigned deleted_tested:1;
   /* unsigned eod; */
   unsigned long long dirid;
   unsigned long long nameid;
@@ -124,6 +126,7 @@ typedef struct duf_depthinfo_s
   unsigned sql_beginning_done:1;
   unsigned opendir:1;
   unsigned recursive:1;
+  unsigned pyp_created:1;
 
   char *db_attached_selected;
   char *pdi_name;
@@ -143,6 +146,7 @@ typedef struct duf_depthinfo_s
   unsigned long long seq_node;
   duf_items_t items;
   const duf_ufilter_t *pup;
+  duf_yfilter_t *pyp;
   duf_levinfo_context_t context;
   int num_idstatements;
   /* duf_stmnt_t **statements; */

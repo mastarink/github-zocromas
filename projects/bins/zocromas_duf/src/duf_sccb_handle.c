@@ -70,10 +70,10 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
  * for instance: selected_paths does NOT contain "fileless" directories
  */
       csql = sqlt;
-      DUF_TRACE( temp, 10, "@@count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
       assert( rpr >= 0 );
-      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, NULL ) );
+      T( "@@@@@>>>>>>>>>>>>>>> %llu", duf_levinfo_dirid( PDI ) );
+      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL ) );
       assert( rpr >= 0 );
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
@@ -83,8 +83,14 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 #else
         cnt = DUF_GET_UFIELD2( CNT );
 #endif
+        DUF_TRACE( sql, 1, "@@counted A %llu by %s", cnt, csql );
+        if ( !sql_set->cte && SCCB->count_nodes )
+        {
+          cnt = cnt + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+        }
         rpr = 0;
       }
+      DUF_TRACE( sql, 1, "@@counted B %llu by %s", cnt, csql );
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
       assert( rpr >= 0 );
       DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
@@ -108,7 +114,7 @@ duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh /*, const duf_ufilter_t * 
   DEBUG_STARTR( r );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
   {
-    DOR( r, duf_sccb_eval_sqlsq( SCCB, PU, PDI->pdi_name ) );
+    DOR( r, duf_sccb_eval_sqlsq( SCCB, PU, ( duf_yfilter_t * ) NULL, PDI->pdi_name ) );
     if ( DUF_NOERROR( r ) )
     {
       duf_pdi_root( PDI )->sql_beginning_done = 1;
@@ -137,12 +143,14 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
   duf_sccb_handle_t *sccbh = NULL;
   int rpr = 0;
 
+  assert( pdi->pyp );
   if ( sccb )
   {
     DUF_TRACE( fs, 2, "set def. opendir: %d", sccb->def_opendir );
     duf_pdi_set_opendir( pdi, sccb->def_opendir );
 
     sccbh = duf_sccb_handle_create(  );
+
     PARGC = targc;
     PARGV = targv;
     SCCB = sccb;
@@ -155,6 +163,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #else
     PDI = pdi;
 #endif
+    T( "@@@@@>>>>>>>>>>>>>>> %llu >> %llu", duf_levinfo_dirid( PDI ), duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) ) );
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
 
@@ -188,8 +197,8 @@ TODO scan mode
         DUF_TRACE( explain, 0, "no init scan" );
       }
       DOR( rpr,
-           duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ), duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ),
-                                   0 /* caninsert */ , duf_pdi_recursive( PDI ) ) );
+           duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
+                                   duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ , duf_pdi_recursive( PDI ) ) );
     }
   }
   if ( pr )
@@ -205,7 +214,7 @@ duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
   {
     /* final */
     DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
-    DOR( r, duf_sccb_eval_final_sqlsq( SCCB, ( duf_ufilter_t * ) NULL /* pu */  ) );
+    DOR( r, duf_sccb_eval_final_sqlsq( SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL ) );
     if ( PDICLONED )
       duf_pdi_delete( PDI );
     mas_free( sccbh );

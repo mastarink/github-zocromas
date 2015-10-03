@@ -109,7 +109,10 @@ duf_scan_items_with_str_cb_sql( const char *sql_selector, duf_str_cb2_t str_cb2,
   DUF_TRACE( select, 1, "S:%s", sql_selector );
 /* XXX With parent ! XXX */
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
-  duf_bind_ufilter_uni( pstmt_selector, PU, NULL );
+
+  /* DUF_SQL_BIND_LL_NZ_OPT( topDirID, duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) ), r, pstmt_selector ); */
+  /* duf_yfilter_t yf={.topdirid= duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) )}; */
+  DOR( r, duf_bind_ufilter_uni( pstmt_selector, PU, PY, NULL ) );
 
   /* cal one of duf_sel_cb2_(leaf|node) by node_type
    * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )
@@ -117,9 +120,7 @@ duf_scan_items_with_str_cb_sql( const char *sql_selector, duf_str_cb2_t str_cb2,
 
   DUF_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
-  /* T("@@@@@@>>>>>>>>> %p %p - %p", &main_sql_selector_index, duf_pdi_find_statement( PDI, &main_sql_selector_index ) , pstmt_selector); */
   DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
-  /* T("@@@@@@<<<<<<<<< %p %p - %p", &main_sql_selector_index, duf_pdi_find_statement( PDI, &main_sql_selector_index ) , pstmt_selector); */
 #if 1
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
 #else

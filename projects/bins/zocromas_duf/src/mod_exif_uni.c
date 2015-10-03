@@ -115,11 +115,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " sz.size > 0 " /*                                                   */ " AND " /* */
-           " fd.noexif IS NULL " /*                                             */ " AND " /* */
-           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) " /*                   */ " AND" /* */
-           " ( mi.mime IS NULL OR " " mi.mime='image/jpeg' ) " /*               */ " AND" /* */
-           " ( :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*       */ " AND " /* */
+           " sz.size > 0 " /*                                                                       */ " AND " /* */
+           " fd.noexif IS NULL " /*                                                                 */ " AND " /* */
+           " ( fd.exifid IS NULL OR x.modelid IS NULL ) " /*                                        */ " AND" /* */
+           " ( mi.mime   IS NULL OR mi.mime='image/jpeg' ) " /*                                     */ " AND" /* */
+           " ( :fFast    IS NULL OR sz.size IS NULL  OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,                    /* */
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME

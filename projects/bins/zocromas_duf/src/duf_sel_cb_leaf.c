@@ -114,7 +114,8 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
           DUF_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", PDI->seq, PDI->seq_leaf, m );
         }
       }
-      DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT );
+
+      DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
 #else
       DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );
 #endif

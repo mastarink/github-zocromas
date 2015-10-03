@@ -54,6 +54,9 @@ typedef struct
   const char *fieldsets[10];
   /* const char *selector; */
   const char *selector2;
+
+  const char *cte;
+  const char *selector2_cte;
   const char *matcher;
   const char *filter;
   const char *group;

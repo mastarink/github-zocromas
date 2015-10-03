@@ -104,8 +104,8 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
-           " sz.size > 0                               AND " /* */
+           "( fd.mimeid IS NULL OR mi.mime IS NULL ) " /* */ " AND " /* */
+           "( sz.size   IS NULL OR sz.size > 0 ) " /*     */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME},

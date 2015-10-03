@@ -1,3 +1,17 @@
+#
 fs-ls=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg test/tree.no/1106_222036.r.jpg
+
+# ask before remove
 # fs-rm-ask=test/tree/1106_222036.r.jpg
-fs-cp-force=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+
+# overwrite
+# fs-cp-overwrite=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+
+# don't copy if exists:
+# fs-cp-ignore=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+
+# remove before copy (if exists)
+# fs-cp-force=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+
+# ask to remove before copy
+fs-cp-ask=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg

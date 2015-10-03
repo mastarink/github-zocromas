@@ -23,23 +23,26 @@
 #include "duf_option_fs.h"
 /* ###################################################################### */
 
-static int
+static duf_option_fs_mode_t
 duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
 {
-  int doit = 0;
+  duf_option_fs_mode_t doit = DUF_OPTION_FS_MODE_NONE;
   char buf[1024] = "";
   char *s = NULL;
 
   switch ( mode )
   {
   case DUF_OPTION_FS_MODE_NONE:
-    doit = 0;
+    doit = DUF_OPTION_FS_MODE_NONE;
     break;
   case DUF_OPTION_FS_MODE_IGNORE:
-    doit = 0;
+    doit = DUF_OPTION_FS_MODE_IGNORE;
+    break;
+  case DUF_OPTION_FS_MODE_OVERWRITE:
+    doit = DUF_OPTION_FS_MODE_OVERWRITE;
     break;
   case DUF_OPTION_FS_MODE_FORCE:
-    doit = 1;
+    doit = DUF_OPTION_FS_MODE_FORCE;
     break;
   case DUF_OPTION_FS_MODE_ASK:
     while ( 1 )
@@ -48,12 +51,17 @@ duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
       s = mas_chomp( fgets( buf, sizeof( buf ), stdin ) );
       if ( 0 == strcasecmp( s, "y" ) || 0 == strcasecmp( s, "yes" ) )
       {
-        doit = 1;
+        doit = DUF_OPTION_FS_MODE_FORCE;
         break;
       }
       else if ( 0 == strcasecmp( s, "n" ) || 0 == strcasecmp( s, "no" ) )
       {
-        doit = 0;
+        doit = DUF_OPTION_FS_MODE_NONE;
+        break;
+      }
+      else if ( !*s )
+      {
+        doit = DUF_OPTION_FS_MODE_NONE;
         break;
       }
     }
@@ -122,19 +130,20 @@ duf_option_$_fs_ls_file( const char *fn, const void *pv )
 int
 duf_option_fs_rmfile( const char *fn, const void *pv )
 {
-  int ry = 0, dorm = 0;
+  int ry = 0;
+  duf_option_fs_mode_t dorm = 0;
   struct stat st = { 0 };
 
   ry = stat( fn, &st );
   if ( ry >= 0 )
   {
     dorm = duf_fs_ask( "remove", fn, ( duf_option_fs_mode_t ) pv );
-    if ( dorm )
+    if ( dorm == DUF_OPTION_FS_MODE_FORCE )
     {
-      DUF_FPRINTF( 0, stderr, "@@removing %s", fn );
+      T( "@removing %s", fn );
       ry = unlink( fn );
       if ( ry >= 0 )
-        DUF_FPRINTF( 0, stderr, "@@removed %s", fn );
+        T( "@removed %s", fn );
     }
   }
   if ( ry < 0 )
@@ -145,7 +154,7 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
     ser = strerror_r( errno, serr, sizeof( serr ) );
     DUF_SHOW_ERROR( "@Can't remove %s - %s", fn, ser );
   }
-  return ry;
+  return ry >= 0 ? dorm : ry;
 }
 
 duf_error_code_t
@@ -174,7 +183,6 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv, str
   fname = basename( topathf );
   topath = dirname( topathf );
   ry = stat( topath, &st2 );
-  T( "@@@ %d", ry );
   if ( ry >= 0 )
   {
     FILE *ffrom, *fto;
@@ -185,50 +193,55 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv, str
     T( "@@copy to existing dir %s, absent file %s", topath, fname );
     fto = fopen( to, "w" );
     ffrom = fopen( fn, "r" );
-    while ( ry >= 0 && !feof( ffrom ) && !ferror( ffrom ) && !ferror( fto ) )
+    if ( ffrom && fto )
     {
-      size_t nr, nw;
-
-      nr = fread( buf, 1, bufsz, ffrom );
-      if ( nr > 0 )
-        nrs += nr;
-      if ( nr > 0 )
+      while ( ry >= 0 && !feof( ffrom ) && !ferror( ffrom ) && !ferror( fto ) )
       {
-        nw = fwrite( buf, 1, nr, fto );
-        if ( nw > 0 )
-          nws += nw;
-        if ( nr == nw )
+        size_t nr, nw;
+
+        nr = fread( buf, 1, bufsz, ffrom );
+        if ( nr > 0 )
+          nrs += nr;
+        if ( nr > 0 )
         {
-          T( "@copy portion %ld ok", nw );
+          nw = fwrite( buf, 1, nr, fto );
+          if ( nw > 0 )
+            nws += nw;
+
+          if ( ferror( fto ) )
+          {
+            DUF_SHOW_ERROR( "@Can' t copy %s %s - write error ", fn, to );
+            ry = -1;
+            break;
+          }
+          else if ( nr != nw )
+          {
+            DUF_SHOW_ERROR( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to );
+            ry = -1;
+            break;
+          }
         }
-        else if ( ferror( fto ) )
+        else if ( ferror( ffrom ) )
         {
-          DUF_SHOW_ERROR( "@Can' t copy %s %s - write error ", fn, to );
+          DUF_SHOW_ERROR( " @ Can 't copy %s %s - read error", fn, to );
           ry = -1;
           break;
         }
         else
         {
-          DUF_SHOW_ERROR( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to );
+          DUF_SHOW_ERROR( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to );
           ry = -1;
           break;
         }
       }
-      else if ( ferror( ffrom ) )
-      {
-        DUF_SHOW_ERROR( " @ Can 't copy %s %s - read error", fn, to );
-        ry = -1;
-        break;
-      }
-      else
-      {
-        DUF_SHOW_ERROR( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to );
-        ry = -1;
-        break;
-      }
+      fclose( fto );
+      fclose( ffrom );
     }
-    fclose( fto );
-    fclose( ffrom );
+    else
+    {
+      DUF_SHOW_ERROR( "@Can' t copy %s(%d) %s(%d) - open error", fn, ffrom ? 1 : 0, to, fto ? 1 : 0 );
+      ry = -1;
+    }
     if ( ry >= 0 && nrs > 0 && nrs == nws )
     {
 #if 0
@@ -304,6 +317,7 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
   struct stat stfrom = { 0 };
   struct stat stto = { 0 };
   int ry = 0;
+  int dorm = 0;
 
   ry = stat( fn, &stfrom );
   if ( ry >= 0 )
@@ -313,14 +327,13 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
       ry = stat( to, &stto );
       if ( ry >= 0 && ( S_ISREG( stto.st_mode ) || S_ISDIR( stto.st_mode ) ) )
       {
-        T( "@@copy to existing file %s", to );
-        ry = duf_option_fs_rmfile( to, pv );
+        dorm = duf_option_fs_rmfile( to, pv );
         ry = stat( to, &stto );
       }
-      if ( ry < 0 && errno == ENOENT )
+      if ( ( ry < 0 && errno == ENOENT ) || dorm == DUF_OPTION_FS_MODE_OVERWRITE )
         ry = duf_option_fs_cpfile2absent( fn, to, pv, &stfrom, &stto );
       else
-        T( "@@@did'nt copy %s to %s - dst present", fn, to );
+        T( "@@@did'nt copy %s to %s - dst present (%d)", fn, to, dorm );
     }
     else
     {

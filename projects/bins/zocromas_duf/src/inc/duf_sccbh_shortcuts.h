@@ -9,6 +9,7 @@
 #  define PU (sccbh->pu_x)
 #else
 #  define PU duf_pdi_pu(PDI)
+#  define PY duf_pdi_py(PDI)
 #endif
 #  define HCHANGES (sccbh->changes)
 #  define PARGC (sccbh->parg.argc)

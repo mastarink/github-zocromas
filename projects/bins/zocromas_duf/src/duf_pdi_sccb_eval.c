@@ -68,7 +68,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
   sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv /* , pu */ , &r );
   {
-    DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb?SCCB->name:"-" );
+    DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
     DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
   }
   {
@@ -139,8 +139,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
 
 /* 20150922.123706 */
 int
-duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table,
-                         duf_argvc_t * ptarg /*, const duf_ufilter_t * pu */  )
+duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
 
@@ -152,7 +151,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
 
-
+  assert( pdi->pyp );
   while ( DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;

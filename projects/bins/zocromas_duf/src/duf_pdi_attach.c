@@ -57,11 +57,11 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     int changes = 0;
 
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
+    /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
     DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
-    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
-    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL , pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL , ( duf_yfilter_t * ) NULL , pdi->db_attached_selected, &changes ) );
   }
   DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   DEBUG_ENDR( r );
@@ -78,7 +78,7 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   int changes = 0;
 
 
-  DOR( r, duf_eval_sql_one( sql1, pdi->pup, pdi->pdi_name, &changes ) );
+  DOR( r, duf_eval_sql_one( sql1, pdi->pup, ( duf_yfilter_t * ) NULL, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );
 
   DEBUG_ENDR( r );

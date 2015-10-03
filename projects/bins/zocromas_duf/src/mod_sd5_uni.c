@@ -102,9 +102,9 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.sd5id   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0                                             AND " /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
+           "( fd.sd5id IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) " /*                           */ " AND " /* */
+           "( sz.size  IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
+           "(  :fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME}
@@ -206,7 +206,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
       DUF_SQL_END_STMT( pdi, insert_sd5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT )  || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || !lr ) && !changes )
     {
       if ( need_id )
         sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], &lr );

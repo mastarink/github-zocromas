@@ -6,6 +6,7 @@
 duf_depthinfo_t *duf_pdi_root( duf_depthinfo_t * pdi );
 
 const duf_ufilter_t *duf_pdi_pu( const duf_depthinfo_t * pdi );
+const duf_yfilter_t *duf_pdi_py( const duf_depthinfo_t * pdi );
 
 int duf_pdi_max_filter( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );
 int duf_pdi_seq( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );

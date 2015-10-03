@@ -11,9 +11,17 @@ int duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_is_leaf( const duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_up( const duf_depthinfo_t * pdi );
 
-int duf_levinfo_item_deleted_d( const duf_depthinfo_t * pdi, int d );
-int duf_levinfo_item_deleted( const duf_depthinfo_t * pdi );
-int duf_levinfo_item_deleted_up( const duf_depthinfo_t * pdi );
+int duf_levinfo_deleted_d( const duf_depthinfo_t * pdi, int d );
+int duf_levinfo_deleted( const duf_depthinfo_t * pdi );
+int duf_levinfo_deleted_up( const duf_depthinfo_t * pdi );
+
+int duf_levinfo_deleted_tested_d( const duf_depthinfo_t * pdi, int d );
+int duf_levinfo_deleted_tested( const duf_depthinfo_t * pdi );
+int duf_levinfo_deleted_tested_up( const duf_depthinfo_t * pdi );
+
+int duf_levinfo_stat_tested_d( const duf_depthinfo_t * pdi, int d );
+int duf_levinfo_stat_tested( const duf_depthinfo_t * pdi );
+int duf_levinfo_stat_tested_up( const duf_depthinfo_t * pdi );
 
 const char *duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_itemshowname( const duf_depthinfo_t * pdi );
@@ -85,8 +93,14 @@ struct stat *duf_levinfo_stat_up( const duf_depthinfo_t * pdi );
 
 typedef long long_t;
 
+ino_t duf_levinfo_stat_inode_d( const duf_depthinfo_t * pdi, int d );
 ino_t duf_levinfo_stat_inode( const duf_depthinfo_t * pdi );
+ino_t duf_levinfo_stat_inode_up( const duf_depthinfo_t * pdi );
+
+dev_t duf_levinfo_stat_dev_d( const duf_depthinfo_t * pdi, int d );
 dev_t duf_levinfo_stat_dev( const duf_depthinfo_t * pdi );
+dev_t duf_levinfo_stat_dev_up( const duf_depthinfo_t * pdi );
+
 mode_t duf_levinfo_stat_mode( const duf_depthinfo_t * pdi );
 off_t duf_levinfo_stat_size( const duf_depthinfo_t * pdi );
 nlink_t duf_levinfo_stat_nlink( const duf_depthinfo_t * pdi );

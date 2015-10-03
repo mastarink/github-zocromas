@@ -129,17 +129,16 @@ duf_expand_sql( const char *sql, const char *dbname )
 char *
 duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
 {
-#define DUF_SELECTOR selector2
   char *sql = NULL;
 
-  if ( sql_set->fieldset && sql_set->DUF_SELECTOR )
+  if ( sql_set->fieldset && sql_set->selector2 )
   {
-    /* if ( 0 == strncmp( sql_set->DUF_SELECTOR, "SELECT", 6 ) )             */
+    /* if ( 0 == strncmp( sql_set->selector2, "SELECT", 6 ) )             */
     /* {                                                                  */
     /*   char *sql3;                                                      */
     /*                                                                    */
     /*   assert( 0 );                                                     */
-    /*   sql3 = duf_sql_mprintf( sql_set->DUF_SELECTOR, sql_set->fieldset ); */
+    /*   sql3 = duf_sql_mprintf( sql_set->selector2, sql_set->fieldset ); */
     /*   sql = mas_strdup( sql3 );                                        */
     /*   mas_free( sql3 );                                                */
     /* }                                                                  */
@@ -187,7 +186,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
       }
       if ( DUF_NOERROR( *pr ) )
       {
-        selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
+        selector = duf_unref_selector( sql_set->selector2, sql_set->type, pr );
         if ( DUF_NOERROR( *pr ) && selector && fieldset )
         {
           sql = mas_strdup( "SELECT " );
@@ -241,41 +240,34 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
     sql = NULL;
   }
   return sql;
-#undef  DUF_SELECTOR
 }
 
 /* 20150819.133525 */
 char *
 duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
 {
-/* #define DUF_SELECTOR selector_total2 */
-#define DUF_SELECTOR selector2
   char *sql = NULL;
+  const char *selector2 = NULL;
 
   assert( sql_set );
-  assert( sql_set->DUF_SELECTOR );
-  if ( sql_set->DUF_SELECTOR )
+
+  selector2 = ( sql_set->cte ) ? sql_set->selector2_cte : sql_set->selector2;
+  assert( selector2 );
+  if ( selector2 )
   {
-    /* if ( 0 == strncmp( sql_set->DUF_SELECTOR, "SELECT", 6 ) )             */
-    /* {                                                                           */
-    /*   char *sql3;                                                               */
-    /*                                                                             */
-    /*   assert( 0 );                                                              */
-    /*   sql3 = duf_sql_mprintf( sql_set->DUF_SELECTOR, sql_set->fieldset ); */
-    /*   sql = mas_strdup( sql3 );                                                 */
-    /*   mas_free( sql3 );                                                         */
-    /* }                                                                           */
-    /* else                                                                        */
     {
       int has_where = 0;
       int has_group = 0;
       int has_order = 0;
       const char *selector = NULL;
 
-      selector = duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type, pr );
+      selector = duf_unref_selector( selector2, sql_set->type, pr );
       if ( selector )
       {
-        sql = mas_strdup( "SELECT " );
+        if ( sql_set->cte )
+          sql = mas_strcat_x( sql, sql_set->cte );
+
+        sql = mas_strcat_x( sql, "SELECT " );
         sql = mas_strcat_x( sql, "COUNT(" );
         sql = mas_strcat_x( sql, sql_set->count_aggregate ? sql_set->count_aggregate : "*" );
         sql = mas_strcat_x( sql, ") AS nf" );
@@ -349,5 +341,4 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
     DUF_SHOW_ERROR( "Bad arg" );
   }
   return sql;
-#undef  DUF_SELECTOR
 }

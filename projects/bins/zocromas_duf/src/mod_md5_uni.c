@@ -53,7 +53,7 @@ static duf_sql_sequence_t final_sql = /* */
 #endif
           "DELETE FROM path_pairs" /* */
           ,
-          "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT count(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
+          "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT COUNT(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fna" /* */
           "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fda ON (fna.dataid=fda.rowid)" /* */
           "   JOIN " DUF_SQL_TABLES_MD5_FULL " AS mda ON (fda.md5id=mda.rowid)" /* */
@@ -129,11 +129,11 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) " /*                  */ " AND " /* */
-           " sz.size > 0 " /*                                                              */ " AND " /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                  */ " AND " /* */
-           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) " /*    */ " AND " /* */
-           "(  :fFast IS NULL OR sh." DUF_SQL_IDNAME " IS NULL OR sh.dupsha1cnt > 1 ) " /* */ " AND " /* */
+           "( fd.md5id  IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) " /*                                               */ " AND " /* */
+           "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                                 */ " AND " /* */
+           "(  :fFast   IS NULL OR sz.size " /*     */ " IS NULL OR sz.dupzcnt    IS NULL OR sz.dupzcnt > 1 ) " /*    */ " AND " /* */
+           "(  :fFast   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt    IS NULL OR sd.dup2cnt > 1 ) " /*    */ " AND " /* */
+           "(  :fFast   IS NULL OR sh." DUF_SQL_IDNAME " IS NULL OR sh.dupsha1cnt IS NULL OR sh.dupsha1cnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
@@ -190,6 +190,8 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
         ;
 
   DEBUG_START(  );
+  assert( sizeof( unsigned long ) == 8 );
+  assert( sizeof( unsigned long long ) == 8 );
 
   DUF_SQL_START_STMT( pdi, select_md5, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );

@@ -19,6 +19,11 @@ duf_pdi_pu( const duf_depthinfo_t * pdi )
   return pdi ? pdi->pup : NULL;
 }
 
+const duf_yfilter_t *
+duf_pdi_py( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->pyp : NULL;
+}
 /* needless?!? TODO */
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
