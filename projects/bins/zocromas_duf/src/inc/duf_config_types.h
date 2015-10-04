@@ -23,6 +23,7 @@ typedef struct
   /* unsigned opened:1; */
   duf_config_string_t dir;
   duf_config_string_t subdir;
+  char* path;
   duf_db_config_t main;
   duf_db_config_t adm;
   duf_db_config_t tempo;

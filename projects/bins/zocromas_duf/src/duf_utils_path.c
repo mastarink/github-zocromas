@@ -49,7 +49,7 @@ duf_realpath( const char *path, int *pr )
   char *real_path = NULL;
   char *rp = realpath( path, NULL );
 
-  DUF_TRACE( temp, 2, ">> path:%s; rp:%s", path, rp );
+  DUF_TRACE( path, 2, ">> path:%s; rp:%s", path, rp );
 
   if ( rp )
   {

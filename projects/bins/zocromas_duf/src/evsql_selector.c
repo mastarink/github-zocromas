@@ -100,8 +100,12 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
     str = mas_strdup( arg );
   else if ( 0 == strcmp( name, "DB_PATH" ) )
   {
+#if 0
     str = mas_strdup( DUF_CONFIGGSP( db.dir ) );
     str = duf_config_db_path_add_subdir( str, ( int * ) NULL /* &r */  );
+#else
+    str = mas_strdup( DUF_CONFIGGS( db.path ) );
+#endif
   }
   else if ( 0 == strcmp( name, "PID" ) )
   {

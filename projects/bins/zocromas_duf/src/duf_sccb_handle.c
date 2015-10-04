@@ -72,7 +72,6 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       csql = sqlt;
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
       assert( rpr >= 0 );
-      T( "@@@@@>>>>>>>>>>>>>>> %llu", duf_levinfo_dirid( PDI ) );
       DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL ) );
       assert( rpr >= 0 );
       DUF_SQL_STEP( rpr, pstmt );
@@ -163,7 +162,6 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #else
     PDI = pdi;
 #endif
-    T( "@@@@@>>>>>>>>>>>>>>> %llu >> %llu", duf_levinfo_dirid( PDI ), duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) ) );
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
 

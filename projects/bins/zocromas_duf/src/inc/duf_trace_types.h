@@ -33,7 +33,6 @@ typedef enum
   /* DUF_TRACE_MODE_fill, */
   DUF_TRACE_MODE_fs,
   DUF_TRACE_MODE_insert,
-  DUF_TRACE_MODE_integrity,
   DUF_TRACE_MODE_match,
   DUF_TRACE_MODE_md5,
   DUF_TRACE_MODE_sha1,
@@ -60,6 +59,7 @@ typedef enum
   DUF_TRACE_MODE_update,
   DUF_TRACE_MODE_io,
   DUF_TRACE_MODE_verbose,
+  DUF_TRACE_MODE_todo,
 
   DUF_TRACE_MODE_MAX
 } duf_trace_mode_t;

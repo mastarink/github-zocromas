@@ -1,11 +1,11 @@
-find duf_eval_at_config.c
-sfind duf_eval_at_config.h
+find duf_dir_scan2_stages.c
+sfind duf_dir_scan2_stages.h
+
+" tab sfind duf_eval_at_config.c
+" sfind duf_eval_at_config.h
 
 " tab sfind duf_uni_scan2.c
 " sfind duf_uni_scan2.h
-
-tab sfind duf_dir_scan2_stages.c
-sfind duf_dir_scan2_stages.h
 
 tab sfind duf_dirent_scan2.c
 sfind duf_dirent_scan2.h

@@ -81,7 +81,6 @@ noinst_HEADERS=duf.h \
 	duf_trace_types.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \
-	duf_eval_at_config.h \
 	duf_sys_wrap.h duf_utils.h \
 	duf_utils_path.h \
 	duf_utils_print.h

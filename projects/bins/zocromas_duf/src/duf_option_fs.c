@@ -140,10 +140,10 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
     dorm = duf_fs_ask( "remove", fn, ( duf_option_fs_mode_t ) pv );
     if ( dorm == DUF_OPTION_FS_MODE_FORCE )
     {
-      T( "@removing %s", fn );
+      /* T( "@removing %s", fn ); */
       ry = unlink( fn );
-      if ( ry >= 0 )
-        T( "@removed %s", fn );
+      /* if ( ry >= 0 )            */
+      /*   T( "@removed %s", fn ); */
     }
   }
   if ( ry < 0 )
@@ -176,11 +176,11 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv, str
   int ry1 = 0;
   char *topathf = NULL;
   char *topath = NULL;
-  char *fname = NULL;
+  /* char *fname = NULL; */
   struct stat st2 = { 0 };
 
   topathf = mas_strdup( to );
-  fname = basename( topathf );
+  /* fname = basename( topathf ); */
   topath = dirname( topathf );
   ry = stat( topath, &st2 );
   if ( ry >= 0 )
@@ -190,7 +190,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv, str
     char *buf = mas_malloc( bufsz );
     size_t nrs = 0, nws = 0;
 
-    T( "@@copy to existing dir %s, absent file %s", topath, fname );
+    /* T( "@@copy to existing dir %s, absent file %s", topath, fname ); */
     fto = fopen( to, "w" );
     ffrom = fopen( fn, "r" );
     if ( ffrom && fto )
@@ -332,8 +332,8 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
       }
       if ( ( ry < 0 && errno == ENOENT ) || dorm == DUF_OPTION_FS_MODE_OVERWRITE )
         ry = duf_option_fs_cpfile2absent( fn, to, pv, &stfrom, &stto );
-      else
-        T( "@@@did'nt copy %s to %s - dst present (%d)", fn, to, dorm );
+      /* else                                                               */
+      /*   T( "@@@did'nt copy %s to %s - dst present (%d)", fn, to, dorm ); */
     }
     else
     {
@@ -378,7 +378,7 @@ duf_option_$_fs_ls( const char *arg )
   DEBUG_STARTR( r );
   long v = 0;
 
-  T( "ls %s", arg );
+  /* T( "ls %s", arg ); */
   DOR( r, duf_option_fs_each( arg, duf_option_$_fs_ls_file, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
@@ -387,7 +387,7 @@ duf_error_code_t
 duf_option_$_fs_rm( const char *arg, long v )
 {
   DEBUG_STARTR( r );
-  T( "rm %s", arg );
+  /* T( "rm %s", arg ); */
   DOR( r, duf_option_fs_each( arg, duf_option_$_fs_rmfile, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
@@ -396,7 +396,7 @@ duf_error_code_t
 duf_option_$_fs_cp( const char *arg, long v )
 {
   DEBUG_STARTR( r );
-  T( "cp %s", arg );
+  /* T( "cp %s", arg ); */
   DOR( r, duf_option_fs_each2( arg, duf_option_$_fs_cpfile, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
@@ -405,7 +405,7 @@ duf_error_code_t
 duf_option_$_fs_mv( const char *arg, long v )
 {
   DEBUG_STARTR( r );
-  T( "mv %s", arg );
+  /* T( "mv %s", arg ); */
   DOR( r, duf_option_fs_each2( arg, duf_option_fs_mvfile, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }

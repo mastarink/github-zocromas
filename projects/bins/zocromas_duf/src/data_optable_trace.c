@@ -17,6 +17,10 @@ At duf_options_table.c:
 	NULL
       };
 */
+
+#define DUF_TRACE_OPT(_lname, _uname) \
+   {.o = {DO_Q( "trace-" #_lname), DO_A_O, DO_V( _uname ## _TRACE )}, DO_CL( TRACE ), DO_OC( UPLUS, cli.trace._lname )  , DO_STAGE_ANY  , DO_H( trace .... )  }
+
 #ifdef MAS_TRACING_OPTIONS
 const duf_longval_extended_table_t optable_trace = {
   .table =                      /* */
@@ -30,6 +34,7 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.flags ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-pdi" ) /*        */ , DO_A_O /* */ , DO_V( PDI_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.pdi ) /*    */ , DO_STAGE_ANY /*                     */ , DO_H( trace .... ) /*                       */ },
+
    {.o = {DO_Q( "trace-levinfo" ) /*    */ , DO_A_O /* */ , DO_V( LEVINFO_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.levinfo ) /*    */ , DO_STAGE_ANY /*                 */ , DO_H( trace .... ) /*                       */ },
 
@@ -54,10 +59,14 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.collect ), DO_STAGE_ANY /*                           */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-crc32" ) /*      */ , DO_A_O /* */ , DO_V( CRC32_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.crc32 ), DO_STAGE_ANY /*                             */ , DO_H( trace .... ) /*                       */ },
+   {.o = {DO_Q( "trace-todo" ) /*       */ , DO_A_O /* */ , DO_V( TODO_TRACE )} /*         */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.todo ), DO_STAGE_ANY /*                              */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-temporary" ) /*  */ , DO_A_O /* */ , DO_V( TEMPORARY_TRACE )} /*    */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.temporary ), DO_STAGE_ANY /*                         */ , DO_H( trace .... ) /*                       */ },
-   {.o = {DO_Q( "trace-temp" ) /*       */ , DO_A_O /* */ , DO_V( TEMP_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( UPLUS, cli.trace.temp ), DO_STAGE_ANY /*                              */ , DO_H( trace .... ) /*                       */ },
+
+   DUF_TRACE_OPT( temp, TEMP ),
+   /* {.o = {DO_Q( "trace-temp" ) (*       *) , DO_A_O (* *) , DO_V( TEMP_TRACE )} (*        *) , DO_CL( TRACE ) (*   *) ,                            */
+   /*  (*      *) DO_OC( UPLUS, cli.trace.temp ), DO_STAGE_ANY (*                              *) , DO_H( trace .... ) (*                       *) }, */
    {.o = {DO_Q( "trace-deleted" ) /*    */ , DO_A_O /* */ , DO_V( DELETED_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.deleted ), DO_STAGE_ANY /*                           */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-dirent" ) /*     */ , DO_A_O /* */ , DO_V( DIRENT_TRACE )} /*       */ , DO_CL( TRACE ) /*   */ ,
@@ -74,8 +83,6 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.fs ), DO_STAGE_ANY /*                                */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-insert" ) /*     */ , DO_A_O /* */ , DO_V( INSERT_TRACE )} /*       */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.insert ), DO_STAGE_ANY /*                            */ , DO_H( trace .... ) /*                       */ },
-   {.o = {DO_Q( "trace-integrity" ) /*  */ , DO_A_O /* */ , DO_V( INTEGRITY_TRACE )} /*    */ , DO_CL( TRACE ) /* */ ,
-    /*      */ DO_OC( UPLUS, cli.trace.integrity ), DO_STAGE_ANY /*                         */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-match" ) /*      */ , DO_A_O /* */ , DO_V( MATCH_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.match ), DO_STAGE_ANY /*                             */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-md5" ) /*        */ , DO_A_O /* */ , DO_V( MD5_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
@@ -126,9 +133,11 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( FILE, cli.trace.output ), DO_AT_STAGE( SETUP ) /*                     */ , DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-overwrite" ) /*  */ , DO_A_N /* */ , DO_V( TRACE_FILE_OVERWRITE )} /**/, DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, overwrite ), DO_AT_STAGE( SETUP ) /**/, DO_H( trace output to file ) /*             */ },
+    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, overwrite ), DO_AT_STAGE( SETUP ) /**/,
+    DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-append" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_FILE_APPEND )} /*  */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( SETUP ) /*  */ , DO_H( trace output to file ) /*             */ },
+    /*      */ DO_OC( FLAG, cli.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( SETUP ) /*  */ ,
+    DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( FILE, cli.trace.output ),.call = {.value = {.u = 2}} /*               */ , DO_H( trace output to stderr ) /*           */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,

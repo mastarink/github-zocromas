@@ -13,8 +13,6 @@
 	duf_all_options
 	duf_main_db
 	  duf_main_db_open
-	  duf_action
-	    duf_eval_all_at_config
 	  duf_main_db_close
 
 

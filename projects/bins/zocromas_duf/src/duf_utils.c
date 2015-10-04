@@ -150,39 +150,42 @@ duf_strtoll_suff( const char *s, int *pr )
   long l = 0;
   char *pe = NULL;
 
-  l = strtoll( s, &pe, 10 );
-  if ( pe )
+  if ( s )
   {
-    switch ( *pe )
+    l = strtoll( s, &pe, 10 );
+    if ( pe )
     {
-    case 'G':
-      l *= 1024 * 1024 * 1024;
-      break;
-    case 'M':
-      l *= 1024 * 1024;
-      break;
-    case 'k':
-      l *= 1024;
-      break;
-    case 'w':
-      l *= 2;
-      break;
-    case 'c':
-    case '\0':
-      break;
-    case 'b':
-      l *= 512;
-      break;
-    default:
+      switch ( *pe )
+      {
+      case 'G':
+        l *= 1024 * 1024 * 1024;
+        break;
+      case 'M':
+        l *= 1024 * 1024;
+        break;
+      case 'k':
+        l *= 1024;
+        break;
+      case 'w':
+        l *= 2;
+        break;
+      case 'c':
+      case '\0':
+        break;
+      case 'b':
+        l *= 512;
+        break;
+      default:
+        rpr = -1;
+        l = 0;
+        break;
+      }
+    }
+    else
+    {
       rpr = -1;
       l = 0;
-      break;
     }
-  }
-  else
-  {
-    rpr = -1;
-    l = 0;
   }
   if ( pr )
     *pr = rpr;
@@ -281,9 +284,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
     duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
 
     if ( !bar.calls )
-    {
       fputs( "\n", stderr );
-    }
     bar.calls++;
     fprintf( stderr, "\r [" );
     for ( int i = 0; i < bar.width; i++ )
@@ -302,7 +303,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
              delta_sec, msg );
 #endif
     bar.prev_percent = bar.percent;
-    if ( bar.width == width )
-      fputs( "\n", stderr );
+    /* if ( bar.width == width ) */
+    /*   fputs( "\n", stderr );  */
   }
 }

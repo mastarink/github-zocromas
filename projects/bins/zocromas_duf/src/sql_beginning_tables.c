@@ -73,7 +73,6 @@ duf_sql_sequence_t sql_beginning_tables = {
            * path_pairs
            * ...?
            *
-           *  - see mod_integrity_uni.c
            * */
           NULL}
 };

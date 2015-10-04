@@ -41,15 +41,11 @@
 	PDI->items.dirs++; \
  \
         DUF_TRACE( scan, 4, "? (dirs+) scan node [" #stagename "]2 by %5llu", diridpdi ); \
-	if ( duf_levinfo_if_deleted( PDI ) ) \
+	if ( SCCB->node_scan_ ## stagename ## 2_deleted && duf_levinfo_if_deleted( PDI ) ) \
 	{ \
-	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
-	  { \
-	    DUF_TRACE( scan, 4, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
-	     /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
-	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
-	  } \
-	  DUF_TRACE( deleted, 0, "DELETED" ); \
+	  DUF_TRACE( scan, 4, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
+	   /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
+	  DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
 	} \
 	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
 	{ \
@@ -86,13 +82,10 @@
 	PDI->items.total++; \
 	PDI->items.dirs++; \
  \
-	if ( duf_levinfo_item_deleted( PDI ) ) \
+	if ( SCCB->node_scan_ ## stagename ## 2_deleted && duf_levinfo_item_deleted( PDI ) ) \
 	{ \
-	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
-	  { \
 	     /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
-	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
-	  } \
+	  DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
 	} \
 	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
 	{ \

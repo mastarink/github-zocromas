@@ -173,7 +173,8 @@ static int DUF_UNUSED
 filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  T( "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  DUF_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  /* TODO remove or mark name from DB */
   DEBUG_ENDR( r );
 }
 
@@ -191,7 +192,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
   {
     int changes = 0;
 
-    const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (Pathid, name, dataid) VALUES (:pathID, :Name, :dataID)";
+    const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, name, dataid) VALUES (:pathID, :Name, :dataID)";
 
     DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
     DUF_TRACE( mod, 3, "S:%s", sql );

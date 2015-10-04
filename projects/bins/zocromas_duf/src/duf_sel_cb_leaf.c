@@ -117,8 +117,7 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
 
       /* error to be removed at _is_deleted ... ? */
 
-
-      assert( !DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) && !DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) );
+      /* assert( !DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) && !DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) ); */
 
 #else
       DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );

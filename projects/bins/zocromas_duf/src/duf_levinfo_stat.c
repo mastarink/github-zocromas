@@ -39,21 +39,23 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.levinfo[d].itemname );
-  assert( r < 0 || d > 0 || !duf_levinfo_ptr_d( pdi, d - 1 ) );
-  assert( r < 0 || d > 0 || *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
-  assert( r < 0 || d > 0 || 0 == strcmp( duf_levinfo_itemshowname_d( pdi, d ), "/" ) );
+  assert( DUF_IS_ERROR( r ) || d > 0 || !duf_levinfo_ptr_d( pdi, d - 1 ) );
+  assert( DUF_IS_ERROR( r ) || d > 0 || *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
+  assert( DUF_IS_ERROR( r ) || d > 0 || 0 == strcmp( duf_levinfo_itemshowname_d( pdi, d ), "/" ) );
 
   {
     duf_dirhandle_t *pdhlev = duf_levinfo_pdh_d( pdi, d );
     duf_dirhandle_t *pdhuplev = duf_levinfo_pdh_d( pdi, d - 1 );
 
-    assert( r < 0 || d > 0 || !pdhuplev );
-    assert( r < 0 || d == 0 || pdhuplev );
-    assert( r < 0 || pdhlev );
+    assert( DUF_IS_ERROR( r ) || d > 0 || !pdhuplev );
+    assert( DUF_IS_ERROR( r ) || d == 0 || pdhuplev );
+    assert( DUF_IS_ERROR( r ) || pdhlev );
 
     if ( d > 0 )
+    {
       DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) );
-    assert( r < 0 || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
+    }
+    assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     DOR( r, duf_statat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ) ) );
     DUF_TRACE( levinfo, 10, "(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
 

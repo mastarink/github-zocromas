@@ -131,8 +131,9 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_h
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
     DOR( r, duf_eval_sccbh_all( pstmt_selector, sccbh ) );
   }
-  else{
-  DUF_TRACE( sccbh, 0, "@eval sccbh all disabled %s", SCCB->name );
+  else
+  {
+    DUF_TRACE( sccbh, 0, "@eval sccbh all disabled %s", SCCB->name );
   }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );

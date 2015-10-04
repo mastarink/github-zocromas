@@ -7,10 +7,11 @@ db-name test_tree
 drop-tables
 add-path
 create-tables
+create-database
 # trace-option 2
 # trace-fs 2
-trace-sql 2
-trace-file @1.tmp
+# trace-sql 2
+# trace-file @1.tmp
 progress
 # include-fs=*.c
 # include-fs=*.jpg

@@ -76,7 +76,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   if ( py )
   {
     DUF_SQL_BIND_LL_NZ_OPT( topDirID, py->topdirid, r, pstmt );
-    assert( py->topdirid );
+    /* assert( py->topdirid ); */
   }
   else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt ), 4 ) )
   {

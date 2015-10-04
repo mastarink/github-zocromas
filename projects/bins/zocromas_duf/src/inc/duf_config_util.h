@@ -4,7 +4,7 @@
 
 char *duf_string_options_expand( const char *s, char protected_prefix );
 char *duf_config_string_expanded( duf_config_string_t * cs );
-char *duf_config_db_path_add_subdir( char *path, int *pr );
+char *duf_config_db_path_add_subdir( const char *path, int *pr );
 
 
 #endif

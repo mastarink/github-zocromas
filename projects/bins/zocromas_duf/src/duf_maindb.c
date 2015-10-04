@@ -69,46 +69,8 @@ duf_main_db_locate( void )
 {
   DEBUG_STARTR( r );
 
-#if 0
-  if ( DUF_CONFIGG( db.dir ) && DUF_CONFIGG( db.main.name ) )
-  {
-    DOR( r, duf_config_make_db_main_path(  ) );
-
-#  ifdef MAS_SPLIT_DB
-    if ( DUF_CONFIGG( db.adm.name ) )
-      DOR( r, duf_config_make_db_adm_path(  ) );
-#    ifndef DUF_SQL_TTABLES_TEMPORARY
-    if ( DUF_CONFIGG( db.tempo.name ) )
-      DOR( r, duf_config_make_db_temp_path(  ) );
-#    endif
-#  endif
-    assert( DUF_CONFIGG( db.main.fpath ) );
-    {
-      DUF_TRACE( any, 0, "dbfile: %s", DUF_CONFIGG( db.main.fpath ) );
-#  ifdef MAS_SPLIT_DB
-      DUF_TRACE( any, 0, "adm dbfile: %s", DUF_CONFIGG( db.adm.fpath ) );
-#    ifndef DUF_SQL_TTABLES_TEMPORARY
-      DUF_TRACE( any, 0, "tempo dbfile: %s", DUF_CONFIGG( db.tempo.fpath ) );
-#    endif
-      /* DUF_TRACE( any, 0, "selected dbfile: %s", DUF_CONFIGG(db.selected.fpath) ); */
-#  endif
-    }
-  }
-  else if ( !DUF_CONFIGG( db.dir ) )
-  {
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
-    DUF_SHOW_ERROR( "db.dir not set" );
-  }
-  else if ( !DUF_CONFIGG( db.main.name ) )
-  {
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
-    DUF_SHOW_ERROR( "db.main.name not set" );
-  }
-  else
-    DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN );
-#else
   DOR( r, duf_config_make_db_paths(  ) );
-#endif
+
   DEBUG_ENDR( r );
 }
 
@@ -195,7 +157,7 @@ duf_main_db_pre_action( void )
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
   }
 /* --create-tables								*/ DEBUG_STEP(  );
-  if ( DUF_NOERROR( r ) /* && DUF_ACTG_FLAG( create_tables ) */  )
+  if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( create_tables ) /* && DUF_ACTG_FLAG( create_database ) */ )
   {
     DOR( r, duf_main_db_create_tables(  ) );
     global_status.actions_done++;
@@ -284,9 +246,19 @@ duf_main_db_open( void )
     assert( !global_status.db_attached_selected );
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
+
     DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name ), DUF_CONFIGGS( db.main.fpath ) );
     if ( DUF_CONFIGGS( db.main.fpath ) )
     {
+      if ( !DUF_ACTG_FLAG( create_database ) )
+      {
+        struct stat st;
+        int ry = 0;
+
+        ry = stat( DUF_CONFIGGS( db.main.fpath ), &st );
+        if ( ry < 0 )
+          DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+      }
       DORF( r, duf_sql_open, DUF_CONFIGGS( db.main.fpath ) );
     }
     else
@@ -461,9 +433,8 @@ duf_main_db( int argc, char **argv )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     for ( int ia = DUF_CONFIGG( targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( targ.argc ); ia++ )
     {
-      DOR( r,
-           duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), DUF_CONFIGG( targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-                                   NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ) ) );
+      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), DUF_CONFIGG( targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+                                      NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ) ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
       DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     }

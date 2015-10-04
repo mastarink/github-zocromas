@@ -108,7 +108,6 @@ typedef struct
   /* unsigned fill; */
   unsigned fs;
   unsigned insert;
-  unsigned integrity;
   unsigned match;
   unsigned md5;
   unsigned sha1;
@@ -132,6 +131,7 @@ typedef struct
   unsigned sqlite;
   unsigned statistics;
   unsigned temp;
+  unsigned todo;
   unsigned update;
   unsigned io;
   unsigned verbose;

@@ -110,15 +110,17 @@ duf_config_string_expanded( duf_config_string_t * cs )
 }
 
 char *
-duf_config_db_path_add_subdir( char *path, int *pr )
+duf_config_db_path_add_subdir( const char *dir, int *pr )
 {
-  int r = 0;
+  int rpr = 0;
+  char *path = NULL;
 
+  path = mas_strdup( dir );
   if ( DUF_CONFIGGSP( db.subdir ) )
   {
     if ( strchr( DUF_CONFIGGSP( db.subdir ), '/' ) )
     {
-      DUF_MAKE_ERROR( r, DUF_ERROR_MKDIR );
+      DUF_MAKE_ERROR( rpr, DUF_ERROR_MKDIR );
     }
     else
     {
@@ -142,19 +144,19 @@ duf_config_db_path_add_subdir( char *path, int *pr )
               char *s;
 
               s = strerror_r( errno, serr, sizeof( serr ) );
-              DUF_MAKE_ERROR( r, DUF_ERROR_MKDIR );
+              DUF_MAKE_ERROR( rpr, DUF_ERROR_MKDIR );
               DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
             }
           }
         }
         else if ( !S_ISDIR( st.st_mode ) )
         {
-          DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+          DUF_MAKE_ERROR( rpr, DUF_ERROR_STAT );
         }
       }
     }
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   return path;
 }

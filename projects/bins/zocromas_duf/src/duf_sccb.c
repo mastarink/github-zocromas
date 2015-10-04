@@ -105,6 +105,7 @@ duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_ty
   return set;
 }
 
+/* TODO rename _duf_uni_scan_action_title => _duf_sccb_title */
 const char *
 _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
@@ -126,6 +127,7 @@ _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   DEBUG_ENDCS( stitle );
 }
 
+/* TODO rename duf_uni_scan_action_title => duf_sccb_title */
 const char *
 duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {

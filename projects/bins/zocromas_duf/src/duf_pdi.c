@@ -111,7 +111,6 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     memset( pdi->pyp, 0, sizeof( *pdi->pyp ) );
     pdi->pyp->topdirid = duf_levinfo_dirid( pdi );
   }
-  T( "@@@@@>>>>>>>>>>>>>>> %llu : %p", duf_levinfo_dirid( pdi ), pdi->pyp );
 
   DEBUG_ENDR( r );
 }

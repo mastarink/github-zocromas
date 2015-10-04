@@ -22,8 +22,6 @@ duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
   if ( duf_levinfo_opened_dh_d( pdi, d ) <= 0 )
     DOR( r, duf_levinfo_openat_dh_d( pdi, d ) );
   DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
-  
-  assert( duf_levinfo_if_deleted_d( pdi, d ) || DUF_IS_ERROR( r ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
 
   DEBUG_ENDR( r );
 }
@@ -71,6 +69,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       assert( duf_levinfo_itemshowname_d( pdi, d )[1] == 0 );
       assert( *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
       DOR( r, duf_open_dh( pdhlev, duf_levinfo_itemshowname_d( pdi, d ) ) );
+      assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
       DUF_TRACE( levinfo, 0, "(%d)? levinfo openated %s; dfd:%d", r, duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     else                        /* d > 0 ! */
@@ -79,6 +78,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       assert( DUF_IS_ERROR( r ) || pdhuplev->dfd );
 
       DOR_NOE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) ), DUF_ERROR_OPENAT_ENOENT );
+      assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
       DUF_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", duf_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
                  duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
@@ -101,6 +101,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     DUF_TRACE( fs, 0, "@@@@@pdi->opendir not set" );
     DUF_TRACE( levinfo, 0, "pdi->opendir not set" );
   }
+  assert( !pdi->opendir || DUF_IS_ERROR( r ) || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
   DEBUG_ENDR( r );
 }
 /* *INDENT-OFF*  */

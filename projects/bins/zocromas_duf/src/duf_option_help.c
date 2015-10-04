@@ -416,7 +416,7 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20140828 ===================" );
   DUF_PRINTF( 0,
               "  run  /mnt/new_media/media/photo/ -iPO --progress  --md5 --sd5 --crc32 --mime --exif --dirs --files --dirent --filenames --filedata --add-path --create-tables --drop-tables --remove-database --vacuum  --print --integrity --recursive --info  --disable-calculate  --disable-update --summary --version		- %s",
-              "" );
+              "--integrity is obsolete: 20151004.132149" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
   DUF_PRINTF( 0, "  run --print -Rdf --max-depth=2   /mnt/new_media/media/photo/		- %s", "" );
   DUF_PRINTF( 0, "========================= as for 20140831 ===================" );
@@ -828,7 +828,6 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ), */
     /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
 
-    CHECK_FLAG_ID_ROW( integrity, INTEGRITY ),
     CHECK_FLAG_ID_ROW( collect_obs, COLLECT ),
 
     CHECK_FLAG_ID_ROW( progress, PROGRESS ),

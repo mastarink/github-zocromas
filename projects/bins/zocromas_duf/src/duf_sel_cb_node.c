@@ -59,7 +59,6 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
       PDI->seq_node++;
 
       DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-      T( "@@@@%llu:%llu. %s", PDI->seq_node, TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1, duf_levinfo_itemtruename( PDI ) );
       if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACTG_FLAG( progress ) )
       {
         long long m;
@@ -69,7 +68,6 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
 #else
         m = TOTITEMS;
 #endif
-        T( "@@@@TOTITEMS:%llu;m:%llu;seq_node:%llu;", TOTITEMS, m, PDI->seq_node );
         DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
         /* assert( PDI->seq_node <= m ); FIXME counters! */
         /*@ 2. progress bar */

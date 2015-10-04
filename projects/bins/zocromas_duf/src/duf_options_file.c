@@ -351,7 +351,7 @@ duf_indirect_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 0, "@@@@(%d) source: indirect", istage );
-  DUF_TRACE( temp, 2, ">> targc:%d targ_offset:%d", DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ_offset ) );
+  DUF_TRACE( options, 2, ">> targc:%d targ_offset:%d", DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ_offset ) );
   for ( int ia = 0; ia < DUF_CONFIGG( targ_offset ); ia++ )
   {
     const char *cf;

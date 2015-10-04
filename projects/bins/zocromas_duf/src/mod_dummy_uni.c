@@ -91,8 +91,8 @@ dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
-  assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
+  assert( duf_levinfo_opened_dh( pdi ) > 0 );
+  assert( duf_levinfo_stat( pdi ) );
 
 #endif
 
