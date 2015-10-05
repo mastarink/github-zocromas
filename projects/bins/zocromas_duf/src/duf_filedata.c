@@ -89,23 +89,23 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, rpr, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
 
-      DUF_SQL_BIND_LL( Dev, (unsigned long long)duf_levinfo_stat_dev( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( iNode,(unsigned long long) duf_levinfo_stat_inode( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( Mode,(unsigned long long) duf_levinfo_stat_mode( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( Size, (unsigned long long)duf_levinfo_stat_size( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( nLink,(unsigned long long) duf_levinfo_stat_nlink( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( UID,(unsigned long long) duf_levinfo_stat_uid( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( GID, (unsigned long long)duf_levinfo_stat_gid( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( blkSize,(unsigned long long) duf_levinfo_stat_blksize( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( Blocks,(unsigned long long) duf_levinfo_stat_blocks( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( Mode, ( unsigned long long ) duf_levinfo_stat_mode( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( Size, ( unsigned long long ) duf_levinfo_stat_size( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( nLink, ( unsigned long long ) duf_levinfo_stat_nlink( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( UID, ( unsigned long long ) duf_levinfo_stat_uid( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( GID, ( unsigned long long ) duf_levinfo_stat_gid( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( blkSize, ( unsigned long long ) duf_levinfo_stat_blksize( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( Blocks, ( unsigned long long ) duf_levinfo_stat_blocks( pdi ), rpr, pstmt );
 
-      DUF_SQL_BIND_LL( aTim,(unsigned long long) duf_levinfo_stat_asec( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( mTim,(unsigned long long) duf_levinfo_stat_msec( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( cTim,(unsigned long long) duf_levinfo_stat_csec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), rpr, pstmt );
 
-      DUF_SQL_BIND_LL( aTimn,(unsigned long long) duf_levinfo_stat_ansec( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( mTimn,(unsigned long long) duf_levinfo_stat_mnsec( pdi ), rpr, pstmt );
-      DUF_SQL_BIND_LL( cTimn,(unsigned long long) duf_levinfo_stat_cnsec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), rpr, pstmt );
+      DUF_SQL_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), rpr, pstmt );
 
       DUF_SQL_STEP( rpr, pstmt );
       DUF_SQL_CHANGES( changes, rpr, pstmt );

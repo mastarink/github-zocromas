@@ -51,7 +51,7 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
       DUF_TRACE( explain, 1, "@no old opt for %s", extended ? extended->o.name : NULL );
     }
     DUF_TRACE( options, +4, "cli options r: %d", r );
-    DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name_i( r ) );
+    DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended ), duf_error_name_i( r ) );
   }
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -66,10 +66,10 @@ DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, 
 {
   DEBUG_STARTR( r );
 
-  DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
+  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED );
   DOR( r, duf_clarify_xcmd_full( extended, optargg, istage, xtable, no, source ) );
   DUF_TRACE( options, +2, "xname:%s; arg:%s; no:%d", extended ? extended->o.name : "?", optargg, no );
-  DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
+  DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
 #endif
@@ -97,7 +97,7 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   }
   else if ( !extended )
   {
-    extended = duf_longindex2extended( longindex, &xtable, &r );
+    extended = duf_longindex2extended( longindex, &xtable );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +2, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name_i( r ) );

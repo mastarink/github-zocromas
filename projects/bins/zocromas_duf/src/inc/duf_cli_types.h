@@ -16,9 +16,9 @@ typedef struct
 
 typedef struct
 {
-  unsigned debug;
+  int debug;
   unsigned nosqlite;
-  unsigned verbose;
+  int verbose;
   unsigned long min_line;
   unsigned long max_line;
   unsigned long lines;
@@ -83,61 +83,61 @@ typedef struct
 {
   duf_config_output_t output;
 
-  unsigned trace;
-  unsigned dry_run;
-  unsigned flags;
-  unsigned explain;
-  unsigned pdi;
-  unsigned levinfo;
+  int trace;
+  int dry_run;
+  int flags;
+  int explain;
+  int pdi;
+  int levinfo;
 
-  unsigned action;
-  unsigned any;
-  unsigned calls;
-  unsigned collect;
-  unsigned crc32;
-  unsigned temporary;
-  unsigned deleted;
-  unsigned depth;
-  unsigned dirent;
-  unsigned dirs;
-  unsigned error;
-  unsigned errorr;
-  unsigned exif;
-  unsigned filedata;
-  unsigned filenames;
-  /* unsigned fill; */
-  unsigned fs;
-  unsigned insert;
-  unsigned match;
-  unsigned md5;
-  unsigned sha1;
-  unsigned mdpath;
-  unsigned mime;
-  unsigned nonew;
-  unsigned options;
-  unsigned config;
-  unsigned path;
-  unsigned mod;
-  unsigned sample;
-  unsigned sampupd;
-  unsigned scan;
-  unsigned scan_dir;
-  unsigned scan_reg;
-  unsigned sd5;
-  unsigned select;
-  unsigned seq;
-  unsigned db;
-  unsigned sql;
-  unsigned sqlite;
-  unsigned statistics;
-  unsigned temp;
-  unsigned todo;
-  unsigned update;
-  unsigned io;
-  unsigned verbose;
+  int action;
+  int any;
+  int calls;
+  int collect;
+  int crc32;
+  int temporary;
+  int deleted;
+  int depth;
+  int dirent;
+  int dirs;
+  int error;
+  int errorr;
+  int exif;
+  int filedata;
+  int filenames;
+  /* int fill; */
+  int fs;
+  int insert;
+  int match;
+  int md5;
+  int sha1;
+  int mdpath;
+  int mime;
+  int nonew;
+  int options;
+  int config;
+  int path;
+  int mod;
+  int sample;
+  int sampupd;
+  int scan;
+  int scan_dir;
+  int scan_reg;
+  int sd5;
+  int select;
+  int seq;
+  int db;
+  int sql;
+  int sqlite;
+  int statistics;
+  int temp;
+  int todo;
+  int update;
+  int io;
+  int verbose;
 
-  unsigned sccb;
-  unsigned sccbh;
+  int sccb;
+  int sccbh;
 } duf_config_cli_trace_t;
 
 typedef struct

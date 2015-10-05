@@ -18,7 +18,7 @@
 /* ###################################################################### */
 
 static int
-duf_print_file_info_depth( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_depth( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -35,7 +35,7 @@ duf_print_file_info_depth( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_seq( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -57,7 +57,7 @@ duf_print_file_info_seq( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bforma
 }
 
 static int
-duf_print_file_info_seq_node( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq_node( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -79,7 +79,7 @@ duf_print_file_info_seq_node( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_b
 }
 
 static int
-duf_print_file_info_seq_leaf( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq_leaf( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -101,7 +101,7 @@ duf_print_file_info_seq_leaf( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_b
 }
 
 static int
-duf_print_file_info_md5id( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_md5id( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -130,7 +130,7 @@ duf_print_file_info_md5id( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_nsame( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nsame( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -152,8 +152,8 @@ duf_print_file_info_nsame( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 int
-duf_print_file_info_prefix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
-                            duf_pdi_cb_t suffix_cb )
+duf_print_file_info_prefix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+                            duf_pdi_cb_t suffix_cb DUF_UNUSED )
 {
   int ok = 0;
 
@@ -178,7 +178,7 @@ duf_print_file_info_prefix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 static int
-duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -203,7 +203,7 @@ duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -229,7 +229,7 @@ duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 static int
-duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -253,7 +253,7 @@ duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_dataid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_dataid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -273,7 +273,7 @@ duf_print_file_info_dataid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 int
-duf_print_file_info_suffix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+duf_print_file_info_suffix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb DUF_UNUSED,
                             duf_pdi_cb_t suffix_cb )
 {
   int ok = 0;
@@ -300,7 +300,7 @@ duf_print_file_info_suffix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 static int
-duf_print_file_info_inode( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_inode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -317,7 +317,7 @@ duf_print_file_info_inode( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_mode( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -365,7 +365,7 @@ duf_print_file_info_mode( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bform
 }
 
 static int
-duf_print_file_info_nlink( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nlink( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -386,7 +386,7 @@ duf_print_file_info_nlink( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_user( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_user( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -403,7 +403,7 @@ duf_print_file_info_user( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bform
 }
 
 static int
-duf_print_file_info_group( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_group( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -421,7 +421,7 @@ duf_print_file_info_group( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_filesize( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_filesize( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -452,7 +452,7 @@ duf_print_file_info_filesize( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_b
 }
 
 static int
-duf_print_file_info_mtime( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mtime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -478,7 +478,7 @@ duf_print_file_info_mtime( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
 }
 
 static int
-duf_print_file_info_realpath( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_realpath( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -500,7 +500,7 @@ duf_print_file_info_realpath( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_b
 }
 
 static int
-duf_print_file_info_filename( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_filename( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -522,7 +522,7 @@ duf_print_file_info_filename( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_b
 }
 
 static int
-duf_print_file_info_md5( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_md5( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -544,7 +544,7 @@ duf_print_file_info_md5( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bforma
 }
 
 static int
-duf_print_file_info_exifid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_exifid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -572,7 +572,7 @@ duf_print_file_info_exifid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 static int
-duf_print_file_info_exif_date_time( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_exif_date_time( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -600,7 +600,7 @@ duf_print_file_info_exif_date_time( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
 }
 
 static int
-duf_print_file_info_mimeid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mimeid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -627,7 +627,7 @@ duf_print_file_info_mimeid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
 }
 
 static int
-duf_print_file_info_mime( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -648,7 +648,7 @@ duf_print_file_info_mime( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bform
 }
 
 static int
-duf_print_file_info_nameid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nameid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -676,7 +676,7 @@ duf_print_file_info_nameid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
   return ok;
 }
 
-static int __attribute__ ( ( unused ) ) duf_print_file_info_template( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+static int DUF_UNUSED duf_print_file_info_template( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat DUF_UNUSED )
 {
   int ok = 0;
 

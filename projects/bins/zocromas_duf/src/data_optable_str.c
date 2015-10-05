@@ -6,7 +6,7 @@
 #include "duf_config_ref.h"
 #include "duf_optable_def.h"
 
-#include "duf_option_sccb.h"    /* FIXME : temp for duf_option_$_db_open               */
+#include "duf_option_sccb.h"    /* TODO : temp for duf_option_$_db_open               */
 
 /*
 At duf_options_table.c:
@@ -22,6 +22,7 @@ At duf_options_table.c:
 
 
 const duf_longval_extended_table_t optable_str = {
+  .name = "str",
   .table =                      /* */
   {
    {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( CONTROL ) /* */ ,

@@ -4,10 +4,12 @@ recursive
 allow-files
 allow-directories
 db-name test_tree
-drop-tables
+# drop-tables
+clean-tables
 add-path
 create-tables
 create-database
+# trace-errors 2
 # trace-option 2
 # trace-fs 2
 # trace-sql 2
@@ -22,11 +24,11 @@ exclude-fs=*.o
 exclude-fs=SHN_GVIMER_PLUS-*
 
 cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
-evaluate-sccb=dirs,filedata,filenames,md5
+evaluate-sccb=dirs,filedata,filenames
 echo .....
 fs-rm-force test/tree/1106_222036.r.jpg
 echo .....
-evaluate-sccb=dirs,filedata,filenames,md5,sha1
+evaluate-sccb=dirs,filedata,filenames,md5,sha1,crc32,exif,mime
 echo .....
 fs-cp-ignore=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
 echo .....

@@ -20,6 +20,7 @@ At duf_options_table.c:
 
 
 const duf_longval_extended_table_t optable_filter = {
+  .name = "filter",
   .table =                      /* */
   {
    {.o = {DO_Q( "same-md5" ) /*          */ , DO_A_O /* */ , DO_VUF( SAME_MD5 )} /*          */ , DO_CL( FILTER ) /*   */ ,

@@ -13,7 +13,7 @@
 
 /* create level-control array, open 0 level */
 int
-duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int opendir )
+duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth DUF_UNUSED, int recursive DUF_UNUSED, int opendir DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

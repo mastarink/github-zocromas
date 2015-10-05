@@ -114,10 +114,10 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind ll nz opt " # _name ": %lld", (long long)_value); \
-		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
-		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
 
 #  define DUF_SQL_BIND_I( _name, _value, _rt, _pstmt_m ) \
@@ -136,10 +136,10 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz opt " # _name ": %d", _value); \
-		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
-		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
 
 #  define DUF_SQL_BIND_U( _name, _value, _rt, _pstmt_m ) \
@@ -158,10 +158,10 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz opt " # _name ": %u", _value); \
-		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
-		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
 
 
@@ -176,15 +176,15 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  { \
 		    DUF_TRACE( sql, 0, "@@bind s opt " # _name ": %s", _value); \
-		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
 		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
-		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
+		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
 /* DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) */
 
 #  define DUF_SQL_STEP( _rt, _pstmt_m ) \
-  		  if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) DOR_NOE(_rt, duf_sql_step( _pstmt_m ), DUF_SQL_ROW, DUF_SQL_DONE)
+  		  /* if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) */ DOR_LOWERE_N(20, _rt, duf_sql_step( _pstmt_m ), DUF_SQL_ROW, DUF_SQL_DONE)
 #  define DUF_SQL_CHANGES_NOPDI( _changes, _rt, _pstmt_m ) \
   		  if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
                     _changes = duf_sql_changes(  )

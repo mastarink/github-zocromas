@@ -8,6 +8,7 @@ typedef struct
   unsigned vacuum:1;
   unsigned remove_database:1;
   unsigned drop_tables:1;
+  unsigned clean_tables:1;
   unsigned create_database:1;
   unsigned create_tables:1;
   unsigned add_path:1;

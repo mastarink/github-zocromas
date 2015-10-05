@@ -23,6 +23,8 @@
 /* #include "duf_option_restore.h" */
 #include "duf_option.h"
 
+#include "duf_errors.h"
+
 /* ###################################################################### */
 #include "duf_option_misc.h"
 /* ###################################################################### */
@@ -53,7 +55,7 @@ duf_option_$_history( void )
     }
   }
   DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
-  
+
   DEBUG_ENDR( r );
 }
 
@@ -73,7 +75,7 @@ duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
         DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targv[ia] );
       }
   }
-  
+
   DEBUG_ENDR( r );
 }
 
@@ -95,7 +97,7 @@ duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
 
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
-  
+
   DEBUG_ENDR( r );
 }
 
@@ -105,6 +107,16 @@ duf_option_$_echo( const char *arg )
   DEBUG_STARTR( r );
 
   DUF_PRINTF( 0, "%s", arg );
-  
+
+  DEBUG_ENDR( r );
+}
+
+duf_error_code_t
+duf_option_$_error_level( long lev )
+{
+  DEBUG_STARTR( r );
+
+  TT( "@@@@@@error level to be set:%ld", lev );
+  duf_force_offset_ereport( lev );
   DEBUG_ENDR( r );
 }

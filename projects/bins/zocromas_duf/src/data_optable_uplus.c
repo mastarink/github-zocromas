@@ -19,6 +19,7 @@ At duf_options_table.c:
 */
 
 const duf_longval_extended_table_t optable_uplus = {
+  .name = "uplus",
   .table =                      /* */
   {
 

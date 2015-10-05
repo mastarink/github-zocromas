@@ -17,7 +17,7 @@ duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
   DEBUG_STARTR( r );
 
   DUF_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
-  DOR_SQLITE_NOE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
 
   /* assert( r >= 0 ); */
   DEBUG_ENDR( r );
@@ -27,17 +27,10 @@ int
 duf_sql_step( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
-  int r3 = 0;
 
-#if 1
-  DOR_SQLITE_NOE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
-#else
-  r3 = mas_sqlite_step( stmt );
-   DUF_MAKE_ERROR( r, DUF_SQLITE2R_ERROR_CODE( r3 ) );
-  /* DOR_SQLITE_NOE( r, r3, DUF_SQL_ROW, DUF_SQL_DONE ); */
-#endif
-  DUF_TRACE( sql, 3, "(%s) [[%s]]", duf_error_name_i( r ), sqlite3_sql( stmt ) );
-  DUF_TRACE( sql, 3, "r3:%d %s r:%d (%s)", r3, duf_error_name_c( DUF_SQLITE2R_ERROR_CODE( r3 ) ), r, duf_error_name_i( r ) );
+  DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DUF_TRACE( sql, 0, "(%s) [[%s]]", duf_error_name_i( r ), sqlite3_sql( stmt ) );
+  /* assert( duf_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
   DEBUG_ENDR( r );
 }
 

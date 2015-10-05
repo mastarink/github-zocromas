@@ -18,6 +18,7 @@ At duf_options_table.c:
 
 
 const duf_longval_extended_table_t optable_flag_obsolete = {
+  .name = "flag obsolete",
   .table =                      /* */
   {
 

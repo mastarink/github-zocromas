@@ -66,7 +66,7 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
 }
 
 static int
-_duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, int is_leaf )
+_duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, int is_leaf )
 {
   DEBUG_STARTR( r );
   assert( pdi );
@@ -179,9 +179,9 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, int i
   DEBUG_STARTR( r );
   assert( pdi );
 
-  DOR_NOE( r, duf_levinfo_godown_dnn( pdi, 0, itemname, 0, 0, is_leaf ), DUF_ERROR_TOO_DEEP );
+  DOR_LOWERE( r, duf_levinfo_godown_dnn( pdi, 0, itemname, 0, 0, is_leaf ), DUF_ERROR_TOO_DEEP );
 
-  DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
+  DEBUG_ENDR_LOWERE( r, DUF_ERROR_TOO_DEEP );
 }
 
 /* XXX equal to duf_levinfo_godown_db ? XXX */
@@ -192,8 +192,8 @@ duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, int is_leaf, duf_stmnt_t 
   DEBUG_STARTR( r );
   assert( pdi );
 
-  DOR_NOE( r, duf_levinfo_godown_db( pdi, is_leaf, pstmt ), DUF_ERROR_TOO_DEEP );
-  DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
+  DOR_LOWERE( r, duf_levinfo_godown_db( pdi, is_leaf, pstmt ), DUF_ERROR_TOO_DEEP );
+  DEBUG_ENDR_LOWERE( r, DUF_ERROR_TOO_DEEP );
 }
 
 int

@@ -386,7 +386,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
     {
       char *corrected_time = NULL;
 
-      for ( int i = 0; i < strlen( stime_original ); i++ )
+      for ( unsigned i = 0; i < strlen( stime_original ); i++ )
       {
         char c;
 

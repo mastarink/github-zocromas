@@ -27,7 +27,7 @@ tags
 tagnames
 */
 
-duf_sql_sequence_t sql_beginning_clear = /* */
+duf_sql_sequence_t sql_beginning_drop = /* */
 {
   .name = "clear (drop tables)",
   .done = 0,
@@ -56,6 +56,36 @@ duf_sql_sequence_t sql_beginning_clear = /* */
           "DROP TABLE IF EXISTS mdpath",
           NULL}
 };
+duf_sql_sequence_t sql_beginning_clean = /* */
+{
+  .name = "clean tables",
+  .done = 0,
+  .beginend = 1,
+  .sql = {
+          "DELETE FROM " DUF_SQL_TABLES_FILEDATAS_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_FILENAMES_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_CRC32_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_EXIF_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL,
+#if 0
+          "DELETE FROM filefilter",
+#endif
+          "DELETE FROM " DUF_SQL_TABLES_SIZES_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_SHA1_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_MIME_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_SD5_FULL,
+          "DELETE FROM " DUF_SQL_TABLES_MD5_FULL,
+
+          "DELETE FROM " DUF_SQL_TABLES_PATHS_FULL,
+
+          "DELETE FROM tags",
+          "DELETE FROM tagnames",
+          "DELETE FROM log",
+          "DELETE FROM path_pairs",
+          "DELETE FROM mdpath",
+          NULL}
+};
+
 
 duf_sql_sequence_t sql_beginning_create_one = {
   .name = "create (main tables 0)",
@@ -325,7 +355,7 @@ duf_sql_sequence_t sql_beginning_create_three = {
           /* ", FOREIGN KEY(crc32id) REFERENCES " DUF_SQL_TABLES_CRC32 " (" DUF_SQL_IDNAME ") " (* *) */
           /* ", FOREIGN KEY(exifid)  REFERENCES " DUF_SQL_TABLES_EXIF "  (" DUF_SQL_IDNAME ") " (* *) */
           /* ", FOREIGN KEY(mimeid)  REFERENCES " DUF_SQL_TABLES_MIME "  (" DUF_SQL_IDNAME ") " (* *) */
-          /* ", FOREIGN KEY(size)    REFERENCES " DUF_SQL_TABLES_SIZES " ( size ) " (* *) */
+          ", FOREIGN KEY(size)    REFERENCES " DUF_SQL_TABLES_SIZES " ( size ) " /* */
           ")",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_md5id      ON " DUF_SQL_TABLES_FILEDATAS " (md5id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sha1id     ON " DUF_SQL_TABLES_FILEDATAS " (sha1id)",

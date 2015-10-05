@@ -87,7 +87,7 @@ duf_scan_callbacks_t duf_save_to_callbacks = {
 /* ########################################################################################## */
 
 static int
-save_to_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -292,7 +292,7 @@ save_to_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
@@ -312,7 +312,7 @@ save_to_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
@@ -331,7 +331,7 @@ save_to_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -339,14 +339,14 @@ save_to_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
 }
 
 static int
-save_to_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -365,7 +365,7 @@ save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-save_to_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -374,7 +374,7 @@ save_to_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-save_to_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+save_to_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

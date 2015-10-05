@@ -61,7 +61,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
   };
   DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
   DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
-  for ( duf_str_cb2_t * ppass = passes; *ppass; nn++, ppass++ )
+  for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
   {
 #if 0
     DUF_TRACE( temp, 0, "%lu : %lu : %lu : %lu : %p : %p : %p @ %p : %p", ( offsetof( duf_scan_callbacks_t, leaf ) ),
@@ -137,7 +137,6 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_h
   }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
-
   DEBUG_ENDR( r );
 }
 #endif

@@ -660,7 +660,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
       /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
   }
-
   DEBUG_ENDR( r );
   /* DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */
 }

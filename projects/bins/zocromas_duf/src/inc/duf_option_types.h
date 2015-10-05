@@ -242,6 +242,24 @@ typedef enum
   DUF_OFFSET_depthinfo,
   DUF_OFFSET_ufilter,
 } duf_offset_to_t;
+typedef enum
+{
+  DUF_OPTION_STAGE_SETUP = 1,
+  DUF_OPTION_STAGE_FIRST,
+  DUF_OPTION_STAGE_LOOP,
+  DUF_OPTION_STAGE_INTERACTIVE,
+  DUF_OPTION_STAGE_MAX,
+  DUF_OPTION_STAGE_ANY = 99999,
+} duf_option_stage_t;
+
+typedef struct
+{
+  unsigned flag:1;
+  duf_option_stage_t min;
+  duf_option_stage_t max;
+} duf_limits_stage_t;
+
+
 typedef struct
 {
   int shown;
@@ -256,7 +274,7 @@ typedef struct
   unsigned long m_offset;
   duf_offset_to_t relto;
 
-  duf_limits_t stage;
+  duf_limits_stage_t stage;
   unsigned long stage_mask;
   const char *help;
   duf_option_class_t oclass;
@@ -293,20 +311,11 @@ typedef struct
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
   int id;
-  duf_limits_t stage;
+  const char *name;
+  duf_limits_stage_t stage;
   unsigned long stage_mask;
   duf_longval_extended_t table[];
 } duf_longval_extended_table_t;
-
-typedef enum
-{
-  DUF_OPTION_STAGE_ANY = -1,
-  DUF_OPTION_STAGE_SETUP = 0,
-  DUF_OPTION_STAGE_FIRST,
-  DUF_OPTION_STAGE_LOOP,
-  DUF_OPTION_STAGE_INTERACTIVE,
-  DUF_OPTION_STAGE_MAX
-} duf_option_stage_t;
 
 typedef struct
 {

@@ -26,7 +26,7 @@ duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optar
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
+  DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended ),
              extended->o.name, r, duf_error_name_i( r ), extended->o.val, DUF_OPTION_VAL_BFORMAT );
 
   if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) )
@@ -146,7 +146,7 @@ duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optar
         unsigned nvalue;
         char *value;
 
-        DUF_TRACE( options, 3, "really to parse %s = %s (%s)  %s", duf_option_description_x_tmp( -1, extended, NULL ), optargg, extended->o.name,
+        DUF_TRACE( options, 3, "really to parse %s = %s (%s)  %s", duf_option_description_x_tmp( -1, extended ), optargg, extended->o.name,
                    duf_error_name_i( r ) );
 
         /* duf_config->cli.format.seq = (* *)            */

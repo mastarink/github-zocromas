@@ -33,7 +33,7 @@ static int duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi );
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
-static int tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
 static int tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
@@ -226,7 +226,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

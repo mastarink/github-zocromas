@@ -26,7 +26,7 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
              extended->stage.min, extended->stage.max );
   DUF_TRACE( options, 3, "checking stage; istage:%d tflag:%d tuse:%d tminmax:%d/%d", istage, xtable->stage.flag, xtable->use_stage,
              xtable->stage.min, xtable->stage.max );
-  r0 = ( istage == -1 );
+  r0 = ( istage == DUF_OPTION_STAGE_ANY );
   r0 = r0 || extended->stage.flag;
   r1 = ( !extended->use_stage || ( extended->stage.min <= istage && extended->stage.max >= istage ) );
   r2 = ( !xtable || ( !xtable->use_stage || ( xtable->stage.min <= istage && xtable->stage.max >= istage ) ) );
@@ -84,7 +84,7 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_exte
 
 /* return so called `longindex` */
 static const duf_longval_extended_t *
-duf_find_name_long_exact( const char *name, int witharg, const duf_longval_extended_t * xtended, int *pr )
+duf_find_name_long_exact( const char *name, int witharg_unused DUF_UNUSED, const duf_longval_extended_t * xtended, int *pr )
 {
   const duf_longval_extended_t *extended = NULL;
   int ok = 0;
@@ -118,9 +118,10 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
   const duf_longval_extended_t *extended_soft = NULL;
   const duf_longval_extended_t *extended_exact = NULL;
   int rpr = 0;
+  int dbgcnt = 0;
 
   if ( name && *name )
-    for ( ; xtended->o.name; xtended++ )
+    for ( ; xtended->o.name; xtended++, dbgcnt++ )
     {
       int l;
 

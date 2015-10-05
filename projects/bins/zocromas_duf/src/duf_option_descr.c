@@ -39,7 +39,7 @@ duf_find_longval_help( duf_option_code_t codeval, int *pr )
 }
 
 char *
-duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim, int *pr )
+duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim )
 {
   char *s = NULL;
 
@@ -53,7 +53,6 @@ duf_option_description_xd( const duf_longval_extended_t * extended, const char *
     {
       const char *h;
 
-      /* h = _duf_find_longval_help( codeval, pr ); */
       h = extended->help;
       if ( h )
       {
@@ -66,24 +65,21 @@ duf_option_description_xd( const duf_longval_extended_t * extended, const char *
 }
 
 char *
-duf_option_description_d( int longindex, const char *delimh, const char *delim, int *pr )
+duf_option_description_d( int longindex, const char *delimh, const char *delim )
 {
   char *p = NULL;
-  int r = 0;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex2extended( longindex, NULL, &r );
-  if ( DUF_NOERROR( r ) )
-    p = duf_option_description_xd( extended, delimh, delim, pr );
-  if ( pr )
-    *pr = r;
+  extended = duf_longindex2extended( longindex, NULL );
+  if ( extended )
+    p = duf_option_description_xd( extended, delimh, delim );
   return p;
 }
 
 static char *
-duf_option_description_x( const duf_longval_extended_t * extended, int *pr )
+duf_option_description_x( const duf_longval_extended_t * extended )
 {
-  return duf_option_description_xd( extended, NULL, NULL, pr );
+  return duf_option_description_xd( extended, NULL, NULL );
 }
 
 /* char *                                                          */
@@ -94,7 +90,7 @@ duf_option_description_x( const duf_longval_extended_t * extended, int *pr )
 /*                                                                 */
 
 const char *
-duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended, int *pr )
+duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended )
 {
   const char *x = NULL;
 
@@ -109,7 +105,7 @@ duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended
   {
     mas_free( global_status.tmp->option_explanation[index] );
     global_status.tmp->option_explanation[index] = NULL;
-    global_status.tmp->option_explanation[index] = duf_option_description_x( extended, pr );
+    global_status.tmp->option_explanation[index] = duf_option_description_x( extended );
     x = global_status.tmp->option_explanation[index];
   }
   return x;

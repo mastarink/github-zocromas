@@ -107,7 +107,7 @@ duf_option_fs_each2( const char *arg, duf_errc_ps2vv_func_t fun, const void *pv 
 }
 
 duf_error_code_t
-duf_option_$_fs_ls_file( const char *fn, const void *pv )
+duf_option_$_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   int ry = 0;
@@ -154,7 +154,7 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
     ser = strerror_r( errno, serr, sizeof( serr ) );
     DUF_SHOW_ERROR( "@Can't remove %s - %s", fn, ser );
   }
-  return ry >= 0 ? dorm : ry;
+  return ry >= 0 ? ( int ) dorm : ry;
 }
 
 duf_error_code_t
@@ -170,12 +170,13 @@ duf_option_$_fs_rmfile( const char *fn, const void *pv )
 }
 
 int
-duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv, struct stat *pstfrom, struct stat *pstto )
+duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_UNUSED, struct stat *pstfrom, struct stat *pstto DUF_UNUSED )
 {
   int ry = 0;
   int ry1 = 0;
   char *topathf = NULL;
   char *topath = NULL;
+
   /* char *fname = NULL; */
   struct stat st2 = { 0 };
 
@@ -366,7 +367,7 @@ duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
 }
 
 duf_error_code_t
-duf_option_fs_mvfile( const char *arg, const char *to, const void *pv )
+duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );

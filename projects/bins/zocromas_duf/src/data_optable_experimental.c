@@ -8,7 +8,7 @@
 
 
 #include "duf_option_misc.h"
-#include "duf_option_sccb.h"    /* FIXME : temp for duf_option_$_cd               */
+#include "duf_option_sccb.h"    /* TODO : temp for duf_option_$_cd               */
 
 /*
 At duf_options_table.c:
@@ -23,6 +23,7 @@ At duf_options_table.c:
 */
 
 const duf_longval_extended_table_t optable_experimental = {
+  .name = "experimental",
   /* DO_STG_NOT( LOOP ), */
   .table =                      /* */
   {

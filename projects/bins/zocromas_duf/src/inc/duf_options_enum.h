@@ -8,7 +8,8 @@
 /* #  define DUF_DECLARE_OPTION_V(_name, _val) DUF_OPTION_VAL_ ## _name = _val */
 typedef enum
 {
-  DUF_OPTION_VAL_NONE,
+  DUF_OPTION_VAL_ERR=-1,
+  DUF_OPTION_VAL_NONE=0,
 
   DUF_OPTION_VAL_SMART_HELP = 'h',
   DUF_OPTION_VAL_HELP = 'H',
@@ -70,6 +71,7 @@ typedef enum
 /*==================================================*/
   DUF_OPTION_VAL_LONG = 1000,
 /*==================================================*/
+  DUF_OPTION_VAL_ERROR_LEVEL,
   DUF_OPTION_VAL_HELP_NONE,
   DUF_OPTION_VAL_HELP_ALL,
 
@@ -108,6 +110,7 @@ typedef enum
   /* DUF_OPTION_VAL_FLAG_ZERO_DB, */
   DUF_OPTION_VAL_FLAG_REMOVE_DATABASE,
   DUF_OPTION_VAL_FLAG_DROP_TABLES,
+  DUF_OPTION_VAL_FLAG_CLEAN_TABLES,
   DUF_OPTION_VAL_FLAG_VACUUM,
 
   DUF_OPTION_VAL_FLAG_INTERACTIVE,

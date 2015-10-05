@@ -159,7 +159,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
 
     ename = strchr( pnames, ',' );
 
-    len = ename ? ename - pnames : strlen( pnames );
+    len = ename ? ( size_t ) ( ename - pnames ) : strlen( pnames );
     DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, table, ptarg /*, pu */  ) );
     if ( DUF_NOERROR( r ) )
       ok++;

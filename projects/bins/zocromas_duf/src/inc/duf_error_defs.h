@@ -2,22 +2,24 @@
 #  define DUF_ERROR_DEFS_H
 
 
-#  define DUF_E1_NO(...) duf_set_mereport(1, -1, 0, __VA_ARGS__, 0)
+/* #  define DUF_E1_LOWER(...) duf_enable_mereport_c(1, -1, 0, __VA_ARGS__, 0) */
 
-#  define DUF_E_NO(...)  duf_set_mereport(0, -1, 0, __VA_ARGS__, 0)
-#  define DUF_E_YES(...) duf_set_mereport(0,  1, 0, __VA_ARGS__, 0)
+#  define DUF_E_LOWER(...)  duf_enable_mereport_c(0, -1, 0, __VA_ARGS__, 0)
+#  define DUF_E_LOWER_N(_n, ...)  duf_enable_mereport_c(0, -_n, 0, __VA_ARGS__, 0)
+#  define DUF_E_UPPER(...) duf_enable_mereport_c(0,  1, 0, __VA_ARGS__, 0)
+#  define DUF_E_UPPER_N(_n, ...) duf_enable_mereport_c(0, _n, 0, __VA_ARGS__, 0)
 
-#  define DUF_E_SET(_n, ...) duf_set_mereport(0, _n, 1, __VA_ARGS__, 0)
+#  define DUF_E_SET(_n, ...) duf_enable_mereport_c(0, _n, 1, __VA_ARGS__, 0)
 
-#  define DUF_E_MAX(cnt, ...) duf_set_memax_count(cnt, __VA_ARGS__, 0)
+#  define DUF_E_MAX(cnt, ...) duf_set_memax_count_c(cnt, __VA_ARGS__, 0)
 
-#  define DUF_EREPORT(r) (duf_get_ereport(r)>0)
+#  define DUF_EREPORT(rc) (duf_enabled_ereport_i(rc)>0)
 
-#  define DUF_MAKE_ERROR(_rval, _code)         (_rval=(DUF_IS_ERROR(_code) ? duf_make_error( _code, FL, NULL) : _rval))
-#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  (_rval=(DUF_IS_ERROR(_code) ? duf_make_error( _code, FL, _msg) :    0 ))
+#  define DUF_MAKE_ERROR(_rval, _code)         (_rval=(DUF_IS_ERROR(_code) ? duf_make_error_c( _code, FL, NULL) : _rval))
+#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  (_rval=(DUF_IS_ERROR(_code) ? duf_make_error_c( _code, FL, _msg) :    0 ))
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
-#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  FINAL ERROR", __VA_ARGS__)
+#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  ERROR", __VA_ARGS__)
 #  define DUF_SHOW_ERROR_TEST( _fmt, ... ) 		DUF_SHOW_ERROR_WP( "@@> > > > > > > ", "@@@@@@@@@"_fmt,  __VA_ARGS__ )
 
 /* #  ifdef DUF_T_NOIF                                                                            */
@@ -37,13 +39,15 @@
 #  define DUF_TEST_RX_END(_rval) }
 
 #  define DUF_SHOW_ERROR_TEST_WP_STD(_rval, _prefix) DUF_SHOW_ERROR_WP( _prefix, "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_i(_rval) )
+/* DUF_SHOW_ERROR_TEST_STD : takes duf_error_index_t! */
 #  define DUF_SHOW_ERROR_TEST_STD(_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_made_errors(_rval), duf_ecount(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_i(_rval) )
 
 
 
 #  ifdef DUF_T_NOIF
+/* DUF_TEST_RX : takes duf_error_index_t! */
 #    define DUF_TEST_RX(_rval)	   (( (DUF_EREPORT(_rval)) ? (DUF_SHOW_ERROR_TEST_STD(_rval)) : \
     					0 ), _rval)
 #    define DUF_TEST_RX_WP(_rval, _prefix)  (( (DUF_EREPORT(_rval)) ? DUF_SHOW_ERROR_TEST_WP_STD(_rval,_prefix) : \
@@ -69,12 +73,13 @@
 /*                         || _rval==DUF_ERROR_MAX_SEQ_REACHED \ */
 /*                         || _rval==DUF_ERROR_MAX_DEPTH  \      */
 /*         )                                                     */
-/* #  define DUF_TEST_R(_rval)     ( DUF_E_NO(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),DUF_TEST_RX( _rval ),DUF_E_YES(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),_rval ) */
+/* #  define DUF_TEST_R(_rval)     ( DUF_E_LOWER(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),DUF_TEST_RX( _rval ),DUF_E_UPPER(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),_rval ) */
+/* DUF_TEST_R : takes duf_error_index_t! */
 #  define DUF_TEST_R(_rval)	(DUF_TEST_RX( _rval ))
 #  define DUF_TEST_R1(_rval)	(duf_force_ereport(1 /*count*/),DUF_TEST_RX( _rval ))
 /* #  define DUF_TEST_R2(_rval)    (duf_force_ereport(2 (*count*)),DUF_TEST_RX( _rval )) */
 
-#  define DUF_TEST_R_NOE(_rval, ...)	DUF_E_NO(  __VA_ARGS__ );DUF_TEST_R(_rval);DUF_E_YES( __VA_ARGS__ )
+#  define DUF_TEST_R_LOWERE(_rval, ...)	DUF_E_LOWER(  __VA_ARGS__ );DUF_TEST_R(_rval);DUF_E_UPPER( __VA_ARGS__ )
 
 
 
@@ -90,50 +95,7 @@
 /* #  define DUF_TEST_RR(_rval)    DUF_TEST_RQ(_rval, DUF_IS_ERROR_N(_rval, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rval,DUF_SQL_DONE) ) */
 
 /* ###################################################################### */
-
-#  ifdef DUF_T_NOIF
-#    define DUF_TEST_R3(_rval)	( (_rval \
-    			&& (_rval)!=SQLITE_ROW \
-    			&& (_rval)!=SQLITE_DONE \
-    					) ?		\
-					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) \
-					    ) : 0 )
-#    define DUF_TEST_R3S(_rval, _xstr) 	( (_rval \
-    			&& (_rval)!=SQLITE_ROW \
-    			&& (_rval)!=SQLITE_DONE \
-    					) ?		\
-					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
-					    ) : 0 )
-#  else
-#    define DUF_TEST_R3(_rval)	if (_rval \
-    			&& (_rval)!=SQLITE_ROW \
-    			&& (_rval)!=SQLITE_DONE \
-    					)		\
-					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) \
-					    )
-#    define DUF_TEST_R3S(_rval, _xstr) 	if (_rval \
-    			&& (_rval)!=SQLITE_ROW \
-    			&& (_rval)!=SQLITE_DONE \
-    					)		\
-					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name_i(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
-					    )
-#  endif
-
-
-
-
-/* ###################################################################### */
-
-/* ###################################################################### */
-#  define DUF_CLEAR_ERROR(_rt, ...)  _rt=duf_clear_error_i( (_rt), __VA_ARGS__, 0 )
+#  define DUF_CLEAR_ERROR(_rt, ...)    (_rt=duf_clear_error_i( (_rt), __VA_ARGS__, 0 ))
 #  define DUF_CLEARED_ERROR(_rt, ...)  (0==(_rt=duf_clear_error_i( (_rt), __VA_ARGS__, 0 )))
 #  define DUF_IS_ERROR_N(_rt, _er) ( duf_error_code_i( _rt ) == _er )
 #  define DUF_IS_ERROR(_rt) ( _rt < 0 )

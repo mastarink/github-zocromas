@@ -291,7 +291,7 @@ duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   fd = duf_levinfo_dfd( pdi );
   DOR( r, duf_make_sha1_uni( fd, asha1 ) );
   /* reverse */
-  for ( int i = 0; i < sizeof( asha1 ) / sizeof( asha1[0] ); i++ )
+  for ( unsigned i = 0; i < sizeof( asha1 ) / sizeof( asha1[0] ); i++ )
     pmdr[i] = asha1[sizeof( asha1 ) / sizeof( asha1[0] ) - i - 1];
 
 

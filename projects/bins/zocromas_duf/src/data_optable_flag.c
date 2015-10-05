@@ -18,6 +18,7 @@ At duf_options_table.c:
 
 
 const duf_longval_extended_table_t optable_flag = {
+  .name = "flag",
   .table =                      /* */
   {
 #if 0
@@ -29,9 +30,11 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, create_tables ) /*                     */ , DO_H( create tables ) /*                    */ },
    {.o = {DO_Q( "drop-tables" ) /*      */ , DO_A_N /* */ , DO_VF( DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, drop_tables ) /*                       */ , DO_H( drop tables ) /*                      */ },
+   {.o = {DO_Q( "clean-tables" ) /*     */ , DO_A_N /* */ , DO_VF( CLEAN_TABLES )} /*      */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, clean_tables ) /*                      */ , DO_H( clean tables ) /*                     */ },
 
    {.o = {DO_Q( "quit" ) /*             */ , DO_A_N /* */ , DO_VF( QUIT )} /*              */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_OC( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                    */ , DO_H( quit ) /*                             */ },
+    /*      */ DO_OC( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                    */ , DO_H( quit ) /*                              */ },
    {.o = {DO_Q( "add-path" ) /*         */ , DO_A_N /* */ , DO_VF( ADD_PATH )} /*          */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
 

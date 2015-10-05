@@ -87,7 +87,7 @@ typedef enum
 
 static size_t
 duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
-                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb )
+                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb DUF_UNUSED )
 {
   size_t slen = 0;
   duf_sformat_char_t c;
@@ -290,7 +290,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       else
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
 #else
-      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && v < sizeof( hls ) ) ? hls[v] : hls[0] );
+      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && (size_t)v < sizeof( hls ) ) ? hls[v] : hls[0] );
 #endif
     }
     break;
@@ -747,7 +747,7 @@ duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty,
 
 size_t
 duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
-                             size_t max_width )
+                             size_t max_width DUF_UNUSED )
 {
   size_t slen = 0;
   char *buffer;

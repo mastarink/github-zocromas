@@ -33,7 +33,7 @@ duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
     break;
   }
 #else
-  int index;
+  unsigned index;
 
   index = sccb->use_std_leaf;
   if ( index > 0 )
@@ -68,7 +68,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
     break;
   }
 #else
-  int index;
+  unsigned index;
 
   index = sccb->use_std_node;
   if ( index > 0 )

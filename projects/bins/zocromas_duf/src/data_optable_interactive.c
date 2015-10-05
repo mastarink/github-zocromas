@@ -29,6 +29,7 @@ void duf_add_targ( int *targc, char ***targv, const char *s ) __attribute__ ( ( 
 void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak ) );
 */
 const duf_longval_extended_table_t optable_interactive = {
+  .name = "interactive",
   /* DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ), */
   .table =                      /* */
   {

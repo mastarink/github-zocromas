@@ -350,7 +350,7 @@ duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   fd = duf_levinfo_dfd( pdi );
   DOR( r, duf_make_md5_uni( fd, amd5 ) );
   /* reverse */
-  for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
+  for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     pmdr[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
 
 

@@ -145,7 +145,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
 /* ########################################################################################## */
 
 static unsigned long long
-duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
+duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DUF_UNUSED, const char *tail DUF_UNUSED, int need_id, int *pr )
 {
   int lr = 0;
 

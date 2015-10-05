@@ -23,8 +23,10 @@ duf_find_sccb_by_evname_std( const char *name )
 int
 duf_ev_evnamed_list_std( const char *names )
 {
+  DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_ev_evnamed_list( names, duf_action_table(  ) );
+  DOR( r, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
+  DEBUG_ENDR( r );
 }
 
 int

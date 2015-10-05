@@ -157,11 +157,11 @@ duf_main( int argc, char **argv )
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );
-  DOR_NOE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
+  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
   if ( DUF_IS_ERROR( r ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s:%d %s", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_func_i( r ),
-                    duf_error_line_i( r ), duf_error_message_i( r ) );
+    DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_message_i( r ),
+                    duf_error_func_i( r ), duf_error_line_i( r ) );
     DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
   }
 

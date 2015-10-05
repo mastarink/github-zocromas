@@ -102,7 +102,7 @@ global_status_reset( void )
 #endif
   if ( global_status.xcmds )
   {
-    for ( int pos = 0; pos < global_status.n_xcmds; pos++ )
+    for ( unsigned pos = 0; pos < global_status.n_xcmds; pos++ )
     {
       mas_free( global_status.xcmds[pos].optargg );
     }

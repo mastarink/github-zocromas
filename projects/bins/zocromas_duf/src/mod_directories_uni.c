@@ -93,11 +93,11 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 
   .count_nodes = 1,
 #if 0
-#if 0
+#  if 0
   .beginning_sql_seq = &sql_create_selected,
-#else
+#  else
   .beginning_sql_seq = &sql_update_selected,
-#endif
+#  endif
 #endif
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
@@ -172,7 +172,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 
 /* make sure dir name in db */
 static int
-register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+register_pdidirectory( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

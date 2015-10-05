@@ -19,6 +19,7 @@
 */
 
 const duf_longval_extended_table_t optable_help = {
+  .name = "help",
   DO_STG_NOT( FIRST ),
   .table =                      /* */
   {

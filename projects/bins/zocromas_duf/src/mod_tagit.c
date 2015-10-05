@@ -84,7 +84,7 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
 /* ########################################################################################## */
 
 static int
-tagit_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -164,7 +164,7 @@ tagit_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   if ( DUF_CONFIGG( tag.dir ) )
@@ -195,7 +195,7 @@ tagit_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -227,7 +227,7 @@ tagit_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tagit_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+tagit_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -258,7 +258,7 @@ tagit_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -292,7 +292,7 @@ tagit_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-tagit_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+tagit_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

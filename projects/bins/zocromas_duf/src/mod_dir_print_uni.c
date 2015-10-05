@@ -29,7 +29,7 @@
 
 
 /* ########################################################################################## */
-static int print_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
 static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
@@ -216,7 +216,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -301,9 +301,9 @@ print_node_before2( duf_stmnt_t * pstmt_unused, /* unsigned long long pathid_unu
         const duf_filedirformat_t *fmt;
 
 #if 0
-	use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
 #else
-	use = duf_pdi_pu( pdi )->use_format - 1;
+        use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
         fmt = DUF_CONFIGA( cli.output.as_formats.list );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );

@@ -125,7 +125,7 @@ duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_r
   assert( pdi );
 
   /* TODO */
-  DOR( r, duf_levinfo_if_statat_dh( pdi ) );
+  DOR_LOWERE( r, duf_levinfo_if_statat_dh( pdi ) ,DUF_ERROR_STATAT_ENOENT);
 
   DUF_TRACE( scan, 4, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */

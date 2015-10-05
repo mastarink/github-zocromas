@@ -2,7 +2,7 @@
 #include <magic.h>
 
 int
-main( int argc, char *argv[] )
+main( int argc __attribute__(( unused )), char *argv[] __attribute__(( unused )) )
 {
   __attribute__ ( ( unused ) ) int rtst = 0;
   magic_t m = NULL;
@@ -28,7 +28,7 @@ main( int argc, char *argv[] )
     };
     rtst = magic_load( m, NULL );
     rtst = magic_load( m1, NULL );
-    for ( int i = 0; i < sizeof( test ) / sizeof( test[0] ); i++ )
+    for ( unsigned i = 0; i < sizeof( test ) / sizeof( test[0] ); i++ )
     {
       const char *desc = NULL;
       const char *desc1 = NULL;

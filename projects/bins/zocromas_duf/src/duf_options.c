@@ -83,7 +83,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 #else
   int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #endif
-  DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
+  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
 #if 1
 #  define DUF_OPTSRC(_r, _xr, _name,  ...)  \
@@ -208,12 +208,12 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 
   DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
              duf_error_name_i( r ) );
-  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
+  DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 
 
 int
-duf_show_options( const char *a0 )
+duf_show_options( const char *a0 DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #if 0

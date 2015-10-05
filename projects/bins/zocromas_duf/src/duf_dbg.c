@@ -16,7 +16,7 @@
 int duf_dbgfunlevel = 20;
 int dbgfunc_enabled = 0;
 static void
-duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, int g, int eol )
+duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, unsigned g, int eol )
 {
   const char *pg = NULL;
   const char *graph[] = { "┌─", "│ ", "└─" };

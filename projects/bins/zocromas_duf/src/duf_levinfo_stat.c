@@ -95,7 +95,7 @@ duf_levinfo_if_deleted_d( duf_depthinfo_t * pdi, int d )
   {
     int r = 0;
 
-    DOR_NOE( r, duf_levinfo_if_statat_dh_d( pdi, d ), DUF_ERROR_STATAT_ENOENT );
+    DOR_LOWERE( r, duf_levinfo_if_statat_dh_d( pdi, d ), DUF_ERROR_STATAT_ENOENT );
     /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT ); */
   }
   rd = duf_levinfo_deleted_d( pdi, d );

@@ -23,6 +23,7 @@ At duf_options_table.c:
 
 #ifdef MAS_TRACING_OPTIONS
 const duf_longval_extended_table_t optable_trace = {
+  .name = "trace",
   .table =                      /* */
   {
    {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
@@ -71,7 +72,7 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.deleted ), DO_STAGE_ANY /*                           */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-dirent" ) /*     */ , DO_A_O /* */ , DO_V( DIRENT_TRACE )} /*       */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.dirent ), DO_STAGE_ANY /*                            */ , DO_H( trace .... ) /*                       */ },
-   {.o = {DO_Q( "trace-error" ) /*      */ , DO_A_O /* */ , DO_V( ERROR_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
+   {.o = {DO_Q( "trace-errors" ) /*      */ , DO_A_O /* */ , DO_V( ERROR_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.error ), DO_STAGE_ANY /*                             */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-exif" ) /*       */ , DO_A_O /* */ , DO_V( EXIF_TRACE )} /*         */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.exif ), DO_STAGE_ANY /*                              */ , DO_H( trace .... ) /*                       */ },

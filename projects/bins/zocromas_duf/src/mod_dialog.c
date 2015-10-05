@@ -84,7 +84,7 @@ duf_scan_callbacks_t duf_dialog_callbacks = {
 /* ########################################################################################## */
 
 static int
-dialog_init( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dialog_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -171,7 +171,7 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -182,7 +182,7 @@ dialog_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dialog_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -192,7 +192,7 @@ dialog_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -202,7 +202,7 @@ dialog_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -212,7 +212,7 @@ dialog_node_middle2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -222,7 +222,7 @@ dialog_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -232,7 +232,7 @@ dialog_node_after2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dialog_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -242,7 +242,7 @@ dialog_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dialog_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -252,7 +252,7 @@ dialog_de_dir_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-dialog_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dialog_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

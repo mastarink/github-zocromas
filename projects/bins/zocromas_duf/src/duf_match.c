@@ -50,6 +50,7 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
   return rx;
 }
 
+#if 0
 int
 duf_lim_match( duf_limits_t lim, int n )
 {
@@ -75,7 +76,7 @@ duf_lim_matchll( duf_limitsll_t lim, int n )
     rx = ( n <= lim.max ) ? rx : 0;
   return rx;
 }
-
+#endif
 
 /* int                                                                          */
 /* duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id ) */

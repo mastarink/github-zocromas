@@ -17,7 +17,7 @@
 /* ###################################################################### */
 
 int
-duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi )
+duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi )
 {
   DUF_STARTR( r );
   if ( pfi )

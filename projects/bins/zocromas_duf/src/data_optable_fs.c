@@ -10,7 +10,7 @@
 #include "duf_option_misc.h"
 
 #include "duf_option_fs_types.h"
-#include "duf_option_fs.h"      /* FIXME : temp for duf_option_$_fs_...               */
+#include "duf_option_fs.h"      /* TODO : temp for duf_option_$_fs_...               */
 
 /*
 At duf_options_table.c:
@@ -25,6 +25,7 @@ At duf_options_table.c:
 */
 
 const duf_longval_extended_table_t optable_fs = {
+  .name = "fs",
   /* DO_STG_NOT( LOOP ), */
   .table =                      /* */
   {
@@ -67,6 +68,7 @@ const duf_longval_extended_table_t optable_fs = {
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_ASK ),
     DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
+   {.o = {.name = NULL}}
    }
 };
 

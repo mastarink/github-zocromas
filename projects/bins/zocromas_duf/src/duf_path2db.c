@@ -55,7 +55,7 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
   if ( !duf_levinfo_stat_dev( pdi ) )
     DOR( r, duf_levinfo_statat_dh( pdi ) );
 #else
-  DOR( r, duf_levinfo_if_statat_dh( pdi ) );
+  DOR_LOWERE( r, duf_levinfo_if_statat_dh( pdi ),DUF_ERROR_STATAT_ENOENT );
 #endif
   assert( DUF_IS_ERROR( r ) || duf_levinfo_stat_dev( pdi ) );
 

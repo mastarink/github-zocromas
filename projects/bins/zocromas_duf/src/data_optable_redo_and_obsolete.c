@@ -20,6 +20,7 @@ At duf_options_table.c:
 
 
 const duf_longval_extended_table_t optable_redo_and_obsolete = {
+  .name = "redo and obsolete",
   .table =                      /* */
   {
 #if 0

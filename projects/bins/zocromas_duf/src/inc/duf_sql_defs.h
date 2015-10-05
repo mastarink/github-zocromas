@@ -6,6 +6,9 @@
 #  define DUF_SQL_IDNAME "rowid"
 #  define DUF_COMMA_AS(name, alias) , #name " AS " #alias
 
+#  define DUF_SQLITE2R_ERROR_CODE(_r3c) duf_sqlite2r_error_code(_r3c)
+#  define DUF_SQLITE2R_ERROR_INDEX(_r3c) duf_sqlite2duf(_r3c)
+
 
 /* ###################################################################### */
 
@@ -46,8 +49,10 @@
 #  define DUF_SFIELD2OPT(name) const char*         DUF_SET_SFIELD2OPT(name)
 #  define DUF_UFIELD2OPT(name) unsigned long long  DUF_SET_UFIELD2OPT(name)
 
-#  define DOR_SQLITE(_r, _fun)  DOR( _r, DUF_SQLITE2R_ERROR_CODE( _fun ) ) ; DUF_MAKE_ERROR( _r, _r )
-#  define DOR_SQLITE_NOE(_r, _fun, ...) DOR_NOE( _r, DUF_SQLITE2R_ERROR_CODE( _fun ), __VA_ARGS__ ); DUF_MAKE_ERROR( _r, _r )
+/* DOR... : takes duf_error_index_t! */
+#  define DOR_SQLITE(_r, _fun)  DOR(_r, duf_sqlite2duf(_fun))
+#  define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, duf_sqlite2duf( _fun ), __VA_ARGS__ )
+#  define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, duf_sqlite2duf( _fun ), __VA_ARGS__ )
 
 /* #  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE2R_ERROR_CODE(_x)) */
 #endif

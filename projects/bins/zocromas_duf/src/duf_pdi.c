@@ -99,19 +99,19 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 #endif
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
+    {
       DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
-
+      if ( !pdi->pyp )
+      {
+        pdi->pyp = mas_malloc( sizeof( *pdi->pyp ) );
+        pdi->pyp_created = 1;
+        memset( pdi->pyp, 0, sizeof( *pdi->pyp ) );
+        pdi->pyp->topdirid = duf_levinfo_dirid( pdi );
+      }
+    }
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
   DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
-  if ( !pdi->pyp )
-  {
-    pdi->pyp = mas_malloc( sizeof( *pdi->pyp ) );
-    pdi->pyp_created = 1;
-    memset( pdi->pyp, 0, sizeof( *pdi->pyp ) );
-    pdi->pyp->topdirid = duf_levinfo_dirid( pdi );
-  }
-
   DEBUG_ENDR( r );
 }
 

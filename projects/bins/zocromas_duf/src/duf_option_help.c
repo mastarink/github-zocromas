@@ -147,7 +147,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     name = DUF_CONFIGG( longopts_table )[ilong].name;
     codeval = DUF_CONFIGG( longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, NULL, &r );
+    extd = duf_longindex2extended( ilong, NULL  );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
     if ( codeval && DUF_NOERROR( r ) )
@@ -180,7 +180,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
             /* duf_option_class_t hclass; */
 
             /* hclass = duf_help_option2class( codeval ); */
-            s = duf_option_description_d( ilong, "\t", " // ", &r );
+            s = duf_option_description_d( ilong, "\t", " // " );
             DUF_TEST_R( r );
             /* s = mas_strcat_x( s, " ...................." ); */
             if ( s )
@@ -216,7 +216,7 @@ duf_option_$_smart_help_all( duf_option_class_t oclass )
   {
     for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
     {
-      DOR(r,duf_option_$_smart_help( oc ));
+      DOR( r, duf_option_$_smart_help( oc ) );
     }
   }
   DEBUG_ENDR( r );
@@ -790,7 +790,7 @@ duf_option_$_version( void )
   DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( puz )->v.sbit ), DUF_CONFIGG( puz )->v.sbit );
   /* mas_free( sargv2 ); */
   mas_free( sargv1 );
- 
+
   DEBUG_ENDR( r );
 }
 
@@ -850,7 +850,7 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     }
   }
 #endif
-  for ( int i = 0; i < sizeof( tab ) / sizeof( tab[0] ); i++ )
+  for ( unsigned i = 0; i < sizeof( tab ) / sizeof( tab[0] ); i++ )
   {
     if ( tab[i].test.bit == fset.bit )
       rc = tab[i].id;
@@ -917,7 +917,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
     DUF_PRINTF( 0, ".   │" );
-    for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    for ( unsigned i = 1; i < sizeof( u ) * 8 + 1; i++ )
     {
       DUF_PRINTF( 0, ".%s ", u & mask ? "◆" : " " );
       u <<= 1;
@@ -951,7 +951,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
     DUF_PRINTF( 0, ".> > " );
-    for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    for ( unsigned i = 1; i < sizeof( u ) * 8 + 1; i++ )
     {
       DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
       u <<= 1;
@@ -969,7 +969,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
     DUF_PRINTF( 0, ".> > " );
-    for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    for ( unsigned i = 1; i < sizeof( u ) * 8 + 1; i++ )
     {
       DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
       u <<= 1;
@@ -998,7 +998,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 }
 
 duf_error_code_t
-duf_option_$_list_options( long n )
+duf_option_$_list_options( long n_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -1014,7 +1014,7 @@ duf_option_$_list_options( long n )
       char *s = NULL;
 
       if ( xtended->o.val )
-        s = duf_option_description_xd( xtended, "\t", " // ", &r );
+        s = duf_option_description_xd( xtended, "\t", " // " );
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );

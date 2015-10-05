@@ -9,4 +9,6 @@ duf_error_code_t duf_option_$_echo( const char *arg );
 
 duf_error_code_t duf_option_$_history( void );
 
+duf_error_code_t duf_option_$_error_level( long lev );
+
 #endif

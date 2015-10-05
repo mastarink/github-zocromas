@@ -24,8 +24,10 @@ duf_ev_sccb( duf_scan_callbacks_t * sccb )
 int
 duf_ev_evnamen( const char *name, size_t len, const duf_action_table_t * table )
 {
+  DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  return duf_ev_pdi_evnamen( DUF_CONFIGG( pdi ), name, len, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( pdi ), name, len, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DEBUG_ENDR( r );
 }
 
 int
@@ -39,10 +41,12 @@ duf_ev_evname( const char *name, const duf_action_table_t * table )
 int
 duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
 {
+  DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
   assert( DUF_CONFIGX( pdi )->pyp );
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( pdi )->pdi_name );
-  return duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DEBUG_ENDR( r );
 }
 
 #if 0

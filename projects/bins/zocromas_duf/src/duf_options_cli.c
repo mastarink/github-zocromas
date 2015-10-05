@@ -72,7 +72,7 @@ duf_reorder_argvc_at_sign( duf_argvc_t * ptarg )
 }
 
 static void
-duf_clarify_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts )
+duf_clarify_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
 {
   const char *arg;
   static const char *msg = "Invalid option";
@@ -119,7 +119,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   int optoptt = 0, optindd = 0, optindp = 0;
   int numxargv = 0;
 
-  DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
+  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   optopt = 0;
   opterr = 0;
   optind = 1;
@@ -215,7 +215,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
     DUF_TRACE( options, +2, "(no targ) optind:%d; optindd:%d; numxargv:%d", optind, optindd, numxargv );
   }
 
-  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
+  DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 
 int

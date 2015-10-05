@@ -1,5 +1,5 @@
 AM_PROG_AR
-AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Wextra -Werror dist-bzip2])
 dnl AM_INIT_AUTOMAKE([foreign  -Wall -Werror dist-bzip2 nostdinc])
 
 dnl AM_MAINTAINER_MODE([enable])

@@ -30,6 +30,7 @@
 
 /* ###################################################################### */
 
+/* takes ern - error index */
 #  define DUF_TRACE_WHAT_WP_BASE( _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
 			duf_trace(	DUF_TRACE_MODE_ ## _name, DUF_TRACE_SUBMODE_SIMPLE, \
 					#_name, \
@@ -42,6 +43,7 @@
 	/* out */			DUF_TRACE_FILE_C( _cfg ), \
 			    		_prefix, \
 			    		__VA_ARGS__ )
+/* takes ern - error index */
 #  define      DUF_TRACE_WHAT_BASE( _cfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
   					DUF_TRACE_WHAT_WP_BASE(_cfg, NULL, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__)
 

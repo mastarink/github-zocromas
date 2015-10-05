@@ -26,13 +26,13 @@ duf_li_create( int count )
   return pli;
 }
 
-void
-duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, size_t count )
+static void
+duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned count )
 {
   assert( plidst );
   assert( plisrc );
   memcpy( plidst, plisrc, count * sizeof( duf_levinfo_t ) );
-  for ( int i = 0; i < count; i++ )
+  for ( unsigned i = 0; i < count; i++ )
   {
     plidst[i].fullpath = mas_strdup( plisrc[i].fullpath );
     plidst[i].itemname = mas_strdup( plisrc[i].itemname );
@@ -49,7 +49,7 @@ duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, size_t count 
 }
 
 duf_levinfo_t *
-duf_li_clone( const duf_levinfo_t * plisrc, size_t count )
+duf_li_clone( const duf_levinfo_t * plisrc, unsigned count )
 {
   duf_levinfo_t *pli = NULL;
 

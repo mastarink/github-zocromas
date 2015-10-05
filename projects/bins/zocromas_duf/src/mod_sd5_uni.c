@@ -315,7 +315,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   DUF_TRACE( sd5, 0, "+ %s", filename );
   DUF_TEST_R( r );
   /* reverse */
-  for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
+  for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     amd5r[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
 
   if ( DUF_NOERROR( r ) )

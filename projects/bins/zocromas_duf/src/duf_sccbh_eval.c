@@ -43,7 +43,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
-  DUF_E_NO( DUF_ERROR_TOO_DEEP );
+  DUF_E_LOWER( DUF_ERROR_TOO_DEEP );
   assert( sccbh );
   assert( SCCB );
 
@@ -63,7 +63,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
     if ( DUF_ACTG_FLAG( summary ) )
       DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
-  DUF_E_YES( DUF_ERROR_TOO_DEEP );
+  DUF_E_UPPER( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );
 }
 
@@ -143,7 +143,7 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
 
 /* 20150820.085615 */
 int
-duf_sccbh_eval_db_subnodes( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_subnodes( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -162,7 +162,7 @@ duf_sccbh_eval_db_subnodes( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
  *  - sccb
  *  */
 int
-duf_sccbh_eval_db_leaves( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 /* duf_scan_files_by_pathid:
@@ -216,7 +216,7 @@ duf_sccbh_eval_db_leaves( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
  * fn of type: duf_str_cb2_t
  * */
 int
-duf_sccbh_eval_fs_items( duf_stmnt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_fs_items( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
@@ -226,7 +226,7 @@ duf_sccbh_eval_fs_items( duf_stmnt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     /* DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED ); */
-    DOR( r, duf_levinfo_if_statat_dh( PDI ) );
+    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ) ,DUF_ERROR_STATAT_ENOENT);
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", duf_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     /* assert( duf_levinfo_dfd( PDI ) ); */

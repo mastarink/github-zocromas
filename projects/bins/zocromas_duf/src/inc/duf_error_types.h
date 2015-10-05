@@ -1,12 +1,11 @@
 #ifndef MAS_DUF_ERROR_TYPES_H
 #  define MAS_DUF_ERROR_TYPES_H
 
-#  define DUF_SQLITE2R_ERROR_CODE(r3c) duf_sqlite2r_error_code(r3c)
-
 #  include <mastar/sqlite/mas_sqlite_const.h>
 
 typedef enum
 {
+  DUF_SQLITE_ERROR_BASE = MAS_SQLITE_ERROR_BASE,
   DUF_SQL_ERROR = MAS_SQL_ERROR,
   DUF_SQL_INTERNAL = MAS_SQL_INTERNAL, /*    #define SQLITE_INTERNAL    2  Internal logic error in SQLite             */
   DUF_SQL_PERM = MAS_SQL_PERM,  /*            #define SQLITE_PERM        3  Access permission denied                   */
@@ -92,7 +91,8 @@ typedef enum
   DUF_SQL_WARNING_AUTOINDEX = MAS_SQL_WARNING_AUTOINDEX,
 
   DUF_OK = 0,
-  DUF_ERROR_ERROR_BASE = -30000,
+  DUF_ERROR_ERROR_BASE = DUF_SQLITE_ERROR_BASE,
+  DUF_ERROR_ERROR_BASE_PLUS = -3000,
   DUF_ERROR_UNKNOWN,
   DUF_ERROR_UNKNOWN_NODE,
   DUF_ERROR_MAIN,

@@ -489,7 +489,6 @@ duf_config_make_db_paths( void )
   DUF_CONFIGWS( db.path, duf_config_db_path_add_subdir( DUF_CONFIGGSP( db.dir ), &r ) );
 
   DUF_TRACE( db, 0, "@@@@@db.path:%s", DUF_CONFIGGS( db.path ) );
-  T( "@@@db.path:%s", DUF_CONFIGGS( db.path ) );
   if ( DUF_CONFIGGS( db.path ) && DUF_CONFIGGSP( db.main.name ) )
   {
     DOR( r, duf_config_make_db_main_path(  ) );

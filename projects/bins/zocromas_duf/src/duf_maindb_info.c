@@ -135,7 +135,7 @@ duf_main_db_info( void )
        SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
        SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
      */
-    for ( int iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
+    for ( unsigned iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {
       unsigned long *tuple;
       int nolab = 0;

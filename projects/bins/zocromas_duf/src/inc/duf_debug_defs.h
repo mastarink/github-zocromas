@@ -12,8 +12,8 @@
 
 #  define DUF_DBGF(_what)       duf_dbgfunc( DBG_ ## _what, DUF_FL )
 #  define DUF_DBGFX(_what, ...) duf_dbgfunc( DBG_ ## _what, DUF_FL, __VA_ARGS__ )
-#  define  DEBUG_E_NO(...)		       DUF_DBGF(STEP)             ; DUF_E_NO(__VA_ARGS__)
-#  define  DEBUG_E_YES(...)		       DUF_DBGF(STEP)             ; DUF_E_YES(__VA_ARGS__)
+#  define  DEBUG_E_LOWER(...)		       DUF_DBGF(STEP)             ; DUF_E_LOWER(__VA_ARGS__)
+#  define  DEBUG_E_UPPER(...)		       DUF_DBGF(STEP)             ; DUF_E_UPPER(__VA_ARGS__)
 /*XXX  DUF_DBGF* after DUF_START* ! XXX*/
 #  define  DEBUG_START()		                                  ; DUF_START()                                   ;  DUF_DBGF(START)
 #  define  DEBUG_STARTR(_rt)		                                  ; DUF_STARTR(_rt)                               ;  DUF_DBGF(START)
@@ -21,10 +21,10 @@
 /*XXX  DUF_DBGF* before DUF_END* ! XXX*/
 #  define  DEBUG_END()			       DUF_DBGF(END)              ; DUF_END()
 #  define  DEBUG_ENDR(_rt)		       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR(_rt)
-#  define  DEBUG_ENDR_NOE(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_NOE(_rt, __VA_ARGS__)
-#  define  DEBUG_ENDR_YES(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_YES(_rt, __VA_ARGS__)
+#  define  DEBUG_ENDR_LOWERE(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_LOWERE(_rt, __VA_ARGS__)
+#  define  DEBUG_ENDR_UPPER(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_UPPER(_rt, __VA_ARGS__)
 #  define  DEBUG_ENDR_CLEAR(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_CLEAR(_rt, __VA_ARGS__)
-#  define  DEBUG_ENDR_YES_CLEAR(_rt, ...)      DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_YES_CLEAR(_rt, __VA_ARGS__)
+/* #  define  DEBUG_ENDR_YES_CLEAR(_rt, ...)      DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_YES_CLEAR(_rt, __VA_ARGS__) */
 #  define  DEBUG_ENDRQ(_rt,_cond)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDRQ(_rt,_cond)
 #  define  DEBUG_ENDRN(_rt)		       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDRN(_rt)
 #  define  DEBUG_ENDR3(_rt)		       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR3(_rt)

@@ -19,7 +19,7 @@ duf_ufilter_max_rel_depth( const duf_ufilter_t * pu )
 }
 
 int
-duf_ufilter_max_filter( const duf_ufilter_t * pu, int seq, const duf_items_t * pitems )
+duf_ufilter_max_filter( const duf_ufilter_t * pu, unsigned seq, const duf_items_t * pitems )
 {
   DEBUG_STARTR( r );
   if ( pu->max_seq && seq >= pu->max_seq )

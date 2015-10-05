@@ -23,8 +23,9 @@
 /* #define DUF_NOTIMING */
 
 static int
-duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_error_code_t ern, const char *funcid, int linid,
-                  unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
+duf_vtrace_error( duf_trace_mode_t trace_mode DUF_UNUSED, const char *name DUF_UNUSED, int level DUF_UNUSED, duf_error_index_t ern,
+                  const char *funcid DUF_UNUSED, int linid DUF_UNUSED, unsigned flags DUF_UNUSED, int nerr DUF_UNUSED, FILE * out,
+                  const char *prefix DUF_UNUSED, const char *fmt DUF_UNUSED, va_list args DUF_UNUSED )
 {
   int r_ = 0;
 
@@ -34,7 +35,7 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
 
     s = duf_error_name_i( ern );
     if ( ern < 0 && s )
-      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, duf_errnumber( ern ) );
+      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, duf_errnumber_i( ern ) );
     else
       DUF_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
   }
@@ -42,8 +43,8 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
 }
 
 int
-duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid, int linid,
-            double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
+duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_UNUSED, const char *name, int level, int minlevel, const char *funcid, int linid,
+            double time0, char signum, unsigned flags, duf_error_index_t nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
 {
   int r_ = -1;
 
@@ -108,7 +109,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       pfuncid = funcid;
       /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
       /*   pfuncid += 4;                           */
-      for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
+      for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
       DUF_FPRINTFNE( 0, out, "\r%c%2d:%2d ", signum, level, minlevel );
@@ -177,12 +178,13 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
 
 int
 duf_trace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid, int linid,
-           double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, ... )
+           double time0, char signum, unsigned flags, duf_error_index_t nerr, FILE * out, const char *prefix, const char *fmt, ... )
 {
   int r_ = 0;
   va_list args;
 
   va_start( args, fmt );
+  /* takes ern - error index */
   r_ = duf_vtrace( trace_mode, trace_submode, name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fmt, args );
   va_end( args );
   return r_;

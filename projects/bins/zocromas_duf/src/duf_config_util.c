@@ -26,7 +26,7 @@
 
 
 static const char *
-duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg )
+duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
 {
   static char buf[256];
   size_t len;

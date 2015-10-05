@@ -84,7 +84,7 @@ duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
   {
     char rf = 0;
     const char *pfuncid;
-    int highlight = 0;
+    unsigned highlight = 0;
 
     pfuncid = funcid;
     /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
@@ -204,7 +204,7 @@ duf_printf( int level, int noeol, int minlevel, int ifexit, const char *funcid, 
 }
 
 int
-duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
+duf_puts( int level, int minlevel, const char *funcid DUF_UNUSED, int linid DUF_UNUSED, FILE * out, const char *str )
 {
   int ry = 0;
 
@@ -219,7 +219,7 @@ duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, co
 }
 
 int
-duf_writes( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
+duf_writes( int level, int minlevel, const char *funcid DUF_UNUSED, int linid DUF_UNUSED, FILE * out, const char *str )
 {
   int ry = 0;
 
