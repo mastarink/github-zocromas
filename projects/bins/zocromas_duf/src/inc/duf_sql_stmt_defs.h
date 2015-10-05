@@ -102,20 +102,20 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind ll " # _name ": %lld", (long long)_value); \
-		    DOR(_rt, duf_sql_bindn_long_long( _pstmt_m, ":" #_name, _value )); \
+		    DOR(_rt, duf_sql_bindn_long_long( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_LL_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind ll nz " # _name ": %lld", (long long)_value); \
-  		    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value )); \
+  		    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_LL_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind ll nz opt " # _name ": %lld", (long long)_value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
-                    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value )); \
+                    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
 		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
@@ -124,20 +124,20 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i " # _name ": %d", _value); \
-		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value )); \
+		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_I_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz " # _name ": %d", _value); \
-  		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
+  		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_I_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz opt " # _name ": %d", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
-                    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
+                    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
 		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
@@ -146,20 +146,20 @@
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i " # _name ": %u", _value); \
-		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value )); \
+		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_U_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz " # _name ": %u", _value); \
-  		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
+  		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_U_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
 		    DUF_TRACE( sql, 0, "@@bind i nz opt " # _name ": %u", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
-                    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value )); \
+                    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
 		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }
@@ -170,14 +170,14 @@
 		  if ( DUF_NOERROR(_rt) ) \
                   { \
 		    DUF_TRACE( sql, 0, "@@bind s " # _name ": %s", _value); \
-		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value )); \
+		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 #  define DUF_SQL_BIND_S_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  { \
 		    DUF_TRACE( sql, 0, "@@bind s opt " # _name ": %s", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
-		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value )); \
+		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
 		    DUF_E_UPPER( DUF_ERROR_BIND_NAME ); \
 		  }

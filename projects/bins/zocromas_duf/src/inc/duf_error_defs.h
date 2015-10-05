@@ -39,10 +39,10 @@
 #  define DUF_TEST_RX_END(_rval) }
 
 #  define DUF_SHOW_ERROR_TEST_WP_STD(_rval, _prefix) DUF_SHOW_ERROR_WP( _prefix, "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_i(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_reported_i(_rval) )
 /* DUF_SHOW_ERROR_TEST_STD : takes duf_error_index_t! */
 #  define DUF_SHOW_ERROR_TEST_STD(_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d) {+%d} #%ld #%u", \
-					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_i(_rval) )
+					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), duf_made_errors(), duf_ecount_reported_i(_rval) )
 
 
 

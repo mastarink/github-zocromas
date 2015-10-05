@@ -211,6 +211,7 @@ _duf_enabled_ereport_n_c( duf_error_code_t rc, int maxerr )
   return re;
 }
 
+
 /* >0 -- report it */
 static int
 _duf_enabled_ereport_c( duf_error_code_t rc, int maxerr )
@@ -349,7 +350,7 @@ duf_set_memax_count_c( int maxcount, ... )
 }
 
 int
-_duf_ecount_c( duf_error_code_t rc, int maxerr )
+_duf_ecount_reported_c( duf_error_code_t rc, int maxerr )
 {
   int re = 0;
 
@@ -364,18 +365,18 @@ _duf_ecount_c( duf_error_code_t rc, int maxerr )
 }
 
 int
-duf_ecount_c( duf_error_code_t rc )
+duf_ecount_reported_c( duf_error_code_t rc )
 {
   int re = 0;
 
-  DOCF( re, _duf_ecount_c, rc, DUF_ERROR_COUNT );
+  DOCF( re, _duf_ecount_reported_c, rc, DUF_ERROR_COUNT );
   return re;
 }
 
 int
-duf_ecount_i( duf_error_code_t ri )
+duf_ecount_reported_i( duf_error_code_t ri )
 {
-  return duf_ecount_c( duf_error_code_i( ri ) );
+  return duf_ecount_reported_c( duf_error_code_i( ri ) );
 }
 
 duf_error_code_t

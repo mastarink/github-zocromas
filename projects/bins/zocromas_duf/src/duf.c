@@ -171,7 +171,21 @@ duf_main( int argc, char **argv )
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
+  T( "@@@@%d %d %d", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX );
+  {
+    unsigned k = 0;
 
+    for ( unsigned i = 0; i < duf_made_errors(  ); i++ )
+    {
+      int ri = -i - 1;
+
+      if ( duf_error_code_i( ri ) != DUF_SQL_DONE && duf_error_code_i( ri ) != DUF_SQL_ROW )
+      {
+        T( "@@@@@%d. %d. %s @ %s:%d", i, k, duf_error_name_i( ri ), duf_error_func_i( ri ), duf_error_line_i( ri ) );
+        k++;
+      }
+    }
+  }
   DEBUG_ENDR( r );
 }
 

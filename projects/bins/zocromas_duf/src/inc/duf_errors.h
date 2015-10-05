@@ -35,8 +35,8 @@ int duf_enabled_ereport_n_i( duf_error_index_t ri );
 
 int duf_enabled_ereport_i( duf_error_index_t rtest );
 
-int duf_ecount_c( duf_error_code_t rtest );
-int duf_ecount_i( duf_error_code_t ri );
+int duf_ecount_reported_c( duf_error_code_t rtest );
+int duf_ecount_reported_i( duf_error_code_t ri );
 
 
 void duf_set_emax_count_c( int maxcount, duf_error_code_t rtest );

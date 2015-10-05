@@ -568,20 +568,26 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
           sum += rr;
           if ( !exif_loader_write( loader, buffer, rr ) )
           {
+#if 0
             DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_END );
+#endif
             break;
           }
         }
         if ( rr <= 0 )
         {
+#if 0
           DUF_MAKE_ERROR( r, DUF_ERROR_EOF );
+#endif
           break;
         }
 
         DUF_TEST_R( r );
       }
       mas_free( buffer );
+#if 0
       DUF_CLEAR_ERROR( r, DUF_ERROR_EOF, DUF_ERROR_EXIF_END );
+#endif
       if ( DUF_NOERROR( r ) )
       {
         ExifData *edata = NULL;

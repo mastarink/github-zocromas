@@ -43,11 +43,24 @@ duf_vtrace_error( duf_trace_mode_t trace_mode DUF_UNUSED, const char *name DUF_U
 }
 
 int
-duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_UNUSED, const char *name, int level, int minlevel, const char *funcid, int linid,
-            double time0, char signum, unsigned flags, duf_error_index_t nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
+duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_UNUSED, const char *name, int level, int minlevel, const char *funcid,
+            int linid, double time0, char signum, unsigned flags, duf_error_index_t nerr, FILE * out, const char *prefix, const char *fmt,
+            va_list args )
 {
   int r_ = -1;
+  static int ftimez = 0;
+  static double timez = 0;
 
+  if ( !ftimez )
+  {
+    int ry;
+    struct timeval tv;
+
+    ry = gettimeofday( &tv, NULL );
+    if ( ry >= 0 )
+      timez = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+    ftimez = 1;
+  }
   /* 
    * needless??
    *
@@ -139,7 +152,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_U
         double timec = 0.;
 #  endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-        DUF_FPRINTFNE( 0, out, " :%-6.4f:", timec - time0 );
+        DUF_FPRINTFNE( 0, out, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
       }
     }
 #endif
