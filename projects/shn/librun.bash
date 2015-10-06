@@ -62,6 +62,7 @@ function shn_run ()
 	fi
 	{
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
+echo ">$FUNCNAME>>>>>> pwd:$(pwd)" >&2
 	    eval "$bin $qargs"
 	    retcode=$?
 	    popd  &>/dev/null
@@ -109,7 +110,8 @@ function shn_debug ()
       else
         bindir="$bsrc"
       fi
-      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
+      export LD_LIBRARY_PATH="$libsdir"
+#     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
     fi
     bin=${bindir}/${rname}
     cmdfile="$debugdir/debug_${rname}.cmd"
@@ -171,7 +173,8 @@ function shn_core_debug ()
       else
         bindir="$bsrc"
       fi
-      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
+      export LD_LIBRARY_PATH="$libsdir"
+#     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
     fi
     bin=${bindir}/${rname}
 

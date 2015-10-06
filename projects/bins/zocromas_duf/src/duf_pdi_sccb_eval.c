@@ -152,7 +152,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
 
-  assert( pdi->pyp );
+  /* assert( pdi->pyp ); */
   while ( DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;

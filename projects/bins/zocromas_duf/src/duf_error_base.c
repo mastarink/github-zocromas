@@ -30,7 +30,7 @@ duf_error_code_p( size_t rp )
   duf_error_code_t rc = DUF_ERROR_UNDEFINED;
   duf_error_event_t *rev = NULL;
 
-  assert( rp >= 0 );
+  /* assert( rp >= 0 ); */
   rev = duf_find_error_event_p( rp );
   if ( rev )
     rc = rev->code;
@@ -118,7 +118,7 @@ duf_error_name_p( size_t rp )
 {
   duf_error_code_t rc = DUF_ERROR_UNDEFINED;
 
-  assert( rp >= 0 );
+  /* assert( rp >= 0 ); */
   rc = duf_error_code_p( rp );
   assert( rc <= 0 );
   return duf_error_name_c( rc );
@@ -142,7 +142,7 @@ duf_error_func_p( size_t rp )
   const char *funcid;
   duf_error_event_t *rev = NULL;
 
-  assert( rp >= 0 );
+  /* assert( rp >= 0 ); */
   rev = duf_find_error_event_p( rp );
   if ( rev )
     funcid = rev->funcid;
@@ -197,7 +197,7 @@ duf_error_message_p( size_t rp )
   const char *msg = NULL;
   duf_error_event_t *rev = NULL;
 
-  assert( rp >= 0 );
+  /* assert( rp >= 0 ); */
   rev = duf_find_error_event_p( rp );
   if ( rev )
     msg = rev->message;

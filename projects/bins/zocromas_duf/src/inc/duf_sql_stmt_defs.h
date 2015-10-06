@@ -36,7 +36,7 @@
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql,  DUF_SQL_STMD_ID_ ## _name, &_rt ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
-            _rt = DUF_ERROR_PDI_SQL; \
+            DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
           DUF_TEST_R( _rt );
 #  elif defined(DUF_SQL_NOPDI_STMT)
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
@@ -50,7 +50,7 @@
 #    define DUF_SQL_END_STMT(_pdi, _name, _rt, _pstmt_m) \
 	  DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
-            _rt = DUF_ERROR_PDI_SQL; \
+            DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
 	  if (_pstmt_m) \
 	  { duf_sql_reset( _pstmt_m ); duf_sql_clear_bindings( _pstmt_m ); } \
 	  duf_pdi_finalize_statement_by_id(_pdi, DUF_SQL_STMD_ID_ ## _name ); \
@@ -72,7 +72,7 @@
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql, ( duf_stmt_ident_t ) 0, &_rt ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
-            _rt = DUF_ERROR_PDI_SQL; \
+            DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
           DUF_TEST_R( _rt );
 #  else
 #    undef DUF_SQL_START_STMT_LOCAL
@@ -83,7 +83,7 @@
 #    define DUF_SQL_END_STMT_LOCAL(_pdi, _rt, _pstmt_m) \
 	  DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
-            _rt = DUF_ERROR_PDI_SQL; \
+            DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
 	  if (_pstmt_m) \
 	  { duf_sql_reset( _pstmt_m ); duf_sql_clear_bindings( _pstmt_m ); } \
 	  duf_pdi_finalize_statement_by_stmt(_pdi, _pstmt_m ); \

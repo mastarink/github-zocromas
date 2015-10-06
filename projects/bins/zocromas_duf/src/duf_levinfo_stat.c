@@ -54,6 +54,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
     if ( d > 0 )
     {
       DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) );
+      assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     }
     assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     DOR( r, duf_statat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ) ) );

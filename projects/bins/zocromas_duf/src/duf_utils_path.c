@@ -14,7 +14,7 @@
 int
 duf_pathdepth( const char *path )
 {
-  int r = DUF_ERROR_PATH;
+  int r = 0;
   int depth = 0;
   const char *bd;
 
@@ -37,7 +37,10 @@ duf_pathdepth( const char *path )
       bd = ed;
       depth++;
     }
-    r = 0;
+  }
+  else
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
   }
   return r < 0 ? r : depth;
 }
@@ -45,7 +48,7 @@ duf_pathdepth( const char *path )
 char *
 duf_realpath( const char *path, int *pr )
 {
-  int r = DUF_ERROR_PATH;
+  int r = 0;
   char *real_path = NULL;
   char *rp = realpath( path, NULL );
 
@@ -55,8 +58,12 @@ duf_realpath( const char *path, int *pr )
   {
     real_path = mas_strdup( rp );
     free( rp );
-    r = 0;
   }
+  else
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+  }
+
   if ( pr )
     *pr = r;
   return real_path;

@@ -75,6 +75,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 #endif
     pdi->recursive = frecursive ? 1 : 0;
     pdi->opendir = opendir ? 1 : 0;
+
 #if 0
     DOR( r, duf_levinfo_create( pdi, pdi->pathinfo.topdepth, frecursive, opendir ) ); /* depth = -1 */
 #else
@@ -145,7 +146,6 @@ duf_pdi_init_min( duf_depthinfo_t * pdi, const char *real_path )
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, ( duf_ufilter_t * ) NULL, real_path, NULL /* sql_set */ , 0 /* caninsert */ ,
                                         1 /* recursive */ ,
                                         0 /* opendir */  ) );
-
   DEBUG_ENDR( r );
 }
 

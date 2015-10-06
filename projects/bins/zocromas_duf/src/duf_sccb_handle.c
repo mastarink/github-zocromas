@@ -31,11 +31,12 @@
 #include "duf_sccb_handle.h"
 /* ###################################################################### */
 
+/* 20151006.150004 */
 static unsigned long long
 duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
-  int rpr = DUF_ERROR_TOTALS;
+  int rpr = 0;
 
   /* const char *leaf_selector_total2 = NULL; */
 
@@ -47,19 +48,23 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
     char *sqlt = NULL;
     const duf_sql_set_t *sql_set = NULL;
 
-    rpr = 0;
 #if 0
     sqlt = mas_strdup( "SELECT " );
     sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
     sqlt = mas_strcat_x( sqlt, " " );
     sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
 #else
+
+#  if 0
     if ( SCCB->count_nodes )
       sql_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE );
     else
       sql_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_LEAF );
+#  else
+    sql_set = duf_sccb_get_sql_set( SCCB, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
+#  endif
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
-    assert( rpr >= 0 );
+    assert( DUF_NOERROR( rpr ) );
 #endif
     if ( DUF_NOERROR( rpr ) && sqlt )
     {
@@ -71,9 +76,9 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
  */
       csql = sqlt;
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
-      assert( rpr >= 0 );
+      assert( DUF_NOERROR( rpr ) );
       DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL ) );
-      assert( rpr >= 0 );
+      assert( DUF_NOERROR( rpr ) );
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
       {
@@ -99,6 +104,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
   }
   else
   {
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_TOTALS );
     DUF_TRACE( explain, 0, "didn't count files in db" );
   }
   DUF_TEST_R( rpr );
@@ -108,7 +114,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 }
 
 static int
-duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh /*, const duf_ufilter_t * pu_unused */  )
+duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
@@ -142,7 +148,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
   duf_sccb_handle_t *sccbh = NULL;
   int rpr = 0;
 
-  assert( pdi->pyp );
+  /* assert( pdi->pyp ); */
   if ( sccb )
   {
     DUF_TRACE( fs, 2, "set def. opendir: %d", sccb->def_opendir );

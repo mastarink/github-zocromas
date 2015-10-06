@@ -107,6 +107,25 @@ duf_clarify_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, c
   }
 }
 
+static char *
+duf_clarify_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+{
+  const char *arg;
+  static const char *msg = "Invalid option";
+  char buffer[2048] = "";
+
+  arg = DUF_CONFIGG( carg.argv )[optindd];
+  if ( DUF_CONFIGG( cli.dbg.verbose ) )
+  {
+    snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
+  }
+  else
+  {
+    snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
+  }
+  return mas_strdup( buffer );
+}
+
 /* 20150924.144037 */
 static int
 duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
@@ -153,8 +172,11 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
     optindd = optind;
     if ( codeval == '?' )
     {
+      char *msg = NULL;
+
       optoptt = optopt;
-      DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, ( msg = duf_clarify_cli_opts_msgs( codeval, optindp, optoptt, shorts ) ) );
+      mas_free( msg );
     }
 /*
  * duf_clarify_opt(_x) return

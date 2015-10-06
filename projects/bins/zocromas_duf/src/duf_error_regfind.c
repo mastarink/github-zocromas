@@ -51,8 +51,8 @@ duf_find_error_event_p( size_t rp )
 {
   duf_error_event_t *rev = NULL;
 
-  assert( rp >= 0 );
-  if ( rp >= 0 && rp < global_error_list_size )
+  /* assert( rp >= 0 ); */
+  if ( /* rp >= 0 && */ rp < global_error_list_size )
     rev = &global_error_list[rp];
   return rev;
 }

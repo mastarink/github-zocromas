@@ -45,7 +45,7 @@ duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
 {
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  assert( DUF_CONFIGX( pdi )->pyp );
+  /* assert( DUF_CONFIGX( pdi )->pyp ); */
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( pdi )->pdi_name );
   DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
   DEBUG_ENDR( r );
