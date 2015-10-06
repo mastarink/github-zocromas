@@ -26,13 +26,13 @@ duf_r2sqlite_error_code( int rt )
 }
 
 duf_error_index_t
-duf_sqlite2duf( int r3 )
+duf_sqlite2duf( int r3, const char *func, int line )
 {
   DEBUG_STARTR( r );
   duf_error_code_t rc = 0;
 
   rc = duf_sqlite2r_error_code( r3 );
   if ( rc < 0 )
-    DUF_MAKE_ERROR( r, rc );
+    DUF_MAKE_ERRORFL( r, rc, func, line );
   DEBUG_ENDR( r );
 }

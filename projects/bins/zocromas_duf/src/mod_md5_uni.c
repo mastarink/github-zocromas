@@ -203,7 +203,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
     DUF_TRACE( select, 10, "<selected>" );
     /* md5id = duf_sql_column_long_long( pstmt, 0 ); */
     md5id = DUF_GET_UFIELD2( md5id );
-    rpr = 0;
+    /* rpr = 0; */
   }
   else
   {
@@ -244,17 +244,17 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       DUF_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_BIND_LL( md5sum1, md64[1], lr, pstmt );
       DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
-      DUF_SQL_STEP( lr, pstmt );
+      DUF_SQL_STEPC( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
       DUF_SQL_END_STMT( pdi, insert_md5, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( lr ) ) && !changes )
     {
       if ( need_id )
         md5id = duf_pdistat2file_md5id_existed( pdi, md64[1], md64[0], &lr );
     }
-    else if ( !lr /* assume SQLITE_OK */  )
+    else if ( DUF_NOERROR( lr ) /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
@@ -396,7 +396,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         DUF_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_BIND_LL( md5Id, md5id, r, pstmt );
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_STEPC( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
         DUF_SQL_END_STMT( pdi, update_md5id, r, pstmt );
 #endif

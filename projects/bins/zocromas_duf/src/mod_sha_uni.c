@@ -140,7 +140,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
     DUF_TRACE( select, 10, "<selected>" );
     /* sha1id = duf_sql_column_long_long( pstmt, 0 ); */
     sha1id = DUF_GET_UFIELD2( sha1id );
-    rpr = 0;
+    /* rpr = 0; */
   }
   else
   {
@@ -183,7 +183,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
       DUF_SQL_BIND_LL( sha1sum1, sha1[2], lr, pstmt );
       DUF_SQL_BIND_LL( sha1sum2, sha1[1], lr, pstmt );
       DUF_SQL_BIND_LL( sha1sum3, sha1[0], lr, pstmt );
-      DUF_SQL_STEP( lr, pstmt );
+      DUF_SQL_STEPC( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
       DUF_SQL_END_STMT( pdi, insert_sha1, lr, pstmt );
     }
@@ -337,7 +337,7 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         DUF_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_BIND_LL( sha1Id, sha1id, r, pstmt );
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_STEPC( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
         DUF_SQL_END_STMT( pdi, update_sha1id, r, pstmt );
 #endif

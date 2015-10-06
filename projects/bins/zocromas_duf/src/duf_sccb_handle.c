@@ -87,11 +87,11 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
         {
           cnt = cnt + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
         }
-        rpr = 0;
+        /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@counted B %llu by %s", cnt, csql );
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
-      assert( rpr >= 0 );
+      assert( DUF_NOERROR( rpr ) );
       DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
       DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }

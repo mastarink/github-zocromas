@@ -16,9 +16,10 @@
 #  define DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m) \
 	  { \
 	    int __rf = duf_sql_finalize( _pstmt_m ); \
-	    _pstmt_m = NULL; \
-	    if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE )) \
+	    DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE ); \
+	    if ( DUF_NOERROR(_rt) ) \
 	      _rt = __rf; \
+	    _pstmt_m = NULL; \
 	    DUF_TEST_R( _rt ); \
 	  } \
 	}
@@ -47,8 +48,7 @@
 
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_END_STMT(_pdi, _name, _rt, _pstmt_m) \
-	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
-	      _rt = 0; \
+	  DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
 	  if (_pstmt_m) \
@@ -81,8 +81,7 @@
 
 #  ifdef DUF_SQL_PDI_STMT
 #    define DUF_SQL_END_STMT_LOCAL(_pdi, _rt, _pstmt_m) \
-	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
-	      _rt = 0; \
+	  DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _rt = DUF_ERROR_PDI_SQL; \
 	  if (_pstmt_m) \
@@ -185,6 +184,7 @@
 
 #  define DUF_SQL_STEP( _rt, _pstmt_m ) \
   		  /* if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) */ DOR_LOWERE_N(20, _rt, duf_sql_step( _pstmt_m ), DUF_SQL_ROW, DUF_SQL_DONE)
+#  define DUF_SQL_STEPC( _rt, _pstmt_m ) DUF_SQL_STEP( _rt, _pstmt_m ); DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW, DUF_SQL_DONE )
 #  define DUF_SQL_CHANGES_NOPDI( _changes, _rt, _pstmt_m ) \
   		  if ( DUF_NOERROR(_rt) || DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) || DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
                     _changes = duf_sql_changes(  )
@@ -197,7 +197,7 @@
 	  DUF_TRACE(sql, 0, "(%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) \
 	  { \
-	    _rt = 0; \
+	    DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW ); \
 	    DUF_TRACE(sql, 0, "DO EACH ROW STEP:%s", duf_sql_stmt(_pstmt1)); \
 	    _ops ; \
             DUF_TRACE(sql, 0, "(OPS:%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \

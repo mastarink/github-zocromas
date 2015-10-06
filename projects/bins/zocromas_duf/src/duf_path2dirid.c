@@ -77,7 +77,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
     DUF_SQL_STEP( rpr, pstmt );
     if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
-      rpr = 0;
+      /* rpr = 0; */
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
       name = mas_strdup( DUF_GET_SFIELD2( name ) );
       if ( pparentid )

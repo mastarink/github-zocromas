@@ -46,7 +46,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
     dataid = DUF_GET_UFIELD2( dataid );
 #endif
     assert( dataid > 0 );
-    rpr = 0;
+    /* rpr = 0; */
   }
   else
   {
@@ -107,7 +107,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
       DUF_SQL_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), rpr, pstmt );
 
-      DUF_SQL_STEP( rpr, pstmt );
+      DUF_SQL_STEPC( rpr, pstmt );
       DUF_SQL_CHANGES( changes, rpr, pstmt );
       DUF_SQL_END_STMT( pdi, insert_filedata, rpr, pstmt );
     }

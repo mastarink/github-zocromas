@@ -199,7 +199,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_
     DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
     DUF_SQL_BIND_S( Name, fname, r, pstmt );
     DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_STEPC( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
     DUF_SQL_END_STMT( pdi, insert_filename, r, pstmt );
   }

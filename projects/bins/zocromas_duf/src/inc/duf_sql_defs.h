@@ -7,7 +7,7 @@
 #  define DUF_COMMA_AS(name, alias) , #name " AS " #alias
 
 #  define DUF_SQLITE2R_ERROR_CODE(_r3c) duf_sqlite2r_error_code(_r3c)
-#  define DUF_SQLITE2R_ERROR_INDEX(_r3c) duf_sqlite2duf(_r3c)
+#  define DUF_SQLITE2R_ERROR_INDEX(_r3c) duf_sqlite2duf(_r3c, FL)
 
 
 /* ###################################################################### */
@@ -49,10 +49,16 @@
 #  define DUF_SFIELD2OPT(name) const char*         DUF_SET_SFIELD2OPT(name)
 #  define DUF_UFIELD2OPT(name) unsigned long long  DUF_SET_UFIELD2OPT(name)
 
-/* DOR... : takes duf_error_index_t! */
-#  define DOR_SQLITE(_r, _fun)  DOR(_r, duf_sqlite2duf(_fun))
-#  define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, duf_sqlite2duf( _fun ), __VA_ARGS__ )
-#  define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, duf_sqlite2duf( _fun ), __VA_ARGS__ )
 
+#  if 0
+#    define DUF_SQLITE2DUF(_r, _r3) (DUF_MAKE_ERROR( _r, duf_sqlite2r_error_code( _r3 ) ), _r)
+#    define DOR_SQLITE(_r, _fun)  DOR(_r, DUF_SQLITE2DUF(_r, _fun))
+#    define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, DUF_SQLITE2DUF( _r, _fun ), __VA_ARGS__ )
+#    define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, DUF_SQLITE2DUF( _r, _fun ), __VA_ARGS__ )
+#  else
+#    define DOR_SQLITE(_r, _fun)  DOR(_r, duf_sqlite2duf(_fun, FL))
+#    define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, duf_sqlite2duf( _fun, FL ), __VA_ARGS__ )
+#    define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, duf_sqlite2duf( _fun, FL ), __VA_ARGS__ )
+#  endif
 /* #  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE2R_ERROR_CODE(_x)) */
 #endif

@@ -200,11 +200,11 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 #else
         modelid = DUF_GET_UFIELD2( modelid );
 #endif
-        lr = 0;
+        /* lr = 0; */
       }
-      if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) )
-        lr = 0;
-      DUF_TEST_R( lr );
+      /* if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) ) */
+      /*   lr = 0;                                 */
+      /* DUF_TEST_R( lr ); */
       DUF_SQL_END_STMT( pdi, select_model, lr, pstmt );
     }
 
@@ -284,10 +284,10 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
 #else
         exifid = DUF_GET_UFIELD2( exifid );
 #endif
-        lr = 0;
+        /* lr = 0; */
       }
-      DUF_CLEAR_ERROR( lr, DUF_SQL_DONE );
-      DUF_TEST_R( lr );
+      /* DUF_CLEAR_ERROR( lr, DUF_SQL_DONE ); */
+      /* DUF_TEST_R( lr ); */
       DUF_SQL_END_STMT( pdi, select_exif, lr, pstmt );
       /* if ( !exifid )                        */
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
@@ -329,7 +329,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       /*                                                                                                 */
       /*   DUF_SHOW_ERROR( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
       /* }                                                                                               */
-      DUF_SQL_STEP( lr, pstmt_insert );
+      DUF_SQL_STEPC( lr, pstmt_insert );
       /* DUF_TEST_R(lr); */
       DUF_SQL_CHANGES( changes, lr, pstmt_insert );
       if ( need_id && changes )
@@ -818,7 +818,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
                 DUF_TRACE( mod, 3, " S: %s ", sql );
                 DUF_SQL_BIND_LL( exifID, exifid, r, pstmt_update );
                 DUF_SQL_BIND_LL( dataID, dataid, r, pstmt_update );
-                DUF_SQL_STEP( r, pstmt_update );
+                DUF_SQL_STEPC( r, pstmt_update );
                 /* DUF_TEST_R(r); */
                 DUF_SQL_CHANGES( changes, r, pstmt_update );
                 DUF_SQL_END_STMT( pdi, update_exif, r, pstmt_update );

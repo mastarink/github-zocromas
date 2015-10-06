@@ -154,6 +154,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
     }
     else if ( DUF_IS_ERROR_N( r, DUF_SQL_DONE ) )
     {
+      /* DUF_CLEAR_ERROR( r, DUF_SQL_DONE ); */
       DUF_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
                  duf_levinfo_itemshowname( pdi ) );
       DUF_TRACE( select, 10, "<NOT selected> (%d)", r );

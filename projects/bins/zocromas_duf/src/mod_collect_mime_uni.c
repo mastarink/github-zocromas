@@ -174,11 +174,11 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
 #else
         mimeid = DUF_GET_UFIELD2( mimeId );
 #endif
-        lr = 0;
+        /* lr = 0; */
       }
-      if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) )
-        lr = 0;
-      DUF_TEST_R( lr );
+      /* if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) ) */
+      /*   lr = 0;                                 */
+      /* DUF_TEST_R( lr ); */
       DUF_SQL_END_STMT( pdi, select_mime, lr, pstmt );
     }
 
@@ -193,7 +193,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
       /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
       /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
-      DUF_SQL_STEP( lr, pstmt_insert );
+      DUF_SQL_STEPC( lr, pstmt_insert );
       /* DUF_TEST_R(lr); */
       DUF_SQL_CHANGES( changes, lr, pstmt_insert );
       /* DUF_SHOW_ERROR( "changes:%d", changes ); */
@@ -303,7 +303,7 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
           DUF_TRACE( mod, 3, " S: %s ", sql );
           DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
           DUF_SQL_BIND_LL( dataID, filedataid, r, pstmt_update );
-          DUF_SQL_STEP( r, pstmt_update );
+          DUF_SQL_STEPC( r, pstmt_update );
           /* DUF_TEST_R(r); */
           DUF_SQL_CHANGES( changes, r, pstmt_update );
           DUF_SQL_END_STMT( pdi, update_mime, r, pstmt_update );

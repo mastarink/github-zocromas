@@ -15,8 +15,10 @@
 
 #  define DUF_EREPORT(rc) (duf_enabled_ereport_i(rc)>0)
 
-#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  (_rval=(DUF_IS_ERROR(_code) ? duf_register_error_c( _code, FL, _msg) :    0 ))
+#  define DUF_MAKE_ERRORMFL(_rval, _code, _msg, _func, _line)  (_rval=(DUF_IS_ERROR(_code) ? duf_register_error_c( _code, _func, _line, _msg) :    0 ))
+#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  DUF_MAKE_ERRORMFL(_rval, _code, _msg, __func__, __LINE__)
 #  define DUF_MAKE_ERROR(_rval, _code)         DUF_MAKE_ERRORM(_rval, _code, NULL)
+#  define DUF_MAKE_ERRORFL(_rval, _code, _func, _line)         DUF_MAKE_ERRORMFL(_rval, _code, NULL, _func, _line)
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
 #  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  ERROR", __VA_ARGS__)
