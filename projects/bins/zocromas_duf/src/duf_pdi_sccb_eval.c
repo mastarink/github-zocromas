@@ -70,6 +70,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
   {
     DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
     DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
+    DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
   }
   {
     int r1 = 0;

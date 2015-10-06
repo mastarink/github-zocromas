@@ -37,6 +37,8 @@
 
 #include <time.h>
 #include <signal.h>
+#include <unistd.h>
+
 
 #include "duf_maintenance.h"
 
@@ -172,20 +174,22 @@ duf_main( int argc, char **argv )
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
   T( "@@@@%d %d %d", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX );
+  /* sleep( 3 ); */
+#if 0
+  if ( 0 );
   {
     unsigned k = 0;
 
-    for ( unsigned i = 0; i < duf_made_errors(  ); i++ )
+    for ( unsigned rp = 0; rp < duf_error_list_size(  ); rp++ )
     {
-      int ri = -i - 1;
-
-      if ( duf_error_code_i( ri ) != DUF_SQL_DONE && duf_error_code_i( ri ) != DUF_SQL_ROW )
+      if ( duf_error_code_p( rp ) != DUF_SQL_DONE && duf_error_code_p( rp ) != DUF_SQL_ROW )
       {
-        T( "@@@@@%d. %d. %s @ %s:%d", i, k, duf_error_name_i( ri ), duf_error_func_i( ri ), duf_error_line_i( ri ) );
+        T( "@@@@@%d. %d. %s @ %s:%d %s", rp, k, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ), duf_error_message_p( rp ) );
         k++;
       }
     }
   }
+#endif
   DEBUG_ENDR( r );
 }
 

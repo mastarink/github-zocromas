@@ -17,6 +17,10 @@
 /* ###################################################################### */
 
 
+/*
+ * possible error(s):
+ *   DUF_ERROR_OPTION_MULTIPLE
+ *   */
 static const duf_longval_extended_t *
 duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended, char vseparator, char **parg, int *pno, int *pr )
 {
@@ -66,10 +70,10 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   arg = NULL;
 
   mas_free( name );
-  if ( pr )
-    *pr = rpr;
   if ( extended )
     DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+  if ( pr )
+    *pr = rpr;
   return extended;
 }
 
@@ -78,15 +82,16 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
                      duf_option_source_t source )
 {
   DEBUG_STARTR( r );
-  const duf_longval_extended_t *extended = NULL;
   int found = 0;
   const duf_longval_extended_t *xtended = xtable->table;
 
-  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND );
-  while ( xtended && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
+  /* DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND ); */
+  while ( xtended /* && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) */  && DUF_NOERROR( r ) )
   {
+    const duf_longval_extended_t *extended = NULL;
     char *arg = NULL;
     int no = 0;
+
 
     extended = duf_find_cmd_long_no( string, xtended, vseparator, &arg, &no, &r );
     DUF_TRACE( options, 4, "string:%s; no:%d extended(+-):%d", string, no, extended ? 1 : 0 );
@@ -111,13 +116,16 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
   /* assert( ( found && DUF_NOERROR( r ) ) || ( !found && DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) ) ); */
   if ( found )
   {
-    DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-    if ( DUF_NOERROR( r ) )
-      r = found;
+    /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+    /* if ( DUF_NOERROR( r ) ) */
+    /*   r = found;            */
   }
   if ( found )
     DUF_TRACE( options, 3, "@executed" );
-  DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND );
+  if ( !found )
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
+  /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND ); */
+  DEBUG_ENDR( r );
 }
 
 int
@@ -130,20 +138,34 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
 
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
+  /* find and execute ALL matching commands */
   while ( ( xtable = *xtables++ ) && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
+/* 
+ * duf_exec_cmd_xtable >0 if found
+ * duf_exec_cmd_xtable == 0 if ???
+ * duf_exec_cmd_xtable < 0 if error
+ * */
     DOR( r, duf_exec_cmd_xtable( string, xtable, vseparator, istage, source ) );
-    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
-    if ( r > 0 )                /* DUF_NOERROR(r) equal to r>=0 ?? */
-      found += r;
+    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, r < 0 ? duf_error_name_i( r ) : "-", string );
+    if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
+    {
+      /* found one; continue to possibly find more */
+      found += 1;
+      r = 0;
+    }
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
-    DUF_TRACE( options, 3, "@@@@@%s at %s", duf_error_name_i( r ), xtable->name ? xtable->name : "??" );
+    DUF_TRACE( options, 3, "@@@@@%s at %s", r < 0 ? duf_error_name_i( r ) : "-", xtable->name ? xtable->name : "??" );
   }
+  /* no error if at least one found */
+  if ( found )
+    DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_stage_name( istage ) );
+    /* TODO DUF_POP_ERROR( r ); */
   }
 
   DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );

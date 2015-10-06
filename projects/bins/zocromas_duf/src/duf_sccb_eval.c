@@ -16,9 +16,11 @@
 int
 duf_ev_sccb( duf_scan_callbacks_t * sccb )
 {
+  DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, DUF_CONFIGX( pdi )->pdi_name );
-  return duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  DOR( r, duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DEBUG_ENDR( r );
 }
 
 int

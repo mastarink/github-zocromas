@@ -38,7 +38,7 @@
 	} \
 	else \
 	{ \
-	  DOR(_rt, DUF_ERROR_OPTION); \
+	  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
 #define DUF_MINMAXOPT(_no, _rt, _typ,_conv) \
@@ -94,7 +94,7 @@
 	} \
 	else \
 	{ \
-	  DOR(_rt, DUF_ERROR_OPTION); \
+	  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
 #define DUF_MOPT(_no, _rt,_typ,_mix,_conv) \
@@ -110,38 +110,35 @@
 	    mm->flag = 1; \
 	    mm->_mix = _conv( optargg, &__rl ); \
 	    if ( __rl < 0 ) \
-	    {  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION_VALUE);DUF_TEST_R( _rt ); } \
+	    {  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	    else \
 	    { DUF_TRACE( options, 4, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
 	  } \
 	} \
 	else \
 	{ \
-	  DOR(_rt, DUF_ERROR_OPTION); \
+	  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
 
 #define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout ) \
-      if(_rt>=0) \
+      if ( DUF_NOERROR(_rt) ) \
       { \
 	if( !_no ) \
 	{ \
-	  int __rl = 0; \
 	  const char *s; \
 	  _typ *mm; \
 	  s=optargg ? optargg : _defoptarg; \
 	  mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_hasoff == 1 */ \
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
-	    DOR(__rl, duf_set_file_special( s, mm->v.flag.overwrite, &mm->file, &mm->out, _defout, extended->call.value.u )); \
+	    DOR(_rt, duf_set_file_special( s, mm->v.flag.overwrite, &mm->file, &mm->out, _defout, extended->call.value.u )); \
 	    if (mm->out && mm->header_tty && isatty(fileno(mm->out))) { fprintf( mm->out, mm->header_tty ); } \
-	    if ( __rl < 0 ) \
-	    {  DOR(_rt, __rl); } \
 	  } \
 	} \
 	else \
 	{ \
-	  DOR(_rt, DUF_ERROR_OPTION); \
+	  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
 #define DUF_OUTPUTFILE(_no, _rt, _typ, _defout ) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout )

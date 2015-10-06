@@ -11,7 +11,7 @@ handle SIGPIPE nostop noprint
 # watch duf_config->targ.argc
 # watch duf_dbgfunlevel
 
-b evsql_begfin.c:67
+b duf_error_regfind.c:119
 
 run
 bt

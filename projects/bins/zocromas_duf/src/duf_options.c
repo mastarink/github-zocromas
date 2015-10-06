@@ -247,5 +247,5 @@ duf_stage_name( duf_option_stage_t istage )
     [DUF_OPTION_STAGE_INTERACTIVE] = "interactive",
     NULL
   };
-  return ( istage > DUF_OPTION_STAGE_ANY && istage < DUF_OPTION_STAGE_MAX ) ? tail[istage] : NULL;
+  return ( istage >= 0 && istage < DUF_OPTION_STAGE_MAX ) ? tail[istage] : NULL;
 }

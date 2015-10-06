@@ -99,7 +99,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) 
 #endif
 
 /* 20150819.133354 */
-int
+static int
 duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
@@ -226,7 +226,7 @@ duf_sccbh_eval_fs_items( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     /* DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED ); */
-    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ) ,DUF_ERROR_STATAT_ENOENT);
+    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", duf_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     /* assert( duf_levinfo_dfd( PDI ) ); */

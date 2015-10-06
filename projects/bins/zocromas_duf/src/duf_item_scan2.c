@@ -87,7 +87,6 @@ duf_scan_db_row_with_str_cb( duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2
    * DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); (* reset error if it was `MAX_DEPTH` *)
    * */
   DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
-
   DEBUG_ENDR( r );
 }
 
@@ -159,6 +158,5 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
   DOR( r, duf_scan_items_with_str_cb_sql( sql_selector, str_cb2, sccbh, node_type ) );
   mas_free( sql_selector );
   sql_selector = NULL;
-
   DEBUG_ENDR( r );
 }

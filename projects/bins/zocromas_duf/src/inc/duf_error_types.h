@@ -93,6 +93,7 @@ typedef enum
   DUF_OK = 0,
   DUF_ERROR_ERROR_BASE = DUF_SQLITE_ERROR_BASE,
   DUF_ERROR_ERROR_BASE_PLUS = -3000,
+  DUF_ERROR_UNDEFINED,
   DUF_ERROR_UNKNOWN,
   DUF_ERROR_UNKNOWN_NODE,
   DUF_ERROR_MAIN,
@@ -166,17 +167,18 @@ typedef struct
   duf_error_code_t code;
 } duf_errdesc_t;
 
+typedef int duf_error_index_t;
+
 typedef struct
 {
-  long made_id;
-  duf_error_code_t err;
+  duf_error_index_t index;
+  duf_error_code_t code;
   const char *funcid;
   int linid;
   int shown;
-  const char *message;
+  char *message;
 } duf_error_event_t;
 
-typedef int duf_error_index_t;
 
 #  define DUF_ERROR_COUNT ( DUF_ERROR_ERROR_MAX - DUF_ERROR_ERROR_BASE )
 

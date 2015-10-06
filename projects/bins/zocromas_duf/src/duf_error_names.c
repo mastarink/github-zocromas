@@ -92,6 +92,7 @@ const duf_errdesc_t _error_descriptions_table[] = {
   DUF_ERROR_NAME( MAS_SQL_WARNING_AUTOINDEX ),
 /*========================================*/
   DUF_ERROR_NAME( DUF_OK ),
+  DUF_ERROR_NAME( DUF_ERROR_UNDEFINED ),
   DUF_ERROR_NAME( DUF_ERROR_UNKNOWN ),
   DUF_ERROR_NAME( DUF_ERROR_UNKNOWN_NODE ),
   DUF_ERROR_NAME( DUF_ERROR_MAIN ),
