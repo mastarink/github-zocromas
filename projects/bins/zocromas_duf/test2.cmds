@@ -1,0 +1,17 @@
+# run -dfR @out2.cmds --trace-db=2 --max-seq=24 --cd=/ --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`"  --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`" --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`"
+recursive
+allow-files
+allow-directories
+output-file=/dev/pts/24
+# abraka
+# trace-options 2
+db-name test_tree
+trace-db 0
+set-max-seq 24
+cd /
+ls
+echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@
+ls
+echo=@@@@ 2 ============================================ ${TIME(%Y%m%d %T)} @@
+ls
+echo=@@@@@@ 3 ============================================ ${TIME(%Y%m%d %T)} @@
