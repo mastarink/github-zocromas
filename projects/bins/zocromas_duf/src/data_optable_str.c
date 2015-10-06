@@ -49,7 +49,13 @@ const duf_longval_extended_table_t optable_str = {
     /*      */ DO_OC( STR, save.path ) /*                                                   */ , DO_H( save path ) /*                        */ },
 
    {.o = {DO_Q( "history-file" ) /*      */ , DO_A_R /* */ , DO_V( HISTORY_FILE )} /*      */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( STR, cli.output.history_filename ) /*                                 */ , DO_H( history filename ) /*                         */ },
+    /*      */ DO_OC( STR, cli.output.history_filename ) /*                                 */ ,
+    DO_H( history filename ) /*                         */ },
+
+   {.o = {DO_Q( "config-dir" ) /*      */ , DO_A_R /* */ , DO_V( CONFIG_DIR )} /*          */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OC( STR, config_dir ), DO_AT_STAGE( PRESETUP ) /*                         */ , DO_H( config directory ) /*                 */ },
+   {.o = {DO_Q( "cmds-dir" ) /*      */ , DO_A_R /* */ , DO_V( CMDS_DIR )} /*              */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OC( STR, cmds_dir ), DO_AT_STAGE( SETUP ) /*                            */ , DO_H( config directory ) /*                 */ },
 
 
    {.o = {.name = NULL}}

@@ -73,7 +73,7 @@ duf_find_error_event_i( duf_error_index_t ri )
         break;
       }
     }
-  /* assert(rev); */
+  assert(rev);
   return rev;
 }
 

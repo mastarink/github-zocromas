@@ -413,8 +413,10 @@ duf_main_db( int argc DUF_UNUSED, char **argv  DUF_UNUSED)
 
   /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
 
+  /* I. duf_all_options -- STAGE_PRESETUP */
+  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP ), DUF_ERROR_OPTION_NOT_FOUND );
 
-  /* I. duf_all_options -- STAGE_SETUP */
+  /* II. duf_all_options -- STAGE_SETUP */
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
@@ -444,7 +446,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv  DUF_UNUSED)
 
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
 
-  /* II. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
+  /* III. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
   if ( DUF_ACTG_FLAG( interactive ) )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
   else

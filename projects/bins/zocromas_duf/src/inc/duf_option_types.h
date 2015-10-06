@@ -110,6 +110,7 @@ typedef enum
 /*   int val;          */
 /* };                  */
 typedef struct option duf_option_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -121,11 +122,13 @@ typedef struct
   duf_errc_int_func_t func;
   int arg;
 } duf_errc_int_arg_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
   duf_int_void_func_t func;
 } duf_int_void_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -135,6 +138,7 @@ typedef struct
 {
   duf_errc_argcv_func_t func;
 } duf_errc_argcv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -144,6 +148,7 @@ typedef struct
 {
   duf_errc_arg_func_t func;
 } duf_errc_arg_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -153,6 +158,7 @@ typedef struct
 {
   duf_errc_pargcv_func_t func;
 } duf_errc_pargcv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -162,6 +168,7 @@ typedef struct
 {
   duf_errc_pnv_func_t func;
 } duf_errc_pnv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -171,6 +178,7 @@ typedef struct
 {
   duf_errc_pargcnv_func_t func;
 } duf_errc_pargcnv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -180,6 +188,7 @@ typedef struct
 {
   duf_errc_psv_func_t func;
 } duf_errc_psv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -191,6 +200,7 @@ typedef struct
   duf_errc_psv_func_t func;
   const char *arg;
 } duf_errc_psv_arg_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -202,6 +212,7 @@ typedef struct
   duf_errc_psnv_func_t func;
   long arg;
 } duf_errc_psnv_arg_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -211,6 +222,7 @@ typedef struct
 {
   duf_errc_pargcsv_func_t func;
 } duf_errc_pargcsv_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -220,6 +232,7 @@ typedef struct
 {
   duf_errc_void_func_t func;
 } duf_errc_void_funcpair_t;
+
 /********************************************************************************************/
 typedef struct
 {
@@ -244,7 +257,8 @@ typedef enum
 } duf_offset_to_t;
 typedef enum
 {
-  DUF_OPTION_STAGE_SETUP = 1,
+  DUF_OPTION_STAGE_PRESETUP = 1,
+  DUF_OPTION_STAGE_SETUP,
   DUF_OPTION_STAGE_FIRST,
   DUF_OPTION_STAGE_LOOP,
   DUF_OPTION_STAGE_INTERACTIVE,

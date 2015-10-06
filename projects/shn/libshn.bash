@@ -266,7 +266,6 @@ function shn ()
 {
   local TIMEFORMAT=${TIMEFORMAT:-real %lR; user %lU; system %lS; cpu %P}
   declare -gx MSH_SHN_CWD 
-echo ">>$FUNCNAME>>>>> pwd:$(pwd)" >&2
   MSH_SHN_CWD=`pwd`
 # echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
   if pushd . >/dev/null ; then

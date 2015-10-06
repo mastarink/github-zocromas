@@ -61,6 +61,8 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
+  T( "stage:%s:%d", duf_stage_name( istage ), istage );
+  DUF_TRACE( temp, 0, "stage:%s:%d", duf_stage_name( istage ), istage );
   assert( duf_config );
 #if 0
   DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
@@ -241,6 +243,7 @@ const char *
 duf_stage_name( duf_option_stage_t istage )
 {
   static const char *tail[] = {
+    [DUF_OPTION_STAGE_PRESETUP] = "presetup",
     [DUF_OPTION_STAGE_SETUP] = "setup",
     [DUF_OPTION_STAGE_FIRST] = "first",
     [DUF_OPTION_STAGE_LOOP] = "loop",

@@ -53,16 +53,16 @@ function shn_run ()
 #       time eval "$bin $qargs"
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
 	  {
+	    local conffile=$(find $MSH_SHN_PROJECT_DIR -name ${rname}.conf)
 	    echo "# `datemt` : `daten` ++++++++++++++"
-	    echo "# cat $MSH_SHN_PROJECT_DIR/${rname}.conf"
-	    cat -n $MSH_SHN_PROJECT_DIR/${rname}.conf | sed -e 's@^@# => @'
+	    echo "# cat $conffile"
+	    cat -n $conffile | sed -e 's@^@# => @'
 	    echo "# $bin"
 	    echo "# run $qargs"
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.$(/bin/date '+%Y%m%d').txt
 	fi
 	{
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
-echo ">$FUNCNAME>>>>>> pwd:$(pwd)" >&2
 	    eval "$bin $qargs"
 	    retcode=$?
 	    popd  &>/dev/null

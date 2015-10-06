@@ -58,6 +58,13 @@ duf_cfg_create( void )
     if ( ry >= 0 )
       cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
+  {
+    const char *cfgdir;
+
+    cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
+    DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir );
+    DUF_CFGWS( cfg, config_dir, mas_strdup( cfgdir ) );
+  }
   DUF_CFGWSP( cfg, db.main.name, mas_strdup( "duf-main" ) );
   DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name, mas_strdup( "duf-tempo" ) );
@@ -154,8 +161,11 @@ duf_cfg_delete( duf_config_t * cfg )
     duf_ufilter_delete( cfg->puz );
     cfg->puz = NULL;
 
-    mas_free( cfg->config_path );
-    cfg->config_path = NULL;
+    mas_free( cfg->config_dir );
+    cfg->config_dir = NULL;
+
+    mas_free( cfg->config_file_path );
+    cfg->config_file_path = NULL;
 
 #if 0
     mas_free( cfg->db.dir );

@@ -185,7 +185,10 @@ duf_error_line_i( duf_error_index_t ri )
 
   rev = duf_find_error_event_i( ri );
   if ( rev )
+  {
     line = rev->linid;
+    assert( line );
+  }
   return line;
   /* return global_error_list[-ri - 1].linid; */
 }

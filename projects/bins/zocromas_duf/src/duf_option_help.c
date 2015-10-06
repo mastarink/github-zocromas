@@ -147,7 +147,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     name = DUF_CONFIGG( longopts_table )[ilong].name;
     codeval = DUF_CONFIGG( longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, NULL  );
+    extd = duf_longindex2extended( ilong, NULL );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
     if ( codeval && DUF_NOERROR( r ) )
@@ -741,6 +741,14 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "real 47m35.621s; user 8m38.055s; system 4m20.704s; cpu 27.27     	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
 
+
+  DUF_PRINTF( 0, "========================= as for 20151006.194418 ============" );
+  DUF_PRINTF( 0, "  ln -s `realpath dufconf/zocromas_duf.conf` /home/mastar/.mas/config/zocromas_duf.conf 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run @test0.cmds 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --config-dir=dufconf @test0.cmds 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config @test0.cmds 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --config-dir=/home/mastar/.mas/config/ --cmds-dir=test/duf/tests20151006  @test0.cmds 	- %s", "-= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );
@@ -785,7 +793,7 @@ duf_option_$_version( void )
   /* DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 ); */
 
   DUF_PUTSL( 0 );
-  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_path ) );
+  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_file_path ) );
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( cli.v.sbit ) ), DUF_CONFIGG( cli.v.sbit ) );
   DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( puz )->v.sbit ), DUF_CONFIGG( puz )->v.sbit );
   /* mas_free( sargv2 ); */

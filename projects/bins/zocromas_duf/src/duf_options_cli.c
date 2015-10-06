@@ -9,6 +9,7 @@
 #include "duf_option_names.h"
 
 #include "duf_config.h"
+#include "duf_options.h"
 /* ###################################################################### */
 #include "duf_options_string.h"
 #include "duf_options_cli.h"
@@ -249,6 +250,7 @@ duf_cli_options( duf_option_stage_t istage )
 
   DUF_TRACE( options, 0, "@@@@(%d) source: cli", istage );
   DUF_TRACE( options, +2, "cli options..." );
+  T( "cli at stage:%s:%d", duf_stage_name( istage ), istage);
 
   DOR( r, duf_clarify_cli_opts( DUF_CONFIGG( cli.shorts ), istage ) );
 

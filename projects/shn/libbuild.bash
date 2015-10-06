@@ -59,7 +59,6 @@ function shn_build_xcommand ()
     if [[ "${MSH_SHN_DIRS[build]}" ]] && [[ -d "${MSH_SHN_DIRS[build]}" ]] ; then
       shn_dbgmsg 3 $FUNCNAME ${MSH_SHN_DIRS[build]}
       if pushd "${MSH_SHN_DIRS[build]}" &>/dev/null ; then
-echo ">>$FUNCNAME>>>>> pwd:$(pwd)" >&2
   #     shn_pwd
 	shn_dbgmsg 4 $FUNCNAME ${MSH_SHN_DIRS[build]}
 	cmd=`which $cmd` || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
@@ -185,7 +184,6 @@ function shn_installed_list ()
 function shn_build_common_make ()
 {
 # shn_build_xcommand make -s $@ && shn_msgns common make $@ ok || return $?
-echo ">>$FUNCNAME>>>>> pwd:$(pwd)" >&2
   shn_build_xcommand make -s $@ && shn_msgns . || return $?
 }
 function shn_build_autoreconf ()
@@ -280,7 +278,6 @@ function shn_build_make ()
   shn_dbgmsg "$FUNCNAME 1"
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:make]=`datemt`
 #	  if [[ $MSH_SHN_BUILD_DIR ]] && pushd $MSH_SHN_BUILD_DIR >/dev/null && $cmd $@  >$errname 2>&1 ; then
-echo ">>$FUNCNAME>>>>> pwd:$(pwd)" >&2
   shn_build_common_make && shn_msgns make ok || return $?
   shn_dbgmsg "$FUNCNAME 2"
 # shn_build_list src || shn_build_list inc

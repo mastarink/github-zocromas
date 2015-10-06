@@ -49,7 +49,9 @@ typedef struct
   duf_cargvc_t carg;
   duf_argvc_t targ;
   int targ_offset;
-  char *config_path;
+  char *config_dir;
+  char *cmds_dir;
+  char *config_file_path;
 
   struct duf_depthinfo_s *pdi;
   unsigned nopen;

@@ -229,17 +229,17 @@ function shn_exit ()
 function shn_load ()
 {
   local retcode=0
-  pushd &>/dev/null
-  if ! [[ -L shn ]] && type -t shn_project_cd &>/dev/null ; then
-    shn_project_cd
-    shn_dbgmsg "after shn_project_cd $LINENO $FUNCNAME" >&2
-#   "${MSH_SHN_PROJECT_NAME:-zoctypes}"
+  if pushd . &>/dev/null ; then
+    if ! [[ -L shn ]] && type -t shn_project_cd &>/dev/null ; then
+      shn_project_cd
+      shn_dbgmsg "after shn_project_cd $LINENO $FUNCNAME" >&2
+    fi
+    if [[ -f shn/libwork.bash ]] ; then
+      . shn/libwork.bash
+      retcode=$?
+    fi
+    popd &>/dev/null
   fi
-  if [[ -f shn/libwork.bash ]] ; then
-    . shn/libwork.bash
-    retcode=$?
-  fi
-  popd &>/dev/null
   return $retcode
 }
 function shn_last ()

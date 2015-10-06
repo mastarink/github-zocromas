@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_OPTIONS_DEF_H
 #  define MAS_DUF_OPTIONS_DEF_H
 
-#  define DUF_CONFIG_PATH_FROM_ENV "MSHDIRS_CONF_DIR"
+#  define DUF_CONFIG_DIR_FROM_ENV "MSHDIRS_CONF_DIR"
 #  define DUF_CONFIG_FILE_NAME "zocromas_duf"
 
 /* #  define DUF_DECLARE_OPTION(_name)                                         */
@@ -354,6 +354,8 @@ typedef enum
   DUF_OPTION_VAL_PWD,
   DUF_OPTION_VAL_FLAG_QUIT,     /* same as no-interactive */
   DUF_OPTION_VAL_HISTORY_FILE,
+  DUF_OPTION_VAL_CONFIG_DIR,
+  DUF_OPTION_VAL_CMDS_DIR,
 
 
   DUF_OPTION_VAL_TAG_FILE,

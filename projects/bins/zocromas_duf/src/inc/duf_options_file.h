@@ -2,7 +2,7 @@
 #  define MAS_DUF_OPTIONS_FILE_H
 
 
-int duf_infile_options_at_file( duf_option_stage_t istage, const char *filename, int optional );
+int duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, int optional );
 int duf_incfg_options( duf_option_stage_t istage );
 
 int duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int optional );
