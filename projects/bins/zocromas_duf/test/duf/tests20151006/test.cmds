@@ -1,8 +1,0 @@
-db-name test_tree
-recursive
-#files
-directories
-# open-db
-# cd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf
-cd=human
-evaluate-sccb=tree
