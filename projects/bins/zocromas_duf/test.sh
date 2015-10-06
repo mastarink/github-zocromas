@@ -1,7 +1,7 @@
 #!/bin/sh
 if [[ $MSH_SHN_PROJECT_DIR ]] && pushd $MSH_SHN_PROJECT_DIR >/dev/null ; then
   source ./.localrc
-  td=$(realpath test/duf)
+  td=$(realpath test/duf/20151006)
   wd=$td/`/bin/date '+%Y%m%d'`
   if ! [[ -d $wd ]] ; then
     mkdir $wd
