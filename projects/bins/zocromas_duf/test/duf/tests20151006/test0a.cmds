@@ -17,7 +17,7 @@ create-database
 progress
 # include-fs=*.c
 # include-fs=*.jpg
-fs-cp-ignore=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+fs-cp-ignore=/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
 # include-fs=1106_222036.r.jpg
 exclude-fs=*.Po
 exclude-fs=*.o
@@ -26,12 +26,12 @@ exclude-fs=SHN_GVIMER_PLUS-*
 cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
 evaluate-sccb=dirs,filedata,filenames
 echo .....
-fs-rm-force test/tree/1106_222036.r.jpg
+fs-rm-force /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
 echo .....
 evaluate-sccb=dirs,filedata,filenames,md5,sha1,crc32,exif,mime
 echo .....
-fs-cp-ignore=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+fs-cp-ignore /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
 echo .....
-fs-ls=test/tree.r/1106_222036.r.jpg test/tree/1106_222036.r.jpg
+fs-ls /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
 
 # call test1a.cmds

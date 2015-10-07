@@ -40,7 +40,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       if ( errno == ENOENT )
       {
         /* DUF_SHOW_ERROR( "No such entry %s", path ); */
-        DUF_MAKE_ERROR( r, DUF_ERROR_STATAT_ENOENT );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "file %s", path );
       }
       else
       {
@@ -95,9 +95,6 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
     int ry = 0;
 
 
-
-
-
     ry = stat( path, &pdhandle->st );
     DUF_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
 
@@ -115,7 +112,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 
         s = strerror_r( errno, serr, sizeof( serr ) );
         DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
-        DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "file %s", path );
       }
     }
 
@@ -128,7 +125,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
   else if ( !path )
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
-    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "file %s", path );
   }
   DUF_TRACE( fs, 5, "(%d)? stated %s", r, path );
   DEBUG_ENDR( r );
@@ -200,7 +197,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     }
     else if ( ry < 0 && errno == ENOENT )
     {
-      DUF_MAKE_ERROR( r, DUF_ERROR_OPENAT_ENOENT );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT_ENOENT, "file %s", name );
     }
     else if ( ry < 0 )
     {
@@ -209,13 +206,13 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 
       s = strerror_r( errno, serr, sizeof( serr ) );
       DUF_SHOW_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
-      DUF_MAKE_ERROR( r, DUF_ERROR_OPENAT );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "file %s", name );
     }
   }
   else
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
-    DUF_MAKE_ERROR( r, DUF_ERROR_OPENAT );
+    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "file %s", name );
   }
   DEBUG_ENDR( r );
 }

@@ -22,6 +22,7 @@ const duf_longval_extended_table_t optable_flag = {
   .table =                      /* */
   {
 #if 0
+    /* SEE --disable-memusage */
    {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
 #endif
    {.o = {DO_Q( "create-database" ) /*  */ , DO_A_N /* */ , DO_VF( CREATE_DB )} /*         */ , DO_CL( SYSTEM ) /*  */ ,

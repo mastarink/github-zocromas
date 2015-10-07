@@ -88,11 +88,14 @@ function localrc_new
 # localrc $@
 
   echo "localrc_new to do" >&2
+
 if localrc_new $@ ; then
-  echo "localrc_new done" >&2
+# echo "localrc_new done" >&2
+  echo -n ""  >&2
 # alias >&2
 else
-  echo "localrc_new error $?" >&2
+# echo "localrc_new error $?" >&2
+  echo -n ""  >&2
 fi
 
 

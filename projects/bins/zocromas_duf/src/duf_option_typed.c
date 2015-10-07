@@ -430,7 +430,6 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           }
           else if ( optargg && *optargg )
             DOR( r, duf_tmpdb_add( extended->o.val, extended->o.name, optargg ) );
-          T( "@@@@(%d) %s", r, duf_error_name_i( r ) );
         }
         break;
         /*

@@ -341,20 +341,20 @@ duf_error_report_i( duf_error_code_t ri, int test, int verb )
       DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 3:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
       break;
     case 4:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
       break;
     case 5:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
       break;
     default:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
     }
   }
 }

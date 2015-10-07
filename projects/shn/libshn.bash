@@ -268,8 +268,8 @@ function shn ()
   declare -gx MSH_SHN_CWD 
   MSH_SHN_CWD=`pwd`
 # echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
-  if pushd . >/dev/null ; then
+  if pushd . &>/dev/null ; then
     time shn_i $*
-    popd >/dev/null
+    popd &>/dev/null
   fi
 }

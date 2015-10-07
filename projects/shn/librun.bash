@@ -20,6 +20,7 @@ function shn_run ()
   local bin cmdfile tmpcmd sedex lt rname
   local qargs
 # for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
+echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir
   if [[ "$rname" ]] && [[ "$bsrc" ]] ; then
@@ -48,8 +49,8 @@ function shn_run ()
     shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
 #   shn_msg " ---- to run '$bin $1 ...' ----- "
 #   shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
-      echo ; echo ; echo
-      echo ; echo ; echo
+      shn_msg ; shn_msg ; shn_msg
+      shn_msg ; shn_msg ; shn_msg
 #       time eval "$bin $qargs"
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
 	  {
@@ -90,6 +91,7 @@ function shn_run ()
     shn G
   fi
 # shn_msg "Returned $retcode"
+echo "=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<" >&2
   return $retcode
 }
 function shn_debug ()

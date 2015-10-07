@@ -400,8 +400,9 @@ duf_config_make_db_main_path( void )
   /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", DUF_CONFIGGSP(db.dir), DUF_CONFIGGSP(db.main.name) ); */
   mas_free( DUF_CONFIGW( db.main.fpath ) );
   /* TODO to use something like duf_expand_selected_db() here TODO */
-  DUF_CONFIGWS( db.main.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) );
-  DUF_CONFIGWS( db.main.fpath, duf_normalize_path( DUF_CONFIGG( db.main.fpath ) ) );
+
+  /* DUF_CONFIGWS( db.main.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
+  DUF_CONFIGWS( db.main.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;
@@ -428,8 +429,9 @@ duf_config_make_db_adm_path( void )
 
   DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", DUF_CONFIGGSP( db.dir ), DUF_CONFIGGSP( db.adm.name ) );
   mas_free( DUF_CONFIGW( db.adm.fpath ) );
-  DUF_CONFIGWS( db.adm.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) );
-  DUF_CONFIGWS( db.adm.fpath, duf_normalize_path( DUF_CONFIGG( db.adm.fpath ) ) );
+  /* DUF_CONFIGWS( db.adm.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
+  /* DUF_CONFIGWS( db.adm.fpath, duf_normalize_path( DUF_CONFIGG( db.adm.fpath ) ) ); */
+  DUF_CONFIGWS( db.adm.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;
@@ -466,9 +468,9 @@ duf_config_make_db_temp_path( void )
   DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", DUF_CONFIGGSP( db.dir ),
              DUF_CONFIGGSP( db.tempo.name ) );
   mas_free( DUF_CONFIGW( db.tempo.fpath ) );
-  DUF_CONFIGWS( db.tempo.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) );
-  DUF_CONFIGWS( db.tempo.fpath, duf_normalize_path( DUF_CONFIGG( db.tempo.fpath ) ) );
-
+  /* DUF_CONFIGWS( db.tempo.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
+  /* DUF_CONFIGWS( db.tempo.fpath, duf_normalize_path( DUF_CONFIGG( db.tempo.fpath ) ) ); */
+  DUF_CONFIGWS( db.tempo.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;
