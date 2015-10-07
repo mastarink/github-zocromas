@@ -4,7 +4,7 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_ref.h" */
+#include "duf_config_ref.h"
 
 #include "duf_option_find.h"
 #include "duf_option_extended.h"
@@ -70,8 +70,10 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   arg = NULL;
 
   mas_free( name );
-  if ( extended )
-    DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+  /* if ( extended )                                                                                               */
+  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( cli.dbg.verbose ), extended->o.name ); */
+  /* else                                                                                                          */
+  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( cli.dbg.verbose ), name );             */
   if ( pr )
     *pr = rpr;
   return extended;
@@ -122,7 +124,7 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
   }
   if ( found )
     DUF_TRACE( options, 3, "@executed" );
-  if ( !found )
+  if ( !found && DUF_NOERROR( r ) )
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND ); */
   DEBUG_ENDR( r );
@@ -152,7 +154,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
     {
       /* found one; continue to possibly find more */
       found += 1;
-      r = 0;
+      /* r = 0; */
     }
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */

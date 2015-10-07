@@ -115,7 +115,6 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
   int rpr = 0;
   char *path = NULL;
 
-  path = mas_strdup( dir );
   if ( DUF_CONFIGGSP( db.subdir ) )
   {
     if ( strchr( DUF_CONFIGGSP( db.subdir ), '/' ) )
@@ -126,8 +125,7 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
     {
       int ry;
 
-      path = mas_strcat_x( path, DUF_CONFIGGSP( db.subdir ) );
-      path = duf_normalize_path( path );
+      path = duf_concat_path( dir, DUF_CONFIGGSP( db.subdir ) );
       {
         struct stat st;
 
@@ -144,8 +142,8 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
               char *s;
 
               s = strerror_r( errno, serr, sizeof( serr ) );
-              DUF_MAKE_ERROR( rpr, DUF_ERROR_MKDIR );
-              DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
+              DUF_MAKE_ERRORM( rpr, DUF_ERROR_MKDIR, "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
+              /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
             }
           }
         }

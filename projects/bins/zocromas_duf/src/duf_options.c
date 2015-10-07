@@ -61,8 +61,6 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  T( "stage:%s:%d", duf_stage_name( istage ), istage );
-  DUF_TRACE( temp, 0, "stage:%s:%d", duf_stage_name( istage ), istage );
   assert( duf_config );
 #if 0
   DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
@@ -79,7 +77,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DUF_TRACE( temp, 0, "@@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
 #endif
 
-  DUF_TRACE( options, 0, "@@Stage:%d", istage );
+  DUF_TRACE( options, 0, "@@@@stage:%s(%d)", duf_stage_name( istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
@@ -88,11 +86,12 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
 #if 1
-#  define DUF_OPTSRC(_r, _xr, _name,  ...)  \
+#  define DUF_OPTSRC(_r, _xr, _name, _istage )  \
   { \
+    DUF_TRACE(options, 0, "@@@%s : %s", duf_stage_name(_istage), #_name); \
     if ( DUF_NOERROR( r ) ) \
     { \
-      DORF( _r, duf_ ## _name ## _options,  __VA_ARGS__ ); \
+      DORF( _r, duf_ ## _name ## _options, _istage ); \
       _xr = _r; \
     } \
     DUF_TRACE( options, +2, "@got " #_name " options; " #_xr ":%d (%c)  %s", _xr, _xr > ' ' && _xr < 'z' ? _xr : '-', duf_error_name_i( r ) ); \

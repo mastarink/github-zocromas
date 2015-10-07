@@ -276,7 +276,7 @@ duf_main_db_open( void )
 
         ry = stat( DUF_CONFIGGS( db.main.fpath ), &st );
         if ( ry < 0 )
-          DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+          DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, DUF_CONFIGGS( db.main.fpath ) );
       }
       DORF( r, duf_sql_open, DUF_CONFIGGS( db.main.fpath ) );
     }
@@ -354,7 +354,7 @@ duf_main_db_close( int ra )
 }
 
 static int DUF_UNUSED
-duf_store_log( int argc DUF_UNUSED, char *const argv[] DUF_UNUSED )
+duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -404,7 +404,7 @@ duf_store_log( int argc DUF_UNUSED, char *const argv[] DUF_UNUSED )
  * 8. call duf_sql_close to close database
  * */
 int
-duf_main_db( int argc DUF_UNUSED, char **argv  DUF_UNUSED)
+duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -414,9 +414,11 @@ duf_main_db( int argc DUF_UNUSED, char **argv  DUF_UNUSED)
   /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
 
   /* I. duf_all_options -- STAGE_PRESETUP */
+  DUF_TRACE( options, 0, "@@@@I" );
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP ), DUF_ERROR_OPTION_NOT_FOUND );
 
   /* II. duf_all_options -- STAGE_SETUP */
+  DUF_TRACE( options, 0, "@@@@II" );
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
@@ -447,6 +449,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv  DUF_UNUSED)
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
 
   /* III. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
+  DUF_TRACE( options, 0, "@@@@III %s", duf_error_name_i( r ) );
   if ( DUF_ACTG_FLAG( interactive ) )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
   else

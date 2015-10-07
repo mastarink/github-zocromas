@@ -26,6 +26,7 @@ typedef enum
   DUF_TRACE_MODE_dirent,
   DUF_TRACE_MODE_dirs,
   DUF_TRACE_MODE_error,
+  DUF_TRACE_MODE_handle_error,
   DUF_TRACE_MODE_errorr,
   DUF_TRACE_MODE_exif,
   DUF_TRACE_MODE_filedata,

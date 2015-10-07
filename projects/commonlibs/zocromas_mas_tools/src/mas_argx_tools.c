@@ -17,7 +17,7 @@ mas_add_argx_arg_nodup( mas_string_setv_t * ptargx, char *arg )
 }
 
 void
-mas_del_argx( mas_string_setv_t * ptargx, int from_a )
+mas_del_argx( mas_string_setv_t * ptargx, int from_a  __attribute__ ( ( unused ) ) )
 {
   (void) mas_del_argv( ptargx->c, ptargx->v, 0 );
   ptargx->c = 0;

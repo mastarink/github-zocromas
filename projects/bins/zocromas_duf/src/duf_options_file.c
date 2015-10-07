@@ -35,8 +35,8 @@ duf_infilepath( const char *filepath, int *pry )
   mas_free( DUF_CONFIGG( config_file_path ) );
   DUF_CONFIGWS( config_file_path, mas_strdup( filepath ) );
   DUF_TRACE( options, 0, "opened conf file %s %s", DUF_CONFIGG( config_file_path ), f ? "Ok" : "FAIL" );
-  if ( !f && pry )
-    *pry = errno;
+  if ( pry )
+    *pry = f ? 0 : -errno;
   return f;
 }
 
@@ -49,13 +49,7 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   char *cfgpath = NULL;
 
   assert( duf_config );
-  cfgpath = mas_strdup( at );
-  assert( cfgpath );
-#if 0
-  cfgpath = mas_strcat_x( cfgpath, "/" );
-#else
-  cfgpath = duf_normalize_path( cfgpath );
-#endif
+  cfgpath = duf_normalize_path( at );
   assert( cfgpath );
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
@@ -63,11 +57,11 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   cfgpath = mas_strcat_x( cfgpath, filename );
   assert( cfgpath );
   f = duf_infilepath( cfgpath, &ry );
-  mas_free( cfgpath );
   if ( ry < 0 )
-    DUF_MAKE_ERRORM( rpr, DUF_ERROR_OPEN, mas_strdup( cfgpath ) );
+    DUF_MAKE_ERRORM( rpr, DUF_ERROR_OPEN, "file %s", cfgpath );
   if ( pr )
     *pr = rpr;
+  mas_free( cfgpath );
   return f;
 }
 
@@ -159,7 +153,7 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath 
   {
     DUF_TRACE( options, 0, "fail to read config file %s", filepath );
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPEN ); */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN, mas_strdup( filepath ) );
+    DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN, "file '%s'", filepath );
     /* assert(0); */
   }
   DEBUG_ENDR( r );
@@ -180,27 +174,19 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
 
   if ( cfgdir )
     f = duf_infile( 0, cfgdir, filename, &rt1 );
-  if ( f )
-    T( "@@@@@@file %s/%s present", cfgdir, filename );
   if ( !f && v > 0 )
   {
     cfgdir = getenv( "HOME" );
     DUF_TRACE( options, 0, "getting variable HOME value for config path (secondary) : %s", cfgdir );
     f = duf_infile( 1, cfgdir, filename, &rt2 );
     if ( f )
-    {
-      T( "@@@@@@file $HOME/%s present", filename );
       DUF_CLEAR_ERROR( rt1, DUF_ERROR_OPEN );
-    }
   }
   if ( !f && v > 1 )
   {
     f = duf_infile( 0, ".", filename, &rt3 );
     if ( f )
-    {
-      T( "@@@@@@file ./%s present", filename );
       DUF_CLEAR_ERROR( rt2, DUF_ERROR_OPEN );
-    }
   }
 
   DUF_TRACE( explain, 0, "to read config file" );
@@ -224,10 +210,8 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
   {
     DUF_TRACE( explain, 0, "read config file" );
     TR( r );
-    T( "@@@@%d %d %d %d", rt1, rt2, rt3, r );
     if ( DUF_NOERROR( r ) )
       r = rt1 < 0 ? rt1 : ( rt2 < 0 ? rt2 : ( rt3 < 0 ? rt3 : r ) );
-    T( "@@@@%d %d %d %d", rt1, rt2, rt3, r );
   }
   DEBUG_ENDR( r );
 }
@@ -269,7 +253,6 @@ duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int option
 
   filename = mas_strdup( bfilename );
   filename = mas_strcat_x( filename, ".conf" );
-  T( "conf at stage:%s:%d -- %s -- %s", duf_stage_name( istage ), istage, DUF_CONFIGGS( config_dir ), filename );
   DUF_TRACE( options, 0, "@@@@(%d) source: infile(%s)", istage, filename );
 
   DOR( r, duf_infile_options_at_cfgfile( istage, filename, optional ) );
@@ -283,7 +266,7 @@ duf_incfg_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  if ( istage == DUF_OPTION_STAGE_SETUP )
+  if ( istage <= DUF_OPTION_STAGE_SETUP )
     DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME, 0 ) );
 
   DEBUG_ENDR( r );
@@ -294,7 +277,7 @@ duf_incfg_last_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME "_last", 0 ) );
+  DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME "_last", 1 ) );
 
   DEBUG_ENDR( r );
 }

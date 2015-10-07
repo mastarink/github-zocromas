@@ -133,6 +133,7 @@ duf_expand_sql( const char *sql, const char *dbname )
 char *
 duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
 {
+  int rpr = 0;
   char *sql = NULL;
 
   if ( sql_set->fieldset && sql_set->selector2 )
@@ -158,12 +159,12 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         pfs = sql_set->fieldsets;
         if ( *pfs )
         {
-          while ( DUF_NOERROR( *pr ) && pfs && *pfs )
+          while ( DUF_NOERROR( rpr ) && pfs && *pfs )
           {
             const char *fs;
 
-            fs = duf_unref_fieldset( *pfs, sql_set->type, pr );
-            if ( DUF_NOERROR( *pr ) )
+            fs = duf_unref_fieldset( *pfs, sql_set->type, &rpr );
+            if ( DUF_NOERROR( rpr ) )
             {
               assert( fs );
               if ( fieldset )
@@ -183,15 +184,15 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         {
           const char *fs;
 
-          fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, pr );
-          if ( DUF_NOERROR( *pr ) )
+          fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, &rpr );
+          if ( DUF_NOERROR( rpr ) )
             fieldset = mas_strdup( fs );
         }
       }
-      if ( DUF_NOERROR( *pr ) )
+      if ( DUF_NOERROR( rpr ) )
       {
-        selector = duf_unref_selector( sql_set->selector2, sql_set->type, pr );
-        if ( DUF_NOERROR( *pr ) && selector && fieldset )
+        selector = duf_unref_selector( sql_set->selector2, sql_set->type, &rpr );
+        if ( DUF_NOERROR( rpr ) && selector && fieldset )
         {
           sql = mas_strdup( "SELECT " );
           sql = mas_strcat_x( sql, fieldset );
@@ -237,12 +238,16 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
     }
   }
   else
-    DUF_SHOW_ERROR( "Bad arg" );
-  if ( DUF_IS_ERROR( *pr ) && sql )
+  {
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_PTR );
+  }
+  if ( DUF_IS_ERROR( rpr ) && sql )
   {
     mas_free( sql );
     sql = NULL;
   }
+  if ( pr )
+    *pr = rpr;
   return sql;
 }
 
@@ -250,6 +255,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
 char *
 duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
 {
+  int rpr = 0;
   char *sql = NULL;
   const char *selector2 = NULL;
 
@@ -265,7 +271,7 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
       int has_order = 0;
       const char *selector = NULL;
 
-      selector = duf_unref_selector( selector2, sql_set->type, pr );
+      selector = duf_unref_selector( selector2, sql_set->type, &rpr );
       if ( selector )
       {
         if ( sql_set->cte )
@@ -342,7 +348,9 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
   }
   else
   {
-    DUF_SHOW_ERROR( "Bad arg" );
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_PTR );
   }
+  if ( pr )
+    *pr = rpr;
   return sql;
 }

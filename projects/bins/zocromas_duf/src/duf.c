@@ -49,6 +49,8 @@
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
 
+#include "duf_error_reporting.h"
+
 
 #include "duf_maindb.h"
 
@@ -160,12 +162,15 @@ duf_main( int argc, char **argv )
 
   DUF_TRACE( explain, 1, "@main with config" );
   DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
+#if 0
   if ( DUF_IS_ERROR( r ) )
   {
     DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_message_i( r ),
                     duf_error_func_i( r ), duf_error_line_i( r ) );
     DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
   }
+#endif
+
 
   duf_config_delete(  );
   assert( !duf_config );
@@ -173,22 +178,8 @@ duf_main( int argc, char **argv )
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
-  T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, duf_error_list_size(  ) );
+  /* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, duf_error_list_size(  ) ); */
   /* sleep( 3 ); */
-#if 1
-  {
-    unsigned k = 0;
-
-    for ( unsigned rp = 0; rp < duf_error_list_size(  ); rp++ )
-    {
-      /* if ( duf_error_code_p( rp ) != DUF_SQL_DONE && duf_error_code_p( rp ) != DUF_SQL_ROW ) */
-      {
-        T( "@@@@@%d. %d. %s @ %s:%d %s", rp, k, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ), duf_error_message_p( rp ) );
-        k++;
-      }
-    }
-  }
-#endif
   DEBUG_ENDR( r );
 }
 

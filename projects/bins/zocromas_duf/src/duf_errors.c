@@ -38,7 +38,7 @@ duf_vclear_error_c( duf_error_code_t re, va_list args )
       char *en1 = mas_strdup( duf_error_name_c( re ) );
       char *en2 = mas_strdup( duf_error_name_c( c ) );
 
-      DUF_TRACE( error, 2, "@@@clear (%d) %s ? (%d) %s (2nd from list)", re, en1, c, en2 );
+      DUF_TRACE( handle_error, 2, "@@@clear (%d) %s ? (%d) %s (2nd from list)", re, en1, c, en2 );
       mas_free( en1 );
       mas_free( en2 );
     }
@@ -73,11 +73,11 @@ duf_clear_error_i( duf_error_index_t ri, ... )
   if ( DUF_IS_ERROR( ri ) )
   {
     c = duf_error_code_i( ri );
-    DUF_TRACE( error, 2, "c:%d <= ri:%d", c, ri );
+    DUF_TRACE( handle_error, 2, "c:%d <= ri:%d", c, ri );
     if ( DUF_IS_ERROR( c ) )
     {
       c = duf_vclear_error_c( c, args );
-      DUF_TRACE( error, 2, "@(%d) %s", c, duf_error_name_c( c ) );
+      DUF_TRACE( handle_error, 2, "@(%d) %s", c, duf_error_name_c( c ) );
       if ( c == 0 )
       {
         duf_delete_error_i( ri );
@@ -88,7 +88,7 @@ duf_clear_error_i( duf_error_index_t ri, ... )
     }
   }
   va_end( args );
-  DUF_TRACE( error, 2, "@(%d) %s %s", c, duf_error_name_c( c ), duf_error_name_i( ri ) );
+  DUF_TRACE( handle_error, 2, "@(%d) %s %s", c, duf_error_name_c( c ), duf_error_name_i( ri ) );
 
   return ri;
 }

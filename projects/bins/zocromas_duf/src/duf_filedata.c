@@ -123,9 +123,8 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
         dataid = duf_sql_last_insert_rowid(  );
         if ( !dataid )
         {
-          DUF_SHOW_ERROR( "(2) no dataid by parentid=%llu", duf_levinfo_dirid_up( pdi ) );
           if ( DUF_NOERROR( rpr ) )
-            DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
+            DUF_MAKE_ERRORM( rpr, DUF_ERROR_NOT_IN_DB, "(2) no dataid by parentid=%llu", duf_levinfo_dirid_up( pdi ) );
         }
         else
         {

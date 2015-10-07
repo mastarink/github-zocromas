@@ -80,7 +80,7 @@ mas_find_eq_value( const char *s )
 }
 
 static const char *
-mas_expand_getenv( const char *name, const char *arg )
+mas_expand_getenv( const char *name, const char *arg __attribute__ ( ( unused ) ) )
 {
   return getenv( name );
 }
@@ -214,7 +214,7 @@ mas_skip_space( const char *args )
 }
 
 const char *
-mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot )
+mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot __attribute__ ( ( unused ) ) )
 {
   char cend = 0;
   char quote = 0;
@@ -616,21 +616,25 @@ char *
 mas_strcat_xt( char *s1, const char *s2 )
 {
   char *r = NULL;
-  int l, l1, l2;
 
-  l1 = s1 ? strlen( s1 ) : 0;
-  l2 = s2 ? strlen( s2 ) : 0;
-  l = l1 + l2;
-  if ( l > 0 )
+  if ( s1 || s2 )
   {
-    r = mas_malloc( l + 1 );
-    if ( s1 )
+    size_t l, l1, l2;
+
+    l1 = s1 ? strlen( s1 ) : 0;
+    l2 = s2 ? strlen( s2 ) : 0;
+    l = l1 + l2;
+    /* if ( l > 0 ) -- fixed 20151007.143418 - empty string should be allocated too!! */
     {
-      strcpy( r, s1 );
-      mas_free( s1 );
+      r = mas_malloc( l + 1 );
+      if ( s1 )
+      {
+        strcpy( r, s1 );
+        mas_free( s1 );
+      }
+      if ( s2 )
+        strcpy( r + l1, s2 );
     }
-    if ( s2 )
-      strcpy( r + l1, s2 );
   }
   return r;
 }
@@ -639,24 +643,28 @@ char *
 mas_strncat_xt( char *s1, const char *s2, size_t maxs2 )
 {
   char *r = NULL;
-  int l, l1, l2;
 
-  l1 = s1 ? strlen( s1 ) : 0;
-  l2 = s2 ? strlen( s2 ) : 0;
-  if ( maxs2 < l2 )
-    l2 = maxs2;
-  l = l1 + l2;
-  if ( l > 0 )
+  if ( s1 || s2 )
   {
-    r = mas_malloc( l + 1 );
-    if ( s1 )
+    size_t l, l1, l2;
+
+    l1 = s1 ? strlen( s1 ) : 0;
+    l2 = s2 ? strlen( s2 ) : 0;
+    if ( maxs2 < l2 )
+      l2 = maxs2;
+    l = l1 + l2;
+    /* if ( l > 0 ) -- fixed 20151007.143318 - empty string should be allocated too!! */
     {
-      memcpy( r, s1, l1 );
-      mas_free( s1 );
+      r = mas_malloc( l + 1 );
+      if ( s1 )
+      {
+        memcpy( r, s1, l1 );
+        mas_free( s1 );
+      }
+      if ( s2 )
+        memcpy( r + l1, s2, l2 );
+      r[l] = 0;
     }
-    if ( s2 )
-      memcpy( r + l1, s2, l2 );
-    r[l] = 0;
   }
   return r;
 }

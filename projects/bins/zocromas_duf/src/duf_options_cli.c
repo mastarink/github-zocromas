@@ -72,14 +72,30 @@ duf_reorder_argvc_at_sign( duf_argvc_t * ptarg )
   return duf_reorder_argv_at_sign( ptarg->argc, ptarg->argv );
 }
 
-static void
-duf_clarify_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+static char *
+duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
 {
   const char *arg;
   static const char *msg = "Invalid option";
+  char buffer[2048] = "";
 
   arg = DUF_CONFIGG( carg.argv )[optindd];
+  if ( DUF_CONFIGG( cli.dbg.verbose ) )
+    snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
+  else
+    snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
+  return mas_strdup( buffer );
+}
+
 #if 0
+static void
+duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+{
+  /* const char *arg; */
+  /* static const char *msg = "Invalid option"; */
+
+  /* arg = DUF_CONFIGG( carg.argv )[optindd]; */
+#  if 0
   if ( optoptt && codeval > ' ' && codeval <= 'z' )
   {
     if ( DUF_CONFIGG( cli.dbg.verbose ) == 0 )
@@ -93,39 +109,29 @@ duf_clarify_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, c
     }
   }
   else
-#endif
+#  endif
   {
+#  if 0
     if ( DUF_CONFIGG( cli.dbg.verbose ) )
       DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
     else
       DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s'", msg, arg );
-#if 0
+#  else
+    char *s;
+
+    s = duf_clrfy_cli_opts_msgs( codeval, optindd, optoptt, shorts_unused );
+    DUF_SHOW_ERROR( "@@@@@@@@@@@%s", s );
+    mas_free( s );
+#  endif
+#  if 0
     for ( int i = 0; i < DUF_CONFIGG( carg.argc ); i++ )
     {
       DUF_SHOW_ERROR( "@@@ (%d) %c%d '%s'", optindd, i == optindd ? '*' : ' ', i, DUF_CONFIGG( carg.argv )[i] );
     }
+#  endif
+  }
+}
 #endif
-  }
-}
-
-static char *
-duf_clarify_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
-{
-  const char *arg;
-  static const char *msg = "Invalid option";
-  char buffer[2048] = "";
-
-  arg = DUF_CONFIGG( carg.argv )[optindd];
-  if ( DUF_CONFIGG( cli.dbg.verbose ) )
-  {
-    snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
-  }
-  else
-  {
-    snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
-  }
-  return mas_strdup( buffer );
-}
 
 /* 20150924.144037 */
 static int
@@ -176,7 +182,8 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
       char *msg = NULL;
 
       optoptt = optopt;
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, ( msg = duf_clarify_cli_opts_msgs( codeval, optindp, optoptt, shorts ) ) );
+      msg = duf_clrfy_cli_opts_msgs( codeval, optindp, optoptt, shorts );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, msg );
       mas_free( msg );
     }
 /*
@@ -188,9 +195,10 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
     DOR( r, duf_clarify_opt_x( codeval, longindex, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
-
+#if 0
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) )
-      duf_clarify_cli_opts_msg( codeval, optindp, optoptt, shorts );
+      duf_clrfy_cli_opts_msg( codeval, optindp, optoptt, shorts );
+#endif
     optindp = optind;
   }
   numxargv = carg.argc - optind;
@@ -250,9 +258,10 @@ duf_cli_options( duf_option_stage_t istage )
 
   DUF_TRACE( options, 0, "@@@@(%d) source: cli", istage );
   DUF_TRACE( options, +2, "cli options..." );
-  T( "cli at stage:%s:%d", duf_stage_name( istage ), istage);
 
   DOR( r, duf_clarify_cli_opts( DUF_CONFIGG( cli.shorts ), istage ) );
+  if ( istage == DUF_OPTION_STAGE_PRESETUP )
+    DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
 
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name_i( r ) );
   DEBUG_ENDR( r );

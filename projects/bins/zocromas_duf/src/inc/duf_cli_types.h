@@ -101,6 +101,7 @@ typedef struct
   int dirent;
   int dirs;
   int error;
+  int handle_error;
   int errorr;
   int exif;
   int filedata;

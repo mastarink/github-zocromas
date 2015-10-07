@@ -22,6 +22,7 @@ int duf_enabled_ereport_i( duf_error_index_t rtest );
 
 int duf_ecount_reported_c( duf_error_code_t rtest );
 int duf_ecount_reported_i( duf_error_code_t ri );
+int duf_ecount_reported_rev( duf_error_event_t * rev );
 
 
 void duf_set_emax_count_c( int maxcount, duf_error_code_t rtest );
@@ -34,5 +35,8 @@ int duf_error_line_i( duf_error_index_t e );
 const char *duf_error_func_i( duf_error_index_t e );
 const char *duf_error_message_i( duf_error_index_t e );
 
+void duf_error_report_i( duf_error_code_t ri, int test, int verb );
+void duf_error_report_p( size_t rp, int test, int verb );
+void duf_error_report_all( int test, int verb );
 
 #endif

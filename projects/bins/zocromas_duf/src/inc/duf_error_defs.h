@@ -15,24 +15,29 @@
 
 #  define DUF_EREPORT(rc) (duf_enabled_ereport_i(rc)>0)
 
-#  define DUF_MAKE_ERRORMFL(_rval, _code, _msg, _func, _line)  (_rval=(DUF_IS_ERROR(_code) ? duf_register_error_c( _code, _func, _line, _msg) :    0 ))
-#  define DUF_MAKE_ERRORM(_rval, _code, _msg)  DUF_MAKE_ERRORMFL(_rval, _code, _msg, __func__, __LINE__)
-#  define DUF_MAKE_ERROR(_rval, _code)         DUF_MAKE_ERRORM(_rval, _code, NULL)
-#  define DUF_MAKE_ERRORFL(_rval, _code, _func, _line)         DUF_MAKE_ERRORMFL(_rval, _code, NULL, _func, _line)
+#  define DUF_MAKE_ERRORFLM(_rval, ...)  ( _rval = duf_register_error_c( __VA_ARGS__ ) )
+#  define DUF_MAKE_ERRORM(_rval, _code, ...)  DUF_MAKE_ERRORFLM(_rval, _code, __func__, __LINE__, __VA_ARGS__ )
+#  define DUF_MAKE_ERROR(_rval, _code )         (_rval = duf_register_error_c( _code, __func__, __LINE__, NULL ))
+#  define DUF_MAKE_ERRORFL(_rval, _code, _func, _line )         DUF_MAKE_ERRORFLM(_rval, _code, _func, _line, NULL )
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
-#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  ERROR", __VA_ARGS__)
-#  define DUF_SHOW_ERROR_TEST( _fmt, ... ) 		DUF_SHOW_ERROR_WP( "@@> > > > > > > ", "@@@@@@@@@"_fmt,  __VA_ARGS__ )
+
+
+
+
+
 
 /* #  ifdef DUF_T_NOIF                                                                            */
 /* #    define DUF_ERRORQ( _cond, ... )            ( ( _cond ) ? DUF_SHOW_ERROR(__VA_ARGS__) : 0) */
 /* #  else                                                                                        */
 /* #    define DUF_ERRORQ( _cond, ... )            if (_cond)  DUF_SHOW_ERROR(__VA_ARGS__)        */
 /* #  endif                                                                                       */
-#  define DUF_SHOW_ERRORiV( v )				DUF_SHOW_ERROR( #v ":%d" , v )
 #  define DUF_ERRSYS( ... )				DUF_TRACESYS( error, 0, __VA_ARGS__ )
 #  define DUF_ERRSYSE( _ern, ... )			DUF_TRACESYSE( _ern, error, 0, __VA_ARGS__ )
 
+#  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP( "@@  ERROR", __VA_ARGS__)
+#  define DUF_SHOW_ERROR_TEST( _fmt, ... ) 		DUF_SHOW_ERROR_WP( "@@ [TEST] ", "@@@@@@@@@"_fmt,  __VA_ARGS__ )
+#  define DUF_SHOW_ERRORiV( v )				DUF_SHOW_ERROR( #v ":%d" , v )
 /* ###################################################################### */
 
 /* error message if arg is not 0 */
@@ -40,13 +45,13 @@
 
 #  define DUF_TEST_RX_END(_rval) }
 
-#  define DUF_SHOW_ERROR_TEST_WP_STD(_rval, _prefix) DUF_SHOW_ERROR_WP( _prefix, "[%s] (#%d) {+%d} #%ld #%u", \
+#  define DUF_SHOW_ERROR_TEST_WP_STD(_rval, _prefix) DUF_SHOW_ERROR_WP( _prefix, "[%s] (ri:%d) {en:%d} lsz:%ld rep:%u:%u", \
 					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), \
-    						duf_error_list_size(), duf_ecount_reported_i(_rval) )
+    						duf_error_list_size(), duf_ecount_reported_i(_rval), duf_icount_reported_i(_rval) )
 /* DUF_SHOW_ERROR_TEST_STD : takes duf_error_index_t! */
-#  define DUF_SHOW_ERROR_TEST_STD(_rval) DUF_SHOW_ERROR_TEST( "[%s] (#%d) {+%d} #%ld #%u", \
+#  define DUF_SHOW_ERROR_TEST_STD(_rval)           DUF_SHOW_ERROR_TEST(          "[%s] (ri:%d) {en:%d} lsz:%ld rep:%u:%u", \
 					  (_rval)<0?duf_error_name_i(_rval):"+", _rval, duf_enabled_ereport_n_i(_rval), \
-    						duf_error_list_size(), duf_ecount_reported_i(_rval) )
+    						duf_error_list_size(), duf_ecount_reported_i(_rval), duf_icount_reported_i(_rval) )
 
 
 

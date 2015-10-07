@@ -69,24 +69,65 @@ duf_realpath( const char *path, int *pr )
   return real_path;
 }
 
+/* 20151007.135909 */
+/* allocates! */
 char *
-duf_concat_path( char *path, const char *subpath )
+duf_concat_path( const char *path, const char *subpath )
 {
+  char *npath = NULL;
+
   if ( path && subpath && *path && *subpath )
   {
-    path = duf_normalize_path( path );
-    path = mas_strcat_x( path, subpath );
+    npath = duf_normalize_path( path );
+    npath = mas_strcat_x( npath, subpath );
   }
-  return path;
+  return npath;
 }
 
+/* 20151007.135934 */
+/* allocates! */
 char *
-duf_normalize_path( char *path )
+duf_normalize_path( const char *path )
 {
+  char *npath = NULL;
+
   if ( path && *path )
   {
-    if ( path[strlen( path ) - 1] != '/' )
-      path = mas_strcat_x( path, "/" );
+#if 0
+    size_t len;
+
+    len = strlen( path );
+    if ( path[len - 1] != '/' )
+    {
+      npath = mas_strdup( path );
+      npath = mas_strcat_x( npath, "/" );
+    }
+    else
+    {
+      while ( path[len - 1] == '/' )
+        len--;
+      npath = mas_strndup( path, len + 1 );
+    }
+#else
+    const char *ppath;
+    const char *sl;
+
+    ppath = path;
+    /* npath = mas_strdup( "" ); */
+    while ( ( sl = strchr( ppath, '/' ) ) )
+    {
+      npath = mas_strncat_x( npath, ppath, sl - ppath );
+      npath = mas_strcat_x( npath, "/" );
+      ppath = sl + 1;
+      while ( *ppath == '/' )
+        ppath++;
+    }
+    if ( ppath && *ppath )
+    {
+      npath = mas_strcat_x( npath, ppath );
+      npath = mas_strcat_x( npath, "/" );
+    }
+#endif
   }
-  return path;
+  return npath;
 }

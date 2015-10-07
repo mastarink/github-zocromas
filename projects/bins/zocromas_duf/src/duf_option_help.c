@@ -746,8 +746,8 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  ln -s `realpath dufconf/zocromas_duf.conf` /home/mastar/.mas/config/zocromas_duf.conf 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=dufconf @test0.cmds 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config @test0.cmds 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run  --config-dir=/home/mastar/.mas/config/ --cmds-dir=test/duf/tests20151006  @test0.cmds 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config  @test0.cmds 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config/ --cmds-dir=test/duf/tests20151006  @test0.cmds 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

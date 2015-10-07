@@ -23,7 +23,7 @@
 
 /* #define DUF_NOTIMING */
 static int noreport_error[DUF_ERROR_COUNT] = { 0 };
-static int count_error[DUF_ERROR_COUNT] = { 0 };
+static int count_reported[DUF_ERROR_COUNT] = { 0 };
 static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 
 static int force_count_ereport = 0;
@@ -148,7 +148,7 @@ _duf_enabled_ereport_c( duf_error_code_t rc, int maxerr )
       re = 0;                   /* sql ? ? ? */
     }
     else if ( errnumber >= 0 && errnumber < maxerr
-              && ( max_show_count_error[errnumber] <= 0 || count_error[errnumber] < max_show_count_error[errnumber] - 1 ) )
+              && ( max_show_count_error[errnumber] <= 0 || count_reported[errnumber] < max_show_count_error[errnumber] - 1 ) )
       re = noreport_error[errnumber];
   }
   return re;
@@ -277,7 +277,7 @@ _duf_ecount_reported_c( duf_error_code_t rc, int maxerr )
     int errnumber = duf_errnumber_c( rc );
 
     if ( errnumber >= 0 && errnumber < maxerr )
-      re = count_error[errnumber]++;
+      re = count_reported[errnumber]++;
   }
   return re;
 }
@@ -292,7 +292,102 @@ duf_ecount_reported_c( duf_error_code_t rc )
 }
 
 int
+duf_ecount_reported_rev( duf_error_event_t * rev )
+{
+  if ( rev )
+    rev->count_reported++;
+  return duf_ecount_reported_c( duf_error_code_rev( rev ) );
+}
+
+int
 duf_ecount_reported_i( duf_error_code_t ri )
 {
-  return duf_ecount_reported_c( duf_error_code_i( ri ) );
+  duf_error_event_t *rev = NULL;
+
+  rev = duf_find_error_event_i( ri );
+  if ( rev )
+    rev->count_reported++;
+  return duf_ecount_reported_c( duf_error_code_rev( rev ) );
+}
+
+void
+duf_error_report_i( duf_error_code_t ri, int test, int verb )
+{
+
+  if ( ri < 0 )
+  {
+    duf_error_event_t *rev = duf_find_error_event_i( ri );
+    int erep = duf_ecount_reported_rev( rev );
+    int irep = duf_icount_reported_rev( rev );
+    const char *func = duf_error_func_rev( rev );
+    int line = duf_error_line_rev( rev );
+    const char *msg = duf_error_message_rev( rev );
+    const char *ename = duf_error_name_rev( rev );
+    const char *prefix = test ? "@@ [TEST] " : "@@  ERROR";
+
+    switch ( verb )
+    {
+    case 0:
+      DUF_FPRINTF0( 0, stderr, ".   " );
+      DUF_FPRINTF0( 0, stderr, ".@@  %s    ", ename );
+      DUF_FPRINTF0( 0, stderr, "@@@@@@@@" "%s%s", msg ? "  " : "", msg );
+      break;
+    case 1:
+      DUF_FPRINTF0( 0, stderr, ".   " );
+      DUF_FPRINTF0( 0, stderr, ".%s      ", prefix );
+      DUF_FPRINTF0( 0, stderr, "@@@@@@@@" "[%s]%s%s (%s:%d)", ename, msg ? " - " : "", msg, func, line );
+      break;
+    case 2:
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
+      break;
+    case 3:
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      break;
+    case 4:
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      break;
+    case 5:
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+      break;
+    default:
+      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u verb:%d",
+                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, verb );
+    }
+  }
+}
+
+void
+duf_error_report_p( size_t rp, int test, int verb )
+{
+  duf_error_event_t *rev = NULL;
+
+  /* assert( rp >= 0 ); */
+  rev = duf_find_error_event_p( rp );
+  if ( rev )
+    duf_error_report_i( rev->index, test, verb );
+}
+
+void
+duf_error_report_all( int test, int verb )
+{
+  unsigned k = 0;
+
+  for ( unsigned rp = 0; rp < duf_error_list_size(  ); rp++ )
+  {
+    /* if ( duf_error_code_p( rp ) != DUF_SQL_DONE && duf_error_code_p( rp ) != DUF_SQL_ROW ) */
+    {
+      /* T( "@@@@@@%d. %d. %s @ %s:%d %s", rp, k, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ), duf_error_message_p( rp ) ); */
+#if 0
+      T( "@@@@@@@%d. %s @ %s:%d %s", rp + 1, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ), duf_error_message_p( rp ) );
+      DUF_SHOW_ERROR( "@@@@@@@@%d. %s @ %s:%d %s", rp + 1, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ),
+                      duf_error_message_p( rp ) );
+#else
+      duf_error_report_p( rp, test, verb );
+#endif
+      k++;
+    }
+  }
 }

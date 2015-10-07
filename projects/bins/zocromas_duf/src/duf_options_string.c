@@ -12,6 +12,7 @@
 
 /* #include "duf_option_extended.h" */
 #include "duf_option_cmd.h"
+#include "duf_options.h"
 
 /* ###################################################################### */
 #include "duf_options_string.h"

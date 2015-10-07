@@ -264,7 +264,8 @@ mas_escape( char *str )
   ns = mas_malloc( len );
   ip = str;
   op = ns;
-  while ( str && *str && op - ns < len )
+  /* assert( op >= ns ); */
+  while ( str && *str && ( ( size_t ) ( op - ns ) ) < len )
   {
     if ( *ip == '\\' )
     {
@@ -378,7 +379,8 @@ mas_load_stat( int fd, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefil
 }
 
 char *
-mas_load_file( FILE * file, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
+mas_load_file( FILE * file, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg
+               __attribute__ ( ( unused ) ) )
 {
   char *filedata = NULL;
 
@@ -422,7 +424,7 @@ mas_load_file( FILE * file, size_t size, size_t * ptruesize, ino_t * ptrueinode,
 }
 
 char *
-mas_load_fd( int fd, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
+mas_load_fd( int fd, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg __attribute__ ( ( unused ) ) )
 {
   char *filedata = NULL;
 
@@ -498,13 +500,13 @@ mas_load_filename_fd( const char *filepath, size_t size, size_t * ptruesize, ino
 }
 
 void
-mas_common_constructor( const char *fname, int lin, int lev )
+mas_common_constructor( const char *fname, int lin __attribute__ ( ( unused ) ), int lev )
 {
   fprintf( stderr, "\n%s CONstructor %s e%d @", lev == 0 ? "--------------------" : "********************", fname, errno );
 }
 
 void
-mas_common_destructor( const char *fname, int lin, int lev )
+mas_common_destructor( const char *fname, int lin __attribute__ ( ( unused ) ), int lev )
 {
   fprintf( stderr, "\n%s DEstructor %s e%d @", lev == 0 ? "--------------------" : "********************", fname, errno );
 }

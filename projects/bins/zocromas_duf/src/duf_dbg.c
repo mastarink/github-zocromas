@@ -38,7 +38,7 @@ duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, uns
 int
 duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 {
-  int minverbose = 4;
+  int minverbose = 15;
 
   if ( dbgfunc_enabled && duf_config && ( ( DUF_CONFIGX( cli.dbg.verbose ) >= minverbose ) || DUF_CONFIGX( cli.trace.calls ) ) )
   {

@@ -30,6 +30,9 @@
     duf_vprintf( duf_config ? duf_config->cli.output.level:0, 1 /*noeol*/, _min, 0, \
 		DUF_FL, _out, __VA_ARGS__ )
 
+#  define DUF_FPRINTF0( _min, _out, ...) \
+    duf_printf( 0, 0 /*noeol*/, _min, 0, \
+		DUF_FL, _out, __VA_ARGS__ )
 #  define DUF_FPRINTF( _min, _out, ...) \
     duf_printf( duf_config ? duf_config->cli.output.level:0, 0 /*noeol*/, _min, 0, \
 		DUF_FL, _out, __VA_ARGS__ )

@@ -177,6 +177,7 @@ typedef struct
   int linid;
   int shown;
   char *message;
+  int count_reported;
 } duf_error_event_t;
 
 

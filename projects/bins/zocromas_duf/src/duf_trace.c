@@ -125,7 +125,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_U
       for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      DUF_FPRINTFNE( 0, out, "\r%c%2d:%2d ", signum, level, minlevel );
+      DUF_FPRINTFNE( 0, out, "\r%cL%-2d:%2d ", signum, level, minlevel );
       DUF_FPRINTFNE( 0, out, "[%s%-7s%s] ", duf_fcolor_s( out, "\x1b[1;34m" ), uname, duf_fcolor_s( out, "\x1b[m" ) );
       DUF_FPRINTFNE( 0, out, "%s%3u%s:", duf_fcolor_s( out, "\x1b[1;33m" ), linid, duf_fcolor_s( out, "\x1b[m" ) );
 #if 0

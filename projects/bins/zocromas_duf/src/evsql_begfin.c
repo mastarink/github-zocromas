@@ -65,10 +65,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
     if ( DUF_NOERROR( r ) )
     {
       DUF_SQL_STEPC( r, pstmt );
-/* DUF_SHOW_ERROR( "@@@ %s", duf_error_name(r) ); */
       DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-/* DUF_SHOW_ERROR( "@@@ %s: %s", duf_error_name(r),  worksql); */
-
     }
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
   }

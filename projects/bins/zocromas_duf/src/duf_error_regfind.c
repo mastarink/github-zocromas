@@ -52,7 +52,7 @@ duf_find_error_event_p( size_t rp )
   duf_error_event_t *rev = NULL;
 
   /* assert( rp >= 0 ); */
-  if ( /* rp >= 0 && */ rp < global_error_list_size )
+  if (  /* rp >= 0 && */ rp < global_error_list_size )
     rev = &global_error_list[rp];
   return rev;
 }
@@ -62,8 +62,7 @@ duf_find_error_event_i( duf_error_index_t ri )
 {
   duf_error_event_t *rev = NULL;
 
-  assert( ri < 0 );
-  if ( global_error_list_size > 0 )
+  if ( ri < 0 && global_error_list_size > 0 )
     for ( int i = global_error_list_size - 1; i >= 0; i-- )
     {
       /* T("@@@@@@i:%d",i); */
@@ -73,15 +72,17 @@ duf_find_error_event_i( duf_error_index_t ri )
         break;
       }
     }
-  assert(rev);
   return rev;
 }
 
 duf_error_index_t
-duf_register_error_c( duf_error_code_t code, const char *funcid, int linid, const char *message )
+duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, const char *fmt, va_list args )
 {
   duf_error_index_t ri = 0;
+  char message[4096] = "";
 
+  if ( fmt )
+    vsnprintf( message, sizeof( message ), fmt, args );
   if ( code < 0 )
   {
     if ( !global_error_list )
@@ -92,12 +93,14 @@ duf_register_error_c( duf_error_code_t code, const char *funcid, int linid, cons
     assert( global_error_list_size < MAX_ERRORS );
     if ( global_error_list_size < MAX_ERRORS )
     {
+      memset( &global_error_list[global_error_list_size], 0, sizeof( global_error_list[global_error_list_size] ) );
+
       ri = global_error_list[global_error_list_size].index = -++global_error_index;
       assert( ri < 0 );
       global_error_list[global_error_list_size].code = code;
       global_error_list[global_error_list_size].funcid = funcid;
       global_error_list[global_error_list_size].linid = linid;
-      global_error_list[global_error_list_size].message = message ? mas_strdup( message ) : NULL;
+      global_error_list[global_error_list_size].message = *message ? mas_strdup( message ) : NULL;
       assert( ri < 0 );
       global_error_list_size++;
     }
@@ -110,21 +113,49 @@ duf_register_error_c( duf_error_code_t code, const char *funcid, int linid, cons
   return ri;
 }
 
+duf_error_index_t
+duf_register_error_c( duf_error_code_t code, const char *funcid, int linid, const char *fmt, ... )
+{
+  duf_error_index_t ri;
+  va_list args;
+
+  va_start( args, fmt );
+  ri = duf_vregister_error_c( code, funcid, linid, fmt, args );
+  va_end( args );
+  return ri;
+}
+
 void
 duf_delete_error_rev( duf_error_event_t * rev )
 {
   if ( rev && global_error_list_size > 0 )
+  {
     for ( int i = global_error_list_size - 1; i >= 0; i-- )
     {
       if ( rev == &global_error_list[i] )
       {
         mas_free( rev->message );
+        rev->message = NULL;
         if ( global_error_list_size > 1 )
-          memcpy( rev, rev + 1, ( global_error_list_size - 1 - i ) * sizeof( global_error_list[0] ) );
+        {
+#if 0
+          memcpy( rev, rev + 1, ( global_error_list_size - i ) * sizeof( global_error_list[0] ) );
+#else
+          unsigned k = 0;
+
+          for ( unsigned j = i; j < global_error_list_size; j++ )
+          {
+            global_error_list[j] = global_error_list[j + 1];
+            k++;
+          }
+          assert( global_error_list_size - i == k );
+#endif
+        }
         global_error_list_size--;
         break;
       }
     }
+  }
 }
 
 void

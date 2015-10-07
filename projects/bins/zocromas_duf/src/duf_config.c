@@ -62,17 +62,18 @@ duf_cfg_create( void )
     const char *cfgdir;
 
     cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
-    DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir );
+    /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
     DUF_CFGWS( cfg, config_dir, mas_strdup( cfgdir ) );
   }
   DUF_CFGWSP( cfg, db.main.name, mas_strdup( "duf-main" ) );
   DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name, mas_strdup( "duf-selected" ) );
-  DUF_CFGWN( cfg, cli.trace.any, DUF_CFGW( cfg, cli.trace.error ) += 1 );
+  DUF_CFGW( cfg, cli.trace.error ) += 5;
+  /* DUF_CFGWN( cfg, cli.trace.any, DUF_CFGG( cfg, cli.trace.error ) ); */
   /* cfg->cli.trace.options = 1; */
   /* cfg->cli.trace.fs += 1; */
-  cfg->cli.trace.temp += 1;
+  DUF_CFGW( cfg, cli.trace.temp ) += 1;
 
   {
     int tbcount = 0;
@@ -163,6 +164,9 @@ duf_cfg_delete( duf_config_t * cfg )
 
     mas_free( cfg->config_dir );
     cfg->config_dir = NULL;
+
+    mas_free( cfg->cmds_dir );
+    cfg->cmds_dir = NULL;
 
     mas_free( cfg->config_file_path );
     cfg->config_file_path = NULL;
@@ -317,6 +321,8 @@ void
 duf_config_delete( void )
 {
   DEBUG_START(  );
+  duf_error_report_all( 0, DUF_CONFIGG( cli.dbg.verbose ) );
+
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
   duf_config4trace = duf_config = NULL;
@@ -331,11 +337,11 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_FPRINTF( 0, stderr, "db.dir: %s\n", DUF_CONFIGGSP( db.dir ) );
-    DUF_FPRINTF( 0, stderr, "db.path: %s\n", DUF_CONFIGGS( db.path ) );
+    DUF_FPRINTF( 0, stderr, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
+    DUF_FPRINTF( 0, stderr, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
-    DUF_FPRINTF( 0, stderr, "targ.argv[%d]: %s\n", ia, duf_config->targ.argv[ia] );
+    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->targ.argv[ia] );
 
   DEBUG_ENDR( r );
 }
@@ -368,14 +374,14 @@ duf_config_optionally_show( void )
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->puz->globx.include_fs_files.argc, duf_config->puz->globx.include_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@ include-fs %s", sif );
+    DUF_TRACE( config, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->puz->globx.exclude_fs_files.argc, duf_config->puz->globx.exclude_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
+    DUF_TRACE( config, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }
 #endif
@@ -511,13 +517,13 @@ duf_config_make_db_paths( void )
       DOR( r, duf_config_make_db_temp_path(  ) );
 #  endif
 #endif
-    assert( DUF_CONFIGG( db.main.fpath ) );
+    /* assert( DUF_CONFIGG( db.main.fpath ) ); */
     {
-      DUF_TRACE( any, 0, "dbfile: %s", DUF_CONFIGG( db.main.fpath ) );
+      DUF_TRACE( db, 0, "dbfile: %s", DUF_CONFIGG( db.main.fpath ) );
 #ifdef MAS_SPLIT_DB
-      DUF_TRACE( any, 0, "adm dbfile: %s", DUF_CONFIGG( db.adm.fpath ) );
+      DUF_TRACE( db, 0, "adm dbfile: %s", DUF_CONFIGG( db.adm.fpath ) );
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
-      DUF_TRACE( any, 0, "tempo dbfile: %s", DUF_CONFIGG( db.tempo.fpath ) );
+      DUF_TRACE( db, 0, "tempo dbfile: %s", DUF_CONFIGG( db.tempo.fpath ) );
 #  endif
       /* DUF_TRACE( any, 0, "selected dbfile: %s", DUF_CONFIGG(db.selected.fpath) ); */
 #endif

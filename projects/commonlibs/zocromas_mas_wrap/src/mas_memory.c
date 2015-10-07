@@ -52,24 +52,28 @@ char *
 _mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 )
 {
   char *r = NULL;
-  int l, l1, l2;
 
-  l1 = s1 ? strlen( s1 ) : 0;
-  l2 = s2 ? strlen( s2 ) : 0;
-  if ( maxs2 < l2 )
-    l2 = maxs2;
-  l = l1 + l2;
-  if ( l > 0 )
+  if ( s1 || s2 )
   {
-    r = _mas_malloc( func, line, l + 1 );
-    if ( s1 )
+    size_t l, l1, l2;
+
+    l1 = s1 ? strlen( s1 ) : 0;
+    l2 = s2 ? strlen( s2 ) : 0;
+    if ( l2 > maxs2 )
+      l2 = maxs2;
+    l = l1 + l2;
+    /* if ( l > 0 ) -- fixed 20151007.142906 - empty string should be allocated too!! */
     {
-      memcpy( r, s1, l1 );
-      _mas_free( func, line, s1 );
+      r = _mas_malloc( func, line, l + 1 );
+      if ( s1 )
+      {
+        memcpy( r, s1, l1 );
+        _mas_free( func, line, s1 );
+      }
+      if ( s2 )
+        memcpy( r + l1, s2, l2 );
+      r[l] = 0;
     }
-    if ( s2 )
-      memcpy( r + l1, s2, l2 );
-    r[l] = 0;
   }
   return r;
 }
@@ -136,7 +140,7 @@ _print_memlist( const char *func, int line, int fn_f, int s_f, FILE * f, const c
     r = 0;
     if ( r >= 0 && msg1 )
       r = fprintf( f, msg1 );
-    for ( int im = 0; r >= 0 && im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
+    for ( unsigned im = 0; r >= 0 && im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
     {
       if ( memar[im] )
       {
@@ -300,7 +304,7 @@ _mas_malloc( const char *func, int line, size_t size )
 }
 
 void
-_mas_free( const char *func, int line, void *ptr )
+_mas_free( const char *func __attribute__ ( ( unused ) ), int line __attribute__ ( ( unused ) ), void *ptr )
 {
   if ( 1 )
   {
