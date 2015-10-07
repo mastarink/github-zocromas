@@ -193,6 +193,72 @@ duf_error_message_i( duf_error_index_t ri )
   return duf_error_message_rev( duf_find_error_event_i( ri ) );
 }
 
+/* set err message by error list pointer */
+void
+duf_vset_error_message_rev( duf_error_event_t * rev, const char *fmt, va_list args )
+{
+  if ( rev )
+  {
+    char message[4096] = "";
+
+    mas_free( rev->message );
+    rev->message = NULL;
+    if ( fmt )
+    {
+      vsnprintf( message, sizeof( message ), fmt, args );
+      rev->message = mas_strdup( message );
+    }
+  }
+}
+
+/* set err message by error list position */
+void
+duf_vset_error_message_p( size_t rp, const char *fmt, va_list args )
+{
+  duf_vset_error_message_rev( duf_find_error_event_p( rp ), fmt, args );
+}
+
+/* set err message by error unique id ~ index */
+void
+duf_vset_error_message_i( duf_error_index_t ri, const char *fmt, va_list args )
+{
+  duf_vset_error_message_rev( duf_find_error_event_i( ri ), fmt, args );
+}
+
+/* set err message by error list pointer */
+void
+duf_set_error_message_rev( duf_error_event_t * rev, const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  duf_vset_error_message_rev( rev, fmt, args );
+  va_end( args );
+}
+
+/* set err message by error list position */
+void
+duf_set_error_message_p( size_t rp, const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  duf_vset_error_message_p( rp, fmt, args );
+  va_end( args );
+}
+
+/* set err message by error unique id ~ index */
+void
+duf_set_error_message_i( duf_error_index_t ri, const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  duf_vset_error_message_i( ri, fmt, args );
+  va_end( args );
+}
+
+
 /* get err reported counter by error list pointer */
 int
 duf_icount_reported_rev( const duf_error_event_t * rev )

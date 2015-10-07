@@ -30,6 +30,12 @@ const char *duf_error_message_p( size_t rp );
 const char *duf_error_message_i( duf_error_index_t ri );
 const char *duf_error_message_rev( const duf_error_event_t * rev );
 
+void duf_vset_error_message_p( size_t rp, const char *fmt, va_list args );
+void duf_vset_error_message_i( duf_error_index_t ri, const char *fmt, va_list args );
+void duf_set_error_message_rev( duf_error_event_t * rev, const char *fmt, ... );
+void duf_set_error_message_p( size_t rp, const char *fmt, ... );
+void duf_set_error_message_i( duf_error_index_t ri, const char *fmt, ... );
+
 int duf_icount_reported_i( duf_error_index_t ri );
 int duf_icount_reported_rev( const duf_error_event_t * rev );
 

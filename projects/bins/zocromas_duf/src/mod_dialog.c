@@ -124,7 +124,7 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_dbstat( pdi ) );
+  assert( duf_levinfo_dbstat( pdi ) || duf_levinfo_stat( pdi ) );
 
   duf_depthinfo_t di = {
     .pdi_name = "dialog_pdi"
