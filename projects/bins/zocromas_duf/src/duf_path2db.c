@@ -138,10 +138,9 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
                  duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ) );
       if ( !DUF_GET_UFIELD2( dirid ) )
       {
-        /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemname( pdi ) ); */
-        DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
+        /* DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
         if ( DUF_NOERROR( r ) )
-          DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
+          DUF_MAKE_ERRORM( r, DUF_ERROR_NOT_IN_DB, "(1) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
       }
       else
       {
@@ -267,9 +266,8 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
           }
           if ( !duf_levinfo_dirid( pdi ) )
           {
-            /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemshowname( pdi ) ); */
-            DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
-            DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
+            /* DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
+            DUF_MAKE_ERRORM( r, DUF_ERROR_NOT_IN_DB, "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
           }
           DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", duf_levinfo_dirid( pdi ), duf_levinfo_itemshowname( pdi ) );
         }
@@ -311,7 +309,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
     if ( DUF_NOERROR( r ) )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
 #if 0
-    DUF_SHOW_ERROR( "@@@@@@@@(%s) no dirid by parentid=%llu and dirname='%s'", duf_error_name( r ), duf_levinfo_dirid_up( pdi ),
+    _DUF_SHOW_ERROR( "@@@@@@@@(%s) no dirid by parentid=%llu and dirname='%s'", duf_error_name( r ), duf_levinfo_dirid_up( pdi ),
                     duf_levinfo_itemshowname( pdi ) );
 #endif
   }

@@ -165,9 +165,9 @@ duf_main( int argc, char **argv )
 #if 0
   if ( DUF_IS_ERROR( r ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_message_i( r ),
+    _DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_message_i( r ),
                     duf_error_func_i( r ), duf_error_line_i( r ) );
-    DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
+    _DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
   }
 #endif
 

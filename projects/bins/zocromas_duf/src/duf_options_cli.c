@@ -99,13 +99,13 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
   if ( optoptt && codeval > ' ' && codeval <= 'z' )
   {
     if ( DUF_CONFIGG( cli.dbg.verbose ) == 0 )
-      DUF_SHOW_ERROR( "@@@@@@@@@@@ V %s '-%c'      ", msg, optoptt );
+      _DUF_SHOW_ERROR( "@@@@@@@@@@@ V %s '-%c'      ", msg, optoptt );
     else
     {
       if ( codeval == '?' )
-        DUF_SHOW_ERROR( "@@@@@@@@@@@ A %s '-%c' arg[%d]=\"%s\"", msg, optoptt, optindd, arg );
+        _DUF_SHOW_ERROR( "@@@@@@@@@@@ A %s '-%c' arg[%d]=\"%s\"", msg, optoptt, optindd, arg );
       else
-        DUF_SHOW_ERROR( "@@@@@@@@@@@ B %s '-%c' arg[%d]=\"%s\" [%u/%c]", msg, optoptt, optindd, arg, codeval, codeval );
+        _DUF_SHOW_ERROR( "@@@@@@@@@@@ B %s '-%c' arg[%d]=\"%s\" [%u/%c]", msg, optoptt, optindd, arg, codeval, codeval );
     }
   }
   else
@@ -113,20 +113,20 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
   {
 #  if 0
     if ( DUF_CONFIGG( cli.dbg.verbose ) )
-      DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
+      _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
     else
-      DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s'", msg, arg );
+      _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s'", msg, arg );
 #  else
     char *s;
 
     s = duf_clrfy_cli_opts_msgs( codeval, optindd, optoptt, shorts_unused );
-    DUF_SHOW_ERROR( "@@@@@@@@@@@%s", s );
+    _DUF_SHOW_ERROR( "@@@@@@@@@@@%s", s );
     mas_free( s );
 #  endif
 #  if 0
     for ( int i = 0; i < DUF_CONFIGG( carg.argc ); i++ )
     {
-      DUF_SHOW_ERROR( "@@@ (%d) %c%d '%s'", optindd, i == optindd ? '*' : ' ', i, DUF_CONFIGG( carg.argv )[i] );
+      _DUF_SHOW_ERROR( "@@@ (%d) %c%d '%s'", optindd, i == optindd ? '*' : ' ', i, DUF_CONFIGG( carg.argv )[i] );
     }
 #  endif
   }

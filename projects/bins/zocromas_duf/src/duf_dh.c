@@ -40,7 +40,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       if ( errno == ENOENT )
       {
         /* DUF_SHOW_ERROR( "No such entry %s", path ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "file %s", path );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -48,8 +48,8 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd );
-        DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
+        /* DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd ); */
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd );
       }
     }
     pdhandle->rs = ry;
@@ -60,9 +60,10 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
   }
   else
   {
-    DUF_SHOW_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
-                    path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
-    DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
+    /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0, */
+    /*                 path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );                                                           */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0,
+                     pdhandleup ? 1 : 0, path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
   }
   DEBUG_ENDR( r );
 }
@@ -102,8 +103,8 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
     {
       if ( errno == ENOENT )
       {
-        DUF_SHOW_ERROR( "No such entry %s", path );
-        DUF_MAKE_ERROR( r, DUF_ERROR_STATAT_ENOENT );
+        /* DUF_SHOW_ERROR( "No such entry %s", path ); */
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -111,8 +112,8 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "file %s", path );
+        /* DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
       }
     }
 
@@ -124,8 +125,8 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
   }
   else if ( !path )
   {
-    DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
-    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "file %s", path );
+    /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
   DUF_TRACE( fs, 5, "(%d)? stated %s", r, path );
   DEBUG_ENDR( r );
@@ -197,7 +198,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     }
     else if ( ry < 0 && errno == ENOENT )
     {
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT_ENOENT, "file %s", name );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT_ENOENT, "No such entry %s", name );
     }
     else if ( ry < 0 )
     {
@@ -205,14 +206,14 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       char *s;
 
       s = strerror_r( errno, serr, sizeof( serr ) );
-      DUF_SHOW_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "file %s", name );
+      /* DUF_SHOW_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
     }
   }
   else
   {
-    DUF_SHOW_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
-    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "file %s", name );
+    /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
   }
   DEBUG_ENDR( r );
 }
@@ -259,7 +260,7 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     {
       if ( errno == ENOENT )
       {
-        DUF_MAKE_ERROR( r, DUF_ERROR_OPEN_ENOENT );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT,  "No such entry %s", path );
       }
       else
       {
@@ -267,15 +268,15 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path );
-        DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
+        /* DUF_SHOW_ERROR( "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path ); */
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN, "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path );
       }
     }
   }
   else if ( !path )
   {
-    DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
-    DUF_MAKE_ERROR( r, DUF_ERROR_OPENAT );
+    /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
   DUF_TRACE( fs, 5, "(%d)? opened %s", r, path );
   DEBUG_ENDR( r );
@@ -355,8 +356,8 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
           char *s;
 
           s = strerror_r( errno, serr, sizeof( serr ) );
-          DUF_SHOW_ERROR( "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd );
-          DUF_MAKE_ERROR( r, DUF_ERROR_CLOSE );
+          /* DUF_SHOW_ERROR( "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd ); */
+          DUF_MAKE_ERRORM( r, DUF_ERROR_CLOSE, "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd );
           assert( 0 );
         }
 
@@ -368,8 +369,8 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
     }
     else
     {
-      DUF_MAKE_ERROR( r, DUF_ERROR_NOT_OPEN );
-      DUF_SHOW_ERROR( "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
+      /* DUF_SHOW_ERROR( "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_NOT_OPEN, "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
     }
 
     DUF_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );

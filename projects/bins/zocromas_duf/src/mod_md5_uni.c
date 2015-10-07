@@ -261,16 +261,16 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         md5id = duf_sql_last_insert_rowid(  );
       }
     }
-    else
-    {
-      DUF_SHOW_ERROR( "insert md5 %d", lr );
-    }
+    /* else                                     */
+    /* {                                        */
+    /*   DUF_SHOW_ERROR( "insert md5 %d", lr ); */
+    /* }                                        */
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data" );
+    /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    DUF_TEST_R( lr );
+    /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )

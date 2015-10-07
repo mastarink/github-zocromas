@@ -533,13 +533,13 @@ duf_config_make_db_paths( void )
   }
   else if ( !DUF_CONFIGGS( db.path ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
-    DUF_SHOW_ERROR( "db.path not set" );
+    /* DUF_SHOW_ERROR( "db.path not set" ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_PTR, "db.path not set" );
   }
   else if ( !DUF_CONFIGGSP( db.main.name ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
-    DUF_SHOW_ERROR( "db.main.name not set" );
+    /* DUF_SHOW_ERROR( "db.main.name not set" ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_PTR, "db.main.name not set" );
   }
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN );

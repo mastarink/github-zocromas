@@ -209,7 +209,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
   }
   else
   {
-    DUF_SHOW_ERROR( " Wrong data " );
+    /* DUF_SHOW_ERROR( " Wrong data " ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
   }
   DUF_TEST_R( lr );

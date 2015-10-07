@@ -211,23 +211,23 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
       if ( need_id )
         sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], &lr );
     }
-    else if ( !lr /* assume SQLITE_OK */  )
+    else if ( DUF_NOERROR( lr ) /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
         sd5id = duf_sql_last_insert_rowid(  );
       }
     }
-    else
-    {
-      DUF_SHOW_ERROR( "insert sd5 %d", lr );
-    }
+    /* else                                     */
+    /* {                                        */
+    /*   DUF_SHOW_ERROR( "insert sd5 %d", lr ); */
+    /* }                                        */
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data" );
+    /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    DUF_TEST_R( lr );
+    /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )

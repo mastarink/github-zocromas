@@ -274,7 +274,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
+        _DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
       }
 #  endif
       mas_free( selected_db_file );

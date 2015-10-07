@@ -205,8 +205,8 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
-    DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
+    /* DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
     DUF_TEST_R( r );
   }
   /* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */

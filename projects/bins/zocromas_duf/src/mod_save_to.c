@@ -180,8 +180,8 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
           char *s;
 
           s = strerror_r( errno, serr, sizeof( serr ) );
-          DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
-          DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
+          /* DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath ); */
+          DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
         }
       }
       else

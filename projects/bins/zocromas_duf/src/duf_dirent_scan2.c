@@ -33,8 +33,8 @@ duf_scan_fs_with_scanner_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
   }
   else if ( DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) )
   {
-    DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
-    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+    /* DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT , "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ));
   }
   DEBUG_ENDR( r );
 }
@@ -92,13 +92,13 @@ duf_scandirat_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent
     else if ( errorno != EACCES )
     {
       DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
-      DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
     }
     else
     {
       /* ??? */
       DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
-      DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR ,"(%d) path '%s'/'%s'", r, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ));
     }
   }
   DEBUG_ENDR( r );
@@ -137,11 +137,11 @@ duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_r
   {
     /* system level: S_ISDIR - register errors */
 /* no such entry */
-    DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
+    /* DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) ); */
     /* TODO mark as absent or remove from db */
 
-    DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemshowname( pdi ) );
-    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
+    /* DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemshowname( pdi ) ); */
+    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
   }
   DEBUG_ENDR( r );
 }

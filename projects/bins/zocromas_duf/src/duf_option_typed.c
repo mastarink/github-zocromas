@@ -43,17 +43,18 @@ duf_open_file_special( const char *pname, char **popenedname, int overwrite, int
   ry = stat( pname, &st );
   if ( ry >= 0 && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
   {
-    DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
-                    ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-    DUF_MAKE_ERROR( rpr, DUF_ERROR_FILE_EXISTS );
+    /* DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev, */
+    /*                 ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );                                                 */
+    DUF_MAKE_ERRORM( rpr, DUF_ERROR_FILE_EXISTS, "can't open file %s for writing file exists %llu / %llu chr:%d", pname,
+                     ( unsigned long long ) st.st_dev, ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
   }
   else
   {
     newfile = fopen( pname, mode );
     if ( !newfile )
     {
-      DUF_SHOW_ERROR( "can't open file %s\n", pname );
-      DUF_MAKE_ERROR( rpr, DUF_ERROR_OPEN );
+      /* DUF_SHOW_ERROR( "can't open file %s\n", pname ); */
+      DUF_MAKE_ERRORM( rpr, DUF_ERROR_OPEN, "can't open file %s", pname );
     }
   }
   if ( pr )
@@ -114,8 +115,8 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 {
   DEBUG_STARTR( r );
 
-  if ( !extended )
-    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
+  /* if ( !extended )                         */
+  /*   DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); */
 
   DUF_TRACE( options, +2, "parsing typed:`%s`;   %s", extended->o.name, duf_error_name_i( r ) );
   DUF_TRACE( options, +2, "r:%d; xname:%s; noo:%d", r, extended ? extended->o.name : "?", noo );

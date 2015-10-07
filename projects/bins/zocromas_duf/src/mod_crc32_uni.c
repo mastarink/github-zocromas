@@ -218,23 +218,23 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
       if ( need_id )
         crc32id = duf_pdistat2file_crc32id_existed( pdi, crc32sum, &lr );
     }
-    else if ( !lr /* assume SQLITE_OK */  )
+    else if ( DUF_NOERROR( lr ) /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
         crc32id = duf_sql_last_insert_rowid(  );
       }
     }
-    else
-    {
-      DUF_SHOW_ERROR( "insert crc32 %d", lr );
-    }
+    /* else                                       */
+    /* {                                          */
+    /*   DUF_SHOW_ERROR( "insert crc32 %d", lr ); */
+    /* }                                          */
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data" );
+    /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    DUF_TEST_R( lr );
+    /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )

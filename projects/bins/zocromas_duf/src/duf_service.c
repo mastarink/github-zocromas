@@ -14,18 +14,19 @@
 #include "duf_service.h"
 /* ###################################################################### */
 
+#if 0
 int
 duf_check_field( const char *name, int have )
 {
   if ( !have )
   {
-    DUF_SHOW_ERROR( "No such field: %s", name );
+    _DUF_SHOW_ERROR( "No such field: %s", name );
     /* assert(have); */
     return DUF_ERROR_NO_FIELD;
   }
   return 0;
 }
-
+#endif
 typedef struct
 {
   const char *name;

@@ -193,23 +193,23 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
       if ( need_id )
         sha1id = duf_pdistat2file_sha1id_existed( pdi, sha1[2], sha1[1], sha1[0], &lr );
     }
-    else if ( !lr /* assume SQLITE_OK */  )
+    else if ( DUF_NOERROR( lr ) /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
         sha1id = duf_sql_last_insert_rowid(  );
       }
     }
-    else
-    {
-      DUF_SHOW_ERROR( "insert sha1 %d", lr );
-    }
+    /* else                                      */
+    /* {                                         */
+    /*   DUF_SHOW_ERROR( "insert sha1 %d", lr ); */
+    /* }                                         */
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data" );
+    /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    DUF_TEST_R( lr );
+    /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )

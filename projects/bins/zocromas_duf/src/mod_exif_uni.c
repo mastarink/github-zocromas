@@ -338,7 +338,11 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
         assert( exifid );
       }
       if ( !changes )
+      {
         DUF_SHOW_ERROR( "exifid NOT INSERTED:%s - %llu, %lu, %s", sql, modelid, timeepoch, stime_original );
+        /* TODO DUF_MAKE_ERROR */
+      }
+
       {
 #ifdef MAS_TRACING
         DUF_SFIELD2( filename );
@@ -353,7 +357,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
   }
   else
   {
-    DUF_SHOW_ERROR( " Wrong data " );
+    /* DUF_SHOW_ERROR( " Wrong data " ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
   }
 
@@ -439,8 +443,8 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
       else if ( lr >= 0 && strchr( corrected_time, '?' ) )
       {
-        DUF_SHOW_ERROR( "broken date %s", corrected_time );
-        DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_BROKEN_DATE );
+        /* DUF_SHOW_ERROR( "broken date %s", corrected_time ); */
+        DUF_MAKE_ERRORM( lr, DUF_ERROR_EXIF_BROKEN_DATE, "broken date %s", corrected_time );
       }
       if ( lr >= 0 || lr == DUF_ERROR_EXIF_BROKEN_DATE )
       {
