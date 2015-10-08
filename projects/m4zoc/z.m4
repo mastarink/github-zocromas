@@ -1,3 +1,4 @@
+dnl remade from gthumb-3.4.0 configure.ac
 AC_ARG_ENABLE([z],
 	      [AS_HELP_STRING([--disable-z],[do not compile code that uses the zlib library])],,
 	      [enable_z=yes])

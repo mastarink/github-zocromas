@@ -1,6 +1,6 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
-noinst_PROGRAMS=mtest
+noinst_PROGRAMS=mtest mjtest
 
 #noinst_HEADERS=....cdef ....cdef
 
@@ -91,12 +91,16 @@ zocromas_duf_SOURCES=				   \
 #	duf_sql_field1.c
 #	duf_uni_scan1.c
 
-zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
-zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @READLINE_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ @EXIF_LIBS@ @MAGIC_LIBS@ @Z_LIBS@
+zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@
 
 mtest_SOURCES=duftest.c
-mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
-mtest_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ @EXIF_LIBS@ @MAGIC_LIBS@
+mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+mtest_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@   @LIBMAGIC_LIBS@
+
+mjtest_SOURCES=dufjtest.c
+mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
+mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
 
 
 # bin_PROGRAMS = gui-program cli-program

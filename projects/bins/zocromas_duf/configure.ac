@@ -14,17 +14,27 @@ m4_include([m4zoc/vars0.m4])
 m4_include([m4zoc/varscheck.m4])
 
 # Checks for libraries.
-AX_LIB_CRYPTO([yes])
-AX_CHECK_CRYPTO_LIB([MD5],[MD5])
+
+# AX_LIB_CRYPTO([yes])
+# AX_CHECK_CRYPTO_LIB([MD5],[MD5])
+PKG_CHECK_MODULES(LIBCRYPTO, [libcrypto >= 1.0.2])
+
 # AX_CHECK_CRYPTO_LIB([BSD],[BSD])
-AX_LIB_SQLITE3([3.8])
 
+# AX_LIB_SQLITE3([3.8])
+PKG_CHECK_MODULES(SQLITE3, [sqlite3 >= 3.8])
 
-AX_LIB_MYSQL([10.0])
-# MYSQL_CLIENT(10, [client])
+# AX_LIB_MYSQL([10.0])
+#### MYSQL_CLIENT(10, [client])
 
-PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
-AC_SUBST(GLIB_CFLAGS)
+#  PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
+#### AC_SUBST(GLIB_CFLAGS)
+
+PKG_CHECK_MODULES(LIBEXIF, [libexif >= 0.6.21])
+# AC_SUBST(EXIF_CFLAGS)
+
+PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
+# AC_SUBST(ZLIB_CFLAGS)
 
 PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools zocromas_mas_sqlite])
 
@@ -32,10 +42,10 @@ PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools zocromas_mas_sqlite])
 
 
 m4_include([m4zoc/readline.m4])
-m4_include([m4zoc/exif.m4])
+# m4_include([m4zoc/exif.m4])
 m4_include([m4zoc/magic.m4])
 m4_include([m4zoc/jpeg.m4])
-m4_include([m4zoc/z.m4])
+# m4_include([m4zoc/z.m4])
 m4_include([m4zoc/vars1.m4])
 
 #############################################################################################

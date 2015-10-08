@@ -1,3 +1,4 @@
+dnl remade from gthumb-3.4.0 configure.ac
 AC_ARG_ENABLE([exif],
 	      [AS_HELP_STRING([--disable-exif],[do not compile code that uses the libexif library])],,
 	      [enable_exif=yes])

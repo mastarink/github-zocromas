@@ -1,3 +1,4 @@
+dnl from gthumb-3.4.0 configure.ac
 AC_ARG_ENABLE([jpeg],
 	      [AS_HELP_STRING([--disable-jpeg],[do not compile code that uses the libjpeg library])],,
 	      [enable_jpeg=yes])
