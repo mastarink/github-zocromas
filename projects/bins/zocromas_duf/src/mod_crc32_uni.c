@@ -72,7 +72,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "'crc32-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
+           ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
@@ -121,12 +121,12 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "'crc32-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " */
+           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -136,7 +136,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
-           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
+           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
            .filter = NULL       /* */
 #if 0
@@ -303,8 +303,8 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   unsigned long long crc32sum = 0;
   static unsigned long content_cnt = 0;
 
-  DUF_SFIELD2( filename );
-  DUF_TRACE( crc32, 0, "+ %s", filename );
+  DUF_SFIELD2( fname );
+  DUF_TRACE( crc32, 0, "+ %s", fname );
 
   /* assert( duf_levinfo_dbstat( pdi ) ); */
   assert( duf_levinfo_dfd( pdi ) );
@@ -320,10 +320,10 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   {
     unsigned long long crc32id = 0;
 
-    DUF_TRACE( crc32, 10, "insert %s", filename );
+    DUF_TRACE( crc32, 10, "insert %s", fname );
 
 
-    crc32id = duf_insert_crc32_uni( pdi, crc32sum, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+    crc32id = duf_insert_crc32_uni( pdi, crc32sum, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( DUF_NOERROR( r ) && crc32id )
     {
       int changes = 0;
@@ -351,7 +351,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, filename );
+    DUF_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, fname );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   DEBUG_ENDR( r );

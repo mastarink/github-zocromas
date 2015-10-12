@@ -68,7 +68,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 #if 0
   DUF_UFIELD2( dirid );
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
   DUF_UFIELD2( filesize );
   DUF_UFIELD2( filemode );
   DUF_UFIELD2( md5id );

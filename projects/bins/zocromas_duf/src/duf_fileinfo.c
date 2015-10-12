@@ -23,7 +23,7 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinf
   if ( pfi )
   {
     DUF_UFIELD2( dirid );
-    DUF_SFIELD2( filename );
+    DUF_SFIELD2( fname );
     DUF_UFIELD2( filesize );
     DUF_UFIELD2( filemode );
     DUF_UFIELD2( md5id );
@@ -65,7 +65,7 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinf
     pfi->st.st_gid = ( gid_t ) gid;
     pfi->st.st_nlink = ( nlink_t ) nlink;
     pfi->st.st_size = ( off_t ) filesize;
-    pfi->name = filename;
+    pfi->name = fname;
     pfi->exifid = exifid;
     pfi->exifdt = exifdt;
     pfi->camera = camera;

@@ -76,7 +76,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            /* "'exif-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
+           ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s',fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
@@ -142,7 +142,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            /* "'exif-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
            ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -156,7 +156,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #endif
            ,
-           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName ) " /* */
+           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName ) " /* */
            ,                    /* */
            .filter = NULL       /* */
 #if 0
@@ -324,7 +324,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       /*     c++;                                                                                        */
       /*   n++;                                                                                          */
       /*                                                                                                 */
-      /*   DUF_SFIELD2( filename );                                                                      */
+      /*   DUF_SFIELD2( fname );                                                                      */
       /*   real_path = duf_levinfo_path( pdi );                                                          */
       /*                                                                                                 */
       /*   DUF_SHOW_ERROR( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
@@ -345,10 +345,10 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
 
       {
 #ifdef MAS_TRACING
-        DUF_SFIELD2( filename );
+        DUF_SFIELD2( fname );
 #endif
         DUF_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
-                   ( long ) timeepoch, changes, duf_levinfo_path( pdi ), filename );
+                   ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
       }
 
       DUF_SQL_END_STMT( pdi, insert_exif, lr, pstmt_insert );
@@ -800,13 +800,13 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
 #endif
 
 #ifdef MAS_TRACING
-            DUF_SFIELD2( filename );
+            DUF_SFIELD2( fname );
             real_path = duf_levinfo_path( pdi );
 #endif
-            DUF_TRACE( exif, 2, "%s%s", real_path, filename );
+            DUF_TRACE( exif, 2, "%s%s", real_path, fname );
 
             exifid = duf_insert_exif_uni( pstmt, pdi, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , &r );
-            DUF_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, r, sum, model, timeepoch, real_path, filename );
+            DUF_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, r, sum, model, timeepoch, real_path, fname );
 
             DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 

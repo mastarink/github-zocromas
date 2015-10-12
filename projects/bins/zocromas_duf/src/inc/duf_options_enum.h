@@ -238,6 +238,7 @@ typedef enum
   DUF_OPTION_VAL_GLOB_INCL_FS_FILES,
   DUF_OPTION_VAL_GLOB_EXCL_FS_FILES,
   /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+  DUF_OPTION_VAL_SET_DIR_PRIORITY,
 
   DUF_OPTION_VAL_FILTER_NAMEID,
   DUF_OPTION_VAL_FILTER_MINNAMEID,

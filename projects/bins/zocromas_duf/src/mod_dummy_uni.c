@@ -87,10 +87,10 @@ dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) > 0 );
   assert( duf_levinfo_stat( pdi ) );
 
@@ -100,8 +100,8 @@ dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  DUF_TRACE( mod, 1, "dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), filename,
-             0 == strcmp( duf_levinfo_itemshowname( pdi ), filename ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
+  DUF_TRACE( mod, 1, "dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), fname,
+             0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
              duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 
   DEBUG_ENDR( r );
@@ -114,18 +114,18 @@ dummy_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
 #endif
 
 
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  DUF_TRACE( mod, 0, "@dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), filename,
-             0 == strcmp( duf_levinfo_itemshowname( pdi ), filename ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
+  DUF_TRACE( mod, 0, "@dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), fname,
+             0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
              duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 
   DEBUG_ENDR( r );
@@ -137,17 +137,17 @@ dummy_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 
   assert( !duf_levinfo_dfd( pdi ) );
   /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_dbstat( pdi ) );
 #endif
 
 
-  DUF_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( pdi ), filename );
-  DUF_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( pdi ), filename,
+  DUF_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( pdi ), fname );
+  DUF_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( pdi ), fname,
              duf_levinfo_dfd( pdi ), duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_dbstat_dev( pdi ),
              ( unsigned long long ) duf_levinfo_dbstat_inode( pdi ) );
 
@@ -159,9 +159,9 @@ dummy_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #endif
-  DUF_TRACE( mod, 0, "@@dummy %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 0, "@@dummy %s : %s", duf_levinfo_path( pdi ), fname );
   /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
@@ -176,9 +176,9 @@ dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
 
 #if 0
 #  ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #  endif
-  DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
   DEBUG_ENDR( r );
 }
@@ -188,9 +188,9 @@ dummy_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #endif
-  DUF_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( pdi ), fname );
 
 
   DEBUG_ENDR( r );
@@ -205,9 +205,9 @@ dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
 
 #if 0
 #  ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #  endif
-  DUF_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
   DEBUG_ENDR( r );
@@ -218,9 +218,9 @@ dummy_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #endif
-  DUF_TRACE( mod, 0, "@dummy node middle %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 0, "@dummy node middle %s : %s", duf_levinfo_path( pdi ), fname );
 
   DEBUG_ENDR( r );
 }
@@ -234,9 +234,9 @@ dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 
 #if 0
 #  ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #  endif
-  DUF_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
   DEBUG_ENDR( r );
@@ -247,9 +247,9 @@ dummy_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
 #endif
-  DUF_TRACE( mod, 0, "@dummy node after %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 0, "@dummy node after %s : %s", duf_levinfo_path( pdi ), fname );
 
   DEBUG_ENDR( r );
 }

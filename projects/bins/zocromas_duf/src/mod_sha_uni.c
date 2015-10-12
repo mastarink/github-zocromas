@@ -98,18 +98,18 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            /* "'sha1-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId "  */
+           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId "  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
-           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
+           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,
            .filter = NULL       /* */
            },
@@ -304,8 +304,8 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
   unsigned char asha1r[SHA_DIGEST_LENGTH + ASHA1_DELTA];
 
-  DUF_SFIELD2( filename );
-  DUF_TRACE( sha1, 0, "+ %s", filename );
+  DUF_SFIELD2( fname );
+  DUF_TRACE( sha1, 0, "+ %s", fname );
   memset( asha1r, 0, sizeof( asha1r ) );
   if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
     DOR( r, duf_make_sha1r_uni( pdi, asha1r ) );
@@ -316,10 +316,10 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     unsigned long long sha1id = 0;
     unsigned long long *pmd = ( unsigned long long * ) &asha1r;
 
-    DUF_TRACE( sha1, 0, "insert %s", filename );
+    DUF_TRACE( sha1, 0, "insert %s", fname );
 
 
-    sha1id = duf_insert_sha1_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+    sha1id = duf_insert_sha1_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( sha1id )
     {
       int changes = 0;

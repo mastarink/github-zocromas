@@ -75,7 +75,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
            " , fd." DUF_SQL_IDFIELD " AS dataid " /* */
            " , fd.inode AS inode " /* */
-           " , fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
+           " , fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , sd.dup2cnt AS nsame " /* */
            " , md.dup5cnt            AS dup5cnt " /* */
@@ -117,7 +117,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            /* "'sd5-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
@@ -130,7 +130,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
-           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
+           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
            .filter = NULL       /* */
            ,
@@ -305,14 +305,14 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   unsigned char amd5[MD5_DIGEST_LENGTH];
 
 
-  DUF_SFIELD2( filename );
-  DUF_TRACE( sd5, 0, "+ %s", filename );
+  DUF_SFIELD2( fname );
+  DUF_TRACE( sd5, 0, "+ %s", fname );
 
   memset( amd5, 0, sizeof( amd5 ) );
-  DUF_TRACE( sd5, 0, "+ %s", filename );
+  DUF_TRACE( sd5, 0, "+ %s", fname );
   if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
     DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), amd5 ) );
-  DUF_TRACE( sd5, 0, "+ %s", filename );
+  DUF_TRACE( sd5, 0, "+ %s", fname );
   DUF_TEST_R( r );
   /* reverse */
   for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
@@ -324,10 +324,10 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &amd5r;
-    DUF_TRACE( sd5, 0, "insert %s", filename );
+    DUF_TRACE( sd5, 0, "insert %s", fname );
     if ( DUF_CONFIGG( cli.disable.flag.calculate ) )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74; /* FIXME What is it? */
-    sd5id = duf_insert_sd5_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+    sd5id = duf_insert_sd5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( sd5id )
     {
       int changes = 0;

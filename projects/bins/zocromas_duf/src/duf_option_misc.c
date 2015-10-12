@@ -119,3 +119,11 @@ duf_option_$_error_level( long lev )
   duf_force_offset_ereport( lev );
   DEBUG_ENDR( r );
 }
+duf_error_code_t
+duf_option_$_set_dir_priority(  long prio )
+{
+  DEBUG_STARTR( r );
+
+  TT( "@@@@@@error prio to be set:%ld", prio );
+  DEBUG_ENDR( r );
+}

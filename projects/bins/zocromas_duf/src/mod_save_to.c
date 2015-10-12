@@ -207,7 +207,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) > 0 );
   assert( duf_levinfo_stat( pdi ) );
 
@@ -217,7 +217,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     duf_fileinfo_t fi = { 0 };
 #ifdef MAS_TRACING
     /* filename from db same as duf_levinfo_itemname( pdi ) */
-    assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
+    assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
     save_path = duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
@@ -281,7 +281,7 @@ save_to_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
 
 
@@ -303,7 +303,7 @@ save_to_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
+  DUF_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
   /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
@@ -323,7 +323,7 @@ save_to_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
+  DUF_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
 
@@ -358,7 +358,7 @@ save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
+  DUF_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
   DEBUG_ENDR( r );

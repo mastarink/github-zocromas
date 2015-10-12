@@ -76,7 +76,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   DUF_UFIELD2( dirid );
-  DUF_SFIELD2( filename );
+  DUF_SFIELD2( fname );
   DUF_UFIELD2( filesize );
   DUF_UFIELD2( filemode );
   DUF_UFIELD2( md5id );
@@ -160,7 +160,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_gid = ( gid_t ) gid;
     fi.st.st_nlink = ( nlink_t ) nlink;
     fi.st.st_size = ( off_t ) filesize;
-    fi.name = filename;
+    fi.name = fname;
     fi.exifid = exifid;
     fi.exifdt = exifdt;
     fi.camera = camera;

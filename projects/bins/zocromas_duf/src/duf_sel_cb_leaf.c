@@ -69,11 +69,11 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
                   duf_levinfo_dfd( PDI ), PDI->opendir );
 /* #ifdef MAS_ASSERT */
     {
-      /* DUF_SFIELD2( filename ); */
+      /* DUF_SFIELD2( fname ); */
       const char *dfn = duf_levinfo_itemshowname( PDI );
 
       /* filename from db same as duf_levinfo_itemname( pdi ) */
-      assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), dfn ) );
+      assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), dfn ) );
       /* DOR( r, duf_levinfo_pstmt2levinfo_dh( PDI, pstmt, 1 (* is_leaf *)  ) ); */
       {
         duf_levinfo_t *l = duf_levinfo_ptr( PDI );

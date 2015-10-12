@@ -35,11 +35,10 @@ const duf_longval_extended_table_t optable_experimental = {
 #else
    /* FIXME in fact only 1 works...? XXX */
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
-    /*      */ DO_OU( ARGV, globx.include_fs_files ) /*                                      */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OU( ARGV, globx.include_fs_files ) /*                                     */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
-    /*      */ DO_OU( ARGV, globx.exclude_fs_files ) /*                                      */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OU( ARGV, globx.exclude_fs_files ) /*                                     */ , DO_H(  ... ) /*                             */ },
 #endif
-
 
 #if 0
    {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
@@ -61,6 +60,9 @@ const duf_longval_extended_table_t optable_experimental = {
 
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },
+
+   {.o = {DO_Q( "set-dir-priority" ) /* */ , DO_A_R /* */ , DO_V( SET_DIR_PRIORITY )} /*   */ , DO_CL( NODESC ) /*     */ ,
+    DO_N_CALL( set_dir_priority ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /* */ , DO_H(  ... ) /*                             */ },
 
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },

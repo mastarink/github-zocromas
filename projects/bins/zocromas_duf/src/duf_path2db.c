@@ -181,23 +181,25 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #if 1
   duf_sql_set_t def_node_set = {
     .fieldset = "pt." DUF_SQL_IDFIELD " AS dirid " /* */
+          ", pt." DUF_SQL_DIRNAMEFIELD " AS dname " /*      */
           ", tf.numfiles AS nfiles" /* */
           ", td.numdirs AS ndirs  " /*      */
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
-          " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName)" /* */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /* */
+          " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)" /* */
   };
 #else
   const char *def_node_fieldset2 = "pt." DUF_SQL_IDFIELD " AS dirid " /* */
+        ", pt." DUF_SQL_DIRNAMEFIELD " AS dname " /*      */
         ", tf.numfiles AS nfiles" /* */
         ", td.numdirs AS ndirs  " /*      */
         ;
   const char *def_node_selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
         " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
         " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
-        " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName)";
+        " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)";
 #endif
   DEBUG_STARTR( r );
 
