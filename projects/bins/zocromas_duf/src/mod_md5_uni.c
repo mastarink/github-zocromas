@@ -55,11 +55,11 @@ static duf_sql_sequence_t final_sql = /* */
           ,
           "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT COUNT(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fna" /* */
-          "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fda ON (fna.dataid=fda.rowid)" /* */
-          "   JOIN " DUF_SQL_TABLES_MD5_FULL " AS mda ON (fda.md5id=mda.rowid)" /* */
-          "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fdb.md5id=mda.rowid)" /* */
-          "   JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb ON (fdb.rowid=fnb.dataid)" /* */
-          " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
+          "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fda ON (fna.dataid=fda." DUF_SQL_IDFIELD ")" /* */
+          "   JOIN " DUF_SQL_TABLES_MD5_FULL " AS mda ON (fda.md5id=mda." DUF_SQL_IDFIELD ")" /* */
+          "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fdb.md5id=mda." DUF_SQL_IDFIELD ")" /* */
+          "   JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb ON (fdb." DUF_SQL_IDFIELD "=fnb.dataid)" /* */
+          " WHERE Pathid1 < Pathid2 AND fna." DUF_SQL_FILENAMEFIELD "=fnb." DUF_SQL_FILENAMEFIELD "" /* */
           " GROUP BY Pathid1, Pathid2" /* */
           ,
 
@@ -96,7 +96,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
            " , fd." DUF_SQL_IDFIELD " AS dataid " /* */
            " , fd.inode AS inode " /* */
-           " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           " , fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , md.dup5cnt AS nsame " /* */
            ", md.dup5cnt            AS dup5cnt " /* */
@@ -157,12 +157,12 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            /* "'md5-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
+           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId "   */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -172,7 +172,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
-           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
            ,
            .filter = NULL       /* */
            },

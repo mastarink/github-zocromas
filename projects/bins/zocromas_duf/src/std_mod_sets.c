@@ -19,7 +19,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    /* " 'std-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+   ", fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
    ", fd.mode               AS filemode " /* */
@@ -74,7 +74,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+   ", fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
    ", fd.mode               AS filemode " /* */
@@ -136,7 +136,7 @@ duf_sql_set_t std_node_sets[] = { /* */
    /* "'std-node' AS fieldset_id, " (* *) */
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-   ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+   ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -146,14 +146,14 @@ duf_sql_set_t std_node_sets[] = { /* */
    ,
 #if 1
    .cte =                       /* */
-   "WITH RECURSIVE cte_paths(rowid,parentid) AS " /* */
+   "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
    " ( "                        /* */
-   "  SELECT paths.rowid,paths.parentid FROM paths " /* */
+   "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
    "   WHERE parentid=:topDirID " /* */
    "  UNION "                   /* */
-   "   SELECT paths.rowid,paths.parentid " /* */
+   "   SELECT paths." DUF_SQL_IDFIELD ",paths.parentid " /* */
    "    FROM cte_paths "        /* */
-   "    JOIN paths ON(paths.parentid=cte_paths.rowid) " /* */
+   "    JOIN paths ON(paths.parentid=cte_paths." DUF_SQL_IDFIELD ") " /* */
    " ) ",
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                  */ " AS pte " /* */
@@ -166,14 +166,14 @@ duf_sql_set_t std_node_sets[] = { /* */
    .selector2 =                 /* */
 #if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt.rowid ) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt." DUF_SQL_IDFIELD " ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #else
    "#std-node"
 #endif
    ,
-   .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+   .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName ) " /* */
    ,
    .filter = NULL               /* */
    }
@@ -187,7 +187,7 @@ duf_sql_set_t std_node_sets[] = { /* */
    /* "'std-ns-node' AS fieldset_id, " (* *) */
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-   ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+   ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -200,7 +200,7 @@ duf_sql_set_t std_node_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    ,
-   .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+   .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName ) " /* */
    ,
    .filter = NULL               /* */
    ,

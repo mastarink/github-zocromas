@@ -56,6 +56,7 @@ duf_sql_sequence_t sql_beginning_drop = /* */
           "DROP TABLE IF EXISTS mdpath",
           NULL}
 };
+
 duf_sql_sequence_t sql_beginning_clean = /* */
 {
   .name = "clean tables",
@@ -302,24 +303,26 @@ duf_sql_sequence_t sql_beginning_create_three = {
           ", atim REAL, atimn INTEGER" /* */
           ", mtim REAL, mtimn INTEGER" /* */
           ", ctim REAL, ctimn INTEGER" /* */
-          ", dirname TEXT"      /* */
+          ", " DUF_SQL_DIRNAMEFIELD " TEXT" /* */
           ", parentid INTEGER " /* " REFERENCES " DUF_SQL_TABLES_PATHS *//* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           /* ", FOREIGN KEY(parentid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") " (* *) */
           " ) ",
-          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dirname      ON " DUF_SQL_TABLES_PATHS " (dirname)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_" DUF_SQL_DIRNAMEFIELD "      ON " DUF_SQL_TABLES_PATHS " ("
+          DUF_SQL_DIRNAMEFIELD ")",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev_uniq     ON " DUF_SQL_TABLES_PATHS " (dev,inode)",
 
 /*        "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent1_uniq ON " DUF_SQL_TABLES_PATHS " (parentid," DUF_SQL_IDFIELD ")", */
 
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent2_uniq ON " DUF_SQL_TABLES_PATHS " (parentid,dirname)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent2_uniq ON " DUF_SQL_TABLES_PATHS " (parentid," DUF_SQL_DIRNAMEFIELD
+          ")",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev          ON " DUF_SQL_TABLES_PATHS " (dev)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_inode        ON " DUF_SQL_TABLES_PATHS " (inode)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parentid     ON " DUF_SQL_TABLES_PATHS " (parentid)",
 
           "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_lastupdated " /* */
-          " AFTER UPDATE OF dev,inode,dirname,parentid  ON " DUF_SQL_TABLES_PATHS /* */
+          " AFTER UPDATE OF dev,inode," DUF_SQL_DIRNAMEFIELD ",parentid  ON " DUF_SQL_TABLES_PATHS /* */
           " FOR EACH ROW BEGIN " /* */
           "   UPDATE " DUF_SQL_TABLES_PATHS " SET last_updated=DATETIME()  WHERE " DUF_SQL_IDFIELD "=OLD." DUF_SQL_IDFIELD " ; END",
 /******************************************************************************************************/
@@ -388,21 +391,22 @@ duf_sql_sequence_t sql_beginning_create_three = {
 #endif
           "dataid   INTEGER "   /* " REFERENCES " DUF_SQL_TABLES_FILEDATAS " DEFERRABLE INITIALLY DEFERRED " *//* *//* */
           ", Pathid INTEGER "   /* " REFERENCES " DUF_SQL_TABLES_PATHS " DEFERRABLE INITIALLY DEFERRED " *//*     *//* */
-          ", name TEXT NOT NULL" /* */
+          ", " DUF_SQL_FILENAMEFIELD " TEXT NOT NULL" /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           /* ", FOREIGN KEY(dataid) REFERENCES " DUF_SQL_TABLES_FILEDATAS "(" DUF_SQL_IDFIELD ") " (* *) */
           /* ", FOREIGN KEY(Pathid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") "         */
           " ) "                 /* */
           ,
-          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_filename ON " DUF_SQL_TABLES_FILENAMES " (name)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_filename ON " DUF_SQL_TABLES_FILENAMES " (" DUF_SQL_FILENAMEFIELD ")",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_dataid   ON " DUF_SQL_TABLES_FILENAMES " (dataid)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_Pathid   ON " DUF_SQL_TABLES_FILENAMES " (Pathid)",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_uniq     ON " DUF_SQL_TABLES_FILENAMES " (Pathid,name)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_uniq     ON " DUF_SQL_TABLES_FILENAMES " (Pathid,"
+          DUF_SQL_FILENAMEFIELD ")",
 
 
           "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_lastupdated " /* */
-          " AFTER UPDATE OF dataid,name,Pathid ON " DUF_SQL_TABLES_FILENAMES /* */
+          " AFTER UPDATE OF dataid," DUF_SQL_FILENAMEFIELD ",Pathid ON " DUF_SQL_TABLES_FILENAMES /* */
           " FOR EACH ROW BEGIN " /* */
           "   UPDATE " DUF_SQL_TABLES_FILENAMES " SET last_updated=DATETIME()  WHERE " DUF_SQL_IDFIELD "=OLD." DUF_SQL_IDFIELD " ; END",
 
@@ -474,13 +478,14 @@ duf_sql_sequence_t sql_beginning_create_four = {
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE  VIEW  IF NOT EXISTS " DUF_DBPREF "v_selected_filenames AS  SELECT fn.rowid AS rowid, fn.rowid AS nameid  " /* */
+          "CREATE  VIEW  IF NOT EXISTS " DUF_DBPREF "v_selected_filenames AS " /* */
+          " SELECT fn." DUF_SQL_IDFIELD " AS " DUF_SQL_IDFIELD ", fn." DUF_SQL_IDFIELD " AS nameid  " /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd.rowid) " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md.rowid=fd.md5id) " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (x.rowid=fd.exifid) " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm.rowid) " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi.rowid )",
+          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (x." DUF_SQL_IDFIELD "=fd.exifid) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDFIELD " )",
 
           NULL}
 };

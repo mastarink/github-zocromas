@@ -51,11 +51,6 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
  * /mnt/new_media/media/down/
  * */
 
-/* run tables drop tables check path add $MSH_SHN_PRJTOP_DIR/projects/bins/zocromas_duf/
- * sqlite3 -header -column $MSH_SHN_PRJTOP_DIR/duf_db/duf-photo.sqlite3  \
- * 				'SELECT ID, dirname, parentID  FROM dufs.paths order by ID limit 20'
- * */
-
 
 
 #endif

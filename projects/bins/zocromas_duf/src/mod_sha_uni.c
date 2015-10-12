@@ -98,18 +98,18 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            /* "'sha1-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
+           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId "  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
-           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
            ,
            .filter = NULL       /* */
            },

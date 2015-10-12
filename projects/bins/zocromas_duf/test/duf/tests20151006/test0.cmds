@@ -4,6 +4,7 @@ recursive
 allow-files
 allow-directories
 db-name test_tree
+# trace-sql 3
 create-tables
 create-database
 # db-name temp_tree

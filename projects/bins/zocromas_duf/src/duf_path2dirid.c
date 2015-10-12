@@ -104,7 +104,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
-    .fieldset = "pt.parentid AS parentid, pt.dirname as name " /* */
+    .fieldset = "pt.parentid AS parentid, pt." DUF_SQL_DIRNAMEFIELD " AS name " /* */
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /*      */

@@ -40,7 +40,7 @@ duf_sql_sequence_t sql_beginning_tables = {
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
           " GROUP BY fn.Pathid " /* */ ,
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "_rowid ON " DUF_SQL_TABLES_TMP_PATHTOT_FILES " (rowid) " /* */        ,
+//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "_" DUF_SQL_IDFIELD " ON " DUF_SQL_TABLES_TMP_PATHTOT_FILES " (" DUF_SQL_IDFIELD ") ",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_TABLES_TMP_PATHTOT_FILES " (Pathid)"
           /* */ ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_TABLES_TMP_PATHTOT_FILES " (numfiles)", /* */
@@ -54,10 +54,10 @@ duf_sql_sequence_t sql_beginning_tables = {
           " AS numdirs "        /* */
           " FROM "              /* */
           DUF_SQL_TABLES_PATHS_FULL " AS pts " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp.rowid ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
           " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
           " GROUP BY parents." DUF_SQL_IDFIELD " " /* */ ,
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "_rowid ON " DUF_SQL_TABLES_TMP_PATHTOT_DIRS " (rowid) " /* */        ,
+//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "_" DUF_SQL_IDFIELD " ON " DUF_SQL_TABLES_TMP_PATHTOT_DIRS " (" DUF_SQL_IDFIELD ") ",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_TABLES_TMP_PATHTOT_DIRS " (Pathid)"
           /* */ ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_TABLES_TMP_PATHTOT_DIRS " (numdirs)", /* */

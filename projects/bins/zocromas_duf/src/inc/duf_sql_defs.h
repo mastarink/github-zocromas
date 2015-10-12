@@ -4,6 +4,8 @@
 
 /* #  define DUF_USE_IDCOL */
 #  define DUF_SQL_IDFIELD "rowid"
+#  define DUF_SQL_DIRNAMEFIELD "dir_name"
+#  define DUF_SQL_FILENAMEFIELD "file_name"
 #  define DUF_COMMA_AS(name, alias) , #name " AS " #alias
 
 #  define DUF_SQLITE2R_ERROR_CODE(_r3c) duf_sqlite2r_error_code(_r3c)

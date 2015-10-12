@@ -80,7 +80,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
            " , fd." DUF_SQL_IDFIELD " AS dataid " /* */
            " , fd.inode AS inode " /* */
-           " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           " , fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", fd.mode               AS filemode " /* */
            ", mi.dupmimecnt         AS nsame " /* */
@@ -117,7 +117,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            /* "'mime-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
@@ -130,7 +130,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #endif
            ,
-           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName )" /* */
            ,                    /* */
            .filter = NULL       /* */
 #if 0

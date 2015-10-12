@@ -22,7 +22,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
   unsigned long long tagnameid = 0;
   int changes = 0;
   static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tagnames ( name ) VALUES (:tagName )";
-  static const char *sqlv = "SELECT rowid AS tagnameId FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
+  static const char *sqlv = "SELECT " DUF_SQL_IDFIELD " AS tagnameId FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
 
   {
     DUF_SQL_START_STMT( pdi, insert_tagname, sql, rpr, pstmt );
@@ -73,7 +73,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
   unsigned long long tagnameid = 0;
   int changes = 0;
   static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tags ( tagnameid, itemtype, itemid ) VALUES (:tagNameID, :itemType, :itemID )";
-  static const char *sqlv = "SELECT rowid AS tagId FROM " DUF_DBPREF "tags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
+  static const char *sqlv = "SELECT " DUF_SQL_IDFIELD " AS tagId FROM " DUF_DBPREF "tags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
 
   tagnameid = duf_add_tagname( pdi, tag_name, &rpr );
   {

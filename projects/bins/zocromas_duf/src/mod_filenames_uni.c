@@ -77,7 +77,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            "'filenames-leaf' AS fieldset_id, " /* Never used!? */
            "  fn.Pathid AS dirid " /* */
            ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           ", fn." DUF_SQL_FILENAMEFIELD " AS filename, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
@@ -112,35 +112,35 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            "'filenames-node' AS fieldset_id, " /* */
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+           ", pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
 #if 1
            .cte =               /* */
-           "WITH RECURSIVE cte_paths(rowid,parentid) AS " /* */
+           "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
            " ( "                /* */
-           "  SELECT paths.rowid,paths.parentid FROM paths " /* */
+           "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
            "   WHERE parentid=:topDirID " /* */
            "  UNION "           /* */
-           "   SELECT paths.rowid,paths.parentid " /* */
+           "   SELECT paths." DUF_SQL_IDFIELD ",paths.parentid " /* */
            "    FROM cte_paths " /* */
-           "    JOIN paths ON(paths.parentid=cte_paths.rowid) " /* */
+           "    JOIN paths ON(paths.parentid=cte_paths." DUF_SQL_IDFIELD ") " /* */
            " ) ",
 /*
- WITH RECURSIVE cte_paths(rowid,parentid) AS 
-   (SELECT paths.rowid,paths.parentid FROM paths 
+ WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS 
+   (SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths 
       WHERE parentid=15 --------- matcher
      UNION 
-     SELECT paths.rowid,paths.parentid 
+     SELECT paths." DUF_SQL_IDFIELD ",paths.parentid 
         FROM cte_paths 
-        JOIN paths ON(paths.parentid=cte_paths.rowid)
+        JOIN paths ON(paths.parentid=cte_paths." DUF_SQL_IDFIELD ")
    )
    SELECT *
       FROM cte_paths AS pte
-      LEFT JOIN paths AS pt ON(pte.rowid=pt.rowid)
-      LEFT JOIN t_common_pathtot_dirs AS td ON (td.Pathid=pt.rowid)
-      LEFT JOIN t_common_pathtot_files AS tf ON (tf.Pathid=pt.rowid) */
+      LEFT JOIN paths AS pt ON(pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ")
+      LEFT JOIN t_common_pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ")
+      LEFT JOIN t_common_pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") */
            .selector2_cte =     /* */
            " FROM cte_paths " /*                                  */ " AS pte " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
@@ -153,7 +153,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
-           .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName ) " /* */
            ,
            .filter = NULL       /* */
            },
@@ -192,7 +192,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_
   {
     int changes = 0;
 
-    const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, name, dataid) VALUES (:pathID, :Name, :dataID)";
+    const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, " DUF_SQL_FILENAMEFIELD ", dataid) VALUES (:pathID, :Name, :dataID)";
 
     DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
     DUF_TRACE( mod, 3, "S:%s", sql );

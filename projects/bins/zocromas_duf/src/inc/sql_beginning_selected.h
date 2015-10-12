@@ -63,21 +63,21 @@
            " (:minMimeSame IS NULL OR mi.dupmimecnt>=:minMimeSame "                                    ") AND "  \
            " (:maxMimeSame IS NULL OR mi.dupmimecnt<=:maxMimeSame "                                    ") AND "  \
 \
-           " (:Name "    " IS NULL OR fn.name      = :Name "                                           ") AND "  \
+           " (:Name "    " IS NULL OR fn." DUF_SQL_FILENAMEFIELD " = :Name "                           ") AND "  \
            " ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
                                   " OR md." DUF_SQL_IDFIELD "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
                                            " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
-                                             " WHERE fnb.name = :GSameAsMd5 AND fnb.Pathid=:GSameMd5PathID ) "  \
+                                             " WHERE fnb." DUF_SQL_FILENAMEFIELD " = :GSameAsMd5 AND fnb.Pathid=:GSameMd5PathID ) "  \
            " ) AND " \
            " ( ( :GSameAsSha1  IS NULL OR :GSameSha1PathID IS NULL ) "  \
                                   " OR sh." DUF_SQL_IDFIELD "=(SELECT fdb.sha1id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
                                            " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
-                                             " WHERE fnb.name = :GSameAsSha1 AND fnb.Pathid=:GSameSha1PathID ) "  \
+                                             " WHERE fnb." DUF_SQL_FILENAMEFIELD " = :GSameAsSha1 AND fnb.Pathid=:GSameSha1PathID ) "  \
            " ) AND " \
            " ( ( :GSameAsExif  IS NULL OR :GSameExifPathID IS NULL ) "  \
                                  "  OR x." DUF_SQL_IDFIELD "=(SELECT fdb.exifid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
                                            " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
-                                           "  WHERE fnb.name = :GSameAsExif AND fnb.Pathid=:GSameExifPathID ) "  \
+                                           "  WHERE fnb." DUF_SQL_FILENAMEFIELD " = :GSameAsExif AND fnb.Pathid=:GSameExifPathID ) "  \
            " ) AND " \
 	   " ( " \
            "  (SELECT COUNT(*) AS c FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval=:Option_Val_With_Tag_File) == 0 " \
@@ -85,24 +85,24 @@
 	   "  (SELECT COUNT(tg.itemid) icnt " \
 	        " FROM "      DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo " \
 	        " LEFT JOIN " DUF_SQL_TABLES_TAGNAMES_FULL        " AS tn  ON (tbo.arg=tn.name) " \
-	        " LEFT JOIN " DUF_SQL_TABLES_TAGS_FULL            " AS tg  ON (tg.tagnameid=tn.rowid) " \
-	        " WHERE tg.itemid=fn.rowid AND tg.itemtype='filename' " \
+	        " LEFT JOIN " DUF_SQL_TABLES_TAGS_FULL            " AS tg  ON (tg.tagnameid=tn." DUF_SQL_IDFIELD ") " \
+	        " WHERE tg.itemid=fn." DUF_SQL_IDFIELD " AND tg.itemtype='filename' " \
 	        " GROUP BY itemid " \
 	        " HAVING icnt=(SELECT COUNT(*) AS c FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tboc " \
 		" WHERE tbo.oval=:Option_Val_With_Tag_File) " \
 	   "  ) > 0 " \
 	   " ) AND " \
-           " ( :Camera "   " IS NULL OR xm.model     LIKE :Camera ) AND "  \
-           " ( :GName "    " IS NULL OR fn.name      GLOB :GName  ) AND "  \
-           " ( :GNameI "   " IS NULL OR fn.name      GLOB :GNameI ) AND "  \
-           " ( :GNameX "   " IS NULL OR fn.name  NOT GLOB :GNameX ) AND "  \
+           " ( :Camera "   " IS NULL OR xm.model     LIKE :Camera ) "                  " AND "  \
+           " ( :GName "    " IS NULL OR fn." DUF_SQL_FILENAMEFIELD "      GLOB :GName  ) AND "  \
+           " ( :GNameI "   " IS NULL OR fn." DUF_SQL_FILENAMEFIELD "      GLOB :GNameI ) AND "  \
+           " ( :GNameX "   " IS NULL OR fn." DUF_SQL_FILENAMEFIELD "  NOT GLOB :GNameX ) AND "  \
 	" 1 "
 
 /*  20150922.120538 --- XXX "has one of tags" XXX --- replaced with "has both tags"
   	    " ( " \
   	           " (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
   	        " OR " \
-  	           " fn.rowid IN (SELECT itemid FROM " DUF_SQL_TABLES_TAGS_FULL " AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn.rowid) " \
+  	           " fn." DUF_SQL_IDFIELD " IN (SELECT itemid FROM " DUF_SQL_TABLES_TAGS_FULL " AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn." DUF_SQL_IDFIELD ") " \
   	                        " WHERE itemtype='filename' AND tn.name IN " \
   	                                         " (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))  " \
   	    " ) AND " \
