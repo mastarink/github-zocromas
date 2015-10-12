@@ -130,13 +130,17 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     .pdi_name = "dialog_pdi"
   };
   duf_ufilter_t uf = {
-    .use_format = 4,
+    .use_format = 5,
+    
     .md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ),
-    .sha1id.flag = 1,.sha1id.min = DUF_GET_UFIELD2( sha1id ),.sha1id.max = DUF_GET_UFIELD2( sha1id ),
     .same.md5.flag = 1,.same.md5.min = 2,.same.md5.max = 0,
+    
+    .sha1id.flag = 1,.sha1id.min = DUF_GET_UFIELD2( sha1id ),.sha1id.max = DUF_GET_UFIELD2( sha1id ),
+    .same.sha1.flag = 1,.same.sha1.min = 2,.same.sha1.max = 0,
   };
   if ( uf.md5id.min > 0 && uf.sha1id.min > 0 && DUF_GET_UFIELD2( nsame_md5 ) > 1 && DUF_GET_UFIELD2( nsame_sha1 ) > 1 )
   {
+    /* T("@@@@@@top:%s", duf_levinfo_path_top( pdi )); */
     DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ ,
                                           0 /* caninsert */ ,
                                           1 /* recursive */ ,

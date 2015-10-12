@@ -187,6 +187,8 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     {
       const char *sformat = NULL;
       size_t slen = 0;
+      size_t rwidth = 0;
+      int over = 0;
 
       {
         int use;
@@ -208,7 +210,10 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width - slen );
+      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width,
+                                            &rwidth, &over );
+      DUF_PUTSL( 0 );
     }
   }
 
@@ -295,6 +300,8 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
     {
       const char *sformat = NULL;
       size_t slen = 0;
+      size_t rwidth = 0;
+      int over = 0;
 
       {
         int use;
@@ -321,7 +328,10 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
       if ( !sformat )
         sformat = "%r\n";
       DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->pathinfo.topdepth ) );
-      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width - slen );
+      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width,
+                                            &rwidth, &over );
+      DUF_PUTSL( 0 );
     }
   }
 

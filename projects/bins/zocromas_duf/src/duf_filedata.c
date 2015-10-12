@@ -27,7 +27,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   int rpr = 0;
   unsigned long long dataid = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
+        "SELECT " DUF_SQL_IDFIELD " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
         " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DEBUG_START(  );

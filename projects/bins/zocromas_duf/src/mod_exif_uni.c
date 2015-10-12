@@ -52,8 +52,8 @@ static duf_sql_sequence_t final_sql = {
   .done = 0,.sql = {
                     "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
                     " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-                    " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
-                    " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
+                    " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDFIELD ") " /* */
+                    " WHERE exif." DUF_SQL_IDFIELD "=x." DUF_SQL_IDFIELD " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
                     , NULL}
 };
 
@@ -80,8 +80,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s',fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
+           ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
            ", x.dupexifcnt          AS nsame " /* */
            /* ", md.dup5cnt            AS nsame_md5 " (* *) */
            /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
@@ -89,11 +89,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            /* ", md.dup5cnt            AS dup5cnt " (* *) */
            ", sz.dupzcnt            AS dupzcnt " /* */
            ", fd.md5id AS md5id" /* */
-           /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+           /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
            /* */
-           " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
-           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+           " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
+           ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
            ", mi.mime AS mime " /* */
            ", xm.model AS camera " /* */
            ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
@@ -105,11 +105,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ,
            .selector2 =         /* */
            " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
-           " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN  " DUF_SQL_TABLES_MD5_FULL /*          */ " AS md ON ( fd.md5id  = md." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN  " DUF_SQL_TABLES_MIME_FULL /*         */ " AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_FULL /*         */ " AS x  ON ( fd.exifid =  x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_MODEL_FULL /*   */ " AS xm ON ( x.modelid = xm." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_MD5_FULL /*          */ " AS md ON ( fd.md5id  = md." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_MIME_FULL /*         */ " AS mi ON ( fd.mimeid = mi." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_FULL /*         */ " AS x  ON ( fd.exifid =  x." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN  " DUF_SQL_TABLES_EXIF_MODEL_FULL /*   */ " AS xm ON ( x.modelid = xm." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_SIZES_FULL /*        */ " AS sz ON ( sz.size   = fd.size)" /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
@@ -122,14 +122,14 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " ( :fFast    IS NULL OR sz.size IS NULL  OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,                    /* */
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD
 #if 0
            ,
            .selector_total2 =   /* */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            ,                    /* */
 #endif
@@ -140,8 +140,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .expand_sql = 1,     /* */
            .fieldset =          /* */
            /* "'exif-node' AS fieldset_id, " (* *) */
-           "pt." DUF_SQL_IDNAME " AS dirid" /* */
-           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           "pt." DUF_SQL_IDFIELD " AS dirid" /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
@@ -149,11 +149,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ,                    /* */
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #if 0
-           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #endif
            ,
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
@@ -184,7 +184,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 
     if ( need_id )
     {
-      const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
+      const char *sql = "SELECT " DUF_SQL_IDFIELD " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
 
       DUF_SQL_START_STMT( pdi, select_model, sql, lr, pstmt );
       DUF_TEST_R( lr );
@@ -262,7 +262,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
     if ( need_id )
     {
       const char *sql =
-            "SELECT " DUF_SQL_IDNAME " AS exifid FROM " DUF_SQL_TABLES_EXIF_FULL " WHERE ( :modelID IS NULL OR modelid=:modelID ) "
+            "SELECT " DUF_SQL_IDFIELD " AS exifid FROM " DUF_SQL_TABLES_EXIF_FULL " WHERE ( :modelID IS NULL OR modelid=:modelID ) "
             " AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
       DUF_SQL_START_STMT( pdi, select_exif, sql, lr, pstmt );
@@ -816,7 +816,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
 
               if ( 1 )
               {
-                const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = :exifID WHERE " DUF_SQL_IDNAME " = :dataID ";
+                const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = :exifID WHERE " DUF_SQL_IDFIELD " = :dataID ";
 
                 DUF_SQL_START_STMT( pdi, update_exif, sql, r, pstmt_update );
                 DUF_TRACE( mod, 3, " S: %s ", sql );

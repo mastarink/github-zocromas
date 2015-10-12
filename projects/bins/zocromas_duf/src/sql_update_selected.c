@@ -29,7 +29,7 @@ duf_sql_sequence_t sql_update_selected = {
   .sql = {
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " ("
 #ifdef DUF_USE_IDCOL
-          DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
+          DUF_SQL_IDFIELD " INTEGER PRIMARY KEY autoincrement, "
 #endif
           "nameid INTEGER NOT NULL " /* */
           " )" /* */ ,          /* XXX */
@@ -38,13 +38,13 @@ duf_sql_sequence_t sql_update_selected = {
 
           "DELETE FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ , /* XXX */
           "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "( nameid )"
-          " SELECT fn." DUF_SQL_IDNAME " AS nameid " "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn LEFT " /* */
-          "        JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL "  AS sh ON (sh." DUF_SQL_IDNAME "=fd.sha1id) " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-          "   LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+          " SELECT fn." DUF_SQL_IDFIELD " AS nameid " "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn LEFT " /* */
+          "        JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "  AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL "  AS sh ON (sh." DUF_SQL_IDFIELD "=fd.sha1id) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "  AS x ON (x." DUF_SQL_IDFIELD "=fd.exifid) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDFIELD " ) " /* */
           "   LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
           "      WHERE "        /* */
           DUF_SQL_UFILTER_BINDINGS /* */ , /* XXX */
@@ -61,13 +61,13 @@ duf_sql_sequence_t sql_update_selected = {
 
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
           "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHS_FULL " (fid, did, parentid) WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
-          "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDNAME " as parentid " /* */
-          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
-          "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p." DUF_SQL_IDNAME "=fn.Pathid) " /* */
+          "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDFIELD " as parentid " /* */
+          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDFIELD ") " /* */
+          "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p." DUF_SQL_IDFIELD "=fn.Pathid) " /* */
           " UNION "             /* */
           " SELECT fid, did, pp.parentid as parentid " /* */
           " FROM parents_cte "  /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " as pp ON( pp." DUF_SQL_IDNAME " = parents_cte.parentid ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " as pp ON( pp." DUF_SQL_IDFIELD " = parents_cte.parentid ) " /* */
           " ) "                 /* */
           " SELECT fid, did, parentid FROM parents_cte WHERE parentid IS NOT NULL GROUP BY ParentId " /* */ , /* XXX */
 
@@ -88,9 +88,9 @@ duf_sql_sequence_t sql_update_selected = {
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
 #else
           " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDFIELD ") " /* */
 #endif
-          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
           " GROUP BY fn.Pathid " /* */ , /* XXX */
 
 
@@ -104,16 +104,16 @@ duf_sql_sequence_t sql_update_selected = {
 
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS /* */ , /* XXX */
           "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid, numdirs) " /* */
-          " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) AS numdirs " /* */
+          " SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
           " FROM "              /* */
 #if 0
           DUF_SQL_TABLES_PATHS_FULL " " /* */
 #else
           DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
 #endif
-          " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDNAME " = ptsp.parentid ) " /* */
-          " GROUP BY parents." DUF_SQL_IDNAME /* */ , /* XXX */
+          " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
+          " GROUP BY parents." DUF_SQL_IDFIELD /* */ , /* XXX */
 
           NULL}
 };

@@ -107,9 +107,9 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
     .fieldset = "pt.parentid AS parentid, pt.dirname as name " /* */
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
-    " WHERE pt." DUF_SQL_IDNAME "=:dirID"
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
+    " WHERE pt." DUF_SQL_IDFIELD "=:dirID"
   };
 
   assert( pdi );

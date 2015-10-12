@@ -27,8 +27,8 @@
            " (:maxMimeID   IS NULL OR  fd.mimeid   <=:maxMimeID "                                      ") AND "  \
            " (:MimeType    IS NULL OR  mi.mime     =:MimeType "                                        ") AND "  \
 \
-           " (:minDataID   IS NULL OR  fd." DUF_SQL_IDNAME ">=:minDataID "                             ") AND "  \
-           " (:maxDataID   IS NULL OR  fd." DUF_SQL_IDNAME "<=:maxDataID "                             ") AND "  \
+           " (:minDataID   IS NULL OR  fd." DUF_SQL_IDFIELD ">=:minDataID "                             ") AND "  \
+           " (:maxDataID   IS NULL OR  fd." DUF_SQL_IDFIELD "<=:maxDataID "                             ") AND "  \
 \
            " (:minExifID   IS NULL OR  fd.exifid   >=:minExifID "                                      ") AND "  \
            " (:maxExifID   IS NULL OR  fd.exifid   <=:maxExifID "                                      ") AND "  \
@@ -39,8 +39,8 @@
            " (:minExifDT   IS NULL OR  x.date_time >=datetime(:minExifDT,'unixepoch') "                ") AND "  \
            " (:maxExifDT   IS NULL OR  x.date_time <=datetime(:maxExifDT,'unixepoch') "                ") AND "  \
 \
-           " (:minNameID   IS NULL OR  fn." DUF_SQL_IDNAME ">=:minNameID "                             ") AND "  \
-           " (:maxNameID   IS NULL OR  fn." DUF_SQL_IDNAME "<=:maxNameID "                             ") AND "  \
+           " (:minNameID   IS NULL OR  fn." DUF_SQL_IDFIELD ">=:minNameID "                             ") AND "  \
+           " (:maxNameID   IS NULL OR  fn." DUF_SQL_IDFIELD "<=:maxNameID "                             ") AND "  \
 \
            " (:minDirID    IS NULL OR  fn.Pathid   >=:minDirID "                                       ") AND "  \
            " (:maxDirID    IS NULL OR  fn.Pathid   <=:maxDirID "                                       ") AND "  \
@@ -65,18 +65,18 @@
 \
            " (:Name "    " IS NULL OR fn.name      = :Name "                                           ") AND "  \
            " ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
-                                  " OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
-                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+                                  " OR md." DUF_SQL_IDFIELD "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
                                              " WHERE fnb.name = :GSameAsMd5 AND fnb.Pathid=:GSameMd5PathID ) "  \
            " ) AND " \
            " ( ( :GSameAsSha1  IS NULL OR :GSameSha1PathID IS NULL ) "  \
-                                  " OR sh." DUF_SQL_IDNAME "=(SELECT fdb.sha1id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
-                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+                                  " OR sh." DUF_SQL_IDFIELD "=(SELECT fdb.sha1id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
                                              " WHERE fnb.name = :GSameAsSha1 AND fnb.Pathid=:GSameSha1PathID ) "  \
            " ) AND " \
            " ( ( :GSameAsExif  IS NULL OR :GSameExifPathID IS NULL ) "  \
-                                 "  OR x." DUF_SQL_IDNAME "=(SELECT fdb.exifid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
-                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+                                 "  OR x." DUF_SQL_IDFIELD "=(SELECT fdb.exifid FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+                                           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
                                            "  WHERE fnb.name = :GSameAsExif AND fnb.Pathid=:GSameExifPathID ) "  \
            " ) AND " \
 	   " ( " \

@@ -87,9 +87,10 @@ typedef enum
 
 static size_t
 duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
-                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb DUF_UNUSED )
+                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb DUF_UNUSED, size_t * pwidth )
 {
   size_t slen = 0;
+  size_t swidth = 0;
   duf_sformat_char_t c;
   char *pe = NULL;
   long v = 0;
@@ -116,6 +117,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, duf_pdi_reldepth( pdi ) );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ:       /* seq */
 #if 1
@@ -128,6 +130,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pdi->seq );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_NODE:  /* seq_node */
 #if 1
@@ -140,6 +143,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_LEAF:  /* seq_leaf */
 #if 1
@@ -152,6 +156,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MD5ID:     /* md5id */
 #if 1
@@ -163,6 +168,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       snprintf( format, fbsz, "%%llu" );
 #endif
     snprintf( pbuffer, bfsz, format, pfi->md5id );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SHA1ID:    /* sha1id */
 #if 1
@@ -174,6 +180,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       snprintf( format, fbsz, "%%llu" );
 #endif
     snprintf( pbuffer, bfsz, format, pfi->sha1id );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NSAME:     /* nsame */
     {
@@ -209,13 +216,16 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       }
       snprintf( pbuffer, bfsz, format, ns );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_UNDERLINE: /* underline */
     memset( pbuffer, '_', v > 0 ? v : ( v < 0 ? -v : 1 ) );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SPACE:     /* space */
     /* pbuffer += strlen( pbuffer ); */
     memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MOVE_TO_POSITION:
     {
@@ -225,12 +235,14 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       /* memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? -vp : 1 ) ); */
       memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? 1 : 1 ) );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_PREFIX:    /* prefix */
     if ( prefix_scb )
     {
-      ( prefix_scb ) ( pbuffer, bfsz, pdi );
+      ( prefix_scb ) ( pbuffer, bfsz, pdi, &swidth );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_DIRID:     /* dirid */
 #if 1
@@ -243,6 +255,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NFILES:    /* nfiles */
 #if 1
@@ -255,6 +268,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.files );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NDIRS:     /* ndirs */
 #if 1
@@ -279,6 +293,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pfi->dataid );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_COLOR:     /* color */
     {
@@ -290,11 +305,13 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       else
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
 #else
-      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && (size_t)v < sizeof( hls ) ) ? hls[v] : hls[0] );
+      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
 #endif
     }
+    /* Not here : swidth += strlen( pbuffer ); */
     break;
   case DUF_SFMT_CHR_SUFFIX:    /* suffix */
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_INODE:     /* inode */
 #if 1
@@ -307,6 +324,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MODE:      /* mode */
     {
@@ -342,6 +360,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
         *pmode = 'x';
       snprintf( pbuffer, bfsz, "%s", modebuf );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NLINK:     /* nlink */
 #if 1
@@ -354,6 +373,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_USER:      /* user */
 #if 1
@@ -366,6 +386,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_GROUP:     /* group */
 #if 1
@@ -378,6 +399,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_FILESIZE:  /* filesize */
     {
@@ -395,6 +417,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 
       snprintf( pbuffer, bfsz, format, sz );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_FILESIZEH: /* filesize */
     {
@@ -453,6 +476,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
         snprintf( pbuffer, bfsz, format, sz / 1024 / 1024 / 1024 );
       }
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MTIME1:    /* time */
   case DUF_SFMT_CHR_MTIME2:    /* time */
@@ -528,6 +552,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 
       snprintf( pbuffer, bfsz, format, stime );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_REALPATH:  /* realpath */
     {
@@ -545,6 +570,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       real_path = duf_levinfo_path( pdi );
       snprintf( pbuffer, bfsz, format, real_path );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_RELATIVE_PATH: /* relative realpath */
     {
@@ -563,6 +589,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       rel_real_path = duf_levinfo_relpath( pdi );
       snprintf( pbuffer, bfsz, format, rel_real_path );
     }
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_FILENAME:  /* filename */
     {
@@ -578,7 +605,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 
       snprintf( pbuffer, bfsz, format, pfi->name );
     }
-    pbuffer += strlen( pbuffer );
+    swidth += strlen( pbuffer );
     break;
 #if 0
   case 'f':                    /* itemname */
@@ -590,7 +617,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 
       snprintf( pbuffer, bfsz, format, duf_levinfo_itemname( pdi ) );
     }
-    pbuffer += strlen( pbuffer );
+    swidth += strlen( pbuffer );
     break;
 #endif
   case DUF_SFMT_CHR_MD5SUM:    /* md5sum */
@@ -598,12 +625,14 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
     else
       snprintf( pbuffer, bfsz, "%-32s", "-" );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SHA1SUM:   /* sha1sum */
     if ( pfi->sha1sum1 || pfi->sha1sum2 || pfi->sha1sum3 )
       snprintf( pbuffer, bfsz, "%08llx:%016llx:%016llx", pfi->sha1sum1, pfi->sha1sum2, pfi->sha1sum3 );
     else
       snprintf( pbuffer, bfsz, "%-40s", "-" );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_EXIFID:    /* exifid */
 #if 1
@@ -619,6 +648,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       snprintf( pbuffer, bfsz, format, pfi->exifid );
     else
       *pbuffer = '?';
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_CAMERAS:   /* camera */
   case DUF_SFMT_CHR_CAMERA:    /* camera */
@@ -645,6 +675,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
     }
     else
       *pbuffer = '?';
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MIMEID:    /* mimeid */
 #if 1
@@ -657,6 +688,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pfi->mimeid );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MIME:      /* mime */
 #if 1
@@ -669,6 +701,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pfi->mime ? pfi->mime : "?" );
+    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NAMEID:    /* nameid */
 #if 1
@@ -681,6 +714,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pfi->nameid );
+    swidth += strlen( pbuffer );
     break;
   default:
     pbuffer += strlen( pbuffer );
@@ -690,34 +724,39 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
     pbuffer += strlen( pbuffer );
     *pbuffer++ = c;
     *pbuffer = 0;
+    swidth += strlen( pbuffer );
     break;
   }
   slen = strlen( pbuffer );
   pbuffer += slen;
   *pfmt = fmt;
   *ppbuffer = pbuffer;
+  if ( pwidth )
+    *pwidth += swidth;
   return slen;
 }
 
 char *
 duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty, const char *format, duf_pdi_scb_t prefix_scb,
-                       duf_pdi_scb_t suffix_scb, size_t * pslen )
+                       duf_pdi_scb_t suffix_scb, size_t max_width DUF_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
 {
   size_t slen = 0;
+  size_t swidth = 0;
   const char *fmt = format;
   char *buffer = NULL;
   char *pbuffer = NULL;
   size_t bfsz = 1024 * 16;
+  int over = 0;
 
   pbuffer = buffer = mas_malloc( bfsz + 8 );
   memset( buffer, 0, bfsz );
-  while ( fmt && *fmt && buffer + bfsz - pbuffer > 0 )
+  while ( fmt && *fmt && buffer + bfsz - pbuffer > 0 /* && !( over = ( max_width > 0 && swidth > max_width ) ) */  )
   {
     if ( *fmt == '%' )
     {
       fmt++;
       slen += duf_sformat_id( is_atty, &fmt, &pbuffer, pbuffer - buffer, buffer + bfsz - pbuffer /* remaining bytes cnt */ , pdi, pfi, prefix_scb,
-                              suffix_scb );
+                              suffix_scb, &swidth );
     }
     else if ( *fmt == '\\' )
     {
@@ -727,50 +766,47 @@ duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty,
       else if ( *fmt == 'r' )
         *pbuffer++ = '\r';
       else if ( *fmt == 't' )
-        *pbuffer++ = '\t';
+        *pbuffer++ = '\t';      /* FIXME swidth is wrong for \t */
       else
       {
         *pbuffer++ = '\\';
         *pbuffer++ = *fmt;
+        swidth++;
       }
+      swidth++;
       fmt++;
     }
     else
     {
       *pbuffer++ = *fmt++;
+      swidth++;
     }
   }
+  if ( pover )
+    *pover = over;
   if ( pslen )
     *pslen = slen;
+  if ( pwidth )
+    *pwidth = swidth;
+  /* buffer[slen] = 0; */
   return buffer;
 }
 
 size_t
 duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
-                             size_t max_width DUF_UNUSED )
+                             size_t max_width, size_t * pswidth, int *pover )
 {
   size_t slen = 0;
+  size_t swidth = 0;
   char *buffer;
   FILE *out;
 
   out = duf_config && duf_config->cli.output.out ? duf_config->cli.output.out : stdout;
-  buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, &slen );
-#if 0
-  {
-    if ( max_width > 0 && buffer[slen - 1] == '\n' && max_width < slen )
-    {
-      buffer[max_width] = 0;
-      buffer[max_width - 1] = '\n';
-    }
-    else
-    {
-    }
-  }
-#endif
+  buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, max_width, &slen, &swidth, pover );
 
-  /* DUF_WRITES( 0, "[[[" ); */
   DUF_WRITES( 0, buffer );
-  /* DUF_WRITES( 0, "]]]" ); */
   mas_free( buffer );
+  if ( pswidth )
+    *pswidth = swidth;
   return slen;
 }

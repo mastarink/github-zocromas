@@ -41,8 +41,8 @@ static duf_sql_sequence_t final_sql = /* */
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SHA1_FULL " SET dupsha1cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_SHA1_FULL " AS sh " /* */
-          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sha1id=sh." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_SQL_TABLES_SHA1_FULL "." DUF_SQL_IDNAME "=sh." DUF_SQL_IDNAME ")" /* */
+          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sha1id=sh." DUF_SQL_IDFIELD ") " /* */
+          " WHERE " DUF_SQL_TABLES_SHA1_FULL "." DUF_SQL_IDFIELD "=sh." DUF_SQL_IDFIELD ")" /* */
           ,
           NULL,
           }
@@ -81,14 +81,14 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           "( fd.sha1id IS NULL OR sh." DUF_SQL_IDNAME " IS NULL ) " /*                                          */ " AND " /* */
+           "( fd.sha1id IS NULL OR sh." DUF_SQL_IDFIELD " IS NULL ) " /*                                          */ " AND " /* */
            "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                            */ " AND " /* */
            "(  :fFast   IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                                      */ " AND " /* */
-           "(  :fFast   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
-           "(  :fFast   IS NULL OR md." DUF_SQL_IDNAME " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
+           "(  :fFast   IS NULL OR sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
+           "(  :fFast   IS NULL OR md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
            " 1 "                /* */
            ,
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME}
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
   ,                             /* */
   .node = {                     /* */
            .name = "sha1 node",
@@ -96,18 +96,18 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            .expand_sql = 1,     /* */
            .fieldset =          /* */
            /* "'sha1-node' AS fieldset_id, " (* *) */
-           " pt." DUF_SQL_IDNAME " AS dirid" /* */
-           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
+           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            ,
@@ -123,7 +123,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   int rpr = 0;
   unsigned long long sha1id = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDNAME " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
+        "SELECT " DUF_SQL_IDFIELD " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3 */
         ;
 
@@ -329,9 +329,9 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       {
         DUF_UFIELD2( filedataid );
 #if 0
-        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, sha1id, filedataid ) );
+        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sha1id, filedataid ) );
 #else
-        const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id=:sha1Id WHERE " DUF_SQL_IDNAME " =:dataId ";
+        const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id=:sha1Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 
         DUF_SQL_START_STMT( pdi, update_sha1id, sql, r, pstmt );
         DUF_TRACE( mod, 3, "S:%s", sql );

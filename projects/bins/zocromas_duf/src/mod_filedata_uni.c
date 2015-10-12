@@ -30,14 +30,14 @@ static duf_sql_sequence_t final_sql = /* */
 #if 0
           "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-          " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_SQL_TABLES_MD5_FULL "." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
+          " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDFIELD ") " /* */
+          " WHERE " DUF_SQL_TABLES_MD5_FULL "." DUF_SQL_IDFIELD "=md." DUF_SQL_IDFIELD ")" /* */
           /* " WHERE " DUF_SQL_TABLES_MD5_FULL ".md5sum1=md.md5sum1 AND " DUF_SQL_TABLES_MD5_FULL ".md5sum2=md.md5sum2)" */
           ,
           "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-          " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_SQL_TABLES_EXIF_FULL "." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
+          " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDFIELD ") " /* */
+          " WHERE " DUF_SQL_TABLES_EXIF_FULL "." DUF_SQL_IDFIELD "=x." DUF_SQL_IDFIELD " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
 #endif
           /* XXX Needless XXX "DELETE FROM " DUF_SQL_TABLES_SIZES_FULL (* *) , */
@@ -63,26 +63,26 @@ static duf_sql_sequence_t final_sql = /* */
           "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_files (Pathid, numfiles, minsize, maxsize) " /* */
           "SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
           " GROUP BY fn.Pathid" /* */
           ,
           "UPDATE " DUF_DBPREF "pathtot_files SET " /* */
           " minsize=(SELECT min(size) AS minsize " /* */
-          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid) " /* */
           ", maxsize=(SELECT max(size) AS maxsize " /* */
-          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid) " /* */
           ", numfiles=(SELECT COUNT(*) AS numfiles " /* */
-          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)" /* */
           ,
 
           "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
-          "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
+          "SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT(*) AS numdirs " /* */
           " FROM " DUF_SQL_TABLES_PATHS_FULL " " /* */
-          " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON (parents." DUF_SQL_IDNAME "=" DUF_SQL_TABLES_PATHS_FULL ".ParentId) " /* */
-          " GROUP BY parents." DUF_SQL_IDNAME "" /* */
+          " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON (parents." DUF_SQL_IDFIELD "=" DUF_SQL_TABLES_PATHS_FULL ".ParentId) " /* */
+          " GROUP BY parents." DUF_SQL_IDFIELD "" /* */
           ,
           /* "UPDATE " DUF_DBPREF "pathtot_dirs SET " (* *)                      */
           /*       " numdirs=(SELECT COUNT(*) AS numdirs " (* *)                 */
@@ -93,11 +93,11 @@ static duf_sql_sequence_t final_sql = /* */
 
           /* "DELETE FROM " DUF_DBPREF "keydata", */
           /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
-          /*       "SELECT md." DUF_SQL_IDNAME " AS md5id, fn." DUF_SQL_IDNAME " AS filenameid, fd." DUF_SQL_IDNAME " AS dataid, p." DUF_SQL_IDNAME " AS Pathid " (* *) */
+          /*       "SELECT md." DUF_SQL_IDFIELD " AS md5id, fn." DUF_SQL_IDFIELD " AS filenameid, fd." DUF_SQL_IDFIELD " AS dataid, p." DUF_SQL_IDFIELD " AS Pathid " (* *) */
           /*       " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " (* *)                                         */
-          /*       " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ")" (* *)                */
-          /*       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (fn.Pathid=p." DUF_SQL_IDNAME ")" (* *)                           */
-          /*       " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDNAME ")",                                 */
+          /*       " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ")" (* *)                */
+          /*       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (fn.Pathid=p." DUF_SQL_IDFIELD ")" (* *)                           */
+          /*       " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDFIELD ")",                                 */
 
           /* *INDENT-ON*  */
 
@@ -135,13 +135,13 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-           ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
-           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+           ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
+           ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
+           ", fd." DUF_SQL_IDFIELD " AS filedataid " /* */
+           ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
            ", md.dup5cnt AS nsame " /* */
            ", fd.md5id AS md5id" /* */
-           /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+           /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
            ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
            ", fd.size AS filesize " /* */
@@ -149,8 +149,8 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            .selector2 =         /* */
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON ( md." DUF_SQL_IDFIELD " = fd.md5id ) " /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,
@@ -165,19 +165,19 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            .expand_sql = 1,     /* */
            .fieldset =          /* */
            "'filedata-node' AS fieldset_id, " /* */
-           " pt." DUF_SQL_IDNAME " AS dirid" /* */
-           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #if 0
-           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
            .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */

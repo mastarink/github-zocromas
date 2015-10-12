@@ -23,13 +23,13 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
    ", fd.mode               AS filemode " /* */
-   ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-   ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+   ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
+   ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
    ", fd.md5id              AS md5id " /* */
-   /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+   /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
-   ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
-   ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+   ", fd." DUF_SQL_IDFIELD " AS filedataid " /* */
+   ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
    ", md.dup5cnt            AS dup5cnt " /* */
@@ -46,12 +46,12 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .selector2 =                 /* */
 #if 0
    " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fns " /* */
-   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns.nameid=fn." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns.nameid=fn." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDFIELD "=fd.mimeid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x ON (x." DUF_SQL_IDFIELD "=fd.exifid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
 #else
    "#std-leaf"
@@ -62,7 +62,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ,
    .filter =                    /* */
    NULL                         /* */
-   /* " ORDER BY fn." DUF_SQL_IDNAME " " */
+   /* " ORDER BY fn." DUF_SQL_IDFIELD " " */
    }
   ,                             /* */
   {                             /* */
@@ -78,13 +78,13 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
    ", fd.mode               AS filemode " /* */
-   ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-   ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+   ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
+   ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
    ", fd.md5id              AS md5id " /* */
-   /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+   /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
    ", md.md5sum1, md.md5sum2 "  /* */
-   ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
-   ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+   ", fd." DUF_SQL_IDFIELD " AS filedataid " /* */
+   ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
    ", md.dup5cnt            AS dup5cnt " /* */
@@ -101,19 +101,19 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
 #if 0
    " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-   /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
-   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+   /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDFIELD "=fn." DUF_SQL_IDFIELD ") " (* *) */
+   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDFIELD "=fd.mimeid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x  ON (x." DUF_SQL_IDFIELD "=fd.exifid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
 #else
    "#std-ns-leaf"
 #endif
    ,
    .matcher = " fn.Pathid=:parentdirID " /*  +pu  */
-   /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */
+   /* " ORDER BY fn." DUF_SQL_IDFIELD " " *//* */
    ,
    .filter =                    /* */
    DUF_SQL_UFILTER_BINDINGS     /* */
@@ -134,8 +134,8 @@ duf_sql_set_t std_node_sets[] = { /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-node' AS fieldset_id, " (* *) */
-   " pt." DUF_SQL_IDNAME " AS dirid" /* */
-   ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+   " pt." DUF_SQL_IDFIELD " AS dirid" /* */
+   ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
@@ -157,9 +157,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    " ) ",
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                  */ " AS pte " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDNAME "=pt." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
    ,
 #endif
 
@@ -167,8 +167,8 @@ duf_sql_set_t std_node_sets[] = { /* */
 #if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt.rowid ) " /* */
-   " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-   " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+   " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+   " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #else
    "#std-node"
 #endif
@@ -185,8 +185,8 @@ duf_sql_set_t std_node_sets[] = { /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-ns-node' AS fieldset_id, " (* *) */
-   " pt." DUF_SQL_IDNAME " AS dirid" /* */
-   ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+   " pt." DUF_SQL_IDFIELD " AS dirid" /* */
+   ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
@@ -197,8 +197,8 @@ duf_sql_set_t std_node_sets[] = { /* */
    ,
    .selector2 =                 /* */
    " FROM      " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    ,
    .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
    ,

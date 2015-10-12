@@ -59,7 +59,7 @@ duf_main_db_info( void )
       {.title = "paths",.count = 5,.labels = {"num of paths", "max num dirs", "max num files", "@min inow", "@max inow", NULL}
        ,.sql =
        "SELECT  COUNT(*), max(numdirs), max(numfiles), STRFTIME('%s',min(pt.inow)), STRFTIME('%s',max(pt.inow)) FROM " DUF_SQL_TABLES_PATHS_FULL
-       " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ")"}
+       " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ")"}
       ,
 #endif
       {.title = "datas with reasonable date",.count = 5,.labels = {"#", "@min mtim", "@max mtim", "@min inow", "@max inow", NULL}
@@ -70,12 +70,12 @@ duf_main_db_info( void )
       ,
       {.title = "zero files",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME
+       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD
        ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size=0"}
       ,
       {.title = "nonzero files",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME
+       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD
        ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size>0"}
       ,
       {.title = "names",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
@@ -83,13 +83,13 @@ duf_main_db_info( void )
       ,
       {.title = "names 2",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
-       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)"}
+       "SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN "
+       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id)"}
       ,
       {.title = "distinct md5id",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN "
-       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)"}
+       "SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN "
+       DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id)"}
       ,
       {.title = "n/z Sizes",.count = 5,.labels = {"#", "min size", "max size", "@min inow", "@max inow", NULL}
        ,.sql =
@@ -124,16 +124,16 @@ duf_main_db_info( void )
     DUF_TRACE( explain, 0, "-=-=-=-=-=-=-       -=-=-=-=-=-=-=-=-=-" );
     DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
     /*
-       SELECT  COUNT(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") ;
+       SELECT  COUNT(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") ;
        SELECT COUNT(*), datetime(min(mtim), 'unixepoch'), datetime(max(mtim), 'unixepoch'), min(inow), max(inow) FROM filedatas WHERE mtim>320000000 and mtim<1600000000
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size>0;
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size=0;
+       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size>0;
+       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size=0;
        SELECT COUNT(*), min(inow), max(inow)                                                                     FROM " DUF_SQL_TABLES_FILENAMES_FULL ";
        SELECT COUNT(*), max(size), min(size), min(inow), max(inow)                                               FROM " DUF_SQL_TABLES_SIZES_FULL "; 
        SELECT COUNT(*) FROM " DUF_SQL_TABLES_SIZES_FULL " WHERE dupzcnt>1;
        SELECT COUNT(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md;   
-       SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
-       SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
+       SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
+       SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
      */
     for ( unsigned iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {
