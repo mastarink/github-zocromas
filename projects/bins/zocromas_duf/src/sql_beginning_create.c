@@ -305,12 +305,11 @@ duf_sql_sequence_t sql_beginning_create_three = {
           ", ctim REAL, ctimn INTEGER" /* */
           ", " DUF_SQL_DIRNAMEFIELD " TEXT" /* */
           ", parentid INTEGER " /* " REFERENCES " DUF_SQL_TABLES_PATHS *//* */
-          ", last_updated REAL" /* */
+          ", priority INTEGER" ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           /* ", FOREIGN KEY(parentid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") " (* *) */
           " ) ",
-          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_" DUF_SQL_DIRNAMEFIELD "      ON " DUF_SQL_TABLES_PATHS " ("
-          DUF_SQL_DIRNAMEFIELD ")",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_" DUF_SQL_DIRNAMEFIELD " ON " DUF_SQL_TABLES_PATHS " (" DUF_SQL_DIRNAMEFIELD ")",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev_uniq     ON " DUF_SQL_TABLES_PATHS " (dev,inode)",
 
 /*        "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent1_uniq ON " DUF_SQL_TABLES_PATHS " (parentid," DUF_SQL_IDFIELD ")", */
@@ -320,6 +319,7 @@ duf_sql_sequence_t sql_beginning_create_three = {
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev          ON " DUF_SQL_TABLES_PATHS " (dev)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_inode        ON " DUF_SQL_TABLES_PATHS " (inode)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parentid     ON " DUF_SQL_TABLES_PATHS " (parentid)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_priority     ON " DUF_SQL_TABLES_PATHS " (priority)",
 
           "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_lastupdated " /* */
           " AFTER UPDATE OF dev,inode," DUF_SQL_DIRNAMEFIELD ",parentid  ON " DUF_SQL_TABLES_PATHS /* */

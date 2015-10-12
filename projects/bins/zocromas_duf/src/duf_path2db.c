@@ -187,7 +187,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /*      */
-    " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName)"
+          " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR " DUF_SQL_DIRNAMEFIELD "=:dirName)" /* */
   };
 #else
   const char *def_node_fieldset2 = "pt." DUF_SQL_IDFIELD " AS dirid " /* */

@@ -7,6 +7,7 @@ sfind srclow.mased.vim
 sfind src.mased.vim
 sfind srclevinfo.mased.vim
 sfind srcsccb.mased.vim
+sfind dufcmds.mased.vim
 sfind cdef.mased.vim
 sfind srciface.mased.vim
 " sfind src1.mased.vim
