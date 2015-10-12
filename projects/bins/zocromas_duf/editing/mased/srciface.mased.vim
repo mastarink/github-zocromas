@@ -13,8 +13,8 @@ sfind duf_maindb_info.h
 " tab sfind duf_interactive.c
 " sfind duf_interactive.h
 
-tab sfind duf_prepare_actions.c
-sfind duf_prepare_actions.h
+" tab sfind duf_prepare_actions.c
+" sfind duf_prepare_actions.h
 
 tab sfind duf_action_table.c
 sfind duf_action_table.h

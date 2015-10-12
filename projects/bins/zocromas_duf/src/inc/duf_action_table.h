@@ -10,8 +10,9 @@ extern duf_scan_callbacks_t     /* */
   duf_collect_openat_crc32_callbacks, /* */
   duf_collect_openat_sd5_callbacks, /* */
   duf_collect_openat_md5_callbacks, /* */
-  duf_sha1_callbacks,            /* */
-  duf_collect_mime_callbacks, duf_collect_exif_callbacks, /* */
+  duf_sha1_callbacks,           /* */
+  duf_collect_mime_callbacks,   /* */
+  duf_collect_exif_callbacks,   /* */
       /* duf_collect_mdpath_callbacks , */
       /* duf_print_md5_callbacks ,      */
   duf_print_tree_callbacks,     /* */

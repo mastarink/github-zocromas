@@ -1,5 +1,5 @@
 [color]
-	status = true
+	status = always
 	grep = auto
 	diff = auto
 [color "status"]
