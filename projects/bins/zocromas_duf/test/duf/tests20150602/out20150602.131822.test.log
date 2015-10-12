@@ -1,0 +1,385 @@
+============ [testid=creadd] (testcreadd)
+
+
+
+
+
+
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+--------------------------------------------------
+ duf_main_db ended
+--------------------------------------------------
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+[testid=creadd] compare ok
+============ [testid=ca1] (testca1)
+
+
+
+
+
+
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+1,2c1,61
+< 
+< 
+---
+> └─── photos       
+>      ├─── 01jan2004    
+>      ├─── 01jun2004    
+>      ├─── 01may2004    
+>      │    └─── 1            
+>      ├─── 01may2004a   
+>      ├─── 01sep2003    
+>      ├─── 01sep2004    
+>      ├─── 05jul2004    
+>      ├─── 05sep2004    
+>      ├─── 07aug2004    
+>      ├─── 07aug2004try 
+>      ├─── 1            
+>      ├─── 11mar2004    
+>      ├─── 13jun2004    
+>      ├─── 14aug2004    
+>      ├─── 14jul2004    
+>      ├─── 17apr2004    
+>      ├─── 18jul2004    
+>      ├─── 19mar2004    
+>      ├─── 2            
+>      ├─── 20feb2004    
+>      ├─── 20jan2004    
+>      ├─── 24aug2003    
+>      ├─── 24jul2004    
+>      ├─── 24may2004    
+>      ├─── 25jan2004    
+>      ├─── 3            
+>      ├─── 4            
+>      │    └─── small        
+>      ├─── 5            
+>      ├─── 6            
+>      ├─── 72           
+>      │    ├─── 09sep2003    
+>      │    │    └─── 1            
+>      │    ├─── 18oct2003    
+>      │    ├─── 19oct2003    
+>      │    ├─── a            
+>      │    └─── upload       
+>      ├─── a            
+>      ├─── allcat       
+>      ├─── crimea2003   
+>      │    ├─── 1            
+>      │    │    └─── spc          
+>      │    ├─── 2            
+>      │    ├─── 3            
+>      │    └─── upload       
+>      ├─── jan2004      
+>      └─── sel          
+>           ├─── 1            
+>           ├─── 2            
+>           ├─── 3            
+>           ├─── 4            
+>           ├─── bestcat      
+>           │    └─── pub          
+>           ├─── print        
+>           ├─── saltov       
+>           ├─── shagin       
+>           ├─── we           
+>           ├─── xtra         
+>           └─── z            
+4c63
+<  duf_main_db ended
+---
+>  main_db ended
+[testid=ca1] compare fail test/duf/20150602/out20150602.131822.test.ca1 test/duf/good.test.ca1
+============ [testid=0] (test0)
+
+
+
+
+
+
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+--------------------------------------------------
+ duf_main_db ended
+--------------------------------------------------
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+[testid=0] compare ok
+============ [testid=sql1] (testsql1)
+FAKED WMWMOMWMWM EMP MEMT
+1a2,8
+> Tb          Cnt                           
+> ----------  ------------------------------
+> Paths       67                            
+> Datas       2613                          
+> Names       2613                          
+> Sizes       1622                          
+> MD5s        1630                          
+[testid=sql1] compare fail test/duf/20150602/out20150602.131822.test.sql1 test/duf/good.test.sql1
+┌────────────┬  id 1     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.914s; user 0m0.666s; system 0m0.040s; cpu 77.25
+Binary files test/duf/20150602/out20150602.131822.test.1 and test/duf/good.test.1 differ
+[testid=1] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.1 test/duf/good.test.1(B[m
+[testid=1] compare fail test/duf/20150602/out20150602.131822.test.1 test/duf/good.test.1
+└────────────┴──── [33m[1m[41m1          ERROR (B[m :: /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f
+┌────────────┬  id 2     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.664s; user 0m0.552s; system 0m0.034s; cpu 88.25
+Binary files test/duf/20150602/out20150602.131822.test.2 and test/duf/good.test.2 differ
+[testid=2] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.2 test/duf/good.test.2(B[m
+[testid=2] compare fail test/duf/20150602/out20150602.131822.test.2 test/duf/good.test.2
+└────────────┴──── [33m[1m[41m2          ERROR (B[m :: /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=1
+┌────────────┬  id 3     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.732s; user 0m0.610s; system 0m0.041s; cpu 88.95
+Binary files test/duf/20150602/out20150602.131822.test.3 and test/duf/good.test.3 differ
+[testid=3] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.3 test/duf/good.test.3(B[m
+[testid=3] compare fail test/duf/20150602/out20150602.131822.test.3 test/duf/good.test.3
+└────────────┴──── [33m[1m[41m3          ERROR (B[m :: /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=2
+┌────────────┬  id 4     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.479s; user 0m0.359s; system 0m0.035s; cpu 82.24
+1,16c1,19
+< - 3 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/3/
+<   1. #2754   =1     TRANS.TBL         108. -r--r--r-- / Apr 07 2003 18:16:05 / ___ __ ____ __:__:__
+< - 4 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/4/
+<   2. #2759   =1     TRANS.TBL         265. -r--r--r-- / Apr 07 2003 18:16:05 / ___ __ ____ __:__:__
+< - print --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/print/
+<   3. #2811   =1     a                 147. -r--r--r-- / Feb 13 2003 21:59:56 / ___ __ ____ __:__:__
+<   4. #2812   =2     as                 56. -r--r--r-- / Feb 13 2003 21:53:30 / ___ __ ____ __:__:__
+<   5. #2813   =1     auto002-48.pbm    297. -r--r--r-- / Feb 13 2003 21:47:42 / ___ __ ____ __:__:__
+<   6. #2818   =1     auto002-48a.png   346. -r--r--r-- / Feb 13 2003 12:52:48 / ___ __ ____ __:__:__
+<   7. #2819   =1     auto002-48c.face   148. -r--r--r-- / Feb 13 2003 22:26:28 / ___ __ ____ __:__:__
+<   8. #2820   =1     auto002-48c.pbm   297. -r--r--r-- / Feb 13 2003 21:50:58 / ___ __ ____ __:__:__
+<   9. #2812   =2     auto002-cf         56. -r--r--r-- / Feb 13 2003 21:45:06 / ___ __ ____ __:__:__
+<  10. #2822   =1     auto002.pbm       297. -r--r--r-- / Feb 13 2003 13:03:02 / ___ __ ____ __:__:__
+<  11. #2824   =1     auto002c.pbm      297. -r--r--r-- / Feb 13 2003 13:03:58 / ___ __ ____ __:__:__
+< - z --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/z/
+<  12. #2917   =1     TRANS.TBL         272. -r--r--r-- / Apr 07 2003 18:16:05 / ___ __ ____ __:__:__
+---
+> /mnt/new_media/media/photo/Pictures/photos/sel/3
+> -r--r--r-- 1  u1000      g1000             108  Apr 07 2003 18:16:05  .    TRANS.TBL                      #1467   <text/plain> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/4
+> -r--r--r-- 1  u1000      g1000             265  Apr 07 2003 18:16:05  .    TRANS.TBL                      #1472   <text/plain> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/print
+> -r--r--r-- 1  u1000      g1000             147  Feb 13 2003 21:59:56  .    a                              #1524   <text/plain> 
+> -r--r--r-- 1  u1000      g1000              56  Feb 13 2003 21:53:30 =2    as                             #1525   <text/plain> 
+> -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 21:47:42  .    auto002-48.pbm                 #1526   <image/x-portable-bitmap> 
+> -r--r--r-- 1  u1000      g1000             346  Feb 13 2003 12:52:48  .    auto002-48a.png                #1531   <image/png> 
+> -r--r--r-- 1  u1000      g1000             148  Feb 13 2003 22:26:28  .    auto002-48c.face               #1532   <text/plain> 
+> -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 21:50:58  .    auto002-48c.pbm                #1533   <image/x-portable-bitmap> 
+> -r--r--r-- 1  u1000      g1000              56  Feb 13 2003 21:45:06 =2    auto002-cf                     #1525   <text/plain> 
+> -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 13:03:02  .    auto002.pbm                    #1535   <image/x-portable-bitmap> 
+> -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 13:03:58  .    auto002c.pbm                   #1537   <image/x-portable-bitmap> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/z
+> -r--r--r-- 1  u1000      g1000             272  Apr 07 2003 18:16:05  .    TRANS.TBL                      #1630   <text/plain> 
+> --------------------------------------------------
+>  main_db ended
+> --------------------------------------------------
+[testid=4] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.4 test/duf/good.test.4(B[m
+[testid=4] compare fail test/duf/20150602/out20150602.131822.test.4 test/duf/good.test.4
+└────────────┴──── [33m[1m[41m4          ERROR (B[m :: /mnt/new_media/media/photo/Pictures/photos/sel/ -pd -R -f --size=-500 --min-size=1
+┌────────────┬  id 5     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.475s; user 0m0.355s; system 0m0.036s; cpu 82.26
+1,11c1,14
+< - 1 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/1/
+<   1. #1505   =2     imag0008.avi        1M -r--r--r-- / Mar 30 2003 10:33:46 / ___ __ ____ __:__:__
+<   2. #1505   =2     ki1.avi             1M -r--r--r-- / Mar 30 2003 10:33:46 / ___ __ ____ __:__:__
+< - 1 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/1/
+<   3. #2714   =2     imag0124.avi        2M -r--r--r-- / Aug 06 2002 16:04:34 / ___ __ ____ __:__:__
+< - 2 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/2/
+<   4. #2714   =2     imag0124.avi        2M -r--r--r-- / Aug 06 2002 16:04:34 / ___ __ ____ __:__:__
+< - 4 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/4/
+<   5. #2760   =1     imag0117.avi        1M -r--r--r-- / Aug 17 2002 18:03:50 / ___ __ ____ __:__:__
+<   6. #2761   =1     imag0118.avi        1M -r--r--r-- / Aug 17 2002 18:05:40 / ___ __ ____ __:__:__
+<   7. #2762   =1     sss.avi             5M -r--r--r-- / Aug 17 2002 20:06:12 / ___ __ ____ __:__:__
+---
+> /mnt/new_media/media/photo/Pictures/photos/1
+> -r--r--r-- 1  u1000      g1000         1957416  Mar 30 2003 10:33:46 =2    imag0008.avi                   #218    <video/x-msvideo> 
+> -r--r--r-- 1  u1000      g1000         1957416  Mar 30 2003 10:33:46 =2    ki1.avi                        #218    <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/1
+> -r--r--r-- 1  u1000      g1000         2803656  Aug 06 2002 16:04:34 =2    imag0124.avi                   #1427   <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/2
+> -r--r--r-- 1  u1000      g1000         2803656  Aug 06 2002 16:04:34 =2    imag0124.avi                   #1427   <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/4
+> -r--r--r-- 1  u1000      g1000         1396040  Aug 17 2002 18:03:50  .    imag0117.avi                   #1473   <video/x-msvideo> 
+> -r--r--r-- 1  u1000      g1000         1171784  Aug 17 2002 18:05:40  .    imag0118.avi                   #1474   <binary> 
+> -r--r--r-- 1  u1000      g1000         5976064  Aug 17 2002 20:06:12  .    sss.avi                        #1475   <video/x-msvideo> 
+> --------------------------------------------------
+>  main_db ended
+> --------------------------------------------------
+[testid=5] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.5 test/duf/good.test.5(B[m
+[testid=5] compare fail test/duf/20150602/out20150602.131822.test.5 test/duf/good.test.5
+└────────────┴──── [33m[1m[41m5          ERROR (B[m :: /mnt/new_media/media/photo/  -Rpdf  --glob='*.avi'
+┌────────────┬  id 6     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.480s; user 0m0.362s; system 0m0.033s; cpu 82.28
+1,9c1,12
+< - allcat --------- -------		 /mnt/new_media/media/photo/Pictures/photos/allcat/
+<   1. #2272   =6     cat0016.psd         1M -r--r--r-- / Sep 13 2002 17:50:10 / ___ __ ____ __:__:__
+<   2. #2272   =6     cat0017.psd         1M -r--r--r-- / Sep 13 2002 17:50:10 / ___ __ ____ __:__:__
+< - sel --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/
+<   3. #2272   =6     cat0017 (2).psd     1M -r--r--r-- / Apr 17 2005 13:48:42 / ___ __ ____ __:__:__
+<   4. #2272   =6     cat0017.psd         1M -r--r--r-- / Sep 13 2002 17:50:10 / ___ __ ____ __:__:__
+< - xtra --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/xtra/
+<   5. #2272   =6     cat0016 (2).psd     1M -r--r--r-- / Apr 17 2005 13:48:42 / ___ __ ____ __:__:__
+<   6. #2272   =6     cat0016.psd         1M -r--r--r-- / Sep 13 2002 17:50:10 / ___ __ ____ __:__:__
+---
+> /mnt/new_media/media/photo/Pictures/photos/allcat
+> -r--r--r-- 1  u1000      g1000         1941327  Sep 13 2002 17:50:10 =6    cat0016.psd                    #985    <image/vnd.adobe.photoshop> 
+> -r--r--r-- 1  u1000      g1000         1941327  Sep 13 2002 17:50:10 =6    cat0017.psd                    #985    <image/vnd.adobe.photoshop> 
+> /mnt/new_media/media/photo/Pictures/photos/sel
+> -r--r--r-- 1  u1000      g1000         1941327  Apr 17 2005 13:48:42 =6    cat0017 (2).psd                #985    <image/vnd.adobe.photoshop> 
+> -r--r--r-- 1  u1000      g1000         1941327  Sep 13 2002 17:50:10 =6    cat0017.psd                    #985    <image/vnd.adobe.photoshop> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/xtra
+> -r--r--r-- 1  u1000      g1000         1941327  Apr 17 2005 13:48:42 =6    cat0016 (2).psd                #985    <image/vnd.adobe.photoshop> 
+> -r--r--r-- 1  u1000      g1000         1941327  Sep 13 2002 17:50:10 =6    cat0016.psd                    #985    <image/vnd.adobe.photoshop> 
+> --------------------------------------------------
+>  main_db ended
+> --------------------------------------------------
+[testid=6] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.6 test/duf/good.test.6(B[m
+[testid=6] compare fail test/duf/20150602/out20150602.131822.test.6 test/duf/good.test.6
+└────────────┴──── [33m[1m[41m6          ERROR (B[m :: /mnt/new_media/media/photo/  -pRdf --same-as=/mnt/new_media/media/photo/Pictures/photos/sel/xtra/cat0016.psd
+┌────────────┬  id 7     ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.470s; user 0m0.353s; system 0m0.031s; cpu 81.67
+1,9c1,12
+< - 1 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/1/
+<   1. #1505   =2     imag0008.avi        1M -r--r--r-- / Mar 30 2003 10:33:46 / ___ __ ____ __:__:__
+<   2. #1505   =2     ki1.avi             1M -r--r--r-- / Mar 30 2003 10:33:46 / ___ __ ____ __:__:__
+< - 1 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/1/
+<   3. #2714   =2     imag0124.avi        2M -r--r--r-- / Aug 06 2002 16:04:34 / ___ __ ____ __:__:__
+< - 2 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/2/
+<   4. #2714   =2     imag0124.avi        2M -r--r--r-- / Aug 06 2002 16:04:34 / ___ __ ____ __:__:__
+< - 4 --------- -------		 /mnt/new_media/media/photo/Pictures/photos/sel/4/
+<   5. #2762   =1     sss.avi             5M -r--r--r-- / Aug 17 2002 20:06:12 / ___ __ ____ __:__:__
+---
+> /mnt/new_media/media/photo/Pictures/photos/1
+> -r--r--r-- 1  u1000      g1000         1957416  Mar 30 2003 10:33:46 =2    imag0008.avi                   #218    <video/x-msvideo> 
+> -r--r--r-- 1  u1000      g1000         1957416  Mar 30 2003 10:33:46 =2    ki1.avi                        #218    <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/1
+> -r--r--r-- 1  u1000      g1000         2803656  Aug 06 2002 16:04:34 =2    imag0124.avi                   #1427   <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/2
+> -r--r--r-- 1  u1000      g1000         2803656  Aug 06 2002 16:04:34 =2    imag0124.avi                   #1427   <video/x-msvideo> 
+> /mnt/new_media/media/photo/Pictures/photos/sel/4
+> -r--r--r-- 1  u1000      g1000         5976064  Aug 17 2002 20:06:12  .    sss.avi                        #1475   <video/x-msvideo> 
+> --------------------------------------------------
+>  main_db ended
+> --------------------------------------------------
+[testid=7] compare fail test/duf/20150602/out20150602.131822.test.7 test/duf/good.test.7
+[testid=7] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.7 test/duf/good.test.7(B[m
+└────────────┴──── [33m[1m[41m7          ERROR (B[m :: /mnt/new_media/media/photo/ -Rpdf  --glob='*.avi' --size=+1800k
+┌────────────┬  id 8     ────────┬────────────┐
+
+
+
+
+
+
+* 1: 0 [ERROR  ]  61:duf_parse_cli_options           :0.0006 :  Invalid option -- ' ' optind=5/--format=exifdt opt=63/?
+* 1: 0 [ERROR  ] 106:duf_main                        :0.0006 :  > > > > > > >  [ERROR_OPTION_NOT_FOUND] (#-29972) {+0} #0 #0
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+--------------------------------------------------
+ duf_main_db ended
+--------------------------------------------------
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.451s; user 0m0.329s; system 0m0.036s; cpu 80.84
+[testid=8] [33m[1m[41mNo file test/duf/20150602/out20150602.131822.test.8 OR test/duf/good.test.8(B[m
+[testid=8] No file test/duf/20150602/out20150602.131822.test.8 OR test/duf/good.test.8
+└────────────┴──── [33m[1m[41m8          ERROR (B[m :: /mnt/new_media/media/photo/ -Rpdf --format=exifdt --min-exifdt=20040801 --max-exifdt=20150101
+┌────────────┬  id 1.1   ────────┬────────────┐
+
+
+
+
+
+
+@@@@@@@@@@@ 0 (0)
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+WMWMOMWMWM<<EMP MEMT>>WMWMOMWMWM<<EMP MEMT>>
+
+
+│ ...  ...   │                   │            │     real 0m0.489s; user 0m0.364s; system 0m0.038s; cpu 82.25
+Binary files test/duf/20150602/out20150602.131822.test.1.1 and test/duf/good.test.1.1 differ
+[testid=1.1] [33m[1m[41mcompare fail test/duf/20150602/out20150602.131822.test.1.1 test/duf/good.test.1.1(B[m
+[testid=1.1] compare fail test/duf/20150602/out20150602.131822.test.1.1 test/duf/good.test.1.1
+└────────────┴──── [33m[1m[41m1.1        ERROR (B[m :: /mnt/new_media/media/photo/ -Rpdf  --min-mtime=20130126 --max-mtime=20141001
+============ end 
