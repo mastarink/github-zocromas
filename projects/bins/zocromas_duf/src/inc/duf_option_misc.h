@@ -11,6 +11,5 @@ duf_error_code_t duf_option_$_history( void );
 
 duf_error_code_t duf_option_$_error_level( long lev );
 
-duf_error_code_t duf_option_$_set_dir_priority( long prio );
 
 #endif

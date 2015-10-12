@@ -58,6 +58,7 @@ typedef struct
   unsigned nclose;
 
   duf_itemtag_t tag;
+  int dir_priority;
 } duf_config_t;
 
 

@@ -21,6 +21,7 @@ extern duf_scan_callbacks_t     /* */
   duf_dumplet_callbacks,        /* */
   duf_dialog_callbacks,         /* */
   duf_tagit_callbacks,          /* */
+  duf_set_dir_priority_callbacks,          /* */
   duf_save_to_callbacks,        /* */
   duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 

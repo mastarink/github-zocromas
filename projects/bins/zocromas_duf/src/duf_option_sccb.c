@@ -144,3 +144,25 @@ duf_option_$_cd( const char *s )
   }
   DEBUG_ENDR( r );
 }
+
+duf_error_code_t
+duf_option_$_error_level( long lev )
+{
+  DEBUG_STARTR( r );
+
+  TT( "@@@@@@error level to be set:%ld", lev );
+  duf_force_offset_ereport( lev );
+  DEBUG_ENDR( r );
+}
+
+duf_error_code_t
+duf_option_$_set_dir_priority( long prio )
+{
+  DEBUG_STARTR( r );
+
+  /* DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
+  /*                                 duf_pdi_recursive( DUF_CONFIGG( pdi ) ) (*  *)  ) );                                                        */
+
+  TT( "@@@@@@dir priority to be set:%ld for %s", prio, "????" );
+  DEBUG_ENDR( r );
+}

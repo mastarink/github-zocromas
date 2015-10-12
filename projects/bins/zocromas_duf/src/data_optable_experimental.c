@@ -61,8 +61,8 @@ const duf_longval_extended_table_t optable_experimental = {
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },
 
-   {.o = {DO_Q( "set-dir-priority" ) /* */ , DO_A_R /* */ , DO_V( SET_DIR_PRIORITY )} /*   */ , DO_CL( NODESC ) /*     */ ,
-    DO_N_CALL( set_dir_priority ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /* */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "dir-priority" ) /*               */ , DO_A_R /* */ , DO_V( DIR_PRIORITY )} /*                */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OC( NUM, dir_priority ) /*                                                    */ , DO_H(  .... ) /*           */ },
 
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },
