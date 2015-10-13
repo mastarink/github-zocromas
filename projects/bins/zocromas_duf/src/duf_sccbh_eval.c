@@ -15,7 +15,7 @@
 #include "duf_sccb.h"
 #include "duf_sccb_scanstage.h"
 
-#include "duf_leaf_scan2.h"
+#include "duf_sccbh_eval_leaf.h"
 
 
 #include "duf_sccbh_eval_all.h"
