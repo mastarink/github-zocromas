@@ -2,6 +2,7 @@
 # -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
 recursive
 allow-files
+allow-sub
 allow-directories
 db-name test_tree
 drop-tables
@@ -13,6 +14,7 @@ evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
 
 # recursive
 # allow-files
+# allow-sub
 # allow-directories
 output-file=/dev/pts/6
 trace-db 2

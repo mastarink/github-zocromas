@@ -8,6 +8,10 @@
 #include "duf_pdi_reinit.h"
 #include "duf_pdi_ref.h"
 
+#include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
+#include "duf_utils.h"          /* duf_percent */
+
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_stmt_defs.h"
@@ -138,6 +142,44 @@ duf_sccb_handle_create( void )
   return sccbh;
 }
 
+void
+duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
+{
+  if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 )
+  {
+    long long m;
+
+#if 0
+    m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+#else
+    m = TOTITEMS;
+#endif
+    DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
+    /* assert( PDI->seq_node <= m ); FIXME counters! */
+    /*@ 2. progress bar */
+    if ( m > 0 )
+      duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+  }
+}
+
+void
+duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
+{
+  if ( !SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 )
+  {
+    long long m;
+
+    m = TOTITEMS;
+    DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
+    /* assert( PDI->seq_node <= m ); FIXME counters! */
+    if ( m > 0 )
+    {
+      duf_percent( PDI->seq_leaf, m, duf_uni_scan_action_title( SCCB ) );
+      DUF_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", PDI->seq, PDI->seq_leaf, m );
+    }
+  }
+}
+
 /*
  * create & open duf_sccb_handle_t from pdi & sccb (+targ)
  * */
@@ -183,6 +225,11 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
       DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu", TOTITEMS );
       DUF_TRACE( temporary, 0, "@@@@ %llu items registered in db", TOTITEMS );
       DUF_TRACE( explain, 0, "%llu items registered in db", TOTITEMS );
+      if ( DUF_ACTG_FLAG( progress ) )
+      {
+        sccbh->progress_node_cb = duf_sccbh_node_progress;
+        sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;
+      }
     }
 /*
 TODO scan mode

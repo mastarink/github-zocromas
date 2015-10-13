@@ -8,7 +8,4 @@ int duf_sccbh_eval_db_node_before( duf_scanstage_t scanstage, duf_stmnt_t * pstm
 int duf_sccbh_eval_db_node_middle( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh );
 int duf_sccbh_eval_db_node_after( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh );
 
-const char *duf_scanstage_name( duf_scanstage_t scanstage, duf_node_type_t nt );
-duf_scanner_t duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt );
-
 #endif

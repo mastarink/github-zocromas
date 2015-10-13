@@ -72,6 +72,10 @@ duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
       /* if ( xtended->stage.min == 0 && xtended->stage.max == 0 ) */
       xcount++;
       xtended++;
+#if 0
+      if ( xtended->can_no )
+        xcount++;
+#endif
     }
   }
   return xcount;

@@ -81,7 +81,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       DOR_LOWERE( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ), DUF_ERROR_FS_DISABLED );
       assert( DUF_IS_ERROR( r ) || pdhuplev->dfd );
 
-      DOR_LOWERE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) ),
+      DOR_LOWERE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) /* asfile */ ),
                   DUF_ERROR_OPENAT_ENOENT );
       assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
       DUF_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", duf_error_name_i( r ), duf_levinfo_path_d( pdi, d ),

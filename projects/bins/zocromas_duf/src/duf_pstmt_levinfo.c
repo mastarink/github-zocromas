@@ -7,6 +7,7 @@
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
+
 /* ###################################################################### */
 #include "duf_pstmt_levinfo.h"
 /* ###################################################################### */
@@ -14,7 +15,7 @@
 
 /* 20150831.202009 */
 int
-duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, int is_leaf )
+duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_node_type_t node_type )
 {
   DEBUG_STARTR( r );
 
@@ -22,7 +23,7 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi
   DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
   DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
-  DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, is_leaf, pstmt ) );
+  DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, node_type, pstmt ) );
 
   assert( r < 0 || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
 

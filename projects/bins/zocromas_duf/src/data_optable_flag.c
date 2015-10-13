@@ -23,7 +23,7 @@ const duf_longval_extended_table_t optable_flag = {
   {
 #if 0
    /* SEE --disable-memusage */
-   {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
+   {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*   */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
 #endif
    {.o = {DO_Q( "create-database" ) /*  */ , DO_A_N /* */ , DO_VF( CREATE_DB )} /*         */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, create_database ) /*                   */ , DO_H( create db ) /*                        */ },
@@ -38,17 +38,14 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                    */ , DO_H( quit ) /*                              */ },
    {.o = {DO_Q( "add-path" ) /*         */ , DO_A_N /* */ , DO_VF( ADD_PATH )} /*          */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
-
-   {.o = {DO_Q( "collect" ) /* OBSOLETE */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect_obs ) /*                       */ , DO_H( collect mode ) /*                     */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*              */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*                             */ },
 
 
 
 
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*              */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },
 #if 0
    {.o = {DO_Q( "selection" ) /*        */ , DO_A_N /* */ , DO_VF( BEGINNING_SQL ) /* */ } /* */ , DO_CL( CONTROL ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_ANY /*        */ , DO_H(  ... ) /*                            */ },
@@ -71,11 +68,12 @@ const duf_longval_extended_table_t optable_flag = {
     DO_H( collect dir info ) /*                 */ },
    /* 20150907.122956 renames dirs --> allow-dirs */
    {.o = {DO_Q( "allow-dirs" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /* */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ) /*                        */ , DO_H( get dir info ) /*      */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ) /*                        */ , DO_H( get dir info ) /*                     */ },
+   {.o = {DO_Q( "allow-sub" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_SUB )} /* */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_sub ) /*                        */ , DO_H( get sub info ) /*                      */ },
    /* renames files --> allow-files */
    {.o = {DO_Q( "allow-files" ) /*            */ , DO_A_N /* */ , DO_VF( ALLOW_FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_files ), DO_STAGE_ANY /*               */ ,
-    DO_H( get file info ) /*                    */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_files ), DO_STAGE_ANY /*         */ , DO_H( get file info ) /*                    */ },
 
 
    {.o = {DO_Q( "info" ) /*             */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
@@ -100,7 +98,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, remove_database ) /*                   */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, summary ) /*                 */ , DO_H( summary ) /*                          */ },
 
 
 #if 0

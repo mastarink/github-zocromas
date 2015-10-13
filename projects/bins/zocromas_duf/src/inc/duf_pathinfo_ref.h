@@ -10,10 +10,6 @@ duf_levinfo_t *duf_pi_ptr_d( const duf_pathinfo_t * pi, int d );
 duf_levinfo_t *duf_pi_ptr( const duf_pathinfo_t * pi );
 duf_levinfo_t *duf_pi_ptr_up( const duf_pathinfo_t * pi );
 
-int duf_pi_is_leaf_d( const duf_pathinfo_t * pi, int d );
-int duf_pi_is_leaf( const duf_pathinfo_t * pi );
-int duf_pi_is_leaf_up( const duf_pathinfo_t * pi );
-
 int duf_pi_item_deleted_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_item_deleted( const duf_pathinfo_t * pi );
 int duf_pi_item_deleted_up( const duf_pathinfo_t * pi );

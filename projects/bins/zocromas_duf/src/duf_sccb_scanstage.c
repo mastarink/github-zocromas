@@ -58,3 +58,48 @@ duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanst
 
   return scanner;
 }
+
+/* 20151013.113755 */
+const char *
+duf_scanstage_name( duf_scanstage_t scanstage, duf_node_type_t nt DUF_UNUSED )
+{
+  const char *rs = NULL;
+
+  switch ( scanstage )
+  {
+  case DUF_SCANSTAGE_FS_ITEMS:
+    rs = "fs_leaves";
+    break;
+  case DUF_SCANSTAGE_DB_LEAVES_NOFD:
+    rs = "db_leaves";
+    break;
+  case DUF_SCANSTAGE_DB_LEAVES_FD:
+    rs = "db_leaves_fd";
+    break;
+  case DUF_SCANSTAGE_DB_SUBNODES:
+    rs = "db_subnodes";
+    break;
+  case DUF_SCANSTAGE_NODE_BEFORE:
+    rs = "before";
+    break;
+  case DUF_SCANSTAGE_NODE_MIDDLE:
+    rs = "middle";
+    break;
+  case DUF_SCANSTAGE_NODE_AFTER:
+    rs = "after";
+    break;
+  case DUF_SCANSTAGE_MIN:
+    rs = "min";
+    break;
+  case DUF_SCANSTAGE_MAX:
+    rs = "max";
+    break;
+  }
+  return rs;
+}
+
+const char *
+duf_nodetype_name( duf_node_type_t nt )
+{
+  return ( nt == DUF_NODE_LEAF ? "LEAF" : ( nt == DUF_NODE_LEAF ? "NODE" : "UNKNOWN" ) );
+}

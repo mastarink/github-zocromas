@@ -1,5 +1,6 @@
 recursive
 allow-files
+allow-sub
 allow-directories
 output-file=@test2f.tmp
 # abraka

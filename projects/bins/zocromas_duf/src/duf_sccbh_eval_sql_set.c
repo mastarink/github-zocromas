@@ -28,7 +28,8 @@
 
 /* 20151013.125934 */
 static int
-duf_eval_sccbh_sql_row_str_cb( duf_node_type_t node_type, duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2,
+                               duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -49,7 +50,7 @@ duf_eval_sccbh_sql_row_str_cb( duf_node_type_t node_type, duf_stmnt_t * pstmt_se
 
 
     if ( cb )
-      DOR( r, ( cb ) ( pstmt_selector, str_cb2, sccbh ) );
+      DOR( r, ( cb ) ( scanstage, pstmt_selector, str_cb2, sccbh ) );
     else
       DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
   }
@@ -95,7 +96,8 @@ duf_eval_sccbh_sql_row_str_cb( duf_node_type_t node_type, duf_stmnt_t * pstmt_se
  * 2. duf_eval_sccbh_sql_row_str_cb for each row from db by ufilter
  * */
 static int
-duf_eval_sccbh_sql_str_cb( duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
+                           duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -121,7 +123,7 @@ duf_eval_sccbh_sql_str_cb( duf_node_type_t node_type, const char *sql_selector, 
 
   DUF_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
-  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_eval_sccbh_sql_row_str_cb( node_type, pstmt_selector, str_cb2, sccbh ) ) );
+  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_eval_sccbh_sql_row_str_cb( scanstage, node_type, pstmt_selector, str_cb2, sccbh ) ) );
 #if 1
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
 #else
@@ -132,7 +134,8 @@ duf_eval_sccbh_sql_str_cb( duf_node_type_t node_type, const char *sql_selector, 
 
 /* 20151013.125952 */
 int
-duf_eval_sccbh_sql_set_str_cb( duf_node_type_t node_type, const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2,
+                               duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   char *sql_selector = NULL;
@@ -156,7 +159,7 @@ duf_eval_sccbh_sql_set_str_cb( duf_node_type_t node_type, const duf_sql_set_t * 
  *     ( duf_eval_sccbh_db_leaf_str_cb    )
  *     ( duf_str_cb2_scan_file_fd )
  * */
-  DOR( r, duf_eval_sccbh_sql_str_cb( node_type, sql_selector, str_cb2, sccbh ) );
+  DOR( r, duf_eval_sccbh_sql_str_cb( scanstage, node_type, sql_selector, str_cb2, sccbh ) );
   mas_free( sql_selector );
   sql_selector = NULL;
   DEBUG_ENDR( r );

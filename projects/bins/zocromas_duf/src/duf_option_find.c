@@ -41,6 +41,7 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
   return r0;
 }
 
+/* TODO: rename => duf_codeval2extended */
 const duf_longval_extended_t *
 duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )
 {
@@ -234,7 +235,7 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
   if ( pno && DUF_IS_ERROR_N( rpr, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     *pno = 0;
-    DUF_TRACE( options, 6, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
+    DUF_TRACE( options, 0, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
     if ( 0 == strncmp( name, DUF_NO_PREFIX, strlen( DUF_NO_PREFIX ) ) && strlen( name ) > strlen( DUF_NO_PREFIX ) )
     {
       /* DUF_CLEAR_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND ); (* DUF_ERROR_OPTION_NOT_FOUND impossible here !?  *) */

@@ -52,7 +52,7 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
 /* 20150831.000000 */
 void
 duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
-                          int is_leaf, int d )
+                          duf_node_type_t node_type, int d )
 {
   assert( pdi );
   assert( d >= 0 );
@@ -72,19 +72,19 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
     pdi->pathinfo.levinfo[d].itemname = mas_strdup( itemname );
     /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->pathinfo.levinfo[d].itemname, pdi->pathinfo.levinfo[d].itemname ); */
   }
-  pdi->pathinfo.levinfo[d].is_leaf = is_leaf ? 1 : 0;
+  pdi->pathinfo.levinfo[d].node_type = node_type;
 }
 
 /* 20150901.173353 */
 void
 duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
-                        int is_leaf )
+                        duf_node_type_t node_type )
 {
-  duf_levinfo_init_level_d( pdi, itemname, dirid, ndirs, nfiles, is_leaf, pdi->pathinfo.depth );
+  duf_levinfo_init_level_d( pdi, itemname, dirid, ndirs, nfiles, node_type, pdi->pathinfo.depth );
 }
 
 int
-duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, int is_leaf, int d )
+duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
 {
   DEBUG_STARTR( r );
 
@@ -103,7 +103,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, int is_l
     /* if ( S_ISBLK( stX.st_mode ) ) */
     /* {                             */
     /* }                             */
-    /* DUF_SHOW_ERROR( "%s", pdi->pathinfo.levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
+    /* DUF_SHOW_ERROR( "%s", pdi->pathinfo.levinfo[d].is__leaf ? "LEAF" : "NODE" ); */
     /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->pathinfo.levinfo[d].itemname ); */
     {
       /* stat */
@@ -112,7 +112,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, int is_l
         assert( !pli->itemname );
         pli->itemname = mas_strdup( DUF_GET_SFIELD2( dfname ) );
       }
-      pli->is_leaf = is_leaf ? 1 : 0;
+      pli->node_type = node_type;
 
       pli->dirid = DUF_GET_UFIELD2( dirid );
       pli->numdir = DUF_GET_UFIELD2( ndirs );

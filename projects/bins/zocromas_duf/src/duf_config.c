@@ -97,12 +97,24 @@ duf_cfg_create( void )
         xtended = xtable->table;
         while ( xtended->o.name )
         {
+          longopts_ptr->name = mas_strdup( xtended->o.name );
+          longopts_ptr->has_arg = xtended->o.has_arg;
+          longopts_ptr->val = xtended->o.val;
+          longopts_ptr++;
+          /* TODO                        */
+#if 0
+	  if ( xtended->can_no )
           {
-            longopts_ptr->name = xtended->o.name;
+            char *s = NULL;
+
+            s = mas_strdup( "no-" );
+            s = mas_strcat_x( s, xtended->o.name );
+            longopts_ptr->name = s;
             longopts_ptr->has_arg = xtended->o.has_arg;
             longopts_ptr->val = xtended->o.val;
             longopts_ptr++;
           }
+#endif
           xtended++;
         }
       }
@@ -212,6 +224,10 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
+    for ( duf_option_t * o = cfg->longopts_table; o->name; o++ )
+    {
+      mas_free( ( char * ) o->name );
+    }
     mas_free( cfg->longopts_table );
     cfg->longopts_table = NULL;
 

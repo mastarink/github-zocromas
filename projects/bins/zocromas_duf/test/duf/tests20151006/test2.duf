@@ -1,6 +1,7 @@
 # run -dfR @out2.cmds --trace-db=2 --max-seq=24 --cd=/ --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`"  --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`" --ls --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`"
 recursive
 allow-files
+allow-sub
 allow-directories
 output-file=/dev/pts/28
 # abraka

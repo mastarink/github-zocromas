@@ -250,6 +250,9 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
               ( *pi ) &= ~extended->afl.bit;
             else
               ( *pi ) |= extended->afl.bit;
+            /* duf_config->cli.act.v.flag.info = 1; */
+            DUF_TRACE(options, 4, "@@@@@@[%d] %p %p %p :%s: %x %x (%x) %x", nof, byteptr, pi, &duf_config->cli.act.v.bit, extended->o.name, *pi, extended->afl.bit,
+               ( *pi | extended->afl.bit ), duf_config->cli.act.v.bit );
             DUF_TEST_R( r );
           }
         }

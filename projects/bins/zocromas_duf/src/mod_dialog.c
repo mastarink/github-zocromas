@@ -147,8 +147,8 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                                           0 /* opendir */  ) );
     assert( di.pup == &uf );
     DUF_TEST_R( r );
-    /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
-    DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 1 /* is_leaf */  ) );
+    /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), DUF_NODE_LEAF (* node_type *) , pstmt_files ) ); */
+    DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), DUF_NODE_LEAF /* node_type */  ) );
     DUF_TEST_R( r );
     if ( DUF_NOERROR( r ) )
     {

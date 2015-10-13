@@ -1,5 +1,6 @@
 recursive
 allow-files
+allow-sub
 allow-directories
 output-file=@test_with_tagsf.tmp
 db-name test_tree

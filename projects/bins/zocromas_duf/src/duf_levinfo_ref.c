@@ -32,19 +32,29 @@ DUF_LEVINFO_FC_UP_REF( duf_levinfo_t , ptr )
 /* *INDENT-ON*  */
 
 /************************************************************************/
+int
+duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d )
+{
+  return duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF;
+}
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC( int , is_leaf )
+DUF_LEVINFO_FC_UP( int , is_leaf )
+/* *INDENT-ON*  */
 
+/************************************************************************/
 
-/* int                                                         */
-/* duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d ) */
+/* duf_node_type_t                                                         */
+/* duf_levinfo_node_type_leaf_d( const duf_depthinfo_t * pdi, int d ) */
 /* {                                                           */
-/*   return duf_levinfo_ptr_d( pdi, d )->is_leaf ? 1 : 0;      */
+/*   return duf_levinfo_ptr_d( pdi, d )->node_type;            */
 /* }                                                           */
 /* (* *INDENT-OFF*  *)                                         */
-/* DUF_LEVINFO_FC( int, is_leaf )                              */
-/* DUF_LEVINFO_FC_UP( int, is_leaf )                           */
+/* DUF_LEVINFO_FC( int, node_type )                              */
+/* DUF_LEVINFO_FC_UP( int, node_type )                           */
 /* (* *INDENT-ON*  *)                                          */
 
-DUF_LEVINFO_3GET_BOOL( int, is_leaf, is_leaf );
+DUF_LEVINFO_3GET_BOOL( duf_node_type_t, node_type, node_type );
 
 /************************************************************************/
 
@@ -400,7 +410,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
     assert( d >= 0 );
     assert( pdi->pathinfo.levinfo );
     assert( pdi->inited );
-    if ( duf_levinfo_ptr_d( pdi, d )->is_leaf )
+    if ( duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF )
       d--;
 #if 0
     {

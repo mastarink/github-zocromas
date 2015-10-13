@@ -24,7 +24,7 @@ typedef int ( *duf_scan_hook2_item_func_t ) ( duf_stmnt_t * pstmt, duf_depthinfo
 typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_str_cb_t (first range; str_cb) */
-typedef int ( *duf_str_cb2_t ) (  duf_scanstage_t scanstage, duf_stmnt_t * pstmt, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+typedef int ( *duf_str_cb2_t ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 
 
@@ -36,7 +36,8 @@ typedef int ( *duf_str_cb2_t ) (  duf_scanstage_t scanstage, duf_stmnt_t * pstmt
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
 
-typedef int ( *duf_sel_cb2_t ) ( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+typedef int ( *duf_sel_cb2_t ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb,
+                                 struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 #  if 0
 
@@ -130,6 +131,8 @@ struct duf_scan_callbacks_s
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
+typedef void (*duf_sccbh_fun_t)(struct duf_sccb_handle_s *);
+
 struct duf_sccb_handle_s
 {
   unsigned long long total_items;
@@ -146,6 +149,8 @@ struct duf_sccb_handle_s
   duf_depthinfo_t *pdi;
   unsigned long long changes;
   const duf_scan_callbacks_t *sccb;
+  duf_sccbh_fun_t progress_leaf_cb;
+  duf_sccbh_fun_t progress_node_cb;
 };
 
 typedef struct duf_sccb_handle_s duf_sccb_handle_t;

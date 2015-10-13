@@ -16,7 +16,7 @@
 
 
 int
-duf_ev_sccb( duf_scan_callbacks_t * sccb )
+duf_ev_sccb( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
@@ -74,7 +74,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
  *    by calling duf_ev_sccb
  * */
 int
-duf_ev_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
+duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
 {
   DEBUG_STARTR( r );
 

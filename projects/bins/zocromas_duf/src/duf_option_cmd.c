@@ -78,7 +78,7 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
     *pr = rpr;
   return extended;
 }
-
+/* look xtable for cmd from string and exec if found */
 static int
 duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage,
                      duf_option_source_t source )
@@ -130,7 +130,8 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
   DEBUG_ENDR( r );
 }
 
-int
+/* look all xtables for cmd from string and exec if found */
+static int
 duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_t ** xtables, char vseparator, duf_option_stage_t istage,
                            duf_option_source_t source )
 {
@@ -148,6 +149,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
  * duf_exec_cmd_xtable == 0 if ???
  * duf_exec_cmd_xtable < 0 if error
  * */
+/* look xtable for cmd from string and exec if found */
     DOR( r, duf_exec_cmd_xtable( string, xtable, vseparator, istage, source ) );
     DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, r < 0 ? duf_error_name_i( r ) : "-", string );
     if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
@@ -175,12 +177,14 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
   DEBUG_ENDR( r );
 }
 
+/* look all std xtables for cmd from string and exec if found */
 int
 duf_exec_cmd_long_xtables_std( const char *string, char vseparator, duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
   DUF_TRACE( options, 4, "(%d) executed cmd", r );
+/* look all xtables for cmd from string and exec if found */
   DOR( r, duf_exec_cmd_long_xtables( string, lo_extended_table_multi, vseparator, istage, source ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }

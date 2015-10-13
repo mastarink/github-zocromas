@@ -9,6 +9,7 @@
 #include "duf_levinfo_stat.h"
 
 #include "duf_sccb.h"
+#include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
 
@@ -28,7 +29,7 @@
  *  - sccb
  * */
 int
-duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -37,14 +38,23 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage DUF_UNUSED, duf_stmn
 
   DOR_LOWERE( r, duf_levinfo_if_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED, DUF_ERROR_STATAT_ENOENT );
+#if 1
+  if ( duf_levinfo_deleted( PDI ) )
+    DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
+#endif
   {
-    duf_scan_hook2_file_func_t scanner = SCCB->leaf_scan_fd2;
+    duf_scan_hook2_file_func_t scanner = NULL;
 
+#if 0
+    scanner = SCCB->leaf_scan_fd2;
     if ( duf_levinfo_deleted( PDI ) )
     {
       scanner = SCCB->leaf_scan_fd2_deleted ? SCCB->leaf_scan_fd2_deleted : NULL;
-      DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
     }
+    assert( scanner == duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF ) );
+#else
+    scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF );
+#endif
     if ( scanner )
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
     else
@@ -66,7 +76,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage DUF_UNUSED, duf_stmn
  *  - sccb
  * */
 int
-duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -74,13 +84,19 @@ duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t
   PDI->items.files++;
 
   {
-    duf_scan_hook2_file_func_t scanner = SCCB->leaf_scan2;
+    duf_scan_hook2_file_func_t scanner = NULL;
 
+#if 0
+    scanner = SCCB->leaf_scan2;
     if ( SCCB->leaf_scan2_deleted && duf_levinfo_if_deleted( PDI ) )
     {
       scanner = SCCB->leaf_scan2_deleted;
       DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
     }
+    assert( scanner == duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF ) );
+#else
+    scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF );
+#endif
     if ( scanner )
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
   }

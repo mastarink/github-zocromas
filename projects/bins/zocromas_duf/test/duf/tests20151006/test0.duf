@@ -2,6 +2,7 @@
 # -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
 recursive
 allow-files
+allow-sub
 allow-directories
 db-name test_tree
 # trace-sql 3

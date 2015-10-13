@@ -708,7 +708,7 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run . -dfR --min-mimesame=2 --evaluate=tree	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR --min-exifsame=2 --evaluate=tree	- %s", "-= \"\" =-" );
 
-  DUF_PRINTF( 0, "========================= as for 20150917.204538 ============" );
+  DUF_PRINTF( 0, "========================= as for 20150917.204538 ============ new: ...sha1" );
   DUF_PRINTF( 0, "  run test/tree/ --drop-tables  -PO -dfR  --evaluate-sccb=sha1 --progress	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-md5=test/tree/t2.html 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-sha1=test/tree/t2.html 	- %s", "-= \"\" =-" );
@@ -742,12 +742,23 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
 
 
-  DUF_PRINTF( 0, "========================= as for 20151006.194418 ============" );
+  DUF_PRINTF( 0, "========================= as for 20151006.194418 ============ new: --cmds-dir" );
   DUF_PRINTF( 0, "  ln -s `realpath dufconf/zocromas_duf.conf` /home/mastar/.mas/config/zocromas_duf.conf 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=dufconf @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config  @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config/ --cmds-dir=test/duf/tests20151006  @test0.cmds 	- %s", "-= \"\" =-" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20151013.175104 ============ new: --allow-dir, --dir-priority, =set_dir_priority" );
+  DUF_PRINTF( 0, "  run -du                      --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
+              " --evaluate=set_dir_priority test/tree/ 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --allow-dir --allow-sub  --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
+              " --evaluate=set_dir_priority test/tree/ 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -d                       --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
+              " --evaluate=set_dir_priority test/tree/ 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --allow-dir              --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
+              " --evaluate=set_dir_priority test/tree/ 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 
@@ -807,44 +818,45 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
 {
   duf_option_code_t rc = DUF_OPTION_VAL_NONE;
 
-#define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, #_l, DUF_OPTION_VAL_FLAG_ ## _u}
-  duf_chk_act_flags_t tab[] DUF_UNUSED = {
+#define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, .name=#_l, .id=DUF_OPTION_VAL_FLAG_ ## _u}
+  duf_chk_act_flags_t tab[] = {
     CHECK_FLAG_ID_ROW( info, INFO ),
     CHECK_FLAG_ID_ROW( vacuum, VACUUM ),
     CHECK_FLAG_ID_ROW( remove_database, REMOVE_DATABASE ),
     CHECK_FLAG_ID_ROW( drop_tables, DROP_TABLES ),
-    CHECK_FLAG_ID_ROW( vacuum, VACUUM ),
-    CHECK_FLAG_ID_ROW( remove_database, REMOVE_DATABASE ),
-    CHECK_FLAG_ID_ROW( drop_tables, DROP_TABLES ),
+    CHECK_FLAG_ID_ROW( clean_tables, CLEAN_TABLES ),
+    CHECK_FLAG_ID_ROW( create_database, CREATE_DB ),
     CHECK_FLAG_ID_ROW( create_tables, CREATE_TABLES ),
-    CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
-
-    /* CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),     */
-    /* CHECK_FLAG_ID_ROW( md5_obs, MD5 ),     */
-    /* CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ), */
-    /* CHECK_FLAG_ID_ROW( mime_obs, MIME ),   */
-    /* CHECK_FLAG_ID_ROW( exif_obs, EXIF ),   */
-
-    CHECK_FLAG_ID_ROW( mdpath_obs, MDPATH ),
 
     /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
     CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRECTORIES ),
+    CHECK_FLAG_ID_ROW( allow_sub, ALLOW_SUB ),
     /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS; 20151013.095014 -> ALLOW_DIRECTORIES */
     CHECK_FLAG_ID_ROW( allow_files, ALLOW_FILES ),
 
-    /* CHECK_FLAG_ID_ROW( dirent, DIRENT ), */
-    /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ), */
-    /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
-
-    CHECK_FLAG_ID_ROW( collect_obs, COLLECT ),
-
     CHECK_FLAG_ID_ROW( progress, PROGRESS ),
     CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ),
-
     CHECK_FLAG_ID_ROW( summary, SUMMARY ),
     CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
+
     CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ),
     CHECK_FLAG_ID_ROW( fast, FAST ),
+
+    CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
+
+    CHECK_FLAG_ID_ROW( dirent, DIRENT ),
+    /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ),   */
+    /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
+
+    /* CHECK_FLAG_ID_ROW( collect_obs, COLLECT ), */
+    /* CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),     */
+    /* CHECK_FLAG_ID_ROW( md5_obs, MD5 ),     */
+    /* CHECK_FLAG_ID_ROW( sha1_obs, MD5 ),     */
+    /* CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ), */
+    /* CHECK_FLAG_ID_ROW( mime_obs, MIME ),   */
+    /* CHECK_FLAG_ID_ROW( exif_obs, EXIF ),   */
+    /* CHECK_FLAG_ID_ROW( mdpath_obs, MSPATH ),   */
+
   };
 #if 0
   for ( typeof( fset.bit ) uf = 1; uf != 0; uf = uf << 1 )
@@ -897,9 +909,10 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
   {
-    unsigned u = DUF_CONFIGG( cli.act.v.bit );
-
-    DUF_PRINTF( 0, "cli.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( cli.act.v ) ), sizeof( typeof( u ) ),
+    typeof( duf_config->cli.act ) u = duf_config->cli.act;
+    /* u.v.bit = 0;       */
+    /* u.v.flag.info = 1; */
+    DUF_PRINTF( 0, "cli.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( cli.act.v ) ), sizeof( typeof( u.v.bit ) ),
                 ( unsigned long ) DUF_CONFIGG( cli.act.v.bit ) );
 
 
@@ -922,13 +935,17 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
       /* *INDENT-ON*  */
 
 
-    typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
+    typeof( u.v.bit ) mask = ( ( typeof( u.v.bit ) ) 1 ) << ( ( sizeof( u.v.bit ) * 8 ) - 1 );
 
     DUF_PRINTF( 0, ".   │" );
-    for ( unsigned i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    for ( unsigned i = 1; i < sizeof( u.v.bit ) * 8 + 1; i++ )
     {
-      DUF_PRINTF( 0, ".%s ", u & mask ? "◆" : " " );
-      u <<= 1;
+#if 1
+      DUF_PRINTF( 0, ".%s ", u.v.bit & mask ? "◆" : " " );
+#else
+      DUF_PRINTF( 0, "%016x %016x %d - %s", u.v.bit, mask, u.v.bit & mask ? 1 : 0, duf_unflag2cnames( i ) );
+#endif
+      u.v.bit <<= 1;
     }
     DUF_PRINTF( 0, "│" );
       /* *INDENT-OFF*  */

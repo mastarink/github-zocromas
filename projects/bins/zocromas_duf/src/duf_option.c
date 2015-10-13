@@ -108,6 +108,7 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   {
     if ( extended )
     {
+      T("@@@@@extended->o.name: %s", extended->o.name);
       DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, 0 /* no */ , source ) );
     }
     else                        /* switch is useless !... */

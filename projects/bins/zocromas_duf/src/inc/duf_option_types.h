@@ -281,6 +281,7 @@ typedef struct
 //unsigned setit:1;
 //unsigned unsetit:1;
   unsigned invert:1;
+  unsigned can_no:1;
   unsigned m_hasoff:1;
   unsigned use_stage:1;
   unsigned use_stage_mask:1;

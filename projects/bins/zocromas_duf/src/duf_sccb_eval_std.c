@@ -48,7 +48,7 @@ duf_ev_evname_std( const char *name )
 }
 
 int
-duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, duf_argvc_t * ptarg )
+duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
@@ -56,7 +56,7 @@ duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, 
 }
 
 int
-duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, duf_argvc_t * ptarg )
+duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, const duf_argvc_t * ptarg )
 {
   return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) );
 }

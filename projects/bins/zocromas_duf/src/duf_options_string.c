@@ -27,6 +27,7 @@
  * "trace-path=1:trace-options=1"    -- correct
  *
  * */
+/* look all std xtables for cmd's separated with vseparator from string and exec if found */
 int
 duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
 {
@@ -81,6 +82,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
 #endif
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
+/* look all std xtables for cmd from string and exec if found */
         DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, source ) );
       }
       mas_free( s );

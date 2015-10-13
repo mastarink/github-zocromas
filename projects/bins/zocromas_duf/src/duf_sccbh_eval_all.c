@@ -17,6 +17,7 @@
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
 #include "duf_sccbh_eval.h"
+#include "duf_sccbh_eval_fs.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
@@ -40,7 +41,7 @@
  * */
 
 DUF_WRAPSTATIC int
-duf_eval_sccbh_all( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -52,13 +53,13 @@ duf_eval_sccbh_all( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pst
  *                                     -- see duf_dir_scan2_passs.c
  * */
   duf_str_cb2_t passes[] = {
-    [DUF_SCANSTAGE_FS_ITEMS] = duf_sccbh_eval_fs_items, /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
-    [DUF_SCANSTAGE_NODE_BEFORE] = DUF_ACTG_FLAG( allow_dirs )?duf_sccbh_eval_db_node:NULL /* duf_sccbh_eval_db_node_before */ ,
+    [DUF_SCANSTAGE_FS_ITEMS] = DUF_WRAPPED( duf_sccbh_eval_fs ), /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
+    [DUF_SCANSTAGE_NODE_BEFORE] = DUF_ACTG_FLAG( allow_dirs ) ? duf_sccbh_eval_db_node : NULL /* duf_sccbh_eval_db_node_before */ ,
     [DUF_SCANSTAGE_DB_LEAVES_NOFD] = DUF_ACTG_FLAG( allow_files ) ? duf_sccbh_eval_db_leaves_nofd : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_FD] = DUF_ACTG_FLAG( allow_files ) ? duf_sccbh_eval_db_leaves_fd : NULL,
-    [DUF_SCANSTAGE_NODE_MIDDLE] = DUF_ACTG_FLAG( allow_dirs )?duf_sccbh_eval_db_node:NULL /* duf_sccbh_eval_db_node_middle */ ,
-    [DUF_SCANSTAGE_DB_SUBNODES] = duf_sccbh_eval_db_subnodes,
-    [DUF_SCANSTAGE_NODE_AFTER] = DUF_ACTG_FLAG( allow_dirs )?duf_sccbh_eval_db_node:NULL /* duf_sccbh_eval_db_node_after */ ,
+    [DUF_SCANSTAGE_NODE_MIDDLE] = DUF_ACTG_FLAG( allow_dirs ) ? duf_sccbh_eval_db_node : NULL /* duf_sccbh_eval_db_node_middle */ ,
+    [DUF_SCANSTAGE_DB_SUBNODES] = DUF_ACTG_FLAG( allow_sub ) ? duf_sccbh_eval_db_subnodes : NULL,
+    [DUF_SCANSTAGE_NODE_AFTER] = DUF_ACTG_FLAG( allow_dirs ) ? duf_sccbh_eval_db_node : NULL /* duf_sccbh_eval_db_node_after */ ,
     NULL
   };
   DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
@@ -73,7 +74,7 @@ duf_eval_sccbh_all( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pst
 
       DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
       /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-      DOR( r, ( *ppass ) ( ( duf_scanstage_t ) NULL, pstmt_selector, sccbh ) );
+      DOR( r, ( *ppass ) ( scanstage_fake, pstmt_selector, sccbh ) );
       /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
     }
   }
@@ -109,7 +110,7 @@ duf_eval_sccbh_all( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pst
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake, duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -139,7 +140,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake, duf_stmn
 #  endif
   if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, duf_eval_sccbh_all( scanstage_fake, pstmt_selector, sccbh ) );
+    DOR( r, duf_eval_sccbh_all( pstmt_selector, sccbh ) );
   }
   else
   {

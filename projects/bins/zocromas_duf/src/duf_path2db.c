@@ -337,7 +337,7 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
   up_d = duf_pdi_depth( pdi );
 
   /* duf_levinfo_godown_openat_dh: 1. check depth; 2. duf_levinfo_godown */
-  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, 0 /* is_leaf */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name,  DUF_NODE_NODE /* node_type */  ) );
 
   assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
 

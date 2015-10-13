@@ -8,6 +8,7 @@
 #  include "duf_sql_types.h"
 #  include "duf_item_types.h"
 #  include "duf_ufilter_types.h"
+#  include "duf_scan_types.h"
 
 typedef enum
 {
@@ -90,11 +91,12 @@ typedef struct
 
 typedef struct
 {
-  unsigned is_leaf:1;
+  /* unsigned is__leaf:1; */
   unsigned stat_tested:1;
   unsigned deleted:1;
   unsigned deleted_tested:1;
   /* unsigned eod; */
+  duf_node_type_t node_type;
   unsigned long long dirid;
   unsigned long long nameid;
   /* const char *name; */

@@ -186,6 +186,12 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
       DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, msg );
       mas_free( msg );
     }
+    /* {                                                                                                                       */
+    /*   int rt = 0;                                                                                                           */
+    /*   rt = duf_find_name_long_no( name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pno, int *pr ); */
+    /* }                                                                                                                       */
+
+    DUF_TRACE( options, 0, "cli options r: %d %d %d", r, codeval, longindex);
 /*
  * duf_clarify_opt(_x) return
  *        oclass (>0) for "help" options

@@ -1,6 +1,7 @@
 # shn m i r -dfR out1.cmds --trace-db=2 --max-seq=240 --cd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/ --tree --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`" --echo="@@@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`datemt`"
 recursive
 allow-files
+allow-sub
 allow-directories
 output-file=/dev/pts/27
 db-name test_tree

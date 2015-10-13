@@ -9,7 +9,7 @@
 /*                           ( ( (int) DUF_TRACE_CONFIG->nopen - (int) DUF_TRACE_CONFIG->nclose ) ) \                */
 /*                         - (pref  depth)  == 1 ) \                                                     */
 /*                 )                                                                                     */
-/*  (* - (pref levinfo?pref levinfo[pref depth].is_leaf:0) *)                                            */
+/*  (* - (pref levinfo?pref levinfo[pref depth].is__leaf:0) *)                                            */
 /* #  define DUF_OINVC(pref) assert(  !pref opendir || ( \                                               */
 /*                           ( ( (int) DUF_TRACE_CONFIG->nopen - (int) DUF_TRACE_CONFIG->nclose ) ) \                */
 /*                         - (pref  depth)  == 0 ) \                                                     */

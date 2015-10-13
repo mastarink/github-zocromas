@@ -11,25 +11,12 @@ typedef struct
   unsigned clean_tables:1;
   unsigned create_database:1;
   unsigned create_tables:1;
-  unsigned add_path:1;
-
-  /* obsolete */
-  unsigned sd5_obs:1;
-  unsigned md5_obs:1;
-  unsigned sha1_obs:1;
-  unsigned crc32_obs:1;
-  unsigned mime_obs:1;
-  unsigned exif_obs:1;
-  unsigned mdpath_obs:1;
 
   unsigned allow_dirs:1;
+  unsigned allow_sub:1;
   unsigned allow_files:1;
 
-  unsigned dirent:1;
-  unsigned filedata:1;
-  unsigned filenames:1;
 
-  unsigned collect_obs:1;
 
   unsigned progress:1;
   unsigned use_binformat:1;
@@ -41,6 +28,21 @@ typedef struct
 #  endif
   unsigned do_sccbs:1;
   unsigned fast:1;
+
+  unsigned add_path:1;
+  unsigned dirent:1;
+  /* unsigned filedata_obs:1; */
+  /* unsigned filenames_obs:1; */
+  /* obsolete */
+  /* unsigned collect_obs:1; */
+  /* unsigned sd5_obs:1; */
+  /* unsigned md5_obs:1; */
+  /* unsigned sha1_obs:1; */
+  /* unsigned crc32_obs:1; */
+  /* unsigned mime_obs:1; */
+  /* unsigned exif_obs:1; */
+  /* unsigned mdpath_obs:1; */
+
 } duf_config_act_flags_t;
 typedef struct
 {

@@ -65,7 +65,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) )
       {
         _DUF_SHOW_ERROR( "No such entry %s/%s (%s)", duf_levinfo_path_d( pdi, d ), duf_levinfo_itemtruename_d( pdi, d ),
-                        duf_levinfo_itemshowname_d( pdi, d ) );
+                         duf_levinfo_itemshowname_d( pdi, d ) );
         assert( 0 );
       }
     }
@@ -104,7 +104,7 @@ duf_levinfo_if_deleted_d( duf_depthinfo_t * pdi, int d )
   return rd;
 }
 
-  /* int                                                              */
+/* int                                                              */
 /* duf_levinfo_deleted_d( const duf_depthinfo_t * pdi, int d ) */
 /* {                                                                */
 /*                                                                  */

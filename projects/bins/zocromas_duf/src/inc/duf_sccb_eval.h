@@ -34,11 +34,11 @@
  * */
 
 
-int duf_ev_sccb( duf_scan_callbacks_t * sccb ) __attribute__ ( ( warn_unused_result ) );
+int duf_ev_sccb( const duf_scan_callbacks_t * sccb ) __attribute__ ( ( warn_unused_result ) );
 int duf_ev_evnamed_list( const char *names, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 int duf_ev_evnamen( const char *name, size_t len, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 int duf_ev_evname( const char *name, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 
-int duf_ev_sccb_array( duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int *pcnt ) __attribute__ ( ( warn_unused_result ) );
+int duf_ev_sccb_array( const duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int *pcnt ) __attribute__ ( ( warn_unused_result ) );
 
 #endif
