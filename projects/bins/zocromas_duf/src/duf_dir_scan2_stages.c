@@ -28,7 +28,7 @@
 #ifdef MAS_TRACING
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_sccbh_eval_db_node_## stagename( duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
       unsigned long long diridpdi; \
@@ -61,8 +61,8 @@
       } \
       else if ( SCCB->node_scan_ ## stagename ## 2 ) \
       { \
-	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRS ) ); \
-	DUF_TRACE( scan, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRS ) ); \
+	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRECTORIES ) ); \
+	DUF_TRACE( scan, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRECTORIES ) ); \
       } \
       else \
       { \
@@ -71,9 +71,9 @@
       DEBUG_ENDR( r ); \
     }
 #else
-#  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
+#  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( stagename ) \
     int \
-    duf_sccbh_eval_db_node_## stagename( duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
  \

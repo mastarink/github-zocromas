@@ -38,10 +38,9 @@
  * */
 
 DUF_WRAPSTATIC int
-duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_all( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  int nn = 0;
 
   assert( SCCB );
   /* duf_scan_qbeginning_sql( SCCB ); */
@@ -51,35 +50,44 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
  *                                     -- see duf_dir_scan2_passs.c
  * */
   duf_str_cb2_t passes[] = {
-    duf_sccbh_eval_fs_items,    /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
-    duf_sccbh_eval_db_node_before,
-    duf_sccbh_eval_db_leaves,
-    duf_sccbh_eval_db_node_middle,
-    duf_sccbh_eval_db_subnodes,
-    duf_sccbh_eval_db_node_after,
+    [DUF_SCANSTAGE_FS_ITEMS] = duf_sccbh_eval_fs_items, /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
+    [DUF_SCANSTAGE_NODE_BEFORE] = duf_sccbh_eval_db_node /* duf_sccbh_eval_db_node_before */,
+    [DUF_SCANSTAGE_DB_LEAVES_NOFD] = duf_sccbh_eval_db_leaves_nofd,
+    [DUF_SCANSTAGE_DB_LEAVES_FD] = duf_sccbh_eval_db_leaves_fd,
+    [DUF_SCANSTAGE_NODE_MIDDLE] = duf_sccbh_eval_db_node /* duf_sccbh_eval_db_node_middle */,
+    [DUF_SCANSTAGE_DB_SUBNODES] = duf_sccbh_eval_db_subnodes,
+    [DUF_SCANSTAGE_NODE_AFTER] = duf_sccbh_eval_db_node /* duf_sccbh_eval_db_node_after */,
     NULL
   };
   DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
   DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
-  for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
-  {
 #if 0
-    DUF_TRACE( temp, 0, "%lu : %lu : %lu : %lu : %p : %p : %p @ %p : %p", ( offsetof( duf_scan_callbacks_t, leaf ) ),
-               ( offsetof( duf_scan_callbacks_t, init_scan ) ), ( offsetof( duf_scan_callbacks_t, node_scan_before2 ) ),
-               ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ),
-               /* */
-               SCCB, &( SCCB->node_scan_after2 ),
-               ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ), SCCB->node_scan_after2,
-               *( ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ) ) );
-#endif
+  {
+    int nn = 0;
 
-    DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
+    {
+      DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-    DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
+      DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
+      /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+      DOR( r, ( *ppass ) ( ( duf_scanstage_t ) NULL, pstmt_selector, sccbh ) );
+      /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+    }
+  }
+#else
+  for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
+  {
+    DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", scanstage, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ),
+               duf_levinfo_path( PDI ) );
+
+    DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", scanstage, duf_uni_scan_action_title( SCCB ), SCCB->name );
     /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, ( *ppass ) ( pstmt_selector, sccbh ) );
+    if ( passes[scanstage] )
+      DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
     /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   }
+#endif
   DUF_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
   DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
 
@@ -99,7 +107,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake , duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -129,7 +137,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_stmnt_t * pstmt_selector, duf_sccb_h
 #  endif
   if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, duf_eval_sccbh_all( pstmt_selector, sccbh ) );
+    DOR( r, duf_eval_sccbh_all( scanstage_fake, pstmt_selector, sccbh ) );
   }
   else
   {

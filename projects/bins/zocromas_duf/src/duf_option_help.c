@@ -828,8 +828,8 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( mdpath_obs, MDPATH ),
 
     /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
-    CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRS ),
-    /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS */
+    CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRECTORIES ),
+    /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS; 20151013.095014 -> ALLOW_DIRECTORIES */
     CHECK_FLAG_ID_ROW( allow_files, ALLOW_FILES ),
 
     /* CHECK_FLAG_ID_ROW( dirent, DIRENT ), */

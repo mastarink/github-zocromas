@@ -22,7 +22,7 @@ const duf_longval_extended_table_t optable_flag = {
   .table =                      /* */
   {
 #if 0
-    /* SEE --disable-memusage */
+   /* SEE --disable-memusage */
    {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
 #endif
    {.o = {DO_Q( "create-database" ) /*  */ , DO_A_N /* */ , DO_VF( CREATE_DB )} /*         */ , DO_CL( SYSTEM ) /*  */ ,
@@ -66,12 +66,12 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirent ) /*                            */ , DO_H( dirent ) /*                           */ },
 
    /* 20150907.122946 renames directories --> allow-directories */
-   {.o = {DO_Q( "allow-directories" ) /*      */ , DO_A_N /* */ , DO_VF( ALLOW_DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
+   {.o = {DO_Q( "allow-directories" ) /* */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /**/, DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_ANY /*                */ ,
     DO_H( collect dir info ) /*                 */ },
    /* 20150907.122956 renames dirs --> allow-dirs */
-   {.o = {DO_Q( "allow-dirs" ) /*             */ , DO_A_N /* */ , DO_VF( ALLOW_DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ) /*                              */ , DO_H( get dir info ) /*      */ },
+   {.o = {DO_Q( "allow-dirs" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /* */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ) /*                        */ , DO_H( get dir info ) /*      */ },
    /* renames files --> allow-files */
    {.o = {DO_Q( "allow-files" ) /*            */ , DO_A_N /* */ , DO_VF( ALLOW_FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_files ), DO_STAGE_ANY /*               */ ,

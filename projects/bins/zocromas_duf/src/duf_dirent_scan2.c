@@ -40,7 +40,7 @@ duf_scan_fs_with_scanner_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
 }
 
 static int
-duf_scan_fs_with2scanners_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+duf_scan_fs_direntry( struct dirent *de, duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   int is_leaf;
@@ -73,7 +73,7 @@ duf_scandirat_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent
     for ( int il = 0; il < nlist; il++ )
     {
       DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_scan_fs_with2scanners_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+      DOR( r, duf_scan_fs_direntry( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
 
       if ( list[il] )
         free( list[il] );

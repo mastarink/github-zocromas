@@ -94,7 +94,7 @@ duf_sel_cb2_leaf( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
       DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
       assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 #if 1
-      DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+      DOR( r, ( str_cb2 ) ( ( duf_scanstage_t ) NULL /*scanstage */ , pstmt, sccbh ) );
       if ( DUF_NOERROR( r ) )
       {
         PDI->seq++;

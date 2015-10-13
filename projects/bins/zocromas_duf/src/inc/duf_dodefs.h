@@ -38,6 +38,7 @@
 #  define DOR(_rval, _x)                 DUF_DO_TEST_R(_rval, _x)
 #  define DOC(_rval, _x)                 DUF_DO(_rval, _x)
 #  define DORF(_rval, _fun, ...)         DOR(_rval, _fun(__VA_ARGS__))
+#  define DORPF(_rval, _fun, ...)	 if (_fun) DOR(_rval, _fun(__VA_ARGS__)
 
 #  define IF_DORVF(_rval, _fun, ...)     if ( DUF_NOERROR( r ) ) { if (_fun) DOR(r,(_fun)(__VA_ARGS__)); else DUF_MAKE_ERROR(_rval,DUF_ERROR_OPTION_NO_FUNC); }
 

@@ -86,7 +86,7 @@ duf_sel_cb2_node( duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t 
         DUF_TRACE( explain, 2, "=> str cb2" );
         DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
         /*@ 3. str_cb2 */
-        DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+        DOR( r, ( str_cb2 ) ( ( duf_scanstage_t ) NULL /*scanstage */ ,pstmt, sccbh ) );
 
         DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
       }

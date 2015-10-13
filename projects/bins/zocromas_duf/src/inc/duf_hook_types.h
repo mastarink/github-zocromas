@@ -24,7 +24,7 @@ typedef int ( *duf_scan_hook2_item_func_t ) ( duf_stmnt_t * pstmt, duf_depthinfo
 typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_str_cb_t (first range; str_cb) */
-typedef int ( *duf_str_cb2_t ) ( duf_stmnt_t * pstmt, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+typedef int ( *duf_str_cb2_t ) (  duf_scanstage_t scanstage, duf_stmnt_t * pstmt, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 
 

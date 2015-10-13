@@ -125,7 +125,8 @@ __attribute__ ( ( constructor( 101 ) ) )
 __attribute__ ( ( destructor( 101 ) ) )
      static void destructor_global_status( void )
 {
-#define DUF_MEM_ROW "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+/* #define DUF_MEM_ROW "◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐" */
+#define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
   global_status_reset(  );
 #ifdef MAS_TRACEMEM
   print_memlist_msg( FL, stdout, /* */

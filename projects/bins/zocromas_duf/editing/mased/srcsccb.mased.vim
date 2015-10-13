@@ -10,6 +10,12 @@ sfind duf_sccb_eval_std.h
 tab sfind duf_sccbh_eval.c
 sfind duf_sccbh_eval.h
 
+tab sfind duf_sccbh_eval_fs.c
+sfind duf_sccbh_eval_fs.h
+
+tab sfind duf_sccb_scanstage.c
+sfind duf_sccb_scanstage.h
+
 tab sfind duf_sccb.c
 sfind duf_sccb.h
 sfind duf_sccb_def.h
