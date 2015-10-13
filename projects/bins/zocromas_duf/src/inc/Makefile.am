@@ -17,7 +17,6 @@ noinst_HEADERS=duf.h \
 	duf_defs.h \
 	duf_dh.h \
 	duf_dirent.h \
-	duf_dirent_scan2.h \
 	duf_dir_scan2_stages.h \
 	duf_errors.h duf_error_base.h duf_error_regfind.h duf_error_reporting.h duf_error_names.h \
 	duf_error_types.h \

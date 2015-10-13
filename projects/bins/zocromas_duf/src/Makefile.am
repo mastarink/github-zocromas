@@ -27,7 +27,6 @@ zocromas_duf_SOURCES=				   \
 	duf_pdi_sccb_eval.c duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
 	duf_sccb_eval_dirs.c  \
 	duf_dir_scan2_stages.c	\
-	duf_dirent_scan2.c					 \
 								  \
 	duf_context.c	\
 	duf_li_credel.c \
