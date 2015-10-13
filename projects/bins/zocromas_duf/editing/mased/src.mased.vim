@@ -10,8 +10,8 @@ sfind duf_dir_scan2_stages.h
 " tab sfind duf_dirent_scan2.c
 " sfind duf_dirent_scan2.h
 
-tab sfind duf_item_scan2.c
-sfind duf_item_scan2.h
+" tab sfind duf_item_scan2.c
+" sfind duf_item_scan2.h
 
 tab sfind duf_leaf_scan2.c
 sfind duf_leaf_scan2.h

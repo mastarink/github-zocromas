@@ -293,7 +293,7 @@ duf_sccbh_eval_fs_items( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pst
 #if 0
     DOR( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
 #else
-    DOR( r, duf_sccbh_eval_fs_with2scanners( sccbh, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
+    DOR( r, duf_sccbh_eval_fs_with2scanners( sccbh /*, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */  ) );
 #endif
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", duf_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
   }

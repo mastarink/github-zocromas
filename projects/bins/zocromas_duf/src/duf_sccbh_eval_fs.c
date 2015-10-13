@@ -18,7 +18,7 @@
 #include "duf_sccbh_eval_fs.h"
 /* ###################################################################### */
 
-/* 20150901.121041 */
+/* 20151013.130012 */
 static int
 duf_sccbh_eval_fs_with_scanner_here( duf_sccb_handle_t * sccbh, duf_scanner_t scanner )
 {
@@ -40,21 +40,26 @@ duf_sccbh_eval_fs_with_scanner_here( duf_sccb_handle_t * sccbh, duf_scanner_t sc
   DEBUG_ENDR( r );
 }
 
+/* 20151013.130015 */
 static int
-duf_sccbh_eval_fs_direntry( struct dirent *de, duf_sccb_handle_t * sccbh, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+duf_sccbh_eval_fs_direntry( struct dirent *de,
+                            duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
 {
   DEBUG_STARTR( r );
   duf_node_type_t nt;
+
   /* int is_leaf; */
 
   nt = ( de->d_type == DT_DIR ) ? DUF_NODE_NODE : DUF_NODE_LEAF;
   /* is_leaf = ( de->d_type != DT_DIR ); */
 /* --> */
-  DOR( r, duf_levinfo_godown( PDI, de->d_name, nt == DUF_NODE_LEAF /* is_leaf */ ) );
+  DOR( r, duf_levinfo_godown( PDI, de->d_name, nt == DUF_NODE_LEAF /* is_leaf */  ) );
   {
+#if 0
     assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, DUF_NODE_LEAF ) == scanner_dirent_reg2 );
-    assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, DUF_NODE_NODE ) == scanner_dirent_dir2 );
+    assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, DUF_NODE_NODE ) == scanner_dirent_dir2 );    
     /* assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) == ( is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) ); */
+#endif
 #if 0
     DOR( r, duf_sccbh_eval_fs_with_scanner_here( sccbh, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
 #else
@@ -67,9 +72,9 @@ duf_sccbh_eval_fs_direntry( struct dirent *de, duf_sccb_handle_t * sccbh, duf_sc
   DEBUG_ENDR( r );
 }
 
-/* 20150901.120422 */
+/* 20151013.130021 */
 static int
-duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
 {
   DEBUG_STARTR( r );
   int ry = 0;
@@ -83,7 +88,7 @@ duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t 
     for ( int il = 0; il < nlist; il++ )
     {
       DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_sccbh_eval_fs_direntry( list[il], sccbh, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+      DOR( r, duf_sccbh_eval_fs_direntry( list[il], sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
 
       if ( list[il] )
         free( list[il] );
@@ -114,21 +119,21 @@ duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t 
   DEBUG_ENDR( r );
 }
 
-/* 20150901.120412 */
+/* 20151013.130028 */
 static int
-_duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+_duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
 {
   DEBUG_STARTR( r );
 
   DOR( r, duf_levinfo_if_openat_dh( PDI ) );
-  DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( sccbh, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+  DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
 
   DEBUG_ENDR( r );
 }
 
-/* 20150901.120449 */
+/* 20151013.130037 */
 int
-duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
 {
   DEBUG_STARTR( r );
 
@@ -137,11 +142,13 @@ duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh, duf_scanner_t scanne
   /* TODO */
   DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
 
+#if 0
   DUF_TRACE( scan, 4, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
+#endif
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
   if ( S_ISDIR( duf_levinfo_stat_mode( PDI ) ) )
   {
-    DOR( r, _duf_sccbh_eval_fs_with2scanners( sccbh, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+    DOR( r, _duf_sccbh_eval_fs_with2scanners( sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
   }
   else
   {
