@@ -17,7 +17,7 @@
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
-#include "duf_sccb_eval_dirs.h"
+#include "duf_sccbh_eval_all.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_pstmt_levinfo.h"
