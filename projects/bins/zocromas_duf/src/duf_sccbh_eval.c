@@ -23,7 +23,9 @@
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_item_scan2.h"
+/* #include "duf_item_scan2.h" */
+#include "duf_sccbh_eval_sql_set.h"
+
 #include "duf_leaf_scan2.h"
 /* #include "duf_dirent_scan2.h" */
 
@@ -123,8 +125,11 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
 
     DUF_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, duf_levinfo_dirid( PDI ),
                duf_uni_scan_action_title( SCCB ), SCCB->name );
-
+#if 0
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
+#else
+    DOR( r, duf_eval_sccbh_sql_set_str_cb( node_type, sql_set, str_cb2, sccbh ) );
+#endif
     if ( DUF_NOERROR( r ) )
     {
       if ( r > 0 )
