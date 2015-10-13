@@ -6,6 +6,8 @@
 #include "duf_sccb.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_option_defs.h" /* DUF_ACTG_FLAG( summary ) */
+
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
 #include "duf_sccb_eval.h"
@@ -19,7 +21,7 @@ duf_ev_sccb( duf_scan_callbacks_t * sccb )
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, DUF_CONFIGX( pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DOR( r, duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -28,7 +30,7 @@ duf_ev_evnamen( const char *name, size_t len, const duf_action_table_t * table )
 {
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( pdi ), name, len, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( pdi ), name, len, table, DUF_CONFIGA( targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -37,7 +39,7 @@ duf_ev_evname( const char *name, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, DUF_CONFIGX( pdi )->pdi_name );
-  return duf_ev_pdi_evname( DUF_CONFIGG( pdi ), name, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  return duf_ev_pdi_evname( DUF_CONFIGG( pdi ), name, table, DUF_CONFIGA( targ ), DUF_ACTG_FLAG( summary ) );
 }
 
 int
@@ -47,7 +49,7 @@ duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
   assert( DUF_CONFIGX( pdi )->pdi_name );
   /* assert( DUF_CONFIGX( pdi )->pyp ); */
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  ) );
+  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ), DUF_ACTG_FLAG( summary )   ) );
   DEBUG_ENDR( r );
 }
 

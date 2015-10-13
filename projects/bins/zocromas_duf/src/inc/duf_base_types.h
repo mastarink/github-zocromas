@@ -1,6 +1,9 @@
 #ifndef MAS_DUF_BASR_TYPES_H
 #  define MAS_DUF_BASR_TYPES_H
 
+typedef unsigned char boolean;
+typedef boolean bool;
+
 typedef struct
 {
   unsigned flag:1;

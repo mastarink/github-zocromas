@@ -3,6 +3,10 @@
 #include "duf_config_ref.h"
 
 #include "duf_action_table.h"
+
+#include "duf_option_defs.h" /* DUF_ACTG_FLAG( summary ) */
+
+#include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
@@ -47,20 +51,20 @@ int
 duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, duf_argvc_t * ptarg )
 {
   DEBUG_STARTR( r );
-  DOR( r, duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg ) );
+  DOR( r, duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
 int
 duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, duf_argvc_t * ptarg )
 {
-  return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg );
+  return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) );
 }
 
 int
 duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg )
 {
-  return duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), arg );
+  return duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), arg , DUF_ACTG_FLAG( summary ));
 }
 
 int
@@ -68,6 +72,6 @@ duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), NULL ) );
+  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), NULL, DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }

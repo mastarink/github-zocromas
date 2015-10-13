@@ -20,34 +20,6 @@
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
 
-const duf_action_table_t *
-duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_table_t * table )
-{
-  const duf_action_table_t *act = NULL;
-  char *n;
-
-  n = mas_strndup( name, namelen );
-  for ( act = table; !act->end_of_table; act++ )
-  {
-    if ( act->sccb && act->in_use && 0 == strcmp( n, act->sccb->name ) )
-      break;
-  }
-  if ( !act || act->end_of_table || !act->sccb || !act->sccb->name )
-    act = NULL;
-  /* T( "@@@ %s", act && act->sccb ? act->sccb->name : "?" ); */
-  mas_free( n );
-  return act;
-}
-
-const duf_action_table_t *
-duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table )
-{
-  const duf_action_table_t *act;
-
-  act = duf_find_sccb_by_evnamen( name, strlen( name ), table );
-  return act;
-}
-
 /* 20150922.123744
  * make/evaluate sccb
  * ******************
@@ -58,7 +30,7 @@ duf_find_sccb_by_evname( const char *name, const duf_action_table_t * table )
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int
-duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t * ptarg )
+duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
 
@@ -69,7 +41,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
   sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv /* , pu */ , &r );
   {
     DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
-    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
+    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
     DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
   }
   {
@@ -84,7 +56,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_argvc_t
 
 /* 20150922.123731 */
 int
-duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, duf_argvc_t * ptarg )
+duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, duf_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
@@ -98,7 +70,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
   {
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
-    DOR( r, duf_ev_pdi_sccb( pdi, act->sccb, ptarg /*, pu */  ) ); /* XXX XXX XXX XXX */
+    DOR( r, duf_ev_pdi_sccb( pdi, act->sccb, ptarg /*, pu */ , f_summary ) ); /* XXX XXX XXX XXX */
   }
   else
   {
@@ -109,18 +81,18 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
 
 /* 20150922.123721 */
 int
-duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, duf_argvc_t * ptarg )
+duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, duf_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
   assert( pdi );
 
-  DOR( r, duf_ev_pdi_evnamen( pdi, name, strlen( name ), table, ptarg /*, pu */  ) );
+  DOR( r, duf_ev_pdi_evnamen( pdi, name, strlen( name ), table, ptarg /*, pu */,  f_summary  ) );
   DEBUG_ENDR( r );
 }
 
 /* 20150922.123718 */
 int
-duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg )
+duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg, bool f_summary )
 {
   DEBUG_STARTR( r );
 
@@ -132,7 +104,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
     arg = duf_levinfo_path( pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
 
-  DOR( r, duf_ev_pdi_evname( pdi, name, table, &targ /*, pu */  ) );
+  DOR( r, duf_ev_pdi_evname( pdi, name, table, &targ /*, pu */ , f_summary ) );
 
   mas_del_argv( targ.argc, targ.argv, 0 );
   DEBUG_ENDR( r );
@@ -140,7 +112,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
 
 /* 20150922.123706 */
 int
-duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, duf_argvc_t * ptarg )
+duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, duf_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
 
@@ -161,7 +133,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_act
     ename = strchr( pnames, ',' );
 
     len = ename ? ( size_t ) ( ename - pnames ) : strlen( pnames );
-    DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, table, ptarg /*, pu */  ) );
+    DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, table, ptarg /*, pu */,  f_summary  ) );
     if ( DUF_NOERROR( r ) )
       ok++;
 

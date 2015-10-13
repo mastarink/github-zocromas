@@ -2,6 +2,7 @@
 #  define MAS_DUF_PRINT_DEFS_H
 
 #  include "duf_defs.h"
+#  include "duf_config_ref.h"
 
 #  define P_FN_FMT "32"
 
