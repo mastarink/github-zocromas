@@ -27,6 +27,33 @@
 
 extern duf_config_t *duf_config __attribute( ( weak ) );
 
+duf_config_t *
+duf_get_config( void )
+{
+  assert( duf_config );
+  return duf_config;
+}
+
+void *
+duf_get_config_offset( unsigned long off )
+{
+  assert( duf_config );
+  return duf_config ? ( ( ( char * ) duf_config ) + off ) : NULL;
+}
+
+duf_config_cli_t *
+duf_get_config_cli( void )
+{
+  assert( duf_config );
+  return duf_config ? &duf_config->cli : NULL;
+}
+
+duf_config_opt_t *
+duf_get_config_opt( void )
+{
+  return duf_config ? &duf_config->opt : NULL;
+}
+
 int
 duf_output_level( void )
 {

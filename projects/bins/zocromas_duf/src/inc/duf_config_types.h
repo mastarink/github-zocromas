@@ -22,7 +22,7 @@ typedef struct
   /* unsigned opened:1; */
   duf_config_string_t dir;
   duf_config_string_t subdir;
-  char* path;
+  char *path;
   duf_db_config_t main;
   duf_db_config_t adm;
   duf_db_config_t tempo;
@@ -46,6 +46,7 @@ typedef struct
   /* struct duf_depthinfo_s *pdi; */
   duf_depthinfo_t *pdi;
 } duf_status_scanner_t;
+
 typedef struct
 {
   char *help_string;

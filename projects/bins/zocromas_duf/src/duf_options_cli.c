@@ -2,7 +2,8 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
+#include "duf_config_defs.h"
 /*
  * DUF_CONFIGG( cli.carg.argv )
  * DUF_CONFIGG( cli.carg )
@@ -265,7 +266,7 @@ duf_cli_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  assert( duf_config );
+  /* assert( duf_config ); */
 
   DUF_TRACE( options, 0, "@@@@(%d) source: cli", istage );
   DUF_TRACE( options, +2, "cli options..." );

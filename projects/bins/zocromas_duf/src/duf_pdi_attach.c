@@ -1,42 +1,8 @@
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-
-#include <mastar/tools/mas_arg_tools.h>
-
 #include "duf_maintenance.h"
 
 
-#include "duf_utils_path.h"     /* duf_pathdepth */
-
-#include "duf_config_ref.h"
-#include "duf_option_defs.h"
-
-
-#include "duf_levinfo_ref.h"
-#include "duf_levinfo_credel.h"
-#include "duf_context.h"
-#include "duf_path2dirid.h"
-
-#include "duf_pdi_ref.h"
-#include "duf_pdi_stmt.h"
-
-#include "duf_pathinfo_ref.h"
-#include "duf_pathinfo_credel.h"
-
-#include "duf_ufilter_ref.h"
-
-
-#include "duf_maindb.h"
-#include "duf_status_ref.h"
-
-#include "duf_path2db.h"
-#include "sql_tables_defs.h"
-
 #include "evsql_begfin.h"
-#include "evsql_selector.h"
 
-#include "sql_selected_defs.h"
 /* ###################################################################### */
 #include "duf_pdi_attach.h"
 /* ###################################################################### */

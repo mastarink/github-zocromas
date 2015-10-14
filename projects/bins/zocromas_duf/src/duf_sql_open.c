@@ -4,6 +4,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+#include "duf_config_defs.h"
 
 #include "duf_sql_error.h"
 #include "duf_sql_defs.h"

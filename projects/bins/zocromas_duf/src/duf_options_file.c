@@ -6,7 +6,8 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"     /* DUF_CONFIGG */
+/* #include "duf_config_ref.h"   */
+#include "duf_config_defs.h"
 /*
  * DUF_CONFIGG( cli.targ.argc )
  * DUF_CONFIGG( cli.targ_offset )
@@ -73,7 +74,7 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   FILE *f = NULL;
   char *cfgpath = NULL;
 
-  assert( duf_config );
+  /* assert( duf_config ); */
   cfgpath = duf_normalize_path( at );
   assert( cfgpath );
   if ( dot )

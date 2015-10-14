@@ -10,6 +10,7 @@
 
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
+#include "duf_config_defs.h"
 #include "duf_config_util.h"
 #include "duf_cli.h"
 

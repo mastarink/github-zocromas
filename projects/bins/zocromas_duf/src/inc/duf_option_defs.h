@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_OPTION_DEFS_H
 #  define MAS_DUF_OPTION_DEFS_H
 
-#  include "duf_config_ref.h"
+/* #  include "duf_config_ref.h" */
 /* */
 #  ifdef MAS_TRACING
 #    define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))

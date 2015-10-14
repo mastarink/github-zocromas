@@ -6,6 +6,9 @@
 
 #include "duf_utils.h"
 
+/* #include "duf_config_ref.h" */
+#include "duf_config_defs.h"
+
 #include "duf_option_defs.h"
 #include "duf_option_find.h"
 #include "duf_option_tmpdb.h"
@@ -123,13 +126,18 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
   if ( DUF_NOERROR( r ) )
   {
     unsigned doplus = 0;
-    char *byteptr = NULL;
+    void *byteptr = NULL;
 
     DUF_TRACE( options, +2, "switching by extended->relto=%d", extended->relto );
     switch ( extended->relto )
     {
     case DUF_OFFSET_config:
+#if 0
       byteptr = ( ( ( char * ) duf_config ) + extended->m_offset );
+#else
+      byteptr = duf_get_config_offset( extended->m_offset );
+      /* assert( byteptr == ( ( ( char * ) duf_config ) + extended->m_offset ) ); */
+#endif
       break;
     case DUF_OFFSET_depthinfo:
       byteptr = ( ( ( char * ) DUF_CONFIGG( scn.pdi ) ) + extended->m_offset );
@@ -246,8 +254,8 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             else
               ( *pi ) |= extended->afl.bit;
             /* duf_config->opt.act.v.flag.info = 1; */
-            DUF_TRACE(options, 4, "@@@@@@[%d] %p %p %p :%s: %x %x (%x) %x", nof, byteptr, pi, &duf_config->opt.act.v.bit, extended->o.name, *pi, extended->afl.bit,
-               ( *pi | extended->afl.bit ), duf_config->opt.act.v.bit );
+            DUF_TRACE( options, 4, "@@@@@@[%d] %p %p :%s: %x %x (%x) %x", nof, byteptr, pi, extended->o.name, *pi,
+                       extended->afl.bit, ( *pi | extended->afl.bit ), DUF_CONFIGG( opt.act.v.bit ) );
             DUF_TEST_R( r );
           }
         }
@@ -602,7 +610,9 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.tn.func )
-            DOR( r, ( ( extended->call.fdesc.tn.func ) ( DUF_CONFIGA( cli.targ.argc ), DUF_CONFIGA( cli.targ.argv ), duf_strtol_suff( optargg, &r ) ) ) );
+            DOR( r,
+                 ( ( extended->call.fdesc.tn.func ) ( DUF_CONFIGA( cli.targ.argc ), DUF_CONFIGA( cli.targ.argv ),
+                                                      duf_strtol_suff( optargg, &r ) ) ) );
           else
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }

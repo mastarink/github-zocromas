@@ -11,6 +11,7 @@
 #include "duf_maintenance_options.h"
 
 
+#include "duf_config_defs.h"
 
 #include "duf_options_file.h"
 #include "duf_options_env.h"
@@ -55,7 +56,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  assert( duf_config );
+  /* assert( duf_config ); */
 #if 0
   DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
   DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );

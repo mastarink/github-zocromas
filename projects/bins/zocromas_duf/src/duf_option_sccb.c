@@ -7,7 +7,9 @@
 
 
 #include "duf_utils_path.h"
+
 #include "duf_config_ref.h" /* DUF_PRINTF ; DUF_CONFIGG */
+#include "duf_config_defs.h"
 
 #include "duf_action_table.h"
 

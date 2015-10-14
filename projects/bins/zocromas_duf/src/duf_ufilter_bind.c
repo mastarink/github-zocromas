@@ -5,6 +5,7 @@
 
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
+#include "duf_config_defs.h"
 #include "duf_option_defs.h"
 
 #include "duf_path2dirid.h"

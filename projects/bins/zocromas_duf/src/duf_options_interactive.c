@@ -10,6 +10,8 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_config_defs.h"
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_option_defs.h"
@@ -83,7 +85,7 @@ duf_interactive_options( duf_option_stage_t istage )
               && isatty( STDIN_FILENO ) /* only when stdin is tty */  )
       {
         char *rl_buffer = NULL, *s = NULL;
-
+/* TODO : via callback of some kind */
         DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
         snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
                   duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );

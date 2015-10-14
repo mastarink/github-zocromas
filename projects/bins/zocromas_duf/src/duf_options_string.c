@@ -7,7 +7,7 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"
+#include "duf_config_defs.h"
 
 
 /* #include "duf_option_extended.h" */

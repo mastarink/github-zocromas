@@ -33,7 +33,7 @@
 
 
 
-#  define DUF_CONFIGX(_lo)  DUF_CFGX(duf_config, _lo)
+#  define DUF_CONFIGX(_lo)  DUF_CFGX(duf_get_config(), _lo)
 #  ifdef MAS_TRACING
 #    define DUF_CONFIGG(_lo)       (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGX(_lo))
 #  else
@@ -59,7 +59,7 @@
 #  define DUF_CONFIGWSP(_lo, _val)  DUF_CFGWSP(_lo)=(_val)
 
 #  define DUF_CONFIGGS(_lo)         DUF_CONFIGG(_lo)
-#  define DUF_CONFIGGSP(_lo)        DUF_CFGGSP(duf_config, _lo)
+#  define DUF_CONFIGGSP(_lo)        DUF_CFGGSP(duf_get_config(), _lo)
 
 
 #endif

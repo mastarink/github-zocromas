@@ -8,7 +8,6 @@
 #include "duf_status.h"
 #include "duf_status_ref.h"
 
-/* #include "duf_option_defs.h" */
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
@@ -41,14 +40,10 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
 
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
+      assert( 0 );
       DUF_TRACE( explain, 1, "@old opt for %s", extended ? extended->o.name : NULL );
       DOZR( r, duf_clarify_xcmd_old( extended, optargg, istage, xtable ) );
     }
-    else
-    {
-      DUF_TRACE( explain, 1, "@no old opt for %s", extended ? extended->o.name : NULL );
-    }
-    DUF_TRACE( options, +4, "cli options r: %d", r );
     DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended ), duf_error_name_i( r ) );
   }
   else
@@ -82,7 +77,8 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
   const duf_longval_extended_table_t *xtable = NULL;
-int no=0;
+  int no = 0;
+
   assert( ( int ) codeval >= 0 );
   /* short always corresponds long (in my case) - find it */
   DUF_TRACE( options, +2, "parse option longindex:%d", longindex );
@@ -106,7 +102,7 @@ int no=0;
   {
     if ( extended )
     {
-      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable,  no  , source ) );
+      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, no, source ) );
     }
     else                        /* switch is useless !... ?? */
       switch ( ( int ) codeval )

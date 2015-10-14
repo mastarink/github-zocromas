@@ -1,8 +1,14 @@
 #ifndef MAS_DUF_CONFIG_UTIL_H
 #  define MAS_DUF_CONFIG_UTIL_H
 
-int
-duf_output_level( void );
+#  include "duf_config_types.h"
+
+duf_config_t *duf_get_config( void );
+void *duf_get_config_offset( unsigned long off );
+duf_config_cli_t *duf_get_config_cli( void );
+duf_config_opt_t *duf_get_config_opt( void );
+
+int duf_output_level( void );
 FILE *duf_output_file( void );
 
 char *duf_string_options_expand( const char *s, char protected_prefix );

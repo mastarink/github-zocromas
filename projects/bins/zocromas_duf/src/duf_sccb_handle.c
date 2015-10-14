@@ -11,6 +11,8 @@
 #include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
 #include "duf_utils.h"          /* duf_percent */
 
+#include "duf_config_ref.h"
+#include "duf_config_defs.h"
 
 #include "duf_levinfo_ref.h"
 

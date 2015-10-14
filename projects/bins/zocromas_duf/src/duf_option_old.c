@@ -5,12 +5,12 @@
 #include "duf_maintenance_options.h"
 #include "duf_utils.h"
 
+#include "duf_config_ref.h"
+#include "duf_config_defs.h"
 
 #include "duf_option_defs.h"
-/* #include "duf_option_acquire.h" */
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
-/* #include "duf_option_extended.h" */
 #include "duf_option_typed.h"
 
 /* ###################################################################### */
@@ -18,13 +18,13 @@
 /* ###################################################################### */
 
 
-
+/* only DUF_OPTION_VAL_BFORMAT here - TODO: remove all related to bformat */
 int
 duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                       const duf_longval_extended_table_t * xtable )
 {
   DEBUG_STARTR( r );
-
+  assert( 0 );
   DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended ),
              extended->o.name, r, duf_error_name_i( r ), extended->o.val, DUF_OPTION_VAL_BFORMAT );
 
