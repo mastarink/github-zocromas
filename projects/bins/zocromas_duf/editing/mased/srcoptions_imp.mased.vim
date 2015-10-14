@@ -11,3 +11,6 @@ sfind duf_option_misc.h
 tab sfind duf_options_table.c
 sfind duf_options_table.h
 
+tab sfind duf_option_help.c
+sfind duf_option_help.h
+

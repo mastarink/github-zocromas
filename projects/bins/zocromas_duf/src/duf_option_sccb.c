@@ -2,7 +2,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance_options.h"
+#include "duf_maintenance.h"
 
 
 
@@ -24,11 +24,6 @@
 
 
 #include "duf_options_file.h"
-/* #include "duf_option_descr.h" */
-/* #include "duf_option_extended.h" */
-/* #include "duf_option_names.h" */
-/* #include "duf_option_restore.h" */
-/* #include "duf_option.h" */
 
 /* ###################################################################### */
 #include "duf_option_sccb.h"
