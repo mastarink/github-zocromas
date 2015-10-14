@@ -16,6 +16,7 @@
 #include "duf_option_extended.h"
 #include "duf_options_table.h"
 #include "duf_option_names.h"
+#include "duf_options_file.h" /* duf_options_infilepath */
 
 /* #include "duf_option_restore.h" */
 #include "duf_option.h"
@@ -807,7 +808,11 @@ duf_option_$_version( void )
   /* DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 ); */
 
   DUF_PUTSL( 0 );
+#if 0
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_file_path ) );
+#else
+  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath() );
+#endif
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( cli.v.sbit ) ), DUF_CONFIGG( cli.v.sbit ) );
   DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( puz )->v.sbit ), DUF_CONFIGG( puz )->v.sbit );
   /* mas_free( sargv2 ); */

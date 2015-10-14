@@ -3,6 +3,15 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_config_ref.h"
+/*
+ * DUF_CONFIGG( carg.argv )
+ * DUF_CONFIGG( cli.dbg.verbose )
+ * DUF_CONFIGG( carg )
+ * DUF_CONFIGG( longopts_table )
+ * DUF_CONFIGA( targ )
+ * DUF_CONFIGWN( targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( targ ) ) )
+ * DUF_CONFIGG( cli.shorts )
+ */
 
 #include "duf_option.h"
 #include "duf_option_names.h"
@@ -189,7 +198,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
     /*   rt = duf_find_name_long_no( name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pno, int *pr ); */
     /* }                                                                                                                       */
 
-    DUF_TRACE( options, 0, "cli options r: %d %d %d", r, codeval, longindex);
+    DUF_TRACE( options, 0, "cli options r: %d %d %d", r, codeval, longindex );
 /*
  * duf_clarify_opt(_x) return
  *        oclass (>0) for "help" options
@@ -270,6 +279,3 @@ duf_cli_options( duf_option_stage_t istage )
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name_i( r ) );
   DEBUG_ENDR( r );
 }
-
-  /* if ( code==DUF_OPTION_ ## up  ) \                                                                                                          */
-  /*   printf("[%d : %c] %s %d :: %d\n", code, code>' ' && code <= 'z' ? code : '-', #up, DUF_CONFIGG(pref.lo), DUF_CONFIGG(cli.trace.sample)); \ */

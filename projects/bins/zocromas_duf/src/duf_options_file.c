@@ -6,7 +6,7 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h" /* DUF_CONFIGG */
+#include "duf_config_ref.h"     /* DUF_CONFIGG */
 
 #include "duf_utils_path.h"
 
@@ -16,6 +16,23 @@
 #include "duf_options_file.h"
 /* ###################################################################### */
 
+static char *config_file_path = NULL;
+
+__attribute__ ( ( destructor( 101 ) ) )
+     static void destructor_options_file( void )
+{
+  mas_free( config_file_path );
+}
+
+const char *
+duf_options_infilepath( void )
+{
+#if 0
+  return DUF_CONFIGG( config_file_path );
+#else
+  return config_file_path;
+#endif
+}
 
 /*
  * open configuration file
@@ -30,10 +47,15 @@ duf_infilepath( const char *filepath, int *pry )
   FILE *f = NULL;
 
   f = fopen( filepath, "r" );
-
+#if 0
   mas_free( DUF_CONFIGG( config_file_path ) );
   DUF_CONFIGWS( config_file_path, mas_strdup( filepath ) );
   DUF_TRACE( options, 0, "opened conf file %s %s", DUF_CONFIGG( config_file_path ), f ? "Ok" : "FAIL" );
+#else
+  mas_free( config_file_path );
+  config_file_path = mas_strdup( filepath );
+  DUF_TRACE( options, 0, "opened conf file %s %s", config_file_path, f ? "Ok" : "FAIL" );
+#endif
   if ( pry )
     *pry = f ? 0 : -errno;
   return f;

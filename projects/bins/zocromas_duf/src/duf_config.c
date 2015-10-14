@@ -118,8 +118,10 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->cmds_dir );
     cfg->cmds_dir = NULL;
 
+#if 0
     mas_free( cfg->config_file_path );
     cfg->config_file_path = NULL;
+#endif
 
 #if 0
     mas_free( cfg->db.dir );
