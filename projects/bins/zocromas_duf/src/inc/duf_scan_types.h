@@ -17,8 +17,9 @@ typedef enum
 typedef enum
 {
   DUF_NODE_NONE,
-  DUF_NODE_LEAF = 101,
+  DUF_NODE_LEAF = 1,
   DUF_NODE_NODE,
+  DUF_NODE_MAX,
 } duf_node_type_t;
 
 /* typedef struct stat duf_stat_t; */

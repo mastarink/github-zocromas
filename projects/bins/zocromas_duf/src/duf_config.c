@@ -28,6 +28,39 @@
 duf_config_t *duf_config = NULL;
 const duf_config_t *duf_config4trace = NULL;
 
+
+void
+duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t * xtended, int no )
+{
+  while ( xtended->o.name )
+  {
+    if ( no )
+    {
+      if ( xtended->can_no )
+      {
+        char *s = NULL;
+
+        *( *plongopts_ptr ) = xtended->o;
+        s = mas_strdup( "no-" );
+        s = mas_strcat_x( s, ( *plongopts_ptr )->name );
+        ( *plongopts_ptr )->name = s;
+        /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
+        /* ( *plongopts_ptr )->val = xtended->o.val;         */
+        ( *plongopts_ptr )++;
+      }
+    }
+    else
+    {
+      *( *plongopts_ptr ) = xtended->o;
+      ( *plongopts_ptr )->name = mas_strdup( ( *plongopts_ptr )->name );
+      /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
+      /* ( *plongopts_ptr )->val = xtended->o.val;         */
+      ( *plongopts_ptr )++;
+    }
+    xtended++;
+  }
+}
+
 duf_config_t *
 duf_cfg_create( void )
 {
@@ -76,75 +109,24 @@ duf_cfg_create( void )
   DUF_CFGW( cfg, cli.trace.temp ) += 1;
 
   {
-    int tbcount = 0;
     size_t tbsize = 0;
-    const duf_longval_extended_table_t **xtables;
-    const duf_longval_extended_table_t *xtable;
 
-    tbcount = duf_longindex_extended_count( lo_extended_table_multi );
-    xtables = lo_extended_table_multi;
-    tbsize = tbcount * ( sizeof( duf_longval_extended_t ) + 1 );
+    tbsize = duf_longindex_extended_count( lo_extended_table_multi ) * ( sizeof( duf_longval_extended_t ) + 1 );
     {
       duf_option_t *longopts_ptr;
 
       cfg->longopts_table = longopts_ptr = mas_malloc( tbsize );
       memset( cfg->longopts_table, 0, tbsize );
 
-      while ( ( xtable = *xtables++ ) )
-      {
-        const duf_longval_extended_t *xtended;
-
-        xtended = xtable->table;
-        while ( xtended->o.name )
-        {
-          longopts_ptr->name = mas_strdup( xtended->o.name );
-          longopts_ptr->has_arg = xtended->o.has_arg;
-          longopts_ptr->val = xtended->o.val;
-          longopts_ptr++;
-          /* TODO                        */
-#if 0
-	  if ( xtended->can_no )
-          {
-            char *s = NULL;
-
-            s = mas_strdup( "no-" );
-            s = mas_strcat_x( s, xtended->o.name );
-            longopts_ptr->name = s;
-            longopts_ptr->has_arg = xtended->o.has_arg;
-            longopts_ptr->val = xtended->o.val;
-            longopts_ptr++;
-          }
-#endif
-          xtended++;
-        }
-      }
-
-      /* for ( int ilong = 0; ilong < lo_extended_count; ilong++ )            */
-      /* {                                                                    */
-      /*   cfg->longopts_table[ilong].name = lo_extended[ilong].o.name;       */
-      /*   cfg->longopts_table[ilong].has_arg = lo_extended[ilong].o.has_arg; */
-      /*   cfg->longopts_table[ilong].val = lo_extended[ilong].o.val;         */
-      /* }                                                                    */
+      for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++ )
+        duf_xtable2options( &longopts_ptr, ( *xtables )->table, 0 );
+      for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++ )
+        duf_xtable2options( &longopts_ptr, ( *xtables )->table, 1 );
     }
-    /* assert(cfg->longopts_table); */
-    /* {                                                                                                                                          */
-    /*   DUF_PRINTF( 0, "%u -- %u", lo_extended_count, duf_longopts_count );                                                                      */
-    /*   for ( int i = 0; i < duf_longopts_count && duf_longopts[i].name && cfg->longopts_table[i].name; i++ )                             */
-    /*   {                                                                                                                                        */
-    /*     if ( 0 != strcmp( duf_longopts[i].name, cfg->longopts_table[i].name )                                                           */
-    /*          || duf_longopts[i].has_arg != cfg->longopts_table[i].has_arg || duf_longopts[i].val != cfg->longopts_table[i].val ) */
-    /*     {                                                                                                                                      */
-    /*       DUF_PRINTF( 0, "%d: %30s :: %30s", i, duf_longopts[i].name, cfg->longopts_table[i].name );                                    */
-    /*     }                                                                                                                                      */
-    /*   }                                                                                                                                        */
-    /* }                                                                                                                                          */
   }
   cfg->pdi = duf_pdi_create( "selected" );
   assert( cfg->puz );
   assert( cfg->longopts_table );
-
-
-
 
   DEBUG_END(  );
   return cfg;

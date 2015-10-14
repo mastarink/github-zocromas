@@ -84,7 +84,7 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
   const duf_longval_extended_table_t *xtable = NULL;
-
+int no=0;
   assert( ( int ) codeval >= 0 );
   /* short always corresponds long (in my case) - find it */
   DUF_TRACE( options, +2, "parse option longindex:%d", longindex );
@@ -97,7 +97,7 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   }
   else if ( !extended )
   {
-    extended = duf_longindex2extended( longindex, &xtable );
+    extended = duf_longindex2extended( longindex, &xtable, &no );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +2, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name_i( r ) );
@@ -108,10 +108,9 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   {
     if ( extended )
     {
-      T("@@@@@extended->o.name: %s", extended->o.name);
-      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, 0 /* no */ , source ) );
+      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable,  no  , source ) );
     }
-    else                        /* switch is useless !... */
+    else                        /* switch is useless !... ?? */
       switch ( ( int ) codeval )
       {
       case ':':
@@ -120,12 +119,12 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
         DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       case '?':
-        DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION, "* options r: %d", r );
         DUF_TEST_R( r );
         DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       default:
-        DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION, "* options r: %d; codeval:%d; longindex:%d;", r, codeval, longindex );
         DUF_TEST_R( r );
         DUF_TRACE( options, +0, "* options r: %d; codeval:%d;", r, codeval );
         break;

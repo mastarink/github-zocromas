@@ -147,7 +147,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     name = DUF_CONFIGG( longopts_table )[ilong].name;
     codeval = DUF_CONFIGG( longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, NULL );
+    extd = duf_longindex2extended( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
     if ( codeval && DUF_NOERROR( r ) )
@@ -839,7 +839,7 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( summary, SUMMARY ),
     CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
 
-    CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ),
+    /* CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ), */
     CHECK_FLAG_ID_ROW( fast, FAST ),
 
     CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),

@@ -108,11 +108,11 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, uni_scan ),.invert = 1 /*              */ , DO_H(  .... ) /*                            */ },
 #endif
 
+#if 0
    {.o = {DO_Q( "sccbs" ) /*            */ , DO_A_N /* */ , DO_VF( DO_SCCBS )} /*      */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, do_sccbs ) /*                          */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "nosccbs" ) /*          */ , DO_A_N /* */ , DO_VF( DO_SCCBS )} /*      */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, do_sccbs ),.invert = 1 /*              */ , DO_H(  .... ) /*                            */ },
-#if 0
    {.o = {DO_Q( "show-sccbs" ) /*       */ , DO_A_N /* */ , DO_VF( SHOW_SCCBS )} /*      */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, show_sccbs ) /*                        */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "show-sccbh" ) /*       */ , DO_A_N /* */ , DO_VF( SHOW_SCCBH )} /*      */ ,

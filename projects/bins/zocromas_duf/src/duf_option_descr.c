@@ -70,7 +70,7 @@ duf_option_description_d( int longindex, const char *delimh, const char *delim )
   char *p = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex2extended( longindex, NULL );
+  extended = duf_longindex2extended( longindex, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
   if ( extended )
     p = duf_option_description_xd( extended, delimh, delim );
   return p;

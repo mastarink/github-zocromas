@@ -18,6 +18,7 @@
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
+#include "duf_sccb_scanstage.h"
 
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
@@ -32,60 +33,18 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
                                duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
-#if 1
-  {
-    duf_sel_cb2_t cb = NULL;
-
-    if ( node_type == DUF_NODE_NODE )
-      cb = duf_sel_cb2_node;    /* str_cb2 is duf_eval_sccbh_all */
-    else if ( node_type == DUF_NODE_LEAF )
-      cb = duf_sel_cb2_leaf;    /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
-
-    DUF_TRACE( sccbh, 2, "@@@cb(%d) str_cb2(%d) :%llu (%s) %s", cb ? 1 : 0, str_cb2 ? 1 : 0, duf_levinfo_dirid( PDI ),
-               duf_uni_scan_action_title( SCCB ), SCCB->name );
-
-    DUF_TRACE( sccbh, 2, "@has cb(%d) n/t:%d (%s) %s", cb ? 1 : 0, node_type, duf_uni_scan_action_title( SCCB ), SCCB->name );
+  
+  duf_sel_cb2_t cbs[] = {
+    [DUF_NODE_NODE] = duf_sel_cb2_node, /* str_cb2 is duf_eval_sccbh_all */
+    [DUF_NODE_LEAF] = duf_sel_cb2_leaf, /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
+    [DUF_NODE_MAX] = NULL,
+  };
+  DUF_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ),
+             duf_uni_scan_action_title( SCCB ), SCCB->name );
+  IF_DORF( r, cbs[node_type], scanstage, pstmt_selector, str_cb2, sccbh );
 
 
-    if ( cb )
-      DOR( r, ( cb ) ( scanstage, pstmt_selector, str_cb2, sccbh ) );
-    else
-      DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
-  }
-#elif 0
-  switch ( node_type )
-  {
-  case DUF_NODE_NODE:
-    DOR( r, duf_sel_cb2_node( pstmt_selector, str_cb2, sccbh ) ); /* str_cb2 == duf_eval_sccbh_all */
-    break;
-  case DUF_NODE_LEAF:
-    DOR( r, duf_sel_cb2_leaf( pstmt_selector, str_cb2, sccbh ) );
-    break;
-  default:
-    DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
-  }
-#elif 0
-  if ( node_type == DUF_NODE_NODE )
-    DOR( r, duf_sel_cb2_node( pstmt_selector, str_cb2, sccbh ) ); /* str_cb2 == duf_eval_sccbh_all */
-  else if ( node_type == DUF_NODE_LEAF )
-    DOR( r, duf_sel_cb2_leaf( pstmt_selector, str_cb2, sccbh ) );
-  else
-    DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
-#else
-  {
-    duf_sel_cb2_t cb = NULL;
-
-    cb = ( ( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) );
-    if ( cb )
-      ( cb ) ( pstmt_selector, str_cb2, sccbh );
-  }
-#endif
-
-  /* ==> Moved to duf_sccb_eval_dirs.c: duf_eval_sccbh_all() <==
-   * DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); (* reset error if it was `MAX_DEPTH` *)
-   * */
   DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
   DEBUG_ENDR( r );
 }

@@ -63,15 +63,10 @@
     					0 ), _rval)
 #    define DUF_TEST_RX_SHOW(_rval, _prefix)		DUF_TEST_RX_WP(_rval,  _prefix)
 #    define DUF_TEST_RX_START(_rval) if (DUF_TEST_RX(_rval)<0) {
-#  else
-#    define DUF_TEST_RX_START(_rval)	if (DUF_EREPORT(_rval)) { DUF_SHOW_ERROR_TEST_STD(_rval); \
-#    define DUF_TEST_RX(_rval) DUF_TEST_RX_START(_rval); DUF_TEST_RX_END(_rval)
 #  endif
 
 /* #  ifdef DUF_T_NOIF                                                               */
 /* #    define DUF_TEST_RQX(_rval, _cond)  (( !(_cond) ) ? DUF_TEST_RX( _rval ) : 0) */
-/* #  else                                                                           */
-/* #    define DUF_TEST_RQX(_rval, _cond)  if ( !(_cond) ) DUF_TEST_RX( _rval )      */
 /* #  endif                                                                          */
 /* #  define DUF_TEST_R(_rval)       if ( _rval!=DUF_ERROR_MAX_REACHED && _rval!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( _rval ) */
 

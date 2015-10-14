@@ -477,10 +477,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.ev.func )
             DUF_MAKE_ERROR( r, ( extended->call.fdesc.ev.func ) (  ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.ev.func );
+        IF_DORF( r, extended->call.fdesc.ev.func );
 #endif
         break;
       case DUF_OPTION_VTYPE_EIA_CALL: /* stage Not? SETUP *//* call with numeric (int) arg from table (EIA:void-int-arg) */
@@ -493,10 +493,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.eia.func )
             DOR( r, ( extended->call.fdesc.eia.func ) ( extended->call.fdesc.eia.arg ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg );
+        IF_DORF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg );
 #endif
         break;
       case DUF_OPTION_VTYPE_SAS_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
@@ -509,10 +509,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.sa.func )
             DOR( r, ( extended->call.fdesc.sa.func ) ( extended->call.fdesc.sa.arg ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.sas.func, extended->call.fdesc.sas.arg );
+        IF_DORF( r, extended->call.fdesc.sas.func, extended->call.fdesc.sas.arg );
 #endif
         break;
       case DUF_OPTION_VTYPE_SAN_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
@@ -525,10 +525,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.sa.func )
             DOR( r, ( extended->call.fdesc.sa.func ) ( extended->call.fdesc.sa.arg ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.san.func, optargg, extended->call.fdesc.san.arg );
+        IF_DORF( r, extended->call.fdesc.san.func, optargg, extended->call.fdesc.san.arg );
 #endif
         break;
       case DUF_OPTION_VTYPE_A_CALL: /* stage Not? SETUP *//* call with carg[cv] (A:argv) */
@@ -542,10 +542,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.a.func )
             DOR( r, ( extended->call.fdesc.a.func ) ( DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.a.func, DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ) );
+        IF_DORF( r, extended->call.fdesc.a.func, DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ) );
 #endif
         break;
       case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//* call with carg (AA:argv-argv) */
@@ -560,10 +560,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.aa.func )
             DOR( r, ( extended->call.fdesc.aa.func ) ( DUF_CONFIGG( carg ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.aa.func, DUF_CONFIGG( carg ) );
+        IF_DORF( r, extended->call.fdesc.aa.func, DUF_CONFIGG( carg ) );
 #endif
         break;
 
@@ -577,10 +577,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.n.func )
             DOR( r, ( ( extended->call.fdesc.n.func ) ( duf_strtol_suff( optargg, &r ) ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.n.func, duf_strtol_suff( optargg, &r ) );
+        IF_DORF( r, extended->call.fdesc.n.func, duf_strtol_suff( optargg, &r ) );
 #endif
         break;
       case DUF_OPTION_VTYPE_S_CALL: /* stage Not? SETUP *//* call with string optarg (S: string) */
@@ -593,10 +593,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.s.func )
             DOR( r, ( ( extended->call.fdesc.s.func ) ( optargg ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.s.func, optargg );
+        IF_DORF( r, extended->call.fdesc.s.func, optargg );
 #endif
         break;
       case DUF_OPTION_VTYPE_TN_CALL: /* stage Not? SETUP *//* call with targ[cv] + numeric optarg (TN: targ and numeric) */
@@ -609,10 +609,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.tn.func )
             DOR( r, ( ( extended->call.fdesc.tn.func ) ( DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), duf_strtol_suff( optargg, &r ) ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.tn.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), duf_strtol_suff( optargg, &r ) );
+        IF_DORF( r, extended->call.fdesc.tn.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), duf_strtol_suff( optargg, &r ) );
 #endif
         break;
       case DUF_OPTION_VTYPE_TS_CALL: /* stage Not? SETUP *//* call with targ[cv] + string optarg (TS: targ and string) */
@@ -625,10 +625,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           if ( extended->call.fdesc.ts.func )
             DOR( r, ( ( extended->call.fdesc.ts.func ) ( DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), optargg ) ) );
           else
-            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
+            DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORVF( r, extended->call.fdesc.ts.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), optargg );
+        IF_DORF( r, extended->call.fdesc.ts.func, DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), optargg );
 #endif
         break;
         /* 

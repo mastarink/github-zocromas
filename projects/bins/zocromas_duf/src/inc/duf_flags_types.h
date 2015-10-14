@@ -26,11 +26,11 @@ typedef struct
 #  if 0
   unsigned beginning_sql:1;     /* do 'beginning' sql's again (first time mandatory!) */
 #  endif
-  unsigned do_sccbs:1;
   unsigned fast:1;
 
   unsigned add_path:1;
   unsigned dirent:1;
+  /* unsigned do_sccbs_obs:1; */
   /* unsigned filedata_obs:1; */
   /* unsigned filenames_obs:1; */
   /* obsolete */

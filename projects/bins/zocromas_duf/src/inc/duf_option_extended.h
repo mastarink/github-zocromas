@@ -6,7 +6,7 @@
 
 extern const duf_longval_extended_table_t **lo_extended_table_multi;
 
-const duf_longval_extended_t *duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable );
+const duf_longval_extended_t *duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable, int *pno );
 
 /* const char *duf_longindex_extended_name( int longindex, int *pr ); */
 /* duf_option_code_t duf_longindex_extended_codeval( int longindex, int *pr ); */

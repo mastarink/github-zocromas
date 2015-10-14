@@ -46,10 +46,9 @@
 /* #  define DO_ODI(_vt, _v)       DO_OO(_vt, _v, depthinfo) */
 
 
-#  define DO_FL(_t,_fld) .afl._t={._fld=1}
+#  define DO_FL(_t,_fld) .afl._t={._fld=1}, .can_no=1 
                                          /* ,.setit=1 */
 #  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1
-/* #  define DO_CANNO .invert=1,.can_no=1 */
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
 /* #  define DO_INTERACTIVE DO_FL( act, interactive ) */
 

@@ -109,4 +109,3 @@ duf_option_$_echo( const char *arg )
 
   DEBUG_ENDR( r );
 }
-

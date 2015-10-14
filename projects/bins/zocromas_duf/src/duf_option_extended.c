@@ -29,27 +29,89 @@ duf_longindex_extended_codeval( int longindex, int *pr )
   return extended ? extended->o.val : 0;
 }
 #endif
-
 const duf_longval_extended_t *
-duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable )
+_duf_longindex2extended( int longindex, const duf_longval_extended_table_t * xtable, int *ptbcount, int no )
 {
   const duf_longval_extended_t *extended = NULL;
-  int ntable = 0;
+
+  for ( const duf_longval_extended_t * xtended = xtable->table; *ptbcount <= longindex && xtended->o.name; xtended++ )
+  {
+    DUF_TRACE( options, 5, "@li2ex %d [%s]", *ptbcount, xtended->o.name );
+    if ( no )
+    {
+      if ( xtended->can_no )
+      {
+        if ( *ptbcount == longindex )
+        {
+          extended = xtended;
+          break;
+        }
+        ( *ptbcount )++;
+      }
+    }
+    else
+    {
+      if ( *ptbcount == longindex )
+      {
+        extended = xtended;
+        /* break; */
+      }
+      ( *ptbcount )++;
+    }
+  }
+
+  return extended;
+}
+
+const duf_longval_extended_t *
+duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable, int *pno )
+{
+  const duf_longval_extended_t *extended = NULL;
   int tbcount = 0;
 
-  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++, ntable++ )
+  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++ )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
 
-    for ( const duf_longval_extended_t * xtended = xtable->table; tbcount <= longindex && xtended->o.name; xtended++, tbcount++ )
+#if 0
+
+    for ( const duf_longval_extended_t * xtended = xtable->table; tbcount <= longindex && xtended->o.name; xtended++ )
     {
-      DUF_TRACE( options, 5, "@li2ex %d:%d [%s]", ntable, tbcount, xtended->o.name );
+      DUF_TRACE( options, 5, "@li2ex %d [%s]", tbcount, xtended->o.name );
       if ( tbcount == longindex )
       {
         extended = xtended;
         if ( pxtable )
           *pxtable = xtable;
         /* break; */
+      }
+      tbcount++;
+    }
+#else
+    extended = _duf_longindex2extended( longindex, xtable, &tbcount, 0 /* no */  );
+    if ( extended )
+    {
+      if ( pxtable )
+        *pxtable = xtable;
+      break;
+    }
+#endif
+  }
+  if ( !extended )
+  {
+    /* continue with tbcount */
+    for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++ )
+    {
+      const duf_longval_extended_table_t *xtable = *xtables;
+
+      extended = _duf_longindex2extended( longindex, xtable, &tbcount, 1 /* no */  );
+      if ( extended )
+      {
+        if ( pxtable )
+          *pxtable = xtable;
+        if ( pno )
+          *pno = !*pno;
+        break;
       }
     }
   }
@@ -61,6 +123,8 @@ int
 duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
 {
   int xcount = 0;
+
+#if 0
   const duf_longval_extended_table_t *xtable;
 
   while ( ( xtable = *xtables++ ) )
@@ -69,14 +133,26 @@ duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
 
     while ( xtended->o.name )
     {
-      /* if ( xtended->stage.min == 0 && xtended->stage.max == 0 ) */
       xcount++;
       xtended++;
-#if 0
       if ( xtended->can_no )
         xcount++;
-#endif
     }
   }
+#else
+  for ( const duf_longval_extended_table_t ** pxtables = xtables; *pxtables; pxtables++ )
+  {
+    const duf_longval_extended_t *xtended = NULL;
+
+    xtended = ( *pxtables )->table;
+    while ( xtended->o.name )
+    {
+      xcount++;
+      xtended++;
+      if ( xtended->can_no )
+        xcount++;
+    }
+  }
+#endif
   return xcount;
 }
