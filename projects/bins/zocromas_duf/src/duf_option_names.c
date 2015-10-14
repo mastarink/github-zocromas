@@ -2,9 +2,8 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"
 #include "duf_status_ref.h"
 
 

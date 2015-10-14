@@ -15,7 +15,10 @@ sfind srcevsql.mased.vim
 
 tab sfind srctypes.mased.vim
 sfind srcconfig.mased.vim
-sfind srcmod.mased.vim
+sfind srcoptions.mased.vim
+sfind srcoptions_imp.mased.vim
+
+tab sfind srcmod.mased.vim
 sfind srcbegfin.mased.vim
 sfind srcpdi.mased.vim
 sfind srctoexpire.mased.vim

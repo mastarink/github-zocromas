@@ -9,7 +9,7 @@ noinst_HEADERS=duf.h \
 	sql_beginning_types.h \
 	duf_base_types.h \
 	duf_cli_types.h \
-	duf_config4trace_ref.h duf_config.h duf_config_util.h duf_config_ref.h duf_config_types.h \
+	duf_config4trace_ref.h duf_config.h duf_config_util.h duf_config_ref.h duf_config_wref.h duf_config_defs.h duf_config_types.h \
 	duf_context.h \
 	duf_dbg.h \
 	duf_debug_defs.h \
@@ -32,7 +32,7 @@ noinst_HEADERS=duf.h \
 	duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_types.h duf_levinfo_updown.h \
 	duf_pathinfo_credel.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
 	duf_maindb_info.h duf_maindb.h \
-	duf_maintenance.h \
+	duf_maintenance.h duf_maintenance_options.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_cmd.h duf_option_defs.h duf_option_descr.h \
 	duf_options_cli.h duf_options_env.h duf_options_string.h duf_options_file.h duf_options_interactive.h \

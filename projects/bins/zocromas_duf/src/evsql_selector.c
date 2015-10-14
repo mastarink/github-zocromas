@@ -8,6 +8,7 @@
 
 #include "duf_utils_path.h"
 #include "duf_config_ref.h"
+#include "duf_config_util.h"
 
 #include "std_fieldsets.h"
 #include "std_selectors.h"

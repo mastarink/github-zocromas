@@ -1,6 +1,9 @@
 #ifndef MAS_DUF_CONFIG_UTIL_H
 #  define MAS_DUF_CONFIG_UTIL_H
 
+int
+duf_output_level( void );
+FILE *duf_output_file( void );
 
 char *duf_string_options_expand( const char *s, char protected_prefix );
 char *duf_config_string_expanded( duf_config_string_t * cs );

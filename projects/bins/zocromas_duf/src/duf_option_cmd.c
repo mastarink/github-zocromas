@@ -2,16 +2,13 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"
 
 #include "duf_option_find.h"
-/* #include "duf_option_extended.h" */
 #include "duf_options_table.h"
 #include "duf_option.h"
 
-#include "duf_config_util.h"
 /* ###################################################################### */
 #include "duf_options.h"
 #include "duf_option_cmd.h"
@@ -169,7 +166,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_stage_name( istage ) );
+    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_optstage_name( istage ) );
     /* TODO DUF_POP_ERROR( r ); */
   }
 

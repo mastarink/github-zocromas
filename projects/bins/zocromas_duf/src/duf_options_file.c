@@ -4,10 +4,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
-#include "duf_config_ref.h"
-#include "duf_option_cmd.h"
+#include "duf_config_ref.h" /* DUF_CONFIGG */
 
 #include "duf_utils_path.h"
 
@@ -322,7 +321,7 @@ duf_incfg_stg_options( duf_option_stage_t istage )
     char *bfilename;
     const char *sn;
 
-    sn = duf_stage_name( istage );
+    sn = duf_optstage_name( istage );
     if ( sn )
     {
       bfilename = mas_strdup( DUF_CONFIG_FILE_NAME );
@@ -376,7 +375,7 @@ duf_indirect_options( duf_option_stage_t istage )
     const char *cf;
 
     cf = DUF_CONFIGG( targ.argv[ia] );
-    DUF_TRACE( temp, 2, "%s>> targv[%d]='%s'", duf_stage_name( istage ), ia, cf );
+    DUF_TRACE( temp, 2, "%s>> targv[%d]='%s'", duf_optstage_name( istage ), ia, cf );
     if ( cf && *cf == '@' )
     {
 
@@ -386,7 +385,7 @@ duf_indirect_options( duf_option_stage_t istage )
       DOR( r, duf_infile_options_at_dir_and_file( istage, DUF_CONFIGGS( cmds_dir ), cf + 1, 0, 0, DUF_OPTION_SOURCE_FILE ) );
 #endif
 
-      DUF_TRACE( temp, 2, "%s>> (%d) done targv[%d]='%s'", duf_stage_name( istage ), r, ia, cf );
+      DUF_TRACE( temp, 2, "%s>> (%d) done targv[%d]='%s'", duf_optstage_name( istage ), r, ia, cf );
     }
   }
 

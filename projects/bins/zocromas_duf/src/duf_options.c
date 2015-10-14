@@ -8,13 +8,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
 
-#include "duf_config_ref.h"
-/* #include "duf_maindb.h" */
-
-/* #include "duf_option_extended.h" */
 
 #include "duf_options_file.h"
 #include "duf_options_env.h"
@@ -24,8 +20,6 @@
 #include "duf_option_defs.h"
 
 #include "duf_option_names.h"
-/* #include "duf_option_restore.h" */
-/* #include "duf_option.h" */
 
 /* ###################################################################### */
 #include "duf_options.h"
@@ -77,7 +71,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DUF_TRACE( temp, 0, "@@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
 #endif
 
-  DUF_TRACE( options, 0, "@@@@stage:%s(%d)", duf_stage_name( istage ), istage );
+  DUF_TRACE( options, 0, "@@@@stage:%s(%d)", duf_optstage_name( istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
@@ -88,7 +82,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 #if 1
 #  define DUF_OPTSRC(_r, _xr, _name, _istage )  \
   { \
-    DUF_TRACE(options, 0, "@@@%s : %s", duf_stage_name(_istage), #_name); \
+    DUF_TRACE(options, 0, "@@@%s : %s", duf_optstage_name(_istage), #_name); \
     if ( DUF_NOERROR( r ) ) \
     { \
       DORF( _r, duf_ ## _name ## _options, _istage ); \
@@ -239,7 +233,7 @@ duf_show_options( const char *a0 DUF_UNUSED )
 }
 
 const char *
-duf_stage_name( duf_option_stage_t istage )
+duf_optstage_name( duf_option_stage_t istage )
 {
   static const char *tail[] = {
     [DUF_OPTION_STAGE_PRESETUP] = "presetup",

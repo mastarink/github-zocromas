@@ -1,6 +1,5 @@
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
-#include "duf_config_types.h"
 
 
 /* man getopt_long */

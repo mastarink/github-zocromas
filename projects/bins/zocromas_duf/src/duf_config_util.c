@@ -9,6 +9,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config_wref.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
@@ -19,11 +20,24 @@
 #include "duf_option_names.h"
 
 #include "duf_utils_path.h"
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config_util.h"
 /* ###################################################################### */
 
+extern duf_config_t *duf_config __attribute( ( weak ) );
+
+int
+duf_output_level( void )
+{
+  return duf_config ? duf_config->cli.output.level : 0;
+}
+
+FILE *
+duf_output_file( void )
+{
+  return duf_config && duf_config->cli.output.out ? duf_config->cli.output.out : stdout;
+}
 
 static const char *
 duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
@@ -49,7 +63,7 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   }
   else if ( *name == '+' )
   {
-    if ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) )
+    if ( duf_config && ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) ) )
       pbuf = DUF_CONFIGGSP( db.main.name );
   }
   /* T( "@@@@@@var %s => '%s'", name, pbuf ); */

@@ -27,7 +27,7 @@
 #include "duf_sccbh_eval_sql_set.h"
 /* ###################################################################### */
 
-/* 20151013.125934 */
+/* 20151014.093121 */
 static int
 duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2,
                                duf_sccb_handle_t * sccbh )

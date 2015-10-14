@@ -2,7 +2,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
 #include "evsql_begfin.h"
 #include "duf_sql_stmt_defs.h"

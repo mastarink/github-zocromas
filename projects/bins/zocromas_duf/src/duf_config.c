@@ -9,7 +9,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
-
+#include "duf_config_ref.h"
+#include "duf_config_util.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
@@ -17,7 +18,7 @@
 #include "duf_ufilter.h"
 
 #include "duf_option_extended.h" /* duf_options_create_longopts_table */
-#include "duf_options_table.h"/* lo_extended_table_multi */
+#include "duf_options_table.h"  /* lo_extended_table_multi */
 #include "duf_option_names.h"
 
 #include "duf_utils_path.h"

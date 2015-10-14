@@ -2,7 +2,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_maintenance_options.h"
 
 #include "duf_options_table.h"
 /* ###################################################################### */

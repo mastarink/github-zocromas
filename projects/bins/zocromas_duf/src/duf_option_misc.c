@@ -8,10 +8,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
-
-#include "duf_config_ref.h"
-
+#include "duf_maintenance_options.h"
 
 #include "duf_sccb.h"
 
@@ -53,7 +50,8 @@ duf_option_$_history( void )
         DUF_PRINTF( 0, "%s:%s", he->timestamp, he->line );
     }
   }
-  DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
+  /* DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
+  DUF_TRACE( temp, 0, "@@history length:%d; offset:%d;", phstate->length, phstate->offset );
 
   DEBUG_ENDR( r );
 }
