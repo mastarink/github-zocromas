@@ -172,7 +172,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
   assert( SHA_DIGEST_LENGTH == 2 * 64 / 8 + ASHA1_DELTA );
   if ( sha1 && sha1[2] && sha1[1] && sha1[0] )
   {
-    if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       static const char *sql =
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA1_FULL " ( sha1sum1, sha1sum2, sha1sum3 ) VALUES ( :sha1sum1, :sha1sum2, :sha1sum3 )";
@@ -234,7 +234,7 @@ duf_make_sha1_uni( int fd, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( SHA1_Init( &ctx ) != 1 ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && ( SHA1_Init( &ctx ) != 1 ) )
         DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
       DUF_TEST_R( r );
       {
@@ -257,7 +257,7 @@ duf_make_sha1_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( ry > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
+          if ( ry > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
           {
             if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
               DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
@@ -274,7 +274,7 @@ duf_make_sha1_uni( int fd, unsigned char *pmd )
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
   DEBUG_ENDR( r );
 }
@@ -307,7 +307,7 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( fname );
   DUF_TRACE( sha1, 0, "+ %s", fname );
   memset( asha1r, 0, sizeof( asha1r ) );
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
     DOR( r, duf_make_sha1r_uni( pdi, asha1r ) );
 
   assert( sizeof( asha1r ) == 20 + ASHA1_DELTA );
@@ -325,7 +325,7 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( !DUF_CONFIGG( cli.disable.flag.update ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.update ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0

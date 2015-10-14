@@ -32,34 +32,38 @@
 #  define DUF_OPTIONW_FLAG(_lo, _ref, _pref) DUF_OPTIONW_FLAGG(_lo, _pref, _ref v.flag)
 /* */
 #  define DUF_CLIW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli)
-#  define DUF_ACTW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli.act)
-#  define DUF_FORMATW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli.bformat)
-#  define DUF_UW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ->, puz)
+#  define DUF_OPTW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., opt)
+#  define DUF_ACTW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., opt.act)
+#  define DUF_FORMATW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., opt.bformat)
+#  define DUF_UW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ->, scn.puz)
 
 #  define DUF_CLIG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli)
-#  define DUF_ACTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli.act)
-#  define DUF_FORMATG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli.bformat)
-#  define DUF_UG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ->, puz)
+#  define DUF_OPTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt)
+#  define DUF_ACTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt.act)
+#  define DUF_FORMATG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt.bformat)
+#  define DUF_UG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ->, scn.puz)
 
 
 
 /* */
 #  define DUF_CLIW_NUM( _lo, _n ) DUF_OPTIONW_NUM( _lo, cli._n )
-#  define DUF_ACTW_NUM(_lo)      DUF_CLIW_NUM( _lo, act )
-#  define DUF_FORMATW_NUM(_lo)   DUF_CLIW_NUM( _lo, bformat )
+#  define DUF_OPTW_NUM( _lo, _n ) DUF_OPTIONW_NUM( _lo, opt._n )
+#  define DUF_ACTW_NUM(_lo)      DUF_OPTW_NUM( _lo, act )
+#  define DUF_FORMATW_NUM(_lo)   DUF_OPTW_NUM( _lo, bformat )
 
 #  define DUF_CLIG_NUM( _lo, _n ) DUF_OPTIONG_NUM( _lo, cli._n )
-#  define DUF_ACTG_NUM(_lo)      DUF_CLIG_NUM( _lo, act )
-#  define DUF_FORMATG_NUM(_lo)   DUF_CLIG_NUM( _lo, bformat )
+#  define DUF_OPTG_NUM( _lo, _n ) DUF_OPTIONG_NUM( _lo, opt._n )
+#  define DUF_ACTG_NUM(_lo)      DUF_OPTG_NUM( _lo, act )
+#  define DUF_FORMATG_NUM(_lo)   DUF_OPTG_NUM( _lo, bformat )
 
 /* */
-#  define DUF_FORMATW_FLAG_NUM(_lo)   DUF_CLIW_NUM( _lo, bformat.v.flag )
-#  define DUF_FORMATG_FLAG_NUM(_lo)   DUF_CLIG_NUM( _lo, bformat.v.flag )
+#  define DUF_FORMATW_FLAG_NUM(_lo)   DUF_OPTW_NUM( _lo, bformat.v.flag )
+#  define DUF_FORMATG_FLAG_NUM(_lo)   DUF_OPTG_NUM( _lo, bformat.v.flag )
 
 #  define DUF_UG_NUM(_lo)        DUF_OPTIONG_NUM( _lo, u )
 #  define DUF_UW_NUM(_lo)        DUF_OPTIONW_NUM( _lo, u )
 
-#  define DUF_TRACE_NUM(_lo)    DUF_CLIW_NUM( _lo, trace )
+#  define DUF_TRACE_NUM(_lo)    DUF_OPTW_NUM( _lo, trace )
 
 #  define DUF_OPTIONG_NUM(_lo, _pref) DUF_OPTIONG_N(_pref._lo)
 #  define DUF_OPTIONW_NUM(_lo, _pref) DUF_OPTIONW_N(_pref._lo)

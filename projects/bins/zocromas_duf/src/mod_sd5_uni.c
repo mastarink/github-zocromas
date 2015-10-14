@@ -192,7 +192,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
   DEBUG_START(  );
   if ( sd64 && sd64[1] && sd64[0] )
   {
-    if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SD5_FULL " ( sd5sum1, sd5sum2 ) VALUES ( :sd5sum1, :sd5sum2 )";
 
@@ -252,7 +252,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( MD5_Init( &ctx ) != 1 ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && ( MD5_Init( &ctx ) != 1 ) )
         DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
       DUF_TEST_R( r );
       {
@@ -274,7 +274,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( rr > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
+          if ( rr > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
           {
             if ( MD5_Update( &ctx, buffer, rr ) != 1 )
               DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
@@ -291,7 +291,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
@@ -310,7 +310,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
 
   memset( amd5, 0, sizeof( amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", fname );
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
     DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", fname );
   DUF_TEST_R( r );
@@ -325,14 +325,14 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
 
     pmd = ( unsigned long long * ) &amd5r;
     DUF_TRACE( sd5, 0, "insert %s", fname );
-    if ( DUF_CONFIGG( cli.disable.flag.calculate ) )
+    if ( DUF_CONFIGG( opt.disable.flag.calculate ) )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74; /* FIXME What is it? */
     sd5id = duf_insert_sd5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( sd5id )
     {
       int changes = 0;
 
-      if ( !DUF_CONFIGG( cli.disable.flag.update ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.update ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0

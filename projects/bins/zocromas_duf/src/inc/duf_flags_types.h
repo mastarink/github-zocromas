@@ -71,13 +71,13 @@ typedef struct
   unsigned update:1;
   unsigned fs:1;
   unsigned memusage:1;
-} duf_config_cli_disable_flags_t;
+} duf_config_opt_disable_flags_t;
 
 typedef union
 {
-  duf_config_cli_disable_flags_t flag;
+  duf_config_opt_disable_flags_t flag;
   unsigned short sbit;
-} duf_config_cli_disable_flags_combo_t;
+} duf_config_opt_disable_flags_combo_t;
 
 /* ######################################## */
 
@@ -97,13 +97,13 @@ typedef union
 typedef struct
 {
   unsigned dry_run:1;
-} duf_config_cli_flags_t;
+} duf_config_opt_flags_t;
 
 typedef union
 {
-  duf_config_cli_flags_t flag;
+  duf_config_opt_flags_t flag;
   unsigned short sbit;
-} duf_config_cli_flags_combo_t;
+} duf_config_opt_flags_combo_t;
 
 /* ######################################## */
 
@@ -112,8 +112,8 @@ typedef union
   duf_config_act_flags_t act;
   duf_config_output_flags_t output;
   duf_rfilter_flags_t rec_etc;
-  duf_config_cli_flags_t cli;
-  duf_config_cli_disable_flags_t disable;
+  duf_config_opt_flags_t opt;
+  duf_config_opt_disable_flags_t disable;
   unsigned bit;
   unsigned short sbit;
 } duf_anyflag_t;

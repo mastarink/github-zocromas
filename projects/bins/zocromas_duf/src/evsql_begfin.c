@@ -16,7 +16,7 @@
 
 #if 0
 static int
-duf_bind_ufilter( duf_stmnt_t * pstmt, const duf_argvc_t * ttarg )
+duf_bind_ufilter( duf_stmnt_t * pstmt, const mas_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
@@ -41,7 +41,7 @@ duf_bind_ufilter( duf_stmnt_t * pstmt, const duf_argvc_t * ttarg )
  * 5. end statement
  * */
 int
-duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback, const duf_argvc_t * ttarg,
+duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback, const mas_argvc_t * ttarg,
                      const char *selected_db, int *pchanges )
 {
   DEBUG_STARTR( r );
@@ -93,7 +93,7 @@ duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t
  * */
 int
 duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback,
-                   const duf_argvc_t * ttarg, const char *selected_db )
+                   const mas_argvc_t * ttarg, const char *selected_db )
 {
   DEBUG_STARTR( r );
 

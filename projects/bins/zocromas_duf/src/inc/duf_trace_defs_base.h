@@ -26,7 +26,7 @@
 
 
 
-#  define DUF_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->cli.trace.output.out ? _cfg->cli.trace.output.out : stdout )
+#  define DUF_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->opt.trace.output.out ? _cfg->opt.trace.output.out : stdout )
 
 /* ###################################################################### */
 

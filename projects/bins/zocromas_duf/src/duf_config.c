@@ -11,6 +11,7 @@
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
 #include "duf_config_util.h"
+#include "duf_cli.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
@@ -42,8 +43,8 @@ duf_cfg_create( void )
   cfg = mas_malloc( sizeof( duf_config_t ) );
   memset( cfg, 0, sizeof( duf_config_t ) );
 
-  cfg->puz = duf_ufilter_create(  );
-  assert( cfg->puz );
+  cfg->scn.puz = duf_ufilter_create(  );
+  assert( cfg->scn.puz );
 #if 0
   {
     DUF_CFGWSP( cfg, db.dir, mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) ) );
@@ -72,17 +73,17 @@ duf_cfg_create( void )
   DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name, mas_strdup( "duf-selected" ) );
-  DUF_CFGW( cfg, cli.trace.error ) += 5;
-  /* DUF_CFGWN( cfg, cli.trace.any, DUF_CFGG( cfg, cli.trace.error ) ); */
-  /* cfg->cli.trace.options = 1; */
-  /* cfg->cli.trace.fs += 1; */
-  DUF_CFGW( cfg, cli.trace.temp ) += 1;
+  DUF_CFGW( cfg, opt.trace.error ) += 5;
+  /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
+  /* cfg->opt.trace.options = 1; */
+  /* cfg->opt.trace.fs += 1; */
+  DUF_CFGW( cfg, opt.trace.temp ) += 1;
 
-  cfg->longopts_table = duf_options_create_longopts_table( lo_extended_table_multi );
+  cfg->cli.longopts_table = duf_options_create_longopts_table( lo_extended_table_multi );
 
-  cfg->pdi = duf_pdi_create( "selected" );
-  assert( cfg->puz );
-  assert( cfg->longopts_table );
+  cfg->scn.pdi = duf_pdi_create( "selected" );
+  assert( cfg->scn.puz );
+  assert( cfg->cli.longopts_table );
 
   DEBUG_END(  );
   return cfg;
@@ -107,10 +108,10 @@ duf_cfg_delete( duf_config_t * cfg )
   if ( cfg )
   {
 /* xchanges = di.changes; --- needless!? */
-    duf_pdi_kill( &cfg->pdi );
+    duf_pdi_kill( &cfg->scn.pdi );
 
-    duf_ufilter_delete( cfg->puz );
-    cfg->puz = NULL;
+    duf_ufilter_delete( cfg->scn.puz );
+    cfg->scn.puz = NULL;
 
     mas_free( cfg->config_dir );
     cfg->config_dir = NULL;
@@ -164,8 +165,8 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-    duf_options_delete_longopts_table( cfg->longopts_table );
-    cfg->longopts_table = NULL;
+    duf_options_delete_longopts_table( cfg->cli.longopts_table );
+    cfg->cli.longopts_table = NULL;
 
     mas_free( cfg->help_string );
     cfg->help_string = NULL;
@@ -185,60 +186,63 @@ duf_cfg_delete( duf_config_t * cfg )
     /* mas_free( cfg->group ); */
     /* cfg->group = NULL;      */
 
-    mas_del_argv( cfg->targ.argc, cfg->targ.argv, 0 );
-    cfg->targ.argc = 0;
-    cfg->targ.argv = NULL;
+#if 0
+    mas_del_argv( cfg->cli.targ.argc, cfg->cli.targ.argv, 0 );
+    cfg->cli.targ.argc = 0;
+    cfg->cli.targ.argv = NULL;
 
     mas_free( cfg->cli.shorts );
     cfg->cli.shorts = NULL;
+#else
+    duf_cli_shut( &cfg->cli );
+#endif
+    mas_free( cfg->opt.trace.output.file );
+    cfg->opt.trace.output.file = NULL;
 
-    mas_free( cfg->cli.trace.output.file );
-    cfg->cli.trace.output.file = NULL;
-
-    mas_free( cfg->cli.output.file );
-    cfg->cli.output.file = NULL;
+    mas_free( cfg->opt.output.file );
+    cfg->opt.output.file = NULL;
 
     {
-      mas_del_argv( cfg->cli.output.as_formats.tree.files.argc, cfg->cli.output.as_formats.tree.files.argv, 0 );
-      mas_del_argv( cfg->cli.output.as_formats.tree.dirs.argc, cfg->cli.output.as_formats.tree.dirs.argv, 0 );
-      mas_del_argv( cfg->cli.output.as_formats.list.files.argc, cfg->cli.output.as_formats.list.files.argv, 0 );
-      mas_del_argv( cfg->cli.output.as_formats.list.dirs.argc, cfg->cli.output.as_formats.list.dirs.argv, 0 );
-      mas_del_argv( cfg->cli.output.as_formats.gen.files.argc, cfg->cli.output.as_formats.gen.files.argv, 0 );
-      mas_del_argv( cfg->cli.output.as_formats.gen.dirs.argc, cfg->cli.output.as_formats.gen.dirs.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.tree.files.argc, cfg->opt.output.as_formats.tree.files.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.tree.dirs.argc, cfg->opt.output.as_formats.tree.dirs.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.list.files.argc, cfg->opt.output.as_formats.list.files.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.list.dirs.argc, cfg->opt.output.as_formats.list.dirs.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.gen.files.argc, cfg->opt.output.as_formats.gen.files.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.gen.dirs.argc, cfg->opt.output.as_formats.gen.dirs.argv, 0 );
     }
     {
-      mas_free( cfg->cli.output.sformat.files_tree );
-      cfg->cli.output.sformat.files_tree = NULL;
+      mas_free( cfg->opt.output.sformat.files_tree );
+      cfg->opt.output.sformat.files_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat.dirs_tree );
-      cfg->cli.output.sformat.dirs_tree = NULL;
+      mas_free( cfg->opt.output.sformat.dirs_tree );
+      cfg->opt.output.sformat.dirs_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat.prefix_gen_tree );
-      cfg->cli.output.sformat.prefix_gen_tree = NULL;
+      mas_free( cfg->opt.output.sformat.prefix_gen_tree );
+      cfg->opt.output.sformat.prefix_gen_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat.prefix_files_tree );
-      cfg->cli.output.sformat.prefix_files_tree = NULL;
+      mas_free( cfg->opt.output.sformat.prefix_files_tree );
+      cfg->opt.output.sformat.prefix_files_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat.prefix_dirs_tree );
-      cfg->cli.output.sformat.prefix_dirs_tree = NULL;
+      mas_free( cfg->opt.output.sformat.prefix_dirs_tree );
+      cfg->opt.output.sformat.prefix_dirs_tree = NULL;
 
-      mas_free( cfg->cli.output.sformat.files_list );
-      cfg->cli.output.sformat.files_list = NULL;
+      mas_free( cfg->opt.output.sformat.files_list );
+      cfg->opt.output.sformat.files_list = NULL;
 
-      mas_free( cfg->cli.output.sformat.dirs_list );
-      cfg->cli.output.sformat.dirs_list = NULL;
+      mas_free( cfg->opt.output.sformat.dirs_list );
+      cfg->opt.output.sformat.dirs_list = NULL;
 
-      mas_free( cfg->cli.output.sformat.files_gen );
-      cfg->cli.output.sformat.files_gen = NULL;
+      mas_free( cfg->opt.output.sformat.files_gen );
+      cfg->opt.output.sformat.files_gen = NULL;
 
-      mas_free( cfg->cli.output.sformat.dirs_gen );
-      cfg->cli.output.sformat.dirs_gen = NULL;
+      mas_free( cfg->opt.output.sformat.dirs_gen );
+      cfg->opt.output.sformat.dirs_gen = NULL;
 
-      mas_free( cfg->cli.output.history_filename );
-      cfg->cli.output.history_filename = NULL;
+      mas_free( cfg->opt.output.history_filename );
+      cfg->opt.output.history_filename = NULL;
 
-      mas_free( cfg->cli.output.header_tty );
-      cfg->cli.output.header_tty = NULL;
+      mas_free( cfg->opt.output.header_tty );
+      cfg->opt.output.header_tty = NULL;
     }
 
     mas_free( cfg );
@@ -256,13 +260,14 @@ duf_config_create( int argc, char **argv )
 #ifdef MAS_TRACING
   duf_config4trace = duf_config;
 
-  duf_config->carg.argc = argc;
-  duf_config->carg.argv = argv;
+#  if 0
+  duf_config->cli.carg.argc = argc;
+  duf_config->cli.carg.argv = argv;
   if ( !duf_config->cli.shorts )
     duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
-
-
-
+#  else
+  duf_cli_init( &duf_config->cli, argc, argv );
+#  endif
 
   assert( duf_config4trace );
 #endif
@@ -273,7 +278,7 @@ void
 duf_config_delete( void )
 {
   DEBUG_START(  );
-  duf_error_report_all( 0, DUF_CONFIGG( cli.dbg.verbose ) );
+  duf_error_report_all( 0, DUF_CONFIGG( opt.dbg.verbose ) );
 
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
@@ -292,8 +297,8 @@ duf_config_show( void )
     DUF_FPRINTF( 0, stderr, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
     DUF_FPRINTF( 0, stderr, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
-  for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
-    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->targ.argv[ia] );
+  for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
+    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] );
 
   DEBUG_ENDR( r );
 }
@@ -303,7 +308,7 @@ duf_config_optionally_show( void )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.dbg.verbose )
+  if ( duf_config->opt.dbg.verbose )
   {
     DOR( r, duf_config_show(  ) );
   }
@@ -314,25 +319,25 @@ duf_config_optionally_show( void )
 
 #if 0
   /* Obsolete ??? */
-  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( puz )->maxitems.total );
-  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( puz )->maxitems.files );
-  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( puz )->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( puz )->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( puz )->dirfiles.max );
+  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( scn.puz )->maxitems.total );
+  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( scn.puz )->maxitems.files );
+  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( scn.puz )->maxitems.dirs );
+  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( scn.puz )->dirfiles.min );
+  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( scn.puz )->dirfiles.max );
 #endif
 
 #ifdef MAS_TRACING
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->puz->globx.include_fs_files.argc, duf_config->puz->globx.include_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->scn.puz->globx.include_fs_files.argc, duf_config->scn.puz->globx.include_fs_files.argv, 0 );
     DUF_TRACE( config, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->puz->globx.exclude_fs_files.argc, duf_config->puz->globx.exclude_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->scn.puz->globx.exclude_fs_files.argc, duf_config->scn.puz->globx.exclude_fs_files.argv, 0 );
     DUF_TRACE( config, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }

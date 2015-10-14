@@ -52,7 +52,7 @@ int
 duf_main_db_info( void )
 {
   DEBUG_STARTR( r );
-  if ( duf_config->cli.act.v.flag.info )
+  if ( duf_config->opt.act.v.flag.info )
   {
     duf_infodata_t infod[] = {
 #if 0

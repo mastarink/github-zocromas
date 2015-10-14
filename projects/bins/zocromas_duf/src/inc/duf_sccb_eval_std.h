@@ -9,11 +9,12 @@ int duf_ev_evnamed_list_std( const char *names ) __attribute__ ( ( warn_unused_r
 int duf_ev_evnamen_std( const char *name, size_t len ) __attribute__ ( ( warn_unused_result ) );
 int duf_ev_evname_std( const char *name ) __attribute__ ( ( warn_unused_result ) );
 
-int duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t namelen, const duf_argvc_t * ptarg )
-      __attribute__ ( ( warn_unused_result ) );
-int duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, const duf_argvc_t * ptarg ) __attribute__ ( ( warn_unused_result ) );
-
 int duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg ) __attribute__ ( ( warn_unused_result ) );
 int duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name ) __attribute__ ( ( warn_unused_result ) );
+
+#include <mastar/tools/mas_argvc_types.h>
+int duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t namelen, const mas_argvc_t * ptarg )
+      __attribute__ ( ( warn_unused_result ) );
+int duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, const mas_argvc_t * ptarg ) __attribute__ ( ( warn_unused_result ) );
 
 #endif

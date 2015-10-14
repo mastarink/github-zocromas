@@ -30,7 +30,7 @@
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int
-duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const duf_argvc_t * ptarg, bool f_summary )
+duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
 
@@ -56,7 +56,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
 
 /* 20150922.123731 */
 int
-duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const duf_argvc_t * ptarg, bool f_summary )
+duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const mas_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
@@ -81,7 +81,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const d
 
 /* 20150922.123721 */
 int
-duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const duf_argvc_t * ptarg, bool f_summary )
+duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const mas_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
   assert( pdi );
@@ -96,7 +96,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
 {
   DEBUG_STARTR( r );
 
-  duf_argvc_t targ = {.argc = 0,.argv = NULL };
+  mas_argvc_t targ = {.argc = 0,.argv = NULL };
 
   assert( pdi );
 
@@ -112,7 +112,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_
 
 /* 20150922.123706 */
 int
-duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, const duf_argvc_t * ptarg, bool f_summary )
+duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, const mas_argvc_t * ptarg, bool f_summary )
 {
   DEBUG_STARTR( r );
 

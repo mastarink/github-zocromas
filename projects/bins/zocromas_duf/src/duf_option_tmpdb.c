@@ -17,7 +17,7 @@
 
 
 static int
-duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, const duf_yfilter_t * py_unused DUF_UNUSED, const duf_argvc_t * ttarg )
+duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, const duf_yfilter_t * py_unused DUF_UNUSED, const mas_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )
@@ -45,7 +45,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
             NULL}
   };
   char optval[512];
-  duf_argvc_t ttarg = {.argc = 0,.argv = NULL };
+  mas_argvc_t ttarg = {.argc = 0,.argv = NULL };
   snprintf( optval, sizeof( optval ), "%d", oval );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optval );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optname );

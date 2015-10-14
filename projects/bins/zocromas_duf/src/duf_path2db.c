@@ -3,7 +3,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* cli.disable.flag.insert */
+#include "duf_config_ref.h"     /* opt.disable.flag.insert */
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
@@ -249,7 +249,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
     DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", r, duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
                duf_levinfo_dirid_up( pdi ) );
 
-    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       DOR( r, duf_levinfo_stat_insert2db( pdi, &changes ) );
     }

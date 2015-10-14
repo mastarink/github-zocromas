@@ -195,23 +195,23 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         duf_filedirformat_t *fmt;
 
 #if 0
-        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
 #else
         use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
-        fmt = DUF_CONFIGA( cli.output.as_formats.list );
+        fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.files_gen );
+          sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.files_list );
+          sformat = DUF_CONFIGG( opt.output.sformat.files_list );
       }
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width,
+      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
                                             &rwidth, &over );
       DUF_PUTSL( 0 );
     }
@@ -283,7 +283,7 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
     /* fi.sha1id = sha1id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
-    DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, DUF_CONFIGG( cli.bformat.v.bit ) ) );
+    DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, DUF_CONFIGG( opt.bformat.v.bit ) ) );
     if ( DUF_ACTG_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
@@ -308,28 +308,28 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
         const duf_filedirformat_t *fmt;
 
 #if 0
-        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
 #else
         use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
-        fmt = DUF_CONFIGA( cli.output.as_formats.list );
+        fmt = DUF_CONFIGA( opt.output.as_formats.list );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
         if ( use >= 0 && use < fmt->dirs.argc && !sformat )
           sformat = fmt->dirs.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.dirs_gen );
+          sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.dirs_list );
+          sformat = DUF_CONFIGG( opt.output.sformat.dirs_list );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
 
       if ( !sformat )
         sformat = "%r\n";
       DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->pathinfo.topdepth ) );
-      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->cli.output.max_width,
+      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
                                             &rwidth, &over );
       DUF_PUTSL( 0 );
     }

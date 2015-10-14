@@ -180,15 +180,15 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       int over = 0;
 
       {
-        sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_gen_tree );
+        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
         if ( !sformat_pref )
-          sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_files_tree );
+          sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_files_tree );
 
         if ( !sformat_pref )
           sformat_pref = "_%-6M =%-4S%P";
-        if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+        if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->cli.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, &rwidth, &over );
       }
       if ( !over )
       {
@@ -197,29 +197,29 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           duf_filedirformat_t *fmt;
 
 #if 0
-          use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+          use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
 #else
           use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
-          fmt = DUF_CONFIGA( cli.output.as_formats.tree );
+          fmt = DUF_CONFIGA( opt.output.as_formats.tree );
           DUF_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
           if ( use >= 0 && use < fmt->files.argc && !sformat )
             sformat = fmt->files.argv[use];
           DUF_TRACE( temp, 5, "sformat A: %s", sformat );
           if ( !sformat )
-            sformat = DUF_CONFIGG( cli.output.sformat.files_gen );
+            sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
           DUF_TRACE( temp, 5, "sformat B: %s", sformat );
           if ( !sformat )
-            sformat = DUF_CONFIGG( cli.output.sformat.files_tree );
+            sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
           DUF_TRACE( temp, 5, "sformat C: %s", sformat );
         }
         if ( !sformat )
           sformat = "%f\n";
 
 
-        if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+        if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->cli.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, &rwidth, &over );
       }
       DUF_PUTSL( 0 );
     }
@@ -303,15 +303,15 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
     int over = 0;
 
     {
-      sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_gen_tree );
+      sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
       if ( !sformat_pref )
-        sformat_pref = DUF_CONFIGG( cli.output.sformat.prefix_dirs_tree );
+        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_dirs_tree );
 
       if ( !sformat_pref )
         sformat_pref = " %6s  %4s%P";
-      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
         slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                            duf_config->cli.output.max_width, &rwidth, &over );
+                                            duf_config->opt.output.max_width, &rwidth, &over );
     }
     if ( !over )
     {
@@ -320,28 +320,28 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
         duf_filedirformat_t *fmt;
 
 #if 0
-        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
 #else
         use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
-        fmt = DUF_CONFIGA( cli.output.as_formats.tree );
+        fmt = DUF_CONFIGA( opt.output.as_formats.tree );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
         if ( use >= 0 && use < fmt->dirs.argc && !sformat )
           sformat = fmt->dirs.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.dirs_gen );
+          sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = DUF_CONFIGG( cli.output.sformat.dirs_tree );
+          sformat = DUF_CONFIGG( opt.output.sformat.dirs_tree );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
 
       if ( !sformat )
         sformat = "%f\n";
-      if ( duf_config->cli.output.max_width == 0 || duf_config->cli.output.max_width > slen )
+      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
         slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                            duf_config->cli.output.max_width, &rwidth, &over );
+                                            duf_config->opt.output.max_width, &rwidth, &over );
     }
     DUF_PUTSL( 0 );
   }

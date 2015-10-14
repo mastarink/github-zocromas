@@ -20,7 +20,7 @@
 
 
 /*
- * if DUF_CONFIGG(cli.option_delimiter) NOT set
+ * if DUF_CONFIGG(opt.option_delimiter) NOT set
  * "::trace-path=1:trace-options=1"  -- correct
  * ":;trace-path=1;trace-options=1"  -- correct
  * ":,trace-path=1,trace-options=1"  -- correct
@@ -34,7 +34,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
   DEBUG_STARTR( r );
 
   if ( !delim )
-    delim = DUF_CONFIGG( cli.option_delimiter );
+    delim = DUF_CONFIGG( opt.option_delimiter );
   if ( !delim )
     delim = ':';
   if ( cmdstr && *cmdstr == ':' )

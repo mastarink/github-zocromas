@@ -146,7 +146,7 @@ duf_clarify_opt_x( duf_option_code_t codeval, int longindex, const char *optargg
 
 /* 20150924.144102 */
 int
-duf_clarify_argv( duf_argvc_t * ptarg, duf_cargvc_t * pcarg, int pos )
+duf_clarify_argv( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
 {
   DEBUG_STARTR( r );
   mas_del_argv( ptarg->argc, ptarg->argv, 0 );

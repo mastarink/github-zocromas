@@ -4,12 +4,12 @@
 
 #include "duf_config_ref.h"
 /*
- * DUF_CONFIGG( carg.argv )
- * DUF_CONFIGG( cli.dbg.verbose )
- * DUF_CONFIGG( carg )
- * DUF_CONFIGG( longopts_table )
- * DUF_CONFIGA( targ )
- * DUF_CONFIGWN( targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( targ ) ) )
+ * DUF_CONFIGG( cli.carg.argv )
+ * DUF_CONFIGG( cli.carg )
+ * DUF_CONFIGG( opt.dbg.verbose )
+ * DUF_CONFIGG( cli.longopts_table )
+ * DUF_CONFIGA( cli.targ )
+ * DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) )
  * DUF_CONFIGG( cli.shorts )
  */
 
@@ -74,7 +74,7 @@ duf_reorder_argv_at_sign( int argc, char *argv[] )
 
 /* 20150924.144047 */
 static int
-duf_reorder_argvc_at_sign( duf_argvc_t * ptarg )
+duf_reorder_argvc_at_sign( mas_argvc_t * ptarg )
 {
   return duf_reorder_argv_at_sign( ptarg->argc, ptarg->argv );
 }
@@ -86,8 +86,8 @@ duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, co
   static const char *msg = "Invalid option";
   char buffer[2048] = "";
 
-  arg = DUF_CONFIGG( carg.argv )[optindd];
-  if ( DUF_CONFIGG( cli.dbg.verbose ) )
+  arg = DUF_CONFIGG( cli.carg.argv )[optindd];
+  if ( DUF_CONFIGG( opt.dbg.verbose ) )
     snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
   else
     snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
@@ -101,11 +101,11 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
   /* const char *arg; */
   /* static const char *msg = "Invalid option"; */
 
-  /* arg = DUF_CONFIGG( carg.argv )[optindd]; */
+  /* arg = DUF_CONFIGG( cli.carg.argv )[optindd]; */
 #  if 0
   if ( optoptt && codeval > ' ' && codeval <= 'z' )
   {
-    if ( DUF_CONFIGG( cli.dbg.verbose ) == 0 )
+    if ( DUF_CONFIGG( opt.dbg.verbose ) == 0 )
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ V %s '-%c'      ", msg, optoptt );
     else
     {
@@ -119,7 +119,7 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #  endif
   {
 #  if 0
-    if ( DUF_CONFIGG( cli.dbg.verbose ) )
+    if ( DUF_CONFIGG( opt.dbg.verbose ) )
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
     else
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s'", msg, arg );
@@ -131,9 +131,9 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
     mas_free( s );
 #  endif
 #  if 0
-    for ( int i = 0; i < DUF_CONFIGG( carg.argc ); i++ )
+    for ( int i = 0; i < DUF_CONFIGG( cli.carg.argc ); i++ )
     {
-      _DUF_SHOW_ERROR( "@@@ (%d) %c%d '%s'", optindd, i == optindd ? '*' : ' ', i, DUF_CONFIGG( carg.argv )[i] );
+      _DUF_SHOW_ERROR( "@@@ (%d) %c%d '%s'", optindd, i == optindd ? '*' : ' ', i, DUF_CONFIGG( cli.carg.argv )[i] );
     }
 #  endif
   }
@@ -148,7 +148,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 
   int longindex;
   duf_option_code_t codeval;
-  duf_cargvc_t carg;
+  mas_cargvc_t carg;
   int optoptt = 0, optindd = 0, optindp = 0;
   int numxargv = 0;
 
@@ -158,17 +158,17 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   optind = 1;
   optindp = optind;
 #if 0
-  carg.argc = DUF_CONFIGG( carg.argc );
-  carg.argv = DUF_CONFIGG( carg.argv );
+  carg.argc = DUF_CONFIGG( cli.carg.argc );
+  carg.argv = DUF_CONFIGG( cli.carg.argv );
 #else
-  carg = DUF_CONFIGG( carg );
+  carg = DUF_CONFIGG( cli.carg );
 #endif
-  DUF_TRACE( options, +2, "parse cli options (%d)...", DUF_CONFIGG( longopts_table ) ? 1 : 0 );
+  DUF_TRACE( options, +2, "parse cli options (%d)...", DUF_CONFIGG( cli.longopts_table ) ? 1 : 0 );
 #if 0
   {
-    for ( const duf_option_t * po = DUF_CONFIGG( longopts_table ); po && po->name; po++ )
+    for ( const duf_option_t * po = DUF_CONFIGG( cli.longopts_table ); po && po->name; po++ )
     {
-      DUF_TRACE( options, +4, "L:%3ld. %s", ( po - DUF_CONFIGG( longopts_table ) ), po->name );
+      DUF_TRACE( options, +4, "L:%3ld. %s", ( po - DUF_CONFIGG( cli.longopts_table ) ), po->name );
     }
   }
 #endif
@@ -178,7 +178,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
    * */
   while ( DUF_NOERROR( r )
           &&
-          ( ( int ) ( optopt = 0, longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, DUF_CONFIGG( longopts_table ), &longindex ) )
+          ( ( int ) ( optopt = 0, longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, DUF_CONFIGG( cli.longopts_table ), &longindex ) )
             >= 0 ) )
   {
     DUF_TRACE( options, +2, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
@@ -229,12 +229,12 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   {
     DUF_TRACE( options, +2, "(for targ) carg.argv[%d]=\"%s\"", optind, carg.argv[optind] );
 #if 0
-    mas_del_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ), 0 );
-    DUF_CONFIGWN( targ.argc, 0 );
-    DUF_CONFIGWP( targ.argv, NULL );
+    mas_del_argv( DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ.argv ), 0 );
+    DUF_CONFIGWN( cli.targ.argc, 0 );
+    DUF_CONFIGWP( cli.targ.argv, NULL );
 
-    DUF_CONFIGWN( targ.argc,
-                  mas_add_argv_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGA( targ.argv ), DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ),
+    DUF_CONFIGWN( cli.targ.argc,
+                  mas_add_argv_argv( DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGA( cli.targ.argv ), DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ),
                                      optind ) );
 
 
@@ -242,16 +242,14 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 
     /* targ.argv becomes valid here - may init pdi etc. */
 #else
-    DOR( r, duf_clarify_argv( DUF_CONFIGA( targ ), DUF_CONFIGA( carg ), optind ) );
+    DOR( r, duf_clarify_argv( DUF_CONFIGA( cli.targ ), DUF_CONFIGA( cli.carg ), optind ) );
 #endif
 
 #if 0
-    DUF_CONFIGWN( targ_offset, duf_reorder_argv_at_sign( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ) ) );
+    DUF_CONFIGWN( cli.targ_offset, duf_reorder_argv_at_sign( DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ.argv ) ) );
 #else
     if ( DUF_NOERROR( r ) )
-      DUF_CONFIGWN( targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( targ ) ) );
-
-
+      DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) );
 #endif
   }
   else

@@ -57,18 +57,18 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 
   assert( duf_config );
 #if 0
-  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( opt.trace.temp ) );
 #endif
 
   DUF_TRACE( options, 0, "@@@@stage:%s(%d)", duf_optstage_name( istage ), istage );

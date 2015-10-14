@@ -8,6 +8,7 @@ zocromas_duf_SOURCES=				   \
 	duf.c 			\
 	duf_maindb_info.c duf_maindb.c		    \
 	duf_dbg.c duf_config.c duf_config_util.c duf_status.c	     \
+	duf_cli.c \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
 	duf_options.c duf_option.c duf_option_old.c  duf_option_tmpdb.c duf_option_typed.c  \
 	duf_option_find.c duf_options_table.c		\

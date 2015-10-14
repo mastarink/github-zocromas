@@ -78,7 +78,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
   {
     int changes = 0;
 
-    if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILEDATAS_FULL /* */
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */

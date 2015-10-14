@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_UFILTER_TYPES_H
 #  define MAS_DUF_UFILTER_TYPES_H
 
+#include <mastar/tools/mas_argvc_types.h>
+
 #  include "duf_base_types.h"
 #  include "duf_item_types.h"
 #  include "duf_flags_types.h"
@@ -18,8 +20,8 @@
 
 typedef struct globx
 {
-  duf_argvc_t include_fs_files;
-  duf_argvc_t exclude_fs_files;
+  mas_argvc_t include_fs_files;
+  mas_argvc_t exclude_fs_files;
 } duf_filter_globx_t;
 
 

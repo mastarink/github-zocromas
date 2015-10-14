@@ -56,7 +56,7 @@ const duf_longval_extended_table_t optable_experimental = {
 #endif
 
    {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( XCHR, cli.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },
+    /*      */ DO_OC( XCHR, opt.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },
 
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },

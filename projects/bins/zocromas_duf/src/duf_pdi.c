@@ -155,16 +155,16 @@ duf_pdi_init_at_config( void )
 {
   DEBUG_STARTR( r );
 #if 0
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #else
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( puz ), NULL /* real_path */ , NULL /* sql_set */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.puz ), NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #endif
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
+  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) );
   DEBUG_ENDR( r );
 }
 

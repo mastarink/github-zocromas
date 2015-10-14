@@ -801,7 +801,7 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
   char *buffer;
   FILE *out;
 
-  out = duf_config && duf_config->cli.output.out ? duf_config->cli.output.out : stdout;
+  out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout;
   buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, max_width, &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );

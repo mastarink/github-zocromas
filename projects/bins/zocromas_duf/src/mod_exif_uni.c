@@ -208,7 +208,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       DUF_SQL_END_STMT( pdi, select_model, lr, pstmt );
     }
 
-    if ( !modelid && !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !modelid && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_EXIF_MODEL_FULL " ( model ) VALUES ( :Model )";
 
@@ -293,7 +293,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }
 
-    if ( !exifid && !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !exifid && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       int changes = 0;
       const char *sql =
@@ -810,7 +810,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
 
             DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 
-            if ( DUF_NOERROR( r ) && exifid && !DUF_CONFIGG( cli.disable.flag.update ) )
+            if ( DUF_NOERROR( r ) && exifid && !DUF_CONFIGG( opt.disable.flag.update ) )
             {
               int changes = 0;
 

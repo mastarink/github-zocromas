@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
+#include <mastar/tools/mas_argvc_types.h>
+
 #  include "duf_record_types.h"
 #  include "duf_scan_types.h"   /* duf_node_type_t */
 #  include "sql_beginning_types.h"
@@ -140,7 +142,7 @@ struct duf_sccb_handle_s
   int targc;
   char *const *targv;
 #  else
-  duf_cargvc_t parg;
+  mas_cargvc_t parg;
 #  endif
 #  if 0
   const duf_ufilter_t *pu_x;

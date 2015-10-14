@@ -131,7 +131,7 @@ duf_main_with_config( int argc, char **argv )
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
-    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( cli.disable.flag.memusage ) )
+    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
     {
       mas_mem_disable_print_usage = 1;
     }

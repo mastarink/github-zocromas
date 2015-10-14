@@ -46,17 +46,17 @@ duf_clear_filepath( duf_filepath_t * pfp )
 }
 
 int
-duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const duf_argvc_t * ttarg_unused DUF_UNUSED )
+duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #if 0
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
-  if ( DUF_CONFIGG(puz)->_name.flag ) \
+  if ( DUF_CONFIGG(scn.puz)->_name.flag ) \
   { \
-    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(puz)->_name.min, r, pstmt ); \
-    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(puz)->_name.max, r, pstmt ); \
+    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(scn.puz)->_name.min, r, pstmt ); \
+    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(scn.puz)->_name.max, r, pstmt ); \
   }
-  assert( DUF_CONFIGX( puz ) );
+  assert( DUF_CONFIGX( scn.puz ) );
 #else
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
   if ( pu->_name.flag ) \

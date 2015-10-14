@@ -16,7 +16,7 @@
 #include "duf_option_extended.h"
 #include "duf_options_table.h"
 #include "duf_option_names.h"
-#include "duf_options_file.h" /* duf_options_infilepath */
+#include "duf_options_file.h"   /* duf_options_infilepath */
 
 /* #include "duf_option_restore.h" */
 #include "duf_option.h"
@@ -133,14 +133,14 @@ duf_option_$_smart_help( duf_option_class_t oclass )
 
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
-  /* for ( int ilong = 0; DUF_CONFIGG(longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
+  /* for ( int ilong = 0; DUF_CONFIGG(cli.longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
   /* {                                                                                                   */
   /* }                                                                                                   */
   if ( oclass <= DUF_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
     DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
-  for ( int ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( longopts_table )[ilong].name && ilong < tbcount; ilong++ )
+  for ( int ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
   {
 
     duf_option_code_t codeval;
@@ -148,8 +148,8 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     const duf_longval_extended_t *extd;
     int ie;
 
-    name = DUF_CONFIGG( longopts_table )[ilong].name;
-    codeval = DUF_CONFIGG( longopts_table )[ilong].val;
+    name = DUF_CONFIGG( cli.longopts_table )[ilong].name;
+    codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
     extd = duf_longindex2extended( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
@@ -192,7 +192,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
               /* if ( shown >= 0 )                    */
               /*   DUF_PRINTF( 0, " ## %d;", shown ); */
 
-              DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, DUF_CONFIGG( longopts_table )[ilong].val, s );
+              DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, DUF_CONFIGG( cli.longopts_table )[ilong].val, s );
               mas_free( s );
             }
             else
@@ -231,7 +231,7 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
 
-  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( carg.argv )[0] );
+  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
   DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &r ) );
   DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
@@ -264,17 +264,17 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --same-md5" );
   DUF_PRINTF( 0, "Debug ----------" );
   DUF_PRINTF( 0, "  --debug" );
-  DUF_PRINTF( 0, "  -v, --verbose=%d", DUF_CONFIGG( cli.dbg.verbose ) );
-  DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( cli.dbg.max_line ) );
-  DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( cli.dbg.min_line ) );
+  DUF_PRINTF( 0, "  -v, --verbose=%d", DUF_CONFIGG( opt.dbg.verbose ) );
+  DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
+  DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
-  DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( cli.trace.action ) );
-  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( cli.trace.temporary ) );
-  DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( cli.trace.scan ) );
-  DUF_PRINTF( 0, "  -Q, --trace-sql=%d", DUF_CONFIGG( cli.trace.sql ) );
-  DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( cli.trace.sample ) );
-  DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( cli.trace.path ) );
-  DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( cli.trace.collect ) );
+  DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.trace.action ) );
+  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( opt.trace.temporary ) );
+  DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( opt.trace.scan ) );
+  DUF_PRINTF( 0, "  -Q, --trace-sql=%d", DUF_CONFIGG( opt.trace.sql ) );
+  DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( opt.trace.sample ) );
+  DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( opt.trace.path ) );
+  DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.trace.collect ) );
   DUF_PRINTF( 0, "----------------" );
 
   DEBUG_ENDR( r );
@@ -780,8 +780,8 @@ duf_option_$_version( void )
 
   DEBUG_STARTR( r );
 
-  sargv1 = mas_argv_string( DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ), 1 );
-  /* sargv2 = duf_restore_some_options( DUF_CONFIGG(carg.argv)[0] ); */
+  sargv1 = mas_argv_string( DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ), 1 );
+  /* sargv2 = duf_restore_some_options( DUF_CONFIGG(cli.carg.argv)[0] ); */
 
   DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
   DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
@@ -811,10 +811,10 @@ duf_option_$_version( void )
 #if 0
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_file_path ) );
 #else
-  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath() );
+  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath(  ) );
 #endif
-  DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( cli.v.sbit ) ), DUF_CONFIGG( cli.v.sbit ) );
-  DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( puz )->v.sbit ), DUF_CONFIGG( puz )->v.sbit );
+  DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.v.sbit ) ), DUF_CONFIGG( opt.v.sbit ) );
+  DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( scn.puz )->v.sbit ), DUF_CONFIGG( scn.puz )->v.sbit );
   /* mas_free( sargv2 ); */
   mas_free( sargv1 );
 
@@ -917,11 +917,11 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
   {
-    typeof( duf_config->cli.act ) u = duf_config->cli.act;
+    typeof( duf_config->opt.act ) u = duf_config->opt.act;
     /* u.v.bit = 0;       */
     /* u.v.flag.info = 1; */
-    DUF_PRINTF( 0, "cli.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( cli.act.v ) ), sizeof( typeof( u.v.bit ) ),
-                ( unsigned long ) DUF_CONFIGG( cli.act.v.bit ) );
+    DUF_PRINTF( 0, "opt.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.act.v ) ), sizeof( typeof( u.v.bit ) ),
+                ( unsigned long ) DUF_CONFIGG( opt.act.v.bit ) );
 
 
       /* *INDENT-OFF*  */
@@ -976,10 +976,10 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
-    unsigned u = DUF_CONFIGG( puz )->v.sbit;
+    unsigned u = DUF_CONFIGG( scn.puz )->v.sbit;
 
-    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( puz )->v ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( puz )->v.sbit );
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( scn.puz )->v ), sizeof( typeof( u ) ),
+                ( unsigned long ) DUF_CONFIGG( scn.puz )->v.sbit );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
@@ -994,10 +994,10 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "                                                                  └─ --recursive" );
 
   {
-    unsigned u = DUF_CONFIGG( cli.disable.sbit );
+    unsigned u = DUF_CONFIGG( opt.disable.sbit );
 
-    DUF_PRINTF( 0, "cli.disable   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( cli.disable ) ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( cli.disable.sbit ) );
+    DUF_PRINTF( 0, "opt.disable   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.disable ) ), sizeof( typeof( u ) ),
+                ( unsigned long ) DUF_CONFIGG( opt.disable.sbit ) );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 

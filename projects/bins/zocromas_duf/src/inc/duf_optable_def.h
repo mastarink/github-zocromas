@@ -67,7 +67,7 @@
       /* void f( int argc, char *const *argv ) *//* call with carg[cv] (A:argv) */
 #  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f) /**/
       /* */
-      /* void f( duf_cargvc_t arg ) *//* call with carg (AA:argv-argv) */
+      /* void f( mas_cargvc_t arg ) *//* call with carg (AA:argv-argv) */
 #  define DO_AA_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(aa, _f) /**/
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
       /* */

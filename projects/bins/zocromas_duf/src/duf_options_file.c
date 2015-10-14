@@ -7,6 +7,10 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_config_ref.h"     /* DUF_CONFIGG */
+/*
+ * DUF_CONFIGG( cli.targ.argc )
+ * DUF_CONFIGG( cli.targ_offset )
+ */
 
 #include "duf_utils_path.h"
 
@@ -391,12 +395,12 @@ duf_indirect_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 0, "@@@@(%d) source: indirect", istage );
-  DUF_TRACE( options, 2, ">> targc:%d targ_offset:%d", DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ_offset ) );
-  for ( int ia = 0; ia < DUF_CONFIGG( targ_offset ); ia++ )
+  DUF_TRACE( options, 2, ">> targc:%d cli.targ_offset:%d", DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ_offset ) );
+  for ( int ia = 0; ia < DUF_CONFIGG( cli.targ_offset ); ia++ )
   {
     const char *cf;
 
-    cf = DUF_CONFIGG( targ.argv[ia] );
+    cf = DUF_CONFIGG( cli.targ.argv[ia] );
     DUF_TRACE( temp, 2, "%s>> targv[%d]='%s'", duf_optstage_name( istage ), ia, cf );
     if ( cf && *cf == '@' )
     {

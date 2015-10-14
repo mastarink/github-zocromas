@@ -58,60 +58,60 @@ duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optar
 /* i/o */
 
     case DUF_OPTION_VAL_TRACE_STDERR:
-      if ( duf_config->cli.trace.output.out )
+      if ( duf_config->opt.trace.output.out )
       {
-        if ( duf_config->cli.trace.output.out != stderr && duf_config->cli.trace.output.out != stdout )
-          fclose( duf_config->cli.trace.output.out );
-        duf_config->cli.trace.output.out = NULL;
+        if ( duf_config->opt.trace.output.out != stderr && duf_config->opt.trace.output.out != stdout )
+          fclose( duf_config->opt.trace.output.out );
+        duf_config->opt.trace.output.out = NULL;
       }
-      if ( duf_config->cli.trace.output.file )
+      if ( duf_config->opt.trace.output.file )
       {
-        mas_free( duf_config->cli.trace.output.file );
-        duf_config->cli.trace.output.file = NULL;
+        mas_free( duf_config->opt.trace.output.file );
+        duf_config->opt.trace.output.file = NULL;
       }
-      duf_config->cli.trace.output.out = stderr;
+      duf_config->opt.trace.output.out = stderr;
       r = 0;
       break;
     case DUF_OPTION_VAL_TRACE_STDOUT:
-      if ( duf_config->cli.trace.output.out )
+      if ( duf_config->opt.trace.output.out )
       {
-        if ( duf_config->cli.trace.output.out != stderr && duf_config->cli.trace.output.out != stdout )
-          fclose( duf_config->cli.trace.output.out );
-        duf_config->cli.trace.output.out = NULL;
+        if ( duf_config->opt.trace.output.out != stderr && duf_config->opt.trace.output.out != stdout )
+          fclose( duf_config->opt.trace.output.out );
+        duf_config->opt.trace.output.out = NULL;
       }
-      if ( duf_config->cli.trace.output.file )
+      if ( duf_config->opt.trace.output.file )
       {
-        mas_free( duf_config->cli.trace.output.file );
-        duf_config->cli.trace.output.file = NULL;
+        mas_free( duf_config->opt.trace.output.file );
+        duf_config->opt.trace.output.file = NULL;
       }
-      duf_config->cli.trace.output.out = stdout;
+      duf_config->opt.trace.output.out = stdout;
       r = 0;
       break;
 
 /* combined */
     case DUF_OPTION_VAL_ALL_TRACE:
       if ( optargg && *optargg )
-        duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
-              duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
-              duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.exif = duf_config->cli.trace.sample =
-              duf_config->cli.trace.deleted = duf_config->cli.trace.scan = duf_config->cli.trace.temp = strtol( optargg, NULL, 10 );
+        duf_config->opt.trace.sql = duf_config->opt.trace.select = duf_config->opt.trace.insert = duf_config->opt.trace.update =
+              duf_config->opt.trace.collect = duf_config->opt.trace.dirent = duf_config->opt.trace.sd5 = duf_config->opt.trace.md5 =
+              duf_config->opt.trace.crc32 = duf_config->opt.trace.mime = duf_config->opt.trace.exif = duf_config->opt.trace.sample =
+              duf_config->opt.trace.deleted = duf_config->opt.trace.scan = duf_config->opt.trace.temp = strtol( optargg, NULL, 10 );
       else
       {
-        duf_config->cli.trace.sql++;
-        duf_config->cli.trace.select++;
-        duf_config->cli.trace.insert++;
-        duf_config->cli.trace.update++;
-        duf_config->cli.trace.collect++;
-        duf_config->cli.trace.sd5++;
-        duf_config->cli.trace.md5++;
-        duf_config->cli.trace.crc32++;
-        duf_config->cli.trace.mime++;
-        duf_config->cli.trace.exif++;
-        duf_config->cli.trace.dirent++;
-        duf_config->cli.trace.sample++;
-        duf_config->cli.trace.deleted++;
-        duf_config->cli.trace.scan++;
-        duf_config->cli.trace.temp++;
+        duf_config->opt.trace.sql++;
+        duf_config->opt.trace.select++;
+        duf_config->opt.trace.insert++;
+        duf_config->opt.trace.update++;
+        duf_config->opt.trace.collect++;
+        duf_config->opt.trace.sd5++;
+        duf_config->opt.trace.md5++;
+        duf_config->opt.trace.crc32++;
+        duf_config->opt.trace.mime++;
+        duf_config->opt.trace.exif++;
+        duf_config->opt.trace.dirent++;
+        duf_config->opt.trace.sample++;
+        duf_config->opt.trace.deleted++;
+        duf_config->opt.trace.scan++;
+        duf_config->opt.trace.temp++;
       }
       break;
 #if 0
@@ -332,7 +332,7 @@ duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optar
             DUF_FORMATW_NUM( offset ) = value == NULL ? 0 : nvalue;
             break;
           }
-          DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->cli.bformat.v.bit );
+          DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->opt.bformat.v.bit );
           /* DUF_TRACE( any, 0, "rs:%d", rs ); */
           if ( rs < 0 )
           {

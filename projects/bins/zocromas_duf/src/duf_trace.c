@@ -136,7 +136,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode DUF_U
 
 /* \e[1;33m101\e[1;37m:duf_all_options\e[m */
         snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", duf_fcolor_s( out, "\x1b[1;32m" ),
-                  duf_config && duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN, duf_fcolor_s( out, "\x1b[m" ) );
+                  duf_config && duf_config->opt.output.fun_width ? duf_config->opt.output.fun_width : T_FN_FMTN, duf_fcolor_s( out, "\x1b[m" ) );
         DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
       }
 #endif

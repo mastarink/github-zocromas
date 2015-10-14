@@ -199,7 +199,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
   {
     static unsigned long insert_cnt = 0;
 
-    if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_CRC32_FULL " (crc32sum) VALUES (:crc32sum)";
 
@@ -252,9 +252,9 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
   unsigned long crc32sum = 0;
   unsigned char *buffer;
 
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
     crc32sum = crc32( 0L, Z_NULL, 0 );
-  /* if ( !DUF_CONFIGG(cli.disable.flag.calculate )) */
+  /* if ( !DUF_CONFIGG(opt.disable.flag.calculate )) */
   {
     buffer = mas_malloc( bufsz );
     if ( buffer )
@@ -275,7 +275,7 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
           DUF_MAKE_ERROR( r, DUF_ERROR_READ );
         }
         DUF_TEST_R( r );
-        if ( rr > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
+        if ( rr > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
           crc32sum = crc32( crc32sum, buffer, rr );
         DUF_TRACE( crc32, 10, "rr:%d; r:%d; crc32sum:%lx", rr, r, crc32sum );
         if ( rr <= 0 )
@@ -310,7 +310,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   assert( duf_levinfo_dfd( pdi ) );
   assert( duf_levinfo_stat( pdi ) );
 
-  if ( DUF_CONFIGG( cli.disable.flag.calculate ) )
+  if ( DUF_CONFIGG( opt.disable.flag.calculate ) )
     crc32sum = ( unsigned long long ) duf_levinfo_dirid( pdi );
   else
     DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &crc32sum ) );
@@ -329,7 +329,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( DUF_NOERROR( r ) && !DUF_CONFIGG( cli.disable.flag.update ) )
+      if ( DUF_NOERROR( r ) && !DUF_CONFIGG( opt.disable.flag.update ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0

@@ -69,9 +69,9 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
 
   mas_free( name );
   /* if ( extended )                                                                                               */
-  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( cli.dbg.verbose ), extended->o.name ); */
+  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), extended->o.name ); */
   /* else                                                                                                          */
-  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( cli.dbg.verbose ), name );             */
+  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), name );             */
   if ( pr )
     *pr = rpr;
   return extended;

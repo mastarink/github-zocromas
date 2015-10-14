@@ -1,10 +1,14 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 #  include <stdio.h>            /* FILE */
+
+#  include <mastar/tools/mas_argvc_types.h>
+
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 /* duf_format_t */
 #  include "duf_format_types.h"
+#  include "duf_option_types.h"
 
 
 typedef struct
@@ -12,7 +16,7 @@ typedef struct
   duf_config_act_flags_combo_t v;
   unsigned sample;
   unsigned sampupd;
-} duf_config_cli_actions_t;
+} duf_config_opt_actions_t;
 
 typedef struct
 {
@@ -22,12 +26,12 @@ typedef struct
   unsigned long min_line;
   unsigned long max_line;
   unsigned long lines;
-} duf_config_cli_debug_t;
+} duf_config_opt_debug_t;
 
 typedef struct
 {
-  duf_argvc_t files;
-  duf_argvc_t dirs;
+  mas_argvc_t files;
+  mas_argvc_t dirs;
 } duf_filedirformat_t;
 typedef struct
 {
@@ -40,11 +44,11 @@ typedef struct
 {
   char *dirs_tree;
   char *files_tree;
-  
+
   char *prefix_gen_tree;
   char *prefix_files_tree;
   char *prefix_dirs_tree;
-  
+
   char *dirs_list;
   char *files_list;
 
@@ -60,7 +64,7 @@ typedef struct
   unsigned handleid;
   unsigned max_width;
   duf_asformats_t as_formats;
-#if 0
+#  if 0
   char *sformat_dirs_tree;
   char *sformat_files_tree;
   char *sformat_prefix_gen_tree;
@@ -70,9 +74,9 @@ typedef struct
   char *sformat_files_list;
   char *sformat_dirs_gen;
   char *sformat_files_gen;
-#else
+#  else
   duf_sformats_t sformat;
-#endif
+#  endif
   char *file;
   FILE *out;
   char *history_filename;
@@ -139,19 +143,29 @@ typedef struct
 
   int sccb;
   int sccbh;
-} duf_config_cli_trace_t;
+} duf_config_opt_trace_t;
 
 typedef struct
 {
-  duf_config_cli_flags_combo_t v;
-  duf_config_cli_actions_t act;
-  duf_config_cli_disable_flags_combo_t disable;
-  duf_config_cli_debug_t dbg;
-  duf_config_cli_trace_t trace;
+  duf_config_opt_flags_combo_t v;
+  duf_config_opt_actions_t act;
+  duf_config_opt_disable_flags_combo_t disable;
+  duf_config_opt_debug_t dbg;
+  duf_config_opt_trace_t trace;
   duf_config_output_t output;
   duf_bformat_combo_t bformat;
   char option_delimiter;
+} duf_config_opt_t;
+
+typedef struct
+{
   char *shorts;
+  mas_cargvc_t carg;
+  mas_argvc_t targ;
+  int targ_offset;
+
+  duf_option_t *longopts_table;
+
   /* long limit; */
 } duf_config_cli_t;
 

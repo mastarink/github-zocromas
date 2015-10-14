@@ -235,7 +235,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   assert( MD5_DIGEST_LENGTH == 2 * 64 / 8 );
   if ( md64 && md64[1] && md64[0] )
   {
-    if ( !DUF_CONFIGG( cli.disable.flag.insert ) )
+    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MD5_FULL " ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
@@ -295,7 +295,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && ( MD5_Init( &ctx ) != 1 ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && ( MD5_Init( &ctx ) != 1 ) )
         DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
       DUF_TEST_R( r );
       {
@@ -317,7 +317,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( ry > 0 && !DUF_CONFIGG( cli.disable.flag.calculate ) )
+          if ( ry > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
           {
             if ( MD5_Update( &ctx, buffer, ry ) != 1 )
               DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
@@ -334,7 +334,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
@@ -367,7 +367,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( fname );
   DUF_TRACE( md5, 0, "+ %s", fname );
 
-  if ( !DUF_CONFIGG( cli.disable.flag.calculate ) )
+  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
     DOR( r, duf_make_md5r_uni( pdi, amd5r ) );
 
   if ( DUF_NOERROR( r ) )
@@ -384,7 +384,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( !DUF_CONFIGG( cli.disable.flag.update ) )
+      if ( !DUF_CONFIGG( opt.disable.flag.update ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0

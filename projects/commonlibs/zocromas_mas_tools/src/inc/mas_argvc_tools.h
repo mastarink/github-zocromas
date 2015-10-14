@@ -2,17 +2,8 @@
 #  define MAS_ARGVC_TOOLS_H
 
 #  include <sys/types.h>
+#  include "mas_argvc_types.h"
 
-typedef struct
-{
-  int argc;
-  char **argv;
-} mas_argvc_t;
-typedef struct
-{
-  int argc;
-  char *const *argv;
-} mas_cargvc_t;
 
 int mas_add_argvc_args( mas_argvc_t * targ, const char *args, int ia_offset );
 int mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset );

@@ -30,13 +30,13 @@ extern duf_config_t *duf_config __attribute( ( weak ) );
 int
 duf_output_level( void )
 {
-  return duf_config ? duf_config->cli.output.level : 0;
+  return duf_config ? duf_config->opt.output.level : 0;
 }
 
 FILE *
 duf_output_file( void )
 {
-  return duf_config && duf_config->cli.output.out ? duf_config->cli.output.out : stdout;
+  return duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout;
 }
 
 static const char *

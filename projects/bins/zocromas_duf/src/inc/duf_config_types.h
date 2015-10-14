@@ -3,7 +3,6 @@
 
 #  include "duf_base_types.h"
 #  include "duf_cli_types.h"
-#  include "duf_option_types.h"
 
 typedef struct
 {
@@ -29,34 +28,40 @@ typedef struct
   duf_db_config_t tempo;
   duf_db_config_t selected;
   /* char *opened_name; */
-} duf_dbs_config_t;
+} duf_config_db_t;
 
 typedef struct
 {
   char *path;
-} duf_save_config_t;
+} duf_config_save_t;
 
+typedef struct
+{
+  unsigned nopen;
+  unsigned nclose;
+} duf_status_dh_t;
+typedef struct
+{
+  duf_ufilter_t *puz;
+  /* struct duf_depthinfo_s *pdi; */
+  duf_depthinfo_t *pdi;
+} duf_status_scanner_t;
 typedef struct
 {
   char *help_string;
   double loadtime;
-  duf_ufilter_t *puz;
-  duf_option_t *longopts_table;
   duf_config_cli_t cli;
-  duf_dbs_config_t db;
-  duf_save_config_t save;
+  duf_config_opt_t opt;
+  duf_config_db_t db;
+  duf_config_save_t save;
   /* char *group; */
-  duf_cargvc_t carg;
-  duf_argvc_t targ;
-  int targ_offset;
   char *config_dir;
   char *cmds_dir;
   char *config_file_path;
 
-  struct duf_depthinfo_s *pdi;
-  unsigned nopen;
-  unsigned nclose;
+  duf_status_scanner_t scn;
 
+  duf_status_dh_t dh;
   duf_itemtag_t tag;
   int dir_priority;
 } duf_config_t;
