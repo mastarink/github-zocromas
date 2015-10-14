@@ -11,7 +11,7 @@
 /* #include "duf_option_acquire.h" */
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_typed.h"
 
 /* ###################################################################### */

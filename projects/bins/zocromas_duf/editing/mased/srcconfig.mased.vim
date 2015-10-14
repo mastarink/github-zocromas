@@ -56,6 +56,7 @@ sfind duf_status.h
 
 
 tab sfind duf_options_table.c
+sfind duf_options_table.h
 
 " ------------------------------
 tab sfind duf_options_interactive.c

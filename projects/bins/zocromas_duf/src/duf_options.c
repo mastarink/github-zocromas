@@ -14,7 +14,7 @@
 #include "duf_config_ref.h"
 /* #include "duf_maindb.h" */
 
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 
 #include "duf_options_file.h"
 #include "duf_options_env.h"

@@ -4,7 +4,9 @@
 #  include "duf_option_types.h"
 
 
-extern const duf_longval_extended_table_t **lo_extended_table_multi;
+
+duf_option_t *duf_options_create_longopts_table( const duf_longval_extended_table_t ** pxtable );
+void duf_options_delete_longopts_table( duf_option_t * longopts );
 
 const duf_longval_extended_t *duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable, int *pno );
 

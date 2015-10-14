@@ -7,7 +7,8 @@
 #include "duf_config_ref.h"
 
 #include "duf_option_find.h"
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
+#include "duf_options_table.h"
 #include "duf_option.h"
 
 #include "duf_config_util.h"

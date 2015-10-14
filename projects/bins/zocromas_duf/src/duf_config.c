@@ -16,11 +16,12 @@
 
 #include "duf_ufilter.h"
 
-#include "duf_option_extended.h"
+#include "duf_option_extended.h" /* duf_options_create_longopts_table */
+#include "duf_options_table.h"/* lo_extended_table_multi */
 #include "duf_option_names.h"
 
 #include "duf_utils_path.h"
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config.h"
 /* ###################################################################### */
@@ -28,38 +29,6 @@
 duf_config_t *duf_config = NULL;
 const duf_config_t *duf_config4trace = NULL;
 
-
-void
-duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t * xtended, int no )
-{
-  while ( xtended->o.name )
-  {
-    if ( no )
-    {
-      if ( xtended->can_no )
-      {
-        char *s = NULL;
-
-        *( *plongopts_ptr ) = xtended->o;
-        s = mas_strdup( "no-" );
-        s = mas_strcat_x( s, ( *plongopts_ptr )->name );
-        ( *plongopts_ptr )->name = s;
-        /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
-        /* ( *plongopts_ptr )->val = xtended->o.val;         */
-        ( *plongopts_ptr )++;
-      }
-    }
-    else
-    {
-      *( *plongopts_ptr ) = xtended->o;
-      ( *plongopts_ptr )->name = mas_strdup( ( *plongopts_ptr )->name );
-      /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
-      /* ( *plongopts_ptr )->val = xtended->o.val;         */
-      ( *plongopts_ptr )++;
-    }
-    xtended++;
-  }
-}
 
 duf_config_t *
 duf_cfg_create( void )
@@ -108,22 +77,8 @@ duf_cfg_create( void )
   /* cfg->cli.trace.fs += 1; */
   DUF_CFGW( cfg, cli.trace.temp ) += 1;
 
-  {
-    size_t tbsize = 0;
+  cfg->longopts_table = duf_options_create_longopts_table( lo_extended_table_multi );
 
-    tbsize = duf_longindex_extended_count( lo_extended_table_multi ) * ( sizeof( duf_longval_extended_t ) + 1 );
-    {
-      duf_option_t *longopts_ptr;
-
-      cfg->longopts_table = longopts_ptr = mas_malloc( tbsize );
-      memset( cfg->longopts_table, 0, tbsize );
-
-      for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++ )
-        duf_xtable2options( &longopts_ptr, ( *xtables )->table, 0 );
-      for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++ )
-        duf_xtable2options( &longopts_ptr, ( *xtables )->table, 1 );
-    }
-  }
   cfg->pdi = duf_pdi_create( "selected" );
   assert( cfg->puz );
   assert( cfg->longopts_table );
@@ -206,11 +161,7 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-    for ( duf_option_t * o = cfg->longopts_table; o->name; o++ )
-    {
-      mas_free( ( char * ) o->name );
-    }
-    mas_free( cfg->longopts_table );
+    duf_options_delete_longopts_table( cfg->longopts_table );
     cfg->longopts_table = NULL;
 
     mas_free( cfg->help_string );

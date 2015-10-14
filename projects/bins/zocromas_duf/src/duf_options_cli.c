@@ -5,7 +5,7 @@
 #include "duf_config_ref.h"
 
 #include "duf_option.h"
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_names.h"
 
 #include "duf_config.h"

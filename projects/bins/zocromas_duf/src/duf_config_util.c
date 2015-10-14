@@ -15,7 +15,7 @@
 
 #include "duf_ufilter.h"
 
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_names.h"
 
 #include "duf_utils_path.h"

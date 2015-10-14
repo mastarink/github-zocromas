@@ -1,20 +1,14 @@
-#include <sys/types.h>
-#include <unistd.h>
-#include <stddef.h>
-#include <stdio.h>
+#include "duf_maintenance.h"
 
 #include "duf_config_types.h"
-#include "duf_option_defs.h"
-#include "duf_cli_types.h"
-
-#include "duf_option_extended.h"
-#include "duf_option_help.h"
-#include "duf_options.h"
 
 
 /* man getopt_long */
 
 
+/* ###################################################################### */
+#include "duf_options_table.h"
+/* ###################################################################### */
 
 static const duf_longval_extended_t _lo_extended1[] = {
 /* #include "duf_optable.cdef"                   */
