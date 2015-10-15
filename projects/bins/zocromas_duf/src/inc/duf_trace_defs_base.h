@@ -1,8 +1,6 @@
 #ifndef MAS_DUF_TRACE_DEFS_BASE_H
 #  define MAS_DUF_TRACE_DEFS_BASE_H
 
-#  include "duf_config4trace_ref.h"
-#  define DUF_TRACE_CONFIG duf_config4trace
 
 
 
@@ -28,7 +26,8 @@
 /* ###################################################################### */
 /* takes ern - error index */
 #  define DUF_TRACE_WHAT_WP_BASE( _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
-			duf_trace(	DUF_TRACE_MODE_ ## _name, DUF_TRACE_SUBMODE_SIMPLE, \
+			duf_trace( \
+			    /* DUF_TRACE_MODE_ ## _name, DUF_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
 	/* level */			DUF_IF_TRACE_WHAT_C( _cfg, _what, _name ), \
 	/* minlevel */			_min, \
@@ -38,6 +37,7 @@
 	/* flags, nerr */		_flags, _ern, \
 	/* out */			DUF_TRACE_FILE_C( _cfg ), \
 			    		_prefix, \
+			    		DUF_TRACE_FUNWIDTH( _cfg ), \
 			    		__VA_ARGS__ )
 /* takes ern - error index */
 #  define      DUF_TRACE_WHAT_BASE( _cfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \

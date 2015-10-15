@@ -1,6 +1,6 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
-noinst_PROGRAMS=mtest mjtest
+noinst_PROGRAMS=mtest mjtest mtrace_test
 
 #noinst_HEADERS=....cdef ....cdef
 
@@ -95,13 +95,18 @@ zocromas_duf_SOURCES=				   \
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
 zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@
 
-mtest_SOURCES=duftest.c
+mtest_SOURCES=duftest.c 
 mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
 mtest_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@   @LIBMAGIC_LIBS@
 
 mjtest_SOURCES=dufjtest.c
 mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
 mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
+
+mtrace_test_SOURCES=duftrace_test.c duf_trace.c duf_utils_print.c
+mtrace_test_CFLAGS=@AM_CFLAGS@ -pthread
+mtrace_test_LDFLAGS=@AM_LDFLAGS@ 
+
 
 
 # bin_PROGRAMS = gui-program cli-program

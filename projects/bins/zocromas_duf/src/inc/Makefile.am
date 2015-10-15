@@ -47,6 +47,7 @@ noinst_HEADERS=duf.h \
 	duf_pdi.h duf_pdi_reinit.h duf_pdi_attach.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_action_table.h \
 	duf_print_defs.h \
+	duf_print_defs_preset.h \
 	duf_record_types.h \
 	duf_scan_types.h \
 	evsql_begfin.h evsql_selector.h \

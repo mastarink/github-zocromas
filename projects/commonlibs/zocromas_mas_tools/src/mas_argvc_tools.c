@@ -24,7 +24,8 @@ mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset )
 int
 mas_add_argvc_arg_nodup( mas_argvc_t * targ, char *arg )
 {
-  targ->argc = mas_add_argv_arg_nodup( targ->argc, &targ->argv, arg );
+  if ( arg )
+    targ->argc = mas_add_argv_arg_nodup( targ->argc, &targ->argv, arg );
   return targ->argc;
 }
 

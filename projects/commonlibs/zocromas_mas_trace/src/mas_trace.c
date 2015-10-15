@@ -8,25 +8,25 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
-#include "duf_maintenance.h"
+/* #include "mas_maintenance.h" */
 
-/* #include "duf_config_ref.h" */
-#include "duf_print_defs.h"
-#include "duf_errors.h"
+/* #include "mas_config_ref.h" */
+#include "mas_print_defs.h"
+/* #include "mas_errors.h" */
 
 
 /* ###################################################################### */
-#include "duf_utils_print.h"
-#include "duf_trace.h"
+#include "mas_utils_print.h"
+#include "mas_trace.h"
 /* ###################################################################### */
 
-/* #define DUF_NOTIMING */
+/* #define MAST_NOTIMING */
 
 #if 0
 static int
-duf_vtrace_error( duf_trace_mode_t trace_mode DUF_UNUSED, const char *name DUF_UNUSED, int level DUF_UNUSED, int ern,
-                  const char *funcid DUF_UNUSED, int linid DUF_UNUSED, unsigned flags DUF_UNUSED, int nerr DUF_UNUSED, FILE * out,
-                  const char *prefix DUF_UNUSED, const char *fmt DUF_UNUSED, va_list args DUF_UNUSED )
+mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST_UNUSED, int level MAST_UNUSED, int ern,
+                  const char *funcid MAST_UNUSED, int linid MAST_UNUSED, unsigned flags MAST_UNUSED, int nerr MAST_UNUSED, FILE * out,
+                  const char *prefix MAST_UNUSED, const char *fmt MAST_UNUSED, va_list args MAST_UNUSED )
 {
   int r_ = 0;
 
@@ -34,17 +34,17 @@ duf_vtrace_error( duf_trace_mode_t trace_mode DUF_UNUSED, const char *name DUF_U
   {
     const char *s = NULL;
 
-    s = duf_error_name_i( ern );
+    s = mas_error_name_i( ern );
     if ( ern < 0 && s )
-      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, duf_errnumber_i( ern ) );
+      MAST_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, mas_errnumber_i( ern ) );
     else
-      DUF_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
+      MAST_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
   }
   return r_;
 }
 #endif
 int
-duf_vtrace( /* duf_trace_mode_t trace_mode DUF_UNUSED,  duf_trace_submode_t trace_submode DUF_UNUSED, */const char *name, int level, int minlevel, const char *funcid,
+mas_vtrace( /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t trace_submode MAST_UNUSED, */const char *name, int level, int minlevel, const char *funcid,
             int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width,
             const char *fmt, va_list args )
 {
@@ -67,13 +67,13 @@ duf_vtrace( /* duf_trace_mode_t trace_mode DUF_UNUSED,  duf_trace_submode_t trac
    *
    assert( signum != '-' ); (* '-' means there is no config pointer *)
    *
-   * see definition of DUF_TRACE_WHAT_C at duf_trace_defs_what.h
+   * see definition of MAST_TRACE_WHAT_C at mas_trace_defs_what.h
    *
    * */
 #if 0
-  if ( trace_mode == DUF_TRACE_MODE_errorr )
+  if ( trace_mode == MAST_TRACE_MODE_errorr )
   {
-    r_ = duf_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
+    r_ = mas_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
   }
   else
 #endif
@@ -85,7 +85,7 @@ duf_vtrace( /* duf_trace_mode_t trace_mode DUF_UNUSED,  duf_trace_submode_t trac
 
     /* int highlight = 0; */
 
-#ifndef DUF_NOTIMING
+#ifndef MAST_NOTIMING
     struct timeval tv;
 #endif
 #if 0
@@ -124,40 +124,40 @@ duf_vtrace( /* duf_trace_mode_t trace_mode DUF_UNUSED,  duf_trace_submode_t trac
 
       puname = uname;
       pfuncid = funcid;
-      /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
+      /* if ( 0 == strncmp( pfuncid, "mas_", 4 ) ) */
       /*   pfuncid += 4;                           */
       for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      DUF_FPRINTFNE( 0, out, "\r%cL%-2d:%2d ", signum, level, minlevel );
-      DUF_FPRINTFNE( 0, out, "[%s%-7s%s] ", duf_fcolor_s( out, "\x1b[1;34m" ), uname, duf_fcolor_s( out, "\x1b[m" ) );
-      DUF_FPRINTFNE( 0, out, "%s%3u%s:", duf_fcolor_s( out, "\x1b[1;33m" ), linid, duf_fcolor_s( out, "\x1b[m" ) );
+      MAST_FPRINTFNE( 0, out, "\r%cL%-2d:%2d ", signum, level, minlevel );
+      MAST_FPRINTFNE( 0, out, "[%s%-7s%s] ", mas_fcolor_s( out, "\x1b[1;34m" ), uname, mas_fcolor_s( out, "\x1b[m" ) );
+      MAST_FPRINTFNE( 0, out, "%s%3u%s:", mas_fcolor_s( out, "\x1b[1;33m" ), linid, mas_fcolor_s( out, "\x1b[m" ) );
 #if 0
-      DUF_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
+      MAST_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
 #else
       {
         char xfmt[128];
 
-/* \e[1;33m101\e[1;37m:duf_all_options\e[m */
-        snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", duf_fcolor_s( out, "\x1b[1;32m" ),
-                  fun_width ? fun_width /* duf_config && duf_config->opt.output.fun_width ? duf_config->opt.output.fun_width */ : T_FN_FMTN,
-                  duf_fcolor_s( out, "\x1b[m" ) );
-        DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
+/* \e[1;33m101\e[1;37m:mas_all_options\e[m */
+        snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", mas_fcolor_s( out, "\x1b[1;32m" ),
+                  fun_width ? fun_width /* mas_config && mas_config->opt.output.fun_width ? mas_config->opt.output.fun_width */ : T_FN_FMTN,
+                  mas_fcolor_s( out, "\x1b[m" ) );
+        MAST_FPRINTFNE( 0, out, xfmt, pfuncid );
       }
 #endif
     }
-#ifndef DUF_NOTIMING
+#ifndef MAST_NOTIMING
     {
       int ry;
 
       ry = gettimeofday( &tv, NULL );
       if ( ry >= 0 )
       {
-#  ifndef DUF_NOTIMING
+#  ifndef MAST_NOTIMING
         double timec = 0.;
 #  endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-        DUF_FPRINTFNE( 0, out, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
+        MAST_FPRINTFNE( 0, out, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
       }
     }
 #endif
@@ -165,37 +165,37 @@ duf_vtrace( /* duf_trace_mode_t trace_mode DUF_UNUSED,  duf_trace_submode_t trac
     {
       static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
       if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
-        DUF_FPRINTFNE( 0, out, "\x1b[%sm ", hls[highlight] );
+        MAST_FPRINTFNE( 0, out, "\x1b[%sm ", hls[highlight] );
       else if ( highlight )
-        DUF_FPRINTFNE( 0, out, "\x1b[%sm ", hls[0] );
+        MAST_FPRINTFNE( 0, out, "\x1b[%sm ", hls[0] );
       else
-        DUF_FPRINTFNE( 0, out, " " );
+        MAST_FPRINTFNE( 0, out, " " );
     }
 #endif
-    r_ = DUF_FPRINTFNE( 0, out, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
-    r_ = DUF_VFPRINTFNE( 0, out, fmt, args );
+    r_ = MAST_FPRINTFNE( 0, out, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
+    r_ = MAST_VFPRINTFNE( 0, out, fmt, args );
 #if 0
     if ( highlight )
-      DUF_FPRINTFNE( 0, out, "\x1b[m" );
+      MAST_FPRINTFNE( 0, out, "\x1b[m" );
 #endif
-    if ( flags & DUF_TRACE_FLAG_SYSTEM )
+    if ( flags & MAST_TRACE_FLAG_SYSTEM )
     {
       char serr[1024] = "Why?";
       char *s;
 
       s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
-      DUF_FPRINTFNE( 0, out, "; errno:(%d) [%s]", nerr, s );
+      MAST_FPRINTFNE( 0, out, "; errno:(%d) [%s]", nerr, s );
     }
     if ( !noeol )
     {
-      DUF_FPRINTFNE( 0, out, "\n" );
+      MAST_FPRINTFNE( 0, out, "\n" );
     }
   }
   return r_;
 }
 
 int
-duf_trace( /* duf_trace_mode_t trace_mode,  duf_trace_submode_t trace_submode, */const char *name, int level, int minlevel, const char *funcid, int linid,
+mas_trace( /* mas_trace_mode_t trace_mode,  mas_trace_submode_t trace_submode, */const char *name, int level, int minlevel, const char *funcid, int linid,
            double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width, const char *fmt, ... )
 {
   int r_ = 0;
@@ -203,7 +203,7 @@ duf_trace( /* duf_trace_mode_t trace_mode,  duf_trace_submode_t trace_submode, *
 
   va_start( args, fmt );
   /* takes ern - error index */
-  r_ = duf_vtrace( /* trace_mode,  trace_submode, */name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, fmt, args );
+  r_ = mas_vtrace( /* trace_mode,  trace_submode, */name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, fmt, args );
   va_end( args );
   return r_;
 }
