@@ -69,13 +69,14 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
 
   mas_free( name );
   /* if ( extended )                                                                                               */
-  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), extended->o.name ); */
+  /*   DUF_TRACE( options, 5, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), extended->o.name ); */
   /* else                                                                                                          */
-  /*   DUF_TRACE( options, 0, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), name );             */
+  /*   DUF_TRACE( options, 5, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), name );             */
   if ( pr )
     *pr = rpr;
   return extended;
 }
+
 /* look xtable for cmd from string and exec if found */
 static int
 duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage,
@@ -98,9 +99,9 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
 
     if ( extended && DUF_NOERROR( r ) )
     {
-      DUF_TRACE( options, 1, "@(%s:%d) found cmd for %s", duf_error_name_i( r ), found, extended->o.name );
+      DUF_TRACE( options, 5, "@(%s:%d) found cmd for %s", duf_error_name_i( r ), found, extended->o.name );
       DORF( r, DUF_WRAPPED( duf_clarify_xcmd_full ), extended, arg, istage, xtable, no, source );
-      DUF_TRACE( options, 1, "@(%s:%d) full done for %s", duf_error_name_i( r ), found, extended->o.name );
+      DUF_TRACE( options, 5, "@(%s:%d) full done for %s", duf_error_name_i( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
     }
     else
@@ -158,7 +159,8 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
     }
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
-    DUF_TRACE( options, 3, "@@@@@%s at %s", r < 0 ? duf_error_name_i( r ) : "-", xtable->name ? xtable->name : "??" );
+    if ( DUF_IS_ERROR( r ) )
+      DUF_TRACE( options, 3, "@@%s at %s", duf_error_name_i( r ), xtable->name ? xtable->name : "??" );
   }
   /* no error if at least one found */
   if ( found )

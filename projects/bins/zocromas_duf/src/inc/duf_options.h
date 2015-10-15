@@ -7,7 +7,7 @@ const char *duf_optstage_name( duf_option_stage_t istage );
 
 int duf_show_options( const char *a0 );
 
-int duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage );
+int duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int is_interactive );
 
 
 

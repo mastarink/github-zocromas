@@ -94,11 +94,13 @@ typedef enum
   DUF_OPTION_VTYPE_A_CALL,
   DUF_OPTION_VTYPE_AA_CALL,
   DUF_OPTION_VTYPE_N_CALL,
-  DUF_OPTION_VTYPE_TN_CALL,
   DUF_OPTION_VTYPE_S_CALL,
   DUF_OPTION_VTYPE_SAS_CALL,
   DUF_OPTION_VTYPE_SAN_CALL,
-  DUF_OPTION_VTYPE_TS_CALL,
+  DUF_OPTION_VTYPE_TN1_CALL,
+  /* DUF_OPTION_VTYPE_TN2_CALL, */
+  DUF_OPTION_VTYPE_TS1_CALL,
+  DUF_OPTION_VTYPE_TS2_CALL,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
 
@@ -132,22 +134,22 @@ typedef struct
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_argcv_func_t func;
-} duf_void_argcv_funcpair_t;
+  duf_void_cargcv_func_t func;
+} duf_void_cargcv_funcpair_t;
 typedef struct
 {
-  duf_errc_argcv_func_t func;
-} duf_errc_argcv_funcpair_t;
+  duf_errc_cargcv_func_t func;
+} duf_errc_cargcv_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_arg_func_t func;
-} duf_void_arg_funcpair_t;
+  duf_void_carg_func_t func;
+} duf_void_carg_funcpair_t;
 typedef struct
 {
-  duf_errc_arg_func_t func;
-} duf_errc_arg_funcpair_t;
+  duf_errc_carg_func_t func;
+} duf_errc_carg_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
@@ -162,68 +164,82 @@ typedef struct
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_pnv_func_t func;
-} duf_void_pnv_funcpair_t;
+  duf_void_n_func_t func;
+} duf_void_n_funcpair_t;
 typedef struct
 {
-  duf_errc_pnv_func_t func;
-} duf_errc_pnv_funcpair_t;
+  duf_errc_n_func_t func;
+} duf_errc_n_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_pargcnv_func_t func;
-} duf_void_pargcnv_funcpair_t;
+  duf_void_pargcvn_func_t func;
+} duf_void_pargcvn_funcpair_t;
 typedef struct
 {
-  duf_errc_pargcnv_func_t func;
-} duf_errc_pargcnv_funcpair_t;
+  duf_errc_pargcvn_func_t func;
+} duf_errc_pargcvn_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_psv_func_t func;
-} duf_void_psv_funcpair_t;
+  duf_errc_argvn_func_t func;
+} duf_errc_argvn_funcpair_t;
+
+/********************************************************************************************/
+
 typedef struct
 {
-  duf_errc_psv_func_t func;
-} duf_errc_psv_funcpair_t;
+  duf_void_csv_func_t func;
+} duf_void_csv_funcpair_t;
+typedef struct
+{
+  duf_errc_csv_func_t func;
+} duf_errc_csv_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_psv_func_t func;
+  duf_void_csv_func_t func;
   const char *arg;
 } duf_void_psv_arg_funcpair_t;
 typedef struct
 {
-  duf_errc_psv_func_t func;
+  duf_errc_csv_func_t func;
   const char *arg;
 } duf_errc_psv_arg_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_psnv_func_t func;
+  duf_void_csn_func_t func;
   long arg;
-} duf_void_psnv_arg_funcpair_t;
+} duf_void_csn_arg_funcpair_t;
 typedef struct
 {
-  duf_errc_psnv_func_t func;
+  duf_errc_csn_func_t func;
   long arg;
-} duf_errc_psnv_arg_funcpair_t;
+} duf_errc_csn_arg_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
 {
-  duf_void_pargcsv_func_t func;
-} duf_void_pargcsv_funcpair_t;
+  duf_void_pcargcvcs_func_t func;
+} duf_void_pcargcvcs_funcpair_t;
 typedef struct
 {
-  duf_errc_pargcsv_func_t func;
-} duf_errc_pargcsv_funcpair_t;
+  duf_errc_pcargcvcs_func_t func;
+} duf_errc_pcargcvcs_funcpair_t;
 
 /********************************************************************************************/
+typedef struct
+{
+  duf_errc_cargvs_func_t func;
+} duf_errc_cargvs_funcpair_t;
+
+/********************************************************************************************/
+
 typedef struct
 {
   duf_void_void_func_t func;
@@ -252,7 +268,7 @@ typedef union
 typedef enum
 {
   DUF_OFFSET_config = 0,
-  DUF_OFFSET_depthinfo,
+  /* DUF_OFFSET_depthinfo, */
   DUF_OFFSET_ufilter,
 } duf_offset_to_t;
 typedef enum
@@ -306,15 +322,17 @@ typedef struct
       duf_errc_int_arg_funcpair_t eia;
       /* duf_int_void_funcpair_t iv; */
       duf_errc_void_funcpair_t ev;
-      duf_errc_argcv_funcpair_t a;
-      duf_errc_arg_funcpair_t aa;
+      duf_errc_cargcv_funcpair_t a;
+      duf_errc_carg_funcpair_t aa;
       duf_errc_pargcv_funcpair_t t;
-      duf_errc_pnv_funcpair_t n;
-      duf_errc_pargcnv_funcpair_t tn;
-      duf_errc_pargcsv_funcpair_t ts;
-      duf_errc_psv_funcpair_t s;
+      duf_errc_n_funcpair_t n;
+      duf_errc_argvn_funcpair_t tn1;
+      /* duf_errc_pargcvn_funcpair_t tn2; */
+      duf_errc_cargvs_funcpair_t ts1;
+      duf_errc_pcargcvcs_funcpair_t ts2;
+      duf_errc_csv_funcpair_t s;
       duf_errc_psv_arg_funcpair_t sas;
-      duf_errc_psnv_arg_funcpair_t san;
+      duf_errc_csn_arg_funcpair_t san;
       /* duf_scan_hook2_item_pair_t hi; */
     } fdesc;
   } call;

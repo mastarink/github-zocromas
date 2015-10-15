@@ -45,11 +45,11 @@ const duf_longval_extended_table_t optable_interactive = {
     /*      */ DO_OC( PDISCCB, pdi ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*      */ },
 #endif
    /* {.o = {DO_N( list-sccb ) (*           *) , DO_A_O}, DO_TF( VI_CALL, list_sccb, 0 ) (*                     *) }, */
-   {.o = {DO_Q( "list-targ" ) /*           */ , DO_A_O, DO_V( LIST_TARG )}, DO_TF( TN_CALL, list_targ ) /*                        */ },
-   {.o = {DO_Q( "add-targ" ) /*            */ , DO_A_O, DO_V( ADD_TARG )}, DO_TF( TS_CALL, add_targ ) /*                                      */ },
-   {.o = {DO_Q( "clear-targ" ) /*          */ , DO_A_O, DO_V( CLEAR_TARG )}, DO_T( TN_CALL ), DO_TN_CALL( clear_targ ) /*                       */ },
+   {.o = {DO_Q( "list-targ" ) /*        */ , DO_A_O, DO_V( LIST_TARG )}, DO_TF( TN1_CALL, list_targ1 ) /*                                    */ },
+   {.o = {DO_Q( "add-targ" ) /*         */ , DO_A_O, DO_V( ADD_TARG )}, DO_TF( TS1_CALL, add_targ1 ) /*                                      */ },
+   {.o = {DO_Q( "clear-targ" ) /*       */ , DO_A_O, DO_V( CLEAR_TARG )}, DO_T( TN1_CALL ), DO_TN1_CALL( clear_targ1 ) /*                    */ },
 
-   {.o = {DO_Q( "history" ) /*           */ , DO_A_O, DO_V( HISTORY )}, DO_TF( EV_CALL, history ) /*                        */ },
+   {.o = {DO_Q( "history" ) /*          */ , DO_A_O, DO_V( HISTORY )}, DO_TF( EV_CALL, history ) /*                                          */ },
 
    {.o = {.name = NULL}}
    }

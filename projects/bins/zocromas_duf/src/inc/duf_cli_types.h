@@ -165,7 +165,7 @@ typedef struct
   int targ_offset;
 
   duf_option_t *longopts_table;
-
+  const duf_longval_extended_table_t **xtable_multi;
   /* long limit; */
 } duf_config_cli_t;
 

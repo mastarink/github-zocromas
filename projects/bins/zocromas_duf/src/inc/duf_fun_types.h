@@ -1,37 +1,40 @@
 #ifndef MAS_DUF_FUN_TYPES_H
 #  define MAS_DUF_FUN_TYPES_H
 
-#include <mastar/tools/mas_argvc_types.h>
+#  include <mastar/tools/mas_argvc_types.h>
 
 typedef void ( *duf_void_void_func_t ) ( void );
 typedef void ( *duf_void_voidp_func_t ) ( void * );
 typedef void ( *duf_void_int_func_t ) ( int );
-typedef void ( *duf_void_argcv_func_t ) ( int, char *const * );
-typedef void ( *duf_void_arg_func_t ) ( mas_cargvc_t );
+typedef void ( *duf_void_cargcv_func_t ) ( int, char *const * );
+typedef void ( *duf_void_carg_func_t ) ( mas_cargvc_t );
 typedef void ( *duf_void_pargcv_func_t ) ( int *, char *** );
-typedef void ( *duf_void_pargcnv_func_t ) ( int *, char ***, long );
-typedef void ( *duf_void_pnv_func_t ) ( long );
-typedef void ( *duf_void_psv_func_t ) ( const char * );
-typedef void ( *duf_void_psnv_func_t ) ( const char *, long );
-typedef void ( *duf_void_ps2v_func_t ) ( const char *, const char * );
-typedef void ( *duf_void_pargcsv_func_t ) ( int *, char ***, const char * );
+typedef void ( *duf_void_pargcvn_func_t ) ( int *, char ***, long );
+typedef void ( *duf_void_n_func_t ) ( long );
+typedef void ( *duf_void_csv_func_t ) ( const char * );
+typedef void ( *duf_void_csn_func_t ) ( const char *, long );
+typedef void ( *duf_void_cscs_func_t ) ( const char *, const char * );
+typedef void ( *duf_void_pcargcvcs_func_t ) ( int *, char ***, const char * );
+typedef void ( *duf_void_cargvs_func_t ) ( mas_argvc_t *, const char * );
 
-#include "duf_error_types.h"
+#  include "duf_error_types.h"
 
-typedef duf_error_code_t ( *duf_errc_void_func_t ) ( void );
-typedef duf_error_code_t ( *duf_errc_voidp_func_t ) ( void * );
-typedef duf_error_code_t ( *duf_errc_int_func_t ) ( int );
-typedef duf_error_code_t ( *duf_errc_argcv_func_t ) ( int, char *const * );
-typedef duf_error_code_t ( *duf_errc_arg_func_t ) ( mas_cargvc_t );
-typedef duf_error_code_t ( *duf_errc_pargcv_func_t ) ( int *, char *** );
-typedef duf_error_code_t ( *duf_errc_pargcnv_func_t ) ( int *, char ***, long );
-typedef duf_error_code_t ( *duf_errc_pnv_func_t ) ( long );
-typedef duf_error_code_t ( *duf_errc_psv_func_t ) ( const char * );
-typedef duf_error_code_t ( *duf_errc_psvv_func_t ) ( const char *, const void *pv );
-typedef duf_error_code_t ( *duf_errc_psnv_func_t ) ( const char *, long );
-typedef duf_error_code_t ( *duf_errc_ps2v_func_t ) ( const char *, const char * );
-typedef duf_error_code_t ( *duf_errc_ps2vv_func_t ) ( const char *, const char *, const void *pv );
-typedef duf_error_code_t ( *duf_errc_pargcsv_func_t ) ( int *, char ***, const char * );
+typedef duf_error_code_t( *duf_errc_void_func_t ) ( void );
+typedef duf_error_code_t( *duf_errc_voidp_func_t ) ( void * );
+typedef duf_error_code_t( *duf_errc_int_func_t ) ( int );
+typedef duf_error_code_t( *duf_errc_cargcv_func_t ) ( int, char *const * );
+typedef duf_error_code_t( *duf_errc_carg_func_t ) ( mas_cargvc_t * );
+typedef duf_error_code_t( *duf_errc_pargcv_func_t ) ( int *, char *** );
+typedef duf_error_code_t( *duf_errc_pargcvn_func_t ) ( int *, char ***, long );
+typedef duf_error_code_t( *duf_errc_argvn_func_t ) ( mas_argvc_t *, long );
+typedef duf_error_code_t( *duf_errc_n_func_t ) ( long );
+typedef duf_error_code_t( *duf_errc_csv_func_t ) ( const char * );
+typedef duf_error_code_t( *duf_errc_psvv_func_t ) ( const char *, const void *pv );
+typedef duf_error_code_t( *duf_errc_csn_func_t ) ( const char *, long );
+typedef duf_error_code_t( *duf_errc_cscs_func_t ) ( const char *, const char * );
+typedef duf_error_code_t( *duf_errc_cscsv_func_t ) ( const char *, const char *, const void *pv );
+typedef duf_error_code_t( *duf_errc_pcargcvcs_func_t ) ( int *, char ***, const char * );
+typedef duf_error_code_t( *duf_errc_cargvs_func_t ) ( mas_argvc_t *, const char * );
 
 
 

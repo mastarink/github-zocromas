@@ -90,6 +90,7 @@ duf_error_name_c( duf_error_code_t c )
   if ( !found )
     pserr = "Unknown errcode";
   /* snprintf( buf, sizeof( buf ), "Unknown errcode %d", c ); */
+  assert( pserr );
   return pserr;
 }
 
@@ -101,7 +102,7 @@ duf_error_name_rev( const duf_error_event_t * rev )
 
   if ( rev )
     name = duf_error_name_c( duf_error_code_rev( rev ) );
-  return name;
+  return name ? name : "-";
 }
 
 /* get err name by error list position */

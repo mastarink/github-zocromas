@@ -765,6 +765,9 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --allow-dir              --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
               " --evaluate=set_dir_priority test/tree/ 	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20151015.101559 ============" );
+  DUF_PRINTF( 0, "  run -du --allow-sub --no-allow-sub --db-name=test_tree  --trace-mod=7  --dir-priority=-6  --evaluate=tree test/tree/ 	- %s",
+              "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

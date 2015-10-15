@@ -41,6 +41,13 @@ duf_get_config_offset( unsigned long off )
   return duf_config ? ( ( ( char * ) duf_config ) + off ) : NULL;
 }
 
+void *
+duf_get_config_puz_offset( unsigned long off )
+{
+  assert( duf_config );
+  return duf_config && duf_config->scn.puz ? ( ( ( char * ) duf_config->scn.puz ) + off ) : NULL;
+}
+
 duf_config_cli_t *
 duf_get_config_cli( void )
 {
@@ -55,6 +62,12 @@ duf_get_config_opt( void )
 }
 
 int
+duf_verbose( void )
+{
+  return duf_config ? duf_config->opt.dbg.verbose : 0;
+}
+
+int
 duf_output_level( void )
 {
   return duf_config ? duf_config->opt.output.level : 0;
@@ -64,6 +77,12 @@ FILE *
 duf_output_file( void )
 {
   return duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout;
+}
+
+char 
+duf_option_delimiter( void )
+{
+  return duf_config ? duf_config->opt.option_delimiter : ':';
 }
 
 static const char *

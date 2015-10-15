@@ -8,13 +8,13 @@
 
 
 #  ifdef MAS_TRACING
-#    define DUF_TRACE_C( _cfg, ... )				DUF_TRACE_WHAT_C( _cfg,			opt.trace,	__VA_ARGS__ )
+#    define DUF_TRACE_C( _cfg, ... )				DUF_TRACE_WHAT_C( _cfg,			DUF_TRACE_AT_CFG,	__VA_ARGS__ )
 #    define DUF_TRACE( ... )					DUF_TRACE_C(      DUF_TRACE_CONFIG, 			__VA_ARGS__ )
 #  else
 #    define DUF_TRACE( ... )
 #  endif
 
-#  define DUF_TRACE_WP_C( _cfg, _prefix, ... )			DUF_TRACE_WHAT_WP_C( _cfg, _prefix,	opt.trace,	__VA_ARGS__ )
+#  define DUF_TRACE_WP_C( _cfg, _prefix, ... )			DUF_TRACE_WHAT_WP_C( _cfg, _prefix,	DUF_TRACE_AT_CFG,	__VA_ARGS__ )
 #  define DUF_TRACE_WP( ... )					DUF_TRACE_WP_C(      DUF_TRACE_CONFIG, 			__VA_ARGS__ )
 
 #  define DUF_DEBUG(_lev, ...)  if ( DUF_IF_DEBUGN( _lev ) ) {  __VA_ARGS__ ; }

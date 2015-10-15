@@ -34,7 +34,8 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
   DEBUG_STARTR( r );
 
   if ( !delim )
-    delim = DUF_CONFIGG( opt.option_delimiter );
+    /* delim = DUF_CONFIGG( opt.option_delimiter ); */
+    delim = duf_option_delimiter();
   if ( !delim )
     delim = ':';
   if ( cmdstr && *cmdstr == ':' )

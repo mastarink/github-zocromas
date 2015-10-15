@@ -70,7 +70,7 @@ duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
   return doit;
 }
 
-duf_error_code_t
+static duf_error_code_t
 duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
 {
   DEBUG_STARTR( r );
@@ -88,8 +88,8 @@ duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
-duf_option_fs_each2( const char *arg, duf_errc_ps2vv_func_t fun, const void *pv )
+static duf_error_code_t
+duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv )
 {
   DEBUG_STARTR( r );
   mas_argvc_t targ = { 0 };
@@ -127,7 +127,7 @@ duf_option_$_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
   DEBUG_ENDR( r );
 }
 
-int
+static int
 duf_option_fs_rmfile( const char *fn, const void *pv )
 {
   int ry = 0;
@@ -169,7 +169,7 @@ duf_option_$_fs_rmfile( const char *fn, const void *pv )
   DEBUG_ENDR( r );
 }
 
-int
+static int
 duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_UNUSED, struct stat *pstfrom, struct stat *pstto DUF_UNUSED )
 {
   int ry = 0;
@@ -312,7 +312,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
   return ry;
 }
 
-int
+static int
 duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
 {
   struct stat stfrom = { 0 };
@@ -366,8 +366,8 @@ duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
-duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv  DUF_UNUSED)
+static duf_error_code_t
+duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );

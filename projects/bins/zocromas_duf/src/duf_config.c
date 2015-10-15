@@ -12,7 +12,9 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_config_util.h"
+
 #include "duf_cli.h"
+#include "duf_options_config.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
@@ -80,11 +82,9 @@ duf_cfg_create( void )
   /* cfg->opt.trace.fs += 1; */
   DUF_CFGW( cfg, opt.trace.temp ) += 1;
 
-  cfg->cli.longopts_table = duf_options_create_longopts_table( lo_extended_table_multi );
-
   cfg->scn.pdi = duf_pdi_create( "selected" );
   assert( cfg->scn.puz );
-  assert( cfg->cli.longopts_table );
+  /* assert( cfg->cli.longopts_table ); */
 
   DEBUG_END(  );
   return cfg;
@@ -166,8 +166,8 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-    duf_options_delete_longopts_table( cfg->cli.longopts_table );
-    cfg->cli.longopts_table = NULL;
+    /* duf_options_delete_longopts_table( cfg->cli.longopts_table ); */
+    /* cfg->cli.longopts_table = NULL;                               */
 
     mas_free( cfg->help_string );
     cfg->help_string = NULL;
@@ -299,7 +299,8 @@ duf_config_show( void )
     DUF_FPRINTF( 0, stderr, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
-    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] );
+    /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
+    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
 
   DEBUG_ENDR( r );
 }

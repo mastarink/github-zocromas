@@ -7,6 +7,7 @@
 #include <readline/history.h>
 
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_argvc_tools.h>
 
 #include "duf_maintenance.h"
 
@@ -57,7 +58,21 @@ duf_option_$_history( void )
 }
 
 duf_error_code_t
-duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
+duf_option_$_list_targ1( mas_argvc_t * targ, long n )
+{
+  DEBUG_STARTR( r );
+
+  if ( targ->argc && targ->argv )
+    for ( int ia = 0; ia < targ->argc; ia++ )
+    {
+      DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targ->argv[ia] );
+    }
+
+  DEBUG_ENDR( r );
+}
+
+duf_error_code_t
+duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
 
@@ -77,18 +92,42 @@ duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
 }
 
 duf_error_code_t
-duf_option_$_clear_targ( int *ptargc, char ***ptargv, long n )
+duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
+{
+  DEBUG_STARTR( r );
+#if 0
+  if ( targ->argc && targ->argv && n == 0 )
+    targ->argc = mas_argv_delete( targ->argc, targ->argv );
+  targ->argv = NULL;
+#else
+  if ( n == 0 && targ->argc && targ->argv )
+    mas_argvc_delete( targ );
+#endif
+  DEBUG_ENDR( r );
+}
+
+duf_error_code_t
+duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
 
   if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
-
+  *ptargv = NULL;
   DEBUG_ENDR( r );
 }
 
 duf_error_code_t
-duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
+duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
+{
+  DEBUG_STARTR( r );
+
+  mas_add_argvc_arg( targ, s );
+  DEBUG_ENDR( r );
+}
+
+duf_error_code_t
+duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
 {
   DEBUG_STARTR( r );
 
@@ -97,6 +136,7 @@ duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
 
   DEBUG_ENDR( r );
 }
+
 
 duf_error_code_t
 duf_option_$_echo( const char *arg )

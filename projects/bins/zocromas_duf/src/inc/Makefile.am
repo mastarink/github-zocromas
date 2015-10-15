@@ -40,7 +40,7 @@ noinst_HEADERS=duf.h \
 	duf_option_extended.h duf_option_sccb.h duf_option_fs.h duf_option_fs_types.h duf_option_find.h duf_options_table.h \
 	duf_option.h duf_option_old.h  duf_option_tmpdb.h duf_option_typed.h duf_option_typed_defs.h duf_option_help.h duf_option_misc.h \
 	duf_option_names.h \
-	duf_options_enum.h duf_options.h duf_option_types.h \
+	duf_options_enum.h duf_options_config.h duf_options.h duf_option_types.h \
 	duf_path2db.h \
 	duf_path2dirid.h    \
 	duf_tags.h \
@@ -71,6 +71,7 @@ noinst_HEADERS=duf.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
 	duf_trace_defs.h \
 	duf_trace_defs_if.h \
+	duf_trace_defs_preset.h \
 	duf_trace_defs_base.h \
 	duf_trace_defs_what.h \
 	duf_trace_defs_sys.h \

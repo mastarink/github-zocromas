@@ -15,6 +15,7 @@ tab sfind duf_levinfo_types.h
 tab sfind duf_trace_types.h
 sfind duf_trace_defs.h
 sfind duf_trace_defs_if.h
+sfind duf_trace_defs_preset.h
 sfind duf_trace_defs_base.h
 sfind duf_trace_defs_what.h
 sfind duf_trace_defs_sys.h

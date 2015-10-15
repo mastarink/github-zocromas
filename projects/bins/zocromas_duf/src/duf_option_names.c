@@ -8,53 +8,14 @@
 
 
 /* #include "duf_option_extended.h" */
-#include "duf_options_table.h"
+/* #include "duf_options_table.h" */
 
+#include "duf_options_config.h"
 /* ###################################################################### */
 #include "duf_option_names.h"
 /* ###################################################################### */
 
-char *
-duf_cli_option_shorts( const duf_longval_extended_table_t ** xtables )
-{
-  const duf_longval_extended_table_t *xtable;
-  char shorts[1024 * 4] = "";
-  char *p = shorts;
 
-  while ( ( xtable = *xtables++ ) )
-  {
-    const duf_longval_extended_t *xtended;
-
-    xtended = xtable->table;
-    while ( xtended->o.name )
-    {
-      if ( xtended->o.val < 0xFF )
-      {
-        /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
-        if ( !strchr( shorts, ( char ) xtended->o.val ) )
-        {
-          *p++ = ( char ) xtended->o.val;
-          if ( xtended->o.has_arg == no_argument );
-          else if ( xtended->o.has_arg == required_argument )
-            *p++ = ':';
-          else if ( xtended->o.has_arg == optional_argument )
-          {
-            /* *p++ = ':'; */
-            /* *p++ = ':'; */
-          }
-          else
-          {
-            *p++ = ':';
-            *p++ = ':';
-          }
-        }
-        *p = 0;
-      }
-      xtended++;
-    }
-  }
-  return *shorts ? mas_strdup( shorts ) : NULL;
-}
 
 char *
 duf_option_names_d( duf_option_code_t codeval, const char *delim )
@@ -64,7 +25,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
   char *names = NULL;
   int cnt = 0;
 
-  xtables = lo_extended_table_multi;
+  xtables = duf_cli_options_config()->xtable_multi;
 
   while ( ( xtable = *xtables++ ) )
   {

@@ -24,13 +24,16 @@ mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset )
 int
 mas_add_argvc_arg_nodup( mas_argvc_t * targ, char *arg )
 {
-  return ( targ->argc = mas_add_argv_arg_nodup( targ->argc, &targ->argv, arg ) );
+  targ->argc = mas_add_argv_arg_nodup( targ->argc, &targ->argv, arg );
+  return targ->argc;
 }
 
 int
 mas_add_argvc_arg( mas_argvc_t * targ, const char *arg )
 {
-  return arg ? ( targ->argc = mas_add_argvc_arg_nodup( targ, mas_strdup( arg ) ) ) : targ->argc;
+  if ( arg )
+    targ->argc = mas_add_argvc_arg_nodup( targ, mas_strdup( arg ) );
+  return targ->argc;
 }
 
 int
@@ -42,7 +45,9 @@ mas_add_argvc_cmdline( mas_argvc_t * targ, const char *cmdline, size_t len )
 int
 mas_del_argvc( mas_argvc_t * targ, int from_a )
 {
-  return ( targ->argc = mas_del_argv( targ->argc, targ->argv, from_a ) );
+  targ->argc = mas_del_argv( targ->argc, targ->argv, from_a );
+  targ->argv = NULL;
+  return targ->argc;
 }
 
 int

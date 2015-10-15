@@ -11,7 +11,9 @@
 /*
  * DUF_CONFIGG( cli.targ.argc )
  * DUF_CONFIGG( cli.targ_offset )
+ * DUF_CONFIGGS( config_dir )
  */
+#include "duf_options_config.h"
 
 #include "duf_utils_path.h"
 
@@ -55,11 +57,11 @@ duf_infilepath( const char *filepath, int *pry )
 #if 0
   mas_free( DUF_CONFIGG( config_file_path ) );
   DUF_CONFIGWS( config_file_path, mas_strdup( filepath ) );
-  DUF_TRACE( options, 0, "opened conf file %s %s", DUF_CONFIGG( config_file_path ), f ? "Ok" : "FAIL" );
+  DUF_TRACE( options, 3, "opened conf file %s %s", DUF_CONFIGG( config_file_path ), f ? "Ok" : "FAIL" );
 #else
   mas_free( config_file_path );
   config_file_path = mas_strdup( filepath );
-  DUF_TRACE( options, 0, "opened conf file %s %s", config_file_path, f ? "Ok" : "FAIL" );
+  DUF_TRACE( options, 5, "opened conf file %s %s", config_file_path, f ? "Ok" : "FAIL" );
 #endif
   if ( pry )
     *pry = f ? 0 : -errno;
@@ -123,7 +125,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
     if ( s )
     {
       s = mas_chomp( s );
-      DUF_TRACE( options, 1, "@@@@read cmd '%s'", s );
+      DUF_TRACE( options, 5, "@@@@read cmd '%s'", s );
       if ( s && ( ( *s == '#' ) || !*s ) )
         continue;
       /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
@@ -167,17 +169,17 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath 
 
   f = duf_infilepath( filepath, &ry );
 
-  DUF_TRACE( options, 0, "to read config file %s", filepath );
+  DUF_TRACE( options, 5, "to read config file %s", filepath );
   if ( f )
   {
     DOR( r, duf_infile_options_at_stream( istage, f, DUF_OPTION_SOURCE_FILE ) );
 
     fclose( f );
-    DUF_TRACE( options, 0, "read config file %s", filepath );
+    DUF_TRACE( options, 5, "read config file %s", filepath );
   }
   else
   {
-    DUF_TRACE( options, 0, "fail to read config file %s", filepath );
+    DUF_TRACE( options, 5, "fail to read config file %s", filepath );
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPEN ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN, "file '%s'", filepath );
     /* assert(0); */
@@ -203,7 +205,7 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
   if ( !f && v > 0 )
   {
     cfgdir = getenv( "HOME" );
-    DUF_TRACE( options, 0, "getting variable HOME value for config path (secondary) : %s", cfgdir );
+    DUF_TRACE( options, 5, "getting variable HOME value for config path (secondary) : %s", cfgdir );
     f = duf_infile( 1, cfgdir, filename, &rt2 );
     if ( f )
       DUF_CLEAR_ERROR( rt1, DUF_ERROR_OPEN );
@@ -279,7 +281,7 @@ duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int option
 
   filename = mas_strdup( bfilename );
   filename = mas_strcat_x( filename, ".conf" );
-  DUF_TRACE( options, 0, "@@@@(%d) source: infile(%s)", istage, filename );
+  DUF_TRACE( options, 1, "@@@@@@@(%d) source: infile(%s)", istage, filename );
 
   DOR( r, duf_infile_options_at_cfgfile( istage, filename, optional ) );
 
@@ -369,7 +371,7 @@ duf_stdin_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
   static int done = 0;
 
-  DUF_TRACE( options, 0, "@@@@(%d) source: stdin", istage );
+  DUF_TRACE( options, 1, "@@@@@@@(%d) source: stdin", istage );
   if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  )
   {
     if ( !done )
@@ -395,13 +397,15 @@ duf_indirect_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( options, 0, "@@@@(%d) source: indirect", istage );
-  DUF_TRACE( options, 2, ">> targc:%d cli.targ_offset:%d", DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ_offset ) );
-  for ( int ia = 0; ia < DUF_CONFIGG( cli.targ_offset ); ia++ )
+  DUF_TRACE( options, 1, "@@@@@@@(%d) source: indirect", istage );
+  DUF_TRACE( options, 5, ">> targc:%d cli.targ_offset:%d", DUF_CONFIGG( cli.targ.argc ), duf_cli_options_get_targ_offset(  ) );
+  /* for ( int ia = 0; ia < DUF_CONFIGG( cli.targ_offset ); ia++ ) */
+  for ( int ia = 0; ia < duf_cli_options_get_targ_offset(  ); ia++ )
   {
     const char *cf;
 
-    cf = DUF_CONFIGG( cli.targ.argv[ia] );
+    /* cf = DUF_CONFIGG( cli.targ.argv[ia] ); */
+    cf = duf_cli_options_get_targi( ia );
     DUF_TRACE( temp, 2, "%s>> targv[%d]='%s'", duf_optstage_name( istage ), ia, cf );
     if ( cf && *cf == '@' )
     {
