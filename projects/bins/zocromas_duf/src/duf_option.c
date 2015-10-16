@@ -13,9 +13,7 @@
 #include "duf_option_extended.h"
 #include "duf_option_typed.h"
 
-#if 0
-#include "duf_option_old.h"
-#endif
+/* #include "duf_option_old.h" */
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */

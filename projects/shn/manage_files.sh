@@ -55,8 +55,8 @@ function manage_makefiles_am ()
 {
 # 159 .h + 139 .c = 298
   local -a files
-  local -a edfiles
-  local -A in_make in_path in_edit in_any
+  local -a edfiles incfiles
+  local -iA in_make in_path in_edit in_include in_any
   local fn fnf
   local -i cnt=0 cntc=0 cnth=0
   local -i cntf=0 cntfc=0 cntfh=0
@@ -95,6 +95,13 @@ function manage_makefiles_am ()
     in_edit[$fn]=1
     in_any[$fn]+=1
   done
+# incfiles=($(grep  -hr --inc='*.c' '^\s*#include\s\+"[a-z_]\+\.h"' src/ | sed 's@^\s*#include\s\+"\([a-z_]\+\.h\).*$"@\1@' | sort | uniq))
+  incfiles=($(grep  -hr --inc='*.[ch]' '^\s*#\s*include\s\+"[a-z0-9_]\+\.h"' src/ | sed -ne 's@^\s*#\s*include\s\+\"\([a-z0-9_]\+\.h\)\".*$@\1@p' | sort | uniq))
+  for fn in ${incfiles[@]} ; do
+    in_include[$fn]=1
+    in_any[$fn]+=1
+#   echo "$fn" >&2
+  done
   echo "edit:${#edfiles[@]} :: ${#in_edit[@]}" >&2
   echo "cntc:$cntc; cnth:$cnth; cnt:$cnt" >&2
   echo "cntfc:$cntfc; cntfh:$cntfh; cntf:$cntf" >&2
@@ -102,8 +109,12 @@ function manage_makefiles_am ()
   echo "in_path:${#in_path[@]}" >&2
   echo "in_any:${#in_any[@]}" >&2
   for fn in ${!in_any[@]} ; do
-    if ! [[ ${in_make[$fn]} ]] || ! [[ ${in_path[$fn]} ]] || ! [[ ${in_edit[$fn]} ]] ; then
-      echo "make:[${in_make[$fn]:-0}] path:[${in_path[$fn]:-0}] edit:[${in_edit[$fn]:-0}] -- $fn"
+    if  ( ! [[ ${in_make[$fn]} ]] || ! [[ ${in_path[$fn]} ]] || ! [[ ${in_edit[$fn]} ]]  || ( [[ $fn == *.h ]] && ! [[ ${in_include[$fn]} ]] ) ) ; then
+      if [[ ${in_make[$fn]:-0} -gt 0 ]]    ; then printf "make:%8d  " ${in_make[$fn]:-0} ; else printf "               " ; fi
+      if [[ ${in_path[$fn]:-0} -gt 0 ]]    ; then printf "path:%8d  " ${in_path[$fn]:-0} ; else printf "               " ; fi
+      if [[ ${in_edit[$fn]:-0} -gt 0 ]]    ; then printf "edit:%8d  " ${in_edit[$fn]:-0} ; else printf "               " ; fi
+      if [[ ${in_include[$fn]:-0} -gt 0 ]] ; then printf "include:%5d  " ${in_include[$fn]:-0} ; else printf "               " ; fi
+      echo " -- $fn"
     fi
   done
 }

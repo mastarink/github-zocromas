@@ -14,7 +14,6 @@ noinst_HEADERS=duf.h \
 	duf_context.h \
 	duf_dbg.h \
 	duf_debug_defs.h \
-	duf_def.h \
 	duf_defs.h \
 	duf_dh.h \
 	duf_dirent.h \
@@ -71,15 +70,10 @@ noinst_HEADERS=duf.h \
 	duf_sql_prepared.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
 	duf_tracen_defs.h \
-	duf_trace_defs_if.h \
 	duf_tracen_defs_preset.h \
-	duf_trace_defs_base.h \
-	duf_trace_defs_what.h \
-	duf_trace_defs_sys.h \
 	duf_start_end.h \
 	duf_errorn_defs.h \
 	duf_dodefs.h \
-	duf_trace_types.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \
 	duf_sys_wrap.h duf_utils.h \

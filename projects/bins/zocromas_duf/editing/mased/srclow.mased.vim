@@ -52,7 +52,7 @@ sfind duf_fileinfo.h
 tab sfind duf_dbg.c
 sfind duf_dbg.h
 
-tab sfind duf_def.h
+" tab sfind duf_def.h
 
 tab sfind duftest.c
 sfind dufjtest.c
