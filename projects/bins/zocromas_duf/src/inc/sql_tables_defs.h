@@ -1,5 +1,5 @@
-#ifndef SQL_TABLES_DEFS_H
-#  define SQL_TABLES_DEFS_H
+#ifndef MAS_SQL_TABLES_DEFS_H
+#  define MAS_SQL_TABLES_DEFS_H
 
 
 

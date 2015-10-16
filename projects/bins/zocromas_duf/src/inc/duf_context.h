@@ -1,5 +1,5 @@
-#ifndef DUF_CONTEXT_H
-#  define DUF_CONTEXT_H
+#ifndef MAS_DUF_CONTEXT_H
+#  define MAS_DUF_CONTEXT_H
 
 #include "duf_levinfo_types.h"
 #include "duf_fun_types.h"

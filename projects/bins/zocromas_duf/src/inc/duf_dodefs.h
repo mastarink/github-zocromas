@@ -1,5 +1,5 @@
-#ifndef DUF_DODEFS_H
-#  define DUF_DODEFS_H
+#ifndef MAS_DUF_DODEFS_H
+#  define MAS_DUF_DODEFS_H
 
 #  ifdef DUF_T_NOIF
 /* DUF_TEST_R : takes duf_error_index_t! */

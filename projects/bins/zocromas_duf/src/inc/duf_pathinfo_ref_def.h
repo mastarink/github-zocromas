@@ -1,5 +1,5 @@
-#ifndef DUF_PATHINFO_REF_DEF_H
-#  define DUF_PATHINFO_REF_DEF_H
+#ifndef MAS_DUF_PATHINFO_REF_DEF_H
+#  define MAS_DUF_PATHINFO_REF_DEF_H
 
 
 #  define DUF_PATHINFO_F_PLUS(_typ, _name, _ref1, _ref2) _typ duf_pi_ ## _name(  duf_pathinfo_t * pi ) \

@@ -6,11 +6,8 @@
 
 #include "duf_maintenance_options.h"
 
-/* #include "duf_config_ref.h"   */
 #include "duf_config_defs.h"
 /*
- * DUF_CONFIGG( cli.targ.argc )
- * DUF_CONFIGG( cli.targ_offset )
  * DUF_CONFIGGS( config_dir )
  */
 #include "duf_options_config.h"
@@ -398,7 +395,7 @@ duf_indirect_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 1, "@@@@@@@(%d) source: indirect", istage );
-  DUF_TRACE( options, 5, ">> targc:%d cli.targ_offset:%d", DUF_CONFIGG( cli.targ.argc ), duf_cli_options_get_targ_offset(  ) );
+  DUF_TRACE( options, 5, ">> targc:%d cli.targ_offset:%d", /* DUF_CONFIGG( cli.targ.argc ) */ duf_cli_options_get_targc(), duf_cli_options_get_targ_offset(  ) );
   /* for ( int ia = 0; ia < DUF_CONFIGG( cli.targ_offset ); ia++ ) */
   for ( int ia = 0; ia < duf_cli_options_get_targ_offset(  ); ia++ )
   {

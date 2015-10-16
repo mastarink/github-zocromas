@@ -1,5 +1,5 @@
-#ifndef DUF_FILEINFO_H
-#  define DUF_FILEINFO_H
+#ifndef MAS_DUF_FILEINFO_H
+#  define MAS_DUF_FILEINFO_H
 
 #  include "duf_fileinfo_types.h"
 

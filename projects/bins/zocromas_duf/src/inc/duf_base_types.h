@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_BASR_TYPES_H
-#  define MAS_DUF_BASR_TYPES_H
+#ifndef MAS_DUF_BASE_TYPES_H
+#  define MAS_DUF_BASE_TYPES_H
 
 typedef unsigned char boolean;
 typedef boolean bool;

@@ -1,5 +1,5 @@
-#ifndef DUF_MOD_DEFS_H
-#  define DUF_MOD_DEFS_H
+#ifndef MAS_DUF_MOD_DEFS_H
+#  define MAS_DUF_MOD_DEFS_H
 
 #  define DUF_MOD_DECLARE_ALL_FUNCS( _modname ) \
 static int _modname ## _init(              duf_stmnt_t * pstmt, duf_depthinfo_t * pdi ); \

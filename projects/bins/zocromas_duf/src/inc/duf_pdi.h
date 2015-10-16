@@ -1,5 +1,5 @@
-#ifndef DUF_PDI_H
-#  define DUF_PDI_H
+#ifndef MAS_DUF_PDI_H
+#  define MAS_DUF_PDI_H
 
 #  include "duf_levinfo_types.h"
 

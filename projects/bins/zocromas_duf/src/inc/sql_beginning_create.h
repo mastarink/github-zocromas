@@ -1,5 +1,5 @@
-#ifndef SQL_BEGINNING_CREATE_H
-#  define SQL_BEGINNING_CREATE_H
+#ifndef MAS_SQL_BEGINNING_CREATE_H
+#  define MAS_SQL_BEGINNING_CREATE_H
 
 
 #include "sql_beginning_types.h"

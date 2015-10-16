@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_SQL2_H
-#  define MAS_DUF_SQL2_H
+#ifndef MAS_DUF_SQL_POSITIONAL_H
+#  define MAS_DUF_SQL_POSITIONAL_H
 
 
 #  include "duf_sql_types.h"

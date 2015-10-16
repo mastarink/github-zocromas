@@ -1,5 +1,5 @@
-#ifndef DUF_SCCBH_SHORTCUTS_H
-#  define DUF_SCCBH_SHORTCUTS_H
+#ifndef MAS_DUF_SCCBH_SHORTCUTS_H
+#  define MAS_DUF_SCCBH_SHORTCUTS_H
 
 #  define PDI (sccbh->pdi)
 #  define PDICLONED (sccbh->pdi_cloned)

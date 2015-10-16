@@ -1,5 +1,5 @@
-#ifndef DUF_OPTION_TYPED_H
-#  define DUF_OPTION_TYPED_H
+#ifndef MAS_DUF_OPTION_TYPED_H
+#  define MAS_DUF_OPTION_TYPED_H
 
 
 

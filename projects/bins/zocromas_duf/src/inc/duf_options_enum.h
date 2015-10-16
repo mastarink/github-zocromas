@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTIONS_DEF_H
-#  define MAS_DUF_OPTIONS_DEF_H
+#ifndef MAS_DUF_OPTIONS_ENUM_H
+#  define MAS_DUF_OPTIONS_ENUM_H
 
 #  define DUF_CONFIG_DIR_FROM_ENV "MSHDIRS_CONF_DIR"
 #  define DUF_CONFIG_FILE_NAME "zocromas_duf"

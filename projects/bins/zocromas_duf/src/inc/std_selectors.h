@@ -1,5 +1,5 @@
-#ifndef STD_SELECTORS_H
-#  define STD_SELECTORS_H
+#ifndef MAS_STD_SELECTORS_H
+#  define MAS_STD_SELECTORS_H
 
 extern duf_selector_t *all_selectors;
 

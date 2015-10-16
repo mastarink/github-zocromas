@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_SQL_H
-#  define MAS_DUF_SQ_ERROR_H
+#ifndef MAS_DUF_SQL_ERROR_H
+#  define MAS_DUF_SQL_ERROR_H
 
 
 int duf_r2sqlite_error_code( int rt );

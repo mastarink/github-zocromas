@@ -4,10 +4,7 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_utils.h"
-
-/* #include "duf_config_ref.h" */
-/* #include "duf_config_defs.h" */
+#include "duf_utils.h" /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_option_defs.h"
 #include "duf_option_find.h"

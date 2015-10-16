@@ -1,5 +1,5 @@
-#ifndef DUF_PDI_SCCB_EVAL_H
-#  define DUF_PDI_SCCB_EVAL_H
+#ifndef MAS_DUF_PDI_SCCB_EVAL_H
+#  define MAS_DUF_PDI_SCCB_EVAL_H
 
 /* * see duf_sccb_eval.h for names explanation * */
 

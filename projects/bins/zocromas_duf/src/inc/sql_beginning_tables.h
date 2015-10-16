@@ -1,5 +1,5 @@
-#ifndef SQL_BEGINNING_TABLES_H
-#  define SQL_BEGINNING_TABLES_H
+#ifndef MAS_SQL_BEGINNING_TABLES_H
+#  define MAS_SQL_BEGINNING_TABLES_H
 
 
 #  include "sql_tables_defs.h"

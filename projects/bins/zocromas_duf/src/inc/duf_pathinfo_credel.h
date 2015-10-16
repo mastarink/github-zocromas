@@ -1,5 +1,5 @@
-#ifndef DUF_PATHINFO_CREDEL_H
-#  define DUF_PATHINFO_CREDEL_H
+#ifndef MAS_DUF_PATHINFO_CREDEL_H
+#  define MAS_DUF_PATHINFO_CREDEL_H
 
 int duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count );
 void duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc );

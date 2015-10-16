@@ -1,5 +1,5 @@
-#ifndef DUF_SCCB_EVAL_H
-#  define DUF_SCCB_EVAL_H
+#ifndef MAS_DUF_SCCB_EVAL_H
+#  define MAS_DUF_SCCB_EVAL_H
 
 /* fragment of func.name means:
  *

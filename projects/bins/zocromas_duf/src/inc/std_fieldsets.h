@@ -1,5 +1,5 @@
-#ifndef STD_FIELDSETS_H
-#  define STD_FIELDSETS_H
+#ifndef MAS_STD_FIELDSETS_H
+#  define MAS_STD_FIELDSETS_H
 
 extern duf_fieldset_t *all_fieldsets;
 

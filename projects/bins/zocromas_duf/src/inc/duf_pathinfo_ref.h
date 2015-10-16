@@ -1,5 +1,5 @@
-#ifndef DUF_PATHINFO_REF_H
-#  define DUF_PATHINFO_REF_H
+#ifndef MAS_DUF_PATHINFO_REF_H
+#  define MAS_DUF_PATHINFO_REF_H
 
 #  include "duf_levinfo_types.h"
 

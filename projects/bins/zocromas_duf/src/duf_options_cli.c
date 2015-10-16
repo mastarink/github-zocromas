@@ -2,23 +2,9 @@
 
 #include "duf_maintenance_options.h"
 
-/* #include "duf_config_ref.h" */
 #include "duf_options_config.h"
-/* #include "duf_config_defs.h" */
-/*
- * DUF_CONFIGG( cli.carg.argv )
- * DUF_CONFIGG( cli.carg )
- * DUF_CONFIGG( opt.dbg.verbose )
- * DUF_CONFIGG( cli.longopts_table )
- * DUF_CONFIGA( cli.targ )
- * DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) )
- */
-
 #include "duf_option.h"
-#include "duf_option_names.h"
-#include "duf_options_config.h"
 
-#include "duf_options.h"
 /* ###################################################################### */
 #include "duf_options_string.h"
 #include "duf_options_cli.h"

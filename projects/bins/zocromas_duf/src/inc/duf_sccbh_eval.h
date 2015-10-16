@@ -1,5 +1,5 @@
-#ifndef DUF_SCCBH_EVAL_H
-#  define DUF_SCCBH_EVAL_H
+#ifndef MAS_DUF_SCCBH_EVAL_H
+#  define MAS_DUF_SCCBH_EVAL_H
 
 #  include "duf_debug_defs.h"
 

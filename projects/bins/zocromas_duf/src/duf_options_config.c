@@ -4,11 +4,6 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_status_ref.h"
-
-
-/* #include "duf_option_extended.h" */
-/* #include "duf_options_table.h" */
 #include "duf_option_extended.h"
 
 /* ###################################################################### */

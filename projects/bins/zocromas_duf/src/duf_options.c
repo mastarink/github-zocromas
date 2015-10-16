@@ -1,24 +1,14 @@
 #include <string.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
-
-
 
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance_options.h"
 
-
-/* #include "duf_config_defs.h" */
-
 #include "duf_options_file.h"
 #include "duf_options_env.h"
 #include "duf_options_cli.h"
 #include "duf_options_interactive.h"
-
-#include "duf_option_defs.h"
 
 #include "duf_option_names.h"
 

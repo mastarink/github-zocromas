@@ -1,5 +1,5 @@
-#ifndef SQL_BEGINNING_TYPES_H
-#  define SQL_BEGINNING_TYPES_H
+#ifndef MAS_SQL_BEGINNING_TYPES_H
+#  define MAS_SQL_BEGINNING_TYPES_H
 
 
 typedef struct

@@ -1,5 +1,5 @@
-#ifndef DUF_PDI_CREDEL_H
-#  define DUF_PDI_CREDEL_H
+#ifndef MAS_DUF_PDI_CREDEL_H
+#  define MAS_DUF_PDI_CREDEL_H
 
 #  include "duf_levinfo_types.h"
 

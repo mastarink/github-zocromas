@@ -1,5 +1,5 @@
-#ifndef STD_MOD_SETS_H
-#  define STD_MOD_SETS_H
+#ifndef MAS_STD_MOD_SETS_H
+#  define MAS_STD_MOD_SETS_H
 
 #  if 0
 extern duf_sql_set_t std_leaf_set;

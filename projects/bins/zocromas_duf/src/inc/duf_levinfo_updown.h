@@ -1,5 +1,5 @@
-#ifndef DUF_LEVINFO_UPDOWN_H
-#  define DUF_LEVINFO_UPDOWN_H
+#ifndef MAS_DUF_LEVINFO_UPDOWN_H
+#  define MAS_DUF_LEVINFO_UPDOWN_H
 
 #  include "duf_levinfo_types.h"
 

@@ -1,5 +1,5 @@
-#ifndef DUF_H
-#  define DUF_H
+#ifndef MAS_DUF_H
+#  define MAS_DUF_H
 
 
 

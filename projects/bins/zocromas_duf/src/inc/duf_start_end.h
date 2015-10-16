@@ -1,5 +1,5 @@
-#ifndef DUF_START_END_H
-#  define DUF_START_END_H
+#ifndef MAS_DUF_START_END_H
+#  define MAS_DUF_START_END_H
 
 /* DUF_TEST_R : takes duf_error_index_t! */
 #  define DUF_START() {

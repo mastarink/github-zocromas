@@ -1,5 +1,5 @@
-#ifndef DUF_LEVINFO_REF_DEF_H
-#  define DUF_LEVINFO_REF_DEF_H
+#ifndef MAS_DUF_LEVINFO_REF_DEF_H
+#  define MAS_DUF_LEVINFO_REF_DEF_H
 
 
 #  define DUF_LEVINFO_F_PLUS(_typ, _name, _ref1, _ref2) _typ duf_levinfo_ ## _name(  duf_depthinfo_t * pdi ) \

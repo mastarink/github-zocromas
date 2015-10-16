@@ -1,5 +1,5 @@
-#ifndef DUF_OPTION_H
-#  define DUF_OPTION_H
+#ifndef MAS_DUF_OPTION_H
+#  define MAS_DUF_OPTION_H
 
 
 int duf_clarify_opt( duf_option_code_t opt, int longindex, const char *optarg, duf_option_stage_t stage, duf_option_source_t source )

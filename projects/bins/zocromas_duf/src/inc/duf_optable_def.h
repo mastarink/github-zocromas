@@ -1,5 +1,5 @@
-#ifndef DUF_OPTABLE_DEF_H
-#  define DUF_OPTABLE_DEF_H
+#ifndef MAS_DUF_OPTABLE_DEF_H
+#  define MAS_DUF_OPTABLE_DEF_H
 
 #  include "duf_option_types.h"
 /*

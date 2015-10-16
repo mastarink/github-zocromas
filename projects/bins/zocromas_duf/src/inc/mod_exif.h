@@ -1,5 +1,5 @@
-#ifndef MOD_EXIF_H
-#  define MOD_EXIF_H
+#ifndef MAS_MOD_EXIF_H
+#  define MAS_MOD_EXIF_H
 
 /* file:///usr/share/doc/libexif-0.6.21-r1/libexif-api.html/index.html */
 

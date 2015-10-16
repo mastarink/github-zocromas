@@ -1,5 +1,5 @@
-#ifndef DUF_PDI_ATTACH_H
-#  define DUF_PDI_ATTACH_H
+#ifndef MAS_DUF_PDI_ATTACH_H
+#  define MAS_DUF_PDI_ATTACH_H
 
 #  include "sql_tables_defs.h"
 

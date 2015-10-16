@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_SQL2_H
-#  define MAS_DUF_SQL2_H
+#ifndef MAS_DUF_SQL_OPEN_H
+#  define MAS_DUF_SQL_OPEN_H
 
 
 
