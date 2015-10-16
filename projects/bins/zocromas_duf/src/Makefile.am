@@ -1,6 +1,6 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
-noinst_PROGRAMS=mtest mjtest mtrace_test
+noinst_PROGRAMS=mtest mjtest
 
 #noinst_HEADERS=....cdef ....cdef
 
@@ -37,7 +37,7 @@ zocromas_duf_SOURCES=				   \
 	duf_pdi.c duf_pdi_reinit.c duf_pdi_attach.c duf_pdi_credel.c duf_pdi_ref.c duf_pdi_context.c duf_pdi_stmt.c			\
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
-	duf_errors.c duf_error_base.c duf_error_regfind.c duf_error_reporting.c duf_error_names.c  duf_trace.c				      \
+	duf_errors.c duf_error_base.c duf_error_regfind.c duf_error_reporting.c duf_error_names.c       \
 	duf_dh.c duf_service.c duf_print.c duf_printb.c	duf_fileinfo.c	     \
 								      \
 	duf_sql_error.c \
@@ -103,9 +103,6 @@ mjtest_SOURCES=dufjtest.c
 mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
 mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
 
-mtrace_test_SOURCES=duftrace_test.c duf_trace.c duf_utils_print.c
-mtrace_test_CFLAGS=@AM_CFLAGS@ -pthread
-mtrace_test_LDFLAGS=@AM_LDFLAGS@ 
 
 
 

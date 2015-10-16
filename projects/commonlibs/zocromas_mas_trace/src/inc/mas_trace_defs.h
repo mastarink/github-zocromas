@@ -1,7 +1,7 @@
 #ifndef MAS_MAST_TRACE_DEFS_H
 #  define MAS_MAST_TRACE_DEFS_H
 
-
+#  include "mas_print_defs.h"
 #  include "mas_trace_defs_base.h"
 #  include "mas_trace_defs_what.h"
 #  include "mas_trace_defs_sys.h"
@@ -21,7 +21,7 @@
 
 #  define T(_fmt, ...) MAST_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
 #  define TT( ...) MAST_TRACE(temp,0,__VA_ARGS__)
-#  define TR(_r) if (MAST_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, duf_error_code_i(_r), duf_error_name_i(_r));}
+/* #  define TR(_r) if (MAST_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, duf_error_code_i(_r), duf_error_name_i(_r));} */
 
 
 #endif

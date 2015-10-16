@@ -6,6 +6,7 @@
 
 #include "duf_option_defs.h"
 
+#include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 

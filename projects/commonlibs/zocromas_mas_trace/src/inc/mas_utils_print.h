@@ -1,6 +1,7 @@
 #ifndef MAS_MAST_UTILS_PRINT_H
 #  define MAS_MAST_UTILS_PRINT_H
 
+#  include <stdio.h>            /* FILE */
 #  include "mas_print_defs.h"
 
 const char *mas_color_s( int is_atty, const char *s );

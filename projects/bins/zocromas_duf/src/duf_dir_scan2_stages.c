@@ -3,6 +3,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config_util.h"
 #include "duf_config_ref.h"     /* DUF_ACTG_FLAG => DUF_OPTION */
 #include "duf_config_defs.h"     /* DUF_ACTG_FLAG => DUF_OPTION */
 

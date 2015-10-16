@@ -305,7 +305,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       else
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
 #else
-      duf_sncolor_s( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
+      DUF_SNCOLOR_S( is_atty, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
 #endif
     }
     /* Not here : swidth += strlen( pbuffer ); */

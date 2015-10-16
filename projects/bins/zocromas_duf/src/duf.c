@@ -44,6 +44,7 @@
 
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
+#include "duf_config_util.h"
 #include "duf_config.h"
 
 #include "duf_options.h"
@@ -59,7 +60,7 @@
 /* #include "duf_path2db.h"        (* test only *) */
 
 /* צאַצקע */
-#include "duf_trace_defs.h"
+/* #include "duf_trace_defs.h" */
 
 /* ###################################################################### */
 #include "duf.h"

@@ -12,12 +12,24 @@
 #  include "duf_start_end.h"
 #  include "duf_dodefs.h"
 #  include "duf_errors.h"
-#  include "duf_error_defs.h"
 
-#  include "duf_trace.h"
-#  include "duf_utils_print.h"
 
 #  include "duf_debug_defs.h"
+#  if 0
+#    include "duf_error_defs.h"
+#    include "duf_print_defs.h"
+#    include "duf_trace.h"
+#    include "duf_utils_print.h"
+#    include "duf_trace_defs.h"
+#  else
+#    include "duf_errorn_defs.h"
+#    include "duf_printn_defs.h"
+#    include "duf_tracen_defs_preset.h"
+#    include <mastar/trace/mas_trace.h>
+#    include <mastar/trace/mas_utils_print.h>
+#    include "duf_tracen_defs.h"
+#  endif
+
 #  include "duf_dbg.h"
 
 

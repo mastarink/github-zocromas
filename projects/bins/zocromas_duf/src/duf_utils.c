@@ -288,10 +288,10 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
     bar.calls++;
     fprintf( stderr, "\r [" );
     {
-      duf_print_color_s( stderr, "\x1b[%sm", "1;33" );
+      DUF_PRINT_COLOR_S( stderr, "\x1b[%sm", "1;33" );
       for ( int i = 0; i < bar.width; i++ )
         fputc( '=', stderr );
-      duf_print_color_s( stderr, "\x1b[%sm", "0" );
+      DUF_PRINT_COLOR_S( stderr, "\x1b[%sm", "0" );
     }
     if ( bar.width < width )
     {
