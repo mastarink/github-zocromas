@@ -83,8 +83,7 @@ noinst_HEADERS=duf.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \
 	duf_sys_wrap.h duf_utils.h \
-	duf_utils_path.h \
-	duf_utils_print.h
+	duf_utils_path.h
 
 #	duf_item_match2.h	
 #	duf_file_pathid2.h
