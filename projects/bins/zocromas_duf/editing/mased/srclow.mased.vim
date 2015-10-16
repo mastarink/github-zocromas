@@ -31,8 +31,8 @@ sfind duf_error_reporting.h
 tab sfind duf_error_names.c
 sfind duf_error_names.h
 
-tab sfind duf_trace.c
-sfind duf_trace.h
+" tab sfind duf_trace.c
+" sfind duf_trace.h
 
 tab sfind duf_dh.c
 sfind duf_dh.h
@@ -55,3 +55,4 @@ sfind duf_dbg.h
 tab sfind duf_def.h
 
 tab sfind duftest.c
+sfind dufjtest.c

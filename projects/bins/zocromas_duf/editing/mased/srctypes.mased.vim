@@ -2,8 +2,10 @@ find duf_maintenance.h
 
 tab sfind duf_defs.h
 sfind duf_debug_defs.h
-sfind duf_print_defs.h
-
+" sfind duf_print_defs.h
+sfind duf_printn_defs.h
+" sfind duf_print_defs_preset.h
+sfind duf_printn_defs_preset.h
 
 tab sfind duf_base_types.h
 
@@ -13,14 +15,17 @@ sfind duf_status_types.h
 tab sfind duf_levinfo_types.h
 
 tab sfind duf_trace_types.h
-sfind duf_trace_defs.h
+" sfind duf_trace_defs.h
+sfind duf_tracen_defs.h
+sfind duf_tracen_defs_preset.h
 sfind duf_trace_defs_if.h
-sfind duf_trace_defs_preset.h
+" sfind duf_trace_defs_preset.h
 sfind duf_trace_defs_base.h
 sfind duf_trace_defs_what.h
 sfind duf_trace_defs_sys.h
 sfind duf_start_end.h
-sfind duf_error_defs.h
+" sfind duf_error_defs.h
+sfind duf_errorn_defs.h
 sfind duf_dodefs.h
 
 tab sfind duf_fun_types.h

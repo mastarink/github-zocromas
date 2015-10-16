@@ -48,4 +48,4 @@ sfind duf_options_env.h
 tab sfind duf_options_string.c
 sfind duf_options_string.h
 
-tab find duf_maintenance_options.h
+tab sfind duf_maintenance_options.h

@@ -46,8 +46,8 @@ noinst_HEADERS=duf.h \
 	duf_tags.h \
 	duf_pdi.h duf_pdi_reinit.h duf_pdi_attach.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_action_table.h \
-	duf_print_defs.h \
-	duf_print_defs_preset.h \
+	duf_printn_defs.h \
+	duf_printn_defs_preset.h \
 	duf_record_types.h \
 	duf_scan_types.h \
 	evsql_begfin.h evsql_selector.h \
@@ -70,14 +70,14 @@ noinst_HEADERS=duf.h \
 	duf_sql_positional.h \
 	duf_sql_prepared.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
-	duf_trace_defs.h \
+	duf_tracen_defs.h \
 	duf_trace_defs_if.h \
-	duf_trace_defs_preset.h \
+	duf_tracen_defs_preset.h \
 	duf_trace_defs_base.h \
 	duf_trace_defs_what.h \
 	duf_trace_defs_sys.h \
 	duf_start_end.h \
-	duf_error_defs.h \
+	duf_errorn_defs.h \
 	duf_dodefs.h \
 	duf_trace_types.h \
 	duf_ufilter_types.h \
