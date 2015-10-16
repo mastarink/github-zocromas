@@ -13,7 +13,9 @@
 #include "duf_option_extended.h"
 #include "duf_option_typed.h"
 
+#if 0
 #include "duf_option_old.h"
+#endif
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */
@@ -37,13 +39,14 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
     DOR( r, duf_clarify_xcmd_typed( extended, optargg, istage, xtable, no ) );
     DUF_TRACE( options, +6, "parsed typed:`%s`   %s", extended->o.name, duf_error_name_i( r ) );
 
-
+#if 0
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
       assert( 0 );
       DUF_TRACE( explain, 1, "@old opt for %s", extended ? extended->o.name : NULL );
       DOZR( r, duf_clarify_xcmd_old( extended, optargg, istage, xtable ) );
     }
+#endif
     DUF_TRACE( options, +6, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended ), duf_error_name_i( r ) );
   }
   else

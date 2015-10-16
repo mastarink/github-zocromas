@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_UTILS_PRINT_H
 #  define MAS_DUF_UTILS_PRINT_H
 
-#  include "duf_print_defs.h"
+#  include "duf_printn_defs.h"
 
 const char *duf_color_s( int is_atty, const char *s );
 const char *duf_fcolor_s( FILE * out, const char *s );

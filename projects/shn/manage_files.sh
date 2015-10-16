@@ -47,7 +47,7 @@ function manage_makefile_am ()
   file="$at/Makefile.am"
 # shift
   if [[ -f $file ]] ; then
-    echo $file >&2
+#   echo $file >&2
     files=(${files[@]} $( read_makefile_am $mark < $file | sort ))
   fi
 }
