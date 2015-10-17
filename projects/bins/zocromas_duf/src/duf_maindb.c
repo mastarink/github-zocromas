@@ -417,10 +417,13 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
 
   /* I. duf_all_options -- STAGE_PRESETUP */
   DUF_TRACE( options, 0, "@@@@I - stages from presetup" );
+ 
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
 
   /* II. duf_all_options -- STAGE_SETUP */
   DUF_TRACE( options, 0, "@@@@II - stages from setup" );
+ 
+   
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
@@ -433,22 +436,25 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
     DORF( r, duf_store_log, DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ.argv ) );
 #endif
 
+
+
 #if 0
   /* to be removed as obsolete */
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
 #else
 #  if 0
   /* call of duf_pdi_init -- after duf_all_options( DUF_OPTION_STAGE_SETUP ), before duf_all_options, DUF_OPTION_STAGE_(FIRST|INTERACTIVE) */
-  DOR( r,
-       DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pu, NULL /* real_path */ , NULL /* sql_set */ ,
-                                     0 /* caninsert */ ,
-                                     DUF_UG_FLAG( recursive ) /* frecursive */ ,
-                                     1 /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pu, NULL /* real_path */ , NULL /* sql_set */ ,
+                                        0 /* caninsert */ ,
+                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
+                                        1 /* opendir */  ) );
 #  else
   DOR( r, duf_pdi_init_at_config(  ) );
   /* assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) ); */
 
 #  endif
+
+    
 
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
 

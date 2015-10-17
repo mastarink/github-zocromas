@@ -5,7 +5,7 @@ noinst_PROGRAMS=mtest mjtest
 #noinst_HEADERS=....cdef ....cdef
 
 zocromas_duf_SOURCES=				   \
-	duf.c 			\
+	duf.c duf_experiment.c 			\
 	duf_maindb_info.c duf_maindb.c		    \
 	duf_dbg.c duf_config.c duf_config_util.c duf_status.c	     \
 	duf_cli.c \
@@ -25,10 +25,13 @@ zocromas_duf_SOURCES=				   \
 	duf_action_table.c \
 	evsql_begfin.c evsql_selector.c \
 	duf_sccb.c duf_sccb_handle.c  duf_sccbh_eval.c duf_sccbh_eval_fs.c duf_sccbh_eval_sql_set.c duf_sccb_scanstage.c \
-	duf_pdi_sccb_eval.c duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
+	duf_pdi_sccb_eval.c \
+	duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
 	duf_sccbh_eval_all.c  \
 	duf_dir_scan2_stages.c	\
-								  \
+	\
+	duf_atable_sccb.c duf_pdi_atable_sccb_eval.c duf_atable_sccb_eval.c \
+	\
 	duf_context.c	\
 	duf_li_credel.c \
 	duf_levinfo.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_openclose.c duf_levinfo_stat.c \
@@ -43,7 +46,7 @@ zocromas_duf_SOURCES=				   \
 	duf_sql_error.c \
 	duf_sql_open.c duf_sql_positional.c duf_sql_prepared.c duf_sql_field.c duf_sql_bind.c 	       \
 									\
-	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
+	mod_dir_print_uni.c		\
 	mod_filenames_uni.c		mod_filedata_uni.c		    \
 	mod_directories_uni.c						     \
 	mod_md5_uni.c mod_sd5_uni.c mod_sha_uni.c			      \
@@ -53,7 +56,6 @@ zocromas_duf_SOURCES=				   \
 	mod_dumplet.c	\
 	mod_dialog.c	\
 	mod_tagit.c	\
-	mod_dir_priority.c	\
 	mod_save_to.c	\
 	std_fieldsets.c std_selectors.c \
 	std_mod_sets.c \
@@ -93,7 +95,7 @@ zocromas_duf_SOURCES=				   \
 #	duf_uni_scan1.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
-zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@ -ldl
 
 mtest_SOURCES=duftest.c 
 mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
@@ -105,6 +107,19 @@ mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
 
 
 
+
+moduledir=$(libdir)/dufmod
+module_LTLIBRARIES = \
+	crc32.la set_dir_priority.la tree.la
+
+crc32_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+crc32_la_SOURCES          = mod_crc32_uni.c
+
+set_dir_priority_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+set_dir_priority_la_SOURCES	= mod_dir_priority.c
+
+tree_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+tree_la_SOURCES	= mod_tree_print_uni.c
 
 # bin_PROGRAMS = gui-program cli-program
 # gui_program_SOURCES = gui.c

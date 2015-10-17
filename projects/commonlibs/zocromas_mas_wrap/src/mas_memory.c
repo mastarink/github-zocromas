@@ -123,7 +123,7 @@ mas_other_free( void *p )
 
 #ifdef MAS_TRACEMEM
 static int imemar = 0;
-static mas_mem_head_t *memar[4096];
+static mas_mem_head_t *memar[4096 * 16];
 int mas_mem_disable_print_usage = 0;
 
 static int
@@ -276,6 +276,7 @@ _mas_malloc( const char *func, int line, size_t size )
       memory_balance_cnt++;
       real_ptr->sig = 0x6cdb7c9c89c7ad3a;
       real_ptr->id = memory_allocated_cnt;
+      assert( memory_allocated_cnt < sizeof( memar ) / sizeof( memar[0] ) );
       if ( memory_allocated_cnt < sizeof( memar ) / sizeof( memar[0] ) )
         memar[memory_allocated_cnt] = real_ptr;
       real_ptr->func = func;

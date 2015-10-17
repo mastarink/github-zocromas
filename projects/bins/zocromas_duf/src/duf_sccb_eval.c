@@ -8,7 +8,7 @@
 #include "duf_sccb.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_defs.h" /* DUF_ACTG_FLAG( summary ) */
+#include "duf_option_defs.h"    /* DUF_ACTG_FLAG( summary ) */
 
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
@@ -28,32 +28,36 @@ duf_ev_sccb( const duf_scan_callbacks_t * sccb )
 }
 
 int
-duf_ev_evnamen( const char *name, size_t len, const duf_action_table_t * table )
+duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first )
 {
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( scn.pdi ), name, len, table, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( scn.pdi ), name, len, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
 int
-duf_ev_evname( const char *name, const duf_action_table_t * table )
+duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
 {
+  DEBUG_STARTR( r );
   assert( DUF_CONFIGX( scn.pdi )->pdi_name );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, DUF_CONFIGX( scn.pdi )->pdi_name );
-  return duf_ev_pdi_evname( DUF_CONFIGG( scn.pdi ), name, table, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) );
+  DOR( r, duf_ev_pdi_evname( DUF_CONFIGG( scn.pdi ), name, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DEBUG_ENDR( r );
 }
 
 int
-duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
+duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
 {
   DEBUG_STARTR( r );
   assert( DUF_CONFIGX( scn.pdi )->pdi_name );
   /* assert( DUF_CONFIGX( scn.pdi )->pyp ); */
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( scn.pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( scn.pdi ), names, table, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary )   ) );
+
+  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( scn.pdi ), names, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
+
 
 #if 0
 static int

@@ -9,7 +9,7 @@
 #include "duf_utils_path.h"
 
 #include "duf_config_util.h"
-#include "duf_config_ref.h" /* DUF_PRINTF ; DUF_CONFIGG */
+#include "duf_config_ref.h"     /* DUF_PRINTF ; DUF_CONFIGG */
 #include "duf_config_defs.h"
 
 #include "duf_action_table.h"
@@ -36,34 +36,41 @@ duf_error_code_t
 duf_option_$_list_sccbs( void )
 {
   DEBUG_STARTR( r );
-  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+#if 0
+  for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
   {
     duf_scan_callbacks_t *sccb = act->sccb;
 
     /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
     DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
   }
+#else
+  for ( duf_scan_callbacks_t * sccb = duf_first_sccb(  ); sccb; sccb = sccb->next )
+  {
+    DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
+  }
+#endif
   DEBUG_ENDR( r );
 }
-
+#if 0
 duf_error_code_t
 duf_option_$_list_sccb( int x_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
-  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+  for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
   {
     DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
   }
   DEBUG_ENDR( r );
 }
-
+#endif
 duf_error_code_t
 duf_option_$_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
 
 #if 0
-  DOR( r, duf_ev_evnamed_list( names, duf_action_table(  ) ) );
+  DOR( r, duf_ev_evnamed_list( names, _duf_action_table(  ) ) );
 #else
   DOR( r, duf_ev_evnamed_list_std( names ) );
 #endif

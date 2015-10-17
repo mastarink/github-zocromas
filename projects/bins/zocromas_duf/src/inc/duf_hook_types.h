@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
-#include <mastar/tools/mas_argvc_types.h>
+#  include <mastar/tools/mas_argvc_types.h>
 
 #  include "duf_record_types.h"
 #  include "duf_scan_types.h"   /* duf_node_type_t */
@@ -75,6 +75,7 @@ struct duf_scan_callbacks_s
   unsigned disabled:1;
   const char *title;
   const char *name;
+  struct duf_scan_callbacks_s *next;
 
   unsigned use_std_node;
   duf_sql_set_t node;
@@ -85,7 +86,7 @@ struct duf_scan_callbacks_s
   unsigned count_nodes:1;
   unsigned no_progress:1;
   /* const char *leaf_selector_total2; */
-
+  void *dlhan;
 #  if 1
   duf_scanner_t init_scan;
 
@@ -133,7 +134,7 @@ struct duf_scan_callbacks_s
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
-typedef void (*duf_sccbh_fun_t)(struct duf_sccb_handle_s *);
+typedef void ( *duf_sccbh_fun_t ) ( struct duf_sccb_handle_s * );
 
 struct duf_sccb_handle_s
 {

@@ -1,4 +1,4 @@
-noinst_HEADERS=duf.h \
+noinst_HEADERS=duf.h duf_experiment.h 			\
 	sql_tables_defs.h \
 	sql_selected_defs.h \
 	sql_beginning_selected.h \
@@ -51,7 +51,10 @@ noinst_HEADERS=duf.h \
 	duf_scan_types.h \
 	evsql_begfin.h evsql_selector.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_eval.h duf_sccbh_eval_fs.h duf_sccbh_eval_sql_set.h duf_sccb_scanstage.h \
-	duf_pdi_sccb_eval.h duf_sccb_eval.h duf_sccb_eval_std.h duf_sccb_begfin.h duf_sccbh_shortcuts.h \
+	duf_pdi_sccb_eval.h \
+	duf_sccb_eval.h duf_sccb_eval_std.h duf_sccb_begfin.h duf_sccbh_shortcuts.h \
+	duf_atable_sccb.h duf_pdi_atable_sccb_eval.h duf_atable_sccb_eval.h \
+	\
 	duf_sccbh_eval_all.h  \
 	duf_service.h \
 	mod_exif.h \

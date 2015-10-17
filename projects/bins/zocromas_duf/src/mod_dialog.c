@@ -162,7 +162,11 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
       /* DUF_PRINTF( 0, "@@@@@@ %s%s", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ) ); */
       {
-        DOR( r, duf_find_sccb_by_evname_std( "listing" )->sccb->leaf_scan2( pstmt, pdi ) );
+#if 0
+	DOR( r, duf_find_atable_sccb_by_evname_std( "listing" )->sccb->leaf_scan2( pstmt, pdi ) );
+#else
+        DOR( r, duf_find_sccb_by_evname_std( "listing" )->leaf_scan2( pstmt, pdi ) );
+#endif
       }
 /* TODO: call .leaf_scan2 from "listing" */
 

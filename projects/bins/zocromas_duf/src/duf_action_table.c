@@ -1,4 +1,5 @@
 #include <string.h>
+#include <dlfcn.h>
 
 #include "duf_maintenance.h"
 
@@ -16,47 +17,44 @@
 static duf_action_table_t actions_table[] = {
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_directories_callbacks,
-   .on.flag = {/* .collect_obs = 1, */.dirent = 1,.allow_dirs = 1}
+   .on.flag = { /* .collect_obs = 1, */ .dirent = 1,.allow_dirs = 1}
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_filedata_callbacks,
-   .on.flag = {/* .collect_obs = 1, */.dirent = 1 /* ,.filedata = 1 */}
+   .on.flag = { /* .collect_obs = 1, */ .dirent = 1 /* ,.filedata = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_filenames_callbacks,
-   .on.flag = {/* .collect_obs = 1, */.dirent = 1 /* ,.filenames = 1 */}
+   .on.flag = { /* .collect_obs = 1, */ .dirent = 1 /* ,.filenames = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_openat_crc32_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//*.crc32_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//*.crc32_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_openat_sd5_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//*.sd5_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//*.sd5_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_openat_md5_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//*.md5_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//*.md5_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_sha1_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//*.sha1_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//*.sha1_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_mime_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//* .mime_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//* .mime_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_collect_exif_callbacks,
-   .on.flag = {/* .collect_obs = 1, *//* .exif_obs = 1*/}
+   .on.flag = { /* .collect_obs = 1, *//* .exif_obs = 1 */ }
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_tagit_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_set_dir_priority_callbacks,
    },
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_save_to_callbacks,
@@ -71,19 +69,21 @@ static duf_action_table_t actions_table[] = {
    .sccb = &duf_dialog_callbacks,
    },
 
+#if 0
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_print_tree_callbacks,
 #if 0
    .on.flag = {.print = 1,.tree = 1},
 #endif
-   .off.flag = {/*.md5_obs = 1*/}
+   .off.flag = { /*.md5_obs = 1 */ }
    },
+#endif
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_print_dir_callbacks,
 #if 0
    .on.flag = {.print = 1},
 #endif
-   .off.flag = {/*.md5_obs = 1*/
+   .off.flag = {                /*.md5_obs = 1 */
 #if 0
                 ,.tree = 1
 #endif
@@ -95,9 +95,52 @@ static duf_action_table_t actions_table[] = {
   {.sccb = NULL,.end_of_table = 1},
 };
 
-
-duf_action_table_t *
-duf_action_table( void )
+static void
+init_list( void )
 {
-  return actions_table;
+  static unsigned inited = 0;
+
+  if ( !inited )
+  {
+    duf_action_table_t *prev = NULL;
+
+    for ( duf_action_table_t * act = actions_table; act && act->sccb; act++ )
+    {
+      if ( act->in_use )
+      {
+        if ( prev )
+          prev->sccb->next = act->sccb;
+        prev = act;
+      }
+    }
+    /* TODO additionally load dynamic here */
+  }
+}
+
+/* duf_action_table_t *      */
+/* _duf_action_table( void ) */
+/* {                         */
+/*   init_list(  );          */
+/*   return actions_table;   */
+/* }                         */
+
+duf_scan_callbacks_t *
+duf_first_sccb( void )
+{
+  duf_action_table_t *at = NULL;
+
+  init_list(  );
+  at = actions_table;
+  return at ? at->sccb : NULL;
+}
+
+__attribute__ ( ( destructor( 101 ) ) )
+     static void duf_sccb_dlclose( void )
+{
+  for ( duf_scan_callbacks_t * sccb = duf_first_sccb(  ); sccb; sccb = sccb->next )
+  {
+    if ( sccb->dlhan )
+      dlclose( sccb->dlhan );
+    sccb->dlhan = NULL;
+  }
 }

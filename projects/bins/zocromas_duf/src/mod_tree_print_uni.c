@@ -61,6 +61,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   /* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */
 };
+extern duf_scan_callbacks_t tree_cbs __attribute__ ( ( alias( "duf_print_tree_callbacks" ) ) );
 
 /* ########################################################################################## */
 

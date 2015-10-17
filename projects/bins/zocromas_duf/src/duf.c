@@ -61,6 +61,7 @@
 
 /* צאַצקע */
 /* #include "duf_trace_defs.h" */
+#include "duf_experiment.h"
 
 /* ###################################################################### */
 #include "duf.h"
@@ -115,8 +116,17 @@ duf_main_with_config( int argc, char **argv )
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 
+
+#if 0
+  {
+    int rx = 0;
+
+    rx = duf_experiment(  );
+    DUF_TRACE( temp, 0, "rx:%d", rx );
+  }
+#endif
   /* XXX XXX XXX XXX XXX XXX */
-  DOR( r, duf_main_db( argc, argv ) ); /* duf_action (  ) + duf_main_db_close  */
+  DOR( r, duf_main_db( argc, argv ) );
   /* XXX XXX XXX XXX XXX XXX */
 
 #if 0
@@ -168,7 +178,7 @@ duf_main( int argc, char **argv )
   if ( DUF_IS_ERROR( r ) )
   {
     _DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, duf_error_code_i( r ), duf_error_name_i( r ), duf_error_message_i( r ),
-                    duf_error_func_i( r ), duf_error_line_i( r ) );
+                     duf_error_func_i( r ), duf_error_line_i( r ) );
     _DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
   }
 #endif

@@ -50,7 +50,6 @@ static duf_sql_sequence_t final_sql = /* */
 };
 
 /* ########################################################################################## */
-
 duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .title = "collect crc32",
   .name = "crc32",
@@ -149,6 +148,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            },
   .final_sql_seq = &final_sql,
 };
+
 
 /* ########################################################################################## */
 unsigned long long

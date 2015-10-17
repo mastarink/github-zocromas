@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_SCCB_EVAL_H
-#  define MAS_DUF_SCCB_EVAL_H
+#ifndef MAS_DUF_ATABLE_SCCB_EVAL_H
+#  define MAS_DUF_ATABLE_SCCB_EVAL_H
 
 /* fragment of func.name means:
  *
@@ -35,12 +35,11 @@
 
 
 
-int duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first );
+int duf_ev_atable_evnamed_list( const char *names, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 
-int duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first ) __attribute__ ( ( warn_unused_result ) );
+int duf_ev_atable_evnamen( const char *name, size_t len, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 
-int duf_ev_evname( const char *name, duf_scan_callbacks_t * first ) __attribute__ ( ( warn_unused_result ) );
-
-int duf_ev_sccb_array( const duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int *pcnt ) __attribute__ ( ( warn_unused_result ) );
+int duf_ev_atable_evname( const char *name, const duf_action_table_t * table ) __attribute__ ( ( warn_unused_result ) );
 
 #endif
+
