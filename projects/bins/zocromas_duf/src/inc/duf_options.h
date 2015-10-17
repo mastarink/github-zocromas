@@ -3,7 +3,6 @@
 
 #  include "duf_option_types.h"
 
-const char *duf_optstage_name( duf_option_stage_t istage );
 
 int duf_show_options( const char *a0 );
 
