@@ -72,7 +72,7 @@ static duf_sql_sequence_t final_sql = /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
+duf_scan_callbacks_t duf_md5_callbacks = {
   .title = "collect md5",
   .name = "md5",
   .init_scan = NULL,

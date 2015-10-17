@@ -71,12 +71,13 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     duf_scan_callbacks_t *prev = NULL;
     char *path = NULL;
     char *symbol = NULL;
-    
+
     path = mas_strdup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/lib/dufmod/" );
     path = mas_strncat_x( path, name, namelen );
     path = mas_strcat_x( path, ".so" );
-    symbol = mas_strndup( name, namelen );
-    symbol = mas_strcat_x( symbol, "_cbs" );
+    symbol = mas_strdup( "duf_" );
+    symbol = mas_strncat_x( symbol, name, namelen );
+    symbol = mas_strcat_x( symbol, "_callbacks" );
     {
       void *han = NULL;
 
@@ -106,7 +107,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
           }
         }
       }
-      DUF_TRACE( temp, 0, "[han:%p] %s : %s", han, symbol,  sccb ? sccb->name : NULL );
+      DUF_TRACE( temp, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
     }
     mas_free( symbol );
     mas_free( path );
@@ -121,8 +122,10 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
 
   sccb = duf_find_sccb_by_evnamen( name, namelen, first );
   if ( !sccb )
+  {
     sccb = duf_load_sccb_by_evnamen( name, namelen, first );
-  DUF_TRACE( temp, 0, "loaded %s", sccb ? sccb->name : NULL );
+    DUF_TRACE( temp, 0, "loaded %s", sccb ? sccb->name : NULL );
+  }
   return sccb;
 }
 

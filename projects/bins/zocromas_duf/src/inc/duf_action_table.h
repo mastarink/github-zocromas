@@ -8,16 +8,16 @@ extern duf_scan_callbacks_t     /* */
   duf_directories_callbacks,    /* */
   duf_filedata_callbacks,       /* */
   duf_filenames_callbacks,      /* */
-  duf_collect_openat_crc32_callbacks, /* */
-  duf_collect_openat_sd5_callbacks, /* */
-  duf_collect_openat_md5_callbacks, /* */
+  duf_crc32_callbacks, /* */
+  duf_sd5_callbacks, /* */
+  duf_md5_callbacks, /* */
   duf_sha1_callbacks,           /* */
-  duf_collect_mime_callbacks,   /* */
-  duf_collect_exif_callbacks,   /* */
+  duf_mime_callbacks,   /* */
+  duf_exif_callbacks,   /* */
       /* duf_collect_mdpath_callbacks , */
       /* duf_print_md5_callbacks ,      */
-  /* duf_print_tree_callbacks,     (* *) */
-  duf_print_dir_callbacks,      /* */
+  /* duf_tree_callbacks,     (* *) */
+  duf_listing_callbacks,      /* */
   duf_dummy_callbacks,          /* */
   duf_dumplet_callbacks,        /* */
   duf_dialog_callbacks,         /* */

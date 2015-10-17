@@ -28,15 +28,15 @@ static duf_action_table_t actions_table[] = {
    .on.flag = { /* .collect_obs = 1, */ .dirent = 1 /* ,.filenames = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_crc32_callbacks,
+   .sccb = &duf_crc32_callbacks,
    .on.flag = { /* .collect_obs = 1, *//*.crc32_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_sd5_callbacks,
+   .sccb = &duf_sd5_callbacks,
    .on.flag = { /* .collect_obs = 1, *//*.sd5_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_md5_callbacks,
+   .sccb = &duf_md5_callbacks,
    .on.flag = { /* .collect_obs = 1, *//*.md5_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
@@ -44,14 +44,14 @@ static duf_action_table_t actions_table[] = {
    .on.flag = { /* .collect_obs = 1, *//*.sha1_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_mime_callbacks,
+   .sccb = &duf_mime_callbacks,
    .on.flag = { /* .collect_obs = 1, *//* .mime_obs = 1 */ }
    },
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_exif_callbacks,
+   .sccb = &duf_exif_callbacks,
    .on.flag = { /* .collect_obs = 1, *//* .exif_obs = 1 */ }
    },
-  /* {.sccb = &duf_collect_mdpath_callbacks, */
+  /* {.sccb = &duf_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_tagit_callbacks,
@@ -71,7 +71,7 @@ static duf_action_table_t actions_table[] = {
 
 #if 0
   {.tovector = 0,.in_use = 1,
-   .sccb = &duf_print_tree_callbacks,
+   .sccb = &duf_tree_callbacks,
 #if 0
    .on.flag = {.print = 1,.tree = 1},
 #endif
@@ -79,7 +79,7 @@ static duf_action_table_t actions_table[] = {
    },
 #endif
   {.tovector = 0,.in_use = 1,
-   .sccb = &duf_print_dir_callbacks,
+   .sccb = &duf_listing_callbacks,
 #if 0
    .on.flag = {.print = 1},
 #endif

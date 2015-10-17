@@ -61,7 +61,7 @@ static duf_sql_sequence_t final_sql = {
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_collect_exif_callbacks = {
+duf_scan_callbacks_t duf_exif_callbacks = {
   .title = "collect exif",      /* */
   .name = "exif",               /* */
   .def_opendir = 1,             /* */

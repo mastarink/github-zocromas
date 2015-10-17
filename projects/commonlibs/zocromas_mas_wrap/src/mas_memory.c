@@ -123,7 +123,7 @@ mas_other_free( void *p )
 
 #ifdef MAS_TRACEMEM
 static int imemar = 0;
-static mas_mem_head_t *memar[4096 * 16];
+static mas_mem_head_t *memar[1024 * 512];
 int mas_mem_disable_print_usage = 0;
 
 static int

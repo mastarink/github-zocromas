@@ -69,7 +69,6 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 #else
   if ( DUF_NOERROR( r ) )
     sccb = duf_find_or_load_sccb_by_evnamen( name, len, first ); /* XXX XXX */
-  DUF_TRACE( temp, 0, "? loaded %s", sccb ? sccb->name : NULL );
 #endif
   DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccb ? sccb->name : "NONAME" );
   if ( sccb )
