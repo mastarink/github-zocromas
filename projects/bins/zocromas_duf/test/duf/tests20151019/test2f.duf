@@ -2,7 +2,7 @@ recursive
 allow-files
 allow-sub
 allow-directories
-output-file=@test2f.tmp
+output-file=@out.test2f.tmp
 # abraka
 # trace-options 2
 db-name test_tree
@@ -10,9 +10,9 @@ trace-db 0
 set-max-seq 24
 cd /
 ls
-echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@
+echo=@@@ 1 ============================================  @@
 ls
-echo=@@@@ 2 ============================================ ${TIME(%Y%m%d %T)} @@
+echo=@@@@ 2 ============================================  @@
 ls
-echo=@@@@@@ 3 ============================================ ${TIME(%Y%m%d %T)} @@
+echo=@@@@@@ 3 ============================================  @@
 

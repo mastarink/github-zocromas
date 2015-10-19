@@ -1,0 +1,15 @@
+#
+recursive
+allow-files
+allow-sub
+allow-directories
+output-file=@out.test3f.tmp
+db-name test_tree
+trace-db 0
+# set-max-seq 240
+cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/
+tree
+echo=@@@ 1 ============================================  @@
+echo=@@@@@@ 2 ============================================  @@
+
+

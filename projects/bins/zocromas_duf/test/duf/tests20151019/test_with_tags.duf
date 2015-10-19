@@ -1,7 +1,9 @@
+#
 recursive
 allow-files
 allow-sub
 allow-directories
+# output-file=@out.test_with_tagsf.tmp
 db-name test_tree
 cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
 with-tag-file test-goot

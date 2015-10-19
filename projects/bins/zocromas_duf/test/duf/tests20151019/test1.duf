@@ -3,11 +3,13 @@ recursive
 allow-files
 allow-sub
 allow-directories
-output-file=/dev/pts/27
+output-file=@test1.txt.tmp
 db-name test_tree
 trace-db 0
-set-max-seq 240
+# set-max-seq 240
 cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/
 tree
-echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@
-echo=@@@@@@ 2 ============================================ ${TIME(%Y%m%d %T)} @@
+# echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@
+echo=@@@ 1 ============================================  @@
+# echo=@@@@@@ 2 ============================================ ${TIME(%Y%m%d %T)} @@
+echo=@@@@@@ 2 ============================================  @@
