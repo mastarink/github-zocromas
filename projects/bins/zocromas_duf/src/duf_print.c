@@ -9,8 +9,6 @@
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_config_ref.h"
-
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
 
@@ -801,7 +799,11 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
   char *buffer;
   FILE *out;
 
-  out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout;
+#if 0
+  /* out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout; */
+#else
+  out = MAST_OUTPUT_FILE;
+#endif
   buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, max_width, &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );

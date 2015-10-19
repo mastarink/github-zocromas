@@ -427,9 +427,9 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
-  DUF_TEST_RX_START( r );
-  /* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name_i( r ) ); */
-  DUF_TEST_RX_END( r );
+  /* DUF_TEST_RX_START( r ); */
+  /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name_i( r ) ); *) */
+  /* DUF_TEST_RX_END( r ); */
 
 #if 0
   if ( DUF_CONFIGG( cli.targ.argc ) > 0 )

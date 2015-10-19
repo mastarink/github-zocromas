@@ -79,7 +79,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   }
   else
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_SCCB_NOT_FOUND );
+    DUF_MAKE_ERRORM( r, DUF_ERROR_SCCB_NOT_FOUND, "sccb module not found: '%s'", name );
   }
   DEBUG_ENDR( r );
 }

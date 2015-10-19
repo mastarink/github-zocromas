@@ -82,7 +82,7 @@ static duf_sql_sequence_t final_sql = /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_directories_callbacks = {
+duf_scan_callbacks_t duf_dirs_callbacks = {
   .title = "directories",
   .name = "dirs",
   .init_scan = NULL,
@@ -204,6 +204,6 @@ register_pdidirectory( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * 
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
-                                  &duf_directories_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );
+                                  &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );
   DEBUG_ENDR( r );
 }

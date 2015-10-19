@@ -11,7 +11,13 @@ duf_config_opt_t *duf_get_config_opt( void );
 
 int duf_verbose( void );
 int duf_output_level( void );
+
+FILE *duf_output_file_c( const duf_config_t * cfg );
 FILE *duf_output_file( void );
+
+FILE *duf_trace_file_c( const duf_config_t * cfg );
+FILE *duf_trace_file( void );
+
 char duf_option_delimiter( void );
 
 char *duf_string_options_expand( const char *s, char protected_prefix );

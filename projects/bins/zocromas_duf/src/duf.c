@@ -183,6 +183,7 @@ duf_main( int argc, char **argv )
   }
 #endif
 
+  TR( r );
 
   duf_config_delete(  );
   assert( !duf_config );

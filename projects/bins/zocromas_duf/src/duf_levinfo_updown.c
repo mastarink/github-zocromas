@@ -221,7 +221,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
 
     /* DUF_TEST_R( r ); */
     if ( DUF_IS_ERROR( r ) )
-      DUF_SHOW_ERROR( "(%d) close error; L%d", r, pdi->pathinfo.depth );
+      DUF_SHOW_ERRORO( "(%d) close error; L%d", r, pdi->pathinfo.depth );
     DUF_TRACE( explain, 2, "level up:   %d", d );
     assert( pdi->pathinfo.levinfo );
     duf_levinfo_clear_level_d( pdi, d );

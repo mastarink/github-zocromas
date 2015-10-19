@@ -20,7 +20,9 @@ function shn_run ()
   local bin cmdfile tmpcmd sedex lt rname
   local qargs
 # for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
-echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
+  if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
+     echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
+   fi
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir
   if [[ "$rname" ]] && [[ "$bsrc" ]] ; then
@@ -76,7 +78,9 @@ echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.$(/bin/date '+%Y%m%d').txt
 	fi
 
-      echo ; echo ; echo
+        if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
+	  echo ; echo ; echo
+	fi
     shn_msg " exited with $retcode "
   else
     retcode=1
@@ -91,7 +95,9 @@ echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>
     shn G
   fi
 # shn_msg "Returned $retcode"
-echo "=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<" >&2
+  if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
+    echo "=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<" >&2
+  fi
   return $retcode
 }
 function shn_debug ()

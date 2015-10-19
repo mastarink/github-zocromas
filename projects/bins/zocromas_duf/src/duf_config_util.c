@@ -74,12 +74,30 @@ duf_output_level( void )
 }
 
 FILE *
-duf_output_file( void )
+duf_output_file_c( const duf_config_t * cfg )
 {
-  return duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout;
+  return cfg && cfg->opt.output.out ? cfg->opt.output.out : stdout;
 }
 
-char 
+FILE *
+duf_output_file( void )
+{
+  return duf_output_file_c( duf_config );
+}
+
+FILE *
+duf_trace_file_c( const duf_config_t * cfg )
+{
+  return cfg && cfg->MAST_TRACE_AT_CFG.output.out ? cfg->MAST_TRACE_AT_CFG.output.out : stdout;
+}
+
+FILE *
+duf_trace_file( void )
+{
+  return duf_trace_file_c( duf_config );
+}
+
+char
 duf_option_delimiter( void )
 {
   return duf_config ? duf_config->opt.option_delimiter : ':';

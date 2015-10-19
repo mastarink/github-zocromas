@@ -1,0 +1,38 @@
+# run --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .
+# -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
+recursive
+allow-files
+allow-sub
+allow-directories
+db-name test_tree
+# drop-tables
+clean-tables
+add-path
+create-tables
+create-database
+# trace-errors 2
+# trace-option 2
+# trace-fs 2
+# trace-sql 2
+# trace-file @1.tmp
+progress
+# include-fs=*.c
+# include-fs=*.jpg
+fs-cp-ignore=/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
+# include-fs=1106_222036.r.jpg
+exclude-fs=*.Po
+exclude-fs=*.o
+exclude-fs=SHN_GVIMER_PLUS-*
+
+cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
+evaluate-sccb=dirs,filedata,filenames
+echo .....
+fs-rm-force /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
+echo .....
+evaluate-sccb=dirs,filedata,filenames,md5,sha1,crc32,exif,mime
+echo .....
+fs-cp-ignore /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
+echo .....
+fs-ls /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/1106_222036.r.jpg /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/1106_222036.r.jpg
+
+# call test1a.cmds

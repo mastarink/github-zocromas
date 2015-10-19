@@ -46,6 +46,8 @@
 
 
 #  define MAST_PRINTF( _min, ...) MAST_FPRINTF(_min, MAST_OUTPUT_FILE, __VA_ARGS__ )
+#  define MAST_PRINTF0( _min, ...) MAST_FPRINTF0(_min, MAST_OUTPUT_FILE, __VA_ARGS__ )
+#  define MAST_PRINTFNE( _min, ...) MAST_FPRINTFNE(_min, MAST_OUTPUT_FILE, __VA_ARGS__ )
 
 /* #  define MAST_PRINTF( _min, ...) \                                                                                */
 /*     mas_printf( MAST_OUTPUT_LEVEL, 0, _min, 0, \                                           */

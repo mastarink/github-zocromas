@@ -1,0 +1,9 @@
+recursive
+allow-files
+allow-sub
+allow-directories
+db-name test_tree
+cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
+glob *.1*
+tag-file test-one
+evaluate-sccb tagit

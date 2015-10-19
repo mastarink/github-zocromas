@@ -311,7 +311,7 @@ duf_ecount_reported_i( duf_error_code_t ri )
 }
 
 void
-duf_error_report_i( duf_error_code_t ri, int test, int verb )
+duf_error_report_i( duf_error_code_t ri, int test, FILE * out, int verb )
 {
 
   if ( ri < 0 )
@@ -328,50 +328,52 @@ duf_error_report_i( duf_error_code_t ri, int test, int verb )
     switch ( verb )
     {
     case 0:
-      DUF_FPRINTF0( 0, stderr, ".   " );
-      DUF_FPRINTF0( 0, stderr, ".@@  %s    ", ename );
-      DUF_FPRINTF0( 0, stderr, "@@@@@@@@" "%s%s", msg ? "  " : "", msg );
+      DUF_FPRINTF0( 0, out, ".   " );
+      DUF_FPRINTF0( 0, out, ".%s      ", prefix );
+      /* DUF_FPRINTF0( 0, out, ".@@  %s    ", ename ); */
+      /* DUF_FPRINTF0( 0, out, "@@@@@@@@" "%s%s", msg ? "  " : "", msg ); */
+      DUF_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s", ename, msg ? " - " : "", msg );
       break;
     case 1:
-      DUF_FPRINTF0( 0, stderr, ".   " );
-      DUF_FPRINTF0( 0, stderr, ".%s      ", prefix );
-      DUF_FPRINTF0( 0, stderr, "@@@@@@@@" "[%s]%s%s (%s:%d)", ename, msg ? " - " : "", msg, func, line );
+      DUF_FPRINTF0( 0, out, ".   " );
+      DUF_FPRINTF0( 0, out, ".%s      ", prefix );
+      DUF_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d)", ename, msg ? " - " : "", msg, func, line );
       break;
     case 2:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
+      DUF_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 3:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
+      DUF_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                          ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 4:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
+      DUF_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                          ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 5:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
+      DUF_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                          ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line, verb );
       break;
     default:
-      DUF_SHOW_ERROR_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                         ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line , verb );
+      DUF_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                          ename, msg ? " - " : "", msg, ri, duf_enabled_ereport_n_i( ri ), duf_error_list_size(  ), erep, irep, func, line, verb );
     }
   }
 }
 
 void
-duf_error_report_p( size_t rp, int test, int verb )
+duf_error_report_p( size_t rp, int test, FILE * out, int verb )
 {
   duf_error_event_t *rev = NULL;
 
   /* assert( rp >= 0 ); */
   rev = duf_find_error_event_p( rp );
   if ( rev )
-    duf_error_report_i( rev->index, test, verb );
+    duf_error_report_i( rev->index, test, out, verb );
 }
 
 void
-duf_error_report_all( int test, int verb )
+duf_error_report_all( int test, FILE * out, int verb )
 {
   unsigned k = 0;
 
@@ -385,7 +387,7 @@ duf_error_report_all( int test, int verb )
       DUF_SHOW_ERROR( "@@@@@@@@%d. %s @ %s:%d %s", rp + 1, duf_error_name_p( rp ), duf_error_func_p( rp ), duf_error_line_p( rp ),
                       duf_error_message_p( rp ) );
 #else
-      duf_error_report_p( rp, test, verb );
+      duf_error_report_p( rp, test, out, verb );
 #endif
       k++;
     }

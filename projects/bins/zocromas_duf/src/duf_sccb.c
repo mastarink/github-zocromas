@@ -81,7 +81,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     {
       void *han = NULL;
 
-      DUF_TRACE( temp, 0, "@@@@@@to load %s", path );
+      DUF_TRACE( sccb, 0, "@@@@@@to load %s", path );
       han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
       if ( !han )
       {
@@ -92,13 +92,13 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
           if ( sccb )
           {
             sccb->dlhan = han;
-            DUF_TRACE( temp, 0, "[%p] %s => %s", han, path, sccb->name );
+            DUF_TRACE( sccb, 0, "[%p] %s => %s", han, path, sccb->name );
             for ( duf_scan_callbacks_t * tsccb = first; tsccb; tsccb = tsccb->next )
               prev = tsccb;
             if ( prev )
             {
               prev->next = sccb;
-              DUF_TRACE( temp, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL );
+              DUF_TRACE( sccb, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL );
             }
             else
             {
@@ -107,7 +107,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
           }
         }
       }
-      DUF_TRACE( temp, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
+      DUF_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
     }
     mas_free( symbol );
     mas_free( path );
@@ -124,7 +124,7 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
   if ( !sccb )
   {
     sccb = duf_load_sccb_by_evnamen( name, namelen, first );
-    DUF_TRACE( temp, 0, "loaded %s", sccb ? sccb->name : NULL );
+    DUF_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   }
   return sccb;
 }
@@ -179,7 +179,7 @@ duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
     set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
   else
     set = &sccb->leaf;
-  /* DUF_TRACE( temp, 0, "%d : %ld : %s", index, std_leaf_nsets, set->fieldset ); */
+  /* DUF_TRACE( sccb, 0, "%d : %ld : %s", index, std_leaf_nsets, set->fieldset ); */
 #endif
   return set;
 }
@@ -214,7 +214,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
     set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
   else
     set = &sccb->node;
-  /* DUF_TRACE( temp, 0, "%d : %ld : %s", index, std_node_nsets, set->fieldset ); */
+  /* DUF_TRACE( sccb, 0, "%d : %ld : %s", index, std_node_nsets, set->fieldset ); */
 #endif
   return set;
 }

@@ -152,7 +152,7 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
     char *ser;
 
     ser = strerror_r( errno, serr, sizeof( serr ) );
-    DUF_SHOW_ERROR( "@Can't remove %s - %s", fn, ser );
+    DUF_SHOW_ERRORO( "@Can't remove %s - %s", fn, ser );
   }
   return ry >= 0 ? ( int ) dorm : ry;
 }
@@ -211,26 +211,26 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
 
           if ( ferror( fto ) )
           {
-            DUF_SHOW_ERROR( "@Can' t copy %s %s - write error ", fn, to );
+            DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error ", fn, to );
             ry = -1;
             break;
           }
           else if ( nr != nw )
           {
-            DUF_SHOW_ERROR( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to );
+            DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to );
             ry = -1;
             break;
           }
         }
         else if ( ferror( ffrom ) )
         {
-          DUF_SHOW_ERROR( " @ Can 't copy %s %s - read error", fn, to );
+          DUF_SHOW_ERRORO( " @ Can 't copy %s %s - read error", fn, to );
           ry = -1;
           break;
         }
         else
         {
-          DUF_SHOW_ERROR( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to );
+          DUF_SHOW_ERRORO( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to );
           ry = -1;
           break;
         }
@@ -240,7 +240,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
     }
     else
     {
-      DUF_SHOW_ERROR( "@Can' t copy %s(%d) %s(%d) - open error", fn, ffrom ? 1 : 0, to, fto ? 1 : 0 );
+      DUF_SHOW_ERRORO( "@Can' t copy %s(%d) %s(%d) - open error", fn, ffrom ? 1 : 0, to, fto ? 1 : 0 );
       ry = -1;
     }
     if ( ry >= 0 && nrs > 0 && nrs == nws )
@@ -305,7 +305,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
   else if ( errno == ENOENT )
   {
     /* ry = 0; */
-    DUF_SHOW_ERROR( "@Can't copy %s %s - no dst dir", fn, to );
+    DUF_SHOW_ERRORO( "@Can't copy %s %s - no dst dir", fn, to );
     ry = -1;
   }
   mas_free( topathf );
@@ -338,7 +338,7 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
     }
     else
     {
-      DUF_SHOW_ERROR( "@Can't copy %s to %s - src is not a file", fn, to );
+      DUF_SHOW_ERRORO( "@Can't copy %s to %s - src is not a file", fn, to );
       ry = -1;
     }
   }
@@ -349,7 +349,7 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
     char *ser;
 
     ser = strerror_r( errno, serr, sizeof( serr ) );
-    DUF_SHOW_ERROR( "@Can't copy %s %s -- %s", fn, to, ser );
+    DUF_SHOW_ERRORO( "@Can't copy %s %s -- %s", fn, to, ser );
   }
   return ry;
 }

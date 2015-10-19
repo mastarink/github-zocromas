@@ -768,6 +768,12 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20151015.101559 ============" );
   DUF_PRINTF( 0, "  run -du --allow-sub --no-allow-sub --db-name=test_tree  --trace-mod=7  --dir-priority=-6  --evaluate=tree test/tree/ 	- %s",
               "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20151019.111758 ============" );
+  DUF_PRINTF( 0, "  MSH_SHN_DISABLE_MSG=yes MSH_SHN_DISABLE_MARKLINE=yes MSH_SHN_DISABLE_TIMING=yes run  --disable-memusage @test1.duf 	- %s",
+              "-= \"\" =-" );
+
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

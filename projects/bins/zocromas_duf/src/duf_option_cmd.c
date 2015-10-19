@@ -107,7 +107,7 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
     }
     else
     {
-      /* DUF_SHOW_ERROR( "extended is NULL after duf_find_cmd_long_no for %s", string ); */
+      /* DUF_SHOW_ERRORO( "extended is NULL after duf_find_cmd_long_no for %s", string ); */
     }
     mas_free( arg );
     arg = NULL;
@@ -169,7 +169,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_optstage_name( istage ) );
+    DUF_SHOW_ERRORO( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_optstage_name( istage ) );
     /* TODO DUF_POP_ERROR( r ); */
   }
 

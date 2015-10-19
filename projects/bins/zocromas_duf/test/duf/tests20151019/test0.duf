@@ -1,0 +1,16 @@
+# run --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .
+# -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
+recursive
+allow-files
+allow-sub
+allow-directories
+db-name test_tree
+# trace-sql 3
+create-tables
+create-database
+# db-name temp_tree
+drop-tables
+add-path
+progress
+cd /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif

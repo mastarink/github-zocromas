@@ -16,33 +16,24 @@
 
 
 
-#  define DUF_WRITES( _min, _str) \
-         MAST_WRITES( _min, _str)
-#  define DUF_PUTS( _min, _str) \
-  	 MAST_PUTS( _min, _str)
-#  define DUF_PUTSL( _min ) \
-  	 MAST_PUTSL( _min )
+#  define DUF_WRITES( _min, _str)		MAST_WRITES( _min, _str)
+#  define DUF_PUTS( _min, _str)			MAST_PUTS( _min, _str)
+#  define DUF_PUTSL( _min )			MAST_PUTSL( _min )
 
-#  define DUF_VFPRINTF( _min, _out, ...) \
-         MAST_VFPRINTF( _min, _out, __VA_ARGS__)
+#  define DUF_VFPRINTF( _min, _out, ...)	MAST_VFPRINTF( _min, _out, __VA_ARGS__)
 
-#  define DUF_VFPRINTFNE( _min, _out, ...) \
-         MAST_VFPRINTFNE( _min, _out, __VA_ARGS__)
+#  define DUF_VFPRINTFNE( _min, _out, ...)	MAST_VFPRINTFNE( _min, _out, __VA_ARGS__)
 
-#  define DUF_FPRINTF0( _min, _out, ...) \
-         MAST_FPRINTF0( _min, _out, __VA_ARGS__)
+#  define DUF_FPRINTF0( _min, _out, ...)	MAST_FPRINTF0( _min, _out, __VA_ARGS__)
 
-#  define DUF_FPRINTF( _min, _out, ...) \
-         MAST_FPRINTF( _min, _out, __VA_ARGS__ )
-#  define DUF_FPRINTFNE( _min, _out, ...) \
-         MAST_FPRINTFNE( _min, _out, __VA_ARGS__)
+#  define DUF_FPRINTF( _min, _out, ...)		MAST_FPRINTF( _min, _out, __VA_ARGS__ )
+#  define DUF_FPRINTFNE( _min, _out, ...)	MAST_FPRINTFNE( _min, _out, __VA_ARGS__)
 
 
-#  define DUF_PRINTF( _min, ...)  \
-         MAST_PRINTF( _min, __VA_ARGS__)
+#  define DUF_PRINTF( _min, ...)		MAST_PRINTF( _min, __VA_ARGS__)
+#  define DUF_PRINTF0( _min, ...)		MAST_PRINTF0( _min, __VA_ARGS__)
 
-#  define DUF_DIE( _min, ...) \
-         MAST_DIE( _min, __VA_ARGS__)
+#  define DUF_DIE( _min, ...)			MAST_DIE( _min, __VA_ARGS__)
 
 
 

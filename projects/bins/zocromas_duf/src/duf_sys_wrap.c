@@ -32,7 +32,7 @@ duf_unlink( const char *path )
 
       s = strerror_r( errno, serr, sizeof( serr ) );
 
-      DUF_SHOW_ERROR( "unlink %s: [%s]", path, s );
+      DUF_SHOW_ERRORO( "unlink %s: [%s]", path, s );
       if ( errno != ENOENT )
         DUF_MAKE_ERROR( r, DUF_ERROR_UNLINK );
     }

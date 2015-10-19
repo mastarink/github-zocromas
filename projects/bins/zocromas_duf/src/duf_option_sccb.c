@@ -156,7 +156,6 @@ duf_option_$_error_level( long lev )
 {
   DEBUG_STARTR( r );
 
-  TT( "@@@@@@error level to be set:%ld", lev );
   duf_force_offset_ereport( lev );
   DEBUG_ENDR( r );
 }

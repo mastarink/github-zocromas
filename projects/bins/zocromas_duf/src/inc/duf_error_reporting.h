@@ -35,8 +35,8 @@ int duf_error_line_i( duf_error_index_t e );
 const char *duf_error_func_i( duf_error_index_t e );
 const char *duf_error_message_i( duf_error_index_t e );
 
-void duf_error_report_i( duf_error_code_t ri, int test, int verb );
-void duf_error_report_p( size_t rp, int test, int verb );
-void duf_error_report_all( int test, int verb );
+void duf_error_report_i( duf_error_code_t ri, int test, FILE* out, int verb );
+void duf_error_report_p( size_t rp, int test, FILE* out, int verb );
+void duf_error_report_all( int test, FILE* out, int verb );
 
 #endif

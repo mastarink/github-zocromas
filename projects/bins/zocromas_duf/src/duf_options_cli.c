@@ -19,7 +19,7 @@ duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, co
   char buffer[2048] = "";
 
   arg = duf_cli_options_config(  )->carg.argv[optindd];
-  if ( duf_verbose() )
+  if ( duf_verbose(  ) )
     snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
   else
     snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
@@ -81,7 +81,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   int longindex;
   duf_option_code_t codeval;
   mas_cargvc_t *carg;
-  int optoptt = 0, optindd = 0, optindp = 0;
+  int optoptt = 0, optindd = 0, optindp DUF_UNUSED = 0;
   int numxargv = 0;
 
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
@@ -96,7 +96,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   /* carg = DUF_CONFIGG( cli.carg ); */
   carg = duf_cli_options_get_carg(  );
 #endif
-  DUF_TRACE( options, +5, "parse cli options (%d)...", duf_cli_options_get_longopts_table() ? 1 : 0 );
+  DUF_TRACE( options, +5, "parse cli options (%d)...", duf_cli_options_get_longopts_table(  )? 1 : 0 );
 #if 0
   {
     for ( const duf_option_t * po = DUF_CONFIGG( cli.longopts_table ); po && po->name; po++ )
@@ -113,7 +113,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
           &&
           ( ( int )
             ( optopt = 0, longindex = -1, codeval =
-              getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(), &longindex ) ) >= 0 ) )
+              getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex ) ) >= 0 ) )
   {
     DUF_TRACE( options, +5, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
     optoptt = 0;
@@ -123,7 +123,12 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
       char *msg = NULL;
 
       optoptt = optopt;
+#if 0
       msg = duf_clrfy_cli_opts_msgs( codeval, optindp, optoptt, shorts );
+#else
+      msg = duf_clrfy_cli_opts_msgs( codeval, optind - 1, optoptt, shorts );
+#endif
+      DUF_TRACE( options, 4, "@@@@@@@%d:%s", optind - 1, carg->argv[optind - 1] );
       DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, msg );
       mas_free( msg );
     }

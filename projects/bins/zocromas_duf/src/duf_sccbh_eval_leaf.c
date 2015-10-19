@@ -59,7 +59,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
     else
     {
-      DUF_SHOW_ERROR( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ), duf_levinfo_deleted( PDI ),
+      DUF_SHOW_ERRORO( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ), duf_levinfo_deleted( PDI ),
                       duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
     }
   }

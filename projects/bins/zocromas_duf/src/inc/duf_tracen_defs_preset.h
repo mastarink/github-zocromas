@@ -1,11 +1,6 @@
 #ifndef MAS_DUF_TRACEN_DEFS_PRESET_H
 #  define MAS_DUF_TRACEN_DEFS_PRESET_H
 
-#  ifndef MAST_OUTPUT_LEVEL
-#    define MAST_OUTPUT_LEVEL 0
-#  endif
-
-
 
 #  ifndef MAST_TRACE_CONFIG
 #    include "duf_config4trace_ref.h"
@@ -31,13 +26,12 @@
 #    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_config(  ))
 #  endif
 
-
-#  ifndef MAST_TRACE_FILE_C
-#    define MAST_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->MAST_TRACE_AT_CFG.output.out ? _cfg->MAST_TRACE_AT_CFG.output.out : stdout )
-#  endif
+#    ifndef MAST_TRACE_FILE_C
+#      define MAST_TRACE_FILE_C( _cfg ) duf_trace_file_c(_cfg)
+#    endif
 
 #  ifndef MAST_TRACE_FILE
-#    define MAST_TRACE_FILE         MAST_TRACE_FILE_C(duf_get_config(  ))
+#    define MAST_TRACE_FILE          duf_trace_file()
 #  endif
 
 
@@ -47,4 +41,3 @@
 
 
 #endif
-

@@ -458,7 +458,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
       }
       /* else                                */
       /* {                                   */
-      /*   DUF_SHOW_ERROR( "pdi->path not set" ); */
+      /*   DUF_SHOW_ERRORO( "pdi->path not set" ); */
       /* }                                   */
     }
 #else

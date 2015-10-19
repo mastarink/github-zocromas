@@ -31,8 +31,7 @@ duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, uns
     {
       pg = graph[g - 1];
     }
-    DUF_FPRINTFNE( 0, out, "%4lu. %s%s%3d:%-23s \t%20s%s", DUF_CONFIGX( opt.dbg.lines ), pref, pg ? pg : "", line, func, tail,
-                   eol ? "\n" : "" );
+    DUF_FPRINTFNE( 0, out, "%4lu. %s%s%3d:%-23s \t%20s%s", DUF_CONFIGX( opt.dbg.lines ), pref, pg ? pg : "", line, func, tail, eol ? "\n" : "" );
   }
 }
 
@@ -67,8 +66,11 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
     {
       FILE *out;
 
-      out = DUF_CONFIGX( opt.trace.output.out ) ? DUF_CONFIGX( opt.trace.output.out ) : stderr;
-
+#if 0
+      /* out = DUF_CONFIGX( opt.trace.output.out ) ? DUF_CONFIGX( opt.trace.output.out ) : stderr; */
+#else
+      out = MAST_TRACE_FILE;
+#endif
       switch ( code )
       {
       case DBG_START:

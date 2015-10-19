@@ -279,7 +279,9 @@ void
 duf_config_delete( void )
 {
   DEBUG_START(  );
-  duf_error_report_all( 0, DUF_CONFIGG( opt.dbg.verbose ) );
+
+  DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
+  duf_error_report_all( 0, MAST_TRACE_FILE, DUF_CONFIGG( opt.dbg.verbose ) );
 
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
