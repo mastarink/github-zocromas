@@ -8,9 +8,10 @@ sfind duf_error_types.h
 
 " sfind duf_error_defs.h
 
-tab sfind duf_errors.c
-sfind duf_errors.h
-sfind duf_errors_maintenance.h
+tab sfind duf_error_clear.c
+sfind duf_error_clear.h
+
+tab sfind duf_errors_maintenance.h
 
 tab sfind duf_error_base.c
 sfind duf_error_base.h

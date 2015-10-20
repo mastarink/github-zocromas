@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_ERRORS_CLEAR_H
-#  define MAS_DUF_ERRORS_CLEAR_H
+#ifndef MAS_DUF_ERROR_CLEAR_H
+#  define MAS_DUF_ERROR_CLEAR_H
 
 #  include <stdarg.h>
 

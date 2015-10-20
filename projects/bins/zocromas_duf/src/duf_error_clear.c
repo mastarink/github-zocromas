@@ -2,7 +2,7 @@
 
 #include "duf_error_regfind.h"
 /* ###################################################################### */
-#include "duf_errors_clear.h"
+#include "duf_error_clear.h"
 /* ###################################################################### */
 
 /* #define DUF_NOTIMING */
