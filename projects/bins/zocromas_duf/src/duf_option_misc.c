@@ -20,7 +20,6 @@
 /* #include "duf_option_restore.h" */
 #include "duf_option.h"
 
-#include "duf_errors.h"
 
 /* ###################################################################### */
 #include "duf_option_misc.h"

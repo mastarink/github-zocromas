@@ -24,16 +24,8 @@ sfind duf_tracen_defs_preset.h
 " sfind duf_trace_defs_what.h
 " sfind duf_trace_defs_sys.h
 sfind duf_start_end.h
-" sfind duf_error_defs.h
 sfind duf_dodefs.h
 
-tab sfind duf_errorn_defs.h
-sfind duf_errorn_defs_ctrl.h
-sfind duf_errorn_defs_make.h
-sfind duf_errorn_defs_show.h
-
-tab sfind duf_fun_types.h
-sfind duf_error_types.h
 
 tab sfind duf_item_types.h
 tab sfind duf_ufilter_types.h
