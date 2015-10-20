@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_ERRORN_DEFS_H
-#  define MAS_DUF_ERRORN_DEFS_H
+#ifndef MAS_DUF_ERROR_DEFS_H
+#  define MAS_DUF_ERROR_DEFS_H
 
 
 #  define DUF_ERRSYS( ... )				DUF_TRACESYS( errors /* opt.trace.errors */, 0, __VA_ARGS__ )

@@ -1,9 +1,8 @@
-find duf_errorn_defs.h
-sfind duf_errorn_defs_ctrl.h
-sfind duf_errorn_defs_make.h
-sfind duf_errorn_defs_show.h
+find duf_error_defs.h
+sfind duf_error_defs_ctrl.h
+sfind duf_error_defs_make.h
+sfind duf_error_defs_show.h
 
-tab sfind duf_fun_types.h
 sfind duf_error_types.h
 
 " sfind duf_error_defs.h

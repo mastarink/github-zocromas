@@ -2,11 +2,9 @@
 
 #include "duf_tracen_maintenance.h"
 
-#include "duf_dodefs.h"
-
 #include "duf_printn_defs.h"
 
-#include "duf_errorn_defs_show.h"
+#include "duf_error_defs_show.h"
 #include "duf_error_base.h"
 #include "duf_error_names.h"
 
@@ -159,7 +157,7 @@ duf_enabled_ereport_n_c( duf_error_code_t rc )
 {
   int re = 0;
 
-  DOCF( re, _duf_enabled_ereport_n_c, rc, DUF_ERROR_COUNT );
+  re = _duf_enabled_ereport_n_c( rc, DUF_ERROR_COUNT );
   return re;
 }
 
@@ -281,7 +279,7 @@ duf_ecount_reported_c( duf_error_code_t rc )
 {
   int re = 0;
 
-  DOCF( re, _duf_ecount_reported_c, rc, DUF_ERROR_COUNT );
+  re = _duf_ecount_reported_c( rc, DUF_ERROR_COUNT );
   return re;
 }
 

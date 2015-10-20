@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_ERRORN_DEFS_CTRL_H
-#  define MAS_DUF_ERRORN_DEFS_CTRL_H
+#ifndef MAS_DUF_ERROR_DEFS_CTRL_H
+#  define MAS_DUF_ERROR_DEFS_CTRL_H
 
 
 /* #  define DUF_E1_LOWER(...) duf_enable_mereport_c(1, -1, 0, __VA_ARGS__, 0) */

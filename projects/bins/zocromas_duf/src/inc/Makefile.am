@@ -76,10 +76,10 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_tracen_defs.h \
 	duf_tracen_defs_preset.h \
 	duf_start_end.h \
-	duf_errorn_defs.h \
-	duf_errorn_defs_ctrl.h \
-	duf_errorn_defs_make.h \
-	duf_errorn_defs_show.h \
+	duf_error_defs.h \
+	duf_error_defs_ctrl.h \
+	duf_error_defs_make.h \
+	duf_error_defs_show.h \
 	duf_dodefs.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \

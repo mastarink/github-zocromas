@@ -27,6 +27,7 @@ sfind duf_tracen_defs_preset.h
 sfind duf_start_end.h
 sfind duf_dodefs.h
 
+tab sfind duf_fun_types.h
 
 tab sfind duf_item_types.h
 tab sfind duf_ufilter_types.h
