@@ -114,7 +114,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
   /* if ( !extended )                         */
   /*   DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); */
 
-  DUF_TRACE( options, +4, "parsing typed:`%s`;   %s", extended->o.name, duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "parsing typed:`%s`;   %s", extended->o.name, mas_error_name_i( r ) );
   DUF_TRACE( options, +4, "r:%d; xname:%s; noo:%d", r, extended ? extended->o.name : "?", noo );
 /*
  * if arg is help option
@@ -661,12 +661,12 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         }
         break;
       }
-      DUF_TRACE( options, 5, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", duf_error_name_i( r ),
+      DUF_TRACE( options, 5, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", mas_error_name_i( r ),
                  istage, extended->stage.min, extended->stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
     }
     else
     {
-      DUF_TRACE( options, 5, "@(%s) NOT for this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", duf_error_name_i( r ), istage,
+      DUF_TRACE( options, 5, "@(%s) NOT for this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", mas_error_name_i( r ), istage,
                  extended->stage.min, extended->stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
       /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }

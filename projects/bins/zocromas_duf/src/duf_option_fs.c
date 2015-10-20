@@ -70,7 +70,7 @@ duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
   return doit;
 }
 
-static duf_error_code_t
+static mas_error_code_t
 duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
 {
   DEBUG_STARTR( r );
@@ -88,7 +88,7 @@ duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
   DEBUG_ENDR( r );
 }
 
-static duf_error_code_t
+static mas_error_code_t
 duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv )
 {
   DEBUG_STARTR( r );
@@ -106,7 +106,7 @@ duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv 
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
@@ -157,7 +157,7 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
   return ry >= 0 ? ( int ) dorm : ry;
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_rmfile( const char *fn, const void *pv )
 {
   DEBUG_STARTR( r );
@@ -354,7 +354,7 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
   return ry;
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
 {
   DEBUG_STARTR( r );
@@ -366,14 +366,14 @@ duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
   DEBUG_ENDR( r );
 }
 
-static duf_error_code_t
+static mas_error_code_t
 duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_ls( const char *arg )
 {
   DEBUG_STARTR( r );
@@ -384,7 +384,7 @@ duf_option_$_fs_ls( const char *arg )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_rm( const char *arg, long v )
 {
   DEBUG_STARTR( r );
@@ -393,7 +393,7 @@ duf_option_$_fs_rm( const char *arg, long v )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_cp( const char *arg, long v )
 {
   DEBUG_STARTR( r );
@@ -402,7 +402,7 @@ duf_option_$_fs_cp( const char *arg, long v )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_fs_mv( const char *arg, long v )
 {
   DEBUG_STARTR( r );

@@ -8,7 +8,8 @@
 #  include <mastar/wrap/mas_memory.h>
 
 
-#  include "duf_errors_maintenance.h"
+#  include "duf_errorn_defs.h"
+#  include <mastar/error/mas_errors_maintenance.h>
 
 #  include "duf_start_end.h"
 #  include "duf_dodefs.h"

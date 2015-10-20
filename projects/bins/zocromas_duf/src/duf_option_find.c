@@ -187,7 +187,7 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
     DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
 #endif
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", mas_error_name_i( rpr ), extended->o.name );
   if ( pr )
     *pr = rpr;
   return extended;
@@ -208,7 +208,7 @@ duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t 
   else
     extended = duf_find_name_long_exact( name, witharg, xtended /*, &rpr */  );
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( pr ? *pr : -1 ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", mas_error_name_i( pr ? *pr : -1 ), extended->o.name );
   if ( pr )
     *pr = rpr;
   return extended;
@@ -227,7 +227,7 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
   extended = duf_find_name_long( name, witharg, xtended, soft, &rpr );
   DUF_TRACE( options, 4, "@@name:%s; extended:%d", name, extended ? 1 : 0 );
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", mas_error_name_i( rpr ), extended->o.name );
   DUF_TRACE( options, 6, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
   if ( pno && DUF_IS_ERROR_N( rpr, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
@@ -238,12 +238,12 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
       /* DUF_CLEAR_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND ); (* DUF_ERROR_OPTION_NOT_FOUND impossible here !?  *) */
       extended = duf_find_name_long( name + strlen( DUF_NO_PREFIX ), witharg, xtended, soft, &rpr );
       if ( extended )
-        DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+        DUF_TRACE( options, 3, "@(%s) found name:`%s`", mas_error_name_i( rpr ), extended->o.name );
       *pno = 1;
     }
   }
   if ( extended )
-    DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name_i( rpr ), extended->o.name );
+    DUF_TRACE( options, 3, "@(%s) found name:`%s`", mas_error_name_i( rpr ), extended->o.name );
   if ( pr )
     *pr = rpr;
   return extended;

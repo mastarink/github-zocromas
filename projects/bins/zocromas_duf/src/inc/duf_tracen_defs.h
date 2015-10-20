@@ -15,7 +15,7 @@
 
 #  define DUF_DEBUG(_lev, ... )	MAST_DEBUG(_lev, __VA_ARGS__ )
 
-#  define TR(_r) if (DUF_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, duf_error_code_i(_r), duf_error_name_i(_r));}
+#  define TR(_r) if (DUF_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, mas_error_code_i(_r), mas_error_name_i(_r));}
 
 #  include <mastar/trace/mas_trace.h>
 

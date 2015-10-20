@@ -6,15 +6,15 @@
 
 /* duf_option_class_t duf_help_option2class( duf_option_code_t code ); */
 
-duf_error_code_t duf_option_$_smart_help_all( duf_option_class_t oclass );
-duf_error_code_t duf_option_$_smart_help( duf_option_class_t oclass );
-duf_error_code_t duf_option_$_help(  /* int argc, char *const *argv */ void );
-duf_error_code_t duf_option_$_examples(  /* int argc, char *const *argv */ void );
-duf_error_code_t duf_option_$_version(  /* int argc, char *const *argv */ void );
-duf_error_code_t duf_option_$_showflags(  /* int argc, char *const *argv */ void );
+mas_error_code_t duf_option_$_smart_help_all( duf_option_class_t oclass );
+mas_error_code_t duf_option_$_smart_help( duf_option_class_t oclass );
+mas_error_code_t duf_option_$_help(  /* int argc, char *const *argv */ void );
+mas_error_code_t duf_option_$_examples(  /* int argc, char *const *argv */ void );
+mas_error_code_t duf_option_$_version(  /* int argc, char *const *argv */ void );
+mas_error_code_t duf_option_$_showflags(  /* int argc, char *const *argv */ void );
 
 
-duf_error_code_t duf_option_$_list_options( long n );
+mas_error_code_t duf_option_$_list_options( long n );
 
 
 #endif

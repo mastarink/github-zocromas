@@ -194,17 +194,17 @@
 	{ \
 	  DUF_TRACE(sql, 0, "EACH ROW:%s", duf_sql_stmt(_pstmt1)); \
 	  DUF_SQL_STEP( _rt, _pstmt1 ); \
-	  DUF_TRACE(sql, 0, "(%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+	  DUF_TRACE(sql, 0, "(%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) \
 	  { \
 	    DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW ); \
 	    DUF_TRACE(sql, 0, "DO EACH ROW STEP:%s", duf_sql_stmt(_pstmt1)); \
 	    _ops ; \
-            DUF_TRACE(sql, 0, "(OPS:%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+            DUF_TRACE(sql, 0, "(OPS:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	  } \
-          DUF_TRACE(sql, 0, "(NEXT:%s) EACH ROW STEP:%s", duf_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+          DUF_TRACE(sql, 0, "(NEXT:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	} \
-        DUF_TRACE(sql, 0, "(END:%d:%s) EACH ROW STEP:%s", _rt, duf_error_name_i(_rt), duf_sql_stmt(_pstmt1));
+        DUF_TRACE(sql, 0, "(END:%d:%s) EACH ROW STEP:%s", _rt, mas_error_name_i(_rt), duf_sql_stmt(_pstmt1));
 
 
 #endif

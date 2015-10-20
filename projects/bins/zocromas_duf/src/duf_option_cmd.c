@@ -100,9 +100,9 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
 
     if ( extended && DUF_NOERROR( r ) )
     {
-      DUF_TRACE( options, 5, "@(%s:%d) found cmd for %s", duf_error_name_i( r ), found, extended->o.name );
+      DUF_TRACE( options, 5, "@(%s:%d) found cmd for %s", mas_error_name_i( r ), found, extended->o.name );
       DORF( r, DUF_WRAPPED( duf_clarify_xcmd_full ), extended, arg, istage, xtable, no, source );
-      DUF_TRACE( options, 5, "@(%s:%d) full done for %s", duf_error_name_i( r ), found, extended->o.name );
+      DUF_TRACE( options, 5, "@(%s:%d) full done for %s", mas_error_name_i( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
     }
     else
@@ -151,7 +151,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
  * */
 /* look xtable for cmd from string and exec if found */
     DOR( r, duf_exec_cmd_xtable( string, xtable, vseparator, istage, source ) );
-    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, r < 0 ? duf_error_name_i( r ) : "-", string );
+    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, r < 0 ? mas_error_name_i( r ) : "-", string );
     if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
     {
       /* found one; continue to possibly find more */
@@ -161,12 +161,12 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
     if ( DUF_IS_ERROR( r ) )
-      DUF_TRACE( options, 3, "@@%s at %s", duf_error_name_i( r ), xtable->name ? xtable->name : "??" );
+      DUF_TRACE( options, 3, "@@%s at %s", mas_error_name_i( r ), xtable->name ? xtable->name : "??" );
   }
   /* no error if at least one found */
   if ( found )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-  DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name_i( r ), string );
+  DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, mas_error_name_i( r ), string );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     DUF_SHOW_ERRORO( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_optstage_name( istage ) );

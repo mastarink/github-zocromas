@@ -40,7 +40,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
 
   DUF_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, SCCB->name );
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_scanstage_t ) NULL, ( duf_stmnt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
-  DUF_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", duf_error_name_i( r ), sccbh ? 1 : 0, SCCB->name );
+  DUF_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", mas_error_name_i( r ), sccbh ? 1 : 0, SCCB->name );
 
   if ( DUF_NOERROR( r ) && f_summary )
   {

@@ -4,25 +4,24 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_maintenance.h" */
-#  include "duf_tracen_maintenance.h"
+/* #include "mas_maintenance.h" */
+/* #  include "mas_tracen_maintenance.h" */
 
-#include "duf_error_names.h"
+#include "mas_error_names.h"
 
 /* ###################################################################### */
-#include "duf_error_regfind.h"
+#include "mas_error_regfind.h"
 /* ###################################################################### */
 
 #define MAX_ERRORS 100000l
 
 static size_t global_error_list_size = 0;
-static duf_error_index_t global_error_index = 0;
-static duf_error_event_t *global_error_list = NULL;
+static mas_error_index_t global_error_index = 0;
+static mas_error_event_t *global_error_list = NULL;
 
-__attribute__ ( ( destructor( 65535 ) ) )
+__attribute__ ( ( destructor( 50000 ) ) )
      static void destructor_errorlist( void )
 {
-
   for ( int i = global_error_list_size - 1; i >= 0; i-- )
   {
     mas_free( global_error_list[i].message );
@@ -31,18 +30,19 @@ __attribute__ ( ( destructor( 65535 ) ) )
   mas_free( global_error_list );
   global_error_list = NULL;
   global_error_list_size = 0;
+
 }
 
 size_t
-duf_error_list_size( void )
+mas_error_list_size( void )
 {
   return global_error_list_size;
 }
 
-duf_error_event_t *
-duf_find_error_event_p( size_t rp )
+mas_error_event_t *
+mas_find_error_event_p( size_t rp )
 {
-  duf_error_event_t *rev = NULL;
+  mas_error_event_t *rev = NULL;
 
   /* assert( rp >= 0 ); */
   if (  /* rp >= 0 && */ rp < global_error_list_size )
@@ -50,10 +50,10 @@ duf_find_error_event_p( size_t rp )
   return rev;
 }
 
-duf_error_event_t *
-duf_find_error_event_i( duf_error_index_t ri )
+mas_error_event_t *
+mas_find_error_event_i( mas_error_index_t ri )
 {
-  duf_error_event_t *rev = NULL;
+  mas_error_event_t *rev = NULL;
 
   if ( ri < 0 && global_error_list_size > 0 )
     for ( int i = global_error_list_size - 1; i >= 0; i-- )
@@ -68,10 +68,10 @@ duf_find_error_event_i( duf_error_index_t ri )
   return rev;
 }
 
-duf_error_index_t
-duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, const char *fmt, va_list args )
+mas_error_index_t
+mas_vregister_error_c( mas_error_code_t code, const char *funcid, int linid, const char *fmt, va_list args )
 {
-  duf_error_index_t ri = 0;
+  mas_error_index_t ri = 0;
   char message[4096] = "";
 
   if ( fmt )
@@ -80,8 +80,8 @@ duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, con
   {
     if ( !global_error_list )
     {
-      global_error_list = mas_malloc( sizeof( duf_error_event_t ) * MAX_ERRORS );
-      memset( global_error_list, 0, sizeof( duf_error_event_t ) * MAX_ERRORS );
+      global_error_list = mas_malloc( sizeof( mas_error_event_t ) * MAX_ERRORS );
+      memset( global_error_list, 0, sizeof( mas_error_event_t ) * MAX_ERRORS );
     }
     assert( global_error_list_size < MAX_ERRORS );
     if ( global_error_list_size < MAX_ERRORS )
@@ -97,8 +97,8 @@ duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, con
       assert( ri < 0 );
       global_error_list_size++;
     }
-    /* fprintf( stderr, "global_error_list_size:%ld (%d) %s\n", global_error_list_size, code, duf_error_name_c( code ) ); */
-    DUF_TRACE( errors, 5, "made error code:%d; ri:%d; [%ld:%ld]", code, ri, global_error_list_size, MAX_ERRORS );
+    /* fprintf( stderr, "global_error_list_size:%ld (%d) %s\n", global_error_list_size, code, mas_error_name_c( code ) ); */
+/////    DUF_TRACE( errors, 5, "made error code:%d; ri:%d; [%ld:%ld]", code, ri, global_error_list_size, MAX_ERRORS );
     assert( ri < 0 );
   }
   else
@@ -106,20 +106,20 @@ duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, con
   return ri;
 }
 
-duf_error_index_t
-duf_register_error_c( duf_error_code_t code, const char *funcid, int linid, const char *fmt, ... )
+mas_error_index_t
+mas_register_error_c( mas_error_code_t code, const char *funcid, int linid, const char *fmt, ... )
 {
-  duf_error_index_t ri;
+  mas_error_index_t ri;
   va_list args;
 
   va_start( args, fmt );
-  ri = duf_vregister_error_c( code, funcid, linid, fmt, args );
+  ri = mas_vregister_error_c( code, funcid, linid, fmt, args );
   va_end( args );
   return ri;
 }
 
 void
-duf_delete_error_rev( duf_error_event_t * rev )
+mas_delete_error_rev( mas_error_event_t * rev )
 {
   if ( rev && global_error_list_size > 0 )
   {
@@ -152,7 +152,7 @@ duf_delete_error_rev( duf_error_event_t * rev )
 }
 
 void
-duf_delete_error_i( duf_error_index_t ri )
+mas_delete_error_i( mas_error_index_t ri )
 {
-  duf_delete_error_rev( duf_find_error_event_i( ri ) );
+  mas_delete_error_rev( mas_find_error_event_i( ri ) );
 }

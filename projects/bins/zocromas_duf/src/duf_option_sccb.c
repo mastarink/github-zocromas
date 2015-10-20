@@ -32,7 +32,7 @@
 #include "duf_option_sccb.h"
 /* ###################################################################### */
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_list_sccbs( void )
 {
   DEBUG_STARTR( r );
@@ -53,7 +53,7 @@ duf_option_$_list_sccbs( void )
   DEBUG_ENDR( r );
 }
 #if 0
-duf_error_code_t
+mas_error_code_t
 duf_option_$_list_sccb( int x_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
@@ -64,7 +64,7 @@ duf_option_$_list_sccb( int x_unused DUF_UNUSED )
   DEBUG_ENDR( r );
 }
 #endif
-duf_error_code_t
+mas_error_code_t
 duf_option_$_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
@@ -77,7 +77,7 @@ duf_option_$_evaluate_sccb( const char *names )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_call_file( const char *name )
 {
   DEBUG_STARTR( r );
@@ -87,7 +87,7 @@ duf_option_$_call_file( const char *name )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_db_open( void )
 {
   DEBUG_STARTR( r );
@@ -96,7 +96,7 @@ duf_option_$_db_open( void )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_cd( const char *s )
 {
   DEBUG_STARTR( r );
@@ -151,16 +151,16 @@ duf_option_$_cd( const char *s )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_error_level( long lev )
 {
   DEBUG_STARTR( r );
 
-  duf_force_offset_ereport( lev );
+  mas_force_offset_ereport( lev );
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_set_dir_priority( long prio )
 {
   DEBUG_STARTR( r );

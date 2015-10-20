@@ -162,8 +162,8 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   /* {                                                                                                                            */
   /*   T( "@@@CCCCCC (optind:%d:%d:%d:%d)  %d of %d :: '%s'", optind, optindd, numxargv, carg.argc, i, carg.argc, carg.argv[i] ); */
   /* }                                                                                                                            */
-  DUF_TRACE( options, +5, "(%d:%s) istage:%d; optind:%d; carg.argc:%d", r, duf_error_name_i( r ), istage, optind, carg->argc );
-  DUF_TRACE( explain, 0, "parsed %d CLI options %s", optind, duf_error_name_i( r ) );
+  DUF_TRACE( options, +5, "(%d:%s) istage:%d; optind:%d; carg.argc:%d", r, mas_error_name_i( r ), istage, optind, carg->argc );
+  DUF_TRACE( explain, 0, "parsed %d CLI options %s", optind, mas_error_name_i( r ) );
   if ( DUF_NOERROR( r ) && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
   {
     DUF_TRACE( options, +5, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
@@ -219,6 +219,6 @@ duf_cli_options( duf_option_stage_t istage )
   if ( istage == DUF_OPTION_STAGE_PRESETUP )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
 
-  DUF_TRACE( explain, 2, "cli options  %s", duf_error_name_i( r ) );
+  DUF_TRACE( explain, 2, "cli options  %s", mas_error_name_i( r ) );
   DEBUG_ENDR( r );
 }

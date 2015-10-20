@@ -37,7 +37,7 @@ duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   DUF_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
   {
     /*@ 1. go down + dbopenat */
-    DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name_i( r ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
     if ( DUF_NOERROR( r ) )     /* levinfo_down OK */
@@ -114,7 +114,7 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   {
     /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, DUF_NODE_NODE /* node_type */  ) );
-    DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name_i( r ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
     DOR( r, duf_sel_cb2_node_at( scanstage, pstmt, str_cb2, sccbh ) );

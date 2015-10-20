@@ -18,8 +18,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_dh.h \
 	duf_dirent.h \
 	duf_dir_scan2_stages.h \
-	duf_errors_maintenance.h duf_error_clear.h duf_error_base.h duf_error_regfind.h duf_error_reporting.h duf_error_names.h \
-	duf_error_types.h \
 	duf_filedata.h \
 	duf_fileinfo_types.h \
 	duf_flags_types.h \
@@ -76,10 +74,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_tracen_defs.h \
 	duf_tracen_defs_preset.h \
 	duf_start_end.h \
-	duf_error_defs.h \
-	duf_error_defs_ctrl.h \
-	duf_error_defs_make.h \
-	duf_error_defs_show.h \
 	duf_dodefs.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \

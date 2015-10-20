@@ -25,7 +25,7 @@
 #include "duf_option_misc.h"
 /* ###################################################################### */
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_history( void )
 {
   DEBUG_STARTR( r );
@@ -56,7 +56,7 @@ duf_option_$_history( void )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_list_targ1( mas_argvc_t * targ, long n )
 {
   DEBUG_STARTR( r );
@@ -70,7 +70,7 @@ duf_option_$_list_targ1( mas_argvc_t * targ, long n )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
@@ -90,7 +90,7 @@ duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
 {
   DEBUG_STARTR( r );
@@ -105,7 +105,7 @@ duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
@@ -116,7 +116,7 @@ duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
 {
   DEBUG_STARTR( r );
@@ -125,7 +125,7 @@ duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
 {
   DEBUG_STARTR( r );
@@ -137,7 +137,7 @@ duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
 }
 
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_echo( const char *arg )
 {
   DEBUG_STARTR( r );

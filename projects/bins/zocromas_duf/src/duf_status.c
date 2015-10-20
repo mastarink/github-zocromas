@@ -129,6 +129,7 @@ __attribute__ ( ( destructor( 101 ) ) )
 #define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
 
   global_status_reset(  );
+#if 0
 #ifdef MAS_TRACEMEM
   print_memlist_msg( FL, stdout, /* */
                      "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
@@ -136,5 +137,6 @@ __attribute__ ( ( destructor( 101 ) ) )
                      "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
                      "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
          );
+#endif
 #endif
 }

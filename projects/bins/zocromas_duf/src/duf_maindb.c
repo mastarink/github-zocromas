@@ -428,7 +428,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
   /* DUF_TEST_RX_START( r ); */
-  /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name_i( r ) ); *) */
+  /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), mas_error_name_i( r ) ); *) */
   /* DUF_TEST_RX_END( r ); */
 
 #if 0
@@ -459,7 +459,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
 
   /* III. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
-  DUF_TRACE( options, 0, "@@@@III %s - stages from first", duf_error_name_i( r ) );
+  DUF_TRACE( options, 0, "@@@@III %s - stages from first", mas_error_name_i( r ) );
   if ( DUF_ACTG_FLAG( interactive ) )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
   else

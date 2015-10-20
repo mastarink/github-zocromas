@@ -2,8 +2,9 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_mas_error.la
 
 
-libzocromas_mas_error_la_SOURCES = mas_template.c
-libzocromas_mas_error_la_LDFLAGS=@AM_LDFLAGS@
+libzocromas_mas_error_la_SOURCES = mas_error_base.c mas_error_clear.c mas_error_names.c mas_error_regfind.c mas_error_reporting.c
+libzocromas_mas_error_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@
+libzocromas_mas_error_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 
 
 if MAS_TEST

@@ -80,7 +80,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
       DORF( _r, duf_ ## _name ## _options, _istage ); \
       _xr = _r; \
     } \
-    DUF_TRACE( options, +4, "@got " #_name " options; " #_xr ":%d (%c)  %s", _xr, _xr > ' ' && _xr < 'z' ? _xr : '-', duf_error_name_i( r ) ); \
+    DUF_TRACE( options, +4, "@got " #_name " options; " #_xr ":%d (%c)  %s", _xr, _xr > ' ' && _xr < 'z' ? _xr : '-', mas_error_name_i( r ) ); \
   }
   DUF_OPTSRC( r, er, env, istage ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
   DUF_OPTSRC( r, fr, incfg, istage );
@@ -98,21 +98,21 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
     DOR( r, duf_env_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     er = r;
   }
-  DUF_TRACE( options, +4, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', mas_error_name_i( r ) );
 
   if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_cfg_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     fr = r;
   }
-  DUF_TRACE( options, +4, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', mas_error_name_i( r ) );
 
   if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_cli_options( istage ) ); /* => duf_parse_exec_option => duf_clarify_xcmd_full => duf_clarify_xcmd_(typed|old) */
     or = r;
   }
-  DUF_TRACE( options, +4, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', mas_error_name_i( r ) );
 
 #  if 1
   if ( DUF_NOERROR( r ) )
@@ -120,7 +120,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
     DOR( r, duf_stdin_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     isi = r;
   }
-  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", isi, isi > ' ' && isi < 'z' ? isi : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", isi, isi > ' ' && isi < 'z' ? isi : '-', mas_error_name_i( r ) );
 #  endif
 
 #  if 1
@@ -130,7 +130,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
     DOR( r, duf_indirect_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     ir = r;
   }
-  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', mas_error_name_i( r ) );
 #  endif
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) )
@@ -138,7 +138,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
     DOR( r, duf_interactive_options( istage ) );
     iir = r;
   }
-  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", iir, iir > ' ' && iir < 'z' ? iir : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got indirect options; or:%d (%c)  %s", iir, iir > ' ' && iir < 'z' ? iir : '-', mas_error_name_i( r ) );
 #endif
 
 #ifdef MAS_TRACING
@@ -191,11 +191,11 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int i
     DOR( r, duf_stdin_options( istage ) );
     ir = r;
   }
-  DUF_TRACE( options, +4, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name_i( r ) );
+  DUF_TRACE( options, +4, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', mas_error_name_i( r ) );
 #endif
 
   DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
-             duf_error_name_i( r ) );
+             mas_error_name_i( r ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 

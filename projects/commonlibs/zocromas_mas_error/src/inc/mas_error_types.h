@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_ERROR_TYPES_H
-#  define MAS_DUF_ERROR_TYPES_H
+#ifndef MAS_ERROR_TYPES_H
+#  define MAS_ERROR_TYPES_H
 
 #  include <mastar/sqlite/mas_sqlite_const.h>
 
@@ -159,26 +159,26 @@ typedef enum
   DUF_ERROR_FILE_EXISTS,
   DUF_ERROR_SCCB_NOT_FOUND,
   DUF_ERROR_ERROR_MAX,
-} duf_error_code_t;
+} mas_error_code_t;
 
 typedef struct
 {
   const char *name;
-  duf_error_code_t code;
-} duf_errdesc_t;
+  mas_error_code_t code;
+} mas_errdesc_t;
 
-typedef int duf_error_index_t;
+typedef int mas_error_index_t;
 
 typedef struct
 {
-  duf_error_index_t index;
-  duf_error_code_t code;
+  mas_error_index_t index;
+  mas_error_code_t code;
   const char *funcid;
   int linid;
   int shown;
   char *message;
   int count_reported;
-} duf_error_event_t;
+} mas_error_event_t;
 
 
 #  define DUF_ERROR_COUNT ( DUF_ERROR_ERROR_MAX - DUF_ERROR_ERROR_BASE )

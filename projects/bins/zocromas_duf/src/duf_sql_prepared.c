@@ -29,9 +29,9 @@ duf_sql_step( mas_sqlite_stmt_t * stmt )
   DEBUG_STARTR( r );
 
   DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
-  duf_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb() ) );
-  DUF_TRACE( sql, 0, "(%s) [[%s]]", duf_error_name_i( r ), sqlite3_sql( stmt ) );
-  /* assert( duf_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
+  mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb() ) );
+  DUF_TRACE( sql, 0, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
+  /* assert( mas_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
   DEBUG_ENDR( r );
 }
 

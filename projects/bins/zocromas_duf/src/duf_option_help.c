@@ -120,7 +120,7 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
   [DUF_OPTION_CLASS_NODESC] = "No desc",
 };
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_smart_help( duf_option_class_t oclass )
 {
   DEBUG_STARTR( r );
@@ -212,7 +212,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_smart_help_all( duf_option_class_t oclass )
 {
   DEBUG_STARTR( r );
@@ -227,7 +227,7 @@ duf_option_$_smart_help_all( duf_option_class_t oclass )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_help(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
@@ -281,7 +281,7 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_examples(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
@@ -779,7 +779,7 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_version( void )
 {
 
@@ -922,7 +922,7 @@ duf_unflag2cnames( unsigned unfset )
   return duf_uflag2cnames( 1 << unfset );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
@@ -1040,7 +1040,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
   DEBUG_ENDR( r );
 }
 
-duf_error_code_t
+mas_error_code_t
 duf_option_$_list_options( long n_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );

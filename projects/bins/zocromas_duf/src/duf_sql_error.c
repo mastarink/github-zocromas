@@ -7,7 +7,7 @@
 #include "duf_sql_error.h"
 /* ###################################################################### */
 
-duf_error_code_t
+mas_error_code_t
 duf_sqlite2r_error_code( int r3 )
 {
   int rt;
@@ -25,11 +25,11 @@ duf_r2sqlite_error_code( int rt )
   return r3;
 }
 
-duf_error_index_t
+mas_error_index_t
 duf_sqlite2duf( int r3, const char *func, int line )
 {
   DEBUG_STARTR( r );
-  duf_error_code_t rc = 0;
+  mas_error_code_t rc = 0;
 
   rc = duf_sqlite2r_error_code( r3 );
   if ( rc < 0 )
