@@ -22,6 +22,7 @@ commonlibs/zocromas_mas_cliopts
 commonlibs/zocromas_mas_init
 commonlibs/zocromas_mas_sqlite
 commonlibs/zocromas_mas_trace
+commonlibs/zocromas_mas_error
 modules/zocmds/zocromas_zocmds1
 modules/zocmds/zocromas_zocmds2
 modules/protos/xcromas
