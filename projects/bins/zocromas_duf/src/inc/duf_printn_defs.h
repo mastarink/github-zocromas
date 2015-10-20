@@ -4,7 +4,6 @@
 #  include "duf_defs.h"
 /* #  include "duf_config_ref.h" */
 #  include "duf_config_util.h"
-#  include "duf_printn_defs_preset.h"
 
 #  define P_FN_FMT "32"
 

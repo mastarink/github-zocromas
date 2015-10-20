@@ -169,7 +169,7 @@ duf_main( int argc, char **argv )
   assert( duf_config );
   /* raise( SIGABRT ); */
   /* *( ( int * ) NULL ) = 0; */
-
+  /* mas_strdup( "abrakadabra" ); */
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );

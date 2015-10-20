@@ -37,6 +37,21 @@ related:
 
 */
 
+__attribute__ ( ( destructor( 101 ) ) )
+     static void destructor_global_status( void )
+{
+#define DUF_MEM_ROW " ШШШШШШШШШШШШШ "
+
+#ifdef MAS_TRACEMEM
+  print_memlist_msg( FL, stdout, /* */
+                     "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
+                     "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
+                     "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
+                     "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
+         );
+  fprintf( stdout, "\n" );
+#endif
+}
 
 #ifndef MAS_NO_THREADS
 pthread_mutex_t malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
