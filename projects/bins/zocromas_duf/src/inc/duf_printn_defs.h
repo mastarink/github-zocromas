@@ -43,10 +43,10 @@
 /* #  define PF(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " #__VA_ARGS__ " $$$ : " fmt " $$$$$$$$$$$$",  __VA_ARGS__ ) */
 /* #  define PF0(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )                       */
 
+#  include <mastar/trace/mas_utils_print.h>
 
 #endif
 
 /*
 vi: ft=c
 */
-

@@ -5,7 +5,7 @@
 #  define DUF_ERRSYS( ... )				DUF_TRACESYS( errors /* opt.trace.errors */, 0, __VA_ARGS__ )
 #  define DUF_ERRSYSE( _ern, ... )			DUF_TRACESYSE( _ern, errors /* opt.trace.errors */, 0, __VA_ARGS__ )
 
-
+#  define DUF_T_NOIF
 
 #  ifdef DUF_T_NOIF
 /* DUF_TEST_RX : takes duf_error_index_t! */

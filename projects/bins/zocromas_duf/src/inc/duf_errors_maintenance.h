@@ -8,5 +8,11 @@
 #  include "duf_error_regfind.h"
 #  include "duf_error_clear.h"
 
+#  include "duf_errorn_defs.h"
+#  include "duf_errorn_defs_make.h"
+#  include "duf_errorn_defs_ctrl.h"
+#  include "duf_errorn_defs_show.h"
+
+
 #endif
 

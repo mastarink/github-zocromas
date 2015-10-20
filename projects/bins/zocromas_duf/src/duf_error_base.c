@@ -1,4 +1,9 @@
-#include "duf_maintenance.h"
+#include <assert.h>
+/* #include <unistd.h> */
+#include <mastar/wrap/mas_memory.h>
+
+/* #  include "duf_maintenance.h" */
+#  include "duf_tracen_maintenance.h"
 
 #include "duf_error_names.h"
 

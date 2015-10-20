@@ -5,6 +5,8 @@
 #  include <stdio.h>
 #  include <stdlib.h>
 
+#  include  "mas_std_def.h"
+
 struct mas_mem_head_s
 {
   const char *func;

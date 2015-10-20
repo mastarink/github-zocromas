@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_DODEFS_H
 #  define MAS_DUF_DODEFS_H
 
+#  define DUF_T_NOIF
+
 #  ifdef DUF_T_NOIF
 /* DUF_TEST_R : takes duf_error_index_t! */
 #    define DUF_DO_TEST_CALL(_x)  ( /* fprintf(stderr, #_x "\n"), */ (_x))
