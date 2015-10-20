@@ -66,8 +66,10 @@ function shn_run ()
 	fi
 	{
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
+#           echo -n '◁' >&2
 	    eval "$bin $qargs"
 	    retcode=$?
+#           echo -n '▷' >&2
 	    popd  &>/dev/null
 	  fi
 	}

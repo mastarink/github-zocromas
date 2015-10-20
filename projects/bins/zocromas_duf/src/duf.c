@@ -165,6 +165,7 @@ static int
 duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
+  /* fprintf(stderr, "◀"  ); */
   duf_config_create( argc, argv );
   assert( duf_config );
   /* raise( SIGABRT ); */
@@ -191,6 +192,7 @@ duf_main( int argc, char **argv )
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
+  /* fprintf(stderr, "▶"  ); */
   /* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, mas_error_list_size(  ) ); */
   /* sleep( 3 ); */
   DEBUG_ENDR( r );

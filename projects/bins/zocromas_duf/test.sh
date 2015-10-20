@@ -21,6 +21,8 @@ function comparetest ()
     cp -a $(realpath  ${ttype}.${name}.tmp) $(realpath  $matchdir/)
   elif ! diff $matchdir/${ttype}.${name}.tmp ${ttype}.${name}.tmp > diff.${ttype}.${name}.tmp ; then
     echo "test error $(realpath --relative-to=$test_at diff.${ttype}.${name}.tmp)" >&2
+  else
+    echo -n '.' >&2
   fi
 }
 function cmdtest_x ()
@@ -37,9 +39,15 @@ function cmdtest_x ()
     export MSH_DUF_OPTIONS=disable-memusage:trace-temp=-100
     cmd="run ${extra} --trace-file=@trace.${name}.tmp --config-dir=$confdir --db-directory=$dbdir --cmds-dir=$td $@"
   # echo "$cmd" >&2
+#   echo -n '<' >&2
     eval $cmd ; retcode=$?
+#   echo -n '>' >&2
     
-    if [[ $retcode -ne $okret ]] ; then echo "test returned: $retcode; must be $okret" >&2 ; fi  
+    if [[ $retcode -ne $okret ]] ; then
+      echo "test returned: $retcode; must be $okret" >&2
+    else
+      echo -n '.' >&2
+    fi  
     comparetest trace $name
     comparetest out $name
   else
