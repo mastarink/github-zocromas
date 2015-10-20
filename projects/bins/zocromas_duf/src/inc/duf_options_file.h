@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_OPTIONS_FILE_H
 #  define MAS_DUF_OPTIONS_FILE_H
 
+#  include <stdio.h>
+
 const char *duf_options_infilepath( void );
 
 int duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, int optional );

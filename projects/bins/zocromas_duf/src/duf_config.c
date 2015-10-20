@@ -76,7 +76,7 @@ duf_cfg_create( void )
   DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name, mas_strdup( "duf-selected" ) );
-  DUF_CFGW( cfg, opt.trace.error ) += 5;
+  DUF_CFGW( cfg, opt.trace.errors ) += 2;
   /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
   /* cfg->opt.trace.options = 1; */
   /* cfg->opt.trace.fs += 1; */

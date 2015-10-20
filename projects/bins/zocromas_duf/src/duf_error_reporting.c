@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,10 +9,12 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
+#include <mastar/trace/mas_trace.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_maintenance.h"
 
+#include "duf_error_base.h"
 #include "duf_error_names.h"
 
 /* #include "duf_sql_const.h" */
@@ -50,7 +53,7 @@ duf_force_offset_ereport( int count )
 }
 
 static void
-_duf_enable_ereport_c( int once DUF_UNUSED, int enable, int nabs, duf_error_code_t rc, int maxerr )
+_duf_enable_ereport_c( int once __attribute__ ( ( unused ) ), int enable, int nabs, duf_error_code_t rc, int maxerr )
 {
   assert( ( rc >= DUF_SQL_ERROR && rc <= DUF_SQL_WARNING_AUTOINDEX ) || ( rc >= DUF_ERROR_ERROR_BASE && rc <= DUF_ERROR_ERROR_MAX ) );
   if ( rc < 0 )
@@ -58,7 +61,7 @@ _duf_enable_ereport_c( int once DUF_UNUSED, int enable, int nabs, duf_error_code
     int errnumber = duf_errnumber_c( rc );
 
     assert( errnumber >= 0 );
-    DUF_TRACE( error, 5, "set report for error number %d / %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
+    MAST_TRACE( errors, 5, "set report for error number %d / %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
     if ( errnumber >= 0 && errnumber < maxerr )
     {
       /* int b;                        */
@@ -84,7 +87,7 @@ _duf_enable_ereport_c( int once DUF_UNUSED, int enable, int nabs, duf_error_code
 void
 duf_enable_ereport_c( int once, int enable, int nabs, duf_error_code_t rc )
 {
-  DUF_TRACE( error, 5, "set report for error number %d / %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
+  MAST_TRACE( errors, 5, "set report for error number %d / %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
   _duf_enable_ereport_c( once, enable, nabs, rc, DUF_ERROR_COUNT );
 }
 

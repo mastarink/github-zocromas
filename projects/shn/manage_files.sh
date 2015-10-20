@@ -12,7 +12,7 @@ function read_makefile_am ()
 # echo " ${#lines[@]} -- ($mark)" >&2
   for (( i=0; i<${#lines[@]}; i++ )) ; do
     lin=${lines[$i]}
-    if ! [[ $inblock ]] && [[ $lin =~ $mark=[[:blank:]]*(.*[^[:blank:]]|)[[:blank:]]*(\\|)$ ]] ; then
+    if ! [[ $inblock ]] && [[ $lin =~ $mark[[:blank:]]*=[[:blank:]]*(.*[^[:blank:]]|)[[:blank:]]*(\\|)$ ]] ; then
       lin=${BASH_REMATCH[1]}
 #     echo "[$lin]"
       inblock=yes
@@ -26,6 +26,8 @@ function read_makefile_am ()
     elif [[ $inblock ]] ; then
       echo "Why ($lin)" >&2
       unset lin
+#   else
+#     echo "--- Why ($lin -- $mark)" >&2
     fi
     if [[ $inblock ]] && [[ $got -gt 0 ]] ; then
       for fn in $lin ; do

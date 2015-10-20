@@ -27,7 +27,7 @@
 int
 duf_errnumber_c( duf_error_code_t rc )
 {
-  DUF_TRACE( error, 5, "calc error number from error code %d => %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
+  DUF_TRACE( errors, 5, "calc error number from error code %d => %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, duf_error_name_c( rc ) );
   return ( rc - DUF_ERROR_ERROR_BASE );
 }
 
@@ -73,10 +73,10 @@ duf_error_name_c( duf_error_code_t c )
 
   for ( int i = 0; i < duf_error_descriptions_table_size; i++ )
   {
-    DUF_TRACE( error, 10, "c:%d t[%d]:%d", c, i, duf_error_descriptions_table[i].code );
+    DUF_TRACE( errors, 10, "c:%d t[%d]:%d", c, i, duf_error_descriptions_table[i].code );
     if ( c == duf_error_descriptions_table[i].code )
     {
-      DUF_TRACE( error, 7, "c:%d t[%d]:%d => %s", c, i, duf_error_descriptions_table[i].code, duf_error_descriptions_table[i].name );
+      DUF_TRACE( errors, 3, "c:%d t[%d]:%d => %s", c, i, duf_error_descriptions_table[i].code, duf_error_descriptions_table[i].name );
 #if 0
       snprintf( buf, sizeof( buf ), "%s", duf_error_descriptions_table[i].name + 4 );
       pserr = buf;

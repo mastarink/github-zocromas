@@ -105,7 +105,7 @@ duf_vregister_error_c( duf_error_code_t code, const char *funcid, int linid, con
       global_error_list_size++;
     }
     /* fprintf( stderr, "global_error_list_size:%ld (%d) %s\n", global_error_list_size, code, duf_error_name_c( code ) ); */
-    DUF_TRACE( error, 5, "made error code:%d; ri:%d; [%ld:%ld]", code, ri, global_error_list_size, MAX_ERRORS );
+    DUF_TRACE( errors, 5, "made error code:%d; ri:%d; [%ld:%ld]", code, ri, global_error_list_size, MAX_ERRORS );
     assert( ri < 0 );
   }
   else

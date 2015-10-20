@@ -11,7 +11,7 @@
 /* #    define DUF_ERRORQ( _cond, ... )            if (_cond)  DUF_SHOW_ERRORO(__VA_ARGS__)        */
 /* #  endif                                                                                       */
 
-#  define DUF_SHOW_ERRORO_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
+#  define DUF_SHOW_ERRORO_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, errors  /* opt.trace.errors */, 0, __VA_ARGS__ )
 #  define DUF_SHOW_ERRORO( ... )				DUF_SHOW_ERRORO_WP( "@@  ERRor", __VA_ARGS__)
 
 #  define DUF_SHOW_ERRORN( _ri, _verb ) 		duf_error_report_i(_ri, 0, MAST_TRACE_FILE, _verb);

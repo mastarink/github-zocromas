@@ -105,7 +105,7 @@ function shn_debug ()
   local retcode=0
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
-  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
+  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
   local bindir libsdir debugdir
   debugdir="$MSH_SHN_PROJECT_DIR/debug"
   libsdir="${bsrc}/.libs"
@@ -165,7 +165,7 @@ function shn_core_debug ()
   local retcode=0 corename coredir="/tmp"
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
-  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
+  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
   local bindir libsdir debugdir
   local gid
   gid="`stat -c%g /proc/$$`"
@@ -212,7 +212,7 @@ function shn_core_debug_installed ()
   local bin cmdfile tmpcmd sedex lt rname
   rname=$1
   shift
-# rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
+# rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
   local bindir libsdir debugdir
   local gid
   gid="`stat -c%g /proc/$$`"
@@ -228,7 +228,7 @@ function shn_core_debug_installed ()
     if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
       shn_msg "core : $corename" >&2
     else
-      shn_errmsg "not found $corename" >&2
+      shn_errmsg "not found $corename"
       unset corename
       return 1
     fi

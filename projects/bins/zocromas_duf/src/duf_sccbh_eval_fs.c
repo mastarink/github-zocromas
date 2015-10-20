@@ -183,7 +183,7 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
   DEBUG_STARTR( r );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
-    assert( PDI->opendir == 1 );
+    /* assert( PDI->opendir == 1 ); */
     duf_pdi_set_opendir( PDI, 1 ); /* TODO neeless here */
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );

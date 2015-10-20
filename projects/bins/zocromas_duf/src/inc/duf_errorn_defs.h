@@ -2,8 +2,8 @@
 #  define MAS_DUF_ERRORN_DEFS_H
 
 
-#  define DUF_ERRSYS( ... )				DUF_TRACESYS( error, 0, __VA_ARGS__ )
-#  define DUF_ERRSYSE( _ern, ... )			DUF_TRACESYSE( _ern, error, 0, __VA_ARGS__ )
+#  define DUF_ERRSYS( ... )				DUF_TRACESYS( errors /* opt.trace.errors */, 0, __VA_ARGS__ )
+#  define DUF_ERRSYSE( _ern, ... )			DUF_TRACESYSE( _ern, errors /* opt.trace.errors */, 0, __VA_ARGS__ )
 
 
 

@@ -104,7 +104,7 @@ typedef struct
   int depth;
   int dirent;
   int dirs;
-  int error;
+  int errors;
   int handle_error;
   int errorr;
   int exif;

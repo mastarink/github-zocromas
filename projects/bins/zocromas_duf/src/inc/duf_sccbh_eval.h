@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_SCCBH_EVAL_H
 #  define MAS_DUF_SCCBH_EVAL_H
 
-#  include "duf_debug_defs.h"
 
 int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh, bool f_summary ) __attribute__ ( ( warn_unused_result ) ); /* duf_eval_sccbh_all */
 
