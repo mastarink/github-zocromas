@@ -7,6 +7,8 @@ AC_CONFIG_FILES([
 		Makefile
 		src/Makefile
 		src/inc/Makefile
+		mod/Makefile
+		mod/inc/Makefile
 		])
 
 AC_OUTPUT
