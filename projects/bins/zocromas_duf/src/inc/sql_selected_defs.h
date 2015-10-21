@@ -1,6 +1,8 @@
 #ifndef MAS_SQL_SELECTED_DEFS_H
 #  define MAS_SQL_SELECTED_DEFS_H
 
+#  include "sql_tables_global_defs.h"
+
 #  define DUF_SQL_SELECTED_TMP_FILENAMES  "${PDI_NAME}_selected_filenames"
 #  define DUF_SQL_SELECTED_TMP_PATHS "${PDI_NAME}_selected_paths"
 #  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "${PDI_NAME}_selected_pathtot_files"

@@ -1,4 +1,5 @@
 find test0.duf
+sfind test0nd.duf
 sfind test1.duf
 sfind test2.duf
 

@@ -167,12 +167,8 @@ duf_scan_callbacks_t duf_md5_callbacks = {
            /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId "   */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#if 0
-           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-           " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#endif
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,
@@ -383,14 +379,16 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     md5id = duf_insert_md5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( md5id )
     {
-      int changes = 0;
 
       pdi->cnts.dirent_content2++;
       if ( !DUF_CONFIGG( opt.disable.flag.update ) )
       {
+        int changes = 0;
+
         DUF_UFIELD2( filedataid );
 #if 0
-        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET md5id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, md5id, filedataid ) );
+        DOR( r,
+             duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET md5id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, md5id, filedataid ) );
 #else
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET md5id=:md5Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 
@@ -402,8 +400,8 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         DUF_SQL_CHANGES( changes, r, pstmt );
         DUF_SQL_END_STMT( pdi, update_md5id, r, pstmt );
 #endif
+        duf_pdi_reg_changes( pdi, changes );
       }
-      duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );

@@ -3,6 +3,7 @@
 
 
 #include "sql_beginning_types.h"
+#  include "sql_tables_global_defs.h"
 
 extern duf_sql_sequence_t sql_beginning_common;
 

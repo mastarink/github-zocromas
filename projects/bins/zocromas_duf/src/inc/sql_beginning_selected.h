@@ -2,9 +2,9 @@
 #  define MAS_SQL_BEGINNING_SELECTED_H
 
 
+#  include "sql_tables_global_defs.h"
 #  include "sql_tables_defs.h"
 #  include "sql_selected_defs.h"
-
 
 
 #  define DUF_SQL_UFILTER_BINDINGS \

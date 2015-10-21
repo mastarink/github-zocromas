@@ -1,4 +1,5 @@
 noinst_HEADERS=duf.h duf_experiment.h 			\
+	sql_tables_global_defs.h \
 	sql_tables_defs.h \
 	sql_selected_defs.h \
 	sql_beginning_selected.h \

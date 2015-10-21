@@ -75,6 +75,7 @@ typedef enum
   DUF_SQL_STMD_ID_select_exif,
   DUF_SQL_STMD_ID_insert_exif,
   DUF_SQL_STMD_ID_update_exif,
+  DUF_SQL_STMD_ID_update_priority,
 } duf_stmt_ident_t;
 
 typedef struct

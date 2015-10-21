@@ -4,6 +4,8 @@
 #include "duf_sql_defs.h"
 #include "sql_beginning_tables.h"
 #include "sql_beginning_selected.h"
+#include "sql_tables_global_defs.h"
+
 
 /* ###################################################################### */
 #include "std_mod_sets.h"
@@ -144,7 +146,8 @@ duf_sql_set_t std_node_sets[] = { /* */
    "#std-node"
 #endif
    ,
-#if 1
+#ifdef DUF_USE_CTE
+   /* never used?! */
    .cte =                       /* */
    "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
    " ( "                        /* */
@@ -158,8 +161,8 @@ duf_sql_set_t std_node_sets[] = { /* */
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                  */ " AS pte " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
    ,
 #endif
 
@@ -195,10 +198,28 @@ duf_sql_set_t std_node_sets[] = { /* */
    "#std-node"
 #endif
    ,
+#if 1
+   .cte =                       /* */
+   "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
+   " ( "                        /* */
+   "  SELECT pt." DUF_SQL_IDFIELD ",pt.parentid FROM " DUF_SQL_TABLES_PATHS_FULL "  AS pt" /* */
+   "   WHERE parentid=:topDirID " /* */
+   "  UNION "                   /* */
+   "   SELECT ptu." DUF_SQL_IDFIELD ",ptu.parentid " /* */
+   "    FROM cte_paths "        /* */
+   "    JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " /* */
+   " ) ",
+   .selector2_cte =             /* */
+   " FROM cte_paths " /*                                  */ " AS pte " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#endif
+   ,
    .selector2 =                 /* */
    " FROM      " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    ,
    .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName ) " /* */
    ,

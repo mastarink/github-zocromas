@@ -1,12 +1,7 @@
 #ifndef MAS_SQL_TABLES_DEFS_H
 #  define MAS_SQL_TABLES_DEFS_H
 
-
-
-
-#  define DUF_SQL_SELECTED_TEMPORARY "TEMPORARY"
-#  define DUF_SQL_TTABLES_TEMPORARY "TEMPORARY"
-/* #  define DUF_SQL_TABLES_TEMPORARY "TEMPORARY" */
+#  include "sql_tables_global_defs.h"
 
 #  ifndef DUF_SQL_SELECTED_TEMPORARY
 #    define DUF_SQL_SELECTED_DROP
@@ -43,22 +38,22 @@
 #  endif
 
 #  define DUF_SQL_TABLES_TMP_TDB_OPTIONS       "t_tdb_options"
-#  define DUF_SQL_TABLES_TMP_PATHTOT_FILES     "t_common_pathtot_files"
-#  define DUF_SQL_TABLES_TMP_PATHTOT_DIRS      "t_common_pathtot_dirs"
+#  ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
+#    define DUF_SQL_TABLES_TMP_PATHTOT_FILES     "t_common_pathtot_files"
+#  endif
+#  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+#    define DUF_SQL_TABLES_TMP_PATHTOT_DIRS      "t_common_pathtot_dirs"
+#  endif
 
-#  define DUF_SQL_TABLES_FILENAMES             "filenames"
-#  define DUF_SQL_TABLES_FILEDATAS             "filedatas"
-#  define DUF_SQL_TABLES_SHA1                  "sha1"
-#  define DUF_SQL_TABLES_MD5                   "md5"
-#  define DUF_SQL_TABLES_SD5                   "sd5"
-#  define DUF_SQL_TABLES_CRC32                 "crc32"
-#  define DUF_SQL_TABLES_SIZES                 "sizes"
-#  define DUF_SQL_TABLES_EXIF                  "exif"
-#  define DUF_SQL_TABLES_EXIF_MODEL            "exif_model"
-#  define DUF_SQL_TABLES_MIME                  "mime"
-#  define DUF_SQL_TABLES_PATHS                 "paths"
-#  define DUF_SQL_TABLES_TAGS                  "tags"
-#  define DUF_SQL_TABLES_TAGNAMES              "tagnames"
+#  define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES " ( SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " \
+							" FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " \
+								" LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " \
+							" GROUP BY fn.Pathid ) "
+#  define DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS  " ( SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " \
+							" FROM " DUF_SQL_TABLES_PATHS_FULL " AS pts " \
+								" LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " \
+								" JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " \
+							" GROUP BY parents." DUF_SQL_IDFIELD ") "
 
 #  if 1
 
@@ -78,12 +73,31 @@
 
 #    ifdef DUF_SQL_TTABLES_TEMPORARY
 #      define DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL     DUF_SQL_TABLES_TMP_TDB_OPTIONS
-#      define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL   DUF_SQL_TABLES_TMP_PATHTOT_FILES
-#      define DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL    DUF_SQL_TABLES_TMP_PATHTOT_DIRS
+#      ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
+#        define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL   DUF_SQL_TABLES_TMP_PATHTOT_FILES
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL  DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL
+#      else
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES
+#      endif
+#      ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+#        define DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL    DUF_SQL_TABLES_TMP_PATHTOT_DIRS
+#      else
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS
+#      endif
 #    else
 #      define DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL    DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_TDB_OPTIONS
-#      define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL  DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_PATHTOT_FILES
-#      define DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL   DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_PATHTOT_DIRS
+#      ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
+#        define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL  DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_PATHTOT_FILES
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL  DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL
+#      else
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES
+#      endif
+#      ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+#        define DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL   DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_PATHTOT_DIRS
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL   DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL
+#      else
+#        define DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS
+#      endif
 #    endif
 #  else
 #    define DUF_SQL_TABLES_FILENAMES_FULL            DUF_SQL_TABLES_FILENAMES

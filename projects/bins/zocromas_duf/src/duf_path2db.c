@@ -5,7 +5,7 @@
 
 #include "duf_config_util.h"
 #include "duf_config_ref.h"     /* opt.disable.flag.insert */
-#include "duf_config_defs.h"  
+#include "duf_config_defs.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
@@ -188,8 +188,23 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
           ", td.numdirs AS ndirs  " /*      */
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDFIELD ") " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#  else
+          " LEFT JOIN ( SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
+          "   FROM " DUF_SQL_TABLES_PATHS_FULL " AS pts " /* */
+          "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
+          "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
+          "   GROUP BY parents." DUF_SQL_IDFIELD ") AS td  ON (td.Pathid=pt." DUF_SQL_IDFIELD ") "
+#  endif
+#  ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#  else
+          " LEFT JOIN ( SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
+          "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+          "       LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
+          "   GROUP BY fn.Pathid ) AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD " ) "
+#  endif
           " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)" /* */
   };
 #else
@@ -339,7 +354,7 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
   up_d = duf_pdi_depth( pdi );
 
   /* duf_levinfo_godown_openat_dh: 1. check depth; 2. duf_levinfo_godown */
-  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name,  DUF_NODE_NODE /* node_type */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, DUF_NODE_NODE /* node_type */  ) );
 
   assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
 

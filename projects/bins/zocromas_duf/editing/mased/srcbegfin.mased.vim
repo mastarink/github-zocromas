@@ -10,6 +10,7 @@ sfind sql_beginning_common.h
 tab sfind sql_beginning_tables.c
 sfind sql_beginning_tables.h
 sfind sql_tables_defs.h
+sfind sql_tables_global_defs.h
 
 tab sfind sql_beginning_create.c
 sfind sql_beginning_create.h
