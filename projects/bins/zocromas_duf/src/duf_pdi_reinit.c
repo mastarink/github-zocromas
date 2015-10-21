@@ -73,7 +73,9 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
 
   if ( cpath )
   {
-    real_path = duf_realpath( cpath, &r );
+    real_path = duf_realpath( cpath /*, &r */  );
+    if ( !real_path )
+      DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     {
       /* FIXME : does'nt copy pu - so mod_dialog not work ???  */
       DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup->md5id.min );

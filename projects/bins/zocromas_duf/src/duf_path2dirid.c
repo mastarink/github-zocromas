@@ -39,7 +39,10 @@ duf_path2dirid( const char *path, int *pr )
   char *real_path;
   unsigned long long dirid = 0;
 
-  real_path = duf_realpath( path, &rpr );
+  real_path = duf_realpath( path /* , &rpr */  );
+  if ( !real_path )
+    DUF_MAKE_ERROR( rpr, DUF_ERROR_PATH );
+
   if ( DUF_NOERROR( rpr ) )
   {
     duf_depthinfo_t di = { 0 };

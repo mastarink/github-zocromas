@@ -809,8 +809,9 @@ duf_option_$_version( void )
   DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%06lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
               sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__, ( unsigned long ) &__MAS_LINK_TIME__ );
   DUF_PRINTF( 0, "DATE/TIME          %s/%s", __DATE__, __TIME__ );
+  DUF_PRINTF( 0, "MAS_LIBDIR:%s", MAS_LIBDIR );
 #ifdef MAS_SPLIT_DB
-  DUF_PRINTF( 0, "MAS_SPLIT_DB" );
+  DUF_PRINTF( 0, "MAS_SPLIT_DB is set" );
 #endif
 
   DUF_PUTSL( 0 );

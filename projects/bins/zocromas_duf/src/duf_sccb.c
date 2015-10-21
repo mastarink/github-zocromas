@@ -6,6 +6,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_utils_path.h"
+
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
 
@@ -72,7 +74,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     char *path = NULL;
     char *symbol = NULL;
 
-    path = mas_strdup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/lib/dufmod/" );
+    path = duf_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
     path = mas_strncat_x( path, name, namelen );
     path = mas_strcat_x( path, ".so" );
     symbol = mas_strdup( "duf_" );
