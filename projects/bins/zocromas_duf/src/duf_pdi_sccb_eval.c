@@ -36,20 +36,29 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
 
   duf_sccb_handle_t *sccbh = NULL;
 
+  /* assert( duf_levinfo_dirid( pdi ) ); */
   DUF_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb->name, duf_levinfo_path( pdi ) );
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
+  /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
   sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv /* , pu */ , &r );
+  if ( sccbh )
   {
-    DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
-    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
-    DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
-  }
-  {
-    int r1 = 0;
+    {
+      DUF_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
+      DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
+      DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
+    }
+    {
+      int r1 = 0;
 
-    DOR( r1, duf_sccb_handle_close( sccbh ) );
-    if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
-      r = r1;
+      DOR( r1, duf_sccb_handle_close( sccbh ) );
+      if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
+        r = r1;
+    }
+  }
+  else
+  {
+    T( "sccbh not opened %d", sccbh ? 1 : 0 );
   }
   DEBUG_ENDR( r );
 }
@@ -75,6 +84,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   {
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
 
+    /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
     DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg /*, pu */ , f_summary ) ); /* XXX XXX XXX XXX */
   }
   else
@@ -92,6 +102,7 @@ duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t
   DEBUG_STARTR( r );
   assert( pdi );
 
+  /* T( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
   DOR( r, duf_ev_pdi_evnamen( pdi, name, strlen( name ), first, ptarg /*, pu */ , f_summary ) );
   DEBUG_ENDR( r );
 }
@@ -141,6 +152,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_call
     ename = strchr( pnames, ',' );
 
     len = ename ? ( size_t ) ( ename - pnames ) : strlen( pnames );
+    /* T( "pnames:%s; dirid:%llu", pnames, duf_levinfo_dirid( pdi ) ); */
     DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, first, ptarg /*, pu */ , f_summary ) );
     if ( DUF_NOERROR( r ) )
       ok++;

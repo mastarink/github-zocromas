@@ -286,7 +286,6 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         sql = mas_strcat_x( sql, sql_set->count_aggregate ? sql_set->count_aggregate : "*" );
         sql = mas_strcat_x( sql, ") AS nf" );
         sql = mas_strcat_x( sql, " " );
-
         if ( sql_set->expand_sql )
         {
           char *tsql;
@@ -346,9 +345,6 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         }
 #endif
       }
-      if ( sql_set->cte || 1 )
-        DUF_TRACE( temp, 0, "%d: %s", sql_set->cte ? 1 : 0, sql_set->name );
-
     }
     DUF_TRACE( select, 0, "TOTAL: %s", sql );
   }

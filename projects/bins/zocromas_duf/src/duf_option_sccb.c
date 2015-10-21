@@ -1,4 +1,5 @@
 #include <string.h>
+#include <dlfcn.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
@@ -52,6 +53,7 @@ duf_option_$_list_sccbs( void )
 #endif
   DEBUG_ENDR( r );
 }
+
 #if 0
 mas_error_code_t
 duf_option_$_list_sccb( int x_unused DUF_UNUSED )
@@ -69,11 +71,33 @@ duf_option_$_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
 
+  {
+    void *han;
+
+    han = dlopen( NULL, RTLD_NOLOAD | RTLD_LAZY );
+    if ( han )
+    {
+      void *v;
+
+      v = dlsym( han, "duf_ev_evnamed_list_std" );
+      T( "han:%p : %p : %p", han, v, duf_ev_evnamed_list_std );
+
+      dlclose( han );
+    }
+    T( "han:%p", han );
+  }
+  if ( duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) )
+  {
 #if 0
-  DOR( r, duf_ev_evnamed_list( names, _duf_action_table(  ) ) );
+    DOR( r, duf_ev_evnamed_list( names, _duf_action_table(  ) ) );
 #else
-  DOR( r, duf_ev_evnamed_list_std( names ) );
+    DOR( r, duf_ev_evnamed_list_std( names ) );
 #endif
+  }
+  else
+  {
+    T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) );
+  }
   DEBUG_ENDR( r );
 }
 

@@ -84,6 +84,11 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       csql = sqlt;
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
       assert( DUF_NOERROR( rpr ) );
+      /* if ( !PY )                                 */
+      /* {                                          */
+      /*   T( "path:%s", duf_levinfo_path( PDI ) ); */
+      /*   assert( PY );                            */
+      /* }                                          */
       DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL ) );
       assert( DUF_NOERROR( rpr ) );
       DUF_SQL_STEP( rpr, pstmt );
@@ -95,10 +100,9 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
         cnt = DUF_GET_UFIELD2( CNT );
 #endif
         DUF_TRACE( sql, 1, "@@counted A %llu by %s", cnt, csql );
-        if ( !sql_set->cte && SCCB->count_nodes )
-        {
-          cnt = cnt + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
-        }
+        /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
+        if ( cnt > 0 && !sql_set->cte && SCCB->count_nodes )
+          cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
         /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@counted B %llu by %s", cnt, csql );
@@ -194,11 +198,14 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
   int rpr = 0;
 
   /* assert( pdi->pyp ); */
-  if ( sccb )
+  if ( sccb && pdi && duf_levinfo_dirid( pdi ) )
   {
     DUF_TRACE( fs, 2, "set def. opendir: %d", sccb->def_opendir );
     duf_pdi_set_opendir( pdi, sccb->def_opendir );
 
+    assert( pdi );
+    assert( duf_levinfo_dirid( pdi ) );
+    assert( duf_levinfo_path( pdi ) );
     sccbh = duf_sccb_handle_create(  );
 
     PARGC = targc;
@@ -254,6 +261,11 @@ TODO scan mode
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
                                    duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ , duf_pdi_recursive( PDI ) ) );
     }
+  }
+  else
+  {
+    T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) );
+    /* assert(0); */
   }
   if ( pr )
     *pr = rpr;
