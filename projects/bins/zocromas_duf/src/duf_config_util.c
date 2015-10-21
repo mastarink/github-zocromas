@@ -6,6 +6,7 @@
 
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
 
@@ -19,7 +20,6 @@
 /* #include "duf_option_extended.h" */
 #include "duf_option_names.h"
 
-#include "duf_utils_path.h"
 /* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config_util.h"
@@ -203,7 +203,7 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
     {
       int ry;
 
-      path = duf_concat_path( dir, DUF_CONFIGGSP( db.subdir ) );
+      path = mas_concat_path( dir, DUF_CONFIGGSP( db.subdir ) );
       {
         struct stat st;
 

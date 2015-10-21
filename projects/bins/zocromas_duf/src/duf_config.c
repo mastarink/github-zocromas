@@ -7,6 +7,7 @@
 
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
@@ -25,7 +26,6 @@
 #include "duf_options_table.h"  /* lo_extended_table_multi */
 #include "duf_option_names.h"
 
-#include "duf_utils_path.h"
 /* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config.h"
@@ -363,7 +363,7 @@ duf_config_make_db_main_path( void )
   /* TODO to use something like duf_expand_selected_db() here TODO */
 
   /* DUF_CONFIGWS( db.main.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
-  DUF_CONFIGWS( db.main.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
+  DUF_CONFIGWS( db.main.fpath, mas_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;
@@ -391,8 +391,8 @@ duf_config_make_db_adm_path( void )
   DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", DUF_CONFIGGSP( db.dir ), DUF_CONFIGGSP( db.adm.name ) );
   mas_free( DUF_CONFIGW( db.adm.fpath ) );
   /* DUF_CONFIGWS( db.adm.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
-  /* DUF_CONFIGWS( db.adm.fpath, duf_normalize_path( DUF_CONFIGG( db.adm.fpath ) ) ); */
-  DUF_CONFIGWS( db.adm.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
+  /* DUF_CONFIGWS( db.adm.fpath, mas_normalize_path( DUF_CONFIGG( db.adm.fpath ) ) ); */
+  DUF_CONFIGWS( db.adm.fpath, mas_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;
@@ -430,8 +430,8 @@ duf_config_make_db_temp_path( void )
              DUF_CONFIGGSP( db.tempo.name ) );
   mas_free( DUF_CONFIGW( db.tempo.fpath ) );
   /* DUF_CONFIGWS( db.tempo.fpath, mas_strdup( DUF_CONFIGGS( db.path ) ) ); */
-  /* DUF_CONFIGWS( db.tempo.fpath, duf_normalize_path( DUF_CONFIGG( db.tempo.fpath ) ) ); */
-  DUF_CONFIGWS( db.tempo.fpath, duf_normalize_path( DUF_CONFIGG( db.path ) ) );
+  /* DUF_CONFIGWS( db.tempo.fpath, mas_normalize_path( DUF_CONFIGG( db.tempo.fpath ) ) ); */
+  DUF_CONFIGWS( db.tempo.fpath, mas_normalize_path( DUF_CONFIGG( db.path ) ) );
   {
     int ry;
     struct stat st;

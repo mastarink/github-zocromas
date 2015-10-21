@@ -1,8 +1,9 @@
 #include <string.h>
 
+#include <mastar/tools/mas_utils_path.h> /* mas_realpath */
+
 #include "duf_maintenance.h"
 
-#include "duf_utils_path.h"     /* duf_pathdepth */
 
 #include "duf_option_defs.h"
 
@@ -73,7 +74,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
 
   if ( cpath )
   {
-    real_path = duf_realpath( cpath /*, &r */  );
+    real_path = mas_realpath( cpath /*, &r */  );
     if ( !real_path )
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     {

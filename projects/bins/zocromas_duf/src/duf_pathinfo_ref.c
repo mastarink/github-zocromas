@@ -1,5 +1,7 @@
 #include <string.h>
 
+/* #include <mastar/tools/mas_utils_path.h> */
+
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref_def.h"
@@ -8,7 +10,6 @@
 #include "duf_li_credel.h"
 #include "duf_context.h"
 
-#include "duf_utils_path.h"     /* duf_pathdepth */
 
 #include "duf_dh.h"
 

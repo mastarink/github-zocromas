@@ -3,13 +3,13 @@
 #include <unistd.h>
 
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance_options.h"
 
 #include "duf_config_defs.h"    /* DUF_CONFIGGS( config_dir ) */
 #include "duf_options_config.h"
 
-#include "duf_utils_path.h"
 
 #include "duf_option_names.h"
 /* ###################################################################### */
@@ -71,7 +71,7 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   char *cfgpath = NULL;
 
   /* assert( duf_config ); */
-  cfgpath = duf_normalize_path( at );
+  cfgpath = mas_normalize_path( at );
   assert( cfgpath );
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );

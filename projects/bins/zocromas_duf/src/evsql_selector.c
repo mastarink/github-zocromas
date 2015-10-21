@@ -3,10 +3,10 @@
 #include <unistd.h>
 
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
 
-#include "duf_utils_path.h"
 
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
@@ -108,7 +108,7 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
     str = mas_strdup( DUF_CONFIGGSP( db.dir ) );
     str = duf_config_db_path_add_subdir( str, ( int * ) NULL /* &r */  );
 #else
-    str = duf_normalize_path( DUF_CONFIGGS( db.path ) );
+    str = mas_normalize_path( DUF_CONFIGGS( db.path ) );
 #endif
   }
   else if ( 0 == strcmp( name, "PID" ) )

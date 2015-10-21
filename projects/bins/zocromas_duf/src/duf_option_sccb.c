@@ -2,12 +2,12 @@
 #include <dlfcn.h>
 
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
 
 
 
-#include "duf_utils_path.h"
 
 #include "duf_config_util.h"
 #include "duf_config_ref.h"     /* DUF_PRINTF ; DUF_CONFIGG */
@@ -142,7 +142,7 @@ duf_option_$_cd( const char *s )
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
 #  else
-        new_path = duf_normalize_path( new_path );
+        new_path = mas_normalize_path( new_path );
 #  endif
         new_path = mas_strcat_x( new_path, s );
       }

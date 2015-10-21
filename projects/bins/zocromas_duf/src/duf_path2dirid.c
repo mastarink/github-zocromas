@@ -2,11 +2,11 @@
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
 
 
-#include "duf_utils_path.h"
 
 #include "duf_levinfo_ref.h"
 
@@ -39,7 +39,7 @@ duf_path2dirid( const char *path, int *pr )
   char *real_path;
   unsigned long long dirid = 0;
 
-  real_path = duf_realpath( path /* , &rpr */  );
+  real_path = mas_realpath( path /* , &rpr */  );
   if ( !real_path )
     DUF_MAKE_ERROR( rpr, DUF_ERROR_PATH );
 
@@ -161,7 +161,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
 #if 0
       path = mas_strcat_x( path, "/" );
 #else
-      path = duf_normalize_path( path );
+      path = mas_normalize_path( path );
 #endif
       path = mas_strcat_x( path, t );
       mas_free( t );
