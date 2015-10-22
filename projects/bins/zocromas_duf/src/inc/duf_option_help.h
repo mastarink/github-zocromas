@@ -12,7 +12,7 @@ mas_error_code_t duf_option_$_help(  /* int argc, char *const *argv */ void );
 mas_error_code_t duf_option_$_examples(  /* int argc, char *const *argv */ void );
 mas_error_code_t duf_option_$_version(  /* int argc, char *const *argv */ void );
 mas_error_code_t duf_option_$_showflags(  /* int argc, char *const *argv */ void );
-
+mas_error_code_t duf_option_$_list_xtended( const char *s );
 
 mas_error_code_t duf_option_$_list_options( long n );
 

@@ -4,7 +4,7 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_options_table.h"
+#include "duf_xtended_table.h"
 
 /* ###################################################################### */
 #include "duf_option_find.h"

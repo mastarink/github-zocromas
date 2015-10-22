@@ -15,7 +15,8 @@
 
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
-#include "duf_options_table.h"
+#include "duf_xtended_table.h"
+
 #include "duf_option_names.h"
 #include "duf_options_file.h"   /* duf_options_infilepath */
 
@@ -1068,5 +1069,13 @@ duf_option_$_list_options( long n_unused DUF_UNUSED )
       mas_free( s );
     }
   }
+  DEBUG_ENDR( r );
+}
+
+mas_error_code_t
+duf_option_$_list_xtended( const char *s )
+{
+  DEBUG_STARTR( r );
+  duf_extended_table_multi_std_print( s );
   DEBUG_ENDR( r );
 }

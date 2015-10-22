@@ -32,6 +32,8 @@ const duf_longval_extended_table_t optable_info = {
     /*      */ DO_EV_CALL( examples ) /*                                                    */ , DO_H( examples ) /*                         */ },
    {.o = {DO_Q( "list-options" ) /*     */ , DO_A_O /* */ , DO_V( LIST_OPTIONS )} /*      */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( list_options ) /*                                                          */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "list-extended" ) /*     */ , DO_A_O /* */ , DO_V( LIST_XTENDED )} /*      */ , DO_CL( NODESC ) /*  */
+    , DO_S_CALL( list_xtended ), DO_AT_STAGE( SETUP ) /*                                    */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "error-level" ) /*      */ , DO_A_O /* */ , DO_V( ERROR_LEVEL )} /*        */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( error_level ), DO_AT_STAGE( SETUP ) /*                                     */ , DO_H(  ... ) /*                             */ },

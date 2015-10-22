@@ -6,7 +6,8 @@
 
 
 #include "duf_option_find.h"
-#include "duf_options_table.h"
+#include "duf_xtended_table.h"
+
 #include "duf_option.h"
 #include "duf_option_names.h"
 

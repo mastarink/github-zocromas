@@ -11,7 +11,7 @@ zocromas_duf_SOURCES=				   \
 	duf_cli.c \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
 	duf_options_config.c duf_options.c duf_option.c  duf_option_tmpdb.c duf_option_typed.c  \
-	duf_option_find.c duf_options_table.c		\
+	duf_option_find.c duf_xtended_table.c		\
 	duf_option_descr.c		\
 	duf_options_cli.c duf_options_env.c duf_options_string.c duf_options_file.c duf_options_interactive.c \
 	duf_option_help.c duf_option_misc.c		\

@@ -65,8 +65,8 @@
 #  define DO_XFUNC(_f)	    { DO_SET_FUNC(_f)	   }
 #  define DO_XFUNCA(_f, _a) { DO_SET_FUNC(_f), .arg=_a }
 
-#  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }} /**/
-#  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }} /**/
+#  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) },.funcname= #_f} /**/
+#  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f) },.funcname= #_f} /**/
       /* */
       /* void f( .eia.arg ) -- *//* call with numeric (int) arg from table (EIA:void-int-arg) */
 #  define DO_EIA_CALL(_f, _a)		DO_SET_VTYPE( EIA_CALL ), DO_SET_CALLA(eia, _f, _a) /**/

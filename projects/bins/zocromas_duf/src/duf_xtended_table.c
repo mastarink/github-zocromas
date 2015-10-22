@@ -8,7 +8,7 @@
 
 
 /* ###################################################################### */
-#include "duf_options_table.h"
+#include "duf_xtended_table.h"
 /* ###################################################################### */
 
 static const duf_longval_extended_t _lo_extended1[] = {

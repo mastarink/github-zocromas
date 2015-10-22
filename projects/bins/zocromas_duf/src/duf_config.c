@@ -23,7 +23,7 @@
 #include "duf_ufilter.h"
 
 #include "duf_option_extended.h" /* duf_options_create_longopts_table */
-#include "duf_options_table.h"  /* lo_extended_table_multi */
+#include "duf_xtended_table.h"
 #include "duf_option_names.h"
 
 /* #include "duf_config_ref.h" */
