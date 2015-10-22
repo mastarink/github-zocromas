@@ -129,7 +129,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
   size_t ss;
   int tbcount;
 
-  tbcount = duf_longindex_extended_count( lo_extended_table_multi );
+  tbcount = duf_longindex_extended_count( duf_extended_table_multi(  ) );
   ss = tbcount * sizeof( int );
 
   ashown = mas_malloc( ss );
@@ -1049,7 +1049,7 @@ duf_option_$_list_options( long n_unused DUF_UNUSED )
   int ntable = 0;
   int tbcount = 0;
 
-  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++, ntable++ )
+  for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); *xtables; xtables++, ntable++ )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
 

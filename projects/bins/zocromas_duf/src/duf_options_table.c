@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "duf_maintenance.h"
 
 
@@ -73,7 +75,72 @@ static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
 
 
 
-const duf_longval_extended_table_t **lo_extended_table_multi = _lo_extended_table_multi;
+static const duf_longval_extended_table_t **lo_extended_table_multi = NULL;
+
+
+
+void
+_duf_extended_table_multi_init( void )
+{
+  unsigned n = 0;
+  const duf_longval_extended_table_t **src = NULL;
+  const duf_longval_extended_table_t **dst = NULL;
+
+  src = _lo_extended_table_multi;
+  while ( src && *src )
+  {
+    n++;
+    src++;
+  }
+  T( "n:%d", n );
+  n++;
+  lo_extended_table_multi = mas_malloc( sizeof( duf_longval_extended_table_t ** ) * n );
+  memset( lo_extended_table_multi, 0, n );
+  dst = lo_extended_table_multi;
+  for ( const duf_longval_extended_table_t ** src = _lo_extended_table_multi; src && *src; src++, dst++ )
+  {
+    *dst = *src;
+    T( "t:%p '%s'", dst, ( *dst )->name );
+  }
+  *dst++ = NULL;
+  for ( const duf_longval_extended_table_t ** dst = lo_extended_table_multi; dst && *dst; dst++ )
+  {
+    T( "t:%p '%s'", dst, ( *dst )->name );
+  }
+}
+
+void
+duf_extended_table_multi_init( void )
+{
+  static unsigned inited = 0;
+
+  if ( !inited )
+  {
+    _duf_extended_table_multi_init(  );
+    inited = 1;
+  }
+}
+
+__attribute__ ( ( constructor( 101 ) ) )
+     static void extended_table_multi_init( void )
+{
+  /* duf_extended_table_multi_init(  ); */
+}
+
+const duf_longval_extended_table_t **
+duf_extended_table_multi( void )
+{
+  duf_extended_table_multi_init(  );
+  return lo_extended_table_multi;
+}
+
+
+/* _lo_extended_table_multi; */
+__attribute__ ( ( destructor( 101 ) ) )
+     static void unbuild( void )
+{
+  mas_free( lo_extended_table_multi );
+}
 
 /* unsigned lo_extended_count = sizeof( _lo_extended ) / sizeof( _lo_extended[0] ); */
 

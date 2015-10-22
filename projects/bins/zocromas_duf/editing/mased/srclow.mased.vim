@@ -7,8 +7,8 @@ sfind duf_sys_wrap.h
 tab sfind duf_utils.c
 sfind duf_utils.h
 
-tab sfind duf_utils_path.c
-sfind duf_utils_path.h
+" tab sfind duf_utils_path.c
+" sfind duf_utils_path.h
 
 " tab sfind duf_utils_print.c
 " sfind duf_utils_print.h

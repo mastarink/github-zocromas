@@ -339,7 +339,7 @@ typedef struct
 } duf_longval_extended_t;
 typedef duf_longval_extended_t *duf_longval_pextended;
 
-typedef struct
+typedef struct duf_longval_extended_table_s
 {
   unsigned use_stage:1;
   unsigned use_stage_mask:1;

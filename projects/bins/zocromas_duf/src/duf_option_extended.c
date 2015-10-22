@@ -132,7 +132,7 @@ duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxt
   const duf_longval_extended_t *extended = NULL;
   int tbcount = 0;
 
-  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++ )
+  for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(); tbcount <= longindex && *xtables; xtables++ )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
 
@@ -163,7 +163,7 @@ duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxt
   if ( !extended )
   {
     /* continue with tbcount */
-    for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++ )
+    for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(); tbcount <= longindex && *xtables; xtables++ )
     {
       const duf_longval_extended_table_t *xtable = *xtables;
 

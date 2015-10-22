@@ -53,7 +53,7 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_exte
 
   if ( codeval && codeval != '?' )
   {
-    for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; !rxtended && *xtables; xtables++, ntable++ )
+    for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); !rxtended && *xtables; xtables++, ntable++ )
     {
       const duf_longval_extended_table_t *xtable = *xtables;
 
@@ -192,6 +192,7 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
     *pr = rpr;
   return extended;
 }
+
 /*
  * possible error(s):
  *   DUF_ERROR_OPTION_MULTIPLE

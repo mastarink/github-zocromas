@@ -186,6 +186,6 @@ duf_exec_cmd_long_xtables_std( const char *string, char vseparator, duf_option_s
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
   DUF_TRACE( options, 4, "(%d) executed cmd", r );
 /* look all xtables for cmd from string and exec if found */
-  DOR( r, duf_exec_cmd_long_xtables( string, lo_extended_table_multi, vseparator, istage, source ) );
+  DOR( r, duf_exec_cmd_long_xtables( string, duf_extended_table_multi(  ), vseparator, istage, source ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }
