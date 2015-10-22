@@ -13,6 +13,7 @@ int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+  DORF( r, duf_main_db_open );
   DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
   DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
   /* assert( global_status.db_attached_selected == NULL ); */
@@ -26,8 +27,8 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
     DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
-    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL , pdi->db_attached_selected, &changes ) );
-    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL , ( duf_yfilter_t * ) NULL , pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
   }
   DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   DEBUG_ENDR( r );

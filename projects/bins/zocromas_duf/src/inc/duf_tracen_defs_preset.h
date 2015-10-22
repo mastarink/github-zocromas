@@ -3,8 +3,9 @@
 
 
 #  ifndef MAST_TRACE_CONFIG
-#    include "duf_config4trace_ref.h"
-#    define MAST_TRACE_CONFIG duf_config4trace
+/* #    include "duf_config4trace_ref.h" */
+/* #    define MAST_TRACE_CONFIG duf_config4trace */
+#    define MAST_TRACE_CONFIG duf_get_config()
 #  endif
 
 
@@ -38,6 +39,13 @@
 #  ifndef MAST_TRACE_FUNWIDTH
 #    define MAST_TRACE_FUNWIDTH( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 )
 #  endif
+
+#  ifndef MAST_TRACE_LEVEL
+#    define MAST_TRACE_LEVEL( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name )
+/* #    define MAST_TRACE_LEVEL( _cfg, _what, _name ) 0 */
+#  endif
+
+
 
 
 #endif

@@ -87,7 +87,6 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
 
-    DORF( r, duf_main_db_open );
 #ifdef DUF_ATTACH_SELECTED_PATTERN
 #  ifdef DUF_SQL_SELECTED_TEMPORARY
 #    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"

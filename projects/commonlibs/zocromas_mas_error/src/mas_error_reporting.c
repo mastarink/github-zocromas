@@ -3,9 +3,13 @@
 /* #include <mastar/trace/mas_trace.h> */
 /* #include "mas_tracen_maintenance.h" */
 
+#include "mas_error_tracen_defs_preset.h"
+
+
 #include <mastar/trace/mas_print_defs.h>
 #include <mastar/trace/mas_utils_print.h>
 #include <mastar/trace/mas_trace_defs.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "mas_error_defs_show.h"
 #include "mas_error_base.h"
@@ -15,6 +19,7 @@
 /* ###################################################################### */
 #include "mas_error_reporting.h"
 /* ###################################################################### */
+
 
 /* #define MAS_NOTIMING */
 static int noreport_error[DUF_ERROR_COUNT] = { 0 };
@@ -308,7 +313,6 @@ mas_ecount_reported_i( mas_error_code_t ri )
 void
 mas_error_report_i( mas_error_code_t ri, int test, FILE * out, int verb )
 {
-
   if ( ri < 0 )
   {
     mas_error_event_t *rev = mas_find_error_event_i( ri );
@@ -335,23 +339,23 @@ mas_error_report_i( mas_error_code_t ri, int test, FILE * out, int verb )
       MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d)", ename, msg ? " - " : "", msg, func, line );
       break;
     case 2:
-      /* MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb ); */
+      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 3:
-      /* MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                          */
-      /*                     ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 4:
-      /* MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                          */
-      /*                     ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 5:
-      /* MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                          */
-      /*                     ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     default:
-      /* MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                          */
-      /*                     ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     }
   }
@@ -381,7 +385,7 @@ mas_error_report_all( int test, FILE * out, int verb )
 #if 0
       T( "@@@@@@@%d. %s @ %s:%d %s", rp + 1, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ), mas_error_message_p( rp ) );
       MASE_SHOW_ERROR( "@@@@@@@@%d. %s @ %s:%d %s", rp + 1, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ),
-                      mas_error_message_p( rp ) );
+                       mas_error_message_p( rp ) );
 #else
       mas_error_report_p( rp, test, out, verb );
 #endif

@@ -29,7 +29,7 @@
 			mas_trace( \
 			    /* MAST_TRACE_MODE_ ## _name, MAST_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
-	/* level */			MAST_IF_TRACE_WHAT_C( _cfg, _what, _name ), \
+	/* level */			MAST_TRACE_LEVEL( _cfg, _what, _name ), \
 	/* minlevel */			_min, \
 	/* funcid, linid */		MAST_FL, \
 	/* time0 */			MAST_TRACE_LOADTIME_C( _cfg ), \

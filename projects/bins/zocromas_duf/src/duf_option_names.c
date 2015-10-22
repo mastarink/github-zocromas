@@ -22,7 +22,7 @@ duf_optstage_name( duf_option_stage_t istage )
     [DUF_OPTION_STAGE_INTERACTIVE] = "interactive",
     NULL
   };
-  return ( istage >= 0 && istage < DUF_OPTION_STAGE_MAX ) ? tail[istage] : NULL;
+  return ( istage >= 0 && istage < DUF_OPTION_STAGE_MAX ) ? tail[istage] : ( istage == DUF_OPTION_STAGE_ANY ? "any" : NULL );
 }
 
 char *
@@ -33,7 +33,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
   char *names = NULL;
   int cnt = 0;
 
-  xtables = duf_cli_options_config()->xtable_multi;
+  xtables = duf_cli_options_config(  )->xtable_multi;
 
   while ( ( xtable = *xtables++ ) )
   {

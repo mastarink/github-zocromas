@@ -6,6 +6,7 @@
 
 #  include "mas_error_types.h"
 
+
 mas_error_code_t mas_error_code_p( size_t rp );
 mas_error_code_t mas_error_code_i( mas_error_index_t e );
 mas_error_code_t mas_error_code_rev( const mas_error_event_t * rev );

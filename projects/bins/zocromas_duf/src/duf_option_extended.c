@@ -1,4 +1,6 @@
 #include <string.h>
+#include <stddef.h>
+
 
 #include <mastar/tools/mas_arg_tools.h>
 
@@ -19,7 +21,7 @@ duf_print_stage( int use_stage, int use_stage_mask, duf_limits_stage_t stage, un
     DUF_PRINTF( 0, ".  " );
     if ( use_stage )
     {
-      DUF_PRINTF( 0, ".stage(%s,%s) ", duf_optstage_name( stage.min ), duf_optstage_name( stage.max ) );
+      DUF_PRINTF( 0, ".stage(%s(%d),%s(%d)) ", duf_optstage_name( stage.min ), stage.min, duf_optstage_name( stage.max ), stage.max );
     }
     if ( use_stage_mask )
     {
@@ -91,6 +93,223 @@ duf_extended_vtype2string( duf_option_vtype_t ovtype )
   return rs;
 }
 
+const char *
+duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
+{
+  const char *rs = NULL;
+
+  if ( relto == DUF_OFFSET_config )
+  {
+    switch ( offset )
+    {
+    case offsetof( duf_config_t, help_string ):
+      rs = "help_string";
+      break;
+    case offsetof( duf_config_t, loadtime ):
+      rs = "loadtime";
+      break;
+    case offsetof( duf_config_t, config_dir ):
+      rs = "config_dir";
+      break;
+    case offsetof( duf_config_t, cmds_dir ):
+      rs = "cmds_dir";
+      break;
+    case offsetof( duf_config_t, config_file_path ):
+      rs = "config_file_path";
+      break;
+    case offsetof( duf_config_t, dir_priority ):
+      rs = "dir_priority";
+      break;
+    case offsetof( duf_config_t, db.dir ):
+      rs = "db.dir";
+      break;
+    case offsetof( duf_config_t, db.subdir ):
+      rs = "db.subdir";
+      break;
+    case offsetof( duf_config_t, db.adm.name ):
+      rs = "db.adm.name";
+      break;
+    case offsetof( duf_config_t, db.tempo.name ):
+      rs = "db.tempo.name";
+      break;
+    case offsetof( duf_config_t, db.selected.name ):
+      rs = "db.selected.name";
+      break;
+    case offsetof( duf_config_t, db.main.name ):
+      rs = "db.main.name";
+      break;
+    case offsetof( duf_config_t, tag.dir ):
+      rs = "tag.dir";
+      break;
+    case offsetof( duf_config_t, tag.file ):
+      rs = "tag.file";
+      break;
+    case offsetof( duf_config_t, save.path ):
+      rs = "save.path";
+      break;
+      /* case offsetof( duf_config_t, cli ):  */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, opt ):  */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, db ):   */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, save ): */
+      /*   break;                             */
+    default:
+      if ( offset > offsetof( duf_config_t, cli ) && offset < offsetof( duf_config_t, opt ) )
+      {
+      }
+      else if ( offset >= offsetof( duf_config_t, opt ) && offset < offsetof( duf_config_t, db ) )
+      {
+        {
+          if ( offsetof( duf_config_opt_t, option_delimiter ) == offset - offsetof( duf_config_t, opt ) )
+            rs = "opt.option_delimiter";
+        }
+      }
+      else if ( offset >= offsetof( duf_config_t, db ) && offset < offsetof( duf_config_t, save ) )
+      {
+      }
+      else if ( offset >= offsetof( duf_config_t, save ) && offset < offsetof( duf_config_t, config_dir ) )
+      {
+      }
+      else if ( offset >= offsetof( duf_config_t, scn ) && offset < offsetof( duf_config_t, dh ) )
+      {
+      }
+      else if ( offset >= offsetof( duf_config_t, dh ) && offset < offsetof( duf_config_t, tag ) )
+      {
+      }
+      break;
+    }
+  }
+  else if ( relto == DUF_OFFSET_ufilter )
+  {
+    switch ( offset )
+    {
+    case offsetof( duf_ufilter_t, globx.include_fs_files ):
+      rs = "globx.include_fs_files";
+      break;
+    case offsetof( duf_ufilter_t, globx.exclude_fs_files ):
+      rs = "globx.exclude_fs_files";
+      break;
+    case offsetof( duf_ufilter_t, max_rel_depth ):
+      rs = "max_rel_depth";
+      break;
+    case offsetof( duf_ufilter_t, max_seq ):
+      rs = "max_seq";
+      break;
+    case offsetof( duf_ufilter_t, same.md5 ):
+      rs = "same.md5";
+      break;
+    case offsetof( duf_ufilter_t, same.sha1 ):
+      rs = "same.sha1";
+      break;
+    case offsetof( duf_ufilter_t, same.exif ):
+      rs = "same.exif";
+      break;
+    case offsetof( duf_ufilter_t, same.mime ):
+      rs = "same.mime";
+      break;
+    case offsetof( duf_ufilter_t, same.data ):
+      rs = "same.data";
+      break;
+    case offsetof( duf_ufilter_t, same.size ):
+      rs = "same.size";
+      break;
+    case offsetof( duf_ufilter_t, size ):
+      rs = "size";
+      break;
+    case offsetof( duf_ufilter_t, nameid ):
+      rs = "nameid";
+      break;
+    case offsetof( duf_ufilter_t, dataid ):
+      rs = "dataid";
+      break;
+    case offsetof( duf_ufilter_t, dirid ):
+      rs = "dirid";
+      break;
+    case offsetof( duf_ufilter_t, mtime ):
+      rs = "mtime";
+      break;
+    case offsetof( duf_ufilter_t, atime ):
+      rs = "atime";
+      break;
+    case offsetof( duf_ufilter_t, ctime ):
+      rs = "ctime";
+      break;
+    case offsetof( duf_ufilter_t, exifdt ):
+      rs = "exifdt";
+      break;
+    case offsetof( duf_ufilter_t, inode ):
+      rs = "inode";
+      break;
+    case offsetof( duf_ufilter_t, md5id ):
+      rs = "md5id";
+      break;
+    case offsetof( duf_ufilter_t, sha1id ):
+      rs = "sha1id";
+      break;
+    case offsetof( duf_ufilter_t, sd5id ):
+      rs = "sd5id";
+      break;
+    case offsetof( duf_ufilter_t, crc32id ):
+      rs = "crc32id";
+      break;
+    case offsetof( duf_ufilter_t, mimeid ):
+      rs = "mimeid";
+      break;
+    case offsetof( duf_ufilter_t, exifid ):
+      rs = "exifid";
+      break;
+    case offsetof( duf_ufilter_t, filename ):
+      rs = "filename";
+      break;
+    case offsetof( duf_ufilter_t, glob_db ):
+      rs = "glob_db";
+      break;
+    case offsetof( duf_ufilter_t, glob_db_include ):
+      rs = "glob_db_include";
+      break;
+    case offsetof( duf_ufilter_t, glob_db_exclude ):
+      rs = "glob_db_exclude";
+      break;
+    case offsetof( duf_ufilter_t, tag.dir ):
+      rs = "tag.dir";
+      break;
+    case offsetof( duf_ufilter_t, exif.camera ):
+      rs = "exif.camera";
+      break;
+    case offsetof( duf_ufilter_t, mime.type ):
+      rs = "mime.type";
+      break;
+    case offsetof( duf_ufilter_t, same_as.md5 ):
+      rs = "same_as.md5";
+      break;
+    case offsetof( duf_ufilter_t, same_as.sha1 ):
+      rs = "same_as.sha1";
+      break;
+    case offsetof( duf_ufilter_t, same_as.exif ):
+      rs = "same_as.exif";
+      break;
+    case offsetof( duf_ufilter_t, dirfiles.min ):
+      rs = "dirfiles.min";
+      break;
+    case offsetof( duf_ufilter_t, dirfiles.max ):
+      rs = "dirfiles.max";
+      break;
+    case offsetof( duf_ufilter_t, maxitems.dirs ):
+      rs = "maxitems.dirs";
+      break;
+    case offsetof( duf_ufilter_t, maxitems.files ):
+      rs = "maxitems.files";
+      break;
+    case offsetof( duf_ufilter_t, maxitems.total ):
+      rs = "maxitems.total";
+      break;
+    }
+  }
+  return rs;
+}
+
 void
 duf_extended_table_print( const duf_longval_extended_table_t * xtable, const char *name )
 {
@@ -107,9 +326,9 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       if ( xtended->o.has_arg == 0 )
         DUF_PRINTF( 0, "  optarg: %s", "no" );
       else if ( xtended->o.has_arg == 1 )
-        DUF_PRINTF( 0, "  optarg: %s", "optional" );
-      else if ( xtended->o.has_arg == 2 )
         DUF_PRINTF( 0, "  optarg: %s", "required" );
+      else if ( xtended->o.has_arg == 2 )
+        DUF_PRINTF( 0, "  optarg: %s", "optional" );
       else
         DUF_PRINTF( 0, "  optarg: %s", "error" );
       if ( xtended->can_no || xtended->invert || xtended->m_hasoff )
@@ -118,7 +337,20 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
         DUF_PRINTF( 0, ".%s", xtended->can_no ? "can_no " : "" );
         DUF_PRINTF( 0, ".%s", xtended->invert ? "invert " : "" );
         if ( xtended->m_hasoff )
-          DUF_PRINTF( 0, ".offset(%lu,%d) ", xtended->m_offset, xtended->relto );
+        {
+          const char *srelto = NULL;
+
+          switch ( xtended->relto )
+          {
+          case DUF_OFFSET_config:
+            srelto = "config";
+            break;
+          case DUF_OFFSET_ufilter:
+            srelto = "ufilter";
+            break;
+          }
+          DUF_PRINTF( 0, ".offset( %lu, %s(%d) ) ", xtended->m_offset, srelto, xtended->relto );
+        }
         DUF_PUTSL( 0 );
       }
       duf_print_stage( xtended->use_stage, xtended->use_stage_mask, xtended->stage, xtended->stage_mask, 1 );
@@ -129,7 +361,8 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       }
       DUF_PRINTF( 0, "  class:%s(%d)", duf_extended_class2string( xtended->oclass ), xtended->oclass );
       DUF_PRINTF( 0, "  vtype:%s(%d)", duf_extended_vtype2string( xtended->vtype ), xtended->vtype );
-      DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
+      if ( xtended->call.funcname )
+        DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
       switch ( xtended->vtype )
       {
       case DUF_OPTION_VTYPE_EIA_CALL:
@@ -170,7 +403,41 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       default:
         break;
       }
-      DUF_PRINTF( 0, "  help(%s)", xtended->help );
+      if ( xtended->help )
+        DUF_PRINTF( 0, "  help(%s)", xtended->help );
+      DUF_PRINTF( 0, ".{.o = {" );
+      DUF_PRINTF( 0, ".  DO_Q( \"%s\" )", xtended->o.name );
+      {
+        char c;
+
+        if ( xtended->o.has_arg == 0 )
+          c = 'N';
+        else if ( xtended->o.has_arg == 1 )
+          c = 'R';
+        else if ( xtended->o.has_arg == 2 )
+          c = 'O';
+        else
+          c = '_';
+        DUF_PRINTF( 0, "., DO_A_%c", c );
+      }
+      DUF_PRINTF( 0, "., DO_V( %s )", duf_extended_code2string( xtended->o.val ) );
+      DUF_PRINTF( 0, ".  }" );
+      DUF_PRINTF( 0, "., DO_CL( %s )", duf_extended_class2string( xtended->oclass ) );
+      if ( xtended->m_hasoff )
+      {
+        switch ( xtended->relto )
+        {
+        case DUF_OFFSET_config:
+          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          break;
+        case DUF_OFFSET_ufilter:
+          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          break;
+        }
+      }
+      if ( xtended->help )
+        DUF_PRINTF( 0, "., DO_H( %s )", xtended->help );
+      DUF_PRINTF( 0, "}," );
       DUF_PRINTF( 0, "}" );
     }
   }

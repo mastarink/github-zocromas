@@ -103,10 +103,12 @@ _duf_extended_table_multi_init( void )
     T( "t:%p '%s'", dst, ( *dst )->name );
   }
   *dst++ = NULL;
+#if 0
   for ( const duf_longval_extended_table_t ** dst = lo_extended_table_multi; dst && *dst; dst++ )
   {
     T( "t:%p '%s'", dst, ( *dst )->name );
   }
+#endif
 }
 
 void

@@ -44,9 +44,10 @@ mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST
 }
 #endif
 int
-mas_vtrace( /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t trace_submode MAST_UNUSED, */const char *name, int level, int minlevel, const char *funcid,
-            int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width,
-            const char *fmt, va_list args )
+mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t trace_submode MAST_UNUSED, */ const char *name, int level, int minlevel,
+            const char *funcid,
+            int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width, const char *fmt,
+            va_list args )
 {
   int r_ = -1;
   static int ftimez = 0;
@@ -195,15 +196,18 @@ mas_vtrace( /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t tra
 }
 
 int
-mas_trace( /* mas_trace_mode_t trace_mode,  mas_trace_submode_t trace_submode, */const char *name, int level, int minlevel, const char *funcid, int linid,
+mas_trace(  /* mas_trace_mode_t trace_mode,  mas_trace_submode_t trace_submode, */ const char *name, int level, int minlevel, const char *funcid,
+           int linid,
            double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width, const char *fmt, ... )
 {
   int r_ = 0;
   va_list args;
 
+
   va_start( args, fmt );
   /* takes ern - error index */
-  r_ = mas_vtrace( /* trace_mode,  trace_submode, */name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, fmt, args );
+  r_ = mas_vtrace(  /* trace_mode,  trace_submode, */ name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, fmt,
+                   args );
   va_end( args );
   return r_;
 }

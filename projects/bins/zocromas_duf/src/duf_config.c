@@ -297,12 +297,12 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_FPRINTF( 0, stderr, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
-    DUF_FPRINTF( 0, stderr, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
+    DUF_TRACE( temp, 0, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
+    DUF_TRACE( temp, 0, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
     /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
-    DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
+    DUF_TRACE( temp, 0, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
 
   DEBUG_ENDR( r );
 }
@@ -312,7 +312,7 @@ duf_config_optionally_show( void )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->opt.dbg.verbose )
+  if ( duf_config->opt.dbg.verbose > 1 )
   {
     DOR( r, duf_config_show(  ) );
   }

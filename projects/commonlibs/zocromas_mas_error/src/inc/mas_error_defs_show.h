@@ -3,8 +3,6 @@
 
 
 
-
-
 #  define MASE_SHOW_ERRORO_WP( _prefix, ... )		MAST_TRACE_WP( _prefix, errors  /* opt.trace.errors */, 0, __VA_ARGS__ )
 #  define MASE_SHOW_ERRORO( ... )				MASE_SHOW_ERRORO_WP( "@@  ERRor", __VA_ARGS__)
 

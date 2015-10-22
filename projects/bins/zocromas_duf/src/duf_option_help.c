@@ -774,6 +774,10 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  MSH_SHN_DISABLE_MSG=yes MSH_SHN_DISABLE_MARKLINE=yes MSH_SHN_DISABLE_TIMING=yes run  --disable-memusage @test1.duf 	- %s",
               "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20151022.150716 ============" );
+  DUF_PRINTF( 0, "  run  --list-extended 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --list-extended=sccb 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --list-extended=sccb:ls 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

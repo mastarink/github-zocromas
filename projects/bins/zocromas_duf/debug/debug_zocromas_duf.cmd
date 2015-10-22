@@ -11,7 +11,7 @@ handle SIGPIPE nostop noprint
 # watch duf_config->targ.argc
 # watch duf_dbgfunlevel
 
-b duf_print.c:809
+b duf_main_db_open:281
 
 run
 bt

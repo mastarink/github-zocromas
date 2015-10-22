@@ -25,6 +25,7 @@ tmp_cfg_t *ptmpcfg = &tmpcfg;
 #define MAST_TRACE_LOADTIME_C( _cfg ) 0
 #define MAST_TRACE_FILE_C( _cfg ) stderr
 #define MAST_TRACE_CONFIG ptmpcfg
+#define MAST_TRACE_LEVEL( _cfg, _what, _name ) 0
 
 #include "mas_trace_defs.h"
 #include "mas_trace.h"
