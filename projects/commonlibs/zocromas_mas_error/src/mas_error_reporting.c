@@ -331,12 +331,12 @@ mas_error_report_i( mas_error_code_t ri, int test, FILE * out, int verb )
       MAST_FPRINTF0( 0, out, ".%s      ", prefix );
       /* MAST_FPRINTF0( 0, out, ".@@  %s    ", ename ); */
       /* MAST_FPRINTF0( 0, out, "@@@@@@@@" "%s%s", msg ? "  " : "", msg ); */
-      MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s", ename, msg ? " - " : "", msg );
+      MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%d)", ename, msg ? " - " : "", msg, verb );
       break;
     case 1:
       MAST_FPRINTF0( 0, out, ".   " );
       MAST_FPRINTF0( 0, out, ".%s      ", prefix );
-      MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d)", ename, msg ? " - " : "", msg, func, line );
+      MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d) (%d)", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 2:
       MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );

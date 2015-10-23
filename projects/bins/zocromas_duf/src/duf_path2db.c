@@ -127,10 +127,9 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
     truedirname = duf_levinfo_itemtruename( pdi );
     DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
     /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
-
     DUF_SQL_BIND_S( dirName, truedirname, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
-    assert( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) || DUF_IS_ERROR_N( r, DUF_SQL_DONE ) );
+    /* assert( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) || DUF_IS_ERROR_N( r, DUF_SQL_DONE ) ); */
     if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
     {
       DUF_CLEAR_ERROR( r, DUF_SQL_ROW );
@@ -165,10 +164,10 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
     }
     else
     {
-      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+      /* assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); */
     }
   }
-  assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+  assert( DUF_IS_ERROR( r ) || ( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ) );
   DUF_SQL_END_STMT( pdi, select_path, r, pstmt );
   DEBUG_ENDR( r );
 }
@@ -357,7 +356,6 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
   DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, DUF_NODE_NODE /* node_type */  ) );
 
   assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
-
   DOR( r, duf_levinfo_stat2dirid( pdi, caninsert, sql_set /* node_selector2 *//*, 1 -- need_id   - error (0= not) if there is no record */  ) );
 
   DEBUG_ENDR( r );

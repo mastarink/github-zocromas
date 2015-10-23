@@ -39,13 +39,14 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_xtended_table.h \
 	duf_option.h  duf_option_tmpdb.h duf_option_typed.h duf_option_typed_defs.h duf_option_help.h duf_option_misc.h \
 	duf_option_names.h \
-	duf_options_enum.def duf_option_class_enum.def \
+	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
 	duf_options_enum.h duf_options_config.h duf_options.h duf_option_types.h duf_option_vtype_enum.def \
 	duf_path2db.h \
 	duf_path2dirid.h    \
 	duf_tags.h \
 	duf_pdi.h duf_pdi_reinit.h duf_pdi_attach.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_action_table.h \
+	duf_errorn_defs.h \
 	duf_printn_defs.h \
 	duf_printn_defs_preset.h \
 	duf_record_types.h \

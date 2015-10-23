@@ -53,10 +53,14 @@ duf_extended_code2string( duf_option_code_t code )
   switch ( code )
   {
 #define ENUM_WRAP(_n)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
+#define ENUM_WRAPP(_n, _rf, _rf2)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
 #define ENUM_WRAP_V(_n, _v) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
+#define ENUM_WRAP_VP(_n, _v, _rf, _rf2) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
 #include "duf_options_enum.def"
 #undef ENUM_WRAP
+#undef ENUM_WRAPP
 #undef ENUM_WRAP_V
+#undef ENUM_WRAP_VP
   }
   return rs;
 }
@@ -147,6 +151,33 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
     case offsetof( duf_config_t, save.path ):
       rs = "save.path";
       break;
+    case offsetof( duf_config_t, opt.option_delimiter ):
+      rs = "opt.option_delimiter";
+      break;
+    case offsetof( duf_config_t, opt.act.v ):
+      rs = "opt.act.v";
+      break;
+    case offsetof( duf_config_t, opt.v ):
+      rs = "opt.v";
+      break;
+    case offsetof( duf_config_t, opt.output ):
+      rs = "opt.output";
+      break;
+    case offsetof( duf_config_t, opt.output.fun_width ):
+      rs = "opt.output.fun_width";
+      break;
+    case offsetof( duf_config_t, opt.output.header_tty ):
+      rs = "opt.output.header_tty";
+      break;
+    case offsetof( duf_config_t, opt.output.level ):
+      rs = "opt.output.level";
+      break;
+    case offsetof( duf_config_t, opt.disable ):
+      rs = "opt.disable";
+      break;
+    case offsetof( duf_config_t, opt.output.history_filename ):
+      rs = "opt.output.history_filename";
+      break;
       /* case offsetof( duf_config_t, cli ):  */
       /*   break;                             */
       /* case offsetof( duf_config_t, opt ):  */
@@ -161,10 +192,10 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       }
       else if ( offset >= offsetof( duf_config_t, opt ) && offset < offsetof( duf_config_t, db ) )
       {
-        {
-          if ( offsetof( duf_config_opt_t, option_delimiter ) == offset - offsetof( duf_config_t, opt ) )
-            rs = "opt.option_delimiter";
-        }
+        /* {                                                                                                 */
+        /*   if ( offsetof( duf_config_opt_t, option_delimiter ) == offset - offsetof( duf_config_t, opt ) ) */
+        /*     rs = "opt.option_delimiter";                                                                  */
+        /* }                                                                                                 */
       }
       else if ( offset >= offsetof( duf_config_t, db ) && offset < offsetof( duf_config_t, save ) )
       {
@@ -305,6 +336,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
     case offsetof( duf_ufilter_t, maxitems.total ):
       rs = "maxitems.total";
       break;
+    case offsetof( duf_ufilter_t, v ):
+      rs = "v";
+      break;
     }
   }
   return rs;
@@ -349,7 +383,8 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
             srelto = "ufilter";
             break;
           }
-          DUF_PRINTF( 0, ".offset( %lu, %s(%d) ) ", xtended->m_offset, srelto, xtended->relto );
+          DUF_PRINTF( 0, ".offset( %lu, %s(%d), %s ) ", xtended->m_offset, srelto, xtended->relto,
+                      duf_offset2stringid( xtended->m_offset, xtended->relto ) );
         }
         DUF_PUTSL( 0 );
       }
@@ -405,6 +440,7 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       }
       if ( xtended->help )
         DUF_PRINTF( 0, "  help(%s)", xtended->help );
+
       DUF_PRINTF( 0, ".{.o = {" );
       DUF_PRINTF( 0, ".  DO_Q( \"%s\" )", xtended->o.name );
       {
@@ -429,12 +465,17 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
         {
         case DUF_OFFSET_config:
           DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          if ( xtended->afl.bit )
+            DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         case DUF_OFFSET_ufilter:
           DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          if ( xtended->afl.bit )
+            DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         }
       }
+
       if ( xtended->help )
         DUF_PRINTF( 0, "., DO_H( %s )", xtended->help );
       DUF_PRINTF( 0, "}," );

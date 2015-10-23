@@ -8,10 +8,20 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-# watch duf_config->targ.argc
-# watch duf_dbgfunlevel
+b duf_pdi_prepare_statement_by_id
 
-b duf_main_db_open:281
+
+
+# commands 1
+# print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]
+# end
+
+
+display &(duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname)
+display duf_config->scn.pdi->num_idstatements
+display &(duf_config->scn.pdi->idstatements[duf_config->scn.pdi->num_idstatements-1])
+
+
 
 run
-bt
+# bt

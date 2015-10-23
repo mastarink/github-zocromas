@@ -26,7 +26,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
 
   if ( !delim )
     /* delim = DUF_CONFIGG( opt.option_delimiter ); */
-    delim = duf_option_delimiter();
+    delim = duf_option_delimiter(  );
   if ( !delim )
     delim = ':';
   if ( cmdstr && *cmdstr == ':' )
@@ -75,7 +75,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
 /* look all std xtables for cmd from string and exec if found */
-        DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, source ) );
+        DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, 0 /* all_matched */ , source ) );
       }
       mas_free( s );
       peo = e;

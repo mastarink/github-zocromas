@@ -100,7 +100,6 @@ _duf_extended_table_multi_init( void )
   for ( const duf_longval_extended_table_t ** src = _lo_extended_table_multi; src && *src; src++, dst++ )
   {
     *dst = *src;
-    T( "t:%p '%s'", dst, ( *dst )->name );
   }
   *dst++ = NULL;
 #if 0

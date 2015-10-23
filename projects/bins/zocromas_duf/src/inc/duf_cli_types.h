@@ -86,63 +86,69 @@ typedef struct
 typedef struct
 {
   duf_config_output_t output;
-
-  int trace;
-  int dry_run;
-  int flags;
-  int explain;
-  int pdi;
-  int levinfo;
-
-  int action;
-  int any;
-  int calls;
+  int temp;
   int collect;
-  int crc32;
-  int temporary;
-  int deleted;
-  int depth;
-  int dirent;
+  int any;
+  int verbose;
+/**/
   int dirs;
-  int errors;
-  int handle_error;
-  int errorr;
-  int exif;
   int filedata;
   int filenames;
   /* int fill; */
+  int nonew;
+  int statistics;
+/**/
+#if 0
+  int action;
+  int calls;
+  int config;
+  int crc32;
+  int db;
+  int deleted;
+  int depth;
+  int dirent;
+  int dry_run;
+  int errorr;
+  int errors;
+  int exif;
+  int explain;
+  
+  int flags;
   int fs;
+  int handle_error;
   int insert;
+  int io;
+  int levinfo;
   int match;
   int md5;
-  int sha1;
   int mdpath;
   int mime;
-  int nonew;
-  int options;
-  int config;
-  int path;
   int mod;
+  int options;
+  int path;
+  int pdi;
   int sample;
   int sampupd;
   int scan;
   int scan_dir;
   int scan_reg;
+  int sccb;
+  int sccbh;
   int sd5;
   int select;
   int seq;
-  int db;
+  int sha1;
   int sql;
   int sqlite;
-  int statistics;
-  int temp;
+  int temporary;
   int todo;
+  int trace;
   int update;
-  int io;
-  int verbose;
-
-  int sccb;
-  int sccbh;
+#else
+#  define ENUM_WRAPP(_n, _rf, _rf2)      int _rf2; 
+  #  include "duf_options_enum_trace.def"
+#undef ENUM_WRAPP
+#endif
 } duf_config_opt_trace_t;
 
 typedef struct

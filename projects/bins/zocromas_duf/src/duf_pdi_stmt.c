@@ -1,5 +1,6 @@
 #include "duf_maintenance.h"
 
+
 #include "duf_sql_prepared.h"
 #include "duf_maindb.h"
 
@@ -60,6 +61,11 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 
   int rpr = 0;
   duf_idstmt_t *is = NULL;
+  duf_idstmt_t *chkids =NULL;
+
+  DORF( rpr, duf_main_db_open );
+  DUF_TEST_R( rpr );
+  chkids= pdi->idstatements;
 
   assert( pdi );
   assert( pdi->inited );
@@ -71,6 +77,7 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
       pdi->idstatements = mas_malloc( sizeof( duf_idstmt_t ) );
     else
       pdi->idstatements = mas_realloc( pdi->idstatements, ( pdi->num_idstatements + 1 ) * sizeof( duf_idstmt_t ) );
+    chkids = pdi->idstatements;
     is = &( pdi->idstatements[pdi->num_idstatements] );
     is->pstmt = NULL;
 #if 0
@@ -80,10 +87,18 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 #endif
     pdi->num_idstatements++;
   }
-  DORF( rpr, duf_main_db_open );
+  /* duf_main_db_open can't be called after setting 'is' and before using 'is'
+   *   - it may reallocate pdi->idstatements 
+   *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+   */
+  /* DORF( rpr, duf_main_db_open ); */
+  /* DUF_TEST_R( rpr );             */
+
   DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
-  DUF_TRACE( sql, 4, "@@@@@%d: %s", rpr, sql );
-  assert( rpr >= 0 );
+  DUF_TEST_R( rpr );
+
+  DUF_TRACE( sql, 4, "@@@@@%s: %s", mas_error_name_i( rpr ), sql );
+  /* assert( rpr >= 0 ); */
   if ( pstmt )
   {
 #if 0
@@ -93,6 +108,7 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 #endif
     is->pstmt = pstmt;
   }
+  assert( chkids == pdi->idstatements );
 
   if ( pr )
     *pr = rpr;

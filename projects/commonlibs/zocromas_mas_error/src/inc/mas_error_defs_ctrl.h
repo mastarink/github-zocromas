@@ -19,8 +19,9 @@
 /*- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -*/
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#  define MASE_CLEAR_ERROR(_rt, ...)    (_rt=mas_clear_error_i( (_rt), __VA_ARGS__, 0 ))
+#  define MASE_CLEAR_ERROR(_rt, ...)        (_rt=mas_clear_error_i( (_rt), __VA_ARGS__, 0 ))
 #  define MASE_CLEARED_ERROR(_rt, ...)  (0==(_rt=mas_clear_error_i( (_rt), __VA_ARGS__, 0 )))
+/* #  define MASE_CLEARED_ERROR(_rt, ...)  (0==MASE_CLEAR_ERROR(_rt, __VA_ARGS__)) */
 #  define MASE_IS_ERROR_N(_rt, _er) ( mas_error_code_i( _rt ) == _er )
 #  define MASE_IS_ERROR(_rt) ( _rt < 0 )
 #  define MASE_NOERROR(_rt) ( _rt >= 0 )

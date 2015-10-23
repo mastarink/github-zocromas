@@ -295,8 +295,9 @@ duf_main_db_open( void )
     DORF( r, duf_main_db_pre_action );
     DUF_TRACE( pdi, 0, "DUF_CONFIGG( scn.pdi ) %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
     DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( scn.pdi ) ) );
-    if ( r == 0 )
-      r++;
+    DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
+    /* if ( DUF_NOERROR( r ) ) */
+    /*   r++; (* ???? *)       */
   }
   DEBUG_ENDR( r );
 }
@@ -417,13 +418,13 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
 
   /* I. duf_all_options -- STAGE_PRESETUP */
   DUF_TRACE( options, 0, "@@@@I - stages from presetup" );
- 
+
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
 
   /* II. duf_all_options -- STAGE_SETUP */
   DUF_TRACE( options, 0, "@@@@II - stages from setup" );
- 
-   
+
+
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
@@ -454,7 +455,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
 
 #  endif
 
-    
+
 
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
 
