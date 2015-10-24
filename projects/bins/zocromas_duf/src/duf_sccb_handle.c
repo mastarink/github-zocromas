@@ -121,6 +121,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
   DUF_TEST_R( rpr );
   if ( pr )
     *pr = rpr;
+  T( "%s cnt:%llu", duf_uni_scan_action_title( SCCB ), cnt );
   DEBUG_ENDULL( cnt );
 }
 

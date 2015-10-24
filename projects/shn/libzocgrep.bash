@@ -24,8 +24,8 @@ function grepchpx ()
 
   if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
 #   shn_msg grep "$*"
-    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs src/
-    eval grep  -r --inc='*.['${ex:-ch}']' $qargs src/
+    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs src/ mod/
+    eval grep  -r --inc='*.['${ex:-ch}']' $qargs src/ mod/
     popd &>/dev/null
   fi
 }
@@ -71,7 +71,7 @@ function grepnc ()
   done
 # eval /bin/grep --color=yes --inc='*.[ch]' -r '^[[:blank:]]*[^[:blank:]/#\*]$@'
 # eval echo --inc='*.c' -r $opts '^[[:blank:]]*[^[:blank:]\/\#\*].*'$args src >&2
-  eval grep --inc='*.c' -r $opts '^[[:blank:]]*[^[:blank:]\/\#\*].*'"$args" src
+  eval grep --inc='*.c' -r $opts '^[[:blank:]]*[^[:blank:]\/\#\*].*'"$args" src/ mod/
 }
 function grepc ()
 {

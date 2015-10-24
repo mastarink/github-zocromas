@@ -1,5 +1,4 @@
 #ifdef ENUM_WRAP
-#ifdef ENUM_WRAP_V
 
   ENUM_WRAP(NONE)
   ENUM_WRAP(NOOP)
@@ -50,7 +49,6 @@
   ENUM_WRAP(TS2_CALL)
   ENUM_WRAP(FILE)
 
-#endif
 #endif
 /*
 vi: ft=c

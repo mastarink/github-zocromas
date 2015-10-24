@@ -7,19 +7,20 @@ define hook-quit
     set confirm off
 end
 handle SIGPIPE nostop noprint
+set breakpoint pending on
 
-b duf_pdi_prepare_statement_by_id
+# b mod_exif_uni.c:544
 
-
+# ignore <bnum> count
 
 # commands 1
 # print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]
 # end
 
 
-display &(duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname)
-display duf_config->scn.pdi->num_idstatements
-display &(duf_config->scn.pdi->idstatements[duf_config->scn.pdi->num_idstatements-1])
+# display &(duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname)
+# display duf_config->scn.pdi->num_idstatements
+# display &(duf_config->scn.pdi->idstatements[duf_config->scn.pdi->num_idstatements-1])
 
 
 

@@ -12,8 +12,9 @@
 int
 main( int argc, char *argv[] )
 {
+#define  TEST_STR "0123456789abcdefabcdefghijkl\r\nmnopqzABCDEF\tX"
   char *d;
-  const char *s = "0123456789abcdefabcdefghijkl\r\nmnopqzABCDEF\tX";
+  const char *s = TEST_STR;
 
   if ( argc )
   {
@@ -313,6 +314,18 @@ main( int argc, char *argv[] )
     char *segfault = NULL;
 
     printf( "%c\n", *segfault );
+  }
+  {
+    char *sch;
+    size_t l;
+    char *st;
+
+    sch = mas_strdup( TEST_STR "        \t      \t" );
+    l = mas_chomplen( sch );
+    fprintf( stderr, "mas_chomplen test: %d (%lu:%lu)\n", l == strlen( TEST_STR ), l, strlen( TEST_STR ) );
+    st = mas_chomp( sch );
+    fprintf( stderr, "mas_chomp test: %d;%d\n", st && 0 == strcmp( st, TEST_STR ), strlen(st) == strlen(TEST_STR) );
+    mas_free( sch );
   }
 
 #ifdef MAS_TRACEMEM

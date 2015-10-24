@@ -43,6 +43,14 @@ tab sfind duf_options_enum.h
 sfind duf_option_defs.h
 sfind duf_option_types.h
 
+tab sfind duf_options_enum.def
+sfind duf_options_enum_trace.def
+sfind duf_option_vtype_enum.def
+sfind duf_option_class_enum.def
+sfind duf_options_enum_filter_minmax.def
+sfind duf_options_enum_filter_same_minmax.def 
+
+
 tab sfind duf_scan_types.h
 
 tab sfind duf_format_types.h

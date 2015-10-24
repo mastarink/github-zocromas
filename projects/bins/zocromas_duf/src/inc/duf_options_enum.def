@@ -188,7 +188,8 @@
   ENUM_WRAP(GLOB_EXCL_FS_FILES)
   /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
   ENUM_WRAP(DIR_PRIORITY)
-
+  
+#if 0
   ENUM_WRAP(FILTER_NAMEID)
   ENUM_WRAP(FILTER_MINNAMEID)
   ENUM_WRAP(FILTER_MAXNAMEID)
@@ -272,7 +273,14 @@
   ENUM_WRAP(FILTER_SAME_MIME)
   ENUM_WRAP(FILTER_MINSAME_MIME)
   ENUM_WRAP(FILTER_MAXSAME_MIME)
-
+#else
+#define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) ENUM_WRAP(FILTER_ ## _id) ENUM_WRAP(FILTER_MIN ## _id) ENUM_WRAP(FILTER_MAX ## _id)
+#include "duf_options_enum_filter_minmax.def"
+#undef   ENUM_WRAPMM
+#define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) ENUM_WRAP(FILTER_ ## _id) ENUM_WRAP(FILTER_MIN ## _id) ENUM_WRAP(FILTER_MAX ## _id)
+#include "duf_options_enum_filter_same_minmax.def"
+#undef   ENUM_WRAPMM
+#endif
   ENUM_WRAP(FILTER_FILENAME)
   ENUM_WRAP(FILTER_GLOB_DB)
   ENUM_WRAP(FILTER_GLOB_INCL_DB_FILES)

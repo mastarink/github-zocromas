@@ -21,6 +21,7 @@ mas_wordlen( const char *s )
 char *
 mas_chomp( char *str )
 {
+#if 0
   if ( str )
   {
     char *estr;
@@ -34,7 +35,25 @@ mas_chomp( char *str )
       *estr = '\0';
     }
   }
+#else
+  if ( str )
+  {
+    size_t l;
+
+    l = mas_chomplen( str );
+    str[l] = '\0';
+  }
+#endif
   return str;
+}
+
+size_t
+mas_chomplen( char *str )
+{
+  size_t len = 0;
+
+  for ( len = str ? strlen( str ) : 0; len > 0 && str[len - 1] > 0 && str[len - 1] <= ' '; len-- );
+  return len;
 }
 
 int

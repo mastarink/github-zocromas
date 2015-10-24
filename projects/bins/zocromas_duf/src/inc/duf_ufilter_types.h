@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_UFILTER_TYPES_H
 #  define MAS_DUF_UFILTER_TYPES_H
 
-#include <mastar/tools/mas_argvc_types.h>
+#  include <mastar/tools/mas_argvc_types.h>
 
 #  include "duf_base_types.h"
 #  include "duf_item_types.h"
@@ -42,12 +42,18 @@ typedef struct
 
 typedef struct
 {
+#  if 0
   duf_limitsll_t md5;
   duf_limitsll_t sha1;
   duf_limitsll_t exif;
   duf_limitsll_t mime;
   duf_limitsll_t data;
   duf_limitsll_t size;
+#  else
+#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) duf_limitsll_t _rf;
+#    include "duf_options_enum_filter_same_minmax.def"
+#    undef   ENUM_WRAPMM
+#  endif
 } duf_same_limits_t;
 
 typedef struct
@@ -71,8 +77,8 @@ typedef struct
   /* unsigned long long crc32id; */
   /* unsigned long long mimeid; */
   /* unsigned long long exifid; */
+#  if 0
   duf_limitsll_t size;
-  duf_same_limits_t same;
   duf_limitsll_t nameid;
   duf_limitsll_t dataid;
   duf_limitsll_t dirid;
@@ -87,6 +93,12 @@ typedef struct
   duf_limitsll_t crc32id;
   duf_limitsll_t mimeid;
   duf_limitsll_t exifid;
+#  else
+#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) duf_limitsll_t _rf;
+#    include "duf_options_enum_filter_minmax.def"
+#    undef   ENUM_WRAPMM
+#  endif
+  duf_same_limits_t same;
   duf_itemtag_t tag;
   char *filename;
   char *glob_db;

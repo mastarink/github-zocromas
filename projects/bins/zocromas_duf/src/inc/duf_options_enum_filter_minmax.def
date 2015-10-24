@@ -1,0 +1,20 @@
+#ifdef ENUM_WRAPMM
+  ENUM_WRAPMM( NAMEID    ,  LL                          , nameid     , nameid                 )
+  ENUM_WRAPMM( DATAID    ,  LL                          , dataid     , dataid                 )
+  ENUM_WRAPMM( DIRID     ,  LL                          , dirid      , dirid                  )
+  ENUM_WRAPMM( MTIME     ,  DATETIME                    , mtime      , mtime                  )
+  ENUM_WRAPMM( ATIME     ,  DATETIME                    , atime      , atime                  )
+  ENUM_WRAPMM( CTIME     ,  DATETIME                    , ctime      , ctime                  )
+  ENUM_WRAPMM( EXIFDT    ,  DATETIME                    , exifdt     , exifdt                 )
+  ENUM_WRAPMM( INODEID   ,  LL                          , inode      , inode                  )
+  ENUM_WRAPMM( SD5ID     ,  LL                          , sd5id      , sd5id                  )
+  ENUM_WRAPMM( MD5ID     ,  LL                          , md5id      , md5id                  )
+  ENUM_WRAPMM( SHA1ID    ,  LL                          , sha1id     , sha1id                 )
+  ENUM_WRAPMM( CRC32ID   ,  LL                          , crc32id    , crc32id                )
+  ENUM_WRAPMM( MIMEID    ,  LL                          , mimeid     , mimeid                 )
+  ENUM_WRAPMM( EXIFID    ,  LL                          , exifid     , exifid                 )
+  ENUM_WRAPMM( SIZE      ,  LL                          , size       , size                   )
+#endif
+/*
+vi: ft=c
+*/

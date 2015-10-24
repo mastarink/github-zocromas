@@ -19,14 +19,14 @@ mas_vclear_error_c( mas_error_code_t re, va_list args )
   {
     c = va_arg( args, int );
 
-    {
-      char *en1 = mas_strdup( mas_error_name_c( re ) );
-      char *en2 = mas_strdup( mas_error_name_c( c ) );
-
+/// {
+///   char *en1 = mas_strdup( mas_error_name_c( re ) );
+///   char *en2 = mas_strdup( mas_error_name_c( c ) );
+///
 /////      DUF_TRACE( handle_error, 2, "@@@clear (%d) %s ? (%d) %s (2nd from list)", re, en1, c, en2 );
-      mas_free( en1 );
-      mas_free( en2 );
-    }
+///   mas_free( en1 );
+///   mas_free( en2 );
+/// }
     if ( re == c )
     {
       re = 0;

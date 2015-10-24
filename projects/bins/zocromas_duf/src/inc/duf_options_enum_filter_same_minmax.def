@@ -1,0 +1,11 @@
+#ifdef ENUM_WRAPMM
+  ENUM_WRAPMM( SAME_MD5  ,  LL                          , md5   , same-md5               )
+  ENUM_WRAPMM( SAME_SHA1 ,  LL                          , sha1  , same-sha1              )
+  ENUM_WRAPMM( SAME_EXIF ,  LL                          , exif  , same-exif              )
+  ENUM_WRAPMM( SAME_SIZE ,  LL                          , size  , same-size              )
+  ENUM_WRAPMM( SAME_DATA ,  LL                          , data  , same-data              )
+  ENUM_WRAPMM( SAME_MIME ,  LL                          , mime  , same-mime              )
+#endif
+/*
+vi: ft=c
+*/

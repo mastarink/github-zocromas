@@ -366,6 +366,8 @@ duf_sql_sequence_t sql_beginning_create_three = {
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sd5id      ON " DUF_SQL_TABLES_FILEDATAS " (sd5id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_crc32id    ON " DUF_SQL_TABLES_FILEDATAS " (crc32id)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_exifid     ON " DUF_SQL_TABLES_FILEDATAS " (exifid)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_exifid2    ON " DUF_SQL_TABLES_FILEDATAS " (exifid,noexif)",
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_noexif     ON " DUF_SQL_TABLES_FILEDATAS " (noexif)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_mimeid     ON " DUF_SQL_TABLES_FILEDATAS " (mimeid)",
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_size       ON " DUF_SQL_TABLES_FILEDATAS " (size)",
 

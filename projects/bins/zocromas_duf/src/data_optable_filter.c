@@ -23,6 +23,7 @@ const duf_longval_extended_table_t optable_filter = {
   .name = "filter",
   .table =                      /* */
   {
+#if 0
    {.o = {DO_Q( "same-md5" ) /*          */ , DO_A_O /* */ , DO_VUF( SAME_MD5 )} /*          */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MINMAXLL, same.md5 ),.call = {.value = {.u = 2}} /*                    */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "min-same-md5" ) /*      */ , DO_A_R /* */ , DO_VUF( MINSAME_MD5 )} /*       */ , DO_CL( FILTER ) /*   */ ,
@@ -169,6 +170,27 @@ const duf_longval_extended_table_t optable_filter = {
     /*      */ DO_OU( MINLL, exifid ) /*                                                    */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "max-exifid" ) /*       */ , DO_A_R /* */ , DO_VUF( MAXEXIFID )} /*        */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MAXLL, exifid ) /*                                                    */ , DO_H(  .... ) /*                            */ },
+#else
+#  define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) \
+   {.o = {DO_Q( # _rf2 ),          DO_A_O  , DO_VUF( _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MINMAX ## _ty, _rf ),.call = {.value = {.u = 2}}  , DO_H( .... )  }, \
+   {.o = {DO_Q( "min-" # _rf2 ),   DO_A_R  , DO_VUF( MIN ## _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MIN ## _ty, _rf ), DO_H(  .... )  }, \
+   {.o = {DO_Q( "max-" # _rf2 ),   DO_A_R  , DO_VUF( MAX ## _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MAX ## _ty, _rf )  , DO_H(  .... )  },
+#  include "duf_options_enum_filter_minmax.def"
+#  undef   ENUM_WRAPMM
+#  define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) \
+   {.o = {DO_Q( # _rf2 ),          DO_A_O  , DO_VUF( _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MINMAX ## _ty, same._rf ),.call = {.value = {.u = 2}}  , DO_H( .... )  }, \
+   {.o = {DO_Q( "min-" # _rf2 ),   DO_A_R  , DO_VUF( MIN ## _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MIN ## _ty, same._rf ), DO_H(  .... )  }, \
+   {.o = {DO_Q( "max-" # _rf2 ),   DO_A_R  , DO_VUF( MAX ## _id )}  , DO_CL( FILTER )  , \
+     DO_OU( MAX ## _ty, same._rf )  , DO_H(  .... )  },
+#  include "duf_options_enum_filter_same_minmax.def"
+#  undef   ENUM_WRAPMM
+
+#endif
 
    {.o = {DO_Q( "filename-db" ) /*      */ , DO_A_R /* */ , DO_VUF( FILENAME )} /*         */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, filename ) /*                                                    */ , DO_H( glob db ) /*                          */ },

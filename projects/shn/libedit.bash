@@ -165,7 +165,7 @@ shn_gvimer_plus_filtyp ()
     shift
     local dirn=$1
     shift
-    if [[ "$filef" == *.c ]] || [[ "$filef" == *.h ]]; then
+    if [[ "$filef" == *.c ]] || [[ "$filef" == *.h ]] || [[ "$filef" == *.def ]]; then
        typf="src"
     elif [[ "$filef" == *.cmds ]] || [[ "$filef" == *.duf ]]; then
        typf="dufcmds"
@@ -195,7 +195,7 @@ shn_gvimer_plus_find ()
     shift
     local paths
     case $typf in
-        src)		paths='./src/ ./inc/ ./settling/src ./settling/src/inc'	;;
+        src)		paths='./src/ ./mod/ ./inc/ ./settling/src ./settling/src/inc'	;;
         cdef)		paths='./src/'	;;
         ac)		paths='./'		;;
         shn)		paths='./shn/'		;;
@@ -215,7 +215,7 @@ shn_gvimer_plus_vpath ()
     shift
     local paths
     case $typf in
-        src)		paths='src/,src/inc/,inc/,settling/src/,settling/src/inc'	;;
+        src)		paths='src/,mod/,src/inc/,mod/inc/,inc/,settling/src/,settling/src/inc'	;;
         ac)		paths='.'			;;
         shn)		paths='shn/'			;;
         vimstd)		paths="$localvim_dir"		;;
@@ -248,7 +248,7 @@ shn_gvimer_plus_mased ()
   fi
   if ! [[ $file == *.* ]] ; then
     shn_msg "Looking for function $file"
-    fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ )
+    fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
     if [[ $fileq ]] ; then
       shn_msg "Found function $file : $fileq"
       file=$fileq
@@ -331,9 +331,10 @@ shn_gvimer_plus ()
 	    shopt -s extglob
 	    local dn=${PWD##+(*([^/])/)zocromas_}.c
 	    [[ $xg ]] || shopt -u extglob
-	    [[ $dn ]] && deffile=${deffile:-$( find ./src -type f -name "*${dn}" | head -1 )}
-			 deffile=${deffile:-$( find ./src -type f -name '*.c'	 | head -1 )}
-			 deffile=${deffile:-$( find ./src -type f -name '*.h'	 | head -1 )}
+	    [[ $dn ]] && deffile=${deffile:-$( find ./src ./mod -type f -name "*${dn}" | head -1 )}
+			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.c'	 | head -1 )}
+			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.h'	 | head -1 )}
+			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.def'	 | head -1 )}
             if [[ -n "$deffile" ]]; then
                 shn_gvimer_plus_mased $deffile && return 0
             fi
