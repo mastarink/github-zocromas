@@ -54,6 +54,8 @@ const duf_longval_extended_table_t optable_experimental = {
     /*      */ DO_S_CALL( cd ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                                      */ ,
     DO_H( pdi cd ) /*                           */ },
 #endif
+   {.o = {DO_Q( "cd-id" ) /*            */ , DO_A_O /* */ , DO_V( CD_ID )} /*              */ , DO_CL( NODESC ) /*  */
+    , DO_N_CALL( cdid ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*          */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
     /*      */ DO_OC( XCHR, opt.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },

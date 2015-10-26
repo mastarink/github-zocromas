@@ -79,13 +79,13 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     {
       /* FIXME : does'nt copy pu - so mod_dialog not work ???  */
-      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup->md5id.min );
+      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
       DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
       assert( pdi->pdi_name );
       DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, pdi->sql_beginning_done );
       DOR( r, duf_pdi_reinit( pdi, real_path, pu ? pu : DUF_CONFIGG( scn.puz ), sql_set, caninsert, frecursive, duf_pdi_opendir( pdi ) ) );
       DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
-      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup->md5id.min );
+      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
     }
     mas_free( real_path );
   }

@@ -29,18 +29,8 @@
 #include "duf_path2db.h"
 /* ###################################################################### */
 
-static int duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges );
-static int duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv );
-static int duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set );
-static int duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *dir_name, int caninsert, const duf_sql_set_t * sql_set );
-static int _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set );
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
-/***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
-/******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******/
-/********* ********* ********* ********* ********* ********* ********* ********* ********* ********* ********* ********* ********* ********* ***/
-
+/* 20151026.111303 */
+/* insert dir info to db by pdi and possbly fs */
 static int
 duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
 {
@@ -80,7 +70,9 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
   DUF_ENDR( r );
 }
 
-int
+/* 20151026.110612 */
+/* at levinfo current level: set dirid,numdir,numfile */
+static int
 duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid, unsigned long long nfiles, unsigned long long ndirs )
 {
   DUF_STARTR( r );
@@ -95,26 +87,23 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
   DUF_ENDR( r );
 }
 
-int
+/* 20151026.110729 */
+/* at levinfo current level: set dirid,numdir,numfile
+ * WRAPper for duf_set_dirid_and_nums */
+static int
 duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 {
   DUF_STARTR( r );
 
-  DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid ), DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs ) ) );
+  DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid ), DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs ) ) ); /* at levinfo current level:
+                                                                                                                             set dirid,numdir,numfile */
   assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
 
   DUF_ENDR( r );
 }
 
-/* current level at pdi: 
- * 1. take itemtruename
- * 2. bind to sql param `parentdirID` <= parent dir id
- * 3. bind to sql param `dirName`     <= itemtruename
- * 4. do sql
- * 5. get `dirid` field from sql result to dirid at pdi current level
- * 6. get `nfiles`, `ndirs` fields from sql result to numfile, numdir at pdi current level
- * 7. return dirid as result
- * */
+/* 20151026.111126 */
+/* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
 static int
 duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 {
@@ -151,7 +140,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
                    duf_levinfo_dirid_up( pdi ) );
       }
       assert( DUF_GET_UFIELD2( dirid ) );
-      DOR( r, duf_set_dirid_and_nums_from_pstmt( pdi, pstmt ) );
+      DOR( r, duf_set_dirid_and_nums_from_pstmt( pdi, pstmt ) ); /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
       assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else if ( DUF_IS_ERROR_N( r, DUF_SQL_DONE ) )
@@ -172,6 +161,8 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
   DEBUG_ENDR( r );
 }
 
+/* 20151026.111923 */
+/* at levinfo current level: set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
 static int
 duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set )
 {
@@ -237,7 +228,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
   }
 #endif
 
-  DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) );
+  DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) ); /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
   if ( DUF_NOERROR( r ) )
     dirid = duf_levinfo_dirid( pdi );
   mas_free( sqlv );
@@ -247,9 +238,9 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
   DEBUG_ENDR( r );
 }
 
-
-/* TODO remake to pdiitem2dirid */
-int
+/* TODO remake to pdiitem2dirid?? */
+/* at levinfo current level: set dirid,numdir,numfile */
+static int
 _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id )
 {
   DEBUG_STARTR( r );
@@ -261,13 +252,14 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   {
     int changes = 0;
 
-    DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set /* node_selector2 */  ) );
+    DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) ); /* at levinfo current level:
+                                                                      set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
     DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", r, duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
                duf_levinfo_dirid_up( pdi ) );
 
     if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
-      DOR( r, duf_levinfo_stat_insert2db( pdi, &changes ) );
+      DOR( r, duf_levinfo_stat_insert2db( pdi, &changes ) ); /* insert dir info to db by pdi and possbly fs */
     }
     DUF_TRACE( select, 10, "<changes> : %d : %s", changes, duf_levinfo_itemshowname( pdi ) );
     if ( duf_levinfo_dirid( pdi ) <= 0 && need_id )
@@ -276,7 +268,8 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
       {
         if ( DUF_NOERROR( r ) )
         {
-          DOR( r, duf_set_dirid_and_nums( pdi, duf_sql_last_insert_rowid(  ), 0, 0 ) );
+          DOR( r, duf_set_dirid_and_nums( pdi, duf_sql_last_insert_rowid(  ), 0, 0 ) ); /* at levinfo current level:
+                                                                                           set dirid from last inserted record (numdir=0,numfile=0) */
           if ( duf_levinfo_dirid_up( pdi ) )
           {
             DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),
@@ -298,7 +291,9 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
           if ( caninsert )
           {
             assert( 0 );        /*  */
-            DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set /* node_selector2 */  ) );
+            DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) ); /* at levinfo current level:
+                                                                              set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
+
           }
           else
           {
@@ -310,7 +305,9 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
           if ( caninsert )
           {
             assert( 0 );        /*  */
-            DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set /* node_selector2 */  ) );
+            DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) ); /* at levinfo current level:
+                                                                              set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
+
           }
           else
           {
@@ -335,14 +332,18 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   DEBUG_ENDR( r );
 }
 
+/* 20151026.112249 */
+/* at levinfo current level: set dirid,numdir,numfile; WRAPper for _duf_levinfo_stat2dirid */
 int
 duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set )
 {
   DEBUG_STARTR( r );
-  DOR( r, _duf_levinfo_stat2dirid( pdi, caninsert, sql_set, 1 ) );
+  DOR( r, _duf_levinfo_stat2dirid( pdi, caninsert, sql_set, 1 ) ); /* at levinfo current level: set dirid,numdir,numfile */
   DEBUG_ENDR( r );
 }
 
+/* 20151026.112425 */
+/* at levinfo down level: set dirid,numdir,numfile; make level current */
 static int
 duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, int caninsert, const duf_sql_set_t * sql_set )
 {
@@ -352,22 +353,24 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
   assert( pdi );
   up_d = duf_pdi_depth( pdi );
 
-  /* duf_levinfo_godown_openat_dh: 1. check depth; 2. duf_levinfo_godown */
-  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, DUF_NODE_NODE /* node_type */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, DUF_NODE_NODE /* node_type */  ) ); /* check depth; 
+                                                                                                    resets levinfo  (currenl level);
+                                                                                                    may change levinfo (for upper level);
+                                                                                                    does not really open dh?!;
+                                                                                                    XXX equal XXX to duf_levinfo_godown 
+                                                                                                    - except DUF_ERROR_TOO_DEEP ? XXX; */
 
   assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
-  DOR( r, duf_levinfo_stat2dirid( pdi, caninsert, sql_set /* node_selector2 *//*, 1 -- need_id   - error (0= not) if there is no record */  ) );
+  DOR( r, duf_levinfo_stat2dirid( pdi, caninsert, sql_set /*, 1 -- need_id   - error (0= not) if there is no record */  ) ); /* at levinfo current level:
+                                                                                                                                set dirid,numdir,numfile;
+                                                                                                                                WRAPper for _duf_levinfo_stat2dirid */
 
   DEBUG_ENDR( r );
 }
 
-/*
- * parse real_path to components and store/check each to db,
- *   setting each level info to levinfo
- *
- *   note: sets depth + n
- * */
-/* 20150912.180959 */
+/* 20151026.113322 */
+/* parse real_path to components and store/check each to db,
+ *   setting each level info to levinfo; note: sets depth + n */
 static int
 _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
 {
@@ -375,8 +378,8 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   int od = 0;
 
   /* unsigned long long parentid = 0; */
-
   assert( pdi );
+  assert( duf_levinfo_dirid( pdi ) == 0 );
   DUF_TRACE( fs, 2, "set opendir to 1 (one)" );
   od = duf_pdi_set_opendir( pdi, 1 ); /* save open status to restore */
   {
@@ -399,7 +402,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
 
         up_d = duf_pdi_depth( pdi );
         /* down to next */
-        DOR( r, duf_levinfo_down_stat2dirid( pdi, path, caninsert, sql_set ) );
+        DOR( r, duf_levinfo_down_stat2dirid( pdi, path, caninsert, sql_set ) ); /* at levinfo down level: set dirid,numdir,numfile; make level current */
         assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
       }
       path = nextdir;
@@ -407,15 +410,14 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   }
   DUF_TRACE( fs, 2, "set (restore) opendir to %d", od );
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
+  assert( !caninsert || !real_path || duf_levinfo_dirid( pdi ) > 0 );
+  assert( !caninsert || !real_path || duf_levinfo_path( pdi ) );
   DEBUG_ENDR( r );
 }
 
-/*
- * parse real_path to components and store/check each to db,
- *   setting each level info to levinfo
- * */
+/* parse real_path to components and store/check each to db, setting each level info to levinfo */
 int
-duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
+duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set )
 {
   DEBUG_STARTR( r );
   char *real_path;
@@ -432,7 +434,9 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
      *
      *   note: sets depth + n
      * */
-    DOR( r, _duf_real_path2db( pdi, real_path, caninsert, sql_set /* node_selector2 */  ) );
+    DOR( r, _duf_real_path2db( pdi, real_path, caninsert, sql_set ) ); /* parse real_path to components and store/check each to db,
+                                                                          setting each level info to levinfo;
+									  -XXX- sets depth + n -XXX- */
     duf_pdi_set_topdepth( pdi );
   }
   mas_free( real_path );

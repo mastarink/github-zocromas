@@ -1,0 +1,23 @@
+.nullvalue <NULL>
+.width 6 6 6 100
+.headers off
+/* select all files under dir with id=15 */
+WITH RECURSIVE cte_paths(rowid,parentid) AS  (
+  SELECT pt.rowid,pt.parentid
+    FROM main.paths  AS pt 
+    WHERE pt.parentid=15 OR pt.rowid=15
+    UNION
+      SELECT ptu.rowid,ptu.parentid
+        FROM cte_paths
+	JOIN main.paths AS ptu ON( ptu.parentid=cte_paths.rowid )
+	)
+SELECT fn.rowid, fn.Pathid, pte.rowid, fn.file_name
+  FROM cte_paths AS pte
+  JOIN main.filenames  AS fn ON (pte.rowid=fn.Pathid)
+  WHERE pte.rowid IS NOT NULL 
+  ;
+
+
+/*
+vi: ft=sql
+*/

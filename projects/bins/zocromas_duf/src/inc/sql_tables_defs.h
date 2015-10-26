@@ -55,6 +55,32 @@
 								" JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " \
 							" GROUP BY parents." DUF_SQL_IDFIELD ") "
 
+#define DUF_SQL_RNUMDIRS(_paths_alias) "(WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS  ( " \
+			      " SELECT dpt." DUF_SQL_IDFIELD ",dpt.parentid " \
+			        " FROM " DUF_SQL_TABLES_PATHS_FULL "  AS dpt " \
+			        " WHERE parentid=" #_paths_alias "." DUF_SQL_IDFIELD \
+			        " UNION " \
+			          " SELECT ptu." DUF_SQL_IDFIELD ",ptu.parentid " \
+			            " FROM cte_paths " \
+			            " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " \
+			            " ) " \
+			    " SELECT COUNT(*)   " \
+			    "   FROM cte_paths  AS ptenud " \
+			    "   LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS dpt ON (ptenud." DUF_SQL_IDFIELD "=dpt." DUF_SQL_IDFIELD ")) "
+
+#define DUF_SQL_RNUMFILES(_paths_alias) "(WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS  ( " \
+			      " SELECT fpt." DUF_SQL_IDFIELD ",fpt.parentid " \
+			        " FROM " DUF_SQL_TABLES_PATHS_FULL "  AS fpt  " \
+			        " WHERE fpt.parentid=" #_paths_alias "." DUF_SQL_IDFIELD " OR fpt." DUF_SQL_IDFIELD "=" #_paths_alias "." DUF_SQL_IDFIELD \
+			        " UNION " \
+			          " SELECT ptu." DUF_SQL_IDFIELD ",ptu.parentid " \
+			            " FROM cte_paths " \
+			            " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " \
+			            " ) " \
+			    " SELECT COUNT(*)  " \
+			      " FROM cte_paths  AS ptenuf " \
+			      " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (ptenuf." DUF_SQL_IDFIELD "=fn.Pathid) ) " \
+
 #  if 1
 
 #    define DUF_SQL_TABLES_FILENAMES_FULL          DUF_DBPREF  DUF_SQL_TABLES_FILENAMES

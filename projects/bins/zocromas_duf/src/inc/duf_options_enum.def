@@ -311,6 +311,7 @@
   ENUM_WRAP(FLAG_INFO)
 
   ENUM_WRAP(CD)
+  ENUM_WRAP(CD_ID)
   ENUM_WRAP(PWD)
   ENUM_WRAP(FLAG_QUIT)     /* same as no-interactive */
   ENUM_WRAP(HISTORY_FILE)

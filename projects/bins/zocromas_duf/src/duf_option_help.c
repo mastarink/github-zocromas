@@ -779,6 +779,9 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --list-extended=sccb 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  --list-extended=sccb:ls 	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20151026.121305 ============" );
+  DUF_PRINTF( 0, "  run  -duR  --db-name=test_tree --cd-id=15      --evaluate=tree 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run  -duR  --db-name=test_tree --cd=test/tree  --evaluate=tree 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

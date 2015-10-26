@@ -139,7 +139,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   int done = 0;
   int depth = 0;
 
-  duf_depthinfo_t DUF_UNUSED di = { 0 };
+  duf_depthinfo_t di = { 0 };
 #if 0
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
                                         0 /* opendir */  ) );
@@ -153,18 +153,12 @@ duf_dirid2path( unsigned long long dirid, int *pr )
     name = duf_dirid2name_existed( &di, dirid, &dirid, &r );
     if ( name )
     {
-      char *t;
+      char *opath;
 
-      t = path;
-      /* (name && !*name) means "/" */
-      path = mas_strdup( name );
-#if 0
-      path = mas_strcat_x( path, "/" );
-#else
-      path = mas_normalize_path( path );
-#endif
-      path = mas_strcat_x( path, t );
-      mas_free( t );
+      opath = path;
+      path = mas_normalize_path_plus( *name ? name : "/", opath, NULL );
+      mas_free( opath );
+      T( "(%llu) '%s' => path:%s", dirid, name, path );
       depth++;
     }
     else

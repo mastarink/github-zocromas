@@ -1,0 +1,34 @@
+.nullvalue <NULL>
+.headers off
+SELECT rowid, dir_name
+, (WITH RECURSIVE cte_paths(rowid,parentid) AS  (
+  SELECT dpt.rowid,dpt.parentid
+    FROM main.paths  AS dpt 
+    WHERE parentid=pt.rowid
+    UNION
+      SELECT ptu.rowid,ptu.parentid
+        FROM cte_paths
+	JOIN main.paths AS ptu ON( ptu.parentid=cte_paths.rowid )
+	)
+SELECT COUNT(*)  
+  FROM cte_paths  AS pte
+  LEFT JOIN main.paths AS dpt ON (pte.rowid=dpt.rowid)) AS rnumdirs
+, (WITH RECURSIVE cte_paths(rowid,parentid) AS  (
+  SELECT fpt.rowid,fpt.parentid
+    FROM main.paths  AS fpt 
+    WHERE fpt.parentid=pt.rowid OR fpt.rowid=pt.rowid
+    UNION
+      SELECT ptu.rowid,ptu.parentid
+        FROM cte_paths
+	JOIN main.paths AS ptu ON( ptu.parentid=cte_paths.rowid )
+	)
+SELECT COUNT(*) 
+  FROM cte_paths  AS pte
+  JOIN main.filenames AS fn ON (pte.rowid=fn.Pathid) ) AS rnumfiles FROM main.paths AS pt
+  ;
+
+
+/*
+vi: ft=sql
+*/
+

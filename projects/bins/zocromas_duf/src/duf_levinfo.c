@@ -76,6 +76,7 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
 }
 
 /* 20150901.173353 */
+/* resets levinfo  (currenl level) */
 void
 duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
                         duf_node_type_t node_type )

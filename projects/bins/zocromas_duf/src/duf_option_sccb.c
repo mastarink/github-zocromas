@@ -24,6 +24,7 @@
 #include "duf_sccb_eval_std.h"
 
 #include "duf_levinfo_ref.h"
+#include "duf_path2dirid.h"
 #include "duf_maindb.h"
 
 
@@ -172,6 +173,20 @@ duf_option_$_cd( const char *s )
     }
 #endif
   }
+  DEBUG_ENDR( r );
+}
+
+mas_error_code_t
+duf_option_$_cdid( long topdirid )
+{
+  DEBUG_STARTR( r );
+  char *path;
+
+  path = duf_dirid2path( topdirid, &r );
+  T( "%lu: %s", topdirid, path );
+  if ( DUF_NOERROR( r ) && path )
+    r = duf_option_$_cd( path );
+  mas_free( path );
   DEBUG_ENDR( r );
 }
 

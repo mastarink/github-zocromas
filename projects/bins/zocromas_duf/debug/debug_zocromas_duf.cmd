@@ -26,3 +26,4 @@ set breakpoint pending on
 
 run
 # bt
+# vi: ft=gdb
