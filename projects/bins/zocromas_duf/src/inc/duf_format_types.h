@@ -8,7 +8,9 @@ typedef struct
   unsigned dirid_space:1;
   unsigned nfiles:1;
   unsigned nfiles_space:1;
+  unsigned rnfiles:1;
   unsigned ndirs:1;
+  unsigned rndirs:1;
   unsigned ndirs_space:1;
   unsigned filename:1;
   unsigned filesize:1;

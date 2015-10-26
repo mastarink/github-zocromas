@@ -75,24 +75,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            .name = "mime leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
-#if 0
-           /* "'mime-leaf' AS fieldset_id, " (* *) */
-           " fn.Pathid AS dirid " /* */
-           ", 0 AS ndirs, 0 AS nfiles" /* */
-           " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
-           " , fd." DUF_SQL_IDFIELD " AS dataid " /* */
-           " , fd.inode AS inode " /* */
-           " , fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
-           " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
-           ", fd.mode               AS filemode " /* */
-           ", mi.dupmimecnt         AS nsame " /* */
-           ", sz.dupzcnt            AS dupzcnt " /* */
-           ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
-           " , fn." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", fd.md5id              AS md5id " /* */
-#else
-           "#mime"
-#endif
+          "#mime"
            ,
            .selector2 =         /* */
            " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
@@ -121,6 +104,8 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMFILES( pt ) " AS rnfiles " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
@@ -130,7 +115,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            ,
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
-           .filter = NULL       /* */
+           .filter = " rnfiles > 0 " /* */
 #if 0
            ,
            .selector_total2 =   /* */

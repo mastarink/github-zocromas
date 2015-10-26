@@ -138,6 +138,7 @@ typedef void ( *duf_sccbh_fun_t ) ( struct duf_sccb_handle_s * );
 
 struct duf_sccb_handle_s
 {
+  unsigned total_counted:1;
   unsigned long long total_items;
 #  if 0
   int targc;

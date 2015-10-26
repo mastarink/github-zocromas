@@ -412,58 +412,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
     assert( pdi->inited );
     if ( duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF )
       d--;
-#if 0
-    {
-      assert( d >= 0 );
-      if ( duf_levinfo_ptr_d( pdi, d )->fullpath )
-      {
-        path = duf_levinfo_ptr_d( pdi, d )->fullpath;
-      }
-      else
-        /* if ( pdi->path ) */
-      {
-        /* size_t lenp = strlen( pdi->path ); */
-        size_t len = 2;
-        char *p;
-
-        for ( int i = 0; i <= d; i++ )
-        {
-          assert( pdi->pathinfo.levinfo[i].itemname );
-          len += strlen( pdi->pathinfo.levinfo[i].itemname ) + 1;
-        }
-        path = mas_malloc( len );
-        /* path = strcpy( path, pdi->path ); */
-        p = path;
-
-        for ( int i = 0; i <= d; i++ )
-        {
-          size_t l;
-
-          if ( p == path || *( p - 1 ) != '/' )
-            *p++ = '/';
-          *p = 0;
-          DUF_TRACE( path, 4, "path:%s", path );
-          l = strlen( pdi->pathinfo.levinfo[i].itemname );
-          if ( l > 0 )
-          {
-            strcpy( p, pdi->pathinfo.levinfo[i].itemname );
-            p += l;
-            *p++ = '/';
-          }
-          *p = 0;
-        }
-        assert( d >= 0 );
-        duf_levinfo_ptr_d( pdi, d )->fullpath = path;
-        DUF_TRACE( path, 4, "fullpath:%s", path );
-      }
-      /* else                                */
-      /* {                                   */
-      /*   DUF_SHOW_ERRORO( "pdi->path not set" ); */
-      /* }                                   */
-    }
-#else
     path = duf_pi_path_d( &pdi->pathinfo, d );
-#endif
   }
 #if 0
   if ( !path )

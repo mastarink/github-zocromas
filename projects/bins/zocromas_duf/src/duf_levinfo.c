@@ -23,10 +23,7 @@ duf_li_clear( duf_levinfo_t * pli )
   assert( pli );
   assert( pli->lev_dh.opened_copy || pli->lev_dh.dfd == 0 );
   if ( pli->itemname )
-  {
-    /* DUF_SHOW_ERROR( "CLEAR %s %p", pli->itemname, pli->itemname ); */
     mas_free( pli->itemname );
-  }
   pli->itemname = NULL;
 
   if ( pli->fullpath )
@@ -101,11 +98,6 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
   {
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
 
-    /* if ( S_ISBLK( stX.st_mode ) ) */
-    /* {                             */
-    /* }                             */
-    /* DUF_SHOW_ERROR( "%s", pdi->pathinfo.levinfo[d].is__leaf ? "LEAF" : "NODE" ); */
-    /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->pathinfo.levinfo[d].itemname ); */
     {
       /* stat */
       if ( DUF_GET_SFIELD2( dfname ) )

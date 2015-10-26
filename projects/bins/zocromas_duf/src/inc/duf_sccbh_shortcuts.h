@@ -5,6 +5,7 @@
 #  define PDICLONED (sccbh->pdi_cloned)
 #  define SCCB (sccbh->sccb)
 #  define TOTITEMS (sccbh->total_items)
+#  define TOTCOUNTED (sccbh->total_counted)
 #if 0
 #  define PU (sccbh->pu_x)
 #else

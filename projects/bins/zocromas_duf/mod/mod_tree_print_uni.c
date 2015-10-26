@@ -253,6 +253,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                .mimeid = 0,
                .nfiles = 1,
                .ndirs = 1,
+               .rnfiles = 1,
+               .rndirs = 1,
                .inode = 0,
                .mode = 0,
                .nlink = 0,

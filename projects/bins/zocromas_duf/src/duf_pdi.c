@@ -103,6 +103,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
     {
+      /* T( "real_path:%p:%s", real_path, real_path ); */
       DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
       if ( !pdi->pyp )
       {
@@ -110,6 +111,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
         pdi->pyp_created = 1;
         memset( pdi->pyp, 0, sizeof( *pdi->pyp ) );
         pdi->pyp->topdirid = duf_levinfo_dirid( pdi );
+        /* T( "(ci:%d) topdirid:%llu for '%s' - '%s'", caninsert, pdi->pyp->topdirid, real_path, duf_levinfo_path( pdi ) ); */
       }
     }
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
@@ -127,6 +129,7 @@ DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, c
   DEBUG_STARTR( r );
 
   DUF_TRACE( pdi, 0, "@@@frecursive:%d; real_path:%s", frecursive, real_path );
+  /* T( "real_path:%p:%s", real_path, real_path ); */
   DOR( r, duf_pdi_init( pdi, pu, real_path, sql_set, caninsert, frecursive, opendir ) );
 
   if ( DUF_NOERROR( r ) )
@@ -159,11 +162,10 @@ duf_pdi_init_at_config( void )
   DEBUG_STARTR( r );
   DUF_TRACE( pdi, 0, "@@@recursive:%d; NO real_path", DUF_UG_FLAG( recursive ) );
 #if 0
-  DOR( r,
-       DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ ,
-                                     0 /* caninsert */ ,
-                                     DUF_UG_FLAG( recursive ) /* frecursive */ ,
-                                     1 /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ ,
+                                        0 /* caninsert */ ,
+                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
+                                        1 /* opendir */  ) );
 #else
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.puz ), NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,

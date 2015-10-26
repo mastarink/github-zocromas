@@ -69,27 +69,7 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
            .name = "crc32 leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
-#if 0
-           /* "'crc32-leaf' AS fieldset_id, " (* *) */
-           " fn.Pathid AS dirid " /* */
-           ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-           ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-           ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
-           ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", fd.md5id AS md5id " /* */
-           ", fd." DUF_SQL_IDFIELD " AS filedataid " /* */
-           ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
-           ", crc.dup32cnt AS nsame " /* */
-           ", sz.dupzcnt            AS dupzcnt " /* */
-           ", fd.crc32id AS crc32id" /* */
-           ", crc.crc32sum "    /* */
-#else
-           "#crc32"
-#endif
-           ,
+           "#crc32",
            .fieldsets = {
                          "#basic",
                          "#plus",
@@ -124,18 +104,18 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMFILES( pt ) " AS rnfiles " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDFIELD " AS dirid, pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " */
-           /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            ,
            .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
-           .filter = NULL       /* */
+           .filter = " rnfiles > 0 " /* */
 #if 0
            ,
            .selector_total2 =   /* */

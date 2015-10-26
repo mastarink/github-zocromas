@@ -294,7 +294,10 @@ duf_main_db_open( void )
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
     DUF_TRACE( pdi, 0, "DUF_CONFIGG( scn.pdi ) %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-    DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( scn.pdi ) ) );
+# if 0
+    // removed 20151026.200517 - BAD here
+    DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( scn.pdi ) ) ); 
+#endif
     DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
     /* if ( DUF_NOERROR( r ) ) */
     /*   r++; (* ???? *)       */

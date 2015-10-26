@@ -176,7 +176,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname " /*      */
           ", tf.numfiles AS nfiles" /* */
           ", td.numdirs AS ndirs  " /*      */
-          ,
+          ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " ", " DUF_SQL_RNUMFILES( pt ) " AS rnfiles ",
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
 #  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -426,6 +426,11 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );
+  
+  
+  assert( real_path != rpath ); /* MEMORY ERROR !! FIXME  FIXME  FIXME  FIXME  FIXME  FIXME */
+  
+  
   DUF_TRACE( path, 6, "@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
   {
     DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
@@ -436,7 +441,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
      * */
     DOR( r, _duf_real_path2db( pdi, real_path, caninsert, sql_set ) ); /* parse real_path to components and store/check each to db,
                                                                           setting each level info to levinfo;
-									  -XXX- sets depth + n -XXX- */
+                                                                          -XXX- sets depth + n -XXX- */
     duf_pdi_set_topdepth( pdi );
   }
   mas_free( real_path );

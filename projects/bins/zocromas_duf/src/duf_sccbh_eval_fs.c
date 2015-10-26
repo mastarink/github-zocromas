@@ -207,21 +207,6 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
 #endif
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
   }
-  /* else                                                                                                                         */
-  /* {                                                                                                                            */
-  /*   DUF_TRACE( scan, 10,                                                                                                       */
-  /*              "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s", */
-  /*              duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );                                                  */
-  /*   DUF_TRACE( sccbh, 2, "@no scan (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );                                  */
-  /* }                                                                                                                            */
-#if 0
-  {
-    const duf_sql_set_t *sql_set = NULL;
-
-    sql_set = duf_get_leaf_sql_set( SCCB );
-    DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, sql_set ) ); /* count for possibly --progress */
-  }
-#endif
   /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
   DEBUG_ENDR( r );
 }

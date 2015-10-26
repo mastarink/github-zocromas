@@ -6,7 +6,7 @@
 
 
 #include "duf_config_util.h"
-#include "duf_config_ref.h" /* needed for DUF_PRINTF */
+#include "duf_config_ref.h"     /* needed for DUF_PRINTF */
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
@@ -19,6 +19,8 @@
 
 #include "duf_sccbh_eval_leaf.h"
 
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
 
 #include "duf_sccbh_eval_all.h"
 #include "duf_sccbh_eval_sql_set.h"
@@ -99,7 +101,7 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb )
           || ( str_cb2 == duf_eval_sccbh_db_leaf_str_cb ) );
 #ifdef MAS_TRACING
-  const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_NODE ? "node" : "UNDEF" );
+  const char *set_type_title = duf_nodetype_name( node_type );
 #endif
   sql_set = duf_sccb_get_sql_set( SCCB, node_type );
 
@@ -283,13 +285,14 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
 
 /* 20150820.085615 */
 int
-duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
   assert( sccbh );
   assert( SCCB );
 
+  DUF_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt?DUF_GET_UFIELD2( rnfiles ):0, sqlite3_sql( pstmt ) );
   DUF_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DORF( r, duf_eval_sccbh_db_items_str_cb, scanstage, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );

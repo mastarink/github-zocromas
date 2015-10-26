@@ -58,7 +58,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
   else
     worksql = sql;
   {
-    DUF_TRACE( sql, 0, worksql );
+    DUF_TRACE( sql, 3, worksql );
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
     if ( callback )
       DOR( r, ( callback ) ( pstmt, pu, py, ttarg ) );
@@ -120,7 +120,7 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilt
     while ( DUF_NOERROR( r ) && psql && *psql )
     {
       nn++;
-      DUF_TRACE( sql, 0, "beginning psql #%d: %s", nn, *psql );
+      DUF_TRACE( sql, 3, "beginning psql #%d: %s", nn, *psql );
       DUF_TRACE( select, 0, "beginning psql #%d: %s", nn, *psql );
 
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );

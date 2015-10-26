@@ -9,9 +9,7 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-# b mod_exif_uni.c:544
-
-# ignore <bnum> count
+b duf_sccb_handle.c:95
 
 # commands 1
 # print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]

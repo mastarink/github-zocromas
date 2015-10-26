@@ -74,37 +74,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            .name = "exif leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
-#if 0
-           /* "'exif-leaf' AS fieldset_id, " (* *) */
-           " fn.Pathid AS dirid " /* */
-           ", 0 AS ndirs, 0 AS nfiles" /* */
-           ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-           ", STRFTIME( '%s',fd.mtim ) AS mtime " /* */
-           ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
-           ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
-           ", x.dupexifcnt          AS nsame " /* */
-           /* ", md.dup5cnt            AS nsame_md5 " (* *) */
-           /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
-           /* ", x.dupexifcnt          AS nsame_exif " (* *) */
-           /* ", md.dup5cnt            AS dup5cnt " (* *) */
-           ", sz.dupzcnt            AS dupzcnt " /* */
-           ", fd.md5id AS md5id" /* */
-           /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
-           ", md.md5sum1, md.md5sum2 " /* */
-           /* */
-           " , fd." DUF_SQL_IDFIELD " AS filedataid " /* */
-           ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
-           ", mi.mime AS mime " /* */
-           ", xm.model AS camera " /* */
-           ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
-           ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
-           ", xm.model AS camera"
-#else
-           "#exif"
-#endif
-           ,
+           "#exif",
            .selector2 =         /* */
            " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
@@ -124,18 +94,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            " ( :fFast    IS NULL OR sz.size IS NULL  OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,                    /* */
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD
-#if 0
-           ,
-           .selector_total2 =   /* */
-           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDFIELD " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDFIELD " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
-           ,                    /* */
-#endif
-           },                   /* */
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}, /* */
   .node = {
            .name = "exif node",
            .type = DUF_NODE_NODE,
@@ -146,6 +105,8 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMFILES( pt ) " AS rnfiles " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
            ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,                    /* */
@@ -156,11 +117,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            ,
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName ) AND (tf.numfiles>0 OR td.numdirs>0 ) " /* */
            ,                    /* */
-           .filter = NULL       /* */
-#if 0
-           ,.selector_total2 =  /* */
-           " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#endif
+           .filter = " rnfiles > 0 " /* */
            },
   .final_sql_seq = &final_sql,
 };
@@ -268,7 +225,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *mod
       if ( modelid )
       {
         /* DUF_SQL_BIND_LL( modelID, modelid, lr, pstmt ); */
-	DUF_SQL_BIND_LL_NZ_OPT( modelID, modelid, lr, pstmt );
+        DUF_SQL_BIND_LL_NZ_OPT( modelID, modelid, lr, pstmt );
         DUF_TEST_R( lr );
       }
       DUF_SQL_BIND_LL( timeEpoch, timeepoch, lr, pstmt );

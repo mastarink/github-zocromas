@@ -44,6 +44,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int rpr = 0;
+  unsigned long long cnt1 = 0;
 
   /* const char *leaf_selector_total2 = NULL; */
 
@@ -96,16 +97,18 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       {
 #if 1
         cnt = duf_sql_column_long_long( pstmt, 0 );
+        cnt1 = DUF_GET_UFIELD2( nf );
 #else
         cnt = DUF_GET_UFIELD2( CNT );
 #endif
-        DUF_TRACE( sql, 1, "@@counted A %llu by %s", cnt, csql );
+        DUF_TRACE( sql, 1, "@@counted A %llu : %llu by %s", cnt, cnt1, csql );
         /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
         if ( cnt > 0 && !sql_set->cte && SCCB->count_nodes )
           cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
         /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@counted B %llu by %s", cnt, csql );
+      /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
       assert( DUF_NOERROR( rpr ) );
       DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
@@ -121,7 +124,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
   DUF_TEST_R( rpr );
   if ( pr )
     *pr = rpr;
-  T( "%s cnt:%llu", duf_uni_scan_action_title( SCCB ), cnt );
+  /* T( "%s cnt:%llu", duf_uni_scan_action_title( SCCB ), cnt ); */
   DEBUG_ENDULL( cnt );
 }
 
@@ -222,14 +225,17 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PDI = pdi;
 #endif
     /* duf_scan_qbeginning_sql( sccb ); */
-    DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
+    DUF_TRACE( sql, 1, "@@beginning_sql for '%s'", sccb->title );
 
     DOR( rpr, duf_sccbh_eval_sqlsq( sccbh /* , PU */  ) );
 
-    DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
+    DUF_TRACE( sql, 1, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
     {
       TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
+      if ( DUF_NOERROR( rpr ) )
+        TOTCOUNTED = 1;
+      /* T( "TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) ); */
       DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
       /* assert(TOTITEMS=38); */

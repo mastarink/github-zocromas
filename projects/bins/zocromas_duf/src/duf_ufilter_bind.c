@@ -65,19 +65,20 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   { \
     DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, pu->_name.min, r, pstmt ); \
     DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, pu->_name.max, r, pstmt ); \
-    DUF_TRACE(sql, 0, "@@@bind %s: %llu-%llu", # _name, pu->_name.min, pu->_name.max ); \
+    DUF_TRACE(sql, 3, "@@@bind %s: %llu-%llu", # _name, pu->_name.min, pu->_name.max ); \
   }
 #endif
   if ( !pu )
   {
-    DUF_TRACE( sql, 0, "@@@bind - no pu!" );
+    DUF_TRACE( sql, 3, "@@@bind - no pu!" );
     return 0;
   }
 
-  DUF_TRACE( sql, 0, "py:%d - %llu", py ? 1 : 0, py ? py->topdirid : 0 );
+  DUF_TRACE( sql, 3, "py:%d - %llu", py ? 1 : 0, py ? py->topdirid : 0 );
   if ( py )
   {
     DUF_SQL_BIND_LL_NZ_OPT( topDirID, py->topdirid, r, pstmt );
+    /* T( "(%d) BIND topdirid:%llu", r , py->topdirid ); */
     /* assert( py->topdirid ); */
   }
   else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt ), 4 ) )
@@ -109,27 +110,27 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   if ( pu->mime.type )
   {
     DUF_SQL_BIND_S_OPT( MimeType, pu->mime.type, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind MimeType: %s", pu->mime.type );
+    DUF_TRACE( sql, 3, "@@@bind MimeType: %s", pu->mime.type );
   }
   if ( pu->filename )
   {
     DUF_SQL_BIND_S_OPT( Name, pu->filename, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db )
   {
     DUF_SQL_BIND_S_OPT( GName, pu->glob_db, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db_include )
   {
     DUF_SQL_BIND_S_OPT( GNameI, pu->glob_db_include, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db_exclude )
   {
     DUF_SQL_BIND_S_OPT( GNameX, pu->glob_db_exclude, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->exif.camera )
   {
@@ -139,7 +140,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     t = mas_strcat_x( t, pu->exif.camera );
     t = mas_strcat_x( t, "%" );
     DUF_SQL_BIND_S_OPT( Camera, t, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
     mas_free( t );
   }
 
@@ -152,7 +153,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DOR( r, duf_init_filepath( &fp, pu->same_as.md5 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -164,7 +165,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DOR( r, duf_init_filepath( &fp, pu->same_as.sha1 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -176,7 +177,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DOR( r, duf_init_filepath( &fp, pu->same_as.exif ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameExifPathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsExif, fp.name, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -187,16 +188,16 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   if ( pu->tag.file )
   {
     DUF_SQL_BIND_S_OPT( TagFile, pu->tag.file, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->tag.dir )
   {
     DUF_SQL_BIND_S_OPT( TagDir, pu->tag.dir, r, pstmt );
-    DUF_TRACE( sql, 0, "@@@bind " );
+    DUF_TRACE( sql, 3, "@@@bind " );
   }
   DUF_SQL_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
   DUF_SQL_BIND_I_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
-  DUF_TRACE( sql, 0, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
+  DUF_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
   DEBUG_ENDR( r );
 }
