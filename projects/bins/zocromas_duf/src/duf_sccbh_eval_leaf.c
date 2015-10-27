@@ -18,8 +18,8 @@
 /* ###################################################################### */
 
 
-
-/*20150820.085324
+/* 20151027.144543 */
+/*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
@@ -56,11 +56,17 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt
     scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF );
 #endif
     if ( scanner )
+    {
+      sccbh->current_scanner = scanner;
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+      assert( sccbh->current_node_type == DUF_NODE_LEAF );
+      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_LEAF, r );
+    }
     else
     {
       DUF_SHOW_ERRORO( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ), duf_levinfo_deleted( PDI ),
-                      duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
+                       duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
     }
   }
   DEBUG_ENDR( r );

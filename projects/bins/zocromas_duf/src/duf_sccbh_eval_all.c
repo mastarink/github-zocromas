@@ -15,13 +15,14 @@
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_dir_scan2_stages.h" /* rename to duf_dir_scan2_passes.h */
+/* #include "duf_dir_scan2_stages.h" */
 /* #include "duf_item_scan2.h" */
 
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
 #include "duf_sccbh_eval.h"
 #include "duf_sccbh_eval_fs.h"
+#include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
@@ -85,14 +86,20 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 #else
   for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
   {
-    DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", scanstage, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ),
-               duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 4, "scan pass %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
+               duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", scanstage, duf_uni_scan_action_title( SCCB ), SCCB->name );
     /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
     if ( passes[scanstage] )
+    {
+      sccbh->current_statement = pstmt_selector;
+      sccbh->current_scanstage = scanstage;
       DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
-    /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+      /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+      sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
+      sccbh->current_statement = NULL;
+    }
   }
 #endif
   DUF_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );

@@ -158,7 +158,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
       opath = path;
       path = mas_normalize_path_plus( *name ? name : "/", opath, NULL );
       mas_free( opath );
-      T( "(%llu) '%s' => path:%s", dirid, name, path );
+      /* T( "(%llu) '%s' => path:%s", dirid, name, path ); */
       depth++;
     }
     else

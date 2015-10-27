@@ -84,6 +84,7 @@ struct duf_scan_callbacks_s
   duf_sql_set_t leaf;
 
   unsigned count_nodes:1;
+  /* unsigned count_leaves:1; */
   unsigned no_progress:1;
   /* const char *leaf_selector_total2; */
   void *dlhan;
@@ -135,6 +136,7 @@ struct duf_scan_callbacks_s
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
 typedef void ( *duf_sccbh_fun_t ) ( struct duf_sccb_handle_s * );
+typedef void ( *duf_rsccbh_fun_t ) ( const struct duf_sccb_handle_s *, duf_scanstage_t, duf_stmnt_t *, duf_scanner_t, duf_node_type_t, int );
 
 struct duf_sccb_handle_s
 {
@@ -155,6 +157,11 @@ struct duf_sccb_handle_s
   const duf_scan_callbacks_t *sccb;
   duf_sccbh_fun_t progress_leaf_cb;
   duf_sccbh_fun_t progress_node_cb;
+  duf_scanstage_t current_scanstage;
+  duf_stmnt_t *current_statement;
+  duf_scanner_t current_scanner;
+  duf_node_type_t current_node_type;
+  duf_rsccbh_fun_t atom_cb;
 };
 
 typedef struct duf_sccb_handle_s duf_sccb_handle_t;

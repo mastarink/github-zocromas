@@ -240,44 +240,56 @@ duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unus
   DEBUG_ENDR( r );
 }
 
-/* 20151013.113746 */
+/* 20151027.144606 */
 int
 duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   unsigned long long diridpdi;
-  duf_scanner_t scanner = NULL;
 
   diridpdi = duf_levinfo_dirid( PDI );
-  DUF_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage, DUF_NODE_NODE ), diridpdi );
+  DUF_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), diridpdi );
   /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
   {
+    duf_scanner_t scanner = NULL;
+
     PDI->items.total++;
     PDI->items.dirs++;
 
-    DUF_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage, DUF_NODE_NODE ), diridpdi );
+    DUF_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), diridpdi );
 #if 1
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && duf_levinfo_if_deleted( PDI ) )
     {
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage, DUF_NODE_NODE ), diridpdi );
+      sccbh->current_scanner = scanner;
+      sccbh->current_node_type = DUF_NODE_NODE;
+      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), diridpdi );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
+      assert( sccbh->current_node_type == DUF_NODE_NODE );
+      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
     }
     else if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
     {
-      DUF_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage, DUF_NODE_NODE ), diridpdi );
+      sccbh->current_scanner = scanner;
+      sccbh->current_node_type = DUF_NODE_NODE;
+      DUF_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), diridpdi );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
+      assert( sccbh->current_node_type == DUF_NODE_NODE );
+      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
     }
 #else
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_if_deleted( PDI ), DUF_NODE_NODE ) ) )
     {
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage, DUF_NODE_NODE ), diridpdi );
+      sccbh->current_scanner = scanner;
+      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), diridpdi );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
     }
 #endif
     else
     {
-      DUF_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", duf_scanstage_name( scanstage, DUF_NODE_NODE ),
-                 diridpdi, duf_scanstage_name( scanstage, DUF_NODE_NODE ), duf_uni_scan_action_title( SCCB ) );
+      DUF_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", duf_scanstage_name( scanstage ),
+                 diridpdi, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
     }
   }
   DEBUG_ENDR( r );
@@ -292,7 +304,7 @@ duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_U
   assert( sccbh );
   assert( SCCB );
 
-  DUF_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt?DUF_GET_UFIELD2( rnfiles ):0, sqlite3_sql( pstmt ) );
+  DUF_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt ? DUF_GET_UFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
   DUF_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DORF( r, duf_eval_sccbh_db_items_str_cb, scanstage, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );

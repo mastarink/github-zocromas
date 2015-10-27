@@ -29,9 +29,31 @@
 #include "duf_sel_cb_leaf.h"
 /* ###################################################################### */
 
-
-int
+/* 20151027.114003 */
+DUF_WRAPSTATIC int
 duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+{
+  DEBUG_STARTR( r );
+  if ( str_cb2 )
+  {
+    DUF_TRACE( explain, 2, "=> str cb2" );
+    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
+    assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
+    DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
+    if ( DUF_NOERROR( r ) )
+    {
+      PDI->seq++;
+      PDI->seq_leaf++;
+      DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
+    }
+    if ( sccbh->progress_leaf_cb )
+      ( sccbh->progress_leaf_cb ) ( sccbh );
+  }
+  DEBUG_ENDR( r );
+}
+
+/* 20151027.114007 */
+int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   assert( PDI );
@@ -67,46 +89,8 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
 /* #endif */
 
 
+  duf_sel_cb2_leaf_at( scanstage, pstmt, str_cb2, sccbh );
 
-  if ( str_cb2 )
-  {
-    DUF_TRACE( explain, 2, "=> str cb2" );
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
-    assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
-#if 1
-    DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
-    if ( DUF_NOERROR( r ) )
-    {
-      PDI->seq++;
-      PDI->seq_leaf++;
-      DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
-    }
-#  if 0
-    if ( !SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACTG_FLAG( progress ) )
-    {
-      long long m;
-
-      m = TOTITEMS;
-      DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-      /* assert( PDI->seq_node <= m ); FIXME counters! */
-      if ( m > 0 )
-      {
-        duf_percent( PDI->seq_leaf, m, duf_uni_scan_action_title( SCCB ) );
-        DUF_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", PDI->seq, PDI->seq_leaf, m );
-      }
-    }
-#  else
-    if ( sccbh->progress_leaf_cb )
-      ( sccbh->progress_leaf_cb ) ( sccbh );
-#  endif
-    /* error to be removed at _is_deleted ... ? */
-
-    /* assert( !DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) && !DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) ); */
-
-#else
-    DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );
-#endif
-  }
 
   DEBUG_ENDR( r );
 }

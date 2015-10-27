@@ -21,8 +21,34 @@
 #include "duf_sel_cb_node.h"
 /* ###################################################################### */
 
-int
+/* 20151027.113952 */
+DUF_WRAPSTATIC int
 duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+{
+  DEBUG_STARTR( r );
+  /*@ 1. go down + dbopenat */
+  PDI->seq++;
+  PDI->seq_node++;
+
+  DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
+  if ( sccbh->progress_node_cb )
+    ( sccbh->progress_node_cb ) ( sccbh );
+  DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
+
+  if ( str_cb2 )
+  {
+    DUF_TRACE( explain, 2, "=> str cb2" );
+    /*@ 3. str_cb2 */
+    DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
+
+    DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
+  }
+
+  /*@ 4. go up */
+  DEBUG_ENDR( r );
+}
+/* 20151027.114000 */
+int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   assert( PDI );
@@ -35,55 +61,10 @@ duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || str_cb2 == NULL );
 
   DUF_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
+  DUF_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
+  assert( PDI->pathinfo.depth >= 0 );
   {
-    /*@ 1. go down + dbopenat */
-    DUF_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
-    assert( PDI->pathinfo.depth >= 0 );
-
-    if ( DUF_NOERROR( r ) )     /* levinfo_down OK */
-    {
-      PDI->seq++;
-      PDI->seq_node++;
-
-      DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-#if 0
-      if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACTG_FLAG( progress ) )
-      {
-        long long m;
-
-#  if 0
-        m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
-#  else
-        m = TOTITEMS;
-#  endif
-        DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-        /* assert( PDI->seq_node <= m ); FIXME counters! */
-        /*@ 2. progress bar */
-        if ( m > 0 )
-          duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
-      }
-#else
-      if ( sccbh->progress_node_cb )
-        ( sccbh->progress_node_cb ) ( sccbh );
-#endif
-      DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
-
-
-      DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
-                    duf_levinfo_dfd( PDI ), PDI->opendir );
-
-      if ( str_cb2 )
-      {
-        DUF_TRACE( explain, 2, "=> str cb2" );
-        DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
-        /*@ 3. str_cb2 */
-        DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
-
-        DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
-      }
-
-      /*@ 4. go up */
-    }
+    DOR( r, duf_sel_cb2_node_at( scanstage, pstmt, str_cb2, sccbh ) );
   }
   DUF_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );
 

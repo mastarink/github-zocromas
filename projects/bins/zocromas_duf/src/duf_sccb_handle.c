@@ -32,6 +32,7 @@
 #include "duf_sccb_begfin.h"
 #include "duf_ufilter_bind.h"
 
+#include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
@@ -191,12 +192,40 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
   }
 }
 
+/* 20151027.144501 */
+static void
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh DUF_UNUSED, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt DUF_UNUSED,
+                   duf_scanner_t scanner DUF_UNUSED, duf_node_type_t node_type DUF_UNUSED, int r DUF_UNUSED )
+{
+  static unsigned n = 0;
+  char c = '-';
+
+  if ( n > 3 )
+    n = 0;
+  switch ( n++ )
+  {
+  case 0:
+    c = '-';
+    break;
+  case 1:
+    c = '\\';
+    break;
+  case 2:
+    c = '|';
+    break;
+  case 3:
+    c = '/';
+    break;
+  }
+  fprintf( stderr, "\r%c%1s\r", c, duf_scanstage_shortname( scanstage ) );
+}
+
+/* 20151027.144450 */
 /*
  * create & open duf_sccb_handle_t from pdi & sccb (+targ)
  * */
 duf_sccb_handle_t *
-duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv /*, const duf_ufilter_t * pu_unused */ ,
-                      int *pr )
+duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, int *pr )
 {
   duf_sccb_handle_t *sccbh = NULL;
   int rpr = 0;
@@ -232,9 +261,12 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     DUF_TRACE( sql, 1, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
     {
-      TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
-      if ( DUF_NOERROR( rpr ) )
-        TOTCOUNTED = 1;
+      if ( !SCCB->no_progress )
+      {
+        TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
+        if ( DUF_NOERROR( rpr ) )
+          TOTCOUNTED = 1;
+      }
       /* T( "TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) ); */
       DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
@@ -247,6 +279,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
         sccbh->progress_node_cb = duf_sccbh_node_progress;
         sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;
       }
+      sccbh->atom_cb = duf_sccbh_atom_cb;
     }
 /*
 TODO scan mode

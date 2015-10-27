@@ -51,6 +51,7 @@ duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanst
     if ( nt == DUF_NODE_NODE )
       scanner = deleted ? sccb->node_scan_after2_deleted : sccb->node_scan_after2;
     break;
+  case DUF_SCANSTAGE_NONE:
   case DUF_SCANSTAGE_MIN:
   case DUF_SCANSTAGE_MAX:
     break;
@@ -61,43 +62,85 @@ duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanst
 
 /* 20151013.113755 */
 const char *
-duf_scanstage_name( duf_scanstage_t scanstage, duf_node_type_t nt DUF_UNUSED )
+duf_scanstage_name( duf_scanstage_t scanstage )
 {
   const char *rs = NULL;
 
   switch ( scanstage )
   {
   case DUF_SCANSTAGE_FS_ITEMS:
-    rs = "fs_leaves";
+    rs = "fs_leaves"; /* F */
     break;
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
-    rs = "db_leaves";
+    rs = "db_leaves"; /* L */
     break;
   case DUF_SCANSTAGE_DB_LEAVES_FD:
-    rs = "db_leaves_fd";
+    rs = "db_leaves_fd"; /* D */
     break;
   case DUF_SCANSTAGE_DB_SUBNODES:
-    rs = "db_subnodes";
+    rs = "db_subnodes"; /* U */
     break;
   case DUF_SCANSTAGE_NODE_BEFORE:
-    rs = "before";
+    rs = "before"; /* B */
     break;
   case DUF_SCANSTAGE_NODE_MIDDLE:
-    rs = "middle";
+    rs = "middle"; /* M */
     break;
   case DUF_SCANSTAGE_NODE_AFTER:
-    rs = "after";
+    rs = "after"; /* A */
+    break;
+  case DUF_SCANSTAGE_NONE:
+    rs = "none"; /* N */
     break;
   case DUF_SCANSTAGE_MIN:
-    rs = "min";
+    rs = "min"; /* I */
     break;
   case DUF_SCANSTAGE_MAX:
-    rs = "max";
+    rs = "max"; /* X */
     break;
   }
   return rs;
 }
+const char *
+duf_scanstage_shortname( duf_scanstage_t scanstage )
+{
+  const char *rs = NULL;
 
+  switch ( scanstage )
+  {
+  case DUF_SCANSTAGE_FS_ITEMS:
+    rs = "F"; /* F */
+    break;
+  case DUF_SCANSTAGE_DB_LEAVES_NOFD:
+    rs = "L"; /* L */
+    break;
+  case DUF_SCANSTAGE_DB_LEAVES_FD:
+    rs = "D"; /* D */
+    break;
+  case DUF_SCANSTAGE_DB_SUBNODES:
+    rs = "U"; /* U */
+    break;
+  case DUF_SCANSTAGE_NODE_BEFORE:
+    rs = "B"; /* B */
+    break;
+  case DUF_SCANSTAGE_NODE_MIDDLE:
+    rs = "M"; /* M */
+    break;
+  case DUF_SCANSTAGE_NODE_AFTER:
+    rs = "A"; /* A */
+    break;
+  case DUF_SCANSTAGE_NONE:
+    rs = "N"; /* N */
+    break;
+  case DUF_SCANSTAGE_MIN:
+    rs = "i"; /* I */
+    break;
+  case DUF_SCANSTAGE_MAX:
+    rs = "X"; /* X */
+    break;
+  }
+  return rs;
+}
 const char *
 duf_nodetype_name( duf_node_type_t nt )
 {

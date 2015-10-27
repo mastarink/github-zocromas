@@ -34,7 +34,7 @@ static duf_sql_sequence_t final_sql = /* */
           " GROUP BY Pathid1, Pathid2" /* */
           ,
 
-         NULL,
+          NULL,
           }
 };
 
@@ -49,6 +49,7 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
 
   .dirent_dir_scan_before2 = register_pdidirectory,
 
+  .no_progress = 1,
   .count_nodes = 1,
 #if 0
 #  if 0
@@ -57,7 +58,6 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 #  endif
 #endif
-
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -66,8 +66,7 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
            .name = "dirs leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* Never used!? */
-          NULL
-           },
+           NULL},
   .node = {                     /* */
            .name = "dirs node",
            .type = DUF_NODE_NODE,

@@ -22,9 +22,10 @@
 #include "duf_sccbh_eval_fs.h"
 /* ###################################################################### */
 
-/* 20151013.130012 */
+/* 20151027.144614 */
 static int
-duf_sccbh_eval_fs_with_scanner_here( duf_sccb_handle_t * sccbh, duf_scanner_t scanner )
+duf_sccbh_eval_fs_with_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh,
+                                     duf_scanner_t scanner )
 {
   DEBUG_STARTR( r );
 
@@ -34,7 +35,13 @@ duf_sccbh_eval_fs_with_scanner_here( duf_sccb_handle_t * sccbh, duf_scanner_t sc
   {
     /* call hook frmo mod_ */
     if ( scanner )
+    {
+      sccbh->current_scanner = scanner;
       DOR( r, ( scanner ) ( NULL /* pstmt */ , PDI ) );
+      assert( sccbh->current_node_type == DUF_NODE_FS);
+      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+        sccbh->atom_cb( sccbh, scanstage, NULL /* pstmt */ , scanner, DUF_NODE_FS, r );
+    }
   }
   else if ( DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) )
   {
@@ -44,31 +51,19 @@ duf_sccbh_eval_fs_with_scanner_here( duf_sccb_handle_t * sccbh, duf_scanner_t sc
   DEBUG_ENDR( r );
 }
 
-/* 20151013.130015 */
+/* 20151027.104729 */
 static int
-duf_sccbh_eval_fs_direntry( struct dirent *de,
-                            duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
+duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED,
+                            duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   duf_node_type_t nt;
 
-  /* int is__leaf; */
-
   nt = ( de->d_type == DT_DIR ) ? DUF_NODE_NODE : DUF_NODE_LEAF;
-  /* is__leaf = ( de->d_type != DT_DIR ); */
 /* --> */
   DOR( r, duf_levinfo_godown( PDI, de->d_name, nt ) );
   {
-#if 0
-    assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, DUF_NODE_LEAF ) == scanner_dirent_reg2 );
-    assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, DUF_NODE_NODE ) == scanner_dirent_dir2 );
-    /* assert( duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) == ( is__leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) ); */
-#endif
-#if 0
-    DOR( r, duf_sccbh_eval_fs_with_scanner_here( sccbh, is__leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
-#else
-    DOR( r, duf_sccbh_eval_fs_with_scanner_here( sccbh, duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ) );
-#endif
+    DOR( r, duf_sccbh_eval_fs_with_scanner_here( scanstage, pstmt_unused, sccbh, duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ) );
   }
 /* <-- */
   DOR( r, duf_levinfo_goup( PDI ) );
@@ -78,7 +73,7 @@ duf_sccbh_eval_fs_direntry( struct dirent *de,
 
 /* 20151013.130021 */
 static int
-duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
+duf_sccbh_eval_fs_dirat_with2scanners( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   int ry = 0;
@@ -92,7 +87,7 @@ duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner
     for ( int il = 0; il < nlist; il++ )
     {
       DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_sccbh_eval_fs_direntry( list[il], sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
+      DOR( r, duf_sccbh_eval_fs_direntry( list[il], scanstage, pstmt_unused, sccbh ) );
 
       if ( list[il] )
         free( list[il] );
@@ -123,38 +118,23 @@ duf_sccbh_eval_fs_dirat_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner
   DEBUG_ENDR( r );
 }
 
-/* 20151013.130028 */
-static int
-_duf_sccbh_eval_fs_with2scanners( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
-{
-  DEBUG_STARTR( r );
-
-  DOR( r, duf_levinfo_if_openat_dh( PDI ) );
-  DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
-
-  DEBUG_ENDR( r );
-}
-
 /* 20151013.130037 */
 DUF_WRAPSTATIC int
-duf_sccbh_eval_fs( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 */  )
+duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-
-  assert( PDI );
-
-  /* TODO */
-  DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
 
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
-#if 0
-    DUF_TRACE( scan, 4, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
-#endif
+    /* TODO */
+    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
+
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
     if ( S_ISDIR( duf_levinfo_stat_mode( PDI ) ) )
     {
-      DOR( r, _duf_sccbh_eval_fs_with2scanners( sccbh /*, scanner_dirent_reg2, scanner_dirent_dir2 */  ) );
+      DOR( r, duf_levinfo_if_openat_dh( PDI ) );
+      sccbh->current_node_type = DUF_NODE_FS;
+      DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( scanstage, pstmt_unused, sccbh ) );
     }
     else
     {
@@ -170,7 +150,8 @@ duf_sccbh_eval_fs( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_re
   DEBUG_ENDR( r );
 }
 
-/*20150820.085447
+/* 20151027.114354 */
+/*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
  *
@@ -181,6 +162,7 @@ duf_sccbh_eval_fs( duf_sccb_handle_t * sccbh /*, duf_scanner_t scanner_dirent_re
 int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
+  assert( PDI );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
     /* assert( PDI->opendir == 1 ); */
@@ -199,14 +181,8 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
      *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
      * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
 
-    /* DOR_NOE( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED ); */
-#if 0
-    DOR( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
-#else
-    DOR( r, duf_sccbh_eval_fs( sccbh /*, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */  ) );
-#endif
+    DOR( r, duf_sccbh_eval_fs( scanstage, pstmt_unused, sccbh ) );
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
   }
-  /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
   DEBUG_ENDR( r );
 }

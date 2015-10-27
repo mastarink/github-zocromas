@@ -3,6 +3,7 @@
 
 typedef enum
 {
+  DUF_SCANSTAGE_NONE,
   DUF_SCANSTAGE_MIN,
   DUF_SCANSTAGE_FS_ITEMS,
   DUF_SCANSTAGE_NODE_BEFORE,
@@ -19,6 +20,9 @@ typedef enum
   DUF_NODE_NONE,
   DUF_NODE_LEAF = 1,
   DUF_NODE_NODE,
+  DUF_NODE_FS,
+  DUF_NODE_FS_FILE,
+  DUF_NODE_FS_DIR,
   DUF_NODE_MAX,
 } duf_node_type_t;
 

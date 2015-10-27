@@ -18,7 +18,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_defs.h \
 	duf_dh.h \
 	duf_dirent.h \
-	duf_dir_scan2_stages.h \
 	duf_filedata.h \
 	duf_fileinfo_types.h \
 	duf_flags_types.h \

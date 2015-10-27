@@ -1,5 +1,11 @@
-find duf_dir_scan2_stages.c
-sfind duf_dir_scan2_stages.h
+find duf_sel_cb_leaf.c
+sfind duf_sel_cb_leaf.h
+
+tab sfind duf_sel_cb_node.c
+sfind duf_sel_cb_node.h
+
+" tab sfind duf_dir_scan2_stages.c
+" sfind duf_dir_scan2_stages.h
 
 " tab sfind duf_eval_at_config.c
 " sfind duf_eval_at_config.h
@@ -12,12 +18,6 @@ sfind duf_dir_scan2_stages.h
 
 " tab sfind duf_item_scan2.c
 " sfind duf_item_scan2.h
-
-tab sfind duf_sel_cb_leaf.c
-sfind duf_sel_cb_leaf.h
-
-tab sfind duf_sel_cb_node.c
-sfind duf_sel_cb_node.h
 
 " tab sfind duf_item_match2.c
 " sfind duf_item_match2.h
