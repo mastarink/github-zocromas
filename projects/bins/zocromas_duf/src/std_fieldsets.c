@@ -21,8 +21,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'tmpl-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -54,8 +58,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'basic-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    }
   ,
@@ -94,8 +102,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'md5-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -135,8 +147,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'sha1-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -161,8 +177,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'sd5-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -203,8 +223,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'crc32-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -233,8 +257,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'mime-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize  " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME('%s',fd.mtim)   AS mtime " /* */
@@ -261,8 +289,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'exif-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -294,8 +326,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* " 'std-nons-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -330,8 +366,12 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
+#ifndef DUF_NO_NUMS
    ", 0 AS ndirs, 0 AS nfiles"  /* */
-   ", 0 AS rndirs, 0 AS rnfiles"  /* */
+#endif
+#ifndef DUF_NO_RNUMS
+   ", 0 AS rndirs, 0 AS rnfiles" /* */
+#endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -369,9 +409,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -384,9 +428,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -399,9 +447,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -414,9 +466,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -429,9 +485,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -444,9 +504,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid " /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -459,9 +523,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -474,9 +542,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -489,9 +561,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -504,9 +580,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }
@@ -519,9 +599,13 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
+#ifndef DUF_NO_NUMS
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-   ", " DUF_SQL_RNUMDIRS(pt) " AS rndirs"
-   ", " DUF_SQL_RNUMFILES(pt) " AS rnfiles"
+#endif
+#ifndef DUF_NO_RNUMS
+   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
+   ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
+#endif
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
    }

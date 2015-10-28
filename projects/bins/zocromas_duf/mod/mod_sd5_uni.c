@@ -34,6 +34,8 @@
 static int sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
+#define FILTER_DATA "fd.sd5id IS NULL"
+
 static duf_sql_sequence_t final_sql = /* */
 {
   .name = "final @ sd5",
@@ -60,7 +62,6 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
 
 
 
-
   .leaf_scan_fd2 = sd5_dirent_content2,
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
@@ -70,15 +71,13 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            .name = "sd leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
-          "#sd5"
-           ,
+           "#sd5",
            .selector2 =         /* */
-          "#md5-leaf"
-           ,
+           "#md5-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
            .filter =            /* */
-           "( fd.sd5id IS NULL OR sd." DUF_SQL_IDFIELD " IS NULL ) " /*                           */ " AND " /* */
+           "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL ) " /*                           */ " AND " /* */
            "( sz.size  IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
            "(  :fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
@@ -94,23 +93,26 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
+#ifndef DUF_NO_NUMS
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+#endif
+#ifndef DUF_NO_RNUMS
            ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
-           ", " DUF_SQL_RNUMFILES( pt ) " AS rnfiles " /* */
+           ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
+#endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
+#ifndef DUF_NO_NUMS
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#endif
            ,
            .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
+#ifndef DUF_NO_NUMS
            .filter = " rnfiles > 0 " /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-           " /* sd5 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 #endif
            },
   .final_sql_seq = &final_sql,
@@ -310,7 +312,8 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
       {
         DUF_UFIELD2( filedataid );
 #if 0
-        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sd5id, filedataid ) );
+        DOR( r,
+             duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sd5id, filedataid ) );
 #else
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id=:sd5Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 

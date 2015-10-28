@@ -11,6 +11,8 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
 
+#include "duf_pstmt_levinfo.h"
+
 /* ###################################################################### */
 #include "duf_levinfo.h"
 /* ###################################################################### */
@@ -48,7 +50,10 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
 
 /* 20150831.000000 */
 void
-duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
+duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid,
+#ifndef DUF_NO_NUMS
+                          unsigned long long ndirs, unsigned long long nfiles,
+#endif
                           duf_node_type_t node_type, int d )
 {
   assert( pdi );
@@ -60,8 +65,12 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
 #endif
   /* assert( dirid == 0 ); (* ?? *) */
   pdi->pathinfo.levinfo[d].dirid = dirid;
+#ifndef DUF_NO_NUMS
   pdi->pathinfo.levinfo[d].numdir = ndirs;
   pdi->pathinfo.levinfo[d].numfile = nfiles;
+#else
+  duf_levinfo_make_childs( pdi );
+#endif
   if ( itemname )
   {
     /* DUF_SHOW_ERROR( "BEFORE NEW LEVEL %d %s %p", d, pdi->pathinfo.levinfo[d].itemname, pdi->pathinfo.levinfo[d].itemname ); */
@@ -75,10 +84,17 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
 /* 20150901.173353 */
 /* resets levinfo  (currenl level) */
 void
-duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
+duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid,
+#ifndef DUF_NO_NUMS
+                        unsigned long long ndirs, unsigned long long nfiles,
+#endif
                         duf_node_type_t node_type )
 {
-  duf_levinfo_init_level_d( pdi, itemname, dirid, ndirs, nfiles, node_type, pdi->pathinfo.depth );
+  duf_levinfo_init_level_d( pdi, itemname, dirid,
+#ifndef DUF_NO_NUMS
+                            ndirs, nfiles,
+#endif
+                            node_type, pdi->pathinfo.depth );
 }
 
 int
@@ -108,8 +124,12 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
       pli->node_type = node_type;
 
       pli->dirid = DUF_GET_UFIELD2( dirid );
+#ifndef DUF_NO_NUMS
       pli->numdir = DUF_GET_UFIELD2( ndirs );
       pli->numfile = DUF_GET_UFIELD2( nfiles );
+#else
+      duf_levinfo_make_childs( pdi );
+#endif
       pli->nameid = DUF_GET_UFIELD2( nameid );
       pdhlev->st.st_dev = DUF_GET_UFIELD2( dev );
       pdhlev->st.st_ino = DUF_GET_UFIELD2( inode );

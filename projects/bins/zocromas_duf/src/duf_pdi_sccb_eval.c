@@ -40,7 +40,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
   DUF_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb->name, duf_levinfo_path( pdi ) );
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
   /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-  sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv /* , pu */ , &r );
+  sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv, &r );
   if ( sccbh )
   {
     {
@@ -71,6 +71,10 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   const duf_scan_callbacks_t *sccb = NULL;
 
   assert( pdi );
+  
+  {
+    assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
+  }
 
 #if 0
   if ( DUF_NOERROR( r ) )
@@ -85,7 +89,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
 
     /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-    DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg /*, pu */ , f_summary ) ); /* XXX XXX XXX XXX */
+    DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
   }
   else
   {

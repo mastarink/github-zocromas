@@ -13,7 +13,7 @@
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
-
+#include "duf_pstmt_levinfo.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -61,6 +61,7 @@ duf_scan_callbacks_t duf_tree_callbacks = {
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   /* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */
 };
+
 /* extern duf_scan_callbacks_t tree_cbs __attribute__ ( ( alias( "duf_print_tree_callbacks" ) ) ); */
 
 /* ########################################################################################## */
@@ -115,8 +116,10 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  /* .nameid = 1, */
                  .mime = 1,
                  .mimeid = 0,
+#ifndef DUF_NO_NUMS
                  .nfiles_space = 1,
                  .ndirs_space = 1,
+#endif
                  .inode = 0,
                  .mode = 1,
                  .nlink = 1,
@@ -251,10 +254,14 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                .exifdt = 0,
                .camera = 0,
                .mimeid = 0,
+#ifndef DUF_NO_NUMS
                .nfiles = 1,
                .ndirs = 1,
+#endif
+#ifndef DUF_NO_RNUMS
                .rnfiles = 1,
                .rndirs = 1,
+#endif
                .inode = 0,
                .mode = 0,
                .nlink = 0,
@@ -387,9 +394,14 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
     d0 = 1;
   for ( int d = d0; d <= max; d++ )
   {
-    int du = d - 1;
     unsigned flags = 0;
+    int du = d - 1;
+
+#ifndef DUF_NO_NUMS
     long ndu = duf_levinfo_numdir_d( pdi, du );
+#else
+    long ndu = duf_levinfo_numchild_d( pdi, du );
+#endif
 
     char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
     int is_leaf = duf_levinfo_is_leaf_d( pdi, d );
@@ -418,13 +430,17 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
 
     /* if ( is_file )   */
     /*   flags |= 0x40; */
+               
+               DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
+
     DUF_DEBUG( 1,               /* */
                DUF_PRINTF( 1, ".[L%-2d", d ); /* */
                DUF_PRINTF( 1, ".M%-2d", duf_pdi_maxdepth( pdi ) );
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags ); );
+               DUF_PRINTF( 1, ".0x%02x]", flags );
+           );
     {
 #if 0
       {

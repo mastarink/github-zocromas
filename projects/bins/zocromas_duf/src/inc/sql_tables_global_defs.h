@@ -1,7 +1,9 @@
 #ifndef MAS_SQL_TABLES_GLOBAL_DEFS_H
 #  define MAS_SQL_TABLES_GLOBAL_DEFS_H
 
-#  define DUF_USE_CTE yes
+/* see duf_defs.h : */
+/* #  define DUF_USE_CTE yes */
+/* #  define DUF_NO_RNUMS    */
 
 /* #  define DUF_USE_TMP_PATHTOT yes */
 #  ifdef DUF_USE_TMP_PATHTOT

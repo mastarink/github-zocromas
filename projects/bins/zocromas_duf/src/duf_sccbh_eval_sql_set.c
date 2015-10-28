@@ -34,7 +34,7 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
 {
   DEBUG_STARTR( r );
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
-  DUF_TRACE( sql, 0, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
+  DUF_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
   duf_sel_cb2_t cbs[] = {
     [DUF_NODE_NODE] = duf_sel_cb2_node, /* str_cb2 is duf_eval_sccbh_all */
     [DUF_NODE_LEAF] = duf_sel_cb2_leaf, /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
@@ -82,15 +82,17 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
    * */
 
   DUF_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), SCCB->name );
-  DUF_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", duf_levinfo_dirid( PDI ), PDI->seq, PDI->seq_node, PDI->seq_leaf, TOTITEMS,
+  DUF_TRACE( sql, 3, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", duf_levinfo_dirid( PDI ), PDI->seq, PDI->seq_node, PDI->seq_leaf, TOTITEMS,
              sqlite3_sql( pstmt_selector ) );
-  if ( 1 /* || !TOTCOUNTED || TOTITEMS */  ) /* FIXME: ( !TOTCOUNTED || TOTITEMS ) initially not correct */
+  /* assert( !TOTCOUNTED || TOTITEMS ); */
+  if ( !TOTCOUNTED || TOTITEMS )
   {
     DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_eval_sccbh_sql_row_str_cb( scanstage, node_type, pstmt_selector, str_cb2, sccbh ) ) );
   }
   else
   {
-    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
+    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name(scanstage), duf_uni_scan_action_title( SCCB ) );
+    /* assert( 0 );                                                                                               */
   }
 #if 1
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );

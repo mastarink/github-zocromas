@@ -5,6 +5,7 @@
 #include "duf_config_defs.h"
 
 #include "duf_action_table.h"
+#include "duf_levinfo_ref.h"
 
 #include "duf_option_defs.h"    /* DUF_ACTG_FLAG( summary ) */
 
@@ -35,6 +36,7 @@ duf_find_sccb_by_evname_std( const char *name )
   sccb = duf_find_sccb_by_evname( name, duf_first_sccb(  ) );
   return sccb;
 }
+
 const duf_scan_callbacks_t *
 duf_finor_load_d_sccb_by_evname_std( const char *name )
 {
@@ -127,6 +129,9 @@ int
 duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
 {
   DEBUG_STARTR( r );
+  /* assert( 0 );                                             */
+  /* assert( duf_levinfo_node_type( pdi ) == DUF_NODE_LEAF ); */
+
 #if 0
   DOR( r, duf_ev_pdi_atable_evname_at( pdi, name, duf_action_table(  ), NULL, DUF_ACTG_FLAG( summary ) ) );
 #else

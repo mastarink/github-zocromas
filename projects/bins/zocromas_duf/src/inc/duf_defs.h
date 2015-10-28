@@ -3,6 +3,9 @@
 
 #  define DUF_FL __func__,__LINE__
 
+#  define DUF_USE_CTE yes
+#  define DUF_NO_RNUMS yes
+/* #  define DUF_NO_NUMS yes */
 
 
 #  define DUF_RECURSIVE_NO DUF_FALSE
@@ -74,6 +77,8 @@
 #  define STR_CB_UDATA_DEF (NULL)
 
 #  define DUF_STAT_DEF ((struct stat *) NULL)
+
+/* ###################################################################### */
 
 /* ###################################################################### */
 

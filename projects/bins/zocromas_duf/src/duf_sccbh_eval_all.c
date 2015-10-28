@@ -69,39 +69,50 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
   };
   DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
   DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
+  if ( !SCCB->disabled && ( !TOTCOUNTED || TOTITEMS ) )
+  {
 #if 0
-  {
-    int nn = 0;
-
-    for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
     {
-      DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+      int nn = 0;
 
-      DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
-      /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-      DOR( r, ( *ppass ) ( scanstage_fake, pstmt_selector, sccbh ) );
-      /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+      for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
+      {
+        DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ),
+                   duf_levinfo_path( PDI ) );
+
+        DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
+        /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+        DOR( r, ( *ppass ) ( scanstage_fake, pstmt_selector, sccbh ) );
+        /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+      }
     }
-  }
 #else
-  for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
-  {
-    DUF_TRACE( scan, 4, "scan pass %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
-               duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-
-    DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", scanstage, duf_uni_scan_action_title( SCCB ), SCCB->name );
-    /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    if ( passes[scanstage] )
+    for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
     {
-      sccbh->current_statement = pstmt_selector;
-      sccbh->current_scanstage = scanstage;
-      DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
-      /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-      sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
-      sccbh->current_statement = NULL;
+      DUF_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
+                 duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+
+      DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", scanstage, duf_uni_scan_action_title( SCCB ), SCCB->name );
+      /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+      if ( passes[scanstage] )
+      {
+        sccbh->current_statement = pstmt_selector;
+        sccbh->current_scanstage = scanstage;
+        DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
+        /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+        sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
+        sccbh->current_statement = NULL;
+      }
     }
-  }
 #endif
+  }
+  else
+  {
+    /* T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) ); */
+    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu", TOTCOUNTED, TOTITEMS );
+    /* assert( 0 );                                                                                               */
+  }
+
   DUF_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
   DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
 

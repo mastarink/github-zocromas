@@ -157,7 +157,7 @@ duf_sccb_handle_create( void )
 void
 duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
 {
-  if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 )
+  if ( SCCB->count_nodes && !SCCB->no_count && !SCCB->no_progress && TOTITEMS > 0 )
   {
     long long m;
 
@@ -177,7 +177,7 @@ duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
 void
 duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 {
-  if ( !SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 )
+  if ( !SCCB->count_nodes && !SCCB->no_count && !SCCB->no_progress && TOTITEMS > 0 )
   {
     long long m;
 
@@ -261,7 +261,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     DUF_TRACE( sql, 1, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
     {
-      if ( !SCCB->no_progress )
+      if ( !SCCB->no_count )
       {
         TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
         if ( DUF_NOERROR( rpr ) )
@@ -304,7 +304,7 @@ TODO scan mode
   }
   else
   {
-    T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) );
+    T( "sccb:%d; dirid:%llu - %s", sccb ? 1 : 0, duf_levinfo_dirid( pdi ), duf_levinfo_path(pdi) );
     /* assert(0); */
   }
   if ( pr )

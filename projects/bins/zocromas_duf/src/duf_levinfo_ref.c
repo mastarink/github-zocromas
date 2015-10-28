@@ -6,6 +6,7 @@
 #include "duf_levinfo_context.h"
 #include "duf_context.h"
 
+
 #include "duf_pathinfo_ref.h"
 /* ###################################################################### */
 #include "duf_levinfo_ref.h"
@@ -44,17 +45,7 @@ DUF_LEVINFO_FC_UP( int , is_leaf )
 
 /************************************************************************/
 
-/* duf_node_type_t                                                         */
-/* duf_levinfo_node_type_leaf_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                           */
-/*   return duf_levinfo_ptr_d( pdi, d )->node_type;            */
-/* }                                                           */
-/* (* *INDENT-OFF*  *)                                         */
-/* DUF_LEVINFO_FC( int, node_type )                              */
-/* DUF_LEVINFO_FC_UP( int, node_type )                           */
-/* (* *INDENT-ON*  *)                                          */
-
-DUF_LEVINFO_3GET_BOOL( duf_node_type_t, node_type, node_type );
+DUF_LEVINFO_3GET( duf_node_type_t, node_type, node_type );
 
 /************************************************************************/
 
@@ -248,6 +239,7 @@ DUF_LEVINFO_3GET( unsigned long long, items_files, items.files )
 
 /************************************************************************/
 
+
 /* void                                                                              */
 /* duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d ) */
 /* {                                                                                 */
@@ -303,6 +295,7 @@ DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
 
 /************************************************************************/
 
+#ifndef DUF_NO_NUMS
 /* int                                                        */
 /* duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d ) */
 /* {                                                          */
@@ -317,7 +310,13 @@ DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, numdir, numdir )
 /* *INDENT-ON*  */
-
+/************************************************************************/
+#else
+  /* *INDENT-OFF*  */
+DUF_LEVINFO_3GET( unsigned long long, childs, childs )
+DUF_LEVINFO_3GET(  long long, numchild, numchild )
+/* *INDENT-ON*  */
+#endif
 /************************************************************************/
 
 /* SET */

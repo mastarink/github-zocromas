@@ -28,6 +28,7 @@ alias lc='shn_project_files'
 alias qf='shn_project_by_file'
 alias e='shn_file_edit'
 alias run='shn m i r'
+alias rug='shn m i g'
 alias gnc="grepnc"
 alias g="grepchp"
 alias gh="grephp"

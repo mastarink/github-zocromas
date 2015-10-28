@@ -144,8 +144,20 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     mas_free( t );
   }
 
-
-
+#define DUF_SQL_BIND_SAME(_u, _l) \
+	if ( pu->same_as._l ) \
+	{ \
+	  duf_filepath_t fp; \
+ \
+	  DOR( r, duf_init_filepath( &fp, pu->same_as._l ) ); \
+	  DUF_SQL_BIND_LL_NZ_OPT( GSame ## _u ## PathID, fp.dirid, r, pstmt ); \
+	  DUF_SQL_BIND_S_OPT( GSameAs ## _u, fp.name, r, pstmt ); \
+	  DUF_TRACE( sql, 0, "@@@bind GSame" # _u "PathID:%llu", fp.dirid ); \
+	  duf_clear_filepath( &fp ); \
+	  if ( DUF_NOERROR( r ) && !fp.dirid ) \
+	    DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB ); \
+	}
+#if 0
   if ( pu->same_as.md5 )
   {
     duf_filepath_t fp;
@@ -153,7 +165,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DOR( r, duf_init_filepath( &fp, pu->same_as.md5 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt );
-    DUF_TRACE( sql, 3, "@@@bind " );
+    DUF_TRACE( sql, 0, "@@@bind GSameMd5PathID:%llu", fp.dirid );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -165,7 +177,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DOR( r, duf_init_filepath( &fp, pu->same_as.sha1 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
-    DUF_TRACE( sql, 3, "@@@bind " );
+    DUF_TRACE( sql, 0, "@@@bind GSameSha1PathID:%llu", fp.dirid );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -182,7 +194,11 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
-
+#else
+ DUF_SQL_BIND_SAME(Md5, md5);
+ DUF_SQL_BIND_SAME(Sha1, sha1);
+ DUF_SQL_BIND_SAME(Exif, exif);
+#endif
 
 #if 1
   if ( pu->tag.file )

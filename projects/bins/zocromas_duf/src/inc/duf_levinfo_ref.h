@@ -11,6 +11,10 @@ int duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_is_leaf( const duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_up( const duf_depthinfo_t * pdi );
 
+duf_node_type_t duf_levinfo_node_type_d( const duf_depthinfo_t * pdi, int d );
+duf_node_type_t duf_levinfo_node_type( const duf_depthinfo_t * pdi );
+duf_node_type_t duf_levinfo_node_type_up( const duf_depthinfo_t * pdi );
+
 int duf_levinfo_deleted_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_deleted( const duf_depthinfo_t * pdi );
 int duf_levinfo_deleted_up( const duf_depthinfo_t * pdi );
@@ -57,9 +61,18 @@ void duf_levinfo_set_items_files_d( duf_depthinfo_t * pdi, unsigned long long n,
 void duf_levinfo_set_items_files( duf_depthinfo_t * pdi, unsigned long long n );
 void duf_levinfo_set_items_files_up( duf_depthinfo_t * pdi, unsigned long long n );
 
+#  ifndef DUF_NO_NUMS
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_numdir( const duf_depthinfo_t * pdi );
 int duf_levinfo_numdir_up( const duf_depthinfo_t * pdi );
+#  else
+unsigned long long duf_levinfo_childs_d( const duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_childs( const duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_childs_up( const duf_depthinfo_t * pdi );
+long long duf_levinfo_numchild_d( const duf_depthinfo_t * pdi, int d );
+long long duf_levinfo_numchild( const duf_depthinfo_t * pdi );
+long long duf_levinfo_numchild_up( const duf_depthinfo_t * pdi );
+#  endif
 
 void duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d );
 void duf_levinfo_set_context( duf_depthinfo_t * pdi, void *ctx );

@@ -85,6 +85,7 @@ struct duf_scan_callbacks_s
 
   unsigned count_nodes:1;
   /* unsigned count_leaves:1; */
+  unsigned no_count:1;
   unsigned no_progress:1;
   /* const char *leaf_selector_total2; */
   void *dlhan;

@@ -1,0 +1,20 @@
+duf_eval_sccbh_all
+  duf_sccbh_eval_db_subnodes
+    duf_eval_sccbh_db_items_str_cb
+      duf_eval_sccbh_sql_set_str_cb
+        duf_eval_sccbh_sql_str_cb
+	  duf_eval_sccbh_sql_row_str_cb
+	    duf_sel_cb2_node
+	      duf_sel_cb2_node_at
+	        duf_eval_sccbh_all_wrap
+		  duf_eval_sccbh_all
+		    ...
+
+duf_eval_sccbh_all
+  duf_sccbh_eval_fs_wrap
+    duf_sccbh_eval_fs
+      _duf_sccbh_eval_fs_with2scanners
+        duf_sccbh_eval_fs_dirat_with2scanners
+	  duf_sccbh_eval_fs_direntry
+	    duf_sccbh_eval_fs_with_scanner_here
+	      register_pdidirectory

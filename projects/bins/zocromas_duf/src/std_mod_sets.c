@@ -16,15 +16,11 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .name = "std leaf one",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
-   .fieldset =                  /* */
-   "#std-leaf",
-   .selector2 =                 /* */
-   "#std-leaf",
+   .fieldset = "#std-leaf",     /* */
+   .selector2 = "#std-leaf",    /* */
    .matcher = " fn.Pathid=:parentdirID " /* */
-   /* */
    ,
-   .filter =                    /* */
-   NULL                         /* */
+   .filter = NULL               /* */
    /* " ORDER BY fn." DUF_SQL_IDFIELD " " */
    }
   ,                             /* */
@@ -32,8 +28,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .name = "std leaf no sel",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
-   .fieldset =                  /* */
-   "#std-ns-leaf",
+   .fieldset = "#std-ns-leaf",
    .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
    "#std-ns-leaf",
    .matcher = " fn.Pathid=:parentdirID " /*  +pu  */
@@ -72,8 +67,10 @@ duf_sql_set_t std_node_sets[] = { /* */
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                  */ " AS pte " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
+#  ifndef DUF_NO_NUMS
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#  endif
    ,
 #endif
 
@@ -81,8 +78,10 @@ duf_sql_set_t std_node_sets[] = { /* */
 #if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt." DUF_SQL_IDFIELD " ) " /* */
+#  ifndef DUF_NO_NUMS
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+#  endif
 #else
    "#std-node"
 #endif
@@ -110,25 +109,27 @@ duf_sql_set_t std_node_sets[] = { /* */
    "    JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " /* */
    " ) ",
    .selector2_cte =             /* */
-   " FROM cte_paths " /*                                  */ " AS pte " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+   " FROM cte_paths " /*                                     */ " AS pte " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*                */ " AS pt ON (pte." DUF_SQL_IDFIELD " = pt." DUF_SQL_IDFIELD ") " /* */
+#  ifndef DUF_NO_NUMS
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
+#  endif
    ,
 #endif
    .selector2 =                 /* */
    " FROM      " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
+#ifndef DUF_NO_NUMS
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
+#endif
    ,
    .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName ) " /* */
    ,
+#ifdef DUF_NO_RNUMS
    .filter = NULL               /* */
-   /* .filter = DUF_SQL_RNUMDIRS( pt ) " > 0 AND " DUF_SQL_RNUMFILES( pt ) " > 0 " (* *) */
-   ,
-#if 0
-   .selector_total2 =           /* */
-   " /* sns */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#else
+   .filter = DUF_SQL_RNUMDIRS( pt ) " > 0 AND (" DUF_SQL__RNUMFILES( pt ) ") > 0 " /* */
 #endif
    }
 };

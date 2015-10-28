@@ -71,6 +71,7 @@ duf_sql_sequence_t sql_update_selected = {
           " ) "                 /* */
           " SELECT fid, did, parentid FROM parents_cte WHERE parentid IS NOT NULL GROUP BY ParentId " /* */ , /* XXX */
 
+#ifndef DUF_NO_NUMS
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL " (" /* */
           "Pathid INTEGER NOT NULL" /* */
           ", numfiles INTEGER NOT NULL" /* */
@@ -84,12 +85,12 @@ duf_sql_sequence_t sql_update_selected = {
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ , /* XXX */
           "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL " ( Pathid, numfiles, minsize, maxsize )" /* */
           " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
-#if 0
+#  if 0
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-#else
+#  else
           " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel " /* */
           " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDFIELD ") " /* */
-#endif
+#  endif
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
           " GROUP BY fn.Pathid " /* */ , /* XXX */
 
@@ -106,14 +107,14 @@ duf_sql_sequence_t sql_update_selected = {
           "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid, numdirs) " /* */
           " SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
           " FROM "              /* */
-#if 0
+#  if 0
           DUF_SQL_TABLES_PATHS_FULL " " /* */
-#else
+#  else
           DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
-#endif
+#  endif
           " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
           " GROUP BY parents." DUF_SQL_IDFIELD /* */ , /* XXX */
-
+#endif /* ifndef DUF_NO_NUMS */
           NULL}
 };

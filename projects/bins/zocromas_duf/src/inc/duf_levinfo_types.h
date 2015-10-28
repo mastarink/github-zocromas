@@ -45,6 +45,7 @@ typedef struct
 typedef enum
 {
   DUF_SQL_STMD_ID_select_filedata = 0x10000000,
+  DUF_SQL_STMD_ID_select_childs,
   DUF_SQL_STMD_ID_insert_filedata,
   DUF_SQL_STMD_ID_insert_path_table,
   DUF_SQL_STMD_ID_select_path,
@@ -102,8 +103,13 @@ typedef struct
   unsigned long long nameid;
   /* const char *name; */
   duf_items_t items;
+#ifndef DUF_NO_NUMS
   long numdir;
   long numfile;
+#else
+  unsigned long long childs;
+  long long numchild;
+#endif
   char *fullpath;
   char *itemname;
   duf_levinfo_context_t context;

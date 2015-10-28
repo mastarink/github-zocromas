@@ -64,7 +64,7 @@
            " (:maxMimeSame IS NULL OR mi.dupmimecnt<=:maxMimeSame "                                    ") AND "  \
 \
            " (:Name "    " IS NULL OR fn." DUF_SQL_FILENAMEFIELD " = :Name "                           ") AND "  \
-           " ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
+           " ( ( :GSameAsMd5   IS NULL OR :GSameMd5PathID IS NULL ) "  \
                                   " OR md." DUF_SQL_IDFIELD "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
                                            " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDFIELD ") "  \
                                              " WHERE fnb." DUF_SQL_FILENAMEFIELD " = :GSameAsMd5 AND fnb.Pathid=:GSameMd5PathID ) "  \

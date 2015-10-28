@@ -1,17 +1,25 @@
 #ifndef MAS_DUF_FORMAT_TYPES_H
 #  define MAS_DUF_FORMAT_TYPES_H
 
+#ifndef MAS_DUF_DEFS_H
+#error use #include "duf_defs.h"
+#endif
+
 typedef struct
 {
   unsigned dataid:1;
   unsigned dirid:1;
   unsigned dirid_space:1;
+#ifndef DUF_NO_NUMS
   unsigned nfiles:1;
   unsigned nfiles_space:1;
-  unsigned rnfiles:1;
   unsigned ndirs:1;
-  unsigned rndirs:1;
   unsigned ndirs_space:1;
+#endif
+#ifndef DUF_NO_RNUMS
+  unsigned rnfiles:1;
+  unsigned rndirs:1;
+#endif
   unsigned filename:1;
   unsigned filesize:1;
   unsigned human:1;

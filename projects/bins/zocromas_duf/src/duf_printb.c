@@ -202,6 +202,7 @@ duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
   return ok;
 }
 
+#ifndef DUF_NO_NUMS
 static int
 duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
@@ -242,7 +243,6 @@ duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
-
   if ( duf_config->opt.bformat.v.flag.ndirs_space && ( !bformat || bformat->v.flag.ndirs_space ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{ndirs_space}" ) );
@@ -251,6 +251,7 @@ duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
   }
   return ok;
 }
+#endif
 
 static int
 duf_print_file_info_dataid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
@@ -697,8 +698,10 @@ duf_print_bformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bf
   ok += duf_print_file_info_nsame( pdi, pfi, bformat );
   ok += duf_print_file_info_prefix( pdi, pfi, bformat, prefix_cb, suffix_cb );
   ok += duf_print_file_info_dirid( pdi, pfi, bformat );
+#ifndef DUF_NO_NUMS
   ok += duf_print_file_info_nfiles( pdi, pfi, bformat );
   ok += duf_print_file_info_ndirs( pdi, pfi, bformat );
+#endif
   ok += duf_print_file_info_dataid( pdi, pfi, bformat );
   ok += duf_print_file_info_suffix( pdi, pfi, bformat, prefix_cb, suffix_cb );
   ok += duf_print_file_info_inode( pdi, pfi, bformat );

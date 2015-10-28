@@ -31,10 +31,11 @@ duf_sql_sequence_t sql_beginning_tables = {
 
 
 
-#ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
-#  ifndef DUF_SQL_TTABLES_TEMPORARY
+#ifndef DUF_NO_NUMS
+#  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+#    ifndef DUF_SQL_TTABLES_TEMPORARY
           /* "DROP TABLE IF EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL (* *) , */
-#  endif
+#    endif
           "CREATE " DUF_SQL_TTABLES_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL /* */
           " AS "                /* */
           " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
@@ -46,12 +47,12 @@ duf_sql_sequence_t sql_beginning_tables = {
           /* */ ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_TABLES_TMP_PATHTOT_FILES " (numfiles)", /* */
           "DELETE FROM " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL, /* */
-#endif
-
-#ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
-#  ifndef DUF_SQL_TTABLES_TEMPORARY
-          /* "DROP TABLE IF EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL (* *) , */
 #  endif
+
+#  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
+#    ifndef DUF_SQL_TTABLES_TEMPORARY
+          /* "DROP TABLE IF EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL (* *) , */
+#    endif
           "CREATE " DUF_SQL_TTABLES_TEMPORARY_STRING " TABLE IF NOT EXISTS  " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
           " SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) " /* */
@@ -65,6 +66,7 @@ duf_sql_sequence_t sql_beginning_tables = {
           /* */ ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_TABLES_TMP_PATHTOT_DIRS " (numdirs)", /* */
           "DELETE FROM " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL, /* */
+#  endif
 #endif
           /* */
           /* TODO:

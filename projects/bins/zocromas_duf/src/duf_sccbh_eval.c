@@ -304,7 +304,11 @@ duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_U
   assert( sccbh );
   assert( SCCB );
 
+#ifdef DUF_NO_RNUMS
+  DUF_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt ) );
+#else
   DUF_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt ? DUF_GET_UFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
+#endif
   DUF_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DORF( r, duf_eval_sccbh_db_items_str_cb, scanstage, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );
