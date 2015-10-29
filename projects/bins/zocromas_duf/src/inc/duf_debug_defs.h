@@ -15,9 +15,9 @@
 #  define  DEBUG_E_LOWER(...)		       DUF_DBGF(STEP)             ; DUF_E_LOWER(__VA_ARGS__)
 #  define  DEBUG_E_UPPER(...)		       DUF_DBGF(STEP)             ; DUF_E_UPPER(__VA_ARGS__)
 /*XXX  DUF_DBGF* after DUF_START* ! XXX*/
-#  define  DEBUG_START()		                                  ; DUF_START()                                   ;  DUF_DBGF(START)
-#  define  DEBUG_STARTR(_rt)		                                  ; DUF_STARTR(_rt)                               ;  DUF_DBGF(START)
-#  define  DEBUG_STARTULL(_rt)		                                  ; DUF_STARTULL(_rt)                             ;  DUF_DBGF(START)
+#  define  DEBUG_START()		                                    DUF_START()                                   ;  DUF_DBGF(START)
+#  define  DEBUG_STARTR(_rt)		                                    DUF_STARTR(_rt)                               ;  DUF_DBGF(START)
+#  define  DEBUG_STARTULL(_rt)		                                    DUF_STARTULL(_rt)                             ;  DUF_DBGF(START)
 /*XXX  DUF_DBGF* before DUF_END* ! XXX*/
 #  define  DEBUG_END()			       DUF_DBGF(END)              ; DUF_END()
 #  define  DEBUG_ENDR(_rt)		       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR(_rt)
@@ -38,9 +38,9 @@
 #  define  DEBUG_STEPIS(_l, _s)                DUF_DBGFX(STEPIS, _l, _s)
 #  define  DEBUG_STEPULL(_l)                   DUF_DBGFX(STEPULL, _l)
 
-#  define DUF_IF_VERBOSE()			                          DUF_IF_TRACE_WHAT( opt.dbg, verbose )
-#  define DUF_IF_VERBOSEN( _lev )		                          DUF_IF_TRACE_WHATN( opt.dbg, verbose, _lev )
-#  define DUF_VERBOSE( _lev, ... )		                          DUF_TRACE_WHAT( opt.dbg, verbose, _lev, __VA_ARGS__ )
+#  define DUF_IF_VERBOSE()			                            DUF_IF_TRACE_WHAT( opt.dbg, verbose )
+#  define DUF_IF_VERBOSEN( _lev )		                            DUF_IF_TRACE_WHATN( opt.dbg, verbose, _lev )
+#  define DUF_VERBOSE( _lev, ... )		                            DUF_TRACE_WHAT( opt.dbg, verbose, _lev, __VA_ARGS__ )
 
 #endif
 
