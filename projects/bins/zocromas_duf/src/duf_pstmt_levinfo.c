@@ -4,6 +4,7 @@
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_updown.h"
+#include "duf_li.h"
 
 #include "duf_pdi_stmt.h"
 #include "duf_sql_stmt_defs.h"
@@ -41,27 +42,39 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi
 }
 
 #ifdef DUF_NO_NUMS
-int
-duf_levinfo_make_childs_d( duf_depthinfo_t * pdi DUF_UNUSED, int d DUF_UNUSED )
+unsigned long long
+duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
 {
-  int rpr DUF_UNUSED = 0;
+  unsigned long long childs = 0;
 
-  if ( duf_levinfo_dirid_d( pdi, d ) )
+  if ( duf_levinfo_dirid_d( pdi, d ) && duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE )
   {
-    unsigned long long childs = 0;
+    int rpr = 0;
     char *sql = NULL;
-    int ns = 1;
+    int ns = 0;
 
+    ns = pdi->sql_selected_done ? 0 : 1;
+    /* T( ">> sql_selected_done:%d", pdi->sql_selected_done ); */
     const duf_sql_set_t set[] = {
       {
        .name = "childs",
        .type = DUF_NODE_NODE,
        .expand_sql = 1,
-       .selector2 = " FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pt " /* */
-       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptp ON( pt.parentid = ptp." DUF_SQL_IDFIELD " ) " /* */
-       /* */ ,
+#  if 0
+       .filter = "pttot.parentid=:parentdirID" /* */
+       .fieldset = "childs" /* */ ,
+       .selector2 = "FROM ( SELECT parents." DUF_SQL_IDFIELD " AS parentid, COUNT( * ) AS childs FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
+       " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
+       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD "= ptsp.parentid) " /* */
+       " GROUP BY parents." DUF_SQL_IDFIELD ") AS pttot"
+#  else
+       .filter = "parents.rowid=:parentdirID" /* */ ,
        .fieldset = "COUNT(*) AS childs" /* */ ,
-       .filter = "pt.parentid=:parentdirID" /* */
+       .selector2 = " FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
+       " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
+       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD "= ptsp.parentid)"
+#  endif
+       /* */ ,
        },
       {
        .name = "childs",
@@ -75,31 +88,41 @@ duf_levinfo_make_childs_d( duf_depthinfo_t * pdi DUF_UNUSED, int d DUF_UNUSED )
     };
 
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
-    /* T( "@@%s", sql ); */
-    if ( sql )
+    if ( DUF_NOERROR( rpr ) && sql )
     {
-      DUF_SQL_START_STMT( pdi, select_childs, sql, rpr, pstmt );
+      T( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql );
+      DUF_SQL_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, rpr, pstmt );
       DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), rpr, pstmt );
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
       {
         childs = DUF_GET_UFIELD2( childs );
       }
+      else if ( DUF_IS_ERROR_N( rpr, DUF_SQL_DONE ) )
+      {
+        childs = 0;
+      }
       else
       {
-        DUF_TRACE( select, 0, "@<NOT selected> (%d)", rpr );
+        DUF_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
+        T( "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
         assert( 0 );
       }
       /* DUF_TEST_R( rpr ); */
-      DUF_SQL_END_STMT( pdi, select_childs, rpr, pstmt );
+      DUF_SQL_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, rpr, pstmt );
+#  if 0
+      duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), childs );
+#  endif
+      T( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), childs, sql );
+
       mas_free( sql );
-      /* T( "@@childs %d - %llu", d, childs ); */
     }
-    duf_levinfo_ptr_d( pdi, d )->childs = childs;
-    duf_levinfo_ptr_d( pdi, d )->numchild = childs;
   }
-  return 0;
+  return childs;
 }
 
-DUF_LEVINFO_F( int, make_childs ) DUF_LEVINFO_F_UP( int, make_childs )
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC(   unsigned long long, count_childs )
+DUF_LEVINFO_FC_UP( unsigned long long, count_childs )
+/* *INDENT-ON*  */
 #endif

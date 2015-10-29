@@ -25,8 +25,8 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_hook_types.h \
 	duf_sccbh_eval_leaf.h  duf_sel_cb_leaf.h duf_sel_cb_node.h  duf_pstmt_levinfo.h \
 	duf_item_types.h \
-	duf_li_credel.h \
-	duf_levinfo_context.h duf_levinfo_credel.h duf_levinfo.h duf_levinfo_openclose.h duf_levinfo_stat.h \
+	duf_li.h duf_li_credel.h \
+	duf_levinfo.h duf_levinfo_init.h duf_levinfo_dbinit.h duf_levinfo_context.h duf_levinfo_credel.h duf_levinfo_openclose.h duf_levinfo_stat.h \
 	duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_types.h duf_levinfo_updown.h \
 	duf_pathinfo_credel.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
 	duf_maindb_info.h duf_maindb.h \

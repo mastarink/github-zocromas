@@ -60,7 +60,8 @@ duf_sql_sequence_t sql_update_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ , /* XXX */
 
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
-          "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHS_FULL " (fid, did, parentid) WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
+          "INSERT " /* " OR IGNORE " */ " INTO " DUF_SQL_SELECTED_TMP_PATHS_FULL " (fid, did, parentid) " /* */
+          "   WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
           "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDFIELD " as parentid " /* */
           "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDFIELD ") " /* */
           "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p." DUF_SQL_IDFIELD "=fn.Pathid) " /* */

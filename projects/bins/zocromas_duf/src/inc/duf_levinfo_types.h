@@ -133,6 +133,7 @@ typedef struct duf_depthinfo_s
   unsigned attached_copy:1;
   unsigned inited:1;
   unsigned sql_beginning_done:1;
+  unsigned sql_selected_done:1;
   unsigned opendir:1;
   unsigned recursive:1;
   unsigned pyp_created:1;

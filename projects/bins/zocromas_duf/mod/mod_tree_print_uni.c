@@ -31,8 +31,8 @@
 
 
 /* ########################################################################################## */
-static int duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi );
-static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi, size_t * pwidth );
+static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi );
+static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
 static int tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
@@ -362,12 +362,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   DEBUG_ENDR( r );
 }
 
-
-
-
-
 static int
-duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
+duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -397,16 +393,20 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
     unsigned flags = 0;
     int du = d - 1;
 
-#ifndef DUF_NO_NUMS
-    long ndu = duf_levinfo_numdir_d( pdi, du );
-#else
-    long ndu = duf_levinfo_numchild_d( pdi, du );
-#endif
-
-    char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
+    long ndu = 0;
+    char nduc = '?';
     int is_leaf = duf_levinfo_is_leaf_d( pdi, d );
     char leafc = is_leaf ? 'L' : 'D';
 
+    {
+#ifndef DUF_NO_NUMS
+      ndu = duf_levinfo_numdir_d( pdi, du );
+#else
+      ndu = duf_levinfo_count_childs_d( pdi, du );
+      ndu -= duf_levinfo_numchild_d( pdi, du );
+#endif
+    }
+    nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
 
     /* int eod = duf_levinfo_eod_d( pdi, d ); */
     /* char eodc = eod ? '.' : '~';           */
@@ -430,8 +430,8 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
 
     /* if ( is_file )   */
     /*   flags |= 0x40; */
-               
-               DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
+
+    DUF_PRINTF( 1, ".@%-3ld", ndu ); /* */
 
     DUF_DEBUG( 1,               /* */
                DUF_PRINTF( 1, ".[L%-2d", d ); /* */
@@ -439,8 +439,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags );
-           );
+               DUF_PRINTF( 1, ".0x%02x]", flags ); );
     {
 #if 0
       {
@@ -522,7 +521,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
 }
 
 static int
-duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi )
+duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   char buffer[1024];

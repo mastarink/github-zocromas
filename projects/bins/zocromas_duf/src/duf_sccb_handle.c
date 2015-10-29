@@ -253,6 +253,8 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #else
     PDI = pdi;
 #endif
+    if ( SCCB->beginning_sql_seq )
+      PDI->sql_selected_done = SCCB->beginning_sql_seq->set_selected_db;
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 1, "@@beginning_sql for '%s'", sccb->title );
 
@@ -304,7 +306,7 @@ TODO scan mode
   }
   else
   {
-    T( "sccb:%d; dirid:%llu - %s", sccb ? 1 : 0, duf_levinfo_dirid( pdi ), duf_levinfo_path(pdi) );
+    T( "sccb:%d; dirid:%llu - %s", sccb ? 1 : 0, duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
     /* assert(0); */
   }
   if ( pr )

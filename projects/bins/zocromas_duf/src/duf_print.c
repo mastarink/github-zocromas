@@ -84,7 +84,7 @@ typedef enum
 } duf_sformat_char_t;
 
 static size_t
-duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
+duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
                 duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb DUF_UNUSED, size_t * pwidth )
 {
   size_t slen = 0;
@@ -735,7 +735,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 }
 
 char *
-duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty, const char *format, duf_pdi_scb_t prefix_scb,
+duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty, const char *format, duf_pdi_scb_t prefix_scb,
                        duf_pdi_scb_t suffix_scb, size_t max_width DUF_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
 {
   size_t slen = 0;
@@ -791,7 +791,7 @@ duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty,
 }
 
 size_t
-duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
+duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
                              size_t max_width, size_t * pswidth, int *pover )
 {
   size_t slen = 0;

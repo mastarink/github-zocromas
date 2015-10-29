@@ -5,7 +5,7 @@
 
 #  define DUF_USE_CTE yes
 #  define DUF_NO_RNUMS yes
-/* #  define DUF_NO_NUMS yes */
+#  define DUF_NO_NUMS yes
 
 
 #  define DUF_RECURSIVE_NO DUF_FALSE

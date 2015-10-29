@@ -6,6 +6,8 @@
 #include "duf_sql_field.h"
 
 #include "duf_levinfo.h"
+#include "duf_levinfo_init.h"
+#include "duf_levinfo_dbinit.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"
 
@@ -31,11 +33,15 @@ duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
 
   up = duf_levinfo_ptr_up( pdi );
   if ( up )
+  {
 #ifndef DUF_NO_NUMS
     up->numdir--;
+    /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
 #else
-    up->numchild--;
+    up->numchild++;
+    /* T( "@@@numchild:%lld => %lld", up->numchild + 1, up->numchild ); */
 #endif
+  }
 }
 
 /* no side effects */
@@ -108,10 +114,7 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf
 /* 20150901.173329 */
 /* check depth; resets levinfo  (currenl level) with dirid,nfiles,ndirs; may change levinfo (for upper level) */
 static int
-duf_levinfo_godown_dnn( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid,
-#ifndef DUF_NO_NUMS
-                        unsigned long long ndirs, unsigned long long nfiles,
-#endif
+duf_levinfo_godown_dirid( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid,
                         duf_node_type_t node_type )
 {
   DEBUG_STARTR( r );
@@ -120,9 +123,6 @@ duf_levinfo_godown_dnn( duf_depthinfo_t * pdi, const char *itemname, unsigned lo
   DOR( r, _duf_levinfo_godown( pdi, itemname, node_type ) ); /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
   if ( DUF_NOERROR( r ) )
     duf_levinfo_init_level( pdi, itemname, dirid,
-#ifndef DUF_NO_NUMS
-                            ndirs, nfiles,
-#endif
                             node_type ); /* resets levinfo (currenl level) */
   DEBUG_ENDR( r );
 }
@@ -140,10 +140,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t
   if ( DUF_NOERROR( r ) )
     duf_levinfo_init_level( pdi, itemname, 0, 0, 0, node_type ); /* resets levinfo  (currenl level) */
 #else
-  DOR( r, duf_levinfo_godown_dnn( pdi, itemname, 0,
-#  ifndef DUF_NO_NUMS
-                                  0, 0,
-#  endif
+  DOR( r, duf_levinfo_godown_dirid( pdi, itemname, 0 /* dirid */,
                                   node_type ) );
 #endif
   DEBUG_ENDR( r );
@@ -185,7 +182,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stm
     /* ------------------------------------------- */
     assert( duf_levinfo_dirid( pdi ) == 0 );
     assert( !pdi->pathinfo.levinfo[d].itemname );
-    DOR( r, duf_levinfo_dbinit_level_d( pdi, pstmt, node_type, d ) );
+    duf_levinfo_dbinit_level_d( pdi, pstmt, node_type, d ) ;
     assert( duf_levinfo_dirid( pdi ) != 0 );
   }
   DEBUG_ENDR( r );
@@ -202,7 +199,7 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, duf_n
   DEBUG_STARTR( r );
   assert( pdi );
 #if 0
-  DOR_LOWERE( r, duf_levinfo_godown_dnn( pdi, itemname, 0, 0, 0, node_type ), DUF_ERROR_TOO_DEEP ); /* check depth; resets levinfo  (currenl level)
+  DOR_LOWERE( r, duf_levinfo_godown_dirid( pdi, itemname, 0, node_type ), DUF_ERROR_TOO_DEEP ); /* check depth; resets levinfo  (currenl level)
                                                                                                        with dirid,nfiles,ndirs;
                                                                                                        may change levinfo (for upper level) */
 #else

@@ -313,7 +313,9 @@ DUF_LEVINFO_3GET( int, numdir, numdir )
 /************************************************************************/
 #else
   /* *INDENT-OFF*  */
-DUF_LEVINFO_3GET( unsigned long long, childs, childs )
+#if 0
+  DUF_LEVINFO_3GET( unsigned long long, childs, childs )
+#endif
 DUF_LEVINFO_3GET(  long long, numchild, numchild )
 /* *INDENT-ON*  */
 #endif

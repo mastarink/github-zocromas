@@ -1,11 +1,20 @@
 find duf_levinfo.c
 sfind duf_levinfo.h
 
+tab sfind duf_levinfo_init.c
+sfind duf_levinfo_init.h
+
+tab sfind duf_levinfo_dbinit.c
+sfind duf_levinfo_dbinit.h
+
 tab sfind duf_levinfo_credel.c
 sfind duf_levinfo_credel.h
 
 tab sfind duf_li_credel.c
 sfind duf_li_credel.h
+
+tab sfind duf_li.c
+sfind duf_li.h
 
 tab sfind duf_levinfo_openclose.c
 sfind duf_levinfo_openclose.h

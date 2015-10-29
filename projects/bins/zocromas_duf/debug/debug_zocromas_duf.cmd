@@ -9,8 +9,9 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-b duf_sccb_handle.c:307
 
+# b duf_levinfo_make_childs_d
+b mod_tree_print_uni.c:405
 
 # commands 1
 # print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]
@@ -24,5 +25,6 @@ b duf_sccb_handle.c:307
 
 
 run
+# display pdi.pathinfo->levinfo[d].itemname
 # bt
 # vi: ft=gdb

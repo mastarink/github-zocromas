@@ -11,6 +11,8 @@
 #include "duf_levinfo_updown.h"
 /* #include "duf_levinfo_openclose.h" */
 #include "duf_levinfo_stat.h"
+#include "duf_li.h"
+#include "duf_pstmt_levinfo.h"
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
@@ -90,8 +92,11 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
   assert( pli );
   duf_levinfo_set_dirid( pdi, dirid );
 #ifndef DUF_NO_NUMS
-  pli->numfile = nfiles;
-  pli->numdir = ndirs;
+  /* pli->numfile = nfiles; */
+  /* pli->numdir = ndirs;   */
+  duf_li_set_nums( pli, ndirs, nfiles );
+#else
+  /* duf_levinfo_make_childs( pdi ); */
 #endif
   assert( dirid == duf_levinfo_dirid( pdi ) );
   DUF_ENDR( r );
@@ -107,9 +112,9 @@ duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 
   DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid )
 #ifndef DUF_NO_NUMS
-	, DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs )
+                                  , DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs )
 #endif
-	) ); /* at levinfo current level: set dirid,numdir,numfile */
+        ) );                    /* at levinfo current level: set dirid,numdir,numfile */
   assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
 
   DUF_ENDR( r );
@@ -202,8 +207,12 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #  else
           " LEFT JOIN ( SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
           "   FROM " DUF_SQL_TABLES_PATHS_FULL " AS pts " /* */
-          "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
+#if 1
+	  "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
           "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
+#else
+          "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = pts.parentid ) " /* */
+#endif
           "   GROUP BY parents." DUF_SQL_IDFIELD ") AS td  ON (td.Pathid=pt." DUF_SQL_IDFIELD ") "
 #  endif
 #  ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
@@ -279,10 +288,10 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
         {
           DOR( r, duf_set_dirid_and_nums( pdi, duf_sql_last_insert_rowid(  )
 #ifndef DUF_NO_NUMS
-		, 0, 0 
+                                          , 0, 0
 #endif
-		) ); /* at levinfo current level:
-                                                                                           set dirid from last inserted record (numdir=0,numfile=0) */
+                ) );            /* at levinfo current level:
+                                   set dirid from last inserted record (numdir=0,numfile=0) */
           if ( duf_levinfo_dirid_up( pdi ) )
           {
             DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),

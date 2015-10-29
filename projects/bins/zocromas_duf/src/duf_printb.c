@@ -18,7 +18,7 @@
 /* ###################################################################### */
 
 static int
-duf_print_file_info_depth( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_depth( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -35,7 +35,7 @@ duf_print_file_info_depth( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
 }
 
 static int
-duf_print_file_info_seq( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -57,7 +57,7 @@ duf_print_file_info_seq( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED,
 }
 
 static int
-duf_print_file_info_seq_node( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq_node(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -79,7 +79,7 @@ duf_print_file_info_seq_node( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UN
 }
 
 static int
-duf_print_file_info_seq_leaf( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_seq_leaf(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -101,7 +101,7 @@ duf_print_file_info_seq_leaf( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UN
 }
 
 static int
-duf_print_file_info_md5id( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_md5id( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -130,7 +130,7 @@ duf_print_file_info_md5id( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 static int
-duf_print_file_info_nsame( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nsame( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -152,7 +152,7 @@ duf_print_file_info_nsame( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 int
-duf_print_file_info_prefix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+duf_print_file_info_prefix( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
                             duf_pdi_cb_t suffix_cb DUF_UNUSED )
 {
   int ok = 0;
@@ -178,7 +178,7 @@ duf_print_file_info_prefix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUS
 }
 
 static int
-duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_dirid( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -204,7 +204,7 @@ duf_print_file_info_dirid( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
 
 #ifndef DUF_NO_NUMS
 static int
-duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_nfiles( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -230,7 +230,7 @@ duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUS
 }
 
 static int
-duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_ndirs( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -254,7 +254,7 @@ duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSE
 #endif
 
 static int
-duf_print_file_info_dataid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_dataid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -274,7 +274,7 @@ duf_print_file_info_dataid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * p
 }
 
 int
-duf_print_file_info_suffix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb DUF_UNUSED,
+duf_print_file_info_suffix( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb DUF_UNUSED,
                             duf_pdi_cb_t suffix_cb )
 {
   int ok = 0;
@@ -301,7 +301,7 @@ duf_print_file_info_suffix( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUS
 }
 
 static int
-duf_print_file_info_inode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_inode( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -318,7 +318,7 @@ duf_print_file_info_inode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 static int
-duf_print_file_info_mode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mode( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -366,7 +366,7 @@ duf_print_file_info_mode( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi
 }
 
 static int
-duf_print_file_info_nlink( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nlink( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -387,7 +387,7 @@ duf_print_file_info_nlink( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 static int
-duf_print_file_info_user( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_user( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -404,7 +404,7 @@ duf_print_file_info_user( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi
 }
 
 static int
-duf_print_file_info_group( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_group( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -422,7 +422,7 @@ duf_print_file_info_group( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 static int
-duf_print_file_info_filesize( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_filesize( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -453,7 +453,7 @@ duf_print_file_info_filesize( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t *
 }
 
 static int
-duf_print_file_info_mtime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mtime( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -479,7 +479,7 @@ duf_print_file_info_mtime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pf
 }
 
 static int
-duf_print_file_info_realpath( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+duf_print_file_info_realpath( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -501,7 +501,7 @@ duf_print_file_info_realpath( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UN
 }
 
 static int
-duf_print_file_info_filename( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_filename( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -523,7 +523,7 @@ duf_print_file_info_filename( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t *
 }
 
 static int
-duf_print_file_info_md5( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_md5( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -545,7 +545,7 @@ duf_print_file_info_md5( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi,
 }
 
 static int
-duf_print_file_info_exifid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_exifid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -573,7 +573,7 @@ duf_print_file_info_exifid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * p
 }
 
 static int
-duf_print_file_info_exif_date_time( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_exif_date_time( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -601,7 +601,7 @@ duf_print_file_info_exif_date_time( duf_depthinfo_t * pdi DUF_UNUSED, duf_filein
 }
 
 static int
-duf_print_file_info_mimeid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mimeid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -628,7 +628,7 @@ duf_print_file_info_mimeid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * p
 }
 
 static int
-duf_print_file_info_mime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_mime( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -649,7 +649,7 @@ duf_print_file_info_mime( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi
 }
 
 static int
-duf_print_file_info_nameid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+duf_print_file_info_nameid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
 {
   int ok = 0;
 
@@ -677,7 +677,7 @@ duf_print_file_info_nameid( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * p
   return ok;
 }
 
-static int DUF_UNUSED duf_print_file_info_template( duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat DUF_UNUSED )
+static int DUF_UNUSED duf_print_file_info_template( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat DUF_UNUSED )
 {
   int ok = 0;
 
@@ -685,7 +685,7 @@ static int DUF_UNUSED duf_print_file_info_template( duf_depthinfo_t * pdi DUF_UN
 }
 
 int
-duf_print_bformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+duf_print_bformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
                              duf_pdi_cb_t suffix_cb )
 {
   int ok = 0;
