@@ -11,7 +11,7 @@ set breakpoint pending on
 
 
 # b duf_levinfo_make_childs_d
-b mod_tree_print_uni.c:405
+b duf_pstmt_levinfo.c:201
 
 # commands 1
 # print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]

@@ -1,0 +1,9 @@
+SELECT ptp.rowid AS dirid, ptp.dir_name, COUNT(*) FROM main.paths AS pt JOIN main.paths AS ptp ON( pt.parentid = ptp.rowid )  GROUP BY pt.parentid HAVING ptp.rowid=28;
+
+
+SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM main.paths AS pts LEFT JOIN main.paths AS ptsp ON( pts.parentid = ptsp.rowid ) JOIN main.paths AS parents ON( parents.rowid = ptsp.parentid )  WHERE Pathid=28 GROUP BY parents.rowid;
+SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM main.paths AS pts JOIN main.paths AS parents ON( parents.rowid = pts.parentid )  WHERE Pathid=28 GROUP BY parents.rowid;
+/*
+vi: ft=sql
+*/
+

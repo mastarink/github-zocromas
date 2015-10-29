@@ -242,120 +242,126 @@ static int
 tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-
-  duf_bformat_combo_t bformat = { /* */
-    .v.flag = {
-               .filename = 1,
-               .short_filename = 1,
-               .depth = 1,
-               .seq = 1,
-               .dirid = 1,
-               .exifid = 0,
-               .exifdt = 0,
-               .camera = 0,
-               .mimeid = 0,
+  /* if ( duf_levinfo_count_gfiles( pdi ) ) */
+  {
+    duf_bformat_combo_t bformat = { /* */
+      .v.flag = {
+                 .filename = 1,
+                 .short_filename = 1,
+                 .depth = 1,
+                 .seq = 1,
+                 .dirid = 1,
+                 .exifid = 0,
+                 .exifdt = 0,
+                 .camera = 0,
+                 .mimeid = 0,
 #ifndef DUF_NO_NUMS
-               .nfiles = 1,
-               .ndirs = 1,
+                 .nfiles = 1,
+                 .ndirs = 1,
 #endif
 #ifndef DUF_NO_RNUMS
-               .rnfiles = 1,
-               .rndirs = 1,
+                 .rnfiles = 1,
+                 .rndirs = 1,
 #endif
-               .inode = 0,
-               .mode = 0,
-               .nlink = 0,
-               .user = 0,
-               .group = 0,
-               .filesize = 0,
-               .md5 = 0,
-               .md5id = 1,
-               /* .sha1id = 1, */
-               .mtime = 0,
-               .prefix = 1,
-               .suffix = 1,
-               },
-    .nsame = 1,
-    .nsame_md5 = 1,
-    .nsame_sha1 = 1,
-    .nsame_exif = 1,
-  };
+                 .inode = 0,
+                 .mode = 0,
+                 .nlink = 0,
+                 .user = 0,
+                 .group = 0,
+                 .filesize = 0,
+                 .md5 = 0,
+                 .md5id = 1,
+                 /* .sha1id = 1, */
+                 .mtime = 0,
+                 .prefix = 1,
+                 .suffix = 1,
+                 }
+      ,
+      .nsame = 1,
+      .nsame_md5 = 1,
+      .nsame_sha1 = 1,
+      .nsame_exif = 1,
+    };
 
-  duf_fileinfo_t fi = { 0 };
-  /* fi.nsame = nsame; */
-  /* fi.nsame_md5 = nsame_md5;   */
-  /* fi.nsame_sha1 = nsame_sha1; */
-  /* fi.nsame_exif = nsame_exif; */
-  /* fi.st.st_mode = ( mode_t ) filemode; */
-  /* fi.st.st_ino = ( ino_t ) inode;      */
-  /* fi.st.st_mtim.tv_sec = mtime;        */
-  /* fi.st.st_mtim.tv_nsec = 0;           */
-  /* fi.st.st_uid = ( uid_t ) uid;        */
-  /* fi.st.st_gid = ( gid_t ) gid;        */
-  /* fi.st.st_nlink = ( nlink_t ) nlink;  */
-  /* fi.st.st_size = ( off_t ) filesize; */
-  fi.name = duf_levinfo_itemshowname( pdi );
-  /* fi.md5id = md5id; */
-  /* fi.sha1id = sha1id; */
-  /* fi.md5sum1 = md5sum1; */
-  /* fi.md5sum2 = md5sum2; */
-  if ( DUF_ACTG_FLAG( use_binformat ) )
-  {
-    if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
-      DUF_PUTSL( 0 );
-    else
-      DUF_PUTS( 0, "????????????" );
-  }
-  else
-  {
-    const char *sformat_pref = NULL;
-    const char *sformat = NULL;
-    size_t slen = 0;
-    size_t rwidth = 0;
-    int over = 0;
-
+    duf_fileinfo_t fi = { 0 };
+    /* fi.nsame = nsame; */
+    /* fi.nsame_md5 = nsame_md5;   */
+    /* fi.nsame_sha1 = nsame_sha1; */
+    /* fi.nsame_exif = nsame_exif; */
+    /* fi.st.st_mode = ( mode_t ) filemode; */
+    /* fi.st.st_ino = ( ino_t ) inode;      */
+    /* fi.st.st_mtim.tv_sec = mtime;        */
+    /* fi.st.st_mtim.tv_nsec = 0;           */
+    /* fi.st.st_uid = ( uid_t ) uid;        */
+    /* fi.st.st_gid = ( gid_t ) gid;        */
+    /* fi.st.st_nlink = ( nlink_t ) nlink;  */
+    /* fi.st.st_size = ( off_t ) filesize; */
+    fi.name = duf_levinfo_itemshowname( pdi );
+    /* fi.md5id = md5id; */
+    /* fi.sha1id = sha1id; */
+    /* fi.md5sum1 = md5sum1; */
+    /* fi.md5sum2 = md5sum2; */
+    if ( DUF_ACTG_FLAG( use_binformat ) )
     {
-      sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
-      if ( !sformat_pref )
-        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_dirs_tree );
-
-      if ( !sformat_pref )
-        sformat_pref = " %6s  %4s%P";
-      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                            duf_config->opt.output.max_width, &rwidth, &over );
+      if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
+        DUF_PUTSL( 0 );
+      else
+        DUF_PUTS( 0, "????????????" );
     }
-    if ( !over )
+    else
     {
+      const char *sformat_pref = NULL;
+      const char *sformat = NULL;
+      size_t slen = 0;
+      size_t rwidth = 0;
+      int over = 0;
+
+      /* if ( duf_levinfo_count_gfiles( pdi ) )                  */
+      /*   T( "@gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
+
       {
-        int use;
-        duf_filedirformat_t *fmt;
+        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
+        if ( !sformat_pref )
+          sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_dirs_tree );
+
+        if ( !sformat_pref )
+          sformat_pref = " %6s  %4s%P";
+        if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
+          slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                              duf_config->opt.output.max_width, &rwidth, &over );
+      }
+      if ( !over )
+      {
+        {
+          int use;
+          duf_filedirformat_t *fmt;
 
 #if 0
-        use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
+          use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
 #else
-        use = duf_pdi_pu( pdi )->use_format - 1;
+          use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
-        fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-        DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
-        if ( use >= 0 && use < fmt->dirs.argc && !sformat )
-          sformat = fmt->dirs.argv[use];
-        DUF_TRACE( temp, 5, "sformat A: %s", sformat );
-        if ( !sformat )
-          sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
-        DUF_TRACE( temp, 5, "sformat B: %s", sformat );
-        if ( !sformat )
-          sformat = DUF_CONFIGG( opt.output.sformat.dirs_tree );
-        DUF_TRACE( temp, 5, "sformat C: %s", sformat );
-      }
+          fmt = DUF_CONFIGA( opt.output.as_formats.tree );
+          DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
+          if ( use >= 0 && use < fmt->dirs.argc && !sformat )
+            sformat = fmt->dirs.argv[use];
+          DUF_TRACE( temp, 5, "sformat A: %s", sformat );
+          if ( !sformat )
+            sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
+          DUF_TRACE( temp, 5, "sformat B: %s", sformat );
+          if ( !sformat )
+            sformat = DUF_CONFIGG( opt.output.sformat.dirs_tree );
+          DUF_TRACE( temp, 5, "sformat C: %s", sformat );
+        }
 
-      if ( !sformat )
-        sformat = "%f\n";
-      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                            duf_config->opt.output.max_width, &rwidth, &over );
+        if ( !sformat )
+          sformat = "%f\n";
+        if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
+          slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                              duf_config->opt.output.max_width, &rwidth, &over );
+      }
+      DUF_PUTSL( 0 );
     }
-    DUF_PUTSL( 0 );
   }
 
 

@@ -12,6 +12,7 @@
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
 
+#include "duf_pstmt_levinfo.h"
 
 
 /* ###################################################################### */
@@ -791,8 +792,8 @@ duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is
 }
 
 size_t
-duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb,
-                             size_t max_width, size_t * pswidth, int *pover )
+duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb,
+                             duf_pdi_scb_t suffix_scb, size_t max_width, size_t * pswidth, int *pover )
 {
   size_t slen = 0;
   size_t swidth = 0;
@@ -807,6 +808,9 @@ duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, 
   buffer = duf_sformat_file_info( pdi, pfi, isatty( fileno( out ) ), format, prefix_scb, suffix_scb, max_width, &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );
+  /* if ( duf_levinfo_count_gfiles( pdi ) )                                */
+  /*   DUF_PRINTF( 0, ".@ gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
+
   mas_free( buffer );
   if ( pswidth )
     *pswidth = swidth;

@@ -139,8 +139,19 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
 {
   int rpr = 0;
   char *sql = NULL;
+  const char *selector2 = NULL;
+  unsigned cte_mode = 0;
 
-  if ( sql_set->fieldset && sql_set->selector2 )
+  assert( sql_set );
+
+  cte_mode = ( sql_set->selector2 ? 0 : ( ( sql_set->cte && sql_set->selector2_cte ) ? 1 : 0 ) );
+#if 0
+  selector2 = sql_set->selector2;
+#else
+  selector2 = cte_mode ? sql_set->selector2_cte : sql_set->selector2;
+#endif
+  assert( selector2 );
+  if ( sql_set->fieldset && selector2 )
   {
     /* if ( 0 == strncmp( sql_set->selector2, "SELECT", 6 ) )             */
     /* {                                                                  */
@@ -195,10 +206,13 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
       }
       if ( DUF_NOERROR( rpr ) )
       {
-        selector = duf_unref_selector( sql_set->selector2, sql_set->type, &rpr );
+        selector = duf_unref_selector( selector2, sql_set->type, &rpr );
         if ( DUF_NOERROR( rpr ) && selector && fieldset )
         {
-          sql = mas_strdup( "SELECT " );
+          if ( cte_mode )
+            sql = mas_strcat_x( sql, sql_set->cte );
+
+          sql = mas_strcat_x( sql, "SELECT " );
           sql = mas_strcat_x( sql, fieldset );
           sql = mas_strcat_x( sql, " " );
 
@@ -244,6 +258,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
   else
   {
     DUF_MAKE_ERROR( rpr, DUF_ERROR_PTR );
+    assert( 0 );
   }
   if ( DUF_IS_ERROR( rpr ) && sql )
   {
@@ -265,7 +280,7 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
 
   assert( sql_set );
 
-  selector2 = ( sql_set->cte ) ? sql_set->selector2_cte : sql_set->selector2;
+  selector2 = ( sql_set->cte && sql_set->selector2_cte ) ? sql_set->selector2_cte : sql_set->selector2;
   assert( selector2 );
   if ( selector2 )
   {

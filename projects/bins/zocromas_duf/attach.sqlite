@@ -1,0 +1,6 @@
+.h on
+.separator \t
+ATTACH DATABASE '/home/mastar/.mas/lib/duf_db/test_tree/test_tree_$_selected_selected.db' AS dufselected_selected;                     
+/*
+vi: ft=sql
+*/

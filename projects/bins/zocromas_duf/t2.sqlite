@@ -1,0 +1,16 @@
+.width 6 6 6 90
+EXPLAIN  SELECT  fn.Pathid AS dirid , 0 AS ndirs, 0 AS nfiles, 0 AS rndirs, 0 AS rnfiles, fn.file_name AS fname, fn.file_name AS dfname, fd.size AS filesize , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks , STRFTIME( '%s', fd.mtim ) AS mtime , fd.mode  AS filemode , fn.rowid AS filenameid , fn.rowid AS nameid , fd.md5id  AS md5id , md.md5sum1, md.md5sum2 , fd.rowid AS filedataid , fd.rowid AS dataid , sd.dup2cnt  AS nsame , md.dup5cnt  AS dup5cnt , sz.dupzcnt  AS dupzcnt 
+FROM main.filenames AS fn
+LEFT JOIN main.filedatas AS fd ON (fn.dataid=fd.rowid)
+LEFT JOIN main.sizes AS sz ON (sz.size=fd.size)
+LEFT JOIN main.md5 AS md ON (md.rowid=fd.md5id)
+LEFT JOIN main.sd5 AS sd ON (sd.rowid=fd.sd5id)
+LEFT JOIN main.sha1 AS sh ON (sh.rowid=fd.sha1id)
+WHERE (  sd.rowid IS NULL )
+         AND ( sz.size  IS NULL OR sz.size > 0 ); 
+
+ANALYZE main.filedatas;
+/*
+vi: ft=sql
+*/
+

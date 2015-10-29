@@ -782,6 +782,11 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20151026.121305 ============" );
   DUF_PRINTF( 0, "  run  -duR  --db-name=test_tree --cd-id=15      --evaluate=tree 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run  -duR  --db-name=test_tree --cd=test/tree  --evaluate=tree 	- %s", " -= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20151029.182731 ============" );
+  DUF_PRINTF( 0, "  run -vv --trace-stdout --output-level=0 --trace-temp=1 --trace-sql=0 -dfuR --db-name=test_tree test/tree --use-format=3 --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --tree  	- %s", " -= \"\" =-" );
+
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

@@ -26,7 +26,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS " DUF_DBSELECTEDALIAS;
     static const char *sql1 = "DROP  TABLE IF EXISTS " DUF_DBSELECTEDALIAS "." DUF_SQL_SELECTED_TMP_FILENAMES;
     int changes = 0;
-T("@%s", sql);
+
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
     /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
     DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
