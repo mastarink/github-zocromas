@@ -15,6 +15,7 @@ shn_gvimer_plus_fuuid ()
     shift
     local fline=$1
     shift
+    if [[ $fline -eq 0 ]] ; then unset fline ; fi 
     shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
@@ -26,6 +27,7 @@ shn_gvimer_plus_resident ()
     shift
     local fline=$1
     shift
+    if [[ $fline -eq 0 ]] ; then unset fline ; fi 
     shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
@@ -76,6 +78,7 @@ shn_gvimer_plus_regfile_in ()
         do
             if [[ "$resident" == ${fuuid}* ]]; then
  	        [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "regfile_in resident:$resident for $fpath"
+                if [[ $fline -eq 0 ]] ; then unset fline ; fi 
                 shn_gvimer_plus_resident $fpath $fuuid $fline
                 return $?
             fi
@@ -87,6 +90,7 @@ shn_gvimer_plus_regfile_in ()
 #               shn_gvimer_plus_bin --servername "$fuuid" --cmd "set path=$(shn_gvimer_plus_vpath $typf)" --cmd "source $masedf" -c "tab drop $rfile"
 		local edpath=$(shn_gvimer_plus_vpath $typf)
 		shn_msg "Go $rfile : $fline ..."
+                if [[ $fline -eq 0 ]] ; then unset fline ; fi 
                 shn_gvimer_plus_bin \
 			--servername "$fuuid" \
 			${masedf:+--cmd "let masedfile=\"$masedf\""} \

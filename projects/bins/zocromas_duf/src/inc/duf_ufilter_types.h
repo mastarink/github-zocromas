@@ -69,6 +69,8 @@ typedef struct
   duf_rfilter_flags_combo_t v;
   unsigned max_rel_depth;
   unsigned long long max_seq;
+  unsigned long long std_leaf_set;
+  unsigned long long std_node_set;
   duf_items_t maxitems;
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;

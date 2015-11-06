@@ -151,7 +151,7 @@ duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first 
 
 
 static const duf_sql_set_t *
-duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
+duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_leaf_index )
 {
   const duf_sql_set_t *set = NULL;
 
@@ -176,7 +176,7 @@ duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
 #else
   unsigned index;
 
-  index = sccb->use_std_leaf;
+  index = force_leaf_index > 0 ? force_leaf_index : sccb->use_std_leaf;
   if ( index > 0 )
     set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
   else
@@ -187,7 +187,7 @@ duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
 }
 
 static const duf_sql_set_t *
-duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
+duf_get_node_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_node_index )
 {
   const duf_sql_set_t *set = NULL;
 
@@ -211,7 +211,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
 #else
   unsigned index;
 
-  index = sccb->use_std_node;
+  index = force_node_index > 0 ? force_node_index : sccb->use_std_node;
   if ( index > 0 )
     set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
   else
@@ -222,7 +222,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
 }
 
 const duf_sql_set_t *
-duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
+duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type, unsigned force_leaf_index, unsigned force_node_index )
 {
   const duf_sql_set_t *set = NULL;
 
@@ -231,10 +231,10 @@ duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_ty
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set = duf_get_leaf_sql_set( sccb );
+    set = duf_get_leaf_sql_set( sccb, force_leaf_index );
     break;
   case DUF_NODE_NODE:
-    set = duf_get_node_sql_set( sccb );
+    set = duf_get_node_sql_set( sccb, force_node_index );
     break;
   case DUF_NODE_NONE:
     set = NULL;
@@ -244,4 +244,10 @@ duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_ty
     break;
   }
   return set;
+}
+
+const duf_sql_set_t *
+duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
+{
+  return duf_sccb_get_sql_set_f( sccb, node_type, 0, 0 );
 }

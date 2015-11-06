@@ -18,5 +18,7 @@ const duf_scan_callbacks_t *duf_find_or_load_sccb_by_evname( const char *name, d
 /* const duf_sql_set_t *duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb ); */
 /* const duf_sql_set_t *duf_get_node_sql_set( const duf_scan_callbacks_t * sccb ); */
 const duf_sql_set_t *duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type );
+const duf_sql_set_t *duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type, unsigned force_leaf_index,
+                                           unsigned force_node_index );
 
 #endif

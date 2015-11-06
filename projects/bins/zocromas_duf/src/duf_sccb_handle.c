@@ -66,11 +66,11 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 
 #  if 0
     if ( SCCB->count_nodes )
-      sql_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE );
+      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set, PU->std_node_set );
     else
-      sql_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_LEAF );
+      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_LEAF, PU->std_leaf_set, PU->std_node_set );
 #  else
-    sql_set = duf_sccb_get_sql_set( SCCB, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
+    sql_set = duf_sccb_get_sql_set_f( SCCB, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF, PU->std_leaf_set, PU->std_node_set );
 #  endif
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
     assert( DUF_NOERROR( rpr ) );
@@ -248,7 +248,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PU = pu;
 #endif
 #if 1
-    PDI = duf_pdi_clone( pdi, 0 /* no_li */ );
+    PDI = duf_pdi_clone( pdi, 0 /* no_li */  );
     PDICLONED = 1;
 #else
     PDI = pdi;
@@ -299,9 +299,11 @@ TODO scan mode
       {
         DUF_TRACE( explain, 0, "no init scan" );
       }
+      /* T(">>> %llu : %llu", PU->std_leaf_set,  PU->std_node_set); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
-                                   duf_sccb_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ , duf_pdi_recursive( PDI ) ) );
+                                   duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set, PU->std_node_set ), 0 /* caninsert */ ,
+                                   duf_pdi_recursive( PDI ) ) );
     }
   }
   else

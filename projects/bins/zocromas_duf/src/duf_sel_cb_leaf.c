@@ -57,19 +57,26 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
 
         assert( PDI->pathinfo.depth + 1 == ( nn2 = duf_levinfo_count( PDI ) ) );
       }
-      T( "A %d -- %d", PDI->pathinfo.depth + 1, duf_levinfo_count( PDI ) );
+      /* T( "A %d -- %d {%llu:%s,%llu:%s}", PDI->pathinfo.depth + 1, duf_levinfo_count( PDI ), duf_levinfo_dirid( PDI ), duf_levinfo_itemtruename( PDI ), */
+      /*    duf_levinfo_dirid_up( PDI ), duf_levinfo_itemtruename_up( PDI ) );                                                                            */
       {
         pli2 = duf_dirid2li( duf_levinfo_dirid( PDI ), duf_levinfo_itemtruename( PDI ), PDI->pathinfo.maxdepth + 3, &r );
         pdi2 = duf_pdi_clone( PDI, 1 /* no_li */  );
 /*   duf_levinfo_create( pdi2 ); */
 #  if 1
-        T( "B %d -- %d/%d", pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ), duf_li_count( pli2 ) );
+        /* T( "B %d -- %d/%d", pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ), duf_li_count( pli2 ) ); */
         duf_levinfo_set( pdi2, pli2, PDI->pathinfo.maxdepth + 3 );
-        T( "C %d -- %d", pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ) );
         {
           int nn2;
 
-          assert( pdi2->pathinfo.depth + 0 == ( nn2 = duf_levinfo_count( pdi2 ) ) );
+          if ( pdi2->pathinfo.depth + 1 != ( nn2 = duf_levinfo_count( pdi2 ) ) )
+          {
+            T( "P (%llu)  %d -- %d [%s - %s]", duf_levinfo_dirid( PDI ), PDI->pathinfo.depth + 1, duf_levinfo_count( PDI ), duf_levinfo_path( PDI ),
+               duf_levinfo_itemtruename( PDI ) );
+            T( "p2 (%llu) %d -- %d [%s - %s]", duf_levinfo_dirid( pdi2 ), pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ),
+               duf_levinfo_path( pdi2 ), duf_levinfo_itemtruename( pdi2 ) );
+          }
+          assert( pdi2->pathinfo.depth + 1 == ( nn2 = duf_levinfo_count( pdi2 ) ) );
         }
 
         assert( pdi2->pathinfo.levinfo );

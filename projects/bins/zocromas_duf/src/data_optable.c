@@ -44,14 +44,21 @@ const duf_longval_extended_table_t optable_main = {
    {.o = {DO_Q( "max-depth" ) /*        */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
     /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*         */ ,
-    DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_rel_depth ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "max-seq" ) /*          */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( NUM, max_seq ) /*                */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-seq" ) /*      */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( NUM, max_seq ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*         */ , DO_H(  .... ) /*                            */ },
 
+   {.o = {DO_Q( "std-leaf-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_LEAF_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, std_leaf_set ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "std-node-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_NODE_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, std_node_set ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                            */ },
+
+
+
+  
    {.o = {.name = NULL}}
    }
 };

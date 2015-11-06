@@ -125,7 +125,7 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   char *sql_selector = NULL;
 
   /* TODO sql_set is needless here, accessible via duf_get_sql_set( SCCB, node_type ) */
-  assert( duf_sccb_get_sql_set( SCCB, node_type ) == sql_set );
+  assert( duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set ) == sql_set );
 
 #ifdef MAS_TRACING
   const char *set_type_title = duf_nodetype_name( node_type );

@@ -138,11 +138,16 @@ duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED
       }
     }
     while ( name );
-
     for ( int i = 0; i < count; i++ )
     {
       pli[i] = plirev[count - i - 1];
       /* reverse */
+    }
+    if ( leaf_itemtruename )
+    {
+      pli[count].itemname = mas_strdup( leaf_itemtruename );
+      pli[count].dirid = dirid;
+      count++;
     }
 #if 0
     {

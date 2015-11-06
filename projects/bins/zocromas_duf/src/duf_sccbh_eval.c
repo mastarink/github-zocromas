@@ -103,7 +103,11 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
 #ifdef MAS_TRACING
   const char *set_type_title = duf_nodetype_name( node_type );
 #endif
+#if 0
   sql_set = duf_sccb_get_sql_set( SCCB, node_type );
+#else
+  sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set  );
+#endif
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
   if ( sql_set && sql_set->selector2 && sql_set->fieldset )
