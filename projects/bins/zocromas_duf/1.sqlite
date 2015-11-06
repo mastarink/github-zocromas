@@ -47,4 +47,7 @@ SELECT fn.rowid AS fnid, fn.file_name
 
 /*
 vi: ft=sql
+
+:!cat % | sqlite3  /home/mastar/.mas/lib/duf_db/test_tree/test_tree.db
+
 */

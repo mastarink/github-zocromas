@@ -248,7 +248,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PU = pu;
 #endif
 #if 1
-    PDI = duf_pdi_clone( pdi );
+    PDI = duf_pdi_clone( pdi, 0 /* no_li */ );
     PDICLONED = 1;
 #else
     PDI = pdi;

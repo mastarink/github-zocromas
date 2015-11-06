@@ -5,6 +5,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 
@@ -47,6 +48,7 @@ duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   /*@ 4. go up */
   DEBUG_ENDR( r );
 }
+
 /* 20151027.114000 */
 int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
@@ -84,6 +86,10 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
+
+  assert( PDI->pathinfo.depth + 1 == duf_levinfo_count( PDI ) );
+
+
   /* data from db at pstmt */
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
@@ -99,6 +105,9 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
     assert( PDI->pathinfo.depth >= 0 );
 
     DOR( r, duf_sel_cb2_node_at( scanstage, pstmt, str_cb2, sccbh ) );
+
+    assert( PDI->pathinfo.depth + 1 == duf_levinfo_count( PDI ) );
+
     DOR( r, duf_levinfo_goup( PDI ) );
   }
   DUF_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );

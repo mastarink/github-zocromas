@@ -11,4 +11,7 @@ void duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs );
 #    endif
 #  endif
 
+int duf_li_count( const duf_levinfo_t * pli );
+char *duf_li_path( const duf_levinfo_t * pli, int count );
+
 #endif

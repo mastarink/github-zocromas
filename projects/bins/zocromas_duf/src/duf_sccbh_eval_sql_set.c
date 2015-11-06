@@ -9,6 +9,7 @@
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
+#include "duf_levinfo_credel.h"
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_bind.h"
@@ -23,6 +24,16 @@
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
 
+
+
+#include "duf_pdi_credel.h"
+#include "duf_levinfo_credel.h"
+#include "duf_li_credel.h"
+
+
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
+
 /* ###################################################################### */
 #include "duf_sccbh_eval_sql_set.h"
 /* ###################################################################### */
@@ -35,6 +46,9 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   DEBUG_STARTR( r );
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
   DUF_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
+  DUF_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ), node_type,
+             duf_levinfo_path( PDI ), DUF_GET_STMT_SFIELD2( pstmt_selector, dfname ), duf_levinfo_itemtruename( PDI ) );
+
   duf_sel_cb2_t cbs[] = {
     [DUF_NODE_NODE] = duf_sel_cb2_node, /* str_cb2 is duf_eval_sccbh_all */
     [DUF_NODE_LEAF] = duf_sel_cb2_leaf, /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
@@ -71,7 +85,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
 /* TODO : sccbh->pstmt_selector = pstmt_selector OR via pdi */
   DUF_TRACE( select, 1, "S:%s", sql_selector );
 /* XXX With parent ! XXX */
-  DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
+  DUF_SQL_BIND_LL_NZ_OPT( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
 
   /* DUF_SQL_BIND_LL_NZ_OPT( topDirID, duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) ), r, pstmt_selector ); */
   /* duf_yfilter_t yf={.topdirid= duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) )}; */
@@ -91,7 +105,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
   }
   else
   {
-    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name(scanstage), duf_uni_scan_action_title( SCCB ) );
+    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
     /* assert( 0 );                                                                                               */
   }
 #if 1

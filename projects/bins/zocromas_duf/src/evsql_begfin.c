@@ -102,7 +102,6 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilt
     const char **psql = ssql->sql;
 
     const char **psql0 = psql;
-    int nn = 0;
 
 #ifdef MAS_TRACING
     int changes = 0;
@@ -119,9 +118,11 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilt
 
     while ( DUF_NOERROR( r ) && psql && *psql )
     {
-      nn++;
-      DUF_TRACE( sql, 3, "beginning psql #%d: %s", nn, *psql );
-      DUF_TRACE( select, 0, "beginning psql #%d: %s", nn, *psql );
+      int nntr = 0;
+
+      nntr++;
+      DUF_TRACE( sql, 3, "beginning psql #%d: %s", nntr, *psql );
+      DUF_TRACE( select, 0, "beginning psql #%d: %s", nntr, *psql );
 
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );
       DOR( r, duf_eval_sql_one_cb( *psql, pu, py, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes ) );

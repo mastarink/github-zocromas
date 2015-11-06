@@ -3,6 +3,8 @@
 
 #  include "duf_levinfo_types.h"
 
+int duf_levinfo_count( duf_depthinfo_t * pdi );
+
 void duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d );
 
 #endif

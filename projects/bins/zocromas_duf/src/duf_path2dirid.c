@@ -97,7 +97,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   DEBUG_ENDS( name );
 }
 
-static char *
+char *
 duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigned long long *pparentid, int *pr )
 {
   char *name = NULL;
@@ -137,22 +137,22 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   char *path = NULL;
 
   DEBUG_START(  );
-  int r = 0;
+  int rpr = 0;
   int done = 0;
   int depth = 0;
 
   duf_depthinfo_t di = { 0 };
 #if 0
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
-                                        0 /* opendir */  ) );
+  DOR( rpr, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
+                                          0 /* opendir */  ) );
 #else
-  DOR( r, duf_pdi_init_min( &di, NULL /* real_path */  ) );
+  DOR( rpr, duf_pdi_init_min( &di, NULL /* real_path */  ) );
 #endif
   do
   {
     char *name = NULL;
 
-    name = duf_dirid2name_existed( &di, dirid, &dirid, &r );
+    name = duf_dirid2name_existed( &di, dirid, &dirid, &rpr );
     if ( name )
     {
       char *opath;
@@ -171,6 +171,6 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   duf_pdi_shut( &di );
 
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   DEBUG_ENDS( path );
 }

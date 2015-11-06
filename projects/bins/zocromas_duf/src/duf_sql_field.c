@@ -17,11 +17,23 @@ __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
 
   for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
   {
+    /* T( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
     if ( 0 == strcmp( duf_sql_column_name( pstmt, icol ), name ) )
     {
       pos = icol;
+      /* T( "@field %s  found (%d)", name, pos ); */
       break;
     }
+  }
+  /* T( "@field %s  pos:%d", name, pos ); */
+  if ( pos < 0 )
+  {
+    T( "@field %s not found:", name );
+    for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+    {
+      T( "@@@- %s", duf_sql_column_name( pstmt, icol ) );
+    }
+    assert( 0 );
   }
   return pos;
 }

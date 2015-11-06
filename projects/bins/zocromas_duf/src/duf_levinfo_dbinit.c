@@ -29,6 +29,8 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
 
   duf_levinfo_clear_level_d( pdi, d );
   assert( !pdi->pathinfo.levinfo[d].itemname );
+ 
+  
   /* if ( pdi->opendir ) */
   {
     duf_levinfo_t *pli;

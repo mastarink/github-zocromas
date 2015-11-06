@@ -1,14 +1,15 @@
 #include <string.h>
 
-#include <mastar/tools/mas_utils_path.h>  /* mas_pathdepth */
+#include <mastar/tools/mas_utils_path.h> /* mas_pathdepth */
 
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
 #include "duf_levinfo_credel.h"
+
 #include "duf_li_credel.h"
-#include "duf_context.h"
+#include "duf_li.h"
 
 
 #include "duf_dh.h"
@@ -20,7 +21,16 @@
 /* ###################################################################### */
 
 int
-duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count )
+duf_pi_levinfo_count( duf_pathinfo_t * pi )
+{
+  DEBUG_STARTR( r );
+  assert( pi );
+  r = pi->levinfo ? duf_li_count( pi->levinfo ) : 0;
+  DEBUG_ENDR( r );
+}
+
+int
+duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t count )
 {
   DEBUG_STARTR( r );
 
@@ -28,19 +38,29 @@ duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count )
   if ( count )
   {
     pi->levinfo_count = count;
-    pi->levinfo = duf_li_create( pi->levinfo_count );
+    pi->levinfo = pli;
     assert( pi->levinfo );
   }
   DEBUG_ENDR( r );
 }
 
+int
+duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count )
+{
+  DEBUG_STARTR( r );
+
+  DOR( r, duf_pi_levinfo_set( pi, duf_li_create( count ), count ) );
+
+  DEBUG_ENDR( r );
+}
+
 void
-duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc )
+duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
 {
   assert( pidst );
   assert( pisrc );
   memcpy( pidst, pisrc, sizeof( duf_pathinfo_t ) );
-  pidst->levinfo = duf_li_clone( pisrc->levinfo, pisrc->levinfo_count );
+  pidst->levinfo = ( no_li ) ? NULL : duf_li_clone( pisrc->levinfo, pisrc->levinfo_count );
 }
 
 int

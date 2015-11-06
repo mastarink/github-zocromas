@@ -85,7 +85,7 @@
 			      " FROM cte_paths  AS ptenuf " \
 			      " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (ptenuf." DUF_SQL_IDFIELD "=fn.Pathid) " \
 			      " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " \
-			      " JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" \
+			      " JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)"
 
 #    define DUF_SQL_RNUMFILES(_paths_alias, _wmore)  " ( " DUF_SQL__RNUMFILES(_paths_alias) # _wmore " ) "
 #  endif

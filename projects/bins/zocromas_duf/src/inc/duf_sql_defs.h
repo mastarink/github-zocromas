@@ -6,7 +6,7 @@
 #  define DUF_SQL_IDFIELD "rowid"
 #  define DUF_SQL_DIRNAMEFIELD "dir_name"
 #  define DUF_SQL_FILENAMEFIELD "file_name"
-#  define DUF_COMMA_AS(name, alias) , #name " AS " #alias
+#  define DUF_COMMA_AS(_name, alias) , #_name " AS " #alias
 
 #  define DUF_SQLITE2R_ERROR_CODE(_r3c) duf_sqlite2r_error_code(_r3c)
 #  define DUF_SQLITE2R_ERROR_INDEX(_r3c) duf_sqlite2duf(_r3c, FL)
@@ -15,41 +15,57 @@
 /* ###################################################################### */
 
 /*
-#  define DUF_SET_SFIELD(name) name = __duf_sql_str_by_name( #name, precord, NULL, 0 )
-#  define DUF_SET_UFIELD(name) name = __duf_sql_ull_by_name( #name, precord, NULL, 0 )
+#  define DUF_SET_SFIELD(_name) _name = __duf_sql_str_by_name( #_name, precord, NULL, 0 )
+#  define DUF_SET_UFIELD(_name) _name = __duf_sql_ull_by_name( #_name, precord, NULL, 0 )
 
-#  define DUF_SFIELD(name) const char*  DUF_SET_SFIELD(name)
-#  define DUF_UFIELD(name) unsigned long long  DUF_SET_UFIELD(name)
+#  define DUF_SFIELD(_name) const char*  DUF_SET_SFIELD(_name)
+#  define DUF_UFIELD(_name) unsigned long long  DUF_SET_UFIELD(_name)
 
-#  define DUF_SFIELD_CHECK(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 0 ); \
-  	duf_check_field(#name, duf_have_field_##name)
-#  define DUF_UFIELD_CHECK(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 0 ); \
-  	duf_check_field(#name, duf_have_field_##name)
+#  define DUF_SFIELD_CHECK(_name) int duf_have_field_##_name; const char* _name = __duf_sql_str_by_name( #_name, precord, &duf_have_field_##_name, 0 ); \
+  	duf_check_field(#_name, duf_have_field_##_name)
+#  define DUF_UFIELD_CHECK(_name) int duf_have_field_##_name; unsigned long long _name = __duf_sql_ull_by_name( #_name, precord, &duf_have_field_##_name, 0 ); \
+  	duf_check_field(#_name, duf_have_field_##_name)
 
-#  define DUF_SFIELD_OPT(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 1 )
-#  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
+#  define DUF_SFIELD_OPT(_name) int duf_have_field_##_name; const char* _name = __duf_sql_str_by_name( #_name, precord, &duf_have_field_##_name, 1 )
+#  define DUF_UFIELD_OPT(_name) int duf_have_field_##_name; unsigned long long _name = __duf_sql_ull_by_name( #_name, precord, &duf_have_field_##_name, 1 )
 */
+#  define DUF_GET_STMT_XFIELD2Q(_pstmt, _typ, _name, _opt)		__duf_sql_ ## _typ ## _by_name2( _pstmt, #_name, _opt )
 
-#  define DUF_GET_SFIELD2Q(name, opt) __duf_sql_str_by_name2( pstmt, #name, opt )
-#  define DUF_GET_UFIELD2Q(name, opt) __duf_sql_ull_by_name2( pstmt, #name, opt )
+#  define DUF_GET_STMT_SFIELD2Q(_pstmt, _name, _opt)			__duf_sql_str_by_name2( _pstmt, #_name, _opt )
+#  define DUF_GET_STMT_UFIELD2Q(_pstmt, _name, _opt)			__duf_sql_ull_by_name2( _pstmt, #_name, _opt )
 
-#  define DUF_GET_SFIELD2(name)                    DUF_GET_SFIELD2Q(name, 0)
-#  define DUF_GET_UFIELD2(name)                    DUF_GET_UFIELD2Q(name, 0)
+#  define DUF_GET_SFIELD2Q(_name, _opt)			DUF_GET_STMT_SFIELD2Q( pstmt, _name, _opt)
+#  define DUF_GET_UFIELD2Q(_name, _opt)			DUF_GET_STMT_UFIELD2Q( pstmt, _name, _opt)
 
-#  define DUF_GET_SFIELD2OPT(name)                 DUF_GET_SFIELD2Q(name, 1)
-#  define DUF_GET_UFIELD2OPT(name)                 DUF_GET_UFIELD2Q(name, 1)
+#  define DUF_GET_SFIELD2(_name)			DUF_GET_SFIELD2Q(_name, 0)
+#  define DUF_GET_UFIELD2(_name)			DUF_GET_UFIELD2Q(_name, 0)
+#  define DUF_GET_STMT_SFIELD2(_pstmt, _name)		DUF_GET_STMT_SFIELD2Q(_pstmt, _name, 0)
+#  define DUF_GET_STMT_UFIELD2(_pstmt, _name)		DUF_GET_STMT_UFIELD2Q(_pstmt, _name, 0)
 
-#  define DUF_SET_SFIELD2(name) name =             DUF_GET_SFIELD2(name)
-#  define DUF_SET_UFIELD2(name) name =             DUF_GET_UFIELD2(name)
+#  define DUF_GET_SFIELD2OPT(_name)			DUF_GET_SFIELD2Q(_name, 1)
+#  define DUF_GET_UFIELD2OPT(_name)			DUF_GET_UFIELD2Q(_name, 1)
+#  define DUF_GET_STMT_SFIELD2OPT(_pstmt, _name)	DUF_GET_STMT_SFIELD2Q(_pstmt, _name, 1)
+#  define DUF_GET_STMT_UFIELD2OPT(_pstmt, _name)	DUF_GET_STMT_UFIELD2Q(_pstmt, _name, 1)
 
-#  define DUF_SFIELD2(name) const char*            DUF_SET_SFIELD2(name)
-#  define DUF_UFIELD2(name) unsigned long long     DUF_SET_UFIELD2(name)
+#  define DUF_SET_SFIELD2(_name)			_name =	DUF_GET_SFIELD2(_name)
+#  define DUF_SET_UFIELD2(_name)			_name = DUF_GET_UFIELD2(_name)
+#  define DUF_SET_STMT_SFIELD2(_pstmt, _name)		_name = DUF_GET_STMT_SFIELD2(_pstmt, _name)
+#  define DUF_SET_STMT_UFIELD2(_pstmt, _name)		_name = DUF_GET_STMT_UFIELD2(_pstmt, _name)
 
-#  define DUF_SET_SFIELD2OPT(name) name =          DUF_GET_SFIELD2OPT(name)
-#  define DUF_SET_UFIELD2OPT(name) name =          DUF_GET_UFIELD2OPT(name)
+#  define DUF_SFIELD2(_name)				const char*         DUF_SET_SFIELD2(_name)
+#  define DUF_UFIELD2(_name)				unsigned long long  DUF_SET_UFIELD2(_name)
+#  define DUF_STMT_SFIELD2(_pstmt, _name)		const char*         DUF_SET_STMT_SFIELD2(_pstmt, _name)
+#  define DUF_STMT_UFIELD2(_pstmt, _name)		unsigned long long  DUF_SET_STMT_UFIELD2(_pstmt, _name)
 
-#  define DUF_SFIELD2OPT(name) const char*         DUF_SET_SFIELD2OPT(name)
-#  define DUF_UFIELD2OPT(name) unsigned long long  DUF_SET_UFIELD2OPT(name)
+#  define DUF_SET_SFIELD2OPT(_name)			_name = DUF_GET_SFIELD2OPT(_name)
+#  define DUF_SET_UFIELD2OPT(_name)			_name = DUF_GET_UFIELD2OPT(_name)
+#  define DUF_SET_STMT_SFIELD2OPT(_pstmt, _name)	_name = DUF_GET_STMT_SFIELD2OPT(_pstmt, _name)
+#  define DUF_SET_STMT_UFIELD2OPT(_pstmt, _name)	_name = DUF_GET_STMT_UFIELD2OPT(_pstmt, _name)
+
+#  define DUF_SFIELD2OPT(_name)				const char*         DUF_SET_SFIELD2OPT(_name)
+#  define DUF_UFIELD2OPT(_name)				unsigned long long  DUF_SET_UFIELD2OPT(_name)
+#  define DUF_STMT_SFIELD2OPT(_pstmt, _name)		const char*         DUF_SET_STMT_SFIELD2OPT(_pstmt, _name)
+#  define DUF_STMT_UFIELD2OPT(_pstmt, _name)		unsigned long long  DUF_SET_STMT_UFIELD2OPT(_pstmt, _name)
 
 
 #  if 0

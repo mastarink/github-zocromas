@@ -38,6 +38,18 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    DUF_SQL_UFILTER_BINDINGS     /* */
    /* " ORDER BY ...." */
    }
+    ,                             /* */
+  {                             /* */
+   .name = "std leaf no sel no matcher",
+   .type = DUF_NODE_LEAF,
+   .expand_sql = 1,             /* */
+   .fieldset = "#std-ns-leaf",
+   .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
+   "#std-ns-leaf",
+   .filter =                    /* */
+   DUF_SQL_UFILTER_BINDINGS     /* */
+   /* " ORDER BY ...." */
+   }
 };
 
 size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );

@@ -29,8 +29,12 @@ if exists('v:servername')
   execute "set viminfo='50,<1000,s1000,n" . viminfofile
 endif
 
+
 if exists('g:maseddrop')
   execute 'tab drop ' . g:maseddrop
+endif
+if exists('g:masedline')
+  execute g:masedline
 endif
 
 " hi ColorColumn ctermbg=lightgrey guibg=lightgrey
@@ -52,12 +56,16 @@ hi ColorColumn ctermbg=grey guibg=#035656
 "   nmap <C-\> <ESC>:execute "sbuffer " . expand('<cWORD>')<CR>
 " endif
 
+" echo '(send-window-to-workspace-from-first (get-window-by-name-re "\.jl") 2)' | sawfish-client --
+
+
 nnoremap <A-1> :tabfirst<CR>
 nnoremap <A-2> :tablast<CR>
 let shn_doprj="shn/doprj.sh"
 if filereadable(shn_doprj)
 " echo "has doprj:" . shn_doprj
   nnoremap <F3>   :wa<CR>:!shn/doprj.sh i<CR>
+" nnoremap <F3>   :wa<CR>:make install<CR>
   nnoremap <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
 endif
 

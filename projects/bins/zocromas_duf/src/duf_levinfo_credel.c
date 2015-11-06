@@ -3,54 +3,40 @@
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_updown.h"
+#include "duf_levinfo.h"
+#include "duf_levinfo_ref.h"
 
 #include "duf_pathinfo_ref.h"
 #include "duf_pathinfo_credel.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_credel.h"
 /* ###################################################################### */
 
+int
+duf_levinfo_set( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t count )
+{
+  DEBUG_STARTR( r );
+
+  DOR( r, duf_pi_levinfo_set( &pdi->pathinfo, pli, count ) );
+
+  DEBUG_ENDR( r );
+}
 
 /* create level-control array, open 0 level */
 int
-duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth DUF_UNUSED, int recursive DUF_UNUSED, int opendir DUF_UNUSED )
+duf_levinfo_create( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
   assert( pdi );
-#if 0
-  if ( !pdi->pathinfo.levinfo )
-  {
-    int max_rel_depth = 0;
 
-    max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
-    assert( pdi->pathinfo.depth == -1 );
-    /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
-    if ( max_rel_depth /* FIXME */  )
-    {
-      pdi->pathinfo.maxdepth = max_rel_depth + ( pathdepth ? pathdepth : 20 );
-      pdi->recursive = recursive ? 1 : 0;
-      pdi->opendir = opendir ? 1 : 0;
-
-      duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth + 3 );
-      assert( pdi->pathinfo.levinfo );
-      assert( pdi->pathinfo.depth == -1 );
-    }
-    else
-    {
-      T( "max_rel_depth:%d", max_rel_depth );
-      DUF_MAKE_ERROR( r, DUF_ERROR_LEVINFO_SIZE );
-    }
-    /* DOR( r, duf_levinfo_open_dh( pdi, path ) ); */
-  }
-  else
-  {
-  }
-#else
+  assert( duf_levinfo_dirid( pdi ) == 0 );
   duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth + 3 );
+
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.depth == -1 );
-#endif
+
   DEBUG_ENDR( r );
 }
 
@@ -63,10 +49,13 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
   assert( pdi );
   /* assert( pdi->pathinfo.levinfo ); */
 
+  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+
   if ( pdi->pathinfo.levinfo )
   {
     while ( DUF_NOERROR( r ) && pdi->pathinfo.depth >= 0 )
     {
+      assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
       duf_levinfo_goup( pdi );
     }
     assert( pdi->pathinfo.depth == -1 );

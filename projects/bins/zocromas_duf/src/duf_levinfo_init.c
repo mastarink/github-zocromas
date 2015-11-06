@@ -60,4 +60,6 @@ void
 duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
 {
   duf_levinfo_init_level_d( pdi, itemname, dirid, node_type, pdi->pathinfo.depth );
+
+  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
 }

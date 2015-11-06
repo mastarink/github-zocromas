@@ -21,6 +21,7 @@ sfind draft1.sh
 sfind draft2.sh
 sfind draft.sh
 sfind exit_code.sh
+sfind cpp.sh
 
 tab sfind load.sh
 sfind prjname.sh

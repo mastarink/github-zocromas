@@ -7,6 +7,7 @@
 #include "duf_config_util.h"
 #include "duf_config_defs.h"
 
+#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_credel.h"
 #include "duf_context.h"
@@ -79,11 +80,8 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     pdi->recursive = frecursive ? 1 : 0;
     pdi->opendir = opendir ? 1 : 0;
 
-#if 0
-    DOR( r, duf_levinfo_create( pdi, pdi->pathinfo.topdepth, frecursive, opendir ) ); /* depth = -1 */
-#else
-    DOR( r, duf_levinfo_create( pdi, duf_pdi_topdepth( pdi ), frecursive, opendir ) ); /* depth = -1 */
-#endif
+    DOR( r, duf_levinfo_create( pdi ) ); /* depth = -1 */
+
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
 
@@ -200,6 +198,9 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
   assert( pdi );
   if ( pdi->inited )
   {
+
+    assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+
     duf_clear_context( &pdi->context );
     DOR( r, duf_levinfo_delete( pdi ) );
 
@@ -257,6 +258,9 @@ int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+
+  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+
   DOR( r, duf_pdi_shut( pdi ) );
   if ( pdi->pdi_name && pdi->db_attached_selected && !pdi->attached_copy )
   {

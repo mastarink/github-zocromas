@@ -5,5 +5,8 @@ SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM main.paths AS pts LEF
 SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM main.paths AS pts JOIN main.paths AS parents ON( parents.rowid = pts.parentid )  WHERE Pathid=28 GROUP BY parents.rowid;
 /*
 vi: ft=sql
+
+:!cat % | sqlite3  /home/mastar/.mas/lib/duf_db/test_tree/test_tree.db
+
 */
 

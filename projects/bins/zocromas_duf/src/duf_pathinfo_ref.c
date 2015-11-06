@@ -7,8 +7,10 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
 #include "duf_levinfo_credel.h"
+
 #include "duf_li_credel.h"
-#include "duf_context.h"
+#include "duf_li.h"
+
 
 
 #include "duf_dh.h"
@@ -44,47 +46,55 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
   pli = duf_pi_ptr_d( pi, d );
   assert( pli );
 
+#if 0
   if ( pli->fullpath )
   {
     path = pli->fullpath;
   }
   else
   {
-    size_t len = 2;
-    char *p;
-
-    assert( pi );
-    assert( d >= 0 );
-    for ( int i = 0; i <= d; i++ )
     {
-      assert( pi->levinfo[i].itemname );
-      len += strlen( pi->levinfo[i].itemname ) + 1;
-    }
-    path = mas_malloc( len );
-    p = path;
+      size_t len = 2;
+      char *p;
 
-    for ( int i = 0; i <= d; i++ )
-    {
-      size_t l;
-
-      if ( p == path || *( p - 1 ) != '/' )
-        *p++ = '/';
-      *p = 0;
-      DUF_TRACE( path, 4, "path:%s", path );
-      l = strlen( pi->levinfo[i].itemname );
-      if ( l > 0 )
+      assert( pi );
+      assert( d >= 0 );
+      for ( int i = 0; i <= d; i++ )
       {
-        strcpy( p, pi->levinfo[i].itemname );
-        p += l;
-        *p++ = '/';
+        assert( &pli[i - d] == &pi->levinfo[i] );
+        assert( pi->levinfo[i].itemname );
+        len += strlen( pi->levinfo[i].itemname ) + 1;
       }
-      *p = 0;
+      path = mas_malloc( len );
+      p = path;
+
+      for ( int i = 0; i <= d; i++ )
+      {
+        size_t l;
+
+        if ( p == path || *( p - 1 ) != '/' )
+          *p++ = '/';
+        *p = 0;
+        DUF_TRACE( path, 4, "path:%s", path );
+        l = strlen( pi->levinfo[i].itemname );
+        if ( l > 0 )
+        {
+          strcpy( p, pi->levinfo[i].itemname );
+          p += l;
+          *p++ = '/';
+        }
+        *p = 0;
+      }
     }
     assert( d >= 0 );
     pli->fullpath = path;
-    DUF_TRACE( path, 4, "fullpath:%s", path );
   }
-  return path;
+#else
+  if ( !pli->fullpath )
+    pli->fullpath = duf_li_path( duf_pi_ptr_d( pi, 0 ), d + 1 );
+#endif
+  DUF_TRACE( path, 4, "fullpath:%s", path );
+  return pli->fullpath;
 }
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC( const char *, path )

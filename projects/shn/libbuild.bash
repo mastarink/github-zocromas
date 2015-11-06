@@ -67,6 +67,7 @@ function shn_build_xcommand ()
 			|| { retcode=$? ; popd &>/dev/null ; return $retcode ; }
 	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MSH_SHN_DIRS[error]}" ]] && [[ -d "${MSH_SHN_DIRS[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
+	  echo "$cmd $@ @ $(pwd)" >&2
 	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
 	    shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_FULLNAME] ok"

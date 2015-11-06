@@ -71,23 +71,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
   DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
   if ( !SCCB->disabled && ( !TOTCOUNTED || TOTITEMS ) )
   {
-#if 0
-    {
-      int nn = 0;
-
-      for ( duf_str_cb2_t * ppass = passes; DUF_NOERROR( r ) && *ppass; nn++, ppass++ )
-      {
-        DUF_TRACE( scan, 4, "scan pass %d by %5llu:%s; %s", nn, duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ),
-                   duf_levinfo_path( PDI ) );
-
-        DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", nn, duf_uni_scan_action_title( SCCB ), SCCB->name );
-        /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-        DOR( r, ( *ppass ) ( scanstage_fake, pstmt_selector, sccbh ) );
-        /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-      }
-    }
-#else
-    for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
+   for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage < DUF_SCANSTAGE_MAX; scanstage++ )
     {
       DUF_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
                  duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
@@ -104,7 +88,6 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
         sccbh->current_statement = NULL;
       }
     }
-#endif
   }
   else
   {
@@ -157,7 +140,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake DUF_UNUSE
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( SCCB ) );
 
-  DUF_TRACE( sccbh, 0, "eval sccbh all %s at %llu:%s", SCCB->name, duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
+  DUF_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", SCCB->name, duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
 
 #  endif
   if ( !SCCB->disabled )

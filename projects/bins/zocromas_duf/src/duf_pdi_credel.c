@@ -2,6 +2,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_levinfo.h"
 #include "duf_pdi_ref.h"
 #include "duf_pathinfo_credel.h"
 
@@ -28,7 +29,7 @@ duf_pdi_create( const char *name )
 }
 
 void
-duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
+duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
 {
   char *pdname;
 
@@ -61,7 +62,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
   /* assert( pdisrc->num_idstatements == 0 ); */
   /* assert( !pdisrc->idstatements ); */
 
-  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo );
+  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li );
 #if 0
   duf_items_copy( pdidst->items, pdisrc->items );
 #else
@@ -83,12 +84,12 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
 }
 
 duf_depthinfo_t *
-duf_pdi_clone( duf_depthinfo_t * pdisrc )
+duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
 {
   duf_depthinfo_t *pdi = NULL;
 
   pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */  );
-  duf_pdi_copy( pdi, pdisrc );
+  duf_pdi_copy( pdi, pdisrc, no_li );
   pdi->root_pdi = duf_pdi_root( pdisrc );
   DUF_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p (%p:%p:%p:%p)", pdi, pdisrc, pdi->root_pdi, pdisrc, duf_pdi_root( pdisrc ), pdisrc->root_pdi );
   return pdi;
@@ -100,6 +101,9 @@ duf_pdi_delete( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+
+  /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
   DOR( r, duf_pdi_close( pdi ) );
   if ( pdi->created_name )
     mas_free( pdi->pdi_name );

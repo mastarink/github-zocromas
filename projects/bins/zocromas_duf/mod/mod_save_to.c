@@ -238,7 +238,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     else
     {
       char *sl;
-      int nn = 0;
+      int nnsavp = 0;
       int rt = 0;
 
       sl = save_path;
@@ -250,7 +250,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         sl = strchr( sl, '/' );
         if ( sl )
           *sl = 0;
-        DUF_TRACE( mod, 0, "%d. create => %s", nn, save_path );
+        DUF_TRACE( mod, 0, "%d. create => %s", nnsavp, save_path );
         rt = fstatat( duf_levinfo_dfd_top( pdi ), save_path, &stdir, AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW );
         if ( rt < 0 && errno == ENOENT )
         {
@@ -264,7 +264,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         if ( rt < 0 )
           DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
 
-        nn++;
+        nnsavp++;
       }
       DOR( r, duf_copy_to( pdi, save_path ) );
     }

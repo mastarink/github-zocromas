@@ -4,6 +4,7 @@ shn_gvimer_plus_bin ()
     local a c='-o'
     for a in "$@" ; do c+=" '$a'" ; done
     [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
+#   echo "{${MSHCMD_GVIMC:=/usr/bin/gvim} $c}"
     eval ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
 }
 shn_gvimer_plus_fuuid ()
@@ -12,6 +13,9 @@ shn_gvimer_plus_fuuid ()
     shift
     local fuuid=$1
     shift
+    local fline=$1
+    shift
+    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_resident ()
@@ -20,6 +24,9 @@ shn_gvimer_plus_resident ()
     shift
     local fuuid=$1
     shift
+    local fline=$1
+    shift
+    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_uuid ()
@@ -50,6 +57,8 @@ shn_gvimer_plus_regfile_in ()
     shift
     local fuuid=${1:-"$( shn_gvimer_plus_uuid $file )"}
     shift
+    local fline=$1
+    shift
     local masedf=$1
     shift
     local typf=$1
@@ -67,7 +76,7 @@ shn_gvimer_plus_regfile_in ()
         do
             if [[ "$resident" == ${fuuid}* ]]; then
  	        [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "regfile_in resident:$resident for $fpath"
-                shn_gvimer_plus_resident $fpath $fuuid ${fline:++$fline}
+                shn_gvimer_plus_resident $fpath $fuuid $fline
                 return $?
             fi
         done
@@ -77,9 +86,11 @@ shn_gvimer_plus_regfile_in ()
 #		echo "masedf: $masedf" >&2
 #               shn_gvimer_plus_bin --servername "$fuuid" --cmd "set path=$(shn_gvimer_plus_vpath $typf)" --cmd "source $masedf" -c "tab drop $rfile"
 		local edpath=$(shn_gvimer_plus_vpath $typf)
+		shn_msg "Go $rfile : $fline ..."
                 shn_gvimer_plus_bin \
 			--servername "$fuuid" \
 			${masedf:+--cmd "let masedfile=\"$masedf\""} \
+			${fline:+--cmd "let masedline=\"$fline\""} \
 			${edpath:+--cmd "let masedpath=\"$edpath\""} \
 			${rfile:+--cmd "let maseddrop=\"$rfile\""} \
 			${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""}
@@ -88,10 +99,10 @@ shn_gvimer_plus_regfile_in ()
 #		shn_gvimer_plus_resident $rfile $fuuid
             else
               shn_errmsg "not found '${filen}' [$typf] at $masedf -- `pwd`"
-                shn_gvimer_plus_fuuid $fpath $fuuid
+                shn_gvimer_plus_fuuid $fpath $fuuid $fline
             fi
         else
-            shn_gvimer_plus_fuuid $fpath $fuuid
+            shn_gvimer_plus_fuuid $fpath $fuuid $fline
         fi
         return $?
     else
@@ -146,7 +157,7 @@ shn_gvimer_plus_anywhere ()
 shn_gvimer_plus_nomased ()
 {
     local file
-    local fuuid0 fuuid
+    local fuuid0 fuuid fline
     fuuid0=$( shn_gvimer_plus_uuid $@ )
     for file in $@
     do
@@ -154,7 +165,7 @@ shn_gvimer_plus_nomased ()
 #       shn_msg "nomased $file $fuuid (a/w)"
 	[[ ${fuuid:=$fuuid0} ]]
 #	echo "fuuid:$fuuid" >&2
-        shn_gvimer_plus_regfile $file $fuuid || return $?
+        shn_gvimer_plus_regfile $file $fuuid ${fline:-0} || return $?
     done
     return 0
 }
@@ -231,7 +242,8 @@ shn_gvimer_plus_mased ()
 {
   local file=$1 filef
   local typf
-  local fileq a b fline
+# local fileq
+  local a b fline flinef
   shn_dbgmsg "gvimer_plus_mased 1 $@"
   if [[ $file =~ ^(.*):(.*)$ ]] ; then
     a=${BASH_REMATCH[1]}
@@ -247,12 +259,24 @@ shn_gvimer_plus_mased ()
     shn_msg "$file -- $fline"
   fi
   if ! [[ $file == *.* ]] ; then
-    shn_msg "Looking for function $file"
-    fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
-    if [[ $fileq ]] ; then
-      shn_msg "Found function $file : $fileq"
-      file=$fileq
+    local -a afileq
+    local -a afline
+    shn_msg "Looking for function '$file'"
+#   fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
+    shn_msg ">> ${afileq[@]}"
+    if afileq=($( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )) || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*$file\>\s*)\s*(" src/ mod/ )) ; then
+      shn_msg "Found function $file : ${afileq[@]}"
+      flinef=$(   grep -n "^$file\>(" "${afileq[@]}")
+      fline=${flinef%:*}
+      file=${afileq[0]}
+    elif afileq=($( grep -rl --inc='*.[ch]' "#\s*define\>\s\+$file\>" src/ mod/ )) ; then
+      shn_msg "Found define $file : ${afileq[@]}"
+      afline=($(grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}"))
+      flinef=$( grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}")
+      fline=${flinef%:*}
+      file=${afileq[0]}
     fi
+    shn_msg "file='$file' fline:$fline flinef:'$flinef'"
   fi
   typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
   shn_msg "typf=$typf for '$file'"
@@ -269,7 +293,7 @@ shn_gvimer_plus_mased ()
 	  shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found '$filef'"
       fi
   fi
-  shn_msg "filef='$filef' for file='$file'"
+  shn_msg "filef='$filef' for file='$file' fline:$fline"
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
   local rfile=`/usr/bin/realpath $filef`
   shn_dbgmsg "rfile:$rfile" 
@@ -302,7 +326,7 @@ shn_gvimer_plus_mased ()
 	notifymas +shn "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
 ##	echo "mased fuuid: $fuuid" 1>&2
         shn_dbgmsg "gvimer_plus_mased 6a $@"
-	shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
+	shn_gvimer_plus_regfile $rfile $fuuid ${fline:-0} $masedf $typf && return 0
     else
         shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) masedf '$masedf' not found"
         shn_dbgmsg "gvimer_plus_mased 6b $@"

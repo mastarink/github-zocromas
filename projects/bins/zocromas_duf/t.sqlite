@@ -2,5 +2,8 @@ SELECT pt.rowid AS dirid , pt.dir_name AS dname , tf.numfiles AS nfiles, td.numd
 
 /*
 vi: ft=sql
+
+:!cat % | sqlite3  /home/mastar/.mas/lib/duf_db/test_tree/test_tree.db
+
 */
 

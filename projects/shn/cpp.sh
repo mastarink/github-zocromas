@@ -1,4 +1,5 @@
 #!/bin/sh
+
 function docpp ()
 {
   local file=$1
@@ -19,3 +20,4 @@ if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
   . shn/libwork.bash
   docpp $@
 fi
+# vi:ft=sh
