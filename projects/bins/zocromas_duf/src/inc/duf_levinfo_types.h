@@ -90,7 +90,11 @@ typedef struct
 } duf_idstmt_t;
 
 /********************************************************************************************/
-
+typedef struct
+{
+  unsigned long long dirid;
+  unsigned long long nameid;
+} duf_levinfo_db_t;
 typedef struct
 {
   /* unsigned is__leaf:1; */
@@ -99,17 +103,18 @@ typedef struct
   unsigned deleted_tested:1;
   /* unsigned eod; */
   duf_node_type_t node_type;
-  unsigned long long dirid;
-  unsigned long long nameid;
+  duf_levinfo_db_t db;
   /* const char *name; */
+#  ifdef DUF_LVI_ITEMS
   duf_items_t items;
-#ifndef DUF_NO_NUMS
+#  endif
+#  ifndef DUF_NO_NUMS
   long numdir;
   long numfile;
-#else
+#  else
   unsigned long long childs;
   long long numchild;
-#endif
+#  endif
   char *fullpath;
   char *itemname;
   duf_levinfo_context_t context;

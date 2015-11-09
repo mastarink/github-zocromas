@@ -203,6 +203,7 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
   return p ? p : q;
 }
 
+#ifdef DUF_LVI_ITEMS
 /************************************************************************/
 
 /* SET */
@@ -236,6 +237,7 @@ DUF_LEVINFO_3SET( unsigned long long, items_files, items.files )
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( unsigned long long, items_files, items.files )
 /* *INDENT-ON*  */
+#endif
 
 /************************************************************************/
 
@@ -252,7 +254,7 @@ DUF_LEVINFO_3GET( unsigned long long, items_files, items.files )
 /* (* *INDENT-ON*  *)                                                                */
 /*                                                                                   */
 /* *INDENT-OFF*  */
-DUF_LEVINFO_3SET( unsigned long long, dirid, dirid )
+DUF_LEVINFO_3SET( unsigned long long, dirid, db.dirid )
 /* *INDENT-ON*  */
 
 /************************************************************************/
@@ -269,13 +271,13 @@ DUF_LEVINFO_3SET( unsigned long long, dirid, dirid )
 /* (* *INDENT-ON*  *)                                        */
 
 /* *INDENT-OFF*  */
-DUF_LEVINFO_3GET( unsigned long long, dirid, dirid )
+DUF_LEVINFO_3GET( unsigned long long, dirid, db.dirid )
 /* *INDENT-ON*  */
 
 /************************************************************************/
 
   /* *INDENT-OFF*  */
-DUF_LEVINFO_3GET( unsigned long long, nameid, nameid )
+DUF_LEVINFO_3GET( unsigned long long, nameid, db.nameid )
 /* *INDENT-ON*  */
 
 /************************************************************************/

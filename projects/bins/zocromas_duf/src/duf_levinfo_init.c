@@ -35,7 +35,7 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
 
     pli = &pdi->pathinfo.levinfo[d];
     pli->node_type = node_type;
-    pli->dirid = dirid;
+    pli->db.dirid = dirid;
 
     if ( itemname )
     {

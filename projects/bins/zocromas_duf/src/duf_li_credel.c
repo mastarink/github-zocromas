@@ -133,7 +133,8 @@ duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED
       if ( name )
       {
         plirev[count].itemname = name;
-        plirev[count].dirid = dirid;
+        plirev[count].db.dirid = dirid;
+        plirev[count].node_type = 0;
         count++;
       }
     }
@@ -146,7 +147,7 @@ duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED
     if ( leaf_itemtruename )
     {
       pli[count].itemname = mas_strdup( leaf_itemtruename );
-      pli[count].dirid = dirid;
+      pli[count].db.dirid = dirid;
       count++;
     }
 #if 0

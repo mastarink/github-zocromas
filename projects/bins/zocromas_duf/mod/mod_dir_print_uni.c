@@ -31,7 +31,9 @@
 
 
 /* ########################################################################################## */
+#ifdef DUF_LVI_ITEMS
 static int print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
+#endif
 static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
@@ -62,7 +64,9 @@ duf_scan_callbacks_t duf_listing_callbacks = {
 #  endif
 #endif
   /* .node_scan_before = scan_node_before, */
+#ifdef DUF_LVI_ITEMS
   .node_scan_before2 = print_node_before2,
+#endif
   /* .leaf_scan = print_leaf, */
   .leaf_scan2 = print_leaf2,
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
@@ -222,6 +226,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_ENDR( r );
 }
 
+#ifdef DUF_LVI_ITEMS
 static int
 print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
@@ -309,11 +314,11 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
         int use;
         const duf_filedirformat_t *fmt;
 
-#if 0
+#  if 0
         use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
-#else
+#  else
         use = duf_pdi_pu( pdi )->use_format - 1;
-#endif
+#  endif
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
         if ( use >= 0 && use < fmt->dirs.argc && !sformat )
@@ -335,7 +340,9 @@ print_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
                                             &rwidth, &over );
       DUF_PUTSL( 0 );
     }
+    /* assert( 0 ); */
   }
 
   DEBUG_ENDR( r );
 }
+#endif

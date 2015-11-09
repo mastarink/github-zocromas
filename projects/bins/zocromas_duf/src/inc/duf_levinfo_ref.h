@@ -53,6 +53,7 @@ unsigned long long duf_levinfo_nameid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_nameid( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_nameid_up( const duf_depthinfo_t * pdi );
 
+#ifdef DUF_LVI_ITEMS
 unsigned long long duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_items_files( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_items_files_up( const duf_depthinfo_t * pdi );
@@ -60,6 +61,7 @@ unsigned long long duf_levinfo_items_files_up( const duf_depthinfo_t * pdi );
 void duf_levinfo_set_items_files_d( duf_depthinfo_t * pdi, unsigned long long n, int d );
 void duf_levinfo_set_items_files( duf_depthinfo_t * pdi, unsigned long long n );
 void duf_levinfo_set_items_files_up( duf_depthinfo_t * pdi, unsigned long long n );
+#endif
 
 #  ifndef DUF_NO_NUMS
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );

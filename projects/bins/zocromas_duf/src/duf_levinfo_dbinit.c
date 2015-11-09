@@ -37,7 +37,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
 
     pli = &pdi->pathinfo.levinfo[d];
     pli->node_type = node_type;
-    pli->dirid = DUF_GET_UFIELD2( dirid );
+    pli->db.dirid = DUF_GET_UFIELD2( dirid );
 
     if ( DUF_GET_SFIELD2( dfname ) )
     {
@@ -53,7 +53,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
     /* if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE ) */
     /*   duf_levinfo_make_childs_d( pdi, d );                    */
 #endif
-    pli->nameid = DUF_GET_UFIELD2( nameid );
+    pli->db.nameid = DUF_GET_UFIELD2( nameid );
     {
       duf_dirhandle_t *pdhlev = &pli->lev_dh;
 

@@ -33,8 +33,10 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt
 {
   DEBUG_STARTR( r );
 
+#if 0
   PDI->items.total++;
   PDI->items.files++;
+#endif
 
   DOR_LOWERE( r, duf_levinfo_if_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED, DUF_ERROR_STATAT_ENOENT );
