@@ -105,9 +105,6 @@ typedef struct
   duf_node_type_t node_type;
   duf_levinfo_db_t db;
   /* const char *name; */
-#  ifdef DUF_LVI_ITEMS
-  duf_items_t items;
-#  endif
 #  ifndef DUF_NO_NUMS
   long numdir;
   long numfile;

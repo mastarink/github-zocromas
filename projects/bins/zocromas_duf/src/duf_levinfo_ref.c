@@ -203,41 +203,6 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
   return p ? p : q;
 }
 
-#ifdef DUF_LVI_ITEMS
-/************************************************************************/
-
-/* SET */
-/* void                                                                                */
-/* duf_levinfo_set_items_files_d( duf_depthinfo_t * pdi, unsigned long long n, int d ) */
-/* {                                                                                   */
-/*   duf_levinfo_ptr_d( pdi, d )->items.files = n;                                     */
-/* }                                                                                   */
-/*                                                                                     */
-/* (* *INDENT-OFF*  *)                                                                 */
-/* DUF_LEVINFO_FS( unsigned long long, items_files )                                   */
-/* DUF_LEVINFO_FS_UP( unsigned long long, items_files )                                */
-/* (* *INDENT-ON*  *)                                                                  */
-
-/* *INDENT-OFF*  */
-DUF_LEVINFO_3SET( unsigned long long, items_files, items.files )
-/* *INDENT-ON*  */
-
-/************************************************************************/
-/* unsigned long long                                              */
-/* duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                               */
-/*   return duf_levinfo_ptr_d( pdi, d )->items.files;              */
-/* }                                                               */
-/*                                                                 */
-/* (* *INDENT-OFF*  *)                                             */
-/* DUF_LEVINFO_FC( unsigned long long, items_files )               */
-/* DUF_LEVINFO_FC_UP( unsigned long long, items_files )            */
-/* (* *INDENT-ON*  *)                                              */
-
-/* *INDENT-OFF*  */
-DUF_LEVINFO_3GET( unsigned long long, items_files, items.files )
-/* *INDENT-ON*  */
-#endif
 
 /************************************************************************/
 

@@ -57,10 +57,6 @@ typedef enum
   DUF_SFMT_CHR_MIME = /*               */ 'e', /* mime */
   DUF_SFMT_CHR_MIMEID = /*             */ 'E', /* mimeid */
   DUF_SFMT_CHR_FILENAME = /*           */ 'f', /* filename */
-#ifdef DUF_LVI_ITEMS
-  DUF_SFMT_CHR_NDIRS = /*              */ 'D', /* ndirs */
-  DUF_SFMT_CHR_NFILES = /*             */ 'F', /* nfiles */
-#endif
   DUF_SFMT_CHR_GROUP = /*              */ 'g', /* group */
   DUF_SFMT_CHR_DEPTH = /*              */ 'h', /* depth */
   DUF_SFMT_CHR_SHA1ID = /*             */ 'H', /* sha1id */
@@ -258,33 +254,6 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     swidth += strlen( pbuffer );
     break;
-#ifdef DUF_LVI_ITEMS
-  case DUF_SFMT_CHR_NFILES:    /* nfiles */
-#  if 1
-    duf_convert_fmt( format, fbsz, fmt0, "llu" );
-#  else
-    if ( v )
-      snprintf( format, fbsz, "%%%ldllu", v );
-    else
-      snprintf( format, fbsz, "%%llu" );
-#  endif
-
-    snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.files );
-    swidth += strlen( pbuffer );
-    break;
-  case DUF_SFMT_CHR_NDIRS:     /* ndirs */
-#  if 1
-    duf_convert_fmt( format, fbsz, fmt0, "llu" );
-#  else
-    if ( v )
-      snprintf( format, fbsz, "%%%ldllu", v );
-    else
-      snprintf( format, fbsz, "%%llu" );
-#  endif
-
-    snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.dirs );
-    break;
-#endif
   case DUF_SFMT_CHR_DATAID:    /* dataid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
