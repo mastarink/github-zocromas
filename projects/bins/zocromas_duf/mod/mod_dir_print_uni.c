@@ -60,11 +60,6 @@ duf_scan_callbacks_t duf_listing_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 #  endif
 #endif
-  /* .node_scan_before = scan_node_before, */
-#ifdef DUF_LVI_ITEMS
-  .node_scan_before2 = print_node_before2,
-#endif
-  /* .leaf_scan = print_leaf, */
   .leaf_scan2 = print_leaf2,
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
