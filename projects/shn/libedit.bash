@@ -168,7 +168,7 @@ shn_gvimer_plus_nomased ()
         fuuid=$(shn_gvimer_plus_anywhere $file)
 #       shn_msg "nomased $file $fuuid (a/w)"
 	[[ ${fuuid:=$fuuid0} ]]
-#	echo "fuuid:$fuuid" >&2
+
         shn_gvimer_plus_regfile $file $fuuid ${fline:-0} || return $?
     done
     return 0
@@ -267,17 +267,16 @@ shn_gvimer_plus_mased ()
     local -a afline
     shn_msg "Looking for function '$file'"
 #   fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
-    shn_msg ">> ${afileq[@]}"
     if afileq=($( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )) || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*$file\>\s*)\s*(" src/ mod/ )) ; then
       shn_msg "Found function $file : ${afileq[@]}"
       flinef=$(   grep -n "^$file\>(" "${afileq[@]}")
-      fline=${flinef%:*}
+      fline=${fline:-${flinef%:*}}
       file=${afileq[0]}
     elif afileq=($( grep -rl --inc='*.[ch]' "#\s*define\>\s\+$file\>" src/ mod/ )) ; then
       shn_msg "Found define $file : ${afileq[@]}"
       afline=($(grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}"))
       flinef=$( grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}")
-      fline=${flinef%:*}
+      fline=${fline:-${flinef%:*}}
       file=${afileq[0]}
     fi
     shn_msg "file='$file' fline:$fline flinef:'$flinef'"

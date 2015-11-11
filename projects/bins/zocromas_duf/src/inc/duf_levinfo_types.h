@@ -50,6 +50,7 @@ typedef enum
   DUF_SQL_STMD_ID_insert_path_table,
   DUF_SQL_STMD_ID_select_path,
   DUF_SQL_STMD_ID_dirid2name_existed,
+  DUF_SQL_STMD_ID_dirid2li_existed,
   DUF_SQL_STMD_ID_insert_tagname,
   DUF_SQL_STMD_ID_select_tagname,
   DUF_SQL_STMD_ID_insert_tag,

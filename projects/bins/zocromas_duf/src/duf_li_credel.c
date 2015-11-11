@@ -119,46 +119,60 @@ duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED
 
   {
     int rpr = 0;
-    int count = 0;
-    char *name = NULL;
+    unsigned count = 0;
+
+    /* char *name = NULL; */
     duf_levinfo_t *plirev = NULL;
+
+    /* unsigned long long cdirid, pdirid; */
 
     plirev = duf_li_create( maxcount );
 
     duf_depthinfo_t di = { 0 };
     DOR( rpr, duf_pdi_init_min( &di, NULL /* real_path */  ) );
-    do
+    /* cdirid = dirid; */
+    while ( DUF_NOERROR( rpr ) )
     {
-      name = duf_dirid2name_existed( &di, dirid, &dirid, &rpr );
-      if ( name )
-      {
-        plirev[count].itemname = name;
-        plirev[count].db.dirid = dirid;
-        plirev[count].node_type = 0;
-        count++;
-      }
-    }
-    while ( name );
-    for ( int i = 0; i < count; i++ )
-    {
-      pli[i] = plirev[count - i - 1];
-      /* reverse */
-    }
-    if ( leaf_itemtruename )
-    {
-      pli[count].itemname = mas_strdup( leaf_itemtruename );
-      pli[count].db.dirid = dirid;
+      DOR( rpr, duf_dirid2li_existed( &di, dirid, &plirev[count], &dirid ) );
+      if ( DUF_IS_ERROR( rpr ) || !plirev[count].itemname )
+        break;
+      /* plirev[count].itemname = name; */
+      /* plirev[count].db.dirid = pdirid; */
+      /* pdirid = cdirid; */
+      /* plirev[count].node_type = DUF_NODE_NODE; */
+      /* plirev[count].source = DUF_DH_SOURCE_DB; */
+      /* T( "@@@count:%d [%llu:%llu] %s", count, dirid, plirev[count].db.dirid, plirev[count].itemname ); */
+      assert( count < maxcount );
       count++;
     }
-#if 0
+    if ( DUF_NOERROR( rpr ) )
     {
-      char *t;
+      for ( unsigned i = 0; i < count; i++ )
+      {
+        pli[i] = plirev[count - i - 1];
+        /* reverse */
+      }
+      if ( leaf_itemtruename && count > 0 )
+      {
+        pli[count].itemname = mas_strdup( leaf_itemtruename );
+        pli[count].db.dirid = pli[count - 1].db.dirid;
+        pli[count].node_type = DUF_NODE_LEAF;
+        /* pli[count].source = DUF_DH_SOURCE_DB; */
+      }
+      /* for ( unsigned i = 0; i <= count; i++ )                             */
+      /* {                                                                   */
+      /*   T( "@@%d. dirid:%llu; %s", i, pli[i].db.dirid, pli[i].itemname ); */
+      /* }                                                                   */
+#if 0
+      {
+        char *t;
 
-      t = duf_li_path( pli, count );
-      T( "%s", t );
-      mas_free( t );
-    }
+        t = duf_li_path( pli, count );
+        T( "%s", t );
+        mas_free( t );
+      }
 #endif
+    }
     duf_pdi_shut( &di );
     mas_free( plirev );
   }

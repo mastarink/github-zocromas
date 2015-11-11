@@ -47,7 +47,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
     assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 
-#if 0
+#if 1
     {
       duf_levinfo_t *pli2;
       duf_depthinfo_t *pdi2;
@@ -71,10 +71,10 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
 
           if ( pdi2->pathinfo.depth + 1 != ( nn2 = duf_levinfo_count( pdi2 ) ) )
           {
-            T( "P (%llu)  %d -- %d [%s - %s] %s(%d)", duf_levinfo_dirid( PDI ), PDI->pathinfo.depth + 1, duf_levinfo_count( PDI ),
+            T( "P  (%3llu) %d -- %d [%s - %s] %s(%d)", duf_levinfo_dirid( PDI ), PDI->pathinfo.depth + 1, duf_levinfo_count( PDI ),
                duf_levinfo_path( PDI ), duf_levinfo_itemtruename( PDI ), duf_nodetype_name( duf_levinfo_node_type( PDI ) ),
                duf_levinfo_node_type( PDI ) );
-            T( "p2 (%llu) %d -- %d [%s - %s] %s(%d)", duf_levinfo_dirid( pdi2 ), pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ),
+            T( "p2 (%3llu) %d -- %d [%s - %s] %s(%d)", duf_levinfo_dirid( pdi2 ), pdi2->pathinfo.depth + 1, duf_levinfo_count( pdi2 ),
                duf_levinfo_path( pdi2 ), duf_levinfo_itemtruename( pdi2 ), duf_nodetype_name( duf_levinfo_node_type( pdi2 ) ),
                duf_levinfo_node_type( pdi2 ) );
           }
