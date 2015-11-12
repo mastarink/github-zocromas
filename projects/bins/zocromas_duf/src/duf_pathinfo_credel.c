@@ -29,19 +29,34 @@ duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
   DEBUG_ENDR( r );
 }
 
+void
+duf_pi_levinfo_delete( duf_pathinfo_t * pi )
+{
+  if ( pi->levinfo )
+  {
+    duf_li_clear_n( pi->levinfo, pi->maxdepth );
+    mas_free( pi->levinfo );
+    pi->levinfo = NULL;
+  }
+}
+
 int
 duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
 {
   DEBUG_STARTR( r );
 
   assert( pi );
+
   if ( maxdepth )
   {
+    duf_pi_levinfo_delete( pi );
+    assert( !pi->levinfo );
     pi->maxdepth = maxdepth;
     pi->levinfo = pli;
     pi->depth = duf_li_calc_depth( pli );
     assert( pi->levinfo );
   }
+
   DEBUG_ENDR( r );
 }
 
@@ -49,8 +64,10 @@ int
 duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t maxdepth )
 {
   DEBUG_STARTR( r );
+  duf_levinfo_t *pli = NULL;
 
-  DOR( r, duf_pi_levinfo_set( pi, duf_li_create( maxdepth ), maxdepth ) );
+  pli = duf_li_create( maxdepth );
+  DOR( r, duf_pi_levinfo_set( pi, pli, maxdepth ) );
 
   DEBUG_ENDR( r );
 }

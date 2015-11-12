@@ -102,6 +102,9 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
   if ( !TOTCOUNTED || TOTITEMS )
   {
     DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_eval_sccbh_sql_row_str_cb( scanstage, node_type, pstmt_selector, str_cb2, sccbh ) ) );
+
+    mas_force_count_ereport( 1 );
+    DUF_TEST_R( r );
   }
   else
   {

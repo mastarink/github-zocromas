@@ -24,6 +24,7 @@ duf_pdi_py( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->pyp : NULL;
 }
+
 /* needless?!? TODO */
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
@@ -56,16 +57,6 @@ int
 duf_pdi_seq( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->seq : 0;
-}
-
-static int
-duf_pdi_deltadepth_d( const duf_depthinfo_t * pdi, int d )
-{
-#if 0
-  return pdi ? d - pdi->pathinfo.topdepth : 0;
-#else
-  return pdi ? duf_pi_deltadepth_d( &pdi->pathinfo, d ) : 0;
-#endif
 }
 
 int
@@ -103,15 +94,17 @@ duf_pdi_depth( const duf_depthinfo_t * pdi )
 #endif
 }
 
+int
+duf_pdi_reldepth_d( const duf_depthinfo_t * pdi, int d )
+{
+  return pdi ? duf_pi_deltadepth_d( &pdi->pathinfo, d ) : 0;
+}
+
 /* pdi->pathinfo.depth - pdi->pathinfo.topdepth */
 int
 duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 {
-#if 0
-  return pdi ? duf_pdi_deltadepth_d( pdi, pdi->pathinfo.depth ) : 0;
-#else
   return pdi ? duf_pi_deltadepth( &pdi->pathinfo ) : 0;
-#endif
 }
 
 int
@@ -164,16 +157,10 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
   }
   else
   {
-    rd = duf_pdi_deltadepth_d( pdi, d ) <= delta; /* d - topdepth <= delta */
-    DUF_TRACE( temp, 5, "(%d>0) duf_pdi_topdepth(pdi):%d; duf_pdi_deltadepth_d( pdi, %d ):%d <= delta:%d;", ( rd ), d,
-#if 0
-               pdi->pathinfo.topdepth, duf_pdi_deltadepth_d( pdi, d ), delta );
-#else
-               duf_pdi_topdepth( pdi ), duf_pdi_deltadepth_d( pdi, d ), delta );
-#endif
+    rd = duf_pdi_reldepth_d( pdi, d ) <= delta; /* d - topdepth <= delta */
+    DUF_TRACE( temp, 0, "(%d>0) duf_pdi_topdepth(pdi):%d; duf_pdi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
+               duf_pdi_topdepth( pdi ), duf_pdi_reldepth_d( pdi, d ), delta );
   }
-
-
 
   /* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
   return rd;

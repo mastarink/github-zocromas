@@ -36,6 +36,7 @@ DUF_LEVINFO_FC_UP_REF( duf_levinfo_t , ptr )
 int
 duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d )
 {
+  assert( d >= 0 );
   return duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF;
 }
 /* *INDENT-OFF*  */
@@ -93,6 +94,7 @@ duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d )
 {
   struct stat *pst = NULL;
 
+  assert( d >= 0 );
   /* if ( pdi->opendir ) */
   {
     if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rdb > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_DB )
@@ -160,6 +162,7 @@ duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d )
 {
   const char *n = NULL;
 
+  assert( d >= 0 );
   n = duf_levinfo_ptr_d( pdi, d )->itemname;
   /* return n ? ( *n ? n : "/" ) : n; */
   return n && !*n ? "/" : n;
@@ -184,6 +187,7 @@ duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d )
 {
   const char *n = NULL;
 
+  assert( d >= 0 );
   n = duf_levinfo_ptr_d( pdi, d )->itemname;
   /* return n ? ( *n ? n : "/" ) : n; */
   return n;
@@ -375,7 +379,6 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi );
   if ( pdi->inited && d >= 0 )
   {
-    assert( d >= 0 );
     assert( pdi->pathinfo.levinfo );
     assert( pdi->inited );
     if ( duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF )

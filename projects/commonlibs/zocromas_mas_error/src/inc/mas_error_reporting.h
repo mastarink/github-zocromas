@@ -22,7 +22,7 @@ int mas_enabled_ereport_n_i( mas_error_index_t ri );
 int mas_enabled_ereport_i( mas_error_index_t rtest );
 
 int mas_ecount_reported_c( mas_error_code_t rtest );
-int mas_ecount_reported_i( mas_error_code_t ri );
+int mas_ecount_reported_i( mas_error_index_t ri );
 int mas_ecount_reported_rev( mas_error_event_t * rev );
 
 
@@ -36,7 +36,7 @@ int mas_error_line_i( mas_error_index_t e );
 const char *mas_error_func_i( mas_error_index_t e );
 const char *mas_error_message_i( mas_error_index_t e );
 
-void mas_error_report_i( mas_error_code_t ri, int test, FILE* out, int verb );
+void mas_error_report_i( mas_error_index_t ri, int test, FILE* out, int verb );
 void mas_error_report_p( size_t rp, int test, FILE* out, int verb );
 void mas_error_report_all( int test, FILE* out, int verb );
 

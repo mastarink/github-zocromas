@@ -11,6 +11,8 @@
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"
 
+
+
 #include "duf_pstmt_levinfo.h"
 
 #include "duf_sccb_scanstage.h" /* duf_nodetype_name, temporarily */
@@ -66,7 +68,8 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
     }
     else if ( !( rgd = duf_pdi_is_good_depth( pdi, delta ) ) )
     {
-      DUF_MAKE_ERROR( r, DUF_ERROR_TOO_DEEP );
+      DUF_MAKE_ERRORM( r, DUF_ERROR_TOO_DEEP, "depth(%d); maxdepth(%d);rgd:%d dd:%d; delta:%d", duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ), rgd,
+                       duf_pdi_reldepth( pdi ), delta );
     }
 
     if ( !DUF_NOERROR( r ) )

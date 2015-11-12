@@ -4,6 +4,7 @@
 int duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi );
 int duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t count );
 
+void duf_pi_levinfo_delete( duf_pathinfo_t * pi );
 int duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count );
 void duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li );
 

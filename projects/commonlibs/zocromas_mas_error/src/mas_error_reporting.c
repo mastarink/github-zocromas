@@ -300,7 +300,7 @@ mas_ecount_reported_rev( mas_error_event_t * rev )
 }
 
 int
-mas_ecount_reported_i( mas_error_code_t ri )
+mas_ecount_reported_i( mas_error_index_t ri )
 {
   mas_error_event_t *rev = NULL;
 
@@ -311,7 +311,7 @@ mas_ecount_reported_i( mas_error_code_t ri )
 }
 
 void
-mas_error_report_i( mas_error_code_t ri, int test, FILE * out, int verb )
+mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
 {
   if ( ri < 0 )
   {

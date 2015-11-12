@@ -14,11 +14,13 @@
 /* ###################################################################### */
 
 int
-duf_levinfo_set( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t count )
+duf_levinfo_set( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
 {
   DEBUG_STARTR( r );
-
-  DOR( r, duf_pi_levinfo_set( &pdi->pathinfo, pli, count ) );
+ 
+  assert( pli[0].itemname );
+  DOR( r, duf_pi_levinfo_set( &pdi->pathinfo, pli, maxdepth ) );
+  assert( pli[0].itemname );
 
   DEBUG_ENDR( r );
 }
@@ -32,7 +34,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi )
   assert( pdi );
 
   assert( duf_levinfo_dirid( pdi ) == 0 );
-  duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth + 3 );
+  duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth );
 
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.depth == -1 );

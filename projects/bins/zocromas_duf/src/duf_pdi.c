@@ -198,7 +198,6 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
   assert( pdi );
   if ( pdi->inited )
   {
-
     assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
     duf_clear_context( &pdi->context );

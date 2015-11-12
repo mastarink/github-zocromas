@@ -28,7 +28,7 @@ duf_li_create( int maxdepth )
   {
     size_t lsz;
 
-    lsz = sizeof( duf_levinfo_t ) * ( maxdepth +3 );
+    lsz = sizeof( duf_levinfo_t ) * ( maxdepth + 3 );
     pli = mas_malloc( lsz );
     memset( pli, 0, lsz );
   }
@@ -64,12 +64,12 @@ duf_li_clear_n( duf_levinfo_t * pli, unsigned maxdepth )
   }
 }
 
-void
-duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth )
-{
-  duf_li_clear_n( pli, maxdepth );
-  mas_free( pli );
-}
+/* void                                                    */
+/* duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth ) */
+/* {                                                       */
+/*   duf_li_clear_n( pli, maxdepth );                      */
+/*   mas_free( pli );                                      */
+/* }                                                       */
 
 static void
 duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth )
