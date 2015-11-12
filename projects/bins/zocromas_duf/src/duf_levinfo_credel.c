@@ -49,13 +49,13 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
   assert( pdi );
   /* assert( pdi->pathinfo.levinfo ); */
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   if ( pdi->pathinfo.levinfo )
   {
     while ( DUF_NOERROR( r ) && pdi->pathinfo.depth >= 0 )
     {
-      assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+      assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
       duf_levinfo_goup( pdi );
     }
     assert( pdi->pathinfo.depth == -1 );

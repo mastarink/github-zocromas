@@ -49,8 +49,9 @@ typedef enum
   DUF_SQL_STMD_ID_insert_filedata,
   DUF_SQL_STMD_ID_insert_path_table,
   DUF_SQL_STMD_ID_select_path,
-  DUF_SQL_STMD_ID_dirid2name_existed,
+  DUF_SQL_STMD_ID_nameid2li_existed,
   DUF_SQL_STMD_ID_dirid2li_existed,
+  DUF_SQL_STMD_ID_dirid2name_existed,
   DUF_SQL_STMD_ID_insert_tagname,
   DUF_SQL_STMD_ID_select_tagname,
   DUF_SQL_STMD_ID_insert_tag,
@@ -117,6 +118,7 @@ typedef struct
   char *itemname;
   duf_levinfo_context_t context;
   duf_dirhandle_t lev_dh;
+  int d;
 } duf_levinfo_t;
 
 typedef struct
@@ -126,7 +128,7 @@ typedef struct
   int topdepth;                 /* signed !! */
   /* duf_node_type_t node_type; */
   /* char *path; */
-  size_t levinfo_count;
+  /* size_t levinfo_count; => maxdepth + 3 */
   duf_levinfo_t *levinfo;
 } duf_pathinfo_t;
 

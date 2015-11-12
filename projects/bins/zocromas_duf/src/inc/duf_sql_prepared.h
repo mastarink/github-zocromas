@@ -14,6 +14,7 @@ int duf_sql_changes( void );
 
 
 const char *duf_sql_column_name( duf_stmnt_t * stmt, int index );
+const char *duf_sql_column_decltype( mas_sqlite_stmt_t * stmt, int index );
 int duf_sql_column_count( duf_stmnt_t * stmt );
 
 unsigned long long duf_sql_last_insert_rowid( void );

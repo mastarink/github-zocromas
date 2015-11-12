@@ -29,7 +29,7 @@ duf_sql_step( mas_sqlite_stmt_t * stmt )
   DEBUG_STARTR( r );
 
   DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
-  mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb() ) );
+  mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb(  ) ) );
   DUF_TRACE( sql, 2, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
   /* assert( mas_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
   DEBUG_ENDR( r );
@@ -69,6 +69,12 @@ const char *
 duf_sql_column_name( mas_sqlite_stmt_t * stmt, int index )
 {
   return mas_sqlite_column_name( stmt, index );
+}
+
+const char *
+duf_sql_column_decltype( mas_sqlite_stmt_t * stmt, int index )
+{
+  return mas_sqlite_column_decltype( stmt, index );
 }
 
 int

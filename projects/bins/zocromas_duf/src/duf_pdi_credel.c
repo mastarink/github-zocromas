@@ -101,7 +101,7 @@ duf_pdi_delete( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
   DOR( r, duf_pdi_close( pdi ) );

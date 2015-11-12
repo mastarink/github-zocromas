@@ -58,6 +58,7 @@ const char *mas_sqlite_column_string( mas_sqlite_stmt_t * stmt, int icol );
 
 
 const char *mas_sqlite_column_name( mas_sqlite_stmt_t * stmt, int index );
+const char *mas_sqlite_column_decltype( mas_sqlite_stmt_t * stmt, int index );
 int mas_sqlite_column_count( mas_sqlite_stmt_t * stmt );
 
 

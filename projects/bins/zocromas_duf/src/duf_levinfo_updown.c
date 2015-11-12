@@ -87,7 +87,7 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf
   DEBUG_STARTR( r );
   assert( pdi );
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   DOR( r, duf_levinfo_check_depth( pdi, node_type ) ); /* no side effects */
   if ( DUF_NOERROR( r ) )
@@ -112,7 +112,7 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf
     if ( node_type == DUF_NODE_NODE )
       duf_levinfo_countdown_dirs( pdi ); /* may change levinfo (for upper level) */
   }
-  assert( pdi->pathinfo.depth + 0 /* not yet 1 */  == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth - 1 /* not yet ... */  == duf_levinfo_calc_depth( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -130,7 +130,7 @@ duf_levinfo_godown_dirid( duf_depthinfo_t * pdi, const char *itemname, unsigned 
     duf_levinfo_init_level( pdi, itemname, dirid, node_type ); /* resets levinfo (currenl level) */
 
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -152,7 +152,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t
                                     node_type ) );
 #endif
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -171,7 +171,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stm
     int d;
 
 
-    assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
     d = ++pdi->pathinfo.depth;
     assert( d >= 0 );
@@ -196,7 +196,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stm
     assert( duf_levinfo_dirid( pdi ) != 0 );
     assert( d == pdi->pathinfo.depth );
 
-    assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
   }
   DEBUG_ENDR( r );
 }
@@ -231,7 +231,7 @@ duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, duf_node_type_t node_type
   assert( pdi );
 
   DOR_LOWERE( r, duf_levinfo_godown_db( pdi, node_type, pstmt ), DUF_ERROR_TOO_DEEP );
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   DEBUG_ENDR_LOWERE( r, DUF_ERROR_TOO_DEEP );
 }
@@ -250,7 +250,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
   {
     int d;
 
-    assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
 
     d = pdi->pathinfo.depth--;

@@ -99,7 +99,7 @@ mas_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
 }
 
 int
-mas_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
+mas_sqlite_exec_c( const char *sql, int constraint_ignore __attribute__ ( ( unused ) ), int *pchanges )
 {
   int r3;
   char *emsg = NULL;
@@ -188,7 +188,7 @@ mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
       /* assert( 0 ); */
     }
     fprintf( stderr, "\nSQLITE ERROR %d: %s\n", r3, sqlite3_errmsg( pDb ) );
-    assert(0);
+    assert( 0 );
   }
   /* assert( r3 == 0 ); */
   /* assert( r3 != SQLITE_MISUSE ); */
@@ -360,6 +360,12 @@ mas_sqlite_column_name( mas_sqlite_stmt_t * stmt, int index )
 
   str = sqlite3_column_name( stmt, index );
   return str;
+}
+
+const char *
+mas_sqlite_column_decltype( mas_sqlite_stmt_t * stmt, int index )
+{
+  return sqlite3_column_decltype( stmt, index );
 }
 
 int

@@ -199,7 +199,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
   if ( pdi->inited )
   {
 
-    assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
     duf_clear_context( &pdi->context );
     DOR( r, duf_levinfo_delete( pdi ) );
@@ -259,7 +259,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  assert( pdi->pathinfo.depth + 1 == duf_levinfo_count( pdi ) );
+  assert( pdi->pathinfo.depth  == duf_levinfo_calc_depth( pdi ) );
 
   DOR( r, duf_pdi_shut( pdi ) );
   if ( pdi->pdi_name && pdi->db_attached_selected && !pdi->attached_copy )

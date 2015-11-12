@@ -9,6 +9,31 @@
 /* ###################################################################### */
 #include "duf_sql_field.h"
 /* ###################################################################### */
+void
+__duf_sql_dump_row( duf_stmnt_t * pstmt )
+{
+  for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+  {
+    const char *t;
+    const char *n;
+    const char *v;
+
+    t = duf_sql_column_decltype( pstmt, icol );
+    n = duf_sql_column_name( pstmt, icol );
+    v = duf_sql_column_string( pstmt, icol );
+    if ( v )
+    {
+      if ( t && 0 == strcasecmp( t, "integer" ) )
+        T( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( pstmt, icol ) );
+      else if ( t && 0 == strcasecmp( t, "text" ) )
+        T( "%2d[%8s]:\t %11s = \t\"%s\"", icol, t ? t : "-", n, v );
+      else
+        T( "%2d[%8s]:\t %11s = \t'%s'", icol, t ? t : "-", n, v );
+    }
+    else
+      T( "@@@%2d[%8s]:\t %11s = \t NULL", icol, t ? t : "-", n );
+  }
+}
 
 int
 __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )

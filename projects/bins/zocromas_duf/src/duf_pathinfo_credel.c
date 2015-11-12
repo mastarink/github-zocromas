@@ -21,35 +21,36 @@
 /* ###################################################################### */
 
 int
-duf_pi_levinfo_count( duf_pathinfo_t * pi )
+duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
 {
   DEBUG_STARTR( r );
   assert( pi );
-  r = pi->levinfo ? duf_li_count( pi->levinfo ) : 0;
+  r = pi->levinfo ? duf_li_calc_depth( pi->levinfo ) : 0;
   DEBUG_ENDR( r );
 }
 
 int
-duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t count )
+duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
 {
   DEBUG_STARTR( r );
 
   assert( pi );
-  if ( count )
+  if ( maxdepth )
   {
-    pi->levinfo_count = count;
+    pi->maxdepth = maxdepth;
     pi->levinfo = pli;
+    pi->depth = duf_li_calc_depth( pli );
     assert( pi->levinfo );
   }
   DEBUG_ENDR( r );
 }
 
 int
-duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count )
+duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t maxdepth )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pi_levinfo_set( pi, duf_li_create( count ), count ) );
+  DOR( r, duf_pi_levinfo_set( pi, duf_li_create( maxdepth ), maxdepth ) );
 
   DEBUG_ENDR( r );
 }
@@ -60,7 +61,7 @@ duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
   assert( pidst );
   assert( pisrc );
   memcpy( pidst, pisrc, sizeof( duf_pathinfo_t ) );
-  pidst->levinfo = ( no_li ) ? NULL : duf_li_clone( pisrc->levinfo, pisrc->levinfo_count );
+  pidst->levinfo = ( no_li ) ? NULL : duf_li_clone( pisrc->levinfo, pisrc->maxdepth );
 }
 
 int

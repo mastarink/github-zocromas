@@ -237,6 +237,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     duf_pdi_set_opendir( pdi, sccb->def_opendir );
 
     assert( pdi );
+    assert( pdi->pathinfo.levinfo );
     assert( duf_levinfo_dirid( pdi ) );
     assert( duf_levinfo_path( pdi ) );
     sccbh = duf_sccb_handle_create(  );
@@ -249,6 +250,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #endif
 #if 1
     PDI = duf_pdi_clone( pdi, 0 /* no_li */  );
+    assert( PDI->pathinfo.levinfo );
     PDICLONED = 1;
 #else
     PDI = pdi;
@@ -299,6 +301,7 @@ TODO scan mode
       {
         DUF_TRACE( explain, 0, "no init scan" );
       }
+      assert( PDI->pathinfo.levinfo );
       /* T(">>> %llu : %llu", PU->std_leaf_set,  PU->std_node_set); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),

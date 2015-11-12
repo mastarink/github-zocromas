@@ -46,11 +46,11 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
 }
 
 int
-duf_levinfo_count( duf_depthinfo_t * pdi )
+duf_levinfo_calc_depth( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pi_levinfo_count( &pdi->pathinfo ) );
+  DOR( r, duf_pi_levinfo_calc_depth( &pdi->pathinfo ) );
 
   DEBUG_ENDR( r );
 }

@@ -87,7 +87,7 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   assert( PDI->pathinfo.depth >= 0 );
 
 
-  assert( PDI->pathinfo.depth + 1 == duf_levinfo_count( PDI ) );
+  assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
 
 
   /* data from db at pstmt */
@@ -106,7 +106,7 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
 
     DOR( r, duf_sel_cb2_node_at( scanstage, pstmt, str_cb2, sccbh ) );
 
-    assert( PDI->pathinfo.depth + 1 == duf_levinfo_count( PDI ) );
+    assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
 
     DOR( r, duf_levinfo_goup( PDI ) );
   }
