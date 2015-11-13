@@ -368,16 +368,42 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   DEBUG_ENDR( r );
 }
 
+/* 20151113.132638 */
 static int
 duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
 {
   DEBUG_STARTR( r );
+/* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
+/* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
+/* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
+/* ╌ ╍ ╎ ╏ ═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟ ╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬ */
+/* ╭ ╮ ╯ ╰ ╱ ╲ ╳ ╴ ╵ ╶ ╷ ╸ ╹ ╺ ╻ ╼ ╽ ╾ ╿                                                         */
+/* ₴ ☑ ♒ */
+/* ⬅⬇⬆➡🔜  🆘  🐰 */
+/* ╔═╦══╤╗ ┏━┳━━┯┓ ┌─┰──┬┐ ╲    ╲   ╱    ╱   ╭─────╮
+ * ║ ║  │║ ┃ ┃  │┃ │ ┃  ││  ╲    ╲ ╱    ╱    │     │       ╷
+ * ╠═╬══╪╣ ┣━╋━━┿┫ ┝━╋━━┿┥   ╲    ╳    ╱     │     │      ╶┼╴
+ * ╟─╫──┼╢ ┠─╂──┼┨ ├─╂──┼┤    ╲  ╱ ╲  ╱      ╰─────╯       ╵
+ * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
+ * */
+
+
   unsigned flags = 0;
   int du = d - 1;
 
   long ndu = 0;
   long nchild = 0;
   int is_leaf = duf_levinfo_is_leaf_d( pdi, d );
+
+#define DUF_TREE_SPACE     " "
+#define DUF_TREE_HLINE     "─"
+#define DUF_TREE_VRLINE2   "╞"
+#define DUF_TREE_VLINE     "│"
+#define DUF_TREE_VRLINE    "├"
+#define DUF_TREE_URLINE    "└"
+#define DUF_TREE_PRE_NODE DUF_TREE_SPACE
+#define DUF_TREE_PRE_LEAF DUF_TREE_SPACE
+#define DUF_TREE_PRE_INTER DUF_TREE_SPACE
 
 #if 0
 #  define DUF_TREE_FLAG_NONE 0x0
@@ -451,27 +477,41 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
    *
    * */
 #if 1
-  if ( !( flags & DUF_TREE_FLAG_HERE ) || ( flags & DUF_TREE_FLAG_LEAF ) )
-    /* if ( flags & ( DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_LEAF ) == DUF_TREE_FLAG_LEAF ) */
   {
-    if ( flags & DUF_TREE_FLAG_CONTINUE )
-      strncpy( pbuffer, "│", bfsz );
+    const char *s1 = NULL;
+    const char *s2 = NULL;
+
+    if ( flags & DUF_TREE_FLAG_HERE )
+    {
+#  if 1
+      if ( flags & DUF_TREE_FLAG_CONTINUE )
+        s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_VLINE : DUF_TREE_PRE_NODE DUF_TREE_VRLINE;
+      else
+        s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_SPACE : DUF_TREE_PRE_NODE DUF_TREE_URLINE;
+#  else
+      if ( flags & DUF_TREE_FLAG_CONTINUE )
+        s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_VRLINE2 : DUF_TREE_PRE_NODE DUF_TREE_VRLINE;
+      else
+        s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_SPACE : DUF_TREE_PRE_NODE DUF_TREE_URLINE;
+#  endif
+    }
     else
-      strncpy( pbuffer, " ", bfsz );
-  }
-  else
-  {
-    if ( flags & DUF_TREE_FLAG_CONTINUE )
-      strncpy( pbuffer, "├", bfsz );
+    {
+      if ( flags & DUF_TREE_FLAG_CONTINUE )
+        s1 = DUF_TREE_PRE_INTER DUF_TREE_VLINE;
+      else
+        s1 = DUF_TREE_PRE_INTER DUF_TREE_SPACE;
+    }
+
+    if ( flags & DUF_TREE_FLAG_LEAF )
+      s2 = DUF_TREE_SPACE;
+    else if ( ( flags & DUF_TREE_FLAG_HERE ) )
+      s2 = DUF_TREE_HLINE DUF_TREE_HLINE DUF_TREE_SPACE;
     else
-      strncpy( pbuffer, "└", bfsz );
+      s2 = DUF_TREE_SPACE DUF_TREE_SPACE DUF_TREE_SPACE;
+    strncpy( pbuffer, s1, bfsz );
+    strncat( pbuffer, s2, bfsz );
   }
-  if ( flags & DUF_TREE_FLAG_LEAF )
-    strncat( pbuffer, "  ", bfsz );
-  else if ( ( flags & DUF_TREE_FLAG_HERE ) )
-    strncat( pbuffer, "─── ", bfsz );
-  else
-    strncat( pbuffer, "    ", bfsz );
 #elif 0
   if ( flags & DUF_TREE_FLAG_CONTINUE )
   {
@@ -548,6 +588,7 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
   DEBUG_ENDR( r );
 }
 
+/* 20151113.132643 */
 static int
 duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
 {
@@ -556,20 +597,6 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_
 
   int d0 = duf_pdi_topdepth( pdi );
   int maxd = duf_pdi_depth( pdi );
-
-/* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
-/* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
-/* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
-/* ╌ ╍ ╎ ╏ ═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟ ╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬ */
-/* ╭ ╮ ╯ ╰ ╱ ╲ ╳ ╴ ╵ ╶ ╷ ╸ ╹ ╺ ╻ ╼ ╽ ╾ ╿                                                         */
-/* ₴ ☑ ♒ */
-/* ⬅⬇⬆➡🔜  🆘  🐰 */
-/* ╔═╦══╤╗ ┏━┳━━┯┓ ┌─┰──┬┐ ╲    ╲   ╱    ╱   ╭─────╮
- * ║ ║  │║ ┃ ┃  │┃ │ ┃  ││  ╲    ╲ ╱    ╱    │     │       ╷
- * ╠═╬══╪╣ ┣━╋━━┿┫ ┝━╋━━┿┥   ╲    ╳    ╱     │     │      ╶┼╴
- * ╟─╫──┼╢ ┠─╂──┼┨ ├─╂──┼┤    ╲  ╱ ╲  ╱      ╰─────╯       ╵
- * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
- * */
 
   if ( d0 == 0 )
     d0 = 1;
