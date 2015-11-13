@@ -1,0 +1,324 @@
+Duf=/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/ filter=*.ac {
+ CD=.
+ c=src filter="*.c" {
+   duf.c
+   data_optable.c
+   data_optable_debug.c
+   data_optable_experimental.c
+   data_optable_filter.c
+   data_optable_flag.c
+   data_optable_flag_obsolete.c
+   data_optable_format.c
+   data_optable_fs.c
+   data_optable_help.c
+   data_optable_info.c
+   data_optable_interactive.c
+   data_optable_io.c
+   data_optable_redo_and_obsolete.c
+   data_optable_sccb.c
+   data_optable_sflag.c
+   data_optable_str.c
+   data_optable_trace.c
+   data_optable_uplus.c
+   duf_action_table.c
+   duf_atable_sccb.c
+   duf_atable_sccb_eval.c
+   duf_cli.c
+   duf_config.c
+   duf_config_util.c
+   duf_context.c
+   duf_dbg.c
+   duf_dh.c
+   duf_dirent.c
+   duf_experiment.c
+   duf_filedata.c
+   duf_fileinfo.c
+   dufjtest.c
+   duf_levinfo.c
+   duf_levinfo_context.c
+   duf_levinfo_credel.c
+   duf_levinfo_dbinit.c
+   duf_levinfo_init.c
+   duf_levinfo_openclose.c
+   duf_levinfo_ref.c
+   duf_levinfo_stat.c
+   duf_levinfo_updown.c
+   duf_li.c
+   duf_li_credel.c
+   duf_maindb.c
+   duf_maindb_info.c
+   duf_match.c
+   duf_option.c
+   duf_option_cmd.c
+   duf_option_descr.c
+   duf_option_extended.c
+   duf_option_find.c
+   duf_option_fs.c
+   duf_option_help.c
+   duf_option_misc.c
+   duf_option_names.c
+   duf_options.c
+   duf_option_sccb.c
+   duf_options_cli.c
+   duf_options_config.c
+   duf_options_env.c
+   duf_options_file.c
+   duf_options_interactive.c
+   duf_options_string.c
+   duf_option_tmpdb.c
+   duf_option_typed.c
+   duf_path2db.c
+   duf_path2dirid.c
+   duf_pathinfo_credel.c
+   duf_pathinfo_ref.c
+   duf_pdi_atable_sccb_eval.c
+   duf_pdi_attach.c
+   duf_pdi.c
+   duf_pdi_context.c
+   duf_pdi_credel.c
+   duf_pdi_ref.c
+   duf_pdi_reinit.c
+   duf_pdi_sccb_eval.c
+   duf_pdi_stmt.c
+   duf_printb.c
+   duf_print.c
+   duf_pstmt_levinfo.c
+   duf_sccb_begfin.c
+   duf_sccb.c
+   duf_sccb_eval.c
+   duf_sccb_eval_std.c
+   duf_sccb_handle.c
+   duf_sccbh_eval_all.c
+   duf_sccbh_eval.c
+   duf_sccbh_eval_fs.c
+   duf_sccbh_eval_leaf.c
+   duf_sccbh_eval_sql_set.c
+   duf_sccb_scanstage.c
+   duf_sel_cb_leaf.c
+   duf_sel_cb_node.c
+   duf_service.c
+   duf_sql_bind.c
+   duf_sql_error.c
+   duf_sql_field.c
+   duf_sql_open.c
+   duf_sql_positional.c
+   duf_sql_prepared.c
+   duf_status.c
+   duf_sys_wrap.c
+   duf_tags.c
+   duftest.c
+   duf_ufilter_bind.c
+   duf_ufilter.c
+   duf_ufilter_ref.c
+   duf_utils.c
+   duf_xtended_table.c
+   evsql_begfin.c
+   evsql_selector.c
+   mod_dummy_uni.c
+   sql_beginning_common.c
+   sql_beginning_create.c
+   sql_beginning_selected.c
+   sql_beginning_tables.c
+   sql_beginning_vacuum.c
+   sql_update_selected.c
+   std_fieldsets.c
+   std_mod_sets.c
+   std_selectors.c
+ }
+ h=src/inc filter="*.h" {
+duf_action_table.h
+duf_atable_sccb_eval.h
+duf_atable_sccb.h
+duf_base_types.h
+duf_cli.h
+duf_cli_types.h
+duf_config4trace_ref.h
+duf_config_defs.h
+duf_config.h
+duf_config_ref.h
+duf_config_types.h
+duf_config_util.h
+duf_config_wref.h
+duf_context.h
+duf_dbg.h
+duf_debug_defs.h
+duf_defs.h
+duf_dh.h
+duf_dirent.h
+duf_dodefs.h
+duf_errorn_defs.h
+duf_experiment.h
+duf_filedata.h
+duf_fileinfo.h
+duf_fileinfo_types.h
+duf_flags_types.h
+duf_format_types.h
+duf_fun_types.h
+duf.h
+duf_hook_types.h
+duf_item_types.h
+duf_levinfo_context.h
+duf_levinfo_credel.h
+duf_levinfo_dbinit.h
+duf_levinfo.h
+duf_levinfo_init.h
+duf_levinfo_openclose.h
+duf_levinfo_ref_def.h
+duf_levinfo_ref.h
+duf_levinfo_stat.h
+duf_levinfo_types.h
+duf_levinfo_updown.h
+duf_li_credel.h
+duf_li.h
+duf_maindb.h
+duf_maindb_info.h
+duf_maintenance.h
+duf_maintenance_options.h
+duf_match.h
+duf_mod_defs.h
+duf_optable_def.h
+duf_option_cmd.h
+duf_option_defs.h
+duf_option_descr.h
+duf_option_extended.h
+duf_option_find.h
+duf_option_fs.h
+duf_option_fs_types.h
+duf_option.h
+duf_option_help.h
+duf_option_misc.h
+duf_option_names.h
+duf_option_sccb.h
+duf_options_cli.h
+duf_options_config.h
+duf_options_enum.h
+duf_options_env.h
+duf_options_file.h
+duf_options.h
+duf_options_interactive.h
+duf_options_string.h
+duf_option_tmpdb.h
+duf_option_typed_defs.h
+duf_option_typed.h
+duf_option_types.h
+duf_path2db.h
+duf_path2dirid.h
+duf_pathinfo_credel.h
+duf_pathinfo_ref_def.h
+duf_pathinfo_ref.h
+duf_pdi_atable_sccb_eval.h
+duf_pdi_attach.h
+duf_pdi_context.h
+duf_pdi_credel.h
+duf_pdi.h
+duf_pdi_ref.h
+duf_pdi_reinit.h
+duf_pdi_sccb_eval.h
+duf_pdi_stmt.h
+duf_pdi_types.h
+duf_printb.h
+duf_print.h
+duf_printn_defs.h
+duf_printn_defs_preset.h
+duf_pstmt_levinfo.h
+duf_record_types.h
+duf_scan_types.h
+duf_sccb_begfin.h
+duf_sccb_def.h
+duf_sccb_eval.h
+duf_sccb_eval_std.h
+duf_sccb.h
+duf_sccb_handle.h
+duf_sccbh_eval_all.h
+duf_sccbh_eval_fs.h
+duf_sccbh_eval.h
+duf_sccbh_eval_leaf.h
+duf_sccbh_eval_sql_set.h
+duf_sccbh_shortcuts.h
+duf_sccb_scanstage.h
+duf_sel_cb_leaf.h
+duf_sel_cb_node.h
+duf_service.h
+duf_sql_bind.h
+duf_sql_defs.h
+duf_sql_error.h
+duf_sql_field.h
+duf_sql_open.h
+duf_sql_positional.h
+duf_sql_prepared.h
+duf_sql_stmt_defs.h
+duf_sql_types.h
+duf_start_end.h
+duf_status.h
+duf_status_ref.h
+duf_status_types.h
+duf_sys_wrap.h
+duf_tags.h
+duf_tracen_defs.h
+duf_tracen_defs_preset.h
+duf_tracen_maintenance.h
+duf_ufilter_bind.h
+duf_ufilter.h
+duf_ufilter_ref.h
+duf_ufilter_types.h
+duf_utils.h
+duf_xtended_table.h
+evsql_begfin.h
+evsql_selector.h
+sql_beginning_common.h
+sql_beginning_create.h
+sql_beginning_selected.h
+sql_beginning_tables.h
+sql_beginning_types.h
+sql_beginning_vacuum.h
+sql_selected_defs.h
+sql_tables_defs.h
+sql_tables_global_defs.h
+std_fieldsets.h
+std_mod_sets.h
+std_selectors.h
+ }
+ m=mod filter="*.c" {
+mod_collect_mime_uni.c
+mod_crc32_uni.c
+mod_dialog.c
+mod_directories_uni.c
+mod_dir_print_uni.c
+mod_dir_priority.c
+mod_dumplet.c
+mod_exif_uni.c
+mod_filedata_uni.c
+mod_filenames_uni.c
+mod_md5_uni.c
+mod_save_to.c
+mod_sd5_uni.c
+mod_sha_uni.c
+mod_tagit.c
+mod_tree_print_uni.c
+}
+ mh=mod/inc filter="*.h" {
+mod_exif.h
+ } 
+ am=. filter="*.am" {
+   CD=.
+   configure.ac
+   Makefile.am
+   src/Makefile.am
+   src/inc/Makefile.am
+   mod/Makefile.am
+   mod/inc/Makefile.am
+   m4zoc/init.m4
+   m4zoc/vars0.m4
+   m4zoc/varscheck.m4
+   m4zoc/readline.m4
+   m4zoc/magic.m4
+   m4zoc/jpeg.m4
+   m4zoc/vars1.m4
+   m4zoc/am_ldflags.m4
+   m4zoc/vars2.m4
+   m4zoc/am_cflags.m4
+   m4zoc/vars3.m4
+   m4zoc/msg.m4
+   m4zoc/output.m4
+ }
+}

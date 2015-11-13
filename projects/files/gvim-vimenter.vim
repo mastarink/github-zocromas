@@ -1,32 +1,57 @@
 " echo 'in ' . expand('<sfile>')
 
 set makeprg=make\ -C\ $MSH_SHN_BUILD_DIR
-
-let  gvim_funcs=mas_localvimdirs . 'gvim-funcs.vim'
-if filereadable(gvim_funcs)
-  source `=gvim_funcs`
-else
-  echo 'Not found: ' . gvim_funcs
-endif
-
-set swb=usetab,newtab,split
-set undolevels=10000
-set virtualedit=block
-
-if exists('v:servername')
-  let vrbprefix=mas_localvimdirs . '.gvimvrb/'
-  if !isdirectory(vrbprefix)
-    call mkdir(vrbprefix)
+if isdirectory(mas_localvimdirs)
+  let  gvim_funcs=mas_localvimdirs . 'gvim-funcs.vim'
+  if filereadable(gvim_funcs)
+    source `=gvim_funcs`
+  else
+    echo 'Not found: ' . gvim_funcs
   endif
-  if !isdirectory(vrbprefix)
-    let vrbprefix=''
+
+  set swb=usetab,newtab,split
+  set undolevels=10000
+  set virtualedit=block
+
+  if exists('v:servername')
+    let mas_gvimworkbase=mas_localvimdirs . '.gvim/'
+    let mas_gvimwork=mas_gvimworkbase . strftime( "%Y%m%d" ) . '/'
+    let vrbprefix=mas_gvimwork . 'vrb/'
+    let redirprefix=mas_gvimwork . 'vrb/'
+    let infoprefix=mas_gvimwork . 'info/'
+    if exists( "*mkdir" )
+      if ( !isdirectory(mas_gvimworkbase) )
+	call mkdir( mas_gvimworkbase )
+      endif
+      if ( !isdirectory(mas_gvimwork) )
+	call mkdir( mas_gvimwork )
+      endif
+      if ( !isdirectory(vrbprefix) )
+	call mkdir( vrbprefix )
+      endif
+      if ( !isdirectory(redirprefix) )
+	call mkdir( redirprefix )
+      endif
+      if ( !isdirectory(infoprefix) )
+	call mkdir( infoprefix )
+      endif
+    endif
+    if !isdirectory(vrbprefix)
+      let vrbprefix=''
+    endif
+    if !isdirectory(redirprefix)
+      let redirprefix=''
+    endif
+    if !isdirectory(infoprefix)
+      let infoprefix=''
+    endif
+    let vrbfile=vrbprefix . v:servername . ".vrb"
+    let redirfile=redirprefix . v:servername . ".redir"
+    let viminfofile=infoprefix . v:servername . ".viminfo"
+    execute 'set verbosefile=' . vrbfile
+    execute 'redir >> ' . redirfile
+    execute "set viminfo='50,<1000,s1000,n" . viminfofile
   endif
-  let vrbfile=vrbprefix . v:servername . ".vrb"
-  let redirfile=vrbprefix . v:servername . ".redir"
-  let viminfofile=vrbprefix . v:servername . ".viminfo"
-  execute 'set verbosefile=' . vrbfile
-  execute 'redir >> ' . redirfile
-  execute "set viminfo='50,<1000,s1000,n" . viminfofile
 endif
 
 

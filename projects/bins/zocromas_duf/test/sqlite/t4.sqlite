@@ -1,0 +1,19 @@
+WITH RECURSIVE cte_paths(rowid,parentid) AS  (
+			       SELECT dpt.rowid,dpt.parentid
+			         FROM main.paths  AS dpt
+			         WHERE parentid=15
+			         UNION 
+			           SELECT ptu.rowid,ptu.parentid 
+			             FROM cte_paths 
+			             JOIN main.paths AS ptu ON( ptu.parentid=cte_paths.rowid ) 
+			             ) 
+			     SELECT COUNT(*)   
+			       FROM cte_paths  AS ptenud 
+			       LEFT JOIN main.paths AS dpt ON (ptenud.rowid=dpt.rowid);
+
+/*
+vi: ft=sql
+
+:!cat % | sqlite3  /home/mastar/.mas/lib/duf_db/test_tree/test_tree.db
+
+*/
