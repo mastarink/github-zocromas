@@ -64,12 +64,12 @@ duf_li_clear_n( duf_levinfo_t * pli, unsigned maxdepth )
   }
 }
 
-/* void                                                    */
-/* duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth ) */
-/* {                                                       */
-/*   duf_li_clear_n( pli, maxdepth );                      */
-/*   mas_free( pli );                                      */
-/* }                                                       */
+void
+duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth )
+{
+  duf_li_clear_n( pli, maxdepth );
+  mas_free( pli );
+}
 
 static void
 duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth )
@@ -129,7 +129,7 @@ duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED
     plirev = duf_li_create( maxdepth );
 
     duf_depthinfo_t di = { 0 };
-    DOR( rpr, duf_pdi_init_min( &di, NULL /* real_path */  ) );
+    DOR( rpr, duf_pdi_init_min_r( &di, NULL /* real_path */  ) );
     /* cdirid = dirid; */
     while ( DUF_NOERROR( rpr ) )
     {
@@ -204,7 +204,7 @@ duf_nameid2li( unsigned long long nameid, unsigned maxdepth, int *pr )
     plirev = duf_li_create( maxdepth );
 
     duf_depthinfo_t di = { 0 };
-    DOR( rpr, duf_pdi_init_min( &di, NULL /* real_path */  ) );
+    DOR( rpr, duf_pdi_init_min_r( &di, NULL /* real_path */  ) );
     /* cdirid = dirid; */
     DOR( rpr, duf_nameid2li_existed( &di, nameid, &plirev[count], &dirid ) );
     if ( DUF_NOERROR( rpr ) )

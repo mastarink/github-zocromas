@@ -141,9 +141,10 @@ DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, c
 }
 #endif
 
-/* 20150914.114501 */
+/* 20151113.105524 */
+/* min, recursive */
 int
-duf_pdi_init_min( duf_depthinfo_t * pdi, const char *real_path )
+duf_pdi_init_min_r( duf_depthinfo_t * pdi, const char *real_path )
 {
   DEBUG_STARTR( r );
 

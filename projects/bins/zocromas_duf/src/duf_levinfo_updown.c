@@ -43,7 +43,7 @@ duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
     /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
 #else
     up->numchild++;
-    /* T( "@@@numchild:%lld => %lld", up->numchild + 1, up->numchild ); */
+    /* T( "@@@{%p:%p} numchild:%lld => %lld - %s", pdi, up, up->numchild - 1, up->numchild, duf_levinfo_path_up( pdi ) ); */
 #endif
   }
 }
@@ -114,8 +114,8 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf
     }
     if ( node_type == DUF_NODE_NODE )
       duf_levinfo_countdown_dirs( pdi ); /* may change levinfo (for upper level) */
+    assert( pdi->pathinfo.depth - 1 /* not yet ... */  == duf_levinfo_calc_depth( pdi ) );
   }
-  assert( pdi->pathinfo.depth - 1 /* not yet ... */  == duf_levinfo_calc_depth( pdi ) );
 
   DEBUG_ENDR( r );
 }

@@ -51,11 +51,8 @@ duf_path2dirid( const char *path, int *pr )
     DOR( rpr, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , real_path, NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
                                             0 /* opendir */  ) );
 #else
-    DOR( rpr, duf_pdi_init_min( &di, real_path ) );
+    DOR( rpr, duf_pdi_init_min_r( &di, real_path ) );
 #endif
-
-
-
     if ( DUF_NOERROR( rpr ) )
       dirid = duf_levinfo_dirid( &di );
     /* xchanges = di.changes; --- needless!? */
@@ -147,7 +144,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   DOR( rpr, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
                                           0 /* opendir */  ) );
 #else
-  DOR( rpr, duf_pdi_init_min( &di, NULL /* real_path */  ) );
+  DOR( rpr, duf_pdi_init_min_r( &di, NULL /* real_path */  ) );
 #endif
   do
   {
