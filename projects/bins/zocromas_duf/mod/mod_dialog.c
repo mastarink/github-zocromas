@@ -146,6 +146,8 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path_top( pdi ) /* duf_levinfo_path( pdi ) */ , NULL /* sql_set */ ,
                                           0 /* caninsert */ ,
                                           1 /* recursive */ ,
+                                          1 /* allow_dirs */ ,
+                                          0 /* linear */ ,
                                           0 /* opendir */  ) );
     assert( di.pup == &uf );
     DUF_TEST_R( r );

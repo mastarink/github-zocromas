@@ -28,12 +28,12 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
   assert( pdi->pathinfo.levinfo );
 
   duf_levinfo_clear_level_d( pdi, d );
-  assert( !pdi->pathinfo.levinfo[d].itemname );
 
-  /* if ( pdi->opendir ) */
+  if ( d >= 0 /* pdi->opendir */  )
   {
     duf_levinfo_t *pli;
 
+    assert( !pdi->pathinfo.levinfo[d].itemname );
     pli = &pdi->pathinfo.levinfo[d];
 
     duf_li_dbinit( pli, pstmt, node_type, d );

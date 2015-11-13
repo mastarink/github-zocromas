@@ -30,9 +30,12 @@ duf_levinfo_set_nums_d( duf_depthinfo_t * pdi, unsigned long long ndirs, unsigne
   duf_levinfo_t *pli;
 
   assert( pdi );
+  if ( d >= 0 )
+  {
+    pli = &pdi->pathinfo.levinfo[d];
+    duf_li_set_nums( pli, ndirs, nfiles );
+  }
   assert( d >= 0 );
-  pli = &pdi->pathinfo.levinfo[d];
-  duf_li_set_nums( pli, ndirs, nfiles );
 }
 #endif
 
@@ -41,16 +44,15 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->pathinfo.levinfo );
-  assert( d >= 0 );
-  duf_li_clear( &pdi->pathinfo.levinfo[d] );
+  if ( d >= 0 )
+    duf_li_clear( &pdi->pathinfo.levinfo[d] );
 }
 
 int
 duf_levinfo_calc_depth( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  int d;
 
-  DOR( r, duf_pi_levinfo_calc_depth( &pdi->pathinfo ) );
-
-  DEBUG_ENDR( r );
+  d = duf_pi_levinfo_calc_depth( &pdi->pathinfo );
+  return d;
 }

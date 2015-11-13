@@ -151,7 +151,7 @@
    return st ? st->st_ ## _fld : 0; \
  } \
  DUF_LEVINFO_FC( _typ ## _t, stat_ ## _name ) DUF_LEVINFO_FC_UP( _typ ## _t, stat_ ## _name )
- 
+
 
 #  define DUF_LEVINFO_ST_FLD_NAME(_fld, _name) DUF_LEVINFO_ST_TYP_FLD_NAME(_fld, _fld, _name)
 #  define DUF_LEVINFO_ST_TYP_FLD(_typ, _fld) DUF_LEVINFO_ST_TYP_FLD_NAME(_typ, _fld, _fld)

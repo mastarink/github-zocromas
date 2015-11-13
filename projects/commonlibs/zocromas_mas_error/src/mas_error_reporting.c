@@ -358,6 +358,9 @@ mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
                            ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     }
+    assert( func );
+    assert( *func );
+    assert( line );
   }
 }
 

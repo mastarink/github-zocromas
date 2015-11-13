@@ -84,6 +84,7 @@ typedef union
 typedef struct
 {
   unsigned recursive:1;
+  unsigned linear:1;
 } duf_rfilter_flags_t;
 
 typedef union

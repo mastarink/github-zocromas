@@ -416,7 +416,7 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
- 
+
   /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
 
   /* I. duf_all_options -- STAGE_PRESETUP */
@@ -471,8 +471,10 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     for ( int ia = DUF_CONFIGG( cli.targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
     {
-      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-                                      NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ) ) );
+      DOR( r,
+           duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+                                   NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
+                                   DUF_UG_FLAG( linear ) ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
       DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     }

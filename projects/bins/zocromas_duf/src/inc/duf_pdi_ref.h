@@ -24,6 +24,8 @@ int duf_pdi_reldepth( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unuse
 
 
 int duf_pdi_recursive( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );
+int duf_pdi_allow_dirs( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );
+int duf_pdi_linear( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );
 int duf_pdi_opendir( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused_result ) );
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
 

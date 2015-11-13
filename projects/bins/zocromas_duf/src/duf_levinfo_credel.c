@@ -14,13 +14,11 @@
 /* ###################################################################### */
 
 int
-duf_levinfo_set( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
+duf_levinfo_set_li( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
 {
   DEBUG_STARTR( r );
  
-  assert( pli[0].itemname );
   DOR( r, duf_pi_levinfo_set( &pdi->pathinfo, pli, maxdepth ) );
-  assert( pli[0].itemname );
 
   DEBUG_ENDR( r );
 }

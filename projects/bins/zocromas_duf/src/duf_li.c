@@ -48,16 +48,16 @@ duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs )
 int
 duf_li_calc_depth( const duf_levinfo_t * pli )
 {
-  int cnt = -1;
+  int d = -1;
 
   while ( pli && pli->itemname )
   {
-    /* if ( cnt < 0 ) */
-    /*   cnt = 0;     */
-    cnt++;
+    /* if ( d < 0 ) */
+    /*   d = 0;     */
+    d++;
     pli++;
   }
-  return cnt;
+  return d;
 }
 
 char *

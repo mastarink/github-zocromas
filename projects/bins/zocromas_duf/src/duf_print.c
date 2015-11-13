@@ -69,6 +69,7 @@ typedef enum
   DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p', /* move to position */
   DUF_SFMT_CHR_PREFIX = /*             */ 'P', /* prefix */
   DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q', /* seq_node */
+  DUF_SFMT_CHR_SEQ_ROW = /*            */ 'w', /* seq_row */
   DUF_SFMT_CHR_SEQ = /*                */ 'Q', /* seq */
   DUF_SFMT_CHR_REALPATH = /*           */ 'r', /* realpath */
   DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R', /* relative realpath (relative to 'top level') */
@@ -140,6 +141,19 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
 #endif
 
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
+    swidth += strlen( pbuffer );
+    break;
+  case DUF_SFMT_CHR_SEQ_ROW:   /* seq_row */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
+    if ( v )
+      snprintf( format, fbsz, "%%%ldllu", v );
+    else
+      snprintf( format, fbsz, "%%llu" );
+#endif
+
+    snprintf( pbuffer, bfsz, format, pdi->seq_row );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_LEAF:  /* seq_leaf */
@@ -689,6 +703,7 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
     swidth += strlen( pbuffer );
     break;
   default:
+    T( "@fmt %c", c );
     pbuffer += strlen( pbuffer );
     *pbuffer++ = '%';
     if ( v )

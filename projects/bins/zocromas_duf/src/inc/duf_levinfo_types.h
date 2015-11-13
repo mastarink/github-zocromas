@@ -141,6 +141,8 @@ typedef struct duf_depthinfo_s
   unsigned sql_selected_done:1;
   unsigned opendir:1;
   unsigned recursive:1;
+  unsigned allow_dirs:1;
+  unsigned linear:1;
   unsigned pyp_created:1;
 
   char *db_attached_selected;
@@ -159,6 +161,7 @@ typedef struct duf_depthinfo_s
   unsigned long long seq;
   unsigned long long seq_leaf;
   unsigned long long seq_node;
+  unsigned long long seq_row;
   duf_items_t items;
   const duf_ufilter_t *pup;
   duf_yfilter_t *pyp;

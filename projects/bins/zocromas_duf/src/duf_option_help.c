@@ -784,7 +784,22 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  -duR  --db-name=test_tree --cd=test/tree  --evaluate=tree 	- %s", " -= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20151029.182731 ============" );
-  DUF_PRINTF( 0, "  run -vv --trace-stdout --output-level=0 --trace-temp=1 --trace-sql=0 -dfuR --db-name=test_tree test/tree --use-format=3 --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --tree  	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0,
+              "  run -vv --trace-stdout --output-level=0 --trace-temp=1 --trace-sql=0 -dfuR --db-name=test_tree test/tree --use-format=3 --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --tree  	- %s",
+              " -= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20151113.164253 ============" );
+  DUF_PRINTF( 0, "  run     --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -L 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run     --std-leaf-set=2 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -L 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run     --std-leaf-set=2 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -R 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run     --std-leaf-set=2 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -Rdu 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run     --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -uL 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0,
+              "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --ls test/tree/ -L 	- %s",
+              " -= \"\" =-" );
+  DUF_PRINTF( 0,
+              "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 --sha1id=380 --ls test/tree/ -L 	- %s",
+              " -= \"\" =-" );
 
 
   DUF_PRINTF( 0, "=============================================================" );

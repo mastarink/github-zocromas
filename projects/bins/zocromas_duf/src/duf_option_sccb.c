@@ -87,6 +87,7 @@ duf_option_$_evaluate_sccb( const char *names )
     }
     T( "han:%p", han );
   }
+  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) );
   if ( duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) )
   {
 #if 0
@@ -97,7 +98,6 @@ duf_option_$_evaluate_sccb( const char *names )
   }
   else
   {
-    T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) );
   }
   DEBUG_ENDR( r );
 }
@@ -162,7 +162,8 @@ duf_option_$_cd( const char *s )
       /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
 
       DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
-                                      duf_pdi_recursive( DUF_CONFIGG( scn.pdi ) ) /*  */  ) );
+                                      duf_pdi_recursive( DUF_CONFIGG( scn.pdi ) ), duf_pdi_allow_dirs( DUF_CONFIGG( scn.pdi ) ),
+                                      duf_pdi_linear( DUF_CONFIGG( scn.pdi ) ) ) );
     }
     mas_free( new_path );
 #else

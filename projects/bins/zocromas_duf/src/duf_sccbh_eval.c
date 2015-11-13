@@ -51,6 +51,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
     DUF_PRINTF( 0, " summary; seq:     %llu", PDI->seq );
     DUF_PRINTF( 0, " summary; seq-leaf:%llu", PDI->seq_leaf );
     DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
+    DUF_PRINTF( 0, " summary;  seq-row:%llu", PDI->seq_row );
     if ( PU->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
     DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
@@ -106,14 +107,14 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
 #if 0
   sql_set = duf_sccb_get_sql_set( SCCB, node_type );
 #else
-  sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set  );
+  sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set );
 #endif
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
   if ( sql_set && sql_set->selector2 && sql_set->fieldset )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
-    DUF_TRACE( scan, 10, "ql%llu / qn%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq, SCCB->title );
+    DUF_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );
 
     DUF_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, duf_levinfo_dirid( PDI ),
                duf_uni_scan_action_title( SCCB ), SCCB->name );

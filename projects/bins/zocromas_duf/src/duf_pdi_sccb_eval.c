@@ -72,9 +72,9 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 
   assert( pdi );
   
-  {
-    assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
-  }
+
+  assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
+
 
 #if 0
   if ( DUF_NOERROR( r ) )

@@ -58,6 +58,9 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
     int delta;
     int rgd = 0;
 
+    /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
+    DUF_TRACE( temp, 2, "@%d: check depth #%llu: %s - %llu: %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ),
+               duf_levinfo_nameid( pdi ), duf_levinfo_itemtruename( pdi ) );
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
     delta = 0;
     /* if ( duf_pdi_recursive( pdi ) )               */
@@ -131,7 +134,6 @@ duf_levinfo_godown_dirid( duf_depthinfo_t * pdi, const char *itemname, unsigned 
   DOR( r, _duf_levinfo_godown( pdi, itemname, node_type ) ); /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
   if ( DUF_NOERROR( r ) )
     duf_levinfo_init_level( pdi, itemname, dirid, node_type ); /* resets levinfo (currenl level) */
-
 
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 

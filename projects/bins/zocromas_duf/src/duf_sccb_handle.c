@@ -306,7 +306,7 @@ TODO scan mode
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
                                    duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set, PU->std_node_set ), 0 /* caninsert */ ,
-                                   duf_pdi_recursive( PDI ) ) );
+                                   duf_pdi_recursive( PDI ), duf_pdi_allow_dirs( PDI ), duf_pdi_linear( PDI ) ) );
     }
   }
   else

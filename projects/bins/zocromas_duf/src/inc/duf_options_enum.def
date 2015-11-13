@@ -26,6 +26,7 @@
   /* /trace */
 
   ENUM_WRAP_V(FLAG_RECURSIVE , 'R')
+  ENUM_WRAP_V(FLAG_LINEAR , 'L')
   /* ENUM_WRAP_V(TREE_TO_DB , 'B') */
   ENUM_WRAP_V(FLAG_ADD_PATH , 'P')
 

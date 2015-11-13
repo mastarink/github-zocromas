@@ -23,10 +23,10 @@
 int
 duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
 {
-  DEBUG_STARTR( r );
+  int d;
   assert( pi );
-  r = pi->levinfo ? duf_li_calc_depth( pi->levinfo ) : 0;
-  DEBUG_ENDR( r );
+  d = pi->levinfo ? duf_li_calc_depth( pi->levinfo ) : 0;
+  return d;
 }
 
 void

@@ -64,18 +64,18 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
           pdi2 = duf_pdi_clone( PDI, 1 /* no_li */  );
 /*   duf_levinfo_create( pdi2 ); */
 #    if 1
-          /* T( "B %d -- %d/%d", pdi2->pathinfo.depth + 1, duf_levinfo_calc_depth( pdi2 ), duf_li_calc_depth( pli ) ); */
-          duf_levinfo_set( pdi2, pli, PDI->pathinfo.maxdepth );
+          /* T( "B %d -- %d/%d", pdi2->pathinfo.depth, duf_levinfo_calc_depth( pdi2 ), duf_li_calc_depth( pli ) ); */
+          duf_levinfo_set_li( pdi2, pli, PDI->pathinfo.maxdepth );
           {
             if ( duf_levinfo_dirid( pdi2 ) != duf_levinfo_dirid_up( pdi2 ) || pdi2->pathinfo.depth != duf_levinfo_calc_depth( pdi2 ) )
             {
               __duf_sql_dump_row( pstmt );
               T( "P  nameid:%llu; (dirid:%3llu/%3llu) depth(%d/%d) [%s - %s:%llu/%s:%llu] %s(%d)", duf_levinfo_nameid( PDI ),
-                 duf_levinfo_dirid( PDI ), duf_levinfo_dirid_up( PDI ), PDI->pathinfo.depth + 1, duf_levinfo_calc_depth( PDI ),
+                 duf_levinfo_dirid( PDI ), duf_levinfo_dirid_up( PDI ), PDI->pathinfo.depth, duf_levinfo_calc_depth( PDI ),
                  duf_levinfo_path( PDI ), duf_levinfo_itemtruename( PDI ), duf_levinfo_nameid( PDI ), duf_levinfo_itemtruename_up( PDI ),
                  duf_levinfo_nameid_up( PDI ), duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_levinfo_node_type( PDI ) );
               T( "p2 nameid:%llu; (dirid:%3llu/%3llu) depth(%d/%d) [%s - %s:%llu/%s:%llu] %s(%d)", duf_levinfo_nameid( pdi2 ),
-                 duf_levinfo_dirid( pdi2 ), duf_levinfo_dirid_up( pdi2 ), pdi2->pathinfo.depth + 1, duf_levinfo_calc_depth( pdi2 ),
+                 duf_levinfo_dirid( pdi2 ), duf_levinfo_dirid_up( pdi2 ), pdi2->pathinfo.depth, duf_levinfo_calc_depth( pdi2 ),
                  duf_levinfo_path( pdi2 ), duf_levinfo_itemtruename( pdi2 ), duf_levinfo_nameid( pdi2 ), duf_levinfo_itemtruename_up( pdi2 ),
                  duf_levinfo_nameid_up( pdi2 ), duf_nodetype_name( duf_levinfo_node_type( pdi2 ) ), duf_levinfo_node_type( pdi2 ) );
             }
@@ -105,7 +105,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
 
           pli = duf_nameid2li( duf_levinfo_nameid( PDI ), PDI->pathinfo.maxdepth, &r );
           if ( DUF_NOERROR( r ) )
-            duf_levinfo_set( PDI, pli, PDI->pathinfo.maxdepth );
+            duf_levinfo_set_li( PDI, pli, PDI->pathinfo.maxdepth );
           else
             duf_li_delete( pli, PDI->pathinfo.maxdepth );
         }
