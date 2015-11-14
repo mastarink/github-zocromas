@@ -13,11 +13,13 @@
 
 
 #include "duf_levinfo_ref.h"
-#include "duf_pdi_ref.h"
 
-#include "duf_pdi_credel.h"
-/* ###################################################################### */
 #include "duf_pdi.h"
+#include "duf_pdi_filters.h"
+#include "duf_pdi_ref.h"
+#include "duf_pdi_credel.h"
+
+/* ###################################################################### */
 #include "duf_pdi_reinit.h"
 /* ###################################################################### */
 

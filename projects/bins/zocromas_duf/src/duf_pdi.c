@@ -13,6 +13,7 @@
 #include "duf_context.h"
 #include "duf_path2dirid.h"
 
+#include "duf_pdi_filters.h"
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
 #include "duf_pdi_stmt.h"

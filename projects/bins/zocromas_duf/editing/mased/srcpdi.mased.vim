@@ -7,6 +7,12 @@ sfind duf_pdi_reinit.h
 tab sfind duf_pdi_attach.c
 sfind duf_pdi_attach.h
 
+tab sfind duf_pdi_depth.c
+sfind duf_pdi_depth.h
+
+tab sfind duf_pdi_filters.c
+sfind duf_pdi_filters.h
+
 tab sfind duf_pdi_ref.c
 sfind duf_pdi_ref.h
 

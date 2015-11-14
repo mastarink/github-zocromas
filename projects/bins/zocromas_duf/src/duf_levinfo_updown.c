@@ -2,6 +2,7 @@
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
+#include "duf_pdi_depth.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"

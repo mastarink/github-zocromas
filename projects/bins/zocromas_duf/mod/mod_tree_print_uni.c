@@ -10,6 +10,8 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 
+#include "duf_pdi_filters.h"
+#include "duf_pdi_depth.h"
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
 
