@@ -1,9 +1,7 @@
 #include "duf_maintenance.h"
 
-#include "duf_ufilter_ref.h"
-/* #include "duf_pathinfo_ref.h" */
 
-#include "duf_pdi_pi_ref.h"
+
 /* ###################################################################### */
 #include "duf_pdi_ref.h"
 /* ###################################################################### */
@@ -39,6 +37,13 @@ duf_pdi_linear( const duf_depthinfo_t * pdi )
   return pdi ? ( pdi->linear ? 1 : 0 ) : 0;
 }
 
+void
+duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )
+{
+  if ( pdi )
+    pdi->changes += changes;
+}
+
 int
 duf_pdi_opendir( const duf_depthinfo_t * pdi )
 {
@@ -56,11 +61,4 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   DUF_TRACE( fs, 3, "set opendir:%d", od );
 
   DEBUG_ENDR( rd );
-}
-
-void
-duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )
-{
-  if ( pdi )
-    pdi->changes += changes;
 }

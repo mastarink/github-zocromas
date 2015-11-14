@@ -10,6 +10,9 @@ sfind duf_levinfo_dbinit.h
 tab sfind duf_levinfo_credel.c
 sfind duf_levinfo_credel.h
 
+tab sfind duf_levinfo_count.c
+sfind duf_levinfo_count.h
+
 tab sfind duf_li_credel.c
 sfind duf_li_credel.h
 
