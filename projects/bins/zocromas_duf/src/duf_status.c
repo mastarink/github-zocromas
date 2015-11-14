@@ -116,27 +116,29 @@ global_status_reset( void )
   global_status.db_opened_name = NULL;
 }
 
-__attribute__ ( ( constructor( 101 ) ) )
-     static void constructor_global_status( void )
+static void constructor_global_status( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_global_status( void )
 {
   global_status_init(  );
 }
 
-__attribute__ ( ( destructor( 101 ) ) )
-     static void destructor_global_status( void )
+static void destructor_global_status( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_global_status( void )
 {
 /* #define DUF_MEM_ROW "◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐" */
 #define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
 
   global_status_reset(  );
 #if 0
-#ifdef MAS_TRACEMEM
+#  ifdef MAS_TRACEMEM
   print_memlist_msg( FL, stdout, /* */
                      "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
                      "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
                      "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
                      "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
          );
-#endif
+#  endif
 #endif
 }

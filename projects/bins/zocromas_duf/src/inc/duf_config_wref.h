@@ -7,7 +7,7 @@
 
 
 
-extern duf_config_t *duf_config __attribute( ( weak ) );
+extern duf_config_t *duf_config __attribute__( ( weak ) );
 
 
 #endif

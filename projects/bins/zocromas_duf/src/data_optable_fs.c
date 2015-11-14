@@ -13,7 +13,7 @@
 #include "duf_option_misc.h"
 
 #include "duf_option_fs_types.h"
-#include "duf_option_fs.h"      /* TODO : temp for duf_option_$_fs_...               */
+#include "duf_option_fs.h"      /* TODO : temp for duf_option_O_fs_...               */
 
 /*
 At duf_options_table.c:

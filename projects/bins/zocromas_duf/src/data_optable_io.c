@@ -10,7 +10,7 @@
 #include "duf_optable_def.h"
 
 
-#include "duf_option_sccb.h"    /* TODO : temp for duf_option_$_cd               */
+#include "duf_option_sccb.h"    /* TODO : temp for duf_option_O_cd               */
 
 /*
 At duf_options_table.c:

@@ -26,7 +26,7 @@
 /* ###################################################################### */
 
 mas_error_code_t
-duf_option_$_history( void )
+duf_option_O_history( void )
 {
   DEBUG_STARTR( r );
 
@@ -57,7 +57,7 @@ duf_option_$_history( void )
 }
 
 mas_error_code_t
-duf_option_$_list_targ1( mas_argvc_t * targ, long n )
+duf_option_O_list_targ1( mas_argvc_t * targ, long n )
 {
   DEBUG_STARTR( r );
 
@@ -71,7 +71,7 @@ duf_option_$_list_targ1( mas_argvc_t * targ, long n )
 }
 
 mas_error_code_t
-duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
+duf_option_O_list_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
 
@@ -91,7 +91,7 @@ duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
 }
 
 mas_error_code_t
-duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
+duf_option_O_clear_targ1( mas_argvc_t * targ, long n )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -106,7 +106,7 @@ duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
 }
 
 mas_error_code_t
-duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
+duf_option_O_clear_targ2( int *ptargc, char ***ptargv, long n )
 {
   DEBUG_STARTR( r );
 
@@ -117,7 +117,7 @@ duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
 }
 
 mas_error_code_t
-duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
+duf_option_O_add_targ1( mas_argvc_t * targ, const char *s )
 {
   DEBUG_STARTR( r );
 
@@ -126,7 +126,7 @@ duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
 }
 
 mas_error_code_t
-duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
+duf_option_O_add_targ2( int *ptargc, char ***ptargv, const char *s )
 {
   DEBUG_STARTR( r );
 
@@ -138,7 +138,7 @@ duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
 
 
 mas_error_code_t
-duf_option_$_echo( const char *arg )
+duf_option_O_echo( const char *arg )
 {
   DEBUG_STARTR( r );
 

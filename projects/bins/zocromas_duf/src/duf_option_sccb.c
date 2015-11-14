@@ -35,7 +35,7 @@
 /* ###################################################################### */
 
 mas_error_code_t
-duf_option_$_list_sccbs( void )
+duf_option_O_list_sccbs( void )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -57,7 +57,7 @@ duf_option_$_list_sccbs( void )
 
 #if 0
 mas_error_code_t
-duf_option_$_list_sccb( int x_unused DUF_UNUSED )
+duf_option_O_list_sccb( int x_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
@@ -67,8 +67,13 @@ duf_option_$_list_sccb( int x_unused DUF_UNUSED )
   DEBUG_ENDR( r );
 }
 #endif
+/*! 20151114.204523 
+ * \brief evaluate sccb
+ *         for current directory
+ *
+ * */
 mas_error_code_t
-duf_option_$_evaluate_sccb( const char *names )
+duf_option_O_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
 
@@ -101,9 +106,11 @@ duf_option_$_evaluate_sccb( const char *names )
   }
   DEBUG_ENDR( r );
 }
-
+/*! 20151114.204538
+ * \brief call file
+ * */
 mas_error_code_t
-duf_option_$_call_file( const char *name )
+duf_option_O_call_file( const char *name )
 {
   DEBUG_STARTR( r );
   int r DUF_UNUSED = 0;
@@ -113,7 +120,7 @@ duf_option_$_call_file( const char *name )
 }
 
 mas_error_code_t
-duf_option_$_db_open( void )
+duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
@@ -122,7 +129,7 @@ duf_option_$_db_open( void )
 }
 
 mas_error_code_t
-duf_option_$_cd( const char *s )
+duf_option_O_cd( const char *s )
 {
   DEBUG_STARTR( r );
   if ( s && *s )
@@ -178,7 +185,7 @@ duf_option_$_cd( const char *s )
 }
 
 mas_error_code_t
-duf_option_$_cdid( long topdirid )
+duf_option_O_cdid( long topdirid )
 {
   DEBUG_STARTR( r );
   char *path;
@@ -186,13 +193,13 @@ duf_option_$_cdid( long topdirid )
   path = duf_dirid2path( topdirid, &r );
   T( "%lu: %s", topdirid, path );
   if ( DUF_NOERROR( r ) && path )
-    r = duf_option_$_cd( path );
+    r = duf_option_O_cd( path );
   mas_free( path );
   DEBUG_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_$_error_level( long lev )
+duf_option_O_error_level( long lev )
 {
   DEBUG_STARTR( r );
 
@@ -201,7 +208,7 @@ duf_option_$_error_level( long lev )
 }
 
 mas_error_code_t
-duf_option_$_set_dir_priority( long prio )
+duf_option_O_set_dir_priority( long prio )
 {
   DEBUG_STARTR( r );
 

@@ -537,7 +537,7 @@ duf_longindex_extended_codeval( int longindex, int *pr )
   return extended ? extended->o.val : 0;
 }
 #endif
-const duf_longval_extended_t *
+static const duf_longval_extended_t *
 _duf_longindex2extended( int longindex, const duf_longval_extended_table_t * xtable, int *ptbcount, int no )
 {
   const duf_longval_extended_t *extended = NULL;

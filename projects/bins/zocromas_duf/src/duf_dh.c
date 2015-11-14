@@ -331,7 +331,7 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
   DEBUG_ENDR( r );
 }
 
-int
+static int
 _duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   DEBUG_STARTR( r );
@@ -397,7 +397,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
   DEBUG_ENDR( r );
 }
 
-int
+static int
 _duf_check_dh( const char *msg )
 {
   DEBUG_STARTR( r );

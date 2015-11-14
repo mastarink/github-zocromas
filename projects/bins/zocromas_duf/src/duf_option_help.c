@@ -122,7 +122,7 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
 };
 
 mas_error_code_t
-duf_option_$_smart_help( duf_option_class_t oclass )
+duf_option_O_smart_help( duf_option_class_t oclass )
 {
   DEBUG_STARTR( r );
 
@@ -214,7 +214,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
 }
 
 mas_error_code_t
-duf_option_$_smart_help_all( duf_option_class_t oclass )
+duf_option_O_smart_help_all( duf_option_class_t oclass )
 {
   DEBUG_STARTR( r );
 
@@ -222,14 +222,14 @@ duf_option_$_smart_help_all( duf_option_class_t oclass )
   {
     for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
     {
-      DOR( r, duf_option_$_smart_help( oc ) );
+      DOR( r, duf_option_O_smart_help( oc ) );
     }
   }
   DEBUG_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_$_help(  /* int argc, char *const *argv */ void )
+duf_option_O_help(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
 
@@ -283,7 +283,7 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_$_examples(  /* int argc, char *const *argv */ void )
+duf_option_O_examples(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
 
@@ -808,7 +808,7 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_$_version( void )
+duf_option_O_version( void )
 {
 
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
@@ -952,7 +952,7 @@ duf_unflag2cnames( unsigned unfset )
 }
 
 mas_error_code_t
-duf_option_$_showflags(  /* int argc, char *const *argv */ void )
+duf_option_O_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_STARTR( r );
   {
@@ -1070,7 +1070,7 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_$_list_options( long n_unused DUF_UNUSED )
+duf_option_O_list_options( long n_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -1100,7 +1100,7 @@ duf_option_$_list_options( long n_unused DUF_UNUSED )
 }
 
 mas_error_code_t
-duf_option_$_list_xtended( const char *s )
+duf_option_O_list_xtended( const char *s )
 {
   DEBUG_STARTR( r );
   duf_extended_table_multi_std_print( s );

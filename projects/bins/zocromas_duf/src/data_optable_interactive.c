@@ -23,7 +23,7 @@ At duf_options_table.c:
       };
 */
 
-extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
+extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute__( ( weak ) ) */ ;
 
 /*
 void duf_list_sccb( int ) __attribute__ ( ( weak ) );

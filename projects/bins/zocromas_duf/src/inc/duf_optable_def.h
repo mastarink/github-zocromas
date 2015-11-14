@@ -61,7 +61,7 @@
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
 /* #  define DO_INTERACTIVE DO_FL( act, interactive ) */
 
-#  define DO_SET_FUNC(_f) .func=duf_option_$_ ## _f
+#  define DO_SET_FUNC(_f) .func=duf_option_O_ ## _f
 #  define DO_XFUNC(_f)	    { DO_SET_FUNC(_f)	   }
 #  define DO_XFUNCA(_f, _a) { DO_SET_FUNC(_f), .arg=_a }
 

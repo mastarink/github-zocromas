@@ -25,7 +25,7 @@
 #include "duf_config_util.h"
 /* ###################################################################### */
 
-extern duf_config_t *duf_config __attribute( ( weak ) );
+extern duf_config_t *duf_config /* __attribute__( ( weak ) ) */;
 
 duf_config_t *
 duf_get_config( void )
@@ -134,7 +134,7 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   return pbuf;
 }
 
-char *
+static char *
 _duf_string_options_expand( const char *s, char protected_prefix, int *pexpandable_later )
 {
   char *xs = NULL;

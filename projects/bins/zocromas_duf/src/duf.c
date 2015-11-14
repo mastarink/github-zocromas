@@ -6,7 +6,7 @@
  *   - 
  * */
 
-/*
+/*! \mainpage
   main
     duf_main
       duf_main_with_config
@@ -16,13 +16,13 @@
 	  duf_main_db_close
 
 
-  duf_option_$_list_sccbs
-  duf_option_$_evaluate_sccb
+  duf_option_O_list_sccbs
+  duf_option_O_evaluate_sccb
 
-  duf_option_$_list_sccb
-  duf_option_$_db_open
+  duf_option_O_list_sccb
+  duf_option_O_db_open
 
-  duf_option_$_cd
+  duf_option_O_cd
   ... ...
 */
 
@@ -79,8 +79,9 @@ INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT COUNT(*), fn
   WHERE fna.Pathid != fnb.Pathid
   GROUP BY mda.rowid;
 */
-__attribute__ ( ( constructor( 101 ) ) )
-     static void constructor_main( void )
+static void constructor_main( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_main( void )
 {
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
@@ -103,8 +104,9 @@ __attribute__ ( ( constructor( 101 ) ) )
 #endif
 }
 
-__attribute__ ( ( destructor( 101 ) ) )
-     static void destructor_main( void )
+static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_main( void )
 {
 }
 
@@ -141,7 +143,7 @@ duf_main_with_config( int argc, char **argv )
 
 #ifdef MAS_TRACEMEM
   {
-    extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
+    extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
 
     if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
     {

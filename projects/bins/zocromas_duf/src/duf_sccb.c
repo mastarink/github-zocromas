@@ -16,7 +16,7 @@
 /* ###################################################################### */
 
 /* TODO rename _duf_uni_scan_action_title => _duf_sccb_title */
-const char *
+static const char *
 _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   const char *stitle;

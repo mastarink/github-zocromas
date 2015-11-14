@@ -73,13 +73,9 @@ static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
   NULL
 };
 
-
-
 static const duf_longval_extended_table_t **lo_extended_table_multi = NULL;
 
-
-
-void
+static void
 _duf_extended_table_multi_init( void )
 {
   unsigned n = 0;
@@ -110,7 +106,7 @@ _duf_extended_table_multi_init( void )
 #endif
 }
 
-void
+static void
 duf_extended_table_multi_init( void )
 {
   static unsigned inited = 0;
@@ -122,8 +118,9 @@ duf_extended_table_multi_init( void )
   }
 }
 
-__attribute__ ( ( constructor( 101 ) ) )
-     static void extended_table_multi_init( void )
+static void extended_table_multi_init( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+extended_table_multi_init( void )
 {
   /* duf_extended_table_multi_init(  ); */
 }
@@ -137,8 +134,9 @@ duf_extended_table_multi( void )
 
 
 /* _lo_extended_table_multi; */
-__attribute__ ( ( destructor( 101 ) ) )
-     static void unbuild( void )
+static void unbuild( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+unbuild( void )
 {
   mas_free( lo_extended_table_multi );
 }

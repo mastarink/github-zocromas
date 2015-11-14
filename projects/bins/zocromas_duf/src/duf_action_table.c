@@ -72,9 +72,9 @@ static duf_action_table_t actions_table[] = {
 #if 0
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_tree_callbacks,
-#if 0
+#  if 0
    .on.flag = {.print = 1,.tree = 1},
-#endif
+#  endif
    .off.flag = { /*.md5_obs = 1 */ }
    },
 #endif
@@ -134,8 +134,9 @@ duf_first_sccb( void )
   return at ? at->sccb : NULL;
 }
 
-__attribute__ ( ( destructor( 101 ) ) )
-     static void duf_sccb_dlclose( void )
+static void duf_sccb_dlclose( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+duf_sccb_dlclose( void )
 {
   for ( duf_scan_callbacks_t * sccb = duf_first_sccb(  ); sccb; sccb = sccb->next )
   {

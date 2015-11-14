@@ -23,7 +23,7 @@ extern duf_scan_callbacks_t     /* */
   /* duf_dialog_callbacks,         (* *) */
   /* duf_tagit_callbacks,          (* *) */
   /* duf_save_to_callbacks,        (* *) */
-  duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
+  duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute__( ( weak ) );
 
 
 #endif

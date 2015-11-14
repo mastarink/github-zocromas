@@ -107,7 +107,7 @@ duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv 
 }
 
 mas_error_code_t
-duf_option_$_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
+duf_option_O_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   int ry = 0;
@@ -158,7 +158,7 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
 }
 
 mas_error_code_t
-duf_option_$_fs_rmfile( const char *fn, const void *pv )
+duf_option_O_fs_rmfile( const char *fn, const void *pv )
 {
   DEBUG_STARTR( r );
   int ry = 0;
@@ -355,7 +355,7 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
 }
 
 mas_error_code_t
-duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
+duf_option_O_fs_cpfile( const char *fn, const char *to, const void *pv )
 {
   DEBUG_STARTR( r );
   int ry;
@@ -374,36 +374,36 @@ duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, con
 }
 
 mas_error_code_t
-duf_option_$_fs_ls( const char *arg )
+duf_option_O_fs_ls( const char *arg )
 {
   DEBUG_STARTR( r );
   long v = 0;
 
   /* T( "ls %s", arg ); */
-  DOR( r, duf_option_fs_each( arg, duf_option_$_fs_ls_file, ( const void * ) v ) );
+  DOR( r, duf_option_fs_each( arg, duf_option_O_fs_ls_file, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_$_fs_rm( const char *arg, long v )
+duf_option_O_fs_rm( const char *arg, long v )
 {
   DEBUG_STARTR( r );
   /* T( "rm %s", arg ); */
-  DOR( r, duf_option_fs_each( arg, duf_option_$_fs_rmfile, ( const void * ) v ) );
+  DOR( r, duf_option_fs_each( arg, duf_option_O_fs_rmfile, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_$_fs_cp( const char *arg, long v )
+duf_option_O_fs_cp( const char *arg, long v )
 {
   DEBUG_STARTR( r );
   /* T( "cp %s", arg ); */
-  DOR( r, duf_option_fs_each2( arg, duf_option_$_fs_cpfile, ( const void * ) v ) );
+  DOR( r, duf_option_fs_each2( arg, duf_option_O_fs_cpfile, ( const void * ) v ) );
   DEBUG_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_$_fs_mv( const char *arg, long v )
+duf_option_O_fs_mv( const char *arg, long v )
 {
   DEBUG_STARTR( r );
   /* T( "mv %s", arg ); */

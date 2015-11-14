@@ -7,7 +7,9 @@
 /* ###################################################################### */
 
 
-/* 20151114.124346 */
+/**! \brief
+ 20151114.124346
+ */
 /* pdi->pathinfo.topdepth + pdi->pathinfo.depth - pdi->pathinfo.topdepth === pdi->pathinfo.depth */
 int
 duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )

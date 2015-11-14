@@ -9,7 +9,7 @@
 #include "duf_config_ref.h"
 #include "duf_optable_def.h"
 
-#include "duf_option_sccb.h"    /* TODO : temp for duf_option_$_db_open               */
+#include "duf_option_sccb.h"    /* TODO : temp for duf_option_O_db_open               */
 
 /*
 At duf_options_table.c:

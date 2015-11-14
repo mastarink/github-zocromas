@@ -19,8 +19,9 @@
 
 static char *config_file_path = NULL;
 
-__attribute__ ( ( destructor( 101 ) ) )
-     static void destructor_options_file( void )
+static void destructor_options_file( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_options_file( void )
 {
   mas_free( config_file_path );
 }
