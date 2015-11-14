@@ -10,6 +10,9 @@ sfind duf_pdi_attach.h
 tab sfind duf_pdi_ref.c
 sfind duf_pdi_ref.h
 
+tab sfind duf_pdi_pi_ref.c
+sfind duf_pdi_pi_ref.h
+
 tab sfind duf_pdi_context.c
 sfind duf_pdi_context.h
 

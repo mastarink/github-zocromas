@@ -11,6 +11,7 @@
 #include "duf_levinfo_updown.h" /* duf_levinfo_goup */
 
 #include "duf_pdi_ref.h"        /* duf_pdi_depth */
+#include "duf_pdi_pi_ref.h"        /* duf_pdi_depth */
 
 #include "duf_sccb_def.h"       /* DUF_SCCB_PDI */
 #include "duf_sccb.h"           /* duf_uni_scan_action_title, contained at DUF_SCCB_PDI */

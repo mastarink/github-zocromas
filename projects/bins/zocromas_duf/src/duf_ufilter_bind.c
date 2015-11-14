@@ -71,6 +71,7 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   if ( !pu )
   {
     DUF_TRACE( sql, 3, "@@@bind - no pu!" );
+    assert( 0);
     return 0;
   }
 

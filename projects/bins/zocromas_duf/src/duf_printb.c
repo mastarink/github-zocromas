@@ -10,6 +10,7 @@
 
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 
 
 

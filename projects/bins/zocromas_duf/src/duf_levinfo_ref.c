@@ -208,41 +208,9 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
 /************************************************************************/
 
 
-/* void                                                                              */
-/* duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d ) */
-/* {                                                                                 */
-/*   duf_levinfo_ptr_d( pdi, d )->dirid = dirid;                                     */
-/* }                                                                                 */
-/*                                                                                   */
-/* (* *INDENT-OFF*  *)                                                               */
-/* DUF_LEVINFO_FS( unsigned long long, dirid )                                       */
-/* DUF_LEVINFO_FS_UP( unsigned long long, dirid )                                    */
-/* (* *INDENT-ON*  *)                                                                */
-/*                                                                                   */
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3SET( unsigned long long, dirid, db.dirid )
-/* *INDENT-ON*  */
-
-/************************************************************************/
-
-/* unsigned long long                                        */
-/* duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                         */
-/*   return duf_levinfo_ptr_d( pdi, d )->dirid;              */
-/* }                                                         */
-/*                                                           */
-/* (* *INDENT-OFF*  *)                                       */
-/* DUF_LEVINFO_FC( unsigned long long, dirid )               */
-/* DUF_LEVINFO_FC_UP( unsigned long long, dirid )            */
-/* (* *INDENT-ON*  *)                                        */
-
-/* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( unsigned long long, dirid, db.dirid )
-/* *INDENT-ON*  */
-
-/************************************************************************/
-
-  /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( unsigned long long, nameid, db.nameid )
 /* *INDENT-ON*  */
 
@@ -264,17 +232,6 @@ DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
 /************************************************************************/
 
 #ifndef DUF_NO_NUMS
-/* int                                                        */
-/* duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                          */
-/*   return duf_levinfo_ptr_d( pdi, d )->numdir;              */
-/* }                                                          */
-/*                                                            */
-/* (* *INDENT-OFF*  *)                                        */
-/* DUF_LEVINFO_FC( int, numdir )                              */
-/* DUF_LEVINFO_FC_UP( int, numdir )                           */
-/* (* *INDENT-ON*  *)                                         */
-
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, numdir, numdir )
 /* *INDENT-ON*  */
@@ -318,49 +275,12 @@ DUF_LEVINFO_FC_UP( void *, context )
 
 /************************************************************************/
 
-/* duf_dirhandle_t *                                       */
-/* duf_levinfo_pdh_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                       */
-/*   return &duf_levinfo_ptr_d( pdi, d )->lev_dh;          */
-/* }                                                       */
-/*                                                         */
-/* (* *INDENT-OFF*  *)                                     */
-/* DUF_LEVINFO_FC( duf_dirhandle_t *, pdh )                */
-/* DUF_LEVINFO_FC_UP( duf_dirhandle_t*, pdh )              */
-/* (* *INDENT-ON*  *)                                      */
-
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET_REF( duf_dirhandle_t, pdh, lev_dh )
-/* *INDENT-ON*  */
-
-/************************************************************************/
-
-/* int                                                     */
-/* duf_levinfo_dfd_d( const duf_depthinfo_t * pdi, int d ) */
-/* {                                                       */
-/*   return duf_levinfo_ptr_d( pdi, d )->lev_dh.dfd;       */
-/* }                                                       */
-/*                                                         */
-/* (* *INDENT-OFF*  *)                                     */
-/* DUF_LEVINFO_FC( int, dfd )                              */
-/* DUF_LEVINFO_FC_UP( int, dfd )                           */
-/* (* *INDENT-ON*  *)                                      */
-
-/* *INDENT-OFF*  */
 DUF_LEVINFO_4GET( int, dfd, lev_dh.dfd )
-/* *INDENT-ON*  */
-
-
-
-/************************************************************************/
-/* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, source, lev_dh.source )
-/* *INDENT-ON*  */
-
-/* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, opened_copy, lev_dh.opened_copy )
 /* *INDENT-ON*  */
-
 
 
 /************************************************************************/
@@ -378,8 +298,14 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
   {
     assert( pdi->pathinfo.levinfo );
     assert( pdi->inited );
+#if 0
+#  if 0
     if ( duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF )
+#  else
+    if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_LEAF )
+#  endif
       d--;
+#endif
     path = duf_pi_path_d( &pdi->pathinfo, d );
   }
 #if 0
@@ -397,9 +323,11 @@ DUF_LEVINFO_FC_UP( const char *, path )
 DUF_LEVINFO_FC_TOP( const char *, path )
 /* *INDENT-ON*  */
 
+/* 20151114.114401 */
 const char *
 duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d )
 {
+#if 0
   const char *toppath;
   const char *path;
   size_t len;
@@ -408,6 +336,9 @@ duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d )
   len = strlen( toppath );
   path = duf_levinfo_path_d( pdi, d );
   return path + len;
+#else
+  return pdi ? duf_pi_relpath_d( &pdi->pathinfo, d ) : NULL;
+#endif
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC( const char *, relpath )
@@ -434,6 +365,3 @@ duf_levinfo_path_qdup( const duf_depthinfo_t * pdi, const char *q )
     path = mas_strdup( p );
   return path;
 }
-
-
-/************************************************************************/

@@ -7,6 +7,7 @@
 #include "duf_pdi_credel.h"
 #include "duf_pdi_reinit.h"
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 
 #include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
 #include "duf_utils.h"          /* duf_percent */

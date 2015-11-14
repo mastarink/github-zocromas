@@ -8,6 +8,7 @@
 #include "duf_config_util.h"
 #include "duf_config_ref.h"     /* needed for DUF_PRINTF */
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"

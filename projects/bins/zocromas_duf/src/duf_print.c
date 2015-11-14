@@ -11,6 +11,7 @@
 
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 
 #include "duf_pstmt_levinfo.h"
 
@@ -570,7 +571,6 @@ duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position
       else
         snprintf( format, fbsz, "%%s" );
 #endif
-
 
       rel_real_path = duf_levinfo_relpath( pdi );
       snprintf( pbuffer, bfsz, format, rel_real_path );

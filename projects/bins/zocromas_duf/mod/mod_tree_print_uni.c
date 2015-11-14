@@ -11,6 +11,7 @@
 #include "duf_config_defs.h"
 
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_pstmt_levinfo.h"

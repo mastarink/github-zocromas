@@ -15,6 +15,7 @@
 #include "duf_pstmt_levinfo.h"
 
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_sql_defs.h"

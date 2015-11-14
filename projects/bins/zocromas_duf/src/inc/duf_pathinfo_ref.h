@@ -130,6 +130,10 @@ const char *duf_pi_relpath_d( const duf_pathinfo_t * pi, int d );
 const char *duf_pi_relpath( const duf_pathinfo_t * pi );
 const char *duf_pi_relpath_up( const duf_pathinfo_t * pi );
 
+duf_node_type_t duf_pi_node_type_d( const duf_pathinfo_t * pi, int d );
+duf_node_type_t duf_pi_node_type( const duf_pathinfo_t * pi );
+duf_node_type_t duf_pi_node_type_up( const duf_pathinfo_t * pi );
+
 const char *duf_pi_path_q( const duf_pathinfo_t * pi, const char *q );
 char *duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q );
 

@@ -43,6 +43,9 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
   char *path = NULL;
   duf_levinfo_t *pli;
 
+  if ( duf_pi_node_type_d( pi, d ) == DUF_NODE_LEAF )
+    d--;
+
   pli = duf_pi_ptr_d( pi, d );
   assert( pli );
 
@@ -102,6 +105,7 @@ DUF_PATHINFO_FC_UP( const char *, path )
 DUF_PATHINFO_FC_TOP( const char *, path )
 /* *INDENT-ON*  */
 
+DUF_PATHINFO_3GET( duf_node_type_t, node_type, node_type );
 
 /* 20150904.122510 */
 const char *

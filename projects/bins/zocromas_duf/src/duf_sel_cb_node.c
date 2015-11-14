@@ -10,6 +10,7 @@
 #include "duf_levinfo_updown.h"
 
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"        /* duf_pdi_depth */
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"

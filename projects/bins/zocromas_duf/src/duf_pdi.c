@@ -14,6 +14,7 @@
 #include "duf_path2dirid.h"
 
 #include "duf_pdi_ref.h"
+#include "duf_pdi_pi_ref.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_pathinfo_credel.h"
