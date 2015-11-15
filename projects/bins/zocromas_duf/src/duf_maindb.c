@@ -240,10 +240,12 @@ duf_main_db_tune( void )
 }
 
 int
-duf_main_db_open( void )
+duf_main_db_open( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+  assert( pdi );
+  assert( !pdi->attached_copy );
   /* global_status.db_opened_name */
 
   DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
@@ -254,8 +256,22 @@ duf_main_db_open( void )
   {
     DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db_opened_name, DUF_CONFIGGSP( db.main.name ) );
     DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
-    DOR( r, duf_main_db_close( 0 ) );
+    DOR( r, duf_main_db_close( pdi, 0 ) );
     DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
+  }
+  {
+    duf_depthinfo_t *pdis;
+
+    pdis = global_status.pdilist;
+    while ( pdis && pdis != pdi )
+      pdis = pdis->next;
+    if ( !pdis )
+    {
+      assert( !pdi->next );
+      pdi->next = global_status.pdilist;
+      global_status.pdilist = pdi;
+      T( "@link (%p=>%p) pdi:%p => %p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+    }
   }
   DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
 #if 0
@@ -306,9 +322,11 @@ duf_main_db_open( void )
 }
 
 int
-duf_main_db_close( int ra )
+duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
+  assert( !pdi->attached_copy );
   r = ra;
 #if 0
   if ( DUF_CONFIGG( db.opened ) )
@@ -317,44 +335,69 @@ duf_main_db_close( int ra )
 #endif
   {
     int rt = 0;
+    duf_depthinfo_t *pdis = NULL;
 
-    DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db_opened_name );
-#if 0
+    if ( pdi->next )
     {
-#  ifdef MAS_SPLIT_DB
-      if ( DUF_CONFIGG( db.adm.fpath ) )
-      {
-        static const char *sql = "DETACH DATABASE 'adm'";
+      duf_depthinfo_t *prev_pdis = NULL;
 
-        DUF_TRACE( explain, 0, "detach adm database %s", DUF_CONFIGG( db.adm.fpath ) );
-        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
-        DUF_SQL_END_STMT_NOPDI( r, pstmt );
-      }
-      if ( DUF_CONFIGG( db.tempo.fpath ) )
+      pdis = global_status.pdilist;
+      while ( pdis && pdis != pdi )
       {
-        static const char *sql = "DETACH DATABASE 'tempo'";
-
-        DUF_TRACE( explain, 0, "detach tempo database %s -- %s", DUF_CONFIGG( db.tempo.fpath ), sql );
-        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
-        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+        prev_pdis = pdis;
+        pdis = pdis->next;
       }
-#  endif
+      if ( pdis )
+      {
+        if ( prev_pdis )
+          prev_pdis->next = pdis->next;
+        else
+          global_status.pdilist = pdis->next;
+        T( "@unlink pdi:%p", pdi );
+        pdis->next = NULL;
+      }
     }
-#endif
-    /* don't DOR it directly! call allways! */
-    DORF( rt, duf_sql_close );
-    if ( r == 0 && rt < 0 )
-      DOR( r, rt );
+    if ( pdis && !global_status.pdilist )                 /* close only if opened for this pdi */
+    {
+      DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db_opened_name );
 #if 0
-    DUF_CONFIGWN( db.opened, !( DUF_NOERROR( r ) ) );
-#else
-    mas_free( global_status.db_opened_name );
-    global_status.db_opened_name = NULL;
+      {
+#  ifdef MAS_SPLIT_DB
+        if ( DUF_CONFIGG( db.adm.fpath ) )
+        {
+          static const char *sql = "DETACH DATABASE 'adm'";
+
+          DUF_TRACE( explain, 0, "detach adm database %s", DUF_CONFIGG( db.adm.fpath ) );
+          DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+          DUF_SQL_STEP( r, pstmt );
+          DUF_SQL_END_STMT_NOPDI( r, pstmt );
+        }
+        if ( DUF_CONFIGG( db.tempo.fpath ) )
+        {
+          static const char *sql = "DETACH DATABASE 'tempo'";
+
+          DUF_TRACE( explain, 0, "detach tempo database %s -- %s", DUF_CONFIGG( db.tempo.fpath ), sql );
+          DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+          DUF_SQL_STEP( r, pstmt );
+          DUF_SQL_END_STMT_NOPDI( r, pstmt );
+        }
+#  endif
+      }
 #endif
-    mas_free( global_status.db_attached_selected );
-    global_status.db_attached_selected = NULL;
+      /* don't DOR it directly! call allways! */
+      DORF( rt, duf_sql_close );
+      T("@duf_sql_close: rt:%d", rt);
+      if ( r == 0 && rt < 0 )
+        DOR( r, rt );
+#if 0
+      DUF_CONFIGWN( db.opened, !( DUF_NOERROR( r ) ) );
+#else
+      mas_free( global_status.db_opened_name );
+      global_status.db_opened_name = NULL;
+#endif
+      mas_free( global_status.db_attached_selected );
+      global_status.db_attached_selected = NULL;
+    }
   }
   DEBUG_ENDR( r );
 }
@@ -376,7 +419,7 @@ duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
     sargv1 = mas_argv_string( argc, argv, 1 );
     sargv2 = duf_restore_some_options( argv[0] );
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-    DORF( r, duf_main_db_open );
+    DORF( r, duf_main_db_open, pdi );
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
 
@@ -471,10 +514,9 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     for ( int ia = DUF_CONFIGG( cli.targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
     {
-      DOR( r,
-           duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-                                   NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
-                                   DUF_UG_FLAG( linear ) ) );
+      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+                                      NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
+                                      DUF_UG_FLAG( linear ) ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
       DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     }
@@ -483,6 +525,6 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
   if ( DUF_ACTG_FLAG( info ) )
     DOR( r, duf_main_db_info(  ) );
 
-  DORF( r, duf_main_db_close, r ); /* [@] */
+  DORF( r, duf_main_db_close, DUF_CONFIGG( scn.pdi ), r ); /* [@] */
   DEBUG_ENDR( r );
 }

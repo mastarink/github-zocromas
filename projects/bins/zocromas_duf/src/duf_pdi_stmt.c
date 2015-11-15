@@ -61,11 +61,12 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 
   int rpr = 0;
   duf_idstmt_t *is = NULL;
-  duf_idstmt_t *chkids =NULL;
+  duf_idstmt_t *chkids = NULL;
 
-  DORF( rpr, duf_main_db_open );
+  if ( !pdi->attached_copy )
+    DORF( rpr, duf_main_db_open, pdi );
   DUF_TEST_R( rpr );
-  chkids= pdi->idstatements;
+  chkids = pdi->idstatements;
 
   assert( pdi );
   assert( pdi->inited );
@@ -91,8 +92,6 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
    *   - it may reallocate pdi->idstatements 
    *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
    */
-  /* DORF( rpr, duf_main_db_open ); */
-  /* DUF_TEST_R( rpr );             */
 
   DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
   DUF_TEST_R( rpr );

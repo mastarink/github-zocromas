@@ -35,6 +35,7 @@ typedef struct
   size_t n_xcmds;
   duf_xcmd_t *xcmds;
   duf_tmp_t *tmp;
+  duf_depthinfo_t *pdilist;
 } duf_status_t;
 
 #endif

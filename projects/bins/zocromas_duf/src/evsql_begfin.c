@@ -51,7 +51,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
 
   /* r = duf_sql( *p, &changes ); */
 #if 0
-  DORF( r, duf_main_db_open );
+  DORF( r, duf_main_db_open, pdi );
 #endif
   if ( selected_db )
     worksql = tmpsql = duf_expand_sql( sql, selected_db );

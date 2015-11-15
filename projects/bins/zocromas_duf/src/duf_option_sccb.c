@@ -124,7 +124,7 @@ duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_main_db_open(  ) );
+  DOR( r, duf_main_db_open(  DUF_CONFIGG( scn.pdi ) ) );
   DEBUG_ENDR( r );
 }
 

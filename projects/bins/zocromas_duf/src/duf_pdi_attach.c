@@ -17,24 +17,28 @@ int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  DORF( r, duf_main_db_open );
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-  /* assert( global_status.db_attached_selected == NULL ); */
-  if ( !pdi->db_attached_selected )
+  if ( !pdi->attached_copy )
   {
-    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS " DUF_DBSELECTEDALIAS;
-    static const char *sql1 = "DROP  TABLE IF EXISTS " DUF_DBSELECTEDALIAS "." DUF_SQL_SELECTED_TMP_FILENAMES;
-    int changes = 0;
+    DORF( r, duf_main_db_open, pdi );
+    DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
+    DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
+    /* assert( global_status.db_attached_selected == NULL ); */
+    if ( !pdi->db_attached_selected )
+    {
+      static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS " DUF_DBSELECTEDALIAS;
+      static const char *sql1 = "DROP  TABLE IF EXISTS " DUF_DBSELECTEDALIAS "." DUF_SQL_SELECTED_TMP_FILENAMES;
+      int changes = 0;
 
-    pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
-    DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
+      T( "(%d) to attach (%p:%s)", r, pdi, pdi->pdi_name );
+      pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
+      /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
+      DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
-    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
-    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
+      DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
+      DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
+    }
+    DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   }
-  DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   DEBUG_ENDR( r );
 }
 #endif

@@ -268,42 +268,47 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   DOR( r, duf_pdi_shut( pdi ) );
-  if ( pdi->pdi_name && pdi->db_attached_selected && !pdi->attached_copy )
+  if ( pdi->pdi_name /* && pdi->db_attached_selected */  && !pdi->attached_copy )
   {
-    assert( 0 == strcmp( pdi->db_attached_selected, pdi->pdi_name ) );
-    DOR( r, duf_main_db_close( r ) );
+    DOR( r, duf_main_db_close( pdi, r ) );
+    assert( !pdi->next );
+    if ( pdi->db_attached_selected )
+    {
+      assert( 0 == strcmp( pdi->db_attached_selected, pdi->pdi_name ) );
 #ifdef DUF_ATTACH_SELECTED_PATTERN
 #  ifdef DUF_SQL_SELECTED_TEMPORARY
 #    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
 #  endif
 
 #  if 0
-    DOR( r, duf_pdi_detach_selected( pdi ) );
+      DOR( r, duf_pdi_detach_selected( pdi ) );
 #  endif
-    {
-      int ry DUF_UNUSED = 0;
-      char *selected_db_file;
-
-      selected_db_file = duf_expand_sql( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
 #  if 0
-      ry = unlink( selected_db_file );
       {
-        char serr[1024] = "";
-        char *s;
+        int ry DUF_UNUSED = 0;
+        char *selected_db_file;
 
-        s = strerror_r( errno, serr, sizeof( serr ) );
-        _DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
+        selected_db_file = duf_expand_sql( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
+        ry = unlink( selected_db_file );
+        {
+          char serr[1024] = "";
+          char *s;
+
+          s = strerror_r( errno, serr, sizeof( serr ) );
+          _DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
+        }
+        mas_free( selected_db_file );
       }
 #  endif
-      mas_free( selected_db_file );
-    }
 #else
 #  ifndef DUF_SQL_SELECTED_TEMPORARY
 #    error Wrong "DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
 #  endif
 #endif
+      mas_free( pdi->db_attached_selected );
+      pdi->db_attached_selected = NULL;
+    }
   }
-  mas_free( pdi->db_attached_selected );
-  pdi->db_attached_selected = NULL;
+  assert( !pdi->next );
   DEBUG_ENDR( r );
 }

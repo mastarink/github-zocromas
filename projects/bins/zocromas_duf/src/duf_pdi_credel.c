@@ -40,6 +40,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
   *pdidst = *pdisrc;
 #endif
   pdidst->pdi_name = pdname;
+  pdidst->next = NULL;
   if ( !pdidst->pdi_name )
   {
     pdidst->created_name = pdisrc->created_name;
@@ -48,7 +49,8 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
     else
       pdidst->pdi_name = pdisrc->pdi_name;
   }
-  pdidst->db_attached_selected = mas_strdup( pdisrc->db_attached_selected );
+  /* pdidst->db_attached_selected = mas_strdup( pdisrc->db_attached_selected ); */
+  assert( !pdidst->next );
   pdidst->attached_copy = 1;
   pdidst->num_idstatements = 0;
   pdidst->idstatements = NULL;

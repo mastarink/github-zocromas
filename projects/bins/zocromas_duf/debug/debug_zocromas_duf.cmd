@@ -10,7 +10,8 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 
-b duf_pathinfo_credel.c:40
+watch global_status.pdilist
+watch global_status.pdilist->next
 
 
 # commands 1

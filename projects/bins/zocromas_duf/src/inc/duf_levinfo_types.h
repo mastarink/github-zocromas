@@ -172,6 +172,7 @@ typedef struct duf_depthinfo_s
   /* int **xstatements; */
   duf_modcnts_t cnts;
   struct duf_depthinfo_s *root_pdi;
+  struct duf_depthinfo_s *next;
 } duf_depthinfo_t;
 
 #endif

@@ -127,7 +127,6 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_dbstat( pdi ) || duf_levinfo_stat( pdi ) );
-
   duf_depthinfo_t di = {
     .pdi_name = "dialog_pdi"
   };
@@ -150,6 +149,7 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                                           0 /* linear */ ,
                                           0 /* opendir */  ) );
     assert( di.pup == &uf );
+    T( "@dialog 1 next:%p", di.next );
     DUF_TEST_R( r );
     /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), DUF_NODE_LEAF (* node_type *) , pstmt_files ) ); */
 
@@ -185,7 +185,14 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       DUF_TEST_R( r );
       assert( di.pup == &uf );
     }
+    T( "@dialog 2 next:%p", di.next );
+#if 0
     duf_pdi_shut( &di );
+#else
+    duf_pdi_close( &di );
+#endif
+    T( "@dialog 3 next:%p", di.next );
+    assert( !di.next );
   }
   DEBUG_ENDR( r );
 }
