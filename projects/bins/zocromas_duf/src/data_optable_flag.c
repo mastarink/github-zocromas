@@ -45,6 +45,10 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*                             */ },
 
 
+   {.o = {DO_Q( "force-color" ) /*      */ , DO_A_N /* */ , DO_VF( FORCE_COLOR )} /*       */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, force_color ) /*                       */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "nocolor" ) /*             */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*        */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, nocolor ) /*                           */ , DO_H(  ... ) /*                             */ },
 
 
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,

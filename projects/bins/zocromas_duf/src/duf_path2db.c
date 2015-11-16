@@ -128,6 +128,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 {
   DEBUG_STARTR( r );
 
+  assert( pdi->pdi_name );
   DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
   {
     const char *truedirname;
@@ -208,12 +209,12 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #  else
           " LEFT JOIN ( SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
           "   FROM " DUF_SQL_TABLES_PATHS_FULL " AS pts " /* */
-#if 1
-	  "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
+#    if 1
+          "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
           "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
-#else
+#    else
           "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = pts.parentid ) " /* */
-#endif
+#    endif
           "   GROUP BY parents." DUF_SQL_IDFIELD ") AS td  ON (td.Pathid=pt." DUF_SQL_IDFIELD ") "
 #  endif
 #  ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
@@ -230,6 +231,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
   DEBUG_STARTR( r );
 
   assert( pdi );
+  assert( pdi->pdi_name );
 
 #if 1
   sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name, &r );
@@ -265,6 +267,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   DEBUG_STARTR( r );
 
   assert( pdi );
+  assert( pdi->pdi_name );
 
   DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
   DUF_TRACE( path, 2, "@           inserting [%40s] %d", duf_levinfo_itemshowname( pdi ), caninsert );
@@ -402,6 +405,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
 
   /* unsigned long long parentid = 0; */
   assert( pdi );
+  assert( pdi->pdi_name );
   assert( duf_levinfo_dirid( pdi ) == 0 );
   DUF_TRACE( fs, 2, "set opendir to 1 (one)" );
   od = duf_pdi_set_opendir( pdi, 1 ); /* save open status to restore */
@@ -446,6 +450,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   char *real_path;
 
   assert( pdi );
+  assert(pdi->pdi_name);
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );

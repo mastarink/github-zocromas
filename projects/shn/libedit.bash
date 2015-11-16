@@ -267,12 +267,16 @@ shn_gvimer_plus_mased ()
     local -a afline
     shn_msg "Looking for function '$file'"
 #   fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
-    if afileq=($( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )) || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*$file\>\s*)\s*(" src/ mod/ )) ; then
+    local finddirs
+    if [[ -d src ]] ; then finddirs="${finddirs:+$finddirs }src/" ; fi
+    if [[ -d mod ]] ; then finddirs="${finddirs:+$finddirs }mod/" ; fi
+shn_msg "find at $finddirs"
+    if afileq=($( grep -rl --inc='*.c' "^$file\>(" $finddirs )) || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*$file\>\s*)\s*(" $finddirs )) ; then
       shn_msg "Found function $file : ${afileq[@]}"
       flinef=$(   grep -n "^$file\>(" "${afileq[@]}")
       fline=${fline:-${flinef%:*}}
       file=${afileq[0]}
-    elif afileq=($( grep -rl --inc='*.[ch]' "#\s*define\>\s\+$file\>" src/ mod/ )) ; then
+    elif afileq=($( grep -rl --inc='*.[ch]' "#\s*define\>\s\+$file\>" $finddirs )) ; then
       shn_msg "Found define $file : ${afileq[@]}"
       afline=($(grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}"))
       flinef=$( grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}")
@@ -357,11 +361,15 @@ shn_gvimer_plus ()
 	    shopt -q extglob && xg=1
 	    shopt -s extglob
 	    local dn=${PWD##+(*([^/])/)zocromas_}.c
+	    local finddirs=''
+	    if [[ -d src ]] ; then finddirs="${finddirs:+$finddirs }./src" ; fi
+	    if [[ -d mod ]] ; then finddirs="${finddirs:+$finddirs }./mod" ; fi
+shn_msg "find at $finddirs"
 	    [[ $xg ]] || shopt -u extglob
-	    [[ $dn ]] && deffile=${deffile:-$( find ./src ./mod -type f -name "*${dn}" | head -1 )}
-			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.c'	 | head -1 )}
-			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.h'	 | head -1 )}
-			 deffile=${deffile:-$( find ./src ./mod -type f -name '*.def'	 | head -1 )}
+	    [[ $dn ]] && deffile=${deffile:-$( find $finddirs -type f -name "*${dn}" | head -1 )}
+			 deffile=${deffile:-$( find $finddirs -type f -name '*.c'	 | head -1 )}
+			 deffile=${deffile:-$( find $finddirs -type f -name '*.h'	 | head -1 )}
+			 deffile=${deffile:-$( find $finddirs -type f -name '*.def'	 | head -1 )}
             if [[ -n "$deffile" ]]; then
                 shn_gvimer_plus_mased $deffile && return 0
             fi

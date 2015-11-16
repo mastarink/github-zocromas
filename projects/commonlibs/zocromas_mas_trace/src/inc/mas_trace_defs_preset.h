@@ -36,14 +36,34 @@
 #    define MAST_TRACE_FILE         stdout
 #  endif
 
-#  ifndef MAST_TRACE_FUNWIDTH
+#  ifndef MAST_TRACE_FUNWIDTH_C
 /* #    define MAST_TRACE_FUNWIDTH( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 ) */
-#    define MAST_TRACE_FUNWIDTH( _cfg ) 18
+#    define MAST_TRACE_FUNWIDTH_C( _cfg ) 18
 #  endif
 
-#  ifndef MAST_TRACE_LEVEL
-/* #    define MAST_TRACE_LEVEL( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name ) */
-#    define MAST_TRACE_LEVEL( _cfg, _what, _name ) 0
+#  ifndef MAST_TRACE_FORCE_COLOR_C
+/* #    define MAST_TRACE_FORCE_COLOR_C( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 ) */
+#    define MAST_TRACE_FORCE_COLOR_C( _cfg ) 0
+#  endif
+
+#  ifndef MAST_TRACE_FORCE_COLOR
+/* #    define MAST_TRACE_FORCE_COLOR_C( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 ) */
+#    define MAST_TRACE_FORCE_COLOR 0
+#  endif
+
+#  ifndef MAST_TRACE_NOCOLOR_C
+/* #    define MAST_TRACE_NOCOLOR( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 ) */
+#    define MAST_TRACE_NOCOLOR_C( _cfg ) 0
+#  endif
+
+#  ifndef MAST_TRACE_NOCOLOR
+/* #    define MAST_TRACE_NOCOLOR( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 ) */
+#    define MAST_TRACE_NOCOLOR 0
+#  endif
+
+#  ifndef MAST_TRACE_LEVEL_C
+/* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name ) */
+#    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0
 #  endif
 
 #endif

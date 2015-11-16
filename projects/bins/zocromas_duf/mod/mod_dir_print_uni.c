@@ -211,7 +211,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         sformat = " _%M  =%S %8s%f\n";
       if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
         slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
-                                            &rwidth, &over );
+                                            DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }
   }

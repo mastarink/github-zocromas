@@ -29,7 +29,7 @@
 			mas_trace( \
 			    /* MAST_TRACE_MODE_ ## _name, MAST_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
-	/* level */			MAST_TRACE_LEVEL( _cfg, _what, _name ), \
+	/* level */			MAST_TRACE_LEVEL_C( _cfg, _what, _name ), \
 	/* minlevel */			_min, \
 	/* funcid, linid */		MAST_FL, \
 	/* time0 */			MAST_TRACE_LOADTIME_C( _cfg ), \
@@ -37,7 +37,9 @@
 	/* flags, nerr */		_flags, _ern, \
 	/* out */			MAST_TRACE_FILE_C( _cfg ), \
 			    		_prefix, \
-			    		MAST_TRACE_FUNWIDTH( _cfg ), \
+			    		MAST_TRACE_FUNWIDTH_C( _cfg ), \
+			    		MAST_TRACE_FORCE_COLOR_C( _cfg ), \
+			    		MAST_TRACE_NOCOLOR_C( _cfg ), \
 			    		__VA_ARGS__ )
 /* takes ern - error index */
 #  define      MAST_TRACE_WHAT_BASE( _cfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \

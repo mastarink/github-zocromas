@@ -18,6 +18,11 @@ FILE *duf_output_file( void );
 FILE *duf_trace_file_c( const duf_config_t * cfg );
 FILE *duf_trace_file( void );
 
+int duf_trace_force_color_c( const duf_config_t * cfg );
+int duf_trace_force_color( void );
+int duf_trace_nocolor_c( const duf_config_t * cfg );
+int duf_trace_nocolor( void );
+
 char duf_option_delimiter( void );
 
 char *duf_string_options_expand( const char *s, char protected_prefix );

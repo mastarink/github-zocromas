@@ -47,8 +47,8 @@ duf_clear_filepath( duf_filepath_t * pfp )
     mas_free( pfp->name );
 }
 
-int
-duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused DUF_UNUSED )
+static int
+_duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -68,13 +68,6 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
     DUF_TRACE(sql, 3, "@@@bind %s: %llu-%llu", # _name, pu->_name.min, pu->_name.max ); \
   }
 #endif
-  if ( !pu )
-  {
-    DUF_TRACE( sql, 3, "@@@bind - no pu!" );
-    assert( 0);
-    return 0;
-  }
-
   DUF_TRACE( sql, 3, "py:%d - %llu", py ? 1 : 0, py ? py->topdirid : 0 );
   if ( py )
   {
@@ -196,9 +189,9 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
 #else
- DUF_SQL_BIND_SAME(Md5, md5);
- DUF_SQL_BIND_SAME(Sha1, sha1);
- DUF_SQL_BIND_SAME(Exif, exif);
+  DUF_SQL_BIND_SAME( Md5, md5 );
+  DUF_SQL_BIND_SAME( Sha1, sha1 );
+  DUF_SQL_BIND_SAME( Exif, exif );
 #endif
 
 #if 1
@@ -216,5 +209,19 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   DUF_SQL_BIND_I_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
   DUF_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
+  DEBUG_ENDR( r );
+}
+
+int
+duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused )
+{
+  DEBUG_STARTR( r );
+  if ( !pu )
+  {
+    DUF_TRACE( sql, 3, "@@@bind - no pu!" );
+    return 0;
+  }
+  if ( pu )
+    _duf_bind_ufilter_uni( pstmt, pu, py, ttarg_unused );
   DEBUG_ENDR( r );
 }

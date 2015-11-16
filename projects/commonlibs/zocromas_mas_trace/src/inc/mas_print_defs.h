@@ -27,22 +27,33 @@
     mas_puts( MAST_OUTPUT_LEVEL, _min, \
 		MAST_FL, MAST_OUTPUT_FILE, NULL)
 
-#  define MAST_VFPRINTF( _min, _out, ...) \
-    mas_vprintf( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 0, \
-		MAST_FL, _out, __VA_ARGS__ )
-#  define MAST_VFPRINTFNE( _min, _out, ...) \
-    mas_vprintf( MAST_OUTPUT_LEVEL, 1 /*noeol*/, _min, 0, \
-		MAST_FL, _out, __VA_ARGS__ )
+#  define MAST_VFPRINTFO( _min, _out, _force_color, _nocolor, ...) \
+    mas_vprintfo( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 0, \
+		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
+#  define MAST_VFPRINTFONE( _min, _out, _force_color, _nocolor, ...) \
+    mas_vprintfo( MAST_OUTPUT_LEVEL, 1 /*noeol*/, _min, 0, \
+		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
 
-#  define MAST_FPRINTF0( _min, _out, ...) \
-    mas_printf( 0, 0 /*noeol*/, _min, 0, \
-		MAST_FL, _out, __VA_ARGS__ )
-#  define MAST_FPRINTF( _min, _out, ...) \
-    mas_printf( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 0, \
-		MAST_FL, _out, __VA_ARGS__ )
-#  define MAST_FPRINTFNE( _min, _out, ...) \
-    mas_printf( MAST_OUTPUT_LEVEL, 1 /*noeol*/, _min, 0, \
-		MAST_FL, _out, __VA_ARGS__ )
+#  define MAST_VFPRINTF( _min, _out, ...)  MAST_VFPRINTFO(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+#  define MAST_VFPRINTFNE( _min, _out, ...)   MAST_VFPRINTFONE(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+
+
+#  define MAST_FPRINTFO0( _min, _out, _force_color, _nocolor, ...) \
+    mas_printfo( 0, 0 /*noeol*/, _min, 0, \
+		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
+#  define MAST_FPRINTFO( _min, _out, _force_color, _nocolor, ...) \
+    mas_printfo( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 0, \
+		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
+#  define MAST_FPRINTFONE( _min, _out, _force_color, _nocolor, ...) \
+    mas_printfo( MAST_OUTPUT_LEVEL, 1 /*noeol*/, _min, 0, \
+		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
+
+#  define MAST_FPRINTF0( _min, _out, ...) MAST_FPRINTFO0(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+#  define MAST_FPRINTF( _min, _out, ...) MAST_FPRINTFO(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+#  define MAST_FPRINTFNE( _min, _out, ...) MAST_FPRINTFONE(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+
+
+
 
 
 #  define MAST_PRINTF( _min, ...) MAST_FPRINTF(_min, MAST_OUTPUT_FILE, __VA_ARGS__ )
@@ -50,12 +61,12 @@
 #  define MAST_PRINTFNE( _min, ...) MAST_FPRINTFNE(_min, MAST_OUTPUT_FILE, __VA_ARGS__ )
 
 /* #  define MAST_PRINTF( _min, ...) \                                                                                */
-/*     mas_printf( MAST_OUTPUT_LEVEL, 0, _min, 0, \                                           */
-/*                 MAST_FL, MAST_OUTPUT_FILE, __VA_ARGS__ ) */
+/*     mas_printfo( MAST_OUTPUT_LEVEL, 0, _min, 0, \                                           */
+/*                 MAST_FL, MAST_OUTPUT_FILE, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__ ) */
 
 #  define MAST_DIE( _min, ...) \
-    mas_printf( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 1, \
-		MAST_FL, MAST_OUTPUT_FILE, __VA_ARGS__ )
+    mas_printfo( MAST_OUTPUT_LEVEL, 0 /*noeol*/, _min, 1, \
+		MAST_FL, MAST_OUTPUT_FILE, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__ )
 
 
 #  define P(txt) MAST_PRINTF(0, #txt)

@@ -20,3 +20,7 @@ sfind mas_error_reporting.h
 
 tab sfind mas_errors_maintenance.h
 sfind mas_error_types.h
+
+tab sfind mas_error_tracen_defs_preset.h
+tab sfind merror_test.c
+

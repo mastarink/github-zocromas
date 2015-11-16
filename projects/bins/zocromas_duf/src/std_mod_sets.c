@@ -38,7 +38,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    DUF_SQL_UFILTER_BINDINGS     /* */
    /* " ORDER BY ...." */
    }
-    ,                             /* */
+  ,                             /* */
   {                             /* */
    .name = "std leaf no sel no matcher",
    .type = DUF_NODE_LEAF,
@@ -46,9 +46,11 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .fieldset = "#std-ns-leaf",
    .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
    "#std-ns-leaf",
-   .filter =                    /* */
-   DUF_SQL_UFILTER_BINDINGS     /* */
+   .filter = DUF_SQL_UFILTER_BINDINGS, /* */
    /* " ORDER BY ...." */
+   /* .order = "sha1id",           (* *) */
+   /* .order = "nsame_sha1 DESC,sha1id",           (* *) */
+   .order = "sh.dupsha1cnt DESC,sha1id",           /* */
    }
 };
 

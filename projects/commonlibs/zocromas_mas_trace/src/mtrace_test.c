@@ -21,11 +21,13 @@ tmp_cfg_t *ptmpcfg = &tmpcfg;
 #define MAST_DBG_AT_CFG  dbg
 #define MAST_TRACE_LOADTIME 0
 /* #define MAST_TRACE_FUNWIDTH(_cfg) _cfg->opt.output.fun_width */
-#define MAST_TRACE_FUNWIDTH( _cfg ) 18
+#define MAST_TRACE_FUNWIDTH_C( _cfg ) 18
+#define MAST_TRACE_FORCE_COLOR_C( _cfg ) 0
+#define MAST_TRACE_NOCOLOR_C( _cfg ) 0
 #define MAST_TRACE_LOADTIME_C( _cfg ) 0
 #define MAST_TRACE_FILE_C( _cfg ) stderr
 #define MAST_TRACE_CONFIG ptmpcfg
-#define MAST_TRACE_LEVEL( _cfg, _what, _name ) 0
+#define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0
 
 #include "mas_trace_defs.h"
 #include "mas_trace.h"

@@ -7,6 +7,15 @@
 #    define MAST_OUTPUT_LEVEL 0
 #  endif
 
+#  ifndef MAST_OUTPUT_FORCE_COLOR
+#    define MAST_OUTPUT_FORCE_COLOR 0
+#  endif
+
+#  ifndef MAST_OUTPUT_NOCOLOR
+#    define MAST_OUTPUT_NOCOLOR 0
+#  endif
+
+
 #  ifndef MAST_OUTPUT_FILE
 #    define MAST_OUTPUT_FILE  stdout
 #  endif

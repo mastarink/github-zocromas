@@ -36,13 +36,20 @@
 #  endif
 
 
-#  ifndef MAST_TRACE_FUNWIDTH
-#    define MAST_TRACE_FUNWIDTH( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 )
+#  ifndef MAST_TRACE_FUNWIDTH_C
+#    define MAST_TRACE_FUNWIDTH_C( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 )
+#  endif
+
+#  ifndef MAST_TRACE_FORCE_COLOR_C
+#    define MAST_TRACE_FORCE_COLOR_C( _cfg ) duf_trace_force_color()
+#  endif
+#  ifndef MAST_TRACE_NOCOLOR
+#    define MAST_TRACE_NOCOLOR_C( _cfg )  duf_trace_nocolor()
 #  endif
 
 #  ifndef MAST_TRACE_LEVEL
-#    define MAST_TRACE_LEVEL( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name )
-/* #    define MAST_TRACE_LEVEL( _cfg, _what, _name ) 0 */
+#    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name )
+/* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0 */
 #  endif
 
 

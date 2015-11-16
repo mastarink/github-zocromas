@@ -25,7 +25,7 @@
 #include "duf_config_util.h"
 /* ###################################################################### */
 
-extern duf_config_t *duf_config /* __attribute__( ( weak ) ) */;
+extern duf_config_t *duf_config /* __attribute__( ( weak ) ) */ ;
 
 duf_config_t *
 duf_get_config( void )
@@ -95,6 +95,33 @@ FILE *
 duf_trace_file( void )
 {
   return duf_trace_file_c( duf_config );
+}
+
+int
+duf_trace_force_color_c( const duf_config_t * cfg )
+{
+  /* fprintf(stderr, "@@@@@@@@@@@@@@FC:%d\n", cfg ? cfg->opt.act.v.flag.force_color : 0 ); */
+  return cfg ? cfg->opt.act.v.flag.force_color : 0;
+  /* return DUF_ACTG_FLAG( force_color ); */
+}
+
+int
+duf_trace_force_color( void )
+{
+  return duf_trace_force_color_c( duf_config );
+}
+
+int
+duf_trace_nocolor_c( const duf_config_t * cfg )
+{
+  return cfg ? cfg->opt.act.v.flag.nocolor : 0;
+  /* return DUF_ACTG_FLAG( nocolor ); */
+}
+
+int
+duf_trace_nocolor( void )
+{
+  return duf_trace_nocolor_c( duf_config );
 }
 
 char

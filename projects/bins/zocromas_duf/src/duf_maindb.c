@@ -259,20 +259,6 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     DOR( r, duf_main_db_close( pdi, 0 ) );
     DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
   }
-  {
-    duf_depthinfo_t *pdis;
-
-    pdis = global_status.pdilist;
-    while ( pdis && pdis != pdi )
-      pdis = pdis->next;
-    if ( !pdis )
-    {
-      assert( !pdi->next );
-      pdi->next = global_status.pdilist;
-      global_status.pdilist = pdi;
-      T( "@link (%p=>%p) pdi:%p => %p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
-    }
-  }
   DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
 #if 0
   if ( !DUF_CONFIGG( db.opened ) )
@@ -318,6 +304,21 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     /* if ( DUF_NOERROR( r ) ) */
     /*   r++; (* ???? *)       */
   }
+  {
+    duf_depthinfo_t *pdis;
+
+    pdis = global_status.pdilist;
+    while ( pdis && pdis != pdi )
+      pdis = pdis->next;
+    if ( !pdis )
+    {
+      assert( !pdi->next );
+      pdi->next = global_status.pdilist;
+      assert( !pdi->attached_copy );
+      global_status.pdilist = pdi;
+      DUF_TRACE( temp, 2, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+    }
+  }
   DEBUG_ENDR( r );
 }
 
@@ -353,11 +354,11 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
           prev_pdis->next = pdis->next;
         else
           global_status.pdilist = pdis->next;
-        T( "@unlink pdi:%p", pdi );
+        DUF_TRACE( temp, 2, "@unlink (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
         pdis->next = NULL;
       }
     }
-    if ( pdis && !global_status.pdilist )                 /* close only if opened for this pdi */
+    if ( pdis && !global_status.pdilist ) /* close only if opened for this pdi */
     {
       DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db_opened_name );
 #if 0
@@ -386,7 +387,7 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
 #endif
       /* don't DOR it directly! call allways! */
       DORF( rt, duf_sql_close );
-      T("@duf_sql_close: rt:%d", rt);
+      T( "@duf_sql_close: rt:%d", rt );
       if ( r == 0 && rt < 0 )
         DOR( r, rt );
 #if 0

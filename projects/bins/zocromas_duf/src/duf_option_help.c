@@ -794,12 +794,16 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run     --std-leaf-set=2 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -R 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run     --std-leaf-set=2 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -Rdu 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run     --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3  --ls test/tree/ -uL 	- %s", " -= \"\" =-" );
-  DUF_PRINTF( 0,
-              "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --ls test/tree/ -L 	- %s",
-              " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 "
+              " --same-as-sha1=test/tree/test/duf/20150602/out20150602.131822.test.sql1 --ls test/tree/ -L 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0,
               "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 --sha1id=380 --ls test/tree/ -L 	- %s",
               " -= \"\" =-" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20151115.165244 ============" );
+  DUF_PRINTF( 0, "  run   --db-name=photo  --evaluate-sccb=listing /home/mastar/big/misc/media/photo  -f  --std-leaf-set=3 "
+              " --force-color  -L | less -R 	- %s", " -= \"\" =-" );
 
 
   DUF_PRINTF( 0, "=============================================================" );

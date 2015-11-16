@@ -198,7 +198,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           sformat_pref = "_%-6M =%-4S%P";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              &over );
       }
       if ( !over )
       {
@@ -229,7 +230,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              &over );
       }
       DUF_PUTSL( 0 );
     }
@@ -332,7 +334,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat_pref = " %6s  %4s%P";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              &over );
       }
       if ( !over )
       {
@@ -362,7 +365,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat = "%f\n";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, &rwidth, &over );
+                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              &over );
       }
       DUF_PUTSL( 0 );
     }

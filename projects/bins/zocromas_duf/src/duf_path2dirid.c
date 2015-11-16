@@ -45,7 +45,7 @@ duf_path2dirid( const char *path, int *pr )
 
   if ( DUF_NOERROR( rpr ) )
   {
-    duf_depthinfo_t di = { 0 };
+    duf_depthinfo_t di = {.pdi_name = "path2dirid" };
 
 #if 0
     DOR( rpr,
@@ -57,7 +57,7 @@ duf_path2dirid( const char *path, int *pr )
     if ( DUF_NOERROR( rpr ) )
       dirid = duf_levinfo_dirid( &di );
     /* xchanges = di.changes; --- needless!? */
-    duf_pdi_shut( &di );
+    duf_pdi_close( &di );
   }
   mas_free( real_path );
   if ( pr )
@@ -140,7 +140,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   int done = 0;
   int depth = 0;
 
-  duf_depthinfo_t di = { 0 };
+  duf_depthinfo_t di = {.pdi_name = "dirid2path" };
 #if 0
   DOR( rpr, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
                                           0 /* linear */ ,
@@ -168,7 +168,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
     mas_free( name );
   }
   while ( !done );
-  duf_pdi_shut( &di );
+  duf_pdi_close( &di );
 
   if ( pr )
     *pr = rpr;

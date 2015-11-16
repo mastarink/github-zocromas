@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -18,9 +19,10 @@ mas_color_s( int is_atty, const char *s )
 }
 
 const char *
-mas_fcolor_s( FILE * out, const char *s )
+mas_fcoloro_s( FILE * out, int force_color, int nocolor, const char *s )
 {
-  return mas_color_s( isatty( fileno( out ) ), s );
+  return mas_color_s( ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ) ? 1 : 0, s );
+  /* return mas_color_s( isatty( fileno( out ) ), s ); */
 }
 
 int
@@ -50,15 +52,27 @@ mas_sncolor_s( int is_atty, char *buf, size_t size, const char *fmt, ... )
 }
 
 int
-mas_vprint_color_s( FILE * out, const char *fmt, va_list args )
+mas_vprint_coloro_s( FILE * out, int force_color, int nocolor, const char *fmt, va_list args )
 {
   int ry = -1;
   char buf[2048];
 
-  ry = mas_vsncolor_s( isatty( fileno( out ) ), buf, sizeof( buf ), fmt, args );
+  ry = mas_vsncolor_s( ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ) ? 1 : 0, buf, sizeof( buf ), fmt, args );
   if ( *buf )
     ry = fputs( buf, out );
   /* ry = fwrite( buf, 1, strlen( buf ), out ); */
+  return ry;
+}
+
+int
+mas_print_coloro_s( FILE * out, int force_color, int nocolor, const char *fmt, ... )
+{
+  int ry = 0;
+  va_list args;
+
+  va_start( args, fmt );
+  ry = mas_vprint_coloro_s( out, force_color, nocolor, fmt, args );
+  va_end( args );
   return ry;
 }
 
@@ -67,15 +81,18 @@ mas_print_color_s( FILE * out, const char *fmt, ... )
 {
   int ry = 0;
   va_list args;
+  int force_color = 0;
+  int nocolor = 0;
 
   va_start( args, fmt );
-  ry = mas_vprint_color_s( out, fmt, args );
+  ry = mas_vprint_coloro_s( out, force_color, nocolor, fmt, args );
   va_end( args );
   return ry;
 }
 
 int
-mas_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
+mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, int force_color, int nocolor,
+              const char *fmt, va_list args )
 {
   int ry = -1;
   int colorize = 1;
@@ -123,7 +140,9 @@ mas_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
       }
       while ( fmt += valid, valid );
       {
-        static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
+        static char *hls[] = {
+          "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47"
+        };
         if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
           fprintf( out, "\x1b[%sm ", hls[highlight] );
         else if ( highlight )
@@ -158,13 +177,13 @@ mas_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
 #  if 0
           fprintf( out, "\x1b[%sm", hls[highlight] );
 #  else
-          mas_print_color_s( out, "\x1b[%sm", hls[highlight] );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", hls[highlight] );
 #  endif
         else if ( highlight )
 #  if 0
           fprintf( out, "\x1b[%sm", hls[0] );
 #  else
-          mas_print_color_s( out, "\x1b[%sm", hls[0] );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", hls[0] );
 #  endif
         /* fprintf( out, "%s", pbuf ); */
         fwrite( pbuf, 1, strlen( pbuf ), out );
@@ -172,7 +191,7 @@ mas_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
 #  if 0
           fprintf( out, "\x1b[m" );
 #  else
-          mas_print_color_s( out, "\x1b[%sm", "" );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", "" );
 #  endif
       }
 #endif
@@ -192,13 +211,14 @@ mas_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
 }
 
 int
-mas_printf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+mas_printfo( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, int force_color, int nocolor,
+             const char *fmt, ... )
 {
   int ry = 0;
   va_list args;
 
   va_start( args, fmt );
-  ry = mas_vprintf( level, noeol, minlevel, ifexit, funcid, linid, out, fmt, args );
+  ry = mas_vprintfo( level, noeol, minlevel, ifexit, funcid, linid, out, force_color, nocolor, fmt, args );
   va_end( args );
   return ry;
 }

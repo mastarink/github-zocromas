@@ -36,18 +36,16 @@ mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST
 
     s = mas_error_name_i( ern );
     if ( ern < 0 && s )
-      MAST_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", s, ern, mas_errnumber_i( ern ) );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "\n  [%s] (#%d; i.e.%d)\n", s, ern, mas_errnumber_i( ern ) );
     else
-      MAST_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "Error rv=%d\n", ern );
   }
   return r_;
 }
 #endif
 int
-mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t trace_submode MAST_UNUSED, */ const char *name, int level, int minlevel,
-            const char *funcid,
-            int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width, const char *fmt,
-            va_list args )
+mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum, unsigned flags, int nerr, FILE * out,
+            const char *prefix, int fun_width, int force_color, int nocolor, const char *fmt, va_list args )
 {
   int r_ = -1;
   static int ftimez = 0;
@@ -130,20 +128,23 @@ mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t tr
       for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      MAST_FPRINTFNE( 0, out, "\r%cL%-2d:%2d ", signum, level, minlevel );
-      MAST_FPRINTFNE( 0, out, "[%s%-7s%s] ", mas_fcolor_s( out, "\x1b[1;34m" ), uname, mas_fcolor_s( out, "\x1b[m" ) );
-      MAST_FPRINTFNE( 0, out, "%s%3u%s:", mas_fcolor_s( out, "\x1b[1;33m" ), linid, mas_fcolor_s( out, "\x1b[m" ) );
+      /* MAST_FPRINTFONE( 0, out, force_color, nocolor, "\r%cL%-2d:%2d ", signum, level, minlevel ); */
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "%cL%-2d:%2d ", signum, level, minlevel );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "[%s%-7s%s] ", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;34m" ), uname,
+                       mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "%s%3u%s:", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;33m" ), linid,
+                       mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
 #if 0
-      MAST_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "%-" T_FN_FMT "s", pfuncid );
 #else
       {
         char xfmt[128];
 
 /* \e[1;33m101\e[1;37m:mas_all_options\e[m */
-        snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", mas_fcolor_s( out, "\x1b[1;32m" ),
+        snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;32m" ),
                   fun_width ? fun_width /* mas_config && mas_config->opt.output.fun_width ? mas_config->opt.output.fun_width */ : T_FN_FMTN,
-                  mas_fcolor_s( out, "\x1b[m" ) );
-        MAST_FPRINTFNE( 0, out, xfmt, pfuncid );
+                  mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+        MAST_FPRINTFONE( 0, out, force_color, nocolor, xfmt, pfuncid );
       }
 #endif
     }
@@ -158,7 +159,7 @@ mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t tr
         double timec = 0.;
 #  endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-        MAST_FPRINTFNE( 0, out, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
+        MAST_FPRINTFONE( 0, out, force_color, nocolor, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
       }
     }
 #endif
@@ -166,18 +167,18 @@ mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t tr
     {
       static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
       if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
-        MAST_FPRINTFNE( 0, out, "\x1b[%sm ", hls[highlight] );
+        MAST_FPRINTFONE( 0, out, force_color, nocolor, "\x1b[%sm ", hls[highlight] );
       else if ( highlight )
-        MAST_FPRINTFNE( 0, out, "\x1b[%sm ", hls[0] );
+        MAST_FPRINTFONE( 0, out, force_color, nocolor, "\x1b[%sm ", hls[0] );
       else
-        MAST_FPRINTFNE( 0, out, " " );
+        MAST_FPRINTFONE( 0, out, force_color, nocolor, " " );
     }
 #endif
-    r_ = MAST_FPRINTFNE( 0, out, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
-    r_ = MAST_VFPRINTFNE( 0, out, fmt, args );
+    r_ = MAST_FPRINTFONE( 0, out, force_color, nocolor, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
+    r_ = MAST_VFPRINTFONE( 0, out, force_color, nocolor, fmt, args );
 #if 0
     if ( highlight )
-      MAST_FPRINTFNE( 0, out, "\x1b[m" );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "\x1b[m" );
 #endif
     if ( flags & MAST_TRACE_FLAG_SYSTEM )
     {
@@ -185,20 +186,19 @@ mas_vtrace(  /* mas_trace_mode_t trace_mode MAST_UNUSED,  mas_trace_submode_t tr
       char *s;
 
       s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
-      MAST_FPRINTFNE( 0, out, "; errno:(%d) [%s]", nerr, s );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "; errno:(%d) [%s]", nerr, s );
     }
     if ( !noeol )
     {
-      MAST_FPRINTFNE( 0, out, "\n" );
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "\n" );
     }
   }
   return r_;
 }
 
 int
-mas_trace(  /* mas_trace_mode_t trace_mode,  mas_trace_submode_t trace_submode, */ const char *name, int level, int minlevel, const char *funcid,
-           int linid,
-           double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, int fun_width, const char *fmt, ... )
+mas_trace( const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum, unsigned flags, int nerr, FILE * out,
+           const char *prefix, int fun_width, int force_color, int nocolor, const char *fmt, ... )
 {
   int r_ = 0;
   va_list args;
@@ -206,8 +206,7 @@ mas_trace(  /* mas_trace_mode_t trace_mode,  mas_trace_submode_t trace_submode, 
 
   va_start( args, fmt );
   /* takes ern - error index */
-  r_ = mas_vtrace(  /* trace_mode,  trace_submode, */ name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, fmt,
-                   args );
+  r_ = mas_vtrace( name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, force_color, nocolor, fmt, args );
   va_end( args );
   return r_;
 }

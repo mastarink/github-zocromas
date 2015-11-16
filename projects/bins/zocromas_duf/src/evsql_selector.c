@@ -165,6 +165,8 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
     /* else                                                               */
     {
       int has_where = 0;
+      int has_group = 0;
+      int has_order = 0;
       const char *selector = NULL;
       char *fieldset = NULL;
 
@@ -248,6 +250,28 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
               sql = mas_strcat_x( sql, " WHERE " );
             has_where = 1;
             sql = mas_strcat_x( sql, sql_set->matcher );
+          }
+#endif
+#if 1
+          if ( sql_set->group )
+          {
+            if ( has_group )
+              sql = mas_strcat_x( sql, "," );
+            else
+              sql = mas_strcat_x( sql, " GROUP BY " );
+            has_group = 1;
+            sql = mas_strcat_x( sql, sql_set->order );
+          }
+#endif
+#if 1
+          if ( sql_set->order )
+          {
+            if ( has_order )
+              sql = mas_strcat_x( sql, "," );
+            else
+              sql = mas_strcat_x( sql, " ORDER BY " );
+            has_order = 1;
+            sql = mas_strcat_x( sql, sql_set->order );
           }
 #endif
         }
