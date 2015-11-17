@@ -88,7 +88,6 @@ _duf_extended_table_multi_init( void )
     n++;
     src++;
   }
-  T( "n:%d", n );
   n++;
   lo_extended_table_multi = mas_malloc( sizeof( duf_longval_extended_table_t ** ) * n );
   memset( lo_extended_table_multi, 0, n );

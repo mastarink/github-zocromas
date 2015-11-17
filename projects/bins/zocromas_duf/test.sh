@@ -21,6 +21,8 @@ function comparetest ()
     cp -a $(realpath  ${ttype}.${name}.tmp) $(realpath  $matchdir/)
   elif ! diff $matchdir/${ttype}.${name}.tmp ${ttype}.${name}.tmp > diff.${ttype}.${name}.tmp ; then
     echo "test error $(realpath --relative-to=$test_at diff.${ttype}.${name}.tmp)" >&2
+    echo "--- $(realpath $matchdir/${ttype}.${name}.tmp)" >&2
+    echo "--- $(realpath ${ttype}.${name}.tmp)" >&2
   else
     echo -n '.' >&2
   fi
