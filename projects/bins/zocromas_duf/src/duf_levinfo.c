@@ -14,7 +14,7 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
 
-#include "duf_pathinfo_credel.h"
+#include "duf_pathinfo.h"
 
 
 #include "duf_pstmt_levinfo.h"

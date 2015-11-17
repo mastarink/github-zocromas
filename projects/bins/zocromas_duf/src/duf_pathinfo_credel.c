@@ -14,20 +14,13 @@
 
 #include "duf_dh.h"
 
+#include "duf_pathinfo_ref.h"
+#include "duf_pathinfo.h"
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
 #include "duf_pathinfo_credel.h"
 /* ###################################################################### */
-
-int
-duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
-{
-  int d;
-  assert( pi );
-  d = pi->levinfo ? duf_li_calc_depth( pi->levinfo ) : 0;
-  return d;
-}
 
 void
 duf_pi_levinfo_delete( duf_pathinfo_t * pi )
@@ -40,24 +33,13 @@ duf_pi_levinfo_delete( duf_pathinfo_t * pi )
   }
 }
 
-int
-duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
+void
+duf_pi_init_level_d( duf_pathinfo_t * pi, const char *itemname, unsigned long long dirid, duf_node_type_t node_type, int d )
 {
-  DEBUG_STARTR( r );
+  duf_levinfo_t *li;
 
-  assert( pi );
-
-  if ( maxdepth )
-  {
-    duf_pi_levinfo_delete( pi );
-    assert( !pi->levinfo );
-    pi->maxdepth = maxdepth;
-    pi->levinfo = pli;
-    pi->depth = duf_li_calc_depth( pli );
-    assert( pi->levinfo );
-  }
-
-  DEBUG_ENDR( r );
+  li = duf_pi_ptr_d( pi, d );
+  duf_li_init( li, itemname, dirid, node_type );
 }
 
 int
@@ -96,23 +78,4 @@ duf_pi_shut( duf_pathinfo_t * pi )
   DEBUG_ENDR( r );
 }
 
-int
-duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd )
-{
-  DEBUG_STARTR( r );
 
-  pi->depth = -1;
-
-  if ( real_path )
-  {
-    DOR( r, mas_pathdepth( real_path ) );
-    if ( DUF_NOERROR( r ) )
-      pi->topdepth = r;
-  }
-
-  assert( pi->depth == -1 );
-  /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
-  pi->maxdepth = max_rd ? max_rd : 20 + ( pi->topdepth ? pi->topdepth : 20 ); /* FIXME ??? */
-
-  DEBUG_ENDR( r );
-}

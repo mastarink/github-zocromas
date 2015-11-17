@@ -24,6 +24,7 @@ const char *duf_pi_itemtruename( const duf_pathinfo_t * pi );
 const char *duf_pi_itemtruename_up( const duf_pathinfo_t * pi );
 const char *duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q );
 
+/*
 void duf_pi_set_dirid_d( duf_pathinfo_t * pi, unsigned long long dirid, int d );
 void duf_pi_set_dirid( duf_pathinfo_t * pi, unsigned long long dirid );
 void duf_pi_set_dirid_up( duf_pathinfo_t * pi, unsigned long long dirid );
@@ -39,6 +40,7 @@ unsigned long long duf_pi_nodedirid_up( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_nameid_d( const duf_pathinfo_t * pi, int d );
 unsigned long long duf_pi_nameid( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_nameid_up( const duf_pathinfo_t * pi );
+*/
 
 unsigned long long duf_pi_items_files_d( const duf_pathinfo_t * pi, int d );
 unsigned long long duf_pi_items_files( const duf_pathinfo_t * pi );

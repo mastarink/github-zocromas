@@ -19,6 +19,8 @@
 #include "duf_pdi_stmt.h"
 
 #include "duf_pathinfo_credel.h"
+#include "duf_pathinfo.h"
+
 #include "duf_ufilter_ref.h"
 
 #include "sql_tables_defs.h"

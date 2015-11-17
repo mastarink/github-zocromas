@@ -65,6 +65,24 @@ duf_li_clear_n( duf_levinfo_t * pli, unsigned maxdepth )
 }
 
 void
+duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
+{
+  assert( pli );
+
+  duf_li_clear( pli );
+  assert( !pli->itemname );
+
+  pli->node_type = node_type;
+  pli->db.dirid = dirid;
+
+  if ( itemname )
+  {
+    assert( !pli->itemname );
+    pli->itemname = mas_strdup( itemname );
+  }
+}
+
+void
 duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth )
 {
   duf_li_clear_n( pli, maxdepth );

@@ -6,6 +6,7 @@
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_pathinfo.h"
 #include "duf_pathinfo_ref.h"
 #include "duf_pathinfo_credel.h"
 

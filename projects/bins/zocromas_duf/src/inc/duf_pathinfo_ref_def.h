@@ -28,7 +28,8 @@
   duf_pi_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
   { \
     _typ  _ref2 __val; \
-    __val=((_cond)?(_ref1 duf_pi_ptr_d( pi, d )->_fld):((_typ _ref2) 0)); \
+    duf_levinfo_t *pli= duf_pi_ptr_d( pi, d ); \
+    __val=(pli && (_cond)?(_ref1 pli->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   }
 
@@ -87,7 +88,7 @@
 #  define DUF_PATHINFO_FC_REF(_typ, _name) DUF_PATHINFO_FC_PLUS(_typ, _name, &, *)
 #  define DUF_PATHINFO_FC_UP_REF(_typ, _name) DUF_PATHINFO_FC_UP_PLUS(_typ, _name, &, *)
 
-
+/*
 #  define DUF_PATHINFO_3GET_PLUS_OLD(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   _typ _ref2 \
   duf_pi_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
@@ -99,6 +100,7 @@
    \
   DUF_PATHINFO_FC_PLUS( _typ, _name, _ref1, _ref2 ) \
   DUF_PATHINFO_FC_UP_PLUS( _typ, _name, _ref1, _ref2 )
+*/
 
 #  define DUF_PATHINFO_3GET_PLUS(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   DUF_PATHINFO_FC_D_PLUS(  _typ, _name, _fld, _cond, _ref1, _ref2, _suffix ) \
