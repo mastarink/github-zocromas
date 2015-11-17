@@ -7,7 +7,6 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_levinfo_stat.h"
 /* ###################################################################### */
 #include "duf_levinfo_openclose.h"
 /* ###################################################################### */

@@ -20,6 +20,24 @@
 
 #  define DUF_PATHINFO_F(_typ, _name) DUF_PATHINFO_F_PLUS(_typ, _name, , )
 #  define DUF_PATHINFO_F_UP(_typ, _name) DUF_PATHINFO_F_UP_PLUS(_typ, _name, , )
+/***************************************************************************************/
+#  define DUF_PATHINFO_VF_PLUS(_typ, _name, _ref1, _ref2) _typ duf_pi_ ## _name(  duf_pathinfo_t * pi ) \
+	{ \
+	  assert( pi ); \
+	  duf_pi_ ## _name ## _d( pi, pi->depth ); \
+	}
+
+#  define DUF_PATHINFO_VF_UP_PLUS(_typ, _name, _ref1, _ref2) \
+  	_typ _ref2 \
+	duf_pi_ ## _name ## _up(  duf_pathinfo_t * pi ) \
+	{ \
+	  assert( pi ); \
+	  if (pi->depth > 0 ) \
+	    duf_pi_ ## _name ## _d( pi, pi->depth - 1 ); \
+	}
+
+#  define DUF_PATHINFO_VF(_typ, _name) DUF_PATHINFO_VF_PLUS(_typ, _name, , )
+#  define DUF_PATHINFO_VF_UP(_typ, _name) DUF_PATHINFO_VF_UP_PLUS(_typ, _name, , )
 
 /*********************** in FC - 'C' means const ***************************************/
 

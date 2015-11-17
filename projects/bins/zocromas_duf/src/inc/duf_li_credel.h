@@ -2,7 +2,7 @@
 #  define MAS_DUF_LI_CREDEL_H
 
 void duf_li_clear( duf_levinfo_t * pli );
-void duf_li_clear_n( duf_levinfo_t * pli, unsigned maxcount );
+void duf_li_clear_alln( duf_levinfo_t * pli, unsigned maxcount );
 void duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type );
 
 void duf_li_delete( duf_levinfo_t * pli, unsigned maxcount );

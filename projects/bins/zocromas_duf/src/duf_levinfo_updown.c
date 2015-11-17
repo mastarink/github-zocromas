@@ -4,23 +4,14 @@
 #include "duf_pdi_pi_ref.h"
 #include "duf_pdi_depth.h"
 
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
-
 #include "duf_levinfo.h"
 #include "duf_levinfo_init.h"
 #include "duf_levinfo_dbinit.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"
 
-
-
 #include "duf_pathinfo.h"
 #include "duf_pathinfo_ref.h"
-#include "duf_pathinfo_credel.h"
-
-
-#include "duf_pstmt_levinfo.h"
 
 #include "duf_sccb_scanstage.h" /* duf_nodetype_name, temporarily */
 /* ###################################################################### */

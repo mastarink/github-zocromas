@@ -7,6 +7,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi_filters.h"
+#include "duf_pdi_pi_ref.h"
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
@@ -76,7 +77,6 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
                            duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
   DUF_SQL_START_STMT_NOPDI( sql_selector, r, pstmt_selector );

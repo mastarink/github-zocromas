@@ -1,23 +1,17 @@
-find duf_levinfo.c
-sfind duf_levinfo.h
+find duf_levinfo_credel.c
+sfind duf_levinfo_credel.h
 
 tab sfind duf_levinfo_init.c
 sfind duf_levinfo_init.h
 
+tab sfind duf_levinfo.c
+sfind duf_levinfo.h
+
 tab sfind duf_levinfo_dbinit.c
 sfind duf_levinfo_dbinit.h
 
-tab sfind duf_levinfo_credel.c
-sfind duf_levinfo_credel.h
-
 tab sfind duf_levinfo_count.c
 sfind duf_levinfo_count.h
-
-tab sfind duf_li_credel.c
-sfind duf_li_credel.h
-
-tab sfind duf_li.c
-sfind duf_li.h
 
 tab sfind duf_levinfo_openclose.c
 sfind duf_levinfo_openclose.h
@@ -37,15 +31,4 @@ sfind duf_levinfo_ref_def.h
 
 tab sfind duf_pstmt_levinfo.c
 sfind duf_pstmt_levinfo.h
-
-tab sfind duf_pathinfo_credel.c
-sfind duf_pathinfo_credel.h
-
-tab sfind duf_pathinfo.c
-sfind duf_pathinfo.h
-
-tab sfind duf_pathinfo_ref.c
-sfind duf_pathinfo_ref.h
-sfind duf_pathinfo_ref_def.h
-
 

@@ -2,24 +2,10 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_context.h"
-
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
-
-#include "duf_li.h"
-#include "duf_li_credel.h"
-
-#include "duf_levinfo_ref.h"
-#include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_context.h"
-
 #include "duf_pathinfo_credel.h"
-
-#include "duf_pstmt_levinfo.h"
+#include "duf_levinfo.h"
 
 /* ###################################################################### */
-#include "duf_levinfo.h"
 #include "duf_levinfo_init.h"
 /* ###################################################################### */
 

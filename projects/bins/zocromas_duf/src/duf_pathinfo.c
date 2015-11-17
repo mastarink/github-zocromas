@@ -72,3 +72,22 @@ duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd
 
   DEBUG_ENDR( r );
 }
+void
+duf_pi_levinfo_clear_d( duf_pathinfo_t * pi, int d )
+{
+  assert( pi );
+  duf_li_clear( &pi->levinfo[d] );
+}
+/* *INDENT-OFF*  */
+DUF_PATHINFO_VF( void, levinfo_clear )
+DUF_PATHINFO_VF_UP( void, levinfo_clear )
+/* *INDENT-ON*  */
+
+void
+duf_pi_levinfo_clear_all( duf_pathinfo_t * pi )
+{
+  assert( pi );
+  duf_li_clear_alln( pi->levinfo, pi->maxdepth );
+}
+
+

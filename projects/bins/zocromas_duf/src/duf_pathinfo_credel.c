@@ -25,9 +25,14 @@
 void
 duf_pi_levinfo_delete( duf_pathinfo_t * pi )
 {
+  assert( pi );
   if ( pi->levinfo )
   {
+#if 0
     duf_li_clear_n( pi->levinfo, pi->maxdepth );
+#else
+    duf_pi_levinfo_clear_all( pi );
+#endif
     mas_free( pi->levinfo );
     pi->levinfo = NULL;
   }
@@ -77,5 +82,3 @@ duf_pi_shut( duf_pathinfo_t * pi )
 
   DEBUG_ENDR( r );
 }
-
-

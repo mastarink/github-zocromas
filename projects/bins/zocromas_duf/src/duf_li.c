@@ -115,8 +115,8 @@ _duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt )
   /* pli->numfile = DUF_GET_UFIELD2( nfiles ); */
   duf_li_set_nums( pli, DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ) );
 #else
-  /* if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE ) */
-  /*   duf_levinfo_make_childs_d( pdi, d );                    */
+  /* if ( duf_levinfo_node_type_d( pditemp, d ) == DUF_NODE_NODE ) */
+  /*   duf_levinfo_make_childs_d( pditemp, d );                    */
 #endif
   pli->db.nameid = DUF_GET_UFIELD2( nameid );
   {
@@ -150,11 +150,11 @@ duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t node_ty
 }
 
 static int
-_duf_dirid2li_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
+_duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
 {
   DEBUG_STARTR( r );
 
-  DUF_SQL_START_STMT( pdi, dirid2li_existed, sqlv, r, pstmt );
+  DUF_SQL_START_STMT( pditemp, dirid2li_existed, sqlv, r, pstmt );
   {
     DUF_SQL_BIND_LL( dirID, dirid, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
@@ -171,13 +171,13 @@ _duf_dirid2li_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long lo
       DUF_TRACE( select, 10, "<NOT selected> (%d)", r );
     }
   }
-  DUF_SQL_END_STMT( pdi, dirid2li_existed, r, pstmt );
+  DUF_SQL_END_STMT( pditemp, dirid2li_existed, r, pstmt );
   DEBUG_ENDR( r );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
 int
-duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
+duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
 {
   DEBUG_STARTR( r );
   char *sqlv = NULL;
@@ -196,13 +196,13 @@ duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levin
     " WHERE pt." DUF_SQL_IDFIELD "=:dirID"
   };
 
-  assert( pdi );
+  assert( pditemp );
 
   {
-    sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, &r );
+    sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
     if ( sqlv )
     {
-      DOR( r, _duf_dirid2li_existed( pdi, sqlv, dirid, pli, pparentid ) );
+      DOR( r, _duf_dirid2li_existed( pditemp, sqlv, dirid, pli, pparentid ) );
       mas_free( sqlv );
     }
   }
@@ -212,11 +212,11 @@ duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levin
 
 
 static int
-_duf_nameid2li_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
+_duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
 {
   DEBUG_STARTR( r );
 
-  DUF_SQL_START_STMT( pdi, nameid2li_existed, sqlv, r, pstmt );
+  DUF_SQL_START_STMT( pditemp, nameid2li_existed, sqlv, r, pstmt );
   {
     DUF_SQL_BIND_LL( nameID, nameid, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
@@ -225,7 +225,6 @@ _duf_nameid2li_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long l
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
 
       duf_li_dbinit( pli, pstmt, DUF_NODE_LEAF, -2 );
-
       if ( pdirid )
         *pdirid = DUF_GET_UFIELD2( dirid );
     }
@@ -234,13 +233,13 @@ _duf_nameid2li_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long l
       DUF_TRACE( select, 10, "<NOT selected> (%d)", r );
     }
   }
-  DUF_SQL_END_STMT( pdi, nameid2li_existed, r, pstmt );
+  DUF_SQL_END_STMT( pditemp, nameid2li_existed, r, pstmt );
   DEBUG_ENDR( r );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
 int
-duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
+duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
 {
   DEBUG_STARTR( r );
   char *sqlv = NULL;
@@ -261,13 +260,13 @@ duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_lev
     " WHERE fn." DUF_SQL_IDFIELD "=:nameID"
   };
 
-  assert( pdi );
+  assert( pditemp );
 
   {
-    sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, &r );
+    sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
     if ( sqlv )
     {
-      DOR( r, _duf_nameid2li_existed( pdi, sqlv, nameid, pli, pdirid ) );
+      DOR( r, _duf_nameid2li_existed( pditemp, sqlv, nameid, pli, pdirid ) );
       mas_free( sqlv );
     }
   }

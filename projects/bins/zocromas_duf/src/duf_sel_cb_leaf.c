@@ -100,6 +100,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
           duf_pdi_delete( pdi2 );
         }
 #  else
+
         if ( !( duf_levinfo_dirid( PDI ) == duf_levinfo_dirid_up( PDI ) && PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) ) )
         {
           duf_levinfo_t *pli = NULL;

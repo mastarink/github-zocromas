@@ -2,10 +2,7 @@
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_updown.h"
-#include "duf_li.h"
 
-#include "duf_pdi_ref.h"
 #include "duf_pdi_filters.h"
 #include "duf_pdi_stmt.h"
 
@@ -15,13 +12,9 @@
 #include "duf_sql_prepared.h"
 
 #include "evsql_selector.h"
-#include "sql_tables_defs.h"    /* for duf_levinfo_childs* only */
-#include "sql_selected_defs.h"
 #include "duf_ufilter_bind.h"
 
-
 #include "sql_beginning_selected.h"
-
 #include "duf_sql_field.h"
 
 

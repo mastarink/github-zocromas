@@ -56,7 +56,7 @@ duf_li_clear( duf_levinfo_t * pli )
 }
 
 void
-duf_li_clear_n( duf_levinfo_t * pli, unsigned maxdepth )
+duf_li_clear_alln( duf_levinfo_t * pli, unsigned maxdepth )
 {
   for ( unsigned i = 0; i < maxdepth; i++ )
   {
@@ -85,7 +85,7 @@ duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid
 void
 duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth )
 {
-  duf_li_clear_n( pli, maxdepth );
+  duf_li_clear_alln( pli, maxdepth );
   mas_free( pli );
 }
 
@@ -210,7 +210,6 @@ duf_nameid2li( unsigned long long nameid, unsigned maxdepth, int *pr )
 
 
   {
-    int rpr = 0;
     unsigned count = 0;
     unsigned long long dirid = 0;
 
