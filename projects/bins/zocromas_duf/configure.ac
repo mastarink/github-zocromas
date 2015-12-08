@@ -59,4 +59,4 @@ m4_include([m4zoc/am_cflags.m4])
 
 m4_include([m4zoc/vars3.m4])
 m4_include([m4zoc/msg.m4])
-m4_include([m4zoc/output.m4])
+m4_include([m4zoc/output_mod.m4])
