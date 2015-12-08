@@ -22,7 +22,7 @@
 
 
 int
-runonce_test( int argc, char *argv[] )
+runonce_test( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
 
   /* for ( unsigned i = 0; i < pidarray_size; i++ )                                                             */

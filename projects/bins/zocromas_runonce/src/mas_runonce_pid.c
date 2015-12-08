@@ -28,7 +28,7 @@ cbcmdline( pid_t pid, const char *line, const char *etext )
 }
 
 static const char *
-cbstatus( pid_t pid, const char *line, const char *etext )
+cbstatus( pid_t pid, const char *line, const char *etext __attribute__ ( ( unused ) ) )
 {
   const char *pline;
   const char *eline;
@@ -190,7 +190,7 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
 {
   size_t cnt = 0;
 
-  for ( pid_t pid = 0; pid < runonce_pids.size; pid++ )
+  for ( pid_t pid = 0; pid < ( int ) runonce_pids.size; pid++ )
   {
     pid_t fpid = 0;
     size_t maxcmp = 15;
@@ -202,11 +202,11 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
       /* speech-dispatch(er) */
       /* notification-da(emon) */
       /* 123456789012345 */
-      if ( flags.verbose > 3 )
-        printf( "? PidOf [%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
+      if ( flags.verbose > 1 )
+        printf( "? PidOf %u [%s:%s:%s] argc:%d\n", pid, name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
       if ( 0 == strncmp( name, runonce_pids.array[pid].progname, maxcmp ) )
       {
-        if ( flags.verbose > 2 )
+        if ( flags.verbose > 2 && runonce_pids.array[pid].argc > 0 )
         {
           printf( "+ PidOf [%s:%s:%s] argc:%d", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
           for ( int i = 1; i < runonce_pids.array[pid].argc; i++ )
@@ -226,8 +226,9 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
             s = runonce_pids.array[pid].argv[1];
             if ( s )
             {
+              if ( flags.verbose > 1 )
+                printf( "? * PidOf [%s:%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, s, runonce_pids.array[pid].argc );
               slen = strlen( s );
-              if ( subname )
               {
                 sublen = strlen( subname );
                 /* printf( ">%d [%s:%s:%s] %d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname,                         */

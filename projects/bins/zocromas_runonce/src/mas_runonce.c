@@ -24,7 +24,7 @@
 int
 runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonce_flags_t flags )
 {
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   /* printf( "group_patt:%s; sect_patt:%s (strict:%d)\n", group_patt, sect_patt, !flags.nostrict ); */
   switch ( roaction )
@@ -38,7 +38,7 @@ runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonc
       Window *client_list = NULL;
 
       client_list = get_client_list( &client_list_size );
-      for ( int i = 0; i < client_list_size / sizeof( Window ); i++ )
+      for ( unsigned i = 0; i < client_list_size / sizeof( Window ); i++ )
       {
         char *title;
         char *class;
@@ -103,11 +103,11 @@ main( int argc, char *argv[] )
     rocnt = runonce_cli_options( argc, argv, &errorcnt, aroaction, sizeof( aroaction ) / sizeof( aroaction[0] ) );
     if ( !errorcnt )
     {
-      if ( configuration.flags.verbose > 1 )
+      if ( configuration.flags.verbose > 2 )
         printf( "+ rocnt:%u\n", ( unsigned ) rocnt );
-      for ( int roseq = 0; roseq < rocnt; roseq++ )
+      for ( unsigned roseq = 0; roseq < rocnt; roseq++ )
       {
-        if ( configuration.flags.verbose > 1 )
+        if ( configuration.flags.verbose > 2 )
           printf( "+ roseq:%u\n", ( unsigned ) roseq );
         /* runonce_test( argc, argv ); */
         if ( configuration.flags.verbose > 4 )

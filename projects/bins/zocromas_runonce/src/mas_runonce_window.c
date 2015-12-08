@@ -249,7 +249,7 @@ runonce_wids_set( void )
   prec_t *pidinfo = runonce_pids_precs(  );
 
   client_list = get_client_list( &client_list_size );
-  for ( int i = 0; i < client_list_size / sizeof( Window ); i++ )
+  for ( unsigned i = 0; i < client_list_size / sizeof( Window ); i++ )
   {
     pid_t wpid = 0;
 

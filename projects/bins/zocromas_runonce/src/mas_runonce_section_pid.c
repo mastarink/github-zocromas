@@ -48,6 +48,8 @@ runonce_section_get_pids( config_section_t * sect, runonce_flags_t flags )
         pref = psname;
         prog = NULL;
       }
+      if ( flags.verbose > 3 )
+        printf( "? name:%s\n", prog );
       npids = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), pref, prog, path, targc, targv, flags );
       if ( flags.verbose > 1 )
         printf( "(%2d) %5s pref:%18s; prog:%18s; path:%5s; psname:%18s; process: %-25s\n", npids,

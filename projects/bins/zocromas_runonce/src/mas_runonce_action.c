@@ -24,7 +24,7 @@
 
 
 static int
-runonce_waiton( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t pid )
+runonce_waiton( config_section_t * sect, int nsec __attribute__ ( ( unused ) ), runonce_flags_t flags, pid_t pid )
 {
   int npids;
 
@@ -85,7 +85,7 @@ runonce_waiton( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t 
 }
 
 static int
-runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t pid )
+runonce_waitoff( config_section_t * sect, int nsec __attribute__ ( ( unused ) ), runonce_flags_t flags, pid_t pid )
 {
   int npids;
 
@@ -93,7 +93,7 @@ runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t
   int w = 0;
   int done = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   do
   {
@@ -173,7 +173,7 @@ runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t
 /* }                                                                       */
 
 int
-runonce_close( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
+runonce_close( config_group_t * grp, config_section_t * sect, int nsec __attribute__ ( ( unused ) ), runonce_flags_t flags )
 {
   int done = 0;
   prec_t *pidinfo = runonce_pids_precs(  );
@@ -206,14 +206,14 @@ runonce_close( config_group_t * grp, config_section_t * sect, int nsec, runonce_
 }
 
 int
-runonce_show( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
+runonce_show( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags __attribute__ ( ( unused ) ) )
 {
   int done = 0;
   char *command = mas_argv_string( sect->largc, sect->largv, 0 );
   char *spids = NULL;
   char *swids = NULL;
   char *sdtids = NULL;
-  int maxcmdlen = 90;
+  unsigned maxcmdlen = 90;
   prec_t *pidinfo = runonce_pids_precs(  );
 
   runonce_wids_set(  );
@@ -291,7 +291,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
 {
   int done = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s n/l:%s\n", __func__, sect->values[RUNONCE_NOLAUNCH] );
   /* const char *command = sect->values[RUNONCE_COMMAND]; */
   int canlaunch = ( sect->values[RUNONCE_NOLAUNCH] && !flags.force ) ? 0 : 1;
@@ -508,7 +508,7 @@ runonce_terminate( config_group_t * grp, config_section_t * sect, int nsec, runo
   int signal = 0;
   const char *signame = sect->values[RUNONCE_PFIN];
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   if ( sect->instances )
   {
@@ -562,7 +562,7 @@ runonce_toggle( config_group_t * grp, config_section_t * sect, int nsec, runonce
 {
   int done = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
 
   if ( sect->instances )

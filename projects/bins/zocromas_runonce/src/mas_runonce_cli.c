@@ -16,7 +16,7 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
 {
   int errorcnt = 0;
   int opt;
-  int roseq = 0;
+  unsigned roseq = 0;
 
   /* -K
    * sawfish-client -e '(delete-window (get-window-by-name-re "..." ))'

@@ -299,7 +299,7 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
           qu1 = strchr( a0, '"' );
           if ( qu1 )
             qu2 = strchr( qu1 + 1, '"' );
-          if ( qu1 && qu1 == ( eq + 1 ) && qu2 && ( qu2 - a0 ) == ( l - 1 ) )
+          if ( qu1 && qu1 == ( eq + 1 ) && qu2 && ( ( size_t ) ( qu2 - a0 ) == ( l - 1 ) ) )
           {
             char *s;
 

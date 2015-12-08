@@ -32,5 +32,8 @@ sfind mas_runonce_pid.h
 tab sfind mas_runonce_cli.c
 sfind mas_runonce_cli.h
 
+tab sfind mas_runonce_window.c
+sfind mas_runonce_window.h
+
 tab sfind mas_runonce_config_types.h
 

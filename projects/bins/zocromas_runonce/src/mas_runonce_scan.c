@@ -23,13 +23,13 @@
 
 
 int
-runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags, char *msg, va_list args )
+runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags, char *msg __attribute__ ( ( unused ) ), va_list args )
 {
   int cnt = 0;
   va_list ids;
   int done = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
 
   va_copy( ids, args );
@@ -90,7 +90,7 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
 {
   int nsec = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   for ( nsec = 0; nsec < grp->num_sections; nsec++ )
   {
@@ -98,7 +98,7 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
 
     if ( sect->name && sect->name[0] != '@' )
     {
-      if ( flags.verbose > 0 )
+      if ( flags.verbose > 3 )
         printf( "patt:%s; name:%s\n", sectpatt, sect->name );
       if ( !sectpatt || ( !flags.nostrict && 0 == strcmp( sectpatt, sect->name ) ) || ( flags.nostrict && strstr( sect->name, sectpatt ) ) )
       {
@@ -127,7 +127,7 @@ runonce_vscan( const char *grppatt, const char *sectpatt, runonce_flags_t flags,
 {
   int nsecg = 0;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
   {
@@ -152,7 +152,7 @@ runonce_scan( const char *grppatt, const char *sectpatt, runonce_flags_t flags, 
 {
   va_list args;
 
-  if ( flags.verbose > 1 )
+  if ( flags.verbose > 4 )
     printf( "function %s\n", __func__ );
   va_start( args, msg );
   runonce_vscan( grppatt, sectpatt, flags, msg, args );
