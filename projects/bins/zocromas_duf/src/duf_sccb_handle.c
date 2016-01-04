@@ -104,13 +104,13 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 #else
         cnt = DUF_GET_UFIELD2( CNT );
 #endif
-        DUF_TRACE( sql, 1, "@@counted A %llu : %llu by %s", cnt, cnt1, csql );
+        DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cnt, cnt1, csql );
         /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
         if ( cnt > 0 && !sql_set->cte && SCCB->count_nodes )
           cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
         /* rpr = 0; */
       }
-      DUF_TRACE( sql, 1, "@@counted B %llu by %s", cnt, csql );
+      DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
       /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
       assert( DUF_NOERROR( rpr ) );

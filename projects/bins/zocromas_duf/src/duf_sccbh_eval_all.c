@@ -77,14 +77,14 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
       DUF_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
                  duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-      DUF_TRACE( sccbh, 2, "%d. pass (%s) %s", scanstage, duf_uni_scan_action_title( SCCB ), SCCB->name );
+      DUF_TRACE( sccbh, 2, "@%15s(%d). pass (%s)", duf_scanstage_name( scanstage ), scanstage, duf_uni_scan_action_title( SCCB ) );
       /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
       if ( passes[scanstage] )
       {
         sccbh->current_statement = pstmt_selector;
         sccbh->current_scanstage = scanstage;
         DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
-        /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+	DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
         sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
         sccbh->current_statement = NULL;
       }
@@ -93,7 +93,9 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
   else
   {
     /* T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) ); */
-    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu", TOTCOUNTED, TOTITEMS );
+
+    T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
+
     /* assert( 0 );                                                                                               */
   }
 

@@ -184,29 +184,14 @@ int
 duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-/*
- * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_leaf_scan) + pdi (also) as str_cb_udata
- * 			for each <file> record by dirID with corresponding args
- *
- * */
   /* scan this files in this directory */
-  DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
   /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
-    DUF_TRACE( sccbh, 2, "@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    DUF_TRACE( sccbh, 2, "@@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
-#if 0
-    if ( SCCB->leaf_scan_fd2 )
-    {
-      DUF_TRACE( sccbh, 4, "%s: allow_files:%d; leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, DUF_ACTG_FLAG( allow_files ),
-                 SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
-      /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
-      DOR( r, duf_eval_sccbh_db_items_str_cb( DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
-    }
-#endif
+    DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan2 ? 1 : 0 );
     if ( SCCB->leaf_scan2 )
     {
-      DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
       /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
     }
@@ -218,32 +203,17 @@ int
 duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-/*
- * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_leaf_scan) + pdi (also) as str_cb_udata
- * 			for each <file> record by dirID with corresponding args
- *
- * */
   /* scan this files in this directory */
-  DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
   /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
-    DUF_TRACE( sccbh, 2, "@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    DUF_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
+    DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan_fd2 ? 1 : 0 );
     if ( SCCB->leaf_scan_fd2 )
     {
-      DUF_TRACE( sccbh, 4, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
       /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
     }
-#if 0
-    if ( SCCB->leaf_scan2 )
-    {
-      DUF_TRACE( sccbh, 10, "%s: allow_files:%d; leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, DUF_ACTG_FLAG( allow_files ),
-                 SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
-      /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
-      DOR( r, duf_eval_sccbh_db_items_str_cb( DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
-    }
-#endif
   }
   DEBUG_ENDR( r );
 }
