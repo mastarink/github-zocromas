@@ -18,12 +18,14 @@
 
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
+#include "duf_option_stage.h"
+
+#include "duf_options.h"
+#include "duf_options_config.h"
 
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_open.h"
-
-#include "duf_options.h"
 
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
@@ -453,6 +455,21 @@ duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
  *   7. optionally collect statistics from database ('info' option) by calling duf_info_from_db
  * 8. call duf_sql_close to close database
  * */
+int
+cb_do_interactive( void )
+{
+  return DUF_ACTG_FLAG( interactive );
+}
+
+const char *
+cb_prompt_interactive( void )
+{
+  static char rl_prompt[256 * 10] = "";
+
+  snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
+            duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+  return rl_prompt;
+}
 
 /*int
 duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )*/
@@ -467,7 +484,7 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
   /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
 
   /* I. duf_all_options -- STAGE_PRESETUP */
-  DUF_TRACE( options, 0, "@@I - stages from presetup" );
+  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
 
 
 
@@ -476,22 +493,22 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
 #else
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
-  CR( all_options, DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) );
-  DUF_TRACE( options, 0, "@@@@@after all options for presetup stage" );
+  CR( all_options, DUF_OPTION_STAGE_PRESETUP, /* DUF_ACTG_FLAG( interactive ), */ cb_do_interactive, cb_prompt_interactive );
+  DUF_TRACE( options, 0, "@@@@@after all options for %s(presetup) stage", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
   DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
 #endif
 
   /* II. duf_all_options -- STAGE_SETUP */
-  DUF_TRACE( options, 0, "@@II - stages from setup" );
+  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( DUF_OPTION_STAGE_SETUP ) );
 
 #if 0
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
-  DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 #else
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
-  CR( config_optionally_show );
+  CR( all_options, DUF_OPTION_STAGE_SETUP, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive );
   DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
 #endif
+  CR( config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
   /* DUF_TEST_RX_START( r ); */
   /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), mas_error_name_i( r ) ); *) */
   /* DUF_TEST_RX_END( r ); */
@@ -529,26 +546,39 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
   if ( DUF_ACTG_FLAG( interactive ) )
   {
     /* DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-    CR( all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-  DUF_TRACE( options, 0, "@@@@@after all options for interactive stage" );
+    CR( all_options, DUF_OPTION_STAGE_INTERACTIVE, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+    DUF_TRACE( options, 0, "@@@@@after all options for %s(interactive) stage", duf_optstage_name( DUF_OPTION_STAGE_INTERACTIVE ) );
   }
   else
   {
     /* DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-    CR( all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-  DUF_TRACE( options, 0, "@@@@@after all options for first stage" );
+    CR( all_options, DUF_OPTION_STAGE_FIRST, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+
+    DUF_TRACE( options, 0, "@@@@@after all options for %s(first) stage", duf_optstage_name( DUF_OPTION_STAGE_FIRST ) );
+
+
+#  if 0
     for ( int ia = DUF_CONFIGG( cli.targ_offset ); QNOERR && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
+#  else
+    for ( int ia = duf_cli_options_get_targ_offset(  ); QNOERR && ia < duf_cli_options_get_targc(  ); ia++ )
+#  endif
     {
       /* DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL (* take pu from config *) , */
       /*                                 NULL (* node_selector2 *) , 7 (* caninsert *) , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),         */
       /*                                 DUF_UG_FLAG( linear ) ) );                                                                                     */
+#  if 0
       CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
           NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
           DUF_UG_FLAG( linear ) );
+#  else
+      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), duf_cli_options_get_targv(  )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+          NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
+          DUF_UG_FLAG( linear ) );
+#  endif
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
       /* DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-      CR( all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-  DUF_TRACE( options, 0, "@@@@@after all options for loop stage" );
+      CR( all_options, DUF_OPTION_STAGE_LOOP, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+      DUF_TRACE( options, 0, "@@@@@after all options for %s(loop) stage", duf_optstage_name( DUF_OPTION_STAGE_LOOP ) );
     }
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );

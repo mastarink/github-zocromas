@@ -5,7 +5,6 @@
 #include "duf_options_config.h"
 #include "duf_option.h"
 
-/* #include "duf_option_names.h" */
 #include "duf_option_stage.h"
 
 /* ###################################################################### */
@@ -124,9 +123,9 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
             ( optopt = 0, longindex = -1, codeval =
               getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex ) ) >= 0 ) )
   {
-    DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c') '%s' li:%d; oi:%d; oo:%d; oe:%d", codeval, codeval > ' '
+    DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c') '%s' li:%d; oi:%d; oo:%d; oe:%d; stage:%s", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', longindex >= 0 ? duf_cli_options_get_longopts_table(  )[longindex].name : "?", longindex, optind,
-               optopt, opterr );
+               optopt, opterr, duf_optstage_name( istage ) );
     optoptt = 0;
     optindd = optind;
     if ( codeval == '?' )
@@ -171,6 +170,9 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   /* {                                                                                                                            */
   /*   T( "@@@CCCCCC (optind:%d:%d:%d:%d)  %d of %d :: '%s'", optind, optindd, numxargv, carg.argc, i, carg.argc, carg.argv[i] ); */
   /* }                                                                                                                            */
+
+  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optind:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optind );
+
   if ( DUF_NOERROR( r ) && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
   {
     DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
@@ -209,7 +211,8 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 }
 
 int
-duf_source_cli_options( duf_option_stage_t istage )
+duf_source_cli_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                        __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 

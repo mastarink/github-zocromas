@@ -74,8 +74,14 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     config_cli->shorts = duf_cli_option_shorts_create( xtables );
     config_cli->longopts_table = duf_options_create_longopts_table( xtables );
     assert( config_cli->longopts_table );
-
   }
+/*
+  TODO
+    config_dir (duf_options_file.c)
+    cmds_dir (duf_options_file.c)
+    opt.output.history_filename (duf_options_interactive.c) =>  cli.history_filename
+    scn.pdi (duf_options_interactive.c)
+*/
 }
 
 void
@@ -89,6 +95,14 @@ duf_cli_options_shut( duf_config_cli_t * cli )
   config_cli->targ.argv = NULL;
   mas_free( config_cli->shorts );
   config_cli->shorts = NULL;
+  mas_free( config_cli->history_filename );
+  config_cli->history_filename = NULL;
+}
+
+const char *
+duf_cli_options_get_history_filename( void )
+{
+  return config_cli ? config_cli->history_filename : NULL;
 }
 
 mas_argvc_t *

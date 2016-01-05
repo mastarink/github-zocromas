@@ -130,6 +130,8 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 
   assert( pdi->pdi_name );
   DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
+    DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu; '%s'", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
+               duf_levinfo_dirid_up( pdi ), sqlv );
   {
     const char *truedirname;
 
@@ -250,6 +252,8 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #endif
 
   DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) ); /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
+    DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
+               duf_levinfo_dirid_up( pdi ) );
   if ( DUF_NOERROR( r ) )
     dirid = duf_levinfo_dirid( pdi );
   mas_free( sqlv );
@@ -270,13 +274,13 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   assert( pdi->pdi_name );
 
   DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
-  DUF_TRACE( path, 2, "@           inserting [%40s] %d", duf_levinfo_itemshowname( pdi ), caninsert );
+  DUF_TRACE( path, 2, "@inserting [%s] caninsert:%d", duf_levinfo_itemshowname( pdi ), caninsert );
   {
     int changes = 0;
 
     DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) ); /* at levinfo current level:
                                                                       set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
-    DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", r, duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
+    DUF_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
                duf_levinfo_dirid_up( pdi ) );
 
     if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
@@ -423,7 +427,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
       if ( nextdir )
         *nextdir++ = 0;
 
-      DUF_TRACE( path, 6, "@@      +prepared path:[%40s]\tup to [%s]", path, nextdir );
+      DUF_TRACE( path, 6, "@@      +prepared path:[%s]\tup to [%s]", path, nextdir );
       {
         int up_d = 0;
 
@@ -437,8 +441,8 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   }
   DUF_TRACE( fs, 2, "set (restore) opendir to %d", od );
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
-  assert( !caninsert || !real_path || duf_levinfo_dirid( pdi ) > 0 );
-  assert( !caninsert || !real_path || duf_levinfo_path( pdi ) );
+  assert( !DUF_NOERROR( r ) || !caninsert || !real_path || duf_levinfo_dirid( pdi ) > 0 );
+  assert( !DUF_NOERROR( r ) || !caninsert || !real_path || duf_levinfo_path( pdi ) );
   DEBUG_ENDR( r );
 }
 

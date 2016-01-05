@@ -19,16 +19,16 @@ static int
 duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
 {
   DEBUG_STARTR( r );
-  
+
   const char *eo = NULL;
 
   eo = getenv( envvarname );
 
-  DUF_TRACE( options, 1, "@@@@@@@ stage:%s; source: env(%s='%s')", duf_optstage_name(istage), envvarname, eo );
+  DUF_TRACE( options, 1, "@@@@@@@ stage:%s; source: env(%s='%s')", duf_optstage_name( istage ), envvarname, eo );
   DOR( r, duf_string_options_at_string( '=', istage, DUF_OPTION_SOURCE_ENV, eo, 0 ) );
-  
+
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
-  
+
   DEBUG_ENDR( r );
 }
 
@@ -40,7 +40,8 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
  * 2. call duf_env_options_at_var
  * */
 int
-duf_source_env_options( duf_option_stage_t istage )
+duf_source_env_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                        __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 

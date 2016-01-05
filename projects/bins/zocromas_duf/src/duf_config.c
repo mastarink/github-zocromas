@@ -80,7 +80,8 @@ duf_cfg_create( void )
   /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
   /* cfg->opt.trace.options = 1; */
   /* cfg->opt.trace.fs += 1; */
-  DUF_CFGW( cfg, opt.trace.options ) = 71;
+  
+  /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
   DUF_CFGW( cfg, opt.trace.temp ) += 1;
 
   cfg->scn.pdi = duf_pdi_create( "selected" );
@@ -240,8 +241,8 @@ duf_cfg_delete( duf_config_t * cfg )
       mas_free( cfg->opt.output.sformat.dirs_gen );
       cfg->opt.output.sformat.dirs_gen = NULL;
 
-      mas_free( cfg->opt.output.history_filename );
-      cfg->opt.output.history_filename = NULL;
+      /* mas_free( cfg->opt.output.history_filename ); */
+      /* cfg->opt.output.history_filename = NULL;      */
 
       mas_free( cfg->opt.output.header_tty );
       cfg->opt.output.header_tty = NULL;

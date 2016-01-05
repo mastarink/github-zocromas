@@ -1,1 +1,30 @@
 q
+q
+q
+q
+q
+q
+cd test
+q
+cd test
+q
+cd test
+q
+cd test
+cd ..
+q
+q
+cd test
+q
+cd test
+cd ..
+q
+cd test
+cd ..
+q
+cd test
+cd ..
+q
+cd test
+cd ..
+q

@@ -140,9 +140,6 @@ duf_main_with_config( int argc, char **argv )
   DUF_PUTS( 0, "---------------------------------------------(o)" );
 #endif
 
-  if ( DUF_IF_TRACE( options ) )
-    DOR( r, duf_show_options( argv[0] ) ); /* FIXME similar to duf_config_optionally_show, called from duf_main_db called above this ??? FIXME */
-
 #ifdef MAS_TRACEMEM
   {
     extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;

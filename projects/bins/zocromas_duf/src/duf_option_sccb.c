@@ -103,6 +103,7 @@ duf_option_O_evaluate_sccb( const char *names )
   }
   else
   {
+    /* DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN ); (* 20160105.125904 *) */
   }
   DEBUG_ENDR( r );
 }
@@ -156,7 +157,13 @@ duf_option_O_cd( const char *s )
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
 #  else
-        new_path = mas_normalize_path( new_path );
+        {
+          char *p;
+
+          p = mas_normalize_path( new_path );
+          mas_free( new_path );
+          new_path = p;
+        }
 #  endif
         new_path = mas_strcat_x( new_path, s );
       }

@@ -63,8 +63,10 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
   duf_idstmt_t *is = NULL;
   duf_idstmt_t *chkids = NULL;
 
+  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   if ( !pdi->attached_copy )
     DORF( rpr, duf_main_db_open, pdi );
+  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   DUF_TEST_R( rpr );
   chkids = pdi->idstatements;
 
@@ -92,11 +94,12 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
    *   - it may reallocate pdi->idstatements 
    *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
    */
+  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
 
   DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
   DUF_TEST_R( rpr );
 
-  DUF_TRACE( sql, 4, "@@@@@%s: %s", mas_error_name_i( rpr ), sql );
+  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   /* assert( rpr >= 0 ); */
   if ( pstmt )
   {

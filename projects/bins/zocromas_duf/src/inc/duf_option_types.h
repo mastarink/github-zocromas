@@ -23,6 +23,25 @@ typedef enum
 
 typedef enum
 {
+  DUF_OPTION_STAGE_PRESETUP = 1,
+  DUF_OPTION_STAGE_SETUP,
+  DUF_OPTION_STAGE_FIRST,
+  DUF_OPTION_STAGE_LOOP,
+  DUF_OPTION_STAGE_INTERACTIVE,
+  DUF_OPTION_STAGE_MAX,
+  DUF_OPTION_STAGE_ANY = 99999,
+} duf_option_stage_t;
+
+typedef struct
+{
+  duf_option_source_t source;
+  duf_option_stage_t stage;
+
+} duf_option_data_t;
+
+
+typedef enum
+{
 #  define ENUM_WRAP(_n)       DUF_OPTION_CLASS_ ## _n,
 #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_CLASS_ ## _n = _v,
 #  include "duf_option_class_enum.def"
@@ -206,16 +225,6 @@ typedef enum
   /* DUF_OFFSET_depthinfo, */
   DUF_OFFSET_ufilter,
 } duf_offset_to_t;
-typedef enum
-{
-  DUF_OPTION_STAGE_PRESETUP = 1,
-  DUF_OPTION_STAGE_SETUP,
-  DUF_OPTION_STAGE_FIRST,
-  DUF_OPTION_STAGE_LOOP,
-  DUF_OPTION_STAGE_INTERACTIVE,
-  DUF_OPTION_STAGE_MAX,
-  DUF_OPTION_STAGE_ANY = 99999,
-} duf_option_stage_t;
 
 typedef struct
 {

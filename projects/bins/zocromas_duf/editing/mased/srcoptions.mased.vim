@@ -1,7 +1,4 @@
-find duf_options.c
-sfind duf_options.h
-
-tab sfind duf_options_config.c
+find duf_options_config.c
 sfind duf_options_config.h
 
 tab sfind duf_option.c
@@ -29,9 +26,6 @@ sfind duf_option_names.h
 tab sfind duf_option_stage.c
 sfind duf_option_stage.h
 
-tab sfind duf_option_source.c
-sfind duf_option_source.h
-
 tab sfind duf_option_cmd.c
 sfind duf_option_cmd.h
 
@@ -39,18 +33,6 @@ tab sfind duf_option_extended.c
 sfind duf_option_extended.h
 
 " ------------------------------
-tab sfind duf_options_interactive.c
-sfind duf_options_interactive.h
-
-tab sfind duf_options_file.c
-sfind duf_options_file.h
-
-tab sfind duf_options_cli.c
-sfind duf_options_cli.h
-
-tab sfind duf_options_env.c
-sfind duf_options_env.h
-
 tab sfind duf_options_string.c
 sfind duf_options_string.h
 

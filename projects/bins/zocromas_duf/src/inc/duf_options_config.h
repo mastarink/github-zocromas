@@ -10,6 +10,9 @@ duf_config_cli_t *duf_cli_options_config( void );
 char *duf_cli_options_shorts_create( const duf_longval_extended_table_t ** xtables );
 const char *duf_cli_options_get_shorts( void );
 mas_argvc_t *duf_cli_options_get_targ( void );
+
+const char *duf_cli_options_get_history_filename( void );
+
 int duf_cli_options_get_targc( void );
 int *duf_cli_options_get_ptargc( void );
 char **duf_cli_options_get_targv( void );

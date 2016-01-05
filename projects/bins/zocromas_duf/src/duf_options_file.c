@@ -7,7 +7,7 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_defs.h"    /* DUF_CONFIGGS( config_dir ) */
+#include "duf_config_defs.h"    /* DUF_CONFIGGS( config_dir ) */ /* insularity! FIXME */
 #include "duf_options_config.h"
 
 /* #include "duf_option_names.h" */
@@ -299,7 +299,8 @@ duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int option
 }
 
 int
-duf_source_incfg_options( duf_option_stage_t istage )
+duf_source_incfg_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                          __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 
@@ -312,7 +313,8 @@ duf_source_incfg_options( duf_option_stage_t istage )
 }
 
 int
-duf_source_incfg_last_options( duf_option_stage_t istage )
+duf_source_incfg_last_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 
@@ -354,7 +356,8 @@ duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
 }
 #endif
 int
-duf_source_incfg_stg_options( duf_option_stage_t istage )
+duf_source_incfg_stg_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                              __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 
@@ -381,7 +384,8 @@ duf_source_incfg_stg_options( duf_option_stage_t istage )
 
 /* duf_source_stdin_options - can be executed only once (direct stdin reading!)  */
 int
-duf_source_stdin_options( duf_option_stage_t istage )
+duf_source_stdin_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                          __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
   static int done = 0;
@@ -409,7 +413,8 @@ duf_source_stdin_options( duf_option_stage_t istage )
 }
 
 int
-duf_source_indirect_options( duf_option_stage_t istage )
+duf_source_indirect_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+                             __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
 

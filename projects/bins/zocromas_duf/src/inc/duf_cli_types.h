@@ -79,7 +79,7 @@ typedef struct
 #  endif
   char *file;
   FILE *out;
-  char *history_filename;
+  /* char *history_filename; */
   char *header_tty;
 } duf_config_output_t;
 
@@ -173,6 +173,7 @@ typedef struct
   duf_option_t *longopts_table;
   const duf_longval_extended_table_t **xtable_multi;
   /* long limit; */
+  char *history_filename;
 } duf_config_cli_t;
 
 typedef struct

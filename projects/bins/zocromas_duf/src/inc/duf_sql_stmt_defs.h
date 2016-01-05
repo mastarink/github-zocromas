@@ -29,18 +29,21 @@
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
-	  DUF_TRACE(sql, 4, "START:%s", _sql); \
+	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           /* TODO : static not always or never? */ \
           if ( DUF_NOERROR(_rt) ) \
             _pstmt_m = duf_pdi_find_statement_by_id( _pdi, DUF_SQL_STMD_ID_ ## _name ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql,  DUF_SQL_STMD_ID_ ## _name, &_rt ); \
+	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
+	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           DUF_TEST_R( _rt );
 #  elif defined(DUF_SQL_NOPDI_STMT)
 #    define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
-	DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m );
+	DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ); \
+	DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
 #  else
 #    undef DUF_SQL_START_STMT
 #  endif

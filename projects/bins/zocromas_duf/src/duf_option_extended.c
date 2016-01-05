@@ -6,10 +6,7 @@
 
 #include "duf_maintenance_options.h"
 
-/* #include "duf_options_config.h" */
-
-/* #include "duf_option_names.h"    */
-#include "duf_option_stage.h"  /* duf_optstage_name */
+#include "duf_option_stage.h"   /* duf_optstage_name */
 
 #include "duf_xtended_table.h"
 
@@ -179,9 +176,10 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
     case offsetof( duf_config_t, opt.disable ):
       rs = "opt.disable";
       break;
-    case offsetof( duf_config_t, opt.output.history_filename ):
-      rs = "opt.output.history_filename";
-      break;
+      /* case offsetof( duf_config_t, opt.output.history_filename ): */
+      /*   rs = "opt.output.history_filename";                       */
+      /*   break;                                                    */
+
       /* case offsetof( duf_config_t, cli ):  */
       /*   break;                             */
       /* case offsetof( duf_config_t, opt ):  */

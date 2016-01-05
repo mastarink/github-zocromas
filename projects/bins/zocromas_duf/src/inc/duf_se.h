@@ -11,6 +11,7 @@ typedef enum
 {
   DUF_LAYER_NONE,
   DUF_LAYER_TOP,
+  DUF_LAYER_OPTIONS,
   DUF_LAYER_SNIPPET_OPTION,
 } duf_layer_t;
 

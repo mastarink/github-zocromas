@@ -12,7 +12,6 @@
 #include "duf_option_extended.h"
 #include "duf_option_typed.h"
 
-/* #include "duf_option_names.h" */
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
@@ -109,8 +108,8 @@ duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, 
   {
     if ( extended )
     {
-      DUF_TRACE( options, 55, "@@to fully clarify option: cv:%d; li:%d; [--%s] stage:%s; source:%d", codeval, longindex,
-                 extended ? extended->o.name : "?", duf_optstage_name( istage ), source );
+      DUF_TRACE( options, 55, "@@to fully clarify option: cv:%d; li:%d; [--%s] stage:%s; source:%s", codeval, longindex,
+                 extended ? extended->o.name : "?", duf_optstage_name( istage ), duf_optsource_name(source) );
       DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, no, source ) );
       DUF_TRACE( options, 57, "@@after fully clarify option: cv:%d; li:%d; [--%s] stage:%s; source:%d (%d:%s)", codeval, longindex,
                  extended ? extended->o.name : "?", duf_optstage_name( istage ), source, r, mas_error_name_i( r ) );

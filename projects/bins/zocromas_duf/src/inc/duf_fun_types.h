@@ -39,6 +39,8 @@ typedef mas_error_code_t( *duf_errc_cargvs_func_t ) ( mas_argvc_t *, const char 
 
 
 typedef int ( *duf_int_void_func_t ) ( void );
+typedef char *( *duf_pchar_void_func_t ) ( void );
+typedef const char *( *duf_cpchar_void_func_t ) ( void );
 
 #endif
 
