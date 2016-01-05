@@ -3,7 +3,8 @@
 
 /* DUF_TEST_R : takes duf_error_index_t! */
 #  define DUF_START() {
-#  define DUF_STARTTYP(typ, _rt) typ _rt=(typ)0; DUF_START()
+#  define DUF_STARTT(_typ, _rt) _rt=(_typ)0; DUF_START()
+#  define DUF_STARTTYP(_typ, _rt) _typ DUF_STARTT(_typ, _rt)
 #  define DUF_STARTR(_rt)         DUF_STARTTYP(int, _rt)
 #  define DUF_STARTULL(_rt)       DUF_STARTTYP(unsigned long long, _rt)
 #  define DUF_END() } /* END */

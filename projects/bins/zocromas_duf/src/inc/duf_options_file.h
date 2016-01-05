@@ -3,20 +3,15 @@
 
 #  include <stdio.h>
 
+int duf_source_stdin_options( duf_option_stage_t istage );
+int duf_source_indirect_options( duf_option_stage_t istage );
+int duf_source_incfg_last_options( duf_option_stage_t istage );
+int duf_source_incfg_stg_options( duf_option_stage_t istage );
+int duf_source_incfg_options( duf_option_stage_t istage );
+
+
 const char *duf_options_infilepath( void );
-
-int duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, int optional );
-int duf_incfg_options( duf_option_stage_t istage );
-
-int duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int optional );
-int duf_incfg_last_options( duf_option_stage_t istage );
-int duf_incfg_stg_options( duf_option_stage_t istage );
-
-int duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_source_t source );
-int duf_stdin_options( duf_option_stage_t istage );
-
 int duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath );
 
-int duf_indirect_options( duf_option_stage_t istage );
 
 #endif

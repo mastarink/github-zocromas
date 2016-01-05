@@ -16,10 +16,12 @@
 #  define  DEBUG_E_UPPER(...)		       DUF_DBGF(STEP)             ; DUF_E_UPPER(__VA_ARGS__)
 /*XXX  DUF_DBGF* after DUF_START* ! XXX*/
 #  define  DEBUG_START()		                                    DUF_START()                                   ;  DUF_DBGF(START)
+#  define  DEBUG_STARTTYP(_typ, _rt)					    DUF_STARTTYP(_typ, _rt)			  ;  DUF_DBGF(START)
 #  define  DEBUG_STARTR(_rt)		                                    DUF_STARTR(_rt)                               ;  DUF_DBGF(START)
 #  define  DEBUG_STARTULL(_rt)		                                    DUF_STARTULL(_rt)                             ;  DUF_DBGF(START)
 /*XXX  DUF_DBGF* before DUF_END* ! XXX*/
 #  define  DEBUG_END()			       DUF_DBGF(END)              ; DUF_END()
+#  define  DEBUG_ENDRET(_rt)		       DUF_DBGF(END)              ; DUF_ENDRET(_rt)
 #  define  DEBUG_ENDR(_rt)		       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR(_rt)
 #  define  DEBUG_ENDR_LOWERE(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_LOWERE(_rt, __VA_ARGS__)
 #  define  DEBUG_ENDR_UPPER(_rt, ...)	       DUF_DBGFX(ENDR, _rt)       ; DUF_ENDR_UPPER(_rt, __VA_ARGS__)

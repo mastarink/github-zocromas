@@ -11,10 +11,10 @@
 /* MASE_TEST_RX : takes mas_error_index_t! */
 #    ifdef MASE_STD_VERBOSE_LEVEL
 #      define MASE_TEST_RX(_rval)	   (( (MASE_EREPORT(_rval)) ? (MASE_SHOW_ERRORN_TEST_STD(_rval, MASE_STD_VERBOSE_LEVEL)) : \
-    					0 ), _rval)
+    					0 ), (_rval))
 #    else
 #      define MASE_TEST_RX(_rval)	   (( (MASE_EREPORT(_rval)) ? (MASE_SHOW_ERRORN_TEST_STD(_rval, 0)) : \
-    					0 ), _rval)
+    					0 ), (_rval))
 #    endif
 #    if 0
 #      define MASE_TEST_RX_WP(_rval, _prefix)  (( (MASE_EREPORT(_rval)) ? MASE_SHOW_ERRORO_TEST_WP_STD(_rval,_prefix) : \
@@ -39,7 +39,7 @@
 /*         )                                                     */
 /* #  define MASE_TEST_R(_rval)     ( MASE_E_LOWER(MASE_ERROR_MAX_REACHED,MASE_ERROR_MAX_SEQ_REACHED,MASE_ERROR_MAX_DEPTH,0),MASE_TEST_RX( _rval ),MASE_E_UPPER(MASE_ERROR_MAX_REACHED,MASE_ERROR_MAX_SEQ_REACHED,MASE_ERROR_MAX_DEPTH,0),_rval ) */
 /* MASE_TEST_R : takes mas_error_index_t! */
-#  define MASE_TEST_R(_rval)	(MASE_TEST_RX( _rval ))
+#  define MASE_TEST_R(_rval)	((void)(MASE_TEST_RX( _rval )))
 #  define MASE_TEST_R1(_rval)	(mas_force_ereport(1 /*count*/),MASE_TEST_RX( _rval ))
 /* #  define MASE_TEST_R2(_rval)    (mas_force_ereport(2 (*count*)),MASE_TEST_RX( _rval )) */
 

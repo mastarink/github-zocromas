@@ -128,7 +128,9 @@ duf_main_with_config( int argc, char **argv )
   }
 #endif
   /* XXX XXX XXX XXX XXX XXX */
+  
   DOR( r, duf_main_db( argc, argv ) );
+
   /* XXX XXX XXX XXX XXX XXX */
 
 #if 0

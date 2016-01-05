@@ -26,6 +26,12 @@ sfind duf_option_descr.h
 tab sfind duf_option_names.c
 sfind duf_option_names.h
 
+tab sfind duf_option_stage.c
+sfind duf_option_stage.h
+
+tab sfind duf_option_source.c
+sfind duf_option_source.h
+
 tab sfind duf_option_cmd.c
 sfind duf_option_cmd.h
 

@@ -7,8 +7,12 @@
 #include "duf_maintenance_options.h"
 
 /* #include "duf_options_config.h" */
-#include "duf_option_names.h"   /* duf_optstage_name */
+
+/* #include "duf_option_names.h"    */
+#include "duf_option_stage.h"  /* duf_optstage_name */
+
 #include "duf_xtended_table.h"
+
 /* ###################################################################### */
 #include "duf_option_extended.h"
 /* ###################################################################### */
@@ -544,7 +548,7 @@ _duf_longindex2extended( int longindex, const duf_longval_extended_table_t * xta
 
   for ( const duf_longval_extended_t * xtended = xtable->table; *ptbcount <= longindex && xtended->o.name; xtended++ )
   {
-    DUF_TRACE( options, 5, "@li2ex %d [%s]", *ptbcount, xtended->o.name );
+    DUF_TRACE( options, +500, "li2ex %d [%s]", *ptbcount, xtended->o.name );
     if ( no )
     {
       if ( xtended->can_no )
@@ -647,7 +651,7 @@ duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxt
 
     for ( const duf_longval_extended_t * xtended = xtable->table; tbcount <= longindex && xtended->o.name; xtended++ )
     {
-      DUF_TRACE( options, 5, "@li2ex %d [%s]", tbcount, xtended->o.name );
+      DUF_TRACE( options, +150, "@li2ex %d [%s]", tbcount, xtended->o.name );
       if ( tbcount == longindex )
       {
         extended = xtended;

@@ -453,28 +453,45 @@ duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
  *   7. optionally collect statistics from database ('info' option) by calling duf_info_from_db
  * 8. call duf_sql_close to close database
  * */
-int
-duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
+
+/*int
+duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )*/
+SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  /* DEBUG_STARTR( r ); */
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
+  DUF_TRACE( options, 0, "@@@@@to do all options for all stages" );
 
   /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
 
   /* I. duf_all_options -- STAGE_PRESETUP */
-  DUF_TRACE( options, 0, "@@@@I - stages from presetup" );
+  DUF_TRACE( options, 0, "@@I - stages from presetup" );
 
+
+
+#if 0
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
+#else
+  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+
+  CR( all_options, DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) );
+  DUF_TRACE( options, 0, "@@@@@after all options for presetup stage" );
+  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+#endif
 
   /* II. duf_all_options -- STAGE_SETUP */
-  DUF_TRACE( options, 0, "@@@@II - stages from setup" );
+  DUF_TRACE( options, 0, "@@II - stages from setup" );
 
-
+#if 0
   DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
-
+#else
+  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+  CR( config_optionally_show );
+  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+#endif
   /* DUF_TEST_RX_START( r ); */
   /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), mas_error_name_i( r ) ); *) */
   /* DUF_TEST_RX_END( r ); */
@@ -497,7 +514,8 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #  else
-  DOR( r, duf_pdi_init_at_config(  ) );
+  /* DOR( r, duf_pdi_init_at_config(  ) ); */
+  CR( pdi_init_at_config );
   /* assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) ); */
 
 #  endif
@@ -507,25 +525,41 @@ duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
 
   /* III. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
-  DUF_TRACE( options, 0, "@@@@III %s - stages from first", mas_error_name_i( r ) );
+  DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
   if ( DUF_ACTG_FLAG( interactive ) )
-    DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  {
+    /* DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
+    CR( all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  DUF_TRACE( options, 0, "@@@@@after all options for interactive stage" );
+  }
   else
   {
-    DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-    for ( int ia = DUF_CONFIGG( cli.targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
+    /* DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
+    CR( all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  DUF_TRACE( options, 0, "@@@@@after all options for first stage" );
+    for ( int ia = DUF_CONFIGG( cli.targ_offset ); QNOERR && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
     {
-      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-                                      NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
-                                      DUF_UG_FLAG( linear ) ) );
+      /* DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL (* take pu from config *) , */
+      /*                                 NULL (* node_selector2 *) , 7 (* caninsert *) , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),         */
+      /*                                 DUF_UG_FLAG( linear ) ) );                                                                                     */
+      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+          NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
+          DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-      DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+      /* DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
+      CR( all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  DUF_TRACE( options, 0, "@@@@@after all options for loop stage" );
     }
   }
+  DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
 #endif
   if ( DUF_ACTG_FLAG( info ) )
-    DOR( r, duf_main_db_info(  ) );
-
-  DORF( r, duf_main_db_close, DUF_CONFIGG( scn.pdi ), r ); /* [@] */
-  DEBUG_ENDR( r );
+  {
+    /* DOR( r, duf_main_db_info(  ) ); */
+    CR( main_db_info );
+  }
+  /* DORF( r, duf_main_db_close, DUF_CONFIGG( scn.pdi ), r ); (* [@] *) */
+  CR( main_db_close, DUF_CONFIGG( scn.pdi ), QERRIND ); /* [@] */
+  /* DEBUG_ENDR( r ); */
+  ER( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED );
 }

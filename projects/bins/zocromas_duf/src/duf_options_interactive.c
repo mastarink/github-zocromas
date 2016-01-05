@@ -21,7 +21,7 @@
 /* ###################################################################### */
 
 int
-duf_interactive_options( duf_option_stage_t istage )
+duf_source_interactive_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
   static char rl_prompt[256 * 10] = "";

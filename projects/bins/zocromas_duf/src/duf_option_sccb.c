@@ -106,17 +106,23 @@ duf_option_O_evaluate_sccb( const char *names )
   }
   DEBUG_ENDR( r );
 }
+
 /*! 20151114.204538
  * \brief call file
  * */
-mas_error_code_t
-duf_option_O_call_file( const char *name )
-{
-  DEBUG_STARTR( r );
-  int r DUF_UNUSED = 0;
 
-  duf_infile_options_at_filepath( DUF_OPTION_STAGE_ANY, name );
-  DEBUG_ENDR( r );
+
+/*mas_error_code_t
+duf_option_O_call_file( const char *name )
+*/
+SR( SNIPPET_OPTION, option_O_call_file, const char *name )
+{
+  /* DEBUG_STARTR( r ); */
+  /* int r DUF_UNUSED = 0; */
+
+  CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY, name );
+  /* DEBUG_ENDR( r ); */
+  ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }
 
 mas_error_code_t
@@ -124,7 +130,7 @@ duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_main_db_open(  DUF_CONFIGG( scn.pdi ) ) );
+  DOR( r, duf_main_db_open( DUF_CONFIGG( scn.pdi ) ) );
   DEBUG_ENDR( r );
 }
 

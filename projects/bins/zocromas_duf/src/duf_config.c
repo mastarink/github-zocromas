@@ -80,6 +80,7 @@ duf_cfg_create( void )
   /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
   /* cfg->opt.trace.options = 1; */
   /* cfg->opt.trace.fs += 1; */
+  DUF_CFGW( cfg, opt.trace.options ) = 71;
   DUF_CFGW( cfg, opt.trace.temp ) += 1;
 
   cfg->scn.pdi = duf_pdi_create( "selected" );

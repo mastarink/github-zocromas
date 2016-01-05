@@ -27,7 +27,7 @@
 		  ( *p ) += __v; \
 		else \
 		  ( *p ) = __v; \
-		DUF_TRACE( options, 4, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
+		DUF_TRACE( options, 120, "'--%s' : number set:%llu", extended->o.name, (unsigned long long) __v ); \
 	      } \
 	    } \
 	  } \
