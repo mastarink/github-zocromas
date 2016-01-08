@@ -15,32 +15,6 @@
 
 #define  DUF_NO_PREFIX "no-"
 
-int
-duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
-{
-  int r0 = 0;
-  int r1 = 0;
-  int r2 = 0;
-
-  DUF_TRACE( options, +150, "checking stage(%s) xflag:%d xuse:%d xminmax:%d/%d", duf_optstage_name( istage ), extended->stage.flag, extended->use_stage,
-             extended->stage.min, extended->stage.max );
-  DUF_TRACE( options, +150, "checking stage(%s) tflag:%d tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xtable->stage.flag, xtable->use_stage,
-             xtable->stage.min, xtable->stage.max );
-  r0 = ( istage == DUF_OPTION_STAGE_ANY );
-  r0 = r0 || extended->stage.flag;
-  r1 = ( !extended->use_stage || ( extended->stage.min <= istage && extended->stage.max >= istage ) );
-  r2 = ( !xtable || ( !xtable->use_stage || ( xtable->stage.min <= istage && xtable->stage.max >= istage ) ) );
-  r0 = r0 || ( r1 && r2 );
-  if ( ( extended->use_stage_mask && ( extended->stage_mask & ( 1 << istage ) ) )
-       || ( xtable->use_stage_mask && ( xtable->stage_mask & ( 1 << istage ) ) ) )
-  {
-    r0 = 0;
-  }
-
-  DUF_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( istage ), r0 );
-  return r0;
-}
-
 /* TODO: rename => duf_codeval2extended */
 const duf_longval_extended_t *
 duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )

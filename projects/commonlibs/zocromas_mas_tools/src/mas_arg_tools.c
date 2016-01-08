@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -686,4 +687,16 @@ mas_strncat_xt( char *s1, const char *s2, size_t maxs2 )
     }
   }
   return r;
+}
+
+const char *
+mas_strtolower( char *s )
+{
+  char *p = s;
+
+  while ( p && *p )
+  {
+    *p = tolower( *p );
+  }
+  return s;
 }

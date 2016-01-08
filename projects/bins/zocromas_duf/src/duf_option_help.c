@@ -12,13 +12,16 @@
 #include "duf_action_table.h"
 #include "duf_sccb.h"
 
-
-#include "duf_option_descr.h"
-#include "duf_option_extended.h"
 #include "duf_xtended_table.h"
 
-#include "duf_option_names.h"
 #include "duf_options_file.h"   /* duf_options_infilepath */
+
+#include "duf_option_descr.h"
+#include "duf_option_stage.h"
+#include "duf_option_extended.h"
+
+#include "duf_option_names.h"
+#include "duf_option_class.h"
 
 /* #include "duf_option_restore.h" */
 #include "duf_option.h"
@@ -101,132 +104,6 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
   return rv;
 }
 #endif
-static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
-  [DUF_OPTION_CLASS_HELP] = "Help",
-  [DUF_OPTION_CLASS_NO_HELP] = "No help",
-  [DUF_OPTION_CLASS_SYSTEM] = "System",
-  [DUF_OPTION_CLASS_CONTROL] = "Control",
-  [DUF_OPTION_CLASS_REFERENCE] = "Reference",
-  [DUF_OPTION_CLASS_COLLECT] = "Collect",
-  [DUF_OPTION_CLASS_SCAN] = "Scan",
-  [DUF_OPTION_CLASS_FILTER] = "Filter",
-  [DUF_OPTION_CLASS_UPDATE] = "Update",
-  [DUF_OPTION_CLASS_REQUEST] = "Request",
-  [DUF_OPTION_CLASS_PRINT] = "Print",
-  [DUF_OPTION_CLASS_TRACE] = "Trace",
-  [DUF_OPTION_CLASS_OBSOLETE] = "Obsolete",
-  [DUF_OPTION_CLASS_OTHER] = "Other",
-  [DUF_OPTION_CLASS_NONE] = "None",
-  [DUF_OPTION_CLASS_DEBUG] = "DEBUG",
-  [DUF_OPTION_CLASS_NODESC] = "No desc",
-};
-
-mas_error_code_t
-duf_option_O_smart_help( duf_option_class_t oclass )
-{
-  DEBUG_STARTR( r );
-
-  int *ashown;
-  size_t ss;
-  int tbcount;
-
-  tbcount = duf_longindex_extended_count( duf_extended_table_multi(  ) );
-  ss = tbcount * sizeof( int );
-
-  ashown = mas_malloc( ss );
-  memset( ( void * ) ashown, 0, ss );
-  /* for ( int ilong = 0; DUF_CONFIGG(cli.longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
-  /* {                                                                                                   */
-  /* }                                                                                                   */
-  if ( oclass <= DUF_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
-    DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
-  else
-    DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
-  for ( int ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
-  {
-
-    duf_option_code_t codeval;
-    const char *name;
-    const duf_longval_extended_t *extd;
-    int ie;
-
-    name = DUF_CONFIGG( cli.longopts_table )[ilong].name;
-    codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
-    /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
-    /* ie = extended ? extended - &lo_extended[0] : -1; */
-    ie = ilong;
-    if ( codeval && DUF_NOERROR( r ) )
-    {
-      int cnd = 0;
-
-      cnd = ( !extd && ( oclass == DUF_OPTION_CLASS_ANY || oclass == DUF_OPTION_CLASS_NODESC ) )
-            || ( extd && ( oclass == DUF_OPTION_CLASS_ANY || oclass == extd->oclass ) );
-      if ( cnd )
-      {
-        int shown = -1;
-
-        if ( ie >= 0 )
-          shown = ashown[ie];
-        if ( shown <= 0 )
-        {
-          int look = 1;
-
-          /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
-          if ( DUF_CONFIGG( help_string ) )
-          {
-            char *s = DUF_CONFIGG( help_string );
-
-            look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
-          }
-          if ( look )
-          {
-            char *s = NULL;
-
-            /* duf_option_class_t hclass; */
-
-            /* hclass = duf_help_option2class( codeval ); */
-            s = duf_option_description_d( ilong, "\t", " // " );
-            DUF_TEST_R( r );
-            /* s = mas_strcat_x( s, " ...................." ); */
-            if ( s )
-            {
-              /* if ( shown >= 0 )                    */
-              /*   DUF_PRINTF( 0, " ## %d;", shown ); */
-
-              DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, DUF_CONFIGG( cli.longopts_table )[ilong].val, s );
-              mas_free( s );
-            }
-            else
-            {
-              DUF_PRINTF( 0, " ??? %s", name );
-            }
-          }
-        }
-        if ( ie >= 0 )
-          ashown[ie]++;
-      }
-    }
-  }
-  mas_free( ashown );
-
-  DEBUG_ENDR( r );
-}
-
-mas_error_code_t
-duf_option_O_smart_help_all( duf_option_class_t oclass )
-{
-  DEBUG_STARTR( r );
-
-  if ( oclass == DUF_OPTION_CLASS_ALL )
-  {
-    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
-    {
-      DOR( r, duf_option_O_smart_help( oc ) );
-    }
-  }
-  DEBUG_ENDR( r );
-}
 
 mas_error_code_t
 duf_option_O_help(  /* int argc, char *const *argv */ void )
@@ -805,61 +682,21 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run   --db-name=photo  --evaluate-sccb=listing /home/mastar/big/misc/media/photo  -f  --std-leaf-set=3 "
               " --force-color  -L | less -R 	- %s", " -= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20160105.200407 ============" );
+  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database test/tree/  test/tree/  --db-name=test_tree2 "
+              " -dfuR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 2>&1 | less	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run     --interac --flags	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database test/tree/  --db-name=test_tree2 "
+              " -dfuR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress 	- %s", " -= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20160107.144855 ============" );
+
+  DUF_PRINTF( 0, "  run --help-set 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run --help-set=format  	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run --help-set=%%  	- %s", " -= \"\" =-" );
+
 
   DUF_PRINTF( 0, "=============================================================" );
-
-  DEBUG_ENDR( r );
-}
-
-mas_error_code_t
-duf_option_O_version( void )
-{
-
-  extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
-  char *sargv1;
-
-  /* char *sargv2; */
-
-  DEBUG_STARTR( r );
-
-  sargv1 = mas_argv_string( DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ), 1 );
-  /* sargv2 = duf_restore_some_options( DUF_CONFIGG(cli.carg.argv)[0] ); */
-
-  DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
-  DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
-  DUF_PRINTF( 0, "configire        (%s)", MAS_CONFIG_ARGS );
-  DUF_PUTSL( 0 );
-  DUF_PRINTF( 0, "UUID             %s", MAS_UUID );
-
-  DUF_PUTSL( 0 );
-  DUF_PRINTF( 0, "prefix    [%2lu]   %s", sizeof( MAS_CONFIG_PREFIX ), MAS_CONFIG_PREFIX );
-  DUF_PRINTF( 0, "C version:[%2lu]   %lu", sizeof( __STDC_VERSION__ ), __STDC_VERSION__ );
-  DUF_PRINTF( 0, "O.        [%2lu]   %s", sizeof( MAS_OSVER ), MAS_OSVER );
-  DUF_PRINTF( 0, "U.        [%2lu]   %s", sizeof( MAS_UNAME ), MAS_UNAME );
-  DUF_PRINTF( 0, "V.        [%2lu]   %s", sizeof( PACKAGE_STRING ), PACKAGE_STRING );
-  DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
-  DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%06lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
-              sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__, ( unsigned long ) &__MAS_LINK_TIME__ );
-  DUF_PRINTF( 0, "DATE/TIME          %s/%s", __DATE__, __TIME__ );
-  DUF_PRINTF( 0, "MAS_LIBDIR:%s", MAS_LIBDIR );
-#ifdef MAS_SPLIT_DB
-  DUF_PRINTF( 0, "MAS_SPLIT_DB is set" );
-#endif
-
-  DUF_PUTSL( 0 );
-  DUF_PRINTF( 0, "args:            (%s)", sargv1 );
-  /* DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 ); */
-
-  DUF_PUTSL( 0 );
-#if 0
-  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_file_path ) );
-#else
-  DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath(  ) );
-#endif
-  DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.v.sbit ) ), DUF_CONFIGG( opt.v.sbit ) );
-  DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( scn.puz )->v.sbit ), DUF_CONFIGG( scn.puz )->v.sbit );
-  /* mas_free( sargv2 ); */
-  mas_free( sargv1 );
 
   DEBUG_ENDR( r );
 }

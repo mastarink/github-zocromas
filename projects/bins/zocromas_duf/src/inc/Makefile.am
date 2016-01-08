@@ -37,8 +37,8 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_options_cli.h duf_options_env.h duf_options_string.h duf_options_file.h duf_options_interactive.h \
 	duf_option_extended.h duf_option_sccb.h duf_option_fs.h duf_option_fs_types.h duf_option_find.h \
 	duf_xtended_table.h \
-	duf_option.h  duf_option_tmpdb.h duf_option_typed.h duf_option_typed_defs.h duf_option_help.h duf_option_misc.h \
-	duf_option_names.h duf_option_stage.h duf_option_source.h  \
+	duf_option.h  duf_option_tmpdb.h duf_option_typed.h duf_option_typed_defs.h duf_option_help.h duf_option_smart_help.h duf_option_version.h duf_option_misc.h \
+	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
 	duf_options_enum.h duf_options_config.h duf_options.h duf_option_types.h duf_option_vtype_enum.def \
 	duf_options_enum_filter_minmax.def duf_options_enum_filter_same_minmax.def \

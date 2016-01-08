@@ -299,8 +299,8 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_TRACE( temp, 0, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
-    DUF_TRACE( temp, 0, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
+    DUF_TRACE( temp, 3, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
+    DUF_TRACE( temp, 3, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
     /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */

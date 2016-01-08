@@ -12,6 +12,7 @@
 
 #include "duf_option_misc.h"
 #include "duf_option_help.h"
+#include "duf_option_version.h"
 /*
 At duf_options_table.c:
   1. extern const duf_longval_extended_table_t optable_info[];

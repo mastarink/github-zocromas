@@ -362,7 +362,7 @@ duf_source_incfg_stg_options( duf_option_stage_t istage, duf_int_void_func_t cb_
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 20, "@@@@incfg stg options; stage:%s", duf_optstage_name( istage ) );
-  if ( istage > 0 && istage < DUF_OPTION_STAGE_MAX )
+  if ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX )
   {
     char *bfilename;
     const char *sn;

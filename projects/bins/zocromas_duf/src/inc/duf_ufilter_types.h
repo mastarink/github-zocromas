@@ -50,7 +50,7 @@ typedef struct
   duf_limitsll_t data;
   duf_limitsll_t size;
 #  else
-#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) duf_limitsll_t _rf;
+#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) duf_limitsll_t _rf;
 #    include "duf_options_enum_filter_same_minmax.def"
 #    undef   ENUM_WRAPMM
 #  endif
@@ -96,7 +96,7 @@ typedef struct
   duf_limitsll_t mimeid;
   duf_limitsll_t exifid;
 #  else
-#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2) duf_limitsll_t _rf;
+#    define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) duf_limitsll_t _rf;
 #    include "duf_options_enum_filter_minmax.def"
 #    undef   ENUM_WRAPMM
 #  endif

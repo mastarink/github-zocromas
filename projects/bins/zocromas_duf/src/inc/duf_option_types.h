@@ -23,12 +23,14 @@ typedef enum
 
 typedef enum
 {
-  DUF_OPTION_STAGE_PRESETUP = 1,
+  DUF_OPTION_STAGE_NONE = 0,
+  DUF_OPTION_STAGE_MIN = 1,
+  DUF_OPTION_STAGE_PRESETUP = DUF_OPTION_STAGE_MIN,
   DUF_OPTION_STAGE_SETUP,
   DUF_OPTION_STAGE_FIRST,
   DUF_OPTION_STAGE_LOOP,
   DUF_OPTION_STAGE_INTERACTIVE,
-  DUF_OPTION_STAGE_MAX,
+  DUF_OPTION_STAGE_MAX = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_ANY = 99999,
 } duf_option_stage_t;
 
@@ -221,7 +223,8 @@ typedef union
 } duf_anynum_t;
 typedef enum
 {
-  DUF_OFFSET_config = 0,
+  DUF_OFFSET_none = 0,
+  DUF_OFFSET_config,
   /* DUF_OFFSET_depthinfo, */
   DUF_OFFSET_ufilter,
 } duf_offset_to_t;

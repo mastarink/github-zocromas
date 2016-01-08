@@ -11,6 +11,7 @@ typedef const char *( *mas_arg_get_cb_arg_t ) ( const char *name, const char *ar
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );
 size_t mas_chomplen( char *s );
+const char *mas_strtolower( char *s );
 char *mas_expand_string_cb_arg_alloc( const char *str, mas_arg_get_cb_arg_t cb, const char *arg );
 char *mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg );
 char *mas_expand_string( const char *str );

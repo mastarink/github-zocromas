@@ -26,7 +26,7 @@ At duf_options_table.c:
 
 #ifdef MAS_TRACING_OPTIONS
 const duf_longval_extended_table_t optable_trace = {
-  .name = "trace t",
+  .name = "trace_t",
   .table =                      /* */
   {
    DUF_TRACE_OPT( temp, TEMP ),
@@ -156,9 +156,9 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( FLAG, opt.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( SETUP ) /*  */ ,
     DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 2}} /*               */ , DO_H( trace output to stderr ) /*           */ },
+    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 2}}, DO_STAGE_ANY /* */ , DO_H( trace output to stderr ) /*           */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 1}}, DO_STAGE_ANY /* */ , DO_H( trace .... ) /*                       */ },
+    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 1}}, DO_STAGE_ANY /* */ , DO_H( trace output to stdout ) /*           */ },
    {.o = {.name = NULL}}
    }
 };

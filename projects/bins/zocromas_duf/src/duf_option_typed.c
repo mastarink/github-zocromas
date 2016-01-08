@@ -134,6 +134,9 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
     DUF_TRACE( options, 60, "to switch by extended->relto=%d", extended->relto );
     switch ( extended->relto )
     {
+    case DUF_OFFSET_none:
+      assert( extended->m_offset == 0 );
+      break;
     case DUF_OFFSET_config:
       DUF_TRACE( options, 60, "relto=%d", extended->relto );
 #if 0
@@ -491,7 +494,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORF( r, extended->call.fdesc.ev.func );
+        IF_DORF( r, extended->call.fdesc.ev.func ); /* fixed no arg */
 #endif
         break;
       case DUF_OPTION_VTYPE_EIA_CALL: /* stage Not? SETUP *//* call with numeric (int) arg from table (EIA:void-int-arg) */
@@ -507,7 +510,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg );
+        IF_DORF( r, extended->call.fdesc.eia.func, extended->call.fdesc.eia.arg ); /* fixed int arg */
 #endif
         break;
       case DUF_OPTION_VTYPE_SAS_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
@@ -523,10 +526,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORF( r, extended->call.fdesc.sas.func, extended->call.fdesc.sas.arg );
+        IF_DORF( r, extended->call.fdesc.sas.func, extended->call.fdesc.sas.arg ); /* fixed string arg */
 #endif
         break;
-      case DUF_OPTION_VTYPE_SAN_CALL: /* stage Not? SETUP *//* call with constant string arg from table (SAS:void-string-sarg) */
+      case DUF_OPTION_VTYPE_SAN_CALL: /* stage Not? SETUP *//* call with optarg and constant num arg from table (SAN:void-string-sarg) */
         DUF_TRACE( options, 70, "vtype SAS_CALL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -539,7 +542,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORF( r, extended->call.fdesc.san.func, optargg, extended->call.fdesc.san.arg );
+        IF_DORF( r, extended->call.fdesc.san.func, optargg, extended->call.fdesc.san.arg ); /* optarg and fixed num arg */
 #endif
         break;
       case DUF_OPTION_VTYPE_A_CALL: /* stage Not? SETUP *//* call with carg[cv] (A:argv) */
@@ -558,7 +561,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         }
 #else
         /* IF_DORF( r, extended->call.fdesc.a.func, DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ) ); */
-        IF_DORF( r, extended->call.fdesc.a.func, duf_cli_options_get_carg(  )->argc, duf_cli_options_get_carg(  )->argv );
+        IF_DORF( r, extended->call.fdesc.a.func, duf_cli_options_get_carg(  )->argc, duf_cli_options_get_carg(  )->argv ); /* argc and argv */
 #endif
         break;
 
@@ -591,7 +594,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
         }
 #else
-        IF_DORF( r, extended->call.fdesc.s.func, optargg );
+        IF_DORF( r, extended->call.fdesc.s.func, optargg ); /* optarg */
 #endif
         break;
       case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//* call with carg (AA:argv-argv) */
@@ -611,7 +614,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         }
 #else
         /* IF_DORF( r, extended->call.fdesc.aa.func, DUF_CONFIGG( cli.carg ) ); */
-        IF_DORF( r, extended->call.fdesc.aa.func, duf_cli_options_get_carg(  ) );
+        IF_DORF( r, extended->call.fdesc.aa.func, duf_cli_options_get_carg(  ) ); /* arg[cv] as mas_cargvc_t */
 #endif
         break;
       case DUF_OPTION_VTYPE_TN1_CALL: /* stage Not? SETUP *//* call with targ + numeric optarg (TN: targ and numeric) */
@@ -619,7 +622,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
 
-        IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ(  ), duf_strtol_suff( optargg, &r ) );
+        IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ(  ), duf_strtol_suff( optargg, &r ) ); /* targ as mas_argvc_t and numeric optarg */
         break;
 #if 0
       case DUF_OPTION_VTYPE_TN2_CALL: /* stage Not? SETUP *//* call with targ[cv] + numeric optarg (TN: targ and numeric) */
@@ -637,7 +640,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         assert( &duf_cli_options_get_targ(  )->argc == duf_cli_options_get_ptargc(  ) );
         assert( &duf_cli_options_get_targ(  )->argv == duf_cli_options_get_ptargv(  ) );
-        IF_DORF( r, extended->call.fdesc.ts1.func, duf_cli_options_get_targ(  ), optargg );
+        IF_DORF( r, extended->call.fdesc.ts1.func, duf_cli_options_get_targ(  ), optargg ); /* targ as mas_argvc_t and optarg */
         break;
       case DUF_OPTION_VTYPE_TS2_CALL: /* stage Not? SETUP *//* call with targ[cv] + string optarg (TS: targ and string) */
         DUF_TRACE( options, 70, "vtype TS_CALL" );
@@ -645,7 +648,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         assert( &duf_cli_options_get_targ(  )->argc == duf_cli_options_get_ptargc(  ) );
         assert( &duf_cli_options_get_targ(  )->argv == duf_cli_options_get_ptargv(  ) );
-        IF_DORF( r, extended->call.fdesc.ts2.func, duf_cli_options_get_ptargc(  ), duf_cli_options_get_ptargv(  ), optargg );
+        IF_DORF( r, extended->call.fdesc.ts2.func, duf_cli_options_get_ptargc(  ), duf_cli_options_get_ptargv(  ), optargg ); /* targc, targv and optarg */
         break;
         /* 
          * FILE

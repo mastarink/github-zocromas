@@ -10,22 +10,14 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config_defs.h"    /* insularity! FIXME */
+/* #include "duf_config_defs.h" */
 
 #include "duf_option_defs.h"
 #include "duf_option_cmd.h"
+#include "duf_option_stage.h"
 #include "duf_options_config.h"
 
 #include "duf_levinfo_ref.h"
-
-/*******************************************/
-/*******************************************/
-/*** TODO should NOT know about pdi 
- *  duf_levinfo_path as prompt-callback;
- * DUF_ACTG_FLAG req.  ---> ??
- * ***/
-/*******************************************/
-/*******************************************/
 
 /* ###################################################################### */
 #include "duf_options_string.h"
@@ -37,14 +29,18 @@ duf_source_interactive_options( duf_option_stage_t istage, duf_int_void_func_t c
                                 __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );
+#if 0
   static char rl_prompt[256 * 10] = "";
-  const char *prompt=NULL;
+#endif
+  const char *prompt = NULL;
 
   if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
-    DUF_TRACE( options, 0, "@@@@(%d) source: interactive", istage );
+    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( istage ) );
+#if 0
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );
+#endif
 
 #if 0
     add_history( "quit" );
@@ -98,7 +94,7 @@ duf_source_interactive_options( duf_option_stage_t istage, duf_int_void_func_t c
         DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.history_filename ) );
       }
 #endif
-      while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) /* don't remove: this is for quit */
+      while ( DUF_NOERROR( r ) /* && DUF_ACTG_FLAG( interactive ) */  && cb_do_interactive(  ) /* don't remove: this is for quit */
               && isatty( STDIN_FILENO ) /* only when stdin is tty */  )
       {
         char *rl_buffer = NULL, *s = NULL;
@@ -106,13 +102,14 @@ duf_source_interactive_options( duf_option_stage_t istage, duf_int_void_func_t c
 /* TODO : via callback of some kind */
 
 
-        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
 
 
-          prompt = cb_prompt_interactive(  );
-
+#if 0
         snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
                   duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+#else
+        prompt = cb_prompt_interactive(  );
+#endif
         while ( !rl_buffer )
           rl_buffer = readline( prompt );
         s = rl_buffer;
@@ -143,14 +140,19 @@ duf_source_interactive_options( duf_option_stage_t istage, duf_int_void_func_t c
             mas_free( xs );
 #else
             DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE_INTERACTIVE, s, 0 ) );
-            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s [i/a:%d]", r, s, DUF_ACTG_FLAG( interactive ) );
+            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
 #endif
           }
           free( rl_buffer );
           rl_buffer = NULL;
         }
+#if 0
         if ( DUF_CONFIGG( cli.history_filename ) )
           write_history( DUF_CONFIGG( cli.history_filename ) );
+#else
+        if ( duf_cli_options_get_history_filename(  ) )
+          write_history( duf_cli_options_get_history_filename(  ) );
+#endif
       }
     }
   }
