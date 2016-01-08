@@ -1,0 +1,21 @@
+#ifdef ENUM_WRAP
+
+  ENUM_WRAP(NONE			)
+  ENUM_WRAP(EIA				)
+  ENUM_WRAP(EV				)
+  ENUM_WRAP(A				)
+  ENUM_WRAP(AA				)
+  ENUM_WRAP(N				)
+  ENUM_WRAP(S				)
+  ENUM_WRAP(SAS				)
+  ENUM_WRAP(SAN				)
+  ENUM_WRAP(TN1				)
+  /* TN2				) */
+  ENUM_WRAP(TS1				)
+  ENUM_WRAP(TS2				)
+
+#endif
+/*
+vi: ft=c
+*/
+

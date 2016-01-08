@@ -188,23 +188,71 @@ duf_option_O_help_set( const char *arg )
           {
             if ( !optname || ( *optname && 0 == strcmp( optname, xtended->o.name ) ) )
             {
-              char *sl;
+              char *sl = NULL;
 
               const char *srelto[] = {
                 [DUF_OFFSET_config] = "config",
                 [DUF_OFFSET_ufilter] = "ufilter",
               };
               sl = duf_stages_list( xtended, xtable );
-              DUF_PRINTF( 0, "\t--%-20s; [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
-                          "; %d:%d:%d:%d:%d * \t| %-40s;\toclass: %-10s:%-10s; %s + %-4lu; func: %-14s;", xtended->o.name, /* */
+              DUF_PRINTF( 0, ".\t--%-20s; [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
+                          "; %d:%d:%d:%d:%d * \t| %-40s; {%-10s:%-10s} `%s`; %s + %-4lu & %x;", xtended->o.name, /* */
                           sl,   /* xtended->stage.min, duf_optstage_name( xtended->stage.min ), *//* */
                           /* xtended->stage.max, duf_optstage_name( xtended->stage.max ), *//* */
                           /* xtended->stage_mask, *//* */
                           xtended->invert, xtended->can_no, xtended->m_hasoff, xtended->use_stage, xtended->use_stage_mask, /* */
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass], /* */
-                          srelto[xtended->relto], xtended->m_offset, /* */
-                          xtended->call.funcname ? xtended->call.funcname : "-" );
+                          duf_extended_vtype2string( xtended->vtype ), /* */
+                          srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
+              if ( xtended->call.funcname || xtended->calltype != DUF_OPTION_CALL_TYPE_NONE )
+              {
+                const char *sfargs = NULL;
+
+                DUF_PRINTF( 0, ". %s::%s( ", duf_extended_call_type2string( xtended->calltype ), /* */
+                            xtended->call.funcname ? xtended->call.funcname : "-" );
+
+                switch ( xtended->calltype )
+                {
+                case DUF_OPTION_CALL_TYPE_NONE:
+                  break;
+                case DUF_OPTION_CALL_TYPE_EIA:
+		  sfargs="int num_from_tab";
+                  break;
+                case DUF_OPTION_CALL_TYPE_EV:
+		  sfargs="void";
+                  break;
+                case DUF_OPTION_CALL_TYPE_A:
+		  sfargs="int cargc, const char **cargv";
+                  break;
+                case DUF_OPTION_CALL_TYPE_AA:
+		  sfargs="mas_cargvc_t carg";
+                  break;
+                case DUF_OPTION_CALL_TYPE_N:
+		  sfargs="long optarg";
+                  break;
+                case DUF_OPTION_CALL_TYPE_S:
+		  sfargs="char *optarg";
+                  break;
+                case DUF_OPTION_CALL_TYPE_SAS:
+		  sfargs="const char *str_from_tab";
+                  break;
+                case DUF_OPTION_CALL_TYPE_SAN:
+		  sfargs="char *optarg, num_from_tab";
+                  break;
+                case DUF_OPTION_CALL_TYPE_TN1:
+		  sfargs="mas_argvc_t targ, long optarg_with_units";
+                  break;
+                case DUF_OPTION_CALL_TYPE_TS1:
+		  sfargs="mas_argvc_t targ, optarg";
+                  break;
+                case DUF_OPTION_CALL_TYPE_TS2:
+		  sfargs="int targc, char **targv, optarg";
+                  break;
+                }
+                DUF_PRINTF( 0, ".%s )", sfargs ? sfargs : "...." );
+              }
+              DUF_PUTSL( 0 );
               mas_free( sl );
             }
           }

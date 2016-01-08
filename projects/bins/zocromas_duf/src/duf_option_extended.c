@@ -99,6 +99,22 @@ duf_extended_vtype2string( duf_option_vtype_t ovtype )
 }
 
 const char *
+duf_extended_call_type2string( duf_option_call_type_t call_type )
+{
+  const char *rs = NULL;
+
+  switch ( call_type )
+  {
+#define ENUM_WRAP(_n)       case DUF_OPTION_CALL_TYPE_ ## _n: rs= #_n; break;
+#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_CALL_TYPE_ ## _n: rs= #_n; break;
+#include "duf_option_call_type_enum.def"
+#undef ENUM_WRAP
+#undef ENUM_WRAP_V
+  }
+  return rs;
+}
+
+const char *
 duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
 {
   const char *rs = NULL;
@@ -408,6 +424,7 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       DUF_PRINTF( 0, "  vtype:%s(%d)", duf_extended_vtype2string( xtended->vtype ), xtended->vtype );
       if ( xtended->call.funcname )
         DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
+#if 0
       switch ( xtended->vtype )
       {
       case DUF_OPTION_VTYPE_EIA_CALL:
@@ -448,6 +465,7 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
       default:
         break;
       }
+#endif
       if ( xtended->help )
         DUF_PRINTF( 0, "  help(%s)", xtended->help );
 

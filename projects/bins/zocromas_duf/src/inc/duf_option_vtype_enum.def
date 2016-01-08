@@ -35,6 +35,8 @@
   ENUM_WRAP(MAXDATETIME				)
   ENUM_WRAP(MINMAXDATETIME			)
 /******************************************/
+  /***
+  ENUM_WRAP(GEN_CALL				)
   ENUM_WRAP(EIA_CALL				)
   ENUM_WRAP(EV_CALL				)
   ENUM_WRAP(A_CALL				)
@@ -44,9 +46,9 @@
   ENUM_WRAP(SAS_CALL				)
   ENUM_WRAP(SAN_CALL				)
   ENUM_WRAP(TN1_CALL				)
-  /* TN2_CALL				) */
   ENUM_WRAP(TS1_CALL				)
   ENUM_WRAP(TS2_CALL				)
+  **/
   ENUM_WRAP(FILE				)
 
 #endif

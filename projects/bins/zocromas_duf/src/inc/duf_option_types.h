@@ -34,18 +34,11 @@ typedef enum
   DUF_OPTION_STAGE_ANY = 99999,
 } duf_option_stage_t;
 
-typedef struct
-{
-  duf_option_source_t source;
-  duf_option_stage_t stage;
-
-} duf_option_data_t;
-
-
 typedef enum
 {
-#  define ENUM_WRAP(_n)       DUF_OPTION_CLASS_ ## _n,
-#  define ENUM_WRAP_V(_n, _v) DUF_OPTION_CLASS_ ## _n = _v,
+#  define ENUM_WRAP(_n, ...)       DUF_OPTION_CLASS_ ## _n __VA_ARGS__,
+/* #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_CLASS_ ## _n = _v, */
+#  define ENUM_WRAP_V(_n, _v) ENUM_WRAP(_n, = _v)
 #  include "duf_option_class_enum.def"
 #  undef ENUM_WRAP
 #  undef ENUM_WRAP_V
@@ -53,12 +46,24 @@ typedef enum
 
 typedef enum
 {
-#  define ENUM_WRAP(_n)       DUF_OPTION_VTYPE_ ## _n,
-#  define ENUM_WRAP_V(_n, _v) DUF_OPTION_VTYPE_ ## _n = _v,
+#  define ENUM_WRAP(_n, ...)       DUF_OPTION_VTYPE_ ## _n __VA_ARGS__,
+/* #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_VTYPE_ ## _n = _v, */
+#  define ENUM_WRAP_V(_n, _v) ENUM_WRAP(_n, = _v)
 #  include "duf_option_vtype_enum.def"
 #  undef ENUM_WRAP
 #  undef ENUM_WRAP_V
 } duf_option_vtype_t;
+
+typedef enum
+{
+#  define ENUM_WRAP(_n, ...)       DUF_OPTION_CALL_TYPE_ ## _n __VA_ARGS__,
+/* #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_CALL_TYPE_ ## _n = _v, */
+#  define ENUM_WRAP_V(_n, _v) ENUM_WRAP(_n, = _v)
+#  include "duf_option_call_type_enum.def"
+#  undef ENUM_WRAP
+#  undef ENUM_WRAP_V
+} duf_option_call_type_t;
+
 
 /* struct option       */
 /* {                   */
@@ -257,6 +262,7 @@ typedef struct
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
+  duf_option_call_type_t calltype;
   duf_option_t o;
 
 
@@ -304,6 +310,18 @@ typedef struct
   const char *name;
   duf_option_code_t id;
 } duf_chk_act_flags_t;
+
+typedef struct
+{
+  duf_option_source_t source;
+  duf_option_stage_t stage;
+  const duf_longval_extended_t * extended;
+  const char *optarg;
+  const duf_longval_extended_table_t * xtable;
+  int noo;
+} duf_option_data_t;
+
+
 
 
 #endif

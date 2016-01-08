@@ -11,7 +11,7 @@
   ENUM_WRAP_V(TEST , 't'					)
   ENUM_WRAP_V(VERBOSE , 'v'					)
   ENUM_WRAP_V(DEBUG , 'g'					)
-  ENUM_WRAP_V(VERSION , 'V'					)
+  ENUM_WRAP_V(DUFVERSION , 'V'					)
   ENUM_WRAP_V(MEMUSAGE , 'M'					)
 /* db general */
   ENUM_WRAP_V(DB_DIRECTORY , 'Y'				)
