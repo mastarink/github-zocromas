@@ -146,14 +146,16 @@ duf_source_interactive_options( duf_option_stage_t istage, duf_int_void_func_t c
           free( rl_buffer );
           rl_buffer = NULL;
         }
-#if 0
-        if ( DUF_CONFIGG( cli.history_filename ) )
-          write_history( DUF_CONFIGG( cli.history_filename ) );
-#else
-        if ( duf_cli_options_get_history_filename(  ) )
-          write_history( duf_cli_options_get_history_filename(  ) );
-#endif
+        DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
+        TR( r );
       }
+#if 0
+      if ( DUF_CONFIGG( cli.history_filename ) )
+        write_history( DUF_CONFIGG( cli.history_filename ) );
+#else
+      if ( duf_cli_options_get_history_filename(  ) )
+        write_history( duf_cli_options_get_history_filename(  ) );
+#endif
     }
   }
   DEBUG_ENDR( r );

@@ -2,11 +2,11 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_types.h"
-#include "duf_ufilter_types.h"
-#include "duf_levinfo_types.h"
+/* #include "duf_config_types.h" */
+/* #include "duf_ufilter_types.h" */
+/* #include "duf_levinfo_types.h" */
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 
 #include "duf_optable_def.h"
 
@@ -28,13 +28,13 @@ const duf_longval_extended_table_t optable_info = {
   .name = "info",
   .table =                      /* */
   {
-   {.o = {DO_Q( "version" ) /*          */ , DO_A_N /* */ } /*                            */ , DO_CL( REFERENCE ) /*  */ ,
+   {.o = {DO_Q( "version" ) /*          */ , DO_A_N /* */ } /*                             */ , DO_CL( REFERENCE ) /*  */ ,
     /*      */ DO_EV_CALL( version ) /*                                                     */ , DO_H( version info ) /*                     */ },
-   {.o = {DO_Q( "flags" ) /*            */ , DO_A_N /* */ } /*                            */ , DO_CL( REFERENCE ) /*  */ ,
+   {.o = {DO_Q( "flags" ) /*            */ , DO_A_N /* */ } /*                             */ , DO_CL( REFERENCE ) /*  */ ,
     /*      */ DO_EV_CALL( showflags ) /*                                                   */ , DO_H( version info ) /*                     */ },
-   {.o = {DO_Q( "help-examples" ) /*    */ , DO_A_N /* */ , DO_V( EXAMPLES )} /*          */ , DO_CL( HELP ) /*      */ ,
+   {.o = {DO_Q( "help-examples" ) /*    */ , DO_A_N /* */ , DO_V( EXAMPLES )} /*           */ , DO_CL( HELP ) /*      */ ,
     /*      */ DO_EV_CALL( examples ) /*                                                    */ , DO_H( examples ) /*                         */ },
-   {.o = {DO_Q( "list-options" ) /*     */ , DO_A_O /* */ , DO_V( LIST_OPTIONS )} /*      */ , DO_CL( NODESC ) /*  */
+   {.o = {DO_Q( "list-options" ) /*     */ , DO_A_O /* */ , DO_V( LIST_OPTIONS )} /*       */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( list_options ) /*                                                          */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "list-extended" ) /*     */ , DO_A_O /* */ , DO_V( LIST_XTENDED )} /*      */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( list_xtended ), DO_AT_STAGE( SETUP ) /*                                    */ , DO_H(  ... ) /*                             */ },

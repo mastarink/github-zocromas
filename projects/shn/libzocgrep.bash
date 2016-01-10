@@ -7,7 +7,7 @@ function grepchg ()
 
   if pushd $MSH_SHN_PROJECTS_DIR &>/dev/null ; then
 #   shn_msg grep "$*" -- ${MSH_SHN_PROJECTS[@]}
-    eval grep -r --inc='*.[ch]' $qargs -- ${MSH_SHN_PROJECTS[@]}
+    eval grep -r --inc='*.[ch]' --inc='*.def' $qargs -- ${MSH_SHN_PROJECTS[@]}
     popd &>/dev/null
   fi
 }
@@ -24,8 +24,8 @@ function grepchpx ()
 
   if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
 #   shn_msg grep "$*"
-    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs src/ mod/
-    eval grep  -r --inc='*.['${ex:-ch}']' $qargs src/ mod/
+    shn_msg  -r --inc='*.['${ex:-ch}']' --inc='*.def' $qargs src/ mod/
+    eval grep  -r --inc='*.['${ex:-ch}']' --inc='*.def' $qargs src/ mod/
     popd &>/dev/null
   fi
 }

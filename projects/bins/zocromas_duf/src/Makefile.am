@@ -59,6 +59,7 @@ zocromas_duf_SOURCES=				   \
 	data_optable_flag_obsolete.c	\
 	data_optable_sflag.c	\
 	data_optable_str.c	\
+	data_optable_db.c	\
 	data_optable_redo_and_obsolete.c	\
 	data_optable_uplus.c	\
 	data_optable_debug.c	\

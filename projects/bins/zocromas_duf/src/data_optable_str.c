@@ -2,11 +2,11 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_types.h"
-#include "duf_ufilter_types.h"
-#include "duf_levinfo_types.h"
+/* #include "duf_config_types.h" */
+/* #include "duf_ufilter_types.h" */
+/* #include "duf_levinfo_types.h" */
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_optable_def.h"
 
 #include "duf_option_sccb.h"    /* TODO : temp for duf_option_O_db_open               */
@@ -28,20 +28,6 @@ const duf_longval_extended_table_t optable_str = {
   .name = "str",
   .table =                      /* */
   {
-   {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.dir ) /*                                                      */ , DO_H( db directory ) /*                     */ },
-   {.o = {DO_Q( "db-subdirectory" ) /*  */ , DO_A_R /* */ , DO_V( DB_SUBDIRECTORY )} /*    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.subdir ) /*                                                   */ , DO_H( db directory ) /*                     */ },
-   {.o = {DO_Q( "db-adm-name" ) /*      */ , DO_A_R /* */ , DO_V( DB_NAME_ADM )} /*        */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.adm.name ) /*                                                 */ , DO_H( db name adm ) /*                      */ },
-   {.o = {DO_Q( "db-temp-name" ) /*     */ , DO_A_R /* */ , DO_V( DB_NAME_TEMP )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.tempo.name ) /*                                               */ , DO_H( db name tempo ) /*                    */ },
-   {.o = {DO_Q( "db-selected-name" ) /* */ , DO_A_R /* */ , DO_V( DB_NAME_SELECTED )} /*   */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.selected.name ) /*                                           */ , DO_H( db name selected ) /*                 */ },
-   {.o = {DO_Q( "db-name" ) /*          */ , DO_A_R /* */ , DO_V( DB_NAME_MAIN )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( CSTR, db.main.name ) /*                                               */ , DO_H( db name main ) /*                     */ },
-   {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
-    , DO_EV_CALL( db_open ), DO_STAGE_ANY /*                                                */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "tag-file" ) /*         */ , DO_A_R /* */ , DO_V( TAG_FILE )} /*           */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, tag.file ) /*                                                    */ , DO_H( tag file ) /*                         */ },

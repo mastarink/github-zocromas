@@ -26,10 +26,12 @@ typedef enum
   DUF_OPTION_STAGE_NONE = 0,
   DUF_OPTION_STAGE_MIN = 1,
   DUF_OPTION_STAGE_PRESETUP = DUF_OPTION_STAGE_MIN,
+  DUF_OPTION_STAGE_PRESET = DUF_OPTION_STAGE_PRESETUP,
   DUF_OPTION_STAGE_SETUP,
   DUF_OPTION_STAGE_FIRST,
   DUF_OPTION_STAGE_LOOP,
   DUF_OPTION_STAGE_INTERACTIVE,
+  DUF_OPTION_STAGE_INTERAC = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_MAX = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_ANY = 99999,
 } duf_option_stage_t;
@@ -315,9 +317,9 @@ typedef struct
 {
   duf_option_source_t source;
   duf_option_stage_t stage;
-  const duf_longval_extended_t * extended;
+  const duf_longval_extended_t *extended;
   const char *optarg;
-  const duf_longval_extended_table_t * xtable;
+  const duf_longval_extended_table_t *xtable;
   int noo;
 } duf_option_data_t;
 

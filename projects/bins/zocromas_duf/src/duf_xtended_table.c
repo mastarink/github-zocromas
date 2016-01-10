@@ -14,6 +14,7 @@
 static const duf_longval_extended_t _lo_extended1[] = {
 /* #include "duf_optable.cdef"                   */
 /* #include "duf_optable_str.cdef"               */
+/* #include "duf_optable_db.cdef"                */
 /* #include "duf_optable_sflag.cdef"             */
 /* #include "duf_optable_uplus.cdef"             */
 /* #include "duf_optable_help.cdef"              */
@@ -34,6 +35,7 @@ extern const duf_longval_extended_table_t optable_experimental;
 extern const duf_longval_extended_table_t optable_fs;
 extern const duf_longval_extended_table_t optable_interactive;
 extern const duf_longval_extended_table_t optable_str;
+extern const duf_longval_extended_table_t optable_db;
 extern const duf_longval_extended_table_t optable_sccb;
 extern const duf_longval_extended_table_t optable_info;
 extern const duf_longval_extended_table_t optable_flag;
@@ -56,6 +58,7 @@ static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
   &optable_io,
   &optable_interactive,
   &optable_str,
+  &optable_db,
   &optable_sccb,
   &optable_info,
   &optable_sflag,

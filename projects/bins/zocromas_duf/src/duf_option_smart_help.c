@@ -35,6 +35,9 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
   [DUF_OPTION_CLASS_NO_HELP] = "No help",
   [DUF_OPTION_CLASS_SYSTEM] = "System",
   [DUF_OPTION_CLASS_CONTROL] = "Control",
+  [DUF_OPTION_CLASS_DB] = "Database",
+  [DUF_OPTION_CLASS_FS] = "File system",
+  [DUF_OPTION_CLASS_SCCB] = "SCCB system",
   [DUF_OPTION_CLASS_REFERENCE] = "Reference",
   [DUF_OPTION_CLASS_COLLECT] = "Collect",
   [DUF_OPTION_CLASS_SCAN] = "Scan",
@@ -65,6 +68,87 @@ duf_option_O_smart_help_all( duf_option_class_t oclass )
   DEBUG_ENDR( r );
 }
 
+static void
+duf_show_option_description_x( const duf_longval_extended_t *extended)
+{
+  int look = 1;
+  const char *name;
+  duf_option_code_t codeval;
+
+  name = extended->o.name;
+  codeval = extended->o.val;
+
+  /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
+  if ( DUF_CONFIGG( help_string ) )
+  {
+    char *s = DUF_CONFIGG( help_string );
+
+    look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
+  }
+  if ( look )
+  {
+    char *s = NULL;
+
+    /* duf_option_class_t hclass; */
+
+    /* hclass = duf_help_option2class( codeval ); */
+    s = duf_option_description_xd( extended, "\t", " // " );
+    /* s = mas_strcat_x( s, " ...................." ); */
+    if ( s )
+    {
+      /* if ( shown >= 0 )                    */
+      /*   DUF_PRINTF( 0, " ## %d;", shown ); */
+      /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
+      DUF_PRINTF( 0, "[%u] \t%s", codeval, s );
+      mas_free( s );
+    }
+    else
+    {
+      DUF_PRINTF( 0, " ??? %s", name );
+    }
+  }
+}
+static void
+duf_show_option_description( int ilong )
+{
+  int look = 1;
+  const char *name;
+  duf_option_code_t codeval;
+
+  name = DUF_CONFIGG( cli.longopts_table )[ilong].name;
+  codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
+
+  /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
+  if ( DUF_CONFIGG( help_string ) )
+  {
+    char *s = DUF_CONFIGG( help_string );
+
+    look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
+  }
+  if ( look )
+  {
+    char *s = NULL;
+
+    /* duf_option_class_t hclass; */
+
+    /* hclass = duf_help_option2class( codeval ); */
+    s = duf_option_description_d( ilong, "\t", " // " );
+    /* s = mas_strcat_x( s, " ...................." ); */
+    if ( s )
+    {
+      /* if ( shown >= 0 )                    */
+      /*   DUF_PRINTF( 0, " ## %d;", shown ); */
+      /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
+      DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, codeval, s );
+      mas_free( s );
+    }
+    else
+    {
+      DUF_PRINTF( 0, " ??? %s", name );
+    }
+  }
+}
+
 mas_error_code_t
 duf_option_O_smart_help( duf_option_class_t oclass )
 {
@@ -75,7 +159,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
   int tbcount;
 
   tbcount = duf_longindex_extended_count( duf_extended_table_multi(  ) );
-  ss = tbcount * sizeof( int );
+  ss = DUF_OPTION_VAL_MAX_LONG * sizeof( int );
 
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
@@ -88,18 +172,15 @@ duf_option_O_smart_help( duf_option_class_t oclass )
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
   for ( int ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
   {
-
     duf_option_code_t codeval;
-    const char *name;
     const duf_longval_extended_t *extd;
     int ie;
 
-    name = DUF_CONFIGG( cli.longopts_table )[ilong].name;
     codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
     extd = duf_longindex2extended( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
-    ie = ilong;
+    ie = codeval;
     if ( codeval && DUF_NOERROR( r ) )
     {
       int cnd = 0;
@@ -113,40 +194,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
         if ( ie >= 0 )
           shown = ashown[ie];
         if ( shown <= 0 )
-        {
-          int look = 1;
-
-          /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
-          if ( DUF_CONFIGG( help_string ) )
-          {
-            char *s = DUF_CONFIGG( help_string );
-
-            look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
-          }
-          if ( look )
-          {
-            char *s = NULL;
-
-            /* duf_option_class_t hclass; */
-
-            /* hclass = duf_help_option2class( codeval ); */
-            s = duf_option_description_d( ilong, "\t", " // " );
-            DUF_TEST_R( r );
-            /* s = mas_strcat_x( s, " ...................." ); */
-            if ( s )
-            {
-              /* if ( shown >= 0 )                    */
-              /*   DUF_PRINTF( 0, " ## %d;", shown ); */
-
-              DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, DUF_CONFIGG( cli.longopts_table )[ilong].val, s );
-              mas_free( s );
-            }
-            else
-            {
-              DUF_PRINTF( 0, " ??? %s", name );
-            }
-          }
-        }
+          duf_show_option_description( ilong );
         if ( ie >= 0 )
           ashown[ie]++;
       }
@@ -195,16 +243,21 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_ufilter] = "ufilter",
               };
               sl = duf_stages_list( xtended, xtable );
+              duf_show_option_description_x( xtended );
               DUF_PRINTF( 0, ".\t--%-20s; [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
-                          "; %d:%d:%d:%d:%d * \t| %-40s; {%-10s:%-10s} `%s`; %s + %-4lu & %x;", xtended->o.name, /* */
+                          "; %d:%d:%d:%d * \t| %-40s; {%-10s:%-10s}", xtended->o.name, /* */
                           sl,   /* xtended->stage.min, duf_optstage_name( xtended->stage.min ), *//* */
                           /* xtended->stage.max, duf_optstage_name( xtended->stage.max ), *//* */
                           /* xtended->stage_mask, *//* */
-                          xtended->invert, xtended->can_no, xtended->m_hasoff, xtended->use_stage, xtended->use_stage_mask, /* */
+                          xtended->invert, xtended->can_no, xtended->use_stage, xtended->use_stage_mask, /* */
                           xtended->help, /* */
-                          duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass], /* */
-                          duf_extended_vtype2string( xtended->vtype ), /* */
-                          srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
+                          duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
+              if ( xtended->vtype!=DUF_OPTION_VTYPE_NONE )
+		DUF_PRINTF( 0, ". `%s`;",duf_extended_vtype2string( xtended->vtype ) );
+              if ( xtended->m_hasoff )
+              {
+                DUF_PRINTF( 0, ".%s + %-4lu & %x;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
+              }
               if ( xtended->call.funcname || xtended->calltype != DUF_OPTION_CALL_TYPE_NONE )
               {
                 const char *sfargs = NULL;
@@ -217,37 +270,37 @@ duf_option_O_help_set( const char *arg )
                 case DUF_OPTION_CALL_TYPE_NONE:
                   break;
                 case DUF_OPTION_CALL_TYPE_EIA:
-		  sfargs="int num_from_tab";
+                  sfargs = "int num_from_tab";
                   break;
                 case DUF_OPTION_CALL_TYPE_EV:
-		  sfargs="void";
+                  sfargs = "void";
                   break;
                 case DUF_OPTION_CALL_TYPE_A:
-		  sfargs="int cargc, const char **cargv";
+                  sfargs = "int cargc, const char **cargv";
                   break;
                 case DUF_OPTION_CALL_TYPE_AA:
-		  sfargs="mas_cargvc_t carg";
+                  sfargs = "mas_cargvc_t carg";
                   break;
                 case DUF_OPTION_CALL_TYPE_N:
-		  sfargs="long optarg";
+                  sfargs = "long optarg";
                   break;
                 case DUF_OPTION_CALL_TYPE_S:
-		  sfargs="char *optarg";
+                  sfargs = "char *optarg";
                   break;
                 case DUF_OPTION_CALL_TYPE_SAS:
-		  sfargs="const char *str_from_tab";
+                  sfargs = "const char *str_from_tab";
                   break;
                 case DUF_OPTION_CALL_TYPE_SAN:
-		  sfargs="char *optarg, num_from_tab";
+                  sfargs = "char *optarg, num_from_tab";
                   break;
                 case DUF_OPTION_CALL_TYPE_TN1:
-		  sfargs="mas_argvc_t targ, long optarg_with_units";
+                  sfargs = "mas_argvc_t targ, long optarg_with_units";
                   break;
                 case DUF_OPTION_CALL_TYPE_TS1:
-		  sfargs="mas_argvc_t targ, optarg";
+                  sfargs = "mas_argvc_t targ, optarg";
                   break;
                 case DUF_OPTION_CALL_TYPE_TS2:
-		  sfargs="int targc, char **targv, optarg";
+                  sfargs = "int targc, char **targv, optarg";
                   break;
                 }
                 DUF_PRINTF( 0, ".%s )", sfargs ? sfargs : "...." );

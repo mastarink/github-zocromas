@@ -34,7 +34,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
         size_t mln = 14;
 
         if ( !cnt )
-          names = mas_strcat_x( names, "≪" );
+          names = mas_strcat_x( names, "〈" );
         else
           names = mas_strcat_x( names, delim ? delim : " | " );
         names = mas_strcat_x( names, "--" );
@@ -61,7 +61,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
     cnt++;
   }
   if ( cnt )
-    names = mas_strcat_x( names, "≫" );
+    names = mas_strcat_x( names, "〉" );
   return names;
 }
 

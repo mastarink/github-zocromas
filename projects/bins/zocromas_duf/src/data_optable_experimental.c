@@ -2,11 +2,11 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_types.h"
-#include "duf_ufilter_types.h"
-#include "duf_levinfo_types.h"
+/* #include "duf_config_types.h" */
+/* #include "duf_ufilter_types.h" */
+/* #include "duf_levinfo_types.h" */
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_optable_def.h"
 
 
@@ -37,9 +37,9 @@ const duf_longval_extended_table_t optable_experimental = {
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
 #else
    /* FIXME in fact only 1 works...? XXX */
-   {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
+   {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( FS ) /*     */ ,
     /*      */ DO_OU( ARGV, globx.include_fs_files ) /*                                     */ , DO_H(  ... ) /*                             */ },
-   {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
+   {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( FS ) /*     */ ,
     /*      */ DO_OU( ARGV, globx.exclude_fs_files ) /*                                     */ , DO_H(  ... ) /*                             */ },
 #endif
 

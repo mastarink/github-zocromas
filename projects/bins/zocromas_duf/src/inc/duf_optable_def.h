@@ -73,49 +73,73 @@
 
 /* void f( .eia.arg ) -- call with numeric (int) arg from table (EIA:void-int-arg) */
 #  define DO_EIA_CALL(_f, _a)		/* DO_SET_VTYPE( EIA_CALL ), */ DO_SET_CALL_TYPE( EIA ), DO_SET_CALLA(eia, _f, _a)
-#  define DO_EIA_CALLH(_cl)		DO_EIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl) /**/
-#  define DO_EIA_CALLCL(_f, _cl)	DO_EIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl) /**/
-      /* */
+#  define DO_EIA_CALLH(_cl)		DO_EIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
+
+#  define DO_EIA_CALLCL(_f, _cl)	DO_EIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
+
+
       /* void f( int argc, char *const *argv ) ;;;; call with carg[cv] (A:argv) */
-#  define DO_A_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */ DO_SET_CALL_TYPE( A ), DO_SET_CALL(a, _f) /**/
-      /* */
+#  define DO_A_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */ DO_SET_CALL_TYPE( A ), DO_SET_CALL(a, _f)
+
+
       /* void f( mas_cargvc_t arg ) ;;;; call with carg (AA:argv-argv) */
-#  define DO_AA_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */ DO_SET_CALL_TYPE( A ), DO_SET_CALL(aa, _f) /**/
+#  define DO_AA_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */ DO_SET_CALL_TYPE( A ), DO_SET_CALL(aa, _f)
+
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL_TYPE( T ), DO_SET_CALL(t, _f) */
-      /* */
+
       /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN1: targ and numeric) */
-#  define DO_TN1_CALL(_f)        /* DO_SET_VTYPE( TN1_CALL ), */ DO_SET_CALL_TYPE( TN1 ), DO_SET_CALL(tn1, _f) /**/
+#  define DO_TN1_CALL(_f)        /* DO_SET_VTYPE( TN1_CALL ), */ DO_SET_CALL_TYPE( TN1 ), DO_SET_CALL(tn1, _f)
+
       /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN2: targ and numeric) */
-#  define DO_TN2_CALL(_f)        /* DO_SET_VTYPE( TN2_CALL ), */ DO_SET_CALL_TYPE( TN2 ), DO_SET_CALL(tn2, _f) /**/
-      /* */
+#  define DO_TN2_CALL(_f)        /* DO_SET_VTYPE( TN2_CALL ), */ DO_SET_CALL_TYPE( TN2 ), DO_SET_CALL(tn2, _f)
+
+
       /* duf_error_code_t f( void ) ;;;; call with nothing (EV:errc-void) */
-#  define DO_EV_CALL(_f)        /* DO_SET_VTYPE( EV_CALL ), */ DO_SET_CALL_TYPE( EV ), DO_SET_CALL(ev, _f) /**/
-      /* */
+#  define DO_EV_CALL(_f)        /* DO_SET_VTYPE( EV_CALL ), */ DO_SET_CALL_TYPE( EV ), DO_SET_CALL(ev, _f)
+
+
       /* void f( duf_strtol_suff( optargg, &r ) ) ;;;; call with numeric optarg (N:numeric) */
-#  define DO_N_CALL(_f)         /* DO_SET_VTYPE( N_CALL ), */ DO_SET_CALL_TYPE( N ), DO_SET_CALL(n, _f) /**/
-      /* */
+#  define DO_N_CALL(_f)         /* DO_SET_VTYPE( N_CALL ), */ DO_SET_CALL_TYPE( N ), DO_SET_CALL(n, _f)
+
+
       /* void f( &duf_config->targc, &duf_config->targv, optargg ) ;;;; call with targ[cv] + string optarg (TS1: targ and string) */
-#  define DO_TS1_CALL(_f)        /* DO_SET_VTYPE( TS1_CALL ), */ DO_SET_CALL_TYPE( TS1 ), DO_SET_CALL(ts1, _f) /**/
+#  define DO_TS1_CALL(_f)        /* DO_SET_VTYPE( TS1_CALL ), */ DO_SET_CALL_TYPE( TS1 ), DO_SET_CALL(ts1, _f)
+
       /* void f( &duf_config->targc, &duf_config->targv, optargg ) ;;;; call with targ[cv] + string optarg (TS: targ and string) */
-#  define DO_TS2_CALL(_f)        /* DO_SET_VTYPE( TS2_CALL ), */ DO_SET_CALL_TYPE( TS2 ), DO_SET_CALL(ts2, _f) /**/
-      /* */
+#  define DO_TS2_CALL(_f)        /* DO_SET_VTYPE( TS2_CALL ), */ DO_SET_CALL_TYPE( TS2 ), DO_SET_CALL(ts2, _f)
+
+
       /* void f( optargg ) ;;;; call with string optarg (S: string) */
-#  define DO_S_CALL(_f)         /* DO_SET_VTYPE( S_CALL ), */ DO_SET_CALL_TYPE( S ), DO_SET_CALL(s, _f) /**/
-      /* */
+#  define DO_S_CALL(_f)         /* DO_SET_VTYPE( S_CALL ), */ DO_SET_CALL_TYPE( S ), DO_SET_CALL(s, _f)
+
+
       /* void f( .sas.arg ) -- ;;;; call with constant string arg from table (SAS:void-string-sarg) */
-#  define DO_SAS_CALL(_f, _a)		/* DO_SET_VTYPE( SAS_CALL ), */ DO_SET_CALL_TYPE( SAS ), DO_SET_CALLA(sas, _f, _a) /**/
+#  define DO_SAS_CALL(_f, _a)		/* DO_SET_VTYPE( SAS_CALL ), */ DO_SET_CALL_TYPE( SAS ), DO_SET_CALLA(sas, _f, _a)
+
       /* void f( optargg, .san.arg ) -- ;;;; call with constant string arg from table (SAS:void-string-narg) */
-#  define DO_SAN_CALL(_f, _a)		/* DO_SET_VTYPE( SAN_CALL ), */ DO_SET_CALL_TYPE( SAN ), DO_SET_CALLA(san, _f, _a) /**/
-      /* */
-#  define DO_TDB( ) 	DO_SET_VTYPE( TDB ) /**/
-      /* */
-#  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1 /**/
-      /* */
-#  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag) /**/
-      /* */
-#  define DO_STAGE_ANY		DO_SET_STAGE(SETUP, ANY) /**/
-      /* */
-#  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v /**/
-      /* */
-#  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) ) /**/
+#  define DO_SAN_CALL(_f, _a)		/* DO_SET_VTYPE( SAN_CALL ), */ DO_SET_CALL_TYPE( SAN ), DO_SET_CALLA(san, _f, _a)
+
+
+#  define DO_TDB( ) 	DO_SET_VTYPE( TDB )
+
+
+#  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1
+
+
+#  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
+
+
+#  define DO_STAGE_ANY		DO_SET_STAGE(SETUP, ANY)
+
+
+#  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v
+
+
+#  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
+
+
+#  define DO_CMD(_otxt, _oarg, _ocode , ...) {.o={DO_Q(_otxt), DO_A_ ## _oarg, DO_V(_ocode)}, __VA_ARGS__}
+#  define DO_CMD2(_o, ...) {.o=_o, __VA_ARGS__}
+
+
 #endif
