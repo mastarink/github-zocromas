@@ -33,7 +33,7 @@ const duf_longval_extended_table_t optable_fs = {
   .table =                      /* */
   {
    {.o = {DO_Q( "fs-ls" ) /*            */ , DO_A_R /*  */ , DO_V( FS_LS )} /*             */ , DO_CL( FS ) /*    */ ,
-    /*    */ DO_S_CALL( fs_ls ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*  */ , DO_H( fs rm file ) /*                       */ },
+    /*    */ DO_S_CALL( fs_ls ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*  */ , DO_H( fs ls ) /*                       */ },
 
    {.o = {DO_Q( "fs-rm-force" ) /*      */ , DO_A_R /*  */ , DO_V( FS_RM )} /*             */ , DO_CL( FS ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_rm, DUF_OPTION_FS_MODE_FORCE ),
@@ -44,29 +44,29 @@ const duf_longval_extended_table_t optable_fs = {
     DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
 
    {.o = {DO_Q( "fs-cp-ignore" ) /*     */ , DO_A_R /*  */ , DO_V( FS_CP )} /*             */ , DO_CL( FS ) /*    */ , DO_STG_NOT( LOOP ),
-    DO_SET_STAGE( FIRST, INTERAC ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_IGNORE ) /*      */ , DO_H( fs rm file ) /*                       */ },
+    DO_SET_STAGE( FIRST, INTERAC ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_IGNORE ) /*      */ , DO_H( fs cp file ) /*                       */ },
 
    {.o = {DO_Q( "fs-cp-overwrite" ) /*  */ , DO_A_R /*  */ , DO_V( FS_CP )} /*             */ , DO_CL( FS ) /*    */ , DO_STG_NOT( LOOP ),
-    DO_SET_STAGE( FIRST, INTERAC ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_OVERWRITE ) /*   */ , DO_H( fs rm file ) /*                       */ },
+    DO_SET_STAGE( FIRST, INTERAC ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_OVERWRITE ) /*   */ , DO_H( fs cp file ) /*                       */ },
 
    {.o = {DO_Q( "fs-cp-force" ) /*      */ , DO_A_R /*  */ , DO_V( FS_CP )} /*             */ , DO_CL( FS ) /*    */ , DO_STG_NOT( LOOP ),
-    DO_SET_STAGE( FIRST, INTERACTIVE ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_FORCE ) /*   */ , DO_H( fs rm file ) /*                       */ },
+    DO_SET_STAGE( FIRST, INTERACTIVE ), DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_FORCE ) /*   */ , DO_H( fs cp file ) /*                       */ },
 
    {.o = {DO_Q( "fs-cp-ask" ) /*        */ , DO_A_R /*  */ , DO_V( FS_CP )} /*         */ , DO_CL( FS ) /*    */ , DO_STG_NOT( LOOP ),
     /*    */ DO_SAN_CALL( fs_cp, DUF_OPTION_FS_MODE_ASK ),
-    DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
+    DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs cp file ) /*                       */ },
 
    {.o = {DO_Q( "fs-mv-ignore" ) /*     */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( FS ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_IGNORE ),
-    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
+    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs mv file ) /*                       */ },
 
    {.o = {DO_Q( "fs-mv-force" ) /*      */ , DO_A_R /*  */ , DO_V( FS_MV )} /*       */ , DO_CL( FS ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_FORCE ),
-    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
+    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs mv file ) /*                       */ },
 
    {.o = {DO_Q( "fs-mv-ask" ) /*        */ , DO_A_R /*  */ , DO_V( FS_MV )} /*         */ , DO_CL( FS ) /*    */ ,
     /*    */ DO_SAN_CALL( fs_mv, DUF_OPTION_FS_MODE_ASK ),
-    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs rm file ) /*                       */ },
+    DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                               */ , DO_H( fs mv file ) /*                       */ },
 
    {.o = {.name = NULL}}
    }

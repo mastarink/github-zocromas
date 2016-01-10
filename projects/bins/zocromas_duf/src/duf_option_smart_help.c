@@ -69,7 +69,7 @@ duf_option_O_smart_help_all( duf_option_class_t oclass )
 }
 
 static void
-duf_show_option_description_x( const duf_longval_extended_t *extended)
+duf_show_option_description_x( const duf_longval_extended_t * extended )
 {
   int look = 1;
   const char *name;
@@ -108,6 +108,7 @@ duf_show_option_description_x( const duf_longval_extended_t *extended)
     }
   }
 }
+
 static void
 duf_show_option_description( int ilong )
 {
@@ -230,10 +231,18 @@ duf_option_O_help_set( const char *arg )
           optname = NULL;
         if ( ( 0 == strcmp( arg, "%" ) || ( 0 == strncmp( xtable->name, arg, len ) && ( arg[len] == 0 || arg[len] == ':' ) ) ) )
         {
+          int *ashown;
+          int ss = DUF_OPTION_VAL_MAX_LONG * sizeof( int );
+
+          ashown = mas_malloc( ss );
+          memset( ( void * ) ashown, 0, ss );
           if ( !title_printed++ )
             DUF_PRINTF( 0, "# set '%-15s'", xtable->name );
           for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++ )
           {
+            duf_option_code_t codeval;
+
+            codeval = xtended->o.val;
             if ( !optname || ( *optname && 0 == strcmp( optname, xtended->o.name ) ) )
             {
               char *sl = NULL;
@@ -243,17 +252,18 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_ufilter] = "ufilter",
               };
               sl = duf_stages_list( xtended, xtable );
-              duf_show_option_description_x( xtended );
-              DUF_PRINTF( 0, ".\t--%-20s; [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
-                          "; %d:%d:%d:%d * \t| %-40s; {%-10s:%-10s}", xtended->o.name, /* */
-                          sl,   /* xtended->stage.min, duf_optstage_name( xtended->stage.min ), *//* */
-                          /* xtended->stage.max, duf_optstage_name( xtended->stage.max ), *//* */
-                          /* xtended->stage_mask, *//* */
-                          xtended->invert, xtended->can_no, xtended->use_stage, xtended->use_stage_mask, /* */
+              if ( ashown[codeval] <= 0 )
+                duf_show_option_description_x( xtended );
+              ashown[codeval]++;
+              DUF_PRINTF( 0, ".\t--%-20s;", xtended->o.name );
+              DUF_PRINTF( 0, ". [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
+                          "; %d:%d * \t| %-40s; {%-10s:%-10s}", /* */
+                          sl,   /* */
+                          xtended->invert, xtended->can_no, /* xtended->use_stage, xtended->use_stage_mask, *//* */
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
-              if ( xtended->vtype!=DUF_OPTION_VTYPE_NONE )
-		DUF_PRINTF( 0, ". `%s`;",duf_extended_vtype2string( xtended->vtype ) );
+              if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
+                DUF_PRINTF( 0, ". `%s`;", duf_extended_vtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )
               {
                 DUF_PRINTF( 0, ".%s + %-4lu & %x;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
@@ -309,6 +319,7 @@ duf_option_O_help_set( const char *arg )
               mas_free( sl );
             }
           }
+          mas_free( ashown );
         }
       }
       else
