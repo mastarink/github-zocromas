@@ -111,9 +111,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DEBUG_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
-  DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_SMART_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir ) );
@@ -283,18 +284,18 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
 
   DUF_PRINTF( 0, "========================= as for 20140818 ===================" );
-  DUF_PRINTF( 0, "  run   --help-short 		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help       		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-help   		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-system 		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-refer		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-collect		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-scan   		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-update 		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-request		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-print  		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-nodesc 		- %s", "" );
-  DUF_PRINTF( 0, "  run   --help-examples		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-short 		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class       		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-help   		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-system 		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-refer		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-collect		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-scan   		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-update 		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-request		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-print  		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-nodesc 		- %s", "" );
+  DUF_PRINTF( 0, "  run   --help-class-examples		- %s", "" );
 
   DUF_PRINTF( 0, "========================= as for 20140828 ===================" );
   DUF_PRINTF( 0,
@@ -783,7 +784,7 @@ duf_uflag2cnames( unsigned long ufset )
   duf_option_code_t id = DUF_OPTION_VAL_NONE;
 
   id = duf_uflag2code( ufset );
-  return id == DUF_OPTION_VAL_NONE ? "" : duf_option_cnames_tmp( -1, id, NULL );
+  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp( -1, id, NULL );
 }
 
 static const char *
@@ -900,7 +901,7 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
       .flag.progress = 1
     };
     id = duf_flag2code( vv );
-    DUF_PRINTF( 0, "id:%u - %s", id, duf_option_cnames_tmp( -1, id, NULL ) );
+    DUF_PRINTF( 0, "id:%u - %s", id, duf_coption_cnames_tmp( -1, id, NULL ) );
     for ( unsigned u = 0; u < 30; u++ )
     {
       DUF_PRINTF( 0, "====================== %u. %s", u, duf_unflag2cnames( u ) );
@@ -927,7 +928,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       char *s = NULL;
 
       if ( xtended->o.val )
-        s = duf_option_description_xd( xtended, "\t", " // " );
+        s = duf_xoption_description_d( xtended, "\t", " // " );
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );

@@ -25,6 +25,7 @@
   ENUM_WRAP(XCHR				)
   ENUM_WRAP(STR					)
   ENUM_WRAP(CSTR				)
+  ENUM_WRAP(PATH				)
   /* PSTR					) */
   ENUM_WRAP(ARGV				)
   /* PAA					) */

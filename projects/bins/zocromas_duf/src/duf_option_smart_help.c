@@ -92,7 +92,7 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
     /* duf_option_class_t hclass; */
 
     /* hclass = duf_help_option2class( codeval ); */
-    s = duf_option_description_xd( extended, "\t", " // " );
+    s = duf_xoption_description_d( extended, "\t", " // " );
     /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -133,7 +133,7 @@ duf_show_option_description( int ilong )
     /* duf_option_class_t hclass; */
 
     /* hclass = duf_help_option2class( codeval ); */
-    s = duf_option_description_d( ilong, "\t", " // " );
+    s = duf_loption_description_d( ilong, "\t", " // " );
     /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {

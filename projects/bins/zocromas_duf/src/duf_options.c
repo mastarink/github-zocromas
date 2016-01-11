@@ -17,31 +17,6 @@
 #include "duf_options.h"
 /* ###################################################################### */
 
-/*
- * get get options/settings
- *    - global variable duf_config must be created/inited
- * ************************
- * 1. call duf_source_env_options, i.e. get options/settings from OS environment
- * 2. call duf_infile_options, i.e. get options/settings from configuration file(s)
- * 3. call duf_source_cli_options, i.e. get options/settings from command line
- * */
-
-/*
- * TODO join duf_action and duf_all_options
- *
- *
- * duf_action									| duf_all_options
- * with istage = DUF_OPTION_STAGE_FIRST						| with istage
- * 										|  
- * 										|
- * 										|  - duf_source_env_options
- * 										|  - duf_infile_options
- *   - duf_source_cli_options( istage )						|  - duf_source_cli_options
- *   - duf_source_stdin_options( istage )					|
- *   - duf_source_indirect_options( istage )					|  - duf_source_indirect_options
- *   - duf_source_interactive_options( DUF_OPTION_STAGE_INTERACTIVE )		|
- * */
-
 SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive )
 {
@@ -75,28 +50,20 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
 #endif
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   {
-#define DUF_OPTSRC( _xr, _name, _istage )  \
-  { \
-    DUF_TRACE( options, 10, "@@@to do %s options; stage:%s(%d)", #_name, duf_optstage_name( _istage ), _istage ); \
-    if ( QNOERR ) \
-    { \
-      CR( source_ ## _name ## _options, _istage, NULL, NULL ); \
-      _xr = QERRIND; \
-    } \
-    DUF_TRACE( options, 10, "@@@@@done %s options; %s:%d [%c]  (%d:%s)", \
-	#_name, #_xr, QERRIND, QERRIND > ' ' && QERRIND < 'z' ? QERRIND : '-', QERRIND, QERRNAME ); \
-  }
 #define DUF_OPTSRCI( _xr, _name, _istage, _cb_do_interactive, _cb_prompt_interactive )  \
   { \
     DUF_TRACE( options, 10, "@@@to do %s options; stage:%s(%d)", #_name, duf_optstage_name( _istage ), _istage ); \
     if ( QNOERR ) \
     { \
-      CR( source_ ## _name ## _options, _istage, _cb_do_interactive, _cb_prompt_interactive ); \
+      CR( source_ ## _name ## _parse, _istage, _cb_do_interactive, _cb_prompt_interactive ); \
       _xr = QERRIND; \
     } \
     DUF_TRACE( options, 10, "@@@@@done %s options; %s:%d [%c]  (%d:%s)", \
 	#_name, #_xr, QERRIND, QERRIND > ' ' && QERRIND < 'z' ? QERRIND : '-', QERRIND, QERRNAME ); \
   }
+#define DUF_OPTSRC( _xr, _name, _istage )  \
+  DUF_OPTSRCI( _xr, _name, _istage, NULL, NULL )
+
     DUF_OPTSRC( er, env, istage ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     DUF_OPTSRC( fr, incfg, istage );
     DUF_OPTSRC( sr, incfg_stg, istage );

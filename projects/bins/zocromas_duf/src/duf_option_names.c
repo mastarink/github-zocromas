@@ -13,7 +13,7 @@
 /* ###################################################################### */
 
 char *
-duf_option_names_d( duf_option_code_t codeval, const char *delim )
+duf_coption_names_d( duf_option_code_t codeval, const char *delim )
 {
   const duf_longval_extended_table_t **xtables;
   const duf_longval_extended_table_t *xtable;
@@ -67,58 +67,15 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
   return names;
 }
 
-/* char *                                                                                                */
-/* duf_option_names_d( duf_option_code_t codeval, const char *delim )                                    */
-/* {                                                                                                     */
-/*   char *names = NULL;                                                                                 */
-/*   int cnt = 0;                                                                                        */
-/*                                                                                                       */
-/*   for ( int ilong = 0; DUF_CONFIGG(longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
-/*   {                                                                                                   */
-/*     if ( DUF_CONFIGG(longopts_table)[ilong].val == codeval )                                           */
-/*     {                                                                                                 */
-/*       const char *spaces = "                                                            ";            */
-/*       size_t l;                                                                                       */
-/*       size_t mln = 14;                                                                                */
-/*                                                                                                       */
-/*       if ( !cnt )                                                                                     */
-/*         names = mas_strcat_x( names, "≪" );                                                         */
-/*       else                                                                                            */
-/*         names = mas_strcat_x( names, delim ? delim : " | " );                                         */
-/*       names = mas_strcat_x( names, "--" );                                                            */
-/*       names = mas_strcat_x( names, DUF_CONFIGG(longopts_table)[ilong].name );                          */
-/*       l = strlen( DUF_CONFIGG(longopts_table)[ilong].name );                                           */
-/*       if ( l < mln )                                                                                  */
-/*         names = mas_strncat_x( names, spaces, mln - l );                                              */
-/*       cnt++;                                                                                          */
-/*     }                                                                                                 */
-/*   }                                                                                                   */
-/*   if ( names && codeval && ( ( unsigned ) codeval ) < 0xff )                                          */
-/*   {                                                                                                   */
-/*     char sh[10] = "- ";                                                                               */
-/*                                                                                                       */
-/*     sh[1] = codeval & 0xff;                                                                           */
-/*     if ( !cnt )                                                                                       */
-/*       names = mas_strcat_x( names, "≫" );                                                           */
-/*     if ( cnt )                                                                                        */
-/*       names = mas_strcat_x( names, delim ? delim : " | " );                                           */
-/*     names = mas_strcat_x( names, sh );                                                                */
-/*     cnt++;                                                                                            */
-/*   }                                                                                                   */
-/*   if ( cnt )                                                                                          */
-/*     names = mas_strcat_x( names, "≫" );                                                             */
-/*   return names;                                                                                       */
-/* }                                                                                                     */
-
 char *
-duf_option_names( duf_option_code_t codeval )
+duf_coption_names( duf_option_code_t codeval )
 {
-  return duf_option_names_d( codeval, NULL );
+  return duf_coption_names_d( codeval, NULL );
 }
 
 static duf_tmp_t *cnames_tmp = NULL;
 const char *
-duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
+duf_coption_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
 {
   const char *x = NULL;
 
@@ -133,7 +90,7 @@ duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
   {
     mas_free( cnames_tmp->tmp_string[index] );
     cnames_tmp->tmp_string[index] = NULL;
-    cnames_tmp->tmp_string[index] = duf_option_names_d( codeval, delim );
+    cnames_tmp->tmp_string[index] = duf_coption_names_d( codeval, delim );
     x = cnames_tmp->tmp_string[index];
   }
   return x;

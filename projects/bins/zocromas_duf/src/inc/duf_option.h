@@ -1,19 +1,29 @@
 #ifndef MAS_DUF_OPTION_H
 #  define MAS_DUF_OPTION_H
 
+/* naming convention:
+ * <gen.prefix>_<subject prefix><entity>_<action-result>
+ * 1. gen.prefix: duf
+ * 2. subject prefix: depends on main argument(s) type
+ *   const char *name				=> n
+ *   duf_option_code_t codeval			=> c
+ *   int longindex				=> l
+ *   int longindex, duf_option_code_t codeval	=> lc
+ *   duf_longval_extended_t * extended		=> x
+ * 3. entity: option
+ * 4. action: clarify, clarify_full
+ * */
 
-int duf_clarify_opt( duf_option_code_t opt, int longindex, const char *optarg, duf_option_stage_t stage, duf_option_source_t source )
+
+int duf_lcoption_clarify( int longindex, duf_option_code_t codeval, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
 
-int duf_clarify_opt_x( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
-      __attribute__ ( ( warn_unused_result ) );
-
-int DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t stage,
+int DUF_WRAPPED( duf_xoption_clarify_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t stage,
                                            const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
 
 #  include <mastar/tools/mas_argvc_types.h>
 
-int duf_clarify_argv( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos );
+int duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos );
 
 #endif

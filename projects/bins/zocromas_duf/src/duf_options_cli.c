@@ -76,7 +76,7 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 
 /* 20150924.144037 */
 static int
-duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
+_duf_source_cli_parse( const char *shorts, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
@@ -85,7 +85,6 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
   mas_cargvc_t *carg;
   int optoptt = 0, optindd = 0, optindp DUF_UNUSED = 0;
   int numxargv = 0;
-
 
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   optopt = 0;
@@ -148,12 +147,12 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
     /* }                                                                                                                       */
 
 /*
- * duf_clarify_opt(_x) return
+ * duf_cloption_clarify(_x) return
  *        oclass (>0) for "help" options
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    DOR( r, duf_clarify_opt_x( codeval, longindex, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
+    DOR( r, duf_lcoption_clarify( longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
     /* DUF_TEST_R1( r ); */
 #if 0
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) )
@@ -190,7 +189,7 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 
     /* targ.argv becomes valid here - may init pdi etc. */
 #else
-    DOR( r, duf_clarify_argv( duf_cli_options_get_targ(  ), carg, optind ) );
+    DOR( r, duf_argv_clarify( duf_cli_options_get_targ(  ), carg, optind ) );
 #endif
 
 #if 0
@@ -211,20 +210,15 @@ duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
 }
 
 int
-duf_source_cli_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                        __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
+duf_source_cli_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
+                      duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
-  /* assert( duf_config ); */
-
   DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( istage ) );
 
-#if 0
-  DOR( r, duf_clarify_cli_opts( DUF_CONFIGG( cli.shorts ), istage ) );
-#else
-  DOR( r, duf_clarify_cli_opts( duf_cli_options_get_shorts(  ), istage ) );
-#endif
+  DOR( r, _duf_source_cli_parse( duf_cli_options_get_shorts(  ), istage ) );
+
   if ( istage == DUF_OPTION_STAGE_PRESETUP )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
 

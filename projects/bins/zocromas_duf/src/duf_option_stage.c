@@ -24,7 +24,7 @@ duf_optstage_name( duf_option_stage_t istage )
 }
 
 int
-duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
 {
   int r0 = 0;
   int r1 = 0;
@@ -55,7 +55,7 @@ duf_stages_list( const duf_longval_extended_t * extended, const duf_longval_exte
   char *s = NULL;
   for ( duf_option_stage_t istg = DUF_OPTION_STAGE_MIN; istg <= DUF_OPTION_STAGE_MAX; istg++ )
   {
-    if ( duf_check_stage( istg, extended, xtable ) )
+    if ( duf_optstage_check( istg, extended, xtable ) )
       s = mas_strncat_x( s, duf_optstage_name( istg ), 1 );
     else
       s = mas_strcat_x( s, "_" );

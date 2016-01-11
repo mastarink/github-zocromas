@@ -70,13 +70,16 @@ const duf_longval_extended_table_t optable_help = {
    {.o = {DO_Q( "help-set" ) /*         */ , DO_A_O /*  */ , DO_V( HELP_SET )} /*          */ , DO_CL( HELP ) /*       */ ,
     /*      */ DO_S_CALL( help_set ), DO_AT_STAGE( PRESETUP ) /*                            */ , DO_H( help on set / optfile ) /*            */ },
 #elif 1
+   /* see help-set :: see list-options, list-extended   */
    DO_CMD( "help-set", O, HELP_SET, DO_CL( HELP ), DO_S_CALL( help_set ), DO_AT_STAGE( PRESETUP ), DO_H( help on set / optfile ) ),
 #endif
 
 
 
    {.o = {DO_Q( "help" ) /*              */ , DO_A_N /*  */ , DO_V( HELP )} /*             */ , DO_CL( HELP ) /*       */ ,
-    /*      */ DO_EV_CALL( help ), DO_AT_STAGE( PRESETUP ) /*                               */ , DO_H( help ) /*                             */ },
+    /*      */ DO_EV_CALL( help ), DO_AT_STAGE( PRESETUP ) /*                               */ , DO_H( show short options help ) /*                             */ },
+   {.o = {DO_Q( "help-examples" ) /*    */ , DO_A_N /* */ , DO_V( EXAMPLES )} /*           */ , DO_CL( HELP ) /*      */ ,
+    /*      */ DO_EV_CALL( examples ) /*                                                    */ , DO_H( show short options examples ) /*                         */ },
 
 
    {.o = {.name = NULL}}

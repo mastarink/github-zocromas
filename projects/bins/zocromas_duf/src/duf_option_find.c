@@ -15,7 +15,7 @@
 
 /* TODO: rename => duf_codeval2extended */
 const duf_longval_extended_t *
-duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )
+duf_coption_xfind_x_at_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )
 {
   const duf_longval_extended_t *rxtended = NULL;
 

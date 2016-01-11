@@ -103,7 +103,7 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
     if ( extended && DUF_NOERROR( r ) )
     {
       DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s found cmd for %s", mas_error_name_i( r ), found, xtable->name, string, extended->o.name );
-      DORF( r, DUF_WRAPPED( duf_clarify_xcmd_full ), extended, arg, istage, xtable, no, source );
+      DORF( r, DUF_WRAPPED( duf_xoption_clarify_full ), extended, arg, istage, xtable, no, source );
       DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s full done for %s", mas_error_name_i( r ), found, xtable->name, string, extended->o.name );
       found += ( extended ? 1 : 0 );
       DUF_TRACE( options, 130, "@executed '%s'; stage:%s; source:%d", extended->o.name, duf_optstage_name( istage ), source );

@@ -399,7 +399,7 @@ duf_extended_table_print( const duf_longval_extended_table_t * xtable, const cha
           switch ( xtended->relto )
           {
           case DUF_OFFSET_none:
-	    break;
+            break;
           case DUF_OFFSET_config:
             srelto = "config";
             break;
@@ -604,6 +604,7 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
 {
   while ( xtended->o.name )
   {
+    assert( xtended->o.val );
     if ( no )
     {
       if ( xtended->can_no )

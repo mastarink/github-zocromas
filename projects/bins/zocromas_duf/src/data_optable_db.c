@@ -29,7 +29,7 @@ const duf_longval_extended_table_t optable_db = {
   .table =                      /* */
   {
    {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( DB ) /* */ ,
-    /*      */ DO_OC( CSTR, db.dir ) /*                                                      */ , DO_H( db directory ) /*                     */ },
+    /*      */ DO_OC( PATH, db.dir ) /*                                                      */ , DO_H( db directory ) /*                     */ },
    {.o = {DO_Q( "db-subdirectory" ) /*  */ , DO_A_R /* */ , DO_V( DB_SUBDIRECTORY )} /*    */ , DO_CL( DB ) /* */ ,
     /*      */ DO_OC( CSTR, db.subdir ) /*                                                   */ , DO_H( db directory ) /*                     */ },
    {.o = {DO_Q( "db-adm-name" ) /*      */ , DO_A_R /* */ , DO_V( DB_NAME_ADM )} /*        */ , DO_CL( DB ) /* */ ,

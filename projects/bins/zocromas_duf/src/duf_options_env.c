@@ -40,7 +40,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
  * 2. call duf_env_options_at_var
  * */
 int
-duf_source_env_options( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                         __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
   DEBUG_STARTR( r );

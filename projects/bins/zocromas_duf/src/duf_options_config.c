@@ -19,7 +19,7 @@ duf_cli_options_config( void )
   return config_cli;
 }
 
-char *
+static char *
 duf_cli_option_shorts_create( const duf_longval_extended_table_t ** xtables )
 {
   const duf_longval_extended_table_t *xtable;
@@ -33,8 +33,9 @@ duf_cli_option_shorts_create( const duf_longval_extended_table_t ** xtables )
     xtended = xtable->table;
     while ( xtended->o.name )
     {
-      if ( xtended->o.val < 0xFF )
+      if ( xtended->o.val && xtended->o.val < 0xFF )
       {
+        DUF_TRACE( options, 50,  "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
         /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
         if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
@@ -55,6 +56,10 @@ duf_cli_option_shorts_create( const duf_longval_extended_table_t ** xtables )
         }
         *p = 0;
       }
+      else
+      {
+        DUF_TRACE( options, 60, "@@@- shorts[%s]: %c : %x", xtended->o.name, ' ', xtended->o.val );
+      }
       xtended++;
     }
   }
@@ -72,6 +77,7 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     config_cli->carg.argv = argv;
     config_cli->xtable_multi = xtables;
     config_cli->shorts = duf_cli_option_shorts_create( xtables );
+
     config_cli->longopts_table = duf_options_create_longopts_table( xtables );
     assert( config_cli->longopts_table );
   }
