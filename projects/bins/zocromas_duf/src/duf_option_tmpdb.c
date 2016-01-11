@@ -13,8 +13,6 @@
 /* ###################################################################### */
 #include "duf_option_tmpdb.h"
 /* ###################################################################### */
-/* #define DUF_SQL_TMP_TEMPORARY_STRING  "TEMPORARY" */
-
 
 static int
 duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, const duf_yfilter_t * py_unused DUF_UNUSED, const mas_argvc_t * ttarg )

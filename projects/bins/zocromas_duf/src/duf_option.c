@@ -5,7 +5,7 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_status.h"
-#include "duf_status_ref.h"
+/* #include "duf_status_ref.h" */
 
 #include "duf_option_find.h"
 #include "duf_option_descr.h"

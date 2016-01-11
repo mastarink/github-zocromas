@@ -18,5 +18,5 @@ duf_optclass_name( duf_option_class_t oclass )
   };
 #undef ENUM_WRAP
 #undef ENUM_WRAP_V
-  return ( oclass >= 0 && oclass < DUF_OPTION_CLASS_MAX ) ? ( const char * ) /* mas_strtolower */( tail[oclass] ) : ( const char * ) NULL;
+  return ( oclass >= 0 && oclass < DUF_OPTION_CLASS_MAX ) ? ( const char * ) /* mas_strtolower */ ( tail[oclass] ) : ( const char * ) NULL;
 }

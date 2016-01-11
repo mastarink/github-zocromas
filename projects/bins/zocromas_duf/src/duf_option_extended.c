@@ -1,14 +1,12 @@
 #include <string.h>
 #include <stddef.h>
 
-
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance_options.h"
 
-#include "duf_option_stage.h"   /* duf_optstage_name */
-
 #include "duf_xtended_table.h"
+#include "duf_option_stage.h"   /* duf_optstage_name */
 
 /* ###################################################################### */
 #include "duf_option_extended.h"

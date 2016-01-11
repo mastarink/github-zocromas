@@ -5,8 +5,6 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_xtended_table.h"
-
-/* #include "duf_option_names.h" */
 #include "duf_option_stage.h"
 
 /* ###################################################################### */

@@ -75,6 +75,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_sql_positional.h \
 	duf_sql_prepared.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
+	duf_tmp_types.h \
 	duf_tracen_maintenance.h \
 	duf_tracen_defs.h \
 	duf_tracen_defs_preset.h \

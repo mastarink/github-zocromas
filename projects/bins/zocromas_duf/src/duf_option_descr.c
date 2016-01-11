@@ -4,7 +4,8 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_status_ref.h"
+/* #include "duf_status_ref.h" */
+#include "duf_tmp_types.h"
 
 #include "duf_option_find.h"
 #include "duf_option_extended.h"
@@ -88,6 +89,8 @@ duf_option_description_x( const duf_longval_extended_t * extended )
 /* }                                                               */
 /*                                                                 */
 
+static duf_tmp_t *cnames_tmp = NULL;
+
 const char *
 duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended )
 {
@@ -95,17 +98,39 @@ duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended
 
   if ( index < 0 )
   {
-    index = global_status.tmp->explanation_index++;
-    if ( global_status.tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
-      global_status.tmp->explanation_index = 0;
+    index = cnames_tmp->tmp_index++;
+    if ( cnames_tmp->tmp_index >= DUF_TMP_INDEX_MAX )
+      cnames_tmp->tmp_index = 0;
   }
 
-  if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
+  if ( index >= 0 && index < DUF_TMP_INDEX_MAX )
   {
-    mas_free( global_status.tmp->option_explanation[index] );
-    global_status.tmp->option_explanation[index] = NULL;
-    global_status.tmp->option_explanation[index] = duf_option_description_x( extended );
-    x = global_status.tmp->option_explanation[index];
+    mas_free( cnames_tmp->tmp_string[index] );
+    cnames_tmp->tmp_string[index] = NULL;
+    cnames_tmp->tmp_string[index] = duf_option_description_x( extended );
+    x = cnames_tmp->tmp_string[index];
   }
   return x;
+}
+static void constructor_tmp( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_tmp( void )
+{
+  cnames_tmp = mas_malloc( sizeof( duf_tmp_t ) );
+  memset( cnames_tmp, 0, sizeof( duf_tmp_t ) );
+}
+
+static void destructor_tmp( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_tmp( void )
+{
+  if ( cnames_tmp )
+  {
+    for ( int i = 0; i < DUF_TMP_INDEX_MAX; i++ )
+    {
+      mas_free( cnames_tmp->tmp_string[i] );
+      cnames_tmp->tmp_string[i] = NULL;
+    }
+    mas_free( cnames_tmp );
+  }
 }

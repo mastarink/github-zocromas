@@ -30,15 +30,10 @@ duf_tmp_delete( duf_tmp_t * tmp )
 {
   if ( tmp )
   {
-    for ( int i = 0; i < DUF_TMP_PATH_MAX; i++ )
+    for ( int tmp_index = 0; tmp_index < DUF_TMP_INDEX_MAX; tmp_index++ )
     {
-      mas_free( tmp->path[i] );
-      tmp->path[i] = NULL;
-    }
-    for ( int i = 0; i < DUF_TMP_EXPLANATION_MAX; i++ )
-    {
-      mas_free( tmp->option_explanation[i] );
-      tmp->option_explanation[i] = NULL;
+      mas_free( tmp->tmp_string[tmp_index] );
+      tmp->tmp_string[tmp_index] = NULL;
     }
     mas_free( tmp );
   }

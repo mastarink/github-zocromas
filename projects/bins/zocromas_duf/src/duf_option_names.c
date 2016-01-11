@@ -4,7 +4,8 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_status_ref.h"
+/* #include "duf_status_ref.h" */
+#include "duf_tmp_types.h"
 
 #include "duf_options_config.h"
 /* ###################################################################### */
@@ -18,6 +19,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
   const duf_longval_extended_table_t *xtable;
   char *names = NULL;
   int cnt = 0;
+  static const char *wrap[2] = { "〈", "〉" };
 
   xtables = duf_cli_options_config(  )->xtable_multi;
 
@@ -34,7 +36,7 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
         size_t mln = 14;
 
         if ( !cnt )
-          names = mas_strcat_x( names, "〈" );
+          names = mas_strcat_x( names, wrap[0] );
         else
           names = mas_strcat_x( names, delim ? delim : " | " );
         names = mas_strcat_x( names, "--" );
@@ -54,14 +56,14 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
 
     sh[1] = codeval & 0xff;
     if ( !cnt )
-      names = mas_strcat_x( names, "≫" );
+      names = mas_strcat_x( names, wrap[1] );
     if ( cnt )
       names = mas_strcat_x( names, delim ? delim : " | " );
     names = mas_strcat_x( names, sh );
     cnt++;
   }
   if ( cnt )
-    names = mas_strcat_x( names, "〉" );
+    names = mas_strcat_x( names, wrap[1] );
   return names;
 }
 
@@ -114,6 +116,7 @@ duf_option_names( duf_option_code_t codeval )
   return duf_option_names_d( codeval, NULL );
 }
 
+static duf_tmp_t *cnames_tmp = NULL;
 const char *
 duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
 {
@@ -121,17 +124,40 @@ duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
 
   if ( index < 0 )
   {
-    index = global_status.tmp->explanation_index++;
-    if ( global_status.tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
-      global_status.tmp->explanation_index = 0;
+    index = cnames_tmp->tmp_index++;
+    if ( cnames_tmp->tmp_index >= DUF_TMP_INDEX_MAX )
+      cnames_tmp->tmp_index = 0;
   }
 
-  if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
+  if ( index >= 0 && index < DUF_TMP_INDEX_MAX )
   {
-    mas_free( global_status.tmp->option_explanation[index] );
-    global_status.tmp->option_explanation[index] = NULL;
-    global_status.tmp->option_explanation[index] = duf_option_names_d( codeval, delim );
-    x = global_status.tmp->option_explanation[index];
+    mas_free( cnames_tmp->tmp_string[index] );
+    cnames_tmp->tmp_string[index] = NULL;
+    cnames_tmp->tmp_string[index] = duf_option_names_d( codeval, delim );
+    x = cnames_tmp->tmp_string[index];
   }
   return x;
+}
+
+static void constructor_tmp( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_tmp( void )
+{
+  cnames_tmp = mas_malloc( sizeof( duf_tmp_t ) );
+  memset( cnames_tmp, 0, sizeof( duf_tmp_t ) );
+}
+
+static void destructor_tmp( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_tmp( void )
+{
+  if ( cnames_tmp )
+  {
+    for ( int i = 0; i < DUF_TMP_INDEX_MAX; i++ )
+    {
+      mas_free( cnames_tmp->tmp_string[i] );
+      cnames_tmp->tmp_string[i] = NULL;
+    }
+    mas_free( cnames_tmp );
+  }
 }

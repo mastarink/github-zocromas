@@ -3,15 +3,7 @@
 #  include "duf_ufilter_types.h"
 #  include "duf_option_types.h"
 
-#  define  DUF_TMP_PATH_MAX 6
-#  define  DUF_TMP_EXPLANATION_MAX 6
-
-typedef struct
-{
-  char *path[DUF_TMP_PATH_MAX];
-  unsigned explanation_index;
-  char *option_explanation[DUF_TMP_EXPLANATION_MAX];
-} duf_tmp_t;
+#include "duf_tmp_types.h"
 
 typedef struct
 {
