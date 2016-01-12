@@ -51,12 +51,12 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },
 #if 0
    {.o = {DO_Q( "selection" ) /*        */ , DO_A_N /* */ , DO_VF( BEGINNING_SQL ) /* */ } /* */ , DO_CL( CONTROL ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_ANY /*        */ , DO_H(  ... ) /*                            */ },
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_SPLS /*        */ , DO_H(  ... ) /*                            */ },
 #endif
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_ANY /*              */ , DO_H( recursive ) /*                        */ },
+    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_SPLS /*              */ , DO_H( recursive ) /*                        */ },
    {.o = {DO_Q( "linear" ) /*        */ , DO_A_N /* */ , DO_VF( LINEAR )} /*         */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_ANY /*              */ , DO_H( recursive ) /*                        */ },
+    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*              */ , DO_H( recursive ) /*                        */ },
 #if 0
    {.o = {DO_Q( "if-recursive" ) /*     */ , DO_A_N} /*                                    */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( PSFLAG, v ), DO_FL( rec_etc, recursive ) /*                           */ , DO_H( recursive ) /*                        */ },
@@ -69,7 +69,7 @@ const duf_longval_extended_table_t optable_flag = {
 
    /* 20150907.122946 renames directories --> allow-directories */
    {.o = {DO_Q( "allow-directories" ) /* */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /**/, DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_ANY /*                */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_SPLS /*                */ ,
     DO_H( collect dir info ) /*                 */ },
    /* 20150907.122956 renames dirs --> allow-dirs */
    {.o = {DO_Q( "allow-dirs" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /* */ , DO_CL( COLLECT ) /* */ ,
@@ -78,7 +78,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_sub ) /*                        */ , DO_H( get sub info ) /*                      */ },
    /* renames files --> allow-files */
    {.o = {DO_Q( "allow-files" ) /*            */ , DO_A_N /* */ , DO_VF( ALLOW_FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_files ), DO_STAGE_ANY /*         */ , DO_H( get file info ) /*                    */ },
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_files ), DO_STAGE_SPLS /*         */ , DO_H( get file info ) /*                    */ },
 
 
    {.o = {DO_Q( "info" ) /*             */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,

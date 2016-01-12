@@ -25,10 +25,10 @@ const duf_longval_extended_table_t optable_sflag = {
     /*      */ DO_OC( SFLAG, opt.disable ) /*           */ , DO_FL( disable, insert ) /*    */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "disable-update" ) /*   */ , DO_A_N, DO_VF( DISABLE_UPDATE )} /*           */ , DO_CL( COLLECT ) /*    */ ,
     /*      */ DO_OC( SFLAG, opt.disable ) /*           */ , DO_FL( disable, update ) /*    */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "disable-fs" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_FS )} /*        */ , DO_CL( FS ) /* */ , DO_STAGE_ANY /* */ ,
+   {.o = {DO_Q( "disable-fs" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_FS )} /*        */ , DO_CL( FS ) /* */ , DO_STAGE_SPLS /* */ ,
     /*      */ DO_OC( SFLAG, opt.disable ) /*           */ , DO_FL( disable, fs ) /*        */ , DO_H( disable_fs ) /*                       */ },
 
-   {.o = {DO_Q( "disable-memusage" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_MEMUSAGE )} /*  */ , DO_CL( CONTROL ) /* */ , DO_STAGE_ANY /* */ ,
+   {.o = {DO_Q( "disable-memusage" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_MEMUSAGE )} /*  */ , DO_CL( CONTROL ) /* */ , DO_STAGE_SPLS /* */ ,
     /*      */ DO_OC( SFLAG, opt.disable ) /*           */ , DO_FL( disable, memusage ) /*  */ , DO_H( disable_memusage ) /*                 */ },
 
    {.o = {.name = NULL}}

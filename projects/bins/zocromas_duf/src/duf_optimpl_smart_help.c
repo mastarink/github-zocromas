@@ -256,9 +256,10 @@ duf_option_O_help_set( const char *arg )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;
               DUF_PRINTF( 0, ".\t--%-20s;", xtended->o.name );
-              DUF_PRINTF( 0, ". [%s] " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
+              DUF_PRINTF( 0, ". [%s] %d:%d:%d " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
                           "; %d:%d * \t| %-40s; {%-10s:%-10s}", /* */
                           sl,   /* */
+                          xtended->stage.min, xtended->stage.max, xtended->use_stage, /* */
                           xtended->invert, xtended->can_no, /* xtended->use_stage, xtended->use_stage_mask, *//* */
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );

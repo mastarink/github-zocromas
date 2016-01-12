@@ -121,7 +121,7 @@ SR( SNIPPET_OPTION, option_O_call_file, const char *name )
   /* DEBUG_STARTR( r ); */
   /* int r DUF_UNUSED = 0; */
 
-  CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY, name );
+  CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */, name );
   /* DEBUG_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }

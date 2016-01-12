@@ -54,6 +54,7 @@
 #include <mastar/error/mas_error_reporting.h>
 
 
+#include "duf_option_stage.h"
 #include "duf_maindb.h"
 
 
@@ -110,13 +111,23 @@ destructor_main( void )
 {
 }
 
-static int
-duf_main_with_config( int argc, char **argv )
+static
+SR( TOP, main_with_config, int argc, char **argv )
 {
-  DEBUG_STARTR( r );
+  /* DEBUG_STARTR( r ); */
+
+#if 0
+  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
+#else
+  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+
+  CR( all_options, DUF_OPTION_STAGE_DEBUG, /* DUF_ACTG_FLAG( interactive ), */ NULL, NULL );
+  DUF_TRACE( options, 0, "@@@@@after all options for %s(presetup) stage", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
+  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+#endif
 
   DUF_TRACE( any, 1, "any test" );
-  DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
+  DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
 
 #if 0
@@ -128,14 +139,14 @@ duf_main_with_config( int argc, char **argv )
   }
 #endif
   /* XXX XXX XXX XXX XXX XXX */
-  
-  DOR( r, duf_main_db( argc, argv ) );
+
+  CR( main_db, argc, argv );
 
   /* XXX XXX XXX XXX XXX XXX */
 
 #if 0
   DUF_PUTS( 0, "------------------------------------(*)" );
-  DUF_PRINTF( 0, "------- duf_main_db ended --------" );
+  DUF_PRINTF( 0, "------- main_db ended --------" );
   DUF_TEST_R( r );              /* don't remove! */
   DUF_PUTS( 0, "---------------------------------------------(o)" );
 #endif
@@ -159,7 +170,8 @@ duf_main_with_config( int argc, char **argv )
   }
 #endif
 
-  DEBUG_ENDR( r );
+  /* DEBUG_ENDR( r ); */
+  ER( TOP, main_with_config, int argc, char **argv );
 }
 
 static int

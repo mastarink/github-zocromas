@@ -15,9 +15,9 @@ duf_codeval2string( duf_option_code_t codeval )
 
   switch ( codeval )
   {
-#define ENUM_WRAP(_n)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
+#define ENUM_WRAP(_n)                   case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
 #define ENUM_WRAPP(_n, _rf, _rf2)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
+#define ENUM_WRAP_V(_n, _v)             case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
 #define ENUM_WRAP_VP(_n, _v, _rf, _rf2) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
 #include "duf_options_enum.def"
 #undef ENUM_WRAP

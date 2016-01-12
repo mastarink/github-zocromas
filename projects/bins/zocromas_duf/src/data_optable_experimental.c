@@ -44,7 +44,7 @@ const duf_longval_extended_table_t optable_experimental = {
     /*      */ DO_OC( PDISTR, pdi ) /*                                    */ , DO_H( pdi cd ) /*                           */ },
 #elif 0
    {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_S_CALL( cd ), DO_STAGE_ANY, DO_STG_NOT( FIRST ), DO_STG_NOT( LOOP ) /*                                      */ ,
+    /*      */ DO_S_CALL( cd ), DO_STAGE_SPLS, DO_STG_NOT( FIRST ), DO_STG_NOT( LOOP ) /*                                      */ ,
     DO_H( pdi cd ) /*                           */ },
 #else
    {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,

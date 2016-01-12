@@ -129,7 +129,8 @@
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
 
 
-#  define DO_STAGE_ANY		DO_SET_STAGE(SETUP, ANY)
+#  define DO_STAGE_SPLS		DO_SET_STAGE(SETUP, MAX)
+#  define DO_STAGE_ALL		DO_SET_STAGE(DEBUG, MAX)
 
 
 #  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v

@@ -22,7 +22,7 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
 {
   /* DEBUG_STARTR( r ); */
 
-  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ), cb_do_interactive(  ) );
+  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ), cb_do_interactive?cb_do_interactive(  ):0 );
 
 
   /* assert( duf_config ); */
@@ -71,7 +71,7 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
     DUF_OPTSRC( isi, stdin, istage );
     DUF_OPTSRC( ir, indirect, istage );
     /* if ( DUF_ACTG_FLAG( interactive ) ) */
-    if ( cb_do_interactive(  ) )
+    if ( cb_do_interactive && cb_do_interactive(  ) )
       DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive );
     DUF_OPTSRC( lr, incfg_last, istage );
 
