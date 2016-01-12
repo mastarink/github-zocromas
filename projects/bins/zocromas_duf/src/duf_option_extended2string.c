@@ -271,6 +271,7 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
 }
 
 /* duf_xarr_print */
+/* TODO : duf_codeval2string depends on optimpl !! */
 static void
 duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
 {
@@ -320,6 +321,7 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
       duf_optstage_print( xtended->use_stage, xtended->use_stage_mask, xtended->stage, xtended->stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
+/* TODO : duf_codeval2string depends on optimpl !! */
         DUF_PRINTF( 0, ".code:%s(%d)", duf_codeval2string( xtended->o.val ), xtended->o.val );
         DUF_PUTSL( 0 );
       }
@@ -418,6 +420,7 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
 }
 
 /* duf_multix_print */
+/* TODO :  depends on optimpl !! */
 static void
 duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *name )
 {
@@ -440,13 +443,13 @@ duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *nam
     }
     /* if ( ( !matchtab || !*matchtab || 0 == strncmp( ( *xt )->name, matchtab, strlen( matchtab ) ) ) ) */
     if ( ( !matchtab || !*matchtab || strstr( ( *xt )->name, matchtab ) ) )
-      duf_xarr_print( *xt, matchopt );
+      duf_xarr_print( *xt, matchopt ); /* TODO :  depends on optimpl !! */
     mas_free( matchtab );
     mas_free( matchopt );
   }
 }
 
-/* duf_stdx_print */
+/* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {

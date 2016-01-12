@@ -1,3 +1,4 @@
+/* TODO rename to duf_optimpl_enum_trace.def */
 #ifdef ENUM_WRAPP
   /* trace */
   ENUM_WRAPP(ACTION_TRACE,  trace, action			)

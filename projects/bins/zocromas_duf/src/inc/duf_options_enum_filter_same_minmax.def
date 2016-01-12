@@ -1,3 +1,4 @@
+/* TODO rename to duf_optimpl_enum_filter_same_minmax.def */
 #ifdef ENUM_WRAPMM
   ENUM_WRAPMM( SAME_MD5  ,  LL                          , md5   , same-md5               )
   ENUM_WRAPMM( SAME_SHA1 ,  LL                          , sha1  , same-sha1              )
