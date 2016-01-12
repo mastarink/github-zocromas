@@ -25,7 +25,7 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
                      duf_option_source_t source )
 {
   DEBUG_STARTR( r );
-  int found = 0;
+  int clarified = 0;
   int cntfound = 0;
   const duf_longval_extended_t *xtended = xtable->table;
 
@@ -42,10 +42,10 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
 
     if ( extended && DUF_NOERROR( r ) )
     {
-      DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s found cmd for %s", mas_error_name_i( r ), found, xtable->name, string, extended->o.name );
-      DORF( r, DUF_WRAPPED( duf_xoption_clarify_full ), extended, arg, istage, xtable, no, source );
-      DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s full done for %s", mas_error_name_i( r ), found, xtable->name, string, extended->o.name );
-      found += ( extended ? 1 : 0 );
+      DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s clarified cmd for %s", mas_error_name_i( r ), clarified, xtable->name, string, extended->o.name );
+      DORF( r, DUF_WRAPPED( duf_xoption_clarify ), extended, arg, istage, xtable, no, source );
+      DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s full done for %s", mas_error_name_i( r ), clarified, xtable->name, string, extended->o.name );
+      clarified += ( extended ? 1 : 0 );
       DUF_TRACE( options, 130, "@executed '%s'; stage:%s; source:%d", extended->o.name, duf_optstage_name( istage ), source );
     }
     else
@@ -57,19 +57,19 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
     xtended = extended;
     if ( !all_matched )
       break;
-    if ( xtended )
+    if ( xtended ) /* continue if matched all needed */
       xtended++;
   }
-  /* assert( ( found && DUF_NOERROR( r ) ) || ( !found && DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) ) ); */
-  if ( found )
+  /* assert( ( clarified && DUF_NOERROR( r ) ) || ( !clarified && DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) ) ); */
+  if ( clarified )
   {
     /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     /* if ( DUF_NOERROR( r ) ) */
-    /*   r = found;            */
+    /*   r = clarified;            */
   }
-  if ( found )
+  if ( clarified )
     DUF_TRACE( options, 130, "@executed at least one from '%s'", string );
-  if ( !found && DUF_NOERROR( r ) )
+  if ( !clarified && DUF_NOERROR( r ) )
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION_NOT_FOUND ); */
   DEBUG_ENDR( r );
@@ -82,7 +82,7 @@ duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_t
                            int all_matched, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
-  int found = 0;
+  int clarified = 0;
   const duf_longval_extended_table_t *xtable = NULL;
 
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
@@ -91,25 +91,25 @@ duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_t
   while ( ( xtable = *multix++ ) && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
 /* 
- * duf_soption_xclarify_at_xarr >0 if found
+ * duf_soption_xclarify_at_xarr >0 if clarified
  * duf_soption_xclarify_at_xarr == 0 if ???
  * duf_soption_xclarify_at_xarr < 0 if error
  * */
-/* look xtable for cmd from string and exec if found */
+/* look xtable for cmd from string and exec if clarified */
     DOR( r, duf_soption_xclarify_at_xarr( string, xtable, vseparator, istage, all_matched, source ) );
     DUF_TRACE( options, 150, "@after executing cmd from '%s'; table %s. (%d:%s)" , string, xtable->name, r, mas_error_name_i( r ) );
     if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
     {
-      /* found one; continue to possibly find more */
-      found += 1;
+      /* clarified one; continue to possibly find more */
+      clarified += 1;
       /* r = 0; */
     }
     /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
     DUF_TRACE( options, 170, "@@at %s (%d:%s)", xtable->name ? xtable->name : "??", r, mas_error_name_i( r ) );
   }
-  /* no error if at least one found */
-  if ( found )
+  /* no error if at least one clarified */
+  if ( clarified )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   DUF_TRACE( options, 160, "@@@executed cmd from '%s' (%d:%s)", string, r, mas_error_name_i( r ) );
   if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )

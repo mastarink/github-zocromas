@@ -4,7 +4,6 @@
 
 #include "duf_maintenance_options.h"
 
-/* #include "duf_status_ref.h" */
 #include "duf_tmp_types.h"
 
 #include "duf_options_config.h"
