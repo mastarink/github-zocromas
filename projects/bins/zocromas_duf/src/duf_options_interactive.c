@@ -13,7 +13,7 @@
 /* #include "duf_config_defs.h" */
 
 #include "duf_option_defs.h"
-#include "duf_option_cmd.h"
+#include "duf_option_clarify_string.h"
 #include "duf_option_stage.h"
 #include "duf_options_config.h"
 

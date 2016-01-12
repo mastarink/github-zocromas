@@ -2,9 +2,9 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_option_cmd.h"
+#include "duf_option_clarify_string.h"
 
-/* TODO file rename duf_option_batch_clarify.[ch] */
+/* TODO file rename duf_option_clarify_batch.[ch] */
 
 /* ###################################################################### */
 #include "duf_options_string.h"

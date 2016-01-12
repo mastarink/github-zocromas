@@ -38,8 +38,8 @@ sfind duf_option_stage.h
 tab sfind duf_option_class.c
 sfind duf_option_class.h
 
-tab sfind duf_option_cmd.c
-sfind duf_option_cmd.h
+tab sfind duf_option_clarify_string.c
+sfind duf_option_clarify_string.h
 
 tab sfind duf_option_extended.c
 sfind duf_option_extended.h

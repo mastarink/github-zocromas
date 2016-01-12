@@ -10,10 +10,8 @@
 #include "duf_option_find.h"
 #include "duf_option_stage.h"
 
-/* TODO file rename duf_option_string_clarify.[ch] */
-
 /* ###################################################################### */
-#include "duf_option_cmd.h"
+#include "duf_option_clarify_string.h"
 /* ###################################################################### */
 
 

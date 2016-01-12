@@ -33,7 +33,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_maindb_info.h duf_maindb.h \
 	duf_maintenance.h duf_maintenance_options.h \
 	duf_match.h \
-	duf_optable_def.h duf_option_cmd.h duf_option_defs.h duf_option_descr.h \
+	duf_optable_def.h duf_option_clarify_string.h duf_option_defs.h duf_option_descr.h \
 	duf_options_cli.h duf_options_env.h duf_options_string.h duf_options_file.h duf_options_interactive.h \
 	duf_option_extended.h duf_option_longopts.h duf_option_extended2string.h duf_option_sccb.h \
 	duf_option_fs.h duf_option_fs_types.h duf_option_find.h duf_option_lfind.h \

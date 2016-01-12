@@ -17,7 +17,7 @@ zocromas_duf_SOURCES=				   \
 	duf_option_help.c duf_option_misc.c		\
 	duf_option_extended.c duf_option_longopts.c duf_option_extended2string.c duf_option_sccb.c duf_option_fs.c \
 	duf_option_names.c duf_option_stage.c duf_option_source.c duf_option_class.c \
-	duf_option_cmd.c \
+	duf_option_clarify_string.c \
 							 \
 	duf_filedata.c					   \
 	duf_path2db.c    \
