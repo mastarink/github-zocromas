@@ -3,9 +3,9 @@
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>_<action-result>
- *   *** see duf_option.h
+ *   *** see duf_option_clarify.h
  * 1. gen.prefix: duf
- * 2. subject prefix: depends on main argument(s) type, see duf_option.h
+ * 2. subject prefix: depends on main argument(s) type, see duf_option_clarify.h
  * 3. entity: option
  * 4. action: ...
  * */
