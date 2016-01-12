@@ -7,78 +7,14 @@
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"   /* duf_optstage_name */
+#include "duf_option_class.h"
+#include "duf_option_val.h"
+#include "duf_option_vtype.h"
 
 /* ###################################################################### */
 #include "duf_option_extended.h"
 /* ###################################################################### */
 
-const char *
-duf_extended_code2string( duf_option_code_t code )
-{
-  const char *rs = NULL;
-
-  switch ( code )
-  {
-#define ENUM_WRAP(_n)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
-#define ENUM_WRAPP(_n, _rf, _rf2)       case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_VP(_n, _v, _rf, _rf2) case DUF_OPTION_VAL_ ## _n: rs= #_n; break;
-#include "duf_options_enum.def"
-#undef ENUM_WRAP
-#undef ENUM_WRAPP
-#undef ENUM_WRAP_V
-#undef ENUM_WRAP_VP
-  }
-  return rs;
-}
-
-const char *
-duf_extended_class2string( duf_option_class_t oclass )
-{
-  const char *rs = NULL;
-
-  switch ( oclass )
-  {
-#define ENUM_WRAP(_n)       case DUF_OPTION_CLASS_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_CLASS_ ## _n: rs= #_n; break;
-#include "duf_option_class_enum.def"
-#undef ENUM_WRAP
-#undef ENUM_WRAP_V
-  }
-  return rs;
-}
-
-const char *
-duf_extended_vtype2string( duf_option_vtype_t ovtype )
-{
-  const char *rs = NULL;
-
-  switch ( ovtype )
-  {
-#define ENUM_WRAP(_n)       case DUF_OPTION_VTYPE_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_VTYPE_ ## _n: rs= #_n; break;
-#include "duf_option_vtype_enum.def"
-#undef ENUM_WRAP
-#undef ENUM_WRAP_V
-  }
-  return rs;
-}
-
-const char *
-duf_extended_call_type2string( duf_option_call_type_t call_type )
-{
-  const char *rs = NULL;
-
-  switch ( call_type )
-  {
-#define ENUM_WRAP(_n)       case DUF_OPTION_CALL_TYPE_ ## _n: rs= #_n; break;
-#define ENUM_WRAP_V(_n, _v) case DUF_OPTION_CALL_TYPE_ ## _n: rs= #_n; break;
-#include "duf_option_call_type_enum.def"
-#undef ENUM_WRAP
-#undef ENUM_WRAP_V
-  }
-  return rs;
-}
 
 const char *
 duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
@@ -384,11 +320,11 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
       duf_optstage_print( xtended->use_stage, xtended->use_stage_mask, xtended->stage, xtended->stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
-        DUF_PRINTF( 0, ".code:%s(%d)", duf_extended_code2string( xtended->o.val ), xtended->o.val );
+        DUF_PRINTF( 0, ".code:%s(%d)", duf_codeval2string( xtended->o.val ), xtended->o.val );
         DUF_PUTSL( 0 );
       }
-      DUF_PRINTF( 0, "  class:%s(%d)", duf_extended_class2string( xtended->oclass ), xtended->oclass );
-      DUF_PRINTF( 0, "  vtype:%s(%d)", duf_extended_vtype2string( xtended->vtype ), xtended->vtype );
+      DUF_PRINTF( 0, "  class:%s(%d)", duf_optclass2string( xtended->oclass ), xtended->oclass );
+      DUF_PRINTF( 0, "  vtype:%s(%d)", duf_vtype2string( xtended->vtype ), xtended->vtype );
       if ( xtended->call.funcname )
         DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
 #if 0
@@ -451,9 +387,9 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
           c = '_';
         DUF_PRINTF( 0, "., DO_A_%c", c );
       }
-      DUF_PRINTF( 0, "., DO_V( %s )", duf_extended_code2string( xtended->o.val ) );
+      DUF_PRINTF( 0, "., DO_V( %s )", duf_codeval2string( xtended->o.val ) );
       DUF_PRINTF( 0, ".  }" );
-      DUF_PRINTF( 0, "., DO_CL( %s )", duf_extended_class2string( xtended->oclass ) );
+      DUF_PRINTF( 0, "., DO_CL( %s )", duf_optclass2string( xtended->oclass ) );
       if ( xtended->m_hasoff )
       {
         switch ( xtended->relto )
@@ -461,12 +397,12 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
         case DUF_OFFSET_none:
           break;
         case DUF_OFFSET_config:
-          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         case DUF_OFFSET_ufilter:
-          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_extended_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;

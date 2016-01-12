@@ -3,8 +3,20 @@
 
 #  include "duf_option_types.h"
 
+/* naming convention:
+ * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>
+ * 
+ * ** subject is entity "incarnation"
+ *
+ * 1. gen.prefix: duf
+ * 2. subject prefix: depends on main argument(s) type
+ *   <nothing>					=>
+ * 3. entity: optstage
+ *   3.1. entity-details:
+ * 4. result/action: 
+ * */
 
-const char *duf_coption_cnames_tmp( int index, duf_option_code_t code, const char *delim );
+const char *duf_coption_cnames_tmp( int index, duf_option_code_t codeval, const char *delim );
 
 char *duf_coption_names( duf_option_code_t codeval );
 char *duf_coption_names_d( duf_option_code_t codeval, const char *delim );

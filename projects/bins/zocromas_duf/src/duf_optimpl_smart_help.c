@@ -24,6 +24,7 @@
 
 #include "duf_option_names.h"
 #include "duf_option_class.h"
+#include "duf_option_vtype.h"
 
 /* ###################################################################### */
 #include "duf_optimpl_smart_help.h"
@@ -262,7 +263,7 @@ duf_option_O_help_set( const char *arg )
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
-                DUF_PRINTF( 0, ". `%s`;", duf_extended_vtype2string( xtended->vtype ) );
+                DUF_PRINTF( 0, ". `%s`;", duf_vtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )
               {
                 DUF_PRINTF( 0, ".%s + %-4lu & %x;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
