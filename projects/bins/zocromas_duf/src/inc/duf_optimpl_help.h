@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_HELP_H
-#  define MAS_DUF_OPTION_HELP_H
+#ifndef MAS_DUF_OPTIMPL_HELP_H
+#  define MAS_DUF_OPTIMPL_HELP_H
 
 
 

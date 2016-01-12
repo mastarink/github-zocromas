@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_FS_H
-#  define MAS_DUF_OPTION_FS_H
+#ifndef MAS_DUF_OPTIMPL_FS_H
+#  define MAS_DUF_OPTIMPL_FS_H
 
 
 mas_error_code_t duf_option_O_fs_ls( const char *arg );

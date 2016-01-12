@@ -14,8 +14,7 @@ zocromas_duf_SOURCES=				   \
 	duf_option_find.c duf_option_lfind.c duf_xtended_table.c		\
 	duf_option_descr.c		\
 	duf_options_cli.c duf_options_env.c duf_options_file.c duf_options_interactive.c \
-	duf_option_help.c duf_option_misc.c		\
-	duf_option_extended.c duf_option_longopts.c duf_option_extended2string.c duf_option_sccb.c duf_option_fs.c \
+	duf_option_extended.c duf_option_longopts.c duf_option_extended2string.c \
 	duf_option_names.c duf_option_stage.c duf_option_source.c duf_option_class.c \
 	duf_option_clarify.c duf_option_clarify_string.c duf_option_clarify_batch.c duf_option_tmpdb.c \
 							 \
@@ -56,6 +55,7 @@ zocromas_duf_SOURCES=				   \
 	sql_beginning_create.c \
 	sql_beginning_vacuum.c \
 	sql_beginning_tables.c \
+	duf_optimpl_help.c duf_optimpl_misc.c		\
 	data_optable_flag.c	\
 	data_optable_flag_obsolete.c	\
 	data_optable_sflag.c	\
@@ -65,14 +65,14 @@ zocromas_duf_SOURCES=				   \
 	data_optable_uplus.c	\
 	data_optable_debug.c	\
 	data_optable_filter.c	\
-	data_optable_help.c duf_option_smart_help.c duf_option_version.c	\
+	data_optable_help.c duf_optimpl_smart_help.c duf_optimpl_version.c	\
 	data_optable_trace.c	\
 	data_optable_format.c	\
-	data_optable_sccb.c \
+	data_optable_sccb.c  duf_optimpl_sccb.c \
 	data_optable_info.c \
 	data_optable_interactive.c \
 	data_optable_io.c \
-	data_optable_fs.c \
+	data_optable_fs.c  duf_optimpl_fs.c \
 	data_optable_experimental.c \
 	data_optable.c
 

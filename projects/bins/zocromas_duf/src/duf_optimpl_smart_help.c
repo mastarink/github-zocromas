@@ -26,7 +26,7 @@
 #include "duf_option_class.h"
 
 /* ###################################################################### */
-#include "duf_option_smart_help.h"
+#include "duf_optimpl_smart_help.h"
 /* ###################################################################### */
 
 static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {

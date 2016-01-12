@@ -2,15 +2,10 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_types.h" */
-/* #include "duf_ufilter_types.h" */
-/* #include "duf_levinfo_types.h" */
-
-/* #include "duf_config_ref.h" */
 #include "duf_optable_def.h"
 
-#include "duf_option_help.h"
-#include "duf_option_smart_help.h"
+#include "duf_optimpl_help.h"
+#include "duf_optimpl_smart_help.h"
 /*
  * At duf_options_table.c:
  * 1. extern const duf_longval_extended_table_t optable_help[];

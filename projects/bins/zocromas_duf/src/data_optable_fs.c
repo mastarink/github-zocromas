@@ -2,18 +2,10 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_types.h" */
-/* #include "duf_ufilter_types.h" */
-/* #include "duf_levinfo_types.h" */
-
-/* #include "duf_config_ref.h" */
 #include "duf_optable_def.h"
 
-
-/* #include "duf_option_misc.h" */
-
-#include "duf_option_fs_types.h"
-#include "duf_option_fs.h"      /* TODO : temp for duf_option_O_fs_...               */
+#include "duf_optimpl_fs_types.h"
+#include "duf_optimpl_fs.h"      /* TODO : temp for duf_option_O_fs_...               */
 
 /*
 At duf_options_table.c:

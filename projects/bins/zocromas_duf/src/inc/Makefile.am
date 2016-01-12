@@ -35,12 +35,12 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_match.h \
 	duf_optable_def.h duf_option_defs.h duf_option_descr.h \
 	duf_options_cli.h duf_options_env.h duf_options_file.h duf_options_interactive.h \
-	duf_option_extended.h duf_option_longopts.h duf_option_extended2string.h duf_option_sccb.h \
-	duf_option_fs.h duf_option_fs_types.h duf_option_find.h duf_option_lfind.h \
+	duf_option_extended.h duf_option_longopts.h duf_option_extended2string.h \
+	duf_option_find.h duf_option_lfind.h \
 	duf_xtended_table.h \
 	duf_option_clarify.h duf_option_clarify_string.h duf_option_clarify_batch.h  duf_option_tmpdb.h \
 	duf_option_typed.h duf_option_typed_gen.h duf_option_typed_call.h duf_option_typed_defs.h \
-	duf_option_help.h duf_option_smart_help.h duf_option_version.h duf_option_misc.h \
+	duf_optimpl_help.h duf_optimpl_smart_help.h duf_optimpl_version.h duf_optimpl_misc.h duf_optimpl_sccb.h duf_optimpl_fs.h duf_optimpl_fs_types.h \
 	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
 	duf_options_enum.h duf_option_config.h duf_options.h duf_option_types.h duf_option_vtype_enum.def duf_option_call_type_enum.def \

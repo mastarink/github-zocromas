@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_FS_TYPES_H
-#  define MAS_DUF_OPTION_FS_TYPES_H
+#ifndef MAS_DUF_OPTIMPL_FS_TYPES_H
+#  define MAS_DUF_OPTIMPL_FS_TYPES_H
 
 typedef enum
 {

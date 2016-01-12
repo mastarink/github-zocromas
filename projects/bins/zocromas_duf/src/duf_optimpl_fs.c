@@ -16,8 +16,8 @@
 #include "duf_maintenance.h"
 
 /* ###################################################################### */
-#include "duf_option_fs_types.h"
-#include "duf_option_fs.h"
+#include "duf_optimpl_fs_types.h"
+#include "duf_optimpl_fs.h"
 /* ###################################################################### */
 
 static duf_option_fs_mode_t

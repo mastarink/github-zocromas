@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_SCCB_H
-#  define MAS_DUF_OPTION_SCCB_H
+#ifndef MAS_DUF_OPTIMPL_SCCB_H
+#  define MAS_DUF_OPTIMPL_SCCB_H
 
 
 mas_error_code_t duf_option_O_list_sccbs( void );
