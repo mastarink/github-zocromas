@@ -24,8 +24,8 @@
 
 
 int
-duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const char *optargg DUF_UNUSED, duf_option_stage_t istage DUF_UNUSED,
-                                const duf_longval_extended_table_t * xtable DUF_UNUSED, int noo DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
+duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage DUF_UNUSED,
+                                int noo DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   switch ( extended->calltype )
