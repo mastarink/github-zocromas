@@ -41,6 +41,9 @@ sfind duf_option_class.h
 tab sfind duf_option_clarify_string.c
 sfind duf_option_clarify_string.h
 
+tab sfind duf_option_clarify_batch.c
+sfind duf_option_clarify_batch.h
+
 tab sfind duf_option_extended.c
 sfind duf_option_extended.h
 
@@ -51,7 +54,7 @@ tab sfind duf_option_longopts.c
 sfind duf_option_longopts.h
 
 " ------------------------------
-tab sfind duf_options_string.c
-sfind duf_options_string.h
+" tab sfind duf_options_string.c
+" sfind duf_options_string.h
 
 tab sfind duf_maintenance_options.h
