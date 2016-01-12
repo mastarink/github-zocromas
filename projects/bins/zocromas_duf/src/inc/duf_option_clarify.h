@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_H
-#  define MAS_DUF_OPTION_H
+#ifndef MAS_DUF_OPTION_CLARIFY_H
+#  define MAS_DUF_OPTION_CLARIFY_H
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>_<action-result>

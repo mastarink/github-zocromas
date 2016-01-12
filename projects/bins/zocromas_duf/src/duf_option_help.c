@@ -24,9 +24,6 @@
 #include "duf_option_names.h"
 #include "duf_option_class.h"
 
-/* #include "duf_option_restore.h" */
-#include "duf_option.h"
-
 /* ###################################################################### */
 #include "duf_option_help.h"
 /* ###################################################################### */

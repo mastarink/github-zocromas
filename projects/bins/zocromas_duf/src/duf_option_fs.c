@@ -15,9 +15,6 @@
 
 #include "duf_maintenance.h"
 
-
-#include "duf_config_ref.h"
-
 /* ###################################################################### */
 #include "duf_option_fs_types.h"
 #include "duf_option_fs.h"

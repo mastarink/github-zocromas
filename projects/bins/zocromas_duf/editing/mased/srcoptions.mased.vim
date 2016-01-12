@@ -1,8 +1,8 @@
 find duf_options_config.c
 sfind duf_options_config.h
 
-tab sfind duf_option.c
-sfind duf_option.h
+tab sfind duf_option_clarify.c
+sfind duf_option_clarify.h
 
 " tab sfind duf_option_old.c
 " sfind duf_option_old.h

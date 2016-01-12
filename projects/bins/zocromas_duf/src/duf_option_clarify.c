@@ -16,10 +16,8 @@
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
-/* TODO file rename duf_option_clarify.[ch] */
-
 /* ###################################################################### */
-#include "duf_option.h"
+#include "duf_option_clarify.h"
 /* ###################################################################### */
 
 DUF_WRAPSTATIC int
