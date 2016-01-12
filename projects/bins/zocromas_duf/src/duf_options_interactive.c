@@ -13,14 +13,16 @@
 /* #include "duf_config_defs.h" */
 
 #include "duf_option_defs.h"
-#include "duf_option_clarify_string.h"
 #include "duf_option_stage.h"
+
+#include "duf_option_clarify_string.h"
+#include "duf_option_clarify_batch.h"
+
 #include "duf_options_config.h"
 
 #include "duf_levinfo_ref.h"
 
 /* ###################################################################### */
-#include "duf_options_string.h"
 #include "duf_options_interactive.h"
 /* ###################################################################### */
 

@@ -10,14 +10,14 @@ zocromas_duf_SOURCES=				   \
 	duf_dbg.c duf_config.c duf_config_util.c duf_status.c	     \
 	duf_cli.c \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
-	duf_options_config.c duf_options.c duf_option_clarify.c  duf_option_tmpdb.c duf_option_typed.c duf_option_typed_gen.c duf_option_typed_call.c  \
+	duf_options_config.c duf_options.c  duf_option_typed.c duf_option_typed_gen.c duf_option_typed_call.c  \
 	duf_option_find.c duf_option_lfind.c duf_xtended_table.c		\
 	duf_option_descr.c		\
-	duf_options_cli.c duf_options_env.c duf_options_string.c duf_options_file.c duf_options_interactive.c \
+	duf_options_cli.c duf_options_env.c duf_options_file.c duf_options_interactive.c \
 	duf_option_help.c duf_option_misc.c		\
 	duf_option_extended.c duf_option_longopts.c duf_option_extended2string.c duf_option_sccb.c duf_option_fs.c \
 	duf_option_names.c duf_option_stage.c duf_option_source.c duf_option_class.c \
-	duf_option_clarify_string.c \
+	duf_option_clarify.c duf_option_clarify_string.c duf_option_clarify_batch.c duf_option_tmpdb.c \
 							 \
 	duf_filedata.c					   \
 	duf_path2db.c    \

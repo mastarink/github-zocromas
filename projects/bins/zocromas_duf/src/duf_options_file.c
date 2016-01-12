@@ -7,14 +7,16 @@
 
 #include "duf_maintenance_options.h"
 
+
 #include "duf_config_defs.h"    /* DUF_CONFIGGS( config_dir ) */ /* insularity! FIXME */
+
 #include "duf_options_config.h"
 
-/* #include "duf_option_names.h" */
 #include "duf_option_stage.h"
 
+#include "duf_option_clarify_batch.h"
+
 /* ###################################################################### */
-#include "duf_options_string.h"
 #include "duf_options_file.h"
 /* ###################################################################### */
 

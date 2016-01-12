@@ -3,13 +3,13 @@
 #include "duf_maintenance_options.h"
 
 
-#include "duf_option_clarify_string.h"
-
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
+#include "duf_option_clarify_string.h"
+#include "duf_option_clarify_batch.h"
+
 /* ###################################################################### */
-#include "duf_options_string.h"
 #include "duf_options_env.h"
 /* ###################################################################### */
 
