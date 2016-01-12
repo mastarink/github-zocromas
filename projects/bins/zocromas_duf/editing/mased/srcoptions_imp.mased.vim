@@ -8,9 +8,6 @@ sfind duf_option_fs_types.h
 tab sfind duf_option_misc.c
 sfind duf_option_misc.h
 
-tab sfind duf_xtended_table.c
-sfind duf_xtended_table.h
-
 tab sfind duf_option_help.c
 sfind duf_option_help.h
 

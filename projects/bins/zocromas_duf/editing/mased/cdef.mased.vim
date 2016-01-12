@@ -1,4 +1,8 @@
-find   duf_optable_def.h
+find duf_xtended_table.c
+tab sfind duf_xtended_table.h
+
+tab find  duf_optable_def.h
+
 tab sfind data_optable_flag.c
 tab sfind data_optable_flag_obsolete.c
 tab sfind data_optable_sflag.c
