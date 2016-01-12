@@ -8,7 +8,8 @@
 #include "duf_tmp_types.h"
 
 #include "duf_option_find.h"
-#include "duf_option_extended.h"
+#include "duf_option_lfind.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_names.h"
 
 /* ###################################################################### */
@@ -18,12 +19,12 @@
 
 /* -= by duf_option_code_t codeval =- */
 static const char *
-_duf_coption_xfind_help_at_std( duf_option_code_t codeval, int *pr )
+_duf_coption_xfind_help_at_stdx( duf_option_code_t codeval, int *pr )
 {
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_coption_xfind_x_at_std( codeval, NULL, pr );
+  extended = duf_coption_xfind_at_stdx( codeval, NULL, pr );
   /* extended = &lo_extended[ilong]; */
 
   if ( extended )
@@ -32,9 +33,9 @@ _duf_coption_xfind_help_at_std( duf_option_code_t codeval, int *pr )
 }
 
 const char *
-duf_coption_xfind_desc_at_std( duf_option_code_t codeval, int *pr )
+duf_coption_xfind_desc_at_stdx( duf_option_code_t codeval, int *pr )
 {
-  const char *ph = _duf_coption_xfind_help_at_std( codeval, pr );
+  const char *ph = _duf_coption_xfind_help_at_stdx( codeval, pr );
 
   return ph ? ph : "-";
 }
@@ -46,7 +47,7 @@ duf_loption_description_d( int longindex, const char *delimh, const char *delim 
   char *p = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex2extended( longindex, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
+  extended = duf_loption_xfind_at_stdx( longindex, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
   if ( extended )
     p = duf_xoption_description_d( extended, delimh, delim );
   return p;

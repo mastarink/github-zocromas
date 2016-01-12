@@ -5,6 +5,7 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_option_extended.h"
+#include "duf_option_longopts.h"
 
 /* ###################################################################### */
 #include "duf_options_config.h"

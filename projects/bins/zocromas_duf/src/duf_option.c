@@ -8,14 +8,18 @@
 /* #include "duf_status_ref.h" */
 
 #include "duf_option_find.h"
+#include "duf_option_lfind.h"
 #include "duf_option_descr.h"
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
 #include "duf_option_typed.h"
 
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
 /* #include "duf_option_old.h" */
+
+/* TODO file rename duf_option_clarify.[ch] */
+
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */
@@ -90,14 +94,14 @@ _duf_lcoption_clarify( int longindex, duf_option_code_t codeval, const char *opt
   DUF_TRACE( options, 50, "@to clarify option: cv:%d; li:%d; stage:%s; source:%d", codeval, longindex, duf_optstage_name( istage ), source );
   if ( longindex < 0 )
   {
-    extended = duf_coption_xfind_x_at_std( codeval, &xtable, &r );
+    extended = duf_coption_xfind_at_stdx( codeval, &xtable, &r );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, 50, "@@@@@@@%s found (by cv) of option %d (%c) => [--%s] (%d:%s)", extended ? "" : "not", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", r, mas_error_name_i( r ) );
   }
   else if ( !extended )
   {
-    extended = duf_longindex2extended( longindex, &xtable, &no );
+    extended = duf_loption_xfind_at_stdx( longindex, &xtable, &no );
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, 50, "@@@@@@@found (by li) of option %d (%c) => [--%s] (%d:%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", r, mas_error_name_i( r ) );

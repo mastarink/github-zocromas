@@ -4,6 +4,8 @@
 
 #include "duf_option_cmd.h"
 
+/* TODO file rename duf_option_batch_clarify.[ch] */
+
 /* ###################################################################### */
 #include "duf_options_string.h"
 /* ###################################################################### */
@@ -18,8 +20,9 @@
  *
  * */
 /* look all std xtables for cmd's separated with vseparator from string and exec if found */
+/* duf_boption_xclarify_at_stdx */
 int
-duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
+duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
 {
   DEBUG_STARTR( r );
 
@@ -74,7 +77,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
 /* look all std xtables for cmd from string and exec if found */
-        DOR( r, duf_exec_cmd_long_xtables_std( s, vseparator, istage, 0 /* all_matched */ , source ) );
+        DOR( r, duf_soption_xclarify_at_stdx( s, vseparator, istage, 0 /* all_matched */ , source ) );
       }
       mas_free( s );
       peo = e;

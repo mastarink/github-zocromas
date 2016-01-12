@@ -18,7 +18,8 @@
 
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"
-#include "duf_option_extended.h"
+/* #include "duf_option_extended.h" */
+#include "duf_option_extended2string.h"
 
 #include "duf_option_names.h"
 #include "duf_option_class.h"
@@ -111,10 +112,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DEBUG_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
-  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_std( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_SMART_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir ) );
@@ -945,6 +946,6 @@ mas_error_code_t
 duf_option_O_list_xtended( const char *s )
 {
   DEBUG_STARTR( r );
-  duf_extended_table_multi_std_print( s );
+  duf_stdx_print( s );
   DEBUG_ENDR( r );
 }

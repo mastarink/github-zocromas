@@ -10,78 +10,18 @@
 #include "duf_option_find.h"
 #include "duf_option_stage.h"
 
+/* TODO file rename duf_option_string_clarify.[ch] */
+
 /* ###################################################################### */
 #include "duf_option_cmd.h"
 /* ###################################################################### */
 
 
-/*
- * possible error(s):
- *   DUF_ERROR_OPTION_MULTIPLE
- *   */
-static const duf_longval_extended_t *
-duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended, char vseparator, char **parg, int *pno, int *pcnt, int *pr )
-{
-  const duf_longval_extended_t *extended = NULL;
-  int rpr = 0;
-  char *barg = NULL;
-  char *endn = NULL;
-  char *name = NULL;
-  char *arg = NULL;
-
-  switch ( vseparator )
-  {
-  case ' ':
-    barg = endn = strpbrk( string, "\t\r\n " );
-    while ( barg && *barg && strchr( "\t\r\n ", *barg ) )
-      barg++;
-    break;
-  case 0:
-    barg = endn = strpbrk( string, "\t\r\n =" );
-    while ( barg && *barg && strchr( "\t\r\n =", *barg ) )
-      barg++;
-    break;
-  default:
-    barg = endn = strchr( string, '=' );
-    if ( barg )
-      barg++;
-    break;
-  }
-  if ( endn )
-    name = mas_strndup( string, endn - string );
-  else
-    name = mas_strdup( string );
-  if ( barg )
-  {
-    /* arg = mas_strdup( barg ); */
-    /* T( ">>>> barg:'%s'", barg ); */
-    arg = duf_string_options_expand( barg, '?' );
-    /* T( ">> arg:'%s' => %s", barg, arg ); */
-  }
-  DUF_TRACE( options, +180, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
-
-  extended = duf_find_name_long_no( name, arg ? 1 : 0, xtended, 1 /* soft */ , pno, pcnt, &rpr );
-  if ( extended )
-    DUF_TRACE( findopt, 5, "@(%s) by %s found cmd for %s", mas_error_name_i( rpr ), string, extended->o.name );
-  if ( DUF_NOERROR( rpr ) && parg )
-    *parg = arg;
-  else
-    mas_free( arg );
-  arg = NULL;
-
-  mas_free( name );
-  /* if ( extended )                                                                                               */
-  /*   DUF_TRACE( findopt, 5, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), extended->o.name ); */
-  /* else                                                                                                          */
-  /*   DUF_TRACE( findopt, 5, "@@@@(verb:%d) found name:`%s`", DUF_CONFIGG( opt.dbg.verbose ), name );             */
-  if ( pr )
-    *pr = rpr;
-  return extended;
-}
-
 /* look xtable for cmd from string and exec if found */
+/* string + extended_array => find + clarify */
+/* duf_soption_xclarify_at_xarr */
 static int
-duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage, int all_matched,
+duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage, int all_matched,
                      duf_option_source_t source )
 {
   DEBUG_STARTR( r );
@@ -97,7 +37,7 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
     int no = 0;
 
     DUF_TRACE( findopt, 5, "to find %s at %s [%ld]", string, xtable->name, xtended - xtable->table );
-    extended = duf_find_cmd_long_no( string, xtended, vseparator, &arg, &no, &cntfound, &r );
+    extended = duf_soption_xfind_at_xarr( string, xtended, vseparator, &arg, &no, &cntfound, &r );
     DUF_TRACE( options, 190, "string:%s; no:%d extended(+-):%d", string, no, extended ? 1 : 0 );
 
     if ( extended && DUF_NOERROR( r ) )
@@ -110,7 +50,7 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
     }
     else
     {
-      /* DUF_SHOW_ERRORO( "extended is NULL after duf_find_cmd_long_no for %s", string ); */
+      /* DUF_SHOW_ERRORO( "extended is NULL after duf_soption_xfind_at_xarr for %s", string ); */
     }
     mas_free( arg );
     arg = NULL;
@@ -135,9 +75,10 @@ duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xt
   DEBUG_ENDR( r );
 }
 
-/* look all xtables for cmd from string and exec if found */
+/* look all multix for cmd from string and exec if found */
+/* duf_soption_xclarify_at_multix */
 static int
-duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_t ** xtables, char vseparator, duf_option_stage_t istage,
+duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_table_t ** multix, char vseparator, duf_option_stage_t istage,
                            int all_matched, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
@@ -147,15 +88,15 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
   /* find and execute ALL matching commands */
-  while ( ( xtable = *xtables++ ) && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
+  while ( ( xtable = *multix++ ) && DUF_CLEARED_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
 /* 
- * duf_exec_cmd_xtable >0 if found
- * duf_exec_cmd_xtable == 0 if ???
- * duf_exec_cmd_xtable < 0 if error
+ * duf_soption_xclarify_at_xarr >0 if found
+ * duf_soption_xclarify_at_xarr == 0 if ???
+ * duf_soption_xclarify_at_xarr < 0 if error
  * */
 /* look xtable for cmd from string and exec if found */
-    DOR( r, duf_exec_cmd_xtable( string, xtable, vseparator, istage, all_matched, source ) );
+    DOR( r, duf_soption_xclarify_at_xarr( string, xtable, vseparator, istage, all_matched, source ) );
     DUF_TRACE( options, 150, "@after executing cmd from '%s'; table %s. (%d:%s)" , string, xtable->name, r, mas_error_name_i( r ) );
     if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
     {
@@ -184,12 +125,12 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
 
 /* look all std xtables for cmd from string and exec if found */
 int
-duf_exec_cmd_long_xtables_std( const char *string, char vseparator, duf_option_stage_t istage, int all_matched, duf_option_source_t source )
+duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_stage_t istage, int all_matched, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 /* look all xtables for cmd from string and exec if found */
-  DOR( r, duf_exec_cmd_long_xtables( string, duf_extended_table_multi(  ), vseparator, istage, all_matched, source ) );
+  DOR( r, duf_soption_xclarify_at_multix( string, duf_extended_table_multi(  ), vseparator, istage, all_matched, source ) );
   DUF_TRACE( options, 160, "@executed cmd '%s'; stage:%s; source:%d (%d:%s)", string, duf_optstage_name( istage ), source, r, mas_error_name_i( r ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }

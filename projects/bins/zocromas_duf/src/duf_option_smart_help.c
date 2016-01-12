@@ -19,6 +19,8 @@
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"
 #include "duf_option_extended.h"
+#include "duf_option_extended2string.h"
+#include "duf_option_lfind.h"
 
 #include "duf_option_names.h"
 #include "duf_option_class.h"
@@ -179,7 +181,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
 
     codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
+    extd = duf_loption_xfind_at_stdx( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = codeval;
     if ( codeval && DUF_NOERROR( r ) )
@@ -251,7 +253,7 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_config] = "config",
                 [DUF_OFFSET_ufilter] = "ufilter",
               };
-              sl = duf_stages_list( xtended, xtable );
+              sl = duf_optstages_list( xtended, xtable );
               if ( ashown[codeval] <= 0 )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;

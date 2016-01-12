@@ -140,13 +140,13 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
 #  if 0
         DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ? source : DUF_OPTION_SOURCE_STREAM ) );
 #  else
-        DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
+        DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
 #  endif
 
         DUF_TRACE( options, 250, "executed cmd; r=%d; xs=%s", r, xs );
         mas_free( xs );
 #else
-        DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, s, 0 ) );
+        DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, s, 0 ) );
         TR( r );
 #endif
       }

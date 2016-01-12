@@ -50,9 +50,10 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
 }
 
 char *
-duf_stages_list( const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+duf_optstages_list( const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
 {
   char *s = NULL;
+
   for ( duf_option_stage_t istg = DUF_OPTION_STAGE_MIN; istg <= DUF_OPTION_STAGE_MAX; istg++ )
   {
     if ( duf_optstage_check( istg, extended, xtable ) )
@@ -61,4 +62,36 @@ duf_stages_list( const duf_longval_extended_t * extended, const duf_longval_exte
       s = mas_strcat_x( s, "_" );
   }
   return s;
+}
+
+ void
+duf_optstage_print( int use_stage, int use_stage_mask, duf_limits_stage_t stage, unsigned long stage_mask, unsigned eol )
+{
+  if ( use_stage || use_stage_mask )
+  {
+    DUF_PRINTF( 0, ".  " );
+    if ( use_stage )
+    {
+      DUF_PRINTF( 0, ".stage(%s(%d),%s(%d)) ", duf_optstage_name( stage.min ), stage.min, duf_optstage_name( stage.max ), stage.max );
+    }
+    if ( use_stage_mask )
+    {
+      unsigned long msk = stage_mask;
+      unsigned n = 0;
+
+      DUF_PRINTF( 0, ".mask(%lu; { ", stage_mask );
+      while ( msk )
+      {
+        if ( msk & 1 )
+        {
+          DUF_PRINTF( 0, ".%s; ", duf_optstage_name( n ) );
+        }
+        n++;
+        msk = msk >> 1;
+      }
+      DUF_PRINTF( 0, ".} )" );
+    }
+    if ( eol )
+      DUF_PUTSL( 0 );
+  }
 }

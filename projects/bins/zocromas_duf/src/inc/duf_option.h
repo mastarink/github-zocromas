@@ -3,9 +3,15 @@
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>_<action-result>
+ * xtable ~ duf_longval_extended_table_t
+ * xarr ~ array of `const duf_longval_extended_t *`, (xarr = xtable->table), limited by xtended->o.name == NULL
+ * multix ~  multitable ~ array of xtable's, limited by NULL
+ * stdx ~ standard multix (multitable ~ array of xtable's, limited by NULL)
  * 1. gen.prefix: duf
  * 2. subject prefix: depends on main argument(s) type
- *   const char *name				=> n
+ *   const char *ostring			=> s  >> ostring is: name + tail
+ *   const char *osbatch			=> b  >> osbatch is: several ostrings, separated with `separator`
+ *   const char *oname				=> n
  *   duf_option_code_t codeval			=> c
  *   int longindex				=> l
  *   int longindex, duf_option_code_t codeval	=> lc

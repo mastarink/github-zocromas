@@ -139,7 +139,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
                        DUF_CONFIGG( scn.pdi ) ? 1 : 0 );
             mas_free( xs );
 #else
-            DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE_INTERACTIVE, s, 0 ) );
+            DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE_INTERACTIVE, s, 0 ) );
             DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
 #endif
           }
