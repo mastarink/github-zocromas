@@ -43,7 +43,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_option_help.h duf_option_smart_help.h duf_option_version.h duf_option_misc.h \
 	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
-	duf_options_enum.h duf_options_config.h duf_options.h duf_option_types.h duf_option_vtype_enum.def duf_option_call_type_enum.def \
+	duf_options_enum.h duf_option_config.h duf_options.h duf_option_types.h duf_option_vtype_enum.def duf_option_call_type_enum.def \
 	duf_options_enum_filter_minmax.def duf_options_enum_filter_same_minmax.def \
 	duf_path2db.h \
 	duf_path2dirid.h    \

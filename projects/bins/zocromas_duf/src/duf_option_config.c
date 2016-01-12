@@ -8,7 +8,7 @@
 #include "duf_option_longopts.h"
 
 /* ###################################################################### */
-#include "duf_options_config.h"
+#include "duf_option_config.h"
 /* ###################################################################### */
 
 static duf_config_cli_t *config_cli = NULL;

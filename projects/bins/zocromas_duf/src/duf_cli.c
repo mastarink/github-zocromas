@@ -3,11 +3,9 @@
 
 #include "duf_maintenance.h"
 
-
-#include "duf_option_names.h"
 #include "duf_xtended_table.h"
 
-#include "duf_options_config.h"
+#include "duf_option_config.h"
 /* ###################################################################### */
 #include "duf_cli.h"
 /* ###################################################################### */

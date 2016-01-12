@@ -15,16 +15,16 @@
 #include "duf_config_util.h"
 
 #include "duf_cli.h"
-#include "duf_options_config.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
 
 #include "duf_ufilter.h"
 
+#include "duf_option_config.h"
 #include "duf_option_extended.h" /* duf_options_create_longopts_table */
-#include "duf_xtended_table.h"
 #include "duf_option_names.h"
+#include "duf_xtended_table.h"
 
 /* #include "duf_config_ref.h" */
 /* ###################################################################### */

@@ -1,5 +1,5 @@
-find duf_options_config.c
-sfind duf_options_config.h
+find duf_option_config.c
+sfind duf_option_config.h
 
 tab sfind duf_option_clarify.c
 sfind duf_option_clarify.h

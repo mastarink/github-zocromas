@@ -2,10 +2,10 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_options_config.h"
 
 #include "duf_option_stage.h"
 
+#include "duf_option_config.h"
 #include "duf_option_clarify.h"
 #include "duf_option_clarify_batch.h"
 

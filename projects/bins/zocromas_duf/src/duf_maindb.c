@@ -19,9 +19,9 @@
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 #include "duf_option_stage.h"
+#include "duf_option_config.h"
 
 #include "duf_options.h"
-#include "duf_options_config.h"
 
 #include "duf_levinfo_ref.h"
 
