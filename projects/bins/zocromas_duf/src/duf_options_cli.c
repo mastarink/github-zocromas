@@ -15,7 +15,7 @@
 
 
 static char *
-duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt )
 {
   const char *arg;
   static const char *msg = "Invalid option";
@@ -65,7 +65,7 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #  else
     char *s;
 
-    s = duf_clrfy_cli_opts_msgs( codeval, optindd, optoptt, shorts_unused );
+    s = duf_clrfy_cli_opts_msgs( codeval, optindd, optoptt );
     _DUF_SHOW_ERROR( "@@@@@@@@@@@%s", s );
     mas_free( s );
 #  endif
@@ -80,12 +80,10 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #endif
 
 static
-SR( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, const char *shorts, duf_option_stage_t istage )
+SR( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, duf_option_stage_t istage )
 {
   int optoptt = 0;
-  mas_cargvc_t *carg;
 
-  carg = duf_cli_options_get_carg(  );
   DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c') '%s' li:%d; oi:%d; oo:%d; oe:%d; stage:%s", codeval, codeval > ' '
              && codeval <= 'z' ? codeval : '?', longindex >= 0 ? duf_cli_options_get_longopts_table(  )[longindex].name : "?", longindex, optind,
              optopt, opterr, duf_optstage_name( istage ) );
@@ -96,38 +94,57 @@ SR( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, const c
 
     optoptt = optopt;
 #if 0
-    msg = duf_clrfy_cli_opts_msgs( codeval, optindp, optoptt, shorts );
+    msg = duf_clrfy_cli_opts_msgs( codeval, optindp, optoptt );
 #else
-    msg = duf_clrfy_cli_opts_msgs( codeval, optind - 1, optoptt, shorts );
+    msg = duf_clrfy_cli_opts_msgs( codeval, optind - 1, optoptt );
 #endif
-    DUF_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, carg->argv[optind - 1] );
+    DUF_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, duf_cli_options_get_carg(  )->argv[optind - 1] );
     DUF_MAKE_ERRORM( QERRIND, DUF_ERROR_OPTION_NOT_FOUND, msg );
     mas_free( msg );
   }
 
-/*
- * duf_lcoption_clarify(_x) return
- *        oclass (>0) for "help" options
- *                =0  for normal options
- * or  errorcode (<0) for error
- * */
-  CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI ); /* => duf_clarify_xcmd_full */
-  /* DUF_TEST_R1( r ); */
-  ER( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, const char *shorts, duf_option_stage_t istage );
+  CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI );
+  ER( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, duf_option_stage_t istage );
+}
+
+static
+SR( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage )
+{
+  int numxargv = 0;
+  mas_cargvc_t *carg;
+
+  carg = duf_cli_options_get_carg(  );
+  numxargv = carg->argc - optind;
+  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optind:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optind );
+
+  if ( QNOERR && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
+  {
+    DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
+    CR( argv_clarify, duf_cli_options_get_targ(  ), carg, optind );
+
+    if ( QNOERR )
+      /* DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) ); */
+      duf_cli_options_reset_targ_offset(  );
+  }
+  else
+  {
+    DUF_TRACE( options, +150, "(no targ) optind:%d; optindd:%d; numxargv:%d", optind, optindd, numxargv );
+  }
+  ER( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage );
 }
 
 /* 20160113.124316 */
-static int
-duf_cli_parse( const char *shorts, duf_option_stage_t istage )
+static
+SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage )
 {
-  DEBUG_STARTR( r );
+  /* DEBUG_STARTR( r ); */
 
   int longindex;
   duf_option_code_t codeval;
   mas_cargvc_t *carg;
+
   /* int optoptt = 0; */
   int optindd = 0, optindp DUF_UNUSED = 0;
-  int numxargv = 0;
 
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   optopt = 0;
@@ -145,68 +162,36 @@ duf_cli_parse( const char *shorts, duf_option_stage_t istage )
    *   inside loop means next arg to process in non-permuted list
    *   outside loop means first not processed arg in permuted list
    * */
-
-  while ( DUF_NOERROR( r )
+#if 0
+  while ( QNOERR
           &&
           ( ( int )
             ( optopt = 0, longindex = -1, codeval =
               getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex ) ) >= 0 ) )
   {
     optindd = optind;
-#if 0
-    DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c') '%s' li:%d; oi:%d; oo:%d; oe:%d; stage:%s", codeval, codeval > ' '
-               && codeval <= 'z' ? codeval : '?', longindex >= 0 ? duf_cli_options_get_longopts_table(  )[longindex].name : "?", longindex, optind,
-               optopt, opterr, duf_optstage_name( istage ) );
-    optoptt = 0;
-    if ( codeval == '?' )
-    {
-      char *msg = NULL;
-
-      optoptt = optopt;
-#  if 0
-      msg = duf_clrfy_cli_opts_msgs( codeval, optindp, optoptt, shorts );
-#  else
-      msg = duf_clrfy_cli_opts_msgs( codeval, optind - 1, optoptt, shorts );
-#  endif
-      DUF_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, carg->argv[optind - 1] );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPTION_NOT_FOUND, msg );
-      mas_free( msg );
-    }
-
-/*
- * duf_lcoption_clarify(_x) return
- *        oclass (>0) for "help" options
- *                =0  for normal options
- * or  errorcode (<0) for error
- * */
-    DOR( r, duf_lcoption_clarify( longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI ) ); /* => duf_clarify_xcmd_full */
-    /* DUF_TEST_R1( r ); */
-#else
-    DOR(r, duf_cli_parse_option( codeval, longindex, shorts, istage ));
-#endif
+    CR( cli_parse_option, codeval, longindex, istage );
     optindp = optind;
   }
-  numxargv = carg->argc - optind;
-
-  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optind:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optind );
-
-  if ( DUF_NOERROR( r ) && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
+#else
+  do
   {
-    DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
-    DOR( r, duf_argv_clarify( duf_cli_options_get_targ(  ), carg, optind ) );
-
-    if ( DUF_NOERROR( r ) )
-      /* DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) ); */
-      duf_cli_options_reset_targ_offset(  );
+    optopt = 0, longindex = -1;
+    codeval = getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex );
+    if ( codeval >= 0 )
+    {
+      optindd = optind;
+      CR( cli_parse_option, codeval, longindex, istage );
+      optindp = optind;
+    }
   }
-  else
-  {
-    DUF_TRACE( options, +150, "(no targ) optind:%d; optindd:%d; numxargv:%d", optind, optindd, numxargv );
-  }
-
+  while ( QNOERR && codeval >= 0 );
+#endif
+  CR( cli_parse_targ, optindd, istage );
   /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-  DEBUG_ENDR( r );
+  /* DEBUG_ENDR( r ); */
+  ER( OPTIONS, duf_cli_parse, const char *shorts, duf_option_stage_t istage );
 }
 
 SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
