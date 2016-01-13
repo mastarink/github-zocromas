@@ -83,7 +83,7 @@ duf_cfg_create( void )
   
   /* DUF_CFGW( cfg, opt.trace.options ) = 11; */
   /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
-  DUF_CFGW( cfg, opt.trace.temp ) += 1;
+  /* DUF_CFGW( cfg, opt.trace.temp ) += 1; 20160113.115143 */
 
   cfg->scn.pdi = duf_pdi_create( "selected" );
   assert( cfg->scn.puz );
@@ -300,12 +300,12 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_TRACE( temp, 3, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
-    DUF_TRACE( temp, 3, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
+    DUF_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
+    DUF_TRACE( temp, 4, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
     /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
-    DUF_TRACE( temp, 0, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
+    DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
 
   DEBUG_ENDR( r );
 }

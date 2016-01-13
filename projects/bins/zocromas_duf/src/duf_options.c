@@ -22,7 +22,8 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
 {
   /* DEBUG_STARTR( r ); */
 
-  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ), cb_do_interactive?cb_do_interactive(  ):0 );
+  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ),
+             cb_do_interactive ? cb_do_interactive(  ) : 0 );
 
 
   /* assert( duf_config ); */

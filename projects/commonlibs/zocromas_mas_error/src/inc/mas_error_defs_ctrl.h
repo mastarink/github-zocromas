@@ -4,10 +4,10 @@
 
 /* #  define MASE_E1_LOWER(...) mas_enable_mereport_c(1, -1, 0, __VA_ARGS__, 0) */
 
-#  define MASE_E_LOWER(...)  mas_enable_mereport_c(0, -1, 0, __VA_ARGS__, 0)
-#  define MASE_E_LOWER_N(_n, ...)  mas_enable_mereport_c(0, -_n, 0, __VA_ARGS__, 0)
-#  define MASE_E_UPPER(...) mas_enable_mereport_c(0,  1, 0, __VA_ARGS__, 0)
-#  define MASE_E_UPPER_N(_n, ...) mas_enable_mereport_c(0, _n, 0, __VA_ARGS__, 0)
+#  define MASE_E_LOWER(...)  { mas_enable_mereport_c(0, -1, 0, __VA_ARGS__, 0)
+#  define MASE_E_LOWER_N(_n, ...) { mas_enable_mereport_c(0, -_n, 0, __VA_ARGS__, 0)
+#  define MASE_E_UPPER(...) mas_enable_mereport_c(0,  1, 0, __VA_ARGS__, 0); }
+#  define MASE_E_UPPER_N(_n, ...) mas_enable_mereport_c(0, _n, 0, __VA_ARGS__, 0); }
 
 #  define MASE_E_SET(_n, ...) mas_enable_mereport_c(0, _n, 1, __VA_ARGS__, 0)
 

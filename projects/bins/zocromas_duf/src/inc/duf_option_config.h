@@ -19,9 +19,12 @@ char **duf_cli_options_get_targv( void );
 char ***duf_cli_options_get_ptargv( void );
 char *duf_cli_options_get_targi( int ia );
 char **duf_cli_options_get_ptargi( int ia );
+
 mas_cargvc_t *duf_cli_options_get_carg( void );
 int duf_cli_options_get_cargc( void );
 char *const *duf_cli_options_get_cargv( void );
+const char *duf_cli_options_get_cargvn( int n );
+
 int duf_cli_options_get_targ_offset( void );
 void duf_cli_options_set_targ_offset( int targ_offset );
 

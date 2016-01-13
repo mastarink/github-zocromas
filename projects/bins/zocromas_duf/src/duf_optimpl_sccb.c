@@ -77,6 +77,7 @@ duf_option_O_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
 
+#if 0
   {
     void *han;
 
@@ -93,6 +94,7 @@ duf_option_O_evaluate_sccb( const char *names )
     T( "han:%p", han );
   }
   T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) );
+#endif
   if ( duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) )
   {
 #if 0

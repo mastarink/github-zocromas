@@ -75,7 +75,7 @@ duf_pi_levinfo_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type
     int rgd = 0;
 
     /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
-    DUF_TRACE( temp, 2, "@%d: check depth %s - %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
+    DUF_TRACE( temp, 3, "@%d: check depth %s - %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
     delta = 0;
     /* if ( duf_pdi_recursive( pdi ) )               */
@@ -111,7 +111,7 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
     int rgd = 0;
 
     /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
-    DUF_TRACE( temp, 2, "@%d: check depth #%llu: %s - %llu: %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ),
+    DUF_TRACE( temp, 3, "@%d: check depth #%llu: %s - %llu: %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ),
                duf_levinfo_nameid( pdi ), duf_levinfo_itemtruename( pdi ) );
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
     delta = 0;

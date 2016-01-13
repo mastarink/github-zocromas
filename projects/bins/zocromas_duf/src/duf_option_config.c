@@ -36,7 +36,7 @@ duf_cli_option_shorts_create( const duf_longval_extended_table_t ** xtables )
     {
       if ( xtended->o.val && xtended->o.val < 0xFF )
       {
-        DUF_TRACE( options, 50,  "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
+        DUF_TRACE( options, 50, "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
         /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
         if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
@@ -188,6 +188,15 @@ char *const *
 duf_cli_options_get_cargv( void )
 {
   return config_cli ? config_cli->carg.argv : NULL;
+}
+
+const char *
+duf_cli_options_get_cargvn( int n )
+{
+  char *const *cargv;
+
+  cargv = duf_cli_options_get_cargv(  );
+  return cargv ? cargv[n] : NULL;
 }
 
 const char *

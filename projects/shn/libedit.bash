@@ -241,7 +241,23 @@ shn_gvimer_plus_vpath ()
     esac
     echo "${paths:-.}"
 }
-
+shn_find_c_mastar_function ()
+{
+  local name=$1
+  shift
+  local finddirs="$*"
+  
+  local sname
+  local cmd="grep -rl --inc='*.c'"
+  local afileq
+  if [[ $name =~ ^duf_(.*)$ ]] ; then
+    sname=${BASH_REMATCH[1]}
+  fi
+     afileq=($( grep -rl --inc='*.c' "^$name\>(" $finddirs )) \
+  || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*${name}\>\s*)\s*(" $finddirs )) \
+  || afileq=($( grep -rl --inc='*.c' "^SR(\s*[A-Z]\+, ${sname}\>" $finddirs ))
+  echo $afileq
+}
 shn_gvimer_plus_mased ()
 {
   local file=$1 filef
@@ -271,7 +287,7 @@ shn_gvimer_plus_mased ()
     if [[ -d src ]] ; then finddirs="${finddirs:+$finddirs }src/" ; fi
     if [[ -d mod ]] ; then finddirs="${finddirs:+$finddirs }mod/" ; fi
 shn_msg "find at $finddirs"
-    if afileq=($( grep -rl --inc='*.c' "^$file\>(" $finddirs )) || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*$file\>\s*)\s*(" $finddirs )) ; then
+    if afileq=`shn_find_c_mastar_function $file $finddirs` ; then
       shn_msg "Found function $file : ${afileq[@]}"
       flinef=$(   grep -n "^$file\>(" "${afileq[@]}")
       fline=${fline:-${flinef%:*}}
