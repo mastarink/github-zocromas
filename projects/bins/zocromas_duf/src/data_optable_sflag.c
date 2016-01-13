@@ -3,6 +3,9 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
+#include "duf_options_enum.h" 
+
+
 /*
 At duf_options_table.c:
   1. extern const duf_longval_extended_table_t optable_sflag[];

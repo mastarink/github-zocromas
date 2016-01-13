@@ -4,9 +4,7 @@
 /*
  * TODO rename
  * */
-
-/* codeval + std.xtables => extended; codeval2extended_by_multitable */
-const duf_longval_extended_t *duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended_table_t ** result_pxtable, int *pr );
+#include "duf_options_enum.h" /* duf_option_code_t */ /* TODO duf_option_code_t => duf_option_code_general_t i.e. `unsigned` */
 
 /* name + extended_array => extended; name2extended_by_xarr */
 const duf_longval_extended_t *duf_noption_xfind_no_at_xarr( const char *name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pno,

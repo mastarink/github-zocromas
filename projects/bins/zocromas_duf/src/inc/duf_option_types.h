@@ -6,7 +6,7 @@
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 #  include "duf_hook_types.h"
-#  include "duf_options_enum.h"
+/* #  include "duf_options_enum.h" */
 
 typedef enum
 {
@@ -308,21 +308,25 @@ typedef struct duf_longval_extended_table_s
   duf_longval_extended_t table[];
 } duf_longval_extended_table_t;
 
-typedef struct
-{
-  duf_config_act_flags_combo_t test;
-  const char *name;
-  duf_option_code_t id;
-} duf_chk_act_flags_t;
+
+
+typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+                                    const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source );
 
 typedef struct
 {
+  const char *string;
+  char vseparator;
   duf_option_source_t source;
   duf_option_stage_t stage;
   const duf_longval_extended_t *extended;
-  const char *optarg;
+  
+  char *name;
+  char *optarg;
+  
   const duf_longval_extended_table_t *xtable;
   int noo;
+  duf_xclarifier_t clarifier;
 } duf_option_data_t;
 
 

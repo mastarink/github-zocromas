@@ -57,6 +57,26 @@ duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_table_t *
   return extended;
 }
 
+const duf_longval_extended_t *
+duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_table_t ** xtables, int *ptbcount, int no,
+                             const duf_longval_extended_table_t ** result_pxtable )
+{
+  const duf_longval_extended_t *extended = NULL;
+
+  for ( ; *ptbcount <= longindex && *xtables; xtables++ )
+  {
+    const duf_longval_extended_table_t *xtable = *xtables;
+
+    extended = duf_loption_xfind_at_xtable( longindex, xtable, ptbcount, no );
+    if ( extended )
+    {
+      if ( result_pxtable )
+        *result_pxtable = xtable;
+      break;
+    }
+  }
+  return extended;
+}
 
 /* longindex + stdx => extended */
 const duf_longval_extended_t *
@@ -65,25 +85,11 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** 
   const duf_longval_extended_t *extended = NULL;
   int tbcount = 0;
 
+#if 0
   for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); tbcount <= longindex && *xtables; xtables++ )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
 
-#if 0
-
-    for ( const duf_longval_extended_t * xtended = xtable->table; tbcount <= longindex && xtended->o.name; xtended++ )
-    {
-      DUF_TRACE( options, +150, "@li2ex %d [%s]", tbcount, xtended->o.name );
-      if ( tbcount == longindex )
-      {
-        extended = xtended;
-        if ( result_pxtable )
-          *result_pxtable = xtable;
-        /* break; */
-      }
-      tbcount++;
-    }
-#else
     extended = duf_loption_xfind_at_xtable( longindex, xtable, &tbcount, 0 /* no */  );
     if ( extended )
     {
@@ -91,11 +97,14 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** 
         *result_pxtable = xtable;
       break;
     }
-#endif
   }
+#else
+  extended = duf_loption_xfind_at_multix( longindex, duf_extended_table_multi(  ), &tbcount, 0 /* no */ , result_pxtable );
+#endif
   if ( !extended )
   {
     /* continue with tbcount */
+#if 0
     for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); tbcount <= longindex && *xtables; xtables++ )
     {
       const duf_longval_extended_table_t *xtable = *xtables;
@@ -110,6 +119,11 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** 
         break;
       }
     }
+#else
+    extended = duf_loption_xfind_at_multix( longindex, duf_extended_table_multi(  ), &tbcount, 1 /* no */ , result_pxtable );
+    if ( extended && pno )
+      *pno = !*pno;
+#endif
   }
 
   return extended;

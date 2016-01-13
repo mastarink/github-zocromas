@@ -4,12 +4,12 @@
 
 #include "duf_maintenance_options.h"
 
-/* #include "duf_status_ref.h" */
 #include "duf_tmp_types.h"
 
 #include "duf_option_find.h"
+#include "duf_option_cfind.h"
 #include "duf_option_lfind.h"
-/* #include "duf_option_extended.h" */
+
 #include "duf_option_names.h"
 
 /* ###################################################################### */
@@ -26,7 +26,6 @@ _duf_coption_xfind_help_at_stdx( duf_option_code_t codeval, int *pr )
 
   extended = duf_coption_xfind_at_stdx( codeval, NULL, pr );
   /* extended = &lo_extended[ilong]; */
-
   if ( extended )
     ph = extended->help;
   return extended ? ( ph ? ph : "no description" ) : "not found";
@@ -61,10 +60,7 @@ duf_xoption_description_d( const duf_longval_extended_t * extended, const char *
 
   if ( extended )
   {
-    duf_option_code_t codeval;
-
-    codeval = extended->o.val;
-    s = duf_coption_names_d( codeval, delim );
+    s = duf_coption_names_d( extended->o.val, delim );
     if ( s )
     {
       const char *h;

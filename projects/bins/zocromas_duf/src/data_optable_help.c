@@ -3,6 +3,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
+#include "duf_options_enum.h" 
 
 #include "duf_optimpl_help.h"
 #include "duf_optimpl_smart_help.h"

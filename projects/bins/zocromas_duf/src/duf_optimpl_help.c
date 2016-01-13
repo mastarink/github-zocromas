@@ -111,7 +111,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
   DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_HELP, &r ) );
   DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
@@ -704,6 +704,15 @@ duf_option_code_t
 duf_flag2code( duf_config_act_flags_combo_t fset )
 {
   duf_option_code_t rc = DUF_OPTION_VAL_NONE;
+
+  typedef struct
+  {
+    duf_config_act_flags_combo_t test;
+    const char *name;
+    duf_option_code_t id;
+  } duf_chk_act_flags_t;
+
+
 
 #define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, .name=#_l, .id=DUF_OPTION_VAL_FLAG_ ## _u}
   duf_chk_act_flags_t tab[] = {

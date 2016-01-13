@@ -25,12 +25,15 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
   DEBUG_STARTR( r );
   duf_option_data_t od DUF_UNUSED;
 
+#if 0
   od.stage = istage;
   od.source = source;
   od.optarg = optargg;
   od.xtable = xtable;
   od.noo = noo;
   od.extended = extended;
+#endif
+
   if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) /* duf_optstage_check */
   {
     int nogen = 0;
@@ -41,7 +44,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     {
       nogen = 1;
       DOR( r, duf_xoption_clarify_typed_call( extended, optargg, istage, noo ) );
-      
+
       /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )
       {

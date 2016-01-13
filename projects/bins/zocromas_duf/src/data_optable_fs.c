@@ -3,6 +3,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
+#include "duf_options_enum.h" 
 
 #include "duf_optimpl_fs_types.h"
 #include "duf_optimpl_fs.h"      /* TODO : temp for duf_option_O_fs_...               */

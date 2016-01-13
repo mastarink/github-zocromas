@@ -12,6 +12,8 @@
 
 #include "duf_option_config.h"
 #include "duf_option_stage.h"
+#include "duf_options_enum.h" /* DUF_CONFIG_FILE_NAME */
+
 
 #include "duf_option_clarify_batch.h"
 

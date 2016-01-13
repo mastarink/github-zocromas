@@ -7,7 +7,12 @@
 
 #include "duf_option_config.h"
 #include "duf_option_clarify.h"
+#include "duf_option_lcclarify.h"
+
 #include "duf_option_clarify_batch.h"
+
+#include "duf_option_clarify_new.h"
+
 
 /* ###################################################################### */
 #include "duf_options_cli.h"
@@ -80,7 +85,7 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #endif
 
 static
-SR( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, duf_option_stage_t istage )
+SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_option_stage_t istage )
 {
   int optoptt = 0;
 
@@ -104,7 +109,7 @@ SR( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, duf_opt
   }
 
   CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI );
-  ER( OPTIONS, cli_parse_option, duf_option_code_t codeval, int longindex, duf_option_stage_t istage );
+  ER( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_option_stage_t istage );
 }
 
 static
@@ -170,18 +175,30 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage )
               getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex ) ) >= 0 ) )
   {
     optindd = optind;
-    CR( cli_parse_option, codeval, longindex, istage );
+    CR( lcoption_parse, longindex, codeval, istage );
     optindp = optind;
   }
 #else
   do
   {
     optopt = 0, longindex = -1;
+
     codeval = getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex );
     if ( codeval >= 0 )
     {
       optindd = optind;
-      CR( cli_parse_option, codeval, longindex, istage );
+#  if 1
+      CR( soption_xclarify_new, NULL, duf_cli_options_get_longopts_table(  )[longindex].name, optarg, 0 /* vseparator */ , istage, 0 /* all_matched */ ,
+          DUF_OPTION_SOURCE_CLI );
+      CR( lcoption_parse, longindex, codeval, istage );
+
+/* TODO */
+#  else
+      const duf_longval_extended_t *extended = NULL;
+
+      extended = duf_noption_xfind_no_at_stdx( name, arg ? 1 : 0, 1 /* soft */ , pno, pcnt, QPERRIND );
+      CR( xoption_parse, extended, istage );
+#  endif
       optindp = optind;
     }
   }

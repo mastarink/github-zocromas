@@ -29,7 +29,9 @@ typedef struct
 
 #  define QSTR(_name) #_name
 #  define QERRIND fundecl_.r.ei
+#  define QPERRIND &(fundecl_.r.ei)
 #  define F2C(_funname, ...) duf_ ## _funname(__VA_ARGS__)
+#  define F2CW(_funname, ...) DUF_WRAPPED( duf_ ## _funname )(__VA_ARGS__)
 #  define T2T(_typid) typeof((*((duf_fundecl_t *)NULL)).r._typid)
 #  define DT( _layer_id, _pre, _typid, _funname, ... ) T2T(_typid) F2C(_funname, __VA_ARGS__ )
 #  define ST( _layer_id, _pre, _typid, _funname, ... ) DT( _layer_id, , _typid, _funname, __VA_ARGS__ ) \
@@ -47,6 +49,7 @@ typedef struct
 #  define SR( _layer_id, _funname, ... ) ST( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 #  define ER( _layer_id, _funname, ... ) ET( _layer_id, DUF_TEST_R( QERRIND ),	ei, _funname, __VA_ARGS__ )
 #  define CR(            _funname, ... ) DOR( QERRIND, F2C(_funname, __VA_ARGS__) )
+#  define CRW(		 _funname, ... ) DOR( QERRIND, F2CW( _funname, __VA_ARGS__))
 #  define QNOERR  DUF_NOERROR( QERRIND )
 #  define QERRNAME mas_error_name_i( QERRIND )
 
