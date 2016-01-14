@@ -11,15 +11,32 @@
 typedef enum
 {
   DUF_OPTION_SOURCE_NONE = 0,
-  DUF_OPTION_SOURCE_ENV,
+  DUF_OPTION_SOURCE_MIN,
+  DUF_OPTION_SOURCE_ENV = DUF_OPTION_SOURCE_MIN,
   DUF_OPTION_SOURCE_STDIN,
   DUF_OPTION_SOURCE_STREAM,
-  DUF_OPTION_SOURCE_FILE,
+  DUF_OPTION_SOURCE_DUFFILE,
   DUF_OPTION_SOURCE_CFG,
   DUF_OPTION_SOURCE_CLI,
   DUF_OPTION_SOURCE_INTERACTIVE,
-  DUF_OPTION_SOURCE_MAX,
+  DUF_OPTION_SOURCE_INTERAC = DUF_OPTION_SOURCE_INTERACTIVE,
+  DUF_OPTION_SOURCE_MAX = DUF_OPTION_SOURCE_INTERAC,
+} duf_option_source_code_t;
+typedef struct
+{
+  duf_option_source_code_t sourcecode;
+  int labelled;
+  const char *label;
 } duf_option_source_t;
+
+#  define  DUF_OPTION_SOURCE_LABELLED(_code, _label) ((duf_option_source_t){.sourcecode = DUF_OPTION_SOURCE_ ## _code, .label=_label, .labelled=1 })
+#  define  DUF_OPTION_SOURCE(_code ) ((duf_option_source_t){.sourcecode = DUF_OPTION_SOURCE_ ## _code })
+#  define DUF_OPTION_SOURCE_DEFAULT(_source, _code) ((duf_option_source_t){ \
+    		.sourcecode = (_source.sourcecode==DUF_OPTION_SOURCE_NONE?DUF_OPTION_SOURCE_ ## _code:_source.sourcecode), \
+    		.label=_source.label, \
+    		.labelled=_source.labelled \
+    	})
+#  define DUF_IS_SOURCE(_source, _code) (_source.sourcecode==DUF_OPTION_SOURCE_ ## _code)
 
 typedef enum
 {
@@ -240,7 +257,7 @@ typedef enum
 
 typedef struct
 {
-  unsigned flag:1;
+  /* unsigned flag:1; ??? */
   duf_option_stage_t min;
   duf_option_stage_t max;
 } duf_limits_stage_t;
@@ -315,21 +332,37 @@ typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, con
 
 typedef struct
 {
+  int soft;                     /* unmatched tail length */
+  const duf_longval_extended_table_t *xtable;
+  const duf_longval_extended_t *xtended;
+} duf_found_extended_t;
+
+typedef struct
+{
+  size_t allocated_size;
+  size_t count_hard;
+  size_t count_soft;
+  size_t hard_index;
+  size_t soft_index;
+  duf_found_extended_t *array;
+} duf_found_extended_array_t;
+
+typedef struct
+{
   const char *string;
   char vseparator;
   duf_option_source_t source;
   duf_option_stage_t stage;
   const duf_longval_extended_t *extended;
-  
+
   char *name;
   char *optarg;
-  
+
   const duf_longval_extended_table_t *xtable;
   int noo;
   duf_xclarifier_t clarifier;
+  duf_found_extended_array_t xfound;
 } duf_option_data_t;
-
-
 
 
 #endif

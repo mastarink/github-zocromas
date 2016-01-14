@@ -30,7 +30,8 @@ typedef struct
 #  define QSTR(_name) #_name
 #  define QERRIND fundecl_.r.ei
 #  define QPERRIND &(fundecl_.r.ei)
-#  define F2C(_funname, ...) duf_ ## _funname(__VA_ARGS__)
+#  define F2N(_funname) duf_ ## _funname
+#  define F2C(_funname, ...) F2N(_funname)(__VA_ARGS__)
 #  define F2CW(_funname, ...) DUF_WRAPPED( duf_ ## _funname )(__VA_ARGS__)
 #  define T2T(_typid) typeof((*((duf_fundecl_t *)NULL)).r._typid)
 #  define DT( _layer_id, _pre, _typid, _funname, ... ) T2T(_typid) F2C(_funname, __VA_ARGS__ )

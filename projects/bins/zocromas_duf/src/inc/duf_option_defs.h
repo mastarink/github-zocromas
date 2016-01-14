@@ -68,13 +68,6 @@
 #  define DUF_OPTIONG_NUM(_lo, _pref) DUF_OPTIONG_N(_pref._lo)
 #  define DUF_OPTIONW_NUM(_lo, _pref) DUF_OPTIONW_N(_pref._lo)
 
-#  if 0
-#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) \
-	  ( _istage == -1 || ( !_extended->use_stage || ( _extended->stage.min <= _istage && _extended->stage.max >= _istage ) ) \
-       || ( _xtable && ( !_xtable->use_stage || ( _xtable->stage.min <= _istage && _xtable->stage.max >= _istage ) ) ) || _extended->stage.flag )
-#  else
-#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) duf_optstage_check( _istage, _extended, _xtable)
-#  endif
 
 #endif
 

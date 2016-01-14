@@ -38,7 +38,8 @@ SR( OPTIONS, lcoption_clarify_expanded, int longindex, duf_option_code_t codeval
 
   assert( ( int ) codeval >= 0 );
   /* short always corresponds long (in my case) - find it */
-  DUF_TRACE( options, 50, "@to clarify option: cv:%d; li:%d; stage:%s; source:%d", codeval, longindex, duf_optstage_name( istage ), source );
+  DUF_TRACE( options, 50, "@to clarify option: cv:%d; li:%d; stage:%s; source:%s", codeval, longindex, duf_optstage_name( istage ),
+             duf_optsource_name( source ) );
   if ( longindex < 0 )
   {
     extended = duf_coption_xfind_at_stdx( codeval, &xtable, QPERRIND );
@@ -64,8 +65,8 @@ SR( OPTIONS, lcoption_clarify_expanded, int longindex, duf_option_code_t codeval
 #else
       CRW( xoption_clarify, extended, optargg, istage, xtable, no, source );
 #endif
-      DUF_TRACE( options, 57, "@@after fully clarify option: cv:%d; li:%d; [--%s] stage:%s; source:%d (%d:%s)", codeval, longindex,
-                 extended ? extended->o.name : "?", duf_optstage_name( istage ), source, QERRIND, QERRNAME );
+      DUF_TRACE( options, 57, "@@after fully clarify option: cv:%d; li:%d; [--%s] stage:%s; source:%s (%d:%s)", codeval, longindex,
+                 extended ? extended->o.name : "?", duf_optstage_name( istage ), duf_optsource_name( source ), QERRIND, QERRNAME );
     }
     else                        /* switch is useless !... ?? */
       switch ( ( int ) codeval )
@@ -98,7 +99,8 @@ SR( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const c
   /* DEBUG_STARTR( r ); */
   char *oa;
 
-  DUF_TRACE( options, 50, "@clarify option (x): cv:%-4d; li:%d; stage:%s; source:%d", codeval, longindex, duf_optstage_name( istage ), source );
+  DUF_TRACE( options, 50, "@clarify option (x): cv:%-4d; li:%d; stage:%s; source:%s", codeval, longindex, duf_optstage_name( istage ),
+             duf_optsource_name( source ) );
 
   oa = duf_string_options_expand( optargg, '?' );
   CR( lcoption_clarify_expanded, longindex, codeval, oa, istage, source ); /* => duf_xoption_clarify */
@@ -107,5 +109,3 @@ SR( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const c
   ER( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const char *optargg, duf_option_stage_t istage,
       duf_option_source_t source );
 }
-
-

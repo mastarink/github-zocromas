@@ -166,7 +166,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 
     byteptr = duf_xoption_clarify_typed_byteptr( extended );
     DUF_TRACE( options, 60, "to check stage; istage:%s", duf_optstage_name( istage ) );
-    /* if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) (* duf_optstage_check *) *//* moved upper */
+    /* if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) *//* moved upper */
     {
       int nof;
       char *doptargg;

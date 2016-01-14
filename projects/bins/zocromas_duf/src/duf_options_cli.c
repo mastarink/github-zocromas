@@ -108,7 +108,9 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
     mas_free( msg );
   }
 
-  CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE_CLI );
+  {
+    CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE( CLI ) );
+  }
   ER( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_option_stage_t istage );
 }
 
@@ -188,8 +190,10 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage )
     {
       optindd = optind;
 #  if 1
-      CR( soption_xclarify_new, NULL, duf_cli_options_get_longopts_table(  )[longindex].name, optarg, 0 /* vseparator */ , istage, 0 /* all_matched */ ,
-          DUF_OPTION_SOURCE_CLI );
+      {
+        CR( soption_xclarify_new, NULL, duf_cli_options_get_longopts_table(  )[longindex].name, optarg, 0 /* vseparator */ , istage,
+            DUF_OPTION_SOURCE( CLI ) );
+      }
       CR( lcoption_parse, longindex, codeval, istage );
 
 /* TODO */

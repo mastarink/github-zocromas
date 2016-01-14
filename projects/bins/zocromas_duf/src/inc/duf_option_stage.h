@@ -16,6 +16,15 @@
  * 4. result: name
  * */
 
+#  if 0
+#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) \
+	  ( _istage == -1 || ( !_extended->use_stage || ( _extended->stage.min <= _istage && _extended->stage.max >= _istage ) ) \
+       || ( _xtable && ( !_xtable->use_stage || ( _xtable->stage.min <= _istage && _xtable->stage.max >= _istage ) ) ) || _extended->stage.flag )
+#  else
+#    define DUF_OPTION_CHECK_STAGE(_istage, _extended, _xtable) (duf_optstage_check( _istage, _extended, _xtable))
+#  endif
+
+
 const char *duf_optstage_name( duf_option_stage_t istage );
 int duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
       __attribute__ ( ( warn_unused_result ) );

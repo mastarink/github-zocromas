@@ -8,7 +8,10 @@
 #include "duf_xtended_table.h"
 #include "duf_option_clarify.h"
 #include "duf_option_find.h"
+
 #include "duf_option_stage.h"
+#include "duf_option_source.h"
+#include "duf_option_clarify_new.h"
 
 /* ###################################################################### */
 #include "duf_option_clarify_string.h"
@@ -19,8 +22,8 @@
 /* string + extended_array => find + clarify */
 /* duf_soption_xclarify_at_xarr */
 static int
-duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage, int all_matched,
-                     duf_option_source_t source )
+duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage,
+                              int all_matched, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   int clarified = 0;
@@ -44,7 +47,7 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
       DORF( r, DUF_WRAPPED( duf_xoption_clarify ), extended, arg, istage, xtable, no, source );
       DUF_TRACE( findopt, 5, "@(%s:%d) at %s by %s full done for %s", mas_error_name_i( r ), clarified, xtable->name, string, extended->o.name );
       clarified += ( extended ? 1 : 0 );
-      DUF_TRACE( options, 130, "@executed '%s'; stage:%s; source:%d", extended->o.name, duf_optstage_name( istage ), source );
+      DUF_TRACE( options, 130, "@executed '%s'; stage:%s; source:%s", extended->o.name, duf_optstage_name( istage ), duf_optsource_name( source ) );
     }
     else
     {
@@ -55,7 +58,7 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
     xtended = extended;
     if ( !all_matched )
       break;
-    if ( xtended ) /* continue if matched all needed */
+    if ( xtended )              /* continue if matched all needed */
       xtended++;
   }
   /* assert( ( clarified && DUF_NOERROR( r ) ) || ( !clarified && DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) ) ); */
@@ -77,7 +80,7 @@ duf_soption_xclarify_at_xarr( const char *string, const duf_longval_extended_tab
 /* duf_soption_xclarify_at_multix */
 static int
 duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_table_t ** multix, char vseparator, duf_option_stage_t istage,
-                           int all_matched, duf_option_source_t source )
+                                int all_matched, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   int clarified = 0;
@@ -95,7 +98,7 @@ duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_t
  * */
 /* look xtable for cmd from string and exec if clarified */
     DOR( r, duf_soption_xclarify_at_xarr( string, xtable, vseparator, istage, all_matched, source ) );
-    DUF_TRACE( options, 150, "@after executing cmd from '%s'; table %s. (%d:%s)" , string, xtable->name, r, mas_error_name_i( r ) );
+    DUF_TRACE( options, 150, "@after executing cmd from '%s'; table %s. (%d:%s)", string, xtable->name, r, mas_error_name_i( r ) );
     if ( DUF_NOERROR( r ) )     /* DUF_NOERROR(r) equal to r>=0 ?? */
     {
       /* clarified one; continue to possibly find more */
@@ -128,7 +131,19 @@ duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_st
   DEBUG_STARTR( r );
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 /* look all xtables for cmd from string and exec if found */
+
+  if ( !DUF_IS_SOURCE( source, CFG ) && duf_optsource_labelled( source ) )
+  {
+#if 0
+    r = duf_soption_xclarify_new( string, NULL, NULL, vseparator, istage, all_matched, source );
+#else
+    DORF( r, F2N( soption_xclarify_new ), string, NULL, NULL, vseparator, istage, source );
+#endif
+  }
+
+
   DOR( r, duf_soption_xclarify_at_multix( string, duf_extended_table_multi(  ), vseparator, istage, all_matched, source ) );
-  DUF_TRACE( options, 160, "@executed cmd '%s'; stage:%s; source:%d (%d:%s)", string, duf_optstage_name( istage ), source, r, mas_error_name_i( r ) );
+  DUF_TRACE( options, 160, "@executed cmd '%s'; stage:%s; source:%s (%d:%s)", string, duf_optstage_name( istage ), duf_optsource_name( source ), r,
+             mas_error_name_i( r ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }

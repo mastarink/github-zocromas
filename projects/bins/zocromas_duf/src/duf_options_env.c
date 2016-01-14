@@ -25,7 +25,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
   eo = getenv( envvarname );
 
   DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name( istage ), envvarname, eo );
-  DOR( r, duf_boption_xclarify_at_stdx( '=', istage, DUF_OPTION_SOURCE_ENV, eo, 0 ) );
+  DOR( r, duf_boption_xclarify_at_stdx( '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0 ) );
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
 

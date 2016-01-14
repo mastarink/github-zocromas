@@ -34,7 +34,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
   od.extended = extended;
 #endif
 
-  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) /* duf_optstage_check */
+  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) )
   {
     int nogen = 0;
 

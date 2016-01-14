@@ -28,15 +28,15 @@ const duf_longval_extended_table_t optable_trace = {
   {
    DUF_TRACE_OPT( temp, TEMP ),
    /* {.o = {DO_Q( "trace-temp" ) (*       *) , DO_A_O (* *) , DO_V( TEMP_TRACE )} (*        *) , DO_CL( TRACE ) (*   *) ,                            */
-   /*  (*      *) DO_OC( UPLUS, opt.trace.temp ), DO_STAGE_SPLS (*                              *) , DO_H( trace .... ) (*                       *) }, */
+   /*  (*      *) DO_OC( UPLUS, opt.trace.temp ), DO_SET_STAGE( DEBUG, MAX) (*                              *) , DO_H( trace .... ) (*                       *) }, */
    {.o = {DO_Q( "trace-collect" ) /*    */ , DO_A_O /* */ , DO_V( COLLECT_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, opt.trace.collect ) /*                           */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-any" ) /*        */ , DO_A_O /* */ , DO_V( ANY_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( UPLUS, opt.trace.any ), DO_STAGE_SPLS /*                               */ , DO_H( trace .... ) /*                       */ },
+    /*      */ DO_OC( UPLUS, opt.trace.any ), DO_SET_STAGE( DEBUG, MAX) /*                               */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
     /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-nonew" ) /*      */ , DO_A_O /* */ , DO_V( NONEW_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( UPLUS, opt.trace.nonew ), DO_STAGE_SPLS /*                             */ , DO_H( trace .... ) /*                       */ },
+    /*      */ DO_OC( UPLUS, opt.trace.nonew ), DO_SET_STAGE( DEBUG, MAX) /*                             */ , DO_H( trace .... ) /*                       */ },
 
 
 #  if 0
@@ -137,7 +137,7 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, opt.trace.io ), DO_STAGE_SPLS /*                                */ , DO_H( trace .... ) /*                       */ },
 #  else
 #    define ENUM_WRAPP(_n, _rf, _rf2)  \
-   {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OC( UPLUS, opt.trace._rf2 )  , DO_STAGE_SPLS  , DO_H( trace # _rf2 )  },
+   {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OC( UPLUS, opt.trace._rf2 )  , DO_SET_STAGE( DEBUG, MAX)  , DO_H( trace # _rf2 )  },
 #    include "duf_options_enum_trace.def"
 #    undef ENUM_WRAPP
 
@@ -145,17 +145,17 @@ const duf_longval_extended_table_t optable_trace = {
 #  endif
 
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, opt.trace.output ), DO_AT_STAGE( SETUP ) /*                     */ , DO_H( trace output to file ) /*             */ },
+    /*      */ DO_OC( FILE, opt.trace.output ), DO_AT_STAGE( DEBUG ) /*                     */ , DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-overwrite-file" ) /*  */ , DO_A_N /* */ , DO_V( TRACE_FILE_OVERWRITE )} /**/, DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.trace.output.v ), DO_FL( output, overwrite ), DO_AT_STAGE( SETUP ) /**/,
+    /*      */ DO_OC( FLAG, opt.trace.output.v ), DO_FL( output, overwrite ), DO_AT_STAGE( DEBUG ) /**/,
     DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-append-file" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_FILE_APPEND )} /*  */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( SETUP ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.trace.output.v ), DO_FL( output, append ), DO_AT_STAGE( DEBUG ) /*  */ ,
     DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 2}}, DO_STAGE_SPLS /* */ , DO_H( trace output to stderr ) /*           */ },
+    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 2}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stderr ) /*           */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 1}}, DO_STAGE_SPLS /* */ , DO_H( trace output to stdout ) /*           */ },
+    /*      */ DO_OC( FILE, opt.trace.output ),.call = {.value = {.u = 1}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stdout ) /*           */ },
    {.o = {.name = NULL}}
    }
 };

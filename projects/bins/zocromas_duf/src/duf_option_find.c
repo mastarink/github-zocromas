@@ -159,7 +159,7 @@ duf_noption_xfind_at_xarr( const char *name, int witharg, const duf_longval_exte
  * possible error(s):
  *   DUF_ERROR_OPTION_MULTIPLE
  *   */
-const duf_longval_extended_t *
+static const duf_longval_extended_t *
 duf_noption_xfind_no_at_xarr( const char *name, int witharg, const duf_longval_extended_t * xarr, int soft, int *pno, int *pcnt, int *pr )
 {
   int rpr = 0;
