@@ -333,6 +333,7 @@ typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, con
 typedef struct
 {
   int soft;                     /* unmatched tail length */
+  int noo;
   const duf_longval_extended_table_t *xtable;
   const duf_longval_extended_t *xtended;
 } duf_found_extended_t;
@@ -344,6 +345,7 @@ typedef struct
   size_t count_soft;
   size_t hard_index;
   size_t soft_index;
+  
   duf_found_extended_t *array;
 } duf_found_extended_array_t;
 
@@ -355,6 +357,7 @@ typedef struct
   duf_option_stage_t stage;
   const duf_longval_extended_t *extended;
 
+  size_t name_offset;
   char *name;
   char *optarg;
 

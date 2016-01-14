@@ -1,3 +1,6 @@
 trace-temp 3
-help-s
+# help-s
+# no-disable-fs
+no-recursive
+recursive
 # trace-temp 8

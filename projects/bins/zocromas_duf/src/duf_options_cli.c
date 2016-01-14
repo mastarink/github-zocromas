@@ -190,6 +190,7 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage )
     {
       optindd = optind;
 #  if 1
+      if ( codeval != '?' && longindex >= 0 )
       {
         CR( soption_xclarify_new, NULL, duf_cli_options_get_longopts_table(  )[longindex].name, optarg, 0 /* vseparator */ , istage,
             DUF_OPTION_SOURCE( CLI ) );

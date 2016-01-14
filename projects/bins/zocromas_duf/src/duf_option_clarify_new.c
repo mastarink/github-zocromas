@@ -100,6 +100,7 @@ SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtend
   }
   pod->xfound.array[index].xtended = xtended;
   pod->xfound.array[index].soft = soft;
+  pod->xfound.array[index].noo = pod->noo;
   pod->xfound.array[index].xtable = pod->xtable;
 
   if ( soft )
@@ -120,19 +121,41 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
   for ( const duf_longval_extended_t * xtended = xarr; xtended->o.name; xtended++ )
   {
     size_t len_ask, len_tb;
+    const char *match = NULL;
+    int is_no;
 
-    len_ask = strlen( pod->name );
-    len_tb = strlen( xtended->o.name );
-    if ( 0 == strcmp( pod->name, xtended->o.name ) )
+    is_no = ( 0 == strncmp( pod->name, "no-", 3 ) );
+    assert( ( xtended->can_no && xtended->o.has_arg == no_argument ) || ( !xtended->can_no ) );
+    if ( xtended->can_no && is_no )
     {
+      pod->noo = 1;
+      pod->name_offset = 3;
+      /* T( "@0a name_offset:%lu - %s ? %s", pod->name_offset, pod->name,  xtended->o.name ); */
+    }
+    else
+    {
+      pod->noo = 0;
+      pod->name_offset = 0;
+      /* T( "@0b name_offset:%lu - %s ? %s", pod->name_offset, pod->name,  xtended->o.name ); */
+    }
+    if ( xtended->invert )
+      pod->noo = !pod->noo;
+    len_ask = strlen( pod->name ) - pod->name_offset;
+    len_tb = strlen( xtended->o.name );
+    match = pod->name + pod->name_offset;
+    if ( 0 == strcmp( match, xtended->o.name ) )
+    {
+      /* T( "@1 name_offset:%lu - %s (%s) noo:%d", pod->name_offset, pod->name, match, pod->noo ); */
       assert( len_tb == len_ask );
       CR( soption_xclarify_new_register, xtended, 0 /* soft */ , pod );
     }
-    else if ( 0 == strncmp( pod->name, xtended->o.name, len_ask ) )
+    else if ( 0 == strncmp( match, xtended->o.name, len_ask ) )
     {
+      /* T( "@2 name_offset:%lu - %s (%s) noo:%d", pod->name_offset, pod->name, match, pod->noo ); */
       assert( len_tb > len_ask );
       CR( soption_xclarify_new_register, xtended, len_tb - len_ask /* soft */ , pod );
     }
+    /* T( "@3 name_offset:%lu - %s", pod->name_offset, pod->name ); */
   }
 
   ER( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xarr, duf_option_data_t * pod );
@@ -147,6 +170,8 @@ SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_table
 
 SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table_t ** xtables, duf_option_data_t * pod )
 {
+  int doindex = -1;
+
   for ( ; *xtables; xtables++ )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
@@ -159,7 +184,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
     if ( pod->xfound.array[pod->xfound.hard_index].soft == 0
          && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.array[pod->xfound.hard_index].xtended, pod->xfound.array[0].xtable ) )
     {
-      T( "@Do it : %s", pod->xfound.array[pod->xfound.hard_index].xtended->o.name );
+      doindex = pod->xfound.hard_index;
     }
   }
   else if ( pod->xfound.count_hard == 0 )
@@ -168,7 +193,9 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
     {
       if ( pod->xfound.array[pod->xfound.soft_index].soft > 0
            && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.array[pod->xfound.hard_index].xtended, pod->xfound.array[0].xtable ) )
-        T( "@Do it : %s", pod->xfound.array[pod->xfound.soft_index].xtended->o.name );
+      {
+        doindex = pod->xfound.hard_index;
+      }
     }
     else if ( pod->xfound.count_soft > 1 )
     {
@@ -183,10 +210,21 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
   {
     /* BAD-MULTI-ERROR : same command defined, needs fixing tables */
   }
+  if ( doindex >= 0 && pod->clarifier )
+  {
+    T( "@Do it : (%c)%s", pod->xfound.array[doindex].noo ? '-' : '+', pod->xfound.array[doindex].xtended->o.name );
+    if ( 0 )
+    {
+      /* int duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t stage, */
+      /*                          const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source );      */
+      ( pod->clarifier ) ( pod->xfound.array[doindex].xtended, pod->optarg, pod->stage, pod->xfound.array[doindex].xtable, pod->noo, pod->source );
+    }
+  }
   T( "@-------- %lu:%lu ----------", pod->xfound.count_hard, pod->xfound.count_soft );
   for ( size_t n = 0; n < pod->xfound.count_hard + pod->xfound.count_soft; n++ )
   {
-    T( "@@ ========== %d: --%s='%s' =======================", pod->xfound.array[n].soft, pod->xfound.array[n].xtended->o.name, pod->optarg );
+    T( "@@ ========== s:%d; ch:%lu; cs:%lu; doi:%d {%d} --%s='%s' =======================", pod->xfound.array[n].soft, pod->xfound.count_hard,
+       pod->xfound.count_soft, doindex, pod->clarifier ? 1 : 0, pod->xfound.array[n].xtended->o.name, pod->optarg );
   }
   mas_free( pod->xfound.array );
   pod->xfound.array = NULL;
@@ -240,3 +278,5 @@ SR( OPTIONS, soption_xclarify_new, const char *string, const char *name, const c
   ER( OPTIONS, soption_xclarify_new, const char *string, const char *name, const char *arg, char vseparator, duf_option_stage_t istage,
       duf_option_source_t source );
 }
+/* for batch:                        */
+/* delim = duf_option_delimiter(  ); */
