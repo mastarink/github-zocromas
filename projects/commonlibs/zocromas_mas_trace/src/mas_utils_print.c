@@ -115,6 +115,8 @@ mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid
       fmt++;
 
 
+    if ( !out )
+      out = stderr;
 
     if ( ifexit )
     {

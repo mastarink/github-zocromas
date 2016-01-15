@@ -4,7 +4,7 @@
 
 #include "duf_option_clarify_string.h"
 
-/* TODO file rename duf_option_clarify_batch.[ch] */
+#include "duf_option_clarify_new.h"
 
 /* ###################################################################### */
 #include "duf_option_clarify_batch.h"
@@ -77,7 +77,14 @@ duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_op
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
 
 /* look all std xtables for cmd from string and exec if found */
+
+
+/* TODO */
+#if 0 /* 1:old clarify; 0:new clarify; see also duf_options_cli.c ....; 20160115.170514 */
         DOR( r, duf_soption_xclarify_at_stdx( s, vseparator, istage, 0 /* all_matched */ , source ) );
+#else
+        DORF( r, F2N( soption_xclarify_new_at_stdx_default ), s, NULL, NULL, vseparator, istage, source );
+#endif
       }
       mas_free( s );
       peo = e;

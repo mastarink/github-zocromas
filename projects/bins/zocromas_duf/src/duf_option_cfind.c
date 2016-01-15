@@ -6,10 +6,79 @@
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"
+#include "duf_option_config.h"
 
 /* ###################################################################### */
 #include "duf_option_cfind.h"
 /* ###################################################################### */
+
+static const duf_option_t *
+duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, int *pr )
+{
+  const duf_option_t *roption = NULL;
+  int rpr = 0;
+  int ntable = 0;
+  int tbcount = 0;
+
+  {
+    for ( ; !roption && arr->name; arr++, tbcount++ )
+    {
+      if ( arr )
+      {
+        DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, arr->name, arr->val, codeval );
+        /* assert( 0 ); */
+        if ( arr->val == codeval )
+        {
+          roption = arr;
+          DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, arr->name );
+#if 0
+          ok = 1;
+#endif
+          break;                /* ? */
+        }
+      }
+    }
+  }
+  if ( pr )
+    *pr = rpr;
+  return roption;
+}
+
+const duf_option_t *
+duf_coption_find_at_std( duf_option_code_t codeval, int *pr )
+{
+  return duf_coption_find_at_arr( codeval, duf_cli_options_get_longopts_table(  ), pr );
+}
+
+const duf_option_t *
+duf_lcoption_find_at_std( duf_option_code_t codeval, int longindex, int *pr )
+{
+  const duf_option_t *roption = NULL;
+
+  if ( longindex >= 0 && codeval > DUF_OPTION_VAL_LONG )
+    roption = &( duf_cli_options_get_longopts_table(  )[longindex] );
+  else if ( codeval != '?' )
+    roption = duf_coption_find_at_std( codeval, pr );
+  return roption;
+}
+
+const char *
+duf_coption_find_name_at_std( duf_option_code_t codeval, int *pr )
+{
+  const duf_option_t *longoption = NULL;
+
+  longoption = duf_coption_find_at_std( codeval, pr );
+  return longoption ? longoption->name : NULL;
+}
+
+const char *
+duf_lcoption_find_name_at_std( duf_option_code_t codeval, int longindex, int *pr )
+{
+  const duf_option_t *longoption = NULL;
+
+  longoption = duf_lcoption_find_at_std( codeval, longindex, pr );
+  return longoption ? longoption->name : NULL;
+}
 
 static const duf_longval_extended_t *
 duf_coption_xfind_at_xarr( duf_option_code_t codeval, const duf_longval_extended_t * xarr, int *pr )
@@ -21,19 +90,16 @@ duf_coption_xfind_at_xarr( duf_option_code_t codeval, const duf_longval_extended
 
   for ( ; !rxtended && xarr->o.name; xarr++, tbcount++ )
   {
-    if ( xarr )
+    DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
+    /* assert( 0 ); */
+    if ( xarr->o.val == codeval )
     {
-      DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
-      /* assert( 0 ); */
-      if ( xarr->o.val == codeval )
-      {
-        rxtended = xarr;
-        DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
+      rxtended = xarr;
+      DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
 #if 0
-        ok = 1;
+      ok = 1;
 #endif
-        break;                  /* ? */
-      }
+      break;                    /* ? */
     }
   }
   if ( pr )

@@ -56,7 +56,6 @@ duf_ev_evnamed_list_std( const char *names )
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
-  /* T( "names:%s;", names ); */
   /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) ); */
   DOR( r, duf_ev_evnamed_list( names, duf_first_sccb(  ) ) );
 #endif

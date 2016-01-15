@@ -14,8 +14,10 @@
 #    define MAST_TRACE( ... )
 #  endif
 
-#  define MAST_TRACE_WP_C( _cfg, _prefix, ... )			MAST_TRACE_WHAT_WP_C( _cfg, _prefix,	MAST_TRACE_AT_CFG,	__VA_ARGS__ )
-#  define MAST_TRACE_WP( ... )					MAST_TRACE_WP_C(      MAST_TRACE_CONFIG, 			__VA_ARGS__ )
+#  define MAST_TRACE_WP_C( _cfg, _prefix, ... )			MAST_TRACE_WHAT_WP_C(        _cfg, _prefix,	MAST_TRACE_AT_CFG,	__VA_ARGS__ )
+#  define MAST_OTRACE_WP_C( _out, _cfg, _prefix, ... )		MAST_OTRACE_WHAT_WP_C( _out, _cfg, _prefix,	MAST_TRACE_AT_CFG,	__VA_ARGS__ )
+#  define MAST_TRACE_WP( ... )					MAST_TRACE_WP_C(	    MAST_TRACE_CONFIG, 			__VA_ARGS__ )
+#  define MAST_OTRACE_WP(_out, ... )				MAST_OTRACE_WP_C( _out,	    MAST_TRACE_CONFIG, 			__VA_ARGS__ )
 
 #  define MAST_DEBUG(_lev, ...)  if ( MAST_IF_DEBUGN( _lev ) ) {  __VA_ARGS__ ; }
 

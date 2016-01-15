@@ -83,8 +83,9 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
       {
         sccbh->current_statement = pstmt_selector;
         sccbh->current_scanstage = scanstage;
+        /* T( "@@@############# hhh: %s @ %s", duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) ); */
         DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
-	DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+        DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
         sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
         sccbh->current_statement = NULL;
       }

@@ -83,6 +83,12 @@ function shn_run ()
         if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
 	  echo ; echo ; echo
 	fi
+    if [[ -f mas_debug_memory.tmp ]] ; then
+      cat mas_debug_memory.tmp >&2
+      mv -f mas_debug_memory_old2.tmp  mas_debug_memory_old3.tmp
+      mv -f mas_debug_memory_old.tmp  mas_debug_memory_old2.tmp
+      mv -f mas_debug_memory.tmp  mas_debug_memory_old.tmp
+    fi
     shn_msg " exited with $retcode "
   else
     retcode=1

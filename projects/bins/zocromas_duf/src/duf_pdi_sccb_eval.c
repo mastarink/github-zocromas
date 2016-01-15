@@ -51,6 +51,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
     {
       int r1 = 0;
 
+      /* T( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
       DOR( r1, duf_sccb_handle_close( sccbh ) );
       if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
         r = r1;
@@ -71,7 +72,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   const duf_scan_callbacks_t *sccb = NULL;
 
   assert( pdi );
-  
+
 
   assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
 
@@ -88,7 +89,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   {
     DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
 
-    /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+    /* T( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
     DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
   }
   else

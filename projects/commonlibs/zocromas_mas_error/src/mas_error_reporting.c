@@ -342,22 +342,22 @@ mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
       MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d) (v%d)", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 2:
-      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
+      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
       break;
     case 3:
-      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
                            ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 4:
-      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
                            ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     case 5:
-      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+      MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
                            ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     default:
-      MASE_SHOW_ERRORO_WP( prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
                            ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
       break;
     }

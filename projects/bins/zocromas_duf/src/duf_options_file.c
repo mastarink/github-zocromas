@@ -446,12 +446,6 @@ SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func
     {
       const char *fname = cf + 1;
 
-#if 0
-      {
-        CR( soption_xclarify_new, NULL, NULL, NULL, 0 /* vseparator */ , istage,
-            DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ) );
-      }
-#endif
       {
         CR( infile_options_at_dir_and_file, istage, DUF_CONFIGGS( cmds_dir ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ) );
       }

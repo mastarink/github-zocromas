@@ -27,9 +27,9 @@
 #    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_config(  ))
 #  endif
 
-#    ifndef MAST_TRACE_FILE_C
-#      define MAST_TRACE_FILE_C( _cfg ) duf_trace_file_c(_cfg)
-#    endif
+#  ifndef MAST_TRACE_FILE_C
+#    define MAST_TRACE_FILE_C( _cfg ) duf_trace_file_c(_cfg)
+#  endif
 
 #  ifndef MAST_TRACE_FILE
 #    define MAST_TRACE_FILE          duf_trace_file()

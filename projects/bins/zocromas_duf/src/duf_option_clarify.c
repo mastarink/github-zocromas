@@ -35,7 +35,6 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
  * */
     DUF_TRACE( options, 55, "@@@fully clarify option: [--%s='%s'] stage:%s; `no`:%d; source:%s",
                extended ? extended->o.name : "?", optargg, duf_optstage_name( istage ), no, duf_optsource_name( source ) );
-
 /* TODO : register  extended + optargg for further use */
     global_status_register_xcmd( extended, optargg, istage, no, source );
     DOR( r, duf_xoption_clarify_typed( extended, optargg, istage, xtable, no, source ) );
@@ -53,7 +52,10 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
     DUF_TRACE( options, 55, "@clarified cli option: %s (%d:%s)", duf_xoption_description_tmp( -1, extended ), r, mas_error_name_i( r ) );
   }
   else
+  {
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+    assert( 0 );
+  }
   DUF_TRACE( options, +170, "@[%s]; arg:%s; istage:%d; `no`:%d", duf_xoption_description_tmp( -1, extended ), optargg, istage, no );
   DEBUG_ENDR( r );
 }

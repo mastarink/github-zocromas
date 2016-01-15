@@ -11,7 +11,6 @@
 
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
-#include "duf_option_clarify_new.h"
 
 /* ###################################################################### */
 #include "duf_option_clarify_string.h"
@@ -126,23 +125,14 @@ duf_soption_xclarify_at_multix( const char *string, const duf_longval_extended_t
 
 /* look all std xtables for cmd from string and exec if found */
 int
-duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_stage_t istage, int all_matched, duf_option_source_t source )
+duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_stage_t istage, int all_matched DUF_UNUSED, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 /* look all xtables for cmd from string and exec if found */
 
-  if ( !DUF_IS_SOURCE( source, CFG ) && duf_optsource_labelled( source ) )
-  {
-#if 0
-    r = duf_soption_xclarify_new( string, NULL, NULL, vseparator, istage, all_matched, source );
-#else
-    DORF( r, F2N( soption_xclarify_new ), string, NULL, NULL, vseparator, istage, source );
-#endif
-  }
-
-
   DOR( r, duf_soption_xclarify_at_multix( string, duf_extended_table_multi(  ), vseparator, istage, all_matched, source ) );
+
   DUF_TRACE( options, 160, "@executed cmd '%s'; stage:%s; source:%s (%d:%s)", string, duf_optstage_name( istage ), duf_optsource_name( source ), r,
              mas_error_name_i( r ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );

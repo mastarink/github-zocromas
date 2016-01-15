@@ -360,6 +360,7 @@ typedef struct
   size_t name_offset;
   char *name;
   char *optarg;
+  int has_arg;
 
   const duf_longval_extended_table_t *xtable;
   int noo;

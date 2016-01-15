@@ -15,6 +15,7 @@
 #include "duf_option_config.h"
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
+#include "duf_option_extended2string.h"
 
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"

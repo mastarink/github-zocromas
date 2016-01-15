@@ -80,7 +80,7 @@ duf_cfg_create( void )
   /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
   /* cfg->opt.trace.options = 1; */
   /* cfg->opt.trace.fs += 1; */
-  
+
   /* DUF_CFGW( cfg, opt.trace.options ) = 11; */
   /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
   /* DUF_CFGW( cfg, opt.trace.temp ) += 1; 20160113.115143 */
@@ -284,7 +284,11 @@ duf_config_delete( void )
   DEBUG_START(  );
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
+#if 0                           /* 20160115.115839 */
   mas_error_report_all( 0, MAST_TRACE_FILE, DUF_CONFIGG( opt.dbg.verbose ) );
+#else
+  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), DUF_CONFIGG( opt.dbg.verbose ) );
+#endif
 
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING

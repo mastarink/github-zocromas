@@ -1,6 +1,10 @@
+# output-stderr
+trace-stderr
 trace-temp 3
-# help-s
+# help-set
+# help-ex
+# help-ex=32334
 # no-disable-fs
-no-recursive
-recursive
+# no-recursive
+# recursive
 # trace-temp 8
