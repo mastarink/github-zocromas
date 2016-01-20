@@ -25,8 +25,6 @@
 
 #include "duf_fileinfo.h"
 
-/* #include "duf_dbg.h" */
-
 #include "sql_beginning_selected.h"
 
 

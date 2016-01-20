@@ -114,7 +114,7 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
 #endif
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
-  if ( sql_set && sql_set->selector2 && sql_set->fieldset )
+  if ( sql_set /* && sql_set->selector2 && sql_set->fieldset  FIXME for !sql_set->selector2 && sql_set->selector2_cte */ )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
     DUF_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );

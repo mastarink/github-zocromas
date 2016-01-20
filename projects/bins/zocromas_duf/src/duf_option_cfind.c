@@ -44,13 +44,13 @@ duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, in
   return roption;
 }
 
-const duf_option_t *
+static const duf_option_t *
 duf_coption_find_at_std( duf_option_code_t codeval, int *pr )
 {
   return duf_coption_find_at_arr( codeval, duf_cli_options_get_longopts_table(  ), pr );
 }
 
-const duf_option_t *
+static const duf_option_t *
 duf_lcoption_find_at_std( duf_option_code_t codeval, int longindex, int *pr )
 {
   const duf_option_t *roption = NULL;

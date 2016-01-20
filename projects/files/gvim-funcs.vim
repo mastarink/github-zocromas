@@ -46,7 +46,11 @@ function! MasGoTag2 ()
 	  set wrapscan
 	  set nomagic
 	  set noignorecase
-	  execute t.cmd
+	  try
+	    execute t.cmd
+	  catch
+	    echoerr "MasGoTag2: t.cmd (" . t.cmd . ") error"
+	  endtry
 	  let &magic=mmagic
 	  let &wrapscan=mwrapscan
 	  let &ignorecase=mignorecase

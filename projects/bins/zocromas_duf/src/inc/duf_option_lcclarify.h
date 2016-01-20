@@ -23,8 +23,10 @@
 #  include "duf_options_enum.h" /* duf_option_code_t :: TODO duf_option_code_t => duf_option_code_general_t i.e. `unsigned` */
 
 
+#if 0 /* not used with new options system , see duf_option_clarify_new.c */
 DR( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
+#endif
 
 #endif
 

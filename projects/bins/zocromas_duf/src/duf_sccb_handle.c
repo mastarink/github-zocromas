@@ -107,15 +107,20 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
         DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cnt, cnt1, csql );
         /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
         if ( cnt > 0 && !sql_set->cte && SCCB->count_nodes )
-          cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+        {
+          T( "@%llu:%llu; %s", cnt1, cnt, csql );
+          cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) /* - 1 20160118.153828 */ ;
+          T( "@%llu:%llu:%d; %s", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ), csql );
+        }
         /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
       /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
+
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
       assert( DUF_NOERROR( rpr ) );
-      DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
-      DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
+      if ( !cnt )
+        T( "@%llu:%llu; %s; %s", cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql );
     }
     mas_free( sqlt );
   }

@@ -1,0 +1,483 @@
+# 20160117.144857 : 1453034937.280581773 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/dufconf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/duf/tests20151019/dufconf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/duf/tests20151006/dufconf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/tree.r/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.r/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/tree.r/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.20151019/tree.r/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree.20151019/test/duf/zocromas_duf.conf
+/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree1/test/duf/zocromas_duf.conf
+# =>      1	# disable-memusage
+# =>      2	# verbose 1
+# =>      3	trace-any=0
+# =>      4	trace-stderr
+# =>      5	trace-temp
+# =>      6	output-fun-width=30
+# =>      7	# uni-scan => obsolete
+# =>      8	# sccbs => obsolete
+# =>      9	
+# =>     10	# allow-files
+# =>     11	# allow-sub
+# =>     12	# allow-directories
+# =>     13	
+# =>     14	
+# =>     15	# noopenat
+# =>     16	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>     17	db-directory=$MSHDIRS_DIR/lib///duf_db///
+# =>     18	# db-name=test${MSH_SHN_BASHPID}
+# =>     19	db-name=test${MSH_SHN_LAUNCHPID}
+# =>     20	
+# =>     21	db-name=test25561
+# =>     22	db-name=testing
+# =>     23	db-adm-name=adm
+# =>     24	db-temp-name=temp
+# =>     25	db-selected-name=selected
+# =>     26	
+# =>     27	db-subdir=?${+db-name}
+# =>     28	
+# =>     29	############################################################
+# =>     30	#   ~      suffix                                          #
+# =>     31	#   _      underline                                       #
+# =>     32	#   .      sha1sum                                         #
+# =>     33	#   @      md5sum                                          #
+# =>     34	#   &      dataid                                          #
+# =>     35	#   #      seq_leaf                                        #
+# =>     36	#   a      camera                                          #
+# =>     37	#   A      camera                                          #
+# =>     38	#   c      color                                           #
+# =>     39	#   e      mime                                            #
+# =>     40	#   E      mimeid                                          #
+# =>     41	#   f      filename                                        #
+# =>     42	# -----   D      ndirs      20151109 OFF                   #
+# =>     43	# -----   F      nfiles     20151109 OFF                   #
+# =>     44	#   g      group                                           #
+# =>     45	#   h      depth                                           #
+# =>     46	#   H      sha1id                                          #
+# =>     47	#   I      dirid                                           #
+# =>     48	#   m      mimeid                                          #
+# =>     49	#   M      md5id                                           #
+# =>     50	#   n      nlink                                           #
+# =>     51	#   N      nameid                                          #
+# =>     52	#   O      inode                                           #
+# =>     53	#   p      move to position                                #
+# =>     54	#   P      prefix                                          #
+# =>     55	#   w      seq_row                                         #
+# =>     56	#   q      seq_node                                        #
+# =>     57	#   Q      seq                                             #
+# =>     58	#   r      realpath                                        #
+# =>     59	#   R      relative realpath (relative to 'top level')     #
+# =>     60	#   s      << space >>                                     #
+# =>     61	#   S      nsame_md5                                       #
+# =>     62	#   t      tm,tc,ta: mtime                                 #
+# =>     63	#   T         - " -                                        #
+# =>     64	#   u      user                                            #
+# =>     65	#   X      exifid                                          #
+# =>     66	#   z      filesize                                        #
+# =>     67	#   Z      filesize                                        #
+# =>     68	############################################################
+# =>     69	
+# =>     70	
+# =>     71	cmds-dir test/duf/tests20151006
+# =>     72	
+# =>     73	
+# =>     74	format-prefix-files-tree=#%5c%06M%c#%4c%06&%c%3s=%6c%-4Sm%c%1s%P
+# =>     75	format-prefix-dirs-tree=%23s%P
+# =>     76	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>     77	format-dirs-tree=@-- [%I] %f\n
+# =>     78	
+# =>     79	# format-files-list=%q.%Q.%w.%#. %6M#%6& =%-4Sm  %f %4s%8z  %m / %tm / %tx
+# =>     80	format-files-list=%3#.%3w. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%f%115p| %tx %e X%X,%a
+# =>     81	# format-files-list=%3#.%3w. #%-6M#%-6& =%-4Sm %m %R%f%115p%1_%12Z %tm/%tx %e X%X
+# =>     82	format-dirs-list=- %f ---------%_-------\t\t %r
+# =>     83	
+# =>     84	
+# =>     85	use-format=3
+# =>     86	format-tree-files=%f
+# =>     87	format-tree-files=%f%20p%4s%8z  %m / %tm / %tx %e
+# =>     88	format-tree-files=%7c%f%20p%c%4s%8z  %m / %tm / %tx %e
+# =>     89	format-tree-dirs=%f
+# =>     90	format-tree-dirs=[%I] %f
+# =>     91	format-tree-dirs=[%I] %f
+# =>     92	
+# =>     93	format-list-files=%3#.%3w. %f %@ %. =%-4Sm =%-4Sx
+# =>     94	format-list-files=%3#.%3w. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a
+# =>     95	format-list-files=%3#.%3w. #%-6M#%-6&#%-6H =%-2Sm =X%-2Sx =%-2Ss %8Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a
+# =>     96	format-list-files=%3#.%3w. #%-6M#%-6& =%-4Sm %r%f%115p%9Z %Tm/%tx %e X%X,%a
+# =>     97	format-list-files=%3#.%3w. #%-6M#%-6& =%-4Sm %R%f%115p%9Z %Tm/%tx %e X%X,%a
+# =>     98	
+# =>     99	format-list-dirs=%f
+# =>    100	format-list-dirs=- %f ---------%_-------\t\t %r
+# =>    101	format-list-dirs=- %f ---------%_-------\t\t %r
+# =>    102	format-list-dirs=- %f ---------%_-------\t\t %r
+# =>    103	
+# =>    104	
+# =>    105	history-file=test-history.txt
+# =>    106	
+# =>    107	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    108	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>    109	# trace-stderr
+# =>    110	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>    111	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>    112	# open-db
+# =>    113	
+# =>    114	# output-header=Wowoowowow
+# =>    115	output-header-tty=c[?1000l[?25h
+# =>    116	# disable-memusage
+# =>    117	# verbose 1
+# =>    118	trace-any=0
+# =>    119	trace-stderr
+# =>    120	trace-temp
+# =>    121	output-fun-width=30
+# =>    122	# uni-scan => obsolete
+# =>    123	# sccbs
+# =>    124	
+# =>    125	# noopenat
+# =>    126	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>    127	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>    128	# db-name=test${MSH_SHN_BASHPID}
+# =>    129	db-name=test${MSH_SHN_LAUNCHPID}
+# =>    130	
+# =>    131	db-name=test25561
+# =>    132	db-name=testing
+# =>    133	db-adm-name=adm
+# =>    134	db-temp-name=temp
+# =>    135	db-selected-name=selected
+# =>    136	
+# =>    137	db-subdir=?${+db-name}
+# =>    138	
+# =>    139	############################################################
+# =>    140	#   ~      suffix                                          #
+# =>    141	#   _      underline                                       #
+# =>    142	#   .      sha1sum                                         #
+# =>    143	#   @      md5sum                                          #
+# =>    144	#   &      dataid                                          #
+# =>    145	#   #      seq_leaf                                        #
+# =>    146	#   a      camera                                          #
+# =>    147	#   A      camera                                          #
+# =>    148	#   c      color                                           #
+# =>    149	#   D      ndirs                                           #
+# =>    150	#   e      mime                                            #
+# =>    151	#   E      mimeid                                          #
+# =>    152	#   f      filename                                        #
+# =>    153	#   F      nfiles                                          #
+# =>    154	#   g      group                                           #
+# =>    155	#   h      depth                                           #
+# =>    156	#   H      sha1id                                          #
+# =>    157	#   I      dirid                                           #
+# =>    158	#   m      mimeid                                          #
+# =>    159	#   M      md5id                                           #
+# =>    160	#   n      nlink                                           #
+# =>    161	#   N      nameid                                          #
+# =>    162	#   O      inode                                           #
+# =>    163	#   p      move to position                                #
+# =>    164	#   P      prefix                                          #
+# =>    165	#   q      seq_node                                        #
+# =>    166	#   Q      seq                                             #
+# =>    167	#   r      realpath                                        #
+# =>    168	#   R      relative realpath (relative to 'top level')     #
+# =>    169	#   s      << space >>                                     #
+# =>    170	#   S      nsame_md5                                       #
+# =>    171	#   t      tm,tc,ta: mtime                                 #
+# =>    172	#   T         - " -                                        #
+# =>    173	#   u      user                                            #
+# =>    174	#   X      exifid                                          #
+# =>    175	#   z      filesize                                        #
+# =>    176	#   Z      filesize                                        #
+# =>    177	############################################################
+# =>    178	
+# =>    179	
+# =>    180	cmds-dir test/duf/tests20151006
+# =>    181	
+# =>    182	
+# =>    183	format-prefix-files-tree=#%5c%06M%c#%4c%06&%c%3s=%6c%-4Sm%c%1s%P
+# =>    184	format-prefix-dirs-tree=%23s%P
+# =>    185	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>    186	format-dirs-tree=@-- [%I] %f\n
+# =>    187	
+# =>    188	# format-files-list=%q.%Q.%#. %6M#%6& =%-4Sm  %f %4s%8z  %m / %tm / %tx\n
+# =>    189	format-files-list=%3#. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%f%115p| %tx %e X%X,%a\n
+# =>    190	# format-files-list=%3#. #%-6M#%-6& =%-4Sm %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>    191	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>    192	
+# =>    193	
+# =>    194	use-format=3
+# =>    195	format-tree-files=%f\n
+# =>    196	format-tree-files=%f%20p%4s%8z  %m / %tm / %tx %e\n
+# =>    197	format-tree-files=%7c%f%20p%c%4s%8z  %m / %tm / %tx %e\n
+# =>    198	format-tree-dirs=%f\n
+# =>    199	format-tree-dirs=[%I] %f\n
+# =>    200	format-tree-dirs=[%I] %f\n
+# =>    201	
+# =>    202	format-list-files=%3#. %f %@ %. =%-4Sm =%-4Sx\n
+# =>    203	format-list-files=%3#. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a\n
+# =>    204	format-list-files=%3#. #%-6M#%-6&#%-6H =%-2Sm =X%-2Sx =%-2Ss %8Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a\n
+# =>    205	format-list-files=%3#. #%-6M#%-6& =%-4Sm %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>    206	
+# =>    207	format-list-dirs=%f\n
+# =>    208	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    209	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    210	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    211	
+# =>    212	
+# =>    213	history-file=test-history.txt
+# =>    214	
+# =>    215	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    216	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>    217	# trace-stderr
+# =>    218	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>    219	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>    220	# open-db
+# =>    221	
+# =>    222	# output-header=Wowoowowow
+# =>    223	output-header-tty=c[?1000l[?25h
+# =>    224	# disable-memusage
+# =>    225	# verbose 1
+# =>    226	trace-any=0
+# =>    227	trace-stderr
+# =>    228	trace-temp
+# =>    229	output-fun-width=30
+# =>    230	# uni-scan => obsolete
+# =>    231	sccbs
+# =>    232	
+# =>    233	# noopenat
+# =>    234	# db-directory=$MSHDIRS_CONF_DIR_ZOC_NEW/duf_db
+# =>    235	db-directory=$MSHDIRS_DIR/lib/duf_db/
+# =>    236	# db-name=test${MSH_SHN_BASHPID}
+# =>    237	db-name=test${MSH_SHN_LAUNCHPID}
+# =>    238	
+# =>    239	db-name=test25561
+# =>    240	db-name=testing
+# =>    241	db-adm-name=adm
+# =>    242	db-temp-name=temp
+# =>    243	db-selected-name=selected
+# =>    244	
+# =>    245	db-subdir=?${+db-name}
+# =>    246	
+# =>    247	############################################################
+# =>    248	#   ~      suffix                                          #
+# =>    249	#   _      underline                                       #
+# =>    250	#   .      sha1sum                                         #
+# =>    251	#   @      md5sum                                          #
+# =>    252	#   &      dataid                                          #
+# =>    253	#   #      seq_leaf                                        #
+# =>    254	#   a      camera                                          #
+# =>    255	#   A      camera                                          #
+# =>    256	#   c      color                                           #
+# =>    257	#   D      ndirs                                           #
+# =>    258	#   e      mime                                            #
+# =>    259	#   E      mimeid                                          #
+# =>    260	#   f      filename                                        #
+# =>    261	#   F      nfiles                                          #
+# =>    262	#   g      group                                           #
+# =>    263	#   h      depth                                           #
+# =>    264	#   H      sha1id                                          #
+# =>    265	#   I      dirid                                           #
+# =>    266	#   m      mimeid                                          #
+# =>    267	#   M      md5id                                           #
+# =>    268	#   n      nlink                                           #
+# =>    269	#   N      nameid                                          #
+# =>    270	#   O      inode                                           #
+# =>    271	#   p      move to position                                #
+# =>    272	#   P      prefix                                          #
+# =>    273	#   q      seq_node                                        #
+# =>    274	#   Q      seq                                             #
+# =>    275	#   r      realpath                                        #
+# =>    276	#   R      relative realpath (relative to 'top level')     #
+# =>    277	#   s      << space >>                                     #
+# =>    278	#   S      nsame_md5                                       #
+# =>    279	#   t      tm,tc,ta: mtime                                 #
+# =>    280	#   T         - " -                                        #
+# =>    281	#   u      user                                            #
+# =>    282	#   X      exifid                                          #
+# =>    283	#   z      filesize                                        #
+# =>    284	#   Z      filesize                                        #
+# =>    285	############################################################
+# =>    286	
+# =>    287	
+# =>    288	cmds-dir test/duf/tests20151006
+# =>    289	
+# =>    290	
+# =>    291	format-prefix-files-tree=#%5c%06M%c#%4c%06&%c%3s=%6c%-4Sm%c%1s%P
+# =>    292	format-prefix-dirs-tree=%23s%P
+# =>    293	format-files-tree=@-- %f%4s%8z  %m / %tm / %tx %e\n
+# =>    294	format-dirs-tree=@-- [%I] %f\n
+# =>    295	
+# =>    296	# format-files-list=%q.%Q.%#. %6M#%6& =%-4Sm  %f %4s%8z  %m / %tm / %tx\n
+# =>    297	format-files-list=%3#. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%f%115p| %tx %e X%X,%a\n
+# =>    298	# format-files-list=%3#. #%-6M#%-6& =%-4Sm %m %R%f%115p%1_%12Z %tm/%tx %e X%X\n
+# =>    299	format-dirs-list=- %f ---------%_-------\t\t %r\n
+# =>    300	
+# =>    301	
+# =>    302	use-format=3
+# =>    303	format-tree-files=%f\n
+# =>    304	format-tree-files=%f%20p%4s%8z  %m / %tm / %tx %e\n
+# =>    305	format-tree-files=%7c%f%20p%c%4s%8z  %m / %tm / %tx %e\n
+# =>    306	format-tree-dirs=%f\n
+# =>    307	format-tree-dirs=[%I] %f\n
+# =>    308	format-tree-dirs=[%I] %f\n
+# =>    309	
+# =>    310	format-list-files=%3#. %f %@ %. =%-4Sm =%-4Sx\n
+# =>    311	format-list-files=%3#. #%-6M#%-6& =%-4Sm %m %12Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a\n
+# =>    312	format-list-files=%3#. #%-6M#%-6&#%-6H =%-2Sm =X%-2Sx =%-2Ss %8Z. %tm %R%7c%f%c%125p| %tx %e X%X,%a\n
+# =>    313	format-list-files=%3#. #%-6M#%-6& =%-4Sm %r%f%115p%9Z %Tm/%tx %e X%X,%a\n
+# =>    314	
+# =>    315	format-list-dirs=%f\n
+# =>    316	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    317	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    318	format-list-dirs=- %f ---------%_-------\t\t %r\n
+# =>    319	
+# =>    320	
+# =>    321	history-file=test-history.txt
+# =>    322	
+# =>    323	# bformat=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    324	bformat=depth,filesize,mode,mtime,seq,seq-leaf,seq-node,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,dirid,user,group,nameid,prefix
+# =>    325	# trace-stderr
+# =>    326	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>    327	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# =>    328	# open-db
+# =>    329	
+# =>    330	# output-header=Wowoowowow
+# =>    331	output-header-tty=c[?1000l[?25h
+# =>    332	trace-any=0
+# =>    333	trace-stdout
+# =>    334	trace-temp
+# =>    335	uni-scan
+# =>    336	
+# =>    337	# noopenat
+# =>    338	db-directory=test/duf
+# =>    339	
+# =>    340	db-name=temp.db
+# =>    341	db-adm-name=adm.db
+# =>    342	
+# =>    343	
+# =>    344	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    345	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    346	# trace-stderr
+# =>    347	# trace-file=@20150602.134058.trace-sql
+# =>    348	# trace-file=@human/trace/20150602.trace
+# =>    349	trace-any=0
+# =>    350	trace-stdout
+# =>    351	trace-temp
+# =>    352	uni-scan
+# =>    353	
+# =>    354	# noopenat
+# =>    355	db-directory=test/duf
+# =>    356	
+# =>    357	db-name=temp.db
+# =>    358	db-adm-name=adm.db
+# =>    359	
+# =>    360	
+# =>    361	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    362	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    363	# trace-stderr
+# =>    364	# trace-file=@20150602.134058.trace-sql
+# =>    365	# trace-file=@human/trace/20150602.trace
+# =>    366	trace-any=0
+# =>    367	trace-stdout
+# =>    368	trace-temp
+# =>    369	uni-scan
+# =>    370	
+# =>    371	# noopenat
+# =>    372	db-directory=test/duf
+# =>    373	
+# =>    374	db-name=temp.db
+# =>    375	db-adm-name=adm.db
+# =>    376	
+# =>    377	
+# =>    378	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    379	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    380	# trace-stderr
+# =>    381	# trace-file=@20150602.134058.trace-sql
+# =>    382	# trace-file=@human/trace/20150602.trace
+# =>    383	trace-any=0
+# =>    384	trace-stdout
+# =>    385	trace-temp
+# =>    386	uni-scan
+# =>    387	
+# =>    388	# noopenat
+# =>    389	db-directory=test/duf
+# =>    390	
+# =>    391	db-name=temp.db
+# =>    392	db-adm-name=adm.db
+# =>    393	
+# =>    394	
+# =>    395	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    396	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    397	# trace-stderr
+# =>    398	# trace-file=@20150602.134058.trace-sql
+# =>    399	# trace-file=@human/trace/20150602.trace
+# =>    400	trace-any=0
+# =>    401	trace-stdout
+# =>    402	trace-temp
+# =>    403	uni-scan
+# =>    404	
+# =>    405	# noopenat
+# =>    406	db-directory=test/duf
+# =>    407	
+# =>    408	db-name=temp.db
+# =>    409	db-adm-name=adm.db
+# =>    410	
+# =>    411	
+# =>    412	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    413	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    414	# trace-stderr
+# =>    415	# trace-file=@20150602.134058.trace-sql
+# =>    416	# trace-file=@human/trace/20150602.trace
+# =>    417	trace-any=0
+# =>    418	trace-stdout
+# =>    419	trace-temp
+# =>    420	uni-scan
+# =>    421	
+# =>    422	# noopenat
+# =>    423	db-directory=test/duf
+# =>    424	
+# =>    425	db-name=temp.db
+# =>    426	db-adm-name=adm.db
+# =>    427	
+# =>    428	
+# =>    429	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    430	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    431	# trace-stderr
+# =>    432	# trace-file=@20150602.134058.trace-sql
+# =>    433	# trace-file=@human/trace/20150602.trace
+# =>    434	trace-any=0
+# =>    435	trace-stdout
+# =>    436	trace-temp
+# =>    437	uni-scan
+# =>    438	
+# =>    439	# noopenat
+# =>    440	db-directory=test/duf
+# =>    441	
+# =>    442	db-name=temp.db
+# =>    443	db-adm-name=adm.db
+# =>    444	
+# =>    445	
+# =>    446	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    447	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    448	# trace-stderr
+# =>    449	# trace-file=@20150602.134058.trace-sql
+# =>    450	# trace-file=@human/trace/20150602.trace
+# =>    451	trace-any=0
+# =>    452	trace-stdout
+# =>    453	trace-temp
+# =>    454	uni-scan
+# =>    455	
+# =>    456	# noopenat
+# =>    457	db-directory=test/duf
+# =>    458	
+# =>    459	db-name=temp.db
+# =>    460	db-adm-name=adm.db
+# =>    461	
+# =>    462	
+# =>    463	# format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
+# =>    464	format=filesize,mode,mtime,seq-leaf,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,mime,nlink,dirid,dirid_space,user,group,nameid,prefix
+# =>    465	# trace-stderr
+# =>    466	# trace-file=@20150602.134058.trace-sql
+# =>    467	# trace-file=@human/trace/20150602.trace
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--drop-table' '--create-tables' '--create-database' '--db-name=owncloud_mega' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32' '--progress' '/home/mastar/Desktop/20160108/Camera_Uploads' '/home/space/owncloud/data/mastarink/files/Camera'
+# retcode:0
+# 20160117.145252 : 1453035172.067278868 ------------[r]--

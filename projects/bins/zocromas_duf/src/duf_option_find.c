@@ -13,6 +13,9 @@
 
 #define  DUF_NO_PREFIX "no-"
 
+#if 0 /* not used with new options system , see duf_option_clarify_new.c */
+
+
 /* return so called `longindex` */
 /* name + xtended_array => extended ; duf_noption_xfind */
 static const duf_longval_extended_t *
@@ -252,3 +255,4 @@ duf_soption_xfind_at_xarr( const char *string, const duf_longval_extended_t * xa
     *pr = rpr;
   return extended;
 }
+#endif

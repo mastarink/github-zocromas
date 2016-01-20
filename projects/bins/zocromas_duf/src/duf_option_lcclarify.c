@@ -22,6 +22,8 @@
 #include "duf_option_lcclarify.h"
 /* ###################################################################### */
 
+#if 0 /* not used with new options system , see duf_option_clarify_new.c */
+
 /*
  * return 
  *               =0  for normal options
@@ -109,3 +111,4 @@ SR( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const c
   ER( OPTIONS, lcoption_clarify, int longindex, duf_option_code_t codeval, const char *optargg, duf_option_stage_t istage,
       duf_option_source_t source );
 }
+#endif

@@ -1,0 +1,12 @@
+/home/mastar/Desktop/20160108/Camera_Uploads
+/home/space/owncloud/data/mastarink/files/Camera
+/home/space/sambaspace/2016/y
+/home/space/sambaspace/2016/sdcard
+
+run  --drop-table --create-tables --create-database   --db-name=owncloud_mega_zip   -dufR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress /home/mastar/Desktop/20160108/Camera_Uploads /home/space/owncloud/data/mastarink/files/Camera  /home/space/sambaspace/2016/y 
+
+run   --db-name=owncloud_mega_zip   -dufR  --evaluate-sccb=mime,exif --progress /home/mastar/Desktop/20160108/Camera_Uploads /home/space/owncloud/data/mastarink/files/Camera  /home/space/sambaspace/2016/y 
+
+run --db-name=owncloud_mega_zip    -dRuf   --same-sha1=1  --evaluate-sccb=tree /
+run --db-name=owncloud_mega_zip    -dRuf   --same-sha1=1  --evaluate-sccb=listing /
+

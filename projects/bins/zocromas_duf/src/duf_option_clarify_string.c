@@ -16,6 +16,7 @@
 #include "duf_option_clarify_string.h"
 /* ###################################################################### */
 
+#if 0 /* not used with new options system , see duf_option_clarify_new.c */
 
 /* look xtable for cmd from string and exec if found */
 /* string + extended_array => find + clarify */
@@ -137,3 +138,4 @@ duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_st
              mas_error_name_i( r ) );
   DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }
+#endif

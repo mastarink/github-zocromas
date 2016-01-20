@@ -108,7 +108,7 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
       mas_free( msg );
     }
 
-#if 0  /* 1:old clarify; 0:new clarify; see also duf_option_clarify_batch.c 20160115.170518 */
+#if 0  /* 1:old clarify; 0:new clarify; see also duf_option_clarify_batch.c.... ; 20160115.170518 */
     CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE( CLI ) );
 #else
     mas_cargvc_t *carg;

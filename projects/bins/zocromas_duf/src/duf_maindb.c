@@ -571,14 +571,17 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
           NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
           DUF_UG_FLAG( linear ) );
 #  else
-      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), duf_cli_options_get_targv(  )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
+      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), duf_cli_options_get_targi( ia ), ( duf_ufilter_t * ) NULL /* take pu from config */ ,
           NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
           DUF_UG_FLAG( linear ) );
 #  endif
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
       /* DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
+      DUF_TRACE( options, 0, "@@@@@before all options for %s(loop) stage; '%s'", duf_optstage_name( DUF_OPTION_STAGE_LOOP ),
+                 duf_cli_options_get_targi( ia ) );
       CR( all_options, DUF_OPTION_STAGE_LOOP, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-      DUF_TRACE( options, 0, "@@@@@after all options for %s(loop) stage", duf_optstage_name( DUF_OPTION_STAGE_LOOP ) );
+      DUF_TRACE( options, 0, "@@@@@after all options for %s(loop) stage; '%s'", duf_optstage_name( DUF_OPTION_STAGE_LOOP ),
+                 duf_cli_options_get_targi( ia ) );
     }
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );

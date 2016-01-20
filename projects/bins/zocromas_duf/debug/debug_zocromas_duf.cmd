@@ -10,14 +10,13 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 
-watch global_status.pdilist
-watch global_status.pdilist->next
 
 
 # commands 1
 # print duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname[0]
 # end
 
+b duf_dh.c:258
 
 # display &(duf_config->scn.pdi->pathinfo.levinfo[duf_config->scn.pdi->pathinfo.depth].itemname)
 # display duf_config->scn.pdi->num_idstatements

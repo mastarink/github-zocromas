@@ -16,6 +16,10 @@
 #include "duf_option_descr.h"
 /* ###################################################################### */
 
+/* TODO to new option system , see duf_option_clarify_new.c
+ * use soption_xclarify_new_at_stdx with specific `duf_xclarifier_t clarifier`
+ *
+ * */
 
 /* -= by duf_option_code_t codeval =- */
 static const char *

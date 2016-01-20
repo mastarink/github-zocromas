@@ -10,10 +10,11 @@
  * 4. action: ...
  * */
 
-/* TODO not used with duf_option_clarify_new.c */
+/* TODO  */
+#if 0 /* not used with new options system , see duf_option_clarify_new.c */
 int duf_soption_xclarify_at_stdx( const char *string, char vseparator, duf_option_stage_t istage, int all_matched, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
-
+#endif
 
 
 #endif

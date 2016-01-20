@@ -92,9 +92,16 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
+
+/* 
+ * TODO 20160118.164635
+ *  1. filedata need to put file counter into paths table
+ *  2. filenames to use it as counter!
+ *  currently filenames counts childs dir, therefore doesn't scan files is there are no child dirs
+ * */   
 #ifdef DUF_USE_CTE
            .cte =               /* */
-           "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
+           "W? ITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
            " ( "                /* */
            "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
            "   WHERE parentid=:topDirID " /* */

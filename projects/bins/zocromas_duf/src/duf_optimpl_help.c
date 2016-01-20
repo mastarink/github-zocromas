@@ -695,6 +695,23 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --help-set=%%  	- %s", " -= \"\" =-" );
 
 
+  DUF_PRINTF( 0, "========================= as for 20160120.160108 ============" );
+  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database  --db-name=owncloud_mega_zip "
+              " -dufR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress "
+              " /home/mastar/Desktop/20160108/Camera_Uploads "
+              " /home/space/owncloud/data/mastarink/files/Camera "
+              " /home/space/sambaspace/2016/y " " /home/space/sambaspace/2016/sdcard " " 	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip   -dufR  --evaluate-sccb=mime,exif --progress "
+              " /home/mastar/Desktop/20160108/Camera_Uploads "
+              " /home/space/owncloud/data/mastarink/files/Camera "
+              " /home/space/sambaspace/2016/y " " /home/space/sambaspace/2016/sdcard " "  	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "  run --db-name=owncloud_mega_zip    -dRuf   --same-sha1=1  --evaluate-sccb=listing /  	- %s", " -= \"\" =-" );
+
+  DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip --linear --std-leaf-set=4   -df  --evaluate-sccb=listing "
+              " /home/space/sambaspace/2016/y/ " " --use-format=4  	- %s", " -= \"std-leaf-set=4\" =-" );
+
+  DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip --linear --std-leaf-set=4   -df  --evaluate-sccb=listing "
+              " /home/ " " --use-format=4    	- %s", " -= \"same-groups almost shows (automatically)\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

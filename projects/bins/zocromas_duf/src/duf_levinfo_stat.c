@@ -30,6 +30,7 @@ DUF_LEVINFO_F_UP( int, if_statat_dh )
 /* *INDENT-ON*  */
 
 /* 20150904.114634 */
+/* may open upper level */
 int
 duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 {
@@ -53,7 +54,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 
     if ( d > 0 )
     {
-      DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) );
+      DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) ); /* may open pdhuplev->dfd */
       assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     }
     assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );

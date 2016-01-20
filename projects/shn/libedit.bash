@@ -16,7 +16,7 @@ shn_gvimer_plus_fuuid ()
     local fline=$1
     shift
     if [[ $fline -eq 0 ]] ; then unset fline ; fi 
-    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
+#20160118.112059    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_resident ()
@@ -28,7 +28,7 @@ shn_gvimer_plus_resident ()
     local fline=$1
     shift
     if [[ $fline -eq 0 ]] ; then unset fline ; fi 
-    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
+#20160118.112059    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_uuid ()
@@ -268,7 +268,7 @@ shn_gvimer_plus_mased ()
   if [[ $file =~ ^(.*):(.*)$ ]] ; then
     a=${BASH_REMATCH[1]}
     b=${BASH_REMATCH[2]}
-    shn_msg "name parts a:$a; b:$b"
+#20160118.112059    shn_msg "name parts a:$a; b:$b"
     if [[ $a =~ ^[[:digit:]]+$ ]] ; then
       file=$b
       fline=$a
@@ -276,33 +276,33 @@ shn_gvimer_plus_mased ()
       file=$a
       fline=$b
     fi
-    shn_msg "$file -- $fline"
+#20160118.112059    shn_msg "$file -- $fline"
   fi
   if ! [[ $file == *.* ]] ; then
     local -a afileq
     local -a afline
-    shn_msg "Looking for function '$file'"
+#20160118.112059    shn_msg "Looking for function '$file'"
 #   fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ mod/ )
     local finddirs
     if [[ -d src ]] ; then finddirs="${finddirs:+$finddirs }src/" ; fi
     if [[ -d mod ]] ; then finddirs="${finddirs:+$finddirs }mod/" ; fi
-shn_msg "find at $finddirs"
+#20160118.112059shn_msg "find at $finddirs"
     if afileq=`shn_find_c_mastar_function $file $finddirs` ; then
-      shn_msg "Found function $file : ${afileq[@]}"
+#20160118.112059      shn_msg "Found function $file : ${afileq[@]}"
       flinef=$(   grep -n "^$file\>(" "${afileq[@]}")
       fline=${fline:-${flinef%:*}}
       file=${afileq[0]}
     elif afileq=($( grep -rl --inc='*.[ch]' "#\s*define\>\s\+$file\>" $finddirs )) ; then
-      shn_msg "Found define $file : ${afileq[@]}"
+#20160118.112059      shn_msg "Found define $file : ${afileq[@]}"
       afline=($(grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}"))
       flinef=$( grep -n "#\s*define\>\s\+$file\>" "${afileq[@]}")
       fline=${fline:-${flinef%:*}}
       file=${afileq[0]}
     fi
-    shn_msg "file='$file' fline:$fline flinef:'$flinef'"
+#20160118.112059    shn_msg "file='$file' fline:$fline flinef:'$flinef'"
   fi
   typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
-  shn_msg "typf=$typf for '$file'"
+#20160118.112059  shn_msg "typf=$typf for '$file'"
   shn_dbgmsg "gvimer_plus_mased 2 typf:$typf"
   if [[ "$file" == */* ]]; then
       filef=$file
@@ -316,7 +316,7 @@ shn_msg "find at $finddirs"
 	  shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found '$filef'"
       fi
   fi
-  shn_msg "filef='$filef' for file='$file' fline:$fline"
+#20160118.112059  shn_msg "filef='$filef' for file='$file' fline:$fline"
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
   local rfile=`/usr/bin/realpath $filef`
   shn_dbgmsg "rfile:$rfile" 
@@ -367,7 +367,7 @@ shn_gvimer_plus ()
     if [[ $mased_dir ]] && [[ -d $mased_dir ]] && [[ $localvim_dir ]] && [[ -d $localvim_dir ]] ; then
         shn_dbgmsg "gvimer $LINENO $@"
         if [[ "$@" ]]; then
-	  shn_msg "Looking for $@"
+#20160118.112059	  shn_msg "Looking for $@"
             shn_dbgmsg "gvimer $LINENO $@"
             shn_gvimer_plus_mased $@ && return 0
             shn_gvimer_plus_nomased   $@ && return 0

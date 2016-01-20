@@ -66,17 +66,13 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
 }
 
 unsigned long long
-duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, */ int need_id, int *pr )
+duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int rpr = 0;
   unsigned long long dataid = 0;
 
-  /* const struct stat *pst_file = NULL; */
-
   DEBUG_START(  );
 
-  /* pst_file = duf_levinfo_stat( pdi ); */
-  /* if ( pst_file ) */
   {
     int changes = 0;
 
@@ -144,7 +140,6 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
   /* }                                      */
   if ( pr )
     *pr = rpr;
-  /* DUF_TRACE( select, 0, "%llu", dataid ); */
   assert( !need_id || dataid );
   DEBUG_ENDULL( dataid );
   return dataid;

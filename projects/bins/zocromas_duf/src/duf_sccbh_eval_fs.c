@@ -40,7 +40,7 @@ duf_sccbh_eval_fs_with_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_s
     {
       sccbh->current_scanner = scanner;
       DOR( r, ( scanner ) ( NULL /* pstmt */ , PDI ) );
-      assert( sccbh->current_node_type == DUF_NODE_FS);
+      assert( sccbh->current_node_type == DUF_NODE_FS );
       if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, scanstage, NULL /* pstmt */ , scanner, DUF_NODE_FS, r );
     }
@@ -65,6 +65,8 @@ duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNU
 /* --> */
   DOR( r, duf_levinfo_godown( PDI, de->d_name, nt ) );
   {
+    /* assert(duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt )); */
+    /* T( "SCANNER: %d : %s", duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ? 1 : 0, duf_uni_scan_action_title( SCCB ) ); */
     DOR( r, duf_sccbh_eval_fs_with_scanner_here( scanstage, pstmt_unused, sccbh, duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ) );
   }
 /* <-- */
@@ -172,7 +174,7 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT ); /* TODO neeless here */
+    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT ); /* TODO neeless here */ /* may open (upper level) */
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     /* assert( duf_levinfo_dfd( PDI ) ); */
