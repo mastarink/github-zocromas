@@ -77,7 +77,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDFIELD "=fd.mimeid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL /*                     */ " AS sh ON (sh." DUF_SQL_IDFIELD "=fd.sha1id) ", /* */
    .filter = DUF_SQL_UFILTER_BINDINGS, /* */
-   .order = "sh.dupsha1cnt DESC,sha1id", /* */
+   .order = "sh.dupsha1cnt ASC,sha1id", /* */
    .matcher = NULL,
    /* To select ALL files under path
      WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)
