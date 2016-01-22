@@ -5,7 +5,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_context.h"
+/* #include "duf_levinfo_context.h" */
 #include "duf_levinfo_credel.h"
 
 #include "duf_li_credel.h"
@@ -16,21 +16,12 @@
 
 #include "duf_pathinfo_credel.h"
 #include "duf_pathinfo_ref.h"
+#include "duf_sccb_scanstage.h"
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
 #include "duf_pathinfo.h"
 /* ###################################################################### */
-
-int
-duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
-{
-  int d;
-
-  assert( pi );
-  d = pi->levinfo ? duf_li_calc_depth( pi->levinfo ) : 0;
-  return d;
-}
 
 int
 duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
@@ -72,22 +63,21 @@ duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd
 
   DEBUG_ENDR( r );
 }
+
 void
-duf_pi_levinfo_clear_d( duf_pathinfo_t * pi, int d )
+duf_pi_clear_d( duf_pathinfo_t * pi, int d )
 {
   assert( pi );
   duf_li_clear( &pi->levinfo[d] );
 }
 /* *INDENT-OFF*  */
-DUF_PATHINFO_VF( void, levinfo_clear )
-DUF_PATHINFO_VF_UP( void, levinfo_clear )
+DUF_PATHINFO_VF( void, clear )
+DUF_PATHINFO_VF_UP( void, clear )
 /* *INDENT-ON*  */
 
 void
-duf_pi_levinfo_clear_all( duf_pathinfo_t * pi )
+duf_pi_clear_all( duf_pathinfo_t * pi )
 {
   assert( pi );
   duf_li_clear_alln( pi->levinfo, pi->maxdepth );
 }
-
-

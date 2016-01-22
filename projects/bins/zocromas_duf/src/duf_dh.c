@@ -183,7 +183,6 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     if ( ry > 0 )
     {
       pdhandle->dfd = ry;
-      fprintf( stderr, "@@@@ openat %d", pdhandle->dfd );
       pdhandle->serial = ++open_serial;
       DUF_TRACE( fs, 5, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
 
@@ -255,7 +254,6 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     if ( ry >= 0 )
     {
       pdhandle->dfd = ry;
-      fprintf( stderr, "@@@@ open %d\n", pdhandle->dfd );
       pdhandle->serial = ++open_serial;
       DUF_TRACE( fs, 5, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DOR( r, duf_stat_dh( pdhandle, path ) );
@@ -264,7 +262,7 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     {
       if ( errno == ENOENT )
       {
-        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT, "No such entry %s", path );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT,  "No such entry %s", path );
       }
       else
       {
@@ -367,8 +365,8 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
         DUF_TEST_R( r );
       }
-      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", DUF_CONFIGG( dh.nopen ), DUF_CONFIGG( dh.nclose ),
-                 DUF_CONFIGG( dh.nopen ) - DUF_CONFIGG( dh.nclose ), pdhandle->dfd );
+      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", DUF_CONFIGG( dh.nopen ), DUF_CONFIGG( dh.nclose ), DUF_CONFIGG( dh.nopen ) - DUF_CONFIGG( dh.nclose ),
+                 pdhandle->dfd );
       DUF_CONFIGW( dh.nclose )++;
     }
     else
@@ -379,7 +377,6 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
     DUF_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
-    fprintf( stderr, "@@@ close %d\n", pdhandle->dfd );
   }
   DEBUG_ENDR( r );
 }
@@ -388,6 +385,7 @@ int
 duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   DEBUG_STARTR( r );
+
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );

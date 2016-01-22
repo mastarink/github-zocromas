@@ -212,7 +212,7 @@ duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   DUF_TRACE( scan, 9, "LEAF %s", duf_levinfo_path( PDI ) );
   {
     /*@ 1. go down + dbopenat */
-    DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, DUF_NODE_LEAF /* node_type */  ) );
+    DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, sccbh, DUF_NODE_LEAF /* node_type */  ) );
     DUF_TRACE( scan, 9, "(%s) LEAF down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 

@@ -104,10 +104,10 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
 #ifndef DUF_NO_NUMS
-	   ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
 #ifndef DUF_NO_RNUMS
-	   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -115,16 +115,16 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            .selector2 =         /* */
            " FROM      " DUF_SQL_TABLES_PATHS_FULL "             AS pt " /* */
 #ifndef DUF_NO_NUMS
-	   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
-	   ,
+           ,
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
 #ifndef DUF_NO_RNUMS
            .filter = " rnfiles > 0 " /* */
 #endif
-          },
+           },
   .final_sql_seq = &final_sql,
 };
 
@@ -241,16 +241,13 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
     {
       magic = magic_open( MAGIC_MIME | MAGIC_PRESERVE_ATIME );
       DUF_TRACE( mime, 0, " opened mime %s ", magic ? " OK " : " FAIL " );
-      if ( 1 )
-      {
-        duf_pdi_set_context( pdi, magic );
-        duf_pdi_set_context_destructor( pdi, mime_destructor );
-      }
-      else
-      {
-        duf_levinfo_set_context_up( pdi, magic );
-        duf_levinfo_set_context_up_destructor( pdi, mime_destructor );
-      }
+#if 0
+      duf_levinfo_set_context_up( pdi, magic );
+      duf_levinfo_set_context_up_destructor( pdi, mime_destructor );
+#else
+      duf_pdi_set_context( pdi, magic );
+      duf_pdi_set_context_destructor( pdi, mime_destructor );
+#endif
     }
     DOR( r, magic_load( magic, NULL ) );
 

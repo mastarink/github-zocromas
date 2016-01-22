@@ -5,7 +5,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_context.h"
+/* #include "duf_levinfo_context.h" */
 #include "duf_levinfo_credel.h"
 
 #include "duf_li_credel.h"
@@ -31,7 +31,7 @@ duf_pi_levinfo_delete( duf_pathinfo_t * pi )
 #if 0
     duf_li_clear_n( pi->levinfo, pi->maxdepth );
 #else
-    duf_pi_levinfo_clear_all( pi );
+    duf_pi_clear_all( pi );
 #endif
     mas_free( pi->levinfo );
     pi->levinfo = NULL;
@@ -45,6 +45,28 @@ duf_pi_init_level_d( duf_pathinfo_t * pi, const char *itemname, unsigned long lo
 
   li = duf_pi_ptr_d( pi, d );
   duf_li_init( li, itemname, dirid, node_type );
+}
+
+/* 20160120.190820 */
+void
+duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+{
+  assert( pi );
+  assert( d >= 0 );
+  assert( pi->levinfo );
+
+  duf_pi_clear_d( pi, d );
+
+  if ( d >= 0 /* pdi->opendir */  )
+  {
+    duf_levinfo_t *pli;
+
+    assert( !pi->levinfo[d].itemname );
+    pli = &pi->levinfo[d];
+
+    duf_li_dbinit( pli, pstmt, node_type, d );
+    DUF_TRACE( levinfo, 10, "levinfo openated %s; dfd:%d", pi->levinfo[d].itemname, pli->lev_dh.dfd );
+  }
 }
 
 int

@@ -5,7 +5,7 @@
 # unset command_not_found_handle 
 # export MSH_SHN_LIBWORK_LOADED=`datemt`
 
-for lib in tools project shn zocserver zocgrep edit ; do
+for lib in tools project shn zocserver zocgrep edit uuid wraped nomased inedit loedit ednew findedit ; do
 # shn_msg "Loading lib $lib ..." >&2
   if [[ -L shn ]] && [[ -f ${MSH_SHN_DIR:-shn}/lib${lib}.bash ]] && source ${MSH_SHN_DIR:-shn}/lib${lib}.bash
   then

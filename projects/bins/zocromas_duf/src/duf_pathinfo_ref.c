@@ -5,7 +5,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_context.h"
+/* #include "duf_levinfo_context.h" */
 #include "duf_levinfo_credel.h"
 
 #include "duf_li_credel.h"
@@ -27,9 +27,9 @@ duf_pi_ptr_d( const duf_pathinfo_t * pi, int d )
 {
   assert( pi );
   /* assert( d >= 0 ); */
-  assert( pi->levinfo );
+  /* assert( pi->levinfo ); */
 
-  return pi && ( d >= 0 && d <= ( int ) pi->maxdepth ) ? &pi->levinfo[d] : NULL;
+  return pi && ( d >= 0 && d <= ( int ) pi->maxdepth ) && pi->levinfo ? &pi->levinfo[d] : NULL;
 }
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC_REF( duf_levinfo_t , ptr )
@@ -111,6 +111,7 @@ DUF_PATHINFO_FC_TOP( const char *, path )
 /* *INDENT-ON*  */
 
 DUF_PATHINFO_3GET( duf_node_type_t, node_type, node_type );
+DUF_PATHINFO_3GET_REF( void, context, context );
 
 /* 20150904.122510 */
 const char *
@@ -153,6 +154,7 @@ duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q )
 /* *INDENT-OFF*  */
 DUF_PATHINFO_4GET( int, dfd, lev_dh.dfd )
 /* *INDENT-ON*  */
+
 
 
 
@@ -278,16 +280,16 @@ duf_pi_maxdepth( const duf_pathinfo_t * pi )
   return pi ? pi->maxdepth : 0;
 }
 
-duf_levinfo_t *
-duf_pi_levinfo( const duf_pathinfo_t * pi )
-{
-  return pi ? pi->levinfo : NULL;
-}
-
 int
 duf_pi_depth( const duf_pathinfo_t * pi )
 {
   return pi ? pi->depth : 0;
+}
+
+duf_levinfo_t *
+duf_pi_levinfo( const duf_pathinfo_t * pi )
+{
+  return pi ? pi->levinfo : NULL;
 }
 
 int
@@ -299,3 +301,5 @@ duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 DUF_PATHINFO_FC( int, deltadepth )
 DUF_PATHINFO_FC_UP( int, deltadepth )
 /* *INDENT-ON*  */
+
+

@@ -42,6 +42,7 @@ unsigned long long duf_pi_nameid( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_nameid_up( const duf_pathinfo_t * pi );
 */
 
+
 unsigned long long duf_pi_items_files_d( const duf_pathinfo_t * pi, int d );
 unsigned long long duf_pi_items_files( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_items_files_up( const duf_pathinfo_t * pi );

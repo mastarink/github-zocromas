@@ -4,9 +4,6 @@
 #  include "duf_levinfo_types.h"
 
 
-int duf_pi_is_good_depth_d( const duf_pathinfo_t * pdi, int delta, int frecursive, int flinear, int d );
-int duf_pi_is_good_depth( const duf_pathinfo_t * pdi, int delta, int frecursive, int flinear);
-
 int duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d ) __attribute__ ( ( warn_unused_result ) );
 int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta ) __attribute__ ( ( warn_unused_result ) );
 
