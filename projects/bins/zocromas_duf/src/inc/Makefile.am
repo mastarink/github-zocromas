@@ -30,7 +30,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_levinfo.h duf_levinfo_init.h duf_levinfo_dbinit.h duf_levinfo_context.h duf_levinfo_credel.h duf_levinfo_count.h duf_levinfo_openclose.h duf_levinfo_stat.h \
 	duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_types.h duf_levinfo_updown.h \
 	duf_pathinfo_credel.h duf_pathinfo.h duf_pathinfo_depth.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
-	duf_maindb_info.h duf_maindb.h \
+	duf_maindb_info.h duf_maindb.h duf_maindb_options.h \
 	duf_maintenance.h duf_maintenance_options.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_defs.h duf_option_descr.h \

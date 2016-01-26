@@ -17,19 +17,6 @@
 #include "duf_options.h"
 /* ###################################################################### */
 
-/* SR(OPTIONS, all_stages) */
-SR( OPTIONS, treat_option_stage, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )
-{
-#if 0
-  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
-#else
-  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
-  CR( all_options, istage, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive );
-  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-#endif
-
-ER( OPTIONS, treat_option_stage, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )}
-
 SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive )
 {
@@ -54,10 +41,9 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
   DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
   DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
 #endif
-  extern duf_config_t *duf_config;
+ extern duf_config_t *duf_config;
 
-  T( "trace out:%p (%p) %d", duf_config->opt.trace.output.out, stdout,
-     ( ( unsigned long ) duf_config->opt.trace.output.out == ( unsigned long ) stdout ) );
+        T( "trace out:%p (%p) %d", duf_config->opt.trace.output.out, stdout , ((unsigned long)duf_config->opt.trace.output.out== (unsigned long)stdout));
 
   DUF_TRACE( temp, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
   DUF_TRACE( options, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );

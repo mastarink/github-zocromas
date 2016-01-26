@@ -4,6 +4,9 @@ sfind duf.h
 tab sfind duf_maindb.c
 sfind duf_maindb.h
 
+tab sfind duf_maindb_options.c
+sfind duf_maindb_options.h
+
 tab sfind duf_maindb_info.c
 sfind duf_maindb_info.h
 
