@@ -41,10 +41,11 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
  * */
 int
 duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                        __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
+                      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
 {
-  DEBUG_STARTR( r );
+  /* extern duf_config_t *duf_config; */
 
+  DEBUG_STARTR( r );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_AOPTIONS" ) );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_ZOPTIONS" ) );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_OPTIONS" ) );

@@ -217,7 +217,7 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_content2( duf_stmnt_t * pstmt,  duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
@@ -228,7 +228,8 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
 
   if ( DUF_NOERROR( r ) )
   {
-    const char *mime = NULL;
+    char *mime = NULL;
+    char *mime_plus = NULL;
 
     magic_t magic = NULL;
 
@@ -239,7 +240,7 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
 
     if ( !magic )
     {
-      magic = magic_open( MAGIC_MIME | MAGIC_PRESERVE_ATIME );
+      magic = magic_open(  /* MAGIC_MIME | */ MAGIC_PRESERVE_ATIME );
       DUF_TRACE( mime, 0, " opened mime %s ", magic ? " OK " : " FAIL " );
 #if 0
       duf_levinfo_set_context_up( pdi, magic );
@@ -251,8 +252,19 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
     }
     DOR( r, magic_load( magic, NULL ) );
 
-    mime = magic_descriptor( magic, duf_levinfo_dfd( pdi ) );
-    DUF_TRACE( mime, 0, " opened mime %s : %s", magic ? " OK " : " FAIL ", mime );
+    {
+      /* magic_setflags(magic,MAGIC_MIME_TYPE ); */
+      /* magic_setflags(magic, MAGIC_MIME ); */
+    }
+
+    magic_setflags( magic, MAGIC_PRESERVE_ATIME );
+    mime_plus = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
+    /* DUF_TRACE( mime, 0, " opened mime %s : %s ---", magic ? " OK " : " FAIL ", mime_plus ); */
+
+    magic_setflags( magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
+    mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
+    
+    DUF_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 
     if ( mime )
     {
@@ -302,6 +314,8 @@ dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, *
       }
       /* DUF_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
+    mas_free( mime );
+    mas_free( mime_plus );
   }
   DEBUG_ENDR( r );
 }

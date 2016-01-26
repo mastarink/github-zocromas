@@ -147,8 +147,8 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
   return byteptr;
 }
 
- int
-duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int noo )
+int
+duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int noo, duf_option_source_t source DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -465,11 +465,12 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
          * */
       case DUF_OPTION_VTYPE_FILE:
         DUF_TRACE( options, 70, "vtype FILE" );
+        /* T( "@############ %d :: %s :: %s #############", extended->vtype, extended->o.name, duf_optsource_name(source) ); */
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
         {
-          DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
+          DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s) : %d", extended->o.name, extended->call.value.u );
           DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */

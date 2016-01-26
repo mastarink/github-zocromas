@@ -7,6 +7,15 @@ sfind libproject.bash
 
 tab sfind libedit.bash
 
+tab sfind libednew.bash
+sfind libwraped.bash
+sfind libnomased.bash
+sfind libuuid.bash
+sfind libloedit.bash
+sfind libinedit.bash
+sfind libfindedit.bash
+
+
 tab sfind librun.bash
 sfind libshn.bash
 sfind libtools.bash

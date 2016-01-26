@@ -43,7 +43,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     if ( extended->calltype )
     {
       nogen = 1;
-      DOR( r, duf_xoption_clarify_typed_call( extended, optargg, istage, noo ) );
+      DOR( r, duf_xoption_clarify_typed_call( extended, optargg, istage, noo,source ) );
 
       /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )
@@ -54,7 +54,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     }
     if ( !nogen )
     {
-      DOR( r, duf_xoption_clarify_typed_gen( extended, optargg, istage, noo ) );
+      DOR( r, duf_xoption_clarify_typed_gen( extended, optargg, istage, noo,source ) );
     }
   }
   else

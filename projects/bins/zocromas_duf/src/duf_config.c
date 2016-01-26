@@ -83,7 +83,7 @@ duf_cfg_create( void )
 
   /* DUF_CFGW( cfg, opt.trace.options ) = 11; */
   /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
-  /* DUF_CFGW( cfg, opt.trace.temp ) += 1; 20160113.115143 */
+  DUF_CFGW( cfg, opt.trace.temp ) += 2;
 
   cfg->scn.pdi = duf_pdi_create( "selected" );
   assert( cfg->scn.puz );

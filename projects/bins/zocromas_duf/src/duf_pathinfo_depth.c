@@ -43,7 +43,7 @@ duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, int fr
     int rgd = 0;
 
     /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
-    DUF_TRACE( temp, 3, "@%d: check depth  %s -  %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
+    DUF_TRACE( temp, 30, "@%d: check depth  %s -  %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
 
 
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
@@ -192,7 +192,7 @@ duf_pi_is_good_depth_d( const duf_pathinfo_t * pi, int delta, int frecursive, in
     rd = d - duf_pi_maxdepth( pi ) < delta; /* d - pathinfo.maxdepth < delta */
     DUF_TRACE( temp, 6, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pi_maxdepth( pi ), delta );
   }
-  DUF_TRACE( temp, 3, "@@rd:%d max:%d; rel(%d):%d", rd, duf_pi_maxdepth( pi ), d, duf_pi_deltadepth_d( pi, d ) );
+  DUF_TRACE( temp, 30, "@@rd:%d max:%d; rel(%d):%d", rd, duf_pi_maxdepth( pi ), d, duf_pi_deltadepth_d( pi, d ) );
   if ( flinear )
     rd = 1;
   else if ( rd && !frecursive /* && duf_pi_allow_dirs( pi ) */  )

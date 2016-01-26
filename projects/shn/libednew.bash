@@ -3,7 +3,7 @@ shn_gvimer_plus_bin_nt ()
     local a c='-o'
     for a in "$@" ; do c+=" '$a'" ; done
     [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
-    echo "{${MSHCMD_GVIMC:=/usr/bin/gvim} $c}" >&2
+#   echo "{${MSHCMD_GVIMC:=/usr/bin/gvim} $c}" >&2
     eval "${MSHCMD_GVIMC:=/usr/bin/gvim} $c"
 }
 shn_gvimer_plus_fuuid_nt ()
@@ -29,7 +29,7 @@ shn_gvimer_plus_resident_nt ()
     shift
     if [[ $fline -eq 0 ]] ; then unset fline ; fi 
 #20160118.112059    shn_msg "@@" shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
-#    shn_msg "$FUNCNAME: [$file]"
+#    shn_msg "$FUNCNAME: [$file] fuuid:$fuuid"
     shn_gvimer_plus_bin_nt --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_filtyp ()
@@ -48,7 +48,7 @@ shn_gvimer_plus_filtyp ()
   for typ in ${!edfile_typs_re[*]} ; do
     if [[ $filid =~ ${edfile_typs_re[$typ]} ]] ; then
       ytyp=$typ
-      echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
+#     echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
       echo -n $ytyp
       return 0
     fi
@@ -85,7 +85,7 @@ shn_gvimer_plus_mased_file_here_nt ()
   shift
   local rfile=$1
   shift
-#      shn_msg "0 R : $rfile"
+# shn_msg "0 R : $rfile"
   local fpath typf afileq funcid fline edpath p way='undefined' resident masedf fuuid newfile rr
   local -a afpath afpath_src arfile
   if [[ $filid =~ ^([[:digit:]]+)\:(.*)$ ]] ; then
@@ -95,27 +95,29 @@ shn_gvimer_plus_mased_file_here_nt ()
     filid=${BASH_REMATCH[1]}
     fline=${BASH_REMATCH[2]}
   fi
-#  shn_msg "1 $FUNCNAME:$LINENO: filid here: $filid"
+# shn_msg "1 $FUNCNAME:$LINENO: filid here: $filid; rfile:$rfile;"
   if ! typf=$( shn_gvimer_plus_filtyp "${filid}" )  \
   		&& afileq=`shn_find_c_mastar_function "$filid" ${edfile_dirs[src]}` ; then
     funcid=$filid
     typf=src
     rfile="$afileq"
-#      shn_msg "1 R : $rfile"
+#   shn_msg "1 R : $rfile"
     filid=$(basename $afileq)
   elif afileq=`shn_find_c_mastar_def "$filid" ${edfile_dirs[src]}` ; then
     typf=src
     rfile="$afileq"
-#      shn_msg "2 R : $rfile"
+#   shn_msg "2 R : $rfile"
     filid=$(basename $afileq)
   fi
-#  shn_msg "2 $FUNCNAME:$LINENO: filid here: $filid"
+# shn_msg "2 $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
   if [[ $typf ]] ; then
     eval "afpath=(${edfile_dirs[$typf]})"
 #   edpath="${afpath[@]}" ; edpath=${edpath// /,}
     fpath='' ; edpath=''
     for p in ${afpath[@]} ; do
       if [[ -d $p ]] ; then
+#       shn_msg "- P : $p"
+	if ! [[ $p =~ =\/$ ]] ; then p="$p/" ; fi
         fpath=${fpath}${fpath:+' '}$p
 	edpath=${edpath}${edpath:+','}$p
       fi
@@ -123,11 +125,11 @@ shn_gvimer_plus_mased_file_here_nt ()
     if ! [[ "$rfile" ]] ; then
       if [[ -f "$filid" ]] ; then
         rfile="$filid"
-#        shn_msg "3 R : $rfile"
-      elif [[ $filid ]] ; then
-        arfile=(`find $fpath -name "$filid"`)
+#       shn_msg "3 R : $rfile"
+      elif [[ $fpath ]] && [[ $filid ]] ; then
+        arfile=(`find -L $fpath -name "$filid"`)
 	rfile=${arfile[0]}
-#	shn_msg "4 R : $rfile"
+#	shn_msg "4 R : $rfile ($fpath @ $filid)"
       fi
     fi
     if [[ $rfile ]] && [[ -f $rfile ]] ; then
@@ -146,14 +148,16 @@ shn_gvimer_plus_mased_file_here_nt ()
     res=0
   else
     way='notyp'
+#    shn_msg "notyp 1: $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
     if [[ "$filid" ]] && [[ -f "$filid" ]] ; then
       rfile=`/usr/bin/realpath "$filid"`
 #	shn_msg "6 R : $rfile"
-    else
+    elif ! [[ -f $rfile ]] ; then
       rfile=`/usr/bin/realpath "$filid"`
-#      shn_msg "7 R : $rfile"
+#       shn_msg "7 R : $rfile"
       newfile=$fuuid
     fi
+#    shn_msg "notyp 2: $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
 #   shn_msg "3 $FUNCNAME:$LINENO: filid here: $filid"
     
     if resident=$(shn_gvimer_plus_anywhere $rfile) ; then
@@ -161,6 +165,7 @@ shn_gvimer_plus_mased_file_here_nt ()
 #     fuuid=$resident
     fi
   fi
+#   shn_msg "8 R : $rfile"
   if [[ $fline -eq 0 ]]  ; then unset fline ; fi 
   fuuid=${fuuid:-$fuuid0}
   fuuid=${fuuid^^}
@@ -197,10 +202,10 @@ shn_gvimer_plus_mased_file_here_nt ()
   if [[ $rfile ]]        ; then msg="$msg rfile: [$rfile];"    ; fi
 #    shn_msg "4 $FUNCNAME:$LINENO: filid here: $filid; $rfile"
   if [[ $resident ]] ; then
-#    shn_msg "A : $msg"
-    shn_gvimer_plus_resident_nt $rfile $resident $fline
+#     shn_msg "A : $msg (rfile:$rfile; resident: $resident)"
+    shn_gvimer_plus_resident_nt "$rfile" "$resident" "$fline"
   elif [[ $typf ]] && [[ $masedf ]]; then
-#    shn_msg "B : $msg"
+#     shn_msg "B : $msg"
     shn_gvimer_plus_bin_nt --servername "$fuuid" \
         		${masedf:+--cmd "let masedfile=\"$masedf\""} \
         		${fline:+--cmd "let masedline=\"$fline\""} \
@@ -209,14 +214,14 @@ shn_gvimer_plus_mased_file_here_nt ()
         		${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""}
   elif [[ $rfile ]] ; then
     # nomased || notype
-#   shn_msg "C : $msg"
-#    shn_msg "CF : $rfile"
+#    shn_msg "C : $msg"
+#     shn_msg "CF : $rfile"
     shn_gvimer_plus_fuuid_nt "$rfile" $fuuid $fline
   else 
     rfile="`pwd`/$filid"
 #	shn_msg "8 R : $rfile"
-#   shn_msg "D : $msg"
-#    shn_msg "DF : $rfile"
+#    shn_msg "D : $msg"
+#     shn_msg "DF : $rfile"
     shn_gvimer_plus_fuuid_nt "$rfile" $fuuid $fline
   fi
   return $res
@@ -232,12 +237,20 @@ shn_gvimer_plus_mased_file_nt ()
     filid=$(basename "$filid")  
     tdir=$(dirname "$rfile")
   fi
-#  shn_msg "$FUNCNAME: filid: $filid; @ $tdir;"
+#  shn_msg "$FUNCNAME: 1 filid: $filid; @ $tdir;"
   if ! [[ $tdir ]] ; then
+#    shn_msg "$FUNCNAME: 2 filid: $filid; @ $tdir;"
     shn_gvimer_plus_mased_file_here_nt "$filid"
   elif [[ $MSH_SHN_PROJECT_DIR ]] && plen=${#MSH_SHN_PROJECT_DIR} && [[ ${tdir:0:$plen} == $MSH_SHN_PROJECT_DIR ]] ; then
+#    shn_msg "$FUNCNAME: 3 filid: $filid; @ $tdir;"
     shn_gvimer_plus_mased_file_here_nt "$filid" $rfile
     res=$?
+  elif [[ $MSH_SHN_PROJECTS_DIR ]] && plen=${#MSH_SHN_PROJECTS_DIR} && [[ ${tdir:0:$plen} == $MSH_SHN_PROJECTS_DIR ]] ; then
+#    shn_msg "$FUNCNAME: 3a filid: $filid; @ $tdir;"
+    shn_gvimer_plus_mased_file_here_nt "$filid" $rfile
+    res=$?
+  else
+   : ; shn_msg "$FUNCNAME: 4 filid: $filid; @ $tdir; ($MSH_SHN_PROJECT_DIR) ($tdir)"
   fi
   return $res
 }

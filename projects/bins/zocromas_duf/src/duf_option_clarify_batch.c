@@ -5,6 +5,7 @@
 #include "duf_option_clarify_string.h"
 
 #include "duf_option_clarify_new.h"
+#include "duf_option_source.h"
 
 /* ###################################################################### */
 #include "duf_option_clarify_batch.h"
@@ -80,9 +81,10 @@ duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_op
 
 
 /* TODO */
-#if 0 /* 1:old clarify; 0:new clarify; see also duf_options_cli.c ....; 20160115.170514 */
+#if 0                           /* 1:old clarify; 0:new clarify; see also duf_options_cli.c ....; 20160115.170514 */
         DOR( r, duf_soption_xclarify_at_stdx( s, vseparator, istage, 0 /* all_matched */ , source ) );
 #else
+        /* T( "%s; source:%s", s, duf_optsource_name(source) ); */
         DORF( r, F2N( soption_xclarify_new_at_stdx_default ), s, NULL, NULL, vseparator, istage, source );
 #endif
       }
