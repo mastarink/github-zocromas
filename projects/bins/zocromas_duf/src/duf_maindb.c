@@ -42,7 +42,6 @@
 #include "sql_beginning_vacuum.h"
 #include "sql_beginning_create.h"
 
-#include "duf_maindb_options.h"
 
 /* ###################################################################### */
 #include "duf_maindb.h"
@@ -358,7 +357,7 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
           prev_pdis->next = pdis->next;
         else
           global_status.pdilist = pdis->next;
-        DUF_TRACE( temp, 2, "@unlink (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+        DUF_TRACE( temp, 20, "@unlink (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
         pdis->next = NULL;
       }
     }
@@ -407,198 +406,11 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
   DEBUG_ENDR( r );
 }
 
-static int DUF_UNUSED
-duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
-{
-  DEBUG_STARTR( r );
-#if 0
-  /* if ( argv ) */
-  {
-    char *sargv1, *sargv2;
-
-#  ifdef MAS_TRACING
-    int changes = 0;
-#  else
-    int DUF_UNUSED changes = 0;
-#  endif
-    sargv1 = mas_argv_string( argc, argv, 1 );
-    sargv2 = duf_restore_some_options( argv[0] );
-    DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-    DORF( r, duf_main_db_open, pdi );
-    {
-      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
-
-      DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-      DUF_SQL_BIND_S( Args, sargv1, r, pstmt );
-      DUF_SQL_BIND_S( restoredArgs, sargv2, r, pstmt );
-      DUF_SQL_STEP( r, pstmt );
-      DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-      DUF_SQL_END_STMT_NOPDI( r, pstmt );
-      /* if ( r == DUF_ERROR_SQL_NO_TABLE ) */
-      /*   r = 0;                           */
-    }
-    DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
-    mas_free( sargv2 );
-    mas_free( sargv1 );
-  }
-#endif
-  DEBUG_ENDR( r );
-}
-
-/* do necessary actions to perform tasks, formulated in duf_config global variable and ... for standard database
- *    - global variable duf_config must be created/inited and set
- * ***************************************************************************************
- * 1. build database path
- * 2. optionally call duf_config_show (see also duf_show_options call at duf_main)
- * 3. optionally remove existing database files (dangerous); (* to make sure it's before opening database *)
- * 4. call duf_sql_open to open database
- *   5. make necessary initial sql at database
- *   6. call duf_action to perform tasks
- *   7. optionally collect statistics from database ('info' option) by calling duf_info_from_db
- * 8. call duf_sql_close to close database
- * */
-int
-cb_do_interactive( void )
-{
-  return DUF_ACTG_FLAG( interactive );
-}
-
-const char *
-cb_prompt_interactive( void )
-{
-  static char rl_prompt[256 * 10] = "";
-
-  snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
-            duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-  return rl_prompt;
-}
-
-/*int
-duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )*/
 SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
 {
-  /* DEBUG_STARTR( r ); */
-
-  DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
-  DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
-#if 0
-  DUF_TRACE( options, 0, "@@@@@to do all options for all stages" );
-
-  /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
-
-  /* I. duf_all_options -- STAGE_PRESETUP */
-  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
-
-
-
-#  if 0
-  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_PRESETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
-#  else
-  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
-
-  CR( all_options, DUF_OPTION_STAGE_PRESETUP, /* DUF_ACTG_FLAG( interactive ), */ cb_do_interactive, cb_prompt_interactive );
-  DUF_TRACE( options, 0, "@@@@@after all options for %s(presetup) stage", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
-  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-#  endif
-
-  /* II. duf_all_options -- STAGE_SETUP */
-  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( DUF_OPTION_STAGE_SETUP ) );
-
-#  if 0
-  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_SETUP, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
-#  else
-  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
-  CR( all_options, DUF_OPTION_STAGE_SETUP, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive );
-  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-#  endif
-  CR( config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
-  /* DUF_TEST_RX_START( r ); */
-  /* (* (* > *) DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), mas_error_name_i( r ) ); *) */
-  /* DUF_TEST_RX_END( r ); */
-
-#  if 0
-  if ( DUF_CONFIGG( cli.targ.argc ) > 0 )
-    DORF( r, duf_store_log, DUF_CONFIGG( cli.targ.argc ), DUF_CONFIGG( cli.targ.argv ) );
-#  endif
-
-
-
-#  if 0
-  /* to be removed as obsolete */
-  DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-#  else
-#    if 0
-  /* call of duf_pdi_init -- after duf_all_options( DUF_OPTION_STAGE_SETUP ), before duf_all_options, DUF_OPTION_STAGE_(FIRST|INTERACTIVE) */
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pu, NULL /* real_path */ , NULL /* sql_set */ ,
-                                        0 /* caninsert */ ,
-                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
-                                        1 /* opendir */  ) );
-#    else
-  /* DOR( r, duf_pdi_init_at_config(  ) ); */
-  CR( pdi_init_at_config );
-  /* assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) ); */
-
-#    endif
-
-
-
-  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-
-  /* III. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
-  DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
-  if ( DUF_ACTG_FLAG( interactive ) )
-  {
-    /* DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-    CR( all_options, DUF_OPTION_STAGE_INTERACTIVE, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-    DUF_TRACE( options, 0, "@@@@@after all options for %s(interactive) stage", duf_optstage_name( DUF_OPTION_STAGE_INTERACTIVE ) );
-  }
-  else
-  {
-    /* DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-    CR( all_options, DUF_OPTION_STAGE_FIRST, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-
-    DUF_TRACE( options, 0, "@@@@@after all options for %s(first) stage", duf_optstage_name( DUF_OPTION_STAGE_FIRST ) );
-
-
-#    if 0
-    for ( int ia = DUF_CONFIGG( cli.targ_offset ); QNOERR && ia < DUF_CONFIGG( cli.targ.argc ); ia++ )
-#    else
-    for ( int ia = duf_cli_options_get_targ_offset(  ); QNOERR && ia < duf_cli_options_get_targc(  ); ia++ )
-#    endif
-    {
-      /* DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL (* take pu from config *) , */
-      /*                                 NULL (* node_selector2 *) , 7 (* caninsert *) , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),         */
-      /*                                 DUF_UG_FLAG( linear ) ) );                                                                                     */
-#    if 0
-      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( cli.targ.argv )[ia], ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-          NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
-          DUF_UG_FLAG( linear ) );
-#    else
-      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), duf_cli_options_get_targi( ia ), ( duf_ufilter_t * ) NULL /* take pu from config */ ,
-          NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ), DUF_ACTG_FLAG( allow_dirs ),
-          DUF_UG_FLAG( linear ) );
-#    endif
-      DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-      /* DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP, DUF_ACTG_FLAG( interactive ) ); (* XXX XXX XXX XXX XXX XXX XXX XXX *) */
-      DUF_TRACE( options, 0, "@@@@@before all options for %s(loop) stage; '%s'", duf_optstage_name( DUF_OPTION_STAGE_LOOP ),
-                 duf_cli_options_get_targi( ia ) );
-      CR( all_options, DUF_OPTION_STAGE_LOOP, /* DUF_ACTG_FLAG( interactive ) , */ cb_do_interactive, cb_prompt_interactive ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-      DUF_TRACE( options, 0, "@@@@@after all options for %s(loop) stage; '%s'", duf_optstage_name( DUF_OPTION_STAGE_LOOP ),
-                 duf_cli_options_get_targi( ia ) );
-    }
-  }
-  DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
-#  endif
-#else
-  CR( treat_all_optstages, cb_do_interactive, cb_prompt_interactive );
-#endif
   if ( DUF_ACTG_FLAG( info ) )
-  {
-    /* DOR( r, duf_main_db_info(  ) ); */
     CR( main_db_info );
-  }
-  /* DORF( r, duf_main_db_close, DUF_CONFIGG( scn.pdi ), r ); (* [@] *) */
+  
   CR( main_db_close, DUF_CONFIGG( scn.pdi ), QERRIND ); /* [@] */
-  /* DEBUG_ENDR( r ); */
   ER( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED );
 }

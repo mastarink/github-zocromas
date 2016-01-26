@@ -63,5 +63,6 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
                duf_optstage_name( istage ) );
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   }
+
   DEBUG_ENDR( r );
 }

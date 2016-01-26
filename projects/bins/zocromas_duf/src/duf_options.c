@@ -26,24 +26,20 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
              cb_do_interactive ? cb_do_interactive(  ) : 0 );
 
 
-  /* assert( duf_config ); */
 #if 1
-  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 1, "@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 2, "@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 3, "@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 4, "@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 5, "@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 6, "@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 7, "@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 8, "@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 9, "@@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
-  DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 0, "@@@this is 0 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 1, "@@@@this is 1 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 2, "@@@@@this is 2 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 3, "@@@@@@this is 3 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 4, "@@@@@@@this is 4 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 5, "@@@@@@@@this is 5 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 6, "@@@@@@@@@this is 6 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 7, "@@@@@@@@@@this is 7 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 8, "@@@@@@@@@@@this is 8 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 9, "@@@@@@@@@@@@this is 9 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
+  DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
 #endif
- extern duf_config_t *duf_config;
-
-        T( "trace out:%p (%p) %d", duf_config->opt.trace.output.out, stdout , ((unsigned long)duf_config->opt.trace.output.out== (unsigned long)stdout));
 
   DUF_TRACE( temp, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
   DUF_TRACE( options, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );

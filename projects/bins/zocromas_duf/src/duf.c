@@ -64,6 +64,8 @@
 /* #include "duf_trace_defs.h" */
 #include "duf_experiment.h"
 
+#include "duf_maindb_options.h"
+
 /* ###################################################################### */
 #include "duf.h"
 /* ###################################################################### */
@@ -114,18 +116,7 @@ destructor_main( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  /* DEBUG_STARTR( r ); */
-
-#if 0
-  DOR_LOWERE( r, duf_all_options( DUF_OPTION_STAGE_DEBUG, DUF_ACTG_FLAG( interactive ) ), DUF_ERROR_OPTION_NOT_FOUND );
-#else
-  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
-
-  CR( all_options, DUF_OPTION_STAGE_DEBUG, /* DUF_ACTG_FLAG( interactive ), */ NULL, NULL );
-  DUF_TRACE( options, 0, "@@@@@after all options for %s(presetup) stage", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
-  DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );
-  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-#endif
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
 
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
@@ -141,6 +132,10 @@ SR( TOP, main_with_config, int argc, char **argv )
 #endif
   /* XXX XXX XXX XXX XXX XXX */
 
+  DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
+  DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
+  
+  CR( treat_all_optstages );
   CR( main_db, argc, argv );
 
   /* XXX XXX XXX XXX XXX XXX */
@@ -171,7 +166,6 @@ SR( TOP, main_with_config, int argc, char **argv )
   }
 #endif
 
-  /* DEBUG_ENDR( r ); */
   ER( TOP, main_with_config, int argc, char **argv );
 }
 
