@@ -36,8 +36,8 @@
 */
 
 #include <time.h>
-#include <signal.h>
-#include <unistd.h>
+/* #include <signal.h> */
+/* #include <unistd.h> */
 
 
 #include "duf_maintenance.h"
@@ -55,6 +55,8 @@
 
 
 #include "duf_option_stage.h"
+#include "duf_option_source.h"
+
 #include "duf_maindb.h"
 
 
@@ -134,7 +136,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
-  
+
   CR( treat_all_optstages );
   CR( main_db, argc, argv );
 
@@ -193,7 +195,39 @@ duf_main( int argc, char **argv )
 #endif
 
   TR( r );
+  {
+    FILE *f = NULL;
 
+    f = fopen( "options.tmp", "w" );
+    if ( f )
+    {
+      duf_option_stage_t stage = DUF_OPTION_STAGE_NONE;
+      duf_option_source_t source = {.sourcecode = DUF_OPTION_SOURCE_NONE };
+
+      for ( size_t iod = 0; iod < duf_config->aod.count; iod++ )
+      {
+        duf_option_data_t *pod;
+
+        pod = &duf_config->aod.pods[iod];
+        /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
+        if ( source.sourcecode != pod->source.sourcecode )
+          fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );
+        if ( stage != pod->stage )
+          fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
+        if ( pod->doindex >= 0 )
+        {
+          fprintf( f, "\t%c(%2d) %lu. --%s", ( pod->clarified ? '+' : ' ' ), pod->doindex, iod, pod->xfound.array[pod->doindex].xtended->o.name );
+          if ( pod->optarg )
+            fprintf( f, "='%s'", pod->optarg );
+        }
+        fprintf( f, "\t\t[%c(%2d) %lu. --%s", ( pod->clarified ? '+' : ' ' ), pod->doindex, iod, pod->name );
+        if ( pod->optarg )
+          fprintf( f, "='%s'", pod->optarg );
+        fprintf( f, "]\n" );
+      }
+      fclose( f );
+    }
+  }
   duf_config_delete(  );
   assert( !duf_config );
 

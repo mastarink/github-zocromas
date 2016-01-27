@@ -345,7 +345,7 @@ typedef struct
   size_t count_soft;
   size_t hard_index;
   size_t soft_index;
-  
+
   duf_found_extended_t *array;
 } duf_found_extended_array_t;
 
@@ -366,7 +366,16 @@ typedef struct
   int noo;
   duf_xclarifier_t clarifier;
   duf_found_extended_array_t xfound;
+  int doindex;
+  int clarified;
 } duf_option_data_t;
+
+typedef struct
+{
+  size_t size;
+  size_t count;
+  duf_option_data_t *pods;
+} duf_option_adata_t;
 
 
 #endif

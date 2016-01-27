@@ -17,6 +17,6 @@
  * */
 
 DR( OPTIONS, all_options, /* int argc, char *argv[], */ duf_option_stage_t istage, /* int is_interactive, */ duf_int_void_func_t cb_do_interactive,
-    duf_cpchar_void_func_t cb_prompt_interactive );
+    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod );
 
 #endif

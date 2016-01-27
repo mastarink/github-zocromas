@@ -71,6 +71,7 @@ duf_cfg_create( void )
     cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
     /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
     DUF_CFGWS( cfg, config_dir, mas_strdup( cfgdir ) );
+
   }
   DUF_CFGWSP( cfg, db.main.name, mas_strdup( "duf-main" ) );
   DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
@@ -120,6 +121,23 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->config_dir );
     cfg->config_dir = NULL;
 
+    {
+      for ( size_t iod = 0; iod < cfg->aod.count; iod++ )
+      {
+        duf_option_data_t *pod;
+
+        pod = &cfg->aod.pods[iod];
+        mas_free( pod->xfound.array );
+        pod->xfound.array = NULL;
+        mas_free( pod->name );
+        pod->name = NULL;
+        mas_free( pod->optarg );
+        pod->optarg = NULL;
+      }
+      mas_free( cfg->aod.pods );
+      cfg->aod.pods = NULL;
+      cfg->aod.size = cfg->aod.count = 0;
+    }
     mas_free( cfg->cmds_dir );
     cfg->cmds_dir = NULL;
 
@@ -248,7 +266,6 @@ duf_cfg_delete( duf_config_t * cfg )
       mas_free( cfg->opt.output.header_tty );
       cfg->opt.output.header_tty = NULL;
     }
-
     mas_free( cfg );
     cfg = NULL;
   }

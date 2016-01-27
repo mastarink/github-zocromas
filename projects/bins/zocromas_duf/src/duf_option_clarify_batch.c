@@ -23,7 +23,8 @@
 /* look all std xtables for cmd's separated with vseparator from string and exec if found */
 /* duf_boption_xclarify_at_stdx */
 int
-duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
+duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim,
+                              duf_option_adata_t * paod )
 {
   DEBUG_STARTR( r );
 
@@ -85,7 +86,7 @@ duf_boption_xclarify_at_stdx( char vseparator, duf_option_stage_t istage, duf_op
         DOR( r, duf_soption_xclarify_at_stdx( s, vseparator, istage, 0 /* all_matched */ , source ) );
 #else
         /* T( "%s; source:%s", s, duf_optsource_name(source) ); */
-        DORF( r, F2N( soption_xclarify_new_at_stdx_default ), s, NULL, NULL, vseparator, istage, source );
+        DORF( r, F2N( soption_xclarify_new_at_stdx_default ), s, ( const char * ) NULL, ( const char * ) NULL, vseparator, istage, source, paod );
 #endif
       }
       mas_free( s );

@@ -16,7 +16,7 @@
 
 
 static int
-duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
+duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_option_adata_t * paod )
 {
   DEBUG_STARTR( r );
 
@@ -25,7 +25,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
   eo = getenv( envvarname );
 
   DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name( istage ), envvarname, eo );
-  DOR( r, duf_boption_xclarify_at_stdx( '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0 ) );
+  DOR( r, duf_boption_xclarify_at_stdx( '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0, paod ) );
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
 
@@ -41,13 +41,13 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
  * */
 int
 duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ) )
+                      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod )
 {
   /* extern duf_config_t *duf_config; */
 
   DEBUG_STARTR( r );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_AOPTIONS" ) );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_ZOPTIONS" ) );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_OPTIONS" ) );
+  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_AOPTIONS",    paod  ) );
+  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_ZOPTIONS",    paod  ) );
+  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_OPTIONS",    paod  ) );
   DEBUG_ENDR( r );
 }

@@ -18,7 +18,7 @@
 /* ###################################################################### */
 
 SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
-    duf_cpchar_void_func_t cb_prompt_interactive )
+    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod )
 {
   /* DEBUG_STARTR( r ); */
 
@@ -50,30 +50,30 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
 #endif
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   {
-#define DUF_OPTSRCI( _xr, _name, _istage, _cb_do_interactive, _cb_prompt_interactive )  \
+#define DUF_OPTSRCI( _xr, _name, _istage, _cb_do_interactive, _cb_prompt_interactive, _paod )  \
   { \
     DUF_TRACE( options, 10, "@@@to do %s options; stage:%s(%d)", #_name, duf_optstage_name( _istage ), _istage ); \
     if ( QNOERR ) \
     { \
-      CR( source_ ## _name ## _parse, _istage, _cb_do_interactive, _cb_prompt_interactive ); \
+      CR( source_ ## _name ## _parse, _istage, _cb_do_interactive, _cb_prompt_interactive, _paod ); \
       _xr = QERRIND; \
     } \
     DUF_TRACE( options, 10, "@@@@@done %s options; %s:%d [%c]  (%d:%s)", \
 	#_name, #_xr, QERRIND, QERRIND > ' ' && QERRIND < 'z' ? QERRIND : '-', QERRIND, QERRNAME ); \
   }
-#define DUF_OPTSRC( _xr, _name, _istage )  \
-  DUF_OPTSRCI( _xr, _name, _istage, NULL, NULL )
+#define DUF_OPTSRC( _xr, _name, _istage, _paod )  \
+  DUF_OPTSRCI( _xr, _name, _istage, NULL, NULL, _paod )
 
-    DUF_OPTSRC( fr, incfg, istage );
-    DUF_OPTSRC( sr, incfg_stg, istage );
-    DUF_OPTSRC( er, env, istage ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
-    DUF_OPTSRC( or, cli, istage );
-    DUF_OPTSRC( isi, stdin, istage );
-    DUF_OPTSRC( ir, indirect, istage );
+    DUF_OPTSRC( fr, incfg, istage, paod );
+    DUF_OPTSRC( sr, incfg_stg, istage, paod );
+    DUF_OPTSRC( er, env, istage, paod ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+    DUF_OPTSRC( or, cli, istage, paod );
+    DUF_OPTSRC( isi, stdin, istage, paod );
+    DUF_OPTSRC( ir, indirect, istage, paod );
     /* if ( DUF_ACTG_FLAG( interactive ) ) */
     if ( cb_do_interactive && cb_do_interactive(  ) )
-      DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive );
-    DUF_OPTSRC( lr, incfg_last, istage );
+      DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod );
+    DUF_OPTSRC( lr, incfg_last, istage, paod );
 
 
 #ifdef MAS_TRACING
@@ -126,5 +126,5 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
     DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
   }
   /* DEBUG_ENDR_UPPER( QERRIND, DUF_ERROR_OPTION_NOT_FOUND ); */
-  ER( OPTIONS, duf_all_options, duf_option_stage_t istage, int is_interactive );
+  ER( OPTIONS, duf_all_options, duf_option_stage_t istage, int is_interactive , duf_option_adata_t * paod);
 }

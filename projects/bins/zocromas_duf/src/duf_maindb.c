@@ -319,7 +319,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
       pdi->next = global_status.pdilist;
       assert( !pdi->attached_copy );
       global_status.pdilist = pdi;
-      DUF_TRACE( temp, 3, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+      DUF_TRACE( temp, 20, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
     }
   }
   DEBUG_ENDR( r );

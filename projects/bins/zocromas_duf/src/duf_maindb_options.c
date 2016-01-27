@@ -59,14 +59,15 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
       CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive );
+      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */  );
     }
   }
   else
   {
-    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive );
+    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
+  T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) );
   ER( TOP, treat_option_stage, duf_option_stage_t istage );
 }
 
@@ -86,7 +87,7 @@ SR( TOP, treat_all_optstages )
   DUF_TRACE( options, 0, "@@@@@to do all options for all stages" );
 
   DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_PRESETUP  );
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_PRESETUP );
 
   DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( DUF_OPTION_STAGE_SETUP ) );
   CR( treat_option_stage_ne, DUF_OPTION_STAGE_SETUP );
@@ -98,12 +99,12 @@ SR( TOP, treat_all_optstages )
   DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
   if ( DUF_ACTG_FLAG( interactive ) )
   {
-    CR( treat_option_stage, DUF_OPTION_STAGE_INTERACTIVE  );
+    CR( treat_option_stage, DUF_OPTION_STAGE_INTERACTIVE );
   }
   else
   {
-    CR( treat_option_stage, DUF_OPTION_STAGE_FIRST  );
-    CR( treat_option_stage, DUF_OPTION_STAGE_LOOP  );
+    CR( treat_option_stage, DUF_OPTION_STAGE_FIRST );
+    CR( treat_option_stage, DUF_OPTION_STAGE_LOOP );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
 

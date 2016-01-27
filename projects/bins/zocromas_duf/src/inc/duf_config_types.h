@@ -65,6 +65,7 @@ typedef struct
   duf_status_dh_t dh;
   duf_itemtag_t tag;
   int dir_priority;
+  duf_option_adata_t aod;
 } duf_config_t;
 
 
