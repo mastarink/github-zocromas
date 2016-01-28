@@ -15,7 +15,7 @@ duf_optsource_name( duf_option_source_t source )
     [DUF_OPTION_SOURCE_DUFFILE] = "file",
     [DUF_OPTION_SOURCE_CFG] = "cfg",
     [DUF_OPTION_SOURCE_CLI] = "cli",
-    [DUF_OPTION_SOURCE_INTERACTIVE] = "interactive]",
+    [DUF_OPTION_SOURCE_INTERACTIVE] = "interactive",
     NULL
   };
   return ( source.sourcecode >= DUF_OPTION_SOURCE_MIN

@@ -319,7 +319,6 @@ duf_source_incfg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 20, "@@@@incfg options; stage:%s", duf_optstage_name( istage ) );
-  if ( istage <= DUF_OPTION_STAGE_SETUP )
     DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME, 0, paod ) );
   DUF_TRACE( options, 22, "@@@@incfg options done; stage:%s (%d:%s)", duf_optstage_name( istage ), r, mas_error_name_i( r ) );
 
@@ -376,7 +375,6 @@ duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 20, "@@@@incfg stg options; stage:%s", duf_optstage_name( istage ) );
-  if ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX )
   {
     char *bfilename;
     const char *sn;
@@ -405,7 +403,7 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
   static int done = 0;
 
   DUF_TRACE( options, 20, "@@@@stdin options; stage:%s", duf_optstage_name( istage ) );
-  if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  )
+  /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
   {
     if ( !done )
     {

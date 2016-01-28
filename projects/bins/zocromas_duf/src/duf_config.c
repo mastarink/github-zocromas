@@ -133,6 +133,8 @@ duf_cfg_delete( duf_config_t * cfg )
         pod->name = NULL;
         mas_free( pod->optarg );
         pod->optarg = NULL;
+        mas_free( pod->string_copy );
+        pod->string_copy = NULL;
       }
       mas_free( cfg->aod.pods );
       cfg->aod.pods = NULL;

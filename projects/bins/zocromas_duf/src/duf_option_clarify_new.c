@@ -17,15 +17,16 @@
 #include "duf_option_clarify_new.h"
 /* ###################################################################### */
 
-SR( OPTIONS, split_string_od, duf_option_data_t * pod DUF_UNUSED )
+
+SR( OPTIONS, split_string_od, duf_option_data_t * pod )
 {
-  char *barg = NULL;
-  char *endn = NULL;
+  const char *barg = NULL;
+  const char *endn = NULL;
   char *name = NULL;
   char *arg = NULL;
   char *string;
 
-  string = mas_strdup( pod->string );
+  string = mas_strdup( pod->string_copy );
   pod->has_arg = 0;
   switch ( pod->vseparator )
   {
@@ -70,7 +71,9 @@ SR( OPTIONS, split_string_od, duf_option_data_t * pod DUF_UNUSED )
   pod->name = name;
   pod->optarg = arg;
   /* T( "@0$$$$ n:%s; a:%s(%d:%d); s:%s -- (has_arg:%d)", pod->name, pod->optarg ? pod->optarg : "", pod->optarg ? 1 : 0, */
-  /*    ( pod->optarg && *( pod->optarg ) ) ? 1 : 0, pod->string, pod->has_arg );                                         */
+  /*    ( pod->optarg && *( pod->optarg ) ) ? 1 : 0, pod->string_copy, pod->has_arg );                                         */
+  for ( unsigned i = 0; i < strlen( string ); i++ )
+    string[i] = '@';
   mas_free( string );
   ER( OPTIONS, split_string_od, duf_option_data_t * pod );
 }
@@ -80,7 +83,7 @@ SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtend
   size_t alloc_step = 10;
   size_t index = 0;
 
-  /* T( "$$$$ SOFT:%d; n:%s; a:%s; s:%s -- o.n:%s (has_arg:%d) from %s", soft, pod->name, pod->optarg, pod->string, xtended->o.name, pod->has_arg, */
+  /* T( "$$$$ SOFT:%d; n:%s; a:%s; s:%s -- o.n:%s (has_arg:%d) from %s", soft, pod->name, pod->optarg, pod->string_copy, xtended->o.name, pod->has_arg, */
   /*    duf_optsource_name( pod->source ) );                                                                                                       */
 
   index = pod->xfound.count_hard + pod->xfound.count_soft;
@@ -220,23 +223,23 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
     else if ( pod->xfound.count_soft > 1 )
     {
       /* MULTI-ERROR : may show list to choose */
-      /* T( "@ERR %s", pod->string ); */
-      SERRM( OPTION_NEW_MULTIPLE, "'--%s' '--%s' (from %s)", pod->string, pod->name, duf_optsource_name( pod->source ) );
+      /* T( "@ERR %s", pod->string_copy ); */
+      SERRM( OPTION_NEW_MULTIPLE, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
     }
     else                        /* if ( pod->xfound.count_soft < 1 ) */
     {
       /* NOT-FOUND-ERROR */
-      /* T( "@ERR %s", pod->string ); */
-      SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string, pod->name, duf_optsource_name( pod->source ) );
+      /* T( "@ERR %s", pod->string_copy ); */
+      SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
     }
   }
   else
   {
     /* BAD-MULTI-ERROR : same command defined, needs fixing tables */
-    /* T( "@ERR %s", pod->string ); */
-    SERRM( OPTION_NEW_DUPLICATE, "'--%s' '--%s' (from %s)", pod->string, pod->name, duf_optsource_name( pod->source ) );
+    /* T( "@ERR %s", pod->string_copy ); */
+    SERRM( OPTION_NEW_DUPLICATE, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
   }
-  if ( QNOERR && pod->doindex >= 0 && pod->clarifier )
+  if ( QNOERR && pod->doindex >= 0 && pod->clarifier && pod->stage != DUF_OPTION_STAGE_BOOT )
   {
     /* T( "@Do it : (%c)%s", pod->xfound.array[doindex].noo ? '-' : '+', pod->xfound.array[doindex].xtended->o.name ); */
     {
@@ -245,7 +248,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
       oa = duf_string_options_expand( pod->optarg, '?' );
       CRV( ( pod->clarifier ), pod->xfound.array[pod->doindex].xtended, oa, pod->stage, pod->xfound.array[pod->doindex].xtable, pod->noo,
            pod->source );
-      pod->clarified = 1;
+      pod->clarified[pod->stage] = 1;
       mas_free( oa );
     }
   }
@@ -275,28 +278,134 @@ SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod );
 }
 
+const duf_option_data_t *
+duf_pod_from_paod_n( const duf_option_adata_t * paod, duf_option_stage_t basicstage, duf_option_source_t source, size_t index )
+{
+  const duf_option_data_t *pod = NULL;
+
+  pod = paod->pods + paod->source_index[basicstage][source.sourcecode] + index;
+
+  /* T( "@[%lu:%lu] %s/%s : %s (%s)", index, pod - paod->pods, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->string_copy, */
+  /*    pod->name );                                                                                                                                 */
+  return pod;
+}
+
+size_t
+duf_pod_stage_count( const duf_option_adata_t * paod, duf_option_stage_t istage )
+{
+  return istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX ? paod->stage_count[istage] : 0;
+}
+
+size_t
+duf_pod_source_count( const duf_option_adata_t * paod, duf_option_stage_t istage, duf_option_source_t source )
+{
+  return istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX && source.sourcecode >= DUF_OPTION_SOURCE_MIN
+        && source.sourcecode <= DUF_OPTION_SOURCE_MAX ? paod->source_count[istage][source.sourcecode] : 0;
+}
+
+const duf_option_data_t *
+duf_pod_from_paod( const duf_option_adata_t * paod, duf_option_stage_t basicstage, duf_option_stage_t istage, duf_option_source_t source )
+{
+  const duf_option_data_t *pod = NULL;
+
+  pod = duf_pod_from_paod_n( paod, basicstage, source, paod->source_count[istage][source.sourcecode] );
+  return pod;
+}
+
 SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name, const char *arg, duf_xclarifier_t clarifier, char vseparator,
-    duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod )
+    duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod, duf_option_adata_t * paod )
 {
   int pod_allocated = 0;
+  const duf_option_data_t *bootpod = NULL;
 
+  if ( paod )
+  {
+    if ( paod->last_stage != istage )
+    {
+      paod->stage_index[istage] = paod->count;
+      /* new stage */
+      /* T( "@%s => %s @ %s", duf_optstage_name( paod->last_stage ), duf_optstage_name( istage ), duf_optsource_name( source ) ); */
+      paod->last_stage = istage;
+    }
+    if ( paod->last_source.sourcecode != source.sourcecode )
+    {
+      paod->source_index[istage][source.sourcecode] = paod->count;
+      paod->last_source = source;
+    }
+    if ( paod->count < paod->size )
+    {
+      pod = &paod->pods[paod->count++];
+    }
+    /* T( "@@%9s: %lu string  (%s)'%s'/'%s'", duf_optstage_name( istage ), paod->stage_count[istage], duf_optsource_name( source ), string, name ); */
+    if ( istage > DUF_OPTION_STAGE_BOOT )
+    {
+      bootpod = duf_pod_from_paod( paod, DUF_OPTION_STAGE_BOOT, istage, source );
+      /* assert(0==strcmp()); */
+      if ( bootpod )
+      {
+        /* T( "@@%9s: %lu string  (%s)'%s'/'%s' =(%s)'%s'/'%s'", duf_optstage_name( istage ), paod->stage_count[istage], duf_optsource_name( source ), */
+        /*    string, name, duf_optsource_name( bootpod->source ), bootpod->string_copy, bootpod->name );                                              */
+        assert( ( string == NULL && bootpod->string_copy == NULL && 0 == strcmp( name, bootpod->name ) )
+                || 0 == strcmp( string, bootpod->string_copy ) );
+        assert( ( !string && !bootpod->string_copy ) || ( string && bootpod->string_copy && 0 == strcmp( string, bootpod->string_copy ) ) );
+        assert( ( string && !name ) || ( !name && !bootpod->name ) || ( name && bootpod->name && 0 == strcmp( name, bootpod->name ) ) );
+        assert( ( string && !name ) || ( !arg && !bootpod->optarg ) || ( arg && bootpod->optarg && 0 == strcmp( arg, bootpod->optarg ) ) );
+        assert( vseparator == bootpod->vseparator );
+        /* assert( istage == bootpod->stage ); */
+        assert( source.sourcecode == bootpod->source.sourcecode );
+        assert( clarifier == bootpod->clarifier );
+      }
+      else
+      {
+        assert( 0 );
+      }
+    }
+    else
+    {
+      /* assert( bootpod ); */
+    }
+  }
+  else
+  {
+    assert( 0 );
+  }
+
+  /* T( "@%s", paod->pods[0].string_copy ); */
   /* duf_option_data_t od = { 0 }; */
   if ( !pod )
   {
     pod = mas_malloc( sizeof( duf_option_data_t ) );
     pod_allocated = 1;
+    memset( pod, 0, sizeof( duf_option_data_t ) );
   }
-  memset( pod, 0, sizeof( duf_option_data_t ) );
-  pod->string = string;
-  pod->name = mas_strdup( name );
-  pod->optarg = mas_strdup( arg );
+  if (  /* bootpod || */ istage != DUF_OPTION_STAGE_BOOT )
+  {
+    assert( bootpod );
+    pod->string_copy = mas_strdup( bootpod->string_copy );
+    pod->name = mas_strdup( bootpod->name );
+    pod->optarg = mas_strdup( bootpod->optarg );
+    pod->source = bootpod->source;
+  }
+  else
+  {
+    pod->string_copy = mas_strdup( string );
+    pod->name = mas_strdup( name );
+    pod->optarg = mas_strdup( arg );
+    pod->source = source;
+  }
   pod->vseparator = vseparator;
   pod->clarifier = clarifier;
   pod->stage = istage;
-  pod->source = source;
 
-  if ( string && !pod->name )
-    CR( split_string_od, pod );
+
+  if ( pod->string_copy && !pod->name )
+  {
+    if ( !pod->string_split )
+    {
+      CR( split_string_od, pod );
+      pod->string_split = 1;
+    }
+  }
   else
     pod->has_arg = pod->optarg ? 1 : 0;
 
@@ -314,14 +423,16 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
   }
   pod = NULL;
   ER( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name, const char *arg, duf_xclarifier_t clarifier, char vseparator,
-      duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod );
+      duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod, duf_option_adata_t * paod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_stdx_default, const char *string, const char *name, const char *arg, char vseparator, duf_option_stage_t istage,
-    duf_option_source_t source, duf_option_adata_t * paod )
+SR( OPTIONS, soption_xclarify_new_at_stdx_default, const char *string, const char *name, const char *arg, char vseparator,
+    duf_option_stage_t istage, duf_option_source_t source, duf_option_adata_t * paod )
 {
   duf_option_data_t *pod = NULL;
 
+  /* T( "@last_stage: %s => %s (%s) %lu [%s:%s:%s]", duf_optstage_name( paod->last_stage ), duf_optstage_name( istage ), duf_optsource_name( source ), */
+  /*    paod->count, string, name, arg );                                                                                                              */
   if ( paod )
   {
     if ( !paod->size )
@@ -335,14 +446,12 @@ SR( OPTIONS, soption_xclarify_new_at_stdx_default, const char *string, const cha
       memset( paod->pods, 0, m );
       paod->count = 0;
     }
-
-    if ( paod->count < paod->size )
-    {
-      pod = &paod->pods[paod->count++];
-    }
   }
-  CR( soption_xclarify_new_at_stdx, string, name, arg, DUF_WRAPPED( duf_xoption_clarify ), vseparator, istage, source, pod );
-
+  CR( soption_xclarify_new_at_stdx, string, name, arg, DUF_WRAPPED( duf_xoption_clarify ), vseparator, istage, source, pod, paod );
+  paod->stage_count[istage]++;
+  paod->source_count[istage][source.sourcecode]++;
+  /* T( "@############### %s:%s : %lu:%lu", duf_optstage_name( istage ), duf_optsource_name( source ), paod->stage_count[istage], */
+  /*    paod->source_count[istage][source.sourcecode] );                                                                          */
   ER( OPTIONS, soption_xclarify_new_at_stdx_default, const char *string, const char *name, const char *arg, char vseparator,
       duf_option_stage_t istage, duf_option_source_t source, duf_option_adata_t * paod );
 }

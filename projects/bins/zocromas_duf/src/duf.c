@@ -118,6 +118,7 @@ destructor_main( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
+    CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
   CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
 
   DUF_TRACE( any, 1, "any test" );
@@ -216,11 +217,12 @@ duf_main( int argc, char **argv )
           fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
         if ( pod->doindex >= 0 )
         {
-          fprintf( f, "\t%c(%2d) %lu. --%s", ( pod->clarified ? '+' : ' ' ), pod->doindex, iod, pod->xfound.array[pod->doindex].xtended->o.name );
+          fprintf( f, "\t%c(%2d) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
+                   pod->xfound.array[pod->doindex].xtended->o.name );
           if ( pod->optarg )
             fprintf( f, "='%s'", pod->optarg );
         }
-        fprintf( f, "\t\t[%c(%2d) %lu. --%s", ( pod->clarified ? '+' : ' ' ), pod->doindex, iod, pod->name );
+        fprintf( f, "\t\t[%c(%2d) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod, pod->name );
         if ( pod->optarg )
           fprintf( f, "='%s'", pod->optarg );
         fprintf( f, "]\n" );

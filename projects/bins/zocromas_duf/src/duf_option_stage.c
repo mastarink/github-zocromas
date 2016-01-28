@@ -14,6 +14,7 @@ duf_optstage_name( duf_option_stage_t istage )
 {
   static const char *tail[] = {
     [DUF_OPTION_STAGE_NONE] = "none",
+    [DUF_OPTION_STAGE_BOOT] = "boot",
     [DUF_OPTION_STAGE_DEBUG] = "debug",
     [DUF_OPTION_STAGE_PRESETUP] = "presetup",
     [DUF_OPTION_STAGE_SETUP] = "setup",

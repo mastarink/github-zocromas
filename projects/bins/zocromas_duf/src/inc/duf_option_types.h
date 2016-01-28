@@ -42,7 +42,8 @@ typedef enum
 {
   DUF_OPTION_STAGE_NONE = 0,
   DUF_OPTION_STAGE_MIN = 1,
-  DUF_OPTION_STAGE_DEBUG = DUF_OPTION_STAGE_MIN,
+  DUF_OPTION_STAGE_BOOT = DUF_OPTION_STAGE_MIN,
+  DUF_OPTION_STAGE_DEBUG,
   DUF_OPTION_STAGE_PRESETUP,
   DUF_OPTION_STAGE_PRESET = DUF_OPTION_STAGE_PRESETUP,
   DUF_OPTION_STAGE_SETUP,
@@ -351,7 +352,9 @@ typedef struct
 
 typedef struct
 {
-  const char *string;
+  unsigned string_split:1;
+  /* const char *string; */
+  char *string_copy;
   char vseparator;
   duf_option_source_t source;
   duf_option_stage_t stage;
@@ -367,7 +370,7 @@ typedef struct
   duf_xclarifier_t clarifier;
   duf_found_extended_array_t xfound;
   int doindex;
-  int clarified;
+  unsigned clarified[DUF_OPTION_STAGE_MAX + 1];
 } duf_option_data_t;
 
 typedef struct
@@ -375,6 +378,12 @@ typedef struct
   size_t size;
   size_t count;
   duf_option_data_t *pods;
+  duf_option_stage_t last_stage;
+  duf_option_source_t last_source;
+  size_t stage_index[DUF_OPTION_STAGE_MAX + 1];
+  size_t stage_count[DUF_OPTION_STAGE_MAX + 1];
+  size_t source_index[DUF_OPTION_STAGE_MAX + 1][DUF_OPTION_SOURCE_MAX + 1];
+  size_t source_count[DUF_OPTION_STAGE_MAX + 1][DUF_OPTION_SOURCE_MAX + 1];
 } duf_option_adata_t;
 
 

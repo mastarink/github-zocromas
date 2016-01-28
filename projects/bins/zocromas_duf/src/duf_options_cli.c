@@ -153,6 +153,7 @@ SR( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage )
 
   if ( QNOERR && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
   {
+    T("@Why only DUF_OPTION_STAGE_SETUP %d", istage);
     DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
     CR( argv_clarify, duf_cli_options_get_targ(  ), carg, optind );
 

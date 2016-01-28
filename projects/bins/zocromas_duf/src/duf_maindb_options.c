@@ -22,6 +22,8 @@
 #include "duf_pdi.h"
 #include "duf_pdi_reinit.h"
 
+#include "duf_option_clarify_new.h"
+#include "duf_option_source.h"
 
 /* ###################################################################### */
 #include "duf_maindb_options.h"
@@ -31,6 +33,40 @@ static int
 cb_do_interactive( void )
 {
   return DUF_ACTG_FLAG( interactive );
+}
+
+void
+list_booted_option_source( duf_option_stage_t istage, duf_option_source_t source )
+{
+  if ( istage > DUF_OPTION_STAGE_BOOT )
+  {
+    const duf_option_adata_t *paod;
+
+    paod = DUF_CONFIGA( aod );
+    if ( duf_pod_source_count( paod, istage, source ) )
+      T( "@@@@@@%s:%s:source_count: %lu", duf_optstage_name( istage ), duf_optsource_name( source ), duf_pod_source_count( paod, istage, source ) );
+    for ( size_t npod = 0; npod < duf_pod_source_count( paod, istage, source ); npod++ )
+    {
+      const duf_option_data_t *pod DUF_UNUSED;
+
+      pod = duf_pod_from_paod_n( paod, DUF_OPTION_STAGE_BOOT, source, npod );
+      /* T( "@%lu. %p", npod, pod ); */
+    }
+  }
+}
+
+void
+list_booted_option_stage( duf_option_stage_t istage )
+{
+  /* if ( istage > DUF_OPTION_STAGE_BOOT ) */
+  {
+    duf_option_source_t source = { 0 };
+    for ( duf_option_source_code_t isource = DUF_OPTION_SOURCE_MIN; isource <= DUF_OPTION_SOURCE_MAX; isource++ )
+    {
+      source.sourcecode = isource;
+      list_booted_option_source( istage, source );
+    }
+  }
 }
 
 static const char *
@@ -46,6 +82,8 @@ cb_prompt_interactive( void )
 SR( TOP, treat_option_stage, duf_option_stage_t istage )
 {
   DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( istage ) );
+  /* TODO all (except INTERACTIVE) : call from paod, not real source */
+  T( "@%s", "TODO all (except INTERACTIVE) : call from paod, not real source" );
   if ( istage == DUF_OPTION_STAGE_LOOP )
   {
     for ( int ia = duf_cli_options_get_targ_offset(  ); QNOERR && ia < duf_cli_options_get_targc(  ); ia++ )
@@ -67,7 +105,9 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
     CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
-  T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) );
+  /* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
+
+  list_booted_option_stage( istage );
   ER( TOP, treat_option_stage, duf_option_stage_t istage );
 }
 
