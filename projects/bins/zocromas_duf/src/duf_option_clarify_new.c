@@ -471,10 +471,10 @@ SR( OPTIONS, soption_xclarify_new_booted_source, duf_option_stage_t istage, duf_
   size_t cntpod;
 
   cntpod = duf_pod_source_count( paod, DUF_OPTION_STAGE_BOOT, source );
-  T( "cntpod:%lu", cntpod );
+  DUF_TRACE(optsource,0, "@@@@@@@cntpod:%lu %s %s", cntpod, duf_optstage_name(istage), duf_optsource_name(source) );
 
   if ( cntpod )
-    T( "@@@@@@%s:%s:source_count: %lu", duf_optstage_name( istage ), duf_optsource_name( source ), cntpod );
+    DUF_TRACE(optsource,0, "@@@@@@%s:%s:source_count: %lu", duf_optstage_name( istage ), duf_optsource_name( source ), cntpod );
   if ( istage > DUF_OPTION_STAGE_BOOT )
   {
     for ( size_t npod = 0; npod < cntpod; npod++ )

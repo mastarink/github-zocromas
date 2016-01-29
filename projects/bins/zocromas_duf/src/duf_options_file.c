@@ -385,7 +385,7 @@ duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( optsource, 0, "source:%s", duf_optsourcecode_name( sourcecode ) );
+  DUF_TRACE( optsource, 0, "@@@  source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg stg options; stage:%s", duf_optstage_name( istage ) );
   {
     char *bfilename;
@@ -415,7 +415,7 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
   DEBUG_STARTR( r );
   static int done = 0;
 
-  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
+  DUF_TRACE( optsource, 0, "@@@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@stdin options; stage:%s", duf_optstage_name( istage ) );
   /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
   {
@@ -424,6 +424,8 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
       DUF_TRACE( options, 40, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
       if ( !isatty( STDIN_FILENO ) /* only when stdin is NOT tty */  )
       {
+ DUF_TRACE( optsource, 0, "@@@  !source:%s", duf_optsourcecode_name( sourcecode ) );
+
         DOR( r, duf_infile_options_at_stream( istage, stdin, DUF_OPTION_SOURCE( STDIN ), paod ) );
         done = 1;
       }

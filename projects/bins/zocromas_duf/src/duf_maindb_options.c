@@ -64,13 +64,13 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
       CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
-          0 && (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
+           (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
     }
   }
   else
   {
     CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
-        0 && (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
+         (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
   /* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
