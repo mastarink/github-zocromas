@@ -43,7 +43,7 @@ duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, int fr
     int rgd = 0;
 
     /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
-    DUF_TRACE( temp, 30, "@%d: check depth  %s -  %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
+    DUF_TRACE( levinfo, 30, "@%d: check depth  %s -  %s", duf_pi_depth( pi ), duf_pi_path( pi ), duf_pi_itemtruename( pi ) );
 
 
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
@@ -131,7 +131,7 @@ duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * 
   assert( pi );
 
   DOR( r, duf_pi_check_depth( pi, node_type, frecursive, flinear ) );
-  DUF_TRACE( temp, 5, "@@(%s) maxdepth:%d;", mas_error_name_i( r ), duf_pi_maxdepth( pi ) );
+  DUF_TRACE( levinfo, 5, "@@(%s) maxdepth:%d;", mas_error_name_i( r ), duf_pi_maxdepth( pi ) );
   if ( DUF_NOERROR( r ) )
   {
     int d;
@@ -190,15 +190,15 @@ duf_pi_is_good_depth_d( const duf_pathinfo_t * pi, int delta, int frecursive, in
   /* if ( duf_pi_recursive( pi ) ) */
   {
     rd = d - duf_pi_maxdepth( pi ) < delta; /* d - pathinfo.maxdepth < delta */
-    DUF_TRACE( temp, 6, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pi_maxdepth( pi ), delta );
+    DUF_TRACE( levinfo, 60, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pi_maxdepth( pi ), delta );
   }
-  DUF_TRACE( temp, 30, "@@rd:%d max:%d; rel(%d):%d", rd, duf_pi_maxdepth( pi ), d, duf_pi_deltadepth_d( pi, d ) );
+  DUF_TRACE( levinfo, 30, "@@rd:%d max:%d; rel(%d):%d", rd, duf_pi_maxdepth( pi ), d, duf_pi_deltadepth_d( pi, d ) );
   if ( flinear )
     rd = 1;
   else if ( rd && !frecursive /* && duf_pi_allow_dirs( pi ) */  )
   {
     rd = duf_pi_deltadepth_d( pi, d ) <= delta; /* d - topdepth <= delta */
-    DUF_TRACE( temp, 4, "(%d>0) duf_pi_topdepth(pi):%d; duf_pi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
+    DUF_TRACE( levinfo, 40, "(%d>0) duf_pi_topdepth(pi):%d; duf_pi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
                duf_pi_topdepth( pi ), duf_pi_deltadepth_d( pi, d ), delta );
   }
 

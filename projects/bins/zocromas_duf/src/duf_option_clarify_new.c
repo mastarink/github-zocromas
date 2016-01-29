@@ -359,7 +359,7 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
         /* T( "@@%9s: %lu string  (%s)'%s'/'%s' =(%s)'%s'/'%s'", duf_optstage_name( istage ), paod->stage_count[istage], duf_optsource_name( source ), */
         /*    string, name, duf_optsource_name( bootpod->source ), bootpod->string_copy, bootpod->name );                                              */
 #if 0
-	assert( ( string == NULL && bootpod->string_copy == NULL && 0 == strcmp( name, bootpod->name ) )
+        assert( ( string == NULL && bootpod->string_copy == NULL && 0 == strcmp( name, bootpod->name ) )
                 || 0 == strcmp( string, bootpod->string_copy ) );
         assert( ( !string && !bootpod->string_copy ) || ( string && bootpod->string_copy && 0 == strcmp( string, bootpod->string_copy ) ) );
         assert( ( string && !name ) || ( !name && !bootpod->name ) || ( name && bootpod->name && 0 == strcmp( name, bootpod->name ) ) );
@@ -393,7 +393,7 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
     pod_allocated = 1;
     memset( pod, 0, sizeof( duf_option_data_t ) );
   }
-  if (  /* bootpod || */ istage != DUF_OPTION_STAGE_BOOT )
+  if (  /* bootpod || */ istage > DUF_OPTION_STAGE_BOOT )
   {
     assert( bootpod );
     pod->string_copy = mas_strdup( bootpod->string_copy );
@@ -471,10 +471,8 @@ SR( OPTIONS, soption_xclarify_new_booted_source, duf_option_stage_t istage, duf_
   size_t cntpod;
 
   cntpod = duf_pod_source_count( paod, DUF_OPTION_STAGE_BOOT, source );
-  DUF_TRACE(optsource,0, "@@@@@@@cntpod:%lu %s %s", cntpod, duf_optstage_name(istage), duf_optsource_name(source) );
+  DUF_TRACE( optsource, 0, "@@@@@@@source_count: %lu %s %s", cntpod, duf_optstage_name( istage ), duf_optsource_name( source ) );
 
-  if ( cntpod )
-    DUF_TRACE(optsource,0, "@@@@@@%s:%s:source_count: %lu", duf_optstage_name( istage ), duf_optsource_name( source ), cntpod );
   if ( istage > DUF_OPTION_STAGE_BOOT )
   {
     for ( size_t npod = 0; npod < cntpod; npod++ )

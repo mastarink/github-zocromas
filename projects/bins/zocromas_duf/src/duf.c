@@ -118,8 +118,8 @@ destructor_main( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-    CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
   CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
 
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );

@@ -169,31 +169,63 @@ mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid
           valid = 1;
           highlight++;
         }
+        {
+          static const char *uliml = "∈";
+          static const char *ulimr = "∋";
+          size_t ll;
+
+          if ( !valid && 0 == strncmp( uliml, pbuf, ( ll = strlen( uliml ) ) ) )
+          {
+            char *p = strstr( pbuf, ulimr );
+
+            if ( p )
+            {
+              size_t lr = strlen( uliml );
+              size_t l;
+              char *e = NULL;
+
+              valid += ll;
+              l = sscanf( pbuf + ll, "%d", &highlight );
+              valid += l;
+              e = strstr( pbuf + ll, ulimr );
+              if ( e )
+                valid = e - pbuf + lr;
+            }
+          }
+        }
       }
       while ( pbuf += valid, valid );
       {
         static char *hls[] = {
-          "1;39", "1;7;37;40", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47"
+          "1;39", "1;7;37;40", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;106;33", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47", "7;94;109",
+          "7;96;109", "1;102;97", "1;104;96"
         };
         if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
 #  if 0
           fprintf( out, "\x1b[%sm", hls[highlight] );
 #  else
-          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", hls[highlight] );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[;%sm", hls[highlight] );
 #  endif
         else if ( highlight )
 #  if 0
           fprintf( out, "\x1b[%sm", hls[0] );
 #  else
-          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", hls[0] );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[;%sm", hls[0] );
 #  endif
         /* fprintf( out, "%s", pbuf ); */
+#  if 0
+        {
+          unsigned char *ttt = ( unsigned char * ) "◎";
+
+          fprintf( out, "{%lu:%2x:%2x:%2x}", strlen( ( char * ) ttt ), ttt[0], ttt[1], ttt[2] );
+        }
+#  endif
         fwrite( pbuf, 1, strlen( pbuf ), out );
         if ( highlight )
 #  if 0
           fprintf( out, "\x1b[m" );
 #  else
-          mas_print_coloro_s( out, force_color, nocolor, "\x1b[%sm", "" );
+          mas_print_coloro_s( out, force_color, nocolor, "\x1b[;%sm", "" );
 #  endif
       }
 #endif

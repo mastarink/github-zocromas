@@ -28,16 +28,16 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
     *format++ = '%';
     fbsz--;
   }
-  DUF_TRACE( temp, 5, ">%ld>> '%s' (%c:%d:%d) :: '%s'", fbsz, fmt, *fmt, ( ( *fmt == '+' ) || ( *fmt == '-' ) ) ? 1 : 0, *fmt - '-', tail );
+  DUF_TRACE( temp, 50, ">%ld>> '%s' (%c:%d:%d) :: '%s'", fbsz, fmt, *fmt, ( ( *fmt == '+' ) || ( *fmt == '-' ) ) ? 1 : 0, *fmt - '-', tail );
   if ( fbsz > 0 && ( *fmt == '+' || *fmt == '-' ) )
   {
-    DUF_TRACE( temp, 5, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    DUF_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
     *format++ = *fmt++;
     fbsz--;
   }
   while ( fbsz > 0 && *fmt >= '0' && *fmt <= '9' )
   {
-    DUF_TRACE( temp, 5, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    DUF_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
     *format++ = *fmt++;
     fbsz--;
   }

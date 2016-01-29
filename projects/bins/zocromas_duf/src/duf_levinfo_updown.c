@@ -177,7 +177,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stm
   assert( pdi );
 
   DOR( r, duf_levinfo_check_depth( pdi, node_type ) );
-  DUF_TRACE( temp, 5, "@@(%s) maxdepth:%d;", mas_error_name_i( r ), duf_pdi_maxdepth( pdi ) );
+  DUF_TRACE( temp, 50, "@@(%s) maxdepth:%d;", mas_error_name_i( r ), duf_pdi_maxdepth( pdi ) );
   if ( DUF_NOERROR( r ) )
   {
     int d;
