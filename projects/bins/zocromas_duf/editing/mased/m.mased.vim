@@ -22,9 +22,11 @@ tab sfind srctypes.mased.vim
 sfind srcconfig.mased.vim
 sfind srcoptions.mased.vim
 sfind srcoptions_imp.mased.vim
+sfind srcoptsources.mased.vim
 
 tab sfind srcmod.mased.vim
 sfind srcbegfin.mased.vim
 sfind srcpdi.mased.vim
 sfind srctoexpire.mased.vim
 sfind vimrc.mased.vim
+

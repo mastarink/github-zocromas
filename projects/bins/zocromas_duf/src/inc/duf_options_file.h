@@ -17,15 +17,15 @@
  * */
 
 int duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                            duf_option_adata_t * paod );
+                            duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 int duf_source_indirect_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                               duf_option_adata_t * paod );
+                               duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 int duf_source_incfg_last_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                                 duf_option_adata_t * paod );
+                                 duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 int duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                                duf_option_adata_t * paod );
+                                duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 int duf_source_incfg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                            duf_option_adata_t * paod );
+                            duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 
 
 const char *duf_options_infilepath( void );

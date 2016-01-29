@@ -12,6 +12,7 @@
 
 #include "duf_option_defs.h"
 #include "duf_option_stage.h"
+#include "duf_option_source.h"
 
 #include "duf_option_config.h"
 #include "duf_option_clarify_string.h"
@@ -26,7 +27,8 @@
 
 int
 duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                              __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive __attribute__ ( ( unused ) ), duf_option_adata_t * paod )
+                              __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
+                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -34,6 +36,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
 #endif
   const char *prompt = NULL;
 
+  T( "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
     DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( istage ) );

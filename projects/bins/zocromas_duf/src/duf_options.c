@@ -12,13 +12,16 @@
 #include "duf_options_interactive.h"
 
 #include "duf_option_stage.h"
+#include "duf_option_source.h"
 
+#include "duf_option_clarify_new.h"
 /* ###################################################################### */
+#include "duf_options_def.h"
 #include "duf_options.h"
 /* ###################################################################### */
 
 SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
-    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod )
+    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod )
 {
   /* DEBUG_STARTR( r ); */
 
@@ -41,8 +44,7 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
   DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
 #endif
 
-  DUF_TRACE( temp, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
-  DUF_TRACE( options, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
+  DUF_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
@@ -53,33 +55,47 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
   {
     DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
     {
-#define DUF_OPTSRCI( _xr, _name, _istage, _cb_do_interactive, _cb_prompt_interactive, _paod )  \
-  { \
-    DUF_TRACE( options, 10, "@@@to do %s options; stage:%s(%d)", #_name, duf_optstage_name( _istage ), _istage ); \
-    if ( QNOERR ) \
-    { \
-      CR( source_ ## _name ## _parse, _istage, _cb_do_interactive, _cb_prompt_interactive, _paod ); \
-      _xr = QERRIND; \
-    } \
-    DUF_TRACE( options, 10, "@@@@@done %s options; %s:%d [%c]  (%d:%s)", \
-	#_name, #_xr, QERRIND, QERRIND > ' ' && QERRIND < 'z' ? QERRIND : '-', QERRIND, QERRNAME ); \
-  }
-#define DUF_OPTSRC( _xr, _name, _istage, _paod )  \
-  DUF_OPTSRCI( _xr, _name, _istage, NULL, NULL, _paod )
-
-      if ( istage <= DUF_OPTION_STAGE_SETUP )
-        DUF_OPTSRC( fr, incfg, istage, paod );
-      DUF_OPTSRC( sr, incfg_stg, istage, paod );
-      DUF_OPTSRC( er, env, istage, paod ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
-      DUF_OPTSRC( or, cli, istage, paod );
-      /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
-        DUF_OPTSRC( isi, stdin, istage, paod );
-      DUF_OPTSRC( ir, indirect, istage, paod );
-      /* if ( DUF_ACTG_FLAG( interactive ) ) */
-      if ( cb_do_interactive && cb_do_interactive(  ) )
-        DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod );
-      DUF_OPTSRC( lr, incfg_last, istage, paod );
-
+      if ( from_paod )
+      {
+        if ( istage <= DUF_OPTION_STAGE_SETUP )
+        {
+          CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( CFG ), paod );
+          fr = QERRIND;
+        }
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( CFGSTG ), paod );
+        sr = QERRIND;
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( ENV ), paod );
+        er = QERRIND;
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( CLI ), paod );
+        or = QERRIND;
+        /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( STDIN ), paod );
+        isi = QERRIND;
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( DUFFILE ), paod );
+        ir = QERRIND;
+        if ( cb_do_interactive && cb_do_interactive(  ) ) /* interactive - only at INTERACTIVE (`pseudo´) stage ´¨ˇ˘˙ ΞΞΞΞΞΞΞΞΞΞΞΞ ­ */
+        {
+          DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod, INTERAC );
+          iir = QERRIND;
+        }
+        CR( soption_xclarify_new_booted_source, istage, DUF_OPTION_SOURCE( CFGLAST ), paod );
+        lr = QERRIND;
+      }
+      else
+      {
+        if ( istage <= DUF_OPTION_STAGE_SETUP )
+          DUF_OPTSRC( fr, incfg, istage, paod, CFG ); /* config - only acts at stages <= DUF_OPTION_STAGE_SETUP (??) */
+        DUF_OPTSRC( sr, incfg_stg, istage, paod, CFGSTG ); /* per-stage config */
+        DUF_OPTSRC( er, env, istage, paod, ENV ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+        DUF_OPTSRC( or, cli, istage, paod, CLI );
+        /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
+        DUF_OPTSRC( isi, stdin, istage, paod, STDIN );
+        DUF_OPTSRC( ir, indirect, istage, paod, DUFFILE );
+        /* if ( DUF_ACTG_FLAG( interactive ) ) */
+        if ( cb_do_interactive && cb_do_interactive(  ) ) /* interactive - only at INTERACTIVE (`pseudo´) stage ´¨ˇ˘˙ ΞΞΞΞΞΞΞΞΞΞΞΞ ­ */
+          DUF_OPTSRCI( iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod, INTERAC );
+        DUF_OPTSRC( lr, incfg_last, istage, paod, CFGLAST );
+      }
 
 #ifdef MAS_TRACING
       {

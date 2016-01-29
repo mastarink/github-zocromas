@@ -6,7 +6,7 @@
 /* ###################################################################### */
 
 const char *
-duf_optsource_name( duf_option_source_t source )
+duf_optsourcecode_name( duf_option_source_code_t sourcecode )
 {
   static const char *tail[] = {
     [DUF_OPTION_SOURCE_ENV] = "env",
@@ -14,12 +14,20 @@ duf_optsource_name( duf_option_source_t source )
     [DUF_OPTION_SOURCE_STREAM] = "stream",
     [DUF_OPTION_SOURCE_DUFFILE] = "file",
     [DUF_OPTION_SOURCE_CFG] = "cfg",
+    [DUF_OPTION_SOURCE_CFGSTG] = "cfg-stage",
+    [DUF_OPTION_SOURCE_CFGLAST] = "cfg-last",
     [DUF_OPTION_SOURCE_CLI] = "cli",
     [DUF_OPTION_SOURCE_INTERACTIVE] = "interactive",
     NULL
   };
-  return ( source.sourcecode >= DUF_OPTION_SOURCE_MIN
-           && source.sourcecode <= DUF_OPTION_SOURCE_MAX ) ? ( tail[source.sourcecode] ? tail[source.sourcecode] : "unset" ) : "unknown";
+  return ( sourcecode >= DUF_OPTION_SOURCE_MIN
+           && sourcecode <= DUF_OPTION_SOURCE_MAX ) ? ( tail[sourcecode] ? tail[sourcecode] : "unknown" ) : "unset";
+}
+
+const char *
+duf_optsource_name( duf_option_source_t source )
+{
+  return duf_optsourcecode_name( source.sourcecode );
 }
 
 const char *

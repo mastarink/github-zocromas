@@ -46,6 +46,7 @@ __attribute__ ( ( destructor( 101 ) ) )
 
 #ifdef MAS_TRACEMEM
   FILE *out = NULL;
+
   out = fopen( "mas_debug_memory.tmp", "w" );
   r = print_memlist_msg( FL, out, /* */
                          "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
@@ -263,10 +264,13 @@ print_memlist( const char *func, int line, FILE * f )
 void *
 _mas_calloc( const char *func, int line, size_t nmemb, size_t isize )
 {
+  void *ptr;
   size_t size;
 
   size = isize * nmemb;
-  return _mas_malloc( func, line, size );
+  ptr = _mas_malloc( func, line, size );
+  memset( ptr, 0, size );
+  return ptr;
 }
 
 void *

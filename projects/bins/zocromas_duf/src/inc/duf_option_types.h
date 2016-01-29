@@ -17,6 +17,8 @@ typedef enum
   DUF_OPTION_SOURCE_STREAM,
   DUF_OPTION_SOURCE_DUFFILE,
   DUF_OPTION_SOURCE_CFG,
+  DUF_OPTION_SOURCE_CFGLAST,
+  DUF_OPTION_SOURCE_CFGSTG,
   DUF_OPTION_SOURCE_CLI,
   DUF_OPTION_SOURCE_INTERACTIVE,
   DUF_OPTION_SOURCE_INTERAC = DUF_OPTION_SOURCE_INTERACTIVE,
@@ -369,7 +371,7 @@ typedef struct
   int noo;
   duf_xclarifier_t clarifier;
   duf_found_extended_array_t xfound;
-  int doindex;
+  signed long doindex;
   unsigned clarified[DUF_OPTION_STAGE_MAX + 1];
 } duf_option_data_t;
 

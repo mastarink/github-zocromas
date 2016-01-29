@@ -15,7 +15,7 @@
  * */
 
 int duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-                          duf_option_adata_t * paod );
+                          duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 
 
 #endif

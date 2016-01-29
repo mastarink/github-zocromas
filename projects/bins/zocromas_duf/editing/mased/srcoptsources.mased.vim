@@ -1,5 +1,6 @@
 find duf_options.c
 sfind duf_options.h
+sfind duf_options_def.h
 
 tab sfind duf_options_env.c
 sfind duf_options_env.h

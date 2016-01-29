@@ -217,12 +217,12 @@ duf_main( int argc, char **argv )
           fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
         if ( pod->doindex >= 0 )
         {
-          fprintf( f, "\t%c(%2d) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
+          fprintf( f, "\t%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
                    pod->xfound.array[pod->doindex].xtended->o.name );
           if ( pod->optarg )
             fprintf( f, "='%s'", pod->optarg );
         }
-        fprintf( f, "\t\t[%c(%2d) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod, pod->name );
+        fprintf( f, "\t\t[%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod, pod->name );
         if ( pod->optarg )
           fprintf( f, "='%s'", pod->optarg );
         fprintf( f, "]\n" );

@@ -3,12 +3,13 @@
 #include "duf_maintenance_options.h"
 
 
-#include "duf_option_stage.h"
-
 #include "duf_option_config.h"
 #include "duf_option_clarify.h"
 #include "duf_option_lcclarify.h"
 #include "duf_option_cfind.h"
+
+#include "duf_option_stage.h"
+#include "duf_option_source.h"
 
 #include "duf_option_clarify_batch.h"
 
@@ -151,9 +152,10 @@ SR( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage )
   numxargv = carg->argc - optind;
   DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optind:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optind );
 
-  if ( QNOERR && istage == DUF_OPTION_STAGE_SETUP && /* optind < carg.argc && */ numxargv > 0 )
+  /* 20160129.121211 DUF_OPTION_STAGE_SETUP Changed to  DUF_OPTION_STAGE_BOOT */
+  if ( QNOERR && istage == DUF_OPTION_STAGE_BOOT && /* optind < carg.argc && */ numxargv > 0 )
   {
-    T("@Why only DUF_OPTION_STAGE_SETUP %d", istage);
+    /* to do once, at stage SETUP (?), for next stages */
     DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
     CR( argv_clarify, duf_cli_options_get_targ(  ), carg, optind );
 
@@ -239,13 +241,14 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
 }
 
 SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED,  duf_option_adata_t *  paod )
+    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode )
 {
   /* DEBUG_STARTR( r ); */
 
+  DUF_TRACE(optsource,0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( istage ) );
 
-  CR( cli_parse, duf_cli_options_get_shorts(  ), istage , paod);
+  CR( cli_parse, duf_cli_options_get_shorts(  ), istage, paod );
 
   if ( istage < DUF_OPTION_STAGE_SETUP )
     DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );
@@ -254,5 +257,5 @@ SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb
   /* DEBUG_ENDR( r ); */
 
   ER( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-      duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED,  duf_option_adata_t *  paod );
+      duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED );
 }

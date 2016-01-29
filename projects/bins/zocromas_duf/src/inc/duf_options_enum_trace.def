@@ -46,6 +46,8 @@
   ENUM_WRAPP(TODO_TRACE, trace, todo				)
   ENUM_WRAPP(TRACE_TRACE, trace, trace				)
   ENUM_WRAPP(UPDATE_TRACE, trace, update			)
+  ENUM_WRAPP(OPTSTG, trace, optstage				)
+  ENUM_WRAPP(OPTSRC, trace, optsource				)
 
 #endif
 /*

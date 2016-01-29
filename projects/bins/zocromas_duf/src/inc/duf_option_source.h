@@ -16,6 +16,7 @@
  * 4. result: name
  * */
 
+const char *duf_optsourcecode_name( duf_option_source_code_t sourcecode );
 const char *duf_optsource_name( duf_option_source_t source );
 const char *duf_optsource_label( duf_option_source_t source );
 int duf_optsource_labelled( duf_option_source_t source );

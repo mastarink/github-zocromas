@@ -268,7 +268,6 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     DUF_TRACE( sql, 1, "@@beginning_sql for '%s'", sccb->title );
 
     DOR( rpr, duf_sccbh_eval_sqlsq( sccbh /* , PU */  ) );
-
     DUF_TRACE( sql, 1, "@@/beginning_sql for '%s'", sccb->title );
     if ( DUF_NOERROR( rpr ) )
     {

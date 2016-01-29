@@ -35,39 +35,6 @@ cb_do_interactive( void )
   return DUF_ACTG_FLAG( interactive );
 }
 
-void
-list_booted_option_source( duf_option_stage_t istage, duf_option_source_t source )
-{
-  if ( istage > DUF_OPTION_STAGE_BOOT )
-  {
-    const duf_option_adata_t *paod;
-
-    paod = DUF_CONFIGA( aod );
-    if ( duf_pod_source_count( paod, istage, source ) )
-      T( "@@@@@@%s:%s:source_count: %lu", duf_optstage_name( istage ), duf_optsource_name( source ), duf_pod_source_count( paod, istage, source ) );
-    for ( size_t npod = 0; npod < duf_pod_source_count( paod, istage, source ); npod++ )
-    {
-      const duf_option_data_t *pod DUF_UNUSED;
-
-      pod = duf_pod_from_paod_n( paod, DUF_OPTION_STAGE_BOOT, source, npod );
-      /* T( "@%lu. %p", npod, pod ); */
-    }
-  }
-}
-
-void
-list_booted_option_stage( duf_option_stage_t istage )
-{
-  /* if ( istage > DUF_OPTION_STAGE_BOOT ) */
-  {
-    duf_option_source_t source = { 0 };
-    for ( duf_option_source_code_t isource = DUF_OPTION_SOURCE_MIN; isource <= DUF_OPTION_SOURCE_MAX; isource++ )
-    {
-      source.sourcecode = isource;
-      list_booted_option_source( istage, source );
-    }
-  }
-}
 
 static const char *
 cb_prompt_interactive( void )
@@ -83,7 +50,6 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
 {
   DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( istage ) );
   /* TODO all (except INTERACTIVE) : call from paod, not real source */
-  T( "@%s", "TODO all (except INTERACTIVE) : call from paod, not real source" );
   if ( istage == DUF_OPTION_STAGE_LOOP )
   {
     for ( int ia = duf_cli_options_get_targ_offset(  ); QNOERR && ia < duf_cli_options_get_targc(  ); ia++ )
@@ -97,17 +63,18 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
       CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */  );
+      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
+          0 && (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
     }
   }
   else
   {
-    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */  );
+    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
+        0 && (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
   /* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
 
-  list_booted_option_stage( istage );
   ER( TOP, treat_option_stage, duf_option_stage_t istage );
 }
 
