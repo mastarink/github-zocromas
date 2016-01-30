@@ -393,9 +393,17 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
     pod_allocated = 1;
     memset( pod, 0, sizeof( duf_option_data_t ) );
   }
-  if (  /* bootpod || */ istage > DUF_OPTION_STAGE_BOOT )
+  
+  pod->vseparator = vseparator;
+  pod->clarifier = clarifier;
+  pod->stage = istage;
+  
+  if ( bootpod && istage > DUF_OPTION_STAGE_BOOT )
   {
     assert( bootpod );
+    pod->vseparator = bootpod->vseparator;
+    assert( clarifier == bootpod->clarifier );
+    /* pod->clarifier = bootpod->clarifier; */
     pod->string_copy = mas_strdup( bootpod->string_copy );
     pod->name = mas_strdup( bootpod->name );
     pod->optarg = mas_strdup( bootpod->optarg );
@@ -408,9 +416,6 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
     pod->optarg = mas_strdup( arg );
     pod->source = source;
   }
-  pod->vseparator = vseparator;
-  pod->clarifier = clarifier;
-  pod->stage = istage;
 
 
   if ( pod->string_copy && !pod->name )
