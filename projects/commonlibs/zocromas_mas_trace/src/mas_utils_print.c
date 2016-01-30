@@ -172,24 +172,32 @@ mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid
         {
           static const char *uliml = "∈";
           static const char *ulimr = "∋";
-          size_t ll;
+          static size_t lr = 0;
+          static size_t ll = 0;
 
-          if ( !valid && 0 == strncmp( uliml, pbuf, ( ll = strlen( uliml ) ) ) )
+          if ( !ll )
+            ll = strlen( uliml );
+          if ( !lr )
+            lr = strlen( ulimr );
+
+          if ( !valid && pbuf[0] == uliml[0] && ulimr[0] == uliml[0] )
           {
-            char *p = strstr( pbuf, ulimr );
-
-            if ( p )
+            if ( 0 == strncmp( uliml, pbuf, ll ) )
+              valid += ll;
+            if ( valid )
             {
-              size_t lr = strlen( uliml );
-              size_t l;
               char *e = NULL;
 
-              valid += ll;
-              l = sscanf( pbuf + ll, "%d", &highlight );
-              valid += l;
-              e = strstr( pbuf + ll, ulimr );
-              if ( e )
-                valid = e - pbuf + lr;
+              if ( sscanf( &pbuf[valid], "%d", &highlight ) )
+              {
+                if ( ( e = strstr( &pbuf[valid], ulimr ) ) )
+                  valid = e - pbuf + lr;
+                else
+                  while ( pbuf[valid] >= '0' && pbuf[valid] <= '9' )
+                    valid++;
+              }
+              else
+                valid = 0;
             }
           }
         }

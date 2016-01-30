@@ -115,11 +115,15 @@ SR( TOP, treat_all_optstages )
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
 
-  TT("∈1∋Wow");
-  TT("∈2∋Wow");
-  TT("∈1∋Wow");
-  TT("∈3∋Wow");
-  TT("∈1∋Wow");
-  TT("∈4∋Wow");
+  TT("∈1∋ One ");
+  TT("∈2∋ Two ");
+  TT("∈1∋ Three ");
+  TT("∈3 Four ");
+  TT("∈1∋ Five ");
+  TT("∈4∋ Six ");
+  TT("∈1∋ Seven ");
+  TT("∈6 Eight ");
+  TT("∈1∋ Nine ");
+  TT("∈7∋ Ten ");
   ER( TOP, treat_all_optstages );
 }
