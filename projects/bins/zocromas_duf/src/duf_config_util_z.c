@@ -10,7 +10,8 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_wref.h"
+#include "duf_config_defs.h"
+#include "duf_config_ref.h"
 
 #include "duf_dbg.h"
 #include "duf_pdi_credel.h"
@@ -20,7 +21,6 @@
 /* #include "duf_option_extended.h" */
 #include "duf_option_names.h"
 
-/* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config_util.h"
 /* ###################################################################### */

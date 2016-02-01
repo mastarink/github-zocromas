@@ -1,6 +1,18 @@
 find duf_config.c
 sfind duf_config.h
 
+tab sfind duf_config_credel.c
+sfind duf_config_credel.h
+
+tab sfind duf_config_db.c
+sfind duf_config_db.h
+
+tab sfind duf_config_show_etc.c
+sfind duf_config_show_etc.h
+
+tab sfind duf_cfg_credel.c
+sfind duf_cfg_credel.h
+
 tab sfind duf_config_ref.h
 sfind duf_config_wref.h
 sfind duf_config_defs.h

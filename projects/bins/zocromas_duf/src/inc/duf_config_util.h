@@ -2,7 +2,6 @@
 #  define MAS_DUF_CONFIG_UTIL_H
 
 #  include "duf_cli_types.h"
-#  include "duf_expand_types.h"
 
 void *duf_get_config_offset( unsigned long off );
 void *duf_get_config_puz_offset( unsigned long off );
@@ -21,8 +20,6 @@ int duf_trace_nocolor( void );
 
 char duf_option_delimiter( void );
 
-char *duf_string_options_expand( const char *s, char protected_prefix );
-char *duf_config_string_expanded( duf_expandable_string_t * cs );
 char *duf_config_db_path_add_subdir( const char *path, int *pr );
 
 

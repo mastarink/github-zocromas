@@ -8,35 +8,29 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
-#include "duf_config.h"
+#include "duf_config_db.h"
 #include "duf_status_ref.h"
+
+#include "duf_expandable.h"
 
 #include "duf_sys_wrap.h"
 
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 #include "duf_option_stage.h"
-#include "duf_option_config.h"
-
-#include "duf_options.h"
 
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_open.h"
-
-#include "duf_pdi.h"
-#include "duf_pdi_ref.h"
-#include "duf_pdi_reinit.h"
 
 #include "duf_maindb_info.h"
 
 #include "evsql_begfin.h"
 #include "evsql_selector.h"
 
-#include "sql_tables_defs.h"
+/* #include "sql_tables_defs.h" */
 #include "sql_beginning_common.h"
 #include "sql_beginning_tables.h"
 #include "sql_beginning_vacuum.h"

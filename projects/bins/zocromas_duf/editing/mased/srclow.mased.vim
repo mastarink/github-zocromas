@@ -41,3 +41,6 @@ sfind duf_dbg.h
 
 tab sfind duftest.c
 sfind dufjtest.c
+
+tab sfind  duf_expandable.c
+sfind  duf_expandable.h
