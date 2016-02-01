@@ -44,7 +44,7 @@ typedef struct
 typedef struct
 {
   char *help_string;
-  double loadtime;
+  /* double loadtime; */
   duf_config_cli_t cli;
   duf_config_opt_t opt;
   duf_config_db_t db;

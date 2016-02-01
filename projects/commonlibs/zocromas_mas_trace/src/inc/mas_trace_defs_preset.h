@@ -11,8 +11,11 @@
 #    define MAST_TRACE_CONFIG NULL
 #  endif
 
-#  ifndef MAST_TRACE_AT_CFG
-#    define MAST_TRACE_AT_CFG  xopt.trace.
+#  ifndef MAST_TRACE_AT_CFG_CR
+#    define MAST_TRACE_AT_CFG_CR(_cfg)  &(_cfg->xopt.trace)
+#  endif
+#  ifndef MAST_TRACE_AT_CFG_
+#    define MAST_TRACE_AT_CFG_  xopt.trace.
 #  endif
 /* #  ifndef MAST_DBG_AT_CFG            */
 /* #    define MAST_DBG_AT_CFG  opt.dbg */
@@ -28,7 +31,7 @@
 #  endif
 
 #  ifndef MAST_TRACE_FILE_C
-/* #    define MAST_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->MAST_TRACE_AT_CFG output.out ? _cfg->MAST_TRACE_AT_CFG output.out : stdout ) */
+/* #    define MAST_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->MAST_TRACE_AT_CFG_ output.out ? _cfg->MAST_TRACE_AT_CFG_ output.out : stdout ) */
 #    define MAST_TRACE_FILE_C( _cfg ) stdout
 #  endif
 #  ifndef MAST_TRACE_FILE

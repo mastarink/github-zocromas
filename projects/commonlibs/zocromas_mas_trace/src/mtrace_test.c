@@ -17,7 +17,8 @@ tmp_cfg_t *ptmpcfg = &tmpcfg;
 #define MAST_FL __func__,__LINE__
 
 
-#define MAST_TRACE_AT_CFG  trace
+#define MAST_TRACE_AT_CFG_CR(_cfg)  &(_cfg.trace)
+#define MAST_TRACE_AT_CFG_  trace.
 /* #define MAST_DBG_AT_CFG  dbg */
 #define MAST_TRACE_LOADTIME 0
 /* #define MAST_TRACE_FUNWIDTH(_cfg) _cfg->opt.output.fun_width */

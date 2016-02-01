@@ -137,8 +137,8 @@ SR( TOP, main_with_config, int argc, char **argv )
 #endif
   /* XXX XXX XXX XXX XXX XXX */
 
-  DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
-  DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
+  /* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
+  /* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
 
   CR( treat_all_optstages );
   CR( main_db, argc, argv );

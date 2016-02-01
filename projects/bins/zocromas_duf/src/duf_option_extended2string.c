@@ -33,9 +33,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, help_string ):
         rs = "help_string";
         break;
-      case offsetof( duf_config_t, loadtime ):
-        rs = "loadtime";
-        break;
+      /* case offsetof( duf_config_t, loadtime ): */
+      /*   rs = "loadtime";                       */
+      /*   break;                                 */
       case offsetof( duf_config_t, config_dir ):
         rs = "config_dir";
         break;

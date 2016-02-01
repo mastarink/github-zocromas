@@ -5,18 +5,18 @@
 #  ifndef MAST_TRACE_CONFIG
 /* #    include "duf_config4trace_ref.h" */
 /* #    define MAST_TRACE_CONFIG duf_config4trace */
-#    define MAST_TRACE_CONFIG duf_get_config()
-/* #    define MAST_TRACE_CONFIG duf_get_trace_config() */
+/* #    define MAST_TRACE_CONFIG duf_get_config() */
+#    define MAST_TRACE_CONFIG duf_get_trace_config()
+#  endif
+
+#  ifndef MAST_TRACE_AT_CFG_CR
+/* #    define MAST_TRACE_AT_CFG_CR(_cfg)  (&_cfg->opt.trace) */
+#    define MAST_TRACE_AT_CFG_CR(_cfg) _cfg
 #  endif
 
 #  ifndef MAST_TRACE_AT_CFG_
-#    define MAST_TRACE_AT_CFG  opt.trace
-/* #    define MAST_TRACE_AT_CFG */
-#  endif
-
-#  ifndef MAST_TRACE_AT_CFG_
-#    define MAST_TRACE_AT_CFG_  opt.trace.
-/* #    define MAST_TRACE_AT_CFG_ */
+/* #    define MAST_TRACE_AT_CFG_  opt.trace. */
+#    define MAST_TRACE_AT_CFG_
 #  endif
 
 /* #  ifndef MAST_DBG_AT_CFG            */
