@@ -7,7 +7,10 @@ noinst_PROGRAMS=mtest mjtest motest
 zocromas_duf_SOURCES=				   \
 	duf.c duf_experiment.c  duf_expandable.c	\
 	duf_maindb_info.c duf_maindb.c duf_maindb_options.c		    \
-	duf_dbg.c duf_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c duf_config_util.c duf_config_util_z.c duf_status.c	     \
+	duf_dbg.c \
+	duf_config.c duf_config_trace.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
+	duf_config_util.c duf_config_util_z.c \
+	duf_status.c	     \
 	duf_cli.c \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
 	duf_option_config.c duf_options.c  duf_option_typed.c duf_option_typed_gen.c duf_option_typed_call.c  \

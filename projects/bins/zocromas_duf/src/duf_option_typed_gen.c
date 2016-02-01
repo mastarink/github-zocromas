@@ -8,6 +8,7 @@
 #include "duf_utils.h"          /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_config.h"
+#include "duf_config_trace.h"
 
 #include "duf_option_defs.h"
 /* #include "duf_option_find.h" */

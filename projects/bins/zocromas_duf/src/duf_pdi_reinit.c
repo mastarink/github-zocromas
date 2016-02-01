@@ -5,6 +5,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
+#include "duf_config_trace.h"
 #include "duf_option_defs.h"
 
 #include "duf_config_util.h"

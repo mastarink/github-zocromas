@@ -7,6 +7,7 @@
 #include "duf_status.h"
 
 #include "duf_config.h"
+#include "duf_config_trace.h"
 
 #include "duf_option_find.h"
 #include "duf_option_cfind.h"

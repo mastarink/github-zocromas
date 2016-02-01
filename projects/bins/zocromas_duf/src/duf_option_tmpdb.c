@@ -5,6 +5,7 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_config.h"
+#include "duf_config_trace.h"
 
 #include "evsql_begfin.h"
 #include "duf_sql_stmt_defs.h"
