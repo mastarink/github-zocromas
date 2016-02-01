@@ -1,9 +1,9 @@
 #ifndef MAS_DUF_CONFIG_UTIL_H
 #  define MAS_DUF_CONFIG_UTIL_H
 
-#  include "duf_config_types.h"
+#  include "duf_cli_types.h"
+#  include "duf_expand_types.h"
 
-duf_config_t *duf_get_config( void );
 void *duf_get_config_offset( unsigned long off );
 void *duf_get_config_puz_offset( unsigned long off );
 duf_config_cli_t *duf_get_config_cli( void );
@@ -12,21 +12,17 @@ duf_config_opt_t *duf_get_config_opt( void );
 int duf_verbose( void );
 int duf_output_level( void );
 
-FILE *duf_output_file_c( const duf_config_t * cfg );
 FILE *duf_output_file( void );
 
-FILE *duf_trace_file_c( const duf_config_t * cfg );
 FILE *duf_trace_file( void );
 
-int duf_trace_force_color_c( const duf_config_t * cfg );
 int duf_trace_force_color( void );
-int duf_trace_nocolor_c( const duf_config_t * cfg );
 int duf_trace_nocolor( void );
 
 char duf_option_delimiter( void );
 
 char *duf_string_options_expand( const char *s, char protected_prefix );
-char *duf_config_string_expanded( duf_config_string_t * cs );
+char *duf_config_string_expanded( duf_expandable_string_t * cs );
 char *duf_config_db_path_add_subdir( const char *path, int *pr );
 
 

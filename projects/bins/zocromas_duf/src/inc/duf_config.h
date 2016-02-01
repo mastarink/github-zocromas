@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_CONFIG_H
 #  define MAS_DUF_CONFIG_H
 
+#  include "duf_config_types.h"
 
 duf_config_t *duf_cfg_create( void );
 void duf_cfg_delete( duf_config_t * cfg );

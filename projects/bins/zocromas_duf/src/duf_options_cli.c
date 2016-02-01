@@ -105,37 +105,43 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
       msg = duf_clrfy_cli_opts_msgs( codeval, optind - 1, optoptt );
 
       DUF_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, duf_cli_options_get_carg(  )->argv[optind - 1] );
-      DUF_MAKE_ERRORM( QERRIND, DUF_ERROR_OPTION_NOT_FOUND, msg );
+      if ( istage != DUF_OPTION_STAGE_BOOT )
+        DUF_MAKE_ERRORM( QERRIND, DUF_ERROR_OPTION_NOT_FOUND, msg );
       mas_free( msg );
+
+      /* DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
 
 #if 0                           /* 1:old clarify; 0:new clarify; see also duf_option_clarify_batch.c.... ; 20160115.170518 */
     CR( lcoption_clarify, longindex, codeval, optarg, istage, DUF_OPTION_SOURCE( CLI ) );
 #else
-    mas_cargvc_t *carg;
-    const char *longoptname = NULL;
-    const char *qarg = NULL;
-
-    carg = duf_cli_options_get_carg(  );
-    if ( optind > 0 )
-      qarg = carg->argv[optind - 1];
-    /* longoptname = duf_coption_find_name_at_std( codeval, QPERRIND ); */
-    longoptname = duf_lcoption_find_name_at_std( codeval, longindex, QPERRIND );
-    if ( longindex < 0 && codeval == '?' && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
-      longoptname = qarg + 2;
-
-    if ( longoptname )
-      CR( soption_xclarify_new_at_stdx_default, ( const char * ) NULL, longoptname, optarg, 0 /* vseparator */ , istage, DUF_OPTION_SOURCE( CLI ),
-          paod );
-    else if ( codeval == '?' )
+    if ( QNOERR )
     {
-      SERR( OPTION_NOT_PARSED );
-      assert( 0 );
-    }
-    else                        /* ERROR */
-    {
-      SERR( OPTION_NOT_PARSED );
-      assert( 0 );
+      mas_cargvc_t *carg;
+      const char *longoptname = NULL;
+      const char *qarg = NULL;
+
+      carg = duf_cli_options_get_carg(  );
+      if ( optind > 0 )
+        qarg = carg->argv[optind - 1];
+      /* longoptname = duf_coption_find_name_at_std( codeval, QPERRIND ); */
+      longoptname = duf_lcoption_find_name_at_std( codeval, longindex, QPERRIND );
+      if ( longindex < 0 && codeval == '?' && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
+        longoptname = qarg + 2;
+
+      if ( longoptname )
+        CR( soption_xclarify_new_at_stdx_default, ( const char * ) NULL, longoptname, optarg, 0 /* vseparator */ , istage, DUF_OPTION_SOURCE( CLI ),
+            paod );
+      else if ( codeval == '?' )
+      {
+        SERR( OPTION_NOT_PARSED );
+        assert( 0 );
+      }
+      else                      /* ERROR */
+      {
+        SERR( OPTION_NOT_PARSED );
+        assert( 0 );
+      }
     }
 #endif
   }
@@ -245,13 +251,15 @@ SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb
 {
   /* DEBUG_STARTR( r ); */
 
-  DUF_TRACE(optsource,0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
+  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( istage ) );
 
   CR( cli_parse, duf_cli_options_get_shorts(  ), istage, paod );
 
+  T( "@ (%d:%s)", QERRIND, QERRNAME );
   if ( istage < DUF_OPTION_STAGE_SETUP )
     DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );
+  T( "@ (%d:%s)", QERRIND, QERRNAME );
 
   DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
   /* DEBUG_ENDR( r ); */

@@ -376,9 +376,9 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
         {
-          duf_config_string_t *pcs;
+          duf_expandable_string_t *pcs;
 
-          pcs = ( duf_config_string_t * ) byteptr;
+          pcs = ( duf_expandable_string_t * ) byteptr;
           if ( pcs && pcs->value )
             mas_free( pcs->value );
           pcs->value = NULL;

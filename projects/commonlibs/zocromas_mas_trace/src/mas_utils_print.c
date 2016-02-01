@@ -188,6 +188,7 @@ mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid
             {
               char *e = NULL;
 
+#  if 0
               if ( sscanf( &pbuf[valid], "%d", &highlight ) )
               {
                 if ( ( e = strstr( &pbuf[valid], ulimr ) ) )
@@ -198,6 +199,12 @@ mas_vprintfo( int level, int noeol, int minlevel, int ifexit, const char *funcid
               }
               else
                 valid = 0;
+#  else
+              highlight = ( unsigned ) strtol( &pbuf[valid], &e, 10 );
+              if ( 0 == strncmp( e, ulimr, lr ) )
+                e += lr;
+              valid += e - &pbuf[valid];
+#  endif
             }
           }
         }

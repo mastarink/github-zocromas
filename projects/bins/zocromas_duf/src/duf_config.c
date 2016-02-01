@@ -12,6 +12,7 @@
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
+
 #include "duf_config_util.h"
 
 #include "duf_cli.h"
@@ -95,7 +96,7 @@ duf_cfg_create( void )
 }
 
 void
-duf_cfg_string_delete( duf_config_string_t * cs )
+duf_cfg_string_delete( duf_expandable_string_t * cs )
 {
   DEBUG_START(  );
   mas_free( cs->value );

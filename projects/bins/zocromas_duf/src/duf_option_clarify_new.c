@@ -253,6 +253,8 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
       mas_free( oa );
     }
   }
+  /* if ( pod->source.sourcecode == DUF_OPTION_SOURCE_CLI )                                               */
+  /*   T( "@==== [%s:%s:%s] ==== %d:%s\n", pod->string_copy, pod->name, pod->optarg, QERRIND, QERRNAME ); */
 #if 0
   T( "@-------- %lu:%lu ----------", pod->xfound.count_hard, pod->xfound.count_soft );
   for ( size_t n = 0; n < pod->xfound.count_hard + pod->xfound.count_soft; n++ )
@@ -393,11 +395,11 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
     pod_allocated = 1;
     memset( pod, 0, sizeof( duf_option_data_t ) );
   }
-  
+
   pod->vseparator = vseparator;
   pod->clarifier = clarifier;
   pod->stage = istage;
-  
+
   if ( bootpod && istage > DUF_OPTION_STAGE_BOOT )
   {
     assert( bootpod );

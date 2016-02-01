@@ -1,7 +1,3 @@
-#ifndef MAS_DUF_MAINTENANCE_H
-#  define MAS_DUF_MAINTENANCE_H
-#  define DUF_SQL_PDI_STMT
-
 #  include <assert.h>
 
 #  include <mastar/wrap/mas_std_def.h>
@@ -15,11 +11,7 @@
 #  include "duf_printn_defs.h"
 
 #  include <mastar/error/mas_errors_maintenance.h>
-/* #  include <mastar/error/mas_error_reporting.h> */
 
-
-
-/* #  include "duf_start_end.h" */
 #  include "duf_se.h"
 
 #  include "duf_dodefs.h"
@@ -28,10 +20,21 @@
 #  include "duf_dbg.h"
 
 
-#  include "duf_config_util_z.h"
+/* ^^^ maintenance.h ^^^ */
 
-#endif
 
-/*
-vi: ft=c
-*/
+#include "duf_option_defs.h"
+#include "duf_option_stage.h"
+#include "duf_option_config.h"
+
+#include "duf_options.h"
+
+
+#include "duf_option_clarify_new.h"
+#include "duf_option_source.h"
+
+int
+main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
+{
+  return 0;
+}

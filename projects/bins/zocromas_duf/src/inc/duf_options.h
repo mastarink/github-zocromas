@@ -2,6 +2,7 @@
 #  define MAS_DUF_OPTIONS_H
 
 #  include "duf_option_types.h"
+#  include "duf_fun_types.h"
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>
@@ -16,8 +17,8 @@
  * 4. action: ~parse,~clarify,~exec...?
  * */
 
-DR( OPTIONS, all_options, /* int argc, char *argv[], */ duf_option_stage_t istage, /* int is_interactive, */ duf_int_void_func_t cb_do_interactive,
-    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod );
+DR( OPTIONS, all_options, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
+    duf_option_adata_t * paod, int from_paod );
 
 
 #endif

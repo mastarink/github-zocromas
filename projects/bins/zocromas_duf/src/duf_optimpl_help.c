@@ -712,6 +712,15 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip --linear --std-leaf-set=4   -df  --evaluate-sccb=listing "
               " /home/ " " --use-format=4    	- %s", " -= \"same-groups almost shows (automatically)\" =-" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20160130.174647 ============" );
+  DUF_PRINTF( 0, "  cat << EEE | run   -df /home/"
+              "												- %s\n	┊" "db-name=owncloud_mega_zip\n	┊"
+              "linear\n	┊" "std-leaf-set=4\n	┊" "min-same-sha1=8\n	┊" "max-same-sha1=14\n	┊"
+              "mimeid=1\n	┊" "with-camera=LG\n	┊" "evaluate-sccb=listing\n	┊" "use-format=4\n	┊\n" "	┊EEE", " -= \"\" =-" );
+
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

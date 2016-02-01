@@ -5,8 +5,8 @@
 #include "duf_experiment.h"
 /* ###################################################################### */
 
-extern const duf_config_t *duf_config4trace;
 #if 0
+extern const duf_config_t *duf_config4trace;
 int
 duf_experiment( void )
 {

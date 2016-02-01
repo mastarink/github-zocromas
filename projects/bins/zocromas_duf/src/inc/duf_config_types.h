@@ -3,25 +3,19 @@
 
 #  include "duf_base_types.h"
 #  include "duf_cli_types.h"
+#  include "duf_expand_types.h"
 
 typedef struct
 {
-  int expandable:1;
-  char *expanded;
-  char *value;
-} duf_config_string_t;
-
-typedef struct
-{
-  duf_config_string_t name;
+  duf_expandable_string_t name;
   char *fpath;
 } duf_db_config_t;
 
 typedef struct
 {
   /* unsigned opened:1; */
-  duf_config_string_t dir;
-  duf_config_string_t subdir;
+  duf_expandable_string_t dir;
+  duf_expandable_string_t subdir;
   char *path;
   duf_db_config_t main;
   duf_db_config_t adm;

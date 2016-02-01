@@ -3,8 +3,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_option_types.h"
 #include "duf_maintenance_options.h"
+
+#include "duf_option_types.h"
 
 #include "duf_options_file.h"
 #include "duf_options_env.h"
@@ -35,7 +36,8 @@ SR( OPTIONS, all_options_heterogeneous, duf_option_stage_t istage, duf_int_void_
   DUF_OPTSRC( er, env, istage, paod, ENV ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
   DUF_OPTSRC( or, cli, istage, paod, CLI );
   /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
-  DUF_OPTSRC( isi, stdin, istage, paod, STDIN );
+  if ( istage >= DUF_OPTION_STAGE_BOOT ) /* don't read stdin before DUF_OPTION_STAGE_BOOT : can't re-read! */
+    DUF_OPTSRC( isi, stdin, istage, paod, STDIN );
   DUF_OPTSRC( ir, indirect, istage, paod, DUFFILE );
   /* if ( DUF_ACTG_FLAG( interactive ) ) */
   if ( cb_do_interactive && cb_do_interactive(  ) ) /* interactive - only at INTERACTIVE (`pseudo´) stage ´¨ˇ˘˙ ΞΞΞΞΞΞΞΞΞΞΞΞ ­ */
