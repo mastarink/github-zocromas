@@ -40,9 +40,9 @@
 #  define  DEBUG_STEPIS(_l, _s)                DUF_DBGFX(STEPIS, _l, _s)
 #  define  DEBUG_STEPULL(_l)                   DUF_DBGFX(STEPULL, _l)
 
-#  define DUF_IF_VERBOSE()			                            DUF_IF_TRACE_WHAT( opt.dbg, verbose )
-#  define DUF_IF_VERBOSEN( _lev )		                            DUF_IF_TRACE_WHATN( opt.dbg, verbose, _lev )
-#  define DUF_VERBOSE( _lev, ... )		                            DUF_TRACE_WHAT( opt.dbg, verbose, _lev, __VA_ARGS__ )
+#  define DUF_IF_VERBOSE()			                            DUF_IF_TRACE_WHAT( opt.dbg., verbose )
+#  define DUF_IF_VERBOSEN( _lev )		                            DUF_IF_TRACE_WHATN( opt.dbg., verbose, _lev )
+#  define DUF_VERBOSE( _lev, ... )		                            DUF_TRACE_WHAT( opt.dbg., verbose, _lev, __VA_ARGS__ )
 
 #endif
 

@@ -42,7 +42,7 @@ zocromas_duf_SOURCES=				   \
 	duf_pdi_filters.c duf_pdi_depth.c duf_pdi_ref.c duf_pdi_pi_ref.c duf_pdi_context.c duf_pdi_stmt.c	\
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_match.c   \
-	duf_dh.c duf_service.c duf_print.c duf_printb.c	duf_fileinfo.c	     \
+	duf_dh.c duf_service.c duf_print.c duf_fileinfo.c	     \
 								      \
 	duf_sql_error.c \
 	duf_sql_open.c duf_sql_positional.c duf_sql_prepared.c duf_sql_field.c duf_sql_bind.c 	       \

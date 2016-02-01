@@ -2,6 +2,7 @@
 
 #include "duf_service.h"
 
+#include "duf_config.h"
 #include "duf_config_ref.h"
 
 #include <mastar/sqlite/mas_sqlite.h>

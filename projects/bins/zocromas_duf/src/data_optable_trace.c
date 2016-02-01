@@ -26,6 +26,9 @@ const duf_longval_extended_table_t optable_trace = {
   DO_STAGE_ALL,
   .table =                      /* */
   {
+   {.o = {DO_Q( "trace-fun-width" ) /* */ , DO_A_O /* */ , DO_V( TRACE_FUN_WIDTH )} /*   */ , DO_CL( PRINT ) /*   */ ,
+    /*      */ DO_OC( NUM, opt.trace.fun_width ) /*    */ , DO_AT_STAGE( DEBUG ) /*        */ , DO_H( output fun width ) /*                 */ },
+
    DUF_TRACE_OPT( temp, TEMP ),
    /* {.o = {DO_Q( "trace-temp" ) (*       *) , DO_A_O (* *) , DO_V( TEMP_TRACE )} (*        *) , DO_CL( TRACE ) (*   *) ,                            */
    /*  (*      *) DO_OC( UPLUS, opt.trace.temp ), DO_SET_STAGE( DEBUG, MAX) (*                              *) , DO_H( trace .... ) (*                       *) }, */

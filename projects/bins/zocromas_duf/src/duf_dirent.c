@@ -3,6 +3,9 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
+
+
 #include "duf_match.h"
 
 #include "duf_config_util.h"

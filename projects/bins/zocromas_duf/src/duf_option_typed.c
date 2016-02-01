@@ -5,6 +5,8 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_config.h"
+
 
 #include "duf_option_defs.h"
 

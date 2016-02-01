@@ -4,6 +4,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
+
 #include "duf_pdi_credel.h"
 #include "duf_pdi_reinit.h"
 #include "duf_pdi_filters.h"

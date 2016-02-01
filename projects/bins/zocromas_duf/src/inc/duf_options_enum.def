@@ -126,7 +126,6 @@
   ENUM_WRAP( ECHO						)
   /* i/o */
   ENUM_WRAP( OUTPUT_LEVEL					)
-  ENUM_WRAP( OUTPUT_FUN_WIDTH					)
   ENUM_WRAP( OUTPUT_HEADER_TTY					)
   ENUM_WRAP( OUTPUT_FILE					)
   ENUM_WRAP( OUTPUT_STDERR					)
@@ -163,6 +162,7 @@
   ENUM_WRAPP( NONEW_TRACE, trace, nonew				)
 #include "duf_options_enum_trace.def"
   /* trace i/o */
+  ENUM_WRAP( TRACE_FUN_WIDTH					)
   ENUM_WRAP( TRACE_FILE						)
   ENUM_WRAP( TRACE_FILE_OVERWRITE				)
   ENUM_WRAP( TRACE_FILE_APPEND					)

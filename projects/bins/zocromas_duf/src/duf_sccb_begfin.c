@@ -1,5 +1,6 @@
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
 #include "duf_sccb.h"
 #include "evsql_begfin.h"
 

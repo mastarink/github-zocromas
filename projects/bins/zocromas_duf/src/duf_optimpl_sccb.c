@@ -7,8 +7,7 @@
 #include "duf_maintenance.h"
 
 
-
-
+#include "duf_config.h"
 #include "duf_config_util.h"
 #include "duf_config_ref.h"     /* DUF_PRINTF ; DUF_CONFIGG */
 #include "duf_config_defs.h"

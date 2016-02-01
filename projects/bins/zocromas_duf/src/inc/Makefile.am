@@ -71,7 +71,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	std_fieldsets.h \
 	std_mod_sets.h \
 	duf_mod_defs.h \
-	duf_print.h duf_printb.h duf_fileinfo.h duf_format_types.h \
+	duf_print.h duf_fileinfo.h duf_format_types.h \
 	std_selectors.h duf_sql_types.h \
 	duf_sql_defs.h \
 	duf_sql_stmt_defs.h \

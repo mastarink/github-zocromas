@@ -12,6 +12,7 @@
 
 #include "duf_expandable.h"
 
+#include "duf_config.h"
 #include "duf_config_defs.h"
 #include "duf_config_ref.h"
 
@@ -79,7 +80,7 @@ duf_output_file( void )
 FILE *
 duf_trace_file( void )
 {
-  return duf_trace_file_c( duf_config );
+  return duf_trace_file_c( &duf_config->opt.trace );
 }
 
 int

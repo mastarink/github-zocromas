@@ -71,7 +71,7 @@ duf_cfg_create( void )
 
     ry = gettimeofday( &tv, NULL );
     if ( ry >= 0 )
-      cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+      cfg->opt.trace.loadtime = cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
   {
     const char *cfgdir;

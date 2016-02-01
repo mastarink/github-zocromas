@@ -44,7 +44,7 @@
 			    		__VA_ARGS__ )
 
 #  define MAST_TRACE_WHAT_WP_BASE( _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
-  			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( _cfg ), _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
+  			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( &_cfg -> MAST_TRACE_AT_CFG), _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
 
 
 /* takes ern - error index */

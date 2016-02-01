@@ -60,7 +60,6 @@ typedef struct
 {
   duf_config_output_flags_combo_t v;
   unsigned level;
-  unsigned fun_width;
   unsigned handleid;
   unsigned max_width;
   duf_asformats_t as_formats;
@@ -86,6 +85,8 @@ typedef struct
 typedef struct
 {
   duf_config_output_t output;
+  double loadtime;
+  unsigned fun_width;
   int temp;
   int collect;
   int any;

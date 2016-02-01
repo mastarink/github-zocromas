@@ -4,6 +4,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"

@@ -87,9 +87,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, opt.output ):
         rs = "opt.output";
         break;
-      case offsetof( duf_config_t, opt.output.fun_width ):
-        rs = "opt.output.fun_width";
-        break;
+      /* case offsetof( duf_config_t, opt.output.fun_width ): */
+      /*   rs = "opt.output.fun_width";                       */
+      /*   break;                                             */
       case offsetof( duf_config_t, opt.output.header_tty ):
         rs = "opt.output.header_tty";
         break;

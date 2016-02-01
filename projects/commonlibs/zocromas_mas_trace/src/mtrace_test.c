@@ -2,7 +2,7 @@
 
 typedef struct
 {
-  unsigned nonew:1;
+  /* unsigned nonew:1; */
   unsigned duftrace;
 } tmp_trace_t;
 typedef struct
@@ -18,7 +18,7 @@ tmp_cfg_t *ptmpcfg = &tmpcfg;
 
 
 #define MAST_TRACE_AT_CFG  trace
-#define MAST_DBG_AT_CFG  dbg
+/* #define MAST_DBG_AT_CFG  dbg */
 #define MAST_TRACE_LOADTIME 0
 /* #define MAST_TRACE_FUNWIDTH(_cfg) _cfg->opt.output.fun_width */
 #define MAST_TRACE_FUNWIDTH_C( _cfg ) 18

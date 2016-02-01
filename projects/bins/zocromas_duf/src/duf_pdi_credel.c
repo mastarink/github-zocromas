@@ -2,6 +2,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
+
 #include "duf_levinfo.h"
 #include "duf_pdi_ref.h"
 #include "duf_pathinfo_credel.h"

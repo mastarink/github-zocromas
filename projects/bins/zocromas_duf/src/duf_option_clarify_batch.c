@@ -2,6 +2,8 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_config.h"
+
 #include "duf_option_clarify_string.h"
 
 #include "duf_option_clarify_new.h"

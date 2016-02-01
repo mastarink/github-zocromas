@@ -7,6 +7,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"

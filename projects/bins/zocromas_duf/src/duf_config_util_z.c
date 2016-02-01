@@ -25,14 +25,6 @@
 #include "duf_config_util.h"
 /* ###################################################################### */
 
-extern duf_config_t *duf_config /* __attribute__( ( weak ) ) */ ;
-
-duf_config_t *
-duf_get_config( void )
-{
-  assert( duf_config );
-  return duf_config;
-}
 
 FILE *
 duf_output_file_c( const duf_config_t * cfg )
@@ -41,9 +33,10 @@ duf_output_file_c( const duf_config_t * cfg )
 }
 
 FILE *
-duf_trace_file_c( const duf_config_t * cfg )
+duf_trace_file_c( const duf_config_opt_trace_t * cfg )
 {
-  return cfg && cfg->MAST_TRACE_AT_CFG.output.out ? cfg->MAST_TRACE_AT_CFG.output.out : stdout;
+  /* return cfg && cfg->MAST_TRACE_AT_CFG output.out ? cfg->MAST_TRACE_AT_CFG output.out : stdout; */
+  return cfg && cfg->output.out ? cfg->output.out : stdout;
 }
 
 int

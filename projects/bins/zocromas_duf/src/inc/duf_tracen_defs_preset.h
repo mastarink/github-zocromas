@@ -6,16 +6,22 @@
 /* #    include "duf_config4trace_ref.h" */
 /* #    define MAST_TRACE_CONFIG duf_config4trace */
 #    define MAST_TRACE_CONFIG duf_get_config()
+/* #    define MAST_TRACE_CONFIG duf_get_trace_config() */
 #  endif
 
-
-#  ifndef MAST_TRACE_AT_CFG
+#  ifndef MAST_TRACE_AT_CFG_
 #    define MAST_TRACE_AT_CFG  opt.trace
+/* #    define MAST_TRACE_AT_CFG */
 #  endif
 
-#  ifndef MAST_DBG_AT_CFG
-#    define MAST_DBG_AT_CFG  opt.dbg
+#  ifndef MAST_TRACE_AT_CFG_
+#    define MAST_TRACE_AT_CFG_  opt.trace.
+/* #    define MAST_TRACE_AT_CFG_ */
 #  endif
+
+/* #  ifndef MAST_DBG_AT_CFG            */
+/* #    define MAST_DBG_AT_CFG  opt.dbg */
+/* #  endif                             */
 
 
 
@@ -24,7 +30,7 @@
 #  endif
 
 #  ifndef MAST_TRACE_LOADTIME
-#    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_config(  ))
+#    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_trace_config(  ))
 #  endif
 
 #  ifndef MAST_TRACE_FILE_C
@@ -37,7 +43,7 @@
 
 
 #  ifndef MAST_TRACE_FUNWIDTH_C
-#    define MAST_TRACE_FUNWIDTH_C( _cfg ) ( _cfg?_cfg->opt.output.fun_width : 18 )
+#    define MAST_TRACE_FUNWIDTH_C( _cfg ) ( _cfg?_cfg->MAST_TRACE_AT_CFG_ fun_width : 18 )
 #  endif
 
 #  ifndef MAST_TRACE_FORCE_COLOR_C

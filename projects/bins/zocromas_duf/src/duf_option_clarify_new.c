@@ -4,6 +4,10 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_config.h"
+
+#include "duf_option_types.h"
+
 #include "duf_expandable.h"
 
 #include "duf_option_typed.h"

@@ -25,8 +25,6 @@ const duf_longval_extended_table_t optable_io = {
 
    {.o = {DO_Q( "output-level" ) /*     */ , DO_A_O /* */ , DO_V( OUTPUT_LEVEL )} /*       */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( NUM, opt.output.level ) /*        */ , DO_AT_STAGE( SETUP ) /*        */ , DO_H( output level ) /*                     */ },
-   {.o = {DO_Q( "output-fun-width" ) /* */ , DO_A_O /* */ , DO_V( OUTPUT_FUN_WIDTH )} /*   */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( NUM, opt.output.fun_width ) /*    */ , DO_AT_STAGE( DEBUG ) /*        */ , DO_H( output fun width ) /*                 */ },
    {.o = {DO_Q( "output-header-tty" ) /**/, DO_A_O /* */ , DO_V( OUTPUT_HEADER_TTY )} /*  */ , DO_CL( PRINT ) /*   */ ,
     /* */ DO_OC( STR, opt.output.header_tty ) /*       */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H( output header for tty ) /*             */ }
    ,
