@@ -6,6 +6,7 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_pdi_credel.h"
 #include "duf_status_types.h"
 #include "duf_ufilter.h"
 
@@ -91,6 +92,7 @@ global_status_init( void )
 void
 global_status_reset( void )
 {
+  duf_pdi_kill( &global_status.scn.pdi );
   duf_tmp_delete( global_status.tmp );
   global_status.tmp = NULL;
 #if 0
@@ -149,7 +151,7 @@ destructor_global_status( void )
 /* #define DUF_MEM_ROW "◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐" */
 #define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
 
-  global_status_reset(  );
+  /* global_status_reset(  ); */
 #if 0
 #  ifdef MAS_TRACEMEM
   print_memlist_msg( FL, stdout, /* */

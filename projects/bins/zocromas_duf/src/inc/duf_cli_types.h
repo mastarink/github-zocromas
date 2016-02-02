@@ -161,7 +161,6 @@ typedef struct
   duf_config_opt_trace_t trace;
   duf_config_output_t output;
   duf_bformat_combo_t bformat;
-  char option_delimiter;
 } duf_config_opt_t;
 
 /* options/parameters used for parsing cli options */
@@ -176,6 +175,7 @@ typedef struct
   const duf_longval_extended_table_t **xtable_multi;
   /* long limit; */
   char *history_filename;
+  char option_delimiter;
 } duf_config_cli_t;
 
 typedef struct

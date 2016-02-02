@@ -25,6 +25,7 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_credel.h"
 #include "duf_pdi_reinit.h"
 
 /* #include "duf_option_clarify_new.h" */
@@ -47,7 +48,7 @@ cb_prompt_interactive( void )
   static char rl_prompt[256 * 10] = "";
 
   snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
-            duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+            duf_levinfo_path( global_status.scn.pdi ) );
   return rl_prompt;
 }
 
@@ -65,9 +66,9 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
       duf_ufilter_t *pu = ( duf_ufilter_t * ) NULL; /* take pu from config */
       const duf_sql_set_t *sql_set = NULL;
 
-      CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
+      CR( pdi_reinit_anypath, global_status.scn.pdi, targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
-      DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+      DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( global_status.scn.pdi ) );
       CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
           ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
     }
@@ -105,8 +106,11 @@ SR( TOP, treat_all_optstages )
   CR( treat_option_stage_ne, DUF_OPTION_STAGE_SETUP );
 
   CR( config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
+  
+  global_status.scn.pdi = duf_pdi_create( "selected" );
+
   CR( pdi_init_at_config );
-  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( global_status.scn.pdi ) );
 
   DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
   if ( DUF_ACTG_FLAG( interactive ) )

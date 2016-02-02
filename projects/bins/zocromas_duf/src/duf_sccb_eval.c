@@ -1,5 +1,7 @@
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
@@ -22,11 +24,11 @@ int
 duf_ev_sccb( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, DUF_CONFIGX( scn.pdi )->pdi_name );
+  assert( global_status.scn.pdi->pdi_name );
+  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, global_status.scn.pdi->pdi_name );
 
-  /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( DUF_CONFIGX( scn.pdi ) ) ); */
-  DOR( r, duf_ev_pdi_sccb( DUF_CONFIGG( scn.pdi ), sccb, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( global_status.scn.pdi ) ); */
+  DOR( r, duf_ev_pdi_sccb( global_status.scn.pdi, sccb, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -34,8 +36,8 @@ int
 duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evnamen( DUF_CONFIGG( scn.pdi ), name, len, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  assert( global_status.scn.pdi->pdi_name );
+  DOR( r, duf_ev_pdi_evnamen( global_status.scn.pdi, name, len, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -43,9 +45,9 @@ int
 duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, DUF_CONFIGX( scn.pdi )->pdi_name );
-  DOR( r, duf_ev_pdi_evname( DUF_CONFIGG( scn.pdi ), name, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  assert( global_status.scn.pdi->pdi_name );
+  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, global_status.scn.pdi->pdi_name );
+  DOR( r, duf_ev_pdi_evname( global_status.scn.pdi, name, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -53,12 +55,12 @@ int
 duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  /* assert( DUF_CONFIGX( scn.pdi )->pyp ); */
-  DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, DUF_CONFIGX( scn.pdi )->pdi_name );
+  assert( global_status.scn.pdi->pdi_name );
+  /* assert( global_status.scn.pdi->pyp ); */
+  DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, global_status.scn.pdi->pdi_name );
 
-  /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) ); */
-  DOR( r, duf_ev_pdi_evnamed_list( DUF_CONFIGG( scn.pdi ), names, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( global_status.scn.pdi ) ); */
+  DOR( r, duf_ev_pdi_evnamed_list( global_status.scn.pdi, names, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -90,8 +92,8 @@ duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
 
   int cnt = 0;
 
-  assert( DUF_CONFIGX( scn.pdi )->pdi_name );
-  DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+  assert( global_status.scn.pdi->pdi_name );
+  DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( global_status.scn.pdi ) );
 
   for ( int astep = 0; DUF_NOERROR( r ) && astep < sccb_num; astep++ )
   {

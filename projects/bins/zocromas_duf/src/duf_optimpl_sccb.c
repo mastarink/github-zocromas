@@ -6,6 +6,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -94,9 +95,9 @@ duf_option_O_evaluate_sccb( const char *names )
     }
     T( "han:%p", han );
   }
-  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) );
+  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( global_status.scn.pdi ) );
 #endif
-  if ( duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) )
+  if ( duf_levinfo_dirid( global_status.scn.pdi ) )
   {
 #if 0
     DOR( r, duf_ev_evnamed_list( names, _duf_action_table(  ) ) );
@@ -134,7 +135,7 @@ duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_main_db_open( DUF_CONFIGG( scn.pdi ) ) );
+  DOR( r, duf_main_db_open( global_status.scn.pdi ) );
   DEBUG_ENDR( r );
 }
 
@@ -147,7 +148,7 @@ duf_option_O_cd( const char *s )
 #if 1
     char *new_path = NULL;
 
-    if ( duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) )
+    if ( duf_levinfo_path( global_status.scn.pdi ) )
     {
       if ( *s == '/' )
       {
@@ -155,7 +156,7 @@ duf_option_O_cd( const char *s )
       }
       else
       {
-        new_path = mas_strdup( duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+        new_path = mas_strdup( duf_levinfo_path( global_status.scn.pdi ) );
 #  if 0
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
@@ -179,21 +180,21 @@ duf_option_O_cd( const char *s )
     {
       new_path = mas_strdup( s );
     }
-    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( global_status.scn.pdi ) );
     {
 
       /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
 
-      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
-                                      duf_pdi_recursive( DUF_CONFIGG( scn.pdi ) ), duf_pdi_allow_dirs( DUF_CONFIGG( scn.pdi ) ),
-                                      duf_pdi_linear( DUF_CONFIGG( scn.pdi ) ) ) );
+      DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
+                                      duf_pdi_recursive( global_status.scn.pdi ), duf_pdi_allow_dirs( global_status.scn.pdi ),
+                                      duf_pdi_linear( global_status.scn.pdi ) ) );
     }
     mas_free( new_path );
 #else
     {
 
-      T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( scn.pdi ), duf_pdi_root( DUF_CONFIGG( scn.pdi ) )->sql_beginning_done );
-      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( scn.pdi ) ) ) );
+      T( "@@[%p] sql_beginning_done:%d", global_status.scn.pdi, duf_pdi_root( global_status.scn.pdi )->sql_beginning_done );
+      DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, s, NULL, 1 /* caninsert */ , duf_pdi_recursive( global_status.scn.pdi ) ) );
     }
 #endif
   }
@@ -228,8 +229,8 @@ duf_option_O_set_dir_priority( long prio )
 {
   DEBUG_STARTR( r );
 
-  /* DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( scn.pdi ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
-  /*                                 duf_pdi_recursive( DUF_CONFIGG( scn.pdi ) ) (*  *)  ) );                                                        */
+  /* DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
+  /*                                 duf_pdi_recursive( global_status.scn.pdi ) (*  *)  ) );                                                        */
 
   TT( "@@@@@@dir priority to be set:%ld for %s", prio, "????" );
   DEBUG_ENDR( r );

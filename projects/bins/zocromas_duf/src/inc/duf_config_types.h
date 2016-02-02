@@ -66,16 +66,7 @@ typedef struct
   duf_config_save_t save;
   duf_config_vars_t vars;
   /* char *group; */
-#  if 0
-  char *config_dir;
-  char *cmds_dir;
-  char *config_file_path;
-#  else
   duf_config_cfg_t conf;
-#  endif
-
-  duf_status_scanner_t scn;
-
 } duf_config_t;
 
 

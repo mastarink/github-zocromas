@@ -1,5 +1,7 @@
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
@@ -54,11 +56,11 @@ int
 duf_ev_evnamed_list_std( const char *names )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
+  assert( global_status.scn.pdi->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
-  /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( DUF_CONFIGG( scn.pdi ) ) ); */
+  /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( global_status.scn.pdi ) ); */
   DOR( r, duf_ev_evnamed_list( names, duf_first_sccb(  ) ) );
 #endif
   DEBUG_ENDR( r );
@@ -68,7 +70,7 @@ int
 duf_ev_evnamen_std( const char *name, size_t len )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
+  assert( global_status.scn.pdi->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evnamen( name, len, duf_action_table(  ) ) );
 #else
@@ -81,7 +83,7 @@ int
 duf_ev_evname_std( const char *name )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
+  assert( global_status.scn.pdi->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evname( name, duf_action_table(  ) ) );
 #else

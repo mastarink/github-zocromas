@@ -2,6 +2,8 @@
 
 #include "duf_maintenance.h"
 
+
+#include "duf_status_ref.h"
 #include "duf_option_defs.h"
 
 #include "duf_config.h"
@@ -170,19 +172,19 @@ duf_pdi_init_at_config( void )
   DEBUG_STARTR( r );
   DUF_TRACE( pdi, 0, "@@@recursive:%d; NO real_path", DUF_UG_FLAG( recursive ) );
 #if 0
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( scn.pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( global_status.scn.pdi, global_status.scn.pdi->pup, NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #else
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( scn.pdi ), DUF_CONFIGG( vars.puz ), NULL /* real_path */ , NULL /* sql_set */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( global_status.scn.pdi, DUF_CONFIGG( vars.puz ), NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         DUF_ACTG_FLAG( allow_dirs ) /* fallow_dirs */ ,
                                         DUF_UG_FLAG( linear ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #endif
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
+  assert( global_status.scn.pdi->pup == DUF_CONFIGX( vars.puz ) );
   DEBUG_ENDR( r );
 }
 

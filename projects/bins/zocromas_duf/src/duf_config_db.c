@@ -1,4 +1,3 @@
-/* #include <stdarg.h> */
 #include <string.h>
 
 #include <mastar/tools/mas_tools.h>

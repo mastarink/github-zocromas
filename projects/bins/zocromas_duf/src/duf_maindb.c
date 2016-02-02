@@ -294,10 +294,10 @@ duf_main_db_open( duf_depthinfo_t * pdi )
       global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
-    DUF_TRACE( pdi, 0, "DUF_CONFIGG( scn.pdi ) %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
+    DUF_TRACE( pdi, 0, "global_status.scn.pdi %s", duf_levinfo_path( global_status.scn.pdi ) );
 #if 0
     // removed 20151026.200517 - BAD here
-    DOR( r, duf_pdi_reinit_min( DUF_CONFIGG( scn.pdi ) ) );
+    DOR( r, duf_pdi_reinit_min( global_status.scn.pdi ) );
 #endif
     DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
     /* if ( DUF_NOERROR( r ) ) */
@@ -407,6 +407,6 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
   if ( DUF_ACTG_FLAG( info ) )
     CR( main_db_info );
   
-  CR( main_db_close, DUF_CONFIGG( scn.pdi ), QERRIND ); /* [@] */
+  CR( main_db_close, global_status.scn.pdi, QERRIND ); /* [@] */
   ER( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED );
 }

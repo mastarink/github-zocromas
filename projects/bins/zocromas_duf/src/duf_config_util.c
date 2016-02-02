@@ -1,11 +1,6 @@
-/* #include <stdarg.h> */
 #include <string.h>
 #include <errno.h>
-#include <time.h>
-#include <sys/time.h>
 
-#include <mastar/tools/mas_tools.h>
-#include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
@@ -17,21 +12,10 @@
 #include "duf_config_defs.h"
 #include "duf_config_ref.h"
 
-#include "duf_dbg.h"
-#include "duf_pdi_credel.h"
-
-#include "duf_ufilter.h"
-
-#include "duf_config_types.h"   /* duf_config_t */
-/* #include "duf_option_extended.h" */
-#include "duf_option_names.h"
-
 /* ###################################################################### */
 #include "duf_config_util_z.h"
 #include "duf_config_util.h"
 /* ###################################################################### */
-
-extern duf_config_t *duf_config /* __attribute__( ( weak ) ) */ ;
 
 void *
 duf_get_config_offset( unsigned long off )
@@ -99,7 +83,7 @@ duf_trace_nocolor( void )
 char
 duf_option_delimiter( void )
 {
-  return duf_config ? duf_config->opt.option_delimiter : ':';
+  return duf_config ? duf_config->cli.option_delimiter : ':';
 }
 
 char *

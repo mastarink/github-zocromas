@@ -43,6 +43,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_status_ref.h"
+#include "duf_status.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -183,6 +184,7 @@ duf_main( int argc, char **argv )
   DEBUG_STARTR( r );
   /* fprintf(stderr, "◀"  ); */
   duf_config_create( argc, argv );
+
   assert( duf_config );
   /* raise( SIGABRT ); */
   /* *( ( int * ) NULL ) = 0; */
@@ -235,6 +237,7 @@ duf_main( int argc, char **argv )
       fclose( f );
     }
   }
+  global_status_reset(  );
   duf_config_delete(  );
   assert( !duf_config );
 

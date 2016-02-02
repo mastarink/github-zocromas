@@ -1,35 +1,19 @@
-/* #include <stdarg.h> */
 #include <string.h>
-#include <time.h>
 #include <sys/time.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
-#include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
-#include "duf_config_ref.h"
 #include "duf_config_defs.h"
-
-#include "duf_config_util.h"
 
 #include "duf_cli.h"
 
-#include "duf_dbg.h"
-
 #include "duf_expandable.h"
-#include "duf_pdi_credel.h"
 
 #include "duf_ufilter.h"
 
-#include "duf_option_config.h"
-#include "duf_option_extended.h" /* duf_options_create_longopts_table */
 #include "duf_option_names.h"
-#include "duf_xtended_table.h"
 
-/* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_cfg_credel.h"
 /* ###################################################################### */
@@ -94,7 +78,7 @@ duf_cfg_create( void )
   /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
   DUF_CFGW( cfg, opt.trace.temp ) += 2;
 
-  cfg->scn.pdi = duf_pdi_create( "selected" );
+  /* cfg->scn.pdi = duf_pdi_create( "selected" ); */
   assert( cfg->vars.puz );
   /* assert( cfg->cli.longopts_table ); */
 
@@ -110,7 +94,7 @@ duf_cfg_delete( duf_config_t * cfg )
   if ( cfg )
   {
 /* xchanges = di.changes; --- needless!? */
-    duf_pdi_kill( &cfg->scn.pdi );
+    /* duf_pdi_kill( &cfg->scn.pdi ); */
 
     duf_ufilter_delete( cfg->vars.puz );
     cfg->vars.puz = NULL;

@@ -75,9 +75,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, save.path ):
         rs = "save.path";
         break;
-      case offsetof( duf_config_t, opt.option_delimiter ):
-        rs = "opt.option_delimiter";
-        break;
+      /* case offsetof( duf_config_t, cli.option_delimiter ): */
+      /*   rs = "cli.option_delimiter";                       */
+      /*   break;                                             */
       case offsetof( duf_config_t, opt.act.v ):
         rs = "opt.act.v";
         break;
@@ -118,8 +118,8 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
         else if ( offset >= offsetof( duf_config_t, opt ) && offset < offsetof( duf_config_t, db ) )
         {
           /* {                                                                                                 */
-          /*   if ( offsetof( duf_config_opt_t, option_delimiter ) == offset - offsetof( duf_config_t, opt ) ) */
-          /*     rs = "opt.option_delimiter";                                                                  */
+          /*   if ( offsetof( duf_config_cli_t, option_delimiter ) == offset - offsetof( duf_config_t, cli ) ) */
+          /*     rs = "cli.option_delimiter";                                                                  */
           /* }                                                                                                 */
         }
         else if ( offset >= offsetof( duf_config_t, db ) && offset < offsetof( duf_config_t, save ) )
