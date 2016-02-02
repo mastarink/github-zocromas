@@ -41,7 +41,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_option_extended.h duf_option_longopts.h duf_option_extended2string.h \
 	duf_option_find.h duf_option_cfind.h duf_option_lfind.h \
 	duf_xtended_table.h \
-	duf_option_clarify.h duf_option_lcclarify.h duf_option_clarify_string.h duf_option_clarify_batch.h  duf_option_tmpdb.h \
+	duf_option_clarify.h duf_option_lcclarify.h duf_option_clarify_batch.h  duf_option_tmpdb.h \
 	duf_option_clarify_new.h \
 	duf_option_typed.h duf_option_typed_gen.h duf_option_typed_call.h duf_option_typed_defs.h \
 	duf_optimpl_help.h duf_optimpl_smart_help.h duf_optimpl_version.h duf_optimpl_misc.h duf_optimpl_sccb.h duf_optimpl_fs.h duf_optimpl_fs_types.h \

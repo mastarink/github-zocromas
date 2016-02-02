@@ -10,9 +10,6 @@ sfind duf_option_clarify_new.h
 tab sfind duf_option_lcclarify.c
 sfind duf_option_lcclarify.h
 
-tab sfind duf_option_clarify_string.c
-sfind duf_option_clarify_string.h
-
 tab sfind duf_option_clarify_batch.c
 sfind duf_option_clarify_batch.h
 

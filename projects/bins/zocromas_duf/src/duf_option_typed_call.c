@@ -8,7 +8,6 @@
 #include "duf_utils.h"          /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_option_defs.h"
-/* #include "duf_option_find.h" */
 #include "duf_option_tmpdb.h"
 
 

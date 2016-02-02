@@ -4,16 +4,6 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_status.h"
-
-#include "duf_option_find.h"
-#include "duf_option_cfind.h"
-#include "duf_option_lfind.h"
-
-#include "duf_option_descr.h"
-
-#include "duf_option_typed.h"
-
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
