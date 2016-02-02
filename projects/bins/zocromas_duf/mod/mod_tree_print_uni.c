@@ -198,6 +198,17 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
         if ( !sformat_pref )
           sformat_pref = "_%-6M =%-4S%P";
+#if 0
+        {
+          int c1 DUF_UNUSED;
+          int c2 DUF_UNUSED;
+
+          c1 = DUF_ACTG_FLAG( force_color );
+          c2 = DUF_ACTG_FLAG( nocolor );
+          T( "%d:%d", c1, c2 );
+          assert( 0 );
+        }
+#endif
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
                                               duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,

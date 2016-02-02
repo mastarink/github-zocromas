@@ -221,7 +221,7 @@ duf_main( int argc, char **argv )
         if ( pod->doindex >= 0 )
         {
           fprintf( f, "\t%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
-                   pod->xfound.array[pod->doindex].xtended->o.name );
+                   pod->xfound.xarray[pod->doindex].xtended->o.name );
           if ( pod->optarg )
             fprintf( f, "='%s'", pod->optarg );
         }

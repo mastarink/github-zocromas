@@ -124,8 +124,8 @@ duf_cfg_delete( duf_config_t * cfg )
         duf_option_data_t *pod;
 
         pod = &cfg->aod.pods[iod];
-        mas_free( pod->xfound.array );
-        pod->xfound.array = NULL;
+        mas_free( pod->xfound.xarray );
+        pod->xfound.xarray = NULL;
         mas_free( pod->name );
         pod->name = NULL;
         mas_free( pod->optarg );

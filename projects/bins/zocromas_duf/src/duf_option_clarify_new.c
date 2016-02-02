@@ -90,30 +90,33 @@ SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtend
   size_t alloc_step = 10;
   size_t index = 0;
 
+  /* T( "@@i name_offset:%lu - '%s' (%s) noo:%c", pod->name_offset, pod->name, xtended->o.name, pod->noo ? '+' : '-' ); */
   /* T( "$$$$ SOFT:%d; n:%s; a:%s; s:%s -- o.n:%s (has_arg:%d) from %s", soft, pod->name, pod->optarg, pod->string_copy, xtended->o.name, pod->has_arg, */
   /*    duf_optsource_name( pod->source ) );                                                                                                       */
 
   index = pod->xfound.count_hard + pod->xfound.count_soft;
   if ( pod->xfound.allocated_size == 0 )
   {
-    assert( pod->xfound.array == NULL );
-    pod->xfound.array = mas_malloc( alloc_step * sizeof( pod->xfound.array[0] ) );
+    assert( pod->xfound.xarray == NULL );
+    pod->xfound.xarray = mas_malloc( alloc_step * sizeof( pod->xfound.xarray[0] ) );
 
-    memset( pod->xfound.array + pod->xfound.allocated_size * sizeof( pod->xfound.array[0] ), 0, alloc_step * sizeof( pod->xfound.array[0] ) );
+    memset( pod->xfound.xarray + pod->xfound.allocated_size * sizeof( pod->xfound.xarray[0] ), 0, alloc_step * sizeof( pod->xfound.xarray[0] ) );
     pod->xfound.allocated_size += alloc_step;
   }
   else if ( pod->xfound.allocated_size == index )
   {
-    assert( pod->xfound.array );
-    pod->xfound.array = mas_realloc( pod->xfound.array, ( pod->xfound.allocated_size + alloc_step ) * sizeof( pod->xfound.array[0] ) );
+    assert( pod->xfound.xarray );
+    pod->xfound.xarray = mas_realloc( pod->xfound.xarray, ( pod->xfound.allocated_size + alloc_step ) * sizeof( pod->xfound.xarray[0] ) );
 
-    memset( pod->xfound.array + pod->xfound.allocated_size * sizeof( pod->xfound.array[0] ), 0, alloc_step * sizeof( pod->xfound.array[0] ) );
+    memset( pod->xfound.xarray + pod->xfound.allocated_size * sizeof( pod->xfound.xarray[0] ), 0, alloc_step * sizeof( pod->xfound.xarray[0] ) );
     pod->xfound.allocated_size += alloc_step;
   }
-  pod->xfound.array[index].xtended = xtended;
-  pod->xfound.array[index].soft = soft;
-  pod->xfound.array[index].noo = pod->noo;
-  pod->xfound.array[index].xtable = pod->xtable;
+  pod->xfound.xarray[index].xtended = xtended;
+  pod->xfound.xarray[index].soft = soft;
+  /* T( "@@@(%c%c)%s", pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-', xtended->o.name ); */
+  pod->xfound.xarray[index].noo = pod->noo;
+  /* T( "@@(%c%c)%s", pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-', xtended->o.name ); */
+  pod->xfound.xarray[index].xtable = pod->xtable;
 
   if ( soft )
   {
@@ -172,13 +175,13 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
     {
       if ( 0 == strcmp( match, xtended->o.name ) )
       {
-        /* T( "@1 name_offset:%lu - '%s' (%s|%s) noo:%d", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ); */
+        /* T( "@@1 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb == len_ask );
         CR( soption_xclarify_new_register, xtended, 0 /* soft */ , pod );
       }
       else if ( 0 == strncmp( match, xtended->o.name, len_ask ) )
       {
-        /* T( "@2 name_offset:%lu - '%s' (%s|%s) noo:%d", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ); */
+        /* T( "@@2 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb > len_ask );
         CR( soption_xclarify_new_register, xtended, len_tb - len_ask /* soft */ , pod );
       }
@@ -211,20 +214,25 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
   }
   if ( pod->xfound.count_hard == 1 )
   {
-    if ( pod->xfound.array[pod->xfound.hard_index].soft == 0
-         && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.array[pod->xfound.hard_index].xtended, pod->xfound.array[0].xtable ) )
+    if ( pod->xfound.xarray[pod->xfound.hard_index].soft == 0
+         && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xtable ) )
     {
       pod->doindex = pod->xfound.hard_index;
+      /* T( "@@name_offset:%lu - (%s|%s) noo:%c%c", pod->name_offset, pod->name, pod->xfound.xarray[pod->doindex].xtended->o.name, */
+      /*    pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-' );                                              */
     }
   }
   else if ( pod->xfound.count_hard == 0 )
   {
     if ( pod->xfound.count_soft == 1 )
     {
-      if ( pod->xfound.array[pod->xfound.soft_index].soft > 0
-           && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.array[pod->xfound.hard_index].xtended, pod->xfound.array[0].xtable ) )
+      /* T( "@@name_offset:%lu - (%s) noo:%c", pod->name_offset, pod->name, pod->noo ? '+' : '-' ); */
+      if ( pod->xfound.xarray[pod->xfound.soft_index].soft > 0
+           && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xtable ) )
       {
         pod->doindex = pod->xfound.hard_index;
+        /* T( "@@name_offset:%lu - (%s|%s) noo:%c%c", pod->name_offset, pod->name, pod->xfound.xarray[pod->doindex].xtended->o.name, */
+        /*    pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-' );                                              */
       }
     }
     else if ( pod->xfound.count_soft > 1 )
@@ -248,13 +256,14 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
   }
   if ( QNOERR && pod->doindex >= 0 && pod->clarifier && pod->stage != DUF_OPTION_STAGE_BOOT )
   {
-    /* T( "@Do it : (%c)%s", pod->xfound.array[doindex].noo ? '-' : '+', pod->xfound.array[doindex].xtended->o.name ); */
+    /* T( "@Do it : (%c%c)%s", pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-', */
+    /*    pod->xfound.xarray[pod->doindex].xtended->o.name );                                          */
     {
       char *oa;
 
       oa = duf_string_options_expand( pod->optarg, '?' );
       /* T( "@########### [%s:%s:%s] %lu %s", pod->string_copy,  pod->name, pod->optarg, pod->doindex, duf_optstage_name(pod->stage) ); */
-      CRV( ( pod->clarifier ), pod->xfound.array[pod->doindex].xtended, oa, pod->stage, pod->xfound.array[pod->doindex].xtable, pod->noo,
+      CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->stage, pod->xfound.xarray[pod->doindex].xtable, pod->xfound.xarray[pod->doindex].noo,
            pod->source );
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
@@ -266,12 +275,12 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
   T( "@-------- %lu:%lu ----------", pod->xfound.count_hard, pod->xfound.count_soft );
   for ( size_t n = 0; n < pod->xfound.count_hard + pod->xfound.count_soft; n++ )
   {
-    T( "@@ ========== s:%d; ch:%lu; cs:%lu; doi:%d {%d} --%s='%s' =======================", pod->xfound.array[n].soft, pod->xfound.count_hard,
-       pod->xfound.count_soft, doindex, pod->clarifier ? 1 : 0, pod->xfound.array[n].xtended->o.name, pod->optarg );
+    T( "@@ ========== s:%d; ch:%lu; cs:%lu; doi:%d {%d} --%s='%s' =======================", pod->xfound.xarray[n].soft, pod->xfound.count_hard,
+       pod->xfound.count_soft, doindex, pod->clarifier ? 1 : 0, pod->xfound.xarray[n].xtended->o.name, pod->optarg );
   }
 #endif
-  /* mas_free( pod->xfound.array ); */
-  /* pod->xfound.array = NULL; */
+  /* mas_free( pod->xfound.xarray ); */
+  /* pod->xfound.xarray = NULL; */
   /* mas_free( pod->name );   */
   /* pod->name = NULL;        */
   /* mas_free( pod->optarg ); */
@@ -442,8 +451,8 @@ SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name,
 
   if ( pod_allocated )
   {
-    mas_free( pod->xfound.array );
-    pod->xfound.array = NULL;
+    mas_free( pod->xfound.xarray );
+    pod->xfound.xarray = NULL;
     mas_free( pod->name );
     pod->name = NULL;
     mas_free( pod->optarg );

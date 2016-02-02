@@ -349,7 +349,7 @@ typedef struct
   size_t hard_index;
   size_t soft_index;
 
-  duf_found_extended_t *array;
+  duf_found_extended_t *xarray;
 } duf_found_extended_array_t;
 
 typedef struct
