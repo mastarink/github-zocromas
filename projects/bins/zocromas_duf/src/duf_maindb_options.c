@@ -8,6 +8,9 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
+
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_defs.h"
@@ -65,14 +68,14 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
       CR( pdi_reinit_anypath, DUF_CONFIGG( scn.pdi ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
-           (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
+      CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
+          ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
     }
   }
   else
   {
-    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, DUF_CONFIGA( aod ) /* paod */ ,
-         (istage > DUF_OPTION_STAGE_BOOT) /* from_paod */  );
+    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
+        ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
   /* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
@@ -117,15 +120,15 @@ SR( TOP, treat_all_optstages )
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
 
-  TT("∈1∋ One ");
-  TT("∈2∋ Two ");
-  TT("∈1∋ Three ");
-  TT("∈3 Four ");
-  TT("∈1∋ Five ");
-  TT("∈4∋ Six ");
-  TT("∈1∋ Seven ");
-  TT("∈6 Eight ");
-  TT("∈1∋ Nine ");
-  TT("∈7∋ Ten ");
+  TT( "∈1∋ One " );
+  TT( "∈2∋ Two " );
+  TT( "∈1∋ Three " );
+  TT( "∈3 Four " );
+  TT( "∈1∋ Five " );
+  TT( "∈4∋ Six " );
+  TT( "∈1∋ Seven " );
+  TT( "∈6 Eight " );
+  TT( "∈1∋ Nine " );
+  TT( "∈7∋ Ten " );
   ER( TOP, treat_all_optstages );
 }

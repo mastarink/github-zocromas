@@ -45,24 +45,22 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "force-color" ) /*      */ , DO_A_N /* */ , DO_VF( FORCE_COLOR )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /* */ DO_OC( FLAG, opt.act.v ), DO_FL( act, force_color ), DO_STAGE_ALL /*              */ , DO_H(  ... ) /*                             */ },
-   {.o = {DO_Q( "color" ) /*             */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*        */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( NOFLAG, opt.act.v ), DO_FL( act, nocolor ) /*                           */ , DO_H(  ... ) /*                             */ },
+
+/* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
+   {.o = {DO_Q( "color" ) /*            */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*        */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( NOFLAG, opt.act.v ), DO_FL( act, nocolor ) /*                         */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "escapecoloring" ) /*   */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*        */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FN( act, nocolor ) /*                           */ , DO_H(  ... ) /*                             */ },
+
+
 
 
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },
-#if 0
-   {.o = {DO_Q( "selection" ) /*        */ , DO_A_N /* */ , DO_VF( BEGINNING_SQL ) /* */ } /* */ , DO_CL( CONTROL ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_SPLS /*        */ , DO_H(  ... ) /*                            */ },
-#endif
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_SPLS /*              */ , DO_H( recursive ) /*                        */ },
+    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_SPLS /*             */ , DO_H( recursive ) /*                        */ },
    {.o = {DO_Q( "linear" ) /*        */ , DO_A_N /* */ , DO_VF( LINEAR )} /*         */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*              */ , DO_H( recursive ) /*                        */ },
-#if 0
-   {.o = {DO_Q( "if-recursive" ) /*     */ , DO_A_N} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( PSFLAG, v ), DO_FL( rec_etc, recursive ) /*                           */ , DO_H( recursive ) /*                        */ },
-#endif
 
 
 
@@ -93,12 +91,6 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "use-binformat" ) /*        */ , DO_A_N /* */ , DO_VF( USE_BINFORMAT )} /* */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, use_binformat ) /*                     */ , DO_H( use bin format ) /*                   */ },
-#if 0
-   {.o = {DO_Q( "print" ) /*             */ , DO_A_N /* */ , DO_VF( PRINT )} /*            */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, print ) /*                             */ , DO_H( print ) /*                            */ },
-   {.o = {DO_Q( "tree" ) /*              */ , DO_A_N /* */ , DO_VF( TREE )} /*             */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, tree ) /*                              */ , DO_H( tree ) /*                             */ },
-#endif
    {.o = {DO_Q( "progress" ) /*         */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, progress ) /*                          */ , DO_H( progress ) /*                         */ },
    {.o = {DO_Q( "remove-database" ) /*  */ , DO_A_N /* */ , DO_VF( REMOVE_DATABASE )} /*   */ , DO_CL( SYSTEM ) /*      */ ,
@@ -108,23 +100,6 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, summary ) /*                 */ , DO_H( summary ) /*                          */ },
 
 
-#if 0
-   {.o = {DO_Q( "uni-scan" ) /*         */ , DO_A_N /* */ , DO_VF( UNI_SCAN )} /*          */ , DO_CL( OBSOLETE ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, uni_scan ) /*                          */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "nouni-scan" ) /*       */ , DO_A_N /* */ , DO_VF( UNI_SCAN )} /*          */ , DO_CL( OBSOLETE ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, uni_scan ),.invert = 1 /*              */ , DO_H(  .... ) /*                            */ },
-#endif
-
-#if 0
-   {.o = {DO_Q( "sccbs" ) /*            */ , DO_A_N /* */ , DO_VF( DO_SCCBS )} /*      */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, do_sccbs ) /*                          */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "nosccbs" ) /*          */ , DO_A_N /* */ , DO_VF( DO_SCCBS )} /*      */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, do_sccbs ),.invert = 1 /*              */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "show-sccbs" ) /*       */ , DO_A_N /* */ , DO_VF( SHOW_SCCBS )} /*      */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, show_sccbs ) /*                        */ , DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "show-sccbh" ) /*       */ , DO_A_N /* */ , DO_VF( SHOW_SCCBH )} /*      */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, show_sccbh ) /*                        */ , DO_H(  .... ) /*                            */ },
-#endif
    {.o = {DO_Q( "vacuum" ) /*           */ , DO_A_N /* */ , DO_VF( VACUUM )} /*            */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, vacuum ) /*                            */ , DO_H( vacuum db ) /*                        */ },
 

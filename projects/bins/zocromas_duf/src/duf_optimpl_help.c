@@ -893,10 +893,10 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
-    unsigned u = DUF_CONFIGG( scn.puz )->v.sbit;
+    unsigned u = DUF_CONFIGG( vars.puz )->v.sbit;
 
-    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( scn.puz )->v ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( scn.puz )->v.sbit );
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( vars.puz )->v ), sizeof( typeof( u ) ),
+                ( unsigned long ) DUF_CONFIGG( vars.puz )->v.sbit );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 

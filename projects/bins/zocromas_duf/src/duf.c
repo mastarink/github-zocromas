@@ -42,6 +42,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
@@ -208,11 +210,11 @@ duf_main( int argc, char **argv )
       duf_option_stage_t stage = DUF_OPTION_STAGE_NONE;
       duf_option_source_t source = {.sourcecode = DUF_OPTION_SOURCE_NONE };
 
-      for ( size_t iod = 0; iod < duf_config->aod.count; iod++ )
+      for ( size_t iod = 0; iod < global_status.aod.count; iod++ )
       {
         duf_option_data_t *pod;
 
-        pod = &duf_config->aod.pods[iod];
+        pod = &global_status.aod.pods[iod];
         /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
         if ( source.sourcecode != pod->source.sourcecode )
           fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );

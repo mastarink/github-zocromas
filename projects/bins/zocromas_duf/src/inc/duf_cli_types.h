@@ -164,6 +164,7 @@ typedef struct
   char option_delimiter;
 } duf_config_opt_t;
 
+/* options/parameters used for parsing cli options */
 typedef struct
 {
   char *shorts;

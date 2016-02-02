@@ -8,6 +8,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_status_ref.h"
 #include "duf_config.h"
 #include "duf_config_trace.h"
 
@@ -197,9 +198,10 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       if ( !pdhandle->rs )
         pdhandle->rs++;
 
-      DUF_CONFIGW( dh.nopen )++;
-      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, DUF_CONFIGG( dh.nopen ), DUF_CONFIGG( dh.nclose ),
-                 DUF_CONFIGG( dh.nopen ) - DUF_CONFIGG( dh.nclose ), pdhandle->dfd );
+      global_status.dh.nopen++;
+      /* DUF_CONFIGW( dh.nopen )++; */
+      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, global_status.dh.nopen, global_status.dh.nclose,
+                 global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
     }
     else if ( ry < 0 && errno == ENOENT )
     {
@@ -265,7 +267,7 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     {
       if ( errno == ENOENT )
       {
-        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT,  "No such entry %s", path );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -368,9 +370,9 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
         DUF_TEST_R( r );
       }
-      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", DUF_CONFIGG( dh.nopen ), DUF_CONFIGG( dh.nclose ), DUF_CONFIGG( dh.nopen ) - DUF_CONFIGG( dh.nclose ),
-                 pdhandle->dfd );
-      DUF_CONFIGW( dh.nclose )++;
+      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", global_status.dh.nopen, global_status.dh.nclose,
+                 global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
+      global_status.dh.nclose++;
     }
     else
     {
@@ -405,7 +407,7 @@ _duf_check_dh( const char *msg )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, DUF_CONFIGG( dh.nopen ), DUF_CONFIGG( dh.nclose ), DUF_CONFIGG( dh.nopen ) - DUF_CONFIGG( dh.nclose ) );
+  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, global_status.dh.nopen, global_status.dh.nclose, global_status.dh.nopen - global_status.dh.nclose );
   DEBUG_ENDR( r );
 }
 

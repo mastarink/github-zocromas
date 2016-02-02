@@ -265,6 +265,28 @@ typedef struct
   duf_option_stage_t max;
 } duf_limits_stage_t;
 
+typedef struct
+{
+  unsigned dry_run:1;
+} duf_config_opt_flags_t;
+
+typedef union
+{
+  duf_config_opt_flags_t flag;
+  unsigned short sbit;
+} duf_config_opt_flags_combo_t;
+
+typedef union
+{
+  duf_config_act_flags_t act;
+  duf_config_output_flags_t output;
+  duf_rfilter_flags_t rec_etc;
+  duf_config_opt_flags_t opt;
+  duf_config_opt_disable_flags_t disable;
+  unsigned bit;
+  unsigned short sbit;
+} duf_option_anyflag_t;
+
 
 typedef struct
 {
@@ -277,7 +299,7 @@ typedef struct
   unsigned m_hasoff:1;
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
-  duf_anyflag_t afl;
+  duf_option_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
 

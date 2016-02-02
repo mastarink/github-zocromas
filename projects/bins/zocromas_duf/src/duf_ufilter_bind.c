@@ -58,12 +58,12 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
   DEBUG_STARTR( r );
 #if 0
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
-  if ( DUF_CONFIGG(scn.puz)->_name.flag ) \
+  if ( DUF_CONFIGG(vars.puz)->_name.flag ) \
   { \
-    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(scn.puz)->_name.min, r, pstmt ); \
-    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(scn.puz)->_name.max, r, pstmt ); \
+    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(vars.puz)->_name.min, r, pstmt ); \
+    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(vars.puz)->_name.max, r, pstmt ); \
   }
-  assert( DUF_CONFIGX( scn.puz ) );
+  assert( DUF_CONFIGX( vars.puz ) );
 #else
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
   if ( pu->_name.flag ) \

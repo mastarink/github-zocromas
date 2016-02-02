@@ -75,7 +75,7 @@ static int
 set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  DUF_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  DUF_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
 
   {
@@ -85,7 +85,7 @@ set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
     DUF_SQL_START_STMT( pdi, update_priority, sql, r, pstmt );
     DUF_TRACE( mod, 3, "S:%s", sql );
     DUF_SQL_BIND_LL( dirId, duf_levinfo_dirid( pdi ), r, pstmt );
-    DUF_SQL_BIND_LL( priority, DUF_CONFIGG( dir_priority ), r, pstmt );
+    DUF_SQL_BIND_LL( priority, DUF_CONFIGG( vars.dir_priority ), r, pstmt );
     DUF_SQL_STEPC( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
     DUF_SQL_END_STMT( pdi, update_priority, r, pstmt );
@@ -100,7 +100,7 @@ set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  DUF_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DEBUG_ENDR( r );
 }
@@ -111,7 +111,7 @@ set_dir_priority_node_after2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * 
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  DUF_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DEBUG_ENDR( r );
 }

@@ -154,8 +154,12 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
       pod->name_offset = 0;
       /* T( "@0b name_offset:%lu - %s ? %s", pod->name_offset, pod->name,  xtended->o.name ); */
     }
-    if ( xtended->invert )
-      pod->noo = !pod->noo;
+    /* 
+     * invert works at duf_option_typed_gen.c / DUF_OPTION_VTYPE_FLAG; not here:
+
+       if ( xtended->invert )
+         pod->noo = !pod->noo;
+     */
     len_ask = strlen( pod->name ) - pod->name_offset;
     len_tb = strlen( xtended->o.name );
     match = pod->name + pod->name_offset;

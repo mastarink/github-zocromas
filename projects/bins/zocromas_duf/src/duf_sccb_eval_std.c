@@ -54,7 +54,7 @@ int
 duf_ev_evnamed_list_std( const char *names )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) );
+  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
@@ -68,7 +68,7 @@ int
 duf_ev_evnamen_std( const char *name, size_t len )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) );
+  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evnamen( name, len, duf_action_table(  ) ) );
 #else
@@ -81,7 +81,7 @@ int
 duf_ev_evname_std( const char *name )
 {
   DEBUG_STARTR( r );
-  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( scn.puz ) );
+  assert( DUF_CONFIGX( scn.pdi )->pup == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evname( name, duf_action_table(  ) ) );
 #else

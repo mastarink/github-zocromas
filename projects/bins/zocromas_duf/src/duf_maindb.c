@@ -135,7 +135,7 @@ duf_main_db_pre_action( void )
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_drop, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
-    global_status.actions_done++;
+    /* global_status.actions_done++; */
   }
   else
   {
@@ -150,7 +150,7 @@ duf_main_db_pre_action( void )
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_clean, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
-    global_status.actions_done++;
+    /* global_status.actions_done++; */
   }
   else
   {
@@ -161,7 +161,7 @@ duf_main_db_pre_action( void )
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( create_tables ) /* && DUF_ACTG_FLAG( create_database ) */  )
   {
     DOR( r, duf_main_db_create_tables(  ) );
-    global_status.actions_done++;
+    /* global_status.actions_done++; */
   }
   else
   {
@@ -178,7 +178,7 @@ duf_main_db_pre_action( void )
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_vacuum, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
-    global_status.actions_done++;
+    /* global_status.actions_done++; */
   }
   else
   {
@@ -245,27 +245,27 @@ duf_main_db_open( duf_depthinfo_t * pdi )
 
   assert( pdi );
   assert( !pdi->attached_copy );
-  /* global_status.db_opened_name */
+  /* global_status.db.opened_name */
 
-  DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
-  DUF_TRACE( db, 5, "@@@@global_status.db_opened_name:%s => CFG->db.main.name:%s", global_status.db_opened_name, DUF_CONFIGGSP( db.main.name ) );
+  DUF_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
+  DUF_TRACE( db, 5, "@@@@global_status.db.opened_name:%s => CFG->db.main.name:%s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name ) );
 
-  /* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db_opened_name ); */
-  if ( global_status.db_opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name ), global_status.db_opened_name ) )
+  /* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db.opened_name ); */
+  if ( global_status.db.opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name ), global_status.db.opened_name ) )
   {
-    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db_opened_name, DUF_CONFIGGSP( db.main.name ) );
-    DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
+    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name ) );
+    DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
     DOR( r, duf_main_db_close( pdi, 0 ) );
-    DUF_TRACE( db, 0, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
+    DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
   }
-  DUF_TRACE( db, 5, "@@@@global_status.db_attached_selected:%s", global_status.db_attached_selected );
+  DUF_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
 #if 0
   if ( !DUF_CONFIGG( db.opened ) )
 #else
-  if ( !global_status.db_opened_name )
+  if ( !global_status.db.opened_name )
 #endif
   {
-    assert( !global_status.db_attached_selected );
+    assert( !global_status.db.attached_selected );
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
 
@@ -291,7 +291,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     DUF_CONFIGWN( db.opened, ( DUF_NOERROR( r ) ) );
 #endif
     if ( DUF_NOERROR( r ) )
-      global_status.db_opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
+      global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
     DUF_TRACE( pdi, 0, "DUF_CONFIGG( scn.pdi ) %s", duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
@@ -331,7 +331,7 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
 #if 0
   if ( DUF_CONFIGG( db.opened ) )
 #else
-  if ( global_status.db_opened_name )
+  if ( global_status.db.opened_name )
 #endif
   {
     int rt = 0;
@@ -359,7 +359,7 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
     }
     if ( pdis && !global_status.pdilist ) /* close only if opened for this pdi */
     {
-      DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db_opened_name );
+      DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db.opened_name );
 #if 0
       {
 #  ifdef MAS_SPLIT_DB
@@ -392,11 +392,11 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
 #if 0
       DUF_CONFIGWN( db.opened, !( DUF_NOERROR( r ) ) );
 #else
-      mas_free( global_status.db_opened_name );
-      global_status.db_opened_name = NULL;
+      mas_free( global_status.db.opened_name );
+      global_status.db.opened_name = NULL;
 #endif
-      mas_free( global_status.db_attached_selected );
-      global_status.db_attached_selected = NULL;
+      mas_free( global_status.db.attached_selected );
+      global_status.db.attached_selected = NULL;
     }
   }
   DEBUG_ENDR( r );

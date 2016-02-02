@@ -50,25 +50,25 @@ duf_config_optionally_show( void )
 
 #if 0
   /* Obsolete ??? */
-  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( scn.puz )->maxitems.total );
-  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( scn.puz )->maxitems.files );
-  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( scn.puz )->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( scn.puz )->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( scn.puz )->dirfiles.max );
+  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( vars.puz )->maxitems.total );
+  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( vars.puz )->maxitems.files );
+  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( vars.puz )->maxitems.dirs );
+  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( vars.puz )->dirfiles.min );
+  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( vars.puz )->dirfiles.max );
 #endif
 
 #ifdef MAS_TRACING
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->scn.puz->globx.include_fs_files.argc, duf_config->scn.puz->globx.include_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->vars.puz->globx.include_fs_files.argc, duf_config->vars.puz->globx.include_fs_files.argv, 0 );
     DUF_TRACE( config, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->scn.puz->globx.exclude_fs_files.argc, duf_config->scn.puz->globx.exclude_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->vars.puz->globx.exclude_fs_files.argc, duf_config->vars.puz->globx.exclude_fs_files.argv, 0 );
     DUF_TRACE( config, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }

@@ -39,11 +39,12 @@ duf_tmp_delete( duf_tmp_t * tmp )
   }
 }
 
+#if 0
 void
 global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no,
                              duf_option_source_t source )
 {
-#define XCMDS_STEP 64
+#  define XCMDS_STEP 64
   if ( global_status.n_xcmds == global_status.alloc_xcmds )
   {
     size_t z, n;
@@ -51,9 +52,9 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     z = global_status.alloc_xcmds;
     global_status.alloc_xcmds += XCMDS_STEP;
     n = global_status.alloc_xcmds * sizeof( duf_xcmd_t );
-#if 0
+#  if 0
     global_status.xcmds = mas_realloc( global_status.xcmds, n );
-#else
+#  else
     {
       duf_xcmd_t *xc;
 
@@ -65,7 +66,7 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
       }
       global_status.xcmds = xc;
     }
-#endif
+#  endif
     memset( global_status.xcmds + z, 0, XCMDS_STEP * sizeof( duf_xcmd_t ) );
   }
   {
@@ -79,6 +80,7 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     global_status.xcmds[pos].source = source;
   }
 }
+#endif
 
 void
 global_status_init( void )
@@ -95,6 +97,8 @@ global_status_reset( void )
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = NULL;
 #endif
+
+#if 0
   if ( global_status.xcmds )
   {
     for ( unsigned pos = 0; pos < global_status.n_xcmds; pos++ )
@@ -104,11 +108,31 @@ global_status_reset( void )
     mas_free( global_status.xcmds );
     global_status.xcmds = NULL;
   }
+#endif
+  mas_free( global_status.db.attached_selected );
+  global_status.db.attached_selected = NULL;
+  mas_free( global_status.db.opened_name );
+  global_status.db.opened_name = NULL;
 
-  mas_free( global_status.db_attached_selected );
-  global_status.db_attached_selected = NULL;
-  mas_free( global_status.db_opened_name );
-  global_status.db_opened_name = NULL;
+  {
+    for ( size_t iod = 0; iod < global_status.aod.count; iod++ )
+    {
+      duf_option_data_t *pod;
+
+      pod = &global_status.aod.pods[iod];
+      mas_free( pod->xfound.xarray );
+      pod->xfound.xarray = NULL;
+      mas_free( pod->name );
+      pod->name = NULL;
+      mas_free( pod->optarg );
+      pod->optarg = NULL;
+      mas_free( pod->string_copy );
+      pod->string_copy = NULL;
+    }
+    mas_free( global_status.aod.pods );
+    global_status.aod.pods = NULL;
+    global_status.aod.size = global_status.aod.count = 0;
+  }
 }
 
 static void constructor_global_status( void ) __attribute__ ( ( constructor( 101 ) ) );

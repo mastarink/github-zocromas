@@ -33,19 +33,19 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, help_string ):
         rs = "help_string";
         break;
-      /* case offsetof( duf_config_t, loadtime ): */
-      /*   rs = "loadtime";                       */
-      /*   break;                                 */
-      case offsetof( duf_config_t, config_dir ):
+        /* case offsetof( duf_config_t, loadtime ): */
+        /*   rs = "loadtime";                       */
+        /*   break;                                 */
+      case offsetof( duf_config_t, conf.config_dir ):
         rs = "config_dir";
         break;
-      case offsetof( duf_config_t, cmds_dir ):
+      case offsetof( duf_config_t, conf.cmds_dir ):
         rs = "cmds_dir";
         break;
-      case offsetof( duf_config_t, config_file_path ):
+      case offsetof( duf_config_t, conf.config_file_path ):
         rs = "config_file_path";
         break;
-      case offsetof( duf_config_t, dir_priority ):
+      case offsetof( duf_config_t, vars.dir_priority ):
         rs = "dir_priority";
         break;
       case offsetof( duf_config_t, db.dir ):
@@ -66,10 +66,10 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, db.main.name ):
         rs = "db.main.name";
         break;
-      case offsetof( duf_config_t, tag.dir ):
+      case offsetof( duf_config_t, vars.tag.dir ):
         rs = "tag.dir";
         break;
-      case offsetof( duf_config_t, tag.file ):
+      case offsetof( duf_config_t, vars.tag.file ):
         rs = "tag.file";
         break;
       case offsetof( duf_config_t, save.path ):
@@ -87,9 +87,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, opt.output ):
         rs = "opt.output";
         break;
-      /* case offsetof( duf_config_t, opt.output.fun_width ): */
-      /*   rs = "opt.output.fun_width";                       */
-      /*   break;                                             */
+        /* case offsetof( duf_config_t, opt.output.fun_width ): */
+        /*   rs = "opt.output.fun_width";                       */
+        /*   break;                                             */
       case offsetof( duf_config_t, opt.output.header_tty ):
         rs = "opt.output.header_tty";
         break;
@@ -125,15 +125,15 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
         else if ( offset >= offsetof( duf_config_t, db ) && offset < offsetof( duf_config_t, save ) )
         {
         }
-        else if ( offset >= offsetof( duf_config_t, save ) && offset < offsetof( duf_config_t, config_dir ) )
+        else if ( offset >= offsetof( duf_config_t, save ) && offset < offsetof( duf_config_t, conf.config_dir ) )
         {
         }
-        else if ( offset >= offsetof( duf_config_t, scn ) && offset < offsetof( duf_config_t, dh ) )
-        {
-        }
-        else if ( offset >= offsetof( duf_config_t, dh ) && offset < offsetof( duf_config_t, tag ) )
-        {
-        }
+        /* else if ( offset >= offsetof( duf_config_t, scn ) && offset < offsetof( duf_config_t, dh ) ) */
+        /* {                                                                                            */
+        /* }                                                                                            */
+        /* else if ( offset >= offsetof( duf_config_t, dh ) && offset < offsetof( duf_config_t, vars.tag ) ) */
+        /* {                                                                                                 */
+        /* }                                                                                                 */
         break;
       }
     }
@@ -450,7 +450,7 @@ duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *nam
   }
 }
 
-/* duf_stdx_print *//* TODO :  depends on optimpl !! */
+                    /* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {

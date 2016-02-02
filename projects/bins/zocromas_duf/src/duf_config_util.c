@@ -44,7 +44,7 @@ void *
 duf_get_config_puz_offset( unsigned long off )
 {
   assert( duf_config );
-  return duf_config && duf_config->scn.puz ? ( ( ( char * ) duf_config->scn.puz ) + off ) : NULL;
+  return duf_config && duf_config->vars.puz ? ( ( ( char * ) duf_config->vars.puz ) + off ) : NULL;
 }
 
 duf_config_cli_t *

@@ -54,8 +54,8 @@ duf_cfg_create( void )
 
   cfg = duf_cfg_create_main(  );
 
-  cfg->scn.puz = duf_ufilter_create(  );
-  assert( cfg->scn.puz );
+  cfg->vars.puz = duf_ufilter_create(  );
+  assert( cfg->vars.puz );
 #if 0
   {
     DUF_CFGWSP( cfg, db.dir, mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) ) );
@@ -78,7 +78,7 @@ duf_cfg_create( void )
 
     cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
     /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
-    DUF_CFGWS( cfg, config_dir, mas_strdup( cfgdir ) );
+    DUF_CFGWS( cfg, conf.config_dir, mas_strdup( cfgdir ) );
 
   }
   DUF_CFGWSP( cfg, db.main.name, mas_strdup( "duf-main" ) );
@@ -95,7 +95,7 @@ duf_cfg_create( void )
   DUF_CFGW( cfg, opt.trace.temp ) += 2;
 
   cfg->scn.pdi = duf_pdi_create( "selected" );
-  assert( cfg->scn.puz );
+  assert( cfg->vars.puz );
   /* assert( cfg->cli.longopts_table ); */
 
   DEBUG_END(  );
@@ -112,33 +112,14 @@ duf_cfg_delete( duf_config_t * cfg )
 /* xchanges = di.changes; --- needless!? */
     duf_pdi_kill( &cfg->scn.pdi );
 
-    duf_ufilter_delete( cfg->scn.puz );
-    cfg->scn.puz = NULL;
+    duf_ufilter_delete( cfg->vars.puz );
+    cfg->vars.puz = NULL;
 
-    mas_free( cfg->config_dir );
-    cfg->config_dir = NULL;
+    mas_free( cfg->conf.config_dir );
+    cfg->conf.config_dir = NULL;
 
-    {
-      for ( size_t iod = 0; iod < cfg->aod.count; iod++ )
-      {
-        duf_option_data_t *pod;
-
-        pod = &cfg->aod.pods[iod];
-        mas_free( pod->xfound.xarray );
-        pod->xfound.xarray = NULL;
-        mas_free( pod->name );
-        pod->name = NULL;
-        mas_free( pod->optarg );
-        pod->optarg = NULL;
-        mas_free( pod->string_copy );
-        pod->string_copy = NULL;
-      }
-      mas_free( cfg->aod.pods );
-      cfg->aod.pods = NULL;
-      cfg->aod.size = cfg->aod.count = 0;
-    }
-    mas_free( cfg->cmds_dir );
-    cfg->cmds_dir = NULL;
+    mas_free( cfg->conf.cmds_dir );
+    cfg->conf.cmds_dir = NULL;
 
 #if 0
     mas_free( cfg->config_file_path );
@@ -199,10 +180,10 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->save.path );
     cfg->save.path = NULL;
 
-    mas_free( cfg->tag.file );
-    cfg->tag.file = NULL;
-    mas_free( cfg->tag.dir );
-    cfg->tag.dir = NULL;
+    mas_free( cfg->vars.tag.file );
+    cfg->vars.tag.file = NULL;
+    mas_free( cfg->vars.tag.dir );
+    cfg->vars.tag.dir = NULL;
 
     /* mas_free( cfg->group ); */
     /* cfg->group = NULL;      */

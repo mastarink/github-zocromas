@@ -42,13 +42,12 @@
 /* Offset pdi */
 /* #  define DO_OP(_vt, _v)        DO_OO(_vt, _v, depthinfo) */
 /* Offset config */
+/* _vt is field at config, to get offset */
 #  define DO_OC(_vt, _v)        DO_OO(_vt, _v, config)
 
 
 
 /* Offset ufilter */
-/* #  define DO_OU(_vt, _v)        DO_OOO(_vt, scn.puz._v, config, config) */
-/* #  define DO_OU(_vt, _v)        DO_OOO(_vt, _v, ufilter, ufilter) */
 #  define DO_OU(_vt, _v)        DO_OO(_vt, _v, ufilter)
 
 
@@ -57,9 +56,12 @@
 /* #  define DO_ODI(_vt, _v)       DO_OO(_vt, _v, depthinfo) */
 
 
-#  define DO_FL(_t,_fld) .afl._t={._fld=1}, .can_no=1 /* --flag-option sets flag to 1, --no-flag-option sets flag to 0 */
+/* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
+#  define DO_FL(_t, _fld) .afl._t={._fld=1}, .can_no=1
+                                                    /* --flag-option sets flag to 1, --no-flag-option sets flag to 0 */
                                          /* ,.setit=1 */
-#  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1  /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
+#  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1
+                                                /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
 
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
 /* #  define DO_INTERACTIVE DO_FL( act, interactive ) */

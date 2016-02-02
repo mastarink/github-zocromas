@@ -9,7 +9,7 @@
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
-#include "duf_config_defs.h"    /* DUF_CONFIGGS( config_dir ) */ /* insularity! FIXME */
+#include "duf_config_defs.h"    /* DUF_CONFIGGS( conf.config_dir ) */ /* insularity! FIXME */
 
 #include "duf_option_config.h"
 #include "duf_options_enum.h"   /* DUF_CONFIG_FILE_NAME */
@@ -284,7 +284,7 @@ duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, 
  * */
   DUF_TRACE( options, 20, "@@@@cfgfile options; stage:%s; filename:%s", duf_optstage_name( istage ), filename );
   {
-    DOR( r, duf_infile_options_at_dir_and_file( istage, DUF_CONFIGGS( config_dir ), filename, 3, optional, source, paod ) );
+    DOR( r, duf_infile_options_at_dir_and_file( istage, DUF_CONFIGGS( conf.config_dir ), filename, 3, optional, source, paod ) );
   }
   DUF_TRACE( options, 22, "@@@@cfgfile options done; stage:%s; filename:%s (%d:%s)", duf_optstage_name( istage ), filename, r,
              mas_error_name_i( r ) );
@@ -462,7 +462,7 @@ SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func
       const char *fname = cf + 1;
 
       {
-        CR( infile_options_at_dir_and_file, istage, DUF_CONFIGGS( cmds_dir ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
+        CR( infile_options_at_dir_and_file, istage, DUF_CONFIGGS( conf.cmds_dir ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
       }
 
       DUF_TRACE( temp, 2, "%s>> (%d) done targv[%d]='%s'", duf_optstage_name( istage ), QERRIND, ia, cf );

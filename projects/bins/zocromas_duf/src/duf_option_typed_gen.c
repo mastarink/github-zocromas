@@ -142,7 +142,7 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
     /*   break;                                                                    */
   case DUF_OFFSET_ufilter:
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
-    /* byteptr = ( ( ( char * ) DUF_CONFIGG( scn.puz ) ) + extended->m_offset ); */
+    /* byteptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
     byteptr = duf_get_config_puz_offset( extended->m_offset );
     break;
 #endif

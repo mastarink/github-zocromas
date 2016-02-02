@@ -38,8 +38,6 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
  * */
     DUF_TRACE( options, 55, "@@@fully clarify option: [--%s='%s'] stage:%s; `noo`:%d; source:%s",
                extended ? extended->o.name : "?", optargg, duf_optstage_name( istage ), noo, duf_optsource_name( source ) );
-/* TODO : register  extended + optargg for further use */
-    global_status_register_xcmd( extended, optargg, istage, noo, source );
     DOR( r, duf_xoption_clarify_typed( extended, optargg, istage, xtable, noo, source ) );
     DUF_TRACE( options, 55, "@clarified typed: --%s / [%s]; (%d:%s)", extended->o.name, duf_xoption_description_tmp( -1, extended ), r,
                mas_error_name_i( r ) );
