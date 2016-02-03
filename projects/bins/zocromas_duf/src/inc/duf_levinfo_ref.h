@@ -54,16 +54,18 @@ unsigned long long duf_levinfo_nameid( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_nameid_up( const duf_depthinfo_t * pdi );
 
 
-#  ifndef DUF_NO_NUMS
+#  ifndef  MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_numdir( const duf_depthinfo_t * pdi );
 int duf_levinfo_numdir_up( const duf_depthinfo_t * pdi );
 #  else
-#if 0
+#    if 0
 unsigned long long duf_levinfo_childs_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_childs( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_childs_up( const duf_depthinfo_t * pdi );
-#endif
+#    endif
 long long duf_levinfo_numchild_d( const duf_depthinfo_t * pdi, int d );
 long long duf_levinfo_numchild( const duf_depthinfo_t * pdi );
 long long duf_levinfo_numchild_up( const duf_depthinfo_t * pdi );

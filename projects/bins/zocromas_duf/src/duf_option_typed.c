@@ -8,6 +8,7 @@
 
 
 #include "duf_config_trace.h"
+#include "duf_config_util.h"
 
 #include "duf_option_defs.h"
 
@@ -22,8 +23,8 @@
 /* ###################################################################### */
 
 int
-duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                           const duf_longval_extended_table_t * xtable, int noo, duf_option_source_t source )
+duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_table_t * xtable, int noo,
+                           duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   duf_option_data_t od DUF_UNUSED;
@@ -46,7 +47,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     if ( extended->calltype )
     {
       nogen = 1;
-      DOR( r, duf_xoption_clarify_typed_call( extended, optargg, istage, noo,source ) );
+      DOR( r, duf_xoption_clarify_typed_call( extended, optargg, noo, istage, source ) );
 
       /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )
@@ -57,7 +58,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     }
     if ( !nogen )
     {
-      DOR( r, duf_xoption_clarify_typed_gen( extended, optargg, istage, noo,source ) );
+      DOR( r, duf_xoption_clarify_typed_gen( extended, optargg, noo, istage, source ) );
     }
   }
   else

@@ -72,7 +72,9 @@ duf_sql_sequence_t sql_update_selected = {
           " ) "                 /* */
           " SELECT fid, did, parentid FROM parents_cte WHERE parentid IS NOT NULL GROUP BY ParentId " /* */ , /* XXX */
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL " (" /* */
           "Pathid INTEGER NOT NULL" /* */
           ", numfiles INTEGER NOT NULL" /* */
@@ -116,6 +118,6 @@ duf_sql_sequence_t sql_update_selected = {
 #  endif
           " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
           " GROUP BY parents." DUF_SQL_IDFIELD /* */ , /* XXX */
-#endif /* ifndef DUF_NO_NUMS */
+#endif /* ifdef DUF_DO_NUMS */
           NULL}
 };

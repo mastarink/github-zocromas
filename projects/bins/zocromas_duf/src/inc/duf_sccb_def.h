@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_SCCB_DEF_H
 #  define MAS_DUF_SCCB_DEF_H
 
+#  include "duf_fmt_defs.h"
+
 #  if defined(__GNUC__)
 #    define DUF_SCCB( _macr, _name, _min, _fmt, ... )			_macr( _name, _min, "%" DUF_ACTION_TITLE_FMT "; "  _fmt, \
     			duf_uni_scan_action_title( SCCB ), ##__VA_ARGS__ )

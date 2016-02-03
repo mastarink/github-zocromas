@@ -2,6 +2,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config_trace.h"
+
 
 /* ###################################################################### */
 #include "duf_sql_error.h"

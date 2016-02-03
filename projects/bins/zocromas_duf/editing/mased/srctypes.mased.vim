@@ -1,7 +1,11 @@
 find duf_maintenance.h
 
 tab sfind duf_defs.h
-sfind duf_debug_defs.h
+sfind duf_fmt_defs.h
+sfind duf_db_defs.h
+
+tab sfind duf_debug_defs.h
+sfind duf_compile_defs.h
 " sfind duf_print_defs.h
 sfind duf_printn_defs.h
 " sfind duf_print_defs_preset.h

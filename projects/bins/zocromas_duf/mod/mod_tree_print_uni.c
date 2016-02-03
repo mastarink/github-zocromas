@@ -1,9 +1,22 @@
 #include <string.h>
 
+#include <mastar/error/mas_errors_maintenance.h>
 
 
+#if 1
+#  include "duf_defs.h"
+#  include "duf_config_util_z.h"/* duf_trace_file_c => duf_tracen.h ????? */
+#  include "duf_compile_defs.h"
+#  include "duf_debug_defs.h"   /* START / END */
+#  include "duf_dbg.h"          /* to be removed: duf_dbgfunc */
+#  include "duf_dodefs.h"       /* => duf_compile_defs.h ??? ; join with start/end ??? */
+#  include "duf_errorn_defs.h"
 
-#include "duf_maintenance.h"
+#  include "duf_tracen_maintenance.h"
+#else
+#  include "duf_maintenance.h"
+#endif
+#include "duf_printn_defs.h"    /* DUF_PRINTF */
 
 
 #include "duf_config.h"
@@ -122,7 +135,9 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  /* .nameid = 1, */
                  .mime = 1,
                  .mimeid = 0,
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
                  .nfiles_space = 1,
                  .ndirs_space = 1,
 #endif
@@ -274,11 +289,15 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                  .exifdt = 0,
                  .camera = 0,
                  .mimeid = 0,
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
                  .nfiles = 1,
                  .ndirs = 1,
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
                  .rnfiles = 1,
                  .rndirs = 1,
 #endif
@@ -440,7 +459,9 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
 #  define DUF_TREE_FLAG_TOO_DEEP 0x8
 #endif
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
   ndu = duf_levinfo_numdir_d( pdi, du );
 #else
   ndu = duf_levinfo_count_childs_d( pdi, du );

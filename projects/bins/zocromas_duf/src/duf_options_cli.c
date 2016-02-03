@@ -3,6 +3,7 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 #include "duf_config_trace.h"
 
 #include "duf_option_config.h"
@@ -127,18 +128,21 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
       if ( optind > 0 )
         qarg = carg->argv[optind - 1];
       /* longoptname = duf_coption_find_name_at_std( codeval, QPERRIND ); */
-      longoptname = duf_lcoption_find_name_at_std( codeval, longindex, QPERRIND );
-      if ( longindex < 0 && codeval == '?' && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
+      longoptname = duf_lcoption_find_name_at_std( codeval, &longindex, QPERRIND );
+      assert( ( longindex > 0 && longoptname ) || ( longindex < 0 && !longoptname ) );
+      if ( longindex < 0 /* && codeval == '?' */ && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
         longoptname = qarg + 2;
 
       if ( longoptname )
         CR( soption_xclarify_na_new_at_stdx_default, longoptname, optarg, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( CLI ),
             paod );
+#if 0
       else if ( codeval == '?' )
       {
         SERR( OPTION_NOT_PARSED );
         assert( 0 );
-      }
+      } 
+#endif
       else                      /* ERROR */
       {
         SERR( OPTION_NOT_PARSED );
@@ -221,12 +225,15 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
 #else
   do
   {
+    duf_option_t *longtable = duf_cli_options_get_longopts_table(  );
+
     optopt = 0, longindex = -1;
 
-    codeval = getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex );
+    codeval = getopt_long( carg->argc, carg->argv, shorts, longtable, &longindex );
     if ( codeval >= 0 )
     {
       optindd = optind;
+      /* codeval >=0 && codeval!='?' && longindex<0 means short => in this case longindex=...  */
 #  if 1
       CR( lcoption_parse, longindex, codeval, istage, paod );
 /* TODO */

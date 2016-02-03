@@ -7,7 +7,7 @@
 /* #  include "duf_tracen_defs_sys.h" */
 
 #  define DUF_TRACE( ... )	MAST_TRACE( __VA_ARGS__ )
-#  define DUF_TRACE_WP( ... )	MAST_TRACE_WP( __VA_ARGS__ )
+#  define DUF_TRACE_WP( ... )   MAST_TRACE_WP( __VA_ARGS__ )
 #  define DUF_TRACE_WHAT( ... )	MAST_TRACE_WHAT( __VA_ARGS__ )
 #  define DUF_IF_TRACE( ... )	MAST_IF_TRACE( __VA_ARGS__ )
 #  define DUF_TRACESYS( ... )	MAST_TRACESYS( __VA_ARGS__ )

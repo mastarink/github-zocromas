@@ -21,10 +21,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'tmpl-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -58,10 +62,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'basic-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -102,10 +110,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'md5-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -147,10 +159,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'sha1-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -177,10 +193,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'sd5-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -223,10 +243,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'crc32-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -257,10 +281,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'mime-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize  " /* */
@@ -289,10 +317,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* "'exif-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -326,10 +358,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* " 'std-nons-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -366,10 +402,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set =
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
    " fn.Pathid AS dirid "       /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", 0 AS ndirs, 0 AS nfiles"  /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", 0 AS rndirs, 0 AS rnfiles" /* */
 #endif
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
@@ -409,10 +449,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -428,10 +472,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -447,10 +495,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -466,10 +518,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -485,10 +541,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -504,10 +564,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid " /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -523,10 +587,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -542,10 +610,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -561,10 +633,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -580,10 +656,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif
@@ -599,10 +679,14 @@ static duf_fieldset_t _all_fieldsets[] = {
    " pt." DUF_SQL_IDFIELD " AS dirid" /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
    ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs" /* */
    ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles" /* */
 #endif

@@ -1,6 +1,7 @@
 #ifndef MAS_SQL_TABLES_DEFS_H
 #  define MAS_SQL_TABLES_DEFS_H
 
+#  include "duf_db_defs.h"
 #  include "sql_tables_global_defs.h"
 
 #  ifndef DUF_SQL_SELECTED_TEMPORARY
@@ -38,7 +39,9 @@
 #  endif
 
 #  define DUF_SQL_TABLES_TMP_TDB_OPTIONS       "t_tdb_options"
-#  ifndef DUF_NO_NUMS
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
 #    ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
 #      define DUF_SQL_TABLES_TMP_PATHTOT_FILES     "t_common_pathtot_files"
 #    endif
@@ -109,7 +112,9 @@
 
 #    ifdef DUF_SQL_TTABLES_TEMPORARY
 #      define DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL     DUF_SQL_TABLES_TMP_TDB_OPTIONS
-#      ifndef DUF_NO_NUMS
+#      ifndef MAS_DUF_DEFS_H
+#        error use #include "duf_defs.h"
+#      elif defined( DUF_DO_NUMS )
 #        ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
 #          define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL   DUF_SQL_TABLES_TMP_PATHTOT_FILES
 #          define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL  DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL
@@ -124,7 +129,9 @@
 #      endif
 #    else
 #      define DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL    DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_TDB_OPTIONS
-#      ifndef DUF_NO_NUMS
+#      ifndef MAS_DUF_DEFS_H
+#        error use #include "duf_defs.h"
+#      elif defined( DUF_DO_NUMS )
 #        ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
 #          define DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL  DUF_DBTEMPPREF  DUF_SQL_TABLES_TMP_PATHTOT_FILES
 #          define DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL  DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL

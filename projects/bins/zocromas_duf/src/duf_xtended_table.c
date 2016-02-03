@@ -2,6 +2,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config_trace.h"
+
 
 
 /* man getopt_long */
@@ -98,14 +100,9 @@ _duf_extended_table_multi_init( void )
   for ( const duf_longval_extended_table_t ** src = _lo_extended_table_multi; src && *src; src++, dst++ )
   {
     *dst = *src;
+    /* T("@tab.name: '%s'", (*src)->name); */
   }
   *dst++ = NULL;
-#if 0
-  for ( const duf_longval_extended_table_t ** dst = lo_extended_table_multi; dst && *dst; dst++ )
-  {
-    T( "t:%p '%s'", dst, ( *dst )->name );
-  }
-#endif
 }
 
 static void

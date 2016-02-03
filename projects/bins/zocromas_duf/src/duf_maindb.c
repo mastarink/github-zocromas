@@ -7,9 +7,11 @@
 
 
 #include "duf_maintenance.h"
+#include "duf_printn_defs.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
+#include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_config_db.h"

@@ -43,6 +43,7 @@ duf_coption_xfind_desc_at_stdx( duf_option_code_t codeval, int *pr )
   return ph ? ph : "-";
 }
 
+#if 0
 /* -= by int longindex =- */
 char *
 duf_loption_description_d( int longindex, const char *delimh, const char *delim )
@@ -55,6 +56,7 @@ duf_loption_description_d( int longindex, const char *delimh, const char *delim 
     p = duf_xoption_description_d( extended, delimh, delim );
   return p;
 }
+#endif
 
 /* -= by duf_longval_extended_t * extended =- */
 char *

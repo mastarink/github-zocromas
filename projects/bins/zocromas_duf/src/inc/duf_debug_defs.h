@@ -1,6 +1,9 @@
 #ifndef MAS_DUF_DEBUG_DEFS_H
 #  define MAS_DUF_DEBUG_DEFS_H
-#  include "duf_defs.h"
+/* #  include "duf_defs.h" */
+
+#  include "duf_start_end.h"
+
 
 #  ifdef MAS_WRAP_FUNC
 #    define DUF_WRAPSTATIC static

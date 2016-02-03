@@ -4,10 +4,12 @@
 #include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance_options.h"
+#include "duf_printn_defs.h"
 
 #include "duf_utils.h"          /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_config_trace.h"
+#include "duf_config_util.h"
 
 #include "duf_option_defs.h"
 #include "duf_option_tmpdb.h"
@@ -149,7 +151,7 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 }
 
 int
-duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int noo, duf_option_source_t source DUF_UNUSED)
+duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, int noo, duf_option_stage_t istage, duf_option_source_t source DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 

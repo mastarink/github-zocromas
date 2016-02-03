@@ -7,11 +7,24 @@
 
 #include "duf_config_trace.h"
 
+#include "duf_option_config.h" /* duf_cli_options_get_longopts_table */
+
 #include "duf_xtended_table.h"
 
 /* ###################################################################### */
 #include "duf_option_lfind.h"
 /* ###################################################################### */
+
+
+const duf_option_t *
+duf_loption_find_at_std( int longindex )
+{
+  const duf_option_t *roption = NULL;
+
+  if ( longindex >= 0 )
+    roption = &( duf_cli_options_get_longopts_table(  )[longindex] );
+  return roption;
+}
 
 /* longindex + extended_arrat => extended */
 static const duf_longval_extended_t *

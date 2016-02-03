@@ -5,6 +5,7 @@
 #include "duf_maintenance_options.h"
 
 #include "duf_config_trace.h"
+#include "duf_config_util.h"
 
 #include "duf_option_descr.h"
 
@@ -18,8 +19,8 @@
 /* ###################################################################### */
 
 DUF_WRAPSTATIC int
-duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                     const duf_longval_extended_table_t * xtable, int noo, duf_option_source_t source )
+duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
+                     const duf_longval_extended_table_t * xtable, int noo, duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   if ( extended )
@@ -31,7 +32,7 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
  * */
     DUF_TRACE( options, 55, "@@@fully clarify option: [--%s='%s'] stage:%s; `noo`:%d; source:%s",
                extended ? extended->o.name : "?", optargg, duf_optstage_name( istage ), noo, duf_optsource_name( source ) );
-    DOR( r, duf_xoption_clarify_typed( extended, optargg, istage, xtable, noo, source ) );
+    DOR( r, duf_xoption_clarify_typed( extended, optargg, xtable, noo, istage, source ) );
     DUF_TRACE( options, 55, "@clarified typed: --%s / [%s]; (%d:%s)", extended->o.name, duf_xoption_description_tmp( -1, extended ), r,
                mas_error_name_i( r ) );
 
@@ -56,13 +57,13 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
 
 #ifdef MAS_WRAP_FUNC
 int
-DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                     const duf_longval_extended_table_t * xtable, int noo, duf_option_source_t source )
+DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
+                                     const duf_longval_extended_table_t * xtable, int noo, duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_xoption_clarify( extended, optargg, istage, xtable, noo, source ) );
+  DOR( r, duf_xoption_clarify( extended, optargg, xtable, noo, istage, source ) );
   /* T("@noo:%d", noo); */
   DUF_TRACE( options, +150, "@@@@clarified xcmd full: xname:%s; arg:%s; noo:%d (%d:%s)", duf_xoption_description_tmp( -1, extended ), optargg, noo, r,
              mas_error_name_i( r ) );

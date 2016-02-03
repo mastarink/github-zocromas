@@ -69,7 +69,9 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ , /* XXX */
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 #  ifdef DUF_SQL_SELECTED_DROP
           /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL (* *) , */
 #  endif

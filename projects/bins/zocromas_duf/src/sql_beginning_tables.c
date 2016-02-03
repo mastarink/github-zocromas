@@ -31,7 +31,9 @@ duf_sql_sequence_t sql_beginning_tables = {
 
 
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 #  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
 #    ifndef DUF_SQL_TTABLES_TEMPORARY
           /* "DROP TABLE IF EXISTS " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL (* *) , */

@@ -4,6 +4,9 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance_options.h"
+#include "duf_printn_defs.h"
+
+#include "duf_config_util.h"
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"   /* duf_optstage_name */
@@ -75,9 +78,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, save.path ):
         rs = "save.path";
         break;
-      /* case offsetof( duf_config_t, cli.option_delimiter ): */
-      /*   rs = "cli.option_delimiter";                       */
-      /*   break;                                             */
+        /* case offsetof( duf_config_t, cli.option_delimiter ): */
+        /*   rs = "cli.option_delimiter";                       */
+        /*   break;                                             */
       case offsetof( duf_config_t, opt.act.v ):
         rs = "opt.act.v";
         break;
@@ -450,7 +453,7 @@ duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *nam
   }
 }
 
-                    /* duf_stdx_print *//* TODO :  depends on optimpl !! */
+                                        /* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {

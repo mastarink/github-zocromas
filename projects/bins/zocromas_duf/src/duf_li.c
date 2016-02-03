@@ -24,7 +24,9 @@
 /* ###################################################################### */
 #include "duf_li.h"
 /* ###################################################################### */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 void
 duf_li_set_nums( duf_levinfo_t * pli, unsigned long long ndirs, unsigned long long nfiles )
 {
@@ -114,7 +116,9 @@ _duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt )
     pli->itemname = mas_strdup( DUF_GET_SFIELD2( dfname ) );
   }
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
   /* pli->numdir = DUF_GET_UFIELD2( ndirs );   */
   /* pli->numfile = DUF_GET_UFIELD2( nfiles ); */
   duf_li_set_nums( pli, DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ) );
@@ -193,7 +197,9 @@ duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_l
           ", pt.dev, pt.inode, pt.rdev, pt.mode, pt.nlink, pt.uid, pt.gid, pt.blksize, pt.blocks " /* */
           ", pt.size, pt.atim, pt.atimn, pt.mtim, pt.mtimn, pt.ctim, pt.ctimn ",
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
@@ -257,7 +263,9 @@ duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf
     .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON(pt." DUF_SQL_IDFIELD "=fn.Pathid) " /* */
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON(fd." DUF_SQL_IDFIELD "=fn.dataid) " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif

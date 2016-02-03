@@ -107,7 +107,9 @@ typedef struct
   duf_node_type_t node_type;
   duf_levinfo_db_t db;
   /* const char *name; */
-#  ifndef DUF_NO_NUMS
+#  ifndef  MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
   long numdir;
   long numfile;
 #  else

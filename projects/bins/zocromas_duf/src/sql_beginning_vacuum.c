@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "duf_defs.h"
+/* #include "duf_defs.h" */
 #include "duf_sql_defs.h"
 
 /* ###################################################################### */

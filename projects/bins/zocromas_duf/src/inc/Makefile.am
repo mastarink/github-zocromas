@@ -18,6 +18,9 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_context.h \
 	duf_dbg.h \
 	duf_debug_defs.h \
+	duf_compile_defs.h \
+	duf_fmt_defs.h \
+	duf_db_defs.h \
 	duf_defs.h \
 	duf_dh.h \
 	duf_dirent.h \

@@ -83,7 +83,9 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
 /* at levinfo current level: set dirid,numdir,numfile */
 static int
 duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
                         , unsigned long long nfiles, unsigned long long ndirs
 #endif
        )
@@ -94,7 +96,9 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
   pli = duf_levinfo_ptr( pdi );
   assert( pli );
   duf_levinfo_set_dirid( pdi, dirid );
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
   /* pli->numfile = nfiles; */
   /* pli->numdir = ndirs;   */
   duf_li_set_nums( pli, ndirs, nfiles );
@@ -114,7 +118,9 @@ duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
   DEBUG_STARTR( r );
 
   DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid )
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
                                   , DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs )
 #endif
         ) );                    /* at levinfo current level: set dirid,numdir,numfile */
@@ -132,8 +138,8 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 
   assert( pdi->pdi_name );
   DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
-    DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu; '%s'", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
-               duf_levinfo_dirid_up( pdi ), sqlv );
+  DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu; '%s'", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ),
+             duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ), sqlv );
   {
     const char *truedirname;
 
@@ -197,17 +203,23 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
   duf_sql_set_t def_node_set = {
     .fieldset = "pt." DUF_SQL_IDFIELD " AS dirid " /* */
           ", pt." DUF_SQL_DIRNAMEFIELD " AS dname " /*      */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
           ", tf.numfiles AS nfiles" /* */
           ", td.numdirs AS ndirs  " /*      */
 #endif
-#ifndef DUF_NO_RNUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
           ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles " /* */
 #endif
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 #  ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #  else
@@ -254,8 +266,8 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #endif
 
   DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) ); /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
-    DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
-               duf_levinfo_dirid_up( pdi ) );
+  DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
+             duf_levinfo_dirid_up( pdi ) );
   if ( DUF_NOERROR( r ) )
     dirid = duf_levinfo_dirid( pdi );
   mas_free( sqlv );
@@ -282,8 +294,8 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
 
     DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) ); /* at levinfo current level:
                                                                       set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
-    DUF_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", r, mas_error_name_i(r), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
-               duf_levinfo_dirid_up( pdi ) );
+    DUF_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ),
+               duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 
     if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
@@ -297,7 +309,9 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
         if ( DUF_NOERROR( r ) )
         {
           DOR( r, duf_set_dirid_and_nums( pdi, duf_sql_last_insert_rowid(  )
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
                                           , 0, 0
 #endif
                 ) );            /* at levinfo current level:
@@ -456,7 +470,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   char *real_path;
 
   assert( pdi );
-  assert(pdi->pdi_name);
+  assert( pdi->pdi_name );
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );

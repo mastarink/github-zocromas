@@ -232,7 +232,9 @@ DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
 
 /************************************************************************/
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, numdir, numdir )
 /* *INDENT-ON*  */

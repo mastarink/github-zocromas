@@ -352,8 +352,8 @@ typedef struct duf_longval_extended_table_s
 
 
 
-typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                    const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source );
+typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, const char *optargg,
+                                    const duf_longval_extended_table_t * xtable, int no, duf_option_stage_t istage, duf_option_source_t source );
 
 typedef struct
 {

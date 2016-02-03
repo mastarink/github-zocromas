@@ -2,8 +2,10 @@
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_maintenance.h"
+#include "duf_printn_defs.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 #include "duf_config_trace.h"
 #include "duf_config_ref.h"
 
@@ -61,7 +63,8 @@ duf_main_db_info( void )
       {.title = "paths",.count = 5,.labels = {"num of paths", "max num dirs", "max num files", "@min inow", "@max inow", NULL}
        ,.sql =
        "SELECT  COUNT(*), max(numdirs), max(numfiles), STRFTIME('%s',min(pt.inow)), STRFTIME('%s',max(pt.inow)) FROM " DUF_SQL_TABLES_PATHS_FULL
-       " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ")"}
+       " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD
+       ")"}
       ,
 #endif
       {.title = "datas with reasonable date",.count = 5,.labels = {"#", "@min mtim", "@max mtim", "@min inow", "@max inow", NULL}

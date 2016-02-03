@@ -5,6 +5,7 @@
 #include <mastar/tools/mas_utils_path.h>
 
 #include "duf_maintenance.h"
+#include "duf_printn_defs.h"
 
 #include "duf_status_ref.h"
 

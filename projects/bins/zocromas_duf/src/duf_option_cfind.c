@@ -10,29 +10,31 @@
 #include "duf_option_stage.h"
 #include "duf_option_config.h"
 
+#include "duf_option_lfind.h"
+
 /* ###################################################################### */
 #include "duf_option_cfind.h"
 /* ###################################################################### */
 
 static const duf_option_t *
-duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, int *pr )
+duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, int *plongindex, int *pr )
 {
   const duf_option_t *roption = NULL;
   int rpr = 0;
   int ntable = 0;
-  int tbcount = 0;
+  int longindex = 0;
 
   {
-    for ( ; !roption && arr->name; arr++, tbcount++ )
+    for ( ; !roption && arr->name; arr++, longindex++ )
     {
       if ( arr )
       {
-        DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, arr->name, arr->val, codeval );
+        DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, longindex, arr->name, arr->val, codeval );
         /* assert( 0 ); */
         if ( arr->val == codeval )
         {
           roption = arr;
-          DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, arr->name );
+          DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, longindex, arr->name );
 #if 0
           ok = 1;
 #endif
@@ -41,29 +43,36 @@ duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, in
       }
     }
   }
+  if ( plongindex )
+    *plongindex = longindex;
   if ( pr )
     *pr = rpr;
   return roption;
 }
 
 static const duf_option_t *
-duf_coption_find_at_std( duf_option_code_t codeval, int *pr )
+duf_coption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr )
 {
-  return duf_coption_find_at_arr( codeval, duf_cli_options_get_longopts_table(  ), pr );
+  return duf_coption_find_at_arr( codeval, duf_cli_options_get_longopts_table(  ), plongindex, pr );
 }
 
-static const duf_option_t *
-duf_lcoption_find_at_std( duf_option_code_t codeval, int longindex, int *pr )
+const duf_option_t *
+duf_lcoption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr )
 {
   const duf_option_t *roption = NULL;
 
-  if ( longindex >= 0 && codeval > DUF_OPTION_VAL_LONG )
+  if ( *plongindex >= 0 && codeval > DUF_OPTION_VAL_LONG )
+#if 0
     roption = &( duf_cli_options_get_longopts_table(  )[longindex] );
+#else
+    roption = duf_loption_find_at_std( *plongindex );
+#endif
   else if ( codeval != '?' )
-    roption = duf_coption_find_at_std( codeval, pr );
+    roption = duf_coption_find_at_std( codeval, plongindex, pr );
   return roption;
 }
 
+#if 0
 const char *
 duf_coption_find_name_at_std( duf_option_code_t codeval, int *pr )
 {
@@ -72,13 +81,14 @@ duf_coption_find_name_at_std( duf_option_code_t codeval, int *pr )
   longoption = duf_coption_find_at_std( codeval, pr );
   return longoption ? longoption->name : NULL;
 }
+#endif
 
 const char *
-duf_lcoption_find_name_at_std( duf_option_code_t codeval, int longindex, int *pr )
+duf_lcoption_find_name_at_std( duf_option_code_t codeval, int *plongindex, int *pr )
 {
   const duf_option_t *longoption = NULL;
 
-  longoption = duf_lcoption_find_at_std( codeval, longindex, pr );
+  longoption = duf_lcoption_find_at_std( codeval, plongindex, pr );
   return longoption ? longoption->name : NULL;
 }
 

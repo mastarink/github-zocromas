@@ -203,7 +203,9 @@ duf_print_file_info_dirid( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF
   return ok;
 }
 
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
 static int
 duf_print_file_info_nfiles( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
 {
@@ -699,7 +701,9 @@ duf_print_bformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, 
   ok += duf_print_file_info_nsame( pdi, pfi, bformat );
   ok += duf_print_file_info_prefix( pdi, pfi, bformat, prefix_cb, suffix_cb );
   ok += duf_print_file_info_dirid( pdi, pfi, bformat );
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
   ok += duf_print_file_info_nfiles( pdi, pfi, bformat );
   ok += duf_print_file_info_ndirs( pdi, pfi, bformat );
 #endif

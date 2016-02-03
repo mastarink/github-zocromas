@@ -6,7 +6,7 @@
 #include "duf_maintenance_options.h"
 
 
-
+#include "duf_config_util.h"
 #include "duf_config_trace.h"
 
 #include "duf_option_types.h"
@@ -269,8 +269,8 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
 
       oa = duf_string_options_expand( pod->optarg, '?' );
       /* T( "@########### [%s:%s:%s] %lu %s", pod->string_copy,  pod->name, pod->optarg, pod->doindex, duf_optstage_name(pod->stage) ); */
-      CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->stage, pod->xfound.xarray[pod->doindex].xtable,
-           pod->xfound.xarray[pod->doindex].noo, pod->source );
+      CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xtable,
+           pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
     }

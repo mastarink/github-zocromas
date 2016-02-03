@@ -1,4 +1,5 @@
 #include "duf_maintenance.h"
+#include "duf_fmt_defs.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -41,7 +42,9 @@ duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
   up = duf_levinfo_ptr_up( pdi );
   if ( up )
   {
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
     up->numdir--;
     /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
 #else

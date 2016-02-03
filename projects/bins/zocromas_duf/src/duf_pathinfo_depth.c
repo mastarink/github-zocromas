@@ -3,6 +3,7 @@
 #include <mastar/tools/mas_utils_path.h> /* mas_pathdepth */
 
 #include "duf_maintenance.h"
+#include "duf_fmt_defs.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -82,7 +83,9 @@ duf_pi_levinfo_countdown_dirs( duf_pathinfo_t * pi )
   up = duf_pi_ptr_up( pi );
   if ( up )
   {
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
     up->numdir--;
     /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
 #else
@@ -175,7 +178,9 @@ duf_pi_countdown_dirs( duf_pathinfo_t * pi )
   up = duf_pi_ptr_up( pi );
   if ( up )
   {
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
     up->numdir--;
     /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
 #else

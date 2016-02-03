@@ -105,26 +105,34 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
-#ifndef DUF_NO_NUMS
-	   ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
-#ifndef DUF_NO_RNUMS
-	   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_RNUMS )
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-#ifndef DUF_NO_NUMS
-	   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
-	   ,
+           ,
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,
-#ifndef DUF_NO_NUMS
-	   .filter = " rnfiles > 0 " /* */
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
+           .filter = " rnfiles > 0 " /* */
 #endif
            },
   .final_sql_seq = &final_sql,
@@ -137,7 +145,8 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   int rpr = 0;
   unsigned long long sha1id = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDFIELD " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
+        "SELECT " DUF_SQL_IDFIELD " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL
+        " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3 */
         ;
 
@@ -202,7 +211,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
       DUF_SQL_END_STMT( pdi, insert_sha1, lr, pstmt );
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT )  || !lr ) && !changes )
+    if ( ( DUF_IS_ERROR_N( lr, DUF_SQL_CONSTRAINT ) || !lr ) && !changes )
     {
       if ( need_id )
         sha1id = duf_pdistat2file_sha1id_existed( pdi, sha1[2], sha1[1], sha1[0], &lr );
@@ -261,7 +270,7 @@ duf_make_sha1_uni( int fd, unsigned char *pmd )
 
           DUF_TRACE( sha1, 10, "read fd:%u", fd );
           ry = read( fd, buffer, bufsz );
-	  /* TODO: if (ry>0)  sscbh->bytes+=ry */
+          /* TODO: if (ry>0)  sscbh->bytes+=ry */
           DUF_TRACE( sha1, 10, "read ry:%u", ry );
           if ( ry < 0 )
           {
@@ -343,7 +352,8 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       {
         DUF_UFIELD2( filedataid );
 #if 0
-        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sha1id, filedataid ) );
+        DOR( r,
+             duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sha1id, filedataid ) );
 #else
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sha1id=:sha1Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 

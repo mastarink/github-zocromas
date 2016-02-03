@@ -7,6 +7,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 #include "duf_config_trace.h"
 
 
@@ -111,7 +112,9 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
     .fieldset = "pt.parentid AS parentid, pt." DUF_SQL_DIRNAMEFIELD " AS name " /* */
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif

@@ -61,7 +61,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .cte = "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
    " ( "                        /* */
    "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
-   "   WHERE rowid=:topDirID " /* */
+   "   WHERE rowid=:topDirID "  /* */
    "  UNION "                   /* */
    "   SELECT paths." DUF_SQL_IDFIELD ", paths.parentid " /* */
    "    FROM cte_paths "        /* */
@@ -80,8 +80,8 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .order = "sh.dupsha1cnt ASC, sha1id", /* */
    .matcher = NULL,
    /* To select ALL files under path
-     WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)
-    * */
+      WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)
+      * */
    }
 };
 
@@ -112,7 +112,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                  */ " AS pte " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
-#  ifndef DUF_NO_NUMS
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #  endif
@@ -123,7 +125,9 @@ duf_sql_set_t std_node_sets[] = { /* */
 #if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt." DUF_SQL_IDFIELD " ) " /* */
-#  ifndef DUF_NO_NUMS
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */
 #  endif
@@ -158,7 +162,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    .selector2_cte =             /* */
    " FROM cte_paths " /*                                     */ " AS pte " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*                */ " AS pt ON (pte." DUF_SQL_IDFIELD " = pt." DUF_SQL_IDFIELD ") " /* */
-#  ifndef DUF_NO_NUMS
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
 #  endif
@@ -166,7 +172,9 @@ duf_sql_set_t std_node_sets[] = { /* */
 #endif
    .selector2 =                 /* */
    " FROM      " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
-#ifndef DUF_NO_NUMS
+#ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+#elif defined( DUF_DO_NUMS )
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL /*  */ " AS td ON (td.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL /* */ " AS tf ON (tf.Pathid = pt." DUF_SQL_IDFIELD ") " /* */
 #endif

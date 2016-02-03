@@ -5,6 +5,9 @@
 
 #include "duf_maintenance_options.h"
 
+#include "duf_config_util.h"
+#include "duf_config_trace.h"
+
 #include "duf_utils.h"          /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_option_defs.h"
@@ -24,8 +27,8 @@
 
 
 int
-duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage DUF_UNUSED,
-                                int noo DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
+duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const char *optargg,
+                                int noo, duf_option_stage_t istage DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   switch ( extended->calltype )

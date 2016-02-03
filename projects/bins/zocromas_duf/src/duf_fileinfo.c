@@ -6,6 +6,7 @@
 
 #include "duf_levinfo_ref.h"
 
+#include "duf_config_trace.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"

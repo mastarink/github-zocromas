@@ -3,7 +3,9 @@
 #  include "duf_levinfo_types.h"
 
 
-#  ifndef DUF_NO_NUMS
+#  ifndef  MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS)
 void duf_li_set_nums( duf_levinfo_t * pli, unsigned long long ndirs, unsigned long long nfiles );
 #  else
 #    if 0

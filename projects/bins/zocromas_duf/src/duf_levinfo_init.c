@@ -33,7 +33,9 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
       pli->itemname = mas_strdup( itemname );
     }
 
-#  ifndef DUF_NO_NUMS
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined(DUF_DO_NUMS)
     /* pdi->pathinfo.levinfo[d].numdir = ndirs;   */
     /* pdi->pathinfo.levinfo[d].numfile = nfiles; */
     /* duf_li_set_nums( pli, ndirs, nfiles ); *//* really never nz here */
