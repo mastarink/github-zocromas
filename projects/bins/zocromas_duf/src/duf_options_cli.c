@@ -7,7 +7,7 @@
 
 #include "duf_option_config.h"
 #include "duf_option_clarify.h"
-#include "duf_option_lcclarify.h"
+/* #include "duf_option_lcclarify.h" */
 #include "duf_option_cfind.h"
 
 #include "duf_option_stage.h"
@@ -132,7 +132,7 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
         longoptname = qarg + 2;
 
       if ( longoptname )
-        CR( soption_xclarify_new_at_stdx_default, ( const char * ) NULL, longoptname, optarg, 0 /* vseparator */ , istage, DUF_OPTION_SOURCE( CLI ),
+        CR( soption_xclarify_na_new_at_stdx_default, longoptname, optarg, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( CLI ),
             paod );
       else if ( codeval == '?' )
       {

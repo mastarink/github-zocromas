@@ -59,7 +59,7 @@ duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_table_t *
   return extended;
 }
 
-const duf_longval_extended_t *
+static const duf_longval_extended_t *
 duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_table_t ** xtables, int *ptbcount, int no,
                              const duf_longval_extended_table_t ** result_pxtable )
 {

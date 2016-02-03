@@ -7,8 +7,8 @@ sfind duf_option_clarify.h
 tab sfind duf_option_clarify_new.c
 sfind duf_option_clarify_new.h
 
-tab sfind duf_option_lcclarify.c
-sfind duf_option_lcclarify.h
+" tab sfind duf_option_lcclarify.c
+" sfind duf_option_lcclarify.h
 
 tab sfind duf_option_clarify_batch.c
 sfind duf_option_clarify_batch.h
@@ -29,8 +29,8 @@ sfind duf_option_typed_call.h
 tab sfind duf_option_tmpdb.c
 sfind duf_option_tmpdb.h
 
-tab sfind duf_option_find.c
-sfind duf_option_find.h
+" tab sfind duf_option_find.c
+" sfind duf_option_find.h
 
 tab sfind duf_option_cfind.c
 sfind duf_option_cfind.h

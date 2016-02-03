@@ -106,7 +106,7 @@ duf_pdi_delete( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
+  assert( pdi && pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
   /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
   DOR( r, duf_pdi_close( pdi ) );
@@ -121,7 +121,7 @@ int
 duf_pdi_kill( duf_depthinfo_t ** ppdi )
 {
   DEBUG_STARTR( r );
-  if ( ppdi )
+  if ( ppdi && *ppdi )
     DOR( r, duf_pdi_delete( *ppdi ) );
   *ppdi = NULL;
   DEBUG_ENDR( r );

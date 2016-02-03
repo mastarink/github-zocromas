@@ -18,7 +18,7 @@
 #include "duf_option_source.h"
 
 #include "duf_option_config.h"
-#include "duf_option_clarify_string.h"
+/* #include "duf_option_clarify_string.h" */
 #include "duf_option_clarify_batch.h"
 
 
@@ -146,7 +146,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
             mas_free( xs );
 #else
             {
-              DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
+              DOR( r, duf_boption_xclarify_at_stdx( 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
             }
             DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
 #endif

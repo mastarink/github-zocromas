@@ -6,7 +6,7 @@
 
 #include "duf_tmp_types.h"
 
-#include "duf_option_find.h"
+/* #include "duf_option_find.h" */
 #include "duf_option_cfind.h"
 #include "duf_option_lfind.h"
 

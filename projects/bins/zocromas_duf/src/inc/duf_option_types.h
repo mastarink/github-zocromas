@@ -379,7 +379,7 @@ typedef struct
   unsigned string_split:1;
   /* const char *string; */
   char *string_copy;
-  char vseparator;
+  char value_separator;
   duf_option_source_t source;
   duf_option_stage_t stage;
   const duf_longval_extended_t *extended;

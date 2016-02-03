@@ -145,7 +145,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
 #  if 0
         DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ? source : DUF_OPTION_SOURCE_STREAM ) );
 #  else
-        DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
+        DOR( r, duf_boption_xclarify_at_stdx( 0 /* value_separator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
 #  endif
 
         DUF_TRACE( options, 250, "executed cmd; r=%d; xs=%s", r, xs );
@@ -154,7 +154,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
         {
           if ( !DUF_IS_SOURCE( source, CFG ) && duf_optsource_labelled( source ) )
             DUF_TRACE( optsource, 0, "@@@@@@@@@%s:%s(%s)", duf_optstage_name( istage ), duf_optsource_name( source ), duf_optsource_label( source ) );
-          DOR( r, duf_boption_xclarify_at_stdx( 0 /* vseparator */ , istage, DUF_OPTION_SOURCE_DEFAULT( source, STREAM ), s, 0, paod ) );
+          DOR( r, duf_boption_xclarify_at_stdx( 0 /* value_separator */ , istage, DUF_OPTION_SOURCE_DEFAULT( source, STREAM ), s, 0, paod ) );
         }
         TR( r );
 #endif
