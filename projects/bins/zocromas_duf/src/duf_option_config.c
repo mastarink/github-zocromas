@@ -89,7 +89,6 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     config_dir (duf_options_file.c)
     cmds_dir (duf_options_file.c)
     opt.output.history_filename (duf_options_interactive.c) =>  cli.history_filename
-    scn.pdi (duf_options_interactive.c)
 */
 }
 

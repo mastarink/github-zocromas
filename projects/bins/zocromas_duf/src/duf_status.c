@@ -6,7 +6,9 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_pdi_credel.h"
+/* #include "duf_pdi_credel.h" */
+#include "duf_pdi_global.h"
+
 #include "duf_status_types.h"
 #include "duf_ufilter.h"
 
@@ -92,7 +94,7 @@ global_status_init( void )
 void
 global_status_reset( void )
 {
-  duf_pdi_kill( &global_status.scn.pdi );
+  duf_pdi_kill_global(  );
   duf_tmp_delete( global_status.tmp );
   global_status.tmp = NULL;
 #if 0

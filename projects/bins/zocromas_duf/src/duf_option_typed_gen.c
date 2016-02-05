@@ -136,10 +136,10 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 #endif
     break;
 #if 1
-    /* case DUF_OFFSET_depthinfo:                                                  */
-    /*   DUF_TRACE( options, 60, "relto=%d", extended->relto );                    */
-    /*   byteptr = ( ( ( char * ) DUF_CONFIGG( scn.pdi ) ) + extended->m_offset ); */
-    /*   break;                                                                    */
+  /* case DUF_OFFSET_depthinfo:                                              */
+  /*   DUF_TRACE( options, 60, "relto=%d", extended->relto );                */
+  /*   byteptr = ( ( ( char * ) duf_pdi_global(  ) ) + extended->m_offset ); */
+  /*   break;                                                                */
   case DUF_OFFSET_ufilter:
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
     /* byteptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
@@ -151,7 +151,8 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 }
 
 int
-duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, int noo, duf_option_stage_t istage, duf_option_source_t source DUF_UNUSED)
+duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, int noo, duf_option_stage_t istage,
+                               duf_option_source_t source DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

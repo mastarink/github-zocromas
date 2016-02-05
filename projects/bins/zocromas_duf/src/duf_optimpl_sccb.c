@@ -7,7 +7,6 @@
 #include "duf_maintenance.h"
 #include "duf_printn_defs.h"
 
-#include "duf_status_ref.h"
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -17,7 +16,7 @@
 
 #include "duf_action_table.h"
 
-
+#include "duf_pdi_global.h"
 #include "duf_pdi_reinit.h"
 #include "duf_pdi_ref.h"
 
@@ -96,9 +95,9 @@ duf_option_O_evaluate_sccb( const char *names )
     }
     T( "han:%p", han );
   }
-  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( global_status.scn.pdi ) );
+  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) );
 #endif
-  if ( duf_levinfo_dirid( global_status.scn.pdi ) )
+  if ( duf_levinfo_dirid( duf_pdi_global(  ) ) )
   {
 #if 0
     DOR( r, duf_ev_evnamed_list( names, _duf_action_table(  ) ) );
@@ -136,8 +135,8 @@ duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
-  assert( global_status.scn.pdi );
-  DOR( r, duf_main_db_open( global_status.scn.pdi ) );
+  assert( duf_pdi_global(  ) );
+  DOR( r, duf_main_db_open( duf_pdi_global(  ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -150,7 +149,7 @@ duf_option_O_cd( const char *s )
 #if 1
     char *new_path = NULL;
 
-    if ( duf_levinfo_path( global_status.scn.pdi ) )
+    if ( duf_levinfo_path( duf_pdi_global(  ) ) )
     {
       if ( *s == '/' )
       {
@@ -158,7 +157,7 @@ duf_option_O_cd( const char *s )
       }
       else
       {
-        new_path = mas_strdup( duf_levinfo_path( global_status.scn.pdi ) );
+        new_path = mas_strdup( duf_levinfo_path( duf_pdi_global(  ) ) );
 #  if 0
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
@@ -182,21 +181,21 @@ duf_option_O_cd( const char *s )
     {
       new_path = mas_strdup( s );
     }
-    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( global_status.scn.pdi ) );
+    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_pdi_global(  ) ) );
     {
 
       /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
 
-      DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
-                                      duf_pdi_recursive( global_status.scn.pdi ), duf_pdi_allow_dirs( global_status.scn.pdi ),
-                                      duf_pdi_linear( global_status.scn.pdi ) ) );
+      DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
+                                      duf_pdi_recursive( duf_pdi_global(  ) ), duf_pdi_allow_dirs( duf_pdi_global(  ) ),
+                                      duf_pdi_linear( duf_pdi_global(  ) ) ) );
     }
     mas_free( new_path );
 #else
     {
 
-      T( "@@[%p] sql_beginning_done:%d", global_status.scn.pdi, duf_pdi_root( global_status.scn.pdi )->sql_beginning_done );
-      DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, s, NULL, 1 /* caninsert */ , duf_pdi_recursive( global_status.scn.pdi ) ) );
+      T( "@@[%p] sql_beginning_done:%d", duf_pdi_global(  ), duf_pdi_root( duf_pdi_global(  ) )->sql_beginning_done );
+      DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( duf_pdi_global(  ) ) ) );
     }
 #endif
   }
@@ -231,8 +230,8 @@ duf_option_O_set_dir_priority( long prio )
 {
   DEBUG_STARTR( r );
 
-  /* DOR( r, duf_pdi_reinit_anypath( global_status.scn.pdi, new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
-  /*                                 duf_pdi_recursive( global_status.scn.pdi ) (*  *)  ) );                                                        */
+  /* DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
+  /*                                 duf_pdi_recursive( duf_pdi_global(  ) ) (*  *)  ) );                                                        */
 
   TT( "@@@@@@dir priority to be set:%ld for %s", prio, "????" );
   DEBUG_ENDR( r );

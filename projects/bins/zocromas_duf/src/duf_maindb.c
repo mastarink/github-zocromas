@@ -9,13 +9,14 @@
 #include "duf_maintenance.h"
 #include "duf_printn_defs.h"
 
+#include "duf_status_ref.h"
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_config_db.h"
-#include "duf_status_ref.h"
 
 #include "duf_expandable.h"
 
@@ -28,6 +29,8 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_open.h"
+
+#include "duf_pdi_global.h"
 
 #include "duf_maindb_info.h"
 
@@ -44,28 +47,6 @@
 /* ###################################################################### */
 #include "duf_maindb.h"
 /* ###################################################################### */
-
-#if 0
-static int
-duf_main_db_attach_selected( const char *name )
-{
-  DEBUG_STARTR( r );
-  static const char *sql = "ATTACH DATABASE '${DB_PATH}${SELECTED_DB}' AS duf${SELECTED_DB}";
-  char *worksql;
-
-  worksql = duf_expand_selected_db( sql, name );
-  DORF( r, duf_main_db_open );
-  DUF_TRACE( temp, 0, "@@@@@attach selected database %s", worksql );
-
-  DUF_TRACE( explain, 0, "attach selected database %s", worksql );
-  DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
-  DUF_SQL_STEP( r, pstmt );
-  DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  DUF_TRACE( temp, 0, "@@@@attached selected database %s", worksql );
-  mas_free( worksql );
-  DEBUG_ENDR( r );
-}
-#endif
 
 static int
 duf_main_db_locate( void )
@@ -294,10 +275,10 @@ duf_main_db_open( duf_depthinfo_t * pdi )
       global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
-    DUF_TRACE( pdi, 0, "global_status.scn.pdi %s", duf_levinfo_path( global_status.scn.pdi ) );
+    DUF_TRACE( pdi, 0, "pdi-global %s", duf_levinfo_path( duf_pdi_global() ) );
 #if 0
     // removed 20151026.200517 - BAD here
-    DOR( r, duf_pdi_reinit_min( global_status.scn.pdi ) );
+    DOR( r, duf_pdi_reinit_min( duf_pdi_global() ) );
 #endif
     DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
     /* if ( DUF_NOERROR( r ) ) */
@@ -360,30 +341,6 @@ duf_main_db_close( duf_depthinfo_t * pdi DUF_UNUSED, int ra )
     if ( pdis && !global_status.pdilist ) /* close only if opened for this pdi */
     {
       DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db.opened_name );
-#if 0
-      {
-#  ifdef MAS_SPLIT_DB
-        if ( DUF_CONFIGG( db.adm.fpath ) )
-        {
-          static const char *sql = "DETACH DATABASE 'adm'";
-
-          DUF_TRACE( explain, 0, "detach adm database %s", DUF_CONFIGG( db.adm.fpath ) );
-          DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-          DUF_SQL_STEP( r, pstmt );
-          DUF_SQL_END_STMT_NOPDI( r, pstmt );
-        }
-        if ( DUF_CONFIGG( db.tempo.fpath ) )
-        {
-          static const char *sql = "DETACH DATABASE 'tempo'";
-
-          DUF_TRACE( explain, 0, "detach tempo database %s -- %s", DUF_CONFIGG( db.tempo.fpath ), sql );
-          DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-          DUF_SQL_STEP( r, pstmt );
-          DUF_SQL_END_STMT_NOPDI( r, pstmt );
-        }
-#  endif
-      }
-#endif
       /* don't DOR it directly! call allways! */
       DORF( rt, duf_sql_close );
       T( "@duf_sql_close: rt:%d", rt );
@@ -407,6 +364,6 @@ SR( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED )
   if ( DUF_ACTG_FLAG( info ) )
     CR( main_db_info );
 
-  CR( main_db_close, global_status.scn.pdi, QERRIND ); /* [@] */
+  CR( main_db_close, duf_pdi_global(), QERRIND ); /* [@] */
   ER( TOP, main_db, int argc DUF_UNUSED, char **argv DUF_UNUSED );
 }

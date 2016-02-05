@@ -109,14 +109,8 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
 /* TODO : via callback of some kind */
 
 
-
-
-#if 0
-        snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
-                  duf_levinfo_path( DUF_CONFIGG( scn.pdi ) ) );
-#else
         prompt = cb_prompt_interactive(  );
-#endif
+
         while ( !rl_buffer )
           rl_buffer = readline( prompt );
         s = rl_buffer;
@@ -130,27 +124,10 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
           /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
           DUF_TRACE( explain, 0, "read config line %s", s );
           {
-#if 0
-            char *xs;
-
-            xs = mas_expand_string( s );
-            DUF_TRACE( explain, 0, "expanded config line %s", xs );
-/* 
- * duf_exec_cmd_long_xtables_std return codeval>0 for "help" option
- *   =0 for other option
- *   errorcode<0 for error
- * */
-            DOR( r, duf_exec_cmd_long_xtables_std( xs, ' ', istage, DUF_OPTION_SOURCE_INTERACTIVE ) );
-            DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ),
-                       DUF_CONFIGG( scn.pdi ) ? 1 : 0 );
-            mas_free( xs );
-#else
             {
               DOR( r, duf_boption_xclarify_at_stdx( 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
             }
             DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
-#endif
           }
           free( rl_buffer );
           rl_buffer = NULL;

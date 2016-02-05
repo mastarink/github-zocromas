@@ -78,7 +78,6 @@ duf_cfg_create( void )
   /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
   DUF_CFGW( cfg, opt.trace.temp ) += 2;
 
-  /* cfg->scn.pdi = duf_pdi_create( "selected" ); */
   assert( cfg->vars.puz );
   /* assert( cfg->cli.longopts_table ); */
 
@@ -94,7 +93,6 @@ duf_cfg_delete( duf_config_t * cfg )
   if ( cfg )
   {
 /* xchanges = di.changes; --- needless!? */
-    /* duf_pdi_kill( &cfg->scn.pdi ); */
 
     duf_ufilter_delete( cfg->vars.puz );
     cfg->vars.puz = NULL;

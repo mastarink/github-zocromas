@@ -9,7 +9,6 @@
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
 	  DUF_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
-	  /* DOR( _rt, duf_main_db_open( global_status.scn.pdi ) ); */ \
           if ( DUF_NOERROR(_rt) ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
           DUF_TEST_R( _rt )

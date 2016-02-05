@@ -9,6 +9,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_status_ref.h"
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 

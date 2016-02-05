@@ -13,6 +13,8 @@ typedef enum
   DUF_LAYER_TOP,
   DUF_LAYER_OPTIONS,
   DUF_LAYER_SNIPPET_OPTION,
+  DUF_LAYER_PDI,
+  DUF_LAYER_SCCB,
 } duf_layer_t;
 
 typedef struct

@@ -66,6 +66,7 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
   duf_idstmt_t *is = NULL;
   duf_idstmt_t *chkids = NULL;
 
+  assert( pdi );
   DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   if ( !pdi->attached_copy )
     DORF( rpr, duf_main_db_open, pdi );

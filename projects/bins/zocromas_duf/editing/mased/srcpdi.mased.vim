@@ -1,6 +1,9 @@
 find duf_pdi.c
 sfind duf_pdi.h
 
+tab sfind duf_pdi_global.c
+sfind duf_pdi_global.h
+
 tab sfind duf_pdi_reinit.c
 sfind duf_pdi_reinit.h
 
