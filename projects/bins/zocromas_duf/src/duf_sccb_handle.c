@@ -12,6 +12,7 @@
 #include "duf_pdi_filters.h"
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
+#include "duf_pdi_stmt.h"
 
 #include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
 #include "duf_utils.h"          /* duf_percent */
@@ -24,6 +25,7 @@
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_prepared.h"
+#include "duf_sql_bind.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -89,7 +91,12 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
  * for instance: selected_paths does NOT contain "fileless" directories
  */
       csql = sqlt;
+#if 0
+      /* 20160205.121213 */
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
+#else
+      DUF_SQL_START_STMT_LOCAL( PDI, csql, rpr, pstmt );
+#endif
       assert( DUF_NOERROR( rpr ) );
       /* if ( !PY )                                 */
       /* {                                          */
@@ -119,11 +126,17 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       }
       DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
       /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
-
+#if 0
+      /* 20160205.121213 */
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
+#else
+      DUF_SQL_END_STMT_LOCAL( PDI, rpr, pstmt );
+#endif
       assert( DUF_NOERROR( rpr ) );
       if ( !cnt )
+      {
         T( "@%llu:%llu; %s; %s", cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql );
+      }
     }
     mas_free( sqlt );
   }

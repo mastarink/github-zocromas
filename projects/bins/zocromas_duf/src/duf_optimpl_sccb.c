@@ -136,6 +136,7 @@ duf_option_O_db_open( void )
 {
   DEBUG_STARTR( r );
 
+  assert( global_status.scn.pdi );
   DOR( r, duf_main_db_open( global_status.scn.pdi ) );
   DEBUG_ENDR( r );
 }

@@ -5,12 +5,12 @@
 typedef struct
 {
   unsigned info:1;
-  unsigned vacuum:1;
-  unsigned remove_database:1;
-  unsigned drop_tables:1;
-  unsigned clean_tables:1;
-  unsigned create_database:1;
-  unsigned create_tables:1;
+  unsigned allow_vacuum:1;
+  unsigned allow_remove_database:1;
+  unsigned allow_drop_tables:1;
+  unsigned allow_clean_tables:1;
+  unsigned allow_create_database:1;
+  unsigned allow_create_tables:1;
 
   unsigned allow_dirs:1;
   unsigned allow_sub:1;

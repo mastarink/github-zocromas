@@ -1,16 +1,23 @@
 #include <libgen.h>
 
+
 #include "duf_maintenance.h"
 #include "duf_fmt_defs.h"
+
+#include "duf_status_ref.h"
+
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_prepared.h"
+#include "duf_sql_bind.h"
 
 #include "duf_ufilter.h"
 #include "duf_ufilter_bind.h"
+
+#include "duf_pdi_stmt.h"
 
 #include "evsql_selector.h"
 
@@ -63,7 +70,11 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
     worksql = sql;
   {
     DUF_TRACE( sql, 3, worksql );
+#if 0
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+#else
+    DUF_SQL_START_STMT_LOCAL( global_status.scn.pdi, worksql, r, pstmt );
+#endif
     if ( callback )
       DOR( r, ( callback ) ( pstmt, pu, py, ttarg ) );
     if ( DUF_NOERROR( r ) )
@@ -71,7 +82,11 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
       DUF_SQL_STEPC( r, pstmt );
       DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
     }
+#if 0
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
+#else
+    DUF_SQL_END_STMT_LOCAL( global_status.scn.pdi, r, pstmt );
+#endif
   }
   /* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */
   if ( tmpsql )

@@ -63,7 +63,7 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
   .init_scan = tagit_init,
 #if 0
   .beginning_sql_seq = &sql_create_selected,
-#else
+#elif 0
   .beginning_sql_seq = &sql_update_selected,
 #endif
 
@@ -86,8 +86,8 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
   /* .dirent_dir_scan_before2 = tagit_de_dir_before2, */
 
 /* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .final_sql_seq = &final_sql,
 };
 

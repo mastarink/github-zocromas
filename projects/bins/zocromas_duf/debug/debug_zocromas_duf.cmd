@@ -9,6 +9,7 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
+b duf_maindb.c:191
 
 # watch global_status.pdilist
 # watch global_status.pdilist->next

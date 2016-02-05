@@ -26,14 +26,18 @@ const duf_longval_extended_table_t optable_flag = {
    /* SEE --disable-memusage */
    {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*   */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
 #endif
-   {.o = {DO_Q( "create-database" ) /*  */ , DO_A_N /* */ , DO_VF( CREATE_DB )} /*         */ , DO_CL( SYSTEM ) /*  */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, create_database ) /*                   */ , DO_H( create db ) /*                        */ },
-   {.o = {DO_Q( "create-tables" ) /*    */ , DO_A_N /* */ , DO_VF( CREATE_TABLES )} /*     */ , DO_CL( SYSTEM ) /*  */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, create_tables ) /*                     */ , DO_H( create tables ) /*                    */ },
-   {.o = {DO_Q( "drop-tables" ) /*      */ , DO_A_N /* */ , DO_VF( DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, drop_tables ) /*                       */ , DO_H( drop tables ) /*                      */ },
-   {.o = {DO_Q( "clean-tables" ) /*     */ , DO_A_N /* */ , DO_VF( CLEAN_TABLES )} /*      */ , DO_CL( SYSTEM ) /*  */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, clean_tables ) /*                      */ , DO_H( clean tables ) /*                     */ },
+   {.o = {DO_Q( "allow-remove-database" ), DO_A_N /* */ , DO_VF( ALLOW_REMOVE_DATABASE )}, DO_CL( SYSTEM ) /*      */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_remove_database ) /*             */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "allow-create-database" ), DO_A_N /* */ , DO_VF( ALLOW_CREATE_DB )} /*     */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_create_database ) /*             */ , DO_H( create db ) /*                        */ },
+   {.o = {DO_Q( "allow-create-tables" ), DO_A_N /* */ , DO_VF( ALLOW_CREATE_TABLES )} /*   */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_create_tables ) /*               */ , DO_H( allow create tables ) /*              */ },
+   {.o = {DO_Q( "allow-drop-tables" ), DO_A_N /* */ , DO_VF( ALLOW_DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_drop_tables ) /*                 */ , DO_H( allow drop tables ) /*                */ },
+   {.o = {DO_Q( "allow-clean-tables" ), DO_A_N /* */ , DO_VF( ALLOW_CLEAN_TABLES )} /*     */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_clean_tables ) /*                */ , DO_H( allow clean tables ) /*               */ },
+   {.o = {DO_Q( "allow-vacuum" ) /*     */ , DO_A_N /* */ , DO_VF( ALLOW_VACUUM )} /*      */ , DO_CL( SYSTEM ) /*  */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_vacuum ) /*                      */ , DO_H( vacuum db ) /*                        */ },
 
    {.o = {DO_Q( "quit" ) /*             */ , DO_A_N /* */ , DO_VF( QUIT )} /*              */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( NOFLAG, opt.act.v ), DO_FL( act, interactive ) /*                    */ , DO_H( quit ) /*                              */ },
@@ -93,15 +97,11 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, use_binformat ) /*                     */ , DO_H( use bin format ) /*                   */ },
    {.o = {DO_Q( "progress" ) /*         */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, progress ) /*                          */ , DO_H( progress ) /*                         */ },
-   {.o = {DO_Q( "remove-database" ) /*  */ , DO_A_N /* */ , DO_VF( REMOVE_DATABASE )} /*   */ , DO_CL( SYSTEM ) /*      */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, remove_database ) /*                   */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, summary ) /*                 */ , DO_H( summary ) /*                          */ },
 
 
-   {.o = {DO_Q( "vacuum" ) /*           */ , DO_A_N /* */ , DO_VF( VACUUM )} /*            */ , DO_CL( SYSTEM ) /*  */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, vacuum ) /*                            */ , DO_H( vacuum db ) /*                        */ },
 
 
    {.o = {.name = NULL}}

@@ -7,7 +7,7 @@
 
 /* 20140412                                                                                            */
 /* reset:                                                                                              */
-/*    run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/      */
+/*    run  --db-name=test20140412  --drop-tables --allow-create-tables  --add-path /home/mastar/a/down/      */
 /* test:                                                                                               */
 /*    sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/test20140412 .tables                      */
 /*    sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/test20140412 'select * from dufs.paths'    */

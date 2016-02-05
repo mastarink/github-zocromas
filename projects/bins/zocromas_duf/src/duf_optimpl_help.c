@@ -120,10 +120,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir ) );
-  DUF_PRINTF( 0, "  --drop-tables		DANGEROUS!" );
-  DUF_PRINTF( 0, "  --remove-database		DANGEROUS!" );
-  DUF_PRINTF( 0, "  --create-tables" );
-  DUF_PRINTF( 0, "  -V, --vacuum		vacuum" );
+  DUF_PRINTF( 0, "  --allow-drop-tables		DANGEROUS!" );
+  DUF_PRINTF( 0, "  --allow-remove-database		DANGEROUS!" );
+  DUF_PRINTF( 0, "  --allow-create-tables" );
+  DUF_PRINTF( 0, "  -V, --allow-vacuum		vacuum" );
   DUF_PRINTF( 0, "Manipulations --------------" );
   DUF_PRINTF( 0, "  --add-path" );
   DUF_PRINTF( 0, "  -R, --recursive		recursive" );
@@ -168,10 +168,10 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DEBUG_STARTR( r );
 
   DUF_PRINTF( 0, "Examples" );
-  DUF_PRINTF( 0, "  run  --db-name=test20140412  --drop-tables --create-tables" );
+  DUF_PRINTF( 0, "  run  --db-name=test20140412  --allow-drop-tables --allow-create-tables" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" );
   DUF_PRINTF( 0,
-              "  run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --collect --dirent --files" );
+              "  run  --db-name=test20140412  --allow-drop-tables --allow-create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --collect --dirent --files" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --sample -f -R" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/chromium/   --print    -R --files" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print  --tree  -R --files" );
@@ -204,7 +204,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "=============================================" );
   DUF_PRINTF( 0, "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --summary" );
   DUF_PRINTF( 0, "    same as prev:" );
-  DUF_PRINTF( 0, "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
+  DUF_PRINTF( 0, "  run --db-name=test.db --trace-action=2 --allow-create-tables --uni-scan --recursive --collect --dirent"
               " --files --dirs --md5 /mnt/new_media/media/down/ --summary" );
   DUF_PRINTF( 0, "=============================================" );
   DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan --print  --md5 --noopenat -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" );
@@ -224,7 +224,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PUTS( 0, NULL );
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "=== Working with the tree as for 20140429 ===================" );
-  DUF_PRINTF( 0, "  run --remove-database" );
+  DUF_PRINTF( 0, "  run --allow-remove-database" );
   DUF_PRINTF( 0, "  run -OPA /home/mastar/a/down/chromium/" );
   DUF_PRINTF( 0, "  run --uni-scan -RdifE5 /home/mastar/a/down/chromium/" );
   DUF_PRINTF( 0, "  run -RdifE5 /home/mastar/a/down/chromium/" );
@@ -237,7 +237,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf --max-seq=1000" );
   DUF_PRINTF( 0, "========================= as for 20140504 ===================" );
   DUF_PRINTF( 0, "= full - cycle collect in one command =======================" );
-  DUF_PRINTF( 0, "  run  --remove-database -OP  -RdifE5 /home/mastar/a/down/chromium/"
+  DUF_PRINTF( 0, "  run  --allow-remove-database -OP  -RdifE5 /home/mastar/a/down/chromium/"
               " --exclude='*.doc' --exclude='*.jpg' --exclude='*.css'" " --exclude='*.html' --exclude='*.png'  --exclude='*.gif'"
               " --exclude='*.js'  --exclude='*.php'" );
   DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/" );
@@ -254,7 +254,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20140506 ===================" );
   DUF_PRINTF( 0, "  run -O -Rdif --mime /mnt/new_media/media/photo --max-seq=2000 (%gsec)", 2.8 );
   DUF_PRINTF( 0, "========================= as for 20140509 ===================" );
-  DUF_PRINTF( 0, "  run --remove-database" );
+  DUF_PRINTF( 0, "  run --allow-remove-database" );
   DUF_PRINTF( 0, "  run   -O						- %s", "creates DB" );
   DUF_PRINTF( 0, "  run   -P     /mnt/new_media/media/photo		- %s", "adds initial path" );
   DUF_PRINTF( 0, "  run   -OP    /mnt/new_media/media/photo		- %s", "creates DB AND adds initial path" );
@@ -301,7 +301,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "========================= as for 20140828 ===================" );
   DUF_PRINTF( 0,
-              "  run  /mnt/new_media/media/photo/ -iPO --progress  --md5 --sd5 --crc32 --mime --exif --dirs --files --dirent --filenames --filedata --add-path --create-tables --drop-tables --remove-database --vacuum  --print --integrity --recursive --info  --disable-calculate  --disable-update --summary --version		- %s",
+              "  run  /mnt/new_media/media/photo/ -iPO --progress  --md5 --sd5 --crc32 --mime --exif --dirs --files --dirent --filenames --filedata --add-path --allow-create-tables --allow-drop-tables --allow-remove-database --allow-vacuum  --print --integrity --recursive --info  --disable-calculate  --disable-update --summary --version		- %s",
               "--integrity is obsolete: 20151004.132149" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
   DUF_PRINTF( 0, "  run --print -Rdf --max-depth=2   /mnt/new_media/media/photo/		- %s", "" );
@@ -360,7 +360,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=1k --min-size=1 -T > `datemt`.tt	- %s", "" );
 
   DUF_PRINTF( 0, "========================= as for 20150509.152057 ============" );
-  DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/  --remove-database  -PRDdnEiX235fOep --progres    	- %s", "" );
+  DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/  --allow-remove-database  -PRDdnEiX235fOep --progres    	- %s", "" );
   DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --min-same=10 --output-level=4    	- %s", "" );
   DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --same=5 -T    	- %s", "" );
 
@@ -372,27 +372,27 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
 
   DUF_PRINTF( 0, "========================= as for 20150520.114602 ============" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEi   	- %s",
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEi   	- %s",
               "insert direct child dirs into db; " " without -i will insert only 'upper' (containted in the path)" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  --evaluate-sccb=dirs    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  --evaluate-sccb=dirs    	- %s", "-= \"\" =-" );
 
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiR   	- %s", "insert directly, recursively dirs into db" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -R --evaluate-sccb=dirs  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEiR   	- %s", "insert directly, recursively dirs into db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -R --evaluate-sccb=dirs  	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150520.121030 +===========" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  -dEiD   	- %s",
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  -dEiD   	- %s",
               "(-D is for filedata) insert direct child dirs,filedata into db" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  --evaluate-sccb=dirs --evaluate-sccb=filedata  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  --evaluate-sccb=dirs --evaluate-sccb=filedata  	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150520.122922 +===========" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiDn   	- %s",
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEiDn   	- %s",
               "(-n if for filenames) insert direct child dirs,filedata,filenames into db" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --evaluate-sccb=dirs,filedata,filenames  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO --evaluate-sccb=dirs,filedata,filenames  	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150520.122922 +===========" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiDn3	- %s",
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEiDn3	- %s",
               "(-3) insert direct child dirs,filedata,filenames,crc32 into db" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --evaluate-sccb=dirs,filedata,filenames,crc32	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO --evaluate-sccb=dirs,filedata,filenames,crc32	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150520.175243 +===========" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fi3ER	- %s", "(-3) add crc32 data to db" );
@@ -412,9 +412,9 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150521.082052 ============" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fiXER	- %s", "(-X) add exif data to db" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fR --evaluate-sccb=exif   	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --progress -fR "
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO --progress -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif	- %s", "all from scratch..." );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/Pictures/one/ --remove-database -PO --progress -fR "
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/Pictures/one/ --allow-remove-database -PO --progress -fR "
               " --evaluate-sccb=dirs,filedata,filenames,md5,mime,exif   	- %s", "for faster testing use this path" );
 
   DUF_PRINTF( 0, "========================= as for 20150522.100438 ============" );
@@ -434,13 +434,13 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T --min-same=10 --exclude-db=Picasa.ini    	- %s", "" );
   DUF_PRINTF( 0, "  run / --same-as-md5=/mnt/new_media/media/photo/Фото0829.jpg  -Rdfp    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same-md5 --glob-db='*506-unknown.jpeg'    	- %s", "" );
-  DUF_PRINTF( 0, "  run --memusage  --nosccbs --vacuum --flags    	- %s", "" );
+  DUF_PRINTF( 0, "  run --memusage  --nosccbs --allow-vacuum --flags    	- %s", "" );
 
 
   DUF_PRINTF( 0, "========================= as for 20150529.151033 ============" );
-  DUF_PRINTF( 0, "  run --progress  -F     /mnt/new_media/media/photo/ --remove-database -PO -fR "
+  DUF_PRINTF( 0, "  run --progress  -F     /mnt/new_media/media/photo/ --allow-remove-database -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif    	- %s", "" );
-  DUF_PRINTF( 0, "  run --progress  --fast /mnt/new_media/media/photo/ --remove-database -PO -fR "
+  DUF_PRINTF( 0, "  run --progress  --fast /mnt/new_media/media/photo/ --allow-remove-database -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif    	- %s", "" );
 
   DUF_PRINTF( 0, "========================= as for 20150603.145115 ============" );
@@ -455,10 +455,10 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150604.115535 ============" );
   DUF_PRINTF( 0, "  run -df --interac    	- %s", "\n	tree\n	recursive\n	tree\n	no-recursive\n	tree\n" );
 
-  DUF_PRINTF( 0, "  run --remove-database -O -P /mnt/new_media/media/photo/Pictures/one/    	- %s",
-              "remove old and create new DB, add path to DB; -O, -P, --remove-database are flags!" );
-  DUF_PRINTF( 0, "  run --remove-database /mnt/new_media/media/photo/Pictures/one/ -OP    	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/Pictures/one/ -OP --remove-database    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --allow-remove-database -O -P /mnt/new_media/media/photo/Pictures/one/    	- %s",
+              "remove old and create new DB, add path to DB; -O, -P, --allow-remove-database are flags!" );
+  DUF_PRINTF( 0, "  run --allow-remove-database /mnt/new_media/media/photo/Pictures/one/ -OP    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/Pictures/one/ -OP --allow-remove-database    	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "========================= as for 20150806.154601 ============" );
   DUF_PRINTF( 0, "  ( echo open-db ; echo \"cd=`pwd`/..\" ; echo 'evaluate-sccb=tree' ) | run -dfR   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run -dfR < test.cmds    	- %s", "-= \"\" =-" );
@@ -492,7 +492,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150820.205622 ============" );
   DUF_PRINTF( 0, "  run --trace-explain=2 --memusage  -dfR --trace-fs=0  --trace-mod=2 " " --include-fs='.*.sw*'  --evaluate-sccb=dummy .   	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run   --trace-scan=0 --trace-fs=0  --drop-tables  -dfR --max-depth=3 "
+  DUF_PRINTF( 0, "  run   --trace-scan=0 --trace-fs=0  --allow-drop-tables  -dfR --max-depth=3 "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  --disable-memusage  -dfR  --tree  --max-depth=2 .   	- %s", "new opt: --disable-memusage; --memusage removed" );
   DUF_PRINTF( 0, "  run  --db-name=photo.db /home/mastar/big/misc/media/photo  "
@@ -509,13 +509,13 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' / --tree   	- %s", "-= \"\" =-" );
 
 
-  DUF_PRINTF( 0, "  run  --db-name=htc_20101224.db  --drop-tables  -PO -fR "
+  DUF_PRINTF( 0, "  run  --db-name=htc_20101224.db  --allow-drop-tables  -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/Pictures/HTC_Legend/20101224  	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run  --db-name=lg_g3.db  --drop-tables  -PO -fR "
+  DUF_PRINTF( 0, "  run  --db-name=lg_g3.db  --allow-drop-tables  -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/LG_G3/  	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run  --db-name=htc.db  --drop-tables  -PO -fR "
+  DUF_PRINTF( 0, "  run  --db-name=htc.db  --allow-drop-tables  -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/Pictures/HTC_Legend/  	- %s",
               "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' --with-mime-type=application/octet-stream / --ls  	- %s",
@@ -555,7 +555,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
 
   DUF_PRINTF( 0, "========================= as for 20150902.181551 ============" );
-  DUF_PRINTF( 0, "  run  --db-name=200105.db  --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif "
+  DUF_PRINTF( 0, "  run  --db-name=200105.db  --allow-drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif "
               " --progress  /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  --db-name=200105.db  -dfR  --with-mime=image/jpeg --ls /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s",
               "-= \"\" =-" );
@@ -595,13 +595,13 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run . -dfR --min-exifsame=2 --evaluate=tree	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150917.204538 ============ new: ...sha1" );
-  DUF_PRINTF( 0, "  run test/tree/ --drop-tables  -PO -dfR  --evaluate-sccb=sha1 --progress	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run test/tree/ --allow-drop-tables  -PO -dfR  --evaluate-sccb=sha1 --progress	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-md5=test/tree/t2.html 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run . -dfR  --evaluate=tree --same-as-sha1=test/tree/t2.html 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150918.092133 ============" );
   DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
-  DUF_PRINTF( 0, "  run --fast --trace-md5=0 --trace-sha=0 test/tree/ --drop-tables  -PO -dfR "
+  DUF_PRINTF( 0, "  run --fast --trace-md5=0 --trace-sha=0 test/tree/ --allow-drop-tables  -PO -dfR "
               " --evaluate-sccb=dirs,filedata,filenames,sd5,sha,md5 --progress 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "[==========================] 100%%; 27 of 27; 0 to do; 0.155882 5.7734 ◁ file data ▷     	- %s", "-= \"\" =-" );
@@ -611,7 +611,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "[==========================] 100%%; 127 of 127; 0 to do; 0.0862439 0.679086 ◁ collect md5 ▷   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "2 same md5 different files included : 129 != 127	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
-  DUF_PRINTF( 0, "  run --fast --db-name=photo.db  --drop-tables  -PO -fR "
+  DUF_PRINTF( 0, "  run --fast --db-name=photo.db  --allow-drop-tables  -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif --progress /home/mastar/big/misc/media/photo	- %s",
               "-= \"\" =-" );
   DUF_PRINTF( 0, "[==========================] 100%%; 1250 of 1250; 0 to do; 11.7811s avg:9.4249ms ◁ file data ▷       	- %s", "-= \"\" =-" );
@@ -686,10 +686,10 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               " --force-color  -L | less -R 	- %s", " -= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20160105.200407 ============" );
-  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database test/tree/  test/tree/  --db-name=test_tree2 "
+  DUF_PRINTF( 0, "  run  --allow-drop-table --allow-create-tables --create-database test/tree/  test/tree/  --db-name=test_tree2 "
               " -dfuR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 2>&1 | less	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run     --interac --flags	- %s", " -= \"\" =-" );
-  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database test/tree/  --db-name=test_tree2 "
+  DUF_PRINTF( 0, "  run  --allow-drop-table --allow-create-tables --create-database test/tree/  --db-name=test_tree2 "
               " -dfuR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress 	- %s", " -= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20160107.144855 ============" );
@@ -700,7 +700,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
 
   DUF_PRINTF( 0, "========================= as for 20160120.160108 ============" );
-  DUF_PRINTF( 0, "  run  --drop-table --create-tables --create-database  --db-name=owncloud_mega_zip "
+  DUF_PRINTF( 0, "  run  --allow-drop-table --allow-create-tables --create-database  --db-name=owncloud_mega_zip "
               " -dufR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress "
               " /home/mastar/Desktop/20160108/Camera_Uploads "
               " /home/space/owncloud/data/mastarink/files/Camera "
@@ -747,12 +747,12 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
 #define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, .name=#_l, .id=DUF_OPTION_VAL_FLAG_ ## _u}
   duf_chk_act_flags_t tab[] = {
     CHECK_FLAG_ID_ROW( info, INFO ),
-    CHECK_FLAG_ID_ROW( vacuum, VACUUM ),
-    CHECK_FLAG_ID_ROW( remove_database, REMOVE_DATABASE ),
-    CHECK_FLAG_ID_ROW( drop_tables, DROP_TABLES ),
-    CHECK_FLAG_ID_ROW( clean_tables, CLEAN_TABLES ),
-    CHECK_FLAG_ID_ROW( create_database, CREATE_DB ),
-    CHECK_FLAG_ID_ROW( create_tables, CREATE_TABLES ),
+    CHECK_FLAG_ID_ROW( allow_vacuum, ALLOW_VACUUM ),
+    CHECK_FLAG_ID_ROW( allow_remove_database, ALLOW_REMOVE_DATABASE ),
+    CHECK_FLAG_ID_ROW( allow_drop_tables, ALLOW_DROP_TABLES ),
+    CHECK_FLAG_ID_ROW( allow_clean_tables, ALLOW_CLEAN_TABLES ),
+    CHECK_FLAG_ID_ROW( allow_create_database, ALLOW_CREATE_DB ),
+    CHECK_FLAG_ID_ROW( allow_create_tables, ALLOW_CREATE_TABLES ),
 
     /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
     CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRECTORIES ),

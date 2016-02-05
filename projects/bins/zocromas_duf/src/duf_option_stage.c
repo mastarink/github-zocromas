@@ -21,6 +21,7 @@ duf_optstage_name( duf_option_stage_t istage )
     [DUF_OPTION_STAGE_DEBUG] = "debug",
     [DUF_OPTION_STAGE_PRESETUP] = "presetup",
     [DUF_OPTION_STAGE_SETUP] = "setup",
+    [DUF_OPTION_STAGE_INIT] = "init",
     [DUF_OPTION_STAGE_FIRST] = "first",
     [DUF_OPTION_STAGE_LOOP] = "loop",
     [DUF_OPTION_STAGE_INTERACTIVE] = "interactive",

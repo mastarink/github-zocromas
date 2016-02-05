@@ -107,12 +107,13 @@ SR( TOP, treat_all_optstages )
   CR( treat_option_stage_ne, DUF_OPTION_STAGE_SETUP );
 
   CR( config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
-  
+
   global_status.scn.pdi = duf_pdi_create( "selected" );
-
   CR( pdi_init_at_config );
-  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( global_status.scn.pdi ) );
 
+  CR( treat_option_stage, DUF_OPTION_STAGE_INIT );
+
+  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( global_status.scn.pdi ) );
   DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
   if ( DUF_ACTG_FLAG( interactive ) )
   {

@@ -37,7 +37,7 @@ const duf_longval_extended_table_t optable_db = {
    {.o = {DO_Q( "db-name" ) /*          */ , DO_A_R /* */ , DO_V( DB_NAME_MAIN )} /*       */ , DO_CL( DB ) /* */ ,
     /*      */ DO_OC( CSTR, db.main.name ) /*                                               */ , DO_H( db name main ) /*                     */ },
    {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
-    , DO_EV_CALL( db_open ), DO_STAGE_SPLS /*                                                */ , DO_H(  ... ) /*                             */ },
+    , DO_EV_CALL( db_open ), DO_STAGE_IPLS /*                                                */ , DO_H(  ... ) /*                             */ },
 
 
 
