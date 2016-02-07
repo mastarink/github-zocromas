@@ -24,7 +24,7 @@
 
 
 int DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                         const duf_longval_extended_table_t * xtable, int no, duf_option_stage_t stage, duf_option_source_t source )
+                                         const duf_longval_extended_table_t * xtable, unsigned noo, duf_option_stage_t stage, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
 
 #  include <mastar/tools/mas_argvc_types.h>

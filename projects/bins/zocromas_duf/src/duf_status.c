@@ -44,7 +44,7 @@ duf_tmp_delete( duf_tmp_t * tmp )
 
 #if 0
 void
-global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no,
+global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, unsigned noo,
                              duf_option_source_t source )
 {
 #  define XCMDS_STEP 64
@@ -79,7 +79,7 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     global_status.xcmds[pos].extended = extended;
     global_status.xcmds[pos].optargg = mas_strdup( optargg );
     global_status.xcmds[pos].istage = istage;
-    global_status.xcmds[pos].no = no;
+    global_status.xcmds[pos].noo = noo;
     global_status.xcmds[pos].source = source;
   }
 }

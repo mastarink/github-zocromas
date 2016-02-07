@@ -46,6 +46,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
   DUF_OPTION_CLASS_NONE,
 
   DUF_OPTION_CLASS_HELP,
+  DUF_OPTION_CLASS_TEST,
   DUF_OPTION_CLASS_SYSTEM,
   DUF_OPTION_CLASS_CONTROL,
   DUF_OPTION_CLASS_REFERENCE,
@@ -382,7 +383,8 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150520.121030 +===========" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  -dEiD   	- %s",
               "(-D is for filedata) insert direct child dirs,filedata into db" );
-  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  --evaluate-sccb=dirs --evaluate-sccb=filedata  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO  --evaluate-sccb=dirs --evaluate-sccb=filedata  	- %s",
+              "-= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20150520.122922 +===========" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEiDn   	- %s",
@@ -724,6 +726,9 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               "linear\n	┊" "std-leaf-set=4\n	┊" "min-same-sha1=8\n	┊" "max-same-sha1=14\n	┊"
               "mimeid=1\n	┊" "with-camera=LG\n	┊" "evaluate-sccb=listing\n	┊" "use-format=4\n	┊\n" "	┊EEE", " -= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20160207.144135 ============" );
+  DUF_PRINTF( 0, "  run --no-test-act-flag --test-act-flag --test-act-noflag " " --test-recetc-flag --test-recetc-noflag "
+              "--no-test-recetc-noflag --test-cfg-num=654321  	- %s", " -= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

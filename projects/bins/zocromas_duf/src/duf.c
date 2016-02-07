@@ -38,6 +38,8 @@
 #include <time.h>
 /* #include <signal.h> */
 /* #include <unistd.h> */
+#include <dlfcn.h>
+
 
 
 #include "duf_maintenance.h"
@@ -144,6 +146,20 @@ SR( TOP, main_with_config, int argc, char **argv )
   /* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
   /* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
 
+  {
+    void *han;
+
+    han = dlopen( NULL, RTLD_NOLOAD | RTLD_LAZY );
+    if ( han )
+    {
+      void *v;
+
+      v = dlsym( han, "duf_main_db" );
+      fprintf( stderr, "han:%p : %p : %p\n", han, v, duf_main_db );
+
+      dlclose( han );
+    }
+  }
   CR( treat_all_optstages );
   CR( main_db, argc, argv );
 

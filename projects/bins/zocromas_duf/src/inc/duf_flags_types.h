@@ -45,6 +45,10 @@ typedef struct
   /* unsigned exif_obs:1; */
   /* unsigned mdpath_obs:1; */
 
+  unsigned testflag:1;
+  unsigned testiflag:1;
+  unsigned testnoflag:1;
+
 } duf_config_act_flags_t;
 typedef struct
 {
@@ -73,6 +77,9 @@ typedef struct
   unsigned update:1;
   unsigned fs:1;
   unsigned memusage:1;
+  unsigned testflag:1;
+  unsigned testiflag:1;
+  unsigned testnoflag:1;
 } duf_config_opt_disable_flags_t;
 
 typedef union
@@ -87,6 +94,9 @@ typedef struct
 {
   unsigned recursive:1;
   unsigned linear:1;
+  unsigned testflag:1;
+  unsigned testiflag:1;
+  unsigned testnoflag:1;
 } duf_rfilter_flags_t;
 
 typedef union

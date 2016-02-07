@@ -60,6 +60,7 @@ zocromas_duf_SOURCES=				   \
 	sql_beginning_vacuum.c \
 	sql_beginning_tables.c \
 	duf_optimpl_help.c duf_optimpl_misc.c		\
+	data_optable_test.c	\
 	data_optable_flag.c	\
 	data_optable_flag_obsolete.c	\
 	data_optable_sflag.c	\

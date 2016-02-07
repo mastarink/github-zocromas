@@ -23,12 +23,12 @@ duf_options_delete_longopts_table( duf_option_t * longopts )
 }
 
 static void
-duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t * xtended, int no )
+duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t * xtended, unsigned noo )
 {
   while ( xtended->o.name )
   {
     assert( xtended->o.val );   /* TODO => MAKE_ERROR */
-    if ( no )
+    if ( noo )
     {
       if ( xtended->can_no )
       {

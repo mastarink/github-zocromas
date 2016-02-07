@@ -354,12 +354,13 @@ typedef struct duf_longval_extended_table_s
 
 
 typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                    const duf_longval_extended_table_t * xtable, int no, duf_option_stage_t istage, duf_option_source_t source );
+                                    const duf_longval_extended_table_t * xtable, unsigned noo, duf_option_stage_t istage,
+                                    duf_option_source_t source );
 
 typedef struct
 {
   int soft;                     /* unmatched tail length */
-  int noo;
+  unsigned noo:1;
   const duf_longval_extended_table_t *xtable;
   const duf_longval_extended_t *xtended;
 } duf_found_extended_t;
@@ -378,6 +379,7 @@ typedef struct
 typedef struct
 {
   unsigned string_split:1;
+  unsigned noo:1;
   /* const char *string; */
   char *string_copy;
   char value_separator;
@@ -391,7 +393,6 @@ typedef struct
   int has_arg;
 
   const duf_longval_extended_table_t *xtable;
-  int noo;
   duf_xclarifier_t clarifier;
   duf_found_extended_array_t xfound;
   signed long doindex;

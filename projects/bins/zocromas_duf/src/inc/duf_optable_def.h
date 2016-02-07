@@ -8,14 +8,19 @@
  * */
 
 #  define DO_A_X(_fld) .has_arg = _fld ## _argument
+#  define DOO_A_X(_fld) .o.has_arg = _fld ## _argument
 #  define DO_A_O  DO_A_X(optional)
 #  define DO_A_R  DO_A_X(required)
 #  define DO_A_N  DO_A_X(no)
+#  define DOO_A_N  DOO_A_X(no)
 
 #  define DO_SET_VAL(_val) .val = _val
+#  define DOO_SET_VAL(_val) .o.val = _val
 #  define DO_VX( _vid, ... ) DO_SET_VAL( DUF_OPTION_VAL_ ##  __VA_ARGS__  ## _vid )
+#  define DOO_VX( _vid, ... ) DOO_SET_VAL( DUF_OPTION_VAL_ ##  __VA_ARGS__  ## _vid )
 #  define DO_V( _vid )  DO_VX( _vid )
 #  define DO_VF( _vid ) DO_VX( _vid, FLAG_ )
+#  define DOO_VF( _vid ) DOO_VX( _vid, FLAG_ )
 #  define DO_VUF( _vid ) DO_VX( _vid, FILTER_ )
 
 #  define DO_SET_OCLASS(_ocl) .oclass = _ocl
@@ -23,8 +28,11 @@
 /* #  define DO_VH( _vid ) DO_V( HELP_ ## _vid ) */
 
 #  define DO_SET_NAME( _nam ) .name = _nam
+#  define DOO_SET_NAME( _nam ) .o.name = _nam
 #  define DO_N( _n ) DO_SET_NAME( # _n )
+#  define DOO_N( _n ) DOO_SET_NAME( # _n )
 #  define DO_Q( _n ) DO_SET_NAME( _n )
+#  define DOO_Q( _n ) DOO_SET_NAME( _n )
 #  define DO_H( _h ) .help = # _h
 
 
@@ -57,13 +65,15 @@
 
 
 /* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
-#  define DO_FL(_t, _fld) .afl._t={._fld=1}, .can_no=1
+#  define DO_FL(_loc, _fld) .afl._loc={._fld=1}, .can_no=1
                                                     /* --flag-option sets flag to 1, --no-flag-option sets flag to 0 */
                                          /* ,.setit=1 */
-#  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1
+#  define DOO_FL(_vt, _prf, _loc, _fld) DO_FL(_loc, _fld), DOO_A_N, DO_OC(_vt, _prf._loc )
+#  define DO_FN(_loc,_fld) DO_FL(_loc,_fld),.invert=1
                                                 /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
+#  define DOO_FN(_vt, _prf, _loc, _fld) DO_FN(_loc, _fld), DOO_A_N, DO_OC(_vt, _prf._loc )
 
-/* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
+/* #define DO_FL0(_loc,_fld) .anfl._loc={._fld=1} */
 /* #  define DO_INTERACTIVE DO_FL( act, interactive ) */
 
 #  define DO_SET_FUNC(_f) .func=duf_option_O_ ## _f

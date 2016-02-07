@@ -109,6 +109,7 @@ typedef struct
   duf_same_as_t same_as;
   duf_ufilter_mime_t mime;
   duf_ufilter_exif_t exif;
+  unsigned long testnum;
   /* unsigned long long filter_id; */
 } duf_ufilter_t;
 

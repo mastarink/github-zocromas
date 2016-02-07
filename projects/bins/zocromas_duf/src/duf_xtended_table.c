@@ -50,6 +50,7 @@ extern const duf_longval_extended_table_t optable_trace;
 #endif
 extern const duf_longval_extended_table_t optable_format;
 extern const duf_longval_extended_table_t optable_filter;
+extern const duf_longval_extended_table_t optable_test;
 extern const duf_longval_extended_table_t optable_debug;
 extern const duf_longval_extended_table_t optable_redo_and_obsolete;
 
@@ -70,6 +71,7 @@ static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
   &optable_trace,
 #endif
   &optable_filter,
+  &optable_test,
   &optable_debug,
   &optable_help,
   &optable_format,

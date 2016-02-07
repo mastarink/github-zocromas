@@ -67,6 +67,7 @@ typedef struct
   duf_config_vars_t vars;
   /* char *group; */
   duf_config_cfg_t conf;
+  unsigned long testnum;
 } duf_config_t;
 
 

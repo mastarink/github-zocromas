@@ -136,5 +136,10 @@ SR( TOP, treat_all_optstages )
   TT( "∈6 Eight " );
   TT( "∈1∋ Nine " );
   TT( "∈7∋ Ten " );
+  T( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
+  T( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
+  T( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ), DUF_CONFIGG( opt.disable.flag.testnoflag ) );
+  T( "@test-num: %lu", DUF_CONFIGG( testnum ) );
+
   ER( TOP, treat_all_optstages );
 }

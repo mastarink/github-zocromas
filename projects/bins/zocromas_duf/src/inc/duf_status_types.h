@@ -10,7 +10,7 @@ typedef struct
   const duf_longval_extended_t *extended;
   char *optargg;
   duf_option_stage_t istage;
-  int no;
+  unsigned noo;
   duf_option_source_t source;
 } duf_xcmd_t;
 
