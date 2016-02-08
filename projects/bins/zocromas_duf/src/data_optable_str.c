@@ -22,7 +22,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_str = {
   .name = "str",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
    {.o = {DO_Q( "tag-file" ) /*         */ , DO_A_R /* */ , DO_V( TAG_FILE )} /*           */ , DO_CL( CONTROL ) /* */ ,

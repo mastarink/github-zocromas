@@ -120,20 +120,20 @@ duf_coption_xfind_at_xarr( duf_option_code_t codeval, const duf_longval_extended
 }
 
 static const duf_longval_extended_t *
-duf_coption_xfind_at_xtable( duf_option_code_t codeval, const duf_longval_extended_table_t * xtable,
-                             const duf_longval_extended_table_t ** result_pxtable, int *pr )
+duf_coption_xfind_at_xtable( duf_option_code_t codeval, const duf_longval_extended_vtable_t * xvtable,
+                             const duf_longval_extended_vtable_t ** result_pxvtable, int *pr )
 {
   const duf_longval_extended_t *rxtended = NULL;
 
-  rxtended = duf_coption_xfind_at_xarr( codeval, xtable->table, pr );
-  if ( result_pxtable )
-    *result_pxtable = xtable;
+  rxtended = duf_coption_xfind_at_xarr( codeval, xvtable->xlist, pr );
+  if ( result_pxvtable )
+    *result_pxvtable = xvtable;
   return rxtended;
 }
 
 /* codeval => extended, by standard multi-table */
 const duf_longval_extended_t *
-duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended_table_t ** result_pxtable, int *pr )
+duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended_vtable_t ** result_pxvtable, int *pr )
 {
   const duf_longval_extended_t *rxtended = NULL;
 
@@ -146,12 +146,12 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
 
   if ( codeval && codeval != '?' )
   {
-    for ( const duf_longval_extended_table_t ** multix = duf_extended_table_multi(  ); !rxtended && *multix; multix++, ntable++ )
+    for ( const duf_longval_extended_vtable_t ** multix = duf_extended_vtable_multi(  ); !rxtended && *multix; multix++, ntable++ )
     {
-      const duf_longval_extended_table_t *xtable = *multix;
+      const duf_longval_extended_vtable_t *xvtable = *multix;
 
 #if 0
-      for ( const duf_longval_extended_t * xarr = xtable->table; !rxtended && xarr->o.name; xarr++, tbcount++ )
+      for ( const duf_longval_extended_t * xarr = xvtable->xlist; !rxtended && xarr->o.name; xarr++, tbcount++ )
       {
         if ( xarr )
         {
@@ -159,15 +159,15 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
           if ( xarr->o.val == codeval )
           {
             rxtended = xarr;
-            if ( result_pxtable )
-              *result_pxtable = xtable;
+            if ( result_pxvtable )
+              *result_pxvtable = xvtable;
             DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
             break;              /* ? */
           }
         }
       }
 #else
-      rxtended = duf_coption_xfind_at_xtable( codeval, xtable, result_pxtable, pr );
+      rxtended = duf_coption_xfind_at_xtable( codeval, xvtable, result_pxvtable, pr );
 #endif
     }
     DUF_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );

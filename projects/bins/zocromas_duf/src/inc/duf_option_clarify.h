@@ -3,7 +3,7 @@
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>_<action-result>
- * xtable ~ duf_longval_extended_table_t
+ * xtable ~ duf_longval_extended_vtable_t
  * xarr ~ array of `const duf_longval_extended_t *`, (xarr = xtable->table), limited by xtended->o.name == NULL
  * multix ~  multitable ~ array of xtable's, limited by NULL
  * stdx ~ standard multix (multitable ~ array of xtable's, limited by NULL)
@@ -24,7 +24,7 @@
 
 
 int DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                         const duf_longval_extended_table_t * xtable, unsigned noo, duf_option_stage_t stage, duf_option_source_t source )
+                                         const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage, duf_option_source_t source )
       __attribute__ ( ( warn_unused_result ) );
 
 #  include <mastar/tools/mas_argvc_types.h>

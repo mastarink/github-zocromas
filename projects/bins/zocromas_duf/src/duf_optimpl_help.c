@@ -965,7 +965,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
   {
     const duf_longval_extended_table_t *xtable = *xtables;
 
-    for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++, tbcount++ )
+    for ( const duf_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++, tbcount++ )
     {
       char *s = NULL;
 
@@ -974,8 +974,8 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
-      /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage.min, xtended->stage.max, xtended->o.name ); */
-      DUF_PRINTF( 0, "%3d (%2d) %4d %d:%d\t--%-40s - %s", tbcount, ntable, xtended->o.val, xtended->stage.min, xtended->stage.max, xtended->o.name,
+      /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name ); */
+      DUF_PRINTF( 0, "%3d (%2d) %4d %d:%d\t--%-40s - %s", tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name,
                   s ? s : "" );
       mas_free( s );
     }

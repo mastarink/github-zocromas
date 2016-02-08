@@ -14,17 +14,17 @@
 char *
 duf_coption_names_d( duf_option_code_t codeval, const char *delim )
 {
-  const duf_longval_extended_table_t **xtables;
-  const duf_longval_extended_table_t *xtable;
+  const duf_longval_extended_vtable_t **xvtables;
+  const duf_longval_extended_vtable_t *xtable;
   char *names = NULL;
   int cnt = 0;
   static const char *wrap[2] = { "〈", "〉" };
 
-  xtables = duf_cli_options_config(  )->xtable_multi;
+  xvtables = duf_cli_options_config(  )->xvtable_multi;
 
-  while ( ( xtable = *xtables++ ) )
+  while ( ( xtable = *xvtables++ ) )
   {
-    const duf_longval_extended_t *xtended = xtable->table;
+    const duf_longval_extended_t *xtended = xtable->xlist;
 
     while ( xtended->o.name )
     {

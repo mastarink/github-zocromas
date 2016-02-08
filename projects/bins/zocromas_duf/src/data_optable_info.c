@@ -21,7 +21,7 @@ At duf_options_table.c:
 */
 const duf_longval_extended_table_t optable_info = {
   .name = "info",
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "version" ) /*          */ , DO_A_N /* */ , DO_V( DUFVERSION )} /*         */ , DO_CL( REFERENCE ) /*  */ ,
     /*      */ DO_EV_CALL( version ), DO_AT_STAGE( SETUP ) /*                               */ , DO_H( version info ) /*                     */ },

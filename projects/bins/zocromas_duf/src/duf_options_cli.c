@@ -130,19 +130,19 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
       /* longoptname = duf_coption_find_name_at_std( codeval, QPERRIND ); */
       longoptname = duf_lcoption_find_name_at_std( codeval, &longindex, QPERRIND );
       assert( ( longindex > 0 && longoptname ) || ( longindex < 0 && !longoptname ) );
-      if ( longindex < 0 /* && codeval == '?' */ && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
+      if ( longindex < 0 /* && codeval == '?' */  && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
         longoptname = qarg + 2;
 
       if ( longoptname )
         CR( soption_xclarify_na_new_at_stdx_default, longoptname, optarg, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( CLI ),
             paod );
-#if 0
+#  if 0
       else if ( codeval == '?' )
       {
         SERR( OPTION_NOT_PARSED );
         assert( 0 );
-      } 
-#endif
+      }
+#  endif
       else                      /* ERROR */
       {
         SERR( OPTION_NOT_PARSED );
@@ -188,8 +188,6 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
 {
   /* DEBUG_STARTR( r ); */
 
-  int longindex;
-  duf_option_code_t codeval;
   mas_cargvc_t *carg;
 
   /* int optoptt = 0; */
@@ -206,48 +204,41 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
 
   DUF_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( istage ), carg->argc );
 
-
-  /* optind
-   *   inside loop means next arg to process in non-permuted list
-   *   outside loop means first not processed arg in permuted list
-   * */
-#if 0
-  while ( QNOERR
-          &&
-          ( ( int )
-            ( optopt = 0, longindex = -1, codeval =
-              getopt_long( carg->argc, carg->argv, shorts, duf_cli_options_get_longopts_table(  ), &longindex ) ) >= 0 ) )
   {
-    optindd = optind;
-    CR( lcoption_parse, longindex, codeval, istage );
-    optindp = optind;
-  }
-#else
-  do
-  {
-    duf_option_t *longtable = duf_cli_options_get_longopts_table(  );
+    duf_option_code_t codeval;
+    duf_option_t *longtable;
 
-    optopt = 0, longindex = -1;
+    longtable = duf_cli_options_get_longopts_table(  );
 
-    codeval = getopt_long( carg->argc, carg->argv, shorts, longtable, &longindex );
-    if ( codeval >= 0 )
+    /* optind
+     *   inside loop means next arg to process in non-permuted list
+     *   outside loop means first not processed arg in permuted list
+     * */
+    do
     {
-      optindd = optind;
-      /* codeval >=0 && codeval!='?' && longindex<0 means short => in this case longindex=...  */
-#  if 1
-      CR( lcoption_parse, longindex, codeval, istage, paod );
-/* TODO */
-#  else
-      const duf_longval_extended_t *extended = NULL;
+      int longindex;
 
-      extended = duf_noption_xfind_no_at_stdx( name, arg ? 1 : 0, 1 /* soft */ , pno, pcnt, QPERRIND );
-      CR( xoption_parse, extended, istage );
-#  endif
-      optindp = optind;
-    }
-  }
-  while ( QNOERR && codeval >= 0 );
+      optopt = 0, longindex = -1;
+
+      codeval = getopt_long( carg->argc, carg->argv, shorts, longtable, &longindex );
+      if ( codeval >= 0 )
+      {
+        optindd = optind;
+        /* codeval >=0 && codeval!='?' && longindex<0 means short => in this case longindex=...  */
+#if 1
+        CR( lcoption_parse, longindex, codeval, istage, paod );
+/* TODO */
+#else
+        const duf_longval_extended_t *extended = NULL;
+
+        extended = duf_noption_xfind_no_at_stdx( name, arg ? 1 : 0, 1 /* soft */ , pno, pcnt, QPERRIND );
+        CR( xoption_parse, extended, istage );
 #endif
+        optindp = optind;
+      }
+    }
+    while ( QNOERR && codeval >= 0 );
+  }
   CR( cli_parse_targ, optindd, istage );
   /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );

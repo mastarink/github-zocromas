@@ -277,13 +277,13 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
 /* duf_xarr_print */
 /* TODO : duf_codeval2string depends on optimpl !! */
 static void
-duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
+duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 {
   DUF_PRINTF( 0, ".@@@ [%s]", xtable->name );
-  duf_optstage_print( xtable->use_stage, xtable->use_stage_mask, xtable->stage, xtable->stage_mask, 0 );
+  duf_optstage_print( xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask, 0 );
   DUF_PUTSL( 0 );
 
-  for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++ )
+  for ( const duf_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++ )
   {
     if ( !name || strstr( xtended->o.name, name ) )
     {
@@ -322,7 +322,7 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
         }
         DUF_PUTSL( 0 );
       }
-      duf_optstage_print( xtended->use_stage, xtended->use_stage_mask, xtended->stage, xtended->stage_mask, 1 );
+      duf_optstage_print( xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage, xtended->stage_opts.stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
 /* TODO : duf_codeval2string depends on optimpl !! */
@@ -426,9 +426,9 @@ duf_xarr_print( const duf_longval_extended_table_t * xtable, const char *name )
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *name )
+duf_multix_print( const duf_longval_extended_vtable_t ** xvtables, const char *name )
 {
-  for ( const duf_longval_extended_table_t ** xt = xtables; xt && *xt; xt++ )
+  for ( const duf_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
   {
     char *se = NULL;
     char *matchtab = NULL;
@@ -457,5 +457,5 @@ duf_multix_print( const duf_longval_extended_table_t ** xtables, const char *nam
 void
 duf_stdx_print( const char *name )
 {
-  duf_multix_print( duf_extended_table_multi(  ), name );
+  duf_multix_print( duf_extended_vtable_multi(  ), name );
 }

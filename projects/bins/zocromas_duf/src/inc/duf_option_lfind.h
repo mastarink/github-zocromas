@@ -5,7 +5,7 @@
 
 
 
-const duf_longval_extended_t *duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** pxtable, unsigned *pnoo );
+const duf_longval_extended_t *duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_vtable_t ** pxtable, unsigned *pnoo );
 const duf_option_t *duf_loption_find_at_std( int longindex );
 
 

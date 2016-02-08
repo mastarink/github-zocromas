@@ -19,7 +19,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_io = {
   .name = "io",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
 

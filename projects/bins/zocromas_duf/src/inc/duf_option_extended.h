@@ -4,7 +4,7 @@
 #  include "duf_option_types.h"
 
 
-int duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables );
+int duf_longindex_extended_count( const duf_longval_extended_vtable_t ** xvtables );
 
 
 #endif

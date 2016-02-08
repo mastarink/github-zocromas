@@ -20,7 +20,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_test = {
   .name = "test",
 //DO_AT_STAGE( SETUP ),
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
    {.o = {DO_Q( "test-act-flag" ) /*            */ , DO_A_N /* */ , DO_VF( TEST_ACT_FLAG )} /*              */ , DO_CL( TEST ) /* */ ,
@@ -39,15 +39,15 @@ const duf_longval_extended_table_t optable_test = {
 
    {.o = {DO_Q( "test-disable-flag" ) /*        */ , DO_A_N, DO_VF( TEST_DISABLE_FLAG )} /*                 */ , DO_CL( TEST ) /*    */ ,
     /*      */ DO_OC( SFLAG, opt.disable ), DO_FL( disable, testflag ) /*                                    */ , DO_H(  .... ) /*           */ },
-
    {.o = {DO_Q( "test-disable-iflag" ) /*        */ , DO_A_N, DO_VF( TEST_DISABLE_IFLAG )} /*               */ , DO_CL( TEST ) /*    */ ,
     /*      */ DO_OC( SFLAG, opt.disable ), DO_FN( disable, testiflag ) /*                                   */ , DO_H(  .... ) /*           */ },
 
-   {DOO_Q( "test-disable-noflag" ), DOO_VF( TEST_DISABLE_NOFLAG ), DOO_FL( NOSFLAG, opt, disable, testnoflag ), DO_CL( TEST ), DO_H(  .... ) /**/},
+   /* new macro; also: without ID! : "DOO_VF( TEST_DISABLE_NOFLAG )" */
+   {DOO_Q( "test-disable-noflag" ), DOO_FL( NOSFLAG, opt, disable, testnoflag ), DOO_CL( TEST ), DOO_H(  .... )},
 
 
-   {.o = {DO_Q( "test-cfg-num" ) /*             */ , DO_A_R /* */ , DO_V( TEST_CFG_NUM )} /*                */ , DO_CL( TEST ) /*  */ ,
-    /*      */ DO_OC( NUM, testnum ) /*          */ , DO_AT_STAGE( SETUP ) /*                                */ , DO_H(  .... ) /*           */ },
+   {DOO_Q( "test-cfg-num" ) /*             */ , DOO_A_R /* */ , DOO_V( TEST_CFG_NUM ) /*                */ , DOO_CL( TEST ) /*  */ ,
+    /*      */ DOO_OC( NUM, testnum ) /*          */ , DOO_AT_STAGE( SETUP ) /*                                */ , DOO_H(  .... ) /*           */ },
 
    {.o = {.name = NULL}}
    }

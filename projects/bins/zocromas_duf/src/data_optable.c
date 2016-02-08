@@ -21,7 +21,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_main = {
   .name = "main",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
 #if 0

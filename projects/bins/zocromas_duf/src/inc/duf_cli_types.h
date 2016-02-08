@@ -172,7 +172,7 @@ typedef struct
   int targ_offset;
 
   duf_option_t *longopts_table;
-  const duf_longval_extended_table_t **xtable_multi;
+  const duf_longval_extended_vtable_t **xvtable_multi;
   /* long limit; */
   char *history_filename;
   char option_delimiter;

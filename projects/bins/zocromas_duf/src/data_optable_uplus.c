@@ -19,7 +19,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_uplus = {
   .name = "uplus",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
    {.o = {DO_Q( "sample" ) /*             */ , DO_A_O /* */ , DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*  */ ,

@@ -63,24 +63,24 @@ duf_loption_xfind_at_xarr( int longindex, const duf_longval_extended_t * xarr, i
 
 /* longindex + extended_table => extended */
 static const duf_longval_extended_t *
-duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_table_t * xtable, int *ptbcount, unsigned noo )
+duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_vtable_t * xtable, int *ptbcount, unsigned noo )
 {
   const duf_longval_extended_t *extended = NULL;
 
   if ( xtable )
-    extended = duf_loption_xfind_at_xarr( longindex, xtable->table, ptbcount, noo );
+    extended = duf_loption_xfind_at_xarr( longindex, xtable->xlist, ptbcount, noo );
   return extended;
 }
 
 static const duf_longval_extended_t *
-duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_table_t ** xtables, int *ptbcount, unsigned noo,
-                             const duf_longval_extended_table_t ** result_pxtable )
+duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_vtable_t ** xvtables, int *ptbcount, unsigned noo,
+                             const duf_longval_extended_vtable_t ** result_pxtable )
 {
   const duf_longval_extended_t *extended = NULL;
 
-  for ( ; *ptbcount <= longindex && *xtables; xtables++ )
+  for ( ; *ptbcount <= longindex && *xvtables; xvtables++ )
   {
-    const duf_longval_extended_table_t *xtable = *xtables;
+    const duf_longval_extended_vtable_t *xtable = *xvtables;
 
     extended = duf_loption_xfind_at_xtable( longindex, xtable, ptbcount, noo );
     if ( extended )
@@ -95,15 +95,15 @@ duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_table_t *
 
 /* longindex + stdx => extended */
 const duf_longval_extended_t *
-duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** result_pxtable, unsigned *pnoo )
+duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_vtable_t ** result_pxtable, unsigned *pnoo )
 {
   const duf_longval_extended_t *extended = NULL;
   int tbcount = 0;
 
 #if 0
-  for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); tbcount <= longindex && *xtables; xtables++ )
+  for ( const duf_longval_extended_vtable_t ** xvtables = duf_extended_vtable_multi(  ); tbcount <= longindex && *xvtables; xvtables++ )
   {
-    const duf_longval_extended_table_t *xtable = *xtables;
+    const duf_longval_extended_vtable_t *xtable = *xvtables;
 
     extended = duf_loption_xfind_at_xtable( longindex, xtable, &tbcount, 0 /* noo */  );
     if ( extended )
@@ -114,15 +114,15 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** 
     }
   }
 #else
-  extended = duf_loption_xfind_at_multix( longindex, duf_extended_table_multi(  ), &tbcount, 0 /* noo */ , result_pxtable );
+  extended = duf_loption_xfind_at_multix( longindex, duf_extended_vtable_multi(  ), &tbcount, 0 /* noo */ , result_pxtable );
 #endif
   if ( !extended )
   {
     /* continue with tbcount */
 #if 0
-    for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); tbcount <= longindex && *xtables; xtables++ )
+    for ( const duf_longval_extended_vtable_t ** xvtables = duf_extended_vtable_multi(  ); tbcount <= longindex && *xvtables; xvtables++ )
     {
-      const duf_longval_extended_table_t *xtable = *xtables;
+      const duf_longval_extended_vtable_t *xtable = *xvtables;
 
       extended = duf_loption_xfind_at_xtable( longindex, xtable, &tbcount, 1 /* noo */  );
       if ( extended )
@@ -135,7 +135,7 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_table_t ** 
       }
     }
 #else
-    extended = duf_loption_xfind_at_multix( longindex, duf_extended_table_multi(  ), &tbcount, 1 /* noo */ , result_pxtable );
+    extended = duf_loption_xfind_at_multix( longindex, duf_extended_vtable_multi(  ), &tbcount, 1 /* noo */ , result_pxtable );
     if ( extended && pnoo )
       *pnoo = !*pnoo;
 #endif

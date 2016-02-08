@@ -20,7 +20,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_debug = {
   .name = "debug",
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "min-dbg-lines" ) /*    */ , DO_A_R /* */ , DO_V( MIN_DBGLINE )} /*        */ , DO_CL( DEBUG ) /*   */ ,
     /*      */ DO_OC( NUM, opt.dbg.min_line ) /*                                            */ , DO_H(  ... ) /*                             */ },

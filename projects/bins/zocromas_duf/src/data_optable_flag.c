@@ -20,7 +20,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_flag = {
   .name = "flag",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 #if 0
    /* SEE --disable-memusage */

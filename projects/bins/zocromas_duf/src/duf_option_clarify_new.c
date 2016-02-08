@@ -118,7 +118,7 @@ SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtend
   /* T( "@@@(%c%c)%s", pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-', xtended->o.name ); */
   pod->xfound.xarray[index].noo = pod->noo;
   /* T( "@@(%c%c)%s", pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-', xtended->o.name ); */
-  pod->xfound.xarray[index].xtable = pod->xtable;
+  pod->xfound.xarray[index].xvtable = pod->xvtable;
 
   if ( soft )
   {
@@ -198,30 +198,30 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
   ER( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xarr, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_table_t * xtable, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod )
 {
-  pod->xtable = xtable;
-  CR( soption_xclarify_new_at_xarr_od, xtable->table, pod );
+  pod->xvtable = xvtable;
+  CR( soption_xclarify_new_at_xarr_od, xvtable->xlist, pod );
 
-  ER( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_table_t * xtable, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table_t ** xtables, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod )
 {
   /* int doindex = -1; */
 
   pod->doindex = -1;
-  for ( ; *xtables; xtables++ )
+  for ( ; *xvtables; xvtables++ )
   {
-    const duf_longval_extended_table_t *xtable = *xtables;
+    const duf_longval_extended_vtable_t *xvtable = *xvtables;
 
-    CR( soption_xclarify_new_at_xtable_od, xtable, pod );
+    CR( soption_xclarify_new_at_xtable_od, xvtable, pod );
 /* if not found : clear error */
   }
   if ( pod->xfound.count_hard == 1 )
   {
     if ( pod->xfound.xarray[pod->xfound.hard_index].soft == 0
-         && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xtable ) )
+         && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xvtable ) )
     {
       pod->doindex = pod->xfound.hard_index;
       /* T( "@@name_offset:%lu - (%s|%s) noo:%c%c", pod->name_offset, pod->name, pod->xfound.xarray[pod->doindex].xtended->o.name, */
@@ -234,7 +234,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
     {
       /* T( "@@name_offset:%lu - (%s) noo:%c", pod->name_offset, pod->name, pod->noo ? '+' : '-' ); */
       if ( pod->xfound.xarray[pod->xfound.soft_index].soft > 0
-           && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xtable ) )
+           && DUF_OPTION_CHECK_STAGE( pod->stage, pod->xfound.xarray[pod->xfound.hard_index].xtended, pod->xfound.xarray[0].xvtable ) )
       {
         pod->doindex = pod->xfound.hard_index;
         /* T( "@@name_offset:%lu - (%s|%s) noo:%c%c", pod->name_offset, pod->name, pod->xfound.xarray[pod->doindex].xtended->o.name, */
@@ -269,7 +269,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
 
       oa = duf_string_options_expand( pod->optarg, '?' );
       /* T( "@########### [%s:%s:%s] %lu %s", pod->string_copy,  pod->name, pod->optarg, pod->doindex, duf_optstage_name(pod->stage) ); */
-      CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xtable,
+      CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,
            pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
@@ -293,12 +293,12 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table
   /* pod->optarg = NULL;      */
   TR( QERRIND );
 
-  ER( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_table_t ** xtables, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod );
 }
 
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
 {
-  CR( soption_xclarify_new_at_multix_od, duf_extended_table_multi(  ), pod );
+  CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod );
 
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod );
 }

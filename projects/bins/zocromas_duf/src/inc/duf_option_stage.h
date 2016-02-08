@@ -26,9 +26,9 @@
 
 
 const char *duf_optstage_name( duf_option_stage_t istage );
-int duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+int duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable )
       __attribute__ ( ( warn_unused_result ) );
-char *duf_optstages_list( const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable );
+char *duf_optstages_list( const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable );
 
 void duf_optstage_print( int use_stage, int use_stage_mask, duf_limits_stage_t stage, unsigned long stage_mask, unsigned eol );
 

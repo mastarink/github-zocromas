@@ -20,7 +20,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_sflag = {
   .name = "sflag",
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "disable-calculate" ) /* */ , DO_A_N, DO_VF( DISABLE_CALCULATE )} /*       */ , DO_CL( COLLECT ) /*    */ ,
     /*      */ DO_OC( SFLAG, opt.disable ) /*           */ , DO_FL( disable, calculate ) /* */ , DO_H(  .... ) /*                            */ },

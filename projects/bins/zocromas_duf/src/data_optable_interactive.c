@@ -30,7 +30,7 @@ void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak 
 const duf_longval_extended_table_t optable_interactive = {
   .name = "interactive",
   /* DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ), */
-  .table =                      /* */
+  .xlist =                      /* */
   {
 
    /*

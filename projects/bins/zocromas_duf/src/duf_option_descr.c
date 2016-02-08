@@ -51,7 +51,7 @@ duf_loption_description_d( int longindex, const char *delimh, const char *delim 
   char *p = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_loption_xfind_at_stdx( longindex, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
+  extended = duf_loption_xfind_at_stdx( longindex, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
   if ( extended )
     p = duf_xoption_description_d( extended, delimh, delim );
   return p;

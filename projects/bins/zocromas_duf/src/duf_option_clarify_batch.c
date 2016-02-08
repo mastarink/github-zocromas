@@ -53,7 +53,7 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
 #endif
     DUF_TRACE( explain, 0, "bstr: \"%s\"", bstr );
 
-/* look all std xtables for cmd from string and exec if found */
+/* look all std xvtables for cmd from string and exec if found */
 
     CR( soption_xclarify_s_new_at_stdx_default, bstr, value_separator, istage, source, paod );
   }
@@ -72,7 +72,7 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
  * "trace-path=1:trace-options=1"    -- correct
  *
  * */
-/* look all std xtables for cmd's separated with value_separator from string and exec if found */
+/* look all std xvtables for cmd's separated with value_separator from string and exec if found */
 SR( OPTIONS, boption_xclarify_at_stdx, char value_separator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim,
     duf_option_adata_t * paod )
 {

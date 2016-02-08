@@ -20,7 +20,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_redo_and_obsolete = {
   .name = "redo and obsolete",
-  .table =                      /* */
+  .xlist =                      /* */
   {
 #if 0
    {.o = {DO_Q( "min-dirfiles" ) /*       */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*    */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },

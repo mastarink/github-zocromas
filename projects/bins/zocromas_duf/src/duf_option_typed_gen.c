@@ -480,7 +480,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       }
       mas_free( doptargg );
       DUF_TRACE( options, +150, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", mas_error_name_i( r ),
-                 istage, extended->stage.min, extended->stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
+                 istage, extended->stage_opts.stage.min, extended->stage_opts.stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
     }
 #if 0
     else

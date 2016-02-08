@@ -23,7 +23,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_experimental = {
   .name = "experimental",
   /* DO_STG_NOT( LOOP ), */
-  .table =                      /* */
+  .xlist =                      /* */
   {
 #if 0
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */

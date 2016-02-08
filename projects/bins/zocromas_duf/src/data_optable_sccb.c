@@ -24,7 +24,7 @@ const duf_longval_extended_table_t optable_sccb = {
   .name = "sccb",
   /* DO_SET_STAGE( DUF_OPTION_STAGE_SETUP, DUF_OPTION_STAGE_INTERACTIVE ), */
   DO_STG_NOT( SETUP ),
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "list-sccbs" ) /*       */ , DO_A_N /*  */ , DO_V( LIST_SCCBS )} /*        */ , DO_CL( SCCB ) /*  */
     , DO_EV_CALL( list_sccbs ) /*                                                           */ , DO_H(  ... ) /*                             */ },

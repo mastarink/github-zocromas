@@ -220,16 +220,16 @@ duf_option_O_smart_help( duf_option_class_t oclass )
 #if 0
     int tbcount;
 
-    tbcount = duf_longindex_extended_count( duf_extended_table_multi(  ) );
+    tbcount = duf_longindex_extended_count( duf_extended_vtable_multi(  ) );
     for ( ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
 #else
-    for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); *xtables; xtables++ )
-      for ( const duf_longval_extended_t * xtended = ( *xtables )->table; xtended->o.name; ilong++, xtended++ )
+    for ( const duf_longval_extended_vtable_t ** xtables = duf_extended_vtable_multi(  ); *xtables; xtables++ )
+      for ( const duf_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
 #endif
       {
         const duf_longval_extended_t *extended;
 
-        extended = duf_loption_xfind_at_stdx( ilong, ( const duf_longval_extended_table_t ** ) NULL, NULL /* &no */  );
+        extended = duf_loption_xfind_at_stdx( ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
         {
           int ie;
           duf_option_code_t codeval;
@@ -274,25 +274,25 @@ duf_option_O_help_set( const char *arg )
 {
   DEBUG_STARTR( r );
 
-  for ( const duf_longval_extended_table_t ** xtables = duf_extended_table_multi(  ); *xtables; xtables++ )
+  for ( const duf_longval_extended_vtable_t ** xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++ )
   {
-    const duf_longval_extended_table_t *xtable = *xtables;
+    const duf_longval_extended_vtable_t *xvtable = *xvtables;
     int title_printed = 0;
 
-    if ( xtable && xtable->name )
+    if ( xvtable && xvtable->name )
     {
       if ( arg )
       {
         size_t len = 0;
         const char *optname;
 
-        len = strlen( xtable->name );
+        len = strlen( xvtable->name );
         optname = arg + len;
         if ( *optname == ':' )
           optname++;
         else
           optname = NULL;
-        if ( ( 0 == strcmp( arg, "%" ) || ( 0 == strncmp( xtable->name, arg, len ) && ( arg[len] == 0 || arg[len] == ':' ) ) ) )
+        if ( ( 0 == strcmp( arg, "%" ) || ( 0 == strncmp( xvtable->name, arg, len ) && ( arg[len] == 0 || arg[len] == ':' ) ) ) )
         {
           int *ashown;
           int ss = DUF_OPTION_VAL_MAX_LONG * sizeof( int );
@@ -300,8 +300,8 @@ duf_option_O_help_set( const char *arg )
           ashown = mas_malloc( ss );
           memset( ( void * ) ashown, 0, ss );
           if ( !title_printed++ )
-            DUF_PRINTF( 0, "# set '%-15s'", xtable->name );
-          for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++ )
+            DUF_PRINTF( 0, "# set '%-15s'", xvtable->name );
+          for ( const duf_longval_extended_t * xtended = xvtable->xlist; xtended->o.name; xtended++ )
           {
             duf_option_code_t codeval;
 
@@ -314,7 +314,7 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_config] = "config",
                 [DUF_OFFSET_ufilter] = "ufilter",
               };
-              sl = duf_optstages_list( xtended, xtable );
+              sl = duf_optstages_list( xtended, xvtable );
               if ( ashown[codeval] <= 0 )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;
@@ -322,8 +322,8 @@ duf_option_O_help_set( const char *arg )
               DUF_PRINTF( 0, ". [%s] %d:%d:%d " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
                           "; %d:%d * \t| %-40s; {%-10s:%-10s}", /* */
                           sl,   /* */
-                          xtended->stage.min, xtended->stage.max, xtended->use_stage, /* */
-                          xtended->invert, xtended->can_no, /* xtended->use_stage, xtended->use_stage_mask, *//* */
+                          xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->stage_opts.use_stage, /* */
+                          xtended->invert, xtended->can_no, /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
@@ -387,7 +387,7 @@ duf_option_O_help_set( const char *arg )
         }
       }
       else
-        DUF_PRINTF( 0, "* set '%-15s'", xtable->name );
+        DUF_PRINTF( 0, "* set '%-15s'", xvtable->name );
     }
   }
 

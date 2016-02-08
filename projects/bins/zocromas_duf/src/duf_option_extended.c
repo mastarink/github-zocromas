@@ -14,16 +14,16 @@
 
 
 int
-duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
+duf_longindex_extended_count( const duf_longval_extended_vtable_t ** xvtables )
 {
   int xcount = 0;
 
 #if 0
-  const duf_longval_extended_table_t *xtable;
+  const duf_longval_extended_vtable_t *xtable;
 
-  while ( ( xtable = *xtables++ ) )
+  while ( ( xtable = *xvtables++ ) )
   {
-    const duf_longval_extended_t *xtended = xtable->table;
+    const duf_longval_extended_t *xtended = xtable->xlist;
 
     while ( xtended->o.name )
     {
@@ -34,11 +34,11 @@ duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
     }
   }
 #else
-  for ( const duf_longval_extended_table_t ** pxtables = xtables; *pxtables; pxtables++ )
+  for ( const duf_longval_extended_vtable_t ** pxtables = xvtables; *pxtables; pxtables++ )
   {
     const duf_longval_extended_t *xtended = NULL;
 
-    xtended = ( *pxtables )->table;
+    xtended = ( *pxtables )->xlist;
     while ( xtended->o.name )
     {
       xcount++;

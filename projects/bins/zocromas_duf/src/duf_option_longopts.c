@@ -56,13 +56,13 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
 }
 
 /* 
- * array of duf_longval_extended_table_t => allocated array of duf_option_t
+ * array of duf_longval_extended_vtable_t => allocated array of duf_option_t
  * objects: 
- *     duf_longval_extended_table_t
+ *     duf_longval_extended_vtable_t
  *     duf_option_t
  * */
 duf_option_t *
-duf_options_create_longopts_table( const duf_longval_extended_table_t ** pxtable )
+duf_options_create_longopts_table( const duf_longval_extended_vtable_t ** pxvtable )
 {
   duf_option_t *longopts = NULL;
 
@@ -70,15 +70,15 @@ duf_options_create_longopts_table( const duf_longval_extended_table_t ** pxtable
     duf_option_t *longopts_ptr;
     size_t tbsize = 0;
 
-    tbsize = duf_longindex_extended_count( pxtable ) * ( sizeof( duf_longval_extended_t ) + 1 );
+    tbsize = duf_longindex_extended_count( pxvtable ) * ( sizeof( duf_longval_extended_t ) + 1 );
 
     longopts = longopts_ptr = mas_malloc( tbsize );
     memset( longopts, 0, tbsize );
 
-    for ( const duf_longval_extended_table_t ** xtables = pxtable; *xtables; xtables++ )
-      duf_xtable2options( &longopts_ptr, ( *xtables )->table, 0 );
-    for ( const duf_longval_extended_table_t ** xtables = pxtable; *xtables; xtables++ )
-      duf_xtable2options( &longopts_ptr, ( *xtables )->table, 1 );
+    for ( const duf_longval_extended_vtable_t ** xvtables = pxvtable; *xvtables; xvtables++ )
+      duf_xtable2options( &longopts_ptr, ( *xvtables )->xlist, 0 );
+    for ( const duf_longval_extended_vtable_t ** xvtables = pxvtable; *xvtables; xvtables++ )
+      duf_xtable2options( &longopts_ptr, ( *xvtables )->xlist, 1 );
   }
   return longopts;
 }

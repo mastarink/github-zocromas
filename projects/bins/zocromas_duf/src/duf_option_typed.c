@@ -23,7 +23,7 @@
 /* ###################################################################### */
 
 int
-duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_table_t * xtable, unsigned noo,
+duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_vtable_t * xvtable, unsigned noo,
                            duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
@@ -33,12 +33,12 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
   od.stage = istage;
   od.source = source;
   od.optarg = optargg;
-  od.xtable = xtable;
+  od.xvtable = xvtable;
   od.noo = noo;
   od.extended = extended;
 #endif
 
-  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) )
+  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xvtable ) )
   {
     int nogen = 0;
 

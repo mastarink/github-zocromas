@@ -20,7 +20,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_format = {
   .name = "format",
 //DO_AT_STAGE( SETUP ),
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "bformat" ) /*                  */ , DO_A_R /* */ , DO_V( BFORMAT )} /*                     */ , DO_CL( PRINT ) /*   */
     /*                                                                                                       */ , DO_H( print w / bformat ) /* */ },

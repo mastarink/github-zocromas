@@ -22,7 +22,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_db = {
   .name = "db",
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( DB ) /* */ ,
     /*      */ DO_OC( PATH, db.dir ) /*                                                      */ , DO_H( db directory ) /*                     */ },

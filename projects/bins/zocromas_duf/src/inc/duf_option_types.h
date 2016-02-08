@@ -288,6 +288,14 @@ typedef union
   unsigned short sbit;
 } duf_option_anyflag_t;
 
+typedef struct duf_extended_stageopts_s
+{
+  unsigned use_stage:1;
+  unsigned use_stage_mask:1;
+  duf_limits_stage_t stage;
+  unsigned long stage_mask;
+} duf_extended_stageopts_t;
+
 
 typedef struct
 {
@@ -298,14 +306,18 @@ typedef struct
   unsigned invert:1;
   unsigned can_no:1;
   unsigned m_hasoff:1;
+#if 0
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
+  duf_limits_stage_t stage;
+  unsigned long stage_mask;
+#else
+  duf_extended_stageopts_t stage_opts;
+#endif
   duf_option_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
 
-  duf_limits_stage_t stage;
-  unsigned long stage_mask;
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
@@ -342,26 +354,37 @@ typedef duf_longval_extended_t *duf_longval_pextended;
 
 typedef struct duf_longval_extended_table_s
 {
-  unsigned use_stage:1;
-  unsigned use_stage_mask:1;
   int id;
   const char *name;
+#if 0
+  unsigned use_stage:1;
+  unsigned use_stage_mask:1;
   duf_limits_stage_t stage;
   unsigned long stage_mask;
-  duf_longval_extended_t table[];
+#else
+  duf_extended_stageopts_t stage_opts;
+#endif
+  duf_longval_extended_t xlist[];
 } duf_longval_extended_table_t;
 
+typedef struct duf_longval_extended_vtable_s
+{
+  int id;
+  const char *name;
+  duf_extended_stageopts_t stage_opts;
+  duf_longval_extended_t *xlist;
+} duf_longval_extended_vtable_t;
 
 
 typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                    const duf_longval_extended_table_t * xtable, unsigned noo, duf_option_stage_t istage,
+                                    const duf_longval_extended_vtable_t * xvtable, unsigned noo, duf_option_stage_t istage,
                                     duf_option_source_t source );
 
 typedef struct
 {
   int soft;                     /* unmatched tail length */
   unsigned noo:1;
-  const duf_longval_extended_table_t *xtable;
+  const duf_longval_extended_vtable_t *xvtable;
   const duf_longval_extended_t *xtended;
 } duf_found_extended_t;
 
@@ -392,7 +415,7 @@ typedef struct
   char *optarg;
   int has_arg;
 
-  const duf_longval_extended_table_t *xtable;
+  const duf_longval_extended_vtable_t *xvtable;
   duf_xclarifier_t clarifier;
   duf_found_extended_array_t xfound;
   signed long doindex;

@@ -24,7 +24,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_trace = {
   .name = "trace_t",
   DO_STAGE_ALL,
-  .table =                      /* */
+  .xlist =                      /* */
   {
    {.o = {DO_Q( "trace-fun-width" ) /* */ , DO_A_O /* */ , DO_V( TRACE_FUN_WIDTH )} /*   */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( NUM, opt.trace.fun_width ) /*    */ , DO_AT_STAGE( DEBUG ) /*        */ , DO_H( output fun width ) /*                 */ },

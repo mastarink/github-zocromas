@@ -37,33 +37,33 @@ duf_optstage_name( duf_option_stage_t istage )
  *   ok for > DUF_OPTION_STAGE_DEBUG
  * */
 int
-duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable )
 {
   int r0 = 0;
   int r1 = 0;
   int r2 = 0;
 
   DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( istage ),
-             extended->use_stage, extended->stage.min, extended->stage.max );
-  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xtable->use_stage,
-             xtable->stage.min, xtable->stage.max );
+             extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
+  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xvtable->stage_opts.use_stage,
+             xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
   r0 = ( istage == DUF_OPTION_STAGE_ANY || istage == DUF_OPTION_STAGE_ALL );
-  /* r0 = r0 || ( extended->stage.flag ? 1 : 0 ); (* ???? *) */
+  /* r0 = r0 || ( extended->stage_opts.stage.flag ? 1 : 0 ); (* ???? *) */
   if ( !r0 )
   {
-    if ( extended->use_stage )
-      r1 = ( extended->stage.min <= istage && extended->stage.max >= istage );
+    if ( extended->stage_opts.use_stage )
+      r1 = ( extended->stage_opts.stage.min <= istage && extended->stage_opts.stage.max >= istage );
     else
       r1 = ( istage > DUF_OPTION_STAGE_DEBUG );
-    assert( xtable );
-    if ( xtable->use_stage )
-      r2 = ( xtable->stage.min <= istage && xtable->stage.max >= istage );
+    assert( xvtable );
+    if ( xvtable->stage_opts.use_stage )
+      r2 = ( xvtable->stage_opts.stage.min <= istage && xvtable->stage_opts.stage.max >= istage );
     else
       r2 = r1;
     r0 = ( r1 || r2 );
   }
-  if ( ( extended->use_stage_mask && ( extended->stage_mask & ( 1 << istage ) ) )
-       || ( xtable->use_stage_mask && ( xtable->stage_mask & ( 1 << istage ) ) ) )
+  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage ) ) )
+       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage ) ) ) )
   {
     r0 = 0;
   }
@@ -73,24 +73,24 @@ duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t 
 }
 
 int
-duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable )
 {
   int r0 = 0;
   int r1 = 0;
   int r2 = 0;
 
   DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( istage ),
-             extended->use_stage, extended->stage.min, extended->stage.max );
-  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xtable->use_stage,
-             xtable->stage.min, xtable->stage.max );
+             extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
+  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xvtable->stage_opts.use_stage,
+             xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
   r0 = ( istage == DUF_OPTION_STAGE_ANY || istage == DUF_OPTION_STAGE_ALL ) ? 1 : 0;
-  /* if (r0>=0 && !extended->stage.flag ) r0=-1; (* ???? *) */
+  /* if (r0>=0 && !extended->stage_opts.stage.flag ) r0=-1; (* ???? *) */
 
-  if ( extended->use_stage )
-    r1 = ( extended->stage.min <= istage && extended->stage.max >= istage ) ? 1 : -1;
-  assert( xtable );
-  if ( xtable->use_stage )
-    r2 = ( xtable->stage.min <= istage && xtable->stage.max >= istage ) ? 1 : -1;
+  if ( extended->stage_opts.use_stage )
+    r1 = ( extended->stage_opts.stage.min <= istage && extended->stage_opts.stage.max >= istage ) ? 1 : -1;
+  assert( xvtable );
+  if ( xvtable->stage_opts.use_stage )
+    r2 = ( xvtable->stage_opts.stage.min <= istage && xvtable->stage_opts.stage.max >= istage ) ? 1 : -1;
   if ( r1 > 0 )
     r0 = 1;
   else if ( r1 < 0 )
@@ -98,8 +98,8 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
   else if ( r2 < 0 )
     r0 = -1;
 
-  if ( ( extended->use_stage_mask && ( extended->stage_mask & ( 1 << istage ) ) )
-       || ( xtable->use_stage_mask && ( xtable->stage_mask & ( 1 << istage ) ) ) )
+  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage ) ) )
+       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage ) ) ) )
     r0 = -1;
   if ( r0 == 0 )
   {
@@ -112,7 +112,7 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
   {
     int old;
 
-    old = duf_optstage_check_old( istage, extended, xtable );
+    old = duf_optstage_check_old( istage, extended, xvtable );
     if ( ( old && r0 <= 0 ) || ( !old && r0 >= 0 ) || ( 0 == strcmp( extended->o.name, "help-set" ) ) )
       T( "@@>>>> %s @ %s : (r1:%d; r2:%d) => %d {old:%d}\n", extended->o.name, duf_optstage_name( istage ), r1, r2, r0, old );
   }
@@ -122,13 +122,13 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
 }
 
 char *
-duf_optstages_list( const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+duf_optstages_list( const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable )
 {
   char *s = NULL;
 
   for ( duf_option_stage_t istg = DUF_OPTION_STAGE_MIN; istg <= DUF_OPTION_STAGE_MAX; istg++ )
   {
-    if ( DUF_OPTION_CHECK_STAGE( istg, extended, xtable ) )
+    if ( DUF_OPTION_CHECK_STAGE( istg, extended, xvtable ) )
       s = mas_strncat_x( s, duf_optstage_name( istg ), 1 );
     else
       s = mas_strcat_x( s, "_" );
