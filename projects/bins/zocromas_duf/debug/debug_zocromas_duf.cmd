@@ -9,7 +9,7 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-watch lo_extended_vtable_multi
+# watch lo_extended_vtable_multi
 
 # watch global_status.pdilist
 # watch global_status.pdilist->next
