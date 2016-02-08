@@ -426,9 +426,9 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( const duf_longval_extended_vtable_t ** xvtables, const char *name )
+duf_multix_print( const duf_longval_extended_vtable_t *const* xvtables, const char *name )
 {
-  for ( const duf_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
+  for ( const duf_longval_extended_vtable_t *const* xt = xvtables; xt && *xt; xt++ )
   {
     char *se = NULL;
     char *matchtab = NULL;

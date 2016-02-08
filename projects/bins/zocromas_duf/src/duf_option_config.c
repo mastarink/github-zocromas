@@ -23,7 +23,7 @@ duf_cli_options_config( void )
 }
 
 static char *
-duf_cli_option_shorts_create( const duf_longval_extended_vtable_t ** xvtables )
+duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtables )
 {
   const duf_longval_extended_vtable_t *xtable;
   char shorts[1024 * 4] = "";
@@ -70,7 +70,7 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t ** xvtables )
 }
 
 void
-duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t ** xvtables )
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables )
 {
   if ( cli )
   {

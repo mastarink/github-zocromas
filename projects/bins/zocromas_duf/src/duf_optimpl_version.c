@@ -67,7 +67,7 @@ duf_option_O_version( void )
 #  endif
 
     DUF_PUTSL( 0 );
-    DUF_PRINTF( 0, "args:            (%s)", sargv1?sargv1:"" );
+    DUF_PRINTF( 0, "args:            (%s)", sargv1 ? sargv1 : "" );
     /* DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 ); */
 
     DUF_PUTSL( 0 );

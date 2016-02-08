@@ -14,7 +14,7 @@
 
 
 int
-duf_longindex_extended_count( const duf_longval_extended_vtable_t ** xvtables )
+duf_longindex_extended_count( const duf_longval_extended_vtable_t * const *xvtables )
 {
   int xcount = 0;
 
@@ -34,7 +34,7 @@ duf_longindex_extended_count( const duf_longval_extended_vtable_t ** xvtables )
     }
   }
 #else
-  for ( const duf_longval_extended_vtable_t ** pxtables = xvtables; *pxtables; pxtables++ )
+  for ( const duf_longval_extended_vtable_t * const *pxtables = xvtables; *pxtables; pxtables++ )
   {
     const duf_longval_extended_t *xtended = NULL;
 

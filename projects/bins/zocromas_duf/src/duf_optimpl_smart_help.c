@@ -223,7 +223,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
     tbcount = duf_longindex_extended_count( duf_extended_vtable_multi(  ) );
     for ( ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
 #else
-    for ( const duf_longval_extended_vtable_t ** xtables = duf_extended_vtable_multi(  ); *xtables; xtables++ )
+    for ( const duf_longval_extended_vtable_t * const *xtables = duf_extended_vtable_multi(  ); *xtables; xtables++ )
       for ( const duf_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
 #endif
       {
@@ -274,7 +274,7 @@ duf_option_O_help_set( const char *arg )
 {
   DEBUG_STARTR( r );
 
-  for ( const duf_longval_extended_vtable_t ** xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++ )
+  for ( const duf_longval_extended_vtable_t * const *xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
     int title_printed = 0;

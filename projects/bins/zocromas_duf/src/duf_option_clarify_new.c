@@ -206,7 +206,7 @@ SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtabl
   ER( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t *const* xvtables, duf_option_data_t * pod )
 {
   /* int doindex = -1; */
 
@@ -293,7 +293,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
   /* pod->optarg = NULL;      */
   TR( QERRIND );
 
-  ER( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t *const* xvtables, duf_option_data_t * pod );
 }
 
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
