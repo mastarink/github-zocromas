@@ -103,7 +103,7 @@
 
 /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
 #  define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.invert=1
-#  define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_loc,_fld),.invert=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_vt, _prf,_loc,_fld),.invert=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 #  define DO_SET_FUNC(_f)  .func=duf_option_O_ ## _f
 #  define DOO_SET_FUNC(_f) .func=duf_option_O_ ## _f

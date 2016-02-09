@@ -52,11 +52,12 @@ typedef enum
   DUF_OPTION_STAGE_INIT,
   DUF_OPTION_STAGE_FIRST,
   DUF_OPTION_STAGE_LOOP,
+  DUF_OPTION_STAGE_LOOPE = DUF_OPTION_STAGE_LOOP + 1000,
   DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_INTERAC = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_MAX = DUF_OPTION_STAGE_INTERACTIVE,
-  DUF_OPTION_STAGE_ANY = 88888,
-  DUF_OPTION_STAGE_ALL = 99999,
+  DUF_OPTION_STAGE_ANY = 8888888,
+  DUF_OPTION_STAGE_ALL = 9999999,
 } duf_option_stage_t;
 
 typedef enum
@@ -306,14 +307,14 @@ typedef struct
   unsigned invert:1;
   unsigned can_no:1;
   unsigned m_hasoff:1;
-#if 0
+#  if 0
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
   duf_limits_stage_t stage;
   unsigned long stage_mask;
-#else
+#  else
   duf_extended_stageopts_t stage_opts;
-#endif
+#  endif
   duf_option_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
@@ -356,14 +357,14 @@ typedef struct duf_longval_extended_table_s
 {
   int id;
   const char *name;
-#if 0
+#  if 0
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
   duf_limits_stage_t stage;
   unsigned long stage_mask;
-#else
+#  else
   duf_extended_stageopts_t stage_opts;
-#endif
+#  endif
   duf_longval_extended_t xlist[];
 } duf_longval_extended_table_t;
 

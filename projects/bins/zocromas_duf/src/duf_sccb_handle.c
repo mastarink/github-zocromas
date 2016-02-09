@@ -135,7 +135,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       assert( DUF_NOERROR( rpr ) );
       if ( !cnt )
       {
-        T( "@%llu:%llu; %s; %s", cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql );
+        T( "@%llu:%llu:%llu; %s; %s", PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql );
       }
     }
     mas_free( sqlt );

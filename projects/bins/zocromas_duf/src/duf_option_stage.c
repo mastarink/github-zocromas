@@ -15,6 +15,7 @@
 const char *
 duf_optstage_name( duf_option_stage_t istage )
 {
+#if 0
   static const char *tail[] = {
     [DUF_OPTION_STAGE_NONE] = "none",
     [DUF_OPTION_STAGE_BOOT] = "boot",
@@ -30,6 +31,51 @@ duf_optstage_name( duf_option_stage_t istage )
   return ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX )
         /* || istage == DUF_OPTION_STAGE_NONE ? ( tail[istage] ? tail[istage] : "-?-" ) : ( istage == DUF_OPTION_STAGE_ANY ? "any" : "-" ); */
         || istage == DUF_OPTION_STAGE_NONE ? ( tail[istage] ? tail[istage] : "-?-" ) : ( "-" );
+#else
+  const char *stagename = NULL;
+
+  switch ( istage )
+  {
+  case DUF_OPTION_STAGE_NONE:
+    stagename = "none";
+    break;
+  case DUF_OPTION_STAGE_BOOT:
+    stagename = "boot";
+    break;
+  case DUF_OPTION_STAGE_DEBUG:
+    stagename = "debug";
+    break;
+  case DUF_OPTION_STAGE_PRESETUP:
+    stagename = "presetup";
+    break;
+  case DUF_OPTION_STAGE_SETUP:
+    stagename = "setup";
+    break;
+  case DUF_OPTION_STAGE_INIT:
+    stagename = "init";
+    break;
+  case DUF_OPTION_STAGE_FIRST:
+    stagename = "first";
+    break;
+  case DUF_OPTION_STAGE_LOOP:
+  case DUF_OPTION_STAGE_LOOPE:
+    stagename = "loop";
+    break;
+  case DUF_OPTION_STAGE_INTERACTIVE:
+    stagename = "interactive";
+    break;
+  case DUF_OPTION_STAGE_ANY:
+    stagename = "any";
+    break;
+  case DUF_OPTION_STAGE_ALL:
+    stagename = "all";
+    break;
+  default:
+    if ( istage >= DUF_OPTION_STAGE_LOOP && istage <= DUF_OPTION_STAGE_LOOPE )
+      stagename = "loop";
+  }
+#endif
+  return stagename;
 }
 
 /*
@@ -42,32 +88,37 @@ duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t 
   int r0 = 0;
   int r1 = 0;
   int r2 = 0;
+  duf_option_stage_t istage_check;
 
+  istage_check = istage;
+  if ( istage > DUF_OPTION_STAGE_LOOP && istage <= DUF_OPTION_STAGE_LOOPE )
+    istage_check = DUF_OPTION_STAGE_LOOP;
+  else
+    istage_check = istage;
   DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( istage ),
              extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
   DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xvtable->stage_opts.use_stage,
              xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
-  r0 = ( istage == DUF_OPTION_STAGE_ANY || istage == DUF_OPTION_STAGE_ALL );
+  r0 = ( istage_check == DUF_OPTION_STAGE_ANY || istage_check == DUF_OPTION_STAGE_ALL );
   /* r0 = r0 || ( extended->stage_opts.stage.flag ? 1 : 0 ); (* ???? *) */
   if ( !r0 )
   {
     if ( extended->stage_opts.use_stage )
-      r1 = ( extended->stage_opts.stage.min <= istage && extended->stage_opts.stage.max >= istage );
+      r1 = ( extended->stage_opts.stage.min <= istage_check && extended->stage_opts.stage.max >= istage_check );
     else
-      r1 = ( istage > DUF_OPTION_STAGE_DEBUG );
+      r1 = ( istage_check > DUF_OPTION_STAGE_DEBUG );
     assert( xvtable );
     if ( xvtable->stage_opts.use_stage )
-      r2 = ( xvtable->stage_opts.stage.min <= istage && xvtable->stage_opts.stage.max >= istage );
+      r2 = ( xvtable->stage_opts.stage.min <= istage_check && xvtable->stage_opts.stage.max >= istage_check );
     else
       r2 = r1;
     r0 = ( r1 || r2 );
   }
-  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage ) ) )
-       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage ) ) ) )
+  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage_check ) ) )
+       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage_check ) ) ) )
   {
     r0 = 0;
   }
-
   DUF_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( istage ), r0 );
   return r0;
 }
@@ -78,19 +129,26 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
   int r0 = 0;
   int r1 = 0;
   int r2 = 0;
+  duf_option_stage_t istage_check;
+
+  istage_check = istage;
+  if ( istage > DUF_OPTION_STAGE_LOOP && istage <= DUF_OPTION_STAGE_LOOPE )
+    istage_check = DUF_OPTION_STAGE_LOOP;
+  else
+    istage_check = istage;
 
   DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( istage ),
              extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
   DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( istage ), xvtable->stage_opts.use_stage,
              xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
-  r0 = ( istage == DUF_OPTION_STAGE_ANY || istage == DUF_OPTION_STAGE_ALL ) ? 1 : 0;
+  r0 = ( istage_check == DUF_OPTION_STAGE_ANY || istage_check == DUF_OPTION_STAGE_ALL ) ? 1 : 0;
   /* if (r0>=0 && !extended->stage_opts.stage.flag ) r0=-1; (* ???? *) */
 
   if ( extended->stage_opts.use_stage )
-    r1 = ( extended->stage_opts.stage.min <= istage && extended->stage_opts.stage.max >= istage ) ? 1 : -1;
+    r1 = ( extended->stage_opts.stage.min <= istage_check && extended->stage_opts.stage.max >= istage_check ) ? 1 : -1;
   assert( xvtable );
   if ( xvtable->stage_opts.use_stage )
-    r2 = ( xvtable->stage_opts.stage.min <= istage && xvtable->stage_opts.stage.max >= istage ) ? 1 : -1;
+    r2 = ( xvtable->stage_opts.stage.min <= istage_check && xvtable->stage_opts.stage.max >= istage_check ) ? 1 : -1;
   if ( r1 > 0 )
     r0 = 1;
   else if ( r1 < 0 )
@@ -98,12 +156,12 @@ duf_optstage_check( duf_option_stage_t istage, const duf_longval_extended_t * ex
   else if ( r2 < 0 )
     r0 = -1;
 
-  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage ) ) )
-       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage ) ) ) )
+  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage_check ) ) )
+       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage_check ) ) ) )
     r0 = -1;
   if ( r0 == 0 )
   {
-    if ( istage > DUF_OPTION_STAGE_DEBUG )
+    if ( istage_check > DUF_OPTION_STAGE_DEBUG )
       r0 = 1;
     else
       r0 = -1;
