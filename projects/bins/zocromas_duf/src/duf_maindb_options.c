@@ -70,7 +70,7 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
       duf_ufilter_t *pu = ( duf_ufilter_t * ) NULL; /* take pu from config */
       const duf_sql_set_t *sql_set = NULL;
 
-      T( "@%d/%d. %s", ia, duf_cli_options_get_targc(  ), targia );
+      DUF_TRACE( path, 0, "@%d/%d. %s", ia, duf_cli_options_get_targc(  ), targia );
       CR( pdi_reinit_anypath, duf_pdi_global(  ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
           DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( duf_pdi_global(  ) ) );

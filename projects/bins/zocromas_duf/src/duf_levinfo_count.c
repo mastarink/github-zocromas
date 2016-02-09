@@ -15,6 +15,8 @@
 #include "duf_sql_prepared.h"
 
 #include "evsql_selector.h"
+#include "evsql_selector_new.h"
+
 #include "duf_ufilter_bind.h"
 
 #include "sql_beginning_selected.h"
@@ -74,7 +76,11 @@ duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
 
     ns = pdi->sql_selected_done ? 0 : 1;
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
+#if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
+#else
+    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, &rpr );
+#endif
     if ( DUF_NOERROR( rpr ) && sql )
     {
       /* T( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
@@ -174,7 +180,11 @@ duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
     };
     /* ns = pdi->sql_selected_done ? 0 : 1; */
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
+#if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
+#else
+    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, &rpr );
+#endif
     if ( DUF_NOERROR( rpr ) && sql )
     {
       /* T( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */

@@ -20,7 +20,9 @@
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
 #include "duf_ufilter_bind.h"
+
 #include "evsql_selector.h"
+#include "evsql_selector_new.h"
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
@@ -141,8 +143,11 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
 #endif
 
   if ( DUF_NOERROR( r ) )
+#if 0
     sql_selector = duf_selector2sql( sql_set, PDI->pdi_name, &r );
-
+#else
+    sql_selector = duf_selector2sql_new( sql_set, PDI->pdi_name, 0, &r );
+#endif
 
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
   DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );

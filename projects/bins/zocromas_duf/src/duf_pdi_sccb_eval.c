@@ -39,7 +39,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
   duf_sccb_handle_t *sccbh = NULL;
 
   /* assert( duf_levinfo_dirid( pdi ) ); */
-  DUF_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb->name, duf_levinfo_path( pdi ) );
+  DUF_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb ? sccb->name : NULL, duf_levinfo_path( pdi ) );
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
   /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
   sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv, &r );
@@ -78,25 +78,33 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 
   assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
 
-
 #if 0
-  if ( DUF_NOERROR( r ) )
-    sccb = duf_find_sccb_by_evnamen( name, len, first ); /* XXX XXX */
-#else
-  if ( DUF_NOERROR( r ) )
-    sccb = duf_find_or_load_sccb_by_evnamen( name, len, first ); /* XXX XXX */
-#endif
-  DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccb ? sccb->name : "NONAME" );
-  if ( sccb )
+  if ( 0 == strcmp( name, "NULL" ) )
   {
-    DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
-
-    /* T( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-    DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
+    DOR( r, duf_ev_pdi_sccb( pdi, NULL, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
   }
   else
+#endif
   {
-    DUF_MAKE_ERRORM( r, DUF_ERROR_SCCB_NOT_FOUND, "sccb module not found: '%s'", name );
+#if 0
+    if ( DUF_NOERROR( r ) )
+      sccb = duf_find_sccb_by_evnamen( name, len, first ); /* XXX XXX */
+#else
+    if ( DUF_NOERROR( r ) )
+      sccb = duf_find_or_load_sccb_by_evnamen( name, len, first ); /* XXX XXX */
+#endif
+    DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccb ? sccb->name : "NONAME" );
+    if ( sccb )
+    {
+      DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
+
+      /* T( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+      DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
+    }
+    else
+    {
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCCB_NOT_FOUND, "sccb module not found: '%s'", name );
+    }
   }
   DEBUG_ENDR( r );
 }

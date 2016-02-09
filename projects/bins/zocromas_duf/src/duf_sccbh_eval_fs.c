@@ -42,7 +42,24 @@ duf_sccbh_eval_fs_with_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_s
     if ( scanner )
     {
       sccbh->current_scanner = scanner;
+      T( "@@@%s : %s; %s", duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ), duf_nodetype_name( duf_levinfo_node_type( PDI ) ) );
       DOR( r, ( scanner ) ( NULL /* pstmt */ , PDI ) );
+      {
+        duf_levinfo_t *pli = NULL;
+
+        pli = duf_levinfo_ptr_up( PDI );
+        if ( pli )
+        {
+          if ( duf_levinfo_node_type( PDI ) == DUF_NODE_NODE )
+            pli->scanned_childs.nodes++;
+          else if ( duf_levinfo_node_type( PDI ) == DUF_NODE_LEAF )
+            pli->scanned_childs.leaves++;
+          else
+          {
+            assert( 0 );
+          }
+        }
+      }
       assert( sccbh->current_node_type == DUF_NODE_FS );
       if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, scanstage, NULL /* pstmt */ , scanner, DUF_NODE_FS, r );
@@ -66,7 +83,13 @@ duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNU
 
   nt = ( de->d_type == DT_DIR ) ? DUF_NODE_NODE : DUF_NODE_LEAF;
 /* --> */
+  /* T( "@@1 %-17s : %-17s; %s #%d", duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ), */
+  /*    duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_pdi_depth( PDI ) );                */
   DOR( r, duf_levinfo_godown( PDI, de->d_name, nt ) );
+  /* T( "@@2 %-17s : %-17s; %s #%d", duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ), */
+  /*    duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_pdi_depth( PDI ) );                */
+  T( "@@%s #%d :: %-17s {%p}", duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_pdi_depth( PDI ), duf_levinfo_itemtruename( PDI ),
+     duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) );
   {
     /* assert(duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt )); */
     /* T( "SCANNER: %d : %s", duf_scanstage_scanner( SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ? 1 : 0, duf_uni_scan_action_title( SCCB ) ); */
@@ -86,7 +109,8 @@ duf_sccbh_eval_fs_dirat_with2scanners( duf_scanstage_t scanstage DUF_UNUSED, duf
   int ry = 0;
   struct dirent **list = NULL;
 
-  ry = scandirat( duf_levinfo_dfd( PDI ), ".", &list, duf_direntry_filter, alphasort );
+  /* T( "@@@@%s", duf_levinfo_path( PDI ) ); */
+  ry = scandirat( duf_levinfo_dfd( PDI ), ".", &list, duf_direntry_filter, NULL /* alphasort */  );
   if ( ry >= 0 )
   {
     int nlist = ry;
@@ -133,25 +157,31 @@ duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unu
 
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
-    /* TODO */
-    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
+    /* assert( PDI->opendir == 1 ); */
+    duf_pdi_set_opendir( PDI, 1 ); /* TODO */
+    T( "@@to scan FS at %s", duf_levinfo_path( PDI ) );
+    {
+      DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
+      assert( DUF_IS_ERROR( r ) || duf_levinfo_stat( PDI ) );
 
+      T( "@@@@%s", duf_levinfo_path( PDI ) );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
-    if ( S_ISDIR( duf_levinfo_stat_mode( PDI ) ) )
-    {
-      DOR( r, duf_levinfo_if_openat_dh( PDI ) );
-      sccbh->current_node_type = DUF_NODE_FS;
-      DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( scanstage, pstmt_unused, sccbh ) );
-    }
-    else
-    {
-      /* system level: S_ISDIR - register errors */
+      if ( S_ISDIR( duf_levinfo_stat_mode( PDI ) ) )
+      {
+        DOR( r, duf_levinfo_if_openat_dh( PDI ) );
+        sccbh->current_node_type = DUF_NODE_FS;
+        DOR( r, duf_sccbh_eval_fs_dirat_with2scanners( scanstage, pstmt_unused, sccbh ) );
+      }
+      else
+      {
+        /* system level: S_ISDIR - register errors */
 /* no such entry */
-      /* DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
-      /* TODO mark as absent or remove from db */
+        /* DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
+        /* TODO mark as absent or remove from db */
 
-      /* DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemshowname( PDI ) ); */
-      DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "No such entry '%s'/'%s'", duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+        /* DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemshowname( PDI ) ); */
+        DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "No such entry '%s'/'%s'", duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+      }
     }
   }
   DEBUG_ENDR( r );
@@ -172,16 +202,12 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
   assert( PDI );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
-    /* assert( PDI->opendir == 1 ); */
-    duf_pdi_set_opendir( PDI, 1 ); /* TODO neeless here */
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-    DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT ); /* TODO neeless here */ /* may open (upper level) */
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     /* assert( duf_levinfo_dfd( PDI ) ); */
-    assert( r < 0 || duf_levinfo_stat( PDI ) );
     /*
      *   -- call for each direntry
      *      - for directory                - sccb->dirent_dir_scan_before2

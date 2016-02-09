@@ -22,7 +22,9 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql_stmt_defs.h"
+
 #include "evsql_selector.h"
+#include "evsql_selector_new.h"
 
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
@@ -248,23 +250,11 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 
   assert( pdi );
   assert( pdi->pdi_name );
-
-#if 1
+#if 0
   sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name, &r );
 #else
-  sqlv = mas_strdup( "SELECT " );
-  sqlv = mas_strcat_x( sqlv, def_node_fieldset2 );
-  sqlv = mas_strcat_x( sqlv, " " );
-  if ( node_selector2 )
-  {
-    sqlv = mas_strcat_x( sqlv, node_selector2 );
-  }
-  else
-  {
-    sqlv = mas_strcat_x( sqlv, def_node_selector2 );
-  }
+  sqlv = duf_selector2sql_new( sql_set ? sql_set : &def_node_set, pdi->pdi_name, 0 /*total */ , &r );
 #endif
-
   DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) ); /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
   DUF_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
              duf_levinfo_dirid_up( pdi ) );

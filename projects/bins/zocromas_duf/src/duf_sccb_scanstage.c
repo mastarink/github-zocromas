@@ -66,8 +66,8 @@ duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanst
     /* T( "scanner: %d %s (%s)", scanner ? 1 : 0, duf_uni_scan_action_title( sccb ), duf_scanstage_name( scanstage ) ); */
     break;
   case DUF_SCANSTAGE_NONE:
-  case DUF_SCANSTAGE_MIN:
-  case DUF_SCANSTAGE_MAX:
+  /* case DUF_SCANSTAGE_MIN: */
+  /* case DUF_SCANSTAGE_MAX: */
     /* T( "scanner: %d %s (%s)", scanner ? 1 : 0, duf_uni_scan_action_title( sccb ), duf_scanstage_name( scanstage ) ); */
     break;
   }
@@ -84,7 +84,7 @@ duf_scanstage_name( duf_scanstage_t scanstage )
   switch ( scanstage )
   {
   case DUF_SCANSTAGE_FS_ITEMS:
-    rs = "fs_leaves";           /* F */
+    rs = "fs_items";           /* F */
     break;
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     rs = "db_leaves";           /* L */
@@ -107,12 +107,12 @@ duf_scanstage_name( duf_scanstage_t scanstage )
   case DUF_SCANSTAGE_NONE:
     rs = "none";                /* N */
     break;
-  case DUF_SCANSTAGE_MIN:
-    rs = "min";                 /* I */
-    break;
-  case DUF_SCANSTAGE_MAX:
-    rs = "max";                 /* X */
-    break;
+  /* case DUF_SCANSTAGE_MIN:               */
+  /*   rs = "min";                 (* I *) */
+  /*   break;                              */
+  /* case DUF_SCANSTAGE_MAX:               */
+  /*   rs = "max";                 (* X *) */
+  /*   break;                              */
   }
   return rs;
 }
@@ -148,12 +148,12 @@ duf_scanstage_shortname( duf_scanstage_t scanstage )
   case DUF_SCANSTAGE_NONE:
     rs = "N";                   /* N */
     break;
-  case DUF_SCANSTAGE_MIN:
-    rs = "i";                   /* I */
-    break;
-  case DUF_SCANSTAGE_MAX:
-    rs = "X";                   /* X */
-    break;
+  /* case DUF_SCANSTAGE_MIN:               */
+  /*   rs = "i";                   (* I *) */
+  /*   break;                              */
+  /* case DUF_SCANSTAGE_MAX:               */
+  /*   rs = "X";                   (* X *) */
+  /*   break;                              */
   }
   return rs;
 }

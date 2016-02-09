@@ -18,8 +18,8 @@ shn_gvimer_plus_filtyp ()
        typf="shn"
     elif [[ "$dirn" == shn ]] && ( [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ); then
        typf="shn"
-    elif [[ "$filef" == *.ac ]] || [[ "$filef" == *.am ]]; then
-       typf="ac"
+    elif [[ "$filef" == *.acm ]] || [[ "$filef" == *.am ]]; then
+       typf="acm"
     elif [[ "$filef" == *.mased.vim ]] ; then
        typf="mased_vim"
     elif [[ "$filef" == *.vim ]] || [[ "$filef" == gvim* ]] || [[ "$filef" == vim* ]] ; then
@@ -42,7 +42,7 @@ shn_gvimer_plus_find ()
     case $typf in
         src)		paths='./src/ ./mod/ ./inc/'	;;
         cdef)		paths='./src/'	;;
-        ac)		paths='./'		;;
+        acm)		paths='./'		;;
         shn)		paths='./shn/'		;;
         vimstd)		paths="$localvim_dir/"	;;
         dufcmds)	paths="./test/duf/"	;;
@@ -62,7 +62,7 @@ shn_gvimer_plus_vpath ()
     case $typf in
         src)		paths='src/,mod/,src/inc/,mod/inc/,inc/'	;;
         cdef)		paths="src/,src/inc/"		;;
-        ac)		paths='.'			;;
+        acm)		paths='.'			;;
         shn)		paths='shn/'			;;
         vimstd)		paths="$localvim_dir"		;;
         dufcmds)	paths="test/duf/tests20151006/"		;;

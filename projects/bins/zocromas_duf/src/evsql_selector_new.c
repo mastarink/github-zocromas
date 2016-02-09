@@ -128,7 +128,7 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
 }
 
 char *
-duf_expand_sql( const char *sql, const char *dbname )
+duf_expand_sql_new( const char *sql, const char *dbname )
 {
   char *nsql;
 
@@ -137,7 +137,7 @@ duf_expand_sql( const char *sql, const char *dbname )
   return nsql;
 }
 
-char *
+static char *
 duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
 {
   int rpr = 0;
@@ -185,7 +185,7 @@ duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
 
 /* 20150819.133515 */
 char *
-duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
+duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, unsigned total, int *pr )
 {
   int rpr = 0;
   char *sql = NULL;
@@ -194,8 +194,18 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
 
   assert( sql_set );
 
-  cte_mode = ( sql_set->selector2 ? 0 : ( ( sql_set->cte && sql_set->selector2_cte ) ? 1 : 0 ) );
+
+
+
+#if 0
+  if ( total )
+    cte_mode = sql_set->cte && sql_set->selector2_cte; /* ???????????????????? */
+  else
+#endif
+    cte_mode = ( sql_set->selector2 ? 0 : ( ( sql_set->cte && sql_set->selector2_cte ) ? 1 : 0 ) );
+  
   selector2 = cte_mode ? sql_set->selector2_cte : sql_set->selector2;
+
   assert( selector2 );
   if (  /* sql_set->fieldset && */ selector2 )
   {
@@ -205,7 +215,15 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
     const char *selector = NULL;
     char *fieldset = NULL;
 
-    fieldset = duf_fieldset2sql( sql_set, &rpr );
+    if ( total )
+    {
+      fieldset = mas_strdup( "COUNT(" );
+      fieldset = mas_strcat_x( fieldset, sql_set->count_aggregate ? sql_set->count_aggregate : "*" );
+      fieldset = mas_strcat_x( fieldset, ") AS nf" );
+    }
+    else
+      fieldset = duf_fieldset2sql( sql_set, &rpr );
+
     if ( DUF_NOERROR( rpr ) && fieldset )
     {
       selector = duf_unref_selector( selector2, sql_set->type, &rpr );
@@ -222,7 +240,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         {
           char *tsql;
 
-          tsql = duf_expand_sql( selector, selected_db );
+          tsql = duf_expand_sql_new( selector, selected_db );
           sql = mas_strcat_x( sql, tsql );
           mas_free( tsql );
         }
@@ -242,7 +260,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         }
 #endif
 #if 1
-        if ( sql_set->matcher )
+        if ( sql_set->matcher && !total )
         {
           if ( has_where )
             sql = mas_strcat_x( sql, " AND " );
@@ -290,106 +308,6 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
   }
   if ( pr )
     *pr = rpr;
-  return sql;
-}
-
-/* 20150819.133525 */
-char *
-duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
-{
-  int rpr = 0;
-  char *sql = NULL;
-  const char *selector2 = NULL;
-
-
-  assert( sql_set );
-
-  selector2 = ( sql_set->cte && sql_set->selector2_cte ) ? sql_set->selector2_cte : sql_set->selector2;
-  assert( selector2 );
-  if ( selector2 )
-  {
-    int has_where = 0;
-    int has_group = 0;
-    int has_order = 0;
-    const char *selector = NULL;
-
-    selector = duf_unref_selector( selector2, sql_set->type, &rpr );
-    if ( selector )
-    {
-      if ( sql_set->cte )
-        sql = mas_strcat_x( sql, sql_set->cte );
-
-      sql = mas_strcat_x( sql, "SELECT " );
-      sql = mas_strcat_x( sql, "COUNT(" );
-      sql = mas_strcat_x( sql, sql_set->count_aggregate ? sql_set->count_aggregate : "*" );
-      sql = mas_strcat_x( sql, ") AS nf" );
-      sql = mas_strcat_x( sql, " " );
-      if ( sql_set->expand_sql )
-      {
-        char *tsql;
-
-        tsql = duf_expand_sql( selector, selected_db );
-        sql = mas_strcat_x( sql, tsql );
-        mas_free( tsql );
-      }
-      else
-      {
-        sql = mas_strcat_x( sql, selector );
-      }
-
-
-#if 1
-      if ( sql_set->filter )
-      {
-        if ( has_where )
-          sql = mas_strcat_x( sql, " AND " );
-        else
-          sql = mas_strcat_x( sql, " WHERE " );
-        has_where = 1;
-        sql = mas_strcat_x( sql, sql_set->filter );
-      }
-#endif
-#if 0
-      if ( sql_set->matcher )
-      {
-        if ( has_where )
-          sql = mas_strcat_x( sql, " AnD " );
-        else
-          sql = mas_strcat_x( sql, " WhERE " );
-        has_where = 1;
-        sql = mas_strcat_x( sql, sql_set->matcher );
-      }
-#endif
-#if 1
-      if ( sql_set->group )
-      {
-        if ( has_group )
-          sql = mas_strcat_x( sql, "," );
-        else
-          sql = mas_strcat_x( sql, " GROUP BY " );
-        has_group = 1;
-        sql = mas_strcat_x( sql, sql_set->order );
-      }
-#endif
-#if 1
-      if ( sql_set->order )
-      {
-        if ( has_order )
-          sql = mas_strcat_x( sql, "," );
-        else
-          sql = mas_strcat_x( sql, " ORDER BY " );
-        has_order = 1;
-        sql = mas_strcat_x( sql, sql_set->order );
-      }
-#endif
-    }
-    DUF_TRACE( select, 0, "TOTAL: %s", sql );
-  }
-  else
-  {
-    DUF_MAKE_ERROR( rpr, DUF_ERROR_PTR );
-  }
-  if ( pr )
-    *pr = rpr;
+  /* T("@%s", sql); */
   return sql;
 }

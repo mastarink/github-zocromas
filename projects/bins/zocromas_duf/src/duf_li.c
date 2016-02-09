@@ -12,7 +12,9 @@
 #include "duf_pdi_stmt.h"
 
 #include "duf_sql_stmt_defs.h"
+
 #include "evsql_selector.h"
+#include "evsql_selector_new.h"
 
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
@@ -209,7 +211,11 @@ duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_l
   assert( pditemp );
 
   {
+#if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
+#else
+    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, &r );
+#endif
     if ( sqlv )
     {
       DOR( r, _duf_dirid2li_existed( pditemp, sqlv, dirid, pli, pparentid ) );
@@ -275,7 +281,11 @@ duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf
   assert( pditemp );
 
   {
+#if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
+#else
+    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, &r );
+#endif
     if ( sqlv )
     {
       DOR( r, _duf_nameid2li_existed( pditemp, sqlv, nameid, pli, pdirid ) );

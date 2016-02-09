@@ -28,7 +28,7 @@ zocromas_duf_SOURCES=				   \
 	duf_tags.c					     \
 	duf_sccbh_eval_leaf.c duf_sel_cb_leaf.c duf_sel_cb_node.c  duf_pstmt_levinfo.c		      \
 	duf_action_table.c \
-	evsql_begfin.c evsql_selector.c \
+	evsql_begfin.c evsql_selector.c  evsql_selector_new.c \
 	duf_sccb.c duf_sccb_handle.c  duf_sccbh_eval.c duf_sccbh_eval_fs.c duf_sccbh_eval_sql_set.c duf_sccb_scanstage.c \
 	duf_pdi_sccb_eval.c \
 	duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \

@@ -55,7 +55,7 @@ duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, 
   }
   else
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_SCCB_NOT_FOUND );
+    DUF_MAKE_ERROR( r, DUF_ERROR_ACTTABLE_NOT_FOUND );
   }
   DEBUG_ENDR( r );
 }

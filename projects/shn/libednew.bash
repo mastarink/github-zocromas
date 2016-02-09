@@ -68,14 +68,16 @@ shn_gvimer_masedf_nt ()
   if [[ $mased_dir ]] && [[ -d $mased_dir ]] ; then
 ##  for masedf in $mased_dir/${typf}* ; do
     for masedf in $mased_dir/* ; do
-      if grep -q '\<\(tab\s\+sfind\|sfind\|find\|e\)\>\s\+\<'$filid'\s*$' $masedf && [[ -f $masedf ]] ; then
+      if [[ -f $masedf ]] && grep -q '\<\(tab\s\+sfind\|sfind\|find\|e\|sp\)\>\s\+\<'$filid'\s*$' $masedf ; then
 	echo -n $masedf
+	echo "masedf:$masedf" >&2
 	return 0
       fi
     done
   else
     echo "Error mased_dir: '$mased_dir'" >&2
   fi
+  echo "no masedf ($filid @ $mased_dir)" >&2
   return 1
 }
 shn_gvimer_plus_mased_file_here_nt ()
@@ -296,10 +298,10 @@ shn_gvimer_plus_nt ()
     fi
   fi
   local  fuuid0=$( shn_gvimer_plus_uuid "$@" )
-# declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [cdef]='src/inc' [shn]='shn' [dufcmds]='test/duf/tests20151006' [mased_vim]="$mased_dir" [ac]="." )
+# declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [cdef]='src/inc' [shn]='shn' [dufcmds]='test/duf/tests20151006' [mased_vim]="$mased_dir" [acm]="." )
   declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [mased_vim]="$mased_dir" )
-# declare -A edfile_typs=(['src']='*.[ch]' [cdef]='*.def'  [ac]="*.a[mc]" [mased_vim]="*.mased.vim"  )
-  declare -A edfile_typs=(['src']='*.[ch]'  [ac]="*.a[mc]" [mased_vim]="*.mased.vim"  )
+# declare -A edfile_typs=(['src']='*.[ch]' [cdef]='*.def'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )
+  declare -A edfile_typs=(['src']='*.[ch]'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )
 # declare -A  edfile_typs_re=([dufcmds]='(^.*\.(cmds|duf)$)' [shn]='(^.*\.(bash|sh)$)' [vimstd]='(^(.*\.vim|(gvim|vim).*)$)' )
   declare -A  edfile_typs_re=( [vimstd]='(^(.*\.vim|(gvim|vim).*)$)' )
   if [[ ${auto_edcfg:-'[auto]'} == '[auto]' ]] ; then

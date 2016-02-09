@@ -97,6 +97,13 @@ typedef struct
   unsigned long long dirid;
   unsigned long long nameid;
 } duf_levinfo_db_t;
+
+typedef struct
+{
+  unsigned long long nodes;
+  unsigned long long leaves;
+} duf_child_count_t;
+
 typedef struct
 {
   /* unsigned is__leaf:1; */
@@ -113,9 +120,10 @@ typedef struct
   long numdir;
   long numfile;
 #  else
-  unsigned long long childs;
+  unsigned long long childs; /* not used!? */
   long long numchild;
 #  endif
+  duf_child_count_t scanned_childs;
   char *fullpath;
   char *itemname;
   duf_levinfo_context_t context;
