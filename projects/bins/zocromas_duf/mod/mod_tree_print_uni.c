@@ -75,7 +75,7 @@ duf_scan_callbacks_t duf_tree_callbacks = {
   .leaf_scan2 = tree_leaf2,
 
   /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
-/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
+/* TODO : explain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   /* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */

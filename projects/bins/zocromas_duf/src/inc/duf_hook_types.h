@@ -62,6 +62,12 @@ typedef struct
   const char *selector2_cte;
   const char *matcher;
   const char *filter;
+#  if 0
+  const char *filter_fresh[10];
+#  else
+  const char *filter_fresh;
+#  endif
+  const char *filter_fast;
   const char *group;
   const char *order;
   const char *count_aggregate;
@@ -139,7 +145,8 @@ typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 typedef void ( *duf_sccbh_fun_t ) ( struct duf_sccb_handle_s * );
 typedef void ( *duf_rsccbh_fun_t ) ( const struct duf_sccb_handle_s *, duf_scanstage_t, duf_stmnt_t *, duf_scanner_t, duf_node_type_t, int );
 
-struct duf_sccb_handle_s
+
+typedef struct duf_sccb_handle_s
 {
   unsigned total_counted:1;
   unsigned long long total_items;
@@ -156,6 +163,8 @@ struct duf_sccb_handle_s
   duf_depthinfo_t *pdi;
   unsigned long long changes;
   const duf_scan_callbacks_t *sccb;
+  const duf_sql_set_t *active_set;
+  const duf_sql_set_t *second_set;
   duf_sccbh_fun_t progress_leaf_cb;
   duf_sccbh_fun_t progress_node_cb;
   duf_scanstage_t current_scanstage;
@@ -163,9 +172,7 @@ struct duf_sccb_handle_s
   duf_scanner_t current_scanner;
   duf_node_type_t current_node_type;
   duf_rsccbh_fun_t atom_cb;
-};
-
-typedef struct duf_sccb_handle_s duf_sccb_handle_t;
+} duf_sccb_handle_t;
 
 
 typedef struct

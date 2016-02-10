@@ -129,7 +129,7 @@ SR( TOP, treat_all_optstages )
     CR( treat_option_stage, DUF_OPTION_STAGE_LOOP );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
-
+  fputs( "\n", stderr );
   TT( "∈1∋ One " );
   TT( "∈2∋ Two " );
   TT( "∈1∋ Three " );

@@ -113,6 +113,7 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
 #if 0
   sql_set = duf_sccb_get_sql_set( SCCB, node_type );
 #else
+  /* TODO: sql_set = duf_sccbh_get_sql_set_f( sccbh, node_type ); */
   sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set );
 #endif
 
@@ -277,6 +278,7 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
 }
 
 /* 20150820.085615 */
+/* TODO duf_sccb_handle_t * sccbh must be first in all such funcs 20160210.120016 */
 int
 duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {

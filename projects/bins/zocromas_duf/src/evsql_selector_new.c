@@ -183,9 +183,100 @@ duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
   return fieldset;
 }
 
+char *
+duf_selector2sql_vcat_many_new( char *sql, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis, unsigned *phas,
+                                va_list args )
+{
+  const char *quant = NULL;
+  unsigned cnt = 0;
+
+  assert( phas );
+  while ( ( quant = va_arg( args, const char * ) ) )
+  {
+    if ( quant )
+    {
+      const char *j;
+
+      j = *phas ? jrest : jfirst;
+      if ( cnt > 0 && delim )
+        j = delim;
+      sql = mas_strcat_x( sql, " " );
+      sql = mas_strcat_x( sql, j );
+      sql = mas_strcat_x( sql, " " );
+      if ( cnt == 0 && parenthesis )
+        sql = mas_strcat_x( sql, "( " );
+      sql = mas_strcat_x( sql, "( " );
+      sql = mas_strcat_x( sql, quant );
+      /* T( "@quant=%s; %s", quant, sql ); */
+      sql = mas_strcat_x( sql, " )" );
+      ( *phas )++;
+      cnt++;
+    }
+  }
+  if ( cnt > 0 && parenthesis )
+    sql = mas_strcat_x( sql, " )" );
+  return sql;
+}
+
+char *
+duf_selector2sql_cat_many_new( char *sql, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis, unsigned *phas, ... )
+{
+  va_list args;
+
+  va_start( args, phas );
+  sql = duf_selector2sql_vcat_many_new( sql, jfirst, jrest, delim, parenthesis, phas, args );
+  va_end( args );
+  return sql;
+}
+
+char *
+duf_selector2sql_cat_new( char *sql, const char *jfirst, const char *jrest, unsigned parenthesis, unsigned *phas, const char *quant )
+{
+  return duf_selector2sql_cat_many_new( sql, jfirst, jrest, jrest, parenthesis, phas, quant, NULL );
+}
+
+char *
+duf_selector2sql_vfiltercat_new( char *sql, const char *delim, unsigned *phas_where, va_list args )
+{
+  sql = duf_selector2sql_vcat_many_new( sql, "WHERE", "AND", delim, 1, phas_where, args );
+  return sql;
+}
+
+char *
+duf_selector2sql_filtercat_many_new( char *sql, const char *delim, unsigned *phas_where, ... )
+{
+  va_list args;
+
+  va_start( args, phas_where );
+  sql = duf_selector2sql_vfiltercat_new( sql, delim, phas_where, args );
+  va_end( args );
+  return sql;
+}
+
+char *
+duf_selector2sql_filtercat_new( char *sql, unsigned *phas_where, const char *filter )
+{
+  return duf_selector2sql_filtercat_many_new( sql, "AND", phas_where, filter, NULL );
+}
+
+char *
+duf_selector2sql_filtercat_list_new( char *sql, unsigned *phas_where, const char *const *afilter )
+{
+  for ( unsigned i = 0; afilter[i]; i++ )
+    sql = duf_selector2sql_filtercat_new( sql, phas_where, afilter[i] );
+  return sql;
+}
+
+char *
+duf_selector2sql_filtercat2or_new( char *sql, unsigned *phas_where, const char *cfilter, const char *filter )
+{
+  return ( cfilter && filter ) ? duf_selector2sql_filtercat_many_new( sql, "OR", phas_where, cfilter, filter, NULL ) : sql;
+}
+
+
 /* 20150819.133515 */
 char *
-duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, unsigned total, int *pr )
+duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total, int *pr )
 {
   int rpr = 0;
   char *sql = NULL;
@@ -197,21 +288,19 @@ duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, un
 
 
 
-#if 0
   if ( total )
     cte_mode = sql_set->cte && sql_set->selector2_cte; /* ???????????????????? */
   else
-#endif
     cte_mode = ( sql_set->selector2 ? 0 : ( ( sql_set->cte && sql_set->selector2_cte ) ? 1 : 0 ) );
-  
+
   selector2 = cte_mode ? sql_set->selector2_cte : sql_set->selector2;
 
   assert( selector2 );
   if (  /* sql_set->fieldset && */ selector2 )
   {
-    int has_where = 0;
-    int has_group = 0;
-    int has_order = 0;
+    unsigned has_where = 0;
+    unsigned has_group = 0;
+    unsigned has_order = 0;
     const char *selector = NULL;
     char *fieldset = NULL;
 
@@ -248,29 +337,35 @@ duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, un
         {
           sql = mas_strcat_x( sql, selector );
         }
-#if 1
-        if ( sql_set->filter )
+
+        sql = duf_selector2sql_filtercat_new( sql, &has_where, sql_set->filter );
         {
-          if ( has_where )
-            sql = mas_strcat_x( sql, " AND " );
-          else
-            sql = mas_strcat_x( sql, " WHERE " );
-          has_where = 1;
-          sql = mas_strcat_x( sql, sql_set->filter );
+          unsigned t DUF_UNUSED = has_where;
+
+#if 0
+          sql = duf_selector2sql_filtercat_list_new( sql, &has_where, sql_set->filter_fresh );
+#else
+          sql = duf_selector2sql_filtercat_new( sql, &has_where, sql_set2 ? sql_set2->filter_fresh : sql_set->filter_fresh );
+#endif
+          /* if ( t != has_where ) */
+          /*   T( "@%s", sql );    */
+        }
+
+#if 0
+        if ( sql_set->filter_fast )
+          sql = duf_selector2sql_filtercat_many_new( sql, "OR", &has_where, ":fFast  IS NULL", sql_set->filter_fast, NULL );
+#else
+        {
+          unsigned t DUF_UNUSED = has_where;
+
+          sql = duf_selector2sql_filtercat2or_new( sql, &has_where, ":fFast  IS NULL", sql_set2 ? sql_set2->filter_fast : sql_set->filter_fast );
+          /* if ( t != has_where ) */
+          /*   T( "@%s", sql );    */
         }
 #endif
-#if 1
-        if ( sql_set->matcher && !total )
-        {
-          if ( has_where )
-            sql = mas_strcat_x( sql, " AND " );
-          else
-            sql = mas_strcat_x( sql, " WHERE " );
-          has_where = 1;
-          sql = mas_strcat_x( sql, sql_set->matcher );
-        }
-#endif
-#if 1
+        if ( !total )
+          sql = duf_selector2sql_filtercat_new( sql, &has_where, sql_set->matcher );
+#if 0
         if ( sql_set->group )
         {
           if ( has_group )
@@ -280,8 +375,10 @@ duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, un
           has_group = 1;
           sql = mas_strcat_x( sql, sql_set->order );
         }
+#else
+        sql = duf_selector2sql_cat_new( sql, "GROUP BY", ",", 0, &has_group, sql_set->group );
 #endif
-#if 1
+#if 0
         if ( sql_set->order )
         {
           if ( has_order )
@@ -291,6 +388,8 @@ duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, un
           has_order = 1;
           sql = mas_strcat_x( sql, sql_set->order );
         }
+#else
+        sql = duf_selector2sql_cat_new( sql, "ORDER BY", ",", 0, &has_order, sql_set->group );
 #endif
       }
     }
@@ -310,4 +409,10 @@ duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, un
     *pr = rpr;
   /* T("@%s", sql); */
   return sql;
+}
+
+char *
+duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, unsigned total, int *pr )
+{
+  return duf_selector2sql_2new( sql_set, NULL, selected_db, total, pr );
 }

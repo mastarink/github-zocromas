@@ -153,64 +153,32 @@ duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first 
 
 
 static const duf_sql_set_t *
-duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_leaf_index )
+duf_sccb_get_leaf_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_leaf_index )
 {
   const duf_sql_set_t *set = NULL;
+  unsigned index;
 
   assert( sccb );
-
-#if 0
-
-  switch ( sccb->use_std_leaf )
-  {
-  case 0:
-    set = &sccb->leaf;
-    break;
-  case 1:
-    set = &std_leaf_set;
-    break;
-  case 2:
-    set = &std_ns_leaf_set;
-    break;
-  default:
-    break;
-  }
-#else
-  unsigned index;
 
   index = force_leaf_index > 0 ? force_leaf_index : sccb->use_std_leaf;
   if ( index > 0 )
     set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
   else
     set = &sccb->leaf;
-  /* DUF_TRACE( sccb, 0, "%d : %ld : %s", index, std_leaf_nsets, set->fieldset ); */
-#endif
+  {
+    /* TODO ?? copy set, then set filter, filter_fresh, filter_fast from sccb->leaf 20160210.114823 */
+    /* T( "@%lu : %lu", sizeof( *set ), sizeof( std_leaf_sets[index - 1] ) ); */
+  }
   return set;
 }
 
 static const duf_sql_set_t *
-duf_get_node_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_node_index )
+duf_sccb_get_node_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_node_index )
 {
   const duf_sql_set_t *set = NULL;
 
   assert( sccb );
 
-#if 0
-  switch ( sccb->use_std_node )
-  {
-  case 0:
-    set = &sccb->node;
-    break;
-  case 1:
-    set = &std_node_set;
-    break;
-  case 2:
-    set = &std_ns_node_set;
-    break;
-  default:
-    break;
-  }
-#else
   unsigned index;
 
   index = force_node_index > 0 ? force_node_index : sccb->use_std_node;
@@ -218,8 +186,6 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_node_ind
     set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
   else
     set = &sccb->node;
-  /* DUF_TRACE( sccb, 0, "%d : %ld : %s", index, std_node_nsets, set->fieldset ); */
-#endif
   return set;
 }
 
@@ -233,10 +199,10 @@ duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set = duf_get_leaf_sql_set( sccb, force_leaf_index );
+    set = duf_sccb_get_leaf_sql_set( sccb, force_leaf_index );
     break;
   case DUF_NODE_NODE:
-    set = duf_get_node_sql_set( sccb, force_node_index );
+    set = duf_sccb_get_node_sql_set( sccb, force_node_index );
     break;
   case DUF_NODE_NONE:
     set = NULL;
@@ -248,8 +214,10 @@ duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_
   return set;
 }
 
+#if 0
 const duf_sql_set_t *
 duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
 {
   return duf_sccb_get_sql_set_f( sccb, node_type, 0, 0 );
 }
+#endif

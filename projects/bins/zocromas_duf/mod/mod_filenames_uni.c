@@ -69,7 +69,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .leaf_scan2_deleted = filenames_leaf2_deleted,
 
 
-/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
+/* TODO : explain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
@@ -82,7 +82,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            .expand_sql = 1,     /* */
            .fieldset =          /* */
            "'filenames-node' AS fieldset_id, " /* */
-           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
+           " paaat." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H

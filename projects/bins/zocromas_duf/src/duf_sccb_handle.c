@@ -37,6 +37,8 @@
 #include "evsql_selector.h"
 #include "evsql_selector_new.h"
 
+#include "std_mod_sets.h"
+
 #include "duf_sccb_begfin.h"
 #include "duf_ufilter_bind.h"
 
@@ -47,9 +49,74 @@
 #include "duf_sccb_handle.h"
 /* ###################################################################### */
 
+static const duf_sql_set_t *
+duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_leaf_index )
+{
+  const duf_sql_set_t *set = NULL;
+  unsigned index;
+
+  assert( SCCB );
+
+  index = force_leaf_index > 0 ? force_leaf_index : SCCB->use_std_leaf;
+  if ( index > 0 )
+    set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
+  else
+    set = &SCCB->leaf;
+  sccbh->active_set = set;
+  sccbh->second_set = &SCCB->leaf;
+  {
+    /* TODO ?? copy set, then set filter, filter_fresh, filter_fast from SCCB->leaf 20160210.114823 */
+    /* T( "@%lu : %lu", sizeof( *set ), sizeof( std_leaf_sets[index - 1] ) ); */
+  }
+  return set;
+}
+
+static const duf_sql_set_t *
+duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_node_index )
+{
+  const duf_sql_set_t *set = NULL;
+
+  assert( SCCB );
+
+  unsigned index;
+
+  index = force_node_index > 0 ? force_node_index : SCCB->use_std_node;
+  if ( index > 0 )
+    set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
+  else
+    set = &SCCB->node;
+  sccbh->active_set = set;
+  sccbh->second_set = &SCCB->leaf;
+  return set;
+}
+
+static const duf_sql_set_t *
+duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+{
+  const duf_sql_set_t *set = NULL;
+
+  assert( SCCB );
+  switch ( node_type )
+  {
+  case DUF_NODE_LEAF:
+    set = duf_sccbh_get_leaf_sql_set( sccbh, PU->std_leaf_set );
+    break;
+  case DUF_NODE_NODE:
+    set = duf_sccbh_get_node_sql_set( sccbh, PU->std_node_set );
+    break;
+  case DUF_NODE_NONE:
+    set = NULL;
+    break;
+  default:
+    set = NULL;
+    break;
+  }
+  return set;
+}
+
 /* 20151006.150004 */
 static unsigned long long
-duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
+duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int rpr = 0;
@@ -78,12 +145,18 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
     else
       sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_LEAF, PU->std_leaf_set, PU->std_node_set );
 #  else
-    sql_set = duf_sccb_get_sql_set_f( SCCB, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF, PU->std_leaf_set, PU->std_node_set );
+    sql_set = duf_sccbh_get_sql_set_f( sccbh, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #  endif
 #  if 0
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
 #  else
+    T( "@------------ %d", sccbh->second_set ? 1 : 0 );
+#    if 1
+    /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, PDI->pdi_name, 1, &rpr );
+#    else
+    sqlt = duf_selector2sql_2new( sql_set, sccbh->second_set, PDI->pdi_name, 1, &rpr );
+#    endif
 #  endif
     assert( DUF_NOERROR( rpr ) );
 #endif
@@ -113,20 +186,23 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
       {
+        long long cntfull = 0;
+
 #if 1
-        cnt = duf_sql_column_long_long( pstmt, 0 );
+        cntfull = duf_sql_column_long_long( pstmt, 0 );
         cnt1 = DUF_GET_UFIELD2( nf );
 #else
-        cnt = DUF_GET_UFIELD2( CNT );
+        cntfull = DUF_GET_UFIELD2( CNT );
 #endif
-        DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cnt, cnt1, csql );
+        DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cntfull, cnt1, csql );
         /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
-        if ( cnt > 0 && !sql_set->cte && SCCB->count_nodes )
+        /* T( "@(%llu) %llu; %s [%s]", cnt1, cnt, csql, sql_set->cte ); */
+        cnt = cntfull;
+        if ( cntfull > 0 && !sql_set->cte && SCCB->count_nodes )
         {
-          T( "@%llu:%llu; %s", cnt1, cnt, csql );
           cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) /* - 1 20160118.153828 */ ;
-          T( "@%llu:%llu:%d; %s", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ), csql );
         }
+        /* T( "(%s) %llu = %lld + (%lld); %s", sql_set->name, cntfull, cnt, ( long long ) ( duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ), csql ); */
         /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
@@ -153,7 +229,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
   DUF_TEST_R( rpr );
   if ( pr )
     *pr = rpr;
-  /* T( "%s cnt:%llu", duf_uni_scan_action_title( SCCB ), cnt ); */
+  /* T( "@(%llu) %llu:%d;", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ); */
   DEBUG_ENDULL( cnt );
 }
 

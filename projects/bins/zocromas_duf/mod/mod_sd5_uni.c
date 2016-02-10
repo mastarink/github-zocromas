@@ -66,9 +66,9 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
 
   .leaf_scan_fd2 = sd5_dirent_content2,
 
-/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf and use_std_node TODO */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {
            .name = "sd leaf",
            .type = DUF_NODE_LEAF,
@@ -78,12 +78,25 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            "#md5-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
+#if 0
            .filter =            /* */
            "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL ) " /*                           */ " AND " /* */
            "( sz.size  IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
            "(  :fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,
+#else
+#  if 0
+           .filter_fresh = {
+                            FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0", /* */
+                            NULL}
+#  else
+           .filter_fresh = FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0" /* */
+#  endif
+           ,
+           .filter_fast = "sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1" /* */
+           ,
+#endif
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
   ,
   .node = {

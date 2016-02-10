@@ -68,7 +68,7 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
   /* .leaf_scan_fd = duf_dirent_sha1_content, */
   .leaf_scan_fd2 = sha1_dirent_content2,
 
-/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
+/* TODO : explain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {
