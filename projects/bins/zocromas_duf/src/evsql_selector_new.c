@@ -19,7 +19,7 @@
 #include "std_fieldsets.h"
 #include "std_selectors.h"
 /* ###################################################################### */
-#include "evsql_selector.h"
+#include "evsql_selector_new.h"
 /* ###################################################################### */
 
 static const char *
@@ -127,8 +127,9 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
   return str;
 }
 
+/* TODO : move to common place with general substitutions */
 char *
-duf_expand_sql_new( const char *sql, const char *dbname )
+duf_expand_sql( const char *sql, const char *dbname )
 {
   char *nsql;
 
@@ -184,7 +185,7 @@ duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
 }
 
 char *
-duf_selector2sql_vcat_many_new( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
+duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
                                 unsigned *phas, va_list args )
 {
   const char *quant = NULL;
@@ -223,28 +224,28 @@ duf_selector2sql_vcat_many_new( char *sql, unsigned with_pref, const char *jfirs
 }
 
 char *
-duf_selector2sql_cat_many_new( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
+duf_selector2sql_cat_many_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
                                unsigned *phas, ... )
 {
   va_list args;
 
   va_start( args, phas );
-  sql = duf_selector2sql_vcat_many_new( sql, with_pref, jfirst, jrest, delim, parenthesis, phas, args );
+  sql = duf_selector2sql_vcat_many_frag( sql, with_pref, jfirst, jrest, delim, parenthesis, phas, args );
   va_end( args );
   return sql;
 }
 
 char *
-duf_selector2sql_cat_new( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, unsigned parenthesis, unsigned *phas,
+duf_selector2sql_cat_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, unsigned parenthesis, unsigned *phas,
                           const char *quant )
 {
-  return duf_selector2sql_cat_many_new( sql, with_pref, jfirst, jrest, jrest, parenthesis, phas, quant, NULL );
+  return duf_selector2sql_cat_many_frag( sql, with_pref, jfirst, jrest, jrest, parenthesis, phas, quant, NULL );
 }
 
 char *
 duf_selector2sql_vfiltercat_where_and( char *sql, unsigned with_pref, const char *delim, unsigned parenthesis, unsigned *phas_where, va_list args )
 {
-  sql = duf_selector2sql_vcat_many_new( sql, with_pref, "WHERE", "AND", delim, parenthesis, phas_where, args );
+  sql = duf_selector2sql_vcat_many_frag( sql, with_pref, "WHERE", "AND", delim, parenthesis, phas_where, args );
 
   return sql;
 }
@@ -373,7 +374,7 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
         {
           char *tsql;
 
-          tsql = duf_expand_sql_new( selector, selected_db );
+          tsql = duf_expand_sql( selector, selected_db );
           sql = mas_strcat_x( sql, tsql );
           mas_free( tsql );
         }
@@ -438,7 +439,7 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
           sql = mas_strcat_x( sql, sql_set->order );
         }
 #else
-        sql = duf_selector2sql_cat_new( sql, 1, "GROUP BY", ",", 0, &has_group, ( sql_set_uni->group ? sql_set_uni : sql_set )->group );
+        sql = duf_selector2sql_cat_frag( sql, 1, "GROUP BY", ",", 0, &has_group, ( sql_set_uni->group ? sql_set_uni : sql_set )->group );
 #endif
 #if 0
         if ( sql_set->order )
@@ -451,7 +452,7 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
           sql = mas_strcat_x( sql, sql_set->order );
         }
 #else
-        sql = duf_selector2sql_cat_new( sql, 1, "ORDER BY", ",", 0, &has_order, ( sql_set_uni->order ? sql_set_uni : sql_set )->order );
+        sql = duf_selector2sql_cat_frag( sql, 1, "ORDER BY", ",", 0, &has_order, ( sql_set_uni->order ? sql_set_uni : sql_set )->order );
 #endif
       }
     }

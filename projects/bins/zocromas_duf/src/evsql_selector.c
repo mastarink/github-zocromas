@@ -22,6 +22,10 @@
 #include "evsql_selector.h"
 /* ###################################################################### */
 
+
+
+
+#if 0
 static const char *
 duf_find_std_fieldset( const char *fieldset_name, duf_node_type_t type )
 {
@@ -95,46 +99,6 @@ duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
     }
   }
   return selector;
-}
-
-/* TODO : move to common place with general substitutions */
-static const char *
-duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
-{
-  char *str = NULL;
-  char buf[1024];
-
-  if ( 0 == strcmp( name, "PDI_NAME" ) )
-    str = mas_strdup( arg );
-  else if ( 0 == strcmp( name, "DB_PATH" ) )
-  {
-#if 0
-    str = mas_strdup( DUF_CONFIGGSP( db.dir ) );
-    str = duf_config_db_path_add_subdir( str, ( int * ) NULL /* &r */  );
-#else
-    str = mas_normalize_path( DUF_CONFIGGS( db.path ) );
-#endif
-  }
-  else if ( 0 == strcmp( name, "PID" ) )
-  {
-    snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
-    str = mas_strdup( buf );
-  }
-  else if ( 0 == strcmp( name, "DB_NAME" ) )
-  {
-    str = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
-  }
-  return str;
-}
-
-char *
-duf_expand_sql( const char *sql, const char *dbname )
-{
-  char *nsql;
-
-  nsql = mas_expand_string_cb_arg_alloc( sql, duf_expand_sql_xsdb_getvar, dbname );
-  /* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
-  return nsql;
 }
 
 char *
@@ -393,3 +357,4 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
     *pr = rpr;
   return sql;
 }
+#endif

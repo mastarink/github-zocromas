@@ -193,7 +193,7 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
       }
     }
     /* T( "@3 name_offset:%lu - '%s' (%s|%s) noo:%d; %d; %d (%ld:%ld)", pod->name_offset, pod->name, match, xtended->o.name, pod->noo, arg_error, 
-        pod->has_arg, pod->xfound.count_hard, pod->xfound.count_soft );                                                                         */
+       pod->has_arg, pod->xfound.count_hard, pod->xfound.count_soft );                                                                         */
   }
 
   ER( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xarr, duf_option_data_t * pod );
@@ -230,7 +230,12 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
       /*    pod->xfound.xarray[pod->doindex].noo ? '+' : '-', pod->noo ? '+' : '-' );                                              */
     }
     /* T( "@**%ld - %ld : %ld %s", pod->doindex, pod->xfound.count_hard, pod->xfound.count_soft, pod->name ); */
-    assert( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP );
+    if ( !( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ) )
+    {
+      T( "@not math stage; %ld %s:%s hard:%lu; soft:%lu", pod->doindex, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ),
+         pod->xfound.count_hard, pod->xfound.count_soft );
+    }
+    /* assert( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ); */
   }
   else if ( pod->xfound.count_hard == 0 )
   {
@@ -255,8 +260,12 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
     else                        /* if ( pod->xfound.count_soft < 1 ) */
     {
       /* NOT-FOUND-ERROR */
-      /* T( "@ERR %s", pod->string_copy ); */
-      SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
+      extern duf_config_t *duf_config;
+
+      T( "@ERR %d %s:%s", duf_config->opt.dbg.verbose, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
+      if ( pod->stage != DUF_OPTION_STAGE_BOOT )
+        SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
+      /* assert(0); */
     }
     /* T( "@**%ld - %ld : %ld %s", pod->doindex, pod->xfound.count_hard, pod->xfound.count_soft, pod->name ); */
   }

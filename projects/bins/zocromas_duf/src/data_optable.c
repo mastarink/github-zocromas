@@ -26,9 +26,9 @@ const duf_longval_extended_table_t optable_main = {
 
 #if 0
    {.o = {DO_N( depth ) /*              */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_ODI( PDINUM, depth ) /*             */ , DO_AT_STAGE( SETUP ) /*           */ , DO_H( pdi cd ) /*                           */ },
+    /*      */ DO_ODI( PDINUM, depth ) /*             */ , DO_AT_STAGE( SETUP ) /*           */ , DO_H( pdi cd ) /*                          */ },
    {.o = {DO_N( maxdepth ) /*           */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_ODI( PDINUM, maxdepth ) /*          */ , DO_AT_STAGE( SETUP ) /*           */ , DO_H( pdi cd ) /*                           */ },
+    /*      */ DO_ODI( PDINUM, maxdepth ) /*          */ , DO_AT_STAGE( SETUP ) /*           */ , DO_H( pdi cd ) /*                          */ },
 #endif
 
    {.o = {DO_Q( "max-rel-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
@@ -47,9 +47,9 @@ const duf_longval_extended_table_t optable_main = {
     /*      */ DO_OU( NUM, max_seq ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*         */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "std-leaf-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_LEAF_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, std_leaf_set ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, std_leaf_set_to_obsolete ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                */ },
    {.o = {DO_Q( "std-node-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_NODE_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, std_node_set ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, std_node_set_to_obsolete ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                 */ },
 
 
 

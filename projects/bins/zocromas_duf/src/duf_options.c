@@ -38,8 +38,9 @@ SR( OPTIONS, all_options_heterogeneous, duf_option_stage_t istage, duf_int_void_
     DUF_OPTSRC( fr, incfg, istage, paod, CFG ); /* config - only acts at stages <= DUF_OPTION_STAGE_SETUP (??) */
   DUF_OPTSRC( sr, incfg_stg, istage, paod, CFGSTG ); /* per-stage config */
   DUF_OPTSRC( er, env, istage, paod, ENV ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
-  DUF_OPTSRC( or, cli, istage, paod, CLI );
-  /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
+  {
+      DUF_OPTSRC( or, cli, istage, paod, CLI );
+  }                             /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
   if ( istage >= DUF_OPTION_STAGE_BOOT ) /* don't read stdin before DUF_OPTION_STAGE_BOOT : can't re-read! */
     DUF_OPTSRC( isi, stdin, istage, paod, STDIN );
   DUF_OPTSRC( ir, indirect, istage, paod, DUFFILE );

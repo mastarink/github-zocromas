@@ -23,7 +23,7 @@
 #include "duf_sql_defs.h"
 #include "duf_sql_stmt_defs.h"
 
-#include "evsql_selector.h"
+/* #include "evsql_selector.h" */
 #include "evsql_selector_new.h"
 
 #include "duf_sql_bind.h"

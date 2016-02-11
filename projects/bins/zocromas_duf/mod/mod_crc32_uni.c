@@ -65,9 +65,9 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
 
   .leaf_scan_fd2 = crc32_dirent_content2,
 
-/* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
+  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 #define DUF_FILTER
   .leaf = {                     /* */
            .name = "crc32 leaf",

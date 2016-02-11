@@ -62,9 +62,9 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 #  endif
 #endif
-/* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
+  .use_std_leaf_to_obsolete = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {                     /* */
            .name = "dirs leaf",

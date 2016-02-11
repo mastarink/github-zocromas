@@ -19,7 +19,8 @@
 #include "duf_pdi_global.h"
 #include "duf_pdi_stmt.h"
 
-#include "evsql_selector.h"
+/* #include "evsql_selector.h" */
+#include "evsql_selector_new.h"
 
 /* ###################################################################### */
 #include "evsql_begfin.h"

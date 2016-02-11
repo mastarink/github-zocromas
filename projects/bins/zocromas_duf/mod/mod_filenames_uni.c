@@ -69,9 +69,9 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .leaf_scan2_deleted = filenames_leaf2_deleted,
 
 
-/* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
+  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
   .leaf = {                     /* */
            .type = DUF_NODE_LEAF,

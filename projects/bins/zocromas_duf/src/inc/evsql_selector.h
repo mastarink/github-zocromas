@@ -5,6 +5,5 @@
 
 /* char *duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr ); */
 
-char *duf_expand_sql( const char *sql, const char *dbname );
 
 #endif

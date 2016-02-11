@@ -63,9 +63,9 @@ duf_scan_callbacks_t duf_null_callbacks = {
   .dirent_file_scan_before2 = null_de_file_before2,
   .dirent_dir_scan_before2 = null_de_dir_before2,
 
-/* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
+  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .final_sql_seq = &final_sql,
 };
 

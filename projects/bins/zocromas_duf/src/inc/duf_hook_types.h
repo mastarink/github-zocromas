@@ -48,8 +48,8 @@ typedef int ( *duf_sel_cb2_match_t ) ( duf_stmnt_t * pstmt );
 
 typedef struct
 {
-  unsigned use_std_fieldset:1;
-  unsigned use_std_selector2:1;
+  /* unsigned use_std_fieldset:1; */
+  /* unsigned use_std_selector2:1; */
   unsigned expand_sql:1;
   duf_node_type_t type;
   const char *name;
@@ -83,10 +83,12 @@ struct duf_scan_callbacks_s
   const char *name;
   struct duf_scan_callbacks_s *next;
 
-  unsigned use_std_node;
+  unsigned use_std_node_to_obsolete;
+  const char *std_node_name;
   duf_sql_set_t node;
 
-  unsigned use_std_leaf;
+  unsigned use_std_leaf_to_obsolete;
+  const char *std_leaf_name;
   duf_sql_set_t leaf;
 
   unsigned count_nodes:1;

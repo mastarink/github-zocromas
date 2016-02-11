@@ -34,7 +34,8 @@
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
-#include "evsql_selector.h"
+
+/* #include "evsql_selector.h" */
 #include "evsql_selector_new.h"
 
 #include "std_mod_sets.h"
@@ -57,7 +58,7 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_leaf_index
 
   assert( SCCB );
 
-  index = force_leaf_index > 0 ? force_leaf_index : SCCB->use_std_leaf;
+  index = force_leaf_index > 0 ? force_leaf_index : SCCB->use_std_leaf_to_obsolete;
   if ( index > 0 )
     set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
   else
@@ -81,7 +82,7 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_node_index
 
   unsigned index;
 
-  index = force_node_index > 0 ? force_node_index : SCCB->use_std_node;
+  index = force_node_index > 0 ? force_node_index : SCCB->use_std_node_to_obsolete;
   if ( index > 0 )
     set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
   else
@@ -101,10 +102,10 @@ duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set = duf_sccbh_get_leaf_sql_set( sccbh, PU->std_leaf_set );
+    set = duf_sccbh_get_leaf_sql_set( sccbh, PU->std_leaf_set_to_obsolete );
     break;
   case DUF_NODE_NODE:
-    set = duf_sccbh_get_node_sql_set( sccbh, PU->std_node_set );
+    set = duf_sccbh_get_node_sql_set( sccbh, PU->std_node_set_to_obsolete );
     break;
   case DUF_NODE_NONE:
     set = NULL;
@@ -143,9 +144,9 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 
 #  if 0
     if ( SCCB->count_nodes )
-      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set, PU->std_node_set );
+      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set_to_obsolete, PU->std_node_set_to_obsolete );
     else
-      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_LEAF, PU->std_leaf_set, PU->std_node_set );
+      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_LEAF, PU->std_leaf_set_to_obsolete, PU->std_node_set_to_obsolete );
 #  else
     sql_set = duf_sccbh_get_sql_set_f( sccbh, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #  endif
@@ -407,7 +408,7 @@ TODO scan mode
         DUF_TRACE( explain, 0, "no init scan" );
       }
       assert( PDI->pathinfo.levinfo );
-      /* T(">>> %llu : %llu", PU->std_leaf_set,  PU->std_node_set); */
+      /* T(">>> %llu : %llu", PU->std_leaf_set_to_obsolete,  PU->std_node_set_to_obsolete); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
                                    duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ), 0 /* caninsert */ ,

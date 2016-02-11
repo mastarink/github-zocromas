@@ -145,7 +145,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 
   /* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
   /* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
-
+#if 0
   {
     void *han;
 
@@ -160,6 +160,7 @@ SR( TOP, main_with_config, int argc, char **argv )
       dlclose( han );
     }
   }
+#endif
   CR( treat_all_optstages );
   CR( main_db, argc, argv );
 
@@ -208,7 +209,11 @@ duf_main( int argc, char **argv )
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );
-  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
+#if 0
+  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND , DUF_ERROR_OPTION_NEW_NOT_FOUND);
+#else
+  DORF( r, duf_main_with_config, argc, argv );
+#endif
 #if 0
   if ( DUF_IS_ERROR( r ) )
   {

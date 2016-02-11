@@ -146,7 +146,7 @@ SR( OPTIONS, lcoption_parse, int longindex, duf_option_code_t codeval, duf_optio
       else                      /* ERROR */
       {
         SERR( OPTION_NOT_PARSED );
-        assert( 0 );
+        /* assert( 0 ); */
       }
     }
 #endif
