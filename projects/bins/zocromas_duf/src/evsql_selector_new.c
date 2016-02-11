@@ -186,7 +186,7 @@ duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
 
 char *
 duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
-                                unsigned *phas, va_list args )
+                                 unsigned *phas, va_list args )
 {
   const char *quant = NULL;
   unsigned cnt = 0;
@@ -210,9 +210,15 @@ duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfir
       }
       if ( cnt == 0 && parenthesis )
         sql = mas_strcat_x( sql, "(/*4*/ " );
-      sql = mas_strcat_x( sql, "(/*3*/ " );
+      if ( 0 == strcmp( jfirst, "WHERE" ) )
+      {
+        sql = mas_strcat_x( sql, "(/*3 " );
+        sql = mas_strcat_x( sql, jfirst );
+        sql = mas_strcat_x( sql, "( */ " );
+      }
       sql = mas_strcat_x( sql, quant );
-      sql = mas_strcat_x( sql, " /*3*/)" );
+      if ( 0 == strcmp( jfirst, "WHERE" ) )
+        sql = mas_strcat_x( sql, " /*3*/)" );
       /* T( "[%u:%u] quant=%s; %s", cnt, ( *phas ), quant, sql ); */
       ( *phas )++;
       cnt++;
@@ -225,7 +231,7 @@ duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfir
 
 char *
 duf_selector2sql_cat_many_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, const char *delim, unsigned parenthesis,
-                               unsigned *phas, ... )
+                                unsigned *phas, ... )
 {
   va_list args;
 
@@ -237,7 +243,7 @@ duf_selector2sql_cat_many_frag( char *sql, unsigned with_pref, const char *jfirs
 
 char *
 duf_selector2sql_cat_frag( char *sql, unsigned with_pref, const char *jfirst, const char *jrest, unsigned parenthesis, unsigned *phas,
-                          const char *quant )
+                           const char *quant )
 {
   return duf_selector2sql_cat_many_frag( sql, with_pref, jfirst, jrest, jrest, parenthesis, phas, quant, NULL );
 }
