@@ -730,6 +730,10 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --no-test-act-flag --test-act-flag --test-act-noflag " " --test-recetc-flag --test-recetc-noflag "
               "--no-test-recetc-noflag --test-cfg-num=654321  	- %s", " -= \"\" =-" );
 
+  DUF_PRINTF( 0, "  run --fresh --allow-create-tables --allow-create-database --db-name=temp`datem` "
+              " -dufR   --evaluate-sccb=dirs,filedata,filenames,sd5  `pwd`/test/tree --progress  	- %s", " --fresh -= \"\" =-" );
+
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );
@@ -772,6 +776,7 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
 
     /* CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ), */
     CHECK_FLAG_ID_ROW( fast, FAST ),
+    CHECK_FLAG_ID_ROW( fresh, FRESH ),
 
     CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
 

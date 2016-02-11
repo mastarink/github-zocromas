@@ -26,6 +26,7 @@
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
+#include "duf_sccb_handle.h"
 #include "duf_sccb_scanstage.h"
 
 #include "duf_sel_cb_leaf.h"
@@ -116,6 +117,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
   }
   else
   {
+    fputs( "\n", stderr );
     T( "SKIP: TOTCOUNTED:%d; TOTITEMS:%llu [%s] for %s", TOTCOUNTED, TOTITEMS, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
     /* assert( 0 );                                                                                               */
   }
@@ -136,19 +138,30 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   char *sql_selector = NULL;
 
   /* TODO sql_set is needless here, accessible via duf_get_sql_set( SCCB, node_type ) */
+#if 0
   assert( duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set ) == sql_set );
-
+#else
+  assert( duf_sccbh_get_sql_set_f( sccbh, node_type ) == sql_set );
+#endif
 #ifdef MAS_TRACING
   const char *set_type_title = duf_nodetype_name( node_type );
 #endif
 
   if ( DUF_NOERROR( r ) )
+  {
 #if 0
     sql_selector = duf_selector2sql( sql_set, PDI->pdi_name, &r );
 #else
-    sql_selector = duf_selector2sql_new( sql_set, PDI->pdi_name, 0, &r );
-#endif
+    assert( sql_set == sccbh->active_set );
+    assert( sccbh->second_set );
 
+#  if 0
+    sql_selector = duf_selector2sql_new( sql_set, PDI->pdi_name, 0, &r );
+#  else
+    sql_selector = duf_selector2sql_2new( sql_set, node_type == DUF_NODE_LEAF ? sccbh->second_set : NULL, PDI->pdi_name, 0, &r );
+#  endif
+#endif
+  }
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
   DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
 /*

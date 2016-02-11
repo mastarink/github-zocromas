@@ -23,6 +23,7 @@
 #include "duf_sccb.h"
 #include "duf_sccb_scanstage.h"
 
+#include "duf_sccb_handle.h"
 #include "duf_sccbh_eval_leaf.h"
 
 #include "duf_sql_defs.h"
@@ -114,7 +115,11 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
   sql_set = duf_sccb_get_sql_set( SCCB, node_type );
 #else
   /* TODO: sql_set = duf_sccbh_get_sql_set_f( sccbh, node_type ); */
+#if 0
   sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set );
+#else
+  sql_set = duf_sccbh_get_sql_set_f( sccbh, node_type );
+#endif
 #endif
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */

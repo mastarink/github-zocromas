@@ -212,6 +212,7 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
   }
   DUF_SQL_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
   DUF_SQL_BIND_I_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
+  DUF_SQL_BIND_I_NZ_OPT( fFresh, DUF_ACTG_FLAG( fresh ), r, pstmt );
   DUF_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
   DEBUG_ENDR( r );

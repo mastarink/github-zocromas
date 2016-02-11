@@ -40,7 +40,6 @@
   ENUM_WRAP_V( LSFILES , 'p'					) /* new implementation 20150518.083230 */
 #  endif
   ENUM_WRAP_V( FLAG_SUMMARY , 's'				)
-  ENUM_WRAP_V( FLAG_FAST , 'F'					)
 
   /* actions */
   ENUM_WRAP_V( FLAG_COLLECT , 'i'				)
@@ -65,6 +64,9 @@
 /*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*/
   ENUM_WRAP_V( LONG , 1000					)
 /*,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*/
+  ENUM_WRAP( FLAG_FAST						)
+  ENUM_WRAP( FLAG_FRESH						)
+  
   ENUM_WRAP( ERROR_LEVEL					)
   ENUM_WRAP( HELP_CL_NONE					)
   ENUM_WRAP( HELP_CL_ALL					)

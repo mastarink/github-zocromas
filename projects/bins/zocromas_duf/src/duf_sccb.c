@@ -151,7 +151,7 @@ duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first 
   return sccb;
 }
 
-
+#if 0
 static const duf_sql_set_t *
 duf_sccb_get_leaf_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_leaf_index )
 {
@@ -213,6 +213,7 @@ duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_
   }
   return set;
 }
+#endif
 
 #if 0
 const duf_sql_set_t *

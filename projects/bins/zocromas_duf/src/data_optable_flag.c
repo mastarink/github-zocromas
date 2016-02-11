@@ -61,10 +61,12 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "fresh" ) /*            */ , DO_A_N /* */ , DO_VF( FRESH )} /*             */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fresh ) /*                             */ , DO_H( only process for unset data ) /*      */ },
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_SPLS /*             */ , DO_H( recursive ) /*                        */ },
-   {.o = {DO_Q( "linear" ) /*        */ , DO_A_N /* */ , DO_VF( LINEAR )} /*         */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*              */ , DO_H( recursive ) /*                        */ },
+   {.o = {DO_Q( "linear" ) /*        */ , DO_A_N /* */ , DO_VF( LINEAR )} /*               */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*                */ , DO_H( recursive ) /*                        */ },
 
 
 

@@ -61,13 +61,13 @@ typedef struct
   const char *cte;
   const char *selector2_cte;
   const char *matcher;
+  const char *amatcher[5];
   const char *filter;
-#  if 0
-  const char *filter_fresh[10];
-#  else
+  const char *afilter[5];
   const char *filter_fresh;
-#  endif
+  const char *afilter_fresh[10];
   const char *filter_fast;
+  const char *afilter_fast[10];
   const char *group;
   const char *order;
   const char *count_aggregate;

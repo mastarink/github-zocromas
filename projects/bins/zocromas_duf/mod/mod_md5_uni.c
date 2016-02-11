@@ -88,18 +88,17 @@ duf_scan_callbacks_t duf_md5_callbacks = {
   .leaf = {
            .name = "md leaf",
            .type = DUF_NODE_LEAF,
-           .fieldset =          /* */
-           "#md5",
+           .fieldset = "#md5",  /* from _all_fieldsets */
            .fieldsets = {
                          "#basic",
                          "#plus",
                          "#md5x",
                          NULL}
            ,
-           .selector2 =         /* */
-           "#md5-leaf",
+           .selector2 = "#md5-leaf", /* from _all_selectors */
            .matcher = " fn.Pathid=:parentdirID " /* */
-           ,                    /* */
+           ,
+#if 0
            .filter =            /* */
            "( " FILTER_DATA " OR md." DUF_SQL_IDFIELD " IS NULL ) " /*                                               */ " AND " /* */
            "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                                 */ " AND " /* */
@@ -108,7 +107,14 @@ duf_scan_callbacks_t duf_md5_callbacks = {
            "(  :fFast   IS NULL OR sh." DUF_SQL_IDFIELD " IS NULL OR sh.dupsha1cnt IS NULL OR sh.dupsha1cnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
            ,
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
+#else
+           .afilter_fresh = {FILTER_DATA " OR md." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
+           .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1",
+                            "sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt    IS NULL OR sd.dup2cnt > 1",
+                            "sh." DUF_SQL_IDFIELD " IS NULL OR sh.dupsha1cnt IS NULL OR sh.dupsha1cnt > 1"},
+#endif
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           }
   ,                             /* */
   .node = {                     /* */
            .name = "md node",
@@ -120,14 +126,14 @@ duf_scan_callbacks_t duf_md5_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-	   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -135,18 +141,18 @@ duf_scan_callbacks_t duf_md5_callbacks = {
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
-	   ,
+           ,
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   .filter = " rnfiles > 0 " /* */
+           .filter = " rnfiles > 0 " /* */
 #endif
            },
   .final_sql_seq = &final_sql,

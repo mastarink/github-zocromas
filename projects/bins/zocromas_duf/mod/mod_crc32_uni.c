@@ -66,8 +66,8 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
   .leaf_scan_fd2 = crc32_dirent_content2,
 
 /* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 #define DUF_FILTER
   .leaf = {                     /* */
            .name = "crc32 leaf",
@@ -89,14 +89,21 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
+#if 0
            .filter =            /* */
            "( " FILTER_DATA " OR crc." DUF_SQL_IDFIELD " IS NULL ) " /*                          */ " AND " /* */
            "( sz.size    IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
            "(  :fFast    IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
            " 1 "                /* */
-           /*, .group=" fd." DUF_SQL_IDFIELD */
            ,                    /* */
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
+#else
+           .afilter = {"sz.size > 0"},
+           .afilter_fresh = {FILTER_DATA " OR crc." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
+           .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1"},
+#endif
+           /*, .group=" fd." DUF_SQL_IDFIELD */
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           }
   ,
   .node = {
            .name = "crc32 node",
@@ -226,7 +233,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
   else
   {
     /* DUF_SHOW_ERROR( "Wrong data" ); */
-    DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
+    DUF_MAKE_ERRORM( lr, DUF_ERROR_DATA, "no crc32 sum" );
     /* DUF_TEST_R( lr ); */
   }
 
@@ -249,6 +256,8 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
     crc32sum = crc32( 0L, Z_NULL, 0 );
   /* if ( !DUF_CONFIGG(opt.disable.flag.calculate )) */
   {
+    size_t bytes = 0;
+
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
@@ -269,7 +278,10 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
         }
         DUF_TEST_R( r );
         if ( rr > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
+        {
           crc32sum = crc32( crc32sum, buffer, rr );
+          bytes += rr;
+        }
         DUF_TRACE( crc32, 10, "rr:%d; r:%d; crc32sum:%lx", rr, r, crc32sum );
         if ( rr <= 0 )
           break;
@@ -282,6 +294,7 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
     {
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
+    /* T( "@bytes:%lu", bytes ); */
   }
   if ( pcrc32sum )
     *pcrc32sum = crc32sum;
@@ -307,6 +320,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
     crc32sum = ( unsigned long long ) duf_levinfo_dirid( pdi );
   else
     DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &crc32sum ) );
+
 
   content_cnt++;
   if ( DUF_NOERROR( r ) )

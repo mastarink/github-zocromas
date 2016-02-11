@@ -2,35 +2,21 @@
 #include <errno.h>
 #include <unistd.h>
 #include <openssl/sha.h>
-
-
-
-
 #include "duf_maintenance.h"
-
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
-
-
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
-
 #include "duf_levinfo_ref.h"
-
-
 #include "duf_sql_stmt_defs.h"
-
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-
 #include "duf_sql_bind.h"
 #include "duf_sql_prepared.h"
-
 /* #include "duf_dbg.h" */
-
 #include "sql_beginning_tables.h"
 /* ########################################################################################## */
 static int sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
@@ -69,8 +55,8 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
   .leaf_scan_fd2 = sha1_dirent_content2,
 
 /* TODO : explain values of use_std_leaf and use_std_node TODO */
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {
            .name = "sha1 leaf",
            .type = DUF_NODE_LEAF,
@@ -86,6 +72,7 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            "#sha1-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
+#if 0
            .filter =            /* */
            "( " FILTER_DATA " OR sh." DUF_SQL_IDFIELD " IS NULL ) " /*                                          */ " AND " /* */
            "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                            */ " AND " /* */
@@ -94,7 +81,15 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            "(  :fFast   IS NULL OR md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
            " 1 "                /* */
            ,
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
+#else
+           .afilter_fresh = {FILTER_DATA " OR sh." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
+           .afilter_fast = {
+                            "sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1",
+                            "sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1",
+                            "md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1"},
+#endif
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           }
   ,                             /* */
   .node = {                     /* */
            .name = "sha1 node",

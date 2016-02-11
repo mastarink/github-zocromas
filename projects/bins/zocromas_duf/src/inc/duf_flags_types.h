@@ -27,6 +27,7 @@ typedef struct
   unsigned beginning_sql:1;     /* do 'beginning' sql's again (first time mandatory!) */
 #  endif
   unsigned fast:1;
+  unsigned fresh:1;
   unsigned nocolor:1;
   unsigned force_color:1;
 

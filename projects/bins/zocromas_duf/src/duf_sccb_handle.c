@@ -68,6 +68,7 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_leaf_index
     /* TODO ?? copy set, then set filter, filter_fresh, filter_fast from SCCB->leaf 20160210.114823 */
     /* T( "@%lu : %lu", sizeof( *set ), sizeof( std_leaf_sets[index - 1] ) ); */
   }
+  assert( sccbh->second_set );
   return set;
 }
 
@@ -87,10 +88,11 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_node_index
     set = &SCCB->node;
   sccbh->active_set = set;
   sccbh->second_set = &SCCB->leaf;
+  assert( sccbh->second_set );
   return set;
 }
 
-static const duf_sql_set_t *
+const duf_sql_set_t *
 duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   const duf_sql_set_t *set = NULL;
@@ -150,8 +152,7 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 #  if 0
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
 #  else
-    T( "@------------ %d", sccbh->second_set ? 1 : 0 );
-#    if 1
+#    if 0
     /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, PDI->pdi_name, 1, &rpr );
 #    else
@@ -219,6 +220,7 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
       /*   T( "@%llu:%llu:%llu; %s; %s", PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql ); */
       /* }                                                                                                   */
     }
+    /* T( "%llu : %s", cnt, sqlt ); */
     mas_free( sqlt );
   }
   else
@@ -408,7 +410,7 @@ TODO scan mode
       /* T(">>> %llu : %llu", PU->std_leaf_set,  PU->std_node_set); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
-                                   duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set, PU->std_node_set ), 0 /* caninsert */ ,
+                                   duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ), 0 /* caninsert */ ,
                                    duf_pdi_recursive( PDI ), duf_pdi_allow_dirs( PDI ), duf_pdi_linear( PDI ) ) );
     }
   }

@@ -72,12 +72,10 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
   .leaf = {
            .name = "sd leaf",
            .type = DUF_NODE_LEAF,
-           .fieldset =          /* */
-           "#sd5",
-           .selector2 =         /* */
-           "#md5-leaf",
+           .fieldset = "#sd5",
+           .selector2 = "#md5-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
-           ,                    /* */
+           ,
 #if 0
            .filter =            /* */
            "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL ) " /*                           */ " AND " /* */
@@ -86,18 +84,15 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            " 1 "                /* */
            ,
 #else
-#  if 0
-           .filter_fresh = {
-                            FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0", /* */
-                            NULL}
-#  else
-           .filter_fresh = FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0" /* */
-#  endif
-           ,
-           .filter_fast = "sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1" /* */
-           ,
+           .afilter_fresh = {FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
+           /* .filter_fresh = "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL " ")" " AND " "( sz.size  IS NULL OR sz.size > 0 )" (* *) */
+           /* ,                                                                                                                              */
+           /* .filter_fast = ":fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1" (* *) */
+           /* ,                                                                                                 */
+           .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1"},
 #endif
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           }
   ,
   .node = {
            .name = "sd node",
