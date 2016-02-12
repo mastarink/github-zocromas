@@ -63,9 +63,11 @@ duf_scan_callbacks_t duf_null_callbacks = {
   .dirent_file_scan_before2 = null_de_file_before2,
   .dirent_dir_scan_before2 = null_de_dir_before2,
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel",
+  .std_node_set_name = "std-node-two",
   .final_sql_seq = &final_sql,
 };
 
@@ -180,8 +182,9 @@ null_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 
     pli = duf_levinfo_ptr( pdi );
 
-    T( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ), duf_nodetype_name( duf_levinfo_node_type( pdi ) ),
-       pli ? ( long long ) pli->scanned_childs.nodes : -1, pli ? ( long long ) pli->scanned_childs.leaves : -1 );
+    T( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ),
+       duf_nodetype_name( duf_levinfo_node_type( pdi ) ), pli ? ( long long ) pli->scanned_childs.nodes : -1,
+       pli ? ( long long ) pli->scanned_childs.leaves : -1 );
   }
 #if 0
 #  ifdef MAS_TRACING

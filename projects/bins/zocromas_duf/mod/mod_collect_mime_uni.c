@@ -70,9 +70,11 @@ duf_scan_callbacks_t duf_mime_callbacks = {
 
   .leaf_scan_fd2 = dirent_content2,
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = NULL,
+  .std_node_set_name = NULL,
   /* filename for debug only */
   .leaf = {
            .name = "mime leaf",
@@ -106,12 +108,12 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
            ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
@@ -121,7 +123,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            .selector2 =         /* */
            " FROM      " DUF_SQL_TABLES_PATHS_FULL "             AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -130,7 +132,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,                    /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
            .filter = " rnfiles > 0 " /* */
 #endif
@@ -227,7 +229,7 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_stmnt_t * pstmt,  duf_depthinfo_t * pdi )
+dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
@@ -273,8 +275,9 @@ dirent_content2( duf_stmnt_t * pstmt,  duf_depthinfo_t * pdi )
 
     magic_setflags( magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
     mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
-    
-    DUF_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+
+    DUF_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ),
+               DUF_GET_SFIELD2( fname ) );
 
     if ( mime )
     {

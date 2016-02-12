@@ -74,6 +74,12 @@ typedef struct
   /* const char *selector_total2; */
 } duf_sql_set_t;
 
+typedef struct duf_sql_set_pair_s
+{
+  const duf_sql_set_t *active;
+  const duf_sql_set_t *second;
+} duf_sql_set_pair_t;
+
 struct duf_scan_callbacks_s
 {
   unsigned def_opendir:1;
@@ -83,12 +89,12 @@ struct duf_scan_callbacks_s
   const char *name;
   struct duf_scan_callbacks_s *next;
 
-  unsigned use_std_node_to_obsolete;
-  const char *std_node_name;
+  unsigned use_std_node_set_num;
+  const char *std_node_set_name;
   duf_sql_set_t node;
 
-  unsigned use_std_leaf_to_obsolete;
-  const char *std_leaf_name;
+  unsigned use_std_leaf_set_num;
+  const char *std_leaf_set_name;
   duf_sql_set_t leaf;
 
   unsigned count_nodes:1;
@@ -165,8 +171,10 @@ typedef struct duf_sccb_handle_s
   duf_depthinfo_t *pdi;
   unsigned long long changes;
   const duf_scan_callbacks_t *sccb;
-  const duf_sql_set_t *active_set;
-  const duf_sql_set_t *second_set;
+  /* const duf_sql_set_t *active_leaf_set; */
+  /* const duf_sql_set_t *second_leaf_set; */
+  /* const duf_sql_set_t *active_node_set; */
+  /* const duf_sql_set_t *second_node_set; */
   duf_sccbh_fun_t progress_leaf_cb;
   duf_sccbh_fun_t progress_node_cb;
   duf_scanstage_t current_scanstage;

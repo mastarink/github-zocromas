@@ -70,9 +70,11 @@ duf_scan_callbacks_t duf_exif_callbacks = {
   .name = "exif",               /* */
   .def_opendir = 1,             /* */
   .leaf_scan_fd2 = dirent_contnt2, /* */
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = NULL,
+  .std_node_set_name = NULL,
   /* filename for debug only */
   .leaf = {
            .name = "exif leaf",

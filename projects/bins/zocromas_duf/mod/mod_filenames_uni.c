@@ -69,9 +69,11 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .leaf_scan2_deleted = filenames_leaf2_deleted,
 
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel",
+  .std_node_set_name = "std-node-two",
   .count_nodes = 1,
   .leaf = {                     /* */
            .type = DUF_NODE_LEAF,
@@ -111,9 +113,9 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            " ( "                /* */
            "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
            "   WHERE parentid=:topDirID " /* */
-#ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_RNUMS )
            /* " AND " DUF_SQL_RNUMDIRS( pt ) " > 0 AND (" DUF_SQL__RNUMFILES( pt ) ") > 0 " (* *) */
 #  endif
            "  UNION "           /* */
@@ -138,9 +140,9 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            .selector2_cte =     /* */
            " FROM cte_paths " /*                                  */ " AS pte " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
-#ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
+#  ifndef MAS_DUF_DEFS_H
+#    error use #include "duf_defs.h"
+#  elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #  endif

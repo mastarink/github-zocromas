@@ -63,8 +63,10 @@ duf_scan_callbacks_t duf_set_dir_priority_callbacks = {
   .node_scan_after2 = set_dir_priority_node_after2,
   .node_scan_middle2 = set_dir_priority_node_middle2,
 
-  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel",
+  .std_node_set_name = "std-node-two",
 };
 
 /* extern duf_scan_callbacks_t set_dir_priority_cbs __attribute__ ( ( alias( "duf_set_dir_priority_callbacks" ) ) ); */

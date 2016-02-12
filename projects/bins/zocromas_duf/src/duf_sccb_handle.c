@@ -50,74 +50,120 @@
 #include "duf_sccb_handle.h"
 /* ###################################################################### */
 
-static const duf_sql_set_t *
-duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_leaf_index )
+/* 20160212.130632 */
+static duf_sql_set_pair_t
+duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name )
 {
+  duf_sql_set_pair_t set_pair = { NULL, NULL };
   const duf_sql_set_t *set = NULL;
-  unsigned index;
+  const duf_sql_set_t *setn = NULL;
+  const duf_sql_set_t *setr = NULL;
 
   assert( SCCB );
-
-  index = force_leaf_index > 0 ? force_leaf_index : SCCB->use_std_leaf_to_obsolete;
-  if ( index > 0 )
-    set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
-  else
-    set = &SCCB->leaf;
-  sccbh->active_set = set;
-  sccbh->second_set = &SCCB->leaf;
   {
-    /* TODO ?? copy set, then set filter, filter_fresh, filter_fast from SCCB->leaf 20160210.114823 */
-    /* T( "@%lu : %lu", sizeof( *set ), sizeof( std_leaf_sets[index - 1] ) ); */
+    unsigned index = 0;
+    const char *set_name;
+
+    set_name = force_leaf_set_name ? force_leaf_set_name : SCCB->std_leaf_set_name;
+    if ( set_name )
+      for ( unsigned i = 0; i < std_leaf_nsets; i++ )
+        if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, set_name ) )
+          setn = &std_leaf_sets[i];
+
+    index = force_set_leaf_index > 0 ? force_set_leaf_index : SCCB->use_std_leaf_set_num;
+    if ( index > 0 )
+    {
+      set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
+      assert( 0 == strcmp( set->name, set_name ) );
+    }
   }
-  assert( sccbh->second_set );
-  return set;
+  if ( ( set == setn ) )
+    setr = set;
+  else if ( ( !set && setn ) )
+    setr = setn;
+  else if ( ( set && !setn ) )
+    setr = set;
+  else
+    setr = &SCCB->leaf;
+  /* sccbh->active_leaf_set = setr; */
+  /* sccbh->second_leaf_set = &SCCB->leaf; */
+  set_pair.active = setr;
+  set_pair.second = &SCCB->node;
+
+  /* assert( sccbh->second_leaf_set ); */
+  return set_pair;
 }
 
-static const duf_sql_set_t *
-duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_node_index )
+/* 20160212.130653 */
+static duf_sql_set_pair_t
+duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name DUF_UNUSED )
 {
+  duf_sql_set_pair_t set_pair = { NULL, NULL };
   const duf_sql_set_t *set = NULL;
+  const duf_sql_set_t *setn = NULL;
+  const duf_sql_set_t *setr = NULL;
 
   assert( SCCB );
+  {
+    unsigned index = 0;
+    const char *set_name;
 
-  unsigned index;
+    set_name = force_node_set_name ? force_node_set_name : SCCB->std_node_set_name;
+    if ( set_name )
+      for ( unsigned i = 0; i < std_node_nsets; i++ )
+        if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, set_name ) )
+          setn = &std_node_sets[i];
 
-  index = force_node_index > 0 ? force_node_index : SCCB->use_std_node_to_obsolete;
-  if ( index > 0 )
-    set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
+    index = force_set_node_index > 0 ? force_set_node_index : SCCB->use_std_node_set_num;
+    if ( index > 0 )
+    {
+      set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
+      assert( 0 == strcmp( set->name, set_name ) );
+    }
+  }
+  if ( ( set == setn ) )
+    setr = set;
+  else if ( ( !set && setn ) )
+    setr = setn;
+  else if ( ( set && !setn ) )
+    setr = set;
   else
-    set = &SCCB->node;
-  sccbh->active_set = set;
-  sccbh->second_set = &SCCB->leaf;
-  assert( sccbh->second_set );
-  return set;
+    setr = &SCCB->node;
+  /* sccbh->active_node_set = setr; */
+  /* sccbh->second_node_set = &SCCB->node; */
+  set_pair.active = setr;
+  set_pair.second = &SCCB->node;
+
+  /* assert( sccbh->second_node_set ); */
+  return set_pair;
 }
 
-const duf_sql_set_t *
+/* 20160212.130701 */
+duf_sql_set_pair_t
 duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
-  const duf_sql_set_t *set = NULL;
+  duf_sql_set_pair_t set_pair = {
+    NULL, NULL
+  };
 
   assert( SCCB );
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set = duf_sccbh_get_leaf_sql_set( sccbh, PU->std_leaf_set_to_obsolete );
+    set_pair = duf_sccbh_get_leaf_sql_set( sccbh, PU->std_leaf_set_num, PU->std_leaf_set_name );
     break;
   case DUF_NODE_NODE:
-    set = duf_sccbh_get_node_sql_set( sccbh, PU->std_node_set_to_obsolete );
+    set_pair = duf_sccbh_get_node_sql_set( sccbh, PU->std_node_set_num, PU->std_node_set_name );
     break;
   case DUF_NODE_NONE:
-    set = NULL;
     break;
   default:
-    set = NULL;
     break;
   }
-  return set;
+  return set_pair;
 }
 
-/* 20151006.150004 */
+/* 20160212.130712 */
 static unsigned long long
 duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 {
@@ -133,35 +179,17 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
   if ( SCCB )
   {
     char *sqlt = NULL;
-    const duf_sql_set_t *sql_set = NULL;
+    duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
 
+
+    sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
-    sqlt = mas_strdup( "SELECT " );
-    sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
-    sqlt = mas_strcat_x( sqlt, " " );
-    sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
-#else
-
-#  if 0
-    if ( SCCB->count_nodes )
-      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_NODE, PU->std_leaf_set_to_obsolete, PU->std_node_set_to_obsolete );
-    else
-      sql_set = duf_sccb_get_sql_set_f( SCCB, DUF_NODE_LEAF, PU->std_leaf_set_to_obsolete, PU->std_node_set_to_obsolete );
-#  else
-    sql_set = duf_sccbh_get_sql_set_f( sccbh, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
-#  endif
-#  if 0
-    sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
-#  else
-#    if 0
     /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, PDI->pdi_name, 1, &rpr );
-#    else
-    sqlt = duf_selector2sql_2new( sql_set, sccbh->second_set, PDI->pdi_name, 1, &rpr );
-#    endif
-#  endif
-    assert( DUF_NOERROR( rpr ) );
+#else
+    sqlt = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, PDI->pdi_name, 1, &rpr );
 #endif
+    assert( DUF_NOERROR( rpr ) );
     if ( DUF_NOERROR( rpr ) && sqlt )
     {
       const char *csql;
@@ -198,13 +226,11 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 #endif
         DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cntfull, cnt1, csql );
         /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
-        /* T( "@(%llu) %llu; %s [%s]", cnt1, cnt, csql, sql_set->cte ); */
         cnt = cntfull;
-        if ( cntfull > 0 && !sql_set->cte && SCCB->count_nodes )
+        if ( cntfull > 0 && !sql_set_pair.active->cte && SCCB->count_nodes )
         {
           cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) /* - 1 20160118.153828 */ ;
         }
-        /* T( "(%s) %llu = %lld + (%lld); %s", sql_set->name, cntfull, cnt, ( long long ) ( duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ), csql ); */
         /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
@@ -408,10 +434,10 @@ TODO scan mode
         DUF_TRACE( explain, 0, "no init scan" );
       }
       assert( PDI->pathinfo.levinfo );
-      /* T(">>> %llu : %llu", PU->std_leaf_set_to_obsolete,  PU->std_node_set_to_obsolete); */
+      /* T(">>> %llu : %llu", PU->std_leaf_set_num,  PU->std_node_set_num); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
-                                   duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ), 0 /* caninsert */ ,
+                                   duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
                                    duf_pdi_recursive( PDI ), duf_pdi_allow_dirs( PDI ), duf_pdi_linear( PDI ) ) );
     }
   }

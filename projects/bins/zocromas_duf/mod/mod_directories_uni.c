@@ -62,9 +62,11 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 #  endif
 #endif
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-one",
+  .std_node_set_name = "std-node-two",
   /* filename for debug only */
   .leaf = {                     /* */
            .name = "dirs leaf",
@@ -81,9 +83,9 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
@@ -91,12 +93,12 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
            ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles " /* */
 #endif
-	   ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDFIELD " ) " /* */

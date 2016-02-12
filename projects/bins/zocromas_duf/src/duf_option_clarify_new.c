@@ -232,8 +232,8 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
     /* T( "@**%ld - %ld : %ld %s", pod->doindex, pod->xfound.count_hard, pod->xfound.count_soft, pod->name ); */
     if ( !( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ) )
     {
-      T( "@not math stage; %ld %s:%s hard:%lu; soft:%lu", pod->doindex, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ),
-         pod->xfound.count_hard, pod->xfound.count_soft );
+      T( "@not math stage; %ld %s:%s hard:%lu; soft:%lu : \"%s\"", pod->doindex, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ),
+         pod->xfound.count_hard, pod->xfound.count_soft, pod->name );
     }
     /* assert( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ); */
   }
@@ -260,9 +260,8 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
     else                        /* if ( pod->xfound.count_soft < 1 ) */
     {
       /* NOT-FOUND-ERROR */
-      extern duf_config_t *duf_config;
 
-      T( "@ERR %d %s:%s", duf_config->opt.dbg.verbose, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
+      T( "@ERR %s:%s",  duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
       if ( pod->stage != DUF_OPTION_STAGE_BOOT )
         SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
       /* assert(0); */
@@ -284,10 +283,17 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
       char *oa;
 
       oa = duf_string_options_expand( pod->optarg, '?' );
-      /* T( "@########### [%s:%s:%s] %lu %s:%s", pod->string_copy, pod->name, pod->optarg, pod->doindex, duf_optstage_name( pod->stage ), */
-      /*    duf_optsource_name( pod->source ) );                                                                                          */
       CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,
            pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
+#if 0
+      if ( 0 == strcmp( "verbose", pod->name ) )
+      {
+        extern duf_config_t *duf_config;
+
+        T( "@########### [%s:%s:%s] %lu %s:%s v:%d", pod->string_copy, pod->name, pod->optarg, pod->doindex, duf_optstage_name( pod->stage ),
+           duf_optsource_name( pod->source ), duf_config->opt.dbg.verbose );
+      }
+#endif
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
     }

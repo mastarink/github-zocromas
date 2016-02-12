@@ -713,6 +713,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               " /home/space/sambaspace/2016/y " " /home/space/sambaspace/2016/sdcard " "  	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run --db-name=owncloud_mega_zip    -dRuf   --same-sha1=1  --evaluate-sccb=listing /  	- %s", " -= \"\" =-" );
 
+  DUF_PRINTF( 0, "** new: --linear " );
   DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip --linear --std-leaf-set=4   -df  --evaluate-sccb=listing "
               " /home/space/sambaspace/2016/y/ " " --use-format=4  	- %s", " -= \"std-leaf-set=4\" =-" );
 
@@ -721,18 +722,29 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
 
 
   DUF_PRINTF( 0, "========================= as for 20160130.174647 ============" );
-  DUF_PRINTF( 0, "  cat << EEE | run   -df /home/"
+  DUF_PRINTF( 0, "** new: commands from stdin " );
+  DUF_PRINTF( 0, "  cat << EEE | run -df /home/"
               "												- %s\n	┊" "db-name=owncloud_mega_zip\n	┊"
               "linear\n	┊" "std-leaf-set=4\n	┊" "min-same-sha1=8\n	┊" "max-same-sha1=14\n	┊"
               "mimeid=1\n	┊" "with-camera=LG\n	┊" "evaluate-sccb=listing\n	┊" "use-format=4\n	┊\n" "	┊EEE", " -= \"\" =-" );
 
   DUF_PRINTF( 0, "========================= as for 20160207.144135 ============" );
+  DUF_PRINTF( 0, "** new: some test flags " );
   DUF_PRINTF( 0, "  run --no-test-act-flag --test-act-flag --test-act-noflag " " --test-recetc-flag --test-recetc-noflag "
               "--no-test-recetc-noflag --test-cfg-num=654321  	- %s", " -= \"\" =-" );
 
-  DUF_PRINTF( 0, "  run --fresh --allow-create-tables --allow-create-database --db-name=temp`datem` "
-              " -dufR   --evaluate-sccb=dirs,filedata,filenames,sd5  `pwd`/test/tree --progress  	- %s", " --fresh -= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20160211.200000 ============" );
+  DUF_PRINTF( 0, "** new: --fresh " );
+  DUF_PRINTF( 0, "  run --fresh --allow-create-tables --allow-create-database --db-name=temp`datem` "
+              " -dufR --evaluate-sccb=dirs,filedata,filenames,sd5  `pwd`/test/tree --progress  	- %s", " --fresh -= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20160212.131236 ============" );
+  DUF_PRINTF( 0, "  run --db-name=test_tree -dufR --with-tag-file=test-gz --evaluate-sccb=tree `pwd`/test/tree  	- %s", " -= \"\" =-" );
+  DUF_PRINTF( 0, "** --std-leaf-set =>  --std-leaf-set-num; new: --std-leaf-set-name " );
+  DUF_PRINTF( 0, "  run --db-name=owncloud_mega_zip_copy --linear --std-leaf-set-num=4 --std-leaf-set-name=std-all-under "
+              " -df --sha1id=1351 --tag-file=test-one --evaluate-sccb=listing,tagit  /home/ --use-format=4  	- %s",
+              " --std-leaf-set-num=4 --std-leaf-set-name=std-all-under -= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

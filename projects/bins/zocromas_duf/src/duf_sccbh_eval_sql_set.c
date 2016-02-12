@@ -129,41 +129,25 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
   DEBUG_ENDR( r );
 }
 
-/* 20151013.125952 */
+/* 20160212.130857 */
 int
-duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2,
+duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_sql_set_pair_t sql_set_pair, duf_str_cb2_t str_cb2,
                                duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   char *sql_selector = NULL;
 
-  /* TODO sql_set is needless here, accessible via duf_get_sql_set( SCCB, node_type ) */
-#if 0
-  assert( duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set ) == sql_set );
-#else
-  assert( duf_sccbh_get_sql_set_f( sccbh, node_type ) == sql_set );
-#endif
-#ifdef MAS_TRACING
-  const char *set_type_title = duf_nodetype_name( node_type );
-#endif
 
   if ( DUF_NOERROR( r ) )
-  {
-#if 0
-    sql_selector = duf_selector2sql( sql_set, PDI->pdi_name, &r );
-#else
-    assert( sql_set == sccbh->active_set );
-    assert( sccbh->second_set );
-
-#  if 0
-    sql_selector = duf_selector2sql_new( sql_set, PDI->pdi_name, 0, &r );
-#  else
-    sql_selector = duf_selector2sql_2new( sql_set, node_type == DUF_NODE_LEAF ? sccbh->second_set : NULL, PDI->pdi_name, 0, &r );
-#  endif
-#endif
-  }
+    sql_selector = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, PDI->pdi_name, 0, &r );
+  
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
-  DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
+  {
+#ifdef MAS_TRACING
+    const char *set_type_title = duf_nodetype_name( node_type );
+#endif
+    DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
+  }
 /*
  * str_cb2 (sub-item scanner ): (~~content-scanner!?)
  *       duf_scan_dirs_by_pdi_maxdepth

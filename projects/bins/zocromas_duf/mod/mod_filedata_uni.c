@@ -62,7 +62,7 @@ static duf_sql_sequence_t final_sql = /* */
           ,
 
 
-         NULL,
+          NULL,
           }
 };
 
@@ -80,16 +80,17 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 
 
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel",
+  .std_node_set_name = "std-node-two",
   .count_nodes = 1,
   .leaf = {                     /* */
            .name = "fd leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* Never used!? */
-          NULL
-           },
+           NULL},
   .node = {                     /* */
            .name = "fd node",
            .type = DUF_NODE_NODE,
@@ -100,14 +101,14 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-	   ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
            ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
@@ -115,12 +116,12 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-		 #    error use #include "duf_defs.h"
+#  error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-	   " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
-	   ,
+           ,
            .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName ) " /* */
            ,
            .filter = NULL       /* */

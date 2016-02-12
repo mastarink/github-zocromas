@@ -22,6 +22,7 @@ typedef enum
   DUF_OPTION_SOURCE_CLI,
   DUF_OPTION_SOURCE_INTERACTIVE,
   DUF_OPTION_SOURCE_INTERAC = DUF_OPTION_SOURCE_INTERACTIVE,
+  DUF_OPTION_SOURCE_IA = DUF_OPTION_SOURCE_INTERACTIVE,
   DUF_OPTION_SOURCE_MAX = DUF_OPTION_SOURCE_INTERAC,
 } duf_option_source_code_t;
 typedef struct
@@ -55,6 +56,7 @@ typedef enum
   DUF_OPTION_STAGE_LOOPE = DUF_OPTION_STAGE_LOOP + 1000,
   DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_INTERAC = DUF_OPTION_STAGE_INTERACTIVE,
+  DUF_OPTION_STAGE_IA = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_MAX = DUF_OPTION_STAGE_INTERACTIVE,
   DUF_OPTION_STAGE_ANY = 8888888,
   DUF_OPTION_STAGE_ALL = 9999999,
@@ -365,7 +367,7 @@ typedef struct duf_longval_extended_table_s
 #  else
   duf_extended_stageopts_t stage_opts;
 #  endif
-  duf_longval_extended_t xlist[];
+  duf_longval_extended_t xlist[]; /* the last ! => «flexible array member not at end of struct» */
 } duf_longval_extended_table_t;
 
 typedef struct duf_longval_extended_vtable_s

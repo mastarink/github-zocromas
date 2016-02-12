@@ -5,7 +5,7 @@
 
 
 
-int duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2,
+int duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_sql_set_pair_t sql_set_pair, duf_str_cb2_t str_cb2,
                                    duf_sccb_handle_t * sccbh );
 
 

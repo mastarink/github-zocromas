@@ -2,8 +2,8 @@
 #  define MAS_STD_MOD_SETS_H
 
 #  if 0
-extern duf_sql_set_t std_leaf_set_to_obsolete;
-extern duf_sql_set_t std_node_set_to_obsolete;
+extern duf_sql_set_t std_leaf_set_num;
+extern duf_sql_set_t std_node_set_num;
 
 extern duf_sql_set_t std_ns_leaf_set;
 extern duf_sql_set_t std_ns_node_set;

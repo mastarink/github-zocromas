@@ -98,32 +98,25 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh, b
 }
 #endif
 
-/* 20150819.133354 */
+/* 20160212.130816 */
 static int
 duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
-  const duf_sql_set_t *sql_set = NULL;
+  duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
 
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb )
           || ( str_cb2 == duf_eval_sccbh_db_leaf_str_cb ) );
 #ifdef MAS_TRACING
   const char *set_type_title = duf_nodetype_name( node_type );
 #endif
-#if 0
-  sql_set = duf_sccb_get_sql_set( SCCB, node_type );
-#else
-  /* TODO: sql_set = duf_sccbh_get_sql_set_f( sccbh, node_type ); */
-#if 0
-  sql_set = duf_sccb_get_sql_set_f( SCCB, node_type, PU->std_leaf_set, PU->std_node_set );
-#else
-  sql_set = duf_sccbh_get_sql_set_f( sccbh, node_type );
-#endif
-#endif
+  sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, node_type );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
-  if ( sql_set /* && sql_set->selector2 && sql_set->fieldset  FIXME for !sql_set->selector2 && sql_set->selector2_cte */ )
+  if ( sql_set_pair.active
+       /* && sql_set_pair.active->selector2 && sql_set_pair.active->fieldset  FIXME for !sql_set_pair.active->selector2 && sql_set_pair.active->selector2_cte */
+         )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
     DUF_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );
@@ -131,9 +124,9 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
     DUF_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, duf_levinfo_dirid( PDI ),
                duf_uni_scan_action_title( SCCB ), SCCB->name );
 #if 0
-    DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
+    DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set_pair.active, str_cb2, sccbh, node_type ) );
 #else
-    DOR( r, duf_eval_sccbh_sql_set_str_cb( scanstage, node_type, sql_set, str_cb2, sccbh ) );
+    DOR( r, duf_eval_sccbh_sql_set_str_cb( scanstage, node_type, sql_set_pair, str_cb2, sccbh ) );
 #endif
     if ( DUF_NOERROR( r ) )
     {

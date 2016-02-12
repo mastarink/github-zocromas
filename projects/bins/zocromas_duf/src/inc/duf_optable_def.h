@@ -7,17 +7,17 @@
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
  * */
 
-#  define DO_A_X(_fld)    .has_arg = _fld ## _argument
-#  define DOO_A_X(_fld) .o.has_arg = _fld ## _argument
+#  define DO_A(_fld)    .has_arg = _fld ## _argument
+#  define DOO_A(_fld) .o.has_arg = _fld ## _argument
 
-#  define DO_A_O    DO_A_X(optional)
-#  define DOO_A_O  DOO_A_X(optional)
+#  define DO_A_O    DO_A(optional)
+#  define DOO_A_O  DOO_A(optional)
 
-#  define DO_A_R    DO_A_X(required)
-#  define DOO_A_R  DOO_A_X(required)
+#  define DO_A_R    DO_A(required)
+#  define DOO_A_R  DOO_A(required)
 
-#  define DO_A_N    DO_A_X(no)
-#  define DOO_A_N  DOO_A_X(no)
+#  define DO_A_N    DO_A(no)
+#  define DOO_A_N  DOO_A(no)
 
 #  define DO_SET_VAL(_val)    .val = _val
 #  define DOO_SET_VAL(_val) .o.val = _val
@@ -191,6 +191,8 @@
 #  define DO_SET_STAGE(_min, _max)  .stage_opts.stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
 #  define DOO_SET_STAGE(_min, _max) .stage_opts.stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
 
+#  define DO_STAGES(_min, _max)   DO_SET_STAGE(_min, _max)
+#  define DOO_STAGES(_min, _max)  DOO_SET_STAGE(_min, _max)
 
 #  define DO_AT_STAGE(_stag)	 DO_SET_STAGE(_stag, _stag)
 #  define DOO_AT_STAGE(_stag)	DOO_SET_STAGE(_stag, _stag)
@@ -214,8 +216,8 @@
 #  define DOO_STG_NOT(_v) DOO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
 
 
-#  define DO_CMD(_otxt, _oarg, _ocode , ...)  {.o={DO_Q(_otxt), DO_A_ ## _oarg, DO_V(_ocode)}, __VA_ARGS__}
-#  define DOO_CMD(_otxt, _oarg, _ocode , ...) {DOO_Q(_otxt), DOO_A_ ## _oarg, DOO_V(_ocode), __VA_ARGS__}
+#  define DO_CMD(_otxt, _oarg, _ocode , ...)  {.o={DO_Q(_otxt), DO_A_ ## _oarg , DO_V(_ocode)}, __VA_ARGS__}
+#  define DOO_CMD(_otxt, _oarg, _ocode , ...) {DOO_Q(_otxt), DOO_A_ ##  _oarg , DOO_V(_ocode), __VA_ARGS__}
 
 /* #  define DO_CMD2(_o, ...) {.o=_o, __VA_ARGS__} */
 

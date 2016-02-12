@@ -23,12 +23,19 @@ duf_ufilter_create( void )
   return pu;
 }
 
+/* 20160212.130923 */
 void
 duf_ufilter_delete( duf_ufilter_t * pu )
 {
   /* Don't forget to update duf_ufilter_copy too */
   if ( pu )
   {
+    mas_free( pu->std_node_set_name ); /* 20160212.130932 */
+    pu->std_node_set_name = NULL; /* 20160212.130932 */
+
+    mas_free( pu->std_leaf_set_name ); /* 20160212.130932 */
+    pu->std_leaf_set_name = NULL; /* 20160212.130932 */
+
     mas_free( pu->filename );
     pu->filename = NULL;
 

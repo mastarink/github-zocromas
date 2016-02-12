@@ -82,9 +82,11 @@ duf_scan_callbacks_t duf_md5_callbacks = {
   /* .leaf_scan_fd = duf_dirent_md5_content, */
   .leaf_scan_fd2 = md5_dirent_content2,
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = NULL,
+  .std_node_set_name = NULL,
   .leaf = {
            .name = "md leaf",
            .type = DUF_NODE_LEAF,

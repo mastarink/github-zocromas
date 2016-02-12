@@ -3,7 +3,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"
 
 
 
@@ -34,26 +34,31 @@ const duf_longval_extended_table_t optable_main = {
    {.o = {DO_Q( "max-rel-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
     /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-rel-depth" ) /**/, DO_A_R /*  */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( NUM, max_rel_depth ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "max-depth" ) /*        */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
     /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( NUM, max_rel_depth ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "max-seq" ) /*          */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( NUM, max_seq ) /*                */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-seq" ) /*      */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, max_seq ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*         */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_seq ) /*                */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
 
-   {.o = {DO_Q( "std-leaf-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_LEAF_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, std_leaf_set_to_obsolete ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                */ },
-   {.o = {DO_Q( "std-node-set" ) /*     */ , DO_A_R /* */ , DO_V( STD_NODE_SET )} /*       */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, std_node_set_to_obsolete ) /*  */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  .... ) /*                 */ },
+   {.o = {DO_Q( "std-leaf-set-num" ) /* */ , DO_A_R /* */ , DO_V( STD_LEAF_SET_NUM )} /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, std_leaf_set_num ) /*       */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "std-node-set-num" ) /* */ , DO_A_R /* */ , DO_V( STD_NODE_SET_NUM )} /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, std_node_set_num ) /*       */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
+
+   {DOO_Q( "std-leaf-set-name" ) /*     */ , DOO_A_R /*                                    */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( STR, std_leaf_set_name ) /*      */ , DO_STAGES( FIRST, IA ) /*       */ , DO_H(  .... ) /*                            */ },
+   {DOO_Q( "std-node-set-name" ) /*     */ , DOO_A_R /*                                    */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( STR, std_node_set_name ) /*      */ , DO_STAGES( FIRST, IA ) /*       */ , DO_H(  .... ) /*                            */ },
 
 
 
-  
+
    {.o = {.name = NULL}}
    }
 };

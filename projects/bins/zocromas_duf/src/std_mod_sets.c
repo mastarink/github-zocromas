@@ -13,7 +13,7 @@
 
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
-   .name = "std leaf one",
+   .name = "std-leaf-one",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
    .fieldset = "#std-leaf",     /* */
@@ -25,7 +25,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,                             /* */
   {                             /* */
-   .name = "std leaf no sel",
+   .name = "std-leaf-no-sel",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
    .fieldset = "#std-ns-leaf",
@@ -40,7 +40,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,                             /* */
   {                             /* */
-   .name = "std leaf no sel no matcher",
+   .name = "std-leaf-no-sel-no-matcher",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
    .fieldset = "#std-ns-leaf",
@@ -54,7 +54,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,
   {
-   .name = "std all under",
+   .name = "std-all-under",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
    .fieldset = "#std-ns-leaf",
@@ -92,7 +92,7 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
-   .name = "std node one",
+   .name = "std-node-one",
    .type = DUF_NODE_NODE,
    .expand_sql = 1,             /* */
    .fieldset =                  /* */
@@ -141,7 +141,7 @@ duf_sql_set_t std_node_sets[] = { /* */
    }
   ,
   {
-   .name = "std node two",
+   .name = "std-node-two",
    .type = DUF_NODE_NODE,
    .expand_sql = 1,             /* */
    .fieldset =                  /* */

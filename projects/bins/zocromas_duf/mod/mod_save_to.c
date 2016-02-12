@@ -82,9 +82,11 @@ duf_scan_callbacks_t duf_save_to_callbacks = {
   /* .dirent_file_scan_before2 = save_to_de_file_before2, */
   /* .dirent_dir_scan_before2 = save_to_de_dir_before2, */
 
-/* TODO : explain values of use_std_leaf_to_obsolete and use_std_node_to_obsolete TODO */
-  .use_std_leaf_to_obsolete = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_to_obsolete = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
+  .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-one",
+  .std_node_set_name = "std-node-one",
   .final_sql_seq = &final_sql,
 };
 
@@ -225,7 +227,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #endif
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
     save_path = duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
-                                       0 /* max_width */, NULL /* pslen pr / pok */, NULL /* pwidth */, NULL /* pover */  );
+                                       0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
     DUF_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
     DUF_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     DUF_TRACE( mod, 2, "@to => %s", save_path );

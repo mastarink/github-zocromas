@@ -69,10 +69,10 @@ typedef struct
   duf_rfilter_flags_combo_t v;
   unsigned max_rel_depth;
   unsigned long long max_seq;
-  unsigned long long std_node_set_to_obsolete;
-  const char *std_node_name;
-  unsigned long long std_leaf_set_to_obsolete;
-  const char *std_leaf_name;
+  unsigned long long std_node_set_num;
+  char *std_node_set_name;
+  unsigned long long std_leaf_set_num;
+  char *std_leaf_set_name;
   duf_items_t maxitems;
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;

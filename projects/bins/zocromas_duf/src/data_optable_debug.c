@@ -3,7 +3,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"
 
 /*
 At duf_options_table.c:
@@ -29,7 +29,7 @@ const duf_longval_extended_table_t optable_debug = {
    {.o = {DO_Q( "debug" ) /*            */ , DO_A_O /* */ , DO_V( DEBUG )} /*              */ , DO_CL( DEBUG ) /*   */ ,
     /*      */ DO_OC( UPLUS, opt.dbg.debug ) /*                                             */ , DO_H( debug ) /*                            */ },
    {.o = {DO_Q( "verbose" ) /*          */ , DO_A_O /* */ , DO_V( VERBOSE )} /*            */ , DO_CL( DEBUG ) /*   */ ,
-    /*      */ DO_OC( UPLUS, opt.dbg.verbose ), DO_AT_STAGE( PRESETUP ) /*                  */ , DO_H( verbose ) /*                          */ },
+    /*      */ DO_OC( UPLUS, opt.dbg.verbose ), DO_SET_STAGE( BOOT, PRESETUP ) /*           */ , DO_H( verbose ) /*                          */ },
 
 
    {.o = {.name = NULL}}
