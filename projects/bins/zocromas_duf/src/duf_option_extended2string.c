@@ -297,11 +297,11 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         DUF_PRINTF( 0, "  optarg: %s", "optional" );
       else
         DUF_PRINTF( 0, "  optarg: %s", "error" );
-      if ( xtended->can_no || xtended->invert || xtended->m_hasoff )
+      if ( xtended->can_no || xtended->unset || xtended->m_hasoff )
       {
         DUF_PRINTF( 0, ".%s", "  " );
         DUF_PRINTF( 0, ".%s", xtended->can_no ? "can_no " : "" );
-        DUF_PRINTF( 0, ".%s", xtended->invert ? "invert " : "" );
+        DUF_PRINTF( 0, ".%s", xtended->unset ? "unset " : "" );
         if ( xtended->m_hasoff )
         {
           const char *srelto = NULL;

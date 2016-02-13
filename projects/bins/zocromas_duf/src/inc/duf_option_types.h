@@ -284,7 +284,7 @@ typedef union
 {
   duf_config_act_flags_t act;
   duf_config_output_flags_t output;
-  duf_rfilter_flags_t rec_etc;
+  duf_rec_etc_flags_t rec_etc;
   duf_config_opt_flags_t opt;
   duf_config_opt_disable_flags_t disable;
   unsigned bit;
@@ -306,7 +306,7 @@ typedef struct
 
 //unsigned setit:1;
 //unsigned unsetit:1;
-  unsigned invert:1;
+  unsigned unset:1;
   unsigned can_no:1;
   unsigned m_hasoff:1;
 #  if 0

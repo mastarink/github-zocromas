@@ -99,11 +99,11 @@
 #  define DO_BFS(_loc, _fld)             .flag_bitnum=DUF_FLAG_ ## _loc ## _ ## _fld, .can_no=0
 #  define DOO_BFS(_vt, _prf, _loc, _fld) .flag_bitnum=DUF_FLAG_ ## _loc ## _ ## _fld, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-#  define DO_BFN(_loc,_fld)               DO_BFL(_loc,_fld),.invert=1
-#  define DOO_BFN(_vt, _prf, _loc, _fld)  DOO_BFL(_vt, _prf,_loc,_fld),.invert=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DO_BFN(_loc,_fld)               DO_BFL(_loc,_fld),.unset=1
+#  define DOO_BFN(_vt, _prf, _loc, _fld)  DOO_BFL(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-#  define DO_BFNS(_loc, _fld)             DO_BFS(_loc, _fld),.invert=1
-#  define DOO_BFNS(_vt, _prf, _loc, _fld) DOO_BFS(_vt, _prf, _loc, _fld),.invert=1
+#  define DO_BFNS(_loc, _fld)             DO_BFS(_loc, _fld),.unset=1
+#  define DOO_BFNS(_vt, _prf, _loc, _fld) DOO_BFS(_vt, _prf, _loc, _fld),.unset=1
 
 
 
@@ -117,11 +117,11 @@
 #  define DOO_FS(_vt, _prf, _loc, _fld) .afl._loc={._fld=1}, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
-#  define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.invert=1
-#  define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_vt, _prf,_loc,_fld),.invert=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.unset=1
+#  define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-#  define DO_FNS(_loc,_fld)               DO_FS(_loc,_fld),.invert=1
-#  define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.invert=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DO_FNS(_loc,_fld)               DO_FS(_loc,_fld),.unset=1
+#  define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 
 

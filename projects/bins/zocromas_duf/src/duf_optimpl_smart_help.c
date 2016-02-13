@@ -323,7 +323,7 @@ duf_option_O_help_set( const char *arg )
                           "; %d:%d * \t| %-40s; {%-10s:%-10s}", /* */
                           sl,   /* */
                           xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->stage_opts.use_stage, /* */
-                          xtended->invert, xtended->can_no, /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
+                          xtended->unset, xtended->can_no, /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )

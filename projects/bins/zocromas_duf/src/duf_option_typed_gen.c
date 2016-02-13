@@ -263,7 +263,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 
 #define DUF_OPTION_VTYPE_XFLAG(_typ) \
 	{ \
-          if ( extended->invert ) \
+          if ( extended->unset ) \
             nof = !nof; \
           if ( DUF_NOERROR( r ) ) \
           { \
@@ -296,7 +296,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 
 #define DUF_OPTION_VTYPE_XBFLAG(_typ) \
 	{ \
-          if ( extended->invert ) \
+          if ( extended->unset ) \
             nof = !nof; \
           if ( DUF_NOERROR( r ) ) \
           { \
