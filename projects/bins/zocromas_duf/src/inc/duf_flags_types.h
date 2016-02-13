@@ -2,6 +2,40 @@
 #  define MAS_DUF_FLAGS_TYPES_H
 
 
+typedef enum
+{
+   DUF_FLAG_act_info,
+   DUF_FLAG_act_allow_vacuum,
+   DUF_FLAG_act_allow_remove_database,
+   DUF_FLAG_act_allow_drop_tables,
+   DUF_FLAG_act_allow_clean_tables,
+   DUF_FLAG_act_allow_create_database,
+   DUF_FLAG_act_allow_create_tables,
+            
+   DUF_FLAG_act_allow_dirs,
+   DUF_FLAG_act_allow_sub,
+   DUF_FLAG_act_allow_files,
+
+
+
+   DUF_FLAG_act_progress,
+   DUF_FLAG_act_use_binformat,
+            
+   DUF_FLAG_act_summary,
+   DUF_FLAG_act_interactive,
+   DUF_FLAG_act_fast,
+   DUF_FLAG_act_fresh,
+   DUF_FLAG_act_nocolor,
+   DUF_FLAG_act_force_color,
+            
+   DUF_FLAG_act_add_path,
+   DUF_FLAG_act_dirent,
+            
+   DUF_FLAG_act_testflag,
+   DUF_FLAG_act_testiflag,
+   DUF_FLAG_act_testnoflag,
+
+} duf_config_act_flags_enum_t;
 typedef struct
 {
   unsigned info:1;
@@ -23,9 +57,6 @@ typedef struct
 
   unsigned summary:1;
   unsigned interactive:1;
-#  if 0
-  unsigned beginning_sql:1;     /* do 'beginning' sql's again (first time mandatory!) */
-#  endif
   unsigned fast:1;
   unsigned fresh:1;
   unsigned nocolor:1;
@@ -33,24 +64,13 @@ typedef struct
 
   unsigned add_path:1;
   unsigned dirent:1;
-  /* unsigned do_sccbs_obs:1; */
-  /* unsigned filedata_obs:1; */
-  /* unsigned filenames_obs:1; */
-  /* obsolete */
-  /* unsigned collect_obs:1; */
-  /* unsigned sd5_obs:1; */
-  /* unsigned md5_obs:1; */
-  /* unsigned sha1_obs:1; */
-  /* unsigned crc32_obs:1; */
-  /* unsigned mime_obs:1; */
-  /* unsigned exif_obs:1; */
-  /* unsigned mdpath_obs:1; */
 
   unsigned testflag:1;
   unsigned testiflag:1;
   unsigned testnoflag:1;
 
 } duf_config_act_flags_t;
+
 typedef struct
 {
   unsigned overwrite:1;
@@ -70,7 +90,17 @@ typedef union
 
 
 /* ######################################## */
-
+typedef enum
+{
+  DUF_FLAG_disable_calculate = 0,
+  DUF_FLAG_disable_insert,
+  DUF_FLAG_disable_update,
+  DUF_FLAG_disable_fs,
+  DUF_FLAG_disable_memusage,
+  DUF_FLAG_disable_testflag,
+  DUF_FLAG_disable_testiflag,
+  DUF_FLAG_disable_testnoflag,
+} duf_config_opt_disable_flags_enum_t;
 typedef struct
 {
   unsigned calculate:1;
@@ -90,7 +120,14 @@ typedef union
 } duf_config_opt_disable_flags_combo_t;
 
 /* ######################################## */
-
+typedef enum
+{
+  DUF_FLAG_rfilter_recursive = 0,
+  DUF_FLAG_rfilter_linear,
+  DUF_FLAG_rfilter_testflag,
+  DUF_FLAG_rfilter_testiflag,
+  DUF_FLAG_rfilter_testnoflag,
+} duf_rfilter_flags_enum_t;
 typedef struct
 {
   unsigned recursive:1;

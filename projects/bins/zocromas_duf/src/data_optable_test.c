@@ -30,6 +30,14 @@ const duf_longval_extended_table_t optable_test = {
    {.o = {DO_Q( "test-act-noflag" ) /*          */ , DO_A_N /* */ , DO_VF( TEST_ACT_NOFLAG )} /*            */ , DO_CL( TEST ) /* */ ,
     /* */ DO_OC( NOFLAG, opt.act.v ), DO_FL( act, testnoflag ), DO_STAGE_ALL /*                              */ , DO_H(  ... ) /*            */ },
 
+   {.o = {DO_Q( "test-act-bflag" ) /*           */ , DO_A_N /* */ } /*              */ , DO_CL( TEST ) /* */ ,
+    /* */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, testflag ), DO_STAGE_ALL /*                                */ , DO_H(  ... ) /*            */ },
+   {.o = {DO_Q( "test-act-ibflag" ) /*          */ , DO_A_N /* */ } /*              */ , DO_CL( TEST ) /* */ ,
+    /* */ DO_OC( BFLAG, opt.act.v ), DO_BFN( act, testflag ), DO_STAGE_ALL /*                                */ , DO_H(  ... ) /*            */ },
+   {.o = {DO_Q( "test-act-nobflag" ) /*         */ , DO_A_N /* */ } /*              */ , DO_CL( TEST ) /* */ ,
+    /* */ DO_OC( NOBFLAG, opt.act.v ), DO_BFL( act, testflag ), DO_STAGE_ALL /*                              */ , DO_H(  ... ) /*            */ },
+
+
    {.o = {DO_Q( "test-recetc-flag" ) /*         */ , DO_A_N /* */ , DO_VF( TEST_RECETC_FLAG )} /*           */ , DO_CL( TEST ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, testflag ), DO_STAGE_SPLS /*                               */ , DO_H( sflag ) /*           */ },
    {.o = {DO_Q( "test-recetc-iflag" ) /*        */ , DO_A_N /* */ , DO_VF( TEST_RECETC_IFLAG )} /*          */ , DO_CL( TEST ) /* */ ,

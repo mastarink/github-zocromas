@@ -22,6 +22,11 @@
   ENUM_WRAP(NOSFLAG				)
   /* PSFLAG					) */
 
+  ENUM_WRAP(BFLAG				)
+  ENUM_WRAP(NOBFLAG				)
+  ENUM_WRAP(BSFLAG				)
+  ENUM_WRAP(NOBSFLAG				)
+
   ENUM_WRAP(XCHR				)
   ENUM_WRAP(STR					)
   ENUM_WRAP(CSTR				)

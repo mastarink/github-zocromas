@@ -56,39 +56,29 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
 {
   duf_sql_set_pair_t set_pair = { NULL, NULL };
   const duf_sql_set_t *set = NULL;
-  const duf_sql_set_t *setn = NULL;
-  const duf_sql_set_t *setr = NULL;
 
   assert( SCCB );
   {
-    unsigned index = 0;
-    const char *set_name;
-
-    set_name = force_leaf_set_name ? force_leaf_set_name : SCCB->std_leaf_set_name;
-    if ( set_name )
+    if ( !set && force_leaf_set_name )
       for ( unsigned i = 0; i < std_leaf_nsets; i++ )
-        if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, set_name ) )
-          setn = &std_leaf_sets[i];
+        if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, force_leaf_set_name ) )
+          set = &std_leaf_sets[i];
 
-    index = force_set_leaf_index > 0 ? force_set_leaf_index : SCCB->use_std_leaf_set_num;
-    if ( index > 0 )
-    {
-      set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
-      assert( 0 == strcmp( set->name, set_name ) );
-    }
+    if ( !set && force_set_leaf_index > 0 )
+      set = ( force_set_leaf_index <= std_leaf_nsets ) ? &std_leaf_sets[force_set_leaf_index - 1] : NULL;
+    
+    if ( !set && SCCB->std_leaf_set_name )
+      for ( unsigned i = 0; i < std_leaf_nsets; i++ )
+        if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, SCCB->std_leaf_set_name ) )
+          set = &std_leaf_sets[i];
+
+    if ( !set && SCCB->use_std_leaf_set_num > 0 )
+      set = ( SCCB->use_std_leaf_set_num <= std_leaf_nsets ) ? &std_leaf_sets[SCCB->use_std_leaf_set_num - 1] : NULL;
   }
-  if ( ( set == setn ) )
-    setr = set;
-  else if ( ( !set && setn ) )
-    setr = setn;
-  else if ( ( set && !setn ) )
-    setr = set;
-  else
-    setr = &SCCB->leaf;
   /* sccbh->active_leaf_set = setr; */
   /* sccbh->second_leaf_set = &SCCB->leaf; */
-  set_pair.active = setr;
-  set_pair.second = &SCCB->node;
+  set_pair.active = set;
+  set_pair.second = &SCCB->leaf;
 
   /* assert( sccbh->second_leaf_set ); */
   return set_pair;
@@ -100,44 +90,33 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
 {
   duf_sql_set_pair_t set_pair = { NULL, NULL };
   const duf_sql_set_t *set = NULL;
-  const duf_sql_set_t *setn = NULL;
-  const duf_sql_set_t *setr = NULL;
 
   assert( SCCB );
   {
-    unsigned index = 0;
-    const char *set_name;
-
-    set_name = force_node_set_name ? force_node_set_name : SCCB->std_node_set_name;
-    if ( set_name )
+    if ( !set && force_node_set_name )
       for ( unsigned i = 0; i < std_node_nsets; i++ )
-        if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, set_name ) )
-          setn = &std_node_sets[i];
+        if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, force_node_set_name ) )
+          set = &std_node_sets[i];
 
-    index = force_set_node_index > 0 ? force_set_node_index : SCCB->use_std_node_set_num;
-    if ( index > 0 )
-    {
-      set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
-      assert( 0 == strcmp( set->name, set_name ) );
-    }
+    if ( !set && force_set_node_index > 0 )
+      set = ( force_set_node_index <= std_node_nsets ) ? &std_node_sets[force_set_node_index - 1] : NULL;
+    
+    if ( !set && SCCB->std_node_set_name )
+      for ( unsigned i = 0; i < std_node_nsets; i++ )
+        if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, SCCB->std_node_set_name ) )
+          set = &std_node_sets[i];
+
+    if ( !set && SCCB->use_std_node_set_num > 0 )
+      set = ( SCCB->use_std_node_set_num <= std_node_nsets ) ? &std_node_sets[SCCB->use_std_node_set_num - 1] : NULL;
   }
-  if ( ( set == setn ) )
-    setr = set;
-  else if ( ( !set && setn ) )
-    setr = setn;
-  else if ( ( set && !setn ) )
-    setr = set;
-  else
-    setr = &SCCB->node;
   /* sccbh->active_node_set = setr; */
   /* sccbh->second_node_set = &SCCB->node; */
-  set_pair.active = setr;
+  set_pair.active = set;
   set_pair.second = &SCCB->node;
 
   /* assert( sccbh->second_node_set ); */
   return set_pair;
 }
-
 /* 20160212.130701 */
 duf_sql_set_pair_t
 duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )

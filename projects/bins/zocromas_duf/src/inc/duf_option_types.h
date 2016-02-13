@@ -318,6 +318,7 @@ typedef struct
   duf_extended_stageopts_t stage_opts;
 #  endif
   duf_option_anyflag_t afl;
+  unsigned flag_bitnum;
   unsigned long m_offset;
   duf_offset_to_t relto;
 

@@ -293,6 +293,40 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_SFLAG ) + 17 );
         DUF_OPTION_VTYPE_XFLAG( unsigned short );
         break;
+
+#define DUF_OPTION_VTYPE_XBFLAG(_typ) \
+	{ \
+          if ( extended->invert ) \
+            nof = !nof; \
+          if ( DUF_NOERROR( r ) ) \
+          { \
+            _typ *pix; \
+            pix = ( _typ * ) byteptr; \
+            if ( nof ) \
+              ( *pix ) &= ~(1<<extended->flag_bitnum); \
+            else \
+              ( *pix ) |= (1<<extended->flag_bitnum); \
+            /* duf_config->opt.act.v.flag.info = 1; */ \
+            DUF_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %x %x (%x)", nof, byteptr, pix, extended->o.name, *pix, \
+                       (1<<extended->flag_bitnum), ( *pix | (1<<extended->flag_bitnum) ) ); \
+            DUF_TEST_R( r ); \
+          } \
+        }
+      case DUF_OPTION_VTYPE_NOBFLAG: /* stage SETUP */
+        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBFLAG ) + 17 );
+        nof = !nof;
+      case DUF_OPTION_VTYPE_BFLAG: /* stage SETUP *//*  unsigned set of flags */
+        DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_BFLAG ) + 17, extended->afl.bit );
+        DUF_OPTION_VTYPE_XBFLAG( unsigned );
+        break;
+      case DUF_OPTION_VTYPE_NOBSFLAG: /* stage SETUP */
+        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBSFLAG ) + 17 );
+        nof = !nof;
+      case DUF_OPTION_VTYPE_BSFLAG: /* stage SETUP *//*  unsigned short set of flags */
+        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_BSFLAG ) + 17 );
+        DUF_OPTION_VTYPE_XBFLAG( unsigned short );
+        break;
+
 #if 0
       case DUF_OPTION_VTYPE_PFLAG:
         DUF_TRACE( options, 70, "vtype PFLAG" );
