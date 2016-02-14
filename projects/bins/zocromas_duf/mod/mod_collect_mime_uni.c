@@ -42,7 +42,7 @@ static int dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 #define FILTER_DATA  "fd.mimeid IS NULL"
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ ...",
+  .name = "final-mime",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_MIME_FULL " SET dupmimecnt=(SELECT COUNT(*) " /* */
@@ -77,7 +77,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
   .std_node_set_name = NULL,
   /* filename for debug only */
   .leaf = {
-           .name = "mime leaf",
+           .name = "mime-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            "#mime",
@@ -99,7 +99,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD},
   .node = {
-           .name = "mime node",
+           .name = "mime-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

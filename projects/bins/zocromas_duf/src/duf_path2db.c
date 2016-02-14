@@ -250,6 +250,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 
   assert( pdi );
   assert( pdi->pdi_name );
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
 #if 0
   sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name, &r );
 #else
@@ -276,6 +277,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
 
   assert( pdi );
   assert( pdi->pdi_name );
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
 
   DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
   DUF_TRACE( path, 2, "@inserting [%s] caninsert:%d", duf_levinfo_itemshowname( pdi ), caninsert );
@@ -387,6 +389,8 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
   int up_d = 0;
 
   assert( pdi );
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
+  
   up_d = duf_pdi_depth( pdi );
 
   DOR( r, duf_levinfo_godown_openat_dh( pdi, directory_name, DUF_NODE_NODE /* node_type */  ) ); /* check depth; 
@@ -417,6 +421,8 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   assert( pdi );
   assert( pdi->pdi_name );
   assert( duf_levinfo_dirid( pdi ) == 0 );
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
+
   DUF_TRACE( fs, 2, "set opendir to 1 (one)" );
   od = duf_pdi_set_opendir( pdi, 1 ); /* save open status to restore */
   {
@@ -462,6 +468,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   assert( pdi );
   assert( pdi->pdi_name );
   /* assert( pdi->depth == -1 ); */
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
 
   real_path = mas_strdup( rpath );
 

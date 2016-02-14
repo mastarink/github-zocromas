@@ -43,7 +43,7 @@ static int filenames_de_file_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
-  .name = "final @ ...",
+  .name = "final-filenames",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET dupdatacnt=(SELECT COUNT(*) " /* */
@@ -84,7 +84,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            .expand_sql = 1,     /* */
            .fieldset =          /* */
            "'filenames-node' AS fieldset_id, " /* */
-           " paaat." DUF_SQL_IDFIELD " AS dirid" /* */
+           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H

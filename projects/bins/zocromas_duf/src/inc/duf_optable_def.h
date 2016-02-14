@@ -54,6 +54,9 @@
 #  define DOO_H( _h ) .help = # _h
 #  define DO_H( _h )  .help = # _h
 
+#  define DOO_HQ( _h ) .help = _h
+#  define DO_HQ( _h )  .help = _h
+
 
 #  define DO_SET_VTYPE(_vt)  .vtype=DUF_OPTION_VTYPE_ ## _vt
 #  define DOO_SET_VTYPE(_vt) .vtype=DUF_OPTION_VTYPE_ ## _vt

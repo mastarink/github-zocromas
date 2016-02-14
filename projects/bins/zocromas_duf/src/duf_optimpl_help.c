@@ -744,8 +744,10 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "** --std-leaf-set =>  --std-leaf-set-num; new: --std-leaf-set-name " );
   DUF_PRINTF( 0, "  run --db-name=owncloud_mega_zip_copy --linear --std-leaf-set-num=4 --std-leaf-set-name=std-all-under "
               " -df --sha1id=1351 --tag-file=test-one --evaluate-sccb=listing,tagit  /home/ --use-format=4  	- %s",
-              " --std-leaf-set-num=4 --std-leaf-set-name=std-all-under -= \"\" =-" );
+              " --std-leaf-set-num=4 --std-leaf-set-name=std-all-under	 -= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20160213.185738 ============" );
+  DUF_PRINTF( 0, "  run --test-act-bflag --test-act-nobflag --test-recetc-bflag --test-disable-nobflag --no-test-disable-nobflag	 -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_ENDR( r );

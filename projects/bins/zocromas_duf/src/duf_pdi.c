@@ -43,11 +43,13 @@
 /* 20150904.085609 */
 DUF_WRAPSTATIC int
 duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
-              int caninsert, int frecursive, int fallow_dirs, int flinear, int opendir )
+              int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
 {
   DEBUG_STARTR( r );
 
   assert( pdi );
+  assert( !sql_set || sql_set->type == DUF_NODE_NODE ); /* 20160214.162255 */
+
   DUF_TRACE( pdi, 5, "@@@frecursive:%d; real_path:%s", frecursive, real_path );
   DUF_TRACE( pdi, 7, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
   if ( !pdi->inited )
@@ -133,7 +135,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 /* 20150904.085443 */
 int
 DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,
-                              const duf_sql_set_t * sql_set, int caninsert, int frecursive, int fallow_dirs, int flinear, int opendir )
+                              const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
 {
   DEBUG_STARTR( r );
 
@@ -167,7 +169,7 @@ duf_pdi_init_min_r( duf_depthinfo_t * pdi, const char *real_path )
 /* 20150904.085510 */
 int
 duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid,
-                         const duf_sql_set_t * sql_set, int caninsert, int frecursive, int fallow_dirs, int flinear, int opendir )
+                         const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;

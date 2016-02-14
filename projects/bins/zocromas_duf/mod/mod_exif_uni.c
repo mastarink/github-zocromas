@@ -54,7 +54,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 #define FILTER_DATA "(fd.noexif IS NULL AND fd.noexif IS NULL)"
 
 static duf_sql_sequence_t final_sql = {
-  .name = "final @ ...",
+  .name = "final-exif",
   .done = 0,.sql = {
                     "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
                     " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
@@ -77,7 +77,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
   .std_node_set_name = NULL,
   /* filename for debug only */
   .leaf = {
-           .name = "exif leaf",
+           .name = "exif-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            "#exif",
@@ -101,7 +101,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            ,                    /* */
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD}, /* */
   .node = {
-           .name = "exif node",
+           .name = "exif-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

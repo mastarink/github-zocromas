@@ -40,7 +40,7 @@ static int crc32_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ ...",
+  .name = "final-crc32",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_CRC32_FULL " SET dup32cnt=(SELECT COUNT(*) " /* */
@@ -72,7 +72,7 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
   .std_node_set_name = "std-node-two",
 #define DUF_FILTER
   .leaf = {                     /* */
-           .name = "crc32 leaf",
+           .name = "crc32-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            "#crc32",
@@ -108,7 +108,7 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
            }
   ,
   .node = {
-           .name = "crc32 node",
+           .name = "crc32-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

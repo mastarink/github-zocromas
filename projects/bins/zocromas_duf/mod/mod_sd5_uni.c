@@ -40,7 +40,7 @@ static int sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ sd5",
+  .name = "final-sd5",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SD5_FULL " SET dup2cnt=(SELECT COUNT(*) " /* */
@@ -72,7 +72,7 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
   .leaf = {
-           .name = "sd leaf",
+           .name = "sd-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset = "#sd5",
            .selector2 = "#md5-leaf",
@@ -97,7 +97,7 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            }
   ,
   .node = {
-           .name = "sd node",
+           .name = "sd-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

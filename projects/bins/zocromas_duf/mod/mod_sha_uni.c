@@ -28,7 +28,7 @@ static int sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ sha1",
+  .name = "final-sha1",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SHA1_FULL " SET dupsha1cnt=(SELECT COUNT(*) " /* */
@@ -60,7 +60,7 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
   .leaf = {
-           .name = "sha1 leaf",
+           .name = "sha1-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            "#sha1",
@@ -94,7 +94,7 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            }
   ,                             /* */
   .node = {                     /* */
-           .name = "sha1 node",
+           .name = "sha1-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

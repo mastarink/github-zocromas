@@ -22,7 +22,7 @@ static int register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * 
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ directories",
+  .name = "final-directories",
   .done = 0,
   .sql = {
           "DELETE FROM path_pairs" /* */
@@ -69,12 +69,12 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
   .std_node_set_name = "std-node-two",
   /* filename for debug only */
   .leaf = {                     /* */
-           .name = "dirs leaf",
+           .name = "dirs-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* Never used!? */
            NULL},
   .node = {                     /* */
-           .name = "dirs node",
+           .name = "dirs-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

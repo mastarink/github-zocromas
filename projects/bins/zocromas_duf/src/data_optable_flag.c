@@ -62,29 +62,31 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "fresh" ) /*            */ , DO_A_N /* */ , DO_VF( FRESH )} /*             */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fresh ) /*                             */ , DO_H( only process for unset data ) /*      */ },
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fresh ) /*                             */ , DO_HQ( "only process for unset data" ) /*   */ },
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, recursive ), DO_STAGE_SPLS /*             */ , DO_H( recursive ) /*                        */ },
-   {.o = {DO_Q( "linear" ) /*        */ , DO_A_N /* */ , DO_VF( LINEAR )} /*               */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*                */ , DO_H( recursive ) /*                        */ },
 
+#if 0
+   {.o = {DO_Q( "linear" ) /*           */ , DO_A_N /* */ , DO_VF( LINEAR )} /*            */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, linear ), DO_STAGE_SPLS /*                */ , DO_H( linear ) /*                           */ },
+#else
+   {.o = {DO_Q( "linear" ) /*           */ , DO_A_N /* */ , DO_VF( LINEAR )} /*            */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OU( BSFLAG, v ), DO_BFL( rec_etc, linear ), DO_STAGE_SPLS /*              */ , DO_H( linear ) /*                           */ },
+#endif
 
 
    {.o = {DO_Q( "dirent" ) /*           */ , DO_A_N /* */ , DO_VF( DIRENT )} /*            */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, dirent ) /*                            */ , DO_H( dirent ) /*                           */ },
 
-   /* 20150907.122946 renames directories --> allow-directories */
-   {.o = {DO_Q( "allow-directories" ) /* */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /**/, DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_SPLS /*                */ ,
-    DO_H( collect dir info ) /*                 */ },
-   /* 20150907.122956 renames dirs --> allow-dirs */
+   {.o = {DO_Q( "allow-directories" ), DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /*       */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_SPLS /*         */ , DO_H( collect dir info ) /*                 */ },
    {.o = {DO_Q( "allow-dirs" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_DIRECTORIES )} /* */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_dirs ) /*                        */ , DO_H( get dir info ) /*                     */ },
    {.o = {DO_Q( "allow-sub" ) /*       */ , DO_A_N /* */ , DO_VF( ALLOW_SUB )} /* */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_sub ) /*                        */ , DO_H( get sub info ) /*                      */ },
    /* renames files --> allow-files */
    {.o = {DO_Q( "allow-files" ) /*            */ , DO_A_N /* */ , DO_VF( ALLOW_FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_files ), DO_STAGE_SPLS /*         */ , DO_H( get file info ) /*                    */ },
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, allow_files ), DO_STAGE_SPLS /*         */ , DO_H( get file info ) /*                   */ },
 
 
    {.o = {DO_Q( "info" ) /*             */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
@@ -101,7 +103,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, progress ) /*                          */ , DO_H( progress ) /*                         */ },
 
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, summary ) /*                 */ , DO_H( summary ) /*                          */ },
+    /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },
 
 
 

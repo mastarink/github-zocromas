@@ -26,7 +26,7 @@ static int register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * p
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name = "final @ ...",
+  .name = "final-filedata",
   .done = 0,
   .beginend = 0,
 
@@ -87,12 +87,12 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .std_node_set_name = "std-node-two",
   .count_nodes = 1,
   .leaf = {                     /* */
-           .name = "fd leaf",
+           .name = "fd-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* Never used!? */
            NULL},
   .node = {                     /* */
-           .name = "fd node",
+           .name = "fd-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,     /* */
            .fieldset =          /* */

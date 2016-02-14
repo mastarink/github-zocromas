@@ -43,16 +43,7 @@ static int tagit_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthi
 static int tagit_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
-static duf_sql_sequence_t final_sql = /* */
-{
-  .name = "final @ ...",
-  .done = 0,
-  .sql = {
 
-
-          NULL,
-          }
-};
 
 /* ########################################################################################## */
 
@@ -90,7 +81,6 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
   .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
-  .final_sql_seq = &final_sql,
 };
 
 /* ########################################################################################## */

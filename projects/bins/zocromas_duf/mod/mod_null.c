@@ -29,13 +29,6 @@
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( null )
 /* ########################################################################################## */
-     static duf_sql_sequence_t final_sql = { /* */
-       .name = "final @ ...",
-       .done = 0,
-       .sql = {
-               NULL,
-               }
-     };
 
 /* ########################################################################################## */
 
@@ -68,7 +61,6 @@ duf_scan_callbacks_t duf_null_callbacks = {
   .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
-  .final_sql_seq = &final_sql,
 };
 
 /* ########################################################################################## */
