@@ -71,17 +71,20 @@ duf_scan_callbacks_t duf_exif_callbacks = {
   .def_opendir = 1,             /* */
   .leaf_scan_fd2 = dirent_contnt2, /* */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = NULL,
-  .std_node_set_name = NULL,
+  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
+  .std_node_set_name = "std-node-two",
   /* filename for debug only */
   .leaf = {
            .name = "exif-leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            "#exif",
-           .selector2 =         /* */
+           .selector2 = 
+#if 1
+	     "#std-ns-fd-leaf"        /* */
+#else
            " FROM " /* */ DUF_SQL_TABLES_FILENAMES_FULL /*    */ " AS fn " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL /*    */ " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_MD5_FULL /*          */ " AS md ON ( fd.md5id  = md." DUF_SQL_IDFIELD " ) " /* */
@@ -89,6 +92,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
            " LEFT JOIN  " DUF_SQL_TABLES_EXIF_FULL /*         */ " AS x  ON ( fd.exifid =  x." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_EXIF_MODEL_FULL /*   */ " AS xm ON ( x.modelid = xm." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN  " DUF_SQL_TABLES_SIZES_FULL /*        */ " AS sz ON ( sz.size   = fd.size)" /* */
+#endif
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
@@ -535,7 +539,7 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
     if ( buffer )
     {
       int cnt = 0;
-      int maxcnt = 2;
+      int maxcnt = 2 /* FIXME ??? */;
       ExifLoader *loader;
 
       loader = exif_loader_new(  );
@@ -853,5 +857,6 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
   }
   /* DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_DATE, DUF_ERROR_EXIF_NO_MODEL ); */
 
+  pdi->total_files ++;
   DEBUG_ENDR( r );
 }

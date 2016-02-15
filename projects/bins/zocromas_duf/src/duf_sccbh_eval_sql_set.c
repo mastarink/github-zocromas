@@ -110,6 +110,9 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
   if ( !TOTCOUNTED || TOTITEMS )
   {
     PDI->seq_row = 0;
+    /* PDI->total_bytes = 0; */
+    /* T( "@pdi->total_bytes:%llu", PDI->total_bytes ); */
+
     DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_eval_sccbh_sql_row_str_cb( scanstage, node_type, pstmt_selector, str_cb2, sccbh ) ) );
 
     /* mas_force_count_ereport( 1 ); */
@@ -140,7 +143,7 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
 
   if ( DUF_NOERROR( r ) )
     sql_selector = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, PDI->pdi_name, 0, &r );
-  
+
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
   {
 #ifdef MAS_TRACING

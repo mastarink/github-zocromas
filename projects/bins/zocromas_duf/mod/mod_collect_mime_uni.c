@@ -71,10 +71,10 @@ duf_scan_callbacks_t duf_mime_callbacks = {
   .leaf_scan_fd2 = dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = NULL,
-  .std_node_set_name = NULL,
+  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
+  .std_node_set_name = "std-node-two",
   /* filename for debug only */
   .leaf = {
            .name = "mime-leaf",
@@ -82,6 +82,9 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            .fieldset =          /* */
            "#mime",
            .selector2 =         /* */
+#if 1
+           "#std-ns-fd-leaf"    /* */
+#else
            " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            /* Q_FROM( filenames, fn ) (* *) */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
@@ -89,6 +92,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
            /* Q_JOIN_ID( fd, mime, mi, mimeid) */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL "     AS sz ON ( sz.size   = fd.size               ) " /* */
            /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
+#endif
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
@@ -330,5 +334,6 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     mas_free( mime );
     mas_free( mime_plus );
   }
+  pdi->total_files ++;
   DEBUG_ENDR( r );
 }

@@ -397,51 +397,6 @@ static duf_fieldset_t _all_fieldsets[] = {
    }
   ,
   {
-   .name = "std-ns-leaf",       /* same as std-leaf */
-   .type = DUF_NODE_LEAF,
-   .set =
-   /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
-   " fn.Pathid AS dirid "       /* */
-#ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-   ", 0 AS ndirs, 0 AS nfiles"  /* */
-#endif
-#ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
-   ", 0 AS rndirs, 0 AS rnfiles" /* */
-#endif
-   ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
-   ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-   ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-   ", fd.mode " /*    */ " AS filemode " /* */
-   ", fn." DUF_SQL_IDFIELD " AS filenameid " /* */
-   ", fn." DUF_SQL_IDFIELD " AS nameid " /* */
-   ", fd.md5id " /*    */ " AS md5id " /* */
-   /* ", md." DUF_SQL_IDFIELD " AS md5id " (* *) */
-   ", fd.sha1id " /*    */ " AS sha1id " /* */
-   ", md.md5sum1, md.md5sum2 "  /* */
-   ", sh.sha1sum1, sh.sha1sum2, sh.sha1sum3 " /* */
-   ", fd." DUF_SQL_IDFIELD " AS filedataid " /* */
-   ", fd." DUF_SQL_IDFIELD " AS dataid " /* */
-   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
-   /* */
-   ", md.dup5cnt " /*    */ " AS nsame " /* */
-   ", md.dup5cnt " /*    */ " AS nsame_md5 " /* */
-   ", sh.dupsha1cnt " /*    */ " AS nsame_sha1 " /* */
-   ", x.dupexifcnt " /*    */ " AS nsame_exif " /* */
-   ", md.dup5cnt " /*    */ " AS dup5cnt " /* */
-   ", sz.dupzcnt " /*    */ " AS dupzcnt " /* */
-   ", fd.exifid AS exifid "     /* */
-   ", fd.mimeid AS mimeid "     /* */
-   ", mi.mime AS mime "         /* */
-   ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
-   ", xm.model AS camera "      /* */
-   ,
-   }
-  ,
-  {
    .name = "std-node",
    .type = DUF_NODE_NODE,
    .set =

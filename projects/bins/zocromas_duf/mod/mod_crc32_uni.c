@@ -66,9 +66,10 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
   .leaf_scan_fd2 = crc32_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-no-sel",
+  .use_std_leaf_set_num = -1,   /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  /* .std_leaf_set_name = "std-leaf-no-sel", */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
 #define DUF_FILTER
   .leaf = {                     /* */
@@ -82,13 +83,7 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
                          "#crc32x",
                          NULL}
            ,
-           .selector2 =         /* */
-           /* "SELECT %s " */
-           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
-           " LEFT JOIN " DUF_SQL_TABLES_CRC32_FULL " AS crc ON (crc." DUF_SQL_IDFIELD "=fd.crc32id)" /* */
-           ,
+           .selector2 = "#std-ns-fd-leaf",
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
 #if 0
@@ -104,7 +99,7 @@ duf_scan_callbacks_t duf_crc32_callbacks = {
            .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1"},
 #endif
            /*, .group=" fd." DUF_SQL_IDFIELD */
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
   ,
   .node = {
@@ -247,7 +242,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
 }
 
 static int
-duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
+duf_make_crc32_uni( int fd, unsigned long long *pbytes, unsigned long long *pcrc32sum )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 512 * 8;
@@ -269,23 +264,28 @@ duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
       while ( DUF_NOERROR( r ) && cnt++ < maxcnt )
       {
-        int rr;
+        int ry;
 
-        rr = read( fd, buffer, bufsz );
-        DUF_TRACE( crc32, 10, "read %d : crc32sum:%lx", rr, crc32sum );
-        if ( rr < 0 )
+        ry = read( fd, buffer, bufsz );
+        DUF_TRACE( crc32, 10, "read %d : crc32sum:%lx", ry, crc32sum );
+        if ( ry < 0 )
         {
           DUF_ERRSYS( "read file" );
           DUF_MAKE_ERROR( r, DUF_ERROR_READ );
         }
         DUF_TEST_R( r );
-        if ( rr > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
+        if ( ry > 0 )
         {
-          crc32sum = crc32( crc32sum, buffer, rr );
-          bytes += rr;
+          if ( pbytes )
+            ( *pbytes ) += ry;
+          if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+          {
+            crc32sum = crc32( crc32sum, buffer, ry );
+            bytes += ry;
+          }
         }
-        DUF_TRACE( crc32, 10, "rr:%d; r:%d; crc32sum:%lx", rr, r, crc32sum );
-        if ( rr <= 0 )
+        DUF_TRACE( crc32, 10, "ry:%d; r:%d; crc32sum:%lx", ry, r, crc32sum );
+        if ( ry <= 0 )
           break;
 
       }
@@ -310,6 +310,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   DEBUG_STARTR( r );
   unsigned long long crc32sum = 0;
   static unsigned long content_cnt = 0;
+  unsigned long long bytes = 0;
 
   DUF_SFIELD2( fname );
   DUF_TRACE( crc32, 0, "+ %s", fname );
@@ -321,7 +322,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   if ( DUF_CONFIGG( opt.disable.flag.calculate ) )
     crc32sum = ( unsigned long long ) duf_levinfo_dirid( pdi );
   else
-    DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &crc32sum ) );
+    DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &bytes, &crc32sum ) );
 
 
   content_cnt++;
@@ -363,5 +364,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
     DUF_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, fname );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
+  pdi->total_bytes += bytes;
+  pdi->total_files ++;
   DEBUG_ENDR( r );
 }

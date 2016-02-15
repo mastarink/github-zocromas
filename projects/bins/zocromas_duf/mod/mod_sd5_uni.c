@@ -67,9 +67,10 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
   .leaf_scan_fd2 = sd5_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-no-sel",
+  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  /* .std_leaf_set_name = "std-leaf-no-sel", */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
   .leaf = {
            .name = "sd-leaf",
@@ -93,7 +94,7 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            /* ,                                                                                                 */
            .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1"},
 #endif
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
   ,
   .node = {
@@ -234,7 +235,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
 }
 
 static int
-duf_make_sd5_uni( int fd, unsigned char *pmd )
+duf_make_sd5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 256 * 1;
@@ -257,12 +258,12 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
 
         while ( DUF_NOERROR( r ) && ( maxcnt == 0 || cnt++ < maxcnt ) )
         {
-          int rr;
+          int ry;
 
           DUF_TRACE( sd5, 10, "read fd:%u", fd );
-          rr = read( fd, buffer, bufsz );
-          DUF_TRACE( sd5, 10, "read rr:%u", rr );
-          if ( rr < 0 )
+          ry = read( fd, buffer, bufsz );
+          DUF_TRACE( sd5, 10, "read ry:%u", ry );
+          if ( ry < 0 )
           {
             DUF_ERRSYS( "read file" );
 
@@ -270,12 +271,17 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( rr > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
+          if ( ry > 0 )
           {
-            if ( MD5_Update( &ctx, buffer, rr ) != 1 )
-              DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
+            if ( pbytes )
+              ( *pbytes ) += ry;
+            if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+            {
+              if ( MD5_Update( &ctx, buffer, ry ) != 1 )
+                DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
+            }
           }
-          if ( rr <= 0 )
+          if ( ry <= 0 )
             break;
           DUF_TEST_R( r );
         }
@@ -299,6 +305,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   DEBUG_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
+  unsigned long long bytes = 0;
 
 
   DUF_SFIELD2( fname );
@@ -307,7 +314,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   memset( amd5, 0, sizeof( amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", fname );
   if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
-    DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), amd5 ) );
+    DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), &bytes, amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", fname );
   DUF_TEST_R( r );
   /* reverse */
@@ -352,5 +359,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
     DUF_TRACE( sd5, 0, "%016llx%016llx : sd5id: %llu", pmd[1], pmd[0], sd5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sd5id ); */
   }
+  pdi->total_bytes += bytes;
+  pdi->total_files ++;
   DEBUG_ENDR( r );
 }

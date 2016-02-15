@@ -62,6 +62,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
     if ( PU->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
     DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
+    DUF_PRINTF( 0, " summary; total-bytes:%llu", PDI->total_bytes );
   }
   DUF_E_UPPER( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );

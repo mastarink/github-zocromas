@@ -89,11 +89,11 @@ struct duf_scan_callbacks_s
   const char *name;
   struct duf_scan_callbacks_s *next;
 
-  unsigned use_std_node_set_num;
+  int use_std_node_set_num;
   const char *std_node_set_name;
   duf_sql_set_t node;
 
-  unsigned use_std_leaf_set_num;
+  int use_std_leaf_set_num;
   const char *std_leaf_set_name;
   duf_sql_set_t leaf;
 

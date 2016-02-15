@@ -60,15 +60,15 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
   assert( SCCB );
   {
     if ( !set && force_leaf_set_name )
-      for ( unsigned i = 0; i < std_leaf_nsets; i++ )
+      for ( unsigned i = 0; i < ( unsigned ) std_leaf_nsets; i++ )
         if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, force_leaf_set_name ) )
           set = &std_leaf_sets[i];
 
     if ( !set && force_set_leaf_index > 0 )
-      set = ( force_set_leaf_index <= std_leaf_nsets ) ? &std_leaf_sets[force_set_leaf_index - 1] : NULL;
+      set = ( force_set_leaf_index <= ( unsigned ) std_leaf_nsets ) ? &std_leaf_sets[force_set_leaf_index - 1] : NULL;
 
     if ( !set && SCCB->std_leaf_set_name )
-      for ( unsigned i = 0; i < std_leaf_nsets; i++ )
+      for ( unsigned i = 0; i < ( unsigned ) std_leaf_nsets; i++ )
         if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, SCCB->std_leaf_set_name ) )
           set = &std_leaf_sets[i];
 
@@ -102,15 +102,15 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
   assert( SCCB );
   {
     if ( !set && force_node_set_name )
-      for ( unsigned i = 0; i < std_node_nsets; i++ )
+      for ( unsigned i = 0; i < ( unsigned ) std_node_nsets; i++ )
         if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, force_node_set_name ) )
           set = &std_node_sets[i];
 
     if ( !set && force_set_node_index > 0 )
-      set = ( force_set_node_index <= std_node_nsets ) ? &std_node_sets[force_set_node_index - 1] : NULL;
+      set = ( force_set_node_index <= ( unsigned ) std_node_nsets ) ? &std_node_sets[force_set_node_index - 1] : NULL;
 
     if ( !set && SCCB->std_node_set_name )
-      for ( unsigned i = 0; i < std_node_nsets; i++ )
+      for ( unsigned i = 0; i < ( unsigned ) std_node_nsets; i++ )
         if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, SCCB->std_node_set_name ) )
           set = &std_node_sets[i];
 
@@ -299,7 +299,7 @@ duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
     /* assert( PDI->seq_node <= m ); FIXME counters! */
     /*@ 2. progress bar */
     if ( m > 0 )
-      duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+      duf_percent( PDI->seq_node, PDI->total_bytes, PDI->total_files, m, duf_uni_scan_action_title( SCCB ) );
   }
 }
 
@@ -315,7 +315,7 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
     /* assert( PDI->seq_node <= m ); FIXME counters! */
     if ( m > 0 )
     {
-      duf_percent( PDI->seq_leaf, m, duf_uni_scan_action_title( SCCB ) );
+      duf_percent( PDI->seq_leaf, PDI->total_bytes, PDI->total_files, m, duf_uni_scan_action_title( SCCB ) );
       DUF_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", PDI->seq, PDI->seq_leaf, m );
     }
   }
@@ -384,6 +384,8 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 #else
     PDI = pdi;
 #endif
+    PDI->total_bytes = 0;
+    PDI->total_files = 0;
     if ( SCCB->beginning_sql_seq )
       PDI->sql_selected_done = SCCB->beginning_sql_seq->set_selected_db;
     /* duf_scan_qbeginning_sql( sccb ); */

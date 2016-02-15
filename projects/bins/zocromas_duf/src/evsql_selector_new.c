@@ -209,23 +209,40 @@ duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfir
         sql = mas_strcat_x( sql, " " );
       }
       if ( cnt == 0 && parenthesis )
-        sql = mas_strcat_x( sql, "(/*4*/ " );
+      {
+        sql = mas_strcat_x( sql, "( " );
+        if ( 0 )
+          sql = mas_strcat_x( sql, "/*4*/ " );
+        sql = mas_strcat_x( sql, " " );
+      }
       if ( 0 == strcmp( jfirst, "WHERE" ) )
       {
-        sql = mas_strcat_x( sql, "(/*3 " );
-        sql = mas_strcat_x( sql, jfirst );
-        sql = mas_strcat_x( sql, "( */ " );
+        sql = mas_strcat_x( sql, "( " );
+        if ( 0 )
+        {
+          sql = mas_strcat_x( sql, "/*3 " );
+          sql = mas_strcat_x( sql, jfirst );
+          sql = mas_strcat_x( sql, " */ " );
+        }
       }
       sql = mas_strcat_x( sql, quant );
       if ( 0 == strcmp( jfirst, "WHERE" ) )
-        sql = mas_strcat_x( sql, " /*3*/)" );
+      {
+        if ( 0 )
+          sql = mas_strcat_x( sql, " /*3*/" );
+        sql = mas_strcat_x( sql, " )" );
+      }
       /* T( "[%u:%u] quant=%s; %s", cnt, ( *phas ), quant, sql ); */
       ( *phas )++;
       cnt++;
     }
   }
   if ( cnt > 0 && parenthesis )
-    sql = mas_strcat_x( sql, " /*4*/)" );
+  {
+    if ( 0 )
+      sql = mas_strcat_x( sql, " /*4*/" );
+    sql = mas_strcat_x( sql, " )" );
+  }
   return sql;
 }
 
@@ -296,18 +313,26 @@ duf_selector2sql_filtercat_list_where_and( char *sql, unsigned with_pref, unsign
       sql = mas_strcat_x( sql, j );
       sql = mas_strcat_x( sql, " " );
     }
-    sql = mas_strcat_x( sql, "(/*2*/ " );
+    sql = mas_strcat_x( sql, "( " );
+    if ( 0 )
+      sql = mas_strcat_x( sql, "/*2*/ " );
     if ( flagname )
     {
       sql = mas_strcat_x( sql, ":" );
       sql = mas_strcat_x( sql, flagname );
       sql = mas_strcat_x( sql, " IS NULL OR " );
     }
-    sql = mas_strcat_x( sql, "(/*1*/ " );
+    sql = mas_strcat_x( sql, "( " );
+    if ( 0 )
+      sql = mas_strcat_x( sql, "/*1*/ " );
     assert( sqln );
     sql = mas_strcat_x( sql, sqln );
-    sql = mas_strcat_x( sql, " /*1*/)" );
-    sql = mas_strcat_x( sql, " /*2*/)" );
+    if ( 0 )
+      sql = mas_strcat_x( sql, " /*1*/" );
+    sql = mas_strcat_x( sql, " )" );
+    if ( 0 )
+      sql = mas_strcat_x( sql, " /*2*/" );
+    sql = mas_strcat_x( sql, " )" );
     mas_free( sqln );
   }
   return sql;
@@ -361,13 +386,13 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
           sql = mas_strcat_x( sql, sql_set->cte );
 
         sql = mas_strcat_x( sql, "SELECT " );
-        if ( sql_set )
+        if ( 0 && sql_set )
         {
           sql = mas_strcat_x( sql, "/* " );
           sql = mas_strcat_x( sql, sql_set->name );
           sql = mas_strcat_x( sql, " */" );
         }
-        if ( sql_set2 )
+        if ( 0 && sql_set2 )
         {
           sql = mas_strcat_x( sql, "/* " );
           sql = mas_strcat_x( sql, sql_set2->name );

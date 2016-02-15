@@ -83,10 +83,10 @@ duf_scan_callbacks_t duf_md5_callbacks = {
   .leaf_scan_fd2 = md5_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = NULL,
-  .std_node_set_name = NULL,
+  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
+  .std_node_set_name = "std-node-two",
   .leaf = {
            .name = "md-leaf",
            .type = DUF_NODE_LEAF,
@@ -97,7 +97,8 @@ duf_scan_callbacks_t duf_md5_callbacks = {
                          "#md5x",
                          NULL}
            ,
-           .selector2 = "#md5-leaf", /* from _all_selectors */
+           /* .selector2 = "#md5-leaf", (* from _all_selectors *) */
+           .selector2 = "#std-ns-fd-leaf", /* from _all_selectors */
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,
 #if 0
@@ -115,7 +116,7 @@ duf_scan_callbacks_t duf_md5_callbacks = {
                             "sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt    IS NULL OR sd.dup2cnt > 1",
                             "sh." DUF_SQL_IDFIELD " IS NULL OR sh.dupsha1cnt IS NULL OR sh.dupsha1cnt > 1"},
 #endif
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
   ,                             /* */
   .node = {                     /* */
@@ -262,7 +263,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
 }
 
 static int
-duf_make_md5_uni( int fd, unsigned char *pmd )
+duf_make_md5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
@@ -298,10 +299,15 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( ry > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
+          if ( ry > 0 )
           {
-            if ( MD5_Update( &ctx, buffer, ry ) != 1 )
-              DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
+            if ( pbytes )
+              ( *pbytes ) += ry;
+            if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+            {
+              if ( MD5_Update( &ctx, buffer, ry ) != 1 )
+                DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
+            }
           }
           if ( ry <= 0 )
             break;
@@ -326,14 +332,16 @@ duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   DEBUG_STARTR( r );
   unsigned char amd5[MD5_DIGEST_LENGTH];
   int fd;
+  unsigned long long bytes = 0;
 
   memset( amd5, 0, sizeof( amd5 ) );
   fd = duf_levinfo_dfd( pdi );
-  DOR( r, duf_make_md5_uni( fd, amd5 ) );
+  DOR( r, duf_make_md5_uni( fd, &bytes, amd5 ) );
   /* reverse */
   for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     pmdr[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
-
+  pdi->total_bytes += bytes;
+  pdi->total_files ++;
 
   DEBUG_ENDR( r );
 }

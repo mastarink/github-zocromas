@@ -245,9 +245,9 @@ duf_strtime2long( const char *s, int *pr )
 }
 
 void
-duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg )
+duf_percent( unsigned long long curval, unsigned long long curval2, unsigned long long curval3, unsigned long long maxval, const char *msg )
 {
-  float width = 90.0;
+  double width = 80.0;
   int swidth;
   static duf_bar_t bar;
   const char *sc = getenv( "COLUMNS" );
@@ -257,7 +257,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   if ( sc && *sc )
   {
     swidth = strtol( sc, NULL, 10 );
-    width = ( float ) swidth - 90;
+    width = ( double ) swidth - 90;
   }
   {
     struct timeval tv;
@@ -275,7 +275,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
     delta_sec = timec - time0;
   }
-  bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
+  bar.percent = ( ( ( double ) curval ) / ( ( double ) maxval ) );
   bar.width = width * bar.percent;
   if ( ( ( int ) ( bar.percent * 100. ) ) != ( ( int ) ( bar.prev_percent * 100. ) ) || bar.percent > .98 )
     /* if ( bar.percent != bar.prev_percent ) */
@@ -301,8 +301,9 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
         fputc( ' ', stderr );
     }
 #if 1
-    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %2gs avg:%2gms %s  \r", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval,
-             delta_sec, delta_sec * 1000. / ( ( float ) curval ), msg );
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %2gs avg:%2gms (%9.7g ~ %llu ~ %llu ~ %9.7g) %s  \r", ( int ) ( bar.percent * 100. ), curval, maxval,
+             maxval - curval, delta_sec, delta_sec * 1000. / ( ( double ) curval ), curval2 ? (( double ) delta_sec * 1E9 / ( ( double ) curval2 ) ) : 0.,
+             curval2,curval3,  ((double)curval2)/((double)curval3), msg );
 #else
     fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %2g %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time,
              delta_sec, msg );

@@ -55,9 +55,10 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
   .leaf_scan_fd2 = sha1_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-no-sel",
+  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  /* .std_leaf_set_name = "std-leaf-no-sel", */
+  .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
   .leaf = {
            .name = "sha1-leaf",
@@ -90,7 +91,7 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
                             "sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1",
                             "md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1"},
 #endif
-           .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD /* */
+           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
   ,                             /* */
   .node = {                     /* */
@@ -240,7 +241,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
 }
 
 static int
-duf_make_sha1_uni( int fd, unsigned char *pmd )
+duf_make_sha1_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
@@ -277,10 +278,15 @@ duf_make_sha1_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( ry > 0 && !DUF_CONFIGG( opt.disable.flag.calculate ) )
+          if ( ry > 0 )
           {
-            if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
-              DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
+            if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+            {
+            if ( pbytes )
+              ( *pbytes ) += ry;
+              if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
+                DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
+            }
           }
           if ( ry <= 0 )
             break;
@@ -305,15 +311,18 @@ duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   DEBUG_STARTR( r );
 
   unsigned char asha1[SHA_DIGEST_LENGTH];
+  unsigned long long bytes = 0;
   int fd;
 
   memset( asha1, 0, sizeof( asha1 ) );
   fd = duf_levinfo_dfd( pdi );
-  DOR( r, duf_make_sha1_uni( fd, asha1 ) );
+  DOR( r, duf_make_sha1_uni( fd, &bytes, asha1 ) );
   /* reverse */
   for ( unsigned i = 0; i < sizeof( asha1 ) / sizeof( asha1[0] ); i++ )
     pmdr[i] = asha1[sizeof( asha1 ) / sizeof( asha1[0] ) - i - 1];
 
+  pdi->total_bytes += bytes;
+  pdi->total_files ++;
 
   DEBUG_ENDR( r );
 }

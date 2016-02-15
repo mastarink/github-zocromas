@@ -224,6 +224,9 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     pdi->pyp_created = 0;
     pdi->pyp = NULL;
     pdi->items.dirs = pdi->items.files = pdi->items.total = 0;
+    pdi->total_bytes = 0;
+    pdi->total_files = 0;
+    /* T( "@pdi->total_bytes:%llu", pdi->total_bytes ); */
     pdi->seq = pdi->seq_row = pdi->seq_node = pdi->seq_leaf = 0;
     assert( !pdi->inited );
     assert( !pdi->opendir );

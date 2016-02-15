@@ -18,7 +18,7 @@ typedef struct
 char *duf_single_quotes_2( const char *s );
 
 
-void duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg );
+void duf_percent( unsigned long long curval, unsigned long long curval2, unsigned long long curval3, unsigned long long maxval, const char *msg );
 size_t duf_strflocaltime( char *s, size_t max, const char *format, const time_t * ptim );
 size_t duf_strfgmtime( char *s, size_t max, const char *format, const time_t * ptim );
 

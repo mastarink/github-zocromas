@@ -10,10 +10,10 @@ extern duf_sql_set_t std_ns_node_set;
 #  else
 
 extern duf_sql_set_t std_leaf_sets[];
-extern size_t std_leaf_nsets;
+extern int std_leaf_nsets;
 
 extern duf_sql_set_t std_node_sets[];
-extern size_t std_node_nsets;
+extern int std_node_nsets;
 #  endif
 
 #endif

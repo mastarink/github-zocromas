@@ -28,14 +28,29 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .name = "std-leaf-no-sel",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
-   .fieldset = "#std-ns-leaf",
-   .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
-   "#std-ns-leaf",
+   .fieldset = "#std-leaf",
+   .selector2 = "#std-ns-leaf", /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
    .matcher = " fn.Pathid=:parentdirID " /*  +pu  */
    /* " ORDER BY fn." DUF_SQL_IDFIELD " " *//* */
    ,
-   .filter =                    /* */
-   DUF_SQL_UFILTER_BINDINGS     /* */
+#if 0
+   .filter = DUF_SQL_UFILTER_BINDINGS, /* */
+#else
+   .afilter = {
+               DUF_SQL_UFILTER_BINDINGS, /* */
+               /* for no-sel only: */
+               "fn.Pathid IN ( " /* */
+               " WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ", parentid) AS ( " /* */
+               "		SELECT pt." DUF_SQL_IDFIELD ",pt.parentid " /* */
+               "		FROM main.paths AS pt WHERE rowid=:topDirID " /* */
+               "		UNION "       /* */
+               "			SELECT ptu." DUF_SQL_IDFIELD ", ptu.parentid " /* */
+               "			  FROM cte_paths " /* */
+               "				JOIN main.paths AS ptu ON ( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " )) " /* */
+               " SELECT " DUF_SQL_IDFIELD " FROM cte_paths" /* */
+               ")"              /* */
+               },                /* */
+#endif
    /* " ORDER BY ...." */
    }
   ,                             /* */
@@ -43,10 +58,26 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .name = "std-leaf-no-sel-no-matcher",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
-   .fieldset = "#std-ns-leaf",
-   .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
-   "#std-ns-leaf",
+   .fieldset = "#std-leaf",
+   .selector2 = "#std-ns-leaf", /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
+#if 0
    .filter = DUF_SQL_UFILTER_BINDINGS, /* */
+#else
+   .afilter = {
+               DUF_SQL_UFILTER_BINDINGS, /* */
+               /* for no-sel only: */
+               "fn.Pathid IN ( " /* */
+               " WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ", parentid) AS ( " /* */
+               "		SELECT pt." DUF_SQL_IDFIELD ",pt.parentid " /* */
+               "		FROM main.paths AS pt WHERE rowid=:topDirID " /* */
+               "		UNION "       /* */
+               "			SELECT ptu." DUF_SQL_IDFIELD ", ptu.parentid " /* */
+               "			  FROM cte_paths " /* */
+               "				JOIN main.paths AS ptu ON ( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " )) " /* */
+               " SELECT " DUF_SQL_IDFIELD " FROM cte_paths" /* */
+               ")"              /* */
+               },                /* */
+#endif
    /* " ORDER BY ...." */
    /* .order = "sha1id",           (* *) */
    /* .order = "nsame_sha1 DESC,sha1id",           (* *) */
@@ -57,7 +88,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .name = "std-all-under",
    .type = DUF_NODE_LEAF,
    .expand_sql = 1,             /* */
-   .fieldset = "#std-ns-leaf",
+   .fieldset = "#std-leaf",
    .cte = "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS " /* */
    " ( "                        /* */
    "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
@@ -76,16 +107,71 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDFIELD "=fd.mimeid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL /*                     */ " AS sh ON (sh." DUF_SQL_IDFIELD "=fd.sha1id) ", /* */
+#if 0
    .filter = DUF_SQL_UFILTER_BINDINGS, /* */
+#else
+   .afilter = {
+               DUF_SQL_UFILTER_BINDINGS, /* */
+               /* for no-sel only: -- One of:
+		*  1. JOIN cte_paths
+		*  2. fn.Pathid IN ( WITH...
+		*  */
+#if 0
+               "fn.Pathid IN ( " /* */
+               " WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ", parentid) AS ( " /* */
+               "		SELECT pt." DUF_SQL_IDFIELD ",pt.parentid " /* */
+               "		FROM main.paths AS pt WHERE rowid=:topDirID " /* */
+               "		UNION "       /* */
+               "			SELECT ptu." DUF_SQL_IDFIELD ", ptu.parentid " /* */
+               "			  FROM cte_paths " /* */
+               "				JOIN main.paths AS ptu ON ( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " )) " /* */
+               " SELECT " DUF_SQL_IDFIELD " FROM cte_paths" /* */
+               ")"              /* */	       
+#endif
+   }
+   ,                            /* */
+#endif
    .order = "sh.dupsha1cnt ASC, sha1id", /* */
    .matcher = NULL,
    /* To select ALL files under path
       WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)
       * */
    }
+  ,
+  {                             /* */
+   .name = "std-leaf-no-sel-fd",
+   .type = DUF_NODE_LEAF,
+   .expand_sql = 1,             /* */
+   .fieldset = "#std-leaf",
+   .selector2 = "#std-ns-fd-leaf", /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
+   .matcher = " fn.Pathid=:parentdirID " /*  +pu  */
+   /* " ORDER BY fn." DUF_SQL_IDFIELD " " *//* */
+   ,
+#if 0
+   .filter = DUF_SQL_UFILTER_BINDINGS, /* */
+#else
+   .afilter = {
+               DUF_SQL_UFILTER_BINDINGS, /* */
+               /* for no-sel only: */
+               "fn.Pathid IN ( " /* */
+               " WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ", parentid) AS ( " /* */
+               "		SELECT pt." DUF_SQL_IDFIELD ",pt.parentid " /* */
+               "		FROM main.paths AS pt WHERE rowid=:topDirID " /* */
+               "		UNION "       /* */
+               "			SELECT ptu." DUF_SQL_IDFIELD ", ptu.parentid " /* */
+               "			  FROM cte_paths " /* */
+               "				JOIN main.paths AS ptu ON ( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " )) " /* */
+               " SELECT " DUF_SQL_IDFIELD " FROM cte_paths" /* */
+               ")"              /* */
+               },                /* */
+#endif
+   /* " ORDER BY ...." */
+   }
+  ,                             /* */
+
 };
 
-size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
+int std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 
 
@@ -189,4 +275,4 @@ duf_sql_set_t std_node_sets[] = { /* */
    }
 };
 
-size_t std_node_nsets = sizeof( std_node_sets ) / sizeof( std_node_sets[0] );
+int std_node_nsets = sizeof( std_node_sets ) / sizeof( std_node_sets[0] );
