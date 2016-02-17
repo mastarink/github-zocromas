@@ -3,7 +3,9 @@
 
 #  include "duf_option_types.h"
 
-const char *duf_vtype2string( duf_option_vtype_t ovtype );
+/* const char *duf_extended_vtype2string( duf_option_vtype_t ovtype ); */
+const char *duf_extended_call_type2string( duf_option_call_type_t call_type );
+const char *duf_optvtype2string( duf_option_vtype_t ovtype );
 
 #endif
 

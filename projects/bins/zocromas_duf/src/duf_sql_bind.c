@@ -220,7 +220,6 @@ duf_sql_bindn_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char 
   {
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "10. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
-    assert(0);
   }
   DEBUG_ENDR( r );
 }

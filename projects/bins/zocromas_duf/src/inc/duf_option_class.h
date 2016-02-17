@@ -3,7 +3,7 @@
 
 #  include "duf_option_types.h"
 
-const char *duf_optclass_name( duf_option_class_t istage );
+const char *duf_optclass_name( duf_option_class_t oclass );
 const char *duf_optclass2string( duf_option_class_t oclass );
 
 #endif

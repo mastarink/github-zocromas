@@ -260,6 +260,8 @@ typedef enum
   DUF_OFFSET_config,
   /* DUF_OFFSET_depthinfo, */
   DUF_OFFSET_ufilter,
+  DUF_OFFSET_varptr,
+  DUF_OFFSET_funcptr,
 } duf_offset_to_t;
 
 typedef struct
@@ -321,6 +323,7 @@ typedef struct
   unsigned flag_bitnum;
   unsigned long m_offset;
   duf_offset_to_t relto;
+  void *reltoptr;
 
   const char *help;
   duf_option_class_t oclass;

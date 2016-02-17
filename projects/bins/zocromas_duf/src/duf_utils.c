@@ -284,8 +284,8 @@ duf_percent( unsigned long long curval, unsigned long long curval2, unsigned lon
 
     duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
 
-    if ( !bar.calls )
-      fputs( "\n", stderr );
+    /* if ( !bar.calls )        */
+    /*   fputs( "\n", stderr ); */
     bar.calls++;
     fprintf( stderr, "\r [" );
     {
@@ -309,7 +309,7 @@ duf_percent( unsigned long long curval, unsigned long long curval2, unsigned lon
              delta_sec, msg );
 #endif
     bar.prev_percent = bar.percent;
-    /* if ( bar.width == width ) */
-    /*   fputs( "\n", stderr );  */
+    if ( bar.width == width )
+      fputs( "\n", stderr );
   }
 }

@@ -327,7 +327,7 @@ duf_option_O_help_set( const char *arg )
                           xtended->help, /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
-                DUF_PRINTF( 0, ". `%s`;", duf_vtype2string( xtended->vtype ) );
+                DUF_PRINTF( 0, ". `%s`;", duf_optvtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )
               {
                 DUF_PRINTF( 0, ".%s + %-4lu & %x;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );

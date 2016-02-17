@@ -1,5 +1,5 @@
-#ifndef DUF_ERRORN_DEFS_H
-#  define DUF_ERRORN_DEFS_H
+#ifndef MAS_DUF_ERRORN_DEFS_H
+#  define MAS_DUF_ERRORN_DEFS_H
 
 #  define MASE_STD_VERBOSE_LEVEL duf_verbose()
 #  define DUF_CLEARED_ERROR(...) MASE_CLEARED_ERROR( __VA_ARGS__ )

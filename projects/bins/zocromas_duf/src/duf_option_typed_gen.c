@@ -145,6 +145,12 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
     /* byteptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
     byteptr = duf_get_config_puz_offset( extended->m_offset );
     break;
+  case DUF_OFFSET_varptr:
+    byteptr = duf_get_offset( extended->reltoptr, extended->m_offset );
+    break;
+  case DUF_OFFSET_funcptr:
+    byteptr = duf_get_offset( ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ), extended->m_offset );
+    break;
 #endif
   }
   return byteptr;
@@ -285,6 +291,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       case DUF_OPTION_VTYPE_FLAG: /* stage SETUP *//*  unsigned set of flags */
         DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_FLAG ) + 17, extended->afl.bit );
         DUF_OPTION_VTYPE_XFLAG( unsigned );
+
         break;
       case DUF_OPTION_VTYPE_NOSFLAG: /* stage SETUP */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOSFLAG ) + 17 );
@@ -292,6 +299,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       case DUF_OPTION_VTYPE_SFLAG: /* stage SETUP *//*  unsigned short set of flags */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_SFLAG ) + 17 );
         DUF_OPTION_VTYPE_XFLAG( unsigned short );
+
         break;
 
 #define DUF_OPTION_VTYPE_XBFLAG(_typ) \
@@ -318,6 +326,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       case DUF_OPTION_VTYPE_BFLAG: /* stage SETUP *//*  unsigned set of flags */
         DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_BFLAG ) + 17, extended->afl.bit );
         DUF_OPTION_VTYPE_XBFLAG( unsigned );
+
         break;
       case DUF_OPTION_VTYPE_NOBSFLAG: /* stage SETUP */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBSFLAG ) + 17 );
@@ -325,6 +334,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       case DUF_OPTION_VTYPE_BSFLAG: /* stage SETUP *//*  unsigned short set of flags */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_BSFLAG ) + 17 );
         DUF_OPTION_VTYPE_XBFLAG( unsigned short );
+
         break;
 
 #if 0
@@ -514,7 +524,8 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       }
       mas_free( doptargg );
       DUF_TRACE( options, +150, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", mas_error_name_i( r ),
-                 istage, extended->stage_opts.stage.min, extended->stage_opts.stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
+                 istage, extended->stage_opts.stage.min, extended->stage_opts.stage.max, extended->vtype, extended ? extended->o.name : "?",
+                 optargg ? optargg : "", noo );
     }
 #if 0
     else

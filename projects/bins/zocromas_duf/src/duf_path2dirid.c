@@ -115,7 +115,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
           ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -127,9 +127,9 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 
   {
 #if 0
-      sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, pr );
+    sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, pr );
 #else
-      sqlv = duf_selector2sql_new( &def_node_set, pdi->pdi_name, 0 /*total */ , pr );
+    sqlv = duf_selector2sql_new( &def_node_set, pdi->pdi_name, 0 /*total */ , pr );
 #endif
     if ( sqlv )
     {
@@ -177,8 +177,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
     else
       done = 1;
     mas_free( name );
-  }
-  while ( !done );
+  } while ( !done );
   duf_pdi_close( &di );
 
   if ( pr )

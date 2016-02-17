@@ -27,6 +27,8 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
 
   switch ( relto )
   {
+  case DUF_OFFSET_varptr:
+  case DUF_OFFSET_funcptr:
   case DUF_OFFSET_none:
     break;
   case DUF_OFFSET_config:
@@ -308,6 +310,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 
           switch ( xtended->relto )
           {
+          case DUF_OFFSET_varptr:
+          case DUF_OFFSET_funcptr:
           case DUF_OFFSET_none:
             break;
           case DUF_OFFSET_config:
@@ -322,7 +326,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         }
         DUF_PUTSL( 0 );
       }
-      duf_optstage_print( xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage, xtended->stage_opts.stage_mask, 1 );
+      duf_optstage_print( xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
+                          xtended->stage_opts.stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
 /* TODO : duf_codeval2string depends on optimpl !! */
@@ -330,7 +335,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         DUF_PUTSL( 0 );
       }
       DUF_PRINTF( 0, "  class:%s(%d)", duf_optclass2string( xtended->oclass ), xtended->oclass );
-      DUF_PRINTF( 0, "  vtype:%s(%d)", duf_vtype2string( xtended->vtype ), xtended->vtype );
+      DUF_PRINTF( 0, "  vtype:%s(%d)", duf_optvtype2string( xtended->vtype ), xtended->vtype );
       if ( xtended->call.funcname )
         DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
 #if 0
@@ -400,15 +405,17 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
       {
         switch ( xtended->relto )
         {
+        case DUF_OFFSET_varptr:
+        case DUF_OFFSET_funcptr:
         case DUF_OFFSET_none:
           break;
         case DUF_OFFSET_config:
-          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         case DUF_OFFSET_ufilter:
-          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_vtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
@@ -426,9 +433,9 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( const duf_longval_extended_vtable_t *const* xvtables, const char *name )
+duf_multix_print( const duf_longval_extended_vtable_t * const *xvtables, const char *name )
 {
-  for ( const duf_longval_extended_vtable_t *const* xt = xvtables; xt && *xt; xt++ )
+  for ( const duf_longval_extended_vtable_t * const *xt = xvtables; xt && *xt; xt++ )
   {
     char *se = NULL;
     char *matchtab = NULL;
@@ -453,7 +460,7 @@ duf_multix_print( const duf_longval_extended_vtable_t *const* xvtables, const ch
   }
 }
 
-                                        /* duf_stdx_print *//* TODO :  depends on optimpl !! */
+                                                                                /* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {

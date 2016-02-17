@@ -65,6 +65,9 @@ sfind duf_option_extended2string.h
 tab sfind duf_option_longopts.c
 sfind duf_option_longopts.h
 
+tab sfind optest.c
+sfind optest.h
+
 " ------------------------------
 " tab sfind duf_options_string.c
 " sfind duf_options_string.h

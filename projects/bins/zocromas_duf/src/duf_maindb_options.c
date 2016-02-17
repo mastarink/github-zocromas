@@ -5,11 +5,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-
 #include "duf_maintenance.h"
 
 #include "duf_status_ref.h"
-
 
 #include "duf_config.h"
 #include "duf_config_util.h"
@@ -26,6 +24,7 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
 #include "duf_pdi_global.h"
 #include "duf_pdi_credel.h"
 #include "duf_pdi_reinit.h"
@@ -43,7 +42,6 @@ cb_do_interactive( void )
   return DUF_ACTG_FLAG( interactive );
 }
 
-
 static const char *
 cb_prompt_interactive( void )
 {
@@ -57,7 +55,7 @@ cb_prompt_interactive( void )
 SR( TOP, treat_option_stage, duf_option_stage_t istage )
 {
   DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( istage ) );
-  /* TODO all (except INTERACTIVE) : call from paod, not real source */
+/* TODO all (except INTERACTIVE) : call from paod, not real source */
   if ( istage == DUF_OPTION_STAGE_LOOP )
   {
     duf_option_stage_t istage_plus = istage;
@@ -65,14 +63,32 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
     for ( int ia = duf_cli_options_get_targ_offset(  ); QNOERR && ia < duf_cli_options_get_targc(  ); ia++ )
     {
       const char *targia;
-
-      targia = duf_cli_options_get_targi( ia );
-      duf_ufilter_t *pu = ( duf_ufilter_t * ) NULL; /* take pu from config */
       const duf_sql_set_t *sql_set = NULL;
 
+      targia = duf_cli_options_get_targi( ia );
+
       DUF_TRACE( path, 0, "@%d/%d. %s", ia, duf_cli_options_get_targc(  ), targia );
-      CR( pdi_reinit_anypath, duf_pdi_global(  ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
-          DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
+
+    /* XXX already there : this is reinit, after init! XXX */
+      assert( DUF_UG_FLAG( recursive ) == duf_pdi_recursive( duf_pdi_global(  ) ) );
+      assert( DUF_UG_FLAG( linear ) == duf_pdi_linear( duf_pdi_global(  ) ) );
+      assert( DUF_ACTG_FLAG( allow_dirs ) == duf_pdi_allow_dirs( duf_pdi_global(  ) ) );
+#if 0
+      {
+        duf_ufilter_t *pu = ( duf_ufilter_t * ) NULL; /* take pu from config */
+
+        CR( pdi_reinit_anypath, duf_pdi_global(  ), targia, pu, sql_set, 7 /* caninsert */ , DUF_UG_FLAG( recursive ),
+            DUF_ACTG_FLAG( allow_dirs ), DUF_UG_FLAG( linear ) );
+      }
+#elif 0
+      {
+        duf_ufilter_t *pu = ( duf_ufilter_t * ) NULL; /* take pu from config */
+
+        CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), targia, pu, sql_set );
+      }
+#else
+      CR( pdi_reinit_anypath_global, targia, sql_set );
+#endif
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( duf_pdi_global(  ) ) );
       CR( all_options, istage_plus, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
           ( istage_plus > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
@@ -85,7 +101,7 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage )
         ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
-  /* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
+/* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
 
   ER( TOP, treat_option_stage, duf_option_stage_t istage );
 }

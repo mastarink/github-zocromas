@@ -7,11 +7,10 @@
 #include "duf_maintenance.h"
 #include "duf_printn_defs.h"
 
-
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
-#include "duf_config_ref.h"     /* DUF_PRINTF ; DUF_CONFIGG */
+#include "duf_config_ref.h" /* DUF_PRINTF ; DUF_CONFIGG */
 #include "duf_config_defs.h"
 
 #include "duf_action_table.h"
@@ -28,7 +27,6 @@
 #include "duf_path2dirid.h"
 #include "duf_maindb.h"
 
-
 #include "duf_options_file.h"
 
 /* ###################################################################### */
@@ -44,7 +42,7 @@ duf_option_O_list_sccbs( void )
   {
     duf_scan_callbacks_t *sccb = act->sccb;
 
-    /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
+  /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
     DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
   }
 #else
@@ -78,7 +76,6 @@ duf_option_O_evaluate_sccb( const char *names )
 {
   DEBUG_STARTR( r );
 
-
 #if 0
   {
     void *han;
@@ -107,7 +104,7 @@ duf_option_O_evaluate_sccb( const char *names )
   }
   else
   {
-    /* DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN ); (* 20160105.125904 *) */
+  /* DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN ); (* 20160105.125904 *) */
   }
   DEBUG_ENDR( r );
 }
@@ -116,17 +113,16 @@ duf_option_O_evaluate_sccb( const char *names )
  * \brief call file
  * */
 
-
 /*mas_error_code_t
 duf_option_O_call_file( const char *name )
 */
 SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 {
-  /* DEBUG_STARTR( r ); */
-  /* int r DUF_UNUSED = 0; */
+/* DEBUG_STARTR( r ); */
+/* int r DUF_UNUSED = 0; */
 
   CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name, ( duf_option_adata_t * ) NULL /* paod */  );
-  /* DEBUG_ENDR( r ); */
+/* DEBUG_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }
 
@@ -158,10 +154,10 @@ duf_option_O_cd( const char *s )
       else
       {
         new_path = mas_strdup( duf_levinfo_path( duf_pdi_global(  ) ) );
-#  if 0
+# if 0
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
-#  else
+# else
         {
           char *p;
 
@@ -169,7 +165,7 @@ duf_option_O_cd( const char *s )
           mas_free( new_path );
           new_path = p;
         }
-#  endif
+# endif
         new_path = mas_strcat_x( new_path, s );
       }
     }
@@ -184,11 +180,14 @@ duf_option_O_cd( const char *s )
     DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_pdi_global(  ) ) );
     {
 
-      /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
-
+    /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */
+# if 0
       DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 /* caninsert */ ,
                                       duf_pdi_recursive( duf_pdi_global(  ) ), duf_pdi_allow_dirs( duf_pdi_global(  ) ),
                                       duf_pdi_linear( duf_pdi_global(  ) ) ) );
+# else
+      DOR( r, duf_pdi_reinit_anypath_global( new_path, ( duf_sql_set_t * ) NULL ) );
+# endif
     }
     mas_free( new_path );
 #else
@@ -230,8 +229,8 @@ duf_option_O_set_dir_priority( long prio )
 {
   DEBUG_STARTR( r );
 
-  /* DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
-  /*                                 duf_pdi_recursive( duf_pdi_global(  ) ) (*  *)  ) );                                                        */
+/* DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
+/*                                 duf_pdi_recursive( duf_pdi_global(  ) ) (*  *)  ) );                                                        */
 
   TT( "@@@@@@dir priority to be set:%ld for %s", prio, "????" );
   DEBUG_ENDR( r );

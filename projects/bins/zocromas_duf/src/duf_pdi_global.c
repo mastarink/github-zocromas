@@ -2,7 +2,6 @@
 
 #include "duf_maintenance.h"
 
-
 #include "duf_status_ref.h"
 #include "duf_option_defs.h"
 
@@ -13,12 +12,11 @@
 #include "duf_pdi_credel.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+#include "duf_pdi_reinit.h"
 /* ###################################################################### */
 #include "duf_pdi_global.h"
 /* ###################################################################### */
-
-
-
 
 /* 20150914.114508 */
 int
@@ -103,4 +101,17 @@ SR( PDI, pdi_kill_global, void )
 {
   CR( pdi_kill, &global_status.scn.pdi );
   ER( PDI, pdi_kill_global, void );
+}
+
+SR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set )
+{
+/* CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), cpath, DUF_CONFIGG( vars.puz ), sql_set ); */
+  CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), cpath, pu, sql_set );
+  ER( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set );
+}
+
+SR( PDI, pdi_reinit_anypath_global, const char *cpath, const duf_sql_set_t * sql_set )
+{
+  CR( pdi_reinit_pu_anypath_global, cpath, DUF_CONFIGG( vars.puz ), sql_set );
+  ER( PDI, pdi_reinit_anypath_global, const char *cpath, const duf_sql_set_t * sql_set );
 }

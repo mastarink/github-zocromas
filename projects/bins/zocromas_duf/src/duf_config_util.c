@@ -18,17 +18,22 @@
 /* ###################################################################### */
 
 void *
+duf_get_offset( void *ptr, unsigned long off )
+{
+  assert( ptr );
+  return ptr ? ( ( ( char * ) ptr ) + off ) : NULL;
+}
+
+void *
 duf_get_config_offset( unsigned long off )
 {
-  assert( duf_config );
-  return duf_config ? ( ( ( char * ) duf_config ) + off ) : NULL;
+  return duf_get_offset( duf_config, off );
 }
 
 void *
 duf_get_config_puz_offset( unsigned long off )
 {
-  assert( duf_config );
-  return duf_config && duf_config->vars.puz ? ( ( ( char * ) duf_config->vars.puz ) + off ) : NULL;
+  return duf_config ? duf_get_offset( duf_config->vars.puz, off ) : NULL;
 }
 
 duf_config_cli_t *

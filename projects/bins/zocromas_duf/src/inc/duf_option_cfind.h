@@ -11,7 +11,7 @@ const duf_longval_extended_t *duf_coption_xfind_at_stdx( duf_option_code_t codev
 
 /* const char *duf_coption_find_name_at_std( duf_option_code_t codeval, int *pr ); */
 
-const duf_option_t *duf_lcoption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr );
+/* const duf_option_t *duf_lcoption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr ); */
 const char *duf_lcoption_find_name_at_std( duf_option_code_t codeval, int *plongindex, int *pr );
 
 

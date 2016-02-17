@@ -14,7 +14,7 @@
 char *
 duf_coption_names_d( duf_option_code_t codeval, const char *delim )
 {
-  const duf_longval_extended_vtable_t *const*xvtables;
+  const duf_longval_extended_vtable_t *const *xvtables;
   const duf_longval_extended_vtable_t *xtable;
   char *names = NULL;
   int cnt = 0;
@@ -66,11 +66,13 @@ duf_coption_names_d( duf_option_code_t codeval, const char *delim )
   return names;
 }
 
+#if 0
 char *
 duf_coption_names( duf_option_code_t codeval )
 {
   return duf_coption_names_d( codeval, NULL );
 }
+#endif
 
 static duf_tmp_t *cnames_tmp = NULL;
 const char *

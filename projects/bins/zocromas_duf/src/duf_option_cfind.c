@@ -56,7 +56,7 @@ duf_coption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr )
   return duf_coption_find_at_arr( codeval, duf_cli_options_get_longopts_table(  ), plongindex, pr );
 }
 
-const duf_option_t *
+static const duf_option_t *
 duf_lcoption_find_at_std( duf_option_code_t codeval, int *plongindex, int *pr )
 {
   const duf_option_t *roption = NULL;

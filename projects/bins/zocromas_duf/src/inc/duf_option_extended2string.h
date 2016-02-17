@@ -11,8 +11,6 @@
 /* duf_option_code_t duf_longindex_extended_codeval( int longindex, int *pr ); */
 
 
-const char *duf_extended_vtype2string( duf_option_vtype_t ovtype );
-const char *duf_extended_call_type2string( duf_option_call_type_t call_type );
 
 void duf_stdx_print( const char *name );
 

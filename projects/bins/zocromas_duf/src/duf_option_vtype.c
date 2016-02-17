@@ -10,7 +10,7 @@
 
 
 const char *
-duf_vtype2string( duf_option_vtype_t ovtype )
+duf_optvtype2string( duf_option_vtype_t ovtype )
 {
   const char *rs = NULL;
 

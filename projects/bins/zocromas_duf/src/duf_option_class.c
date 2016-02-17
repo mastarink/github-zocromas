@@ -20,6 +20,7 @@ duf_optclass_name( duf_option_class_t oclass )
 #undef ENUM_WRAP_V
   return ( oclass >= 0 && oclass < DUF_OPTION_CLASS_MAX ) ? ( const char * ) /* mas_strtolower */ ( tail[oclass] ) : ( const char * ) NULL;
 }
+
 /* FIXME: duplicate function!! duf_optclass_name and duf_optclass2string */
 const char *
 duf_optclass2string( duf_option_class_t oclass )

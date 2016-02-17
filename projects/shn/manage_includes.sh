@@ -14,13 +14,13 @@ function check_file ()
 
   if read lin1 ; then
     if ! [[ $lin1 =~ \#[[:blank:]]*ifndef[[:blank:]]+$mark ]] ; then
-      echo "$fname: error line 1 '$lin1'" >&2
+      echo "$fname: error line 1 '$lin1' -- '$mark'" >&2
 #   else
 #     echo "ok line 1 '$lin1' -- '$fname' -- '$mark'" >&2
     fi
     if read lin2 ; then
       if ! [[ $lin2 =~ \#[[:blank:]]*define[[:blank:]]+$mark ]] ; then
-	echo "$fname: error line 2 '$lin2'" >&2
+	echo "$fname: error line 2 '$lin2' -- '$mark'" >&2
 #     else
 #	echo "ok line 2 '$lin2' -- '$fname' -- '$mark'" >&2
       fi

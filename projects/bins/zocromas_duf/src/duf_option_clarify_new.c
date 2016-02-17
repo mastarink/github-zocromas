@@ -261,7 +261,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
     {
       /* NOT-FOUND-ERROR */
 
-      T( "@ERR %s:%s",  duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
+      T( "@ERR %s:%s", duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
       if ( pod->stage != DUF_OPTION_STAGE_BOOT )
         SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( pod->source ) );
       /* assert(0); */
