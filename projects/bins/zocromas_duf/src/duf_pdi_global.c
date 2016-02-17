@@ -43,8 +43,12 @@ duf_pdi_init_global( void )
 
 SR( PDI, pdi_create_global, const char *name )
 {
-  global_status.scn.pdi = duf_pdi_create( name );
+  global_status.scn.pdi = duf_pdi_create( name ? name : "selected" );
   CR( pdi_init_global );
+
+  assert( DUF_UG_FLAG( recursive ) == duf_pdi_recursive( duf_pdi_global(  ) ) );
+  assert( DUF_UG_FLAG( linear ) == duf_pdi_linear( duf_pdi_global(  ) ) );
+  assert( DUF_ACTG_FLAG( allow_dirs ) == duf_pdi_allow_dirs( duf_pdi_global(  ) ) );
 
   ER( PDI, pdi_create_global, const char *name );
 }
@@ -103,15 +107,15 @@ SR( PDI, pdi_kill_global, void )
   ER( PDI, pdi_kill_global, void );
 }
 
-SR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set )
+SR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu )
 {
 /* CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), cpath, DUF_CONFIGG( vars.puz ), sql_set ); */
-  CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), cpath, pu, sql_set );
-  ER( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set );
+  CR( pdi_reinit_defflags_anypath, duf_pdi_global(  ), cpath, pu, NULL /* sql_set */  );
+  ER( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu );
 }
 
-SR( PDI, pdi_reinit_anypath_global, const char *cpath, const duf_sql_set_t * sql_set )
+SR( PDI, pdi_reinit_anypath_global, const char *cpath )
 {
-  CR( pdi_reinit_pu_anypath_global, cpath, DUF_CONFIGG( vars.puz ), sql_set );
-  ER( PDI, pdi_reinit_anypath_global, const char *cpath, const duf_sql_set_t * sql_set );
+  CR( pdi_reinit_pu_anypath_global, cpath, DUF_CONFIGG( vars.puz ) );
+  ER( PDI, pdi_reinit_anypath_global, const char *cpath );
 }

@@ -18,7 +18,7 @@ const char *duf_pdi_global_name( void );
 const duf_ufilter_t *_duf_pdi_global_ufilter( int *pr );
 const duf_ufilter_t *duf_pdi_global_ufilter( void );
 
-DR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set );
-DR( PDI, pdi_reinit_anypath_global, const char *cpath, const duf_sql_set_t * sql_set );
+DR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * pu );
+DR( PDI, pdi_reinit_anypath_global, const char *cpath );
 
 #endif

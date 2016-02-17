@@ -4,6 +4,12 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/error/mas_errors_maintenance.h>
+
+#include "duf_maintenance_options.h"
+
+#include "duf_config_trace.h"
+
 #include "duf_defs.h"
 
 #include "duf_printn_defs_preset.h"
@@ -13,10 +19,11 @@
 #include "duf_tracen_defs.h"
 #include "duf_printn_defs.h"
 
-#include <mastar/error/mas_errors_maintenance.h>
-
 #include "duf_se.h"
+#include "duf_dodefs.h"
 
+#include "duf_option_types.h"
+#include "duf_main_options.h"
 #include "duf_option_types.h"
 #include "duf_option_clarify_new.h"
 
@@ -55,8 +62,19 @@ const duf_longval_extended_table_t optable_test = { /* zzzzzz */
 
 something1_t som1 = { {0, 0} };
 
+#if 0
+SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
+{
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
+
+  return 0;
+  ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
+}
+#else
 int
 main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
   return 0;
 }
+#endif

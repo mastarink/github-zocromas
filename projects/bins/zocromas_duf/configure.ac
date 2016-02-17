@@ -36,6 +36,8 @@ PKG_CHECK_MODULES(LIBEXIF, [libexif >= 0.6.21])
 PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
+PKG_CHECK_MODULES([DEPSE], [zocromas_mas_trace  zocromas_mas_error])
+PKG_CHECK_MODULES([DEPSS], [zocromas_mas_tools zocromas_mas_trace  zocromas_mas_error])
 PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools zocromas_mas_sqlite zocromas_mas_trace  zocromas_mas_error])
 
 # AC_CHECK_LIB([readline], [readline])

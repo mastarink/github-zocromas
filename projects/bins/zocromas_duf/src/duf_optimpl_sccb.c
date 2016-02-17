@@ -186,7 +186,7 @@ duf_option_O_cd( const char *s )
                                       duf_pdi_recursive( duf_pdi_global(  ) ), duf_pdi_allow_dirs( duf_pdi_global(  ) ),
                                       duf_pdi_linear( duf_pdi_global(  ) ) ) );
 # else
-      DOR( r, duf_pdi_reinit_anypath_global( new_path, ( duf_sql_set_t * ) NULL ) );
+      DOR( r, duf_pdi_reinit_anypath_global( new_path ) );
 # endif
     }
     mas_free( new_path );

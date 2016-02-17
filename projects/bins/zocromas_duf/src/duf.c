@@ -15,7 +15,6 @@
 	  duf_main_db_open
 	  duf_main_db_close
 
-
   duf_option_O_list_sccbs
   duf_option_O_evaluate_sccb
 
@@ -25,7 +24,6 @@
   duf_option_O_cd
   ... ...
 */
-
 
 /*
 
@@ -39,8 +37,6 @@
 /* #include <signal.h> */
 /* #include <unistd.h> */
 #include <dlfcn.h>
-
-
 
 #include "duf_maintenance.h"
 
@@ -61,20 +57,20 @@
 
 #include <mastar/error/mas_error_reporting.h>
 
-
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
-#include "duf_maindb.h"
+#include "duf_levinfo_ref.h"
 
+#include "duf_maindb.h"
+#include "duf_main_options.h"
+#include "duf_pdi_global.h"
 
 /* #include "duf_path2db.h"        (* test only *) */
 
 /* צאַצקע */
 /* #include "duf_trace_defs.h" */
 #include "duf_experiment.h"
-
-#include "duf_maindb_options.h"
 
 /* ###################################################################### */
 #include "duf.h"
@@ -107,7 +103,7 @@ constructor_main( void )
     }
   }
   {
-    /* enale debug function ... Is is obolete/useless? */
+  /* enale debug function ... Is is obolete/useless? */
     extern int dbgfunc_enabled __attribute__ ( ( weak ) );
 
     if ( &dbgfunc_enabled )
@@ -123,15 +119,30 @@ destructor_main( void )
 {
 }
 
+static int
+cb_do_interactive( void )
+{
+  return DUF_ACTG_FLAG( interactive );
+}
+
+static const char *
+cb_prompt_interactive( void )
+{
+  static char rl_prompt[256 * 10] = "";
+
+  snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
+            duf_levinfo_path( duf_pdi_global(  ) ) );
+  return rl_prompt;
+}
+
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
 
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-
 
 #if 0
   {
@@ -141,10 +152,10 @@ SR( TOP, main_with_config, int argc, char **argv )
     DUF_TRACE( temp, 0, "rx:%d", rx );
   }
 #endif
-  /* XXX XXX XXX XXX XXX XXX */
+/* XXX XXX XXX XXX XXX XXX */
 
-  /* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
-  /* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
+/* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
+/* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
 #if 0
   {
     void *han;
@@ -161,15 +172,40 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
   }
 #endif
-  CR( treat_all_optstages );
+  CR( treat_all_optstages, duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  fputs( "\n", stderr );
+  TT( "∈1∋ One " );
+  TT( "∈2∋ Two " );
+  TT( "∈1∋ Three " );
+  TT( "∈3 Four " );
+  TT( "∈1∋ Five " );
+  TT( "∈4∋ Six " );
+  TT( "∈1∋ Seven " );
+  TT( "∈6 Eight " );
+  TT( "∈1∋ Nine " );
+  TT( "∈7∋ Ten " );
+  T( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
+  T( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
+  T( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ),
+     DUF_CONFIGG( opt.disable.flag.testnoflag ) );
+  T( "@test-num: %lu", DUF_CONFIGG( testnum ) );
+
+//          opt   disable  testnoflag
+#define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
+  {
+    unsigned long long t1 = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
+    unsigned long long t2 = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
+    T( "@>>>> %llx : %llx <<<<", t1, t2 );
+  }
+  
   CR( main_db, argc, argv );
 
-  /* XXX XXX XXX XXX XXX XXX */
+/* XXX XXX XXX XXX XXX XXX */
 
 #if 0
   DUF_PUTS( 0, "------------------------------------(*)" );
   DUF_PRINTF( 0, "------- main_db ended --------" );
-  DUF_TEST_R( r );              /* don't remove! */
+  DUF_TEST_R( r ); /* don't remove! */
   DUF_PUTS( 0, "---------------------------------------------(o)" );
 #endif
 
@@ -199,18 +235,18 @@ static int
 duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
-  /* fprintf(stderr, "◀"  ); */
+/* fprintf(stderr, "◀"  ); */
   duf_config_create( argc, argv );
 
   assert( duf_config );
-  /* raise( SIGABRT ); */
-  /* *( ( int * ) NULL ) = 0; */
-  /* mas_strdup( "abrakadabra" ); */
+/* raise( SIGABRT ); */
+/* *( ( int * ) NULL ) = 0; */
+/* mas_strdup( "abrakadabra" ); */
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );
 #if 0
-  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND , DUF_ERROR_OPTION_NEW_NOT_FOUND);
+  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_OPTION_NEW_NOT_FOUND );
 #else
   DORF( r, duf_main_with_config, argc, argv );
 #endif
@@ -238,7 +274,7 @@ duf_main( int argc, char **argv )
         duf_option_data_t *pod;
 
         pod = &global_status.aod.pods[iod];
-        /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
+      /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
         if ( source.sourcecode != pod->source.sourcecode )
           fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );
         if ( stage != pod->stage )
@@ -265,9 +301,9 @@ duf_main( int argc, char **argv )
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
-  /* fprintf(stderr, "▶"  ); */
-  /* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, mas_error_list_size(  ) ); */
-  /* sleep( 3 ); */
+/* fprintf(stderr, "▶"  ); */
+/* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, mas_error_list_size(  ) ); */
+/* sleep( 3 ); */
   DEBUG_ENDR( r );
 }
 
@@ -278,7 +314,7 @@ duf_main( int argc, char **argv )
 int
 main( int argc, char **argv )
 {
-  /* setenv( "TZ", "Europe/Kiev", 0 ); */
+/* setenv( "TZ", "Europe/Kiev", 0 ); */
   tzset(  );
   return duf_main( argc, argv );
 }

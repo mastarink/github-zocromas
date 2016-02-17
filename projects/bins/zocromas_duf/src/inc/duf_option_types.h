@@ -137,8 +137,8 @@ typedef struct
 } duf_void_carg_funcpair_t;
 typedef struct
 {
-  duf_errc_carg_func_t func;
-} duf_errc_carg_funcpair_t;
+  duf_errc_cargv_func_t func;
+} duf_errc_cargv_funcpair_t;
 
 /********************************************************************************************/
 typedef struct
@@ -342,7 +342,7 @@ typedef struct
       /* duf_int_void_funcpair_t iv; */
       duf_errc_void_funcpair_t ev;
       duf_errc_cargcv_funcpair_t a;
-      duf_errc_carg_funcpair_t aa;
+      duf_errc_cargv_funcpair_t aa;
       duf_errc_pargcv_funcpair_t t;
       duf_errc_n_funcpair_t n;
       duf_errc_argvn_funcpair_t tn1;
