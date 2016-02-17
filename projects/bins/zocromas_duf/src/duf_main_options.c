@@ -9,28 +9,13 @@
 
 #include "duf_status_ref.h"
 
-/* #include "duf_config.h" */
-/* #include "duf_config_util.h" */
 #include "duf_config_trace.h"
-/* #include "duf_config_defs.h" */
-/* #include "duf_config_show_etc.h" */
 
-/* #include "duf_option_defs.h" */
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 #include "duf_option_config.h"
 
 #include "duf_options.h"
-
-/* #include "duf_levinfo_ref.h" */
-
-/* #include "duf_pdi.h"        */
-/* #include "duf_pdi_ref.h"    */
-/* #include "duf_pdi_global.h" */
-/* #include "duf_pdi_credel.h" */
-/* #include "duf_pdi_reinit.h" */
-
-/* #include "duf_option_clarify_new.h" */
 
 /* ###################################################################### */
 #include "duf_main_options.h"
