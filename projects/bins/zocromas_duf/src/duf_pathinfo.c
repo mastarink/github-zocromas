@@ -28,7 +28,7 @@
 int
 duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pi );
 
@@ -42,13 +42,13 @@ duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
     assert( pi->levinfo );
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   pi->depth = -1;
 
@@ -63,7 +63,7 @@ duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd
   /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
   pi->maxdepth = max_rd ? max_rd : 20 + ( pi->topdepth ? pi->topdepth : 20 ); /* FIXME ??? */
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 void

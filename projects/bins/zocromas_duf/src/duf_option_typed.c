@@ -26,7 +26,7 @@ int
 duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_vtable_t * xvtable, unsigned noo,
                            duf_option_stage_t istage, duf_option_source_t source )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_option_data_t od DUF_UNUSED;
 
 #if 0
@@ -68,5 +68,5 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

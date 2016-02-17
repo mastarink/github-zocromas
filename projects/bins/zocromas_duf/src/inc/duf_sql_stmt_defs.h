@@ -11,7 +11,6 @@
 	  DUF_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
           if ( DUF_NOERROR(_rt) ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
-          DUF_TEST_R( _rt )
 
 #  define DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m) \
 	  { \
@@ -20,7 +19,6 @@
 	    if ( DUF_NOERROR(_rt) ) \
 	      _rt = __rf; \
 	    _pstmt_m = NULL; \
-	    DUF_TEST_R( _rt ); \
 	  } \
 	}
 

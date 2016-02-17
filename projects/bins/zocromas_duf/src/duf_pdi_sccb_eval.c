@@ -34,7 +34,7 @@
 int
 duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   duf_sccb_handle_t *sccbh = NULL;
 
@@ -63,14 +63,14 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
   {
     T( "sccbh not opened %d", sccbh ? 1 : 0 );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150922.123731 */
 int
 duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   const duf_scan_callbacks_t *sccb = NULL;
 
   assert( pdi );
@@ -106,7 +106,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
       DUF_MAKE_ERRORM( r, DUF_ERROR_SCCB_NOT_FOUND, "sccb module not found: '%s'", name );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
@@ -114,12 +114,12 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 int
 duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
 
   /* T( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
   DOR( r, duf_ev_pdi_evnamen( pdi, name, strlen( name ), first, ptarg /*, pu */ , f_summary ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
@@ -127,7 +127,7 @@ duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t
 int
 duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const char *arg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   mas_argvc_t targ = {.argc = 0,.argv = NULL };
 
@@ -140,7 +140,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, duf_scan_callback
   DOR( r, duf_ev_pdi_evname( pdi, name, first, &targ /*, pu */ , f_summary ) );
 
   mas_del_argv( targ.argc, targ.argv, 0 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
@@ -148,7 +148,7 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, duf_scan_callback
 int
 duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   int ok = 0;
   const char *pnames;
@@ -179,5 +179,5 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_call
   {
     /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

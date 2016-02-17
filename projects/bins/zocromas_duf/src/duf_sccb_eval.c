@@ -23,45 +23,45 @@
 int
 duf_ev_sccb( const duf_scan_callbacks_t * sccb )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, duf_pdi_global_name(  ) );
 
   /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( duf_pdi_global() ) ); */
   DOR( r, duf_ev_pdi_sccb( duf_pdi_global(  ), sccb, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_evnamen( duf_pdi_global(  ), name, len, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_evname( duf_pdi_global(  ), name, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
   /* assert( duf_pdi_global()->pyp ); */
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
 
   /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
   DOR( r, duf_ev_pdi_evnamed_list( duf_pdi_global(  ), names, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
@@ -69,7 +69,7 @@ duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
 static int
 duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DUF_PRINTF( 0, "SCCBS" );
   for ( int astep = 0; DUF_NOERROR( r ) && astep < sccb_num; astep++ )
   {
@@ -78,7 +78,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
       DUF_PRINTF( 0, "%d. %s", astep, psccbs[astep]->title );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 #endif
 /*
@@ -88,7 +88,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
 int
 duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   int cnt = 0;
 
@@ -115,5 +115,5 @@ duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
   }
   if ( pcnt )
     *pcnt += cnt;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

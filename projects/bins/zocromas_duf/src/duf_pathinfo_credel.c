@@ -75,13 +75,13 @@ duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t
 int
 duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t maxdepth )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_levinfo_t *pli = NULL;
 
   pli = duf_li_create( maxdepth );
   DOR( r, duf_pi_levinfo_set( pi, pli, maxdepth ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 void
@@ -96,7 +96,7 @@ duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
 int
 duf_pi_shut( duf_pathinfo_t * pi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   pi->depth = pi->topdepth = 0;
   pi->maxdepth = 0;
@@ -105,5 +105,5 @@ duf_pi_shut( duf_pathinfo_t * pi )
   assert( !pi->depth );
   assert( !pi->levinfo );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

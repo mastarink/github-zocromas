@@ -22,7 +22,7 @@ typedef struct
 {
   int debug;
   unsigned nosqlite;
-  int verbose;
+  /* int verbose; */
   unsigned long min_line;
   unsigned long max_line;
   unsigned long lines;
@@ -176,6 +176,7 @@ typedef struct
   /* long limit; */
   char *history_filename;
   char option_delimiter;
+  int verbose;
 } duf_config_cli_t;
 
 typedef struct

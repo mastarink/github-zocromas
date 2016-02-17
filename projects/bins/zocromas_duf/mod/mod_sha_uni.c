@@ -148,7 +148,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3 */
         ;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_sha1, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
@@ -172,7 +172,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   DUF_SQL_END_STMT( pdi, select_sha1, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDULL( sha1id );
+  DUF_ENDULL( sha1id );
 }
 
 static unsigned long long
@@ -186,7 +186,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
   const char *real_path = duf_levinfo_path( pdi );
 #endif
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   assert( sizeof( unsigned long long ) == 8 );
   assert( SHA_DIGEST_LENGTH == 2 * sizeof( unsigned long long ) + ASHA1_DELTA );
@@ -236,14 +236,14 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
   if ( pr )
     *pr = lr;
 
-  DEBUG_ENDULL( sha1id );
+  DUF_ENDULL( sha1id );
   return sha1id;
 }
 
 static int
 duf_make_sha1_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
   SHA_CTX ctx;
 
@@ -302,13 +302,13 @@ duf_make_sha1_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
   }
   if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   unsigned char asha1[SHA_DIGEST_LENGTH];
   unsigned long long bytes = 0;
@@ -324,13 +324,13 @@ duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   pdi->total_bytes += bytes;
   pdi->total_files ++;
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned char asha1r[SHA_DIGEST_LENGTH + ASHA1_DELTA];
 
   DUF_SFIELD2( fname );
@@ -380,5 +380,5 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( sha1, 0, "%08llx%016llx%016llx : sha1id: %llu", pmd[2], pmd[1], pmd[0], sha1id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sha1id ); */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

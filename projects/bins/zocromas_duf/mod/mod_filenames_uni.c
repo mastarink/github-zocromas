@@ -174,24 +174,24 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 static int DUF_UNUSED
 filenames_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   /* T( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int DUF_UNUSED
 filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DUF_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
   /* TODO remove or mark name from DB */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   const char *fname = duf_levinfo_itemtruename( pdi );
 
   unsigned long long dataid;
@@ -221,5 +221,5 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_
     DUF_TEST_R( r );
   }
   /* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

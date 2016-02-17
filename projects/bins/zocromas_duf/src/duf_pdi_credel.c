@@ -104,7 +104,7 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
 int
 duf_pdi_delete( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi && pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
@@ -114,15 +114,15 @@ duf_pdi_delete( duf_depthinfo_t * pdi )
     mas_free( pdi->pdi_name );
   pdi->pdi_name = NULL;
   mas_free( pdi );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_pdi_kill( duf_depthinfo_t ** ppdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( ppdi && *ppdi )
     DOR( r, duf_pdi_delete( *ppdi ) );
   *ppdi = NULL;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

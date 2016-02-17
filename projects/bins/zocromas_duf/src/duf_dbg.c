@@ -18,6 +18,8 @@
 #include "duf_dbg.h"
 /* ###################################################################### */
 
+#ifdef MAS_TRACING
+
 int duf_dbgfunlevel = 20;
 int dbgfunc_enabled = 0;
 static void
@@ -44,7 +46,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 {
   int minverbose = 15;
 
-  if ( dbgfunc_enabled && duf_config && ( ( DUF_CONFIGX( opt.dbg.verbose ) >= minverbose ) || DUF_CONFIGX( opt.trace.calls ) ) )
+  if ( dbgfunc_enabled && duf_config && ( ( DUF_CONFIGX( cli.verbose ) >= minverbose ) || DUF_CONFIGX( opt.trace.calls ) ) )
   {
     static int inited = 0;
     static char pref[1024];
@@ -293,3 +295,18 @@ duf_dbgfunc( duf_dbgcode_t code, const char *func, int line, ... )
   }
   return rt;
 }
+#else
+int
+duf_dbgfunc( duf_dbgcode_t code DUF_UNUSED, const char *func DUF_UNUSED, int line DUF_UNUSED, ... )
+{
+  int rt = 0;
+  va_list args;
+
+  {
+    va_start( args, line );
+    /* rt = duf_dbgfuncv( code, func, line, args ); */
+    va_end( args );
+  }
+  return rt;
+}
+#endif

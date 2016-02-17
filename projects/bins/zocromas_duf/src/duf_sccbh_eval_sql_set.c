@@ -51,7 +51,7 @@ static int
 duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2,
                                duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
   DUF_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
   DUF_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ), node_type,
@@ -70,7 +70,7 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
 
 
   DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*
@@ -82,7 +82,7 @@ static int
 duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
                            duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
   DUF_SQL_START_STMT_NOPDI( sql_selector, r, pstmt_selector );
@@ -128,7 +128,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
 #else
   DUF_SQL_END_STMT_LOCAL( PDI, r, pstmt_selector );
 #endif
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20160212.130857 */
@@ -136,7 +136,7 @@ int
 duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_sql_set_pair_t sql_set_pair, duf_str_cb2_t str_cb2,
                                duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *sql_selector = NULL;
 
 
@@ -159,5 +159,5 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   DOR( r, duf_eval_sccbh_sql_str_cb( scanstage, node_type, sql_selector, str_cb2, sccbh ) );
   mas_free( sql_selector );
   sql_selector = NULL;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -83,41 +83,41 @@ duf_scan_callbacks_t duf_dialog_callbacks = {
 static int
 dialog_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 0, "dialog_init %s", duf_levinfo_path( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
   assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
   DUF_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   DUF_TRACE( mod, 6, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
@@ -189,96 +189,96 @@ dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     T( "@dialog 3 next:%p", di.next );
     assert( !di.next );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   /* Never called (no deleted flag - didn't try to open !!) */
   DUF_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "@dialog node before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "@dialog node middle %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 10, "@dialog node after %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 8, "dialog de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 dialog_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 6, "dialog de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

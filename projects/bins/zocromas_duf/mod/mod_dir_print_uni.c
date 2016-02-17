@@ -75,7 +75,7 @@ duf_scan_callbacks_t duf_listing_callbacks = {
 static int
 print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( fname );
@@ -219,5 +219,5 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     }
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -28,7 +28,7 @@ static int
 duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu,
                 const duf_sql_set_t * sql_set, int caninsert, int frecursive, int fallow_dirs, int flinear, int opendir )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int frec = 0;
   int fwn = 0;
 
@@ -45,7 +45,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 /* T( "%p real_path:%p:%s", pdi->pathinfo.levinfo ? pdi->pathinfo.levinfo->fullpath : 0, real_path, real_path ); */
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, pu, real_path, sql_set, caninsert, frec, fwn, flinear, opendir ) );
 /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150914.111027
@@ -55,7 +55,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 int
 duf_pdi_reinit_min( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *rpath;
 
   rpath = mas_strdup( duf_levinfo_path( pdi ) );
@@ -64,7 +64,7 @@ duf_pdi_reinit_min( duf_depthinfo_t * pdi )
   DOR( r, duf_pdi_reinit( pdi, rpath, duf_pdi_pu( pdi ), ( const duf_sql_set_t * ) NULL /* sql_set */ , 0 /* caninsert */ , -1 /* recursive:auto */ ,
                           -1 /* allow_dirs:auto */ , -1 /* linear:auto */ , duf_pdi_opendir( pdi ) ) );
   mas_free( rpath );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150914.110855
@@ -75,7 +75,7 @@ int
 duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set,
                         int caninsert, int frecursive, int fallow_dirs, int flinear )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *real_path = NULL;
 
   if ( cpath )
@@ -97,7 +97,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
     }
     mas_free( real_path );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int

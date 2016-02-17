@@ -23,7 +23,7 @@ _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   const char *stitle;
 
-  DEBUG_START(  );
+  DUF_START(  );
   if ( sccb && sccb->title )
   {
     stitle = strrchr( sccb->title, '/' );
@@ -36,7 +36,7 @@ _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   {
     stitle = "";
   }
-  DEBUG_ENDCS( stitle );
+  DUF_ENDCS( stitle );
 }
 
 /* TODO rename duf_uni_scan_action_title => duf_sccb_title */

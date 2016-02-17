@@ -60,7 +60,7 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 {
   duf_stmnt_t *pstmt = NULL;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   int rpr = 0;
   duf_idstmt_t *is = NULL;
@@ -118,7 +118,7 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 
   if ( pr )
     *pr = rpr;
-  DEBUG_END(  );
+  DUF_END(  );
   return pstmt;
 }
 
@@ -134,7 +134,7 @@ duf_pdi_find_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* 
 int
 duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   /* int *pi; */
 
   assert( pdi );
@@ -146,13 +146,13 @@ duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
   /* if ( pi )                   */
   /*   *pi = -1;                 */
   pdi->idstatements[i].pstmt = NULL;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_pdi_finalize_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* const int *pindex */  )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_idstmt_t *is = NULL;
 
   assert( pdi->inited );
@@ -164,13 +164,13 @@ duf_pdi_finalize_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid
     is->pstmt = NULL;
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_pdi_finalize_statement_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_idstmt_t *is = NULL;
 
   assert( pdi->inited );
@@ -182,5 +182,5 @@ duf_pdi_finalize_statement_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
     is->pstmt = NULL;
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

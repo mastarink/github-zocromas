@@ -1,5 +1,6 @@
 # --with-sqlite3=/mnt/new_misc/develop/autotools/zoc/admin/install/default
---disable-tracing
+--enable-tracing
+--disable-mas-test
 --enable-wrap-func
 --enable-tracing-options
 --enable-split-db

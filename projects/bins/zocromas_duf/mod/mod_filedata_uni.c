@@ -134,7 +134,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 static int
 register_pdifiledata( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DOR( r, duf_pdistat2file( pdi ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

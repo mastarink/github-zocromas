@@ -17,7 +17,7 @@
 int
 duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 
@@ -29,7 +29,7 @@ duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
   DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
 
   assert( DUF_IS_ERROR( r ) || !pdi->opendir || duf_levinfo_deleted_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_F( int, if_openat_dh )
@@ -40,7 +40,7 @@ DUF_LEVINFO_F_UP( int, if_openat_dh )
 int
 duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 
@@ -109,7 +109,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     DUF_TRACE( levinfo, 0, "pdi->opendir not set" );
   }
   assert( !pdi->opendir || DUF_IS_ERROR( r ) || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_F( int, openat_dh )
@@ -125,7 +125,7 @@ DUF_LEVINFO_F_UP( int, openat_dh )
 int
 duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 #if 0
@@ -143,7 +143,7 @@ duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
    * duf_levinfo_dfd_d( pdi, d )    returns : duf_levinfo_ptr_d( pdi, d )->lev_dh.dfd
    * duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) returns :  duf_levinfo_ptr_d( pdi, d )->lev_dh->dfd
    */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* *INDENT-OFF*  */
@@ -154,10 +154,10 @@ DUF_LEVINFO_F_UP( int, opened_dh )
 int
 duf_levinfo_opened_here_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( !duf_levinfo_opened_copy_d( pdi, d ) )
     DOR( r, duf_levinfo_opened_dh_d( pdi, d ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* *INDENT-OFF*  */
@@ -171,7 +171,7 @@ DUF_LEVINFO_F_UP( int, opened_here_dh )
 int
 duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 
@@ -185,7 +185,7 @@ duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
   }
   assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) == 0 );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* *INDENT-OFF*  */

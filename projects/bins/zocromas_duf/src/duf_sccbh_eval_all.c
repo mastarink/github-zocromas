@@ -52,7 +52,7 @@
 int
 duf_eval_sccbh_scanstage( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned allow_fs = !DUF_CONFIGG( opt.disable.flag.fs );
   unsigned allow_dirs = DUF_ACTG_FLAG( allow_dirs );
   unsigned allow_files = DUF_ACTG_FLAG( allow_files );
@@ -87,14 +87,14 @@ duf_eval_sccbh_scanstage( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccb
     sccbh->current_statement = NULL;
   }
   /* T( "@@@@%s - %s : %s", duf_scanstage_name( scanstage ), duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 
 }
 
 DUF_WRAPSTATIC int
 duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( SCCB );
   /* T( "@@@%s", duf_levinfo_path( PDI ) ); */
@@ -134,7 +134,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 
   DUF_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* duf_scan_dirs_by_pdi_wrap          ( duf_scan_dirs_by_parentid )
@@ -150,7 +150,7 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 #ifdef MAS_WRAP_FUNC
 int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake DUF_UNUSED, duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
@@ -186,6 +186,6 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake DUF_UNUSE
   }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 #endif

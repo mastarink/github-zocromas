@@ -17,45 +17,45 @@
 int
 duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
   DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
 
   /* assert( r >= 0 ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_step( mas_sqlite_stmt_t * stmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
   mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb(  ) ) );
   DUF_TRACE( sql, 2, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
   /* assert( mas_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_finalize( mas_sqlite_stmt_t * stmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DOR_SQLITE( r, mas_sqlite_finalize( stmt ) );
   DUF_TRACE( sql, 6, "-" );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_reset( mas_sqlite_stmt_t * stmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DOR_SQLITE( r, mas_sqlite_reset( stmt ) );
   DUF_TRACE( sql, 6, "-" );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int

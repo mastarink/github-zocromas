@@ -8,6 +8,7 @@
 /* #  ifndef MAST_OUTPUT_FILE */
 #    define MAST_OUTPUT_FILE		duf_output_file()
 /* #  endif */
+#    define MAST_ERRORS_FILE		stderr
 
 #  define DUF_PRINT_COLORO_S( ... ) 	mas_print_coloro_s( __VA_ARGS__ )
 #  define DUF_SNCOLORO_S( ... )         mas_sncoloro_s( __VA_ARGS__ )

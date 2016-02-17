@@ -22,7 +22,7 @@
 static int
 duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, const duf_yfilter_t * py_unused DUF_UNUSED, const mas_argvc_t * ttarg )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )
   {
     /* DUF_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
@@ -33,13 +33,13 @@ duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, c
     DUF_SQL_BIND_S_OPT( optArg, ttarg->argv[2], r, pstmt );
     DUF_TRACE( sql, 0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_tmpdb_add( int oval, const char *optname, const char *optargg )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   static duf_sql_sequence_t tmpseq = { /* */
     .name = "tmpseq",
     .sql = {
@@ -56,5 +56,5 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
 
   DOR( r, duf_eval_sqlsq_cb( &tmpseq, NULL /* title */ , ( duf_ufilter_t * ) NULL , ( duf_yfilter_t * ) NULL , duf_bind_tmp, &ttarg, NULL /* selected_db */  ) );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

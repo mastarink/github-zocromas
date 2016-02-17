@@ -45,7 +45,7 @@
 DUF_WRAPSTATIC int
 duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( str_cb2 )
   {
     DUF_TRACE( explain, 2, "=> str cb2" );
@@ -136,13 +136,13 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
     if ( sccbh->progress_leaf_cb )
       ( sccbh->progress_leaf_cb ) ( sccbh );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151027.114007 */
 int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( PDI );
 
   /* data from db at pstmt */
@@ -179,7 +179,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
   duf_sel_cb2_leaf_at( scanstage, pstmt, str_cb2, sccbh );
 
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* duf_sel_cb_leaves:
@@ -198,7 +198,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
 int
 duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
@@ -228,5 +228,5 @@ duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   }
   DUF_TRACE( scan, 9, "/LEAF %s", duf_levinfo_path( PDI ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -22,7 +22,7 @@ DUF_WRAPSTATIC int
 duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
                      const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( extended )
   {
 /* 
@@ -52,7 +52,7 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
     assert( 0 );
   }
   DUF_TRACE( options, +170, "@[%s]; arg:%s; istage:%d; `noo`:%d", duf_xoption_description_tmp( -1, extended ), optargg, istage, noo );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 #ifdef MAS_WRAP_FUNC
@@ -60,15 +60,15 @@ int
 DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
                                      const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
-  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED );
+  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED );
   DOR( r, duf_xoption_clarify( extended, optargg, xtable, noo, istage, source ) );
   /* T("@noo:%d", noo); */
   DUF_TRACE( options, +150, "@@@@clarified xcmd full: xname:%s; arg:%s; noo:%d (%d:%s)", duf_xoption_description_tmp( -1, extended ), optargg, noo, r,
              mas_error_name_i( r ) );
-  DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_PARSED );
-  DEBUG_ENDR( r );
+  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_PARSED );
+  DUF_ENDR( r );
 }
 #endif
 
@@ -76,7 +76,7 @@ DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, co
 int
 duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   mas_del_argv( ptarg->argc, ptarg->argv, 0 );
   ptarg->argc = 0;
   ptarg->argv = NULL;
@@ -85,5 +85,5 @@ duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
   DUF_TRACE( options, 150, "@@@@@argc:%d", ptarg->argc );
 
   /* targ.argv becomes valid here - may init pdi etc. */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

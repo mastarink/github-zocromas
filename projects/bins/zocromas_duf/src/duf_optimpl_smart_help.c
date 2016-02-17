@@ -58,7 +58,7 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
 mas_error_code_t
 duf_option_O_smart_help_all( duf_option_class_t oclass )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( oclass == DUF_OPTION_CLASS_ALL )
   {
@@ -67,7 +67,7 @@ duf_option_O_smart_help_all( duf_option_class_t oclass )
       DOR( r, duf_option_O_smart_help( oc ) );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static void
@@ -199,7 +199,7 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
 mas_error_code_t
 duf_option_O_smart_help( duf_option_class_t oclass )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   int *ashown;
   size_t ss;
@@ -266,13 +266,13 @@ duf_option_O_smart_help( duf_option_class_t oclass )
   }
   mas_free( ashown );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_help_set( const char *arg )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   for ( const duf_longval_extended_vtable_t * const *xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++ )
   {
@@ -391,5 +391,5 @@ duf_option_O_help_set( const char *arg )
     }
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

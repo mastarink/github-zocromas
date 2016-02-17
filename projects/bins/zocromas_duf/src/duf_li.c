@@ -162,7 +162,7 @@ duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t node_ty
 static int
 _duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_SQL_START_STMT( pditemp, dirid2li_existed, sqlv, r, pstmt );
   {
@@ -182,14 +182,14 @@ _duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lon
     }
   }
   DUF_SQL_END_STMT( pditemp, dirid2li_existed, r, pstmt );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
 int
 duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
@@ -223,14 +223,14 @@ duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_l
     }
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
 static int
 _duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_SQL_START_STMT( pditemp, nameid2li_existed, sqlv, r, pstmt );
   {
@@ -250,14 +250,14 @@ _duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lo
     }
   }
   DUF_SQL_END_STMT( pditemp, nameid2li_existed, r, pstmt );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
 int
 duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
@@ -293,5 +293,5 @@ duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf
     }
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

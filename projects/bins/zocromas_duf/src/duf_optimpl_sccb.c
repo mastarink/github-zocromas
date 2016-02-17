@@ -36,7 +36,7 @@
 mas_error_code_t
 duf_option_O_list_sccbs( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 #if 0
   for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
   {
@@ -51,19 +51,19 @@ duf_option_O_list_sccbs( void )
     DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
   }
 #endif
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 #if 0
 mas_error_code_t
 duf_option_O_list_sccb( int x_unused DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
   {
     DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 #endif
 /*! 20151114.204523 
@@ -74,7 +74,7 @@ duf_option_O_list_sccb( int x_unused DUF_UNUSED )
 mas_error_code_t
 duf_option_O_evaluate_sccb( const char *names )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
 #if 0
   {
@@ -106,7 +106,7 @@ duf_option_O_evaluate_sccb( const char *names )
   {
   /* DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN ); (* 20160105.125904 *) */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*! 20151114.204538
@@ -118,28 +118,28 @@ duf_option_O_call_file( const char *name )
 */
 SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 {
-/* DEBUG_STARTR( r ); */
+/* DUF_STARTR( r ); */
 /* int r DUF_UNUSED = 0; */
 
   CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name, ( duf_option_adata_t * ) NULL /* paod */  );
-/* DEBUG_ENDR( r ); */
+/* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }
 
 mas_error_code_t
 duf_option_O_db_open( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( duf_pdi_global(  ) );
   DOR( r, duf_main_db_open( duf_pdi_global(  ) ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_cd( const char *s )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( s && *s )
   {
 #if 1
@@ -198,13 +198,13 @@ duf_option_O_cd( const char *s )
     }
 #endif
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_cdid( long topdirid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *path;
 
   path = duf_dirid2path( topdirid, &r );
@@ -212,26 +212,26 @@ duf_option_O_cdid( long topdirid )
   if ( DUF_NOERROR( r ) && path )
     r = duf_option_O_cd( path );
   mas_free( path );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_error_level( long lev )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   mas_force_offset_ereport( lev );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_set_dir_priority( long prio DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
 /* DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), new_path, ( const duf_ufilter_t * ) NULL, ( duf_sql_set_t * ) NULL, 1 (* caninsert *) , */
 /*                                 duf_pdi_recursive( duf_pdi_global(  ) ) (*  *)  ) );                                                        */
 
   TT( "@@@@@@dir priority to be set:%ld for %s", prio, "????" );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

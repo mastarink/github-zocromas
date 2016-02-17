@@ -234,7 +234,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 static int
 duf_main( int argc, char **argv )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 /* fprintf(stderr, "◀"  ); */
   duf_config_create( argc, argv );
 
@@ -304,7 +304,7 @@ duf_main( int argc, char **argv )
 /* fprintf(stderr, "▶"  ); */
 /* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, mas_error_list_size(  ) ); */
 /* sleep( 3 ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*

@@ -22,7 +22,7 @@
 int
 duf_pdi_init_global( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DUF_TRACE( pdi, 0, "@@@recursive:%d; NO real_path", DUF_UG_FLAG( recursive ) );
 #if 0
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( global_status.scn.pdi, global_status.scn.pdi->pup, NULL /* real_path */ , NULL /* sql_set */ ,
@@ -38,7 +38,7 @@ duf_pdi_init_global( void )
                                         1 /* opendir */  ) );
 #endif
   assert( global_status.scn.pdi->pup == DUF_CONFIGX( vars.puz ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 SR( PDI, pdi_create_global, const char *name )

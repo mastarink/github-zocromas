@@ -11,7 +11,7 @@
 #  include "duf_dbg.h"          /* to be removed: duf_dbgfunc */
 #  include "duf_dodefs.h"       /* => duf_compile_defs.h ??? ; join with start/end ??? */
 #  include "duf_errorn_defs.h"
-
+#  include "duf_printn_defs_preset.h"
 #  include "duf_tracen_maintenance.h"
 #else
 #  include "duf_maintenance.h"
@@ -90,7 +90,7 @@ duf_scan_callbacks_t duf_tree_callbacks = {
 static int
 tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 #if 0
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( fname );
@@ -271,13 +271,13 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
   /* DUF_PRINTF( 0, "%s", filename ); */
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   /* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
     duf_bformat_combo_t bformat = { /* */
@@ -407,14 +407,14 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   }
 
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151113.132638 */
 static int
 duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 /* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
 /* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
 /* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
@@ -629,14 +629,14 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
   }
 #endif
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151113.132643 */
 static int
 duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
 
   int d0 = duf_pdi_topdepth( pdi );
@@ -657,16 +657,16 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_
   *pbuffer = 0;
   DUF_PRINTF( 1, "@%03d", r );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char buffer[1024];
 
   duf_sql_print_tree_sprefix_uni( buffer, sizeof( buffer ), pdi, NULL /* pwidth */  );
   DUF_WRITES( 0, buffer );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

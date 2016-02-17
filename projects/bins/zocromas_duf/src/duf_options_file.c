@@ -114,7 +114,7 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
 static int
 duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_source_t source, duf_option_adata_t * paod )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( options, 20, "@@@@stream options; stage:%s; source:%s", duf_optstage_name( istage ), duf_optsource_name( source ) );
   while ( DUF_NOERROR( r ) && f && !feof( f ) )
@@ -166,13 +166,13 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
   TR( r );
   DUF_TRACE( options, 22, "@@@@stream options done; stage:%s; source:%s (%d:%s)", duf_optstage_name( istage ), duf_optsource_name( source ), r,
              mas_error_name_i( r ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath, duf_option_adata_t * paod )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int ry = 0;
   FILE *f = NULL;
 
@@ -197,7 +197,7 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath,
   }
   DUF_TRACE( options, 22, "@@@@filepath options done; stage:%s; filepath:%s (%d:%s)", duf_optstage_name( istage ), filepath, r,
              mas_error_name_i( r ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* try config
@@ -209,7 +209,7 @@ static int
 duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdir, const char *filename, int v, int optional,
                                     duf_option_source_t source, duf_option_adata_t * paod )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   FILE *f = NULL;
   int rt1 = 0, rt2 = 0, rt3 = 0;
 
@@ -258,7 +258,7 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
   }
   DUF_TRACE( options, 22, "@@@@dir_and_file options done; stage:%s; cfgdir:%s; filename:%s; source:%s (%d:%s)", duf_optstage_name( istage ), cfgdir,
              filename, duf_optsource_name( source ), r, mas_error_name_i( r ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150122
@@ -272,7 +272,7 @@ static int
 duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, int optional, duf_option_adata_t * paod,
                                duf_option_source_code_t sourcecode )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   duf_option_source_t source = DUF_OPTION_SOURCE_LABELLED( CFG, filename );
 
@@ -291,7 +291,7 @@ duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, 
   DUF_TRACE( options, 22, "@@@@cfgfile options done; stage:%s; filename:%s (%d:%s)", duf_optstage_name( istage ), filename, r,
              mas_error_name_i( r ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*
@@ -304,7 +304,7 @@ duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, 
 static int
 duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int optional, duf_option_adata_t * paod, duf_option_source_code_t sourcecode )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *filename;
 
   DUF_TRACE( optsource, 0, "@  *source:%s", duf_optsourcecode_name( sourcecode ) );
@@ -317,7 +317,7 @@ duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int option
   mas_free( filename );
   DUF_TRACE( options, 22, "@@@@cfgfile options done; stage:%s; bfilename:%s (%d:%s)", duf_optstage_name( istage ), bfilename, r,
              mas_error_name_i( r ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
@@ -325,35 +325,35 @@ duf_source_incfg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
                         DUF_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
                         duf_option_source_code_t sourcecode DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg options; stage:%s", duf_optstage_name( istage ) );
   DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME, 0, paod, DUF_OPTION_SOURCE_NONE /* use default: DUF_OPTION_SOURCE_CFG */  ) );
   DUF_TRACE( options, 22, "@@@@incfg options done; stage:%s (%d:%s)", duf_optstage_name( istage ), r, mas_error_name_i( r ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_source_incfg_last_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
                              duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg `last` options; stage:%s", duf_optstage_name( istage ) );
   DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME "_last", 1, paod, DUF_OPTION_SOURCE_CFGLAST ) );
   DUF_TRACE( options, 22, "@@@@incfg `last` options done; stage:%s (%d:%s)", duf_optstage_name( istage ), r, mas_error_name_i( r ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 #if 0
 int
 duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *bfilename;
 
   static const char *tail[] = {
@@ -375,7 +375,7 @@ duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
     mas_free( bfilename );
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 #endif
 
@@ -385,7 +385,7 @@ duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do
                             DUF_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
                             duf_option_source_code_t sourcecode  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( optsource, 0, "@@@  source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg stg options; stage:%s", duf_optstage_name( istage ) );
@@ -405,7 +405,7 @@ duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do
   }
   DUF_TRACE( options, 22, "@@@@incfg stg options done; stage:%s (%d:%s)", duf_optstage_name( istage ), r, mas_error_name_i( r ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* duf_source_stdin_parse - can be executed only once (direct stdin reading!)  */
@@ -414,7 +414,7 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
                         DUF_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
                         duf_option_source_code_t sourcecode  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   static int done = 0;
 
   DUF_TRACE( optsource, 0, "@@@  %s source:%s", duf_optstage_name( istage ), duf_optsourcecode_name( sourcecode ) );
@@ -438,13 +438,13 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
     }
   }
   DUF_TRACE( options, 22, "@@@@stdin options done; stage:%s (%d:%s)", duf_optstage_name( istage ), r, mas_error_name_i( r ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
     duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode  DUF_UNUSED)
 {
-/* DEBUG_STARTR( r ); */
+/* DUF_STARTR( r ); */
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@indirect options; stage:%s", duf_optstage_name( istage ) );
@@ -471,7 +471,7 @@ SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func
   }
   DUF_TRACE( options, 22, "@@@@indirect options done; stage:%s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
 
-/* DEBUG_ENDR( r ); */
+/* DUF_ENDR( r ); */
   ER( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
       duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 }

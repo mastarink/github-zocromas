@@ -31,7 +31,7 @@
 DUF_WRAPSTATIC int
 duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   /*@ 1. go down + dbopenat */
   PDI->seq++;
   PDI->seq_node++;
@@ -51,13 +51,13 @@ duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   }
 
   /*@ 4. go up */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151027.114000 */
 int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
@@ -75,7 +75,7 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
   }
   DUF_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*
@@ -87,7 +87,7 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
 int
 duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
@@ -117,5 +117,5 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   }
   DUF_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -76,7 +76,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   int rpr = 0;
   char *name = NULL;
 
-  DEBUG_START(  );
+  DUF_START(  );
   DUF_SQL_START_STMT( pdi, dirid2name_existed, sqlv, rpr, pstmt );
   {
     DUF_SQL_BIND_LL( dirID, dirid, rpr, pstmt );
@@ -98,7 +98,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   DUF_SQL_END_STMT( pdi, dirid2name_existed, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDS( name );
+  DUF_ENDS( name );
 }
 
 char *
@@ -106,7 +106,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 {
   char *name = NULL;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   char *sqlv = NULL;
 
@@ -138,7 +138,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
       mas_free( sqlv );
     }
   }
-  DEBUG_ENDS( name );
+  DUF_ENDS( name );
 }
 
 char *
@@ -146,7 +146,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
 {
   char *path = NULL;
 
-  DEBUG_START(  );
+  DUF_START(  );
   int rpr = 0;
   int done = 0;
   int depth = 0;
@@ -182,5 +182,5 @@ duf_dirid2path( unsigned long long dirid, int *pr )
 
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDS( path );
+  DUF_ENDS( path );
 }

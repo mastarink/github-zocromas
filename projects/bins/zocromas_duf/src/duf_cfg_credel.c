@@ -34,7 +34,7 @@ duf_cfg_create( void )
 {
   duf_config_t *cfg = NULL;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   cfg = duf_cfg_create_main(  );
 
@@ -81,14 +81,14 @@ duf_cfg_create( void )
   assert( cfg->vars.puz );
   /* assert( cfg->cli.longopts_table ); */
 
-  DEBUG_END(  );
+  DUF_END(  );
   return cfg;
 }
 
 void
 duf_cfg_delete( duf_config_t * cfg )
 {
-  DEBUG_START(  );
+  DUF_START(  );
 
   if ( cfg )
   {
@@ -231,5 +231,5 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg );
     cfg = NULL;
   }
-  DEBUG_END(  );
+  DUF_END(  );
 }

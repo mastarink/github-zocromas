@@ -171,7 +171,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  md5sum1=:md5Sum1 AND md5sum2=:md5Sum2 */
         ;
 
-  DEBUG_START(  );
+  DUF_START(  );
   assert( sizeof( unsigned long ) == 8 );
   assert( sizeof( unsigned long long ) == 8 );
 
@@ -196,7 +196,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
   DUF_SQL_END_STMT( pdi, select_md5, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDULL( md5id );
+  DUF_ENDULL( md5id );
 }
 
 static unsigned long long
@@ -210,7 +210,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   const char *real_path = duf_levinfo_path( pdi );
 #endif
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   assert( sizeof( unsigned long long ) == 8 );
   assert( MD5_DIGEST_LENGTH == 2 * sizeof( unsigned long long ) );
@@ -258,14 +258,14 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   if ( pr )
     *pr = lr;
 
-  DEBUG_ENDULL( md5id );
+  DUF_ENDULL( md5id );
   return md5id;
 }
 
 static int
 duf_make_md5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
   MD5_CTX ctx;
 
@@ -323,13 +323,13 @@ duf_make_md5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
   }
   if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned char amd5[MD5_DIGEST_LENGTH];
   int fd;
   unsigned long long bytes = 0;
@@ -343,13 +343,13 @@ duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   pdi->total_bytes += bytes;
   pdi->total_files ++;
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];
 
 
@@ -398,5 +398,5 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

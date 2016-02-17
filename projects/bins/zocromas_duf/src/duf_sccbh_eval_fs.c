@@ -32,7 +32,7 @@ static int
 duf_sccbh_eval_fs_w_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh,
                                   duf_scanner_t scanner )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DOR( r, duf_levinfo_statat_dh( PDI ) );
 
@@ -71,7 +71,7 @@ duf_sccbh_eval_fs_w_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_stmn
     /* DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( PDI ), duf_levinfo_itemshowname( PDI ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "No such entry %s/%s", duf_levinfo_path( PDI ), duf_levinfo_itemshowname( PDI ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151027.104729 */
@@ -79,7 +79,7 @@ static int
 duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED,
                             duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_node_type_t nt;
 
   nt = ( de->d_type == DT_DIR ) ? DUF_NODE_NODE : DUF_NODE_LEAF;
@@ -102,14 +102,14 @@ duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNU
 /* <-- */
   DOR( r, duf_levinfo_goup( PDI ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151013.130021 */
 static int DUF_UNUSED
 duf_sccbh_eval_fs_w2scanners_sd( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int ry = 0;
   struct dirent **list = NULL;
 
@@ -140,23 +140,23 @@ duf_sccbh_eval_fs_w2scanners_sd( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     else if ( errorno != EACCES )
     {
-      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+      /* DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", errorno, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
     }
     else
     {
       /* ??? */
-      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+      /* DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", errorno, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int DUF_UNUSED
 duf_sccbh_eval_fs_w2scanners_rd( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DIR *dh = NULL;
 
   dh = opendir( duf_levinfo_path( PDI ) );
@@ -184,24 +184,24 @@ duf_sccbh_eval_fs_w2scanners_rd( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     else if ( errorno != EACCES )
     {
-      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+      /* DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", errorno, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
     }
     else
     {
       /* ??? */
-      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
-      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
+      /* DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", r, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) ); */
+      DUF_MAKE_ERRORM( r, DUF_ERROR_SCANDIR, "(%d) path '%s'/'%s'", errorno, duf_levinfo_path_q( PDI, "?" ), duf_levinfo_itemshowname( PDI ) );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151013.130037 */
 DUF_WRAPSTATIC int
 duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
@@ -236,7 +236,7 @@ duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unu
       }
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151027.114354 */
@@ -250,7 +250,7 @@ duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unu
  * */
 int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( PDI );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
@@ -269,5 +269,5 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage DUF_UNUSED, duf
     DOR( r, duf_sccbh_eval_fs( scanstage, pstmt_unused, sccbh ) );
     DUF_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

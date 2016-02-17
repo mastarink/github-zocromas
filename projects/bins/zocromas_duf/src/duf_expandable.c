@@ -18,12 +18,12 @@
 void
 duf_cfg_string_delete( duf_expandable_string_t * cs )
 {
-  DEBUG_START(  );
+  DUF_START(  );
   mas_free( cs->value );
   cs->value = NULL;
   mas_free( cs->expanded );
   cs->expanded = NULL;
-  DEBUG_END(  );
+  DUF_END(  );
 }
 
   static const char *

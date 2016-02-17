@@ -186,14 +186,14 @@ SR( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage )
 static
 SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_option_adata_t * paod )
 {
-  /* DEBUG_STARTR( r ); */
+  /* DUF_STARTR( r ); */
 
   mas_cargvc_t *carg;
 
   /* int optoptt = 0; */
   int optindd = 0, optindp DUF_UNUSED = 0;
 
-  DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   optopt = 0;
   opterr = 0;
   optind = 1;
@@ -240,16 +240,16 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
     while ( QNOERR && codeval >= 0 );
   }
   CR( cli_parse_targ, optindd, istage );
-  /* DEBUG_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
-  DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
-  /* DEBUG_ENDR( r ); */
+  /* DUF_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+  /* DUF_ENDR( r ); */
   ER( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_option_adata_t * paod );
 }
 
 SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
     duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
-  /* DEBUG_STARTR( r ); */
+  /* DUF_STARTR( r ); */
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( istage ) );
@@ -262,7 +262,7 @@ SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb
   T( "@ (%d:%s)", QERRIND, QERRNAME );
 
   DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
-  /* DEBUG_ENDR( r ); */
+  /* DUF_ENDR( r ); */
 
   ER( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
       duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED );

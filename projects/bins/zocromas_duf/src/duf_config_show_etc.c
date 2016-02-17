@@ -21,7 +21,7 @@
 int
 duf_config_show( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( duf_config )
   {
@@ -32,15 +32,15 @@ duf_config_show( void )
     /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
     DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_config_optionally_show( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
-  if ( duf_config->opt.dbg.verbose > 1 )
+  if ( duf_config->cli.verbose > 1 )
   {
     DOR( r, duf_config_show(  ) );
   }
@@ -75,7 +75,7 @@ duf_config_optionally_show( void )
   }
 #endif
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 

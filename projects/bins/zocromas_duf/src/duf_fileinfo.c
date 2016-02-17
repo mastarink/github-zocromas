@@ -20,7 +20,7 @@
 int
 duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( pfi )
   {
     DUF_UFIELD2( dirid );
@@ -81,5 +81,5 @@ duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinf
     pfi->sha1sum2 = sha1sum2;
     pfi->sha1sum3 = sha1sum3;
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

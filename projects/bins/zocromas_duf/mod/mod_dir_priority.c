@@ -76,7 +76,7 @@ duf_scan_callbacks_t duf_set_dir_priority_callbacks = {
 static int
 set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DUF_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
 
@@ -94,26 +94,26 @@ set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
     duf_pdi_reg_changes( pdi, changes );
     DUF_TEST_R( r );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
 static int
 set_dir_priority_node_after2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

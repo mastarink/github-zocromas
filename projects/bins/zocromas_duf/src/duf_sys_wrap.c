@@ -21,7 +21,7 @@
 int
 duf_unlink( const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( path )
   {
     int ry = 0;
@@ -35,10 +35,10 @@ duf_unlink( const char *path )
 
       s = strerror_r( errno, serr, sizeof( serr ) );
 
-      DUF_SHOW_ERRORO( "unlink %s: [%s]", path, s );
+      /* DUF_SHOW_ERRORO( "unlink %s: [%s]", path, s ); */
       if ( errno != ENOENT )
-        DUF_MAKE_ERROR( r, DUF_ERROR_UNLINK );
+        DUF_MAKE_ERRORM( r, DUF_ERROR_UNLINK, "unlink %s: [%s]", path, s );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

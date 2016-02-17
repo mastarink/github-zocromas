@@ -34,7 +34,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
                               __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode  DUF_UNUSED)
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 #if 0
   static char rl_prompt[256 * 10] = "";
 #endif
@@ -144,5 +144,5 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
 #endif
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

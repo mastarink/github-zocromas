@@ -56,12 +56,12 @@ duf_pdi_opendir( const duf_depthinfo_t * pdi )
 int
 duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 {
-  DEBUG_STARTR( rd );
+  DUF_STARTR( rd );
 
   assert( pdi );
   rd = pdi->opendir;
   pdi->opendir = od;
   DUF_TRACE( fs, 3, "set opendir:%d", od );
 
-  DEBUG_ENDR( rd );
+  DUF_ENDR( rd );
 }

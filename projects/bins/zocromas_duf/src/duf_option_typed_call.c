@@ -30,7 +30,7 @@ int
 duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const char *optargg,
                                 unsigned noo, duf_option_stage_t istage DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   switch ( extended->calltype )
   {
   case DUF_OPTION_CALL_TYPE_NONE:
@@ -204,5 +204,5 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

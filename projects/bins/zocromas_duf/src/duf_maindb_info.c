@@ -55,7 +55,7 @@ duf_info_from_db( int count, const char *sql )
 int
 duf_main_db_info( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( duf_config->opt.act.v.flag.info )
   {
     duf_infodata_t infod[] = {
@@ -188,5 +188,5 @@ duf_main_db_info( void )
     }
     DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

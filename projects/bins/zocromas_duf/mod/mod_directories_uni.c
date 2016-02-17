@@ -117,7 +117,7 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
 static int
 register_pdidirectory( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
 
 #if 0
@@ -148,5 +148,5 @@ register_pdidirectory( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * 
 
   DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
                                   &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

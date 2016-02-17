@@ -34,7 +34,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
         "SELECT " DUF_SQL_IDFIELD " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
         " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
@@ -63,7 +63,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   if ( pr )
     *pr = rpr;
   assert( dataid > 0 );
-  DEBUG_ENDULL( dataid );
+  DUF_ENDULL( dataid );
   return dataid;
 }
 
@@ -73,7 +73,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
   int rpr = 0;
   unsigned long long dataid = 0;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   {
     int changes = 0;
@@ -143,15 +143,15 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
   if ( pr )
     *pr = rpr;
   assert( !need_id || dataid );
-  DEBUG_ENDULL( dataid );
+  DUF_ENDULL( dataid );
   return dataid;
 }
 
 int
 duf_pdistat2file( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   ( void ) /* dataid= */ duf_pdistat2file_dataid( pdi, 0 /*need_id */ , &r );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

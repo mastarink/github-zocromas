@@ -72,7 +72,7 @@ duf_open_file_special( const char *pname, char **popenedname, int overwrite, int
 static int
 duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   FILE *newout;
 
   newout = defout;
@@ -112,7 +112,7 @@ duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE *
       *pfile = newout;
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static void *
@@ -160,7 +160,7 @@ int
 duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, unsigned noo, duf_option_stage_t istage DUF_UNUSED,
                                duf_option_source_t source DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   /* if ( !extended )                         */
   /*   DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); */
@@ -536,6 +536,6 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
     }
 #endif
   }
-  DEBUG_ENDR( r );
-  /* DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+  DUF_ENDR( r );
+  /* DUF_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */
 }

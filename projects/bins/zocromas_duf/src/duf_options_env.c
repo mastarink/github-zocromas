@@ -21,7 +21,7 @@
 static int
 duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_option_adata_t * paod )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   const char *eo = NULL;
 
@@ -32,7 +32,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_o
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*
@@ -49,10 +49,10 @@ duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_inter
 {
   /* extern duf_config_t *duf_config; */
 
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_AOPTIONS", paod ) );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_ZOPTIONS", paod ) );
   DOR( r, duf_env_options_at_var( istage, "MSH_DUF_OPTIONS", paod ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

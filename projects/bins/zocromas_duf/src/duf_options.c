@@ -98,7 +98,7 @@ SR( OPTIONS, all_options_paod, duf_option_stage_t istage, duf_int_void_func_t cb
 SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod )
 {
-  /* DEBUG_STARTR( r ); */
+  /* DUF_STARTR( r ); */
 
   DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ),
              cb_do_interactive ? cb_do_interactive(  ) : 0 );
@@ -128,7 +128,7 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
 
   /* if ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX ) */
   {
-    DEBUG_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+    DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
     {
       if ( from_paod )
       {
@@ -229,8 +229,8 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
                  QERRNAME );
       DUF_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
     }
-    DEBUG_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+    DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
   }
-  /* DEBUG_ENDR_UPPER( QERRIND, DUF_ERROR_OPTION_NOT_FOUND ); */
+  /* DUF_ENDR_UPPER( QERRIND, DUF_ERROR_OPTION_NOT_FOUND ); */
   ER( OPTIONS, duf_all_options, duf_option_stage_t istage, int is_interactive, duf_option_adata_t * paod );
 }

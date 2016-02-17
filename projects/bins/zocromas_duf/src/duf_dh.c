@@ -29,7 +29,7 @@ static unsigned long open_serial = 0;
 static int
 _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( pdhandle && path /* && pdhandleup && pdhandleup->dfd */  )
   {
@@ -72,14 +72,14 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0,
                      pdhandleup ? 1 : 0, path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142729 */
 int
 duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
@@ -89,14 +89,14 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   {
     DOR( r, _duf_statat_dh( pdhandle, pdhandleup, name ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142723 */
 static int
 _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( pdhandle && path )
   {
@@ -136,27 +136,27 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
     DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
   DUF_TRACE( fs, 5, "(%d)? stated %s", r, path );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142714 */
 int
 duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( !DUF_CONFIGG( opt.disable.flag.fs ) )
   {
     DOR( r, _duf_stat_dh( pdhandle, path ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142710 */
 static int
 _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int updfd = 0;
 
 #ifdef DUF_TMP_ASSERT0
@@ -223,7 +223,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
@@ -231,7 +231,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 int
 duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
@@ -241,14 +241,14 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   {
     DOR( r, _duf_openat_dh( pdhandle, pdhandleup, name, asfile ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142701 */
 static int
 _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   /* assert( 0 ); */
   if ( pdhandle && path )
@@ -287,14 +287,14 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
   DUF_TRACE( fs, 5, "(%d)? opened %s", r, path );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.142754 */
 int
 duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
@@ -304,27 +304,27 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   {
     DOR( r, _duf_open_dh( pdhandle, path ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* returns handle >0 */
 static int
 _duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( pdhandle )
     r = pdhandle->dfd;
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
@@ -334,13 +334,13 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
   {
     DOR( r, _duf_opened_dh( pdhandle ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 _duf_close_dh( duf_dirhandle_t * pdhandle )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdhandle );
   if ( pdhandle )
@@ -384,13 +384,13 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
     DUF_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_close_dh( duf_dirhandle_t * pdhandle )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
@@ -400,26 +400,26 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
   {
     DOR( r, _duf_close_dh( pdhandle ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 _duf_check_dh( const char *msg DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, global_status.dh.nopen, global_status.dh.nclose, global_status.dh.nopen - global_status.dh.nclose );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_check_dh( const char *msg )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   /* if ( !DUF_CONFIGG(opt.disable.flag.fs ) ) */
   {
     DOR( r, _duf_check_dh( msg ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -39,7 +39,7 @@ int
 duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const mas_argvc_t * ptarg,
                            bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   const duf_action_table_t *act = NULL;
 
   assert( pdi );
@@ -57,25 +57,25 @@ duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, 
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_ACTTABLE_NOT_FOUND );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150922.123721 */
 int
 duf_ev_pdi_atable_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const mas_argvc_t * ptarg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
 
   DOR( r, duf_ev_pdi_atable_evnamen( pdi, name, strlen( name ), table, ptarg /*, pu */ , f_summary ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150922.123718 */
 int
 duf_ev_pdi_atable_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg, bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   mas_argvc_t targ = {.argc = 0,.argv = NULL };
 
@@ -88,7 +88,7 @@ duf_ev_pdi_atable_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_
   DOR( r, duf_ev_pdi_atable_evname( pdi, name, table, &targ /*, pu */ , f_summary ) );
 
   mas_del_argv( targ.argc, targ.argv, 0 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150922.123706 */
@@ -96,7 +96,7 @@ int
 duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, const mas_argvc_t * ptarg,
                                 bool f_summary )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   int ok = 0;
   const char *pnames;
@@ -126,5 +126,5 @@ duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const 
   {
     /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

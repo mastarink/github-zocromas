@@ -39,7 +39,7 @@ duf_pi_calc_depth( duf_pathinfo_t * pi )
 int
 duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pi );
   {
     int delta;
@@ -72,7 +72,7 @@ duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, unsign
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
   /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH);    */
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static void
@@ -98,7 +98,7 @@ duf_pi_levinfo_countdown_dirs( duf_pathinfo_t * pi )
 int
 duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pi );
 
   assert( pi->depth == duf_pi_calc_depth( pi ) );
@@ -127,13 +127,13 @@ duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursi
     assert( pi->depth - 1 /* not yet ... */  == duf_pi_calc_depth( pi ) );
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pi );
 
   DOR( r, duf_pi_check_depth( pi, node_type, frecursive, flinear ) );
@@ -165,7 +165,7 @@ duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * 
     assert( pi->depth == duf_pi_calc_depth( pi ) );
     DUF_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 void

@@ -18,7 +18,7 @@
 int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( !pdi->attached_copy )
   {
     DORF( r, duf_main_db_open, pdi );
@@ -41,7 +41,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     }
     DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 #endif
 
@@ -49,7 +49,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 int
 duf_pdi_detach_selected( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   static const char *sql1 = "DETACH DATABASE 'duf${PDI_NAME}'";
 
   int changes = 0;
@@ -58,5 +58,5 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   DOR( r, duf_eval_sql_one( sql1, pdi->pup, ( duf_yfilter_t * ) NULL, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

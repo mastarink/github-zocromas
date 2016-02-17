@@ -37,7 +37,7 @@ duf_option_O_version( void )
 
   /* char *sargv2; */
 
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   sargv1 = mas_argv_string( DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ), 1 );
   /* sargv2 = duf_restore_some_options( DUF_CONFIGG(cli.carg.argv)[0] ); */
@@ -83,5 +83,5 @@ duf_option_O_version( void )
   /* mas_free( sargv2 ); */
   mas_free( sargv1 );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

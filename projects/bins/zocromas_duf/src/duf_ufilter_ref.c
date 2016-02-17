@@ -24,7 +24,7 @@ duf_ufilter_max_rel_depth( const duf_ufilter_t * pu )
 int
 duf_ufilter_max_filter( const duf_ufilter_t * pu, unsigned seq, const duf_items_t * pitems )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( pu->max_seq && seq >= pu->max_seq )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
   else if ( pu->maxitems.files && pitems->files >= pu->maxitems.files )
@@ -33,5 +33,5 @@ duf_ufilter_max_filter( const duf_ufilter_t * pu, unsigned seq, const duf_items_
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
   else if ( pu->maxitems.total && pitems->total >= pu->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

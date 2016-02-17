@@ -20,7 +20,7 @@
 void
 duf_config_create( int argc, char **argv )
 {
-  DEBUG_START(  );
+  DUF_START(  );
   duf_config = duf_cfg_create(  );
   assert( duf_config );
 #ifdef MAS_TRACING
@@ -37,19 +37,19 @@ duf_config_create( int argc, char **argv )
   duf_cli_init( &duf_config->cli, argc, argv );
 #endif
 
-  DEBUG_END(  );
+  DUF_END(  );
 }
 
 void
 duf_config_delete( void )
 {
-  DEBUG_START(  );
+  DUF_START(  );
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
 #if 0    /* 20160115.115839 */
   mas_error_report_all( 0, MAST_TRACE_FILE, DUF_CONFIGG( opt.dbg.verbose ) );
 #else
-  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), DUF_CONFIGG( opt.dbg.verbose ) );
+  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), DUF_CONFIGG( cli.verbose ) );
 #endif
 
   duf_cfg_delete( duf_config );
@@ -57,5 +57,5 @@ duf_config_delete( void )
   duf_config4trace =
 #endif
           duf_config = NULL;
-  DEBUG_END(  );
+  DUF_END(  );
 }

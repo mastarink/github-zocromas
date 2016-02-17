@@ -111,7 +111,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
 mas_error_code_t
 duf_option_O_help(  /* int argc, char *const *argv */ void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
   DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_HELP, &r ) );
@@ -147,7 +147,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --same-md5" );
   DUF_PRINTF( 0, "Debug ----------" );
   DUF_PRINTF( 0, "  --debug" );
-  DUF_PRINTF( 0, "  -v, --verbose=%d", DUF_CONFIGG( opt.dbg.verbose ) );
+  DUF_PRINTF( 0, "  -v, --verbose=%d", DUF_CONFIGG( cli.verbose ) );
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
@@ -160,13 +160,13 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.trace.collect ) );
   DUF_PRINTF( 0, "----------------" );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_examples(  /* int argc, char *const *argv */ void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_PRINTF( 0, "Examples" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --allow-drop-tables --allow-create-tables" );
@@ -750,7 +750,7 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --test-act-bflag --test-act-nobflag --test-recetc-bflag --test-disable-nobflag --no-test-disable-nobflag	 -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 duf_option_code_t
@@ -857,7 +857,7 @@ duf_unflag2cnames( unsigned unfset )
 mas_error_code_t
 duf_option_O_showflags(  /* int argc, char *const *argv */ void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   {
     typeof( duf_config->opt.act ) u = duf_config->opt.act;
     /* u.v.bit = 0;       */
@@ -969,13 +969,13 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
     }
   }
 #endif
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_list_options( long n_unused DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   int ntable = 0;
   int tbcount = 0;
@@ -999,13 +999,13 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       mas_free( s );
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_list_xtended( const char *s )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_stdx_print( s );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

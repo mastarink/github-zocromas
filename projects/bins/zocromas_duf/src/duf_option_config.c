@@ -39,7 +39,7 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtab
       if ( xtended->o.val && xtended->o.val < 0xFF )
       {
         DUF_TRACE( options, 50, "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
-        /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
+      /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
         if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
           *p++ = ( char ) xtended->o.val;
@@ -48,8 +48,8 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtab
             *p++ = ':';
           else if ( xtended->o.has_arg == optional_argument )
           {
-            /* *p++ = ':'; */
-            /* *p++ = ':'; */
+          /* *p++ = ':'; */
+          /* *p++ = ':'; */
           }
           else
           {
@@ -203,7 +203,7 @@ duf_cli_options_get_cargvn( int n )
 const char *
 duf_cli_options_get_shorts( void )
 {
-  /* return cli_options_shorts; */
+/* return cli_options_shorts; */
   return config_cli ? config_cli->shorts : NULL;
 }
 
@@ -226,7 +226,6 @@ duf_reorder_argv_at_sign( int argc, char *argv[] )
   int ra = 0;
   int nkra = -1;
   int kra = -1;
-
 
   for ( int ia = 0; ia < argc; ia++ )
   {
@@ -266,7 +265,6 @@ duf_reorder_argv_at_sign( int argc, char *argv[] )
   }
 #endif
 
-
   return ra;
 }
 
@@ -288,3 +286,10 @@ duf_cli_options_get_longopts_table( void )
 {
   return config_cli ? config_cli->longopts_table : NULL;
 }
+#if 1
+int
+duf_verbose( void )
+{
+  return config_cli ? config_cli->verbose : 0;
+}
+#endif

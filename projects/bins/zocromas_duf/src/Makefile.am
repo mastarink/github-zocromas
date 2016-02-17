@@ -1,7 +1,26 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
-noinst_PROGRAMS=mtest mjtest 
-#20160217.124359## motest
+if  MAS_TEST
+noinst_PROGRAMS=mtest mjtest motest
+motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_config_util.c
+# duf_config_util_z.c duf_config_util.c duf_config_trace.c
+# duf_config.c
+motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@
+motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@
+
+
+mtest_SOURCES=duftest.c 
+mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+mtest_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@   @LIBMAGIC_LIBS@
+
+mjtest_SOURCES=dufjtest.c
+mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
+mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
+
+
+else
+
+endif
 
 #noinst_HEADERS=....cdef ....cdef
 
@@ -94,21 +113,6 @@ zocromas_duf_SOURCES=				   \
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
 zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@ -ldl
-
-mtest_SOURCES=duftest.c 
-mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
-mtest_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@   @LIBMAGIC_LIBS@
-
-mjtest_SOURCES=dufjtest.c
-mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
-mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
-
-
-#20160217.124359## motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c
-#20160217.124359## # duf_config_util_z.c duf_config_util.c duf_config_trace.c
-#20160217.124359## # duf_config.c
-#20160217.124359## motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@
-#20160217.124359## motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@
 
 
 

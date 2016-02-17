@@ -88,17 +88,17 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
 static int
 tagit_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 tagit_leaf2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( DUF_CONFIGG( vars.tag.file ) )
   {
 #ifdef MAS_TRACING
@@ -112,13 +112,13 @@ tagit_leaf2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
 
     DUF_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 tagit_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
@@ -131,13 +131,13 @@ tagit_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
     DUF_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static int
 tagit_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -151,14 +151,14 @@ tagit_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
     DUF_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
 static int
 tagit_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -172,5 +172,5 @@ tagit_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
     DUF_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

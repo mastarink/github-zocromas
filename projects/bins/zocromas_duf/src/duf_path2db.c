@@ -45,7 +45,7 @@
 static int
 duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int changes = 0;
 
   static const char *sql =
@@ -78,7 +78,7 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
   DUF_SQL_END_STMT( pdi, insert_path_table, r, pstmt );
   if ( pchanges )
     *pchanges = changes;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.110612 */
@@ -92,7 +92,7 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
 #endif
        )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   duf_levinfo_t *pli;
 
   pli = duf_levinfo_ptr( pdi );
@@ -108,7 +108,7 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
   /* duf_levinfo_make_childs( pdi ); */
 #endif
   assert( dirid == duf_levinfo_dirid( pdi ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.110729 */
@@ -117,7 +117,7 @@ duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
 static int
 duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DOR( r, duf_set_dirid_and_nums( pdi, DUF_GET_UFIELD2( dirid )
 #ifndef MAS_DUF_DEFS_H
@@ -128,7 +128,7 @@ duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
         ) );                    /* at levinfo current level: set dirid,numdir,numfile */
   assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.111126 */
@@ -136,7 +136,7 @@ duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 static int
 duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi->pdi_name );
   DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
@@ -190,7 +190,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
   }
   assert( DUF_IS_ERROR( r ) || ( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ) );
   DUF_SQL_END_STMT( pdi, select_path, r, pstmt );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.111923 */
@@ -246,7 +246,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #endif
           " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)" /* */
   };
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi );
   assert( pdi->pdi_name );
@@ -265,7 +265,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
   DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, duf_levinfo_itemshowname( pdi ) );
   assert( dirid == duf_levinfo_dirid( pdi ) );
   /* assert( !need_id || dirid ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* TODO remake to pdiitem2dirid?? */
@@ -273,7 +273,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 static int
 _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi );
   assert( pdi->pdi_name );
@@ -367,7 +367,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
                      duf_levinfo_itemshowname( pdi ) );
 #endif
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.112249 */
@@ -375,9 +375,9 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
 int
 duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   DOR( r, _duf_levinfo_stat2dirid( pdi, caninsert, sql_set, 1 ) ); /* at levinfo current level: set dirid,numdir,numfile */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.112425 */
@@ -385,7 +385,7 @@ duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_
 static int
 duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, int caninsert, const duf_sql_set_t * sql_set )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int up_d = 0;
 
   assert( pdi );
@@ -405,7 +405,7 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
                                                                                                                                 set dirid,numdir,numfile;
                                                                                                                                 WRAPper for _duf_levinfo_stat2dirid */
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20151026.113322 */
@@ -414,7 +414,7 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, 
 static int
 _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int od = 0;
 
   /* unsigned long long parentid = 0; */
@@ -455,14 +455,14 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
   assert( !DUF_NOERROR( r ) || !caninsert || !real_path || duf_levinfo_dirid( pdi ) > 0 );
   assert( !DUF_NOERROR( r ) || !caninsert || !real_path || duf_levinfo_path( pdi ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* parse real_path to components and store/check each to db, setting each level info to levinfo */
 int
 duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *real_path;
 
   assert( pdi );
@@ -491,5 +491,5 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   }
   mas_free( real_path );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

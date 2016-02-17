@@ -161,7 +161,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 {
   int lr = 0;
 
-  DEBUG_STARTULL( modelid );
+  DUF_STARTULL( modelid );
 
   if ( model && *model && !DUF_CONFIGG( opt.disable.flag.insert ) )
   {
@@ -229,7 +229,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
     *pr = lr;
   DUF_TEST_R( lr );
   /* assert( modelid ); */
-  DEBUG_ENDULL( modelid );
+  DUF_ENDULL( modelid );
 }
 
 static unsigned long long
@@ -239,7 +239,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi, cons
   int lr = 0;
   unsigned long long modelid = 0;
 
-  DEBUG_STARTULL( exifid );
+  DUF_STARTULL( exifid );
   modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , &lr );
   if ( lr >= 0 && ( timeepoch || modelid || dtfixed || stime_original ) && !DUF_CONFIGG( opt.disable.flag.insert ) )
   {
@@ -351,7 +351,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi, cons
   DUF_TEST_R( lr );
   if ( pr )
     *pr = lr;
-  DEBUG_ENDULL( exifid );
+  DUF_ENDULL( exifid );
 }
 
 static time_t
@@ -526,7 +526,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 
 static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_UFIELD2( dataid );
 
@@ -858,5 +858,5 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
   /* DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_DATE, DUF_ERROR_EXIF_NO_MODEL ); */
 
   pdi->total_files ++;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

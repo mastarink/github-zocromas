@@ -23,7 +23,7 @@
 int
 duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   /* Not here : assert( DUF_GET_UFIELD2( dirid) == duf_levinfo_dirid( pdi ) ); */
   DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
@@ -33,5 +33,5 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_sccb_handle_t * s
 
   assert( r < 0 || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( PDI ) ); /* was set by duf_levinfo_godown */
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

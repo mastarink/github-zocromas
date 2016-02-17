@@ -19,13 +19,13 @@
 int
 duf_levinfo_if_statat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 
   if ( !duf_levinfo_stat_d( pdi, d ) )
     DOR( r, duf_levinfo_statat_dh_d( pdi, d ) );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_F( int, if_statat_dh )
@@ -37,7 +37,7 @@ DUF_LEVINFO_F_UP( int, if_statat_dh )
 int
 duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   assert( pdi );
   assert( d >= 0 );
 
@@ -83,7 +83,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
     pdi->pathinfo.levinfo[d].deleted_tested = 1;
     pdi->pathinfo.levinfo[d].stat_tested = 1;
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_F( int, statat_dh )

@@ -30,11 +30,11 @@ duf_r2sqlite_error_code( int rt )
 mas_error_index_t
 duf_sqlite2duf( int r3, const char *func, int line )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   mas_error_code_t rc = 0;
 
   rc = duf_sqlite2r_error_code( r3 );
   if ( rc < 0 )
     DUF_MAKE_ERRORFL( r, rc, func, line );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

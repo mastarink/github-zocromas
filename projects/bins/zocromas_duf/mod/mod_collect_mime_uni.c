@@ -151,7 +151,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
 {
   int lr = 0;
 
-  DEBUG_STARTULL( mimeid );
+  DUF_STARTULL( mimeid );
 
   if ( mime )
   {
@@ -217,7 +217,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
   DUF_TEST_R( lr );
   if ( pr )
     *pr = lr;
-  DEBUG_ENDULL( mimeid );
+  DUF_ENDULL( mimeid );
 }
 
 static void
@@ -235,7 +235,7 @@ mime_destructor( void *ctx )
 static int
 dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned long long mimeid = 0;
 
 
@@ -335,5 +335,5 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     mas_free( mime_plus );
   }
   pdi->total_files ++;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

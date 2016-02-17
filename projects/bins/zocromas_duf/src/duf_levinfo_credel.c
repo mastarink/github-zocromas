@@ -18,18 +18,18 @@
 int
 duf_levinfo_set_li( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
  
   DOR( r, duf_pi_levinfo_set( &pdi->pathinfo, pli, maxdepth ) );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* create level-control array, open 0 level */
 int
 duf_levinfo_create( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi );
 
@@ -39,14 +39,14 @@ duf_levinfo_create( duf_depthinfo_t * pdi )
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.depth == -1 );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* delete level-control array, close 0 level */
 int
 duf_levinfo_delete( duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi );
   /* assert( pdi->pathinfo.levinfo ); */
@@ -65,5 +65,5 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
     mas_free( pdi->pathinfo.levinfo );
     pdi->pathinfo.levinfo = NULL;
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

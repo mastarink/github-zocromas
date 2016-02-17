@@ -27,7 +27,7 @@
 mas_error_code_t
 duf_option_O_history( void )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   HISTORY_STATE *phstate;
 
@@ -52,13 +52,13 @@ duf_option_O_history( void )
   /* DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
   DUF_TRACE( temp, 0, "@@history length:%d; offset:%d;", phstate->length, phstate->offset );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_list_targ1( mas_argvc_t * targ, long n )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( targ->argc && targ->argv )
     for ( int ia = 0; ia < targ->argc; ia++ )
@@ -66,13 +66,13 @@ duf_option_O_list_targ1( mas_argvc_t * targ, long n )
       DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targ->argv[ia] );
     }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_list_targ2( int *ptargc, char ***ptargv, long n )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( ptargc && ptargv )
   {
@@ -86,13 +86,13 @@ duf_option_O_list_targ2( int *ptargc, char ***ptargv, long n )
       }
   }
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_clear_targ1( mas_argvc_t * targ, long n )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 #if 0
   if ( targ->argc && targ->argv && n == 0 )
     targ->argc = mas_argv_delete( targ->argc, targ->argv );
@@ -101,47 +101,47 @@ duf_option_O_clear_targ1( mas_argvc_t * targ, long n )
   if ( n == 0 && targ->argc && targ->argv )
     mas_argvc_delete( targ );
 #endif
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_clear_targ2( int *ptargc, char ***ptargv, long n )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
   *ptargv = NULL;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_add_targ1( mas_argvc_t * targ, const char *s )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   mas_add_argvc_arg( targ, s );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 mas_error_code_t
 duf_option_O_add_targ2( int *ptargc, char ***ptargv, const char *s )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
 mas_error_code_t
 duf_option_O_echo( const char *arg )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   DUF_PRINTF( 0, "%s", arg );
 
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

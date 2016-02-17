@@ -21,7 +21,6 @@
 #include "duf_sccbh_eval_leaf.h"
 /* ###################################################################### */
 
-
 /* 20151027.144543 */
 /*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
@@ -35,7 +34,7 @@
 int
 duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
 #if 0
   PDI->items.total++;
@@ -66,16 +65,21 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt
       sccbh->current_scanner = scanner;
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
       assert( sccbh->current_node_type == DUF_NODE_LEAF );
-      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+      if ( sccbh->atom_cb ) /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_LEAF, r );
     }
     else
     {
+#if 0
       DUF_SHOW_ERRORO( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ), duf_levinfo_deleted( PDI ),
                        duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
+#else
+      DUF_MAKE_ERRORM( r, DUF_ERROR_UNKNOWN, "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ),
+                       duf_levinfo_deleted( PDI ), duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
+#endif
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /*20150820.085324
@@ -90,7 +94,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt
 int
 duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   PDI->items.total++;
   PDI->items.files++;
@@ -112,5 +116,5 @@ duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, d
     if ( scanner )
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

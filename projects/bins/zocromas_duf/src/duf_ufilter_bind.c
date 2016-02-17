@@ -27,7 +27,7 @@
 int
 duf_init_filepath( duf_filepath_t * pfp, const char *filepath )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   char *pathname;
 
   memset( pfp, 0, sizeof( duf_filepath_t ) );
@@ -42,7 +42,7 @@ duf_init_filepath( duf_filepath_t * pfp, const char *filepath )
     pfp->name = mas_strdup( base );
   }
   mas_free( pathname );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 static void
@@ -55,7 +55,7 @@ duf_clear_filepath( duf_filepath_t * pfp )
 static int
 _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused DUF_UNUSED )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 #if 0
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
   if ( DUF_CONFIGG(vars.puz)->_name.flag ) \
@@ -215,13 +215,13 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
   DUF_SQL_BIND_I_NZ_OPT( fFresh, DUF_ACTG_FLAG( fresh ), r, pstmt );
   DUF_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( !pu )
   {
     DUF_TRACE( sql, 3, "@@@bind - no pu!" );
@@ -229,5 +229,5 @@ duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_y
   }
   if ( pu )
     _duf_bind_ufilter_uni( pstmt, pu, py, ttarg_unused );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

@@ -22,7 +22,7 @@ duf_direntry_filter( const struct dirent *de )
 {
   int rx = 0;
 
-  DEBUG_START(  );
+  DUF_START(  );
   switch ( de->d_type )
   {
   case DT_UNKNOWN:
@@ -66,6 +66,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-  DEBUG_END(  );
+  DUF_END(  );
   return rx;
 }

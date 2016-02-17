@@ -149,7 +149,7 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2 */
         ;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_sd5, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
@@ -172,7 +172,7 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
   DUF_SQL_END_STMT( pdi, select_sd5, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDULL( sd5id );
+  DUF_ENDULL( sd5id );
 }
 
 static unsigned long long
@@ -186,7 +186,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
   const char *real_path = duf_levinfo_path( pdi );
 #endif
 
-  DEBUG_START(  );
+  DUF_START(  );
   if ( sd64 && sd64[1] && sd64[0] )
   {
     if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
@@ -230,14 +230,14 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
   if ( pr )
     *pr = lr;
 
-  DEBUG_ENDULL( sd5id );
+  DUF_ENDULL( sd5id );
   return sd5id;
 }
 
 static int
 duf_make_sd5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   size_t bufsz = 256 * 1;
   MD5_CTX ctx;
 
@@ -295,14 +295,14 @@ duf_make_sd5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
   }
   if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 /* 20150820.143755 */
 static int
 sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
   unsigned long long bytes = 0;
@@ -361,5 +361,5 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   }
   pdi->total_bytes += bytes;
   pdi->total_files ++;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

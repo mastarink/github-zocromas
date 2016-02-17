@@ -21,7 +21,7 @@
 int
 duf_sql_bindu_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( fldname )
     pi = BI;
@@ -35,13 +35,13 @@ duf_sql_bindu_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, 
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "1. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindu_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( fldname )
     pi = BI;
@@ -55,13 +55,13 @@ duf_sql_bindu_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int p
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "2. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindu_int( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( fldname )
     pi = BI;
@@ -75,13 +75,13 @@ duf_sql_bindu_int( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int va
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "3. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindu_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( fldname )
     pi = BI;
@@ -95,13 +95,13 @@ duf_sql_bindu_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "4. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindu_string( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, const char *value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   if ( fldname )
     pi = BI;
@@ -115,13 +115,13 @@ duf_sql_bindu_string( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, con
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "5. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindn_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -136,13 +136,13 @@ duf_sql_bindn_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long lon
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "6. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindn_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -158,13 +158,13 @@ duf_sql_bindn_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long 
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "7. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindn_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -179,13 +179,13 @@ duf_sql_bindn_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "8. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindn_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -200,13 +200,13 @@ duf_sql_bindn_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, 
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "9. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bindn_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char *value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -221,13 +221,13 @@ duf_sql_bindn_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char 
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "10. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bind_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi;
 
   pi = BI;
@@ -241,13 +241,13 @@ duf_sql_bind_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "11. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bind_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi;
 
   pi = BI;
@@ -261,13 +261,13 @@ duf_sql_bind_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long l
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "12. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bind_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi;
 
   pi = BI;
@@ -281,13 +281,13 @@ duf_sql_bind_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int 
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "13. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bind_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi;
 
   pi = BI;
@@ -301,13 +301,13 @@ duf_sql_bind_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, i
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "14. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 int
 duf_sql_bind_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char *value, int opt )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   int pi;
 
   pi = BI;
@@ -321,7 +321,7 @@ duf_sql_bind_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char *
     /* DUF_SHOW_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_BIND_NAME, "15. wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 void

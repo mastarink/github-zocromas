@@ -67,6 +67,7 @@ duf_option_delimiter( void )
   return duf_config ? duf_config->cli.option_delimiter : ':';
 }
 
+#if 0
 char *
 duf_path_add_subdir( const char *dir, const char *subdir, int *pr )
 {
@@ -101,7 +102,7 @@ duf_path_add_subdir( const char *dir, const char *subdir, int *pr )
 
               s = strerror_r( errno, serr, sizeof( serr ) );
               DUF_MAKE_ERRORM( rpr, DUF_ERROR_MKDIR, "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
-              /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
+            /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
             }
           }
         }
@@ -116,6 +117,7 @@ duf_path_add_subdir( const char *dir, const char *subdir, int *pr )
     *pr = rpr;
   return path;
 }
+#endif
 
 char *
 duf_config_db_path_add_subdir( const char *dir, int *pr )
@@ -151,7 +153,7 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
 
               s = strerror_r( errno, serr, sizeof( serr ) );
               DUF_MAKE_ERRORM( rpr, DUF_ERROR_MKDIR, "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
-              /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
+            /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
             }
           }
         }

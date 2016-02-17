@@ -163,7 +163,7 @@ duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 static unsigned long long
 duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 {
-  DEBUG_STARTULL( cnt );
+  DUF_STARTULL( cnt );
   int rpr = 0;
   unsigned long long cnt1 DUF_UNUSED = 0;
 
@@ -255,13 +255,13 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
   if ( pr )
     *pr = rpr;
   /* T( "@(%llu) %llu:%d;", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ); */
-  DEBUG_ENDULL( cnt );
+  DUF_ENDULL( cnt );
 }
 
 static int
 duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
   {
     DOR( r, duf_sccb_eval_sqlsq( SCCB, PU, ( duf_yfilter_t * ) NULL, PDI->pdi_name ) );
@@ -270,7 +270,7 @@ duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh )
       duf_pdi_root( PDI )->sql_beginning_done = 1;
     }
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 duf_sccb_handle_t *
@@ -452,7 +452,7 @@ TODO scan mode
 int
 duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   if ( sccbh )
   {
     /* final */
@@ -462,5 +462,5 @@ duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
       duf_pdi_delete( PDI );
     mas_free( sccbh );
   }
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

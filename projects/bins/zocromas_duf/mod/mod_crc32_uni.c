@@ -155,7 +155,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
         /* " INDEXED BY " DUF_SQL_TABLES_CRC32 "_uniq WHERE  crc32sum=:Crc32sum" */
         ;
 
-  DEBUG_START(  );
+  DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_crc32, sql, rpr, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
@@ -177,7 +177,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   DUF_SQL_END_STMT( pdi, select_crc32, rpr, pstmt );
   if ( pr )
     *pr = rpr;
-  DEBUG_ENDULL( crc32id );
+  DUF_ENDULL( crc32id );
 }
 
 static unsigned long long
@@ -191,7 +191,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
   const char *real_path = duf_levinfo_path( pdi );
 #endif
 
-  DEBUG_START(  );
+  DUF_START(  );
   if ( crc32sum )
   {
     static unsigned long insert_cnt = 0;
@@ -237,14 +237,14 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
   if ( pr )
     *pr = lr;
 
-  DEBUG_ENDULL( crc32id );
+  DUF_ENDULL( crc32id );
   return crc32id;
 }
 
 static int
 duf_make_crc32_uni( int fd, unsigned long long *pbytes, unsigned long long *pcrc32sum )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   size_t bufsz = 512 * 8;
   unsigned long crc32sum = 0;
   unsigned char *buffer;
@@ -300,14 +300,14 @@ duf_make_crc32_uni( int fd, unsigned long long *pbytes, unsigned long long *pcrc
   }
   if ( pcrc32sum )
     *pcrc32sum = crc32sum;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
 
 
 static int
 crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
   unsigned long long crc32sum = 0;
   static unsigned long content_cnt = 0;
   unsigned long long bytes = 0;
@@ -366,5 +366,5 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   }
   pdi->total_bytes += bytes;
   pdi->total_files ++;
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }

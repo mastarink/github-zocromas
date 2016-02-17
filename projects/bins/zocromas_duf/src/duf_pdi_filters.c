@@ -28,7 +28,7 @@ duf_pdi_py( const duf_depthinfo_t * pdi )
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 {
-  DEBUG_STARTR( r );
+  DUF_STARTR( r );
 
   assert( pdi );
 #if 0
@@ -49,5 +49,5 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   /*        && ( !pdi->pup->maxitems.files || ( pdi->items.files ) < pdi->pup->maxitems.files )    */
   /*        && ( !pdi->pup->maxitems.dirs || ( pdi->items.dirs ) < pdi->pup->maxitems.dirs )       */
   /*        && ( !pdi->pup->maxitems.total || ( pdi->items.total ) < pdi->pup->maxitems.total ) ); */
-  DEBUG_ENDR( r );
+  DUF_ENDR( r );
 }
