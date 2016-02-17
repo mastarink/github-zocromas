@@ -200,7 +200,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
 }
 
 static unsigned long long
-duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *msg, int need_id, int *pr )
+duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *msg DUF_UNUSED, int need_id, int *pr )
 {
   unsigned long long md5id = -1;
   int lr = 0;

@@ -8,7 +8,6 @@
 #include "duf_sql_positional.h"
 #include "duf_sql_prepared.h"
 
-
 /* ###################################################################### */
 #include "duf_sql_field.h"
 /* ###################################################################### */
@@ -18,7 +17,7 @@ __duf_sql_dump_row( duf_stmnt_t * pstmt )
   for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
   {
     const char *t;
-    const char *n;
+    const char *n DUF_UNUSED;
     const char *v;
 
     t = duf_sql_column_decltype( pstmt, icol );
@@ -27,14 +26,22 @@ __duf_sql_dump_row( duf_stmnt_t * pstmt )
     if ( v )
     {
       if ( t && 0 == strcasecmp( t, "integer" ) )
+      {
         T( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( pstmt, icol ) );
+      }
       else if ( t && 0 == strcasecmp( t, "text" ) )
+      {
         T( "%2d[%8s]:\t %11s = \t\"%s\"", icol, t ? t : "-", n, v );
+      }
       else
+      {
         T( "%2d[%8s]:\t %11s = \t'%s'", icol, t ? t : "-", n, v );
+      }
     }
     else
+    {
       T( "@@@%2d[%8s]:\t %11s = \t NULL", icol, t ? t : "-", n );
+    }
   }
 }
 
@@ -45,15 +52,15 @@ __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
 
   for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
   {
-    /* T( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
+  /* T( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
     if ( 0 == strcmp( duf_sql_column_name( pstmt, icol ), name ) )
     {
       pos = icol;
-      /* T( "@field %s  found (%d)", name, pos ); */
+    /* T( "@field %s  found (%d)", name, pos ); */
       break;
     }
   }
-  /* T( "@field %s  pos:%d", name, pos ); */
+/* T( "@field %s  pos:%d", name, pos ); */
   if ( pos < 0 )
   {
     T( "@field %s not found:", name );

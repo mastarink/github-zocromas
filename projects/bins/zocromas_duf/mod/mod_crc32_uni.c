@@ -181,7 +181,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
 }
 
 static unsigned long long
-duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename, int need_id, int *pr )
+duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename DUF_UNUSED, int need_id, int *pr )
 {
   unsigned long long crc32id = -1;
   int lr = 0;

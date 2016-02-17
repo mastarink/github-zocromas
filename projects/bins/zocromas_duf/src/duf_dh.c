@@ -404,7 +404,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
 }
 
 static int
-_duf_check_dh( const char *msg )
+_duf_check_dh( const char *msg DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

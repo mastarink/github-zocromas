@@ -165,7 +165,7 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int rpr = 0;
-  unsigned long long cnt1 = 0;
+  unsigned long long cnt1 DUF_UNUSED = 0;
 
   /* const char *leaf_selector_total2 = NULL; */
 

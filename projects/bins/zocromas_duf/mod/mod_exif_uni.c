@@ -233,7 +233,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 }
 
 static unsigned long long
-duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
+duf_insert_exif_uni( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
                      int need_id, int *pr )
 {
   int lr = 0;

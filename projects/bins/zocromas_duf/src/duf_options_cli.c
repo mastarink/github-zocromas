@@ -161,15 +161,15 @@ SR( OPTIONS, cli_parse_targ, int optindd, duf_option_stage_t istage )
   mas_cargvc_t *carg;
 
   carg = duf_cli_options_get_carg(  );
-  numxargv = carg->argc - optind;
-  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optind:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optind );
+  numxargv = carg->argc - optindd;
+  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optindd:%d;", duf_optstage_name( istage ), carg->argc, numxargv, optindd );
 
   /* 20160129.121211 DUF_OPTION_STAGE_SETUP Changed to  DUF_OPTION_STAGE_BOOT */
   if ( QNOERR && istage == DUF_OPTION_STAGE_BOOT && /* optind < carg.argc && */ numxargv > 0 )
   {
     /* to do once, at stage SETUP (?), for next stages */
-    DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optind, carg->argv[optind] );
-    CR( argv_clarify, duf_cli_options_get_targ(  ), carg, optind );
+    DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optindd, carg->argv[optindd] );
+    CR( argv_clarify, duf_cli_options_get_targ(  ), carg, optindd );
 
     if ( QNOERR )
       /* DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) ); */
@@ -247,7 +247,7 @@ SR( OPTIONS, cli_parse, const char *shorts, duf_option_stage_t istage, duf_optio
 }
 
 SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode )
+    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
   /* DEBUG_STARTR( r ); */
 

@@ -17,7 +17,6 @@
 #include "duf_config_credel.h"
 /* ###################################################################### */
 
-
 void
 duf_config_create( int argc, char **argv )
 {
@@ -26,18 +25,18 @@ duf_config_create( int argc, char **argv )
   assert( duf_config );
 #ifdef MAS_TRACING
   duf_config4trace = duf_config;
+  assert( duf_config4trace );
+#endif
 
-#  if 0
+#if 0
   duf_config->cli.carg.argc = argc;
   duf_config->cli.carg.argv = argv;
   if ( !duf_config->cli.shorts )
     duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
-#  else
+#else
   duf_cli_init( &duf_config->cli, argc, argv );
-#  endif
-
-  assert( duf_config4trace );
 #endif
+
   DEBUG_END(  );
 }
 
@@ -47,7 +46,7 @@ duf_config_delete( void )
   DEBUG_START(  );
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
-#if 0                           /* 20160115.115839 */
+#if 0    /* 20160115.115839 */
   mas_error_report_all( 0, MAST_TRACE_FILE, DUF_CONFIGG( opt.dbg.verbose ) );
 #else
   mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), DUF_CONFIGG( opt.dbg.verbose ) );
@@ -55,7 +54,8 @@ duf_config_delete( void )
 
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
-  duf_config4trace = duf_config = NULL;
+  duf_config4trace =
 #endif
+          duf_config = NULL;
   DEBUG_END(  );
 }

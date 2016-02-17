@@ -66,7 +66,7 @@ duf_scan_callbacks_t duf_null_callbacks = {
 /* ########################################################################################## */
 
 static int
-null_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+null_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -76,7 +76,7 @@ null_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 }
 
 static int
-null_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_de_content2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -103,7 +103,7 @@ null_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -127,7 +127,7 @@ null_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_leaf2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -150,7 +150,7 @@ null_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -170,7 +170,7 @@ null_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   DUF_TRACE( mod, 1, "null %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   {
-    duf_levinfo_t *pli = NULL;
+    duf_levinfo_t * pli DUF_UNUSED = NULL;
 
     pli = duf_levinfo_ptr( pdi );
 
@@ -188,7 +188,7 @@ null_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-null_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -201,7 +201,7 @@ null_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+null_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -218,7 +218,7 @@ null_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-null_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_node_middle2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -230,7 +230,7 @@ null_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+null_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -247,7 +247,7 @@ null_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 }
 
 static int
-null_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+null_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -259,7 +259,7 @@ null_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-null_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+null_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -268,7 +268,7 @@ null_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pd
 }
 
 static int
-null_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+null_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

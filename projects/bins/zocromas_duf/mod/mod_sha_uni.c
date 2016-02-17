@@ -176,7 +176,7 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
 }
 
 static unsigned long long
-duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char *msg, int need_id, int *pr )
+duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char *msg DUF_UNUSED, int need_id, int *pr )
 {
   unsigned long long sha1id = -1;
   int lr = 0;

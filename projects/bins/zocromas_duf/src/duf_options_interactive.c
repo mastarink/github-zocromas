@@ -32,7 +32,7 @@
 int
 duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
-                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode )
+                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 #if 0

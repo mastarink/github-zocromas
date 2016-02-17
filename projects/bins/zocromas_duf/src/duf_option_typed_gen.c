@@ -157,7 +157,7 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 }
 
 int
-duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, unsigned noo, duf_option_stage_t istage,
+duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, unsigned noo, duf_option_stage_t istage DUF_UNUSED,
                                duf_option_source_t source DUF_UNUSED )
 {
   DEBUG_STARTR( r );

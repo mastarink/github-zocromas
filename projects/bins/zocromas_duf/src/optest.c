@@ -23,7 +23,7 @@
 #include "duf_dodefs.h"
 
 #include "duf_option_types.h"
-#include "duf_main_options.h"
+#include "duf_options_all_stages.h"
 #include "duf_option_types.h"
 #include "duf_option_clarify_new.h"
 
@@ -62,19 +62,20 @@ const duf_longval_extended_table_t optable_test = { /* zzzzzz */
 
 something1_t som1 = { {0, 0} };
 
-#if 0
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG ); /* here to be before following DUF_TRACE's */
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT );
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
 
   return 0;
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }
-#else
+
 int
 main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-  return 0;
+  int r;
+
+  r = duf_main( argc, argv );
+  return r == 0 ? r : 34;
 }
-#endif

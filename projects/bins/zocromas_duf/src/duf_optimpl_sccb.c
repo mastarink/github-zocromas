@@ -225,7 +225,7 @@ duf_option_O_error_level( long lev )
 }
 
 mas_error_code_t
-duf_option_O_set_dir_priority( long prio )
+duf_option_O_set_dir_priority( long prio DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

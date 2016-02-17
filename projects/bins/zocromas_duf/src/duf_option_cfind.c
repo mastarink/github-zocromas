@@ -21,25 +21,22 @@ duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, in
 {
   const duf_option_t *roption = NULL;
   int rpr = 0;
-  int ntable = 0;
   int longindex = 0;
 
+  for ( ; !roption && arr->name; arr++, longindex++ )
   {
-    for ( ; !roption && arr->name; arr++, longindex++ )
+    if ( arr )
     {
-      if ( arr )
+      DUF_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", longindex, arr->name, arr->val, codeval );
+    /* assert( 0 ); */
+      if ( arr->val == codeval )
       {
-        DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, longindex, arr->name, arr->val, codeval );
-        /* assert( 0 ); */
-        if ( arr->val == codeval )
-        {
-          roption = arr;
-          DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, longindex, arr->name );
+        roption = arr;
+        DUF_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", longindex, arr->name );
 #if 0
-          ok = 1;
+        ok = 1;
 #endif
-          break;                /* ? */
-        }
+        break; /* ? */
       }
     }
   }
@@ -97,21 +94,20 @@ duf_coption_xfind_at_xarr( duf_option_code_t codeval, const duf_longval_extended
 {
   const duf_longval_extended_t *rxtended = NULL;
   int rpr = 0;
-  int ntable = 0;
   int tbcount = 0;
 
   for ( ; !rxtended && xarr->o.name; xarr++, tbcount++ )
   {
-    DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
-    /* assert( 0 ); */
+    DUF_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", tbcount, xarr->o.name, xarr->o.val, codeval );
+  /* assert( 0 ); */
     if ( xarr->o.val == codeval )
     {
       rxtended = xarr;
-      DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
+      DUF_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", tbcount, xarr->o.name );
 #if 0
       ok = 1;
 #endif
-      break;                    /* ? */
+      break; /* ? */
     }
   }
   if ( pr )
@@ -142,35 +138,39 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
 #endif
   int rpr = 0;
   int ntable = 0;
-  int tbcount = 0;
 
   if ( codeval && codeval != '?' )
   {
-    for ( const duf_longval_extended_vtable_t *const* multix = duf_extended_vtable_multi(  ); !rxtended && *multix; multix++, ntable++ )
+    for ( const duf_longval_extended_vtable_t * const *multix = duf_extended_vtable_multi(  ); !rxtended && *multix; multix++, ntable++ )
     {
       const duf_longval_extended_vtable_t *xvtable = *multix;
 
 #if 0
-      for ( const duf_longval_extended_t * xarr = xvtable->xlist; !rxtended && xarr->o.name; xarr++, tbcount++ )
       {
-        if ( xarr )
+        int tbcount = 0;
+
+        for ( const duf_longval_extended_t * xarr = xvtable->xlist; !rxtended && xarr->o.name; xarr++, tbcount++ )
         {
-          DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
-          if ( xarr->o.val == codeval )
+          if ( xarr )
           {
-            rxtended = xarr;
-            if ( result_pxvtable )
-              *result_pxvtable = xvtable;
-            DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
-            break;              /* ? */
+            DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
+            if ( xarr->o.val == codeval )
+            {
+              rxtended = xarr;
+              if ( result_pxvtable )
+                *result_pxvtable = xvtable;
+              DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
+              break; /* ? */
+            }
           }
         }
+        DUF_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
       }
 #else
       rxtended = duf_coption_xfind_at_xtable( codeval, xvtable, result_pxvtable, pr );
+      DUF_TRACE( findopt, +1, "@li2ex ? %d [%s]", ntable, rxtended ? rxtended->o.name : NULL );
 #endif
     }
-    DUF_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
   }
 #if 0
   if ( !ok )

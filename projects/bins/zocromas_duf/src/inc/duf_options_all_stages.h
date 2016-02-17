@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_MAIN_OPTIONS_H
-# define MAS_DUF_MAIN_OPTIONS_H
+#ifndef MAS_DUF_OPTIONS_ALL_STAGES_H
+# define MAS_DUF_OPTIONS_ALL_STAGES_H
 
 # include "duf_fun_types.h"
 

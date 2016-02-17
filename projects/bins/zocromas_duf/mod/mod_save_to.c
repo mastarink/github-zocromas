@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <fcntl.h>              /* Definition of AT_* constants */
+#include <fcntl.h> /* Definition of AT_* constants */
 #include <errno.h>
 #include <sys/stat.h>
 
@@ -41,49 +41,47 @@
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( save_to )
 /* ########################################################################################## */
-
 /* ########################################################################################## */
-
-duf_scan_callbacks_t duf_save_to_callbacks = {
-  .title = "save it to",
-  .name = "save_to",
-  .def_opendir = 1,
-  .init_scan = save_to_init,
+     duf_scan_callbacks_t duf_save_to_callbacks = {
+       .title = "save it to",
+       .name = "save_to",
+       .def_opendir = 1,
+       .init_scan = save_to_init,
 #if 0
-  .beginning_sql_seq = &sql_create_selected,
+       .beginning_sql_seq = &sql_create_selected,
 #else
-  .beginning_sql_seq = &sql_update_selected,
+       .beginning_sql_seq = &sql_update_selected,
 #endif
 
-  .node_scan_before2 = save_to_node_before2,
-  .node_scan_before2_deleted = save_to_node_before2_del,
+       .node_scan_before2 = save_to_node_before2,
+       .node_scan_before2_deleted = save_to_node_before2_del,
 
-  .node_scan_after2 = save_to_node_after2,
-  .node_scan_after2_deleted = save_to_node_after2_del,
+       .node_scan_after2 = save_to_node_after2,
+       .node_scan_after2_deleted = save_to_node_after2_del,
 
-  .node_scan_middle2 = save_to_node_middle2,
-  .node_scan_middle2_deleted = save_to_node_middle2_del,
+       .node_scan_middle2 = save_to_node_middle2,
+       .node_scan_middle2_deleted = save_to_node_middle2_del,
 
-  .leaf_scan_fd2 = save_to_de_content2,
-  .leaf_scan_fd2_deleted = save_to_de_content2_del,
+       .leaf_scan_fd2 = save_to_de_content2,
+       .leaf_scan_fd2_deleted = save_to_de_content2_del,
 
-  .leaf_scan2 = save_to_leaf2,
-  .leaf_scan2_deleted = save_to_leaf2_del,
+       .leaf_scan2 = save_to_leaf2,
+       .leaf_scan2_deleted = save_to_leaf2_del,
 
-  /* .dirent_file_scan_before2 = save_to_de_file_before2, */
-  /* .dirent_dir_scan_before2 = save_to_de_dir_before2, */
+     /* .dirent_file_scan_before2 = save_to_de_file_before2, */
+     /* .dirent_dir_scan_before2 = save_to_de_dir_before2, */
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-one",
-  .std_node_set_name = "std-node-one",
-};
+       .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .std_leaf_set_name = "std-leaf-one",
+       .std_node_set_name = "std-node-one",
+     };
 
 /* ########################################################################################## */
 
 static int
-save_to_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+save_to_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -121,7 +119,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
   {
 /* TODO : Compare 2 files; if NOT same - copy with another name */
     fclose( fr );
-    /* DUF_MAKE_ERROR( r, DUF_ERROR_PATH ); */
+  /* DUF_MAKE_ERROR( r, DUF_ERROR_PATH ); */
   }
   else
   {
@@ -168,7 +166,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
         times[0].tv_usec = duf_levinfo_stat_ansec( pdi ) / 1000;
         times[1].tv_usec = duf_levinfo_stat_mnsec( pdi ) / 1000;
 
-        /* chmod(); */
+      /* chmod(); */
         ry = utimes( fpath, times );
         if ( ry < 0 )
         {
@@ -176,7 +174,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
           char *s;
 
           s = strerror_r( errno, serr, sizeof( serr ) );
-          /* DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath ); */
+        /* DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath ); */
           DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
         }
       }
@@ -199,7 +197,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
@@ -212,7 +210,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     char *save_path = NULL;
     duf_fileinfo_t fi = { 0 };
 #ifdef MAS_TRACING
-    /* filename from db same as duf_levinfo_itemname( pdi ) */
+  /* filename from db same as duf_levinfo_itemname( pdi ) */
     assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
@@ -269,17 +267,16 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
-  /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
-
 
 /*
 * 2: 0 [MOD    ]  47:save_to_de_content2                 :3.8916 :  save_to de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
@@ -295,13 +292,13 @@ save_to_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unus
 }
 
 static int
-save_to_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
   DUF_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
-  /* Never called (no deleted flag - didn't try to open !!) */
+/* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
   DEBUG_ENDR( r );
@@ -315,13 +312,12 @@ save_to_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
 }
 
 static int
-save_to_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
   DUF_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
-
 
   DEBUG_ENDR( r );
 }
@@ -350,7 +346,7 @@ save_to_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pd
 }
 
 static int
-save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+save_to_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -361,7 +357,7 @@ save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int DUF_UNUSED
-save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -370,7 +366,7 @@ save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t *
 }
 
 static int DUF_UNUSED
-save_to_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+save_to_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

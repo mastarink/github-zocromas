@@ -1,12 +1,13 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
-noinst_PROGRAMS=mtest mjtest motest
+noinst_PROGRAMS=mtest mjtest 
+#20160217.124359## motest
 
 #noinst_HEADERS=....cdef ....cdef
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_experiment.c  duf_expandable.c	\
-	duf_maindb_info.c duf_maindb.c duf_main_options.c		    \
+	duf_maindb_info.c duf_maindb.c duf_options_all_stages.c		    \
 	duf_dbg.c \
 	duf_config.c duf_config_trace.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
 	duf_config_util.c duf_config_util_z.c \
@@ -102,10 +103,12 @@ mjtest_SOURCES=dufjtest.c
 mjtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @LIBEXIF_CFLAGS@
 mjtest_LDFLAGS=@AM_LDFLAGS@                     @LIBEXIF_LIBS@
 
-motest_SOURCES=optest.c
-# duf_main_options.c duf_config_trace.c duf_config.c duf_config_util_z.c
-motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@
-motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@
+
+#20160217.124359## motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c
+#20160217.124359## # duf_config_util_z.c duf_config_util.c duf_config_trace.c
+#20160217.124359## # duf_config.c
+#20160217.124359## motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@
+#20160217.124359## motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@
 
 
 

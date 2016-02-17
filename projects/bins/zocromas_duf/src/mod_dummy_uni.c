@@ -70,7 +70,7 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
 /* ########################################################################################## */
 
 static int
-dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -80,7 +80,7 @@ dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_de_content2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -107,7 +107,7 @@ dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -131,7 +131,7 @@ dummy_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_leaf2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -154,7 +154,7 @@ dummy_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -168,7 +168,7 @@ dummy_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
   DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
@@ -183,7 +183,7 @@ dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
 }
 
 static int
-dummy_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -196,7 +196,7 @@ dummy_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -213,7 +213,7 @@ dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
 }
 
 static int
-dummy_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_node_middle2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -225,7 +225,7 @@ dummy_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 
@@ -242,7 +242,7 @@ dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-dummy_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -254,7 +254,7 @@ dummy_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
 {
   DEBUG_STARTR( r );
 
@@ -290,7 +290,7 @@ dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
 }
 
 static int
-dummy_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+dummy_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DEBUG_STARTR( r );
 

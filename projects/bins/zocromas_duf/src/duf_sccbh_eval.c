@@ -9,7 +9,7 @@
 #include "duf_config_trace.h"
 
 #include "duf_config_util.h"
-#include "duf_config_ref.h"     /* needed for DUF_PRINTF */
+#include "duf_config_ref.h" /* needed for DUF_PRINTF */
 
 #include "duf_pdi_filters.h"
 #include "duf_pdi_ref.h"
@@ -87,7 +87,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh, b
       }
       else
       {
-        /* assert( 0 ); */
+      /* assert( 0 ); */
       }
     }
   }
@@ -116,8 +116,8 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
   if ( sql_set_pair.active
-       /* && sql_set_pair.active->selector2 && sql_set_pair.active->fieldset  FIXME for !sql_set_pair.active->selector2 && sql_set_pair.active->selector2_cte */
-         )
+     /* && sql_set_pair.active->selector2 && sql_set_pair.active->fieldset  FIXME for !sql_set_pair.active->selector2 && sql_set_pair.active->selector2_cte */
+           )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
     DUF_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );
@@ -132,11 +132,15 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
     if ( DUF_NOERROR( r ) )
     {
       if ( r > 0 )
+      {
         DUF_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                    r, set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
+      }
       else
+      {
         DUF_TRACE( explain, 3, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                    set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
+      }
     }
   }
   else
@@ -161,22 +165,22 @@ duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused 
  * 			for each <file> record by dirID with corresponding args
  *
  * */
-  /* scan this files in this directory */
+/* scan this files in this directory */
   DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
-  /* if ( DUF_ACTG_FLAG( allow_files ) ) */
+/* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
     DUF_TRACE( sccbh, 2, "@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( scanstage == DUF_SCANSTAGE_DB_LEAVES_FD && SCCB->leaf_scan_fd2 )
     {
       DUF_TRACE( sccbh, 4, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
-      /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
+    /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
     }
     if ( scanstage == DUF_SCANSTAGE_DB_LEAVES_NOFD && SCCB->leaf_scan2 )
     {
       DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
-      /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
+    /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
     }
   }
@@ -187,15 +191,15 @@ int
 duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  /* scan this files in this directory */
-  /* if ( DUF_ACTG_FLAG( allow_files ) ) */
+/* scan this files in this directory */
+/* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
     DUF_TRACE( sccbh, 2, "@@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan2 ? 1 : 0 );
     if ( SCCB->leaf_scan2 )
     {
-      /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
+    /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
     }
   }
@@ -206,15 +210,15 @@ int
 duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  /* scan this files in this directory */
-  /* if ( DUF_ACTG_FLAG( allow_files ) ) */
+/* scan this files in this directory */
+/* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
     DUF_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan_fd2 ? 1 : 0 );
     if ( SCCB->leaf_scan_fd2 )
     {
-      /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
+    /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
     }
   }
@@ -226,27 +230,25 @@ int
 duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  unsigned long long diridpdi;
 
-  diridpdi = duf_levinfo_dirid( PDI );
-  DUF_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), diridpdi );
-  /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
+  DUF_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+/* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
   {
     duf_scanner_t scanner = NULL;
 
     PDI->items.total++;
     PDI->items.dirs++;
 
-    DUF_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), diridpdi );
+    DUF_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
 #if 1
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && duf_levinfo_if_deleted( PDI ) )
     {
       sccbh->current_scanner = scanner;
       sccbh->current_node_type = DUF_NODE_NODE;
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), diridpdi );
+      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
-      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+      if ( sccbh->atom_cb ) /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
     }
     else if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
@@ -256,21 +258,21 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
       DUF_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), diridpdi );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
-      if ( sccbh->atom_cb )     /* atom is fs-direntry(dir or reg) or item(node or leaf) */
+      if ( sccbh->atom_cb ) /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
     }
 #else
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_if_deleted( PDI ), DUF_NODE_NODE ) ) )
     {
       sccbh->current_scanner = scanner;
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), diridpdi );
+      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
     }
 #endif
     else
     {
       DUF_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", duf_scanstage_name( scanstage ),
-                 diridpdi, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
+                 duf_levinfo_dirid( PDI ), duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
     }
   }
   DEBUG_ENDR( r );

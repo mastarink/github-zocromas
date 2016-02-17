@@ -59,11 +59,11 @@
 
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
+#include "duf_options_all_stages.h"
 
 #include "duf_levinfo_ref.h"
 
 #include "duf_maindb.h"
-#include "duf_main_options.h"
 #include "duf_pdi_global.h"
 
 /* #include "duf_path2db.h"        (* test only *) */
@@ -193,11 +193,11 @@ SR( TOP, main_with_config, int argc, char **argv )
 //          opt   disable  testnoflag
 #define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
   {
-    unsigned long long t1 = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
-    unsigned long long t2 = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
+    unsigned long long t1 DUF_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
+    unsigned long long t2 DUF_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
     T( "@>>>> %llx : %llx <<<<", t1, t2 );
   }
-  
+
   CR( main_db, argc, argv );
 
 /* XXX XXX XXX XXX XXX XXX */
