@@ -49,7 +49,7 @@ tab sfind duf_sql_set_types.h
 
 tab sfind duf_flags_types.h
 
-tab sfind duf_trace_types.h
+tab sfind duf_config_opt_trace_types.h
 
 tab sfind duf_config_cli_types.h
 tab sfind duf_config_db_types.h

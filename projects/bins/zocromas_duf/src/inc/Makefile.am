@@ -10,7 +10,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
 	duf_base_types.h \
-	duf_trace_types.h \
+	duf_config_opt_trace_types.h \
 	duf_config_cli_types.h \
 	duf_config_output_types.h \
 	duf_config_db_types.h \

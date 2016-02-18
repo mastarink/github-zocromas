@@ -5,7 +5,7 @@
 
 #  include "duf_base_types.h"
 #  include "duf_item_types.h"
-#  include "duf_flags_types.h"
+/* #  include "duf_flags_types.h" */
 #  include "duf_config_rec_etc_types.h"
 
 /* typedef struct                                  */

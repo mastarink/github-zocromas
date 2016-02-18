@@ -4,11 +4,11 @@
 
 # include <mastar/tools/mas_argvc_types.h>
 
-# include "duf_flags_types.h"
+/* # include "duf_flags_types.h" */
 # include "duf_fun_types.h"
 /* duf_format_t */
 # include "duf_option_types.h"
-# include "duf_trace_types.h"
+# include "duf_config_opt_trace_types.h"
 # include "duf_config_output_types.h"
 
 /* duf_config_cli_t

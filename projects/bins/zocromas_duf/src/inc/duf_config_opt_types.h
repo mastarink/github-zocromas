@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CONFIG_OPT_TYPES_H
 # define MAS_DUF_CONFIG_OPT_TYPES_H
 
-# include "duf_trace_types.h"
+# include "duf_config_opt_trace_types.h"
 /* # include "duf_flags_types.h" */
 # include "duf_config_act_types.h"
 # include "duf_config_output_types.h"

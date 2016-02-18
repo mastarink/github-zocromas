@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_TRACE_TYPES_H
-# define MAS_DUF_TRACE_TYPES_H
+#ifndef MAS_DUF_CONFIG_OPT_TRACE_TYPES_H
+# define MAS_DUF_CONFIG_OPT_TRACE_TYPES_H
 
 # include "duf_config_output_types.h"
 
