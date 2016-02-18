@@ -3,13 +3,15 @@
 # include <getopt.h>
 
 # include "duf_base_types.h"
-# include "duf_flags_types.h"
+/* # include "duf_flags_types.h" */
 # include "duf_fun_types.h"
 /* # include "duf_hook_types.h" */
 /* #  include "duf_options_enum.h" */
 /* # include "duf_config_output_types.h" */
 # include "duf_option_source_types.h"
 # include "duf_option_stage_types.h"
+# include "duf_config_rec_etc_types.h"
+# include "duf_config_disable_types.h"
 # include "duf_config_opt_types.h"
 
 typedef enum
@@ -188,13 +190,13 @@ typedef struct
 } duf_errc_void_funcpair_t;
 
 /********************************************************************************************/
-#if 0
+# if 0
 typedef struct
 {
   duf_scan_hook2_item_func_t func;
   duf_scan_callbacks_t *sccb;
 } duf_scan_hook2_item_pair_t;
-#endif
+# endif
 /********************************************************************************************/
 
 typedef union
@@ -301,7 +303,7 @@ typedef struct duf_longval_extended_table_s
 # else
   duf_extended_stageopts_t stage_opts;
 # endif
-  duf_longval_extended_t xlist[]; /* the last ! => «flexible array member not at end of struct» */
+  duf_longval_extended_t xlist[];                                    /* the last ! => «flexible array member not at end of struct» */
 } duf_longval_extended_table_t;
 
 typedef struct duf_longval_extended_vtable_s
@@ -318,7 +320,7 @@ typedef int ( *duf_xclarifier_t ) ( const duf_longval_extended_t * extended, con
 
 typedef struct
 {
-  int soft; /* unmatched tail length */
+  int soft;                                                          /* unmatched tail length */
   unsigned noo:1;
   const duf_longval_extended_vtable_t *xvtable;
   const duf_longval_extended_t *xtended;

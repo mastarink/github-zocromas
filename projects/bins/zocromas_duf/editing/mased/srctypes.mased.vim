@@ -53,6 +53,9 @@ tab sfind duf_trace_types.h
 
 tab sfind duf_config_cli_types.h
 tab sfind duf_config_db_types.h
+tab sfind duf_config_act_types.h
+tab sfind duf_config_rec_etc_types.h
+tab sfind duf_config_disable_types.h
 tab sfind duf_config_opt_types.h
 tab sfind duf_config_output_types.h
 sfind duf_format_types.h

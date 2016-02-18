@@ -2,7 +2,8 @@
 # define MAS_DUF_CONFIG_OPT_TYPES_H
 
 # include "duf_trace_types.h"
-# include "duf_flags_types.h"
+/* # include "duf_flags_types.h" */
+# include "duf_config_act_types.h"
 # include "duf_config_output_types.h"
 
 typedef struct
@@ -16,12 +17,6 @@ typedef union
   unsigned short sbit;
 } duf_config_opt_flags_combo_t;
 
-typedef struct
-{
-  duf_config_act_flags_combo_t v;
-  unsigned sample;
-  unsigned sampupd;
-} duf_config_opt_actions_t;
 
 typedef struct
 {
