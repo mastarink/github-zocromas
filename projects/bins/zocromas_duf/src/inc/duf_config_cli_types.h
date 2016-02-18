@@ -29,6 +29,7 @@ typedef struct
   char *history_filename;
   char option_delimiter;
   char *config_dir;
+  char *cmds_dir;
 } duf_config_cli_t;
 
 #endif

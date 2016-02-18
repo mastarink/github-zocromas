@@ -4,12 +4,15 @@
 # include "duf_option_types.h"
 
 void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables,
-                           const char *config_dir );
+                           const char *config_dir, const char *commands_dir );
 void duf_cli_options_shut( duf_config_cli_t * cli );
 duf_config_cli_t *duf_cli_options_config( void );
 
 char *duf_cli_options_shorts_create( const duf_longval_extended_vtable_t * const *xvtables );
 const char *duf_cli_options_get_shorts( void );
+const char *duf_cli_options_config_dir( void );
+const char *duf_cli_options_commands_dir( void );
+
 mas_argvc_t *duf_cli_options_get_targ( void );
 
 const char *duf_cli_options_get_history_filename( void );

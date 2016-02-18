@@ -7,13 +7,13 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+/* #include "duf_config.h" */
+/* #include "duf_config_util.h" */
 #include "duf_config_trace.h"
-#include "duf_config_defs.h"    /* DUF_CONFIGGS( conf.config_dir ) */ /* insularity! FIXME */
+/* #include "duf_config_defs.h"    (* DUF_CONFIGGS( conf.config_dir ) *) (* insularity! FIXME *) */
 
 #include "duf_option_config.h"
-#include "duf_options_enum.h" /* DUF_CONFIG_FILE_NAME */
+#include "duf_options_enum.h"                                        /* DUF_CONFIG_FILE_NAME */
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 /* #include "duf_option_clarify_new.h" */
@@ -39,7 +39,7 @@ duf_options_infilepath( void )
 #if 0
   return DUF_CONFIGG( config_file_path );
 #else
-  return config_file_path; /* => static duf_config_cli_t *config_cli = NULL; @ duf_option_config.c TODO */
+  return config_file_path;                                           /* => static duf_config_cli_t *config_cli = NULL; @ duf_option_config.c TODO */
 #endif
 }
 
@@ -286,7 +286,11 @@ duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, 
  * */
   DUF_TRACE( options, 20, "@@@@cfgfile options; stage:%s; filename:%s", duf_optstage_name( istage ), filename );
   {
+#if 0
     DOR( r, duf_infile_options_at_dir_and_file( istage, DUF_CONFIGGS( conf.config_dir ), filename, 3, optional, source, paod ) );
+#else
+    DOR( r, duf_infile_options_at_dir_and_file( istage, duf_cli_options_config_dir(  ), filename, 3, optional, source, paod ) );
+#endif
   }
   DUF_TRACE( options, 22, "@@@@cfgfile options done; stage:%s; filename:%s (%d:%s)", duf_optstage_name( istage ), filename, r,
              mas_error_name_i( r ) );
@@ -337,7 +341,8 @@ duf_source_incfg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
 
 int
 duf_source_incfg_last_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-                             duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
+                             duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
+                             duf_option_source_code_t sourcecode DUF_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -383,7 +388,7 @@ duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
 int
 duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                             DUF_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
-                            duf_option_source_code_t sourcecode  DUF_UNUSED)
+                            duf_option_source_code_t sourcecode DUF_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -412,7 +417,7 @@ duf_source_incfg_stg_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do
 int
 duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                         DUF_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
-                        duf_option_source_code_t sourcecode  DUF_UNUSED)
+                        duf_option_source_code_t sourcecode DUF_UNUSED )
 {
   DUF_STARTR( r );
   static int done = 0;
@@ -442,7 +447,7 @@ duf_source_stdin_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_int
 }
 
 SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode  DUF_UNUSED)
+    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
 /* DUF_STARTR( r ); */
 
@@ -462,8 +467,13 @@ SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func
     {
       const char *fname = cf + 1;
 
-      { /* TODO conf.cmds_dir => cli.cmds_dir ?? TODO */
+      {                                                              /* TODO conf.cmds_dir => cli.cmds_dir ?? TODO */
+#if 0
         CR( infile_options_at_dir_and_file, istage, DUF_CONFIGGS( conf.cmds_dir ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
+#else
+        CR( infile_options_at_dir_and_file, istage, duf_cli_options_commands_dir(  ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ),
+            paod );
+#endif
       }
 
       DUF_TRACE( temp, 2, "%s>> (%d) done targv[%d]='%s'", duf_optstage_name( istage ), QERRIND, ia, cf );

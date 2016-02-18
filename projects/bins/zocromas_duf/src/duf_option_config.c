@@ -70,7 +70,8 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtab
 }
 
 void
-duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables, const char *config_dir )
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables, const char *config_dir,
+                      const char *commands_dir )
 {
   if ( cli )
   {
@@ -85,6 +86,7 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     assert( config_cli->longopts_table );
 
     config_cli->config_dir = mas_strdup( config_dir );
+    config_cli->cmds_dir = mas_strdup( commands_dir );
   }
 /*
   TODO
@@ -109,6 +111,8 @@ duf_cli_options_shut( duf_config_cli_t * cli )
   config_cli->history_filename = NULL;
   mas_free( config_cli->config_dir );
   config_cli->config_dir = NULL;
+  mas_free( config_cli->cmds_dir );
+  config_cli->cmds_dir = NULL;
 }
 
 const char *
@@ -209,6 +213,20 @@ duf_cli_options_get_shorts( void )
 {
 /* return cli_options_shorts; */
   return config_cli ? config_cli->shorts : NULL;
+}
+
+const char *
+duf_cli_options_config_dir( void )
+{
+/* return cli_options_shorts; */
+  return config_cli ? config_cli->config_dir : NULL;
+}
+
+const char *
+duf_cli_options_commands_dir( void )
+{
+/* return cli_options_shorts; */
+  return config_cli ? config_cli->cmds_dir : NULL;
 }
 
 int

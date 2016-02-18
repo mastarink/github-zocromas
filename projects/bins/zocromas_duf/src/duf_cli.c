@@ -24,7 +24,7 @@ duf_cli_init( duf_config_cli_t * cli, int argc, char **argv )
   if ( !cli->shorts )
     cli->shorts = duf_cli_options_shorts( lo_extended_table_multi );
 #else
-  duf_cli_options_init( cli, argc, argv, duf_extended_vtable_multi(), DUF_CONFIGGS( conf.config_dir ) );
+  duf_cli_options_init( cli, argc, argv, duf_extended_vtable_multi(), DUF_CONFIGGS( conf.config_dir ), DUF_CONFIGGS( conf.cmds_dir ) );
   /* duf_cli_options_shorts_init( lo_extended_table_multi ); */
 #endif
 }
