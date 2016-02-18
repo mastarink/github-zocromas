@@ -1,10 +1,8 @@
 #include <string.h>
 
-
-
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 #include "duf_printn_defs.h"
-
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -17,10 +15,8 @@
 
 #include "duf_levinfo_ref.h"
 
-
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-
 
 #include "duf_option_defs.h"
 #include "duf_print.h"
@@ -29,8 +25,6 @@
 #include "duf_fileinfo.h"
 
 #include "sql_beginning_selected.h"
-
-
 
 /* ########################################################################################## */
 static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
@@ -53,19 +47,19 @@ static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 duf_scan_callbacks_t duf_listing_callbacks = {
   .title = "listing print",
   .name = "listing",
-  .init_scan = NULL,            /* */
+  .init_scan = NULL,                                                 /* */
   .no_progress = 1,
 #if 0
-#  if 0
+# if 0
   .beginning_sql_seq = &sql_create_selected,
-#  else
+# else
   .beginning_sql_seq = &sql_update_selected,
-#  endif
+# endif
 #endif
   .leaf_scan2 = print_leaf2,
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
-  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
 };
@@ -105,15 +99,15 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( nsame_md5 );
   DUF_UFIELD2( nsame_sha1 );
   DUF_UFIELD2( nsame_exif );
-  /* DUF_SFIELD( mtimef ); */
-  /* DUF_SFIELD( dowmtime ); */
-  /* DUF_SFIELD( monthmtime ); */
+/* DUF_SFIELD( mtimef ); */
+/* DUF_SFIELD( dowmtime ); */
+/* DUF_SFIELD( monthmtime ); */
 
   {
-    duf_bformat_combo_t bformat = { /* */
+    duf_bformat_combo_t bformat = {                                  /* */
       .v.flag = {
                  .filename = 1,
-                 /* .short_filename = 1, */
+               /* .short_filename = 1, */
                  .depth = 1,
                  .seq = 1,
                  .seq_leaf = 1,
@@ -125,8 +119,8 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  .nameid = 1,
                  .mime = 1,
                  .mimeid = 1,
-                 /* .nfiles_space = 1, */
-                 /* .ndirs_space = 1,  */
+               /* .nfiles_space = 1, */
+               /* .ndirs_space = 1,  */
                  .inode = 1,
                  .mode = 1,
                  .nlink = 1,
@@ -135,11 +129,11 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  .filesize = 1,
                  .md5 = 1,
                  .md5id = 1,
-                 /* .sha1id = 1, */
+               /* .sha1id = 1, */
                  .mtime = 1,
                  .dataid = 1,
-                 /* .prefix = 1, */
-                 /* .suffix = 1, */
+               /* .prefix = 1, */
+               /* .suffix = 1, */
                  },
       .nsame = 1,
       .nsame_md5 = 1,
@@ -178,7 +172,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.sha1sum2 = sha1sum2;
     fi.sha1sum3 = sha1sum3;
 
-    if ( duf_output_use_binformat( ) )
+    if ( duf_output_use_binformat(  ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -214,7 +208,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         sformat = " _%M  =%S %8s%f\n";
       if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
         slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
-                                            duf_output_force_color(), duf_output_nocolor(), &rwidth, &over );
+                                            duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }
   }

@@ -10,8 +10,8 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
 	duf_base_types.h \
-	duf_cli_types.h \
 	duf_trace_types.h \
+	duf_config_cli_types.h \
 	duf_config_output_types.h \
 	duf_config_db_types.h \
 	duf_config_opt_types.h \
@@ -33,6 +33,8 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_flags_types.h \
 	duf_fun_types.h \
 	duf_hook_types.h \
+	duf_sccb_types.h \
+	duf_sql_set_types.h \
 	duf_sccbh_eval_leaf.h  duf_sel_cb_leaf.h duf_sel_cb_node.h \
 	duf_item_types.h \
 	duf_li.h duf_li_credel.h \
@@ -54,7 +56,11 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_optimpl_help.h duf_optimpl_smart_help.h duf_optimpl_version.h duf_optimpl_misc.h duf_optimpl_sccb.h duf_optimpl_fs.h duf_optimpl_fs_types.h \
 	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h duf_option_class.h duf_option_val.h duf_option_vtype.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
-	duf_options_enum.h duf_option_config.h duf_options.h duf_options_def.h duf_option_types.h duf_option_vtype_enum.def duf_option_call_type_enum.def \
+	duf_options_enum.h duf_option_config.h duf_options.h duf_options_def.h \
+	duf_option_types.h \
+	duf_option_source_types.h \
+	duf_option_stage_types.h \
+	duf_option_vtype_enum.def duf_option_call_type_enum.def \
 	duf_options_enum_filter_minmax.def duf_options_enum_filter_same_minmax.def \
 	duf_path2db.h \
 	duf_path2dirid.h    \
@@ -65,7 +71,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_errorn_defs.h \
 	duf_printn_defs.h \
 	duf_printn_defs_preset.h \
-	duf_record_types.h \
 	duf_scan_types.h \
 	evsql_begfin.h evsql_selector.h evsql_selector_new.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_eval.h duf_sccbh_eval_fs.h duf_sccbh_eval_sql_set.h duf_sccb_scanstage.h \

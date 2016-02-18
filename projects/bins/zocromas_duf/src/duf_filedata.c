@@ -20,7 +20,6 @@
 
 #include "sql_beginning_tables.h"
 
-
 /* ###################################################################### */
 #include "duf_filedata.h"
 /* ###################################################################### */
@@ -31,8 +30,8 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   int rpr = 0;
   unsigned long long dataid = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDFIELD " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
-        " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
+          "SELECT " DUF_SQL_IDFIELD " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
+          " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DUF_START(  );
 
@@ -50,15 +49,15 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
     dataid = DUF_GET_UFIELD2( dataid );
 #endif
     assert( dataid > 0 );
-    /* rpr = 0; */
+  /* rpr = 0; */
   }
   else
   {
-    /* DUF_TEST_R( rpr ); */
+  /* DUF_TEST_R( rpr ); */
     DUF_TRACE( select, 0, "@<NOT selected> (%d)", rpr );
     assert( 0 );
   }
-  /* DUF_TEST_R( rpr ); */
+/* DUF_TEST_R( rpr ); */
   DUF_SQL_END_STMT( pdi, select_filedata, rpr, pstmt );
   if ( pr )
     *pr = rpr;
@@ -81,10 +80,10 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
     if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILEDATAS_FULL /* */
-            " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
-            " VALUES "          /* */
-            " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
-            "datetime(:aTim, 'unixepoch'), :aTimn, " "datetime(:mTim, 'unixepoch'), :mTimn, " "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
+              " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
+              " VALUES "                                             /* */
+              " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
+              "datetime(:aTim, 'unixepoch'), :aTimn, " "datetime(:mTim, 'unixepoch'), :mTimn, " "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, rpr, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
@@ -135,11 +134,11 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
       DUF_TEST_R( rpr );
     }
   }
-  /* else                                   */
-  /* {                                      */
-  /*   DUF_SHOW_ERROR( "Wrong data" );      */
-  /*   DUF_MAKE_ERROR( rpr, DUF_ERROR_DATA ); */
-  /* }                                      */
+/* else                                   */
+/* {                                      */
+/*   DUF_SHOW_ERROR( "Wrong data" );      */
+/*   DUF_MAKE_ERROR( rpr, DUF_ERROR_DATA ); */
+/* }                                      */
   if ( pr )
     *pr = rpr;
   assert( !need_id || dataid );

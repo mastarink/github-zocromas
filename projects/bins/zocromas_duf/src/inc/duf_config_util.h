@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_CONFIG_UTIL_H
 #  define MAS_DUF_CONFIG_UTIL_H
 
-#  include "duf_cli_types.h"
+#  include "duf_config_cli_types.h"
+#  include "duf_config_opt_types.h"
 
 void *duf_get_offset( void *ptr, unsigned long off );
 void *duf_get_config_offset( unsigned long off );

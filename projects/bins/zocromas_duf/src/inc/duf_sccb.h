@@ -2,6 +2,7 @@
 #  define MAS_DUF_SCCB_H
 
 #  include "duf_scan_types.h"   /* duf_node_type_t */
+#  include "duf_hook_types.h"   /* duf_node_type_t */
 
 const char *duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb );
 

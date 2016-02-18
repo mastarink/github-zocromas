@@ -3,13 +3,10 @@
 
 /* TODO: see media-libs/libextractor */
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
-#include <magic.h>              /* man libmagic */
-
-
-
-
+#include <magic.h>                                                   /* man libmagic */
 
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -40,18 +37,17 @@ static int dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.mimeid IS NULL"
-static duf_sql_sequence_t final_sql = /* */
+static duf_sql_sequence_t final_sql =                                /* */
 {
   .name = "final-mime",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_MIME_FULL " SET dupmimecnt=(SELECT COUNT(*) " /* */
-          " FROM  " DUF_SQL_TABLES_MIME_FULL "      AS mi " /* */
+          " FROM  " DUF_SQL_TABLES_MIME_FULL "      AS mi "          /* */
           " JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.mimeid=mi." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_SQL_TABLES_MIME_FULL "." DUF_SQL_IDFIELD "=mi." DUF_SQL_IDFIELD ")" /* */
-          /* " WHERE " DUF_SQL_TABLES_MIME_FULL ".mime=mi.mime)" (* *) */
+        /* " WHERE " DUF_SQL_TABLES_MIME_FULL ".mime=mi.mime)" (* *) */
           ,
-
 
           NULL,
           }
@@ -71,74 +67,74 @@ duf_scan_callbacks_t duf_mime_callbacks = {
   .leaf_scan_fd2 = dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
-  /* filename for debug only */
+/* filename for debug only */
   .leaf = {
            .name = "mime-leaf",
            .type = DUF_NODE_LEAF,
-           .fieldset =          /* */
+           .fieldset =                                               /* */
            "#mime",
-           .selector2 =         /* */
+           .selector2 =                                              /* */
 #if 1
-           "#std-ns-fd-leaf"    /* */
+           "#std-ns-fd-leaf"                                         /* */
 #else
-           " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
-           /* Q_FROM( filenames, fn ) (* *) */
+           " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn "     /* */
+         /* Q_FROM( filenames, fn ) (* *) */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDFIELD " ) " /* */
-           /* Q_JOIN_ID( fd, mime, mi, mimeid) */
+         /* Q_JOIN_ID( fd, mime, mi, mimeid) */
            " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL "     AS sz ON ( sz.size   = fd.size               ) " /* */
-           /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
+         /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
 #endif
            ,
-           .matcher = " fn.Pathid = :parentdirID " /* */
-           ,                    /* */
-           .filter =            /* */
-           "( " FILTER_DATA " OR mi.mime IS NULL ) " /* */ " AND " /* */
+           .matcher = " fn.Pathid = :parentdirID "                   /* */
+           ,                                                         /* */
+           .filter =                                                 /* */
+           "( " FILTER_DATA " OR mi.mime IS NULL ) " /* */ " AND "   /* */
            "( sz.size   IS NULL OR sz.size > 0 ) " /*     */ " AND " /* */
-           " 1 "                /* */
+           " 1 "                                                     /* */
            ,
            .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD},
   .node = {
            .name = "mime-node",
            .type = DUF_NODE_NODE,
-           .expand_sql = 1,     /* */
-           .fieldset =          /* */
-           /* "'mime-node' AS fieldset_id, " (* *) */
-           "pt." DUF_SQL_IDFIELD " AS dirid" /* */
-           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
+           .expand_sql = 1,                                          /* */
+           .fieldset =                                               /* */
+         /* "'mime-node' AS fieldset_id, " (* *) */
+           "pt." DUF_SQL_IDFIELD " AS dirid"                         /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid "                     /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                 /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
-           .selector2 =         /* */
+           .selector2 =                                              /* */
            " FROM      " DUF_SQL_TABLES_PATHS_FULL "             AS pt " /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName )" /* */
-           ,                    /* */
+           ,                                                         /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-           .filter = " rnfiles > 0 " /* */
+           .filter = " rnfiles > 0 "                                 /* */
 #endif
            },
   .final_sql_seq = &final_sql,
@@ -161,12 +157,12 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
     {
       const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime";
 
-      /* const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
+    /* const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
 
       DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt );
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt );
-      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt ); */
-      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt ); */
+    /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt ); */
+    /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt ); */
       DUF_SQL_STEP( lr, pstmt );
       if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
@@ -176,11 +172,11 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
 #else
         mimeid = DUF_GET_UFIELD2( mimeId );
 #endif
-        /* lr = 0; */
+      /* lr = 0; */
       }
-      /* if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) ) */
-      /*   lr = 0;                                 */
-      /* DUF_TEST_R( lr ); */
+    /* if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) ) */
+    /*   lr = 0;                                 */
+    /* DUF_TEST_R( lr ); */
       DUF_SQL_END_STMT( pdi, select_mime, lr, pstmt );
     }
 
@@ -188,17 +184,17 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime ) VALUES ( :Mime )";
 
-      /* "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
+    /* "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
       DUF_TRACE( mod, 3, " S: %s ", sql );
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
-      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
-      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
+    /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
+    /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
       DUF_SQL_STEPC( lr, pstmt_insert );
-      /* DUF_TEST_R(lr); */
+    /* DUF_TEST_R(lr); */
       DUF_SQL_CHANGES( changes, lr, pstmt_insert );
-      /* DUF_SHOW_ERROR( "changes:%d", changes ); */
+    /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         mimeid = duf_sql_last_insert_rowid(  );
@@ -211,7 +207,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DU
   }
   else
   {
-    /* DUF_SHOW_ERROR( " Wrong data " ); */
+  /* DUF_SHOW_ERROR( " Wrong data " ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
   }
   DUF_TEST_R( lr );
@@ -237,8 +233,6 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
   unsigned long long mimeid = 0;
-
-
 
   DUF_TRACE( mod, 0, " mime" );
 
@@ -269,13 +263,13 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DOR( r, magic_load( magic, NULL ) );
 
     {
-      /* magic_setflags(magic,MAGIC_MIME_TYPE ); */
-      /* magic_setflags(magic, MAGIC_MIME ); */
+    /* magic_setflags(magic,MAGIC_MIME_TYPE ); */
+    /* magic_setflags(magic, MAGIC_MIME ); */
     }
 
     magic_setflags( magic, MAGIC_PRESERVE_ATIME );
     mime_plus = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
-    /* DUF_TRACE( mime, 0, " opened mime %s : %s ---", magic ? " OK " : " FAIL ", mime_plus ); */
+  /* DUF_TRACE( mime, 0, " opened mime %s : %s ---", magic ? " OK " : " FAIL ", mime_plus ); */
 
     magic_setflags( magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
     mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
@@ -316,12 +310,11 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
           DUF_SQL_BIND_LL( dataID, filedataid, r, pstmt_update );
           DUF_SQL_STEPC( r, pstmt_update );
-          /* DUF_TEST_R(r); */
+        /* DUF_TEST_R(r); */
           DUF_SQL_CHANGES( changes, r, pstmt_update );
           DUF_SQL_END_STMT( pdi, update_mime, r, pstmt_update );
 
           duf_pdi_reg_changes( pdi, changes );
-
 
           DUF_TEST_R( r );
         }
@@ -329,11 +322,11 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         mas_free( charset );
         mas_free( tail );
       }
-      /* DUF_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
+    /* DUF_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
     mas_free( mime );
     mas_free( mime_plus );
   }
-  pdi->total_files ++;
+  pdi->total_files++;
   DUF_ENDR( r );
 }

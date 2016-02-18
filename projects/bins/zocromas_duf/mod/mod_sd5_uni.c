@@ -3,10 +3,8 @@
 #include <unistd.h>
 #include <openssl/md5.h>
 
-
-
-
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -14,12 +12,10 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 
-
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_levinfo_ref.h"
-
 
 #include "duf_sql_stmt_defs.h"
 
@@ -38,22 +34,21 @@ static int sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 /* ########################################################################################## */
 #define FILTER_DATA "fd.sd5id IS NULL"
 
-static duf_sql_sequence_t final_sql = /* */
+static duf_sql_sequence_t final_sql =                                /* */
 {
   .name = "final-sd5",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SD5_FULL " SET dup2cnt=(SELECT COUNT(*) " /* */
-          " FROM " DUF_SQL_TABLES_SD5_FULL " AS sd " /* */
+          " FROM " DUF_SQL_TABLES_SD5_FULL " AS sd "                 /* */
           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sd5id=sd." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_SQL_TABLES_SD5_FULL "." DUF_SQL_IDFIELD "=sd." DUF_SQL_IDFIELD ")" /* */
-          /* " WHERE " DUF_SQL_TABLES_SD5_FULL ".sd5sum1=sd.sd5sum1 AND " DUF_SQL_TABLES_SD5_FULL ".sd5sum2=sd.sd5sum2)" (* *) */
+        /* " WHERE " DUF_SQL_TABLES_SD5_FULL ".sd5sum1=sd.sd5sum1 AND " DUF_SQL_TABLES_SD5_FULL ".sd5sum2=sd.sd5sum2)" (* *) */
           ,
           NULL}
 };
 
 /* ########################################################################################## */
-
 
 duf_scan_callbacks_t duf_sd5_callbacks = {
   .title = "collect sd5",
@@ -61,15 +56,12 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-
-
-
   .leaf_scan_fd2 = sd5_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  /* .std_leaf_set_name = "std-leaf-no-sel", */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* .std_leaf_set_name = "std-leaf-no-sel", */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
   .leaf = {
@@ -77,63 +69,63 @@ duf_scan_callbacks_t duf_sd5_callbacks = {
            .type = DUF_NODE_LEAF,
            .fieldset = "#sd5",
            .selector2 = "#md5-leaf",
-           .matcher = " fn.Pathid=:parentdirID " /* */
+           .matcher = " fn.Pathid=:parentdirID "                     /* */
            ,
 #if 0
-           .filter =            /* */
+           .filter =                                                 /* */
            "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL ) " /*                           */ " AND " /* */
            "( sz.size  IS NULL OR sz.size > 0 ) " /*                                             */ " AND " /* */
            "(  :fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1 ) " /* */ " AND " /* */
-           " 1 "                /* */
+           " 1 "                                                     /* */
            ,
 #else
            .afilter_fresh = {FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
-           /* .filter_fresh = "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL " ")" " AND " "( sz.size  IS NULL OR sz.size > 0 )" (* *) */
-           /* ,                                                                                                                              */
-           /* .filter_fast = ":fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1" (* *) */
-           /* ,                                                                                                 */
+         /* .filter_fresh = "( " FILTER_DATA " OR sd." DUF_SQL_IDFIELD " IS NULL " ")" " AND " "( sz.size  IS NULL OR sz.size > 0 )" (* *) */
+         /* ,                                                                                                                              */
+         /* .filter_fast = ":fFast  IS NULL OR sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1" (* *) */
+         /* ,                                                                                                 */
            .afilter_fast = {"sz.size IS NULL OR sz.dupzcnt IS NULL OR sz.dupzcnt > 1"},
 #endif
-           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
+         /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
   ,
   .node = {
            .name = "sd-node",
            .type = DUF_NODE_NODE,
-           .expand_sql = 1,     /* */
-           .fieldset =          /* */
-           /* "'sd5-node' AS fieldset_id, " (* *) */
-           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
-           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
+           .expand_sql = 1,                                          /* */
+           .fieldset =                                               /* */
+         /* "'sd5-node' AS fieldset_id, " (* *) */
+           " pt." DUF_SQL_IDFIELD " AS dirid"                        /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid "                     /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                 /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
-           .selector2 =         /* */
-           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
+           .selector2 =                                              /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "              /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
            .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
-           ,                    /* */
+           ,                                                         /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-           .filter = " rnfiles > 0 " /* */
+           .filter = " rnfiles > 0 "                                 /* */
 #endif
            },
   .final_sql_seq = &final_sql,
@@ -147,7 +139,7 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
   unsigned long long sd5id = 0;
   const char *sql = "SELECT " DUF_SQL_IDFIELD " AS sd5id FROM " DUF_SQL_TABLES_SD5_FULL " WHERE sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2 */
-        ;
+          ;
 
   DUF_START(  );
 
@@ -159,16 +151,16 @@ duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, un
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
-    /* sd5id = duf_sql_column_long_long( pstmt, 0 ); */
+  /* sd5id = duf_sql_column_long_long( pstmt, 0 ); */
     sd5id = DUF_GET_UFIELD2( sd5id );
-    /* rpr = 0; */
+  /* rpr = 0; */
   }
   else
   {
-    /* DUF_TEST_R( rpr ); */
+  /* DUF_TEST_R( rpr ); */
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
-  /* DUF_TEST_R( rpr ); */
+/* DUF_TEST_R( rpr ); */
   DUF_SQL_END_STMT( pdi, select_sd5, rpr, pstmt );
   if ( pr )
     *pr = rpr;
@@ -215,16 +207,16 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char 
         sd5id = duf_sql_last_insert_rowid(  );
       }
     }
-    /* else                                     */
-    /* {                                        */
-    /*   DUF_SHOW_ERROR( "insert sd5 %d", lr ); */
-    /* }                                        */
+  /* else                                     */
+  /* {                                        */
+  /*   DUF_SHOW_ERROR( "insert sd5 %d", lr ); */
+  /* }                                        */
   }
   else
   {
-    /* DUF_SHOW_ERROR( "Wrong data" ); */
+  /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    /* DUF_TEST_R( lr ); */
+  /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )
@@ -307,7 +299,6 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
   unsigned char amd5[MD5_DIGEST_LENGTH];
   unsigned long long bytes = 0;
 
-
   DUF_SFIELD2( fname );
   DUF_TRACE( sd5, 0, "+ %s", fname );
 
@@ -317,7 +308,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
     DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), &bytes, amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", fname );
   DUF_TEST_R( r );
-  /* reverse */
+/* reverse */
   for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     amd5r[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
 
@@ -329,7 +320,7 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
     pmd = ( unsigned long long * ) &amd5r;
     DUF_TRACE( sd5, 0, "insert %s", fname );
     if ( DUF_CONFIGG( opt.disable.flag.calculate ) )
-      pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74; /* FIXME What is it? */
+      pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74;               /* FIXME What is it? */
     sd5id = duf_insert_sd5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( sd5id )
     {
@@ -357,9 +348,9 @@ sd5_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needles
       duf_pdi_reg_changes( pdi, changes );
     }
     DUF_TRACE( sd5, 0, "%016llx%016llx : sd5id: %llu", pmd[1], pmd[0], sd5id );
-    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sd5id ); */
+  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sd5id ); */
   }
   pdi->total_bytes += bytes;
-  pdi->total_files ++;
+  pdi->total_files++;
   DUF_ENDR( r );
 }

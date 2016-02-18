@@ -2,22 +2,22 @@
 
 #include <mastar/error/mas_errors_maintenance.h>
 
-
 #if 1
-#  include "duf_defs.h"
-#  include "duf_config_util_z.h"/* duf_trace_file_c => duf_tracen.h ????? */
-#  include "duf_compile_defs.h"
-#  include "duf_debug_defs.h"   /* START / END */
-#  include "duf_dbg.h"          /* to be removed: duf_dbgfunc */
-#  include "duf_dodefs.h"       /* => duf_compile_defs.h ??? ; join with start/end ??? */
-#  include "duf_errorn_defs.h"
-#  include "duf_printn_defs_preset.h"
-#  include "duf_tracen_maintenance.h"
+# include "duf_defs.h"
+# include "duf_config_util_z.h"                                      /* duf_trace_file_c => duf_tracen.h ????? */
+# include "duf_compile_defs.h"
+# include "duf_debug_defs.h"                                         /* START / END */
+# include "duf_dbg.h"                                                /* to be removed: duf_dbgfunc */
+# include "duf_dodefs.h"                                             /* => duf_compile_defs.h ??? ; join with start/end ??? */
+# include "duf_errorn_defs.h"
+# include "duf_printn_defs_preset.h"
+# include "duf_tracen_maintenance.h"
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t */
 #else
-#  include "duf_maintenance.h"
+# include "duf_maintenance.h"
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t */
 #endif
-#include "duf_printn_defs.h"    /* DUF_PRINTF */
-
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF */
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
@@ -33,10 +33,8 @@
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_count.h"
 
-
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-
 
 #include "duf_option_defs.h"
 #include "duf_print.h"
@@ -47,7 +45,6 @@
 /* #include "duf_dbg.h" */
 
 #include "sql_beginning_selected.h"
-
 
 /* ########################################################################################## */
 static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi );
@@ -62,25 +59,25 @@ static int tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 duf_scan_callbacks_t duf_tree_callbacks = {
   .title = "tree print",
   .name = "tree",
-  .init_scan = NULL,            /* */
+  .init_scan = NULL,                                                 /* */
   .no_progress = 1,
 #if 0
   .beginning_sql_seq = &sql_create_selected,
 #else
   .beginning_sql_seq = &sql_update_selected,
 #endif
-  /* .node_scan_before = tree_node_before, */
+/* .node_scan_before = tree_node_before, */
   .node_scan_before2 = tree_node_before2,
-  /* .leaf_scan = tree_leaf, */
+/* .leaf_scan = tree_leaf, */
   .leaf_scan2 = tree_leaf2,
 
-  /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
+/* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
-  .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
+  .use_std_node_set_num = 1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-one",
-  /* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */
+/* XXX in this case using 1 for nodes for tree only - to calculate 'tree graphics' XXX */
 };
 
 /* extern duf_scan_callbacks_t tree_cbs __attribute__ ( ( alias( "duf_print_tree_callbacks" ) ) ); */
@@ -117,28 +114,28 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( nsame_md5 );
   DUF_UFIELD2( nsame_sha1 );
   DUF_UFIELD2( nsame_exif );
-  /* DUF_SFIELD( mtimef ); */
-  /* DUF_SFIELD( dowmtime ); */
-  /* DUF_SFIELD( monthmtime ); */
+/* DUF_SFIELD( mtimef ); */
+/* DUF_SFIELD( dowmtime ); */
+/* DUF_SFIELD( monthmtime ); */
 #endif
   {
-    duf_bformat_combo_t bformat = { /* */
+    duf_bformat_combo_t bformat = {                                  /* */
       .v.flag = {
                  .filename = 1,
                  .short_filename = 1,
                  .depth = 1,
                  .seq = 1,
-                 /* .seq_leaf = 1, */
-                 /* .dirid = 1, */
+               /* .seq_leaf = 1, */
+               /* .dirid = 1, */
                  .dirid_space = 1,
                  .exifid = 1,
                  .exifdt = 1,
                  .camera = 1,
-                 /* .nameid = 1, */
+               /* .nameid = 1, */
                  .mime = 1,
                  .mimeid = 0,
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
                  .nfiles_space = 1,
                  .ndirs_space = 1,
@@ -151,7 +148,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                  .filesize = 1,
                  .md5 = 1,
                  .md5id = 1,
-                 /* .sha1id = 1, */
+               /* .sha1id = 1, */
                  .mtime = 1,
                  .dataid = 1,
                  .prefix = 1,
@@ -193,7 +190,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #else
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
 #endif
-    if ( duf_output_use_binformat( ) )
+    if ( duf_output_use_binformat(  ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -220,16 +217,15 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           int c1 DUF_UNUSED;
           int c2 DUF_UNUSED;
 
-          c1 = duf_output_force_color();
-          c2 = duf_output_nocolor();
+          c1 = duf_output_force_color(  );
+          c2 = duf_output_nocolor(  );
           T( "%d:%d", c1, c2 );
           assert( 0 );
         }
 #endif
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
-                                              &over );
+                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
       }
       if ( !over )
       {
@@ -257,19 +253,17 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         if ( !sformat )
           sformat = "%f\n";
 
-
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
-                                              &over );
+                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
       }
       DUF_PUTSL( 0 );
     }
   }
 
-  /* SQL at duf_scan_files_by_dirid */
+/* SQL at duf_scan_files_by_dirid */
 
-  /* DUF_PRINTF( 0, "%s", filename ); */
+/* DUF_PRINTF( 0, "%s", filename ); */
 
   DUF_ENDR( r );
 }
@@ -278,9 +272,9 @@ static int
 tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
-  /* if ( duf_levinfo_count_gfiles( pdi ) ) */
+/* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
-    duf_bformat_combo_t bformat = { /* */
+    duf_bformat_combo_t bformat = {                                  /* */
       .v.flag = {
                  .filename = 1,
                  .short_filename = 1,
@@ -292,13 +286,13 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                  .camera = 0,
                  .mimeid = 0,
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
                  .nfiles = 1,
                  .ndirs = 1,
 #endif
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
                  .rnfiles = 1,
                  .rndirs = 1,
@@ -311,7 +305,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                  .filesize = 0,
                  .md5 = 0,
                  .md5id = 1,
-                 /* .sha1id = 1, */
+               /* .sha1id = 1, */
                  .mtime = 0,
                  .prefix = 1,
                  .suffix = 1,
@@ -324,24 +318,24 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
     };
 
     duf_fileinfo_t fi = { 0 };
-    /* fi.nsame = nsame; */
-    /* fi.nsame_md5 = nsame_md5;   */
-    /* fi.nsame_sha1 = nsame_sha1; */
-    /* fi.nsame_exif = nsame_exif; */
-    /* fi.st.st_mode = ( mode_t ) filemode; */
-    /* fi.st.st_ino = ( ino_t ) inode;      */
-    /* fi.st.st_mtim.tv_sec = mtime;        */
-    /* fi.st.st_mtim.tv_nsec = 0;           */
-    /* fi.st.st_uid = ( uid_t ) uid;        */
-    /* fi.st.st_gid = ( gid_t ) gid;        */
-    /* fi.st.st_nlink = ( nlink_t ) nlink;  */
-    /* fi.st.st_size = ( off_t ) filesize; */
+  /* fi.nsame = nsame; */
+  /* fi.nsame_md5 = nsame_md5;   */
+  /* fi.nsame_sha1 = nsame_sha1; */
+  /* fi.nsame_exif = nsame_exif; */
+  /* fi.st.st_mode = ( mode_t ) filemode; */
+  /* fi.st.st_ino = ( ino_t ) inode;      */
+  /* fi.st.st_mtim.tv_sec = mtime;        */
+  /* fi.st.st_mtim.tv_nsec = 0;           */
+  /* fi.st.st_uid = ( uid_t ) uid;        */
+  /* fi.st.st_gid = ( gid_t ) gid;        */
+  /* fi.st.st_nlink = ( nlink_t ) nlink;  */
+  /* fi.st.st_size = ( off_t ) filesize; */
     fi.name = duf_levinfo_itemshowname( pdi );
-    /* fi.md5id = md5id; */
-    /* fi.sha1id = sha1id; */
-    /* fi.md5sum1 = md5sum1; */
-    /* fi.md5sum2 = md5sum2; */
-    if ( duf_output_use_binformat( ) )
+  /* fi.md5id = md5id; */
+  /* fi.sha1id = sha1id; */
+  /* fi.md5sum1 = md5sum1; */
+  /* fi.md5sum2 = md5sum2; */
+    if ( duf_output_use_binformat(  ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -356,8 +350,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
       size_t rwidth = 0;
       int over = 0;
 
-      /* if ( duf_levinfo_count_gfiles( pdi ) )                  */
-      /*   T( "@gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
+    /* if ( duf_levinfo_count_gfiles( pdi ) )                  */
+    /*   T( "@gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
 
       {
         sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
@@ -368,8 +362,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat_pref = " %6s  %4s%P";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
-                                              &over );
+                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
       }
       if ( !over )
       {
@@ -399,13 +392,11 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat = "%f\n";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
-                                              &over );
+                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
       }
       DUF_PUTSL( 0 );
     }
   }
-
 
   DUF_ENDR( r );
 }
@@ -429,7 +420,6 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
  * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
  * */
 
-
   unsigned flags = 0;
   int du = d - 1;
 
@@ -448,21 +438,21 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
 #define DUF_TREE_PRE_INTER DUF_TREE_SPACE
 
 #if 0
-#  define DUF_TREE_FLAG_NONE 0x0
-#  define DUF_TREE_FLAG_CONTINUE 0x1
-#  define DUF_TREE_FLAG_HERE 0x10
-#  define DUF_TREE_FLAG_LEAF 0x4
-#  define DUF_TREE_FLAG_TOO_DEEP 0x20
+# define DUF_TREE_FLAG_NONE 0x0
+# define DUF_TREE_FLAG_CONTINUE 0x1
+# define DUF_TREE_FLAG_HERE 0x10
+# define DUF_TREE_FLAG_LEAF 0x4
+# define DUF_TREE_FLAG_TOO_DEEP 0x20
 #else
-#  define DUF_TREE_FLAG_NONE 0x0
-#  define DUF_TREE_FLAG_CONTINUE 0x1
-#  define DUF_TREE_FLAG_HERE 0x2
-#  define DUF_TREE_FLAG_LEAF 0x4
-#  define DUF_TREE_FLAG_TOO_DEEP 0x8
+# define DUF_TREE_FLAG_NONE 0x0
+# define DUF_TREE_FLAG_CONTINUE 0x1
+# define DUF_TREE_FLAG_HERE 0x2
+# define DUF_TREE_FLAG_LEAF 0x4
+# define DUF_TREE_FLAG_TOO_DEEP 0x8
 #endif
 
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
   ndu = duf_levinfo_numdir_d( pdi, du );
 #else
@@ -472,26 +462,26 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
 #endif
 #if 0
   if ( ndu > 0 && d > d0 )
-    flags |= DUF_TREE_FLAG_CONTINUE; /* set continue */
-#  if 0
+    flags |= DUF_TREE_FLAG_CONTINUE;                                 /* set continue */
+# if 0
   if ( ndu < 0 && d > d0 )
   {
     flags |= 0x2;
     assert( 0 );
   }
-#  endif
+# endif
   if ( is_leaf )
-    flags |= DUF_TREE_FLAG_LEAF; /* set isleaf */
+    flags |= DUF_TREE_FLAG_LEAF;                                     /* set isleaf */
   if ( d == maxd )
-    flags |= DUF_TREE_FLAG_HERE; /* set node */
+    flags |= DUF_TREE_FLAG_HERE;                                     /* set node */
 
   if ( !duf_pdi_is_good_depth_d( pdi, is_leaf ? 1 : 0, d ) )
     flags |= DUF_TREE_FLAG_TOO_DEEP;
 #else
-  flags = ( d == maxd ? DUF_TREE_FLAG_HERE : 0 ) | /* */
-        ( is_leaf ? DUF_TREE_FLAG_LEAF : 0 ) | /* */
-        ( ndu > 0 && d > d0 ? DUF_TREE_FLAG_CONTINUE : 0 ) | /* */
-        ( duf_pdi_is_good_depth_d( pdi, is_leaf, d ) ? 0 : DUF_TREE_FLAG_TOO_DEEP );
+  flags = ( d == maxd ? DUF_TREE_FLAG_HERE : 0 ) |                   /* */
+          ( is_leaf ? DUF_TREE_FLAG_LEAF : 0 ) |                     /* */
+          ( ndu > 0 && d > d0 ? DUF_TREE_FLAG_CONTINUE : 0 ) |       /* */
+          ( duf_pdi_is_good_depth_d( pdi, is_leaf, d ) ? 0 : DUF_TREE_FLAG_TOO_DEEP );
 #endif
 
   DUF_PRINTF( 1, ".@@%1ld/%1ld*%d;", ndu, nchild, flags & DUF_TREE_FLAG_CONTINUE ? 1 : 0 ); /* */
@@ -507,19 +497,19 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
     bfsz -= l;
   }
 #endif
-  /*
-   * 1.
-   *   ' ' 
-   *   '│'  DUF_TREE_FLAG_CONTINUE ; !DUF_TREE_FLAG_HERE
-   *   '│'  DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE ;  DUF_TREE_FLAG_LEAF
-   *   '├'  DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE ; !DUF_TREE_FLAG_LEAF
-   *   '└' !DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE
-   * 2,3,4.
-   *   ' ' !DUF_TREE_FLAG_HERE
-   *   ' '  DUF_TREE_FLAG_HERE ;  DUF_TREE_FLAG_LEAF
-   *   '─'  DUF_TREE_FLAG_HERE ; !DUF_TREE_FLAG_LEAF
-   *
-   * */
+/*
+ * 1.
+ *   ' ' 
+ *   '│'  DUF_TREE_FLAG_CONTINUE ; !DUF_TREE_FLAG_HERE
+ *   '│'  DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE ;  DUF_TREE_FLAG_LEAF
+ *   '├'  DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE ; !DUF_TREE_FLAG_LEAF
+ *   '└' !DUF_TREE_FLAG_CONTINUE ;  DUF_TREE_FLAG_HERE
+ * 2,3,4.
+ *   ' ' !DUF_TREE_FLAG_HERE
+ *   ' '  DUF_TREE_FLAG_HERE ;  DUF_TREE_FLAG_LEAF
+ *   '─'  DUF_TREE_FLAG_HERE ; !DUF_TREE_FLAG_LEAF
+ *
+ * */
 #if 1
   {
     const char *s1 = NULL;
@@ -527,17 +517,17 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
 
     if ( flags & DUF_TREE_FLAG_HERE )
     {
-#  if 1
+# if 1
       if ( flags & DUF_TREE_FLAG_CONTINUE )
         s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_VLINE : DUF_TREE_PRE_NODE DUF_TREE_VRLINE;
       else
         s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_SPACE : DUF_TREE_PRE_NODE DUF_TREE_URLINE;
-#  else
+# else
       if ( flags & DUF_TREE_FLAG_CONTINUE )
         s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_VRLINE2 : DUF_TREE_PRE_NODE DUF_TREE_VRLINE;
       else
         s1 = flags & DUF_TREE_FLAG_LEAF ? DUF_TREE_PRE_LEAF DUF_TREE_SPACE : DUF_TREE_PRE_NODE DUF_TREE_URLINE;
-#  endif
+# endif
     }
     else
     {
@@ -587,12 +577,12 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
     strncpy( pbuffer, "│    ", bfsz );
     break;
   case DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_LEAF /*0x14 */ :
-    /* here: most right; leaf: file */
+  /* here: most right; leaf: file */
     strncpy( pbuffer, "  ", bfsz );
     break;
   case DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_LEAF | DUF_TREE_FLAG_CONTINUE /*0x15 */ :
-    /* continue + !node + isleaf */
-    /* strncpy(pbuffer, "│ → ", bfsz ); */
+  /* continue + !node + isleaf */
+  /* strncpy(pbuffer, "│ → ", bfsz ); */
     strncpy( pbuffer, "│ ", bfsz );
     break;
   case DUF_TREE_FLAG_HERE /*0x10 */ :
@@ -603,14 +593,14 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
   case DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_CONTINUE | DUF_TREE_FLAG_TOO_DEEP /*0x31 */ :
     strncpy( pbuffer, "├─── ", bfsz );
     break;
-#  if 0
+# if 0
   case DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_LEAF | DUF_TREE_FLAG_TOO_DEEP /*0x34 */ :
     strncpy( pbuffer, "  ", bfsz );
     assert( 0 );
     break;
   case DUF_TREE_FLAG_HERE | DUF_TREE_FLAG_LEAF | DUF_TREE_FLAG_TOO_DEEP | DUF_TREE_FLAG_CONTINUE /*0x35 */ :
-    /* !continue + !node + !isleaf */
-    /* strncpy(pbuffer, "  → ", bfsz ); */
+  /* !continue + !node + !isleaf */
+  /* strncpy(pbuffer, "  → ", bfsz ); */
     strncpy( pbuffer, "  ", bfsz );
     assert( 0 );
     break;
@@ -622,7 +612,7 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
     strncpy( pbuffer, "     ", bfsz );
     assert( 0 );
     break;
-#  endif
+# endif
   default:
     snprintf( pbuffer, bfsz, " [%02x]", flags );
     break;
@@ -637,7 +627,6 @@ static int
 duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
 {
   DUF_STARTR( r );
-
 
   int d0 = duf_pdi_topdepth( pdi );
   int maxd = duf_pdi_depth( pdi );

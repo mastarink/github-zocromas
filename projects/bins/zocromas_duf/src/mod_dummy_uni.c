@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
 #include "duf_config_trace.h"
@@ -24,53 +25,50 @@
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
-
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( dummy )
 /* ########################################################################################## */
-
 /* ########################################################################################## */
-
-duf_scan_callbacks_t duf_dummy_callbacks = {
-  .title = "dummy",
-  .name = "dummy",
-  .def_opendir = 0,
-  .init_scan = dummy_init,
+     duf_scan_callbacks_t duf_dummy_callbacks = {
+       .title = "dummy",
+       .name = "dummy",
+       .def_opendir = 0,
+       .init_scan = dummy_init,
 #if 0
-  .beginning_sql_seq = &sql_create_selected,
+       .beginning_sql_seq = &sql_create_selected,
 #else
-  .beginning_sql_seq = &sql_update_selected,
+       .beginning_sql_seq = &sql_update_selected,
 #endif
 
-  .node_scan_before2 = dummy_node_before2,
-  .node_scan_before2_deleted = dummy_node_before2_del,
+       .node_scan_before2 = dummy_node_before2,
+       .node_scan_before2_deleted = dummy_node_before2_del,
 
-  .node_scan_after2 = dummy_node_after2,
-  .node_scan_after2_deleted = dummy_node_after2_del,
+       .node_scan_after2 = dummy_node_after2,
+       .node_scan_after2_deleted = dummy_node_after2_del,
 
-  .node_scan_middle2 = dummy_node_middle2,
-  .node_scan_middle2_deleted = dummy_node_middle2_del,
+       .node_scan_middle2 = dummy_node_middle2,
+       .node_scan_middle2_deleted = dummy_node_middle2_del,
 
-  .leaf_scan_fd2 = dummy_de_content2,
-  .leaf_scan_fd2_deleted = dummy_de_content2_del,
+       .leaf_scan_fd2 = dummy_de_content2,
+       .leaf_scan_fd2_deleted = dummy_de_content2_del,
 
-  .leaf_scan2 = dummy_leaf2,
-  .leaf_scan2_deleted = dummy_leaf2_del,
+       .leaf_scan2 = dummy_leaf2,
+       .leaf_scan2_deleted = dummy_leaf2_del,
 
-  .dirent_file_scan_before2 = dummy_de_file_before2,
-  .dirent_dir_scan_before2 = dummy_de_dir_before2,
+       .dirent_file_scan_before2 = dummy_de_file_before2,
+       .dirent_dir_scan_before2 = dummy_de_dir_before2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-one",
-  .std_node_set_name = "std-node-one",
-};
+       .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .use_std_node_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .std_leaf_set_name = "std-leaf-one",
+       .std_node_set_name = "std-node-one",
+     };
 
 /* ########################################################################################## */
 
 static int
-dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED)
+dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -84,7 +82,7 @@ dummy_de_content2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNU
 {
   DUF_STARTR( r );
 
-  /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 
@@ -94,7 +92,6 @@ dummy_de_content2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNU
   assert( duf_levinfo_stat( pdi ) );
 
 #endif
-
 
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
@@ -111,14 +108,13 @@ dummy_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF
 {
   DUF_STARTR( r );
 
-  /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
 #endif
-
 
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
@@ -139,11 +135,10 @@ dummy_leaf2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
   DUF_SFIELD2( fname );
 
   assert( !duf_levinfo_dfd( pdi ) );
-  /* filename from db same as duf_levinfo_itemname( pdi ) */
+/* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_dbstat( pdi ) );
 #endif
-
 
   DUF_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( pdi ), fname );
   DUF_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( pdi ), fname,
@@ -161,7 +156,7 @@ dummy_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSE
   DUF_SFIELD2( fname );
 #endif
   DUF_TRACE( mod, 0, "@@dummy %s : %s", duf_levinfo_path( pdi ), fname );
-  /* Never called (no deleted flag - didn't try to open !!) */
+/* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
   DUF_ENDR( r );
@@ -174,16 +169,16 @@ dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi
   DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
-#  ifdef MAS_TRACING
+# ifdef MAS_TRACING
   DUF_SFIELD2( fname );
-#  endif
+# endif
   DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
   DUF_ENDR( r );
 }
 
 static int
-dummy_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
+dummy_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
@@ -191,21 +186,20 @@ dummy_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  D
 #endif
   DUF_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( pdi ), fname );
 
-
   DUF_ENDR( r );
 }
 
 static int
-dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
+dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 
   DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
-#  ifdef MAS_TRACING
+# ifdef MAS_TRACING
   DUF_SFIELD2( fname );
-#  endif
+# endif
   DUF_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
@@ -232,9 +226,9 @@ dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   DUF_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
-#  ifdef MAS_TRACING
+# ifdef MAS_TRACING
   DUF_SFIELD2( fname );
-#  endif
+# endif
   DUF_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
@@ -242,7 +236,7 @@ dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-dummy_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
+dummy_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
@@ -254,14 +248,14 @@ dummy_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi  DU
 }
 
 static int
-dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
+dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
 
-  /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+/* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
   {
     struct stat *st = duf_levinfo_stat( pdi );
 
@@ -275,9 +269,9 @@ dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
     assert( st->st_size == pstat_unused->st_size );
     assert( st->st_blksize == pstat_unused->st_blksize );
     assert( st->st_blocks == pstat_unused->st_blocks );
-    /* assert( st->st_atim == pstat_unused->st_atim ); */
-    /* assert( st->st_mtim == pstat_unused->st_mtim ); */
-    /* assert( st->st_ctim == pstat_unused->st_ctim ); */
+  /* assert( st->st_atim == pstat_unused->st_atim ); */
+  /* assert( st->st_mtim == pstat_unused->st_mtim ); */
+  /* assert( st->st_ctim == pstat_unused->st_ctim ); */
     assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
     assert( pstat_unused == st );
   }
@@ -296,7 +290,7 @@ dummy_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * 
 
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
-  /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+/* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
   {
     struct stat *st = duf_levinfo_stat( pdi );
 
@@ -310,9 +304,9 @@ dummy_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * 
     assert( st->st_size == pstat_unused->st_size );
     assert( st->st_blksize == pstat_unused->st_blksize );
     assert( st->st_blocks == pstat_unused->st_blocks );
-    /* assert( st->st_atim == pstat_unused->st_atim ); */
-    /* assert( st->st_mtim == pstat_unused->st_mtim ); */
-    /* assert( st->st_ctim == pstat_unused->st_ctim ); */
+  /* assert( st->st_atim == pstat_unused->st_atim ); */
+  /* assert( st->st_mtim == pstat_unused->st_mtim ); */
+  /* assert( st->st_ctim == pstat_unused->st_ctim ); */
     assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
     assert( pstat_unused == st );
   }

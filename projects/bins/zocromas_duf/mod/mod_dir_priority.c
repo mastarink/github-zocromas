@@ -1,21 +1,14 @@
 #include <string.h>
 #include <unistd.h>
 
-
-
-
-
-
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
-
-
-
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
@@ -51,20 +44,19 @@ static int set_dir_priority_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED,
 static int set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
 static int set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
 
-
 /* ########################################################################################## */
 
 duf_scan_callbacks_t duf_set_dir_priority_callbacks = {
   .title = "set dir priority",
   .name = "set_dir_priority",
-  .def_opendir = 0,             /* ?? */
+  .def_opendir = 0,                                                  /* ?? */
 
   .node_scan_before2 = set_dir_priority_node_before2,
   .node_scan_after2 = set_dir_priority_node_after2,
   .node_scan_middle2 = set_dir_priority_node_middle2,
 
-  .use_std_leaf_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel",
   .std_node_set_name = "std-node-two",
 };
@@ -106,7 +98,6 @@ set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DUF_ENDR( r );
 }
-
 
 static int
 set_dir_priority_node_after2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )

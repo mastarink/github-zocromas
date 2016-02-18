@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_PDI_H
 #  define MAS_DUF_PDI_H
 
-#  include "duf_levinfo_types.h"
+#  include "duf_levinfo_types.h" /* duf_depthinfo_t */
+#  include "duf_hook_types.h" /* duf_sql_set_t */
 
 
 int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_H
 #  define MAS_DUF_CLI_H
 
-#  include "duf_cli_types.h"
+#  include "duf_config_cli_types.h"
 
 void duf_cli_init( duf_config_cli_t * cli, int argc, char **argv );
 void duf_cli_shut( duf_config_cli_t * cli );

@@ -43,20 +43,25 @@ tab sfind duf_ufilter_types.h
 tab sfind duf_fileinfo_types.h
 tab sfind duf_pdi_types.h
 tab sfind duf_hook_types.h
-tab sfind duf_record_types.h
+tab sfind duf_sccb_types.h
+tab sfind duf_sql_set_types.h
+" tab sfind duf_record_types.h
 
-tab sfind duf_cli_types.h
 tab sfind duf_flags_types.h
 
 tab sfind duf_trace_types.h
+
+tab sfind duf_config_cli_types.h
 tab sfind duf_config_db_types.h
 tab sfind duf_config_opt_types.h
 tab sfind duf_config_output_types.h
 sfind duf_format_types.h
 
-tab sfind duf_options_enum.h
 tab sfind duf_option_types.h
-tab sfind duf_option_defs.h
+sfind duf_options_enum.h
+sfind duf_option_defs.h
+tab sfind duf_option_source_types.h
+tab sfind duf_option_stage_types.h
 
 tab sfind duf_options_enum.def
 sfind duf_options_enum_trace.def

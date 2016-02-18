@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
 #include "duf_config_trace.h"
@@ -24,12 +25,10 @@
 
 #include "duf_sccb_eval_std.h"
 
-
 /* #include "duf_path2db.h" */
 #include "duf_path2dirid.h"
 
 #include "duf_maindb.h"
-
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
@@ -38,49 +37,47 @@
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( dumplet )
 /* ########################################################################################## */
-
 /* ########################################################################################## */
-
-duf_scan_callbacks_t duf_dumplet_callbacks = {
-  .title = "dumplet",
-  .name = "dumplet",
-  .def_opendir = 0,
-  .init_scan = dumplet_init,
+     duf_scan_callbacks_t duf_dumplet_callbacks = {
+       .title = "dumplet",
+       .name = "dumplet",
+       .def_opendir = 0,
+       .init_scan = dumplet_init,
 #if 0
-  .beginning_sql_seq = &sql_create_selected,
+       .beginning_sql_seq = &sql_create_selected,
 #else
-  .beginning_sql_seq = &sql_update_selected,
+       .beginning_sql_seq = &sql_update_selected,
 #endif
 
-  .node_scan_before2 = dumplet_node_before2,
-  .node_scan_before2_deleted = dumplet_node_before2_del,
+       .node_scan_before2 = dumplet_node_before2,
+       .node_scan_before2_deleted = dumplet_node_before2_del,
 
-  .node_scan_after2 = dumplet_node_after2,
-  .node_scan_after2_deleted = dumplet_node_after2_del,
+       .node_scan_after2 = dumplet_node_after2,
+       .node_scan_after2_deleted = dumplet_node_after2_del,
 
-  .node_scan_middle2 = dumplet_node_middle2,
-  .node_scan_middle2_deleted = dumplet_node_middle2_del,
+       .node_scan_middle2 = dumplet_node_middle2,
+       .node_scan_middle2_deleted = dumplet_node_middle2_del,
 
-  .leaf_scan_fd2 = dumplet_de_content2,
-  .leaf_scan_fd2_deleted = dumplet_de_content2_del,
+       .leaf_scan_fd2 = dumplet_de_content2,
+       .leaf_scan_fd2_deleted = dumplet_de_content2_del,
 
-  .leaf_scan2 = dumplet_leaf2,
-  .leaf_scan2_deleted = dumplet_leaf2_del,
+       .leaf_scan2 = dumplet_leaf2,
+       .leaf_scan2_deleted = dumplet_leaf2_del,
 
-  .dirent_file_scan_before2 = dumplet_de_file_before2,
-  .dirent_dir_scan_before2 = dumplet_de_dir_before2,
+       .dirent_file_scan_before2 = dumplet_de_file_before2,
+       .dirent_dir_scan_before2 = dumplet_de_dir_before2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .std_leaf_set_name = "std-leaf-one",
-  .std_node_set_name = "std-node-one",
-};
+       .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .use_std_node_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .std_leaf_set_name = "std-leaf-one",
+       .std_node_set_name = "std-node-one",
+     };
 
 /* ########################################################################################## */
 
 static int
-dumplet_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi  DUF_UNUSED)
+dumplet_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -132,7 +129,7 @@ dumplet_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 {
   DUF_STARTR( r );
 
-  /* Never called (no deleted flag - didn't try to open !!) */
+/* Never called (no deleted flag - didn't try to open !!) */
   DUF_TRACE( mod, 4, "dumplet %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
   DUF_ENDR( r );

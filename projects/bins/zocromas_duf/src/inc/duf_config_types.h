@@ -2,7 +2,9 @@
 # define MAS_DUF_CONFIG_TYPES_H
 
 # include "duf_base_types.h"
-# include "duf_cli_types.h"
+# include "duf_ufilter_types.h"
+# include "duf_levinfo_types.h"
+# include "duf_config_cli_types.h"
 # include "duf_expand_types.h"
 # include "duf_config_db_types.h"
 # include "duf_config_opt_types.h"

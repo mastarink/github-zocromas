@@ -1,6 +1,8 @@
 #ifndef MAS_STD_MOD_SETS_H
 #  define MAS_STD_MOD_SETS_H
 
+#include "duf_sql_set_types.h"                                       /* duf_sql_set_t */
+
 #  if 0
 extern duf_sql_set_t std_leaf_set_num;
 extern duf_sql_set_t std_node_set_num;

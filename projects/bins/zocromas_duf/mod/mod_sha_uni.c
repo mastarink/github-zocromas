@@ -2,7 +2,10 @@
 #include <errno.h>
 #include <unistd.h>
 #include <openssl/sha.h>
+
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
+
 #include "duf_config.h"
 #include "duf_config_trace.h"
 #include "duf_config_util.h"
@@ -26,13 +29,13 @@ static int sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 /* ########################################################################################## */
 #define FILTER_DATA "fd.sha1id IS NULL"
 
-static duf_sql_sequence_t final_sql = /* */
+static duf_sql_sequence_t final_sql =                                /* */
 {
   .name = "final-sha1",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SHA1_FULL " SET dupsha1cnt=(SELECT COUNT(*) " /* */
-          " FROM " DUF_SQL_TABLES_SHA1_FULL " AS sh " /* */
+          " FROM " DUF_SQL_TABLES_SHA1_FULL " AS sh "                /* */
           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sha1id=sh." DUF_SQL_IDFIELD ") " /* */
           " WHERE " DUF_SQL_TABLES_SHA1_FULL "." DUF_SQL_IDFIELD "=sh." DUF_SQL_IDFIELD ")" /* */
           ,
@@ -47,23 +50,23 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
   .name = "sha1",
   .init_scan = NULL,
   .def_opendir = 1,
-  /* .dirent_dir_scan_before = NULL, */
-  /* .dirent_file_scan_before = NULL, */
-  /* .node_scan_before = collect_openat_sha1_node_before, */
-  /*  .leaf_scan =  collect_openat_sha1_leaf, */
-  /* .leaf_scan_fd = duf_dirent_sha1_content, */
+/* .dirent_dir_scan_before = NULL, */
+/* .dirent_file_scan_before = NULL, */
+/* .node_scan_before = collect_openat_sha1_node_before, */
+/*  .leaf_scan =  collect_openat_sha1_leaf, */
+/* .leaf_scan_fd = duf_dirent_sha1_content, */
   .leaf_scan_fd2 = sha1_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node_set_num = 2,    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  /* .std_leaf_set_name = "std-leaf-no-sel", */
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* .std_leaf_set_name = "std-leaf-no-sel", */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
   .leaf = {
            .name = "sha1-leaf",
            .type = DUF_NODE_LEAF,
-           .fieldset =          /* */
+           .fieldset =                                               /* */
            "#sha1",
            .fieldsets = {
                          "#basic",
@@ -71,18 +74,18 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
                          "#sha1x",
                          NULL}
            ,
-           .selector2 =         /* */
+           .selector2 =                                              /* */
            "#sha1-leaf",
-           .matcher = " fn.Pathid=:parentdirID " /* */
-           ,                    /* */
+           .matcher = " fn.Pathid=:parentdirID "                     /* */
+           ,                                                         /* */
 #if 0
-           .filter =            /* */
+           .filter =                                                 /* */
            "( " FILTER_DATA " OR sh." DUF_SQL_IDFIELD " IS NULL ) " /*                                          */ " AND " /* */
            "( sz.size   IS NULL OR sz.size > 0 ) " /*                                                            */ " AND " /* */
            "(  :fFast   IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) " /*                                      */ " AND " /* */
            "(  :fFast   IS NULL OR sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1 ) " /*  */ " AND " /* */
            "(  :fFast   IS NULL OR md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1 ) " /*  */ " AND " /* */
-           " 1 "                /* */
+           " 1 "                                                     /* */
            ,
 #else
            .afilter_fresh = {FILTER_DATA " OR sh." DUF_SQL_IDFIELD " IS NULL", "sz.size  IS NULL OR sz.size > 0"},
@@ -91,35 +94,35 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
                             "sd." DUF_SQL_IDFIELD " IS NULL OR sd.dup2cnt IS NULL OR sd.dup2cnt > 1",
                             "md." DUF_SQL_IDFIELD " IS NULL OR md.dup5cnt IS NULL OR md.dup5cnt > 1"},
 #endif
-           /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
+         /* .count_aggregate = "DISTINCT fd." DUF_SQL_IDFIELD (* *) */
            }
-  ,                             /* */
-  .node = {                     /* */
+  ,                                                                  /* */
+  .node = {                                                          /* */
            .name = "sha1-node",
            .type = DUF_NODE_NODE,
-           .expand_sql = 1,     /* */
-           .fieldset =          /* */
-           /* "'sha1-node' AS fieldset_id, " (* *) */
-           " pt." DUF_SQL_IDFIELD " AS dirid" /* */
-           ", pt." DUF_SQL_IDFIELD " AS nameid " /* */
+           .expand_sql = 1,                                          /* */
+           .fieldset =                                               /* */
+         /* "'sha1-node' AS fieldset_id, " (* *) */
+           " pt." DUF_SQL_IDFIELD " AS dirid"                        /* */
+           ", pt." DUF_SQL_IDFIELD " AS nameid "                     /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.ParentId " /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
 #endif
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_RNUMS )
-           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs " /* */
+           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                 /* */
            ", (" DUF_SQL__RNUMFILES( pt ) " WHERE " FILTER_DATA ") AS rnfiles " /* */
 #endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
-           .selector2 =         /* */
-           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
+           .selector2 =                                              /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "              /* */
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
@@ -128,9 +131,9 @@ duf_scan_callbacks_t duf_sha1_callbacks = {
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dname=:dirName )" /* */
            ,
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-           .filter = " rnfiles > 0 " /* */
+           .filter = " rnfiles > 0 "                                 /* */
 #endif
            },
   .final_sql_seq = &final_sql,
@@ -143,10 +146,10 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   int rpr = 0;
   unsigned long long sha1id = 0;
   const char *sql =
-        "SELECT " DUF_SQL_IDFIELD " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL
-        " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
+          "SELECT " DUF_SQL_IDFIELD " AS sha1id FROM " DUF_SQL_TABLES_SHA1_FULL
+          " WHERE sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sha1sum1=:sha1Sum1 AND sha1sum2=:sha1Sum2 AND sha1sum3=:sha1Sum3 */
-        ;
+          ;
 
   DUF_START(  );
 
@@ -159,16 +162,16 @@ duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, 
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
     DUF_TRACE( select, 10, "<selected>" );
-    /* sha1id = duf_sql_column_long_long( pstmt, 0 ); */
+  /* sha1id = duf_sql_column_long_long( pstmt, 0 ); */
     sha1id = DUF_GET_UFIELD2( sha1id );
-    /* rpr = 0; */
+  /* rpr = 0; */
   }
   else
   {
-    /* DUF_TEST_R( rpr ); */
+  /* DUF_TEST_R( rpr ); */
     DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
-  /* DUF_TEST_R( rpr ); */
+/* DUF_TEST_R( rpr ); */
   DUF_SQL_END_STMT( pdi, select_sha1, rpr, pstmt );
   if ( pr )
     *pr = rpr;
@@ -196,7 +199,7 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
     if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
       static const char *sql =
-            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA1_FULL " ( sha1sum1, sha1sum2, sha1sum3 ) VALUES ( :sha1sum1, :sha1sum2, :sha1sum3 )";
+              "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA1_FULL " ( sha1sum1, sha1sum2, sha1sum3 ) VALUES ( :sha1sum1, :sha1sum2, :sha1sum3 )";
 
       DUF_TRACE( sha1, 0, "%08llx%016llx%016llx %s%s", sha1[2], sha1[1], sha1[0], real_path, msg );
       DUF_SQL_START_STMT( pdi, insert_sha1, sql, lr, pstmt );
@@ -221,16 +224,16 @@ duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char
         sha1id = duf_sql_last_insert_rowid(  );
       }
     }
-    /* else                                      */
-    /* {                                         */
-    /*   DUF_SHOW_ERROR( "insert sha1 %d", lr ); */
-    /* }                                         */
+  /* else                                      */
+  /* {                                         */
+  /*   DUF_SHOW_ERROR( "insert sha1 %d", lr ); */
+  /* }                                         */
   }
   else
   {
-    /* DUF_SHOW_ERROR( "Wrong data" ); */
+  /* DUF_SHOW_ERROR( "Wrong data" ); */
     DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
-    /* DUF_TEST_R( lr ); */
+  /* DUF_TEST_R( lr ); */
   }
 
   if ( pr )
@@ -268,7 +271,7 @@ duf_make_sha1_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
 
           DUF_TRACE( sha1, 10, "read fd:%u", fd );
           ry = read( fd, buffer, bufsz );
-          /* TODO: if (ry>0)  sscbh->bytes+=ry */
+        /* TODO: if (ry>0)  sscbh->bytes+=ry */
           DUF_TRACE( sha1, 10, "read ry:%u", ry );
           if ( ry < 0 )
           {
@@ -282,8 +285,8 @@ duf_make_sha1_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
           {
             if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
             {
-            if ( pbytes )
-              ( *pbytes ) += ry;
+              if ( pbytes )
+                ( *pbytes ) += ry;
               if ( SHA1_Update( &ctx, buffer, ry ) != 1 )
                 DUF_MAKE_ERROR( r, DUF_ERROR_SHA1 );
             }
@@ -317,12 +320,12 @@ duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
   memset( asha1, 0, sizeof( asha1 ) );
   fd = duf_levinfo_dfd( pdi );
   DOR( r, duf_make_sha1_uni( fd, &bytes, asha1 ) );
-  /* reverse */
+/* reverse */
   for ( unsigned i = 0; i < sizeof( asha1 ) / sizeof( asha1[0] ); i++ )
     pmdr[i] = asha1[sizeof( asha1 ) / sizeof( asha1[0] ) - i - 1];
 
   pdi->total_bytes += bytes;
-  pdi->total_files ++;
+  pdi->total_files++;
 
   DUF_ENDR( r );
 }
@@ -346,7 +349,6 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     unsigned long long *pmd = ( unsigned long long * ) &asha1r;
 
     DUF_TRACE( sha1, 0, "insert %s", fname );
-
 
     sha1id = duf_insert_sha1_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( sha1id )
@@ -378,7 +380,7 @@ sha1_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( sha1, 4, "%02x:%2x:%2x:%2x:%2x:%2x", asha1r[SHA_DIGEST_LENGTH - 0], asha1r[SHA_DIGEST_LENGTH - 1], asha1r[SHA_DIGEST_LENGTH - 2],
                asha1r[SHA_DIGEST_LENGTH - 3], asha1r[SHA_DIGEST_LENGTH - 4], asha1r[SHA_DIGEST_LENGTH - 5] );
     DUF_TRACE( sha1, 0, "%08llx%016llx%016llx : sha1id: %llu", pmd[2], pmd[1], pmd[0], sha1id );
-    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sha1id ); */
+  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sha1id ); */
   }
   DUF_ENDR( r );
 }

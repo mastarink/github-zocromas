@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <fcntl.h> /* Definition of AT_* constants */
+#include <fcntl.h>                                                   /* Definition of AT_* constants */
 #include <errno.h>
 #include <sys/stat.h>
 
@@ -11,6 +11,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
 #include "duf_config_trace.h"
@@ -72,8 +73,8 @@ DUF_MOD_DECLARE_ALL_FUNCS( save_to )
      /* .dirent_dir_scan_before2 = save_to_de_dir_before2, */
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-       .use_std_leaf_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-       .use_std_node_set_num = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+       .use_std_node_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
        .std_leaf_set_name = "std-leaf-one",
        .std_node_set_name = "std-node-one",
      };

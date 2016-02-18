@@ -1,8 +1,7 @@
 #ifndef MAS_DUF_PDI_GLOBAL_H
-#  define MAS_DUF_PDI_GLOBAL_H
+# define MAS_DUF_PDI_GLOBAL_H
 
-
-
+# include "duf_levinfo_types.h"/* duf_depthinfo_t */
 
 int duf_pdi_init_global( void );
 

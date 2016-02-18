@@ -1,6 +1,8 @@
 #ifndef   MAS_EVSQL_BEGFIN_H
 #  define MAS_EVSQL_BEGFIN_H
 
+#include "sql_beginning_types.h" /* duf_bind_cb_t */
+
 /* 20150913.101022
  * 1. expand sql statement with duf variables ${...}
  * 2. prepare statement
