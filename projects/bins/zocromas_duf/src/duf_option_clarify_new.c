@@ -10,6 +10,7 @@
 #include "duf_config_trace.h"
 
 #include "duf_option_types.h"
+#include "duf_option_config.h"
 
 #include "duf_expandable.h"
 
@@ -285,15 +286,6 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
       oa = duf_string_options_expand( pod->optarg, '?' );
       CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,
            pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
-#if 0
-      if ( 0 == strcmp( "verbose", pod->name ) )
-      {
-        extern duf_config_t *duf_config;
-
-        T( "@########### [%s:%s:%s] %lu %s:%s v:%d", pod->string_copy, pod->name, pod->optarg, pod->doindex, duf_optstage_name( pod->stage ),
-           duf_optsource_name( pod->source ), duf_config->opt.dbg.verbose );
-      }
-#endif
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
     }
@@ -321,7 +313,8 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
 
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
 {
-  CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod );
+  /* CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod ); */
+  CR( soption_xclarify_new_at_multix_od, duf_cli_options_xvtable_multi(), pod );
 
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod );
 }

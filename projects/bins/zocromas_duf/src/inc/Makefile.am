@@ -11,7 +11,9 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	sql_beginning_types.h \
 	duf_base_types.h \
 	duf_config_opt_trace_types.h \
+	duf_config_opt_debug_types.h \
 	duf_config_cli_types.h \
+	duf_config_flow_types.h \
 	duf_config_output_types.h \
 	duf_config_db_types.h \
 	duf_config_act_types.h \
@@ -33,7 +35,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_dirent.h \
 	duf_filedata.h \
 	duf_fileinfo_types.h \
-	duf_flags_types.h \
 	duf_fun_types.h \
 	duf_hook_types.h \
 	duf_sccb_types.h \

@@ -5,7 +5,6 @@
 
 duf_config_opt_trace_t *duf_get_trace_config( void );
 
-int duf_verbose( void );
 FILE *duf_trace_file( void );
 int duf_output_force_color( void );
 int duf_output_nocolor( void );

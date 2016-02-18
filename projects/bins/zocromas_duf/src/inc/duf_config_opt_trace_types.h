@@ -11,7 +11,6 @@ typedef struct
   int temp;
   int collect;
   int any;
-  int verbose;
     /**/ int dirs;
   int filedata;
   int filenames;

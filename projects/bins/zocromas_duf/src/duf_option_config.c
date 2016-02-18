@@ -70,7 +70,7 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtab
 }
 
 void
-duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables )
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables, const char *config_dir )
 {
   if ( cli )
   {
@@ -83,6 +83,8 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
 
     config_cli->longopts_table = duf_options_create_longopts_table( xvtables );
     assert( config_cli->longopts_table );
+
+    config_cli->config_dir = mas_strdup( config_dir );
   }
 /*
   TODO
@@ -105,6 +107,8 @@ duf_cli_options_shut( duf_config_cli_t * cli )
   config_cli->shorts = NULL;
   mas_free( config_cli->history_filename );
   config_cli->history_filename = NULL;
+  mas_free( config_cli->config_dir );
+  config_cli->config_dir = NULL;
 }
 
 const char *
@@ -286,10 +290,15 @@ duf_cli_options_get_longopts_table( void )
 {
   return config_cli ? config_cli->longopts_table : NULL;
 }
-#if 1
-int
-duf_verbose( void )
+
+const duf_longval_extended_vtable_t *const *
+duf_cli_options_xvtable_multi( void )
 {
-  return config_cli ? config_cli->verbose : 0;
+  return config_cli ? config_cli->xvtable_multi : NULL;
 }
-#endif
+
+char
+duf_cli_options_delimiter( void )
+{
+  return config_cli ? config_cli->option_delimiter : ':';
+}

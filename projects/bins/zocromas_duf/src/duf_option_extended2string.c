@@ -86,9 +86,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, opt.act.v ):
         rs = "opt.act.v";
         break;
-      case offsetof( duf_config_t, opt.v ):
-        rs = "opt.v";
-        break;
+      /* case offsetof( duf_config_t, opt.flow ): */
+      /*   rs = "opt.flow";                       */
+      /*   break;                                 */
       case offsetof( duf_config_t, opt.output ):
         rs = "opt.output";
         break;

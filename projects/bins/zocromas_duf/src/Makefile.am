@@ -2,8 +2,8 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 if  MAS_TEST
 noinst_PROGRAMS=mtest mjtest motest
-motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_expandable.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_utils.c 
-#	duf_config_util_z.c duf_config_util.c
+motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_expandable.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_utils.c duf_option_tmpdb.c
+#  duf_config_util_z.c duf_config_util.c
 motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@
 motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@  @READLINE_LIBS@
 

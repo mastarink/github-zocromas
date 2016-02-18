@@ -18,7 +18,7 @@
 
 #include "duf_xtended_table.h"
 
-#include "duf_options_file.h"   /* duf_options_infilepath */
+#include "duf_options_file.h"                                        /* duf_options_infilepath */
 
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"
@@ -33,7 +33,7 @@
 /* ###################################################################### */
 
 #if 0
-#  define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
+# define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
 /*
  * if arg is help option
  * return class id for options to display the help
@@ -137,7 +137,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "    --collect" );
   DUF_PRINTF( 0, "Old options" );
   DUF_PRINTF( 0, "  --zero-duplicates" );
-  /* DUF_PRINTF(0,  "  --update-duplicates"  ); */
+/* DUF_PRINTF(0,  "  --update-duplicates"  ); */
   DUF_PRINTF( 0, "  --zero-filedatas" );
   DUF_PRINTF( 0, "  --update-filedatas" );
   DUF_PRINTF( 0, "  --update-mdpaths" );
@@ -147,7 +147,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --same-md5" );
   DUF_PRINTF( 0, "Debug ----------" );
   DUF_PRINTF( 0, "  --debug" );
-  DUF_PRINTF( 0, "  -v, --verbose=%d", DUF_CONFIGG( cli.verbose ) );
+  DUF_PRINTF( 0, "  -v, --verbose=%d", duf_verbose(  ) );
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
@@ -285,7 +285,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20140718 ===================" );
   DUF_PRINTF( 0, "  run   -OPRidDnf5E  /mnt/new_media/media/photo		- %s", "" );
 
-
   DUF_PRINTF( 0, "========================= as for 20140818 ===================" );
   DUF_PRINTF( 0, "  run   --help-class-short 		- %s", "" );
   DUF_PRINTF( 0, "  run   --help-class       		- %s", "" );
@@ -315,7 +314,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --size=181684411		- %s", "" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -523Xe /mnt/new_media/media/photo/		- %s", "" );
 
-
   DUF_PRINTF( 0, "========================= as for 20140901 ===================" );
   DUF_PRINTF( 0,
               "  run  /mnt/new_media/media/photo/  -Rpdf --format=human=0,mtime,nameid=0,dirid=0,inode=0,md5=0 "
@@ -325,7 +323,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same --glob='*06-unknown.jpeg' 		- %s", "" );
   DUF_PRINTF( 0, "  shn g --memusage  /mnt/new_media/media/photo/  -Rpdf --same --glob='*06-unknown.jpeg' 		- %s", "" );
   DUF_PRINTF( 0, "  run -OPREif -X /mnt/new_media/media/photo/ --progress 		- %s", "" );
-
 
   DUF_PRINTF( 0, "========================= as for 20140905.111356 ============" );
   DUF_PRINTF( 0,
@@ -346,7 +343,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -RDdnEiX235fOe   --show-sccbs --nosccbs	- %s", "dbg ..." );
   DUF_PRINTF( 0, "========================= as for 20150128.161052 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/ -P --trace-path=3	- %s", "dbg, see human/screen-20150128.160747.png" );
-
 
   DUF_PRINTF( 0, "========================= as for 20150506.153411 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf    	- %s", "" );
@@ -370,7 +366,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --memusa --flags    	- %s", "" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/     --min-exifdt=20120101 --max-exifdt=20130101  -dfR  --evaluate-sccb=listing    	- %s", "" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --list-sccbs    	- %s", "" );
-
 
   DUF_PRINTF( 0, "========================= as for 20150520.114602 ============" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --allow-remove-database -PO -dEi   	- %s",
@@ -437,7 +432,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run / --same-as-md5=/mnt/new_media/media/photo/Фото0829.jpg  -Rdfp    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same-md5 --glob-db='*506-unknown.jpeg'    	- %s", "" );
   DUF_PRINTF( 0, "  run --memusage  --nosccbs --allow-vacuum --flags    	- %s", "" );
-
 
   DUF_PRINTF( 0, "========================= as for 20150529.151033 ============" );
   DUF_PRINTF( 0, "  run --progress  -F     /mnt/new_media/media/photo/ --allow-remove-database -PO -fR "
@@ -510,7 +504,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               " --min-same=2 --tag-file=at-LG_G3  --evaluate-sccb=tagit   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' / --tree   	- %s", "-= \"\" =-" );
 
-
   DUF_PRINTF( 0, "  run  --db-name=htc_20101224.db  --allow-drop-tables  -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/Pictures/HTC_Legend/20101224  	- %s",
               "-= \"\" =-" );
@@ -555,13 +548,11 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               " --save-dir=save/%%Tx{%%Y}/%%a/%%Tx{%%B/%%d/%%H%%M%%S}/%%M --evaluate-sccb=save_to /home/mastar/big/misc/media/photo  	- %s",
               "-= \"\" =-" );
 
-
   DUF_PRINTF( 0, "========================= as for 20150902.181551 ============" );
   DUF_PRINTF( 0, "  run  --db-name=200105.db  --allow-drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif "
               " --progress  /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  --db-name=200105.db  -dfR  --with-mime=image/jpeg --ls /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s",
               "-= \"\" =-" );
-
 
   DUF_PRINTF( 0, "========================= as for 20150908.155827 ============" );
   DUF_PRINTF( 0, "  run  --trace-path=1 -dfR --trace-options=2 --output-file=/dev/pts/30 --min-same=5 "
@@ -629,14 +620,12 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "real 47m35.621s; user 8m38.055s; system 4m20.704s; cpu 27.27     	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
 
-
   DUF_PRINTF( 0, "========================= as for 20151006.194418 ============ new: --cmds-dir" );
   DUF_PRINTF( 0, "  ln -s `realpath dufconf/zocromas_duf.conf` /home/mastar/.mas/config/zocromas_duf.conf 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=dufconf @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config  @test0.cmds 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --config-dir=/home/mastar/.mas/config/ --cmds-dir=test/duf/tests20151006  @test0.cmds 	- %s", "-= \"\" =-" );
-
 
   DUF_PRINTF( 0, "========================= as for 20151013.175104 ============ new: --allow-dir, --dir-priority, =set_dir_priority" );
   DUF_PRINTF( 0, "  run -du                      --db-name=test_tree  --trace-mod=7  --dir-priority=-6 "
@@ -682,7 +671,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
               "  run --output-level=0   --std-leaf-set=3 --trace-sccbh=0   -f --db-name=test_tree  --use-format=3 --sha1id=380 --ls test/tree/ -L 	- %s",
               " -= \"\" =-" );
 
-
   DUF_PRINTF( 0, "========================= as for 20151115.165244 ============" );
   DUF_PRINTF( 0, "  run   --db-name=photo  --evaluate-sccb=listing /home/mastar/big/misc/media/photo  -f  --std-leaf-set=3 "
               " --force-color  -L | less -R 	- %s", " -= \"\" =-" );
@@ -699,7 +687,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --help-set 	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run --help-set=format  	- %s", " -= \"\" =-" );
   DUF_PRINTF( 0, "  run --help-set=%%  	- %s", " -= \"\" =-" );
-
 
   DUF_PRINTF( 0, "========================= as for 20160120.160108 ============" );
   DUF_PRINTF( 0, "  run  --allow-drop-table --allow-create-tables --create-database  --db-name=owncloud_mega_zip "
@@ -720,7 +707,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip --linear --std-leaf-set=4   -df  --evaluate-sccb=listing "
               " /home/ " " --use-format=4    	- %s", " -= \"same-groups almost shows (automatically)\" =-" );
 
-
   DUF_PRINTF( 0, "========================= as for 20160130.174647 ============" );
   DUF_PRINTF( 0, "** new: commands from stdin " );
   DUF_PRINTF( 0, "  cat << EEE | run -df /home/"
@@ -732,7 +718,6 @@ duf_option_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "** new: some test flags " );
   DUF_PRINTF( 0, "  run --no-test-act-flag --test-act-flag --test-act-noflag " " --test-recetc-flag --test-recetc-noflag "
               "--no-test-recetc-noflag --test-cfg-num=654321  	- %s", " -= \"\" =-" );
-
 
   DUF_PRINTF( 0, "========================= as for 20160211.200000 ============" );
   DUF_PRINTF( 0, "** new: --fresh " );
@@ -765,8 +750,6 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     duf_option_code_t id;
   } duf_chk_act_flags_t;
 
-
-
 #define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, .name=#_l, .id=DUF_OPTION_VAL_FLAG_ ## _u}
   duf_chk_act_flags_t tab[] = {
     CHECK_FLAG_ID_ROW( info, INFO ),
@@ -777,35 +760,35 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( allow_create_database, ALLOW_CREATE_DB ),
     CHECK_FLAG_ID_ROW( allow_create_tables, ALLOW_CREATE_TABLES ),
 
-    /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
+  /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
     CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRECTORIES ),
     CHECK_FLAG_ID_ROW( allow_sub, ALLOW_SUB ),
-    /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS; 20151013.095014 -> ALLOW_DIRECTORIES */
+  /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS; 20151013.095014 -> ALLOW_DIRECTORIES */
     CHECK_FLAG_ID_ROW( allow_files, ALLOW_FILES ),
 
-    /* CHECK_FLAG_ID_ROW( progress, PROGRESS ), */
-    /* CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ), */
+  /* CHECK_FLAG_ID_ROW( progress, PROGRESS ), */
+  /* CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ), */
     CHECK_FLAG_ID_ROW( summary, SUMMARY ),
     CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
 
-    /* CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ), */
+  /* CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ), */
     CHECK_FLAG_ID_ROW( fast, FAST ),
     CHECK_FLAG_ID_ROW( fresh, FRESH ),
 
     CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
 
     CHECK_FLAG_ID_ROW( dirent, DIRENT ),
-    /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ),   */
-    /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
+  /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ),   */
+  /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
 
-    /* CHECK_FLAG_ID_ROW( collect_obs, COLLECT ), */
-    /* CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),     */
-    /* CHECK_FLAG_ID_ROW( md5_obs, MD5 ),     */
-    /* CHECK_FLAG_ID_ROW( sha1_obs, MD5 ),     */
-    /* CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ), */
-    /* CHECK_FLAG_ID_ROW( mime_obs, MIME ),   */
-    /* CHECK_FLAG_ID_ROW( exif_obs, EXIF ),   */
-    /* CHECK_FLAG_ID_ROW( mdpath_obs, MSPATH ),   */
+  /* CHECK_FLAG_ID_ROW( collect_obs, COLLECT ), */
+  /* CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),     */
+  /* CHECK_FLAG_ID_ROW( md5_obs, MD5 ),     */
+  /* CHECK_FLAG_ID_ROW( sha1_obs, MD5 ),     */
+  /* CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ), */
+  /* CHECK_FLAG_ID_ROW( mime_obs, MIME ),   */
+  /* CHECK_FLAG_ID_ROW( exif_obs, EXIF ),   */
+  /* CHECK_FLAG_ID_ROW( mdpath_obs, MSPATH ),   */
 
   };
 #if 0
@@ -814,7 +797,7 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     duf_config_act_flags_combo_t tst;
 
     tst.bit = uf;
-    /* if ( tst.bit == fset.bit ) */
+  /* if ( tst.bit == fset.bit ) */
     {
       DUF_PRINTF( 0, "%lx/%lx - %lx", ( unsigned long ) uf, ( unsigned long ) tst.bit, ( unsigned long ) fset.bit );
     }
@@ -860,8 +843,8 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
   DUF_STARTR( r );
   {
     typeof( duf_config->opt.act ) u = duf_config->opt.act;
-    /* u.v.bit = 0;       */
-    /* u.v.flag.info = 1; */
+  /* u.v.bit = 0;       */
+  /* u.v.flag.info = 1; */
     DUF_PRINTF( 0, "opt.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.act.v ) ), sizeof( typeof( u.v.bit ) ),
                 ( unsigned long ) DUF_CONFIGG( opt.act.v.bit ) );
 
@@ -883,7 +866,6 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 0 ) );
     DUF_PRINTF( 0, "   ┌──────────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─┐" );
       /* *INDENT-ON*  */
-
 
     typeof( u.v.bit ) mask = ( ( typeof( u.v.bit ) ) 1 ) << ( ( sizeof( u.v.bit ) * 8 ) - 1 );
 
@@ -993,7 +975,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
-      /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name ); */
+    /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name ); */
       DUF_PRINTF( 0, "%3d (%2d) %4d %d:%d\t--%-40s - %s", tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min,
                   xtended->stage_opts.stage.max, xtended->o.name, s ? s : "" );
       mas_free( s );

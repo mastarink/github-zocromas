@@ -40,7 +40,7 @@ duf_config_optionally_show( void )
 {
   DUF_STARTR( r );
 
-  if ( duf_config->cli.verbose > 1 )
+  if ( duf_verbose && duf_verbose() > 1 )
   {
     DOR( r, duf_config_show(  ) );
   }

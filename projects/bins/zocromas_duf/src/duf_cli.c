@@ -3,6 +3,10 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config.h"
+#include "duf_config_trace.h"
+#include "duf_config_defs.h"
+
 #include "duf_xtended_table.h"
 
 #include "duf_option_config.h"
@@ -20,7 +24,7 @@ duf_cli_init( duf_config_cli_t * cli, int argc, char **argv )
   if ( !cli->shorts )
     cli->shorts = duf_cli_options_shorts( lo_extended_table_multi );
 #else
-  duf_cli_options_init( cli, argc, argv, duf_extended_vtable_multi() );
+  duf_cli_options_init( cli, argc, argv, duf_extended_vtable_multi(), DUF_CONFIGGS( conf.config_dir ) );
   /* duf_cli_options_shorts_init( lo_extended_table_multi ); */
 #endif
 }

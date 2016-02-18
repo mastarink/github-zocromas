@@ -9,6 +9,10 @@
 
 #  include "duf_defs.h"
 
+extern int duf_verbose( void ) __attribute__ ( ( weak ) );
+extern int duf_dry_run( void ) __attribute__ ( ( weak ) );
+
+
 #  include "duf_printn_defs_preset.h"
 #  include "duf_tracen_defs_preset.h"
 

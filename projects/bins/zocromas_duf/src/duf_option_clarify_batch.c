@@ -7,6 +7,7 @@
 
 /* #include "duf_option_clarify_string.h" */
 
+#include "duf_option_config.h"
 #include "duf_option_clarify_new.h"
 #include "duf_option_source.h"
 
@@ -15,8 +16,8 @@
 /* ###################################################################### */
 
 static
-SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separator, duf_option_stage_t istage, duf_option_source_t source, char delim,
-    duf_option_adata_t * paod )
+SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separator, duf_option_stage_t istage, duf_option_source_t source,
+    char delim, duf_option_adata_t * paod )
 {
   const char *estr;
   char *bstr;
@@ -48,8 +49,8 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
       xs = xs1;
     }
 #else
-    /* xs = _duf_string_options_expand( bstr, &expandable_later ); */
-    /* xs = duf_string_options_expand( bstr, '?' ); */
+  /* xs = _duf_string_options_expand( bstr, &expandable_later ); */
+  /* xs = duf_string_options_expand( bstr, '?' ); */
 #endif
     DUF_TRACE( explain, 0, "bstr: \"%s\"", bstr );
 
@@ -59,9 +60,9 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
   }
   mas_free( bstr );
   *ppeo = estr;
-  /* DUF_TRACE( explain, 0, "*ppeo \"%s\"", *ppeo ); */
-  ER( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separator, duf_option_stage_t istage, duf_option_source_t source, char delim,
-      duf_option_adata_t * paod );
+/* DUF_TRACE( explain, 0, "*ppeo \"%s\"", *ppeo ); */
+  ER( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separator, duf_option_stage_t istage, duf_option_source_t source,
+      char delim, duf_option_adata_t * paod );
 }
 
 /*
@@ -76,8 +77,13 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
 SR( OPTIONS, boption_xclarify_at_stdx, char value_separator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim,
     duf_option_adata_t * paod )
 {
+#if 0
   if ( !delim )
     delim = duf_option_delimiter(  );
+#else
+  if ( !delim )
+    delim = duf_cli_options_delimiter(  );
+#endif
   if ( !delim )
     delim = ':';
   if ( cmdstr && *cmdstr == ':' )

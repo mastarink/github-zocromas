@@ -221,7 +221,7 @@ typedef union
   duf_config_act_flags_t act;
   duf_config_output_flags_t output;
   duf_rec_etc_flags_t rec_etc;
-  duf_config_opt_flags_t opt;
+  duf_config_flow_flags_t flow;
   duf_config_opt_disable_flags_t disable;
   unsigned bit;
   unsigned short sbit;

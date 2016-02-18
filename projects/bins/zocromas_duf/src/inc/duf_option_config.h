@@ -1,9 +1,10 @@
 #ifndef MAS_DUF_OPTION_CONFIG_H
-#  define MAS_DUF_OPTION_CONFIG_H
+# define MAS_DUF_OPTION_CONFIG_H
 
-#  include "duf_option_types.h"
+# include "duf_option_types.h"
 
-void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables );
+void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables,
+                           const char *config_dir );
 void duf_cli_options_shut( duf_config_cli_t * cli );
 duf_config_cli_t *duf_cli_options_config( void );
 
@@ -31,4 +32,9 @@ void duf_cli_options_set_targ_offset( int targ_offset );
 void duf_cli_options_reset_targ_offset( void );
 
 duf_option_t *duf_cli_options_get_longopts_table( void );
+
+const duf_longval_extended_vtable_t *const *duf_cli_options_xvtable_multi( void );
+
+char duf_cli_options_delimiter( void );
+
 #endif

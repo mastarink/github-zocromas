@@ -13,7 +13,6 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 
-
 /* ###################################################################### */
 #include "duf_dbg.h"
 /* ###################################################################### */
@@ -27,7 +26,7 @@ duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, uns
 {
   const char *pg = NULL;
   const char *graph[] = { "┌─", "│ ", "└─" };
-  /* char *tail = "........."; */
+/* char *tail = "........."; */
   char *tail = "";
 
   if ( duf_dbgfunlevel > 0 )
@@ -45,13 +44,14 @@ int
 duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 {
   int minverbose = 15;
+  /* extern int duf_verbose( void ) __attribute__ ( ( weak ) ); */
 
-  if ( dbgfunc_enabled && duf_config && ( ( DUF_CONFIGX( cli.verbose ) >= minverbose ) || DUF_CONFIGX( opt.trace.calls ) ) )
+  if ( dbgfunc_enabled && duf_config && ( ( duf_verbose && duf_verbose(  ) >= minverbose ) || DUF_CONFIGX( opt.trace.calls ) ) )
   {
     static int inited = 0;
     static char pref[1024];
 
-#define DUF_PREF_ISIZE ((int)sizeof( pref ))
+# define DUF_PREF_ISIZE ((int)sizeof( pref ))
 
     if ( !inited )
     {
@@ -71,11 +71,11 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
     {
       FILE *out;
 
-#if 0
-      /* out = DUF_CONFIGX( opt.trace.output.out ) ? DUF_CONFIGX( opt.trace.output.out ) : stderr; */
-#else
+# if 0
+    /* out = DUF_CONFIGX( opt.trace.output.out ) ? DUF_CONFIGX( opt.trace.output.out ) : stderr; */
+# else
       out = MAST_TRACE_FILE;
-#endif
+# endif
       switch ( code )
       {
       case DBG_START:
@@ -83,8 +83,8 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
         if ( duf_dbgfunlevel >= 0 )
           pref[duf_dbgfunlevel] = ' ';
         duf_dbgfunlevel++;
-        /* if ( duf_dbgfunlevel >= 0 )  */
-        /*   pref[duf_dbgfunlevel] = 0; */
+      /* if ( duf_dbgfunlevel >= 0 )  */
+      /*   pref[duf_dbgfunlevel] = 0; */
         assert( duf_dbgfunlevel < DUF_PREF_ISIZE );
         break;
       case DBG_END:
@@ -100,29 +100,28 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
       case DBG_STEPI2S:
       case DBG_STEPULL:
         break;
-        /* default: */
-        /*   break; */
+      /* default: */
+      /*   break; */
       }
 
-      /* DUF_FPRINTFNE( 0,  out, "%3d:%-23s .........\n", DUF_CONFIGX(opt.dbg.lines), duf_dbgfunlevel, line, func ); */
-      /* DUF_FPRINTFNE( 0,  out, "%4lu of %4lu <<<<<<<<<<\n", DUF_CONFIGX(opt.dbg.lines), DUF_CONFIGX(opt.dbg.max_line) ); */
+    /* DUF_FPRINTFNE( 0,  out, "%3d:%-23s .........\n", DUF_CONFIGX(opt.dbg.lines), duf_dbgfunlevel, line, func ); */
+    /* DUF_FPRINTFNE( 0,  out, "%4lu of %4lu <<<<<<<<<<\n", DUF_CONFIGX(opt.dbg.lines), DUF_CONFIGX(opt.dbg.max_line) ); */
 
-
-      /* DUF_FPRINTFNE( 0,  out, "L%2u", duf_dbgfunlevel ); */
+    /* DUF_FPRINTFNE( 0,  out, "L%2u", duf_dbgfunlevel ); */
       switch ( code )
       {
       case DBG_START:
         if ( !DUF_CONFIGX( opt.trace.calls ) || DUF_CONFIGX( opt.trace.calls ) > duf_dbgfunlevel + 1 )
         {
           duf_dbgfuncv_pref( out, pref, line, func, 1, 1 );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s┌─%3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s┌─%3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
         }
         break;
       case DBG_STEP:
         if ( !DUF_CONFIGX( opt.trace.calls ) || DUF_CONFIGX( opt.trace.calls ) > duf_dbgfunlevel + 2 )
         {
           duf_dbgfuncv_pref( out, pref, line, func, 2, 1 );
-          /* DUF_FPRINTFNE( 0, out, " %s│ %3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
+        /* DUF_FPRINTFNE( 0, out, " %s│ %3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
         }
         break;
       case DBG_STEPIS:
@@ -136,7 +135,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           duf_dbgfuncv_pref( out, pref, line, func, 2, 0 );
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " int(%d) (%s)\n", i, s );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... int(%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, i, s ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... int(%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, i, s ); */
         }
         break;
       case DBG_STEPI2S:
@@ -152,7 +151,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           duf_dbgfuncv_pref( out, pref, line, func, 2, 0 );
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " int(%d;%d) (%s)\n", i1, i2, s );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... int(%d;%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, i1, i2, s ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... int(%d;%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, i1, i2, s ); */
         }
         break;
       case DBG_STEPULL:
@@ -163,7 +162,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 
           duf_dbgfuncv_pref( out, pref, line, func, 2, 0 );
           DUF_FPRINTFNE( 0, out, " ull(%llu)\n", ull );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... ull(%llu)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, ull ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... ull(%llu)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, ull ); */
         }
         break;
       case DBG_STEPS:
@@ -173,22 +172,22 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           s = va_arg( args, const char * );
 
           duf_dbgfuncv_pref( out, pref, line, func, 2, 0 );
-#if 0
+# if 0
           if ( s )
             DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... '%s'\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, s );
           else
             DUF_FPRINTFNE( 0, out, "#%4lu. %s│ %3d:%-23s ......... Nil\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func );
-#else
+# else
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " %s\n", s ? s : "Nil" );
-#endif
+# endif
         }
         break;
       case DBG_END:
         if ( !DUF_CONFIGX( opt.trace.calls ) || DUF_CONFIGX( opt.trace.calls ) > duf_dbgfunlevel + 1 )
         {
           duf_dbgfuncv_pref( out, pref, line, func, 3, 1 );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func ); */
         }
         break;
       case DBG_ENDR:
@@ -200,7 +199,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           duf_dbgfuncv_pref( out, pref, line, func, 3, 0 );
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " rt=int(%d)\n", rt );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... rt=int(%d)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... rt=int(%d)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt ); */
         }
         break;
       case DBG_ENDRS:
@@ -214,7 +213,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           duf_dbgfuncv_pref( out, pref, line, func, 3, 0 );
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " rt=int(%d) (%s)\n", rt, s );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... rt=int(%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt, s ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... rt=int(%d) (%s)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt, s ); */
         }
         break;
       case DBG_ENDULL:
@@ -226,7 +225,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           duf_dbgfuncv_pref( out, pref, line, func, 3, 0 );
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " llu(%llu)\n", rt );
-          /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... llu(%llu)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt ); */
+        /* DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... llu(%llu)\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, rt ); */
         }
         break;
       case DBG_ENDS:
@@ -237,23 +236,23 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           s = va_arg( args, const char * );
 
           duf_dbgfuncv_pref( out, pref, line, func, 3, 0 );
-#if 0
+# if 0
           if ( s )
             DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... '%s'\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, s );
           else
             DUF_FPRINTFNE( 0, out, "#%4lu. %s└─%3d:%-23s ......... Nil\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func );
-#else
+# else
           if ( duf_dbgfunlevel > 0 )
             DUF_FPRINTFNE( 0, out, " %s\n", s ? s : "Nil" );
-#endif
+# endif
         }
         break;
-#if 0
+# if 0
       default:
         if ( !DUF_CONFIGX( opt.trace.calls ) || DUF_CONFIGX( opt.trace.calls ) > duf_dbgfunlevel + 1 )
           DUF_FPRINTFNE( 0, out, "#%4lu. %s::%3d:%-23s code=%d .........\n", DUF_CONFIGX( opt.dbg.lines ), pref, line, func, code );
         break;
-#endif
+# endif
       }
       switch ( code )
       {
@@ -271,8 +270,8 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
       case DBG_ENDULL:
       case DBG_ENDS:
       case DBG_ENDCS:
-        /* if ( duf_dbgfunlevel >= 0 )  */
-        /*   pref[duf_dbgfunlevel] = 0; */
+      /* if ( duf_dbgfunlevel >= 0 )  */
+      /*   pref[duf_dbgfunlevel] = 0; */
         duf_dbgfunlevel--;
         break;
       }
@@ -304,7 +303,7 @@ duf_dbgfunc( duf_dbgcode_t code DUF_UNUSED, const char *func DUF_UNUSED, int lin
 
   {
     va_start( args, line );
-    /* rt = duf_dbgfuncv( code, func, line, args ); */
+  /* rt = duf_dbgfuncv( code, func, line, args ); */
     va_end( args );
   }
   return rt;

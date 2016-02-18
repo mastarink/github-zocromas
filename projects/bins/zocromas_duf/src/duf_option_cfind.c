@@ -141,7 +141,7 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
 
   if ( codeval && codeval != '?' )
   {
-    for ( const duf_longval_extended_vtable_t * const *multix = duf_extended_vtable_multi(  ); !rxtended && *multix; multix++, ntable++ )
+    for ( const duf_longval_extended_vtable_t * const *multix = duf_cli_options_xvtable_multi(); !rxtended && *multix; multix++, ntable++ )
     {
       const duf_longval_extended_vtable_t *xvtable = *multix;
 

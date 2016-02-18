@@ -76,7 +76,7 @@ duf_option_O_version( void )
 #  else
     DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath(  ) );
 #  endif
-    DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.v.sbit ) ), DUF_CONFIGG( opt.v.sbit ) );
+    DUF_PRINTF( 0, "flow.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.flow.v.sbit ) ), DUF_CONFIGG( opt.flow.v.sbit ) );
     DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( vars.puz )->v.sbit ), DUF_CONFIGG( vars.puz )->v.sbit );
   }
 #endif

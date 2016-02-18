@@ -14,7 +14,7 @@ int duf_output_level( void );
 
 FILE *duf_output_file( void );
 
-char duf_option_delimiter( void );
+/* char duf_option_delimiter( void ); */
 
 char *duf_config_db_path_add_subdir( const char *path, int *pr );
 

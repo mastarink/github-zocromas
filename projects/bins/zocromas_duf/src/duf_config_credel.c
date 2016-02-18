@@ -46,11 +46,8 @@ duf_config_delete( void )
   DUF_START(  );
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
-#if 0    /* 20160115.115839 */
-  mas_error_report_all( 0, MAST_TRACE_FILE, DUF_CONFIGG( opt.dbg.verbose ) );
-#else
-  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), DUF_CONFIGG( cli.verbose ) );
-#endif
+
+  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), duf_verbose ? duf_verbose(  ) : 0 );
 
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING

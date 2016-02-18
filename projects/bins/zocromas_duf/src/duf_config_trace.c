@@ -22,6 +22,7 @@ duf_trace_file( void )
 {
   return duf_trace_file_c( &duf_config->opt.trace );
 }
+#endif
 
 int
 duf_output_force_color( void )
@@ -47,4 +48,3 @@ duf_output_use_binformat( void )
   return duf_output_use_binformat_c( duf_config );
 }
 
-#endif

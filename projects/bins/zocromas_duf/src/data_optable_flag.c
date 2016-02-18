@@ -91,7 +91,7 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "information" ) /*      */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, info ) /*                              */ , DO_H( db info ) /*                          */ },
    {.o = {DO_Q( "dry-run" ) /*          */ , DO_A_N /* */ , DO_VF( DRY_RUN )} /*           */ , DO_CL( DEBUG ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.v ), DO_FL( opt, dry_run ) /*                               */ , DO_H( dry ) /*                              */ },
+    /*      */ DO_OC( FLAG, opt.flow ), DO_FL( flow, dry_run ) /*                               */ , DO_H( dry ) /*                              */ },
 
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },

@@ -113,6 +113,20 @@ constructor_main( void )
 #endif
 }
 
+#if 1
+int
+duf_verbose( void )
+{
+  return duf_config ? duf_config->opt.flow.verbose : 0;
+}
+int
+duf_dry_run( void )
+{
+  return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0;
+}
+
+#endif
+
 static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
 static void
 destructor_main( void )

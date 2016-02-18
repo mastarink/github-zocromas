@@ -61,11 +61,13 @@ duf_output_file( void )
   return duf_output_file_c( duf_config );
 }
 
-char
+#if 0
+  char
 duf_option_delimiter( void )
 {
   return duf_config ? duf_config->cli.option_delimiter : ':';
 }
+#endif
 
 #if 0
 char *

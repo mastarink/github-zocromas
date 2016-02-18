@@ -28,7 +28,7 @@ typedef struct
 /* long limit; */
   char *history_filename;
   char option_delimiter;
-  int verbose;
+  char *config_dir;
 } duf_config_cli_t;
 
 #endif
