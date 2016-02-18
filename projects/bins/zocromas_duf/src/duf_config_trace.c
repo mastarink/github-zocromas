@@ -24,14 +24,27 @@ duf_trace_file( void )
 }
 
 int
-duf_trace_force_color( void )
+duf_output_force_color( void )
 {
-  return duf_trace_force_color_c( duf_config );
+  return duf_output_force_color_c( duf_config );
 }
 
 int
-duf_trace_nocolor( void )
+duf_output_nocolor( void )
 {
-  return duf_trace_nocolor_c( duf_config );
+  return duf_output_nocolor_c( duf_config );
 }
+
+int
+duf_output_progress( void )
+{
+  return duf_output_progress_c( duf_config );
+}
+
+int
+duf_output_use_binformat( void )
+{
+  return duf_output_use_binformat_c( duf_config );
+}
+
 #endif

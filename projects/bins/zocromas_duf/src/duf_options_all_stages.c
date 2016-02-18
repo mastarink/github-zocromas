@@ -52,11 +52,11 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage, duf_errc_cs_func_t cb_in
   }
   else
   {
+    /* TODO global_status.aod => global_cli_status.aod */
     CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
         ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
-/* T( "@@@@@############ ######### ######## aod:%lu : %lu", DUF_CONFIGG( aod.size ), DUF_CONFIGG( aod.count ) ); */
 
   ER( TOP, treat_option_stage, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage, duf_int_void_func_t cb_do_interactive,
       duf_cpchar_void_func_t cb_prompt_interactive );

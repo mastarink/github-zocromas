@@ -144,34 +144,6 @@ SR( TOP, main_with_config, int argc, char **argv )
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
-#if 0
-  {
-    int rx = 0;
-
-    rx = duf_experiment(  );
-    DUF_TRACE( temp, 0, "rx:%d", rx );
-  }
-#endif
-/* XXX XXX XXX XXX XXX XXX */
-
-/* DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" ); */
-/* DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" ); */
-#if 0
-  {
-    void *han;
-
-    han = dlopen( NULL, RTLD_NOLOAD | RTLD_LAZY );
-    if ( han )
-    {
-      void *v;
-
-      v = dlsym( han, "duf_main_db" );
-      fprintf( stderr, "han:%p : %p : %p\n", han, v, duf_main_db );
-
-      dlclose( han );
-    }
-  }
-#endif
   CR( treat_all_optstages, duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
   fputs( "\n", stderr );
   TT( "∈1∋ One " );
@@ -184,6 +156,7 @@ SR( TOP, main_with_config, int argc, char **argv )
   TT( "∈6 Eight " );
   TT( "∈1∋ Nine " );
   TT( "∈7∋ Ten " );
+  TT( "∈8∋ -= !! Split config : duf-related and opt/cfg+i/o related !! =- " );
   T( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
   T( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
   T( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ),

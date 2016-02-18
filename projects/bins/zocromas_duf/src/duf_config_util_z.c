@@ -15,24 +15,35 @@ duf_output_file_c( const duf_config_t * cfg )
 }
 
 FILE *
-duf_trace_file_c( const duf_config_opt_trace_t * cfg )
+duf_trace_file_c( const duf_config_opt_trace_t * tcfg )
 {
-/* return cfg && cfg->MAST_TRACE_AT_CFG output.out ? cfg->MAST_TRACE_AT_CFG output.out : stdout; */
-  return cfg && cfg->output.out ? cfg->output.out : stdout;
+/* return tcfg && tcfg->MAST_TRACE_AT_CFG output.out ? tcfg->MAST_TRACE_AT_CFG output.out : stdout; */
+  return tcfg && tcfg->output.out ? tcfg->output.out : stdout;
 }
 
 int
-duf_trace_force_color_c( const duf_config_t * cfg )
+duf_output_force_color_c( const duf_config_t * cfg )
 {
-/* fprintf(stderr, "@@@@@@@@@@@@@@FC:%d\n", cfg ? cfg->opt.act.v.flag.force_color : 0 ); */
-  return cfg ? cfg->opt.act.v.flag.force_color : 0;
+  return cfg ? cfg->opt.output.v.flag.force_color : 0;
 /* return DUF_ACTG_FLAG( force_color ); */
 }
 
 int
-duf_trace_nocolor_c( const duf_config_t * cfg )
+duf_output_nocolor_c( const duf_config_t * cfg )
 {
-  return cfg ? cfg->opt.act.v.flag.nocolor : 0;
+  return cfg ? cfg->opt.output.v.flag.nocolor : 0;
 /* return DUF_ACTG_FLAG( nocolor ); */
 }
 
+int
+duf_output_progress_c( const duf_config_t * cfg )
+{
+  return cfg ? cfg->opt.output.v.flag.progress : 0;
+/* return DUF_ACTG_FLAG( nocolor ); */
+}
+int
+duf_output_use_binformat_c( const duf_config_t * cfg )
+{
+  return cfg ? cfg->opt.output.v.flag.use_binformat : 0;
+/* return DUF_ACTG_FLAG( nocolor ); */
+}

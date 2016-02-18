@@ -193,7 +193,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #else
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
 #endif
-    if ( DUF_ACTG_FLAG( use_binformat ) )
+    if ( duf_output_use_binformat( ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -220,15 +220,15 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           int c1 DUF_UNUSED;
           int c2 DUF_UNUSED;
 
-          c1 = DUF_ACTG_FLAG( force_color );
-          c2 = DUF_ACTG_FLAG( nocolor );
+          c1 = duf_output_force_color();
+          c2 = duf_output_nocolor();
           T( "%d:%d", c1, c2 );
           assert( 0 );
         }
 #endif
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
                                               &over );
       }
       if ( !over )
@@ -260,7 +260,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
                                               &over );
       }
       DUF_PUTSL( 0 );
@@ -341,7 +341,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
     /* fi.sha1id = sha1id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
-    if ( DUF_ACTG_FLAG( use_binformat ) )
+    if ( duf_output_use_binformat( ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -368,7 +368,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat_pref = " %6s  %4s%P";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
                                               &over );
       }
       if ( !over )
@@ -399,7 +399,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
           sformat = "%f\n";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth,
+                                              duf_config->opt.output.max_width, duf_output_force_color(), duf_output_nocolor(), &rwidth,
                                               &over );
       }
       DUF_PUTSL( 0 );

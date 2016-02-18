@@ -47,10 +47,10 @@
 #  endif
 
 #  ifndef MAST_TRACE_FORCE_COLOR_C
-#    define MAST_TRACE_FORCE_COLOR_C( _cfg ) duf_trace_force_color()
+#    define MAST_TRACE_FORCE_COLOR_C( _cfg ) duf_output_force_color()
 #  endif
 #  ifndef MAST_TRACE_NOCOLOR
-#    define MAST_TRACE_NOCOLOR_C( _cfg )  duf_trace_nocolor()
+#    define MAST_TRACE_NOCOLOR_C( _cfg )  duf_output_nocolor()
 #  endif
 
 #  ifndef MAST_TRACE_LEVEL

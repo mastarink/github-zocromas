@@ -178,7 +178,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.sha1sum2 = sha1sum2;
     fi.sha1sum3 = sha1sum3;
 
-    if ( DUF_ACTG_FLAG( use_binformat ) )
+    if ( duf_output_use_binformat( ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -214,7 +214,7 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         sformat = " _%M  =%S %8s%f\n";
       if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
         slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
-                                            DUF_ACTG_FLAG( force_color ), DUF_ACTG_FLAG( nocolor ), &rwidth, &over );
+                                            duf_output_force_color(), duf_output_nocolor(), &rwidth, &over );
       DUF_PUTSL( 0 );
     }
   }

@@ -26,7 +26,7 @@ duf_cfg_string_delete( duf_expandable_string_t * cs )
   DUF_END(  );
 }
 
-  static const char *
+static const char *
 duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
 {
   static char buf[256];
@@ -40,7 +40,7 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   len = strlen( name );
   if ( len > llen && 0 == strncmp( name, "TIME(", llen ) && name[len - 1] == ')' )
   {
-    /* strftime */
+  /* strftime */
     char *fmt;
 
     fmt = mas_strndup( name + llen, len - llen - 1 );
@@ -50,10 +50,10 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   }
   else if ( *name == '+' )
   {
-    if ( duf_config && ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) ) )
+    if ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) )
       pbuf = DUF_CONFIGGSP( db.main.name );
   }
-  /* T( "@@@@@@var %s => '%s'", name, pbuf ); */
+/* T( "@@@@@@var %s => '%s'", name, pbuf ); */
   return pbuf;
 }
 

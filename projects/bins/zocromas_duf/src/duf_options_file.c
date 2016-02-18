@@ -39,7 +39,7 @@ duf_options_infilepath( void )
 #if 0
   return DUF_CONFIGG( config_file_path );
 #else
-  return config_file_path;
+  return config_file_path; /* => static duf_config_cli_t *config_cli = NULL; @ duf_option_config.c TODO */
 #endif
 }
 
@@ -462,7 +462,7 @@ SR( OPTIONS, source_indirect_parse, duf_option_stage_t istage, duf_int_void_func
     {
       const char *fname = cf + 1;
 
-      {
+      { /* TODO conf.cmds_dir => cli.cmds_dir ?? TODO */
         CR( infile_options_at_dir_and_file, istage, DUF_CONFIGGS( conf.cmds_dir ), fname, 0, 0, DUF_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
       }
 

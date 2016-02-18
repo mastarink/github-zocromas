@@ -783,8 +783,8 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS; 20151013.095014 -> ALLOW_DIRECTORIES */
     CHECK_FLAG_ID_ROW( allow_files, ALLOW_FILES ),
 
-    CHECK_FLAG_ID_ROW( progress, PROGRESS ),
-    CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ),
+    /* CHECK_FLAG_ID_ROW( progress, PROGRESS ), */
+    /* CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ), */
     CHECK_FLAG_ID_ROW( summary, SUMMARY ),
     CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
 

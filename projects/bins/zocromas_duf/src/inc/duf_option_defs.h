@@ -40,6 +40,7 @@
 #  define DUF_CLIG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli)
 #  define DUF_OPTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt)
 #  define DUF_ACTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt.act)
+#  define DUF_OUTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt.output)
 #  define DUF_FORMATG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., opt.bformat)
 #  define DUF_UG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ->, vars.puz)
 

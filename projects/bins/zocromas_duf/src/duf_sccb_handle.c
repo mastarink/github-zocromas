@@ -14,7 +14,7 @@
 #include "duf_pdi_pi_ref.h"
 #include "duf_pdi_stmt.h"
 
-#include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
+/* #include "duf_option_defs.h"    (* for DUF_ACTG_FLAG( progress ) !ONLY! *) */
 #include "duf_utils.h"          /* duf_percent */
 
 #include "duf_config_util.h"
@@ -408,7 +408,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
       DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu", TOTITEMS );
       DUF_TRACE( temporary, 0, "@@@@ %llu items registered in db", TOTITEMS );
       DUF_TRACE( explain, 0, "%llu items registered in db", TOTITEMS );
-      if ( DUF_ACTG_FLAG( progress ) )
+      if ( duf_output_progress() )
       {
         sccbh->progress_node_cb = duf_sccbh_node_progress;
         sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;

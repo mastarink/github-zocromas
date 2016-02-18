@@ -11,7 +11,6 @@
 
 #include "duf_utils.h"
 
-
 #include "duf_sql_defs.h"
 
 #include "duf_sql_prepared.h"
@@ -55,6 +54,14 @@ duf_info_from_db( int count, const char *sql )
 int
 duf_main_db_info( void )
 {
+  typedef struct
+  {
+    int count;
+    const char *sql;
+    const char *title;
+    const char *labels[20];
+  } duf_infodata_t;
+
   DUF_STARTR( r );
   if ( duf_config->opt.act.v.flag.info )
   {
@@ -68,7 +75,7 @@ duf_main_db_info( void )
       ,
 #endif
       {.title = "datas with reasonable date",.count = 5,.labels = {"#", "@min mtim", "@max mtim", "@min inow", "@max inow", NULL}
-       ,.sql =                  /* */
+       ,.sql = /* */
        "SELECT COUNT(*), STRFTIME('%s',min(mtim)), STRFTIME('%s',max(mtim)), STRFTIME('%s',min(inow)), STRFTIME('%s',max(inow)) " /* */
        " FROM " DUF_SQL_TABLES_FILEDATAS_FULL /* */
        " WHERE cast(STRFTIME('%s',mtim) as integer)>320000000 and cast(STRFTIME('%s',mtim) as integer)<1600000000"}
@@ -128,24 +135,24 @@ duf_main_db_info( void )
     DUF_TRACE( explain, 0, "-=-=-=                      -=-=-=-=-=-" );
     DUF_TRACE( explain, 0, "-=-=-=-=-=-=-       -=-=-=-=-=-=-=-=-=-" );
     DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
-    /*
-       SELECT  COUNT(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") ;
-       SELECT COUNT(*), datetime(min(mtim), 'unixepoch'), datetime(max(mtim), 'unixepoch'), min(inow), max(inow) FROM filedatas WHERE mtim>320000000 and mtim<1600000000
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size>0;
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size=0;
-       SELECT COUNT(*), min(inow), max(inow)                                                                     FROM " DUF_SQL_TABLES_FILENAMES_FULL ";
-       SELECT COUNT(*), max(size), min(size), min(inow), max(inow)                                               FROM " DUF_SQL_TABLES_SIZES_FULL "; 
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_SIZES_FULL " WHERE dupzcnt>1;
-       SELECT COUNT(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md;   
-       SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
-       SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
-     */
+  /*
+     SELECT  COUNT(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") ;
+     SELECT COUNT(*), datetime(min(mtim), 'unixepoch'), datetime(max(mtim), 'unixepoch'), min(inow), max(inow) FROM filedatas WHERE mtim>320000000 and mtim<1600000000
+     SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size>0;
+     SELECT COUNT(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) WHERE fd.size=0;
+     SELECT COUNT(*), min(inow), max(inow)                                                                     FROM " DUF_SQL_TABLES_FILENAMES_FULL ";
+     SELECT COUNT(*), max(size), min(size), min(inow), max(inow)                                               FROM " DUF_SQL_TABLES_SIZES_FULL "; 
+     SELECT COUNT(*) FROM " DUF_SQL_TABLES_SIZES_FULL " WHERE dupzcnt>1;
+     SELECT COUNT(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md;   
+     SELECT COUNT(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
+     SELECT COUNT(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id);
+   */
     for ( unsigned iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {
       unsigned long *tuple;
       int nolab = 0;
 
-      /* DUF_TRACE( explain, 0, "#%d. SQL:'%s'", iop, infod[iop].sql ); */
+    /* DUF_TRACE( explain, 0, "#%d. SQL:'%s'", iop, infod[iop].sql ); */
       tuple = duf_info_from_db( infod[iop].count, infod[iop].sql );
       DUF_PRINTF( 0, ".#%2d. [ %30s ] -- ", iop, infod[iop].title );
       for ( int iv = 0; iv < infod[iop].count; iv++ )
@@ -172,7 +179,7 @@ duf_main_db_info( void )
             char buf[64];
 
             duf_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
-            /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
+          /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
             DUF_PRINTF( 0, ". %s: %15s;  ", label, buf );
           }
           else

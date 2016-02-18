@@ -7,6 +7,7 @@
 #  include "duf_fun_types.h"
 #  include "duf_hook_types.h"
 /* #  include "duf_options_enum.h" */
+#include "duf_config_output_types.h"
 
 typedef enum
 {

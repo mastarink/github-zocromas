@@ -11,6 +11,10 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	sql_beginning_types.h \
 	duf_base_types.h \
 	duf_cli_types.h \
+	duf_trace_types.h \
+	duf_config_output_types.h \
+	duf_config_db_types.h \
+	duf_config_opt_types.h \
 	duf_config4trace_ref.h duf_config.h duf_config_trace.h duf_config_db.h duf_cfg_credel.h duf_config_credel.h duf_config_show_etc.h \
 	duf_config_util.h duf_config_util_z.h \
 	duf_config_ref.h duf_config_wref.h duf_config_defs.h duf_config_types.h \
