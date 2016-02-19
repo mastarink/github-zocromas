@@ -20,7 +20,11 @@ tab sfind duf_expand_types.h
 
 tab sfind duf_tmp_types.h
 
+tab sfind duf_pathinfo_types.h
+
 tab sfind duf_levinfo_types.h
+sfind duf_levinfo_dirhandle_types.h
+sfind duf_levinfo_stmt_types.h
 
 tab sfind duf_tracen_maintenance.h
 " sfind duf_trace_types.h
@@ -63,6 +67,7 @@ tab sfind duf_config_output_types.h
 sfind duf_format_types.h
 
 tab sfind duf_option_types.h
+sfind duf_option_fun_types.h
 sfind duf_options_enum.h
 sfind duf_option_defs.h
 tab sfind duf_option_source_types.h

@@ -1,29 +1,30 @@
 #ifndef MAS_DUF_FORMAT_TYPES_H
-#  define MAS_DUF_FORMAT_TYPES_H
+# define MAS_DUF_FORMAT_TYPES_H
+# include "duf_defs.h"
 
-#  ifndef MAS_DUF_DEFS_H
-#    error use #include "duf_defs.h"
-#  endif
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# endif
 
 typedef struct
 {
   unsigned dataid:1;
   unsigned dirid:1;
   unsigned dirid_space:1;
-#  ifndef MAS_DUF_DEFS_H
-#    error use #include "duf_defs.h"
-#  elif defined( DUF_DO_NUMS )
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_NUMS )
   unsigned nfiles:1;
   unsigned nfiles_space:1;
   unsigned ndirs:1;
   unsigned ndirs_space:1;
-#  endif
-#  ifndef MAS_DUF_DEFS_H
-#    error use #include "duf_defs.h"
-#  elif defined( DUF_DO_RNUMS )
+# endif
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_RNUMS )
   unsigned rnfiles:1;
   unsigned rndirs:1;
-#  endif
+# endif
   unsigned filename:1;
   unsigned filesize:1;
   unsigned human:1;
@@ -72,8 +73,6 @@ typedef struct
   unsigned offset;
 } duf_bformat_combo_t;
 
-
-
 typedef enum
 {
   DUF_FORMAT_DATAID,
@@ -111,7 +110,7 @@ typedef enum
   DUF_FORMAT_SEQ_NODE,
   DUF_FORMAT_SEQ_LEAF,
   DUF_FORMAT_SEQ_ROW,
-  /* DUF_FORMAT_TRUEPATH, */
+/* DUF_FORMAT_TRUEPATH, */
   DUF_FORMAT_USER,
   DUF_FORMAT_GROUP,
   DUF_FORMAT_MAX,
@@ -145,8 +144,6 @@ typedef struct
   duf_filedirformat_t list;
   duf_filedirformat_t gen;
 } duf_asformats_t;
-
-
 
 #endif
 

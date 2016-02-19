@@ -1,6 +1,12 @@
 #ifndef MAS_DUF_OPTION_CLARIFY_NEW_H
 # define MAS_DUF_OPTION_CLARIFY_NEW_H
 
+
+# include "duf_option_types.h"                                       /* duf_xclarifier_t ; duf_option_data_t ; duf_option_adata_t */
+# include "duf_option_stage_types.h"                                 /* duf_option_stage_t */
+# include "duf_option_source_types.h"                                /* duf_option_source_t */
+
+
 DR( OPTIONS, soption_xclarify_new_at_stdx_default_with_pod, const char *string, const char *name, const char *arg, duf_xclarifier_t clarifier,
     char value_separator, duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod, duf_option_adata_t * paod );
 DR( OPTIONS, soption_xclarify_snac_new_at_stdx_default, const char *string, const char *name, const char *arg, duf_xclarifier_t clarifier,

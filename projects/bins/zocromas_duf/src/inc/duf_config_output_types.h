@@ -1,15 +1,17 @@
 #ifndef MAS_DUF_CONFIG_OUTPUT_TYPES_H
 # define MAS_DUF_CONFIG_OUTPUT_TYPES_H
 
-# include "duf_format_types.h"
+# include <stdio.h>                                                  /* FILE */
+# include "duf_format_types.h"                                       /* duf_asformats_t; duf_sformats_t */
+
 typedef struct
 {
-  unsigned overwrite:1; /* => output options */
-  unsigned append:1; /* => output options */
-  unsigned nocolor:1; /* => output options */
-  unsigned force_color:1; /* => output options */
-  unsigned progress:1; /* => output options */
-  unsigned use_binformat:1; /* => output options */
+  unsigned overwrite:1;                                              /* => output options */
+  unsigned append:1;                                                 /* => output options */
+  unsigned nocolor:1;                                                /* => output options */
+  unsigned force_color:1;                                            /* => output options */
+  unsigned progress:1;                                               /* => output options */
+  unsigned use_binformat:1;                                          /* => output options */
 } duf_config_output_flags_t;
 
 typedef union

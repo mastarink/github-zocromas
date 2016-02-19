@@ -121,6 +121,7 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
   void *byteptr = NULL;
 
   DUF_TRACE( options, 60, "to switch by extended->relto=%d", extended->relto );
+  /* TODO relto=duf_get_config_puz_offset etc. */
   switch ( extended->relto )
   {
   case DUF_OFFSET_none:

@@ -1,13 +1,12 @@
 #ifndef MAS_DUF_CONFIG_TYPES_H
 # define MAS_DUF_CONFIG_TYPES_H
 
-# include "duf_base_types.h"
-# include "duf_ufilter_types.h"
-# include "duf_levinfo_types.h"
-# include "duf_config_cli_types.h"
-# include "duf_expand_types.h"
-# include "duf_config_db_types.h"
-# include "duf_config_opt_types.h"
+# include "duf_base_types.h"                                         /* duf_itemtag_t */
+# include "duf_ufilter_types.h"                                      /* duf_ufilter_t */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t */
+# include "duf_config_db_types.h"                                    /* duf_config_db_t */
+# include "duf_config_opt_types.h"                                   /* duf_config_opt_t */
 
 typedef struct
 {
@@ -44,9 +43,9 @@ typedef struct
 {
   char *help_string;
 /* double loadtime; */
-  duf_config_cli_t cli; /* options/parameters used for parsing cli options */
-  duf_config_opt_t opt; /* misc. options/parameters */
-  duf_config_db_t db; /* options/parameters fpr DB opening / tuning */
+  duf_config_cli_t cli;                                              /* options/parameters used for parsing cli options */
+  duf_config_opt_t opt;                                              /* misc. options/parameters */
+  duf_config_db_t db;                                                /* options/parameters fpr DB opening / tuning */
   duf_config_save_t save;
   duf_config_vars_t vars;
 /* char *group; */

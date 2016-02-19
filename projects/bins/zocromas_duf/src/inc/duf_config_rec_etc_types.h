@@ -8,7 +8,7 @@ typedef enum
   DUF_FLAG_rec_etc_testflag,
   DUF_FLAG_rec_etc_testiflag,
   DUF_FLAG_rec_etc_testnoflag,
-} duf_rec_etc_flags_enum_t;
+} duf_config_rec_etc_flags_enum_t;
 typedef struct
 {
   unsigned recursive:1;
@@ -16,12 +16,12 @@ typedef struct
   unsigned testflag:1;
   unsigned testiflag:1;
   unsigned testnoflag:1;
-} duf_rec_etc_flags_t;
+} duf_config_rec_etc_flags_t;
 
 typedef union
 {
-  duf_rec_etc_flags_t flag;
+  duf_config_rec_etc_flags_t flag;
   unsigned short sbit;
-} duf_rec_etc_flags_combo_t;
+} duf_config_rec_etc_flags_combo_t;
 
 #endif

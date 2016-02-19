@@ -1,5 +1,10 @@
 #ifndef MAS_DUF_OPTION_CLARIFY_H
-#  define MAS_DUF_OPTION_CLARIFY_H
+# define MAS_DUF_OPTION_CLARIFY_H
+
+# include <mastar/tools/mas_argvc_types.h>                           /* mas_argvc_t ; mas_cargvc_t */
+# include "duf_option_types.h"                                       /* duf_longval_extended_t ; duf_longval_extended_vtable_t */
+# include "duf_option_stage_types.h"                                 /* duf_option_stage_t */
+# include "duf_option_source_types.h"                                /* duf_option_source_t */
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>_<action-result>
@@ -20,14 +25,9 @@
  * 4. action: clarify, clarify_full
  * */
 
-#  include "duf_options_enum.h" /* duf_option_code_t :: TODO duf_option_code_t => duf_option_code_general_t i.e. `unsigned` */
-
-
 int DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                         const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage, duf_option_source_t source )
-      __attribute__ ( ( warn_unused_result ) );
-
-#  include <mastar/tools/mas_argvc_types.h>
+                                         const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage,
+                                         duf_option_source_t source ) __attribute__ ( ( warn_unused_result ) );
 
 int duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos );
 

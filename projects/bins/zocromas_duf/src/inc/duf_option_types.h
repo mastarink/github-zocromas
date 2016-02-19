@@ -2,17 +2,23 @@
 # define MAS_DUF_OPTION_TYPES_H
 # include <getopt.h>
 
-# include "duf_base_types.h"
-/* # include "duf_flags_types.h" */
-# include "duf_fun_types.h"
-/* # include "duf_hook_types.h" */
-/* #  include "duf_options_enum.h" */
-/* # include "duf_config_output_types.h" */
-# include "duf_option_source_types.h"
-# include "duf_option_stage_types.h"
-# include "duf_config_rec_etc_types.h"
-# include "duf_config_disable_types.h"
-# include "duf_config_opt_types.h"
+# include "duf_fun_types.h"                                          /* duf_void_int_func_t; duf_errc_int_func_t */
+# include "duf_option_source_types.h"                                /* duf_option_source_t */
+# include "duf_config_rec_etc_types.h"                               /* duf_config_rec_etc_flags_t */
+# include "duf_config_opt_types.h"                                   /* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  */
+# include "duf_config_output_types.h"                                /* duf_config_output_flags_t */
+# include "duf_config_act_types.h"                                   /* duf_config_act_flags_t  */
+# include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
+# include "duf_option_fun_types.h"                                   /*  *_func_t;  *_funcpair_t */
+
+/* struct option       */
+/* {                   */
+/*   const char *name; */
+/*   int has_arg;      */
+/*   int *flag;        */
+/*   int val;          */
+/* };                  */
+typedef struct option duf_option_t;
 
 typedef enum
 {
@@ -44,161 +50,6 @@ typedef enum
 # undef ENUM_WRAP_V
 } duf_option_call_type_t;
 
-/* struct option       */
-/* {                   */
-/*   const char *name; */
-/*   int has_arg;      */
-/*   int *flag;        */
-/*   int val;          */
-/* };                  */
-typedef struct option duf_option_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_int_func_t func;
-  int arg;
-} duf_void_int_arg_funcpair_t;
-typedef struct
-{
-  duf_errc_int_func_t func;
-  int arg;
-} duf_errc_int_arg_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_int_void_func_t func;
-} duf_int_void_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_cargcv_func_t func;
-} duf_void_cargcv_funcpair_t;
-typedef struct
-{
-  duf_errc_cargcv_func_t func;
-} duf_errc_cargcv_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_carg_func_t func;
-} duf_void_carg_funcpair_t;
-typedef struct
-{
-  duf_errc_cargv_func_t func;
-} duf_errc_cargv_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_pargcv_func_t func;
-} duf_void_pargcv_funcpair_t;
-typedef struct
-{
-  duf_errc_pargcv_func_t func;
-} duf_errc_pargcv_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_n_func_t func;
-} duf_void_n_funcpair_t;
-typedef struct
-{
-  duf_errc_n_func_t func;
-} duf_errc_n_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_pargcvn_func_t func;
-} duf_void_pargcvn_funcpair_t;
-typedef struct
-{
-  duf_errc_pargcvn_func_t func;
-} duf_errc_pargcvn_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_errc_argvn_func_t func;
-} duf_errc_argvn_funcpair_t;
-
-/********************************************************************************************/
-
-typedef struct
-{
-  duf_void_csv_func_t func;
-} duf_void_csv_funcpair_t;
-typedef struct
-{
-  duf_errc_csv_func_t func;
-} duf_errc_csv_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_csv_func_t func;
-  const char *arg;
-} duf_void_psv_arg_funcpair_t;
-typedef struct
-{
-  duf_errc_csv_func_t func;
-  const char *arg;
-} duf_errc_psv_arg_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_csn_func_t func;
-  long arg;
-} duf_void_csn_arg_funcpair_t;
-typedef struct
-{
-  duf_errc_csn_func_t func;
-  long arg;
-} duf_errc_csn_arg_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_void_pcargcvcs_func_t func;
-} duf_void_pcargcvcs_funcpair_t;
-typedef struct
-{
-  duf_errc_pcargcvcs_func_t func;
-} duf_errc_pcargcvcs_funcpair_t;
-
-/********************************************************************************************/
-typedef struct
-{
-  duf_errc_cargvs_func_t func;
-} duf_errc_cargvs_funcpair_t;
-
-/********************************************************************************************/
-
-typedef struct
-{
-  duf_void_void_func_t func;
-} duf_void_void_funcpair_t;
-typedef struct
-{
-  duf_errc_void_func_t func;
-} duf_errc_void_funcpair_t;
-
-/********************************************************************************************/
-# if 0
-typedef struct
-{
-  duf_scan_hook2_item_func_t func;
-  duf_scan_callbacks_t *sccb;
-} duf_scan_hook2_item_pair_t;
-# endif
-/********************************************************************************************/
-
 typedef union
 {
   int i;
@@ -206,6 +57,7 @@ typedef union
   unsigned long ul;
   unsigned long long ull;
 } duf_anynum_t;
+
 typedef enum
 {
   DUF_OFFSET_none = 0,
@@ -220,20 +72,12 @@ typedef union
 {
   duf_config_act_flags_t act;
   duf_config_output_flags_t output;
-  duf_rec_etc_flags_t rec_etc;
+  duf_config_rec_etc_flags_t rec_etc;
   duf_config_flow_flags_t flow;
   duf_config_opt_disable_flags_t disable;
   unsigned bit;
   unsigned short sbit;
 } duf_option_anyflag_t;
-
-typedef struct duf_extended_stageopts_s
-{
-  unsigned use_stage:1;
-  unsigned use_stage_mask:1;
-  duf_limits_stage_t stage;
-  unsigned long stage_mask;
-} duf_extended_stageopts_t;
 
 typedef struct
 {

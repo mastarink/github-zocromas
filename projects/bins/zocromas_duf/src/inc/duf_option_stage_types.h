@@ -29,5 +29,14 @@ typedef struct
   duf_option_stage_t max;
 } duf_limits_stage_t;
 
+typedef struct duf_extended_stageopts_s
+{
+  unsigned use_stage:1;
+  unsigned use_stage_mask:1;
+  duf_limits_stage_t stage;
+  unsigned long stage_mask;
+} duf_extended_stageopts_t;
+
+
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_OPTION_LFIND_H
 #  define MAS_DUF_OPTION_LFIND_H
 
-#  include "duf_option_types.h"
+# include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t */
 
 
 

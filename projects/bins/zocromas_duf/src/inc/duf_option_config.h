@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_OPTION_CONFIG_H
 # define MAS_DUF_OPTION_CONFIG_H
 
-# include "duf_option_types.h"
+# include "duf_option_types.h"                                       /* duf_option_t; duf_longval_extended_vtable_t */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t */
 
 void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables,
                            const char *config_dir, const char *commands_dir );
