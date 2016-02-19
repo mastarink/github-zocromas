@@ -1,4 +1,5 @@
-find duf_maintenance.h
+find duf_maintenance_z.h
+tab sfind duf_maintenance.h
 
 tab sfind duf_defs.h
 sfind duf_fmt_defs.h
@@ -68,6 +69,7 @@ sfind duf_format_types.h
 
 tab sfind duf_option_types.h
 sfind duf_option_fun_types.h
+sfind duf_option_class_types.h
 sfind duf_options_enum.h
 sfind duf_option_defs.h
 tab sfind duf_option_source_types.h

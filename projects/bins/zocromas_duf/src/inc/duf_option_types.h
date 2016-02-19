@@ -10,6 +10,7 @@
 # include "duf_config_act_types.h"                                   /* duf_config_act_flags_t  */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
 # include "duf_option_fun_types.h"                                   /*  *_func_t;  *_funcpair_t */
+# include "duf_option_class_types.h"                                 /* duf_option_class_t */
 
 /* struct option       */
 /* {                   */
@@ -19,16 +20,6 @@
 /*   int val;          */
 /* };                  */
 typedef struct option duf_option_t;
-
-typedef enum
-{
-# define ENUM_WRAP(_n, ...)       DUF_OPTION_CLASS_ ## _n __VA_ARGS__,
-/* #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_CLASS_ ## _n = _v, */
-# define ENUM_WRAP_V(_n, _v) ENUM_WRAP(_n, = _v)
-# include "duf_option_class_enum.def"
-# undef ENUM_WRAP
-# undef ENUM_WRAP_V
-} duf_option_class_t;
 
 typedef enum
 {

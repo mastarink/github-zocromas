@@ -3,7 +3,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance_options.h"
+#include "duf_maintenance.h"
 #include "duf_printn_defs.h"
 
 #include "duf_config_util.h"
@@ -20,7 +20,7 @@
 
 /* TODO rename file ...... */
 
-const char *
+static const char *
 duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
 {
   const char *rs = NULL;

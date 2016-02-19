@@ -2,10 +2,7 @@
 #  define MAS_DUF_MAINTENANCE_H
 #  define DUF_SQL_PDI_STMT
 
-#  include <assert.h>
-
-#  include <mastar/wrap/mas_std_def.h>
-#  include <mastar/wrap/mas_memory.h>
+#  include "duf_maintenance_z.h"
 
 #  include "duf_defs.h"
 
@@ -14,11 +11,10 @@ extern int duf_dry_run( void ) __attribute__ ( ( weak ) );
 
 
 #  include "duf_printn_defs_preset.h"
-#  include "duf_tracen_defs_preset.h"
+#  include "duf_tracen_maintenance.h"
 
 #  include "duf_compile_defs.h"
 #  include "duf_errorn_defs.h"
-#  include "duf_tracen_defs.h"
 /* #  include "duf_printn_defs.h" */
 
 #  include <mastar/error/mas_errors_maintenance.h>

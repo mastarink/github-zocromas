@@ -48,7 +48,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_levinfo_updown.h duf_levinfo_ref_def.h duf_levinfo_ref.h 
 	duf_pathinfo_types.h duf_pathinfo_credel.h duf_pathinfo.h duf_pathinfo_depth.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
 	duf_maindb_info.h duf_maindb.h duf_options_all_stages.h \
-	duf_maintenance.h duf_maintenance_options.h \
+	duf_maintenance_z.h duf_maintenance.h duf_maintenance_options.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_defs.h duf_option_descr.h \
 	duf_options_cli.h duf_options_env.h duf_options_file.h duf_options_interactive.h \
@@ -62,7 +62,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h duf_option_class.h duf_option_val.h duf_option_vtype.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
 	duf_options_enum.h duf_option_config.h duf_options.h duf_options_def.h \
-	duf_option_types.h duf_option_fun_types.h \
+	duf_option_types.h duf_option_fun_types.h duf_option_class_types.h \
 	duf_option_source_types.h \
 	duf_option_stage_types.h \
 	duf_option_vtype_enum.def duf_option_call_type_enum.def \

@@ -1,14 +1,11 @@
 #include <string.h>
 #include <stddef.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_(strdup|strcat); etc. */
 
-#include "duf_maintenance_options.h"
+#include "duf_maintenance_z.h"                                       /* mas_(malloc|free); etc. */
 
-#include "duf_xtended_table.h"
-#include "duf_option_stage.h"   /* duf_optstage_name */
-
-#include "duf_option_extended.h"
+#include "duf_option_extended.h"                                     /* duf_longindex_extended_count */
 
 /* ###################################################################### */
 #include "duf_option_longopts.h"
@@ -27,7 +24,7 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
 {
   while ( xtended->o.name )
   {
-    assert( xtended->o.val );   /* TODO => MAKE_ERROR */
+    assert( xtended->o.val );                                        /* TODO => MAKE_ERROR */
     if ( noo )
     {
       if ( xtended->can_no )
@@ -38,8 +35,8 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
         s = mas_strdup( "no-" );
         s = mas_strcat_x( s, ( *plongopts_ptr )->name );
         ( *plongopts_ptr )->name = s;
-        /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
-        /* ( *plongopts_ptr )->val = xtended->o.val;         */
+      /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
+      /* ( *plongopts_ptr )->val = xtended->o.val;         */
         ( *plongopts_ptr )++;
       }
     }
@@ -47,8 +44,8 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
     {
       *( *plongopts_ptr ) = xtended->o;
       ( *plongopts_ptr )->name = mas_strdup( ( *plongopts_ptr )->name );
-      /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
-      /* ( *plongopts_ptr )->val = xtended->o.val;         */
+    /* ( *plongopts_ptr )->has_arg = xtended->o.has_arg; */
+    /* ( *plongopts_ptr )->val = xtended->o.val;         */
       ( *plongopts_ptr )++;
     }
     xtended++;
