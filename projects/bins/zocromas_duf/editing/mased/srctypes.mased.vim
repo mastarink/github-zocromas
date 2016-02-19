@@ -27,7 +27,8 @@ tab sfind duf_levinfo_types.h
 sfind duf_levinfo_dirhandle_types.h
 sfind duf_levinfo_stmt_types.h
 
-tab sfind duf_tracen_maintenance.h
+tab sfind duf_maintenance_errors.h
+tab sfind duf_maintenance_tracen.h
 " sfind duf_trace_types.h
 " sfind duf_trace_defs.h
 sfind duf_tracen_defs.h

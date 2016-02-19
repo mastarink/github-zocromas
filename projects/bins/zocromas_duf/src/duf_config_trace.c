@@ -18,10 +18,18 @@ duf_get_trace_config( void )
 }
 
 FILE *
+duf_trace_file_c( const duf_config_opt_trace_t * tcfg )
+{
+/* return tcfg && tcfg->MAST_TRACE_AT_CFG output.out ? tcfg->MAST_TRACE_AT_CFG output.out : stdout; */
+  return tcfg && tcfg->output.out ? tcfg->output.out : stdout;
+}
+
+FILE *
 duf_trace_file( void )
 {
-  return duf_trace_file_c( &duf_config->opt.trace );
+  return duf_trace_file_c( duf_get_trace_config(  ) );
 }
+
 #endif
 
 int
@@ -47,4 +55,3 @@ duf_output_use_binformat( void )
 {
   return duf_output_use_binformat_c( duf_config );
 }
-

@@ -1,7 +1,9 @@
 #ifndef MAS_DUF_SE_H
 # define MAS_DUF_SE_H
 
+# include <mastar/error/mas_error_types.h>
 # include "duf_start_end.h"
+
 /* #include "duf_debug_defs.h" 
  *
  * DUF_STARTTYP ~ DEBUG_STARTTYP

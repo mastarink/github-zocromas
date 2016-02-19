@@ -3,12 +3,14 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_argv_string; mas_argv_delete */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path */
 
-#include "duf_maintenance_options.h"                                 /* DUF_TRACE, ... */
+#include "duf_maintenance_z.h"                                       /* system calls wrappers, shortcut macros etc. */
+#include "duf_maintenance_errors.h"                                  /* errors subsystem access */
+
+#include "duf_maintenance_tracen.h"                                  /* DUF_TRACE, ... */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF */
 
 #include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
 
-#include "duf_config_trace.h"
 #include "duf_config_util.h"
 
 #include "duf_option_defs.h"

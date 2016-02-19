@@ -48,7 +48,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_levinfo_updown.h duf_levinfo_ref_def.h duf_levinfo_ref.h 
 	duf_pathinfo_types.h duf_pathinfo_credel.h duf_pathinfo.h duf_pathinfo_depth.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
 	duf_maindb_info.h duf_maindb.h duf_options_all_stages.h \
-	duf_maintenance_z.h duf_maintenance.h duf_maintenance_options.h \
+	duf_maintenance_z.h duf_maintenance_trace.h duf_maintenance.h duf_maintenance_options.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_defs.h duf_option_descr.h \
 	duf_options_cli.h duf_options_env.h duf_options_file.h duf_options_interactive.h \
@@ -73,7 +73,6 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_pdi.h duf_pdi_global.h duf_pdi_reinit.h duf_pdi_attach.h duf_pdi_credel.h \
 	duf_pdi_filters.h duf_pdi_depth.h duf_pdi_ref.h duf_pdi_pi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_action_table.h \
-	duf_errorn_defs.h \
 	duf_printn_defs.h \
 	duf_printn_defs_preset.h \
 	duf_scan_types.h \
@@ -100,7 +99,9 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_sql_prepared.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
 	duf_tmp_types.h \
-	duf_tracen_maintenance.h \
+	duf_errorn_defs.h \
+	duf_maintenance_errors.h \
+	duf_maintenance_tracen.h \
 	duf_tracen_defs.h \
 	duf_tracen_defs_preset.h \
 	duf_start_end.h \

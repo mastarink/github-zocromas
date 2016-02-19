@@ -14,13 +14,6 @@ duf_output_file_c( const duf_config_t * cfg )
   return cfg && cfg->opt.output.out ? cfg->opt.output.out : stdout;
 }
 
-FILE *
-duf_trace_file_c( const duf_config_opt_trace_t * tcfg )
-{
-/* return tcfg && tcfg->MAST_TRACE_AT_CFG output.out ? tcfg->MAST_TRACE_AT_CFG output.out : stdout; */
-  return tcfg && tcfg->output.out ? tcfg->output.out : stdout;
-}
-
 int
 duf_output_force_color_c( const duf_config_t * cfg )
 {
