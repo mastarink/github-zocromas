@@ -5,7 +5,6 @@
 #include "duf_maintenance_z.h"
 #include "duf_maintenance_tracen.h"
 
-
 #include "duf_option_extended.h"
 #include "duf_option_longopts.h"
 

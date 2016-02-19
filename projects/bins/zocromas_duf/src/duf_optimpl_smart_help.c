@@ -310,8 +310,10 @@ duf_option_O_help_set( const char *arg )
               char *sl = NULL;
 
               const char *srelto[] = {
-                [DUF_OFFSET_config] = "config",
-                [DUF_OFFSET_ufilter] = "ufilter",
+                /* [DUF_OFFSET_config] = "config",   */
+                /* [DUF_OFFSET_ufilter] = "ufilter", */
+                [DUF_OFFSET_funcptr] = "funcptr",
+                [DUF_OFFSET_varptr] = "varptr",
               };
               sl = duf_optstages_list( xtended, xvtable );
               if ( ashown[codeval] <= 0 )

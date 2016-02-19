@@ -2,6 +2,8 @@
 #  define MAS_DUF_OPTABLE_DEF_H
 
 #  include "duf_option_types.h"
+#  include "duf_config.h" /* duf_get_pointer_config */
+#  include "duf_config_util.h" /* duf_get_pointer_ufilter */
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
@@ -73,8 +75,14 @@
 #  define DO_TF(_vt, ...)   DO_SET_VTYPE(_vt),  DO_ ## _vt(__VA_ARGS__)
 #  define DOO_TF(_vt, ...) DOO_SET_VTYPE(_vt), DOO_ ## _vt(__VA_ARGS__)
 
-#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
-#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
+#if 0
+#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld, .reltoptr= duf_get_pointer_##_fld
+#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld, .reltoptr= duf_get_pointer_##_fld
+#else
+#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+#endif
+
 
 #  define DO_OOO(_vt, _v, _styp, _fld)     DO_SET_VTYPE(_vt), DO_OFFSET( _v, _styp, _fld )
 #  define DOO_OOO(_vt, _v, _styp, _fld)   DOO_SET_VTYPE(_vt), DOO_OFFSET( _v, _styp, _fld )

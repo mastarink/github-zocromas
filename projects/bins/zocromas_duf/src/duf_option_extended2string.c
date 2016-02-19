@@ -19,9 +19,10 @@
 /* TODO rename file ...... */
 
 static const char *
-duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
+duf_offset2stringid( unsigned offset DUF_UNUSED, duf_offset_to_t relto DUF_UNUSED )
 {
   const char *rs = NULL;
+#if 0
 
   switch ( relto )
   {
@@ -271,6 +272,7 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
     }
     break;
   }
+#endif
   return rs;
 }
 
@@ -312,12 +314,14 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
           case DUF_OFFSET_funcptr:
           case DUF_OFFSET_none:
             break;
-          case DUF_OFFSET_config:
+#if 0
+	  case DUF_OFFSET_config:
             srelto = "config";
             break;
           case DUF_OFFSET_ufilter:
             srelto = "ufilter";
             break;
+#endif
           }
           DUF_PRINTF( 0, ".offset( %lu, %s(%d), %s ) ", xtended->m_offset, srelto, xtended->relto,
                       duf_offset2stringid( xtended->m_offset, xtended->relto ) );
@@ -407,7 +411,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         case DUF_OFFSET_funcptr:
         case DUF_OFFSET_none:
           break;
-        case DUF_OFFSET_config:
+#if 0
+	case DUF_OFFSET_config:
           DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
@@ -417,6 +422,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
+#endif
         }
       }
 

@@ -52,9 +52,8 @@ typedef union
 typedef enum
 {
   DUF_OFFSET_none = 0,
-  DUF_OFFSET_config,
-/* DUF_OFFSET_depthinfo, */
-  DUF_OFFSET_ufilter,
+  /* DUF_OFFSET_config, */
+  /* DUF_OFFSET_ufilter, */
   DUF_OFFSET_varptr,
   DUF_OFFSET_funcptr,
 } duf_offset_to_t;

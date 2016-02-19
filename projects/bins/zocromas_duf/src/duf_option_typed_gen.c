@@ -18,7 +18,6 @@
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
-
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"
 #include "duf_option_typed_gen.h"
@@ -113,6 +112,13 @@ duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE *
 }
 
 static void *
+duf_get_offset( void *ptr, unsigned long off )
+{
+  assert( ptr );
+  return ptr ? ( void * ) ( ( ( char * ) ptr ) + off ) : NULL;
+}
+
+static void *
 duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 {
   void *byteptr = NULL;
@@ -124,16 +130,19 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
   case DUF_OFFSET_none:
     assert( extended->m_offset == 0 );
     break;
+#if 0
   case DUF_OFFSET_config:
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
-#if 0
+# if 0
     byteptr = ( ( ( char * ) duf_config ) + extended->m_offset );
-#else
+# else
     byteptr = duf_get_config_offset( extended->m_offset );
+    if ( extended->reltoptr )
+      assert( byteptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
   /* assert( byteptr == ( ( ( char * ) duf_config ) + extended->m_offset ) ); */
-#endif
+# endif
     break;
-#if 1
+# if 1
   /* case DUF_OFFSET_depthinfo:                                              */
   /*   DUF_TRACE( options, 60, "relto=%d", extended->relto );                */
   /*   byteptr = ( ( ( char * ) duf_pdi_global(  ) ) + extended->m_offset ); */
@@ -142,14 +151,17 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
   /* byteptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
     byteptr = duf_get_config_puz_offset( extended->m_offset );
+    if ( extended->reltoptr )
+      assert( byteptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
     break;
+# endif
+#endif
   case DUF_OFFSET_varptr:
     byteptr = duf_get_offset( extended->reltoptr, extended->m_offset );
     break;
   case DUF_OFFSET_funcptr:
     byteptr = duf_get_offset( ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ), extended->m_offset );
     break;
-#endif
   }
   return byteptr;
 }

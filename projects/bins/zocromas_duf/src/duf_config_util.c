@@ -16,7 +16,7 @@
 #include "duf_config_util.h"
 /* ###################################################################### */
 
-void *
+static void *
 duf_get_offset( void *ptr, unsigned long off )
 {
   assert( ptr );
@@ -33,6 +33,12 @@ void *
 duf_get_config_puz_offset( unsigned long off )
 {
   return duf_config ? duf_get_offset( duf_config->vars.puz, off ) : NULL;
+}
+
+void *
+duf_get_pointer_ufilter( void )
+{
+  return duf_config ? duf_config->vars.puz : NULL;
 }
 
 duf_config_cli_t *
@@ -61,7 +67,7 @@ duf_output_file( void )
 }
 
 #if 0
-  char
+char
 duf_option_delimiter( void )
 {
   return duf_config ? duf_config->cli.option_delimiter : ':';

@@ -7,8 +7,6 @@
 #include "duf_maintenance_tracen.h"
 #include "duf_maintenance_errors.h"
 
-
-
 #include "duf_config_util.h"
 
 #include "duf_option_defs.h"
@@ -50,7 +48,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
       nogen = 1;
       DOR( r, duf_xoption_clarify_typed_call( extended, optargg, noo, istage, source ) );
 
-      /* useless now: */
+    /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )
       {
         DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED );
@@ -66,7 +64,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
   {
     DUF_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
                duf_optstage_name( istage ) );
-    /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+  /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   }
 
   DUF_ENDR( r );
