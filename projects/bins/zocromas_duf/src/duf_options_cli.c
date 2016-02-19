@@ -253,10 +253,8 @@ SR( OPTIONS, source_cli_parse, duf_option_stage_t istage, duf_int_void_func_t cb
 
   CR( cli_parse, duf_cli_options_get_shorts(  ), istage, paod );
 
-  T( "@ (%d:%s) {%s}", QERRIND, QERRNAME, duf_cli_options_get_shorts(  ) );
   if ( istage < DUF_OPTION_STAGE_SETUP )
     DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );
-  T( "@ (%d:%s)", QERRIND, QERRNAME );
 
   DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
 /* DUF_ENDR( r ); */

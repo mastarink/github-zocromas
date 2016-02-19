@@ -29,6 +29,7 @@ typedef struct
   unsigned long long leaves;
 } duf_levinfo_child_count_t;
 
+#include "duf_defs.h"
 typedef struct
 {
 /* unsigned is__leaf:1; */

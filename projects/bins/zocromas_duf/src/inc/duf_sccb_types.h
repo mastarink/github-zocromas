@@ -3,6 +3,7 @@
 
 # include "duf_sql_set_types.h"                                      /* duf_sql_set_t */
 # include "sql_beginning_types.h"                                    /* duf_sql_sequence_t */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t */
 
 typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 

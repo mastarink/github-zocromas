@@ -40,5 +40,6 @@ duf_option_t *duf_cli_options_get_longopts_table( void );
 const duf_longval_extended_vtable_t *const *duf_cli_options_xvtable_multi( void );
 
 char duf_cli_options_delimiter( void );
+duf_option_adata_t *duf_cli_options_aod( void );
 
 #endif

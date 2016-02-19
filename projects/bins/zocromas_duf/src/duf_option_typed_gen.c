@@ -18,6 +18,8 @@
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
+#include "duf_expandable.h"
+
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"
 #include "duf_option_typed_gen.h"
@@ -422,17 +424,18 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
         {
-          duf_expandable_string_t *pcs;
+          duf_expandable_string_t *pcs_x;
 
-          pcs = ( duf_expandable_string_t * ) byteptr;
-          if ( pcs && pcs->value )
-            mas_free( pcs->value );
-          pcs->value = NULL;
-          if ( doptargg )
+          pcs_x = ( duf_expandable_string_t * ) byteptr;
+          if ( pcs_x )
           {
-            pcs->value = doptargg;
-            doptargg = NULL;
-            DUF_TRACE( options, +140, "string set:%s @%p", doptargg, pcs->value );
+            duf_cfg_string_delete( pcs_x );
+            if ( doptargg )
+            {
+              pcs_x->value = doptargg;
+              doptargg = NULL;
+              DUF_TRACE( options, +140, "string set:%s @%p", doptargg, pcs_x->value );
+            }
           }
         }
         break;
@@ -474,7 +477,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
             duf_tmpdb_delete( extended->o.name, optargg );
 #endif
           }
-          else if ( optargg && *optargg )
+          else if ( optargg && *optargg && duf_tmpdb_add )
             DOR( r, duf_tmpdb_add( extended->o.val, extended->o.name, optargg ) );
         }
         break;

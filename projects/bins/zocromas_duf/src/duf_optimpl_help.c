@@ -118,8 +118,8 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
-  DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name ) );
-  DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir ) );
+  DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
+  DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
   DUF_PRINTF( 0, "  --allow-drop-tables		DANGEROUS!" );
   DUF_PRINTF( 0, "  --allow-remove-database		DANGEROUS!" );
   DUF_PRINTF( 0, "  --allow-create-tables" );

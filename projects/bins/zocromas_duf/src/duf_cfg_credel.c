@@ -61,25 +61,27 @@ duf_cfg_create( void )
     const char *cfgdir;
 
     cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
-    /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
+  /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
     DUF_CFGWS( cfg, conf.config_dir, mas_strdup( cfgdir ) );
 
   }
-  DUF_CFGWSP( cfg, db.main.name, mas_strdup( "duf-main" ) );
-  DUF_CFGWSP( cfg, db.adm.name, mas_strdup( "duf-adm" ) );
-  DUF_CFGWSP( cfg, db.tempo.name, mas_strdup( "duf-tempo" ) );
-  DUF_CFGWSP( cfg, db.selected.name, mas_strdup( "duf-selected" ) );
+  assert( !cfg->db.main.name_x.value );
+  DUF_CFGWSP( cfg, db.main.name_x, mas_strdup( "duf-main" ) );
+  DUF_CFGWSP( cfg, db.adm.name_x, mas_strdup( "duf-adm" ) );
+  DUF_CFGWSP( cfg, db.tempo.name_x, mas_strdup( "duf-tempo" ) );
+  DUF_CFGWSP( cfg, db.selected.name_x, mas_strdup( "duf-selected" ) );
   DUF_CFGW( cfg, opt.trace.errors ) += 2;
-  /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
-  /* cfg->opt.trace.options = 1; */
-  /* cfg->opt.trace.fs += 1; */
+  fprintf( stderr, "!!!!!!!!%p\n", &cfg->db.main.name_x );
+/* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
+/* cfg->opt.trace.options = 1; */
+/* cfg->opt.trace.fs += 1; */
 
-  /* DUF_CFGW( cfg, opt.trace.options ) = 11; */
-  /* DUF_CFGW( cfg, opt.trace.options ) = 71; */
+/* DUF_CFGW( cfg, opt.trace.options ) = 11; */
+/* DUF_CFGW( cfg, opt.trace.options ) = 71; */
   DUF_CFGW( cfg, opt.trace.temp ) += 2;
 
   assert( cfg->vars.puz );
-  /* assert( cfg->cli.longopts_table ); */
+/* assert( cfg->cli.longopts_table ); */
 
   DUF_END(  );
   return cfg;
@@ -129,12 +131,12 @@ duf_cfg_delete( duf_config_t * cfg )
 #else
     mas_free( cfg->db.path );
     cfg->db.path = NULL;
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.dir ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.subdir ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.main.name ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.adm.name ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.tempo.name ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.selected.name ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.dir_x ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.subdir_x ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.main.name_x ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.adm.name_x ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.tempo.name_x ) );
+    duf_cfg_string_delete( DUF_CFGA( cfg, db.selected.name_x ) );
 #endif
 
     mas_free( cfg->db.main.fpath );
@@ -149,8 +151,8 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-    /* duf_options_delete_longopts_table( cfg->cli.longopts_table ); */
-    /* cfg->cli.longopts_table = NULL;                               */
+  /* duf_options_delete_longopts_table( cfg->cli.longopts_table ); */
+  /* cfg->cli.longopts_table = NULL;                               */
 
     mas_free( cfg->help_string );
     cfg->help_string = NULL;
@@ -167,8 +169,8 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->vars.tag.dir );
     cfg->vars.tag.dir = NULL;
 
-    /* mas_free( cfg->group ); */
-    /* cfg->group = NULL;      */
+  /* mas_free( cfg->group ); */
+  /* cfg->group = NULL;      */
 
 #if 0
     mas_del_argv( cfg->cli.targ.argc, cfg->cli.targ.argv, 0 );
@@ -222,8 +224,8 @@ duf_cfg_delete( duf_config_t * cfg )
       mas_free( cfg->opt.output.sformat.dirs_gen );
       cfg->opt.output.sformat.dirs_gen = NULL;
 
-      /* mas_free( cfg->opt.output.history_filename ); */
-      /* cfg->opt.output.history_filename = NULL;      */
+    /* mas_free( cfg->opt.output.history_filename ); */
+    /* cfg->opt.output.history_filename = NULL;      */
 
       mas_free( cfg->opt.output.header_tty );
       cfg->opt.output.header_tty = NULL;

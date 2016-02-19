@@ -11,6 +11,9 @@
 # include "duf_se.h"
 # include "duf_dodefs.h"
 
+extern int duf_output_level( void ) __attribute__ ( ( weak ) );
+extern FILE *duf_output_file( void ) __attribute__ ( ( weak ) );
+
 extern int duf_verbose( void ) __attribute__ ( ( weak ) );
 extern int duf_dry_run( void ) __attribute__ ( ( weak ) );
 

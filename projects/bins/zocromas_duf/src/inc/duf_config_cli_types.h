@@ -1,6 +1,6 @@
 #ifndef MAS_DUF_CONFIG_CLI_TYPES_H
 # define MAS_DUF_CONFIG_CLI_TYPES_H
-# include <stdio.h>/* FILE */
+# include <stdio.h>                                                  /* FILE */
 
 # include <mastar/tools/mas_argvc_types.h>
 
@@ -30,6 +30,7 @@ typedef struct
   char option_delimiter;
   char *config_dir;
   char *cmds_dir;
+  duf_option_adata_t aod;
 } duf_config_cli_t;
 
 #endif

@@ -117,7 +117,7 @@ global_status_reset( void )
   global_status.db.attached_selected = NULL;
   mas_free( global_status.db.opened_name );
   global_status.db.opened_name = NULL;
-
+#if 0
   {
     for ( size_t iod = 0; iod < global_status.aod.count; iod++ )
     {
@@ -137,6 +137,7 @@ global_status_reset( void )
     global_status.aod.pods = NULL;
     global_status.aod.size = global_status.aod.count = 0;
   }
+#endif
 }
 
 static void constructor_global_status( void ) __attribute__ ( ( constructor( 101 ) ) );

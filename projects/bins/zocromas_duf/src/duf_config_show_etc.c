@@ -24,7 +24,7 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir ) );
+    DUF_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir_x ) );
     DUF_TRACE( temp, 4, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
   }
   for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )

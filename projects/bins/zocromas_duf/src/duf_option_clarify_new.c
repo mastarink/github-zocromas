@@ -69,10 +69,17 @@ SR( OPTIONS, split_string_od, duf_option_data_t * pod )
 #endif
   if ( barg )
   {
-  /* arg = mas_strdup( barg ); */
-  /* T( ">>>> barg:'%s'", barg ); */
+#if 0
     arg = duf_string_options_expand( barg, '?' );
-  /* T( ">> arg:'%s' => %s", barg, arg ); */
+#else
+    {
+      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_string_options_at_string_xsdb_getvar };
+
+      cs_x.value = mas_strdup( barg );
+      arg = mas_strdup( duf_string_expanded( &cs_x ) );
+      duf_cfg_string_delete( &cs_x );
+    }
+#endif
   }
   pod->has_arg = ( ( pod->has_arg && arg ) || ( arg && *arg ) );
   pod->name = name;
@@ -280,7 +287,17 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
     {
       char *oa;
 
+#if 0
       oa = duf_string_options_expand( pod->optarg, '?' );
+#else
+      {
+        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_string_options_at_string_xsdb_getvar };
+
+        cs_x.value = mas_strdup( pod->optarg );
+        oa = mas_strdup( duf_string_expanded( &cs_x ) );
+        duf_cfg_string_delete( &cs_x );
+      }
+#endif
       CRV( ( pod->clarifier ), pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,
            pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
       pod->clarified[pod->stage] = 1;

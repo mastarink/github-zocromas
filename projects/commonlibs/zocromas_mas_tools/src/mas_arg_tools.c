@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -163,6 +164,7 @@ _mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char 
       const char *vv;
 
       vn = mas_strndup( start, end - start );
+      assert( cb );
       vv = ( cb ) ( vn, arg );
       if ( vv && *vv )
       {
@@ -188,7 +190,7 @@ _mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char 
     snew = mas_strdup( cstr );
   else if ( nxt && *nxt )
     snew = mas_strcat_x( snew, nxt );
-  /* fprintf( stderr, "@@@@@@@@@@ [%s] => [%s] ; start:[%s] ; end:[%s]\n", cstr, snew, start, end ); */
+/* fprintf( stderr, "@@@@@@@@@@ [%s] => [%s] ; start:[%s] ; end:[%s]\n", cstr, snew, start, end ); */
 
   return snew;
 }
@@ -265,7 +267,7 @@ mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot __a
     p++;
   if ( !p || !*p )
     p = NULL;
-  /* fprintf( stderr, "S[%lu]:%s\n", p - this, this ); */
+/* fprintf( stderr, "S[%lu]:%s\n", p - this, this ); */
   return p;
 }
 
@@ -320,9 +322,9 @@ mas_find_next_arg( const char *args, const char **pthis, size_t * plen, int *quo
   p = args;
   p = mas_skip_arg( p, pthis, plen, quot );
   p = mas_skip_space( p );
-  /* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
-  /* {                                                                    */
-  /* }                                                                    */
+/* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
+/* {                                                                    */
+/* }                                                                    */
   if ( !p || !*p )
     p = NULL;
   return p;
@@ -339,9 +341,9 @@ mas_find_next_argo( const char *args, const char **pthis, size_t * plen, int *qu
   p = args;
   p = mas_skip_argo( p, pthis, plen, quot );
   p = mas_skip_space( p );
-  /* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
-  /* {                                                                    */
-  /* }                                                                    */
+/* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
+/* {                                                                    */
+/* }                                                                    */
   if ( !p || !*p )
     p = NULL;
   return p;
@@ -364,7 +366,7 @@ remove_backslash( char *string )
   }
   if ( in && out )
     *out = *in;
-  /* printf( "RR: %s\n", string ); */
+/* printf( "RR: %s\n", string ); */
   return string;
 }
 
@@ -453,7 +455,6 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
   char **targv = NULL;
   int nargs = 0, totargc = 0;
 
-
   if ( ptargv )
   {
     int ita = 0;
@@ -487,7 +488,7 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
         if ( nextarg )
           nargs++;
         len = 0;
-        /* a = nextarg; */
+      /* a = nextarg; */
         nextarg = mas_find_next_arg( nextarg, &this, &len, &q );
         if ( nargs > ia_offset )
         {
@@ -496,13 +497,13 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
         }
       }
     }
-    /* zero terminate */
+  /* zero terminate */
     targv[totargc] = NULL;
     *ptargv = targv;
   }
   else
   {
-    /* FPRINTF( STDERR, "no ptargv\n" ); */
+  /* FPRINTF( STDERR, "no ptargv\n" ); */
   }
   return totargc;
 }
@@ -644,7 +645,7 @@ mas_strcat_xt( char *s1, const char *s2 )
     l1 = s1 ? strlen( s1 ) : 0;
     l2 = s2 ? strlen( s2 ) : 0;
     l = l1 + l2;
-    /* if ( l > 0 ) -- fixed 20151007.143418 - empty string should be allocated too!! */
+  /* if ( l > 0 ) -- fixed 20151007.143418 - empty string should be allocated too!! */
     {
       r = mas_malloc( l + 1 );
       if ( s1 )
@@ -673,7 +674,7 @@ mas_strncat_xt( char *s1, const char *s2, size_t maxs2 )
     if ( maxs2 < l2 )
       l2 = maxs2;
     l = l1 + l2;
-    /* if ( l > 0 ) -- fixed 20151007.143318 - empty string should be allocated too!! */
+  /* if ( l > 0 ) -- fixed 20151007.143318 - empty string should be allocated too!! */
     {
       r = mas_malloc( l + 1 );
       if ( s1 )

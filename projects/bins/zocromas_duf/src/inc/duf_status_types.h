@@ -39,7 +39,6 @@ typedef struct
   duf_tmp_t *tmp;
   duf_status_dh_t dh;
   duf_depthinfo_t *pdilist;
-  duf_option_adata_t aod;
   duf_status_scanner_t scn;
 } duf_status_t;
 

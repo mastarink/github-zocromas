@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_SQL_SET_TYPES_H
 # define MAS_DUF_SQL_SET_TYPES_H
 
+# include "duf_scan_types.h"                                         /* duf_node_type_t */
+
 typedef struct
 {
 /* unsigned use_std_fieldset:1; */

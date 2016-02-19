@@ -5,7 +5,7 @@
 
 typedef struct
 {
-  duf_expandable_string_t name;
+  duf_expandable_string_t name_x;
   char *fpath;
 } duf_db_config_t;
 
@@ -13,8 +13,8 @@ typedef struct
 typedef struct
 {
 /* unsigned opened:1; */
-  duf_expandable_string_t dir;
-  duf_expandable_string_t subdir;
+  duf_expandable_string_t dir_x;
+  duf_expandable_string_t subdir_x;
   char *path;
   duf_db_config_t main;
   duf_db_config_t adm;

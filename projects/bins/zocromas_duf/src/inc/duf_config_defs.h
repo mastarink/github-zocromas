@@ -27,7 +27,7 @@
 #  define DUF_CFGWSP(_cfg, _lo, _val) DUF_CFGW(_cfg, _lo.value)=(_val)
 
 #  define DUF_CFGGS(_cfg, _lo) DUF_CFGG(_cfg, _lo)
-#  define DUF_CFGGSP(_cfg, _lo) duf_config_string_expanded(&_cfg->_lo)
+#  define DUF_CFGGSP(_cfg, _lo) duf_string_expanded(&_cfg->_lo)
 
 
 

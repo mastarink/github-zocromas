@@ -8,6 +8,9 @@
 #include "duf_option_extended.h"
 #include "duf_option_longopts.h"
 
+#include "duf_option_stage.h"
+#include "duf_option_source.h"
+
 /* ###################################################################### */
 #include "duf_option_config.h"
 /* ###################################################################### */
@@ -112,6 +115,60 @@ duf_cli_options_shut( duf_config_cli_t * cli )
   config_cli->config_dir = NULL;
   mas_free( config_cli->cmds_dir );
   config_cli->cmds_dir = NULL;
+
+  {
+    FILE *f = NULL;
+
+    f = fopen( "options.tmp", "w" );
+    if ( f )
+    {
+      duf_option_stage_t stage = DUF_OPTION_STAGE_NONE;
+      duf_option_source_t source = {.sourcecode = DUF_OPTION_SOURCE_NONE };
+
+      for ( size_t iod = 0; iod < config_cli->aod.count; iod++ )
+      {
+        duf_option_data_t *pod;
+
+        pod = &config_cli->aod.pods[iod];
+      /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
+        if ( source.sourcecode != pod->source.sourcecode )
+          fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );
+        if ( stage != pod->stage )
+          fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
+        if ( pod->doindex >= 0 )
+        {
+          fprintf( f, "\t%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
+                   pod->xfound.xarray[pod->doindex].xtended->o.name );
+          if ( pod->optarg )
+            fprintf( f, "='%s'", pod->optarg );
+        }
+        fprintf( f, "\t\t[%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod, pod->name );
+        if ( pod->optarg )
+          fprintf( f, "='%s'", pod->optarg );
+        fprintf( f, "]\n" );
+      }
+      fclose( f );
+    }
+  }
+  {
+    for ( size_t iod = 0; iod < config_cli->aod.count; iod++ )
+    {
+      duf_option_data_t *pod;
+
+      pod = &config_cli->aod.pods[iod];
+      mas_free( pod->xfound.xarray );
+      pod->xfound.xarray = NULL;
+      mas_free( pod->name );
+      pod->name = NULL;
+      mas_free( pod->optarg );
+      pod->optarg = NULL;
+      mas_free( pod->string_copy );
+      pod->string_copy = NULL;
+    }
+    mas_free( config_cli->aod.pods );
+    config_cli->aod.pods = NULL;
+    config_cli->aod.size = config_cli->aod.count = 0;
+  }
 }
 
 const char *
@@ -318,4 +375,10 @@ char
 duf_cli_options_delimiter( void )
 {
   return config_cli ? config_cli->option_delimiter : ':';
+}
+
+duf_option_adata_t *
+duf_cli_options_aod( void )
+{
+  return config_cli ? &config_cli->aod : NULL;
 }

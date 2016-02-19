@@ -1,7 +1,8 @@
 #include <string.h>
 #include <errno.h>
 
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/tools/mas_tools.h>                                  /* mas_tstrflocaltime */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_concat_path */
 
 #include "duf_maintenance.h"
 
@@ -132,9 +133,9 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
   int rpr = 0;
   char *path = NULL;
 
-  if ( DUF_CONFIGGSP( db.subdir ) )
+  if ( DUF_CONFIGGSP( db.subdir_x ) )
   {
-    if ( strchr( DUF_CONFIGGSP( db.subdir ), '/' ) )
+    if ( strchr( DUF_CONFIGGSP( db.subdir_x ), '/' ) )
     {
       DUF_MAKE_ERROR( rpr, DUF_ERROR_MKDIR );
     }
@@ -142,7 +143,7 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
     {
       int ry;
 
-      path = mas_concat_path( dir, DUF_CONFIGGSP( db.subdir ) );
+      path = mas_concat_path( dir, DUF_CONFIGGSP( db.subdir_x ) );
       {
         struct stat st;
 
@@ -174,4 +175,35 @@ duf_config_db_path_add_subdir( const char *dir, int *pr )
   if ( pr )
     *pr = rpr;
   return path;
+}
+
+const char *
+duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
+{
+  static char buf[256];
+  size_t len;
+  size_t llen;
+  const char *label = "TIME(";
+  const char *pbuf = buf;
+
+  llen = strlen( label );
+  *buf = 0;
+  len = strlen( name );
+  if ( len > llen && 0 == strncmp( name, "TIME(", llen ) && name[len - 1] == ')' )
+  {
+  /* strftime */
+    char *fmt;
+
+    fmt = mas_strndup( name + llen, len - llen - 1 );
+    mas_tstrflocaltime( buf, sizeof( buf ), fmt, time( NULL ) );
+    mas_free( fmt );
+    pbuf = buf;
+  }
+  else if ( *name == '+' )
+  {
+    if ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) )
+      pbuf = DUF_CONFIGGSP( db.main.name_x );
+  }
+/* T( "@@@@@@var %s => '%s'", name, pbuf ); */
+  return pbuf;
 }

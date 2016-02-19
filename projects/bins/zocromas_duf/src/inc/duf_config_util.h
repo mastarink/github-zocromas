@@ -9,13 +9,11 @@ void *duf_get_config_puz_offset( unsigned long off );
 duf_config_cli_t *duf_get_config_cli( void );
 duf_config_opt_t *duf_get_config_opt( void );
 
-int duf_output_level( void );
-
-FILE *duf_output_file( void );
-
 /* char duf_option_delimiter( void ); */
 
 char *duf_config_db_path_add_subdir( const char *path, int *pr );
 void *duf_get_pointer_ufilter( void );
+
+const char *duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg );
 
 #endif

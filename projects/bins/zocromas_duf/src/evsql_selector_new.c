@@ -121,7 +121,7 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
   }
   else if ( 0 == strcmp( name, "DB_NAME" ) )
   {
-    str = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
+    str = mas_strdup( DUF_CONFIGGSP( db.main.name_x ) );
   }
   return str;
 }

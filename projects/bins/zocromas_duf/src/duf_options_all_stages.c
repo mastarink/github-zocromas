@@ -5,7 +5,7 @@
 #include "duf_maintenance_tracen.h"
 #include "duf_maintenance_errors.h"
 
-#include "duf_status_ref.h"
+/* #include "duf_status_ref.h" */
 
 
 #include "duf_option_stage.h"
@@ -42,7 +42,7 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage, duf_errc_cs_func_t cb_in
         CRV( cb_init_loop_optstage, targia ); /* optstage_cb */
 #endif
     /* DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( duf_pdi_global(  ) ) ); */
-      CR( all_options, istage_plus, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
+      CR( all_options, istage_plus, cb_do_interactive, cb_prompt_interactive, duf_cli_options_aod() /* paod */ ,
           ( istage_plus > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
       istage_plus++;
     }
@@ -50,7 +50,7 @@ SR( TOP, treat_option_stage, duf_option_stage_t istage, duf_errc_cs_func_t cb_in
   else
   {
     /* TODO global_status.aod => global_cli_status.aod */
-    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive, &global_status.aod /* paod */ ,
+    CR( all_options, istage, cb_do_interactive, cb_prompt_interactive,  duf_cli_options_aod() /* paod */ ,
         ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
   DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );

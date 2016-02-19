@@ -34,21 +34,6 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, const char **ppeo, char value_separa
   }
   if ( bstr )
   {
-
-#if 0
-    DUF_TRACE( explain, 0, "bstr: \"%s\"", bstr );
-    xs = mas_expand_string_cb_arg( bstr, duf_string_options_at_string_xsdb_getvar, NULL );
-    {
-      char *xs1;
-
-      xs1 = mas_expand_string( xs );
-      mas_free( xs );
-      xs = xs1;
-    }
-#else
-  /* xs = _duf_string_options_expand( bstr, &expandable_later ); */
-  /* xs = duf_string_options_expand( bstr, '?' ); */
-#endif
     DUF_TRACE( explain, 0, "bstr: \"%s\"", bstr );
 
 /* look all std xvtables for cmd from string and exec if found */

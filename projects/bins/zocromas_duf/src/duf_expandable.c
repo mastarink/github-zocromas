@@ -25,39 +25,8 @@ duf_cfg_string_delete( duf_expandable_string_t * cs )
   DUF_END(  );
 }
 
-static const char *
-duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
-{
-  static char buf[256];
-  size_t len;
-  size_t llen;
-  const char *label = "TIME(";
-  char *pbuf = buf;
-
-  llen = strlen( label );
-  *buf = 0;
-  len = strlen( name );
-  if ( len > llen && 0 == strncmp( name, "TIME(", llen ) && name[len - 1] == ')' )
-  {
-  /* strftime */
-    char *fmt;
-
-    fmt = mas_strndup( name + llen, len - llen - 1 );
-    mas_tstrflocaltime( buf, sizeof( buf ), fmt, time( NULL ) );
-    mas_free( fmt );
-    pbuf = buf;
-  }
-  else if ( *name == '+' )
-  {
-    if ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) )
-      pbuf = DUF_CONFIGGSP( db.main.name );
-  }
-/* T( "@@@@@@var %s => '%s'", name, pbuf ); */
-  return pbuf;
-}
-
 static char *
-_duf_string_options_expand( const char *s, char protected_prefix, int *pexpandable_later )
+_duf_string_options_expand( const char *s, char protected_prefix, int *pexpandable_later, mas_arg_get_cb_arg_t varfunc )
 {
   char *xs = NULL;
 
@@ -68,11 +37,12 @@ _duf_string_options_expand( const char *s, char protected_prefix, int *pexpandab
     {
       xs = mas_strdup( s );
       if ( pexpandable_later )
-        *pexpandable_later = 1; /* expand later */
+        *pexpandable_later = 1;                                      /* expand later */
     }
     else
     {
-      xs = mas_expand_string_cb_arg( s, duf_string_options_at_string_xsdb_getvar, NULL );
+      assert( varfunc );
+      xs = mas_expand_string_cb_arg( s, varfunc /* duf_string_options_at_string_xsdb_getvar */ , NULL );
       {
         char *xs1;
 
@@ -87,24 +57,25 @@ _duf_string_options_expand( const char *s, char protected_prefix, int *pexpandab
 }
 
 char *
-duf_string_options_expand( const char *s, char protected_prefix )
+duf_string_options_expand( const char *s, char protected_prefix, mas_arg_get_cb_arg_t varfunc )
 {
-  return _duf_string_options_expand( s, protected_prefix, NULL );
+  return _duf_string_options_expand( s, protected_prefix, NULL, varfunc );
 }
 
 /* expands duf_expandable_string_t
  * */
-char *
-duf_config_string_expanded( duf_expandable_string_t * cs )
+const char *
+duf_string_expanded( duf_expandable_string_t * cs )
 {
-  char *p = cs->value;
+  const char *p = cs->value;
   char *x = NULL;
 
   if ( p )
   {
-    if ( *p == '?' )
+    if ( !cs->protected_prefix && *p == '?' )
       p++;
-    x = duf_string_options_expand( p, 0 );
+    assert( cs->varfunc );
+    x = duf_string_options_expand( p, cs->protected_prefix, cs->varfunc );
     mas_free( cs->expanded );
     cs->expanded = x;
   }

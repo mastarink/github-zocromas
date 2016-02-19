@@ -117,7 +117,7 @@ SR( OPTIONS, all_options, duf_option_stage_t istage /*, int is_interactive */ , 
   DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
   DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( istage ) );
 #endif
-
+  
   DUF_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name( istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;

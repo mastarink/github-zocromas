@@ -218,12 +218,12 @@ duf_main_db_open( duf_depthinfo_t * pdi )
 /* global_status.db.opened_name */
 
   DUF_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
-  DUF_TRACE( db, 5, "@@@@global_status.db.opened_name:%s => CFG->db.main.name:%s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name ) );
+  DUF_TRACE( db, 5, "@@@@global_status.db.opened_name:%s => CFG->db.main.name:%s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
 
 /* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db.opened_name ); */
-  if ( global_status.db.opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name ), global_status.db.opened_name ) )
+  if ( global_status.db.opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name_x ), global_status.db.opened_name ) )
   {
-    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name ) );
+    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
     DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
     DOR( r, duf_main_db_close( pdi, 0 ) );
     DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
@@ -239,7 +239,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
 
-    DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name ), DUF_CONFIGGS( db.main.fpath ) );
+    DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name_x ), DUF_CONFIGGS( db.main.fpath ) );
     if ( DUF_CONFIGGS( db.main.fpath ) )
     {
       if ( !DUF_ACTG_FLAG( allow_create_database ) )
@@ -261,7 +261,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     DUF_CONFIGWN( db.opened, ( DUF_NOERROR( r ) ) );
 #endif
     if ( DUF_NOERROR( r ) )
-      global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name ) );
+      global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name_x ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
     DUF_TRACE( pdi, 0, "pdi-global %s", duf_levinfo_path( duf_pdi_global(  ) ) );

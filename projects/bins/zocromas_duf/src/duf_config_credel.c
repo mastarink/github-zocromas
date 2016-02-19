@@ -12,9 +12,13 @@
 
 #include "duf_config4trace_ref.h"
 #include "duf_cfg_credel.h"
+
+#include "duf_expandable.h"
+
 /* ###################################################################### */
 #include "duf_config_credel.h"
 /* ###################################################################### */
+
 
 void
 duf_config_create( int argc, char **argv )
@@ -35,7 +39,11 @@ duf_config_create( int argc, char **argv )
 #else
   duf_cli_init( &duf_config->cli, argc, argv );
 #endif
-
+  duf_config->db.main.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
+  duf_config->db.tempo.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
+  duf_config->db.adm.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
+  duf_config->db.dir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
+  duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
   DUF_END(  );
 }
 

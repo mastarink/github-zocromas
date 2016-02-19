@@ -246,6 +246,7 @@ duf_main( int argc, char **argv )
 #endif
 
   TR( r );
+#if 0
   {
     FILE *f = NULL;
 
@@ -280,6 +281,7 @@ duf_main( int argc, char **argv )
       fclose( f );
     }
   }
+#endif
   global_status_reset(  );
   duf_config_delete(  );
   assert( !duf_config );
