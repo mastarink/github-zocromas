@@ -1,7 +1,5 @@
-#include <string.h>
 #include <stddef.h>
-
-#include <mastar/tools/mas_arg_tools.h>
+#include <string.h>
 
 #include "duf_maintenance.h"
 #include "duf_printn_defs.h"
@@ -9,7 +7,7 @@
 #include "duf_config_util.h"
 
 #include "duf_xtended_table.h"
-#include "duf_option_stage.h"   /* duf_optstage_name */
+#include "duf_option_stage.h"                                        /* duf_optstage_name */
 #include "duf_option_class.h"
 #include "duf_option_val.h"
 #include "duf_option_vtype.h"
@@ -38,9 +36,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, help_string ):
         rs = "help_string";
         break;
-        /* case offsetof( duf_config_t, loadtime ): */
-        /*   rs = "loadtime";                       */
-        /*   break;                                 */
+      /* case offsetof( duf_config_t, loadtime ): */
+      /*   rs = "loadtime";                       */
+      /*   break;                                 */
       case offsetof( duf_config_t, conf.config_dir ):
         rs = "config_dir";
         break;
@@ -80,9 +78,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, save.path ):
         rs = "save.path";
         break;
-        /* case offsetof( duf_config_t, cli.option_delimiter ): */
-        /*   rs = "cli.option_delimiter";                       */
-        /*   break;                                             */
+      /* case offsetof( duf_config_t, cli.option_delimiter ): */
+      /*   rs = "cli.option_delimiter";                       */
+      /*   break;                                             */
       case offsetof( duf_config_t, opt.act.v ):
         rs = "opt.act.v";
         break;
@@ -92,9 +90,9 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, opt.output ):
         rs = "opt.output";
         break;
-        /* case offsetof( duf_config_t, opt.output.fun_width ): */
-        /*   rs = "opt.output.fun_width";                       */
-        /*   break;                                             */
+      /* case offsetof( duf_config_t, opt.output.fun_width ): */
+      /*   rs = "opt.output.fun_width";                       */
+      /*   break;                                             */
       case offsetof( duf_config_t, opt.output.header_tty ):
         rs = "opt.output.header_tty";
         break;
@@ -104,28 +102,28 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
       case offsetof( duf_config_t, opt.disable ):
         rs = "opt.disable";
         break;
-        /* case offsetof( duf_config_t, opt.output.history_filename ): */
-        /*   rs = "opt.output.history_filename";                       */
-        /*   break;                                                    */
+      /* case offsetof( duf_config_t, opt.output.history_filename ): */
+      /*   rs = "opt.output.history_filename";                       */
+      /*   break;                                                    */
 
-        /* case offsetof( duf_config_t, cli ):  */
-        /*   break;                             */
-        /* case offsetof( duf_config_t, opt ):  */
-        /*   break;                             */
-        /* case offsetof( duf_config_t, db ):   */
-        /*   break;                             */
-        /* case offsetof( duf_config_t, save ): */
-        /*   break;                             */
+      /* case offsetof( duf_config_t, cli ):  */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, opt ):  */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, db ):   */
+      /*   break;                             */
+      /* case offsetof( duf_config_t, save ): */
+      /*   break;                             */
       default:
         if ( offset > offsetof( duf_config_t, cli ) && offset < offsetof( duf_config_t, opt ) )
         {
         }
         else if ( offset >= offsetof( duf_config_t, opt ) && offset < offsetof( duf_config_t, db ) )
         {
-          /* {                                                                                                 */
-          /*   if ( offsetof( duf_config_cli_t, option_delimiter ) == offset - offsetof( duf_config_t, cli ) ) */
-          /*     rs = "cli.option_delimiter";                                                                  */
-          /* }                                                                                                 */
+        /* {                                                                                                 */
+        /*   if ( offsetof( duf_config_cli_t, option_delimiter ) == offset - offsetof( duf_config_t, cli ) ) */
+        /*     rs = "cli.option_delimiter";                                                                  */
+        /* }                                                                                                 */
         }
         else if ( offset >= offsetof( duf_config_t, db ) && offset < offsetof( duf_config_t, save ) )
         {
@@ -133,12 +131,12 @@ duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
         else if ( offset >= offsetof( duf_config_t, save ) && offset < offsetof( duf_config_t, conf.config_dir ) )
         {
         }
-        /* else if ( offset >= offsetof( duf_config_t, scn ) && offset < offsetof( duf_config_t, dh ) ) */
-        /* {                                                                                            */
-        /* }                                                                                            */
-        /* else if ( offset >= offsetof( duf_config_t, dh ) && offset < offsetof( duf_config_t, vars.tag ) ) */
-        /* {                                                                                                 */
-        /* }                                                                                                 */
+      /* else if ( offset >= offsetof( duf_config_t, scn ) && offset < offsetof( duf_config_t, dh ) ) */
+      /* {                                                                                            */
+      /* }                                                                                            */
+      /* else if ( offset >= offsetof( duf_config_t, dh ) && offset < offsetof( duf_config_t, vars.tag ) ) */
+      /* {                                                                                                 */
+      /* }                                                                                                 */
         break;
       }
     }
@@ -357,8 +355,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(  )->argc,duf_cli_options_get_carg(  )->argv)", xtended->call.fdesc.a.func );
         break;
       case DUF_OPTION_VTYPE_N_CALL:
-        /* int rxx DUF_UNUSED = 0; */
-        /* DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.n.func, duf_strtol_suff( optargg, &rxx ) ); */
+      /* int rxx DUF_UNUSED = 0; */
+      /* DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.n.func, duf_strtol_suff( optargg, &rxx ) ); */
         DUF_PRINTF( 0, "  func:%p(duf_strtol_suff( optargg, &r ))", xtended->call.fdesc.n.func );
         break;
       case DUF_OPTION_VTYPE_S_CALL:
@@ -452,15 +450,15 @@ duf_multix_print( const duf_longval_extended_vtable_t * const *xvtables, const c
       else
         matchtab = mas_strdup( name );
     }
-    /* if ( ( !matchtab || !*matchtab || 0 == strncmp( ( *xt )->name, matchtab, strlen( matchtab ) ) ) ) */
+  /* if ( ( !matchtab || !*matchtab || 0 == strncmp( ( *xt )->name, matchtab, strlen( matchtab ) ) ) ) */
     if ( ( !matchtab || !*matchtab || strstr( ( *xt )->name, matchtab ) ) )
-      duf_xarr_print( *xt, matchopt ); /* TODO :  depends on optimpl !! */
+      duf_xarr_print( *xt, matchopt );                               /* TODO :  depends on optimpl !! */
     mas_free( matchtab );
     mas_free( matchopt );
   }
 }
 
-                                                                                /* duf_stdx_print *//* TODO :  depends on optimpl !! */
+                                                                                                    /* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {

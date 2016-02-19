@@ -7,7 +7,6 @@
 
 
 #include "duf_config.h"
-#include "duf_config_trace.h"
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_prepared.h"

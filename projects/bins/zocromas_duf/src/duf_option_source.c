@@ -1,5 +1,4 @@
-#include "duf_maintenance_options.h"
-
+#include <stddef.h>                                                  /* NULL */
 
 /* ###################################################################### */
 #include "duf_option_source.h"

@@ -2,9 +2,10 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance_options.h"
+#include "duf_maintenance_z.h"
+#include "duf_maintenance_tracen.h"
+#include "duf_maintenance_errors.h"
 
-#include "duf_config_trace.h"
 #include "duf_config_util.h"
 
 #include "duf_option_descr.h"
@@ -18,7 +19,7 @@
 #include "duf_option_clarify.h"
 /* ###################################################################### */
 
-DUF_WRAPSTATIC int
+int
 duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
                      const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
@@ -55,21 +56,24 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
   DUF_ENDR( r );
 }
 
-#ifdef MAS_WRAP_FUNC
+#if 0
+# ifdef MAS_WRAP_FUNC
 int
 DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                     const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
+                                     const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage,
+                                     duf_option_source_t source )
 {
   DUF_STARTR( r );
 
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_PARSED );
   DOR( r, duf_xoption_clarify( extended, optargg, xtable, noo, istage, source ) );
-  /* T("@noo:%d", noo); */
+/* T("@noo:%d", noo); */
   DUF_TRACE( options, +150, "@@@@clarified xcmd full: xname:%s; arg:%s; noo:%d (%d:%s)", duf_xoption_description_tmp( -1, extended ), optargg, noo, r,
              mas_error_name_i( r ) );
   DUF_E_UPPER( DUF_ERROR_OPTION_NOT_PARSED );
   DUF_ENDR( r );
 }
+# endif
 #endif
 
 /* 20150924.144102 */
@@ -84,6 +88,6 @@ duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
   ptarg->argc = mas_add_argv_argv( ptarg->argc, &ptarg->argv, pcarg->argc, pcarg->argv, pos );
   DUF_TRACE( options, 150, "@@@@@argc:%d", ptarg->argc );
 
-  /* targ.argv becomes valid here - may init pdi etc. */
+/* targ.argv becomes valid here - may init pdi etc. */
   DUF_ENDR( r );
 }

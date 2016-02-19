@@ -6,9 +6,8 @@
 
 #include <mastar/error/mas_errors_maintenance.h>
 
-/* #include "duf_maintenance_options.h" */
+#include "duf_maintenance_options.h"
 
-#include "duf_config_trace.h"
 
 #include "duf_defs.h"
 

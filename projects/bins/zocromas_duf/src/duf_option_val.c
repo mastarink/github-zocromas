@@ -1,8 +1,4 @@
-#include <stddef.h>
-#include <mastar/tools/mas_arg_tools.h>
-
-/* #include "duf_maintenance_options.h" */
-
+#include <stddef.h>                                                  /* NULL */
 
 /* ###################################################################### */
 #include "duf_option_val.h"

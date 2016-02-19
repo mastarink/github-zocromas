@@ -25,9 +25,9 @@
  * 4. action: clarify, clarify_full
  * */
 
-int DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, const char *optargg,
-                                         const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage,
-                                         duf_option_source_t source ) __attribute__ ( ( warn_unused_result ) );
+int duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
+                         const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage,
+                         duf_option_source_t source ) __attribute__ ( ( warn_unused_result ) );
 
 int duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos );
 

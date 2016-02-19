@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_CONFIG_TRACE_H
-# define MAS_DUF_CONFIG_TRACE_H
+#ifndef MAS_DUF_TRACEN_CONFIG_H
+# define MAS_DUF_TRACEN_CONFIG_H
 
 # include "duf_config_types.h"
 

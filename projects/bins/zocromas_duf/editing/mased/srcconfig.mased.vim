@@ -4,8 +4,8 @@ sfind duf_config.h
 tab sfind duf_config_credel.c
 sfind duf_config_credel.h
 
-tab sfind duf_config_trace.c
-sfind duf_config_trace.h
+tab sfind duf_tracen_config.c
+sfind duf_tracen_config.h
 
 tab sfind duf_config_db.c
 sfind duf_config_db.h

@@ -27,7 +27,7 @@ zocromas_duf_SOURCES=				   \
 	duf.c duf_experiment.c  duf_expandable.c	\
 	duf_maindb_info.c duf_maindb.c duf_options_all_stages.c		    \
 	duf_dbg.c \
-	duf_config.c duf_config_trace.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
+	duf_config.c duf_tracen_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
 	duf_config_util.c duf_config_util_z.c \
 	duf_status.c	     \
 	duf_cli.c \

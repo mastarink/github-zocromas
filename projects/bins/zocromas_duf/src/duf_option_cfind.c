@@ -1,10 +1,8 @@
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
-#include "duf_maintenance_options.h"
-
-#include "duf_config_trace.h"
+/* #include "duf_maintenance_z.h" */
+#include "duf_maintenance_tracen.h"
+/* #include "duf_maintenance_errors.h" */
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"
@@ -36,7 +34,7 @@ duf_coption_find_at_arr( duf_option_code_t codeval, const duf_option_t * arr, in
 #if 0
         ok = 1;
 #endif
-        break; /* ? */
+        break;                                                       /* ? */
       }
     }
   }
@@ -107,7 +105,7 @@ duf_coption_xfind_at_xarr( duf_option_code_t codeval, const duf_longval_extended
 #if 0
       ok = 1;
 #endif
-      break; /* ? */
+      break;                                                         /* ? */
     }
   }
   if ( pr )
@@ -141,7 +139,7 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
 
   if ( codeval && codeval != '?' )
   {
-    for ( const duf_longval_extended_vtable_t * const *multix = duf_cli_options_xvtable_multi(); !rxtended && *multix; multix++, ntable++ )
+    for ( const duf_longval_extended_vtable_t * const *multix = duf_cli_options_xvtable_multi(  ); !rxtended && *multix; multix++, ntable++ )
     {
       const duf_longval_extended_vtable_t *xvtable = *multix;
 
@@ -160,7 +158,7 @@ duf_coption_xfind_at_stdx( duf_option_code_t codeval, const duf_longval_extended
               if ( result_pxvtable )
                 *result_pxvtable = xvtable;
               DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
-              break; /* ? */
+              break;                                                 /* ? */
             }
           }
         }

@@ -1,5 +1,5 @@
+/* #include <stddef.h> */
 #include <string.h>
-#include <stddef.h>
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_(strdup|strcat); etc. */
 

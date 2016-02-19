@@ -5,7 +5,7 @@
 #include "duf_config_ref.h"
 
 /* ###################################################################### */
-#include "duf_config_trace.h"
+#include "duf_tracen_config.h"
 /* ###################################################################### */
 #ifdef MAS_TRACING
 const duf_config_t *duf_config4trace = NULL;

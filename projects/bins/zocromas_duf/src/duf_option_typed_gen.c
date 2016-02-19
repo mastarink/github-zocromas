@@ -5,22 +5,19 @@
 
 #include "duf_maintenance_z.h"                                       /* system calls wrappers, shortcut macros etc. */
 #include "duf_maintenance_errors.h"                                  /* errors subsystem access */
-
 #include "duf_maintenance_tracen.h"                                  /* DUF_TRACE, ... */
+
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF */
 
 #include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
 
 #include "duf_config_util.h"
 
-#include "duf_option_defs.h"
 #include "duf_option_tmpdb.h"
 
-/* #include "duf_option_config.h" */
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
-#include "duf_option_typed_call.h"
 
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"

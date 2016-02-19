@@ -1,22 +1,18 @@
+/* #include <stddef.h> */
 #include <string.h>
 
-#include "duf_maintenance_options.h"
-
-/* #include "duf_config.h" */
-/* #include "duf_config_util.h" */
-#include "duf_config_trace.h"
+#include "duf_maintenance_z.h"
+#include "duf_maintenance_tracen.h"
+#include "duf_maintenance_errors.h"
 
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
-/* #include "duf_option_clarify_string.h" */
 #include "duf_option_clarify_batch.h"
 
 /* ###################################################################### */
 #include "duf_options_env.h"
 /* ###################################################################### */
-
-
 
 static int
 duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_option_adata_t * paod )
@@ -45,9 +41,9 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_o
 int
 duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                       __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
-                      duf_option_source_code_t sourcecode  DUF_UNUSED)
+                      duf_option_source_code_t sourcecode DUF_UNUSED )
 {
-  /* extern duf_config_t *duf_config; */
+/* extern duf_config_t *duf_config; */
 
   DUF_STARTR( r );
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );

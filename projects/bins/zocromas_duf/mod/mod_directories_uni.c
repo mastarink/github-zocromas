@@ -5,7 +5,6 @@
 #include "sql_beginning_types.h"                                     /* duf_sql_sequence_t */
 
 /* #include "duf_config.h" */
-#include "duf_config_trace.h"
 
 #include "duf_levinfo_ref.h"
 
