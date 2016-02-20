@@ -15,7 +15,7 @@
 
 #include "duf_xtended_table.h"
 
-#include "duf_options_file.h"   /* duf_options_infilepath */
+#include "duf_options_file.h"                                        /* duf_options_infilepath */
 
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"
@@ -26,6 +26,7 @@
 #include "duf_option_names.h"
 #include "duf_option_class.h"
 #include "duf_option_vtype.h"
+#include "duf_option_config.h"
 
 /* ###################################################################### */
 #include "duf_optimpl_smart_help.h"
@@ -79,7 +80,7 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
   name = extended->o.name;
   codeval = extended->o.val;
 
-  /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
+/* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
   if ( DUF_CONFIGG( help_string ) )
   {
     char *s = DUF_CONFIGG( help_string );
@@ -90,16 +91,16 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
   {
     char *s = NULL;
 
-    /* duf_option_class_t hclass; */
+  /* duf_option_class_t hclass; */
 
-    /* hclass = duf_help_option2class( codeval ); */
+  /* hclass = duf_help_option2class( codeval ); */
     s = duf_xoption_description_d( extended, "\t", " // " );
-    /* s = mas_strcat_x( s, " ...................." ); */
+  /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
-      /* if ( shown >= 0 )                    */
-      /*   DUF_PRINTF( 0, " ## %d;", shown ); */
-      /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
+    /* if ( shown >= 0 )                    */
+    /*   DUF_PRINTF( 0, " ## %d;", shown ); */
+    /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
       DUF_PRINTF( 0, "[%u] \t%s", codeval, s );
       mas_free( s );
     }
@@ -121,7 +122,7 @@ duf_show_loption_description( int ilong )
   name = DUF_CONFIGG( cli.longopts_table )[ilong].name;
   codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
 
-  /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
+/* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
   if ( DUF_CONFIGG( help_string ) )
   {
     char *s = DUF_CONFIGG( help_string );
@@ -132,16 +133,16 @@ duf_show_loption_description( int ilong )
   {
     char *s = NULL;
 
-    /* duf_option_class_t hclass; */
+  /* duf_option_class_t hclass; */
 
-    /* hclass = duf_help_option2class( codeval ); */
+  /* hclass = duf_help_option2class( codeval ); */
     s = duf_loption_description_d( ilong, "\t", " // " );
-    /* s = mas_strcat_x( s, " ...................." ); */
+  /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
-      /* if ( shown >= 0 )                    */
-      /*   DUF_PRINTF( 0, " ## %d;", shown ); */
-      /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
+    /* if ( shown >= 0 )                    */
+    /*   DUF_PRINTF( 0, " ## %d;", shown ); */
+    /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
       DUF_PRINTF( 0, " %02d. [%u] \t%s", ilong, codeval, s );
       mas_free( s );
     }
@@ -159,12 +160,12 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
   const char *name;
   duf_option_code_t codeval;
 
-  /* name = DUF_CONFIGG( cli.longopts_table )[ilong].name; */
+/* name = DUF_CONFIGG( cli.longopts_table )[ilong].name; */
   name = extended->o.name;
-  /* codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val; */
+/* codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val; */
   codeval = extended->o.val;
 
-  /* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
+/* DUF_PRINTF( 0, "<><><><><><cnd:%d> %d: ie:%d oc:%d '%s'; %u", cnd, ilong, ie, oclass, name, codeval ); */
   if ( DUF_CONFIGG( help_string ) )
   {
     char *s = DUF_CONFIGG( help_string );
@@ -175,16 +176,16 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
   {
     char *s = NULL;
 
-    /* duf_option_class_t hclass; */
+  /* duf_option_class_t hclass; */
 
-    /* hclass = duf_help_option2class( codeval ); */
+  /* hclass = duf_help_option2class( codeval ); */
     s = duf_xoption_description_d( extended, "\t", " // " );
-    /* s = mas_strcat_x( s, " ...................." ); */
+  /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
-      /* if ( shown >= 0 )                    */
-      /*   DUF_PRINTF( 0, " ## %d;", shown ); */
-      /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
+    /* if ( shown >= 0 )                    */
+    /*   DUF_PRINTF( 0, " ## %d;", shown ); */
+    /* DUF_PRINTF( 0, "(%d;s[%d]=%d) %d. [%u] \t%s", shown, ie, ashown[ie], ilong, codeval, s ); */
       DUF_PRINTF( 0, " %02d. [%u] \t%s", ilong, codeval, s );
       mas_free( s );
     }
@@ -208,9 +209,9 @@ duf_option_O_smart_help( duf_option_class_t oclass )
 
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
-  /* for ( int ilong = 0; DUF_CONFIGG(cli.longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
-  /* {                                                                                                   */
-  /* }                                                                                                   */
+/* for ( int ilong = 0; DUF_CONFIGG(cli.longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
+/* {                                                                                                   */
+/* }                                                                                                   */
   if ( oclass <= DUF_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
     DUF_PRINTF( 0, "-=-=-=-=- %s (%s) -=-=-=-=-", oclass_titles[oclass], duf_optclass_name( oclass ) );
   else
@@ -222,7 +223,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
     tbcount = duf_longindex_extended_count( duf_extended_vtable_multi(  ) );
     for ( ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( cli.longopts_table )[ilong].name && ilong < tbcount; ilong++ )
 #else
-    for ( const duf_longval_extended_vtable_t * const *xtables = duf_extended_vtable_multi(  ); *xtables; xtables++ )
+    for ( duf_longval_extended_vtable_t ** xtables = duf_cli_options_xvtable_multi(  ); *xtables; xtables++ )
       for ( const duf_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
 #endif
       {
@@ -234,8 +235,8 @@ duf_option_O_smart_help( duf_option_class_t oclass )
           duf_option_code_t codeval;
 
           codeval = DUF_CONFIGG( cli.longopts_table )[ilong].val;
-          /* extended = _duf_find_longval_extended( codeval ); */
-          /* ie = extended ? extended - &lo_extended[0] : -1; */
+        /* extended = _duf_find_longval_extended( codeval ); */
+        /* ie = extended ? extended - &lo_extended[0] : -1; */
           ie = codeval;
           assert( extended );
           if ( codeval && DUF_NOERROR( r ) )
@@ -243,7 +244,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
             int cnd = 0;
 
             cnd = ( !extended && ( oclass == DUF_OPTION_CLASS_ANY || oclass == DUF_OPTION_CLASS_NODESC ) )
-                  || ( extended && ( oclass == DUF_OPTION_CLASS_ANY || oclass == extended->oclass ) );
+                    || ( extended && ( oclass == DUF_OPTION_CLASS_ANY || oclass == extended->oclass ) );
             if ( cnd )
             {
               int shown = -1;
@@ -273,7 +274,7 @@ duf_option_O_help_set( const char *arg )
 {
   DUF_STARTR( r );
 
-  for ( const duf_longval_extended_vtable_t * const *xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++ )
+  for ( duf_longval_extended_vtable_t * *xvtables = duf_cli_options_xvtable_multi(  ); *xvtables; xvtables++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
     int title_printed = 0;
@@ -310,8 +311,8 @@ duf_option_O_help_set( const char *arg )
               char *sl = NULL;
 
               const char *srelto[] = {
-                /* [DUF_OFFSET_config] = "config",   */
-                /* [DUF_OFFSET_ufilter] = "ufilter", */
+              /* [DUF_OFFSET_config] = "config",   */
+              /* [DUF_OFFSET_ufilter] = "ufilter", */
                 [DUF_OFFSET_funcptr] = "funcptr",
                 [DUF_OFFSET_varptr] = "varptr",
               };
@@ -320,12 +321,12 @@ duf_option_O_help_set( const char *arg )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;
               DUF_PRINTF( 0, ".\t--%-20s;", xtended->o.name );
-              DUF_PRINTF( 0, ". [%s] %d:%d:%d " /*"%2d( %-9s ):%6d( %-13s ): %lx" */
-                          "; %d:%d * \t| %-40s; {%-10s:%-10s}", /* */
-                          sl,   /* */
+              DUF_PRINTF( 0, ". [%s] %d:%d:%d "                      /*"%2d( %-9s ):%6d( %-13s ): %lx" */
+                          "; %d:%d * \t| %-40s; {%-10s:%-10s}",      /* */
+                          sl,                                        /* */
                           xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->stage_opts.use_stage, /* */
-                          xtended->unset, xtended->can_no, /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
-                          xtended->help, /* */
+                          xtended->unset, xtended->can_no,           /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
+                          xtended->help,                             /* */
                           duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
                 DUF_PRINTF( 0, ". `%s`;", duf_optvtype2string( xtended->vtype ) );

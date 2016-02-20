@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -8,8 +9,10 @@
 #include "duf_option_extended.h"
 #include "duf_option_longopts.h"
 
+#include "duf_option_defs.h"
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
+#include "duf_options_enum.h"                                        /* duf_option_code_t */
 
 /* ###################################################################### */
 #include "duf_option_config.h"
@@ -25,7 +28,7 @@ duf_cli_options_config( void )
 }
 
 static char *
-duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtables )
+duf_cli_option_shorts_create( duf_longval_extended_vtable_t * *xvtables )
 {
   const duf_longval_extended_vtable_t *xtable;
   char shorts[1024 * 4] = "";
@@ -72,8 +75,8 @@ duf_cli_option_shorts_create( const duf_longval_extended_vtable_t * const *xvtab
 }
 
 void
-duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_vtable_t * const *xvtables, const char *config_dir,
-                      const char *commands_dir )
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
+                      const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
 {
   if ( cli )
   {
@@ -81,10 +84,14 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     memset( config_cli, 0, sizeof( duf_config_cli_t ) );
     config_cli->carg.argc = argc;
     config_cli->carg.argv = argv;
-    config_cli->xvtable_multi = xvtables;
-    config_cli->shorts = duf_cli_option_shorts_create( xvtables );
+  /* const duf_longval_extended_vtable_t * const *xvtables
+   * config_cli->xvtable_multi = xvtables;
+   * */
+    config_cli->xvtable_multi = duf_cli_options_xtable_list2xvtable( xtable_list ); /* allocates */
+    config_cli->shorts = duf_cli_option_shorts_create( config_cli->xvtable_multi );
+    config_cli->varfunc = varfunc;
 
-    config_cli->longopts_table = duf_options_create_longopts_table( xvtables );
+    config_cli->longopts_table = duf_options_create_longopts_table( config_cli->xvtable_multi );
     assert( config_cli->longopts_table );
 
     config_cli->config_dir = mas_strdup( config_dir );
@@ -115,6 +122,18 @@ duf_cli_options_shut( duf_config_cli_t * cli )
   config_cli->config_dir = NULL;
   mas_free( config_cli->cmds_dir );
   config_cli->cmds_dir = NULL;
+
+  {
+    for ( size_t itab = 0; config_cli->xvtable_multi && config_cli->xvtable_multi[itab]; itab++ )
+    {
+      mas_free( config_cli->xvtable_multi[itab]->xlist );
+      mas_free( config_cli->xvtable_multi[itab] );
+      config_cli->xvtable_multi[itab] = NULL;
+    }
+
+    mas_free( config_cli->xvtable_multi );
+    config_cli->xvtable_multi = NULL;
+  }
 
   {
     FILE *f = NULL;
@@ -265,6 +284,30 @@ duf_cli_options_get_cargvn( int n )
 }
 
 const char *
+duf_cli_options_bin_name( void )
+{
+  const char *binname;
+
+  binname = duf_cli_options_get_cargvn( 0 );
+  {
+    if ( binname )
+      binname = strrchr( binname, '/' );
+    if ( binname )
+      binname++;
+  }
+  return binname;
+}
+
+const char *
+duf_cli_options_config_file_name( void )
+{
+  const char *binname;
+
+  binname = duf_cli_options_bin_name(  );
+  return binname ? binname : DUF_CONFIG_FILE_NAME;
+}
+
+const char *
 duf_cli_options_get_shorts( void )
 {
 /* return cli_options_shorts; */
@@ -365,7 +408,7 @@ duf_cli_options_get_longopts_table( void )
   return config_cli ? config_cli->longopts_table : NULL;
 }
 
-const duf_longval_extended_vtable_t *const *
+duf_longval_extended_vtable_t **
 duf_cli_options_xvtable_multi( void )
 {
   return config_cli ? config_cli->xvtable_multi : NULL;
@@ -381,4 +424,82 @@ duf_option_adata_t *
 duf_cli_options_aod( void )
 {
   return config_cli ? &config_cli->aod : NULL;
+}
+
+mas_arg_get_cb_arg_t
+duf_cli_options_varfunc( void )
+{
+  return config_cli ? config_cli->varfunc : NULL;
+}
+
+/* 20160220.190632 */
+duf_longval_extended_vtable_t **
+duf_cli_options_xtable_list2xvtable( const duf_longval_extended_table_t * const *xtable_multi )
+{
+  unsigned numtabs = 0;
+  duf_option_code_t maxcodeval = 0;
+  duf_longval_extended_vtable_t **vtable_multi = NULL;
+
+  for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
+  assert( vtable_multi == NULL );
+  vtable_multi = mas_malloc( sizeof( duf_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+  memset( vtable_multi, 0, sizeof( duf_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+  {
+    for ( size_t itab = 0; itab < numtabs; itab++ )
+    {
+      const duf_longval_extended_t *xlist;
+
+      xlist = xtable_multi[itab]->xlist;
+      for ( const duf_longval_extended_t * x = xlist; x->o.name; x++ )
+      {
+        size_t xn = x - xlist;
+
+        if ( xlist[xn].o.val && xlist[xn].o.val > maxcodeval )
+          maxcodeval = xlist[xn].o.val;
+      }
+    }
+    maxcodeval += 100;
+    maxcodeval /= 100;
+    maxcodeval *= 100;
+  }
+  for ( size_t itab = 0; itab < numtabs; itab++ )
+  {
+    duf_longval_extended_vtable_t *vtable;
+
+    vtable = mas_malloc( sizeof( duf_longval_extended_t ) );
+    memset( vtable, 0, sizeof( duf_longval_extended_t ) );
+#if 0
+    memcpy( &vtable, &xtable_multi[itab], sizeof( vtable ) );
+#else
+    vtable->name = xtable_multi[itab]->name;
+    vtable->id = xtable_multi[itab]->id;
+    vtable->stage_opts = xtable_multi[itab]->stage_opts;
+#endif
+  /* T( "@@%lu. tab.name: '%s' : [%p:%p]", itab, vtable->name, vtable, vtable->xlist ); */
+    {
+      size_t xcnt = 0;
+
+      for ( const duf_longval_extended_t * x = xtable_multi[itab]->xlist; x->o.name; x++ )
+        xcnt++;
+      vtable->xlist = mas_malloc( sizeof( duf_longval_extended_t ) * ( xcnt + 1 ) );
+      for ( size_t xn = 0; xn < xcnt; xn++ )
+      {
+        vtable->xlist[xn] = xtable_multi[itab]->xlist[xn];
+      }
+      for ( size_t xn = 0; xn < xcnt; xn++ )
+      {
+        if ( !vtable->xlist[xn].o.val )
+        {
+          T( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, maxcodeval );
+          vtable->xlist[xn].o.val = maxcodeval++;
+        }
+        else
+        {
+        /* T( "@@%s --", vtable->xlist[xn].o.name ); */
+        }
+      }
+    }
+    vtable_multi[itab] = vtable;
+  }
+  return vtable_multi;
 }

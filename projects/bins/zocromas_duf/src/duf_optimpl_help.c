@@ -26,6 +26,8 @@
 
 #include "duf_option_names.h"
 #include "duf_option_class.h"
+#include "duf_option_config.h"
+
 
 /* ###################################################################### */
 #include "duf_optimpl_help.h"
@@ -961,7 +963,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
   int ntable = 0;
   int tbcount = 0;
 
-  for ( const duf_longval_extended_vtable_t * const *xvtables = duf_extended_vtable_multi(  ); *xvtables; xvtables++, ntable++ )
+  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi(  ); *xvtables; xvtables++, ntable++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
 

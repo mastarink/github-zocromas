@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -16,7 +17,7 @@
 char *
 duf_coption_names_d( duf_option_code_t codeval, const char *delim )
 {
-  const duf_longval_extended_vtable_t *const *xvtables;
+  duf_longval_extended_vtable_t **xvtables;
   const duf_longval_extended_vtable_t *xtable;
   char *names = NULL;
   int cnt = 0;

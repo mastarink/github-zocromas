@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -25,6 +26,7 @@
 #include "duf_option_clarify_new.h"
 /* ###################################################################### */
 
+static
 SR( OPTIONS, split_string_od, duf_option_data_t * pod )
 {
   const char *barg = NULL;
@@ -73,7 +75,7 @@ SR( OPTIONS, split_string_od, duf_option_data_t * pod )
     arg = duf_string_options_expand( barg, '?' );
 #else
     {
-      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_string_options_at_string_xsdb_getvar };
+      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(  ) };
 
       cs_x.value = mas_strdup( barg );
       arg = mas_strdup( duf_string_expanded( &cs_x ) );
@@ -212,7 +214,8 @@ SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtabl
   ER( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t * const *xvtables, duf_option_data_t * pod )
+static
+SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod )
 {
 /* int doindex = -1; */
 
@@ -291,7 +294,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
       oa = duf_string_options_expand( pod->optarg, '?' );
 #else
       {
-        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_string_options_at_string_xsdb_getvar };
+        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(  ) };
 
         cs_x.value = mas_strdup( pod->optarg );
         oa = mas_strdup( duf_string_expanded( &cs_x ) );
@@ -322,9 +325,10 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtabl
 /* pod->optarg = NULL;      */
   TR( QERRIND );
 
-  ER( OPTIONS, soption_xclarify_new_at_multix_od, const duf_longval_extended_vtable_t * const *xvtables, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_multix_od, duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod );
 }
 
+static
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
 {
 /* CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod ); */
@@ -333,7 +337,7 @@ SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod );
 }
 
-duf_option_data_t *
+static duf_option_data_t *
 duf_pod_from_paod_n( const duf_option_adata_t * paod, duf_option_stage_t basicstage, duf_option_source_t source, size_t index )
 {
   duf_option_data_t *pod = NULL;
@@ -358,7 +362,7 @@ duf_pod_source_count( const duf_option_adata_t * paod, duf_option_stage_t istage
           && source.sourcecode <= DUF_OPTION_SOURCE_MAX ? paod->source_count[istage][source.sourcecode] : 0;
 }
 
-duf_option_data_t *
+static duf_option_data_t *
 duf_pod_from_paod( const duf_option_adata_t * paod, duf_option_stage_t basicstage, duf_option_stage_t istage, duf_option_source_t source )
 {
   duf_option_data_t *pod = NULL;
@@ -368,6 +372,7 @@ duf_pod_from_paod( const duf_option_adata_t * paod, duf_option_stage_t basicstag
   return pod;
 }
 
+static
 SR( OPTIONS, soption_xclarify_new_at_stdx, const char *string, const char *name, const char *arg, duf_xclarifier_t clarifier, char value_separator,
     duf_option_stage_t istage, duf_option_source_t source, duf_option_data_t * pod, duf_option_adata_t * paod )
 {

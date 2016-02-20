@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <stddef.h>
 #include <string.h>
 
@@ -11,6 +12,7 @@
 #include "duf_option_class.h"
 #include "duf_option_val.h"
 #include "duf_option_vtype.h"
+#include "duf_option_config.h"
 
 /* ###################################################################### */
 #include "duf_option_extended.h"
@@ -22,6 +24,7 @@ static const char *
 duf_offset2stringid( unsigned offset DUF_UNUSED, duf_offset_to_t relto DUF_UNUSED )
 {
   const char *rs = NULL;
+
 #if 0
 
   switch ( relto )
@@ -315,7 +318,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
           case DUF_OFFSET_none:
             break;
 #if 0
-	  case DUF_OFFSET_config:
+          case DUF_OFFSET_config:
             srelto = "config";
             break;
           case DUF_OFFSET_ufilter:
@@ -412,7 +415,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         case DUF_OFFSET_none:
           break;
 #if 0
-	case DUF_OFFSET_config:
+        case DUF_OFFSET_config:
           DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
@@ -437,9 +440,9 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( const duf_longval_extended_vtable_t * const *xvtables, const char *name )
+duf_multix_print( duf_longval_extended_vtable_t ** xvtables, const char *name )
 {
-  for ( const duf_longval_extended_vtable_t * const *xt = xvtables; xt && *xt; xt++ )
+  for ( duf_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
   {
     char *se = NULL;
     char *matchtab = NULL;
@@ -464,9 +467,10 @@ duf_multix_print( const duf_longval_extended_vtable_t * const *xvtables, const c
   }
 }
 
-                                                                                                    /* duf_stdx_print *//* TODO :  depends on optimpl !! */
+                                                                                                                                                                /* duf_stdx_print *//* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {
-  duf_multix_print( duf_extended_vtable_multi(  ), name );
+/* duf_multix_print( duf_extended_vtable_multi(  ), name ); */
+  duf_multix_print( duf_cli_options_xvtable_multi(  ), name );
 }

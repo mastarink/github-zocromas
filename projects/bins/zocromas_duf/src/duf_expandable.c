@@ -30,7 +30,6 @@ _duf_string_options_expand( const char *s, char protected_prefix, int *pexpandab
 {
   char *xs = NULL;
 
-  DUF_TRACE( explain, 0, "s: \"%s\"", s );
   if ( s )
   {
     if ( protected_prefix && *s == protected_prefix )
@@ -52,7 +51,6 @@ _duf_string_options_expand( const char *s, char protected_prefix, int *pexpandab
       }
     }
   }
-  DUF_TRACE( explain, 0, "xs: \"%s\"", xs );
   return xs;
 }
 

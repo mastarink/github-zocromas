@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -17,6 +18,7 @@
 /* ###################################################################### */
 #include "duf_options_all_stages.h"
 /* ###################################################################### */
+
 
 SR( TOP, treat_option_stage, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage, duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive )

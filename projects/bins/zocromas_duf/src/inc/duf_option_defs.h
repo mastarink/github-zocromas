@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_OPTION_DEFS_H
 #  define MAS_DUF_OPTION_DEFS_H
 
+#  define DUF_CONFIG_FILE_NAME "zocromas_duf"
+
 /* #  include "duf_config_ref.h" */
 /* */
 #  ifdef MAS_TRACING

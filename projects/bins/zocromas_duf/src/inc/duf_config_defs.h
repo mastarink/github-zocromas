@@ -1,6 +1,9 @@
 #ifndef MAS_DUF_CONFIG_DEFS_H
 #  define MAS_DUF_CONFIG_DEFS_H
 
+#  define DUF_CONFIG_DIR_FROM_ENV "MSHDIRS_CONF_DIR"
+
+
 #  define DUF_CFGX(_cfg, _lo)  _cfg->_lo
 #  ifdef MAS_TRACING
 #    define DUF_CFGG(_cfg, _lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CFGX(_cfg, _lo))

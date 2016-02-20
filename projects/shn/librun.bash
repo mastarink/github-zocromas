@@ -1,15 +1,18 @@
 function shn_runname ()
 {
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
-  local bin1 bin2
-  if [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_NAME" ]]; then
-    bin1="$bsrc/$MSH_SHN_PROJECT_NAME"
-    bin2="$bsrc/mtest"
-    if [[ -f "$bin1" ]] ; then
-      shn_echon $( shn_basename $bin1 ) && return 0
-    elif [[ -f "$bin2" ]] ; then
-      shn_echon $( shn_basename $bin2 ) && return 0
+  local bin
+  if  [[ "$bsrc" ]] && [[ -d "$bsrc" ]] ; then
+    if [[ "$MSH_SHN_RUN_NAME" ]] ; then
+      bin="$bsrc/$MSH_SHN_RUN_NAME"
+      shn_msg "bin: $bin (MSH_SHN_RUN_NAME)"
+    elif [[ "$MSH_SHN_PROJECT_NAME" ]] ; then
+      bin="$bsrc/$MSH_SHN_PROJECT_NAME"
+      shn_msg "bin: $bin (MSH_SHN_PROJECT_NAME)"
     fi
+  fi
+  if [[ $bin ]] && [[ -f "$bin" ]] && [[ -x "$bin" ]] ; then
+    shn_echon $( shn_basename $bin ) && return 0
   fi
   return 1
 }
@@ -22,7 +25,7 @@ function shn_run ()
 # for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
      echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
-   fi
+  fi
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir
   if [[ "$rname" ]] && [[ "$bsrc" ]] ; then
@@ -42,7 +45,7 @@ function shn_run ()
 #     echo "$FUNCNAME $i : ${!i}" >&2
       qargs+=" '${!i}'"
     done
-    shn_msg " run $rname $qargs "
+    shn_msg "to run $rname $qargs"
     export MSH_SHN_BASHPID=$BASHPID
     export MSH_SHN_LAUNCHPID=$$
     export MSH_SHN_LAUNCHDATEM=$(datem)
@@ -58,8 +61,10 @@ function shn_run ()
 	  {
 	    local conffile=$(find $MSH_SHN_PROJECT_DIR -name ${rname}.conf)
 	    echo "# `datemt` : `daten` ++++++++++++++"
-	    echo "# cat $conffile"
-	    cat -n $conffile | sed -e 's@^@# => @'
+	    if [[ $conffile ]] && [[ -f $conffile ]] ; then
+	      echo "# cat $conffile"
+	      cat -n $conffile | sed -e 's@^@# => @'
+	    fi
 	    echo "# $bin"
 	    echo "# run $qargs"
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.$(/bin/date '+%Y%m%d').txt
@@ -67,8 +72,9 @@ function shn_run ()
 	{
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
 #           echo -n '◁' >&2
-	    eval "$bin $qargs"
-	    retcode=$?
+            shn_msg "eval $bin $qargs" >&2
+	    eval "$bin $qargs" ; retcode=$?
+            shn_msg "/eval $bin $qargs" >&2
 #           echo -n '▷' >&2
 	    popd  &>/dev/null
 	  fi

@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include "duf_maintenance_options.h"

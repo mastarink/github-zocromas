@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 /* #include "duf_maintenance_z.h" */
@@ -69,7 +70,7 @@ duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_vtable_t 
 }
 
 static const duf_longval_extended_t *
-duf_loption_xfind_at_multix( int longindex, const duf_longval_extended_vtable_t * const *xvtables, int *ptbcount, unsigned noo,
+duf_loption_xfind_at_multix( int longindex,  duf_longval_extended_vtable_t **xvtables, int *ptbcount, unsigned noo,
                              const duf_longval_extended_vtable_t ** result_pxvtable )
 {
   const duf_longval_extended_t *extended = NULL;

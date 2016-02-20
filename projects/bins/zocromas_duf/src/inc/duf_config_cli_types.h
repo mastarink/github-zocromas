@@ -3,6 +3,7 @@
 # include <stdio.h>                                                  /* FILE */
 
 # include <mastar/tools/mas_argvc_types.h>
+# include <mastar/tools/mas_arg_tools.h>
 
 /* # include "duf_flags_types.h" */
 # include "duf_fun_types.h"
@@ -24,13 +25,16 @@ typedef struct
   int targ_offset;
 
   duf_option_t *longopts_table;
-  const duf_longval_extended_vtable_t *const *xvtable_multi;
+  duf_longval_extended_vtable_t **xvtable_multi;
 /* long limit; */
   char *history_filename;
   char option_delimiter;
   char *config_dir;
   char *cmds_dir;
   duf_option_adata_t aod;
+
+  mas_arg_get_cb_arg_t varfunc;
+
 } duf_config_cli_t;
 
 #endif

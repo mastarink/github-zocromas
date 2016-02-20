@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -6,7 +7,7 @@
 /* ###################################################################### */
 
 int
-duf_longindex_extended_count( const duf_longval_extended_vtable_t * const *xvtables )
+duf_longindex_extended_count( duf_longval_extended_vtable_t ** xvtables )
 {
   int xcount = 0;
 
@@ -26,7 +27,7 @@ duf_longindex_extended_count( const duf_longval_extended_vtable_t * const *xvtab
     }
   }
 #else
-  for ( const duf_longval_extended_vtable_t * const *pxtables = xvtables; *pxtables; pxtables++ )
+  for ( duf_longval_extended_vtable_t ** pxtables = xvtables; *pxtables; pxtables++ )
   {
     const duf_longval_extended_t *xtended = NULL;
 

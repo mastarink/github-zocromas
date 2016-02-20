@@ -2,16 +2,15 @@
 
 #include "duf_maintenance.h"
 
-
 #include "duf_options_enum.h"
+#include "duf_option_config.h"
 
 /* man getopt_long */
-
 
 /* ###################################################################### */
 #include "duf_xtended_table.h"
 /* ###################################################################### */
-
+#if 0
 static const duf_longval_extended_t _lo_extended1[] = {
 /* #include "duf_optable.cdef"                   */
 /* #include "duf_optable_str.cdef"               */
@@ -25,7 +24,7 @@ static const duf_longval_extended_t _lo_extended1[] = {
 /* #include "duf_optable_redo_and_obsolete.cdef" */
   {0}
 };
-
+#endif
 /* static const duf_longval_extended_t _lo_extended2[] = { */
 /* (* #include "duf_optable_flag.cdef" *)                  */
 /*   {0}                                                   */
@@ -53,7 +52,7 @@ extern const duf_longval_extended_table_t optable_test;
 extern const duf_longval_extended_table_t optable_debug;
 extern const duf_longval_extended_table_t optable_redo_and_obsolete;
 
-static const duf_longval_extended_table_t *const _lo_extended_table_multi[] = {
+static const duf_longval_extended_table_t *const __lo_extended_table_multi[] = {
   &optable_main,
   &optable_experimental,
   &optable_fs,
@@ -79,15 +78,24 @@ static const duf_longval_extended_table_t *const _lo_extended_table_multi[] = {
   NULL
 };
 
-static const duf_longval_extended_table_t **lo_extended_table_multi = NULL;
-duf_longval_extended_vtable_t **lo_extended_vtable_multi = NULL;
+/* static const duf_longval_extended_table_t *const *_lo_extended_table_multi = __lo_extended_table_multi; */
 
+/* static const duf_longval_extended_table_t **lo_extended_table_multi = NULL; */
+duf_longval_extended_vtable_t **lo_extended_vtable_multi = NULL;     /* lo_extended_vtable_multi ==>  config_cli->vtable_multi */
+
+const duf_longval_extended_table_t *const *
+duf_xtable_list( void )
+{
+  return __lo_extended_table_multi;
+}
+
+#if 0
 static void
 _duf_extended_table_multi_init( void )
 {
   unsigned numtabs = 0;
 
-#if 0
+# if 0
   const duf_longval_extended_table_t **src = NULL;
 
   src = _lo_extended_table_multi;
@@ -97,13 +105,13 @@ _duf_extended_table_multi_init( void )
     src++;
   }
   numtabs++;
-#else
+# else
   for ( numtabs = 0; _lo_extended_table_multi[numtabs] && _lo_extended_table_multi[numtabs]->xlist; numtabs++ );
-#endif
+# endif
   lo_extended_table_multi = mas_malloc( sizeof( duf_longval_extended_table_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
   memset( lo_extended_table_multi, 0, sizeof( duf_longval_extended_table_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
   {
-#if 0
+# if 0
     size_t itab = 0;
     const duf_longval_extended_table_t **dst = NULL;
 
@@ -117,89 +125,21 @@ _duf_extended_table_multi_init( void )
       itab++;
     }
     *dst++ = NULL;
-#else
+# else
     for ( size_t itab = 0; itab < numtabs; itab++ )
     {
       lo_extended_table_multi[itab] = _lo_extended_table_multi[itab];
-      /* T( "@@tab.name: '%s' : [%p:%p]", _lo_extended_table_multi[itab]->name, _lo_extended_table_multi[itab], _lo_extended_table_multi[itab]->xlist ); */
+    /* T( "@@tab.name: '%s' : [%p:%p]", _lo_extended_table_multi[itab]->name, _lo_extended_table_multi[itab], _lo_extended_table_multi[itab]->xlist ); */
       for ( const duf_longval_extended_t * extended = _lo_extended_table_multi[itab]->xlist; extended && extended->o.name; extended++ )
       {
       }
     }
-#endif
+# endif
   }
 }
+#endif
 
-/* 20160212.131010 */
-static void
-duf_extended_vtable_multi_init_table( const duf_longval_extended_table_t * const *xtable_multi )
-{
-  unsigned numtabs = 0;
-  duf_option_code_t maxcodeval = 0;
-
-  for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
-  assert( lo_extended_vtable_multi == NULL );
-  lo_extended_vtable_multi = mas_malloc( sizeof( duf_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
-  memset( lo_extended_vtable_multi, 0, sizeof( duf_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
-  {
-    for ( size_t itab = 0; itab < numtabs; itab++ )
-    {
-      const duf_longval_extended_t *xlist;
-
-      xlist = xtable_multi[itab]->xlist;
-      for ( const duf_longval_extended_t * x = xlist; x->o.name; x++ )
-      {
-        size_t xn = x - xlist;
-
-        if ( xlist[xn].o.val && xlist[xn].o.val > maxcodeval )
-          maxcodeval = xlist[xn].o.val;
-      }
-    }
-    maxcodeval += 100;
-    maxcodeval /= 100;
-    maxcodeval *= 100;
-  }
-  for ( size_t itab = 0; itab < numtabs; itab++ )
-  {
-    duf_longval_extended_vtable_t *vtable;
-
-    vtable = mas_malloc( sizeof( duf_longval_extended_t ) );
-    memset( vtable, 0, sizeof( duf_longval_extended_t ) );
 #if 0
-    memcpy( &vtable, &xtable_multi[itab], sizeof( vtable ) );
-#else
-    vtable->name = xtable_multi[itab]->name;
-    vtable->id = xtable_multi[itab]->id;
-    vtable->stage_opts = xtable_multi[itab]->stage_opts;
-#endif
-    /* T( "@@%lu. tab.name: '%s' : [%p:%p]", itab, vtable->name, vtable, vtable->xlist ); */
-    {
-      size_t xcnt = 0;
-
-      for ( const duf_longval_extended_t * x = xtable_multi[itab]->xlist; x->o.name; x++ )
-        xcnt++;
-      vtable->xlist = mas_malloc( sizeof( duf_longval_extended_t ) * ( xcnt + 1 ) );
-      for ( size_t xn = 0; xn < xcnt; xn++ )
-      {
-        vtable->xlist[xn] = xtable_multi[itab]->xlist[xn];
-      }
-      for ( size_t xn = 0; xn < xcnt; xn++ )
-      {
-        if ( !vtable->xlist[xn].o.val )
-        {
-          T( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, maxcodeval );
-          vtable->xlist[xn].o.val = maxcodeval++;
-        }
-        else
-        {
-          /* T( "@@%s --", vtable->xlist[xn].o.name ); */
-        }
-      }
-    }
-    lo_extended_vtable_multi[itab] = vtable;
-  }
-}
-
 static void
 duf_extended_table_multi_init( void )
 {
@@ -211,7 +151,9 @@ duf_extended_table_multi_init( void )
     inited = 1;
   }
 }
+#endif
 
+#if 0
 /* 20160212.131034 */
 static void
 duf_extended_vtable_multi_init( void )
@@ -220,7 +162,7 @@ duf_extended_vtable_multi_init( void )
 
   if ( !inited )
   {
-    duf_extended_vtable_multi_init_table( _lo_extended_table_multi );
+    lo_extended_vtable_multi = duf_cli_options_xtable_list2xvtable( _lo_extended_table_multi );
     inited = 1;
   }
 }
@@ -229,16 +171,17 @@ static void extended_table_multi_init( void ) __attribute__ ( ( constructor( 101
 static void
 extended_table_multi_init( void )
 {
-  /* duf_extended_table_multi_init(  ); */
+/* duf_extended_table_multi_init(  ); */
 }
 
+#if 0
 const duf_longval_extended_table_t **
-duf_extended_table_multi( void ) /* obsolete/not used 20160208.130331 */
+duf_extended_table_multi( void )                                     /* obsolete/not used 20160208.130331 */
 {
   duf_extended_table_multi_init(  );
   return lo_extended_table_multi;
 }
-
+#endif
 static duf_longval_extended_vtable_t **
 _duf_extended_vtable_multi( void )
 {
@@ -252,15 +195,12 @@ duf_extended_vtable_multi( void )
   return ( const duf_longval_extended_vtable_t * const * ) _duf_extended_vtable_multi(  );
 }
 
-
-
-
 /* _lo_extended_table_multi; */
 static void unbuild( void ) __attribute__ ( ( destructor( 101 ) ) );
 static void
 unbuild( void )
 {
-  mas_free( lo_extended_table_multi );
+/* mas_free( lo_extended_table_multi ); */
   {
     for ( size_t itab = 0; lo_extended_vtable_multi && lo_extended_vtable_multi[itab] /* && lo_extended_vtable_multi[itab]->name */ ; itab++ )
     {
@@ -323,3 +263,4 @@ unbuild( void )
 /*                                                                                                                                                */
 /* const duf_option_t *duf_longopts = &duf_longopts_table[0];                                                                                     */
 /* unsigned duf_longopts_count = sizeof( duf_longopts_table ) / sizeof( duf_longopts_table[0] );                                                  */
+#endif

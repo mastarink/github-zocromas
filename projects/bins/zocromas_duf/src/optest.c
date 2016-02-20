@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <assert.h>
 #include <stddef.h>
 
@@ -7,7 +8,6 @@
 #include <mastar/error/mas_errors_maintenance.h>
 
 #include "duf_maintenance_options.h"
-
 
 #include "duf_defs.h"
 
@@ -22,6 +22,7 @@
 #include "duf_dodefs.h"
 
 #include "duf_option_types.h"
+#include "duf_option_config.h"
 #include "duf_options_all_stages.h"
 #include "duf_option_types.h"
 #include "duf_option_clarify_new.h"
@@ -39,7 +40,7 @@ typedef struct
 #define DOO_Q(_name) .o.name =_name
 #define DOO_BFL(_vt, _prf, _loc, _fld) .flag_bitnum=DUF_FLAG_ ## _loc ## _ ## _fld, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-const duf_longval_extended_table_t optable_test = { /* zzzzzz */
+const duf_longval_extended_table_t optable_test = {                  /* zzzzzz */
   .name = "test",
 /* DO_AT_STAGE( SETUP ), */
   .xlist = {
@@ -52,7 +53,7 @@ const duf_longval_extended_table_t optable_test = { /* zzzzzz */
              .m_hasoff = 1,
              .m_offset = offsetof( something1_t, set1 ),
              .oclass = DUF_OPTION_CLASS_TEST,
-             .help = "..." /* */
+             .help = "..."                                           /* */
              },
 
             {.o.name = NULL}
@@ -63,10 +64,20 @@ something1_t som1 = { {0, 0} };
 
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  /* duf_config_cli_t clio; */
 
-  return 0;
+  /* TODO duf_cli_options_init( &clio, argc, argv, optable_test, NULL, NULL, NULL ); */
+
+  fprintf( stderr, "%d\n", QERRIND );
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  fprintf( stderr, "%d\n", QERRIND );
+  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  fprintf( stderr, "%d ===\n", QERRIND );
+  mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
+  fprintf( stderr, "%d\n", QERRIND );
+
+  /* TODO duf_cli_options_shut( &clio ); */
+
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }
 

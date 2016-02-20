@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -59,7 +60,7 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
  *     duf_option_t
  * */
 duf_option_t *
-duf_options_create_longopts_table( const duf_longval_extended_vtable_t * const *xvtables )
+duf_options_create_longopts_table( duf_longval_extended_vtable_t ** xvtables )
 {
   duf_option_t *longopts = NULL;
 
@@ -72,9 +73,9 @@ duf_options_create_longopts_table( const duf_longval_extended_vtable_t * const *
     longopts = longopts_ptr = mas_malloc( tbsize );
     memset( longopts, 0, tbsize );
 
-    for ( const duf_longval_extended_vtable_t * const *xvtable = xvtables; *xvtable; xvtable++ )
+    for ( duf_longval_extended_vtable_t ** xvtable = xvtables; *xvtable; xvtable++ )
       duf_xtable2options( &longopts_ptr, ( *xvtable )->xlist, 0 /* noo */  );
-    for ( const duf_longval_extended_vtable_t * const *xvtable = xvtables; *xvtable; xvtable++ )
+    for ( duf_longval_extended_vtable_t ** xvtable = xvtables; *xvtable; xvtable++ )
       duf_xtable2options( &longopts_ptr, ( *xvtable )->xlist, 1 /* noo */  );
   }
   return longopts;
