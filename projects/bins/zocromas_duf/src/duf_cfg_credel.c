@@ -71,7 +71,6 @@ duf_cfg_create( void )
   DUF_CFGWSP( cfg, db.tempo.name_x, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name_x, mas_strdup( "duf-selected" ) );
   DUF_CFGW( cfg, opt.trace.errors ) += 2;
-  fprintf( stderr, "!!!!!!!!%p\n", &cfg->db.main.name_x );
 /* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
 /* cfg->opt.trace.options = 1; */
 /* cfg->opt.trace.fs += 1; */
@@ -172,16 +171,6 @@ duf_cfg_delete( duf_config_t * cfg )
   /* mas_free( cfg->group ); */
   /* cfg->group = NULL;      */
 
-#if 0
-    mas_del_argv( cfg->cli.targ.argc, cfg->cli.targ.argv, 0 );
-    cfg->cli.targ.argc = 0;
-    cfg->cli.targ.argv = NULL;
-
-    mas_free( cfg->cli.shorts );
-    cfg->cli.shorts = NULL;
-#else
-    duf_cli_shut( &cfg->cli );
-#endif
     mas_free( cfg->opt.trace.output.file );
     cfg->opt.trace.output.file = NULL;
 

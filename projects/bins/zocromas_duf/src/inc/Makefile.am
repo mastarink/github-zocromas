@@ -61,7 +61,7 @@ noinst_HEADERS=duf.h duf_experiment.h 			\
 	duf_optimpl_help.h duf_optimpl_smart_help.h duf_optimpl_version.h duf_optimpl_misc.h duf_optimpl_sccb.h duf_optimpl_fs.h duf_optimpl_fs_types.h \
 	duf_option_names.h duf_option_stage.h duf_option_source.h duf_option_source.h duf_option_class.h duf_option_val.h duf_option_vtype.h  \
 	duf_options_enum.def duf_options_enum_trace.def duf_option_class_enum.def \
-	duf_options_enum.h duf_option_config.h duf_options.h duf_options_def.h \
+	duf_options_enum.h duf_option_config_config.h duf_option_config.h duf_options.h duf_options_def.h \
 	duf_option_types.h duf_option_fun_types.h duf_option_class_types.h \
 	duf_option_source_types.h \
 	duf_option_stage_types.h \

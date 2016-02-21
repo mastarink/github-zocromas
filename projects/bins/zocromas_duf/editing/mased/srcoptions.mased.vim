@@ -1,6 +1,9 @@
 find duf_option_config.c
 sfind duf_option_config.h
 
+tab sfind duf_option_config_credel.c
+sfind duf_option_config_credel.h
+
 tab sfind duf_option_clarify.c
 sfind duf_option_clarify.h
 
