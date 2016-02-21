@@ -38,7 +38,6 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, duf_config_cli_t * cli, const char *
     DUF_TRACE( explain, 0, "bstr: \"%s\"", bstr );
 
 /* look all std xvtables for cmd from string and exec if found */
-
     CR( soption_xclarify_s_new_at_stdx_default, cli, bstr, value_separator, istage, source, paod );
   }
   mas_free( bstr );
@@ -74,7 +73,7 @@ SR( OPTIONS, boption_xclarify_at_stdx, duf_config_cli_t * cli, char value_separa
     cmdstr++;
     delim = *cmdstr++;
   }
-  while ( cmdstr && *cmdstr )
+  while ( QNOERR && cmdstr && *cmdstr )
   {
     CR( boption_frag_xclarify_at_stdx, cli, &cmdstr, value_separator, istage, source, delim, paod );
   }

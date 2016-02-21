@@ -23,6 +23,7 @@
 
 #include "duf_option_types.h"
 #include "duf_option_config.h"
+#include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"
 #include "duf_option_types.h"
 #include "duf_option_clarify_new.h"
@@ -60,24 +61,31 @@ const duf_longval_extended_table_t optable_test = {                  /* zzzzzz *
             }
 };
 
+static const duf_longval_extended_table_t *const optable_test_list[] = { &optable_test, NULL };
+
 something1_t som1 = { {0, 0} };
 
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-/* duf_config_cli_t clio; */
+  duf_config_cli_t *clio;
 
-/* TODO duf_cli_options_init( &clio, argc, argv, optable_test, NULL, NULL, NULL ); */
+  clio = duf_cli_options_create( argc, argv, optable_test_list, NULL /* config_dir */ ,
+                                 NULL /* commands_dir */ , NULL /* varfunc */  );
+  fprintf( stderr, "%d\n", QERRIND );
+  
+  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  fprintf( stderr, "%d\n", QERRIND );
 
-  fprintf( stderr, "%d\n", QERRIND );
-  CR( treat_option_stage_ne, NULL, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
-  fprintf( stderr, "%d\n", QERRIND );
-  CR( treat_option_stage_ne, NULL, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
   fprintf( stderr, "%d ===\n", QERRIND );
+
+  CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
+  fprintf( stderr, "%d ===\n", QERRIND );
+
   mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
   fprintf( stderr, "%d\n", QERRIND );
 
-/* TODO duf_cli_options_shut( &clio ); */
-
+  duf_cli_options_delete( clio );
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }
 

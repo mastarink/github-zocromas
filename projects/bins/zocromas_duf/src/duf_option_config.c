@@ -1,5 +1,6 @@
 #undef MAS_TRACING
 #include <string.h>
+#include <ctype.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
@@ -111,6 +112,7 @@ duf_cli_options_get_cargvn( const duf_config_cli_t * cli, int n )
   char *const *cargv;
 
   cargv = duf_cli_options_get_cargv( cli );
+  assert( cargv );
   return cargv ? cargv[n] : NULL;
 }
 
@@ -120,6 +122,7 @@ duf_cli_options_bin_name( const duf_config_cli_t * cli )
   const char *binname;
 
   binname = duf_cli_options_get_cargvn( cli, 0 );
+  assert( binname );
   {
     if ( binname )
       binname = strrchr( binname, '/' );
@@ -136,6 +139,29 @@ duf_cli_options_config_file_name( const duf_config_cli_t * cli )
 
   binname = duf_cli_options_bin_name( cli );
   return binname ? binname : DUF_CONFIG_FILE_NAME;
+}
+
+const char *
+duf_cli_options_config_env_var_name( const duf_config_cli_t * cli )
+{
+  static unsigned evn_inited = 0;
+  static char envvarname[512] = "DUF_";
+
+  if ( !evn_inited )
+  {
+    const char *binname;
+
+    binname = duf_cli_options_bin_name( cli );
+    if ( binname )
+    {
+      strncpy( envvarname + strlen( envvarname ), binname, sizeof( envvarname ) - 20 );
+      for ( char *p = envvarname; *p; p++ )
+        *p = toupper( *p );
+      strcpy( envvarname + strlen( envvarname ), "_OPTIONS" );
+    }
+    evn_inited = 1;
+  }
+  return *envvarname ? envvarname : "MSH_DUF_OPTIONS";
 }
 
 const char *

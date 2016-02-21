@@ -45,5 +45,6 @@ mas_arg_get_cb_arg_t duf_cli_options_varfunc( const duf_config_cli_t * cli );
 
 const char *duf_cli_options_bin_name( const duf_config_cli_t * cli );
 const char *duf_cli_options_config_file_name( const duf_config_cli_t * cli );
+const char *duf_cli_options_config_env_var_name( const duf_config_cli_t * cli );
 
 #endif

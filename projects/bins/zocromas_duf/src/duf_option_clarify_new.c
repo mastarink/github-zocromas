@@ -12,7 +12,6 @@
 #include "duf_option_types.h"
 #include "duf_option_config.h"
 
-
 #include "duf_expandable.h"
 
 #include "duf_option_typed.h"
@@ -269,6 +268,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
     else                                                             /* if ( pod->xfound.count_soft < 1 ) */
     {
     /* NOT-FOUND-ERROR */
+      fprintf( stderr, "_______NOT FOUND_______ %s {%s:%s}\n", pod->name, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
 
       T( "@ERR %s:%s", duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ) );
       if ( pod->stage != DUF_OPTION_STAGE_BOOT )
@@ -556,8 +556,7 @@ SR( OPTIONS, soption_xclarify_s_new_at_stdx_default, duf_config_cli_t * cli, con
     duf_option_source_t source, duf_option_adata_t * paod )
 {
   CR( soption_xclarify_sna_new_at_stdx_default, cli, string, ( const char * ) NULL /* name */ , ( const char * ) NULL /* arg */ , value_separator,
-      istage,
-      source, paod );
+      istage, source, paod );
   ER( OPTIONS, soption_xclarify_s_new_at_stdx_default, duf_config_cli_t * cli, const char *string, char value_separator, duf_option_stage_t istage,
       duf_option_source_t source, duf_option_adata_t * paod );
 }

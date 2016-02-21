@@ -99,7 +99,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
     duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod )
 {
 /* DUF_STARTR( r ); */
-
+  assert( cli );
   DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( istage ),
              cb_do_interactive ? cb_do_interactive(  ) : 0 );
 

@@ -6,6 +6,7 @@
 #include "duf_maintenance_tracen.h"
 #include "duf_maintenance_errors.h"
 
+#include "duf_option_config.h"
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 
@@ -45,11 +46,17 @@ duf_source_env_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int
                       duf_option_source_code_t sourcecode DUF_UNUSED )
 {
 /* extern duf_config_t *duf_config; */
+  const char *evname = NULL;
 
   DUF_STARTR( r );
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
+  evname = duf_cli_options_config_env_var_name( cli );
+#if 0
   DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_AOPTIONS", paod ) );
   DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_ZOPTIONS", paod ) );
   DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_OPTIONS", paod ) );
+#else
+  DOR( r, duf_env_options_at_var( cli, istage, evname, paod ) );
+#endif
   DUF_ENDR( r );
 }

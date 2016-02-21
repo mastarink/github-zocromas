@@ -125,7 +125,7 @@ duf_get_offset( void *ptr, unsigned long off )
 static void *
 duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 {
-  void *byteptr = NULL;
+  void *byte_ptr = NULL;
 
   DUF_TRACE( options, 60, "to switch by extended->relto=%d", extended->relto );
 /* TODO relto=duf_get_config_puz_offset etc. */
@@ -138,36 +138,36 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
   case DUF_OFFSET_config:
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
 # if 0
-    byteptr = ( ( ( char * ) duf_config ) + extended->m_offset );
+    byte_ptr = ( ( ( char * ) duf_config ) + extended->m_offset );
 # else
-    byteptr = duf_get_config_offset( extended->m_offset );
+    byte_ptr = duf_get_config_offset( extended->m_offset );
     if ( extended->reltoptr )
-      assert( byteptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
-  /* assert( byteptr == ( ( ( char * ) duf_config ) + extended->m_offset ) ); */
+      assert( byte_ptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
+  /* assert( byte_ptr == ( ( ( char * ) duf_config ) + extended->m_offset ) ); */
 # endif
     break;
 # if 1
   /* case DUF_OFFSET_depthinfo:                                              */
   /*   DUF_TRACE( options, 60, "relto=%d", extended->relto );                */
-  /*   byteptr = ( ( ( char * ) duf_pdi_global(  ) ) + extended->m_offset ); */
+  /*   byte_ptr = ( ( ( char * ) duf_pdi_global(  ) ) + extended->m_offset ); */
   /*   break;                                                                */
   case DUF_OFFSET_ufilter:
     DUF_TRACE( options, 60, "relto=%d", extended->relto );
-  /* byteptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
-    byteptr = duf_get_config_puz_offset( extended->m_offset );
+  /* byte_ptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
+    byte_ptr = duf_get_config_puz_offset( extended->m_offset );
     if ( extended->reltoptr )
-      assert( byteptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
+      assert( byte_ptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
     break;
 # endif
 #endif
   case DUF_OFFSET_varptr:
-    byteptr = duf_get_offset( extended->reltoptr, extended->m_offset );
+    byte_ptr = duf_get_offset( extended->reltoptr, extended->m_offset );
     break;
   case DUF_OFFSET_funcptr:
-    byteptr = duf_get_offset( ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ), extended->m_offset );
+    byte_ptr = duf_get_offset( ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ), extended->m_offset );
     break;
   }
-  return byteptr;
+  return byte_ptr;
 }
 
 int
@@ -282,6 +282,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 	{ \
           if ( extended->unset ) \
             nof = !nof; \
+          assert( byteptr ); \
           if ( DUF_NOERROR( r ) ) \
           { \
             _typ *pix; \
@@ -301,7 +302,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         nof = !nof;
       case DUF_OPTION_VTYPE_FLAG:                                   /* stage SETUP *//*  unsigned set of flags */
         DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_FLAG ) + 17, extended->afl.bit );
-        DUF_OPTION_VTYPE_XFLAG( unsigned );
+	DUF_OPTION_VTYPE_XFLAG( unsigned );
 
         break;
       case DUF_OPTION_VTYPE_NOSFLAG:                                /* stage SETUP */
@@ -317,6 +318,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 	{ \
           if ( extended->unset ) \
             nof = !nof; \
+          assert( byteptr ); \
           if ( DUF_NOERROR( r ) ) \
           { \
             _typ *pix; \
@@ -353,6 +355,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype PFLAG" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
@@ -368,6 +371,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype PSFLAG" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
@@ -382,6 +386,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype XCHR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           char *pchr;
@@ -402,6 +407,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           char **pstr;
@@ -424,6 +430,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype %s for %s='%s'", QSTR( DUF_OPTION_VTYPE_CSTR ) + 17, extended->o.name, doptargg ? doptargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           duf_expandable_string_t *pcs_x;
@@ -445,6 +452,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       /* case DUF_OPTION_VTYPE_PAA: */
         DUF_TRACE( options, 70, "vtype PAA" );
 
+        assert( byteptr ); 
         if ( DUF_NOERROR( r ) )
         {
           mas_argvc_t *parg;
