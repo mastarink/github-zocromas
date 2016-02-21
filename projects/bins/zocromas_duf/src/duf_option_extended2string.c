@@ -359,7 +359,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.san.func, xtended->call.fdesc.san.arg );
         break;
       case DUF_OPTION_VTYPE_A_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(duf_get_config_cli())->argc,duf_cli_options_get_carg(duf_get_config_cli())->argv)", xtended->call.fdesc.a.func );
+        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(duf_get_config_cli())->argc,duf_cli_options_get_carg(duf_get_config_cli())->argv)",
+                    xtended->call.fdesc.a.func );
         break;
       case DUF_OPTION_VTYPE_N_CALL:
       /* int rxx DUF_UNUSED = 0; */
@@ -379,7 +380,8 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts1.func );
         break;
       case DUF_OPTION_VTYPE_TS2_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_ptargc(duf_get_config_cli()), duf_cli_options_get_ptargv(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts2.func );
+        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_ptargc(duf_get_config_cli()), duf_cli_options_get_ptargv(duf_get_config_cli()), optargg)",
+                    xtended->call.fdesc.ts2.func );
         break;
       default:
         break;
@@ -467,10 +469,11 @@ duf_multix_print( duf_longval_extended_vtable_t ** xvtables, const char *name )
   }
 }
 
-                                                                                                                                                                /* duf_stdx_print *//* TODO :  depends on optimpl !! */
+/* duf_stdx_print */
+/* TODO :  depends on optimpl !! */
 void
 duf_stdx_print( const char *name )
 {
 /* duf_multix_print( duf_extended_vtable_multi(  ), name ); */
-  duf_multix_print( duf_cli_options_xvtable_multi(duf_get_config_cli()), name );
+  duf_multix_print( duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ), name );
 }

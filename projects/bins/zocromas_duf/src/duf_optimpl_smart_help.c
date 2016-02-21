@@ -94,7 +94,7 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
   /* duf_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( extended, "\t", " // " );
+    s = duf_xoption_description_d( duf_get_config_cli(),extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -179,7 +179,7 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
   /* duf_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( extended, "\t", " // " );
+    s = duf_xoption_description_d( duf_get_config_cli(),extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -229,7 +229,7 @@ duf_option_O_smart_help( duf_option_class_t oclass )
       {
         const duf_longval_extended_t *extended;
 
-        extended = duf_loption_xfind_at_stdx( ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
+        extended = duf_loption_xfind_at_stdx( duf_get_config_cli(),ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
         {
           int ie;
           duf_option_code_t codeval;

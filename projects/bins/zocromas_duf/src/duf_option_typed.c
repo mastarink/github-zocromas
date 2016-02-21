@@ -23,7 +23,7 @@
 /* ###################################################################### */
 
 int
-duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_vtable_t * xvtable, unsigned noo,
+duf_xoption_clarify_typed( duf_config_cli_t * cli,const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_vtable_t * xvtable, unsigned noo,
                            duf_option_stage_t istage, duf_option_source_t source )
 {
   DUF_STARTR( r );
@@ -47,7 +47,7 @@ duf_xoption_clarify_typed( const duf_longval_extended_t * extended, const char *
     if ( extended->calltype )
     {
       nogen = 1;
-      DOR( r, duf_xoption_clarify_typed_call( extended, optargg, noo, istage, source ) );
+      DOR( r, duf_xoption_clarify_typed_call(  cli,extended, optargg, noo, istage, source ) );
 
     /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )

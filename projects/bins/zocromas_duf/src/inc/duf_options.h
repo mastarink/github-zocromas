@@ -18,7 +18,7 @@
  * 4. action: ~parse,~clarify,~exec...?
  * */
 
-DR( OPTIONS, all_options, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive,
-    duf_option_adata_t * paod, int from_paod );
+DR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive,
+    duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod );
 
 #endif

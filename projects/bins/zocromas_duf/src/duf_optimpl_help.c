@@ -115,10 +115,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
-  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_SMART_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
@@ -829,7 +829,7 @@ duf_uflag2cnames( unsigned long ufset )
   duf_option_code_t id = DUF_OPTION_VAL_NONE;
 
   id = duf_uflag2code( ufset );
-  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp( -1, id, NULL );
+  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp(duf_get_config_cli(), -1, id, NULL );
 }
 
 static const char *
@@ -972,7 +972,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       char *s = NULL;
 
       if ( xtended->o.val )
-        s = duf_xoption_description_d( xtended, "\t", " // " );
+        s = duf_xoption_description_d(duf_get_config_cli(), xtended, "\t", " // " );
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );

@@ -118,6 +118,7 @@ duf_verbose( void )
 {
   return duf_config ? duf_config->opt.flow.verbose : 0;
 }
+
 int
 duf_dry_run( void )
 {
@@ -151,13 +152,13 @@ cb_prompt_interactive( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following DUF_TRACE's */
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
 
   DUF_TRACE( any, 1, "any test" );
   DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
-  CR( treat_all_optstages, duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
   fputs( "\n", stderr );
   TT( "∈1∋ One " );
   TT( "∈2∋ Two " );
@@ -191,7 +192,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 #if 0
   DUF_PUTS( 0, "------------------------------------(*)" );
   DUF_PRINTF( 0, "------- main_db ended --------" );
-  DUF_TEST_R( r ); /* don't remove! */
+  DUF_TEST_R( r );                                                   /* don't remove! */
   DUF_PUTS( 0, "---------------------------------------------(o)" );
 #endif
 
@@ -205,11 +206,11 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      DUF_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( MEMUSAGE ) );
+      DUF_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
     }
     else
     {
-      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( MEMUSAGE ) );
+      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ),MEMUSAGE ) );
     }
   }
 #endif

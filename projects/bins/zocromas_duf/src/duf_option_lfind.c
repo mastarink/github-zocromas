@@ -16,12 +16,12 @@
 /* ###################################################################### */
 
 const duf_option_t *
-duf_loption_find_at_std( int longindex )
+duf_loption_find_at_std( duf_config_cli_t * cli,int longindex )
 {
   const duf_option_t *roption = NULL;
 
   if ( longindex >= 0 )
-    roption = &( duf_cli_options_get_longopts_table(duf_get_config_cli())[longindex] );
+    roption = &( duf_cli_options_get_longopts_table( cli )[longindex] );
   return roption;
 }
 
@@ -72,7 +72,7 @@ duf_loption_xfind_at_xtable( int longindex, const duf_longval_extended_vtable_t 
 }
 
 static const duf_longval_extended_t *
-duf_loption_xfind_at_multix( int longindex,  duf_longval_extended_vtable_t **xvtables, int *ptbcount, unsigned noo,
+duf_loption_xfind_at_multix( int longindex, duf_longval_extended_vtable_t ** xvtables, int *ptbcount, unsigned noo,
                              const duf_longval_extended_vtable_t ** result_pxvtable )
 {
   const duf_longval_extended_t *extended = NULL;
@@ -94,13 +94,13 @@ duf_loption_xfind_at_multix( int longindex,  duf_longval_extended_vtable_t **xvt
 
 /* longindex + stdx => extended */
 const duf_longval_extended_t *
-duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_vtable_t ** result_pxvtable, unsigned *pnoo )
+duf_loption_xfind_at_stdx( duf_config_cli_t * cli,int longindex, const duf_longval_extended_vtable_t ** result_pxvtable, unsigned *pnoo )
 {
   const duf_longval_extended_t *extended = NULL;
   int tbcount = 0;
 
 #if 0
-  for ( const duf_longval_extended_vtable_t * const *xvtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); tbcount <= longindex && *xvtables; xvtables++ )
+  for ( const duf_longval_extended_vtable_t * const *xvtables = duf_cli_options_xvtable_multi( cli ); tbcount <= longindex && *xvtables; xvtables++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
 
@@ -113,13 +113,14 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_vtable_t **
     }
   }
 #else
-  extended = duf_loption_xfind_at_multix( longindex, duf_cli_options_xvtable_multi(duf_get_config_cli()), &tbcount, 0 /* noo */ , result_pxvtable );
+  extended = duf_loption_xfind_at_multix( longindex, duf_cli_options_xvtable_multi( cli ), &tbcount, 0 /* noo */ , result_pxvtable );
 #endif
   if ( !extended )
   {
   /* continue with tbcount */
 #if 0
-    for ( const duf_longval_extended_vtable_t * const *xvtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); tbcount <= longindex && *xvtables; xvtables++ )
+    for ( const duf_longval_extended_vtable_t * const *xvtables = duf_cli_options_xvtable_multi( cli ); tbcount <= longindex && *xvtables;
+          xvtables++ )
     {
       const duf_longval_extended_vtable_t *xvtable = *xvtables;
 
@@ -134,7 +135,7 @@ duf_loption_xfind_at_stdx( int longindex, const duf_longval_extended_vtable_t **
       }
     }
 #else
-    extended = duf_loption_xfind_at_multix( longindex, duf_cli_options_xvtable_multi(duf_get_config_cli()), &tbcount, 1 /* noo */ , result_pxvtable );
+    extended = duf_loption_xfind_at_multix( longindex, duf_cli_options_xvtable_multi( cli ), &tbcount, 1 /* noo */ , result_pxvtable );
     if ( extended && pnoo )
       *pnoo = !*pnoo;
 #endif

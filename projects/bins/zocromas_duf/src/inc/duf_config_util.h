@@ -4,7 +4,7 @@
 # include "duf_config_cli_types.h"
 # include "duf_config_opt_types.h"
 
-void *duf_get_config_offset( unsigned long off );
+/* void *duf_get_config_offset( unsigned long off ); */
 void *duf_get_config_puz_offset( unsigned long off );
 
 duf_config_cli_t *duf_get_config_cli( void );

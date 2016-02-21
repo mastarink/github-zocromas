@@ -29,7 +29,7 @@
 /* ###################################################################### */
 
 int
-duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
                               __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
@@ -70,8 +70,8 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
       if ( DUF_CONFIGG( cli.history_filename ) )
         read_history( DUF_CONFIGG( cli.history_filename ) );
 #else
-      if ( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) )
-        read_history( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) );
+      if ( duf_cli_options_get_history_filename( cli ) )
+        read_history( duf_cli_options_get_history_filename( cli ) );
 #endif
 
 #if 0
@@ -122,7 +122,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
           DUF_TRACE( explain, 0, "read config line %s", s );
           {
             {
-              DOR( r, duf_boption_xclarify_at_stdx( 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
+              DOR( r, duf_boption_xclarify_at_stdx( cli, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
             }
             DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
           }
@@ -136,8 +136,8 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
       if ( DUF_CONFIGG( cli.history_filename ) )
         write_history( DUF_CONFIGG( cli.history_filename ) );
 #else
-      if ( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) )
-        write_history( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) );
+      if ( duf_cli_options_get_history_filename( cli ) )
+        write_history( duf_cli_options_get_history_filename( cli ) );
 #endif
     }
   }

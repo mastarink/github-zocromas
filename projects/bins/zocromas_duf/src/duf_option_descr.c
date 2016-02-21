@@ -26,22 +26,22 @@
 
 /* -= by duf_option_code_t codeval =- */
 static const char *
-_duf_coption_xfind_help_at_stdx( duf_option_code_t codeval, int *pr )
+_duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_code_t codeval, int *pr )
 {
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_coption_xfind_at_stdx( codeval, NULL, pr );
-  /* extended = &lo_extended[ilong]; */
+  extended = duf_coption_xfind_at_stdx( cli, codeval, NULL, pr );
+/* extended = &lo_extended[ilong]; */
   if ( extended )
     ph = extended->help;
   return extended ? ( ph ? ph : "no description" ) : "not found";
 }
 
 const char *
-duf_coption_xfind_desc_at_stdx( duf_option_code_t codeval, int *pr )
+duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_code_t codeval, int *pr )
 {
-  const char *ph = _duf_coption_xfind_help_at_stdx( codeval, pr );
+  const char *ph = _duf_coption_xfind_help_at_stdx( cli, codeval, pr );
 
   return ph ? ph : "-";
 }
@@ -63,13 +63,13 @@ duf_loption_description_d( int longindex, const char *delimh, const char *delim 
 
 /* -= by duf_longval_extended_t * extended =- */
 char *
-duf_xoption_description_d( const duf_longval_extended_t * extended, const char *delimh, const char *delim )
+duf_xoption_description_d( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *delimh, const char *delim )
 {
   char *s = NULL;
 
   if ( extended )
   {
-    s = duf_coption_names_d( extended->o.val, delim );
+    s = duf_coption_names_d( cli,extended->o.val, delim );
     if ( s )
     {
       const char *h;
@@ -86,15 +86,15 @@ duf_xoption_description_d( const duf_longval_extended_t * extended, const char *
 }
 
 static char *
-duf_xoption_description( const duf_longval_extended_t * extended )
+duf_xoption_description( duf_config_cli_t * cli, const duf_longval_extended_t * extended )
 {
-  return duf_xoption_description_d( extended, NULL, NULL );
+  return duf_xoption_description_d(  cli, extended, NULL, NULL );
 }
 
 static duf_tmp_t *cnames_tmp = NULL;
 
 const char *
-duf_xoption_description_tmp( int tmp_index, const duf_longval_extended_t * extended )
+duf_xoption_description_tmp( duf_config_cli_t * cli, int tmp_index, const duf_longval_extended_t * extended )
 {
   const char *x = NULL;
 
@@ -109,7 +109,7 @@ duf_xoption_description_tmp( int tmp_index, const duf_longval_extended_t * exten
   {
     mas_free( cnames_tmp->tmp_string[tmp_index] );
     cnames_tmp->tmp_string[tmp_index] = NULL;
-    cnames_tmp->tmp_string[tmp_index] = duf_xoption_description( extended );
+    cnames_tmp->tmp_string[tmp_index] = duf_xoption_description(  cli,extended );
     x = cnames_tmp->tmp_string[tmp_index];
   }
   return x;

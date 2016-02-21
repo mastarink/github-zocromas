@@ -25,7 +25,7 @@
  * 4. action: clarify, clarify_full
  * */
 
-int duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
+int duf_xoption_clarify( duf_config_cli_t * cli,const duf_longval_extended_t * extended, const char *optargg,
                          const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t stage,
                          duf_option_source_t source ) __attribute__ ( ( warn_unused_result ) );
 

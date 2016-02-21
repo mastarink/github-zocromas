@@ -120,7 +120,7 @@ SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 /* DUF_STARTR( r ); */
 /* int r DUF_UNUSED = 0; */
 
-  CR( infile_options_at_filepath, DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name, ( duf_option_adata_t * ) NULL /* paod */  );
+  CR( infile_options_at_filepath, duf_get_config_cli(), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name, ( duf_option_adata_t * ) NULL /* paod */  );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }

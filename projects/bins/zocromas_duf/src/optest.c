@@ -64,19 +64,19 @@ something1_t som1 = { {0, 0} };
 
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-  /* duf_config_cli_t clio; */
+/* duf_config_cli_t clio; */
 
-  /* TODO duf_cli_options_init( &clio, argc, argv, optable_test, NULL, NULL, NULL ); */
+/* TODO duf_cli_options_init( &clio, argc, argv, optable_test, NULL, NULL, NULL ); */
 
   fprintf( stderr, "%d\n", QERRIND );
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, NULL, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
   fprintf( stderr, "%d\n", QERRIND );
-  CR( treat_option_stage_ne, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  CR( treat_option_stage_ne, NULL, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
   fprintf( stderr, "%d ===\n", QERRIND );
   mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
   fprintf( stderr, "%d\n", QERRIND );
 
-  /* TODO duf_cli_options_shut( &clio ); */
+/* TODO duf_cli_options_shut( &clio ); */
 
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }

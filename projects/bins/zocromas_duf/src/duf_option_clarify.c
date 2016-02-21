@@ -21,7 +21,7 @@
 /* ###################################################################### */
 
 int
-duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optargg,
+duf_xoption_clarify( duf_config_cli_t * cli,const duf_longval_extended_t * extended, const char *optargg,
                      const duf_longval_extended_vtable_t * xtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
   DUF_STARTR( r );
@@ -34,7 +34,7 @@ duf_xoption_clarify( const duf_longval_extended_t * extended, const char *optarg
  * */
     DUF_TRACE( options, 55, "@@@fully clarify option: [--%s='%s'] stage:%s; `noo`:%d; source:%s",
                extended ? extended->o.name : "?", optargg, duf_optstage_name( istage ), noo, duf_optsource_name( source ) );
-    DOR( r, duf_xoption_clarify_typed( extended, optargg, xtable, noo, istage, source ) );
+    DOR( r, duf_xoption_clarify_typed(  cli,extended, optargg, xtable, noo, istage, source ) );
     DUF_TRACE( options, 55, "@clarified typed: --%s / [%s]; (%d:%s)", extended->o.name, duf_xoption_description_tmp( -1, extended ), r,
                mas_error_name_i( r ) );
 

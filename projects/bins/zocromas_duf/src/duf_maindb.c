@@ -70,12 +70,12 @@ duf_main_db_optionally_remove_files( void )
   DUF_STARTR( r );
   if ( DUF_ACTG_FLAG( allow_remove_database ) )
   {
-    DUF_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME( ALLOW_REMOVE_DATABASE ) );
+    DUF_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_REMOVE_DATABASE ) );
     DORF( r, duf_main_db_remove_files );
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not removing database", DUF_OPT_FLAG_NAME( ALLOW_REMOVE_DATABASE ) );
+    DUF_TRACE( explain, 1, "no %s option, not removing database", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_REMOVE_DATABASE ) );
   }
   DUF_ENDR( r );
 }
@@ -86,7 +86,7 @@ duf_main_db_create_tables( void )
   DUF_STARTR( r );
 /* DOR( r, duf_check_tables(  ) ); */
   if ( duf_dry_run() )
-    DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ALLOW_CREATE_TABLES ) );
+    DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME(duf_get_config_cli(), DRY_RUN ), DUF_OPT_FLAG_NAME2(duf_get_config_cli(), ALLOW_CREATE_TABLES ) );
   else
   {
     DORF( r, duf_eval_sqlsq, &sql_beginning_create_one, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
@@ -107,9 +107,9 @@ duf_main_db_pre_action( void )
   DUF_STARTR( r );
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_drop_tables ) )
   {
-    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( ALLOW_DROP_TABLES ) );
+    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_DROP_TABLES ) );
     if ( duf_dry_run() )
-      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ALLOW_DROP_TABLES ) );
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME(duf_get_config_cli(), DRY_RUN ), DUF_OPT_FLAG_NAME2(duf_get_config_cli(), ALLOW_DROP_TABLES ) );
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_drop, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
@@ -117,14 +117,14 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( ALLOW_DROP_TABLES ) );
+    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_DROP_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_clean_tables ) )
   {
-    DUF_TRACE( explain, 0, "clean (zero) tables: option %s", DUF_OPT_FLAG_NAME( ALLOW_CLEAN_TABLES ) );
+    DUF_TRACE( explain, 0, "clean (zero) tables: option %s", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_CLEAN_TABLES ) );
     if ( duf_dry_run() )
-      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ALLOW_CLEAN_TABLES ) );
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME(duf_get_config_cli(), DRY_RUN ), DUF_OPT_FLAG_NAME2(duf_get_config_cli(), ALLOW_CLEAN_TABLES ) );
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_clean, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
@@ -132,27 +132,27 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( ALLOW_DROP_TABLES ) );
+    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_DROP_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_create_tables ) /* && DUF_ACTG_FLAG( allow_create_database ) */  )
   {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( ALLOW_CREATE_TABLES ) );
+    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_CREATE_TABLES ) );
     DOR( r, duf_main_db_create_tables(  ) );
   /* global_status.actions_done++; */
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( ALLOW_CREATE_TABLES ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_CREATE_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_vacuum ) )
   {
   /* static const char *sql = "VACUUM"; */
 
-  /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( ALLOW_VACUUM ) ); */
+  /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_VACUUM ) ); */
     if ( duf_dry_run() )
-      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ALLOW_VACUUM ) );
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME(duf_get_config_cli(), DRY_RUN ), DUF_OPT_FLAG_NAME2(duf_get_config_cli(), ALLOW_VACUUM ) );
     else
       DORF( r, duf_eval_sqlsq, &sql_beginning_vacuum, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
             NULL /* selected.db */  );
@@ -160,7 +160,7 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( ALLOW_VACUUM ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_VACUUM ) );
   }
 
   DORF( r, duf_eval_sqlsq, &sql_beginning_tables, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, NULL /* selected.db */  );

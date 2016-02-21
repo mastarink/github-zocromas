@@ -16,7 +16,7 @@
 /* ###################################################################### */
 
 static int
-duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_option_adata_t * paod )
+duf_env_options_at_var( duf_config_cli_t * cli, duf_option_stage_t istage, const char *envvarname, duf_option_adata_t * paod )
 {
   DUF_STARTR( r );
 
@@ -25,7 +25,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_o
   eo = getenv( envvarname );
 
   DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name( istage ), envvarname, eo );
-  DOR( r, duf_boption_xclarify_at_stdx( '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0, paod ) );
+  DOR( r, duf_boption_xclarify_at_stdx( cli, '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0, paod ) );
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
 
@@ -40,7 +40,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname, duf_o
  * 2. call duf_env_options_at_var
  * */
 int
-duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+duf_source_env_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                       __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
                       duf_option_source_code_t sourcecode DUF_UNUSED )
 {
@@ -48,8 +48,8 @@ duf_source_env_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_inter
 
   DUF_STARTR( r );
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_AOPTIONS", paod ) );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_ZOPTIONS", paod ) );
-  DOR( r, duf_env_options_at_var( istage, "MSH_DUF_OPTIONS", paod ) );
+  DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_AOPTIONS", paod ) );
+  DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_ZOPTIONS", paod ) );
+  DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_OPTIONS", paod ) );
   DUF_ENDR( r );
 }

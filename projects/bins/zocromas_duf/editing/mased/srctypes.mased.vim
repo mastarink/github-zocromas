@@ -69,6 +69,7 @@ tab sfind duf_config_output_types.h
 sfind duf_format_types.h
 
 tab sfind duf_option_types.h
+sfind duf_option_data_types.h
 sfind duf_option_fun_types.h
 sfind duf_option_class_types.h
 sfind duf_options_enum.h
