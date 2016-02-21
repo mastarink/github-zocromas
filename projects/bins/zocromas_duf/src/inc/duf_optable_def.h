@@ -98,6 +98,9 @@
 #  define DOO_OC(_vt, _v)      DOO_OO(_vt, _v, config)
 
 
+#  define DO_OI(_vt, _v)        DO_OO(_vt, _v, config_cli)
+#  define DOO_OI(_vt, _v)      DOO_OO(_vt, _v, config_cli)
+
 
 /* Offset ufilter */
 #  define DO_OU(_vt, _v)        DO_OO(_vt, _v, ufilter)

@@ -38,8 +38,8 @@ duf_option_O_version( void )
 
   DUF_STARTR( r );
 
-  sargv1 = mas_argv_string( DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ), 1 );
-  /* sargv2 = duf_restore_some_options( DUF_CONFIGG(cli.carg.argv)[0] ); */
+  sargv1 = mas_argv_string( DUF_CONFIGG( pcli->carg.argc ), DUF_CONFIGG( pcli->carg.argv ), 1 );
+  /* sargv2 = duf_restore_some_options( DUF_CONFIGG(pcli->carg.argv)[0] ); */
 #if 1
   {
     extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;

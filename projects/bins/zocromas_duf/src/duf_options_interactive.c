@@ -12,6 +12,7 @@
 #include "duf_maintenance_tracen.h"
 #include "duf_maintenance_errors.h"
 
+#include "duf_config_util.h"
 
 #include "duf_option_defs.h"
 #include "duf_option_stage.h"
@@ -20,7 +21,6 @@
 #include "duf_option_config.h"
 /* #include "duf_option_clarify_string.h" */
 #include "duf_option_clarify_batch.h"
-
 
 #include "duf_levinfo_ref.h"
 
@@ -31,7 +31,7 @@
 int
 duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
-                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode  DUF_UNUSED)
+                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
 {
   DUF_STARTR( r );
 #if 0
@@ -70,10 +70,9 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
       if ( DUF_CONFIGG( cli.history_filename ) )
         read_history( DUF_CONFIGG( cli.history_filename ) );
 #else
-      if ( duf_cli_options_get_history_filename(  ) )
-        read_history( duf_cli_options_get_history_filename(  ) );
+      if ( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) )
+        read_history( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) );
 #endif
-
 
 #if 0
       {
@@ -107,7 +106,6 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
 
 /* TODO : via callback of some kind */
 
-
         prompt = cb_prompt_interactive(  );
 
         while ( !rl_buffer )
@@ -120,7 +118,7 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
           DUF_TRACE( options, 0, "@@@@read cmd '%s'", s );
           if ( s && ( ( *s == '#' ) || !*s ) )
             continue;
-          /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
+        /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
           DUF_TRACE( explain, 0, "read config line %s", s );
           {
             {
@@ -138,8 +136,8 @@ duf_source_interactive_parse( duf_option_stage_t istage, duf_int_void_func_t cb_
       if ( DUF_CONFIGG( cli.history_filename ) )
         write_history( DUF_CONFIGG( cli.history_filename ) );
 #else
-      if ( duf_cli_options_get_history_filename(  ) )
-        write_history( duf_cli_options_get_history_filename(  ) );
+      if ( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) )
+        write_history( duf_cli_options_get_history_filename( duf_get_config_cli(  ) ) );
 #endif
     }
   }

@@ -7,6 +7,9 @@
 /* #include "duf_maintenance_tracen.h" */
 /* #include "duf_maintenance_errors.h" */
 
+#include "duf_config_util.h"
+
+
 #include "duf_tmp_types.h"
 
 #include "duf_option_config.h"
@@ -23,7 +26,11 @@ duf_coption_names_d( duf_option_code_t codeval, const char *delim )
   int cnt = 0;
   static const char *wrap[2] = { "〈", "〉" };
 
-  xvtables = duf_cli_options_config(  )->xvtable_multi;
+#if 0
+  xvtables = duf_cli_options_config()->xvtable_multi;
+#else
+   xvtables =duf_cli_options_xvtable_multi( duf_get_config_cli(  )  );
+#endif
 
   while ( ( xtable = *xvtables++ ) )
   {

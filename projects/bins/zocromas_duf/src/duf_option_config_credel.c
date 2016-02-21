@@ -66,6 +66,17 @@ duf_cli_option_shorts_create( duf_longval_extended_vtable_t * *xvtables )
   return *shorts ? mas_strdup( shorts ) : NULL;
 }
 
+duf_config_cli_t *
+duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
+                        const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
+{
+  duf_config_cli_t *cli;
+
+  cli = mas_malloc( sizeof( duf_config_cli_t ) );
+  duf_cli_options_init( cli, argc, argv, xtable_list, config_dir, commands_dir, varfunc );
+  return cli;
+}
+
 void
 duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
                       const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
@@ -94,6 +105,13 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
     cmds_dir (duf_options_file.c)
     opt.output.history_filename (duf_options_interactive.c) =>  cli.history_filename
 */
+}
+
+void
+duf_cli_options_delete( duf_config_cli_t * cli )
+{
+  duf_cli_options_shut( cli );
+  mas_free( cli );
 }
 
 void

@@ -75,7 +75,7 @@ SR( OPTIONS, split_string_od, duf_option_data_t * pod )
     arg = duf_string_options_expand( barg, '?' );
 #else
     {
-      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(  ) };
+      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(duf_get_config_cli()) };
 
       cs_x.value = mas_strdup( barg );
       arg = mas_strdup( duf_string_expanded( &cs_x ) );
@@ -294,7 +294,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_longval_extended_vtable_t **
       oa = duf_string_options_expand( pod->optarg, '?' );
 #else
       {
-        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(  ) };
+        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc(duf_get_config_cli()) };
 
         cs_x.value = mas_strdup( pod->optarg );
         oa = mas_strdup( duf_string_expanded( &cs_x ) );
@@ -332,7 +332,7 @@ static
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod )
 {
 /* CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod ); */
-  CR( soption_xclarify_new_at_multix_od, duf_cli_options_xvtable_multi(  ), pod );
+  CR( soption_xclarify_new_at_multix_od, duf_cli_options_xvtable_multi(duf_get_config_cli()), pod );
 
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_option_data_t * pod );
 }

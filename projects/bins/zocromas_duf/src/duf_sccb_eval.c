@@ -27,7 +27,7 @@ duf_ev_sccb( const duf_scan_callbacks_t * sccb )
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, duf_pdi_global_name(  ) );
 
   /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( duf_pdi_global() ) ); */
-  DOR( r, duf_ev_pdi_sccb( duf_pdi_global(  ), sccb, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DOR( r, duf_ev_pdi_sccb( duf_pdi_global(  ), sccb, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
 
@@ -36,7 +36,7 @@ duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
-  DOR( r, duf_ev_pdi_evnamen( duf_pdi_global(  ), name, len, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DOR( r, duf_ev_pdi_evnamen( duf_pdi_global(  ), name, len, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
 
@@ -46,7 +46,7 @@ duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
   DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
-  DOR( r, duf_ev_pdi_evname( duf_pdi_global(  ), name, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DOR( r, duf_ev_pdi_evname( duf_pdi_global(  ), name, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
 
@@ -59,7 +59,7 @@ duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
 
   /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
-  DOR( r, duf_ev_pdi_evnamed_list( duf_pdi_global(  ), names, first, DUF_CONFIGA( cli.targ ), DUF_ACTG_FLAG( summary ) ) );
+  DOR( r, duf_ev_pdi_evnamed_list( duf_pdi_global(  ), names, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
 
@@ -105,7 +105,7 @@ duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
        * - call init  from psccbs[astep]
        * - do beginning sql set  from psccbs[astep]
        * - via duf_sccb_each_targv:
-       *     - evaluate psccbs[astep] for each string  from DUF_CONFIGG(cli.targ)[cv] as path
+       *     - evaluate psccbs[astep] for each string  from DUF_CONFIGG(pcli->targ)[cv] as path
        *     - store number of changes to *pchanges
        * - do final sql set from psccbs[astep]
        * XXX  XXX */ DOR( r, duf_ev_sccb( psccbs[astep] /* sccb */  ) );

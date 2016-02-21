@@ -3,10 +3,10 @@
 #include "duf_maintenance.h"
 
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"
 
 #include "duf_optimpl_misc.h"
-#include "duf_optimpl_sccb.h"    /* TODO : temp for duf_option_O_cd               */
+#include "duf_optimpl_sccb.h"                                        /* TODO : temp for duf_option_O_cd               */
 
 /*
 At duf_options_table.c:
@@ -22,8 +22,8 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_experimental = {
   .name = "experimental",
-  /* DO_STG_NOT( LOOP ), */
-  .xlist =                      /* */
+/* DO_STG_NOT( LOOP ), */
+  .xlist =                                                           /* */
   {
 #if 0
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
@@ -31,7 +31,7 @@ const duf_longval_extended_table_t optable_experimental = {
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
 #else
-   /* FIXME in fact only 1 works...? XXX */
+ /* FIXME in fact only 1 works...? XXX */
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( FS ) /*     */ ,
     /*      */ DO_OU( ARGV, globx.include_fs_files ) /*                                     */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( FS ) /*     */ ,
@@ -55,12 +55,13 @@ const duf_longval_extended_table_t optable_experimental = {
    {.o = {DO_Q( "cd-id" ) /*            */ , DO_A_O /* */ , DO_V( CD_ID )} /*              */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( cdid ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*          */ , DO_H(  ... ) /*                             */ },
 
+#if 0                                                                /* 20160221.132919 */
    {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( XCHR, cli.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },
-
-
-
-
+    /*      */ DO_OC( XCHR, pcli->option_delimiter ) /*                                     */ , DO_H( history filename ) /*                 */ },
+#else
+   {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OI( XCHR, option_delimiter ) /*                                           */ , DO_H( history filename ) /*                 */ },
+#endif
 
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },
@@ -68,14 +69,11 @@ const duf_longval_extended_table_t optable_experimental = {
    {.o = {DO_Q( "dir-priority" ) /*     */ , DO_A_R /* */ , DO_V( DIR_PRIORITY )} /*       */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OC( NUM, vars.dir_priority ) /*                                           */ , DO_H(  .... ) /*                            */ },
 
-
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },
 
    {.o = {.name = NULL}}
    }
 };
-
-
 
 /* vi: et ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */

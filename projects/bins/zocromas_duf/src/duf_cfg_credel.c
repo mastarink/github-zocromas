@@ -6,13 +6,12 @@
 #include "duf_maintenance.h"
 #include "duf_config_defs.h"
 
-#include "duf_cli.h"
-
 #include "duf_expandable.h"
 
 #include "duf_ufilter.h"
 
 #include "duf_option_names.h"
+#include "duf_option_config_credel.h"
 
 /* ###################################################################### */
 #include "duf_cfg_credel.h"
@@ -150,8 +149,7 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-  /* duf_options_delete_longopts_table( cfg->cli.longopts_table ); */
-  /* cfg->cli.longopts_table = NULL;                               */
+    duf_cli_options_delete( cfg->pcli );
 
     mas_free( cfg->help_string );
     cfg->help_string = NULL;

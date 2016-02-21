@@ -73,7 +73,7 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
     /* assert( DUF_CONFIGG( cli.carg.argv ) ); */
-    assert( duf_cli_options_get_carg(  ) && duf_cli_options_get_carg(  )->argv );
+    assert( duf_cli_options_get_carg(duf_get_config_cli()) && duf_cli_options_get_carg(duf_get_config_cli())->argv );
 #if 0
     if ( DUF_NOERROR( r ) )
     {
@@ -84,7 +84,7 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
     }
 #else
     /* IF_DORF( r, extended->call.fdesc.a.func, DUF_CONFIGG( cli.carg.argc ), DUF_CONFIGG( cli.carg.argv ) ); */
-    IF_DORF( r, extended->call.fdesc.a.func, duf_cli_options_get_carg(  )->argc, duf_cli_options_get_carg(  )->argv ); /* argc and argv */
+    IF_DORF( r, extended->call.fdesc.a.func, duf_cli_options_get_carg(duf_get_config_cli())->argc, duf_cli_options_get_carg(duf_get_config_cli())->argv ); /* argc and argv */
 #endif
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
@@ -93,7 +93,7 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
     /* assert( DUF_CONFIGG( cli.carg.argc ) ); */
     /* assert( DUF_CONFIGG( cli.carg.argv ) ); */
-    assert( duf_cli_options_get_carg(  ) && duf_cli_options_get_cargc(  ) && duf_cli_options_get_cargv(  ) );
+    assert( duf_cli_options_get_carg(duf_get_config_cli()) && duf_cli_options_get_cargc(duf_get_config_cli()) && duf_cli_options_get_cargv(duf_get_config_cli()) );
 #if 0
     if ( DUF_NOERROR( r ) )
     {
@@ -104,7 +104,7 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
     }
 #else
     /* IF_DORF( r, extended->call.fdesc.aa.func, DUF_CONFIGG( cli.carg ) ); */
-    IF_DORF( r, extended->call.fdesc.aa.func, duf_cli_options_get_carg(  ) ); /* arg[cv] as mas_cargvc_t */
+    IF_DORF( r, extended->call.fdesc.aa.func, duf_cli_options_get_carg(duf_get_config_cli()) ); /* arg[cv] as mas_cargvc_t */
 #endif
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
@@ -175,33 +175,33 @@ duf_xoption_clarify_typed_call( const duf_longval_extended_t * extended, const c
   case DUF_OPTION_CALL_TYPE_TN1:
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-    IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ(  ), duf_strtol_suff( optargg, &r ) ); /* targ as mas_argvc_t and numeric optarg */
+    IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ(duf_get_config_cli()), duf_strtol_suff( optargg, &r ) ); /* targ as mas_argvc_t and numeric optarg */
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
 #if 0
   case DUF_OPTION_CALL_TYPE_TN2:
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-    assert( &duf_cli_options_get_targ(  )->argc == duf_cli_options_get_ptargc(  ) );
-    assert( &duf_cli_options_get_targ(  )->argv == duf_cli_options_get_ptargv(  ) );
-    IF_DORF( r, extended->call.fdesc.tn2.func, duf_cli_options_get_ptargc(  ), duf_cli_options_get_ptargv(  ), duf_strtol_suff( optargg, &r ) );
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argc == duf_cli_options_get_ptargc(duf_get_config_cli()) );
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argv == duf_cli_options_get_ptargv(duf_get_config_cli()) );
+    IF_DORF( r, extended->call.fdesc.tn2.func, duf_cli_options_get_ptargc(duf_get_config_cli()), duf_cli_options_get_ptargv(duf_get_config_cli()), duf_strtol_suff( optargg, &r ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED );
     break;
 #endif
   case DUF_OPTION_CALL_TYPE_TS1:
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-    assert( &duf_cli_options_get_targ(  )->argc == duf_cli_options_get_ptargc(  ) );
-    assert( &duf_cli_options_get_targ(  )->argv == duf_cli_options_get_ptargv(  ) );
-    IF_DORF( r, extended->call.fdesc.ts1.func, duf_cli_options_get_targ(  ), optargg ); /* targ as mas_argvc_t and optarg */
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argc == duf_cli_options_get_ptargc(duf_get_config_cli()) );
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argv == duf_cli_options_get_ptargv(duf_get_config_cli()) );
+    IF_DORF( r, extended->call.fdesc.ts1.func, duf_cli_options_get_targ(duf_get_config_cli()), optargg ); /* targ as mas_argvc_t and optarg */
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
   case DUF_OPTION_CALL_TYPE_TS2:
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-    assert( &duf_cli_options_get_targ(  )->argc == duf_cli_options_get_ptargc(  ) );
-    assert( &duf_cli_options_get_targ(  )->argv == duf_cli_options_get_ptargv(  ) );
-    IF_DORF( r, extended->call.fdesc.ts2.func, duf_cli_options_get_ptargc(  ), duf_cli_options_get_ptargv(  ), optargg ); /* targc, targv and optarg */
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argc == duf_cli_options_get_ptargc(duf_get_config_cli()) );
+    assert( &duf_cli_options_get_targ(duf_get_config_cli())->argv == duf_cli_options_get_ptargv(duf_get_config_cli()) );
+    IF_DORF( r, extended->call.fdesc.ts2.func, duf_cli_options_get_ptargc(duf_get_config_cli()), duf_cli_options_get_ptargv(duf_get_config_cli()), optargg ); /* targc, targv and optarg */
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
   }

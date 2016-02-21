@@ -8,7 +8,6 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 
-#include "duf_cli.h"
 
 #include "duf_config4trace_ref.h"
 #include "duf_cfg_credel.h"
@@ -43,8 +42,8 @@ duf_config_create( int argc, char **argv )
 # if 0
   duf_cli_init(  /* &duf_config->cli, */ argc, argv );
 # else
-  duf_cli_options_init_global( duf_get_config_cli(  ), argc, argv, duf_xtable_list(  ), DUF_CONFIGGS( conf.config_dir ),
-                               DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar );
+  duf_get_config()->pcli=duf_cli_options_create(argc, argv, duf_xtable_list(  ), DUF_CONFIGGS( conf.config_dir ),
+                               DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar);
 # endif
 
 #endif
@@ -65,7 +64,7 @@ duf_config_delete( void )
 
   mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), duf_verbose ? duf_verbose(  ) : 0 );
 
-  duf_cli_options_shut_global(  );
+  /* duf_cli_options_shut_global(  ); */
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
   duf_config4trace =

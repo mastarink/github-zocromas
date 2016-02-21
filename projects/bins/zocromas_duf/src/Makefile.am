@@ -31,7 +31,6 @@ zocromas_duf_SOURCES=				   \
 	duf_config.c duf_tracen_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
 	duf_config_util.c duf_config_util_z.c \
 	duf_status.c	     \
-	duf_cli.c \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
 	duf_option_config_credel.c duf_option_config.c duf_options.c  duf_option_typed.c duf_option_typed_gen.c duf_option_typed_call.c  \
 	duf_option_cfind.c duf_option_lfind.c duf_xtended_table.c		\

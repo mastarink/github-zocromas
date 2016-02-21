@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -19,128 +19,107 @@
 #include "duf_option_config.h"
 /* ###################################################################### */
 
-static duf_config_cli_t *config_cli = NULL;
-
-void
-duf_cli_options_init_global( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list,
-                             const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
-{
-  config_cli = cli;
-  duf_cli_options_init( cli, argc, argv, xtable_list, config_dir, commands_dir, varfunc );
-}
-
-void
-duf_cli_options_shut_global( void )
-{
-  duf_cli_options_shut( config_cli );
-}
-
-duf_config_cli_t *
-duf_cli_options_config( void )
-{
-  assert( config_cli );
-  return config_cli;
-}
+/* static duf_config_cli_t *config_cli = NULL; */
 
 const char *
-duf_cli_options_get_history_filename( void )
+duf_cli_options_get_history_filename( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->history_filename : NULL;
+  return cli ? cli->history_filename : NULL;
 }
 
 mas_argvc_t *
-duf_cli_options_get_targ( void )
+duf_cli_options_get_targ( duf_config_cli_t * cli )
 {
-  return config_cli ? &config_cli->targ : NULL;
+  return cli ? &cli->targ : NULL;
 }
 
 int
-duf_cli_options_get_targc( void )
+duf_cli_options_get_targc( duf_config_cli_t * cli )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ ? targ->argc : 0;
 }
 
 int *
-duf_cli_options_get_ptargc( void )
+duf_cli_options_get_ptargc( duf_config_cli_t * cli )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ ? &targ->argc : 0;
 }
 
 char **
-duf_cli_options_get_targv( void )
+duf_cli_options_get_targv( duf_config_cli_t * cli )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ ? targ->argv : 0;
 }
 
 char ***
-duf_cli_options_get_ptargv( void )
+duf_cli_options_get_ptargv( duf_config_cli_t * cli )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ ? &targ->argv : 0;
 }
 
 char *
-duf_cli_options_get_targi( int ia )
+duf_cli_options_get_targi( duf_config_cli_t * cli, int ia )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ && ia < targ->argc ? targ->argv[ia] : NULL;
 }
 
 char **
-duf_cli_options_get_ptargi( int ia )
+duf_cli_options_get_ptargi( duf_config_cli_t * cli, int ia )
 {
   mas_argvc_t *targ;
 
-  targ = duf_cli_options_get_targ(  );
+  targ = duf_cli_options_get_targ( cli );
   return targ && ia < targ->argc ? &targ->argv[ia] : NULL;
 }
 
 mas_cargvc_t *
-duf_cli_options_get_carg( void )
+duf_cli_options_get_carg( duf_config_cli_t * cli )
 {
-  return config_cli ? &config_cli->carg : NULL;
+  return cli ? &cli->carg : NULL;
 }
 
 int
-duf_cli_options_get_cargc( void )
+duf_cli_options_get_cargc( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->carg.argc : 0;
+  return cli ? cli->carg.argc : 0;
 }
 
 char *const *
-duf_cli_options_get_cargv( void )
+duf_cli_options_get_cargv( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->carg.argv : NULL;
+  return cli ? cli->carg.argv : NULL;
 }
 
 const char *
-duf_cli_options_get_cargvn( int n )
+duf_cli_options_get_cargvn( const duf_config_cli_t * cli, int n )
 {
   char *const *cargv;
 
-  cargv = duf_cli_options_get_cargv(  );
+  cargv = duf_cli_options_get_cargv( cli );
   return cargv ? cargv[n] : NULL;
 }
 
 const char *
-duf_cli_options_bin_name( void )
+duf_cli_options_bin_name( const duf_config_cli_t * cli )
 {
   const char *binname;
 
-  binname = duf_cli_options_get_cargvn( 0 );
+  binname = duf_cli_options_get_cargvn( cli, 0 );
   {
     if ( binname )
       binname = strrchr( binname, '/' );
@@ -151,46 +130,46 @@ duf_cli_options_bin_name( void )
 }
 
 const char *
-duf_cli_options_config_file_name( void )
+duf_cli_options_config_file_name( const duf_config_cli_t * cli )
 {
   const char *binname;
 
-  binname = duf_cli_options_bin_name(  );
+  binname = duf_cli_options_bin_name( cli );
   return binname ? binname : DUF_CONFIG_FILE_NAME;
 }
 
 const char *
-duf_cli_options_get_shorts( void )
+duf_cli_options_get_shorts( const duf_config_cli_t * cli )
 {
 /* return cli_options_shorts; */
-  return config_cli ? config_cli->shorts : NULL;
+  return cli ? cli->shorts : NULL;
 }
 
 const char *
-duf_cli_options_config_dir( void )
+duf_cli_options_config_dir( const duf_config_cli_t * cli )
 {
 /* return cli_options_shorts; */
-  return config_cli ? config_cli->config_dir : NULL;
+  return cli ? cli->config_dir : NULL;
 }
 
 const char *
-duf_cli_options_commands_dir( void )
+duf_cli_options_commands_dir( const duf_config_cli_t * cli )
 {
 /* return cli_options_shorts; */
-  return config_cli ? config_cli->cmds_dir : NULL;
+  return cli ? cli->cmds_dir : NULL;
 }
 
 int
-duf_cli_options_get_targ_offset( void )
+duf_cli_options_get_targ_offset( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->targ_offset : 0;
+  return cli ? cli->targ_offset : 0;
 }
 
 void
-duf_cli_options_set_targ_offset( int targ_offset )
+duf_cli_options_set_targ_offset( duf_config_cli_t * cli, int targ_offset )
 {
-  if ( config_cli )
-    config_cli->targ_offset = targ_offset;
+  if ( cli )
+    cli->targ_offset = targ_offset;
 }
 
 static int
@@ -249,39 +228,39 @@ duf_reorder_argvc_at_sign( mas_argvc_t * ptarg )
 }
 
 void
-duf_cli_options_reset_targ_offset( void )
+duf_cli_options_reset_targ_offset( duf_config_cli_t * cli )
 {
-  config_cli->targ_offset = duf_reorder_argvc_at_sign( duf_cli_options_get_targ(  ) );
+  cli->targ_offset = duf_reorder_argvc_at_sign( duf_cli_options_get_targ( cli ) );
 }
 
 duf_option_t *
-duf_cli_options_get_longopts_table( void )
+duf_cli_options_get_longopts_table( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->longopts_table : NULL;
+  return cli ? cli->longopts_table : NULL;
 }
 
 duf_longval_extended_vtable_t **
-duf_cli_options_xvtable_multi( void )
+duf_cli_options_xvtable_multi( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->xvtable_multi : NULL;
+  return cli ? cli->xvtable_multi : NULL;
 }
 
 char
-duf_cli_options_delimiter( void )
+duf_cli_options_delimiter( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->option_delimiter : ':';
+  return cli ? cli->option_delimiter : ':';
 }
 
 duf_option_adata_t *
-duf_cli_options_aod( void )
+duf_cli_options_aod( duf_config_cli_t * cli )
 {
-  return config_cli ? &config_cli->aod : NULL;
+  return cli ? &cli->aod : NULL;
 }
 
 mas_arg_get_cb_arg_t
-duf_cli_options_varfunc( void )
+duf_cli_options_varfunc( const duf_config_cli_t * cli )
 {
-  return config_cli ? config_cli->varfunc : NULL;
+  return cli ? cli->varfunc : NULL;
 }
 
 /* 20160220.190632 */

@@ -5,7 +5,7 @@
 #include "duf_optable_def.h"
 #include "duf_options_enum.h"
 
-#include "duf_optimpl_sccb.h"   /* TODO : temp for duf_option_O_db_open               */
+#include "duf_optimpl_sccb.h"                                        /* TODO : temp for duf_option_O_db_open               */
 
 /*
 At duf_options_table.c:
@@ -19,10 +19,9 @@ At duf_options_table.c:
       };
 */
 
-
 const duf_longval_extended_table_t optable_str = {
   .name = "str",
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
 
    {.o = {DO_Q( "tag-file" ) /*         */ , DO_A_R /* */ , DO_V( TAG_FILE )} /*           */ , DO_CL( CONTROL ) /* */ ,
@@ -33,14 +32,18 @@ const duf_longval_extended_table_t optable_str = {
    {.o = {DO_Q( "save-directory" ) /*   */ , DO_A_R /* */ , DO_V( SAVE_DIRECTORY )} /*     */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, save.path ) /*                                                   */ , DO_H( save path ) /*                        */ },
 
+#if 0                                                                /* 20160221.132947 */
    {.o = {DO_Q( "history-file" ) /*      */ , DO_A_R /* */ , DO_V( HISTORY_FILE )} /*      */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( STR, cli.history_filename ) /*                                        */ , DO_H( history filename ) /*                 */ },
+    /*      */ DO_OC( STR, pcli->history_filename ) /*                                      */ , DO_H( history filename ) /*                 */ },
+#else
+   {.o = {DO_Q( "history-file" ) /*      */ , DO_A_R /* */ , DO_V( HISTORY_FILE )} /*      */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OI( STR, history_filename ) /*                                            */ , DO_H( history filename ) /*                 */ },
+#endif
 
    {.o = {DO_Q( "config-dir" ) /*      */ , DO_A_R /* */ , DO_V( CONFIG_DIR )} /*          */ , DO_CL( CONTROL ) /*  */ ,
     /*      */ DO_OC( STR, conf.config_dir ), DO_AT_STAGE( PRESETUP ) /*                    */ , DO_H( config directory ) /*                 */ },
    {.o = {DO_Q( "cmds-dir" ) /*      */ , DO_A_R /* */ , DO_V( CMDS_DIR )} /*              */ , DO_CL( CONTROL ) /*  */ ,
     /*      */ DO_OC( STR, conf.cmds_dir ), DO_AT_STAGE( SETUP ) /*                         */ , DO_H( config directory ) /*                 */ },
-
 
    {.o = {.name = NULL}}
    }

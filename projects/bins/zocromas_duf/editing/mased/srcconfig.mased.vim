@@ -32,5 +32,3 @@ tab sfind duf_status.c
 sfind duf_status_ref.h
 sfind duf_status.h
 
-tab sfind duf_cli.c
-sfind duf_cli.h

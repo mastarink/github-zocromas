@@ -65,7 +65,7 @@ SR( OPTIONS, boption_xclarify_at_stdx, char value_separator, duf_option_stage_t 
     delim = duf_option_delimiter(  );
 #else
   if ( !delim )
-    delim = duf_cli_options_delimiter(  );
+    delim = duf_cli_options_delimiter(duf_get_config_cli());
 #endif
   if ( !delim )
     delim = ':';

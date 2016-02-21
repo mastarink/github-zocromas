@@ -26,10 +26,11 @@ duf_config_show( void )
   {
     DUF_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir_x ) );
     DUF_TRACE( temp, 4, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
+    if ( duf_config->pcli )
+      for ( int ia = 0; ia < duf_config->pcli->targ.argc; ia++ )
+      /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
+        DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli() )->argv[ia] );
   }
-  for ( int ia = 0; ia < duf_config->cli.targ.argc; ia++ )
-    /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
-    DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ(  )->argv[ia] );
 
   DUF_ENDR( r );
 }
@@ -39,7 +40,7 @@ duf_config_optionally_show( void )
 {
   DUF_STARTR( r );
 
-  if ( duf_verbose && duf_verbose() > 1 )
+  if ( duf_verbose && duf_verbose(  ) > 1 )
   {
     DOR( r, duf_config_show(  ) );
   }
@@ -49,7 +50,7 @@ duf_config_optionally_show( void )
   }
 
 #if 0
-  /* Obsolete ??? */
+/* Obsolete ??? */
   DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( vars.puz )->maxitems.total );
   DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( vars.puz )->maxitems.files );
   DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( vars.puz )->maxitems.dirs );
@@ -76,6 +77,3 @@ duf_config_optionally_show( void )
 
   DUF_ENDR( r );
 }
-
-
-

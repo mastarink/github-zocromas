@@ -43,7 +43,7 @@ typedef struct
 {
   char *help_string;
 /* double loadtime; */
-  duf_config_cli_t cli;                                              /* options/parameters used for parsing cli options */
+  duf_config_cli_t *pcli;                                              /* options/parameters used for parsing cli options */
   duf_config_opt_t opt;                                              /* misc. options/parameters */
   duf_config_db_t db;                                                /* options/parameters fpr DB opening / tuning */
   duf_config_save_t save;

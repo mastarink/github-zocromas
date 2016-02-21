@@ -114,7 +114,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
 {
   DUF_STARTR( r );
 
-  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( cli.carg.argv )[0] );
+  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
   DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_HELP, &r ) );
   DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_SMART_HELP, &r ) );
   DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( DUF_OPTION_VAL_EXAMPLES, &r ) );
@@ -963,7 +963,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
   int ntable = 0;
   int tbcount = 0;
 
-  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi(  ); *xvtables; xvtables++, ntable++ )
+  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); *xvtables; xvtables++, ntable++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
 

@@ -46,7 +46,17 @@ duf_config_cli_t *
 duf_get_config_cli( void )
 {
   assert( duf_config );
+#if 0
   return duf_config ? &duf_config->cli : NULL;
+#else
+  return duf_config ? duf_config->pcli : NULL;
+#endif
+}
+
+void *
+duf_get_pointer_config_cli( void )
+{
+  return duf_get_config_cli(  );
 }
 
 duf_config_opt_t *
