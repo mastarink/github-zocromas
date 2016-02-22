@@ -48,14 +48,7 @@ duf_cfg_create( void )
     }
   }
 #endif
-  {
-    int ry;
-    struct timeval tv;
-
-    ry = gettimeofday( &tv, NULL );
-    if ( ry >= 0 )
-      cfg->opt.trace.loadtime = /* cfg->loadtime = */ ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-  }
+  
   {
     const char *cfgdir;
 
@@ -69,14 +62,24 @@ duf_cfg_create( void )
   DUF_CFGWSP( cfg, db.adm.name_x, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name_x, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name_x, mas_strdup( "duf-selected" ) );
-  DUF_CFGW( cfg, opt.trace.errors ) += 2;
-/* DUF_CFGWN( cfg, opt.trace.any, DUF_CFGG( cfg, opt.trace.error ) ); */
-/* cfg->opt.trace.options = 1; */
-/* cfg->opt.trace.fs += 1; */
+ 
+  
+  {
+    int ry;
+    struct timeval tv;
 
-/* DUF_CFGW( cfg, opt.trace.options ) = 11; */
-/* DUF_CFGW( cfg, opt.trace.options ) = 71; */
-  DUF_CFGW( cfg, opt.trace.temp ) += 2;
+    ry = gettimeofday( &tv, NULL );
+    if ( ry >= 0 )
+      cfg->opt.tracecfg.loadtime = /* cfg->loadtime = */ ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+  }
+  DUF_CFGW( cfg, opt.tracecfg.errors ) += 2;
+/* DUF_CFGWN( cfg, opt.tracecfg.any, DUF_CFGG( cfg, opt.tracecfg.error ) ); */
+/* cfg->opt.tracecfg.options = 1; */
+/* cfg->opt.tracecfg.fs += 1; */
+
+/* DUF_CFGW( cfg, opt.tracecfg.options ) = 11; */
+/* DUF_CFGW( cfg, opt.tracecfg.options ) = 71; */
+  DUF_CFGW( cfg, opt.tracecfg.temp ) += 2;
 
   assert( cfg->vars.puz );
 /* assert( cfg->cli.longopts_table ); */
@@ -169,8 +172,8 @@ duf_cfg_delete( duf_config_t * cfg )
   /* mas_free( cfg->group ); */
   /* cfg->group = NULL;      */
 
-    mas_free( cfg->opt.trace.output.file );
-    cfg->opt.trace.output.file = NULL;
+    mas_free( cfg->opt.tracecfg.output.file );
+    cfg->opt.tracecfg.output.file = NULL;
 
     mas_free( cfg->opt.output.file );
     cfg->opt.output.file = NULL;

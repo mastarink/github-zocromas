@@ -34,8 +34,8 @@ sfind duf_printb.h
 tab sfind duf_fileinfo.c
 sfind duf_fileinfo.h
 
-tab sfind duf_dbg.c
-sfind duf_dbg.h
+" tab sfind duf_dbg.c
+" sfind duf_dbg.h
 
 " tab sfind duf_def.h
 

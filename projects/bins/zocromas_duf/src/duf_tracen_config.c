@@ -14,7 +14,7 @@ duf_config_opt_trace_t *
 duf_get_trace_config( void )
 {
   assert( duf_config );
-  return &duf_config->opt.trace;
+  return &duf_config->opt.tracecfg;
 }
 
 FILE *

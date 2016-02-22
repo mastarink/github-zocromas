@@ -25,7 +25,6 @@ noinst_HEADERS=motest_config.h \
 	duf_config_util.h duf_config_util_z.h \
 	duf_config_ref.h duf_config_wref.h duf_config_defs.h duf_config_types.h \
 	duf_context.h \
-	duf_dbg.h \
 	duf_debug_defs.h \
 	duf_compile_defs.h \
 	duf_fmt_defs.h \

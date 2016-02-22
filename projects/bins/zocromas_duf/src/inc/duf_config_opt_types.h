@@ -14,7 +14,7 @@ typedef struct
   duf_config_flow_t flow;
   duf_config_opt_actions_t act;
   duf_config_opt_debug_t dbg;
-  duf_config_opt_trace_t trace;
+  duf_config_opt_trace_t tracecfg;
   duf_config_output_t output;
 } duf_config_opt_t;
 

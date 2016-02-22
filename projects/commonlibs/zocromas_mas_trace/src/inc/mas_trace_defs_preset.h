@@ -6,8 +6,6 @@
 #  endif
 
 #  ifndef MAST_TRACE_CONFIG
-/* #    include "mas_config4trace_ref.h" */
-/* #    define MAST_TRACE_CONFIG mas_config4trace */
 #    define MAST_TRACE_CONFIG NULL
 #  endif
 

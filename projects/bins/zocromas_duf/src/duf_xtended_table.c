@@ -10,25 +10,7 @@
 /* ###################################################################### */
 #include "duf_xtended_table.h"
 /* ###################################################################### */
-#if 0
-static const duf_longval_extended_t _lo_extended1[] = {
-/* #include "duf_optable.cdef"                   */
-/* #include "duf_optable_str.cdef"               */
-/* #include "duf_optable_db.cdef"                */
-/* #include "duf_optable_sflag.cdef"             */
-/* #include "duf_optable_uplus.cdef"             */
-/* #include "duf_optable_help.cdef"              */
-/* #include "duf_optable_trace.cdef"             */
-/* #include "duf_optable_filter.cdef"            */
-/* #include "duf_optable_debug.cdef"             */
-/* #include "duf_optable_redo_and_obsolete.cdef" */
-  {0}
-};
-#endif
-/* static const duf_longval_extended_t _lo_extended2[] = { */
-/* (* #include "duf_optable_flag.cdef" *)                  */
-/*   {0}                                                   */
-/* };                                                      */
+
 extern const duf_longval_extended_table_t optable_main;
 extern const duf_longval_extended_table_t optable_io;
 extern const duf_longval_extended_table_t optable_experimental;

@@ -2,22 +2,9 @@
 
 #include <mastar/error/mas_errors_maintenance.h>
 
-#if 0
-# include "duf_defs.h"
-# include "duf_config_util_z.h"                                      /* duf_trace_file_c => duf_tracen.h ????? */
-# include "duf_compile_defs.h"
-# include "duf_debug_defs.h"                                         /* START / END */
-# include "duf_dbg.h"                                                /* to be removed: duf_dbgfunc */
-# include "duf_dodefs.h"                                             /* => duf_compile_defs.h ??? ; join with start/end ??? */
-# include "duf_errorn_defs.h"
-# include "duf_printn_defs_preset.h"
-# include "duf_maintenance_z.h"
-# include "duf_maintenance_tracen.h"
-#else
 # include "duf_maintenance_z.h"
 # include "duf_maintenance_tracen.h"
 # include "duf_maintenance_errors.h"
-#endif
 
 # include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t */
 

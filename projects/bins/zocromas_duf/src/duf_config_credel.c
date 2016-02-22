@@ -62,7 +62,7 @@ duf_config_delete( void )
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
 
-  mas_error_report_all( 0, DUF_CONFIGG( opt.trace.output.out ), duf_verbose ? duf_verbose(  ) : 0 );
+  mas_error_report_all( 0, DUF_CONFIGG( opt.tracecfg.output.out ), duf_verbose ? duf_verbose(  ) : 0 );
 
   /* duf_cli_options_shut_global(  ); */
   duf_cfg_delete( duf_config );

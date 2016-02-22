@@ -65,10 +65,8 @@
 #include "duf_maindb.h"
 #include "duf_pdi_global.h"
 
-/* #include "duf_path2db.h"        (* test only *) */
 
 /* צאַצקע */
-/* #include "duf_trace_defs.h" */
 #include "duf_experiment.h"
 
 /* ###################################################################### */
