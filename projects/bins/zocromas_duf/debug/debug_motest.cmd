@@ -9,6 +9,7 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
+b duf_options_cli.c:132
 
 # watch lo_extended_vtable_multi
 

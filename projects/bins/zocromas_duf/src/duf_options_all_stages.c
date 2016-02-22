@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -90,7 +90,8 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
 #if 0
   CR( pdi_create_global, "selected" );                               /* all_optstages_cb */
 #else
-  CRV( cb_init_all_optstages, NULL );
+  if ( cb_init_all_optstages )
+    CRV( cb_init_all_optstages, NULL );
 #endif
 /* XXX already there : this is reinit, after init! XXX */
 

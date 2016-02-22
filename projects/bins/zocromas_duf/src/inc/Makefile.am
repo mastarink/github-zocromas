@@ -1,4 +1,5 @@
-noinst_HEADERS=duf.h duf_experiment.h 			\
+noinst_HEADERS=motest_config.h \
+	duf.h duf_experiment.h 			\
 	duf_expand_types.h duf_expandable.h \
 	sql_tables_global_defs.h \
 	sql_tables_defs.h \

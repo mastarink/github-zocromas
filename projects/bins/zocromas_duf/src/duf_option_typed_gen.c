@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_argv_string; mas_argv_delete */
@@ -280,6 +280,8 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 
 #define DUF_OPTION_VTYPE_XFLAG(_typ) \
 	{ \
+	  if (!byteptr) \
+	    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); \
           if ( extended->unset ) \
             nof = !nof; \
           assert( byteptr ); \
@@ -302,7 +304,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         nof = !nof;
       case DUF_OPTION_VTYPE_FLAG:                                   /* stage SETUP *//*  unsigned set of flags */
         DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_FLAG ) + 17, extended->afl.bit );
-	DUF_OPTION_VTYPE_XFLAG( unsigned );
+        DUF_OPTION_VTYPE_XFLAG( unsigned );
 
         break;
       case DUF_OPTION_VTYPE_NOSFLAG:                                /* stage SETUP */
@@ -314,31 +316,47 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 
         break;
 
-#define DUF_OPTION_VTYPE_XBFLAG(_typ) \
+#define DUF_OPTION_VTYPE_QBFLAG(_typ) \
 	{ \
+	  if (!byteptr) \
+	    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); \
           if ( extended->unset ) \
             nof = !nof; \
           assert( byteptr ); \
           if ( DUF_NOERROR( r ) ) \
           { \
             _typ *pix; \
+	    _typ nz=~0; \
             pix = ( _typ * ) byteptr; \
             if ( nof ) \
-              ( *pix ) &= ~(1<<extended->flag_bitnum); \
+              ( *pix ) &= (_typ)((~(((_typ) 1)<<extended->flag_bitnum)) & nz); \
             else \
-              ( *pix ) |= (1<<extended->flag_bitnum); \
+              ( *pix ) |= (_typ)( ( ((_typ) 1)<<extended->flag_bitnum) & nz ); \
             /* duf_config->opt.act.v.flag.info = 1; */ \
-            DUF_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %x %x (%x)", nof, byteptr, pix, extended->o.name, *pix, \
-                       (1<<extended->flag_bitnum), ( *pix | (1<<extended->flag_bitnum) ) ); \
+            DUF_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %llx %llx (%llx)", nof, byteptr, pix, extended->o.name, (unsigned long long)*pix, \
+                       (unsigned long long)(1<<extended->flag_bitnum), (unsigned long long)( *pix | (1<<extended->flag_bitnum) ) ); \
             DUF_TEST_R( r ); \
           } \
         }
+#define DUF_OPTION_VTYPE_XQBFLAG \
+	if (extended->vsize==sizeof(unsigned char)) \
+	{  DUF_OPTION_VTYPE_QBFLAG(unsigned char); } \
+	else if (extended->vsize==sizeof(unsigned short)) \
+	{  DUF_OPTION_VTYPE_QBFLAG(unsigned char); } \
+	else if (extended->vsize==sizeof(unsigned )) \
+	{  DUF_OPTION_VTYPE_QBFLAG(unsigned ); } \
+	else if (extended->vsize==sizeof(unsigned long)) \
+	{  DUF_OPTION_VTYPE_QBFLAG(unsigned long); } \
+	else if (extended->vsize==sizeof(unsigned long long)) \
+	{  DUF_OPTION_VTYPE_QBFLAG(unsigned long long); }
+
+
       case DUF_OPTION_VTYPE_NOBFLAG:                                /* stage SETUP */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBFLAG ) + 17 );
         nof = !nof;
       case DUF_OPTION_VTYPE_BFLAG:                                  /* stage SETUP *//*  unsigned set of flags */
         DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_BFLAG ) + 17, extended->afl.bit );
-        DUF_OPTION_VTYPE_XBFLAG( unsigned );
+        DUF_OPTION_VTYPE_QBFLAG( unsigned );
 
         break;
       case DUF_OPTION_VTYPE_NOBSFLAG:                               /* stage SETUP */
@@ -346,7 +364,16 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         nof = !nof;
       case DUF_OPTION_VTYPE_BSFLAG:                                 /* stage SETUP *//*  unsigned short set of flags */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_BSFLAG ) + 17 );
-        DUF_OPTION_VTYPE_XBFLAG( unsigned short );
+        DUF_OPTION_VTYPE_QBFLAG( unsigned short );
+
+        break;
+
+      case DUF_OPTION_VTYPE_NOBXFLAG:                               /* stage SETUP */
+        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBXFLAG ) + 17 );
+        nof = !nof;
+      case DUF_OPTION_VTYPE_BXFLAG:                                 /* stage SETUP *//*  unsigned short set of flags */
+        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_BXFLAG ) + 17 );
+        DUF_OPTION_VTYPE_XQBFLAG;
 
         break;
 
@@ -355,7 +382,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype PFLAG" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
@@ -371,7 +398,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype PSFLAG" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
@@ -386,7 +413,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype XCHR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           char *pchr;
@@ -407,7 +434,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           char **pstr;
@@ -430,7 +457,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         DUF_TRACE( options, 70, "vtype %s for %s='%s'", QSTR( DUF_OPTION_VTYPE_CSTR ) + 17, extended->o.name, doptargg ? doptargg : "" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           duf_expandable_string_t *pcs_x;
@@ -452,7 +479,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
       /* case DUF_OPTION_VTYPE_PAA: */
         DUF_TRACE( options, 70, "vtype PAA" );
 
-        assert( byteptr ); 
+        assert( byteptr );
         if ( DUF_NOERROR( r ) )
         {
           mas_argvc_t *parg;

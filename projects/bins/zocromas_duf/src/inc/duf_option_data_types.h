@@ -1,11 +1,12 @@
 #ifndef MAS_DUF_OPTION_DATA_TYPES_H
-#define MAS_DUF_OPTION_DATA_TYPES_H
+# define MAS_DUF_OPTION_DATA_TYPES_H
 
 /* #include "duf_config_cli_types.h" */
-struct duf_config_cli_s ;
+struct duf_config_cli_s;
+
 /* typedef struct duf_config_cli_s duf_config_cli_t; */
 
-typedef int ( *duf_xclarifier_t ) ( struct duf_config_cli_s  * cli, const duf_longval_extended_t * extended, const char *optargg,
+typedef int ( *duf_xclarifier_t ) ( struct duf_config_cli_s * cli, const duf_longval_extended_t * extended, const char *optargg,
                                     const duf_longval_extended_vtable_t * xvtable, unsigned noo, duf_option_stage_t istage,
                                     duf_option_source_t source );
 
@@ -32,8 +33,6 @@ typedef struct
   unsigned clarified[DUF_OPTION_STAGE_MAX + 1];
 } duf_option_data_t;
 
-
-
 typedef struct
 {
   size_t size;
@@ -46,6 +45,5 @@ typedef struct
   size_t source_index[DUF_OPTION_STAGE_MAX + 1][DUF_OPTION_SOURCE_MAX + 1];
   size_t source_count[DUF_OPTION_STAGE_MAX + 1][DUF_OPTION_SOURCE_MAX + 1];
 } duf_option_adata_t;
-
 
 #endif

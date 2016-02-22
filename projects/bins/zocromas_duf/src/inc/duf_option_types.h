@@ -95,6 +95,8 @@ typedef struct
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
+  unsigned long long vmask;
+  unsigned short vsize;
   duf_option_call_type_t calltype;
   duf_option_t o;
 

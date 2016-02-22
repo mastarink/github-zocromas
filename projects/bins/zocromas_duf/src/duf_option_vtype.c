@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <mastar/tools/mas_arg_tools.h>
 
 /* ###################################################################### */

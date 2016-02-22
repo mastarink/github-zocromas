@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 /* #include <stddef.h> */
 
 #include "duf_maintenance_z.h"
@@ -88,12 +88,21 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #endif
 
 static
-SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_code_t codeval, duf_option_stage_t istage, duf_option_adata_t * paod )
+SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_code_t codeval, duf_option_stage_t istage,
+    duf_option_adata_t * paod )
 {
 
-  DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c') '%s' li:%d; oi:%d; oo:%d; oe:%d; stage:%s", codeval, codeval > ' '
-             && codeval <= 'z' ? codeval : '?', longindex >= 0 ? duf_cli_options_get_longopts_table( cli )[longindex].name : "?",
-             longindex, optind, optopt, opterr, duf_optstage_name( istage ) );
+  DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c')  li:%d; '%s'/'%s' oi:%d; oo:%d; oe:%d; stage:%s" /* */
+             , codeval                                               /* */
+             , codeval > ' ' && codeval <= 'z' ? codeval : '?'       /* */
+             , longindex                                             /* */
+             , longindex >= 0 ? duf_cli_options_get_longopts_table( cli )[longindex].name : "?" /* */
+             , longitem ? longitem->name : ""                        /* */
+             , optind                                                /* */
+             , optopt                                                /* */
+             , opterr                                                /* */
+             , duf_optstage_name( istage )                           /* */
+           );
   {
     int optoptt = 0;
 
@@ -127,11 +136,13 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_c
       if ( optind > 0 )
         qarg = carg->argv[optind - 1];
     /* longoptname = duf_coption_find_name_at_std( codeval, QPERRIND ); */
-      longoptname = duf_lcoption_find_name_at_std( cli, codeval, &longindex, QPERRIND );
+      if ( longitem )
+        longoptname = longitem->name;
+      if ( !longoptname )
+        longoptname = duf_lcoption_find_name_at_std( cli, codeval, &longindex, QPERRIND );
       assert( ( longindex >= 0 && longoptname ) || ( longindex < 0 && !longoptname ) );
       if ( longindex < 0 /* && codeval == '?' */  && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
         longoptname = qarg + 2;
-
       if ( longoptname )
       {
         CR( soption_xclarify_na_new_at_stdx_default, cli, longoptname, optarg, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( CLI ),
@@ -152,7 +163,7 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_c
     }
 #endif
   }
-  ER( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_code_t codeval, duf_option_stage_t istage,
+  ER( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_code_t codeval, duf_option_stage_t istage,
       duf_option_adata_t * paod );
 }
 
@@ -228,7 +239,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
         optindd = optind;
       /* codeval >=0 && codeval!='?' && longindex<0 means short => in this case longindex=...  */
 #if 1
-        CR( lcoption_parse, cli, longindex, codeval, istage, paod );
+        CR( lcoption_parse, cli, longindex, longindex >= 0 ? &longtable[longindex] : NULL, codeval, istage, paod );
 /* TODO */
 #else
         const duf_longval_extended_t *extended = NULL;
