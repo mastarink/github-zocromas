@@ -2,6 +2,8 @@
 # define MAS_DUF_FORMAT_TYPES_H
 # include "duf_defs.h"
 
+# include <mastar/tools/mas_argvc_types.h>                           /* mas_argvc_t */
+
 # ifndef MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
 # endif

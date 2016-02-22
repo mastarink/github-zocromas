@@ -10,7 +10,7 @@
 /* duf_format_t */
 # include "duf_option_types.h"
 # include "duf_option_data_types.h"
-# include "duf_config_opt_trace_types.h"
+# include "duf_config_trace_types.h"
 # include "duf_config_output_types.h"
 
 /* duf_config_cli_t

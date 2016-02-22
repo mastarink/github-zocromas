@@ -1,0 +1,17 @@
+#include <string.h>
+
+#include "duf_maintenance.h"
+
+#include "duf_config_ref.h"
+
+/* ###################################################################### */
+#include "duf_config_trace.h"
+/* ###################################################################### */
+
+FILE *
+duf_trace_file_c( const duf_config_trace_t * tcfg )
+{
+/* return tcfg && tcfg->MAST_TRACE_AT_CFG output.out ? tcfg->MAST_TRACE_AT_CFG output.out : stdout; */
+  return tcfg && tcfg->output.out ? tcfg->output.out : stdout;
+}
+

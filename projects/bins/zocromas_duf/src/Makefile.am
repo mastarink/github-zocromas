@@ -2,7 +2,9 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 if  MAS_TEST
 noinst_PROGRAMS=mtest mjtest motest
-motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_expandable.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_utils.c
+motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_expandable.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_utils.c  \
+	duf_option_names.c duf_option_descr.c \
+	duf_config_trace_credel.c duf_config_trace.c
 #duf_options.c duf_option_tmpdb.c
 #  duf_config_util_z.c duf_config_util.c
 motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@  -include motest_config.h
@@ -28,6 +30,7 @@ zocromas_duf_SOURCES=				   \
 	duf.c duf_experiment.c  duf_expandable.c	\
 	duf_maindb_info.c duf_maindb.c duf_options_all_stages.c		    \
 	duf_config.c duf_tracen_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
+	duf_config_trace_credel.c duf_config_trace.c \
 	duf_config_util.c duf_config_util_z.c \
 	duf_status.c	     \
 	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \

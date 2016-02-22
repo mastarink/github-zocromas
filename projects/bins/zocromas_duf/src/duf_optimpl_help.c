@@ -152,13 +152,13 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
-  DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.tracecfg.action ) );
-  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( opt.tracecfg.temporary ) );
-  DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( opt.tracecfg.scan ) );
-  DUF_PRINTF( 0, "  -Q, --trace-sql=%d", DUF_CONFIGG( opt.tracecfg.sql ) );
-  DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( opt.tracecfg.sample ) );
-  DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( opt.tracecfg.path ) );
-  DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.tracecfg.collect ) );
+  DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.ptracecfg->action ) );
+  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( opt.ptracecfg->temporary ) );
+  DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( opt.ptracecfg->scan ) );
+  DUF_PRINTF( 0, "  -Q, --trace-sql=%d", DUF_CONFIGG( opt.ptracecfg->sql ) );
+  DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( opt.ptracecfg->sample ) );
+  DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( opt.ptracecfg->path ) );
+  DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.ptracecfg->collect ) );
   DUF_PRINTF( 0, "----------------" );
 
   DUF_ENDR( r );

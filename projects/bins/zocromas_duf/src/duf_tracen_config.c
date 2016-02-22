@@ -4,24 +4,18 @@
 
 #include "duf_config_ref.h"
 
+#include "duf_config_trace.h"
 /* ###################################################################### */
 #include "duf_tracen_config.h"
 /* ###################################################################### */
 #ifdef MAS_TRACING
 const duf_config_t *duf_config4trace = NULL;
 
-duf_config_opt_trace_t *
+duf_config_trace_t *
 duf_get_trace_config( void )
 {
   assert( duf_config );
-  return &duf_config->opt.tracecfg;
-}
-
-FILE *
-duf_trace_file_c( const duf_config_opt_trace_t * tcfg )
-{
-/* return tcfg && tcfg->MAST_TRACE_AT_CFG output.out ? tcfg->MAST_TRACE_AT_CFG output.out : stdout; */
-  return tcfg && tcfg->output.out ? tcfg->output.out : stdout;
+  return duf_config->opt.ptracecfg;
 }
 
 FILE *

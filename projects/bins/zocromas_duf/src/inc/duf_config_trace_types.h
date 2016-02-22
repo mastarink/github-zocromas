@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_CONFIG_OPT_TRACE_TYPES_H
-# define MAS_DUF_CONFIG_OPT_TRACE_TYPES_H
+#ifndef MAS_DUF_CONFIG_TRACE_TYPES_H
+# define MAS_DUF_CONFIG_TRACE_TYPES_H
 
 # include "duf_config_output_types.h"
 
@@ -69,7 +69,7 @@ typedef struct
 #  include "duf_options_enum_trace.def"
 #  undef ENUM_WRAPP
 # endif
-} duf_config_opt_trace_t;
+} duf_config_trace_t;
 
 #endif
 

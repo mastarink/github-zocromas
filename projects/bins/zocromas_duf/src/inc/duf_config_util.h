@@ -9,6 +9,7 @@ void *duf_get_config_puz_offset( unsigned long off );
 
 duf_config_cli_t *duf_get_config_cli( void );
 void *duf_get_pointer_config_cli( void );
+void *duf_get_pointer_config_trace(void);
 
 duf_config_opt_t *duf_get_config_opt( void );
 

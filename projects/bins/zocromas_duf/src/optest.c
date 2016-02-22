@@ -28,6 +28,8 @@
 #include "duf_option_types.h"
 #include "duf_option_clarify_new.h"
 
+#include "duf_config_trace_credel.h"
+
 typedef struct
 {
   unsigned one:1;
@@ -91,29 +93,49 @@ const duf_longval_extended_table_t optable_test = {                  /* zzzzzz *
 
 static const duf_longval_extended_table_t *const optable_test_list[] = { &optable_test, NULL };
 
+static duf_config_trace_t *config_trace = NULL;
+duf_config_trace_t *
+duf_get_trace_config( void )
+{
+  return config_trace;
+}
+
+inline int
+duf_output_nocolor( void )
+{
+  return 0;
+}
+
+inline int
+duf_output_force_color( void )
+{
+  return 0;
+}
+
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
   duf_config_cli_t *clio;
 
+  config_trace = duf_config_trace_create(  );
   clio = duf_cli_options_create( argc, argv, optable_test_list, NULL /* config_dir */ ,
                                  NULL /* commands_dir */ , NULL /* varfunc */  );
-  fprintf( stderr, "%d OPTEST ~ %lu\n", QERRIND, sizeof( something_bits1_combo_t ) );
+  T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
   CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
-  fprintf( stderr, "%d OPTEST\n", QERRIND );
+  T( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
-  fprintf( stderr, "%d OPTEST\n", QERRIND );
+  T( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
-  fprintf( stderr, "%d OPTEST\n", QERRIND );
+  T( "@@@@@%d OPTEST", QERRIND );
 
   mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
-  fprintf( stderr, "%d OPTEST %8x %8x %8x\n"                         /* */
-           , QERRIND                                                 /* */
-           , som1.set1.bits                                          /* */
-           , som1.set2.bits                                          /* */
-           , som1.set3.bits                                          /* */
+  T( "@@@@@%d OPTEST %8x %8x %8x"                                       /* */
+     , QERRIND                                                       /* */
+     , som1.set1.bits                                                /* */
+     , som1.set2.bits                                                /* */
+     , som1.set3.bits                                                /* */
            );
   duf_cli_options_delete( clio );
   {
@@ -135,9 +157,11 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 
       v5 = ( ( typeof( v5 ) ) 1 ) << sh;
     }
-    fprintf( stderr, "%llx:%llx:%llx:%llx:%llx:%llx\n", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
-             ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
+    T( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
+       ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
   }
+  duf_config_trace_delete( config_trace );
+  config_trace = NULL;
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }
 

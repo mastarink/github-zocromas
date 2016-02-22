@@ -59,6 +59,12 @@ duf_get_pointer_config_cli( void )
   return duf_get_config_cli(  );
 }
 
+void *
+duf_get_pointer_config_trace( void )
+{
+  return duf_get_config_opt(  )->ptracecfg;
+}
+
 duf_config_opt_t *
 duf_get_config_opt( void )
 {
