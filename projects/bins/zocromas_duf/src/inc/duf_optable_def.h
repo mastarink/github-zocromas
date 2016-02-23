@@ -75,20 +75,26 @@
 #  define DO_TF(_vt, ...)   DO_SET_VTYPE(_vt),  DO_ ## _vt(__VA_ARGS__)
 #  define DOO_TF(_vt, ...) DOO_SET_VTYPE(_vt), DOO_ ## _vt(__VA_ARGS__)
 
-#if 0
-#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld, .reltoptr= duf_get_pointer_##_fld
-#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld, .reltoptr= duf_get_pointer_##_fld
-#else
+
+
+#  define DO_AFFSET( _v, _styp, _fld, _offset )  .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+#  define DOO_AFFSET( _v, _styp, _fld, _offset ) .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+
 #  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
 #  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
-#endif
 
+
+#  define DO_AOO(_vt, _v, _styp, _fld, _offset)     DO_SET_VTYPE(_vt), DO_AFFSET( _v, _styp, _fld, _offset *sizeof(duf_## _styp ## _t) )
+#  define DOO_AOO(_vt, _v, _styp, _fld, _offset)   DOO_SET_VTYPE(_vt), DOO_AFFSET( _v, _styp, _fld, _offset *sizeof(duf_## _styp ## _t) )
 
 #  define DO_OOO(_vt, _v, _styp, _fld)     DO_SET_VTYPE(_vt), DO_OFFSET( _v, _styp, _fld )
 #  define DOO_OOO(_vt, _v, _styp, _fld)   DOO_SET_VTYPE(_vt), DOO_OFFSET( _v, _styp, _fld )
 
 #  define DO_OO(_vt, _v, _styp)	      DO_OOO(_vt, _v, _styp, _styp)
 #  define DOO_OO(_vt, _v, _styp)      DOO_OOO(_vt, _v, _styp, _styp)
+
+#  define DO_AO(_vt, _v, _styp, _offset)	DO_AOO(_vt, _v, _styp, _styp, _offset)
+#  define DOO_AO(_vt, _v, _styp, _offset)	DOO_AOO(_vt, _v, _styp, _styp, _offset)
 
 /* Offset pdi */
 /* #  define DO_OP(_vt, _v)        DO_OO(_vt, _v, depthinfo) */
@@ -103,6 +109,10 @@
 
 #  define DO_OT(_vt, _v)        DO_OO(_vt, _v, config_trace)
 #  define DOO_OT(_vt, _v)      DOO_OO(_vt, _v, config_trace)
+
+
+#  define DO_ATT(_vt, _v,_offset)        DO_AO(_vt, _v, config_trace_enum,_offset)
+#  define DOO_ATT(_vt, _v,_offset)      DOO_AO(_vt, _v, config_trace_enum,_offset)
 
 
 /* Offset ufilter */

@@ -164,7 +164,12 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
     byte_ptr = duf_get_offset( extended->reltoptr, extended->m_offset );
     break;
   case DUF_OFFSET_funcptr:
-    byte_ptr = duf_get_offset( ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ), extended->m_offset );
+    {
+      void *aptr;
+
+      aptr = ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  );
+      byte_ptr = duf_get_offset( aptr, extended->m_offset );
+    }
     break;
   }
   return byte_ptr;
@@ -218,6 +223,8 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
           doplus = 1;
+        /* assert( 0 ); */
+        /* assert( ( ( char * ) ( duf_config->opt.ptracecfg->class_levels ) ) + ( extended->m_offset ) == ( ( char * ) byteptr ) ); */
       case DUF_OPTION_VTYPE_NUM:                                    /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
         DUF_TRACE( options, 70, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
@@ -349,7 +356,6 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 	{  DUF_OPTION_VTYPE_QBFLAG(unsigned long); } \
 	else if (extended->vsize==sizeof(unsigned long long)) \
 	{  DUF_OPTION_VTYPE_QBFLAG(unsigned long long); }
-
 
       case DUF_OPTION_VTYPE_NOBFLAG:                                /* stage SETUP */
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOBFLAG ) + 17 );

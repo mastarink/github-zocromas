@@ -37,6 +37,15 @@ duf_config_trace_create( void )
     if ( ry >= 0 )
       tcfg->loadtime = /* cfg->loadtime = */ ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
+  tcfg->num_classes = DUF_TRACE_LEVEL_MAX;
+#if 0
+  tcfg->class_levels = mas_calloc( DUF_TRACE_LEVEL_MAX, sizeof( tcfg->class_levels[0] ) );
+#else
+  tcfg->class_levels = mas_malloc( DUF_TRACE_LEVEL_MAX * sizeof( tcfg->class_levels[0] ) );
+  memset( tcfg->class_levels, 0, DUF_TRACE_LEVEL_MAX * sizeof( tcfg->class_levels[0] ) );
+#endif
+
+#if 0
   tcfg->errors += 2;
 /* tcfg->options = 1; */
 /* tcfg->fs += 1; */
@@ -44,6 +53,14 @@ duf_config_trace_create( void )
 /* tcfg->options  = 11; */
 /* tcfg->options  = 71; */
   tcfg->temp += 2;
+#else
+  tcfg->class_levels[DUF_TRACE_LEVEL_errors] += 2;
+  /* tcfg->class_levels[DUF_TRACE_LEVEL_options] = 1;  */
+  /* tcfg->class_levels[DUF_TRACE_LEVEL_fs] += 1;      */
+  /* tcfg->class_levels[DUF_TRACE_LEVEL_options] = 11; */
+  /* tcfg->class_levels[DUF_TRACE_LEVEL_options] = 71; */
+  tcfg->class_levels[DUF_TRACE_LEVEL_temp] += 2;
+#endif
   return tcfg;
 }
 
@@ -52,5 +69,8 @@ duf_config_trace_delete( duf_config_trace_t * tcfg )
 {
   mas_free( tcfg->output.file );
   tcfg->output.file = NULL;
+  mas_free( tcfg->class_levels );
+  tcfg->class_levels = NULL;
+  tcfg->num_classes = 0;
   mas_free( tcfg );
 }

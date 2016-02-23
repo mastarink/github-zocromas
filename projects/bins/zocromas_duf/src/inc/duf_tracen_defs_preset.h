@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_TRACEN_DEFS_PRESET_H
 #  define MAS_DUF_TRACEN_DEFS_PRESET_H
 
+#include "duf_config_trace_types.h"
 
 #  ifndef MAST_TRACE_CONFIG
 /* #    include "duf_config4trace_ref.h" */
@@ -54,8 +55,9 @@
 #  endif
 
 #  ifndef MAST_TRACE_LEVEL
-#    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name )
-/* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0 */
+/* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name ) */
+/* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) (( _cfg ) ? _cfg->_what _name : 1 ) */
+#    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) (( _cfg ) ? _cfg->_what class_levels[DUF_TRACE_LEVEL_ ## _name] : 1 )
 #  endif
 
 

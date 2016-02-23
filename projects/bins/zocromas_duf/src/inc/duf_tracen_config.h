@@ -3,9 +3,12 @@
 
 # include "duf_config_types.h"
 
+#ifdef MAS_TRACING
 duf_config_trace_t *duf_get_trace_config( void );
 
 FILE *duf_trace_file( void );
+#endif
+
 int duf_output_force_color( void );
 int duf_output_nocolor( void );
 int duf_output_progress( void );

@@ -48,6 +48,18 @@
   ENUM_WRAPP(UPDATE_TRACE, trace, update			)
   ENUM_WRAPP(OPTSTAGE, trace, optstage				)
   ENUM_WRAPP(OPTSOURCE, trace, optsource			)
+  
+  ENUM_WRAPP(TEMP, trace, temp					)
+  ENUM_WRAPP(ANY, trace, any					)
+  ENUM_WRAPP(COLLECT, trace, collect				)
+  ENUM_WRAPP(DIRS, trace,       dirs				)
+  ENUM_WRAPP(FILEDATA, trace,   filedata			)
+  ENUM_WRAPP(FILENAMES, trace,  filenames			)
+  ENUM_WRAPP(STATISTICS, trace, statistics			)
+  ENUM_WRAPP(NONEW, trace, nonew				)
+
+
+  ENUM_WRAPP(MAX, trace, MAX					)
 
 #endif
 /*

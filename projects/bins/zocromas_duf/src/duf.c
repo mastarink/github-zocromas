@@ -65,7 +65,6 @@
 #include "duf_maindb.h"
 #include "duf_pdi_global.h"
 
-
 /* צאַצקע */
 #include "duf_experiment.h"
 
@@ -158,6 +157,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 
   CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
   fputs( "\n", stderr );
+  DUF_TRACE( temp, 0, "∈0∋ Zero " );
   TT( "∈1∋ One " );
   TT( "∈2∋ Two " );
   TT( "∈1∋ Three " );
@@ -208,7 +208,7 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
     else
     {
-      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ),MEMUSAGE ) );
+      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
     }
   }
 #endif

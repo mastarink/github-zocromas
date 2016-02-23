@@ -64,6 +64,11 @@ duf_get_pointer_config_trace( void )
 {
   return duf_get_config_opt(  )->ptracecfg;
 }
+void *
+duf_get_pointer_config_trace_enum( void )
+{
+  return duf_get_config_opt(  )->ptracecfg->class_levels;
+}
 
 duf_config_opt_t *
 duf_get_config_opt( void )
@@ -222,4 +227,28 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   }
 /* T( "@@@@@@var %s => '%s'", name, pbuf ); */
   return pbuf;
+}
+
+int
+duf_output_force_color( void )
+{
+  return duf_output_force_color_c( duf_config );
+}
+
+int
+duf_output_nocolor( void )
+{
+  return duf_output_nocolor_c( duf_config );
+}
+
+int
+duf_output_progress( void )
+{
+  return duf_output_progress_c( duf_config );
+}
+
+int
+duf_output_use_binformat( void )
+{
+  return duf_output_use_binformat_c( duf_config );
 }

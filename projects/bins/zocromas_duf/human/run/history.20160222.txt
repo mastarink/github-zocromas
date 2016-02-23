@@ -776,3 +776,9 @@
 # run  '--no-test-q-bflag'
 # retcode:0
 # 20160222.155410 : 1456149250.006984733 ------------[r]--
+# 20160222.155900 : 1456149540.169166382 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160222.155900 : 1456149540.183618097 ------------[r]--

@@ -26,26 +26,4 @@ duf_trace_file( void )
 
 #endif
 
-int
-duf_output_force_color( void )
-{
-  return duf_output_force_color_c( duf_config );
-}
 
-int
-duf_output_nocolor( void )
-{
-  return duf_output_nocolor_c( duf_config );
-}
-
-int
-duf_output_progress( void )
-{
-  return duf_output_progress_c( duf_config );
-}
-
-int
-duf_output_use_binformat( void )
-{
-  return duf_output_use_binformat_c( duf_config );
-}

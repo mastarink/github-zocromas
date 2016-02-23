@@ -9,24 +9,11 @@
 
 #include "duf_maintenance_options.h"
 
-#include "duf_defs.h"
-
-#include "duf_printn_defs_preset.h"
-#include "duf_tracen_defs_preset.h"
-
-#include "duf_errorn_defs.h"
-#include "duf_tracen_defs.h"
-#include "duf_printn_defs.h"
-
 #include "duf_se.h"
 #include "duf_dodefs.h"
 
-#include "duf_option_types.h"
-#include "duf_option_config.h"
 #include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"
-#include "duf_option_types.h"
-#include "duf_option_clarify_new.h"
 
 #include "duf_config_trace_credel.h"
 
@@ -55,18 +42,18 @@ typedef struct
 something1_t som1 = {.set3.bits = 0x3f };
 
 #define MAS_OPT_BXFLAG( _name, _set, _fld, _bitnum, _can_no, _oclass, _help ) { \
-  .o.name = _name, \
-  .o.has_arg = no_argument, \
-  .vtype = DUF_OPTION_VTYPE_BXFLAG, \
-  .vsize= sizeof(_set._fld), \
-  .m_hasoff = 1, \
-  .relto = DUF_OFFSET_varptr, \
-  .reltoptr = &_set, \
-  .m_offset = offsetof( typeof(_set), _fld ), \
+  .o.name      = _name, \
+  .o.has_arg   = no_argument, \
+  .vtype       = DUF_OPTION_VTYPE_BXFLAG, \
+  .vsize       = sizeof(_set._fld), \
+  .m_hasoff    = 1, \
+  .relto       = DUF_OFFSET_varptr, \
+  .reltoptr    = &_set, \
+  .m_offset    = offsetof( typeof(_set), _fld ), \
   .flag_bitnum = _bitnum, \
-  .oclass = DUF_OPTION_CLASS_ ## _oclass, \
-  .can_no=_can_no, \
-  .help=_help \
+  .oclass      = DUF_OPTION_CLASS_ ## _oclass, \
+  .can_no      = _can_no, \
+  .help        = _help \
 }
 
 const duf_longval_extended_table_t optable_test = {                  /* zzzzzz */
@@ -86,7 +73,7 @@ const duf_longval_extended_table_t optable_test = {                  /* zzzzzz *
              .oclass = DUF_OPTION_CLASS_TEST,
              .help = "..."                                           /* */
              },
-            MAS_OPT_BXFLAG( "test-q-bflag", som1, set3, 67, 1, TEST, "something to help" ),
+            MAS_OPT_BXFLAG( "test-q-bflag", som1, set3, 2, 1, TEST, "something to help" ),
             {.o.name = NULL}
             }
 };
@@ -131,7 +118,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
   T( "@@@@@%d OPTEST", QERRIND );
 
   mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
-  T( "@@@@@%d OPTEST %8x %8x %8x"                                       /* */
+  T( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
      , QERRIND                                                       /* */
      , som1.set1.bits                                                /* */
      , som1.set2.bits                                                /* */

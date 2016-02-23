@@ -17,8 +17,9 @@ At duf_options_table.c:
       };
 */
 
-#define DUF_TRACE_OPT(_lname, _uname) \
-   {.o = {DO_Q( "trace-" #_lname), DO_A_O, DO_V( _uname ## _TRACE )}, DO_CL( TRACE ), DO_OT(UPLUS,_lname)  , DO_STAGE_ALL  , DO_H( trace .... )  }
+#define DUF_TRACE_OPTT(_unamet,_lname) \
+   {.o = {DO_Q( "trace-" #_lname), DO_A_O, DO_V( _unamet  )}, DO_CL( TRACE ), DO_ATT(UPLUS,_lname,DUF_TRACE_LEVEL_ ## _lname)  , DO_STAGE_ALL  , DO_H( trace .... )  }
+#define DUF_TRACE_OPT(_uname,_lname) DUF_TRACE_OPTT(_uname ## _TRACE, _lname)
 
 #ifdef MAS_TRACING_OPTIONS
 const duf_longval_extended_table_t optable_trace = {
@@ -29,19 +30,19 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-fun-width" ) /* */ , DO_A_O /* */ , DO_V( TRACE_FUN_WIDTH )} /*   */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OT( NUM, fun_width ) /*    */ , DO_AT_STAGE( DEBUG ) /*        */ , DO_H( output fun width ) /*                 */ },
 
-   DUF_TRACE_OPT( temp, TEMP ),
+   {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
+    /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
+# if 0
+   DUF_TRACE_OPT( TEMP, temp ),
  /* {.o = {DO_Q( "trace-temp" ) (*       *) , DO_A_O (* *) , DO_V( TEMP_TRACE )} (*        *) , DO_CL( TRACE ) (*   *) ,                            */
  /*  (*      *) DO_OT(UPLUS,temp), DO_SET_STAGE( DEBUG, MAX) (*                              *) , DO_H( trace .... ) (*                       *) }, */
    {.o = {DO_Q( "trace-collect" ) /*    */ , DO_A_O /* */ , DO_V( COLLECT_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OT( UPLUS, collect ) /*                           */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-any" ) /*        */ , DO_A_O /* */ , DO_V( ANY_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OT( UPLUS, any ), DO_SET_STAGE( DEBUG, MAX ) /*                               */ , DO_H( trace .... ) /*                       */ },
-   {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
-    /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-nonew" ) /*      */ , DO_A_O /* */ , DO_V( NONEW_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OT( UPLUS, nonew ), DO_SET_STAGE( DEBUG, MAX ) /*                             */ , DO_H( trace .... ) /*                       */ },
 
-# if 0
    {.o = {DO_Q( "trace-trace" ) /*      */ , DO_A_O /* */ , DO_V( TRACE_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OT( UPLUS, trace ) /*    */ , DO_STAGE_SPLS /*                   */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-flags" ) /*      */ , DO_A_O /* */ , DO_V( FLAGS_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
@@ -138,8 +139,9 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-io" ) /*         */ , DO_A_O /* */ , DO_V( IO_TRACE )} /*           */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OT( UPLUS, io ), DO_STAGE_SPLS /*                                */ , DO_H( trace .... ) /*                       */ },
 # else
-#  define ENUM_WRAPP(_n, _rf, _rf2)  \
-   {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OT(UPLUS,_rf2)  , DO_SET_STAGE( DEBUG, MAX)  , DO_H( trace # _rf2 )  },
+#  define ENUM_WRAPP(_n, _rf, _rf2) \
+   DUF_TRACE_OPTT(  _n, _rf2 ),
+ /* {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OT(UPLUS,_rf2)  , DO_SET_STAGE( DEBUG, MAX)  , DO_H( trace # _rf2 )  }, */
 #  include "duf_options_enum_trace.def"
 #  undef ENUM_WRAPP
 

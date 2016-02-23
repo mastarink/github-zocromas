@@ -152,6 +152,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
+#if 0
   DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.ptracecfg->action ) );
   DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( opt.ptracecfg->temporary ) );
   DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( opt.ptracecfg->scan ) );
@@ -159,6 +160,15 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( opt.ptracecfg->sample ) );
   DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( opt.ptracecfg->path ) );
   DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.ptracecfg->collect ) );
+#else
+  DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_action] ) );
+  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temporary] ) );
+  DUF_PRINTF( 0, "  -S, --trace-scan=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_scan] ) );
+  DUF_PRINTF( 0, "  -Q, --trace-sql=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_sql] ) );
+  DUF_PRINTF( 0, "  --trace-sample=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_sample] ) );
+  DUF_PRINTF( 0, "  --trace-path=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_path] ) );
+  DUF_PRINTF( 0, "  -F, --trace-collect=%d", DUF_CONFIGG( opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_collect] ) );
+#endif
   DUF_PRINTF( 0, "----------------" );
 
   DUF_ENDR( r );
