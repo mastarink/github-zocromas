@@ -999,6 +999,6 @@ mas_error_code_t
 duf_option_O_list_xtended( const char *s )
 {
   DUF_STARTR( r );
-  duf_stdx_print( s );
+  duf_stdx_print( duf_get_config_cli(  ), s );
   DUF_ENDR( r );
 }

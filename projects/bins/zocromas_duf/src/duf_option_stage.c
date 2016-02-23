@@ -8,7 +8,7 @@
 /* #include "duf_maintenance_errors.h" */
 #include "duf_printn_defs.h"
 
-#include "duf_config_util.h"
+/* #include "duf_config_util.h" */
 
 /* ###################################################################### */
 #include "duf_option_stage.h"

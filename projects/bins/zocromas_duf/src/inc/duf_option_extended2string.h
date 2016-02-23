@@ -8,7 +8,7 @@
 
 
 
-void duf_stdx_print( const char *name );
+void duf_stdx_print(  const duf_config_cli_t * cli, const char *name );
 
 
 #endif

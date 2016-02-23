@@ -7,7 +7,7 @@
 #include "duf_maintenance_tracen.h"
 #include "duf_maintenance_errors.h"
 
-#include "duf_config_util.h"
+/* #include "duf_config_util.h" */
 
 #include "duf_option_descr.h"
 

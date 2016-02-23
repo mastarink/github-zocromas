@@ -93,3 +93,38 @@
 # run  '--trace-temp=20' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
 # retcode:0
 # 20160223.135011 : 1456228211.176638196 ------------[r]--
+# 20160223.140541 : 1456229141.142300140 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--list-extended'
+# retcode:0
+# 20160223.140541 : 1456229141.178483068 ------------[r]--
+# 20160223.140955 : 1456229395.919698051 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160223.140955 : 1456229395.934967973 ------------[r]--
+# 20160223.141006 : 1456229406.611852797 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--test-q-bflag'
+# retcode:0
+# 20160223.141006 : 1456229406.629422121 ------------[r]--
+# 20160223.141015 : 1456229415.484436970 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160223.141015 : 1456229415.499726696 ------------[r]--
+# 20160223.141115 : 1456229475.586958117 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--test-q-bflag'
+# retcode:0
+# 20160223.141115 : 1456229475.602385228 ------------[r]--
+# 20160223.141118 : 1456229478.827279082 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160223.141118 : 1456229478.842463999 ------------[r]--

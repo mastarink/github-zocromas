@@ -57,6 +57,7 @@ tab sfind duf_sql_set_types.h
 
 tab sfind duf_config_opt_debug_types.h
 tab sfind duf_config_trace_types.h
+tab sfind duf_config_trace_enum.h
 
 tab sfind duf_config_cli_types.h
 tab sfind duf_config_flow_types.h

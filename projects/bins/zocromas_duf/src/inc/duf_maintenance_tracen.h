@@ -5,6 +5,7 @@
 # include "duf_tracen_defs_preset.h"
 # include "duf_tracen_defs.h"
 
+# include "duf_config_trace_enum.h" /* DUF_TRACE_LEVEL_* ; duf_config_trace_enum_t */
 # include "duf_config_trace.h"
 # include "duf_tracen_config.h"
 

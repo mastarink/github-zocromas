@@ -5,12 +5,10 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/error/mas_errors_maintenance.h>
-
-#include "duf_maintenance_options.h"
+#include "duf_maintenance_errors.h"
+#include "duf_maintenance_tracen.h"
 
 #include "duf_se.h"
-#include "duf_dodefs.h"
 
 #include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"

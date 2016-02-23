@@ -11,7 +11,7 @@ noinst_HEADERS=motest_config.h \
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
 	duf_base_types.h \
-	duf_config_trace_types.h \
+	duf_config_trace_types.h duf_config_trace_enum.h \
 	duf_config_opt_debug_types.h \
 	duf_config_cli_types.h \
 	duf_config_flow_types.h \

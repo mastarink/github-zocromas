@@ -7,7 +7,7 @@
 #include "duf_maintenance_z.h"
 #include "duf_maintenance_errors.h"
 
-#include "duf_config_util.h"
+/* #include "duf_config_util.h" */
 
 #include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
 

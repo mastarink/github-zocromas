@@ -5,7 +5,7 @@
 #include "duf_maintenance.h"
 #include "duf_printn_defs.h"
 
-#include "duf_config_util.h"
+/* #include "duf_config_util.h" */
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name */
@@ -472,8 +472,8 @@ duf_multix_print( duf_longval_extended_vtable_t ** xvtables, const char *name )
 /* duf_stdx_print */
 /* TODO :  depends on optimpl !! */
 void
-duf_stdx_print( const char *name )
+duf_stdx_print( const duf_config_cli_t * cli, const char *name )
 {
 /* duf_multix_print( duf_extended_vtable_multi(  ), name ); */
-  duf_multix_print( duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ), name );
+  duf_multix_print( duf_cli_options_xvtable_multi(cli ), name );
 }
