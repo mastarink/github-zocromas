@@ -37,7 +37,7 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
-static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi );
+/* static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi ); */
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
@@ -109,6 +109,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 /* DUF_SFIELD( monthmtime ); */
 #endif
   {
+#if 0
     duf_bformat_combo_t bformat = {                                  /* */
       .v.flag = {
                  .filename = 1,
@@ -149,6 +150,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       .nsame_sha1 = 1,
       .nsame_exif = 1,
     };
+#endif
+
     duf_fileinfo_t fi = { 0 };
 #if 0
     fi.nsame = nsame;
@@ -180,6 +183,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #else
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
 #endif
+
+#if 0
     if ( duf_output_use_binformat(  ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
@@ -188,6 +193,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         DUF_PUTS( 0, "????????????" );
     }
     else
+#endif
     {
       const char *sformat_pref = NULL;
       const char *sformat = NULL;
@@ -264,6 +270,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   DUF_STARTR( r );
 /* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
+#if 0
     duf_bformat_combo_t bformat = {                                  /* */
       .v.flag = {
                  .filename = 1,
@@ -306,7 +313,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
       .nsame_sha1 = 1,
       .nsame_exif = 1,
     };
-
+#endif
     duf_fileinfo_t fi = { 0 };
   /* fi.nsame = nsame; */
   /* fi.nsame_md5 = nsame_md5;   */
@@ -325,6 +332,8 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
   /* fi.sha1id = sha1id; */
   /* fi.md5sum1 = md5sum1; */
   /* fi.md5sum2 = md5sum2; */
+
+#if 0
     if ( duf_output_use_binformat(  ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
@@ -333,6 +342,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
         DUF_PUTS( 0, "????????????" );
     }
     else
+#endif
     {
       const char *sformat_pref = NULL;
       const char *sformat = NULL;
@@ -639,6 +649,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_
   DUF_ENDR( r );
 }
 
+#if 0
 static int
 duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
 {
@@ -649,3 +660,4 @@ duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
   DUF_WRITES( 0, buffer );
   DUF_ENDR( r );
 }
+#endif

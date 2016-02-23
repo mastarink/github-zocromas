@@ -178,8 +178,8 @@ duf_cfg_delete( duf_config_t * cfg )
     cfg->opt.ptracecfg->output.file = NULL;
 #endif
 
-    mas_free( cfg->opt.output.file );
-    cfg->opt.output.file = NULL;
+    mas_free( cfg->opt.output.stream.file );
+    cfg->opt.output.stream.file = NULL;
 
     {
       mas_del_argv( cfg->opt.output.as_formats.tree.files.argc, cfg->opt.output.as_formats.tree.files.argv, 0 );
@@ -220,8 +220,8 @@ duf_cfg_delete( duf_config_t * cfg )
     /* mas_free( cfg->opt.output.history_filename ); */
     /* cfg->opt.output.history_filename = NULL;      */
 
-      mas_free( cfg->opt.output.header_tty );
-      cfg->opt.output.header_tty = NULL;
+      mas_free( cfg->opt.output.stream.header_tty );
+      cfg->opt.output.stream.header_tty = NULL;
     }
     mas_free( cfg );
     cfg = NULL;

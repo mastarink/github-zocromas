@@ -46,22 +46,22 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "force-color" ) /*      */ , DO_A_N /* */ , DO_VF( FORCE_COLOR )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /* */ DO_OC( FLAG, opt.output.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*        */ , DO_H(  ... ) /*                             */ },
+    /* */ DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*        */ , DO_H(  ... ) /*                      */ },
    {.o = {DO_Q( "trace-force-color" ) /* */ , DO_A_N /* */ } /*                            */ , DO_CL( CONTROL ) /* */ ,
-    /* */ DO_OT( FLAG, output.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*            */ , DO_H(  ... ) /*                             */ },
+    /* */ DO_OT( FLAG, output.stream.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*            */ , DO_H(  ... ) /*                      */ },
 
 /* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
    {.o = {DO_Q( "color" ) /*            */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( NOFLAG, opt.output.v ), DO_FL( output, nocolor ) /*                   */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OC( NOFLAG, opt.output.stream.v ), DO_FL( output, nocolor ) /*                   */ , DO_H(  ... ) /*                      */ },
    {.o = {DO_Q( "trace-color" ) /*      */ , DO_A_N /* */ } /*                             */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OT( NOFLAG, output.v ), DO_FL( output, nocolor ) /*                       */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OT( NOFLAG, output.stream.v ), DO_FL( output, nocolor ) /*                       */ , DO_H(  ... ) /*                      */ },
    {.o = {DO_Q( "escapecoloring" ) /*   */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.output.v ), DO_FN( output, nocolor ) /*                     */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OC( FLAG, opt.output.stream.v ), DO_FN( output, nocolor ) /*                     */ , DO_H(  ... ) /*                      */ },
 
-   {.o = {DO_Q( "use-binformat" ) /*        */ , DO_A_N /* */ , DO_VF( USE_BINFORMAT )} /* */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FLAG, opt.output.v ), DO_FL( output, use_binformat ) /*               */ , DO_H( use bin format ) /*                   */ },
+   /* {.o = {DO_Q( "use-binformat" ) (*        *) , DO_A_N (* *) , DO_VF( USE_BINFORMAT )} (* *) , DO_CL( PRINT ) (*   *) ,                    */
+   /*  (*      *) DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, use_binformat ) (*               *) , DO_H( use bin format ) (*     *) }, */
    {.o = {DO_Q( "progress" ) /*         */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
-    /*      */ DO_OC( FLAG, opt.output.v ), DO_FL( output, progress ) /*                    */ , DO_H( progress ) /*                         */ },
+    /*      */ DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, progress ) /*             */ , DO_H( progress ) /*                         */ },
 
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*                             */ },

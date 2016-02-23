@@ -33,6 +33,8 @@ sfind duf_config_util.h
 tab sfind duf_config_util_z.c
 sfind duf_config_util_z.h
 
+tab sfind duf_config_output_util.c
+sfind duf_config_output_util.h
 
 tab sfind duf_status.c
 sfind duf_status_ref.h

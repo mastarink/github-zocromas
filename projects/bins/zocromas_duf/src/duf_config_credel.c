@@ -63,7 +63,8 @@ duf_config_delete( void )
 
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
 
-  mas_error_report_all( 0, /*FIXME: error output is not trace output */ duf_config->opt.ptracecfg->output.out, duf_verbose ? duf_verbose(  ) : 0 );
+  mas_error_report_all( 0, /*FIXME: error output is not trace output */ duf_trace_file_c( duf_config->opt.ptracecfg ),
+                        duf_verbose ? duf_verbose(  ) : 0 );
 
   duf_config_trace_delete( duf_config->opt.ptracecfg );
   duf_config->opt.ptracecfg = NULL;

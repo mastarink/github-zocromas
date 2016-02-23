@@ -76,17 +76,6 @@ duf_get_config_opt( void )
   return duf_config ? &duf_config->opt : NULL;
 }
 
-int
-duf_output_level( void )
-{
-  return duf_config ? duf_config->opt.output.level : 0;
-}
-
-FILE *
-duf_output_file( void )
-{
-  return duf_output_file_c( duf_config );
-}
 
 #if 0
 char
@@ -227,28 +216,4 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_
   }
 /* T( "@@@@@@var %s => '%s'", name, pbuf ); */
   return pbuf;
-}
-
-int
-duf_output_force_color( void )
-{
-  return duf_output_force_color_c( duf_config );
-}
-
-int
-duf_output_nocolor( void )
-{
-  return duf_output_nocolor_c( duf_config );
-}
-
-int
-duf_output_progress( void )
-{
-  return duf_output_progress_c( duf_config );
-}
-
-int
-duf_output_use_binformat( void )
-{
-  return duf_output_use_binformat_c( duf_config );
 }

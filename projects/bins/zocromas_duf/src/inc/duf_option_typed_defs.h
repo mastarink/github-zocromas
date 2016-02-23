@@ -121,7 +121,7 @@
 	} \
       }
 
-#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout ) \
+#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _stream_dot, _defoptarg, _defout ) \
       if ( DUF_NOERROR(_rt) ) \
       { \
 	if( !_no ) \
@@ -132,8 +132,8 @@
 	  mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_hasoff == 1 */ \
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
-	    DOR(_rt, duf_set_file_special( s, mm->v.flag.overwrite, &mm->file, &mm->out, _defout, extended->call.value.u )); \
-	    if (mm->out && mm->header_tty && isatty(fileno(mm->out))) { fprintf( mm->out, mm->header_tty ); } \
+	    DOR(_rt, duf_set_file_special( s, mm->_stream_dot v.flag.overwrite, &mm->_stream_dot file, &mm->_stream_dot out, _defout, extended->call.value.u )); \
+	    if (mm->_stream_dot out && mm->_stream_dot header_tty && isatty(fileno(mm->_stream_dot out))) { fprintf( mm->_stream_dot out, mm->_stream_dot header_tty ); } \
 	  } \
 	} \
 	else \
@@ -141,7 +141,7 @@
 	  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
-#define DUF_OUTPUTFILE(_no, _rt, _typ, _defout ) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout )
+#define DUF_OUTPUTFILE(_no, _rt, _typ, _stream_dot, _defout ) DUF_OUTPUTFILE_A(_no, _rt, _typ, _stream_dot, NULL, _defout )
 
 
 #endif

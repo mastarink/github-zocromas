@@ -240,7 +240,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
   /* T( "@**%ld - %ld : %ld %s", pod->doindex, pod->xfound.count_hard, pod->xfound.count_soft, pod->name ); */
     if ( !( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ) )
     {
-      T( "@not math stage; %ld %s:%s hard:%lu; soft:%lu : \"%s\"", pod->doindex, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ),
+      T( "@not match stage; %ld %s:%s hard:%lu; soft:%lu : \"%s\"", pod->doindex, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ),
          pod->xfound.count_hard, pod->xfound.count_soft, pod->name );
     }
   /* assert( pod->doindex >= 0 || pod->stage < DUF_OPTION_STAGE_LOOP ); */

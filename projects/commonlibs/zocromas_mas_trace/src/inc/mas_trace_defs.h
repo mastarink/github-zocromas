@@ -8,14 +8,14 @@
 
 
 #  ifdef MAS_TRACING
-#    define MAST_TRACE_C( _cfg, ... )				MAST_TRACE_WHAT_C( _cfg,			MAST_TRACE_AT_CFG_,	__VA_ARGS__ )
+#    define MAST_TRACE_C( _tcfg, ... )				MAST_TRACE_WHAT_C( _tcfg,			MAST_TRACE_AT_TCFG_,	__VA_ARGS__ )
 #    define MAST_TRACE( ... )					MAST_TRACE_C(      MAST_TRACE_CONFIG, 			__VA_ARGS__ )
 #  else
 #    define MAST_TRACE( ... )
 #  endif
 
-#  define MAST_TRACE_WP_C( _cfg, _prefix, ... )			MAST_TRACE_WHAT_WP_C(        _cfg, _prefix,	MAST_TRACE_AT_CFG_,	__VA_ARGS__ )
-#  define MAST_OTRACE_WP_C( _out, _cfg, _prefix, ... )		MAST_OTRACE_WHAT_WP_C( _out, _cfg, _prefix,	MAST_TRACE_AT_CFG_,	__VA_ARGS__ )
+#  define MAST_TRACE_WP_C( _tcfg, _prefix, ... )			MAST_TRACE_WHAT_WP_C(        _tcfg, _prefix,	MAST_TRACE_AT_TCFG_,	__VA_ARGS__ )
+#  define MAST_OTRACE_WP_C( _out, _tcfg, _prefix, ... )		MAST_OTRACE_WHAT_WP_C( _out, _tcfg, _prefix,	MAST_TRACE_AT_TCFG_,	__VA_ARGS__ )
 #  define MAST_TRACE_WP( ... )					MAST_TRACE_WP_C(	    MAST_TRACE_CONFIG, 			__VA_ARGS__ )
 #  define MAST_OTRACE_WP(_out, ... )				MAST_OTRACE_WP_C( _out,	    MAST_TRACE_CONFIG, 			__VA_ARGS__ )
 

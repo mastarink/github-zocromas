@@ -11,6 +11,7 @@ noinst_HEADERS=motest_config.h \
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
 	duf_base_types.h \
+	duf_base_output_types.h \
 	duf_config_trace_types.h duf_config_trace_enum.h \
 	duf_config_opt_debug_types.h \
 	duf_config_cli_types.h \
@@ -23,7 +24,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_opt_types.h \
 	duf_config4trace_ref.h duf_config.h duf_tracen_config.h duf_config_db.h duf_cfg_credel.h duf_config_credel.h duf_config_show_etc.h \
 	duf_config_trace_credel.h duf_config_trace.h \
-	duf_config_util.h duf_config_util_z.h \
+	duf_config_util.h duf_config_util_z.h duf_config_output_util.h  \
 	duf_config_ref.h duf_config_wref.h duf_config_defs.h duf_config_types.h \
 	duf_context.h \
 	duf_debug_defs.h \

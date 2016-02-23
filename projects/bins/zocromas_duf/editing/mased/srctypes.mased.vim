@@ -13,6 +13,7 @@ sfind duf_printn_defs.h
 sfind duf_printn_defs_preset.h
 
 tab sfind duf_base_types.h
+sfind duf_base_output_types.h
 
 tab sfind duf_config_types.h
 sfind duf_status_types.h

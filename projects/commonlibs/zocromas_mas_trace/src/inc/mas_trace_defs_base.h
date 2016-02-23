@@ -26,32 +26,32 @@
 /* ###################################################################### */
 /* takes ern - error index */
 
-#  define MAST_OTRACE_WHAT_WP_BASE( _out, _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
+#  define MAST_OTRACE_WHAT_WP_BASE( _out, _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
 			mas_trace( \
 			    /* MAST_TRACE_MODE_ ## _name, MAST_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
-	/* level */			MAST_TRACE_LEVEL_C( _cfg, _what, _name ), \
+	/* level */			MAST_TRACE_LEVEL_C( _tcfg, _what, _name ), \
 	/* minlevel */			_min, \
 	/* funcid, linid */		MAST_FL, \
-	/* time0 */			MAST_TRACE_LOADTIME_C( _cfg ), \
+	/* time0 */			MAST_TRACE_LOADTIME_C( _tcfg ), \
 	/* signum */			_signum, \
 	/* flags, nerr */		_flags, _ern, \
 	/* out */			_out, \
 			    		_prefix, \
-			    		MAST_TRACE_FUNWIDTH_C( _cfg ), \
-			    		MAST_TRACE_FORCE_COLOR_C( _cfg ), \
-			    		MAST_TRACE_NOCOLOR_C( _cfg ), \
+			    		MAST_TRACE_FUNWIDTH_C( _tcfg ), \
+			    		MAST_TRACE_FORCE_COLOR_C( _tcfg ), \
+			    		MAST_TRACE_NOCOLOR_C( _tcfg ), \
 			    		__VA_ARGS__ )
 
-#  define MAST_TRACE_WHAT_WP_BASE( _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
-  			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( MAST_TRACE_AT_CFG_CR(_cfg)), _cfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
+#  define MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
+  			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( MAST_TRACE_AT_TCFG_CR(_tcfg)), _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
 
 
 /* takes ern - error index */
-#  define      MAST_OTRACE_WHAT_BASE( _cfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
-  					MAST_OTRACE_WHAT_WP_BASE(_out, _cfg, NULL, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__)
-#  define      MAST_TRACE_WHAT_BASE( _cfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
-  					MAST_TRACE_WHAT_WP_BASE(_cfg, NULL, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__)
+#  define      MAST_OTRACE_WHAT_BASE( _tcfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
+  					MAST_OTRACE_WHAT_WP_BASE(_out, _tcfg, NULL, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__)
+#  define      MAST_TRACE_WHAT_BASE( _tcfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
+  					MAST_TRACE_WHAT_WP_BASE(_tcfg, NULL, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__)
 #endif
 /*
 vi: ft=c

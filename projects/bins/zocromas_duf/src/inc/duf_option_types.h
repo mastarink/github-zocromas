@@ -6,6 +6,7 @@
 # include "duf_option_source_types.h"                                /* duf_option_source_t */
 # include "duf_config_rec_etc_types.h"                               /* duf_config_rec_etc_flags_t */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  */
+# include "duf_base_output_types.h"                                  /* duf_base_output_flags_t */
 # include "duf_config_output_types.h"                                /* duf_config_output_flags_t */
 # include "duf_config_act_types.h"                                   /* duf_config_act_flags_t  */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
@@ -61,7 +62,7 @@ typedef enum
 typedef union
 {
   duf_config_act_flags_t act;
-  duf_config_output_flags_t output;
+  duf_base_output_flags_t output;
   duf_config_rec_etc_flags_t rec_etc;
   duf_config_flow_flags_t flow;
   duf_config_opt_disable_flags_t disable;
@@ -150,7 +151,6 @@ typedef struct duf_longval_extended_vtable_s
   duf_longval_extended_t *xlist;
 } duf_longval_extended_vtable_t;
 
-
 typedef struct
 {
   int soft;                                                          /* unmatched tail length */
@@ -169,8 +169,6 @@ typedef struct
 
   duf_found_extended_t *xarray;
 } duf_found_extended_array_t;
-
-
 
 #endif
 

@@ -21,9 +21,5 @@ void *duf_get_pointer_ufilter( void );
 
 const char *duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg );
 
-int duf_output_force_color( void );
-int duf_output_nocolor( void );
-int duf_output_progress( void );
-int duf_output_use_binformat( void );
 
 #endif

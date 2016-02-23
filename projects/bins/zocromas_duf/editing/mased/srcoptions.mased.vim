@@ -21,10 +21,10 @@ sfind duf_option_clarify_batch.h
 
 tab sfind duf_option_typed.c
 sfind duf_option_typed.h
-sfind duf_option_typed_defs.h
 
 tab sfind duf_option_typed_gen.c
 sfind duf_option_typed_gen.h
+sfind duf_option_typed_defs.h
 
 tab sfind duf_option_typed_call.c
 sfind duf_option_typed_call.h
