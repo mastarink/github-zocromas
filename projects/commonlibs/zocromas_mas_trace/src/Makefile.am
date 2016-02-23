@@ -2,7 +2,7 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_mas_trace.la
 
 
-libzocromas_mas_trace_la_SOURCES = mas_trace.c mas_utils_print.c
+libzocromas_mas_trace_la_SOURCES = mas_trace.c mas_trace_utils_print.c
 libzocromas_mas_trace_la_LDFLAGS=@AM_LDFLAGS@
 
 

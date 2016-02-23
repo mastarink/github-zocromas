@@ -8,15 +8,11 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
-/* #include "mas_maintenance.h" */
-
-/* #include "mas_config_ref.h" */
 #include "mas_print_defs.h"
 /* #include "mas_errors.h" */
 
-
 /* ###################################################################### */
-#include "mas_utils_print.h"
+#include "mas_trace_utils_print.h"
 #include "mas_trace.h"
 /* ###################################################################### */
 
@@ -61,14 +57,14 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
       timez = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
     ftimez = 1;
   }
-  /* 
-   * needless??
-   *
-   assert( signum != '-' ); (* '-' means there is no config pointer *)
-   *
-   * see definition of MAST_TRACE_WHAT_C at mas_trace_defs_what.h
-   *
-   * */
+/* 
+ * needless??
+ *
+ assert( signum != '-' ); (* '-' means there is no config pointer *)
+ *
+ * see definition of MAST_TRACE_WHAT_C at mas_trace_defs_what.h
+ *
+ * */
 #if 0
   if ( trace_mode == MAST_TRACE_MODE_errorr )
   {
@@ -82,7 +78,7 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
     int noeol = 0;
     int noinfo = 0;
 
-    /* int highlight = 0; */
+  /* int highlight = 0; */
 
 #ifndef MAST_NOTIMING
     struct timeval tv;
@@ -91,12 +87,12 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
     {
       int valid;
 
-      /*
-       * . - w/o eol and w/o info-prefix
-       * : - w/o eol
-       * ; - w/o info-prefix
-       * @ - highlight
-       * */
+    /*
+     * . - w/o eol and w/o info-prefix
+     * : - w/o eol
+     * ; - w/o info-prefix
+     * @ - highlight
+     * */
       do
       {
         valid = 0;
@@ -123,12 +119,12 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
 
       puname = uname;
       pfuncid = funcid;
-      /* if ( 0 == strncmp( pfuncid, "mas_", 4 ) ) */
-      /*   pfuncid += 4;                           */
+    /* if ( 0 == strncmp( pfuncid, "mas_", 4 ) ) */
+    /*   pfuncid += 4;                           */
       for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      /* MAST_FPRINTFONE( 0, out, force_color, nocolor, "\r%cL%-2d:%2d ", signum, level, minlevel ); */
+    /* MAST_FPRINTFONE( 0, out, force_color, nocolor, "\r%cL%-2d:%2d ", signum, level, minlevel ); */
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "%cL%-2d:%2d ", signum, level, minlevel );
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "[%s%-7s%s] ", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;34m" ), uname,
                        mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
@@ -155,9 +151,9 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
       ry = gettimeofday( &tv, NULL );
       if ( ry >= 0 )
       {
-#  ifndef MAST_NOTIMING
+# ifndef MAST_NOTIMING
         double timec = 0.;
-#  endif
+# endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
         MAST_FPRINTFONE( 0, out, force_color, nocolor, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
       }
@@ -203,9 +199,8 @@ mas_trace( const char *name, int level, int minlevel, const char *funcid, int li
   int r_ = 0;
   va_list args;
 
-
   va_start( args, fmt );
-  /* takes ern - error index */
+/* takes ern - error index */
   r_ = mas_vtrace( name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, force_color, nocolor, fmt, args );
   va_end( args );
   return r_;

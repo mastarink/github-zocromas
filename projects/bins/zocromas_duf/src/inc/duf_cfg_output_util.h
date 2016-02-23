@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_CONFIG_UTIL_Z_H
-# define MAS_DUF_CONFIG_UTIL_Z_H
+#ifndef MAS_DUF_CFG_OUTPUT_UTIL_Z_H
+# define MAS_DUF_CFG_OUTPUT_UTIL_Z_H
 
 # include "duf_config_types.h"/* duf_config_t */
 

@@ -1,5 +1,5 @@
-#ifndef MAS_MAST_UTILS_PRINT_H
-#  define MAS_MAST_UTILS_PRINT_H
+#ifndef MAS_MAST_TRACE_UTILS_PRINT_H
+#  define MAS_MAST_TRACE_UTILS_PRINT_H
 
 #  include <stdio.h>            /* FILE */
 #  include "mas_print_defs.h"

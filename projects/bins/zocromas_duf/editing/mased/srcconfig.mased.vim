@@ -30,8 +30,8 @@ sfind duf_config4trace_ref.h
 tab sfind duf_config_util.c
 sfind duf_config_util.h
 
-tab sfind duf_config_util_z.c
-sfind duf_config_util_z.h
+tab sfind duf_cfg_output_util.c
+sfind duf_cfg_output_util.h
 
 tab sfind duf_config_output_util.c
 sfind duf_config_output_util.h
