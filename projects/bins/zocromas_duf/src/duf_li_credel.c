@@ -1,7 +1,9 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include "duf_maintenance.h"
+
+#include "duf_config_util.h"
 
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_ref.h"

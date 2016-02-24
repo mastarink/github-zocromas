@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -8,6 +8,7 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_config_ref.h"
+#include "duf_config_util.h"
 
 #include "duf_pdi.h"
 #include "duf_sql_defs.h"

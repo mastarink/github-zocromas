@@ -5,11 +5,11 @@
 
 #include "mas_error_tracen_defs_preset.h"
 
-
-#include <mastar/trace/mas_print_defs.h>
-#include <mastar/trace/mas_utils_print.h>
-#include <mastar/trace/mas_trace_defs.h>
+/* #include <mastar/trace/mas_print_defs.h>  */
+/* #include <mastar/trace/mas_utils_print.h> */
+/* #include <mastar/trace/mas_trace_defs.h>  */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/trace/mas_trace_utils_print.h>
 
 #include "mas_error_defs_show.h"
 #include "mas_error_base.h"
@@ -20,7 +20,6 @@
 #include "mas_error_reporting.h"
 /* ###################################################################### */
 
-
 /* #define MAS_NOTIMING */
 static int noreport_error[DUF_ERROR_COUNT] = { 0 };
 static int count_reported[DUF_ERROR_COUNT] = { 0 };
@@ -29,7 +28,6 @@ static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 static int force_count_ereport = 0;
 static int force_fixed_ereport = 0;
 static int force_offset_ereport = 0;
-
 
 void
 mas_force_count_ereport( int count )
@@ -61,22 +59,22 @@ _mas_enable_ereport_c( int once __attribute__ ( ( unused ) ), int enable, int na
 /////    MAST_TRACE( errors, 5, "set report for error number %d / %d (%s)", rc, rc - DUF_ERROR_ERROR_BASE, mas_error_name_c( rc ) );
     if ( errnumber >= 0 && errnumber < maxerr )
     {
-      /* int b;                        */
-      /*                               */
-      /* b = noreport_error[errnumber]; */
+    /* int b;                        */
+    /*                               */
+    /* b = noreport_error[errnumber]; */
       if ( nabs )
         noreport_error[errnumber] = enable;
       else
         noreport_error[errnumber] += enable /* < 0 ? -1 : 1 */ ;
-      /* if ( rc == DUF_ERROR_TOO_DEEP )                                                                                         */
-      /* {                                                                                                                          */
-      /*   if ( b < noreport_error[errnumber] )                                                                                      */
-      /*     fprintf( stderr, "$$$$$$$$$$$$ %d+%d=%d (nabs:%d)\n", b, noreport_error[errnumber] - b, noreport_error[errnumber], nabs ); */
-      /*   else if ( b > noreport_error[errnumber] )                                                                                 */
-      /*     fprintf( stderr, "$$$$$$$$$$$$ %d-%d=%d (nabs:%d)\n", b, b - noreport_error[errnumber], noreport_error[errnumber], nabs ); */
-      /*   else                                                                                                                     */
-      /*     fprintf( stderr, "$$$$$$$$$$$$ ==%d (nabs:%d)\n", b, nabs );                                                             */
-      /* }                                                                                                                          */
+    /* if ( rc == DUF_ERROR_TOO_DEEP )                                                                                         */
+    /* {                                                                                                                          */
+    /*   if ( b < noreport_error[errnumber] )                                                                                      */
+    /*     fprintf( stderr, "$$$$$$$$$$$$ %d+%d=%d (nabs:%d)\n", b, noreport_error[errnumber] - b, noreport_error[errnumber], nabs ); */
+    /*   else if ( b > noreport_error[errnumber] )                                                                                 */
+    /*     fprintf( stderr, "$$$$$$$$$$$$ %d-%d=%d (nabs:%d)\n", b, b - noreport_error[errnumber], noreport_error[errnumber], nabs ); */
+    /*   else                                                                                                                     */
+    /*     fprintf( stderr, "$$$$$$$$$$$$ ==%d (nabs:%d)\n", b, nabs );                                                             */
+    /* }                                                                                                                          */
     }
   }
 }
@@ -129,7 +127,6 @@ _mas_enabled_ereport_n_c( mas_error_code_t rc, int maxerr )
   return re;
 }
 
-
 /* >0 -- report it */
 static int
 _mas_enabled_ereport_c( mas_error_code_t rc, int maxerr )
@@ -138,14 +135,14 @@ _mas_enabled_ereport_c( mas_error_code_t rc, int maxerr )
 
   int errnumber = mas_errnumber_c( rc );
 
-  /* if ( rc < 0 ) */
-  /*   return 1;      */
+/* if ( rc < 0 ) */
+/*   return 1;      */
   if ( rc < 0 )
   {
     assert( errnumber >= 0 );
     if ( errnumber < 0 )
     {
-      re = 0;                   /* sql ? ? ? */
+      re = 0;                                                        /* sql ? ? ? */
     }
     else if ( errnumber >= 0 && errnumber < maxerr
               && ( max_show_count_error[errnumber] <= 0 || count_reported[errnumber] < max_show_count_error[errnumber] - 1 ) )
@@ -193,14 +190,14 @@ mas_enabled_ereport_i( mas_error_index_t ri )
     else
       re = en;
     re += force_offset_ereport;
-    /* if ( re > 0 )                      */
-    /*   T( "@@@@@re:%d;en:%d", re, en ); */
-#  if 0
+  /* if ( re > 0 )                      */
+  /*   T( "@@@@@re:%d;en:%d", re, en ); */
+# if 0
     {
       fprintf( stderr, "ri:%d;en:%d;force_offset_ereport:%d;force_fixed_ereport:%d;force_count_ereport:%d;re:%d\n", ri, en, force_offset_ereport,
                force_fixed_ereport, force_count_ereport, re );
     }
-#  endif
+# endif
   }
   return re;
 }
@@ -311,7 +308,7 @@ mas_ecount_reported_i( mas_error_index_t ri )
 }
 
 void
-mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
+mas_error_report_i( const mas_config_trace_t * tcfg, int trace_errindex, mas_error_index_t ri, int test, FILE * out, int verb )
 {
   if ( ri < 0 )
   {
@@ -327,38 +324,69 @@ mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
     switch ( verb )
     {
     case 0:
-      MAST_FPRINTF0( 0, out, ".   " );
-      MAST_FPRINTF0( 0, out, ".%s      ", prefix );
-      /* MAST_FPRINTF0( 0, out, ".@@  %s    ", ename ); */
-      /* MAST_FPRINTF0( 0, out, "@@@@@@@@" "%s%s", msg ? "  " : "", msg ); */
+    /* MAST_FPRINTF0( 0, out, ".   " ); */
+      mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, ".   " );
+
+    /* MAST_FPRINTF0( 0, out, ".%s      ", prefix ); */
+      mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, ".%s      ", prefix );
       if ( verb )
-        MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (v%d)", ename, msg ? " - " : "", msg, verb );
+      {
+      /* MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (v%d)", ename, msg ? " - " : "", msg, verb ); */
+        mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, "@@@@@@@@" "[%s]%s%s (v%d)", ename, msg ? " - " : "", msg,
+                     verb );
+      }
       else
-        MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s", ename, msg ? " - " : "", msg );
+      {
+      /* MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s", ename, msg ? " - " : "", msg ); */
+        mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, "@@@@@@@@" "[%s]%s%s", ename, msg ? " - " : "", msg );
+      }
       break;
     case 1:
-      MAST_FPRINTF0( 0, out, ".   " );
-      MAST_FPRINTF0( 0, out, ".%s      ", prefix );
-      MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d) (v%d)", ename, msg ? " - " : "", msg, func, line, verb );
+    /* MAST_FPRINTF0( 0, out, ".   " ); */
+      mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, ".   " );
+    /* MAST_FPRINTF0( 0, out, ".%s      ", prefix ); */
+      mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, ".%s      ", prefix );
+    /* MAST_FPRINTF0( 0, out, "@@@@@@@@" "[%s]%s%s (%s:%d) (v%d)", ename, msg ? " - " : "", msg, func, line, verb ); */
+      mas_printfo( 0, 0 /*noeol */ , 0 /* _min */ , 0, __func__, __LINE__, out, 1, 1, "@@@@@@@@" "[%s]%s%s (%s:%d) (v%d)", ename, msg ? " - " : "",
+                   msg, func, line, verb );
       break;
     case 2:
-      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
+    /* MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb ); */
+      mas_trace( tcfg, "errors", trace_errindex, 0, func, line, '*' /*signum */ , 0 /*flags */ , 0 /*nerr */ , prefix,
+                 "@@@@@@@@" "[%s]%s%s (%s:%d) verb:%d", ename, msg ? " - " : "", msg, func, line, verb );
+      fprintf( stderr, "*********** %d\n", __LINE__ );
       break;
     case 3:
-      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+    /* MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                     */
+    /*                       ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      mas_trace( tcfg, "errors", trace_errindex, 0, func, line, '*' /*signum */ , 0 /*flags */ , 0 /*nerr */ , prefix,
+                 "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                 ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+      fprintf( stderr, "*********** %d\n", __LINE__ );
       break;
     case 4:
-      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+    /* MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                     */
+    /*                       ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      mas_trace( tcfg, "errors", trace_errindex, 0, func, line, '*' /*signum */ , 0 /*flags */ , 0 /*nerr */ , prefix,
+                 "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                 ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+      fprintf( stderr, "*********** %d\n", __LINE__ );
       break;
     case 5:
-      MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+    /* MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                     */
+    /*                       ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      mas_trace( tcfg, "errors", trace_errindex, 0, func, line, '*' /*signum */ , 0 /*flags */ , 0 /*nerr */ , prefix,
+                 "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                 ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+      fprintf( stderr, "*********** %d\n", __LINE__ );
       break;
     default:
-      MASE_OSHOW_ERRORO_WP(  out,prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
-                           ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+    /* MASE_OSHOW_ERRORO_WP( out, prefix, "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",                                     */
+    /*                       ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb ); */
+      mas_trace( tcfg, "errors", trace_errindex, 0, func, line, '*' /*signum */ , 0 /*flags */ , 0 /*nerr */ , prefix,
+                 "@@@@@@@@" "[%s]%s%s (ri:%d) {en:%d} lsz:%ld rep:%u:%u (%s:%d) verb:%d",
+                 ename, msg ? " - " : "", msg, ri, mas_enabled_ereport_n_i( ri ), mas_error_list_size(  ), erep, irep, func, line, verb );
+      fprintf( stderr, "*********** %d\n", __LINE__ );
       break;
     }
     assert( func );
@@ -368,32 +396,32 @@ mas_error_report_i( mas_error_index_t ri, int test, FILE * out, int verb )
 }
 
 void
-mas_error_report_p( size_t rp, int test, FILE * out, int verb )
+mas_error_report_p( const mas_config_trace_t * tcfg, int trace_errindex, size_t rp, int test, FILE * out, int verb )
 {
   mas_error_event_t *rev = NULL;
 
-  /* assert( rp >= 0 ); */
+/* assert( rp >= 0 ); */
   rev = mas_find_error_event_p( rp );
   if ( rev )
-    mas_error_report_i( rev->index, test, out, verb );
+    mas_error_report_i( tcfg, trace_errindex, rev->index, test, out, verb );
 }
 
 void
-mas_error_report_all( int test, FILE * out, int verb )
+mas_error_report_all( const mas_config_trace_t * tcfg, int trace_errindex, int test, FILE * out, int verb )
 {
   unsigned k = 0;
 
   for ( unsigned rp = 0; rp < mas_error_list_size(  ); rp++ )
   {
-    /* if ( mas_error_code_p( rp ) != MAS_SQL_DONE && mas_error_code_p( rp ) != MAS_SQL_ROW ) */
+  /* if ( mas_error_code_p( rp ) != MAS_SQL_DONE && mas_error_code_p( rp ) != MAS_SQL_ROW ) */
     {
-      /* T( "@@@@@@%d. %d. %s @ %s:%d %s", rp, k, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ), mas_error_message_p( rp ) ); */
+    /* T( "@@@@@@%d. %d. %s @ %s:%d %s", rp, k, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ), mas_error_message_p( rp ) ); */
 #if 0
       T( "@@@@@@@%d. %s @ %s:%d %s", rp + 1, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ), mas_error_message_p( rp ) );
       MASE_SHOW_ERROR( "@@@@@@@@%d. %s @ %s:%d %s", rp + 1, mas_error_name_p( rp ), mas_error_func_p( rp ), mas_error_line_p( rp ),
                        mas_error_message_p( rp ) );
 #else
-      mas_error_report_p( rp, test, out, verb );
+      mas_error_report_p( tcfg, trace_errindex, rp, test, out, verb );
 #endif
       k++;
     }

@@ -95,7 +95,7 @@ SR( OPTIONS, split_string_od, duf_config_cli_t * cli, duf_option_data_t * pod )
   ER( OPTIONS, split_string_od, duf_config_cli_t * cli, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtended, int soft, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_register, duf_config_cli_t * cli, const duf_longval_extended_t * xtended, int soft, duf_option_data_t * pod )
 {
   size_t alloc_step = 10;
   size_t index = 0;
@@ -138,10 +138,10 @@ SR( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtend
     pod->xfound.count_hard++;
     pod->xfound.hard_index = index;
   }
-  ER( OPTIONS, soption_xclarify_new_register, const duf_longval_extended_t * xtended, int soft, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_register, duf_config_cli_t * cli,const duf_longval_extended_t * xtended, int soft, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xarr, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_at_xarr_od, duf_config_cli_t * cli, const duf_longval_extended_t * xarr, duf_option_data_t * pod )
 {
   for ( const duf_longval_extended_t * xtended = xarr; xtended->o.name; xtended++ )
   {
@@ -191,28 +191,28 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xar
       {
       /* T( "@@1 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb == len_ask );
-        CR( soption_xclarify_new_register, xtended, 0 /* soft */ , pod );
+        CR( soption_xclarify_new_register, cli, xtended, 0 /* soft */ , pod );
       }
       else if ( 0 == strncmp( match, xtended->o.name, len_ask ) )
       {
       /* T( "@@2 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb > len_ask );
-        CR( soption_xclarify_new_register, xtended, len_tb - len_ask /* soft */ , pod );
+        CR( soption_xclarify_new_register, cli, xtended, len_tb - len_ask /* soft */ , pod );
       }
     }
   /* T( "@3 name_offset:%lu - '%s' (%s|%s) noo:%d; %d; %d (%ld:%ld)", pod->name_offset, pod->name, match, xtended->o.name, pod->noo, arg_error, 
      pod->has_arg, pod->xfound.count_hard, pod->xfound.count_soft );                                                                         */
   }
 
-  ER( OPTIONS, soption_xclarify_new_at_xarr_od, const duf_longval_extended_t * xarr, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_xarr_od, duf_config_cli_t * cli, const duf_longval_extended_t * xarr, duf_option_data_t * pod );
 }
 
-SR( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod )
+SR( OPTIONS, soption_xclarify_new_at_xtable_od, duf_config_cli_t * cli, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod )
 {
   pod->xvtable = xvtable;
-  CR( soption_xclarify_new_at_xarr_od, xvtable->xlist, pod );
+  CR( soption_xclarify_new_at_xarr_od, cli, xvtable->xlist, pod );
 
-  ER( OPTIONS, soption_xclarify_new_at_xtable_od, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod );
+  ER( OPTIONS, soption_xclarify_new_at_xtable_od, duf_config_cli_t * cli, const duf_longval_extended_vtable_t * xvtable, duf_option_data_t * pod );
 }
 
 static
@@ -225,7 +225,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
 
-    CR( soption_xclarify_new_at_xtable_od, xvtable, pod );
+    CR( soption_xclarify_new_at_xtable_od, cli, xvtable, pod );
   /* T( "@**%ld : %ld", pod->xfound.count_hard, pod->xfound.count_soft ); */
 /* if not found : clear error */
   }

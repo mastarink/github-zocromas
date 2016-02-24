@@ -1,14 +1,14 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 #include <dlfcn.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_utils_path.h>
 
-
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
@@ -106,7 +106,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
             }
             else
             {
-              /* dlclose ?? */
+            /* dlclose ?? */
             }
           }
         }

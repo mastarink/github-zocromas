@@ -116,7 +116,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
   CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
   T( "@@@@@%d OPTEST", QERRIND );
 
-  mas_error_report_all( 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
+  mas_error_report_all(config_trace ,0 /*index*/,0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
   T( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
      , QERRIND                                                       /* */
      , som1.set1.bits                                                /* */

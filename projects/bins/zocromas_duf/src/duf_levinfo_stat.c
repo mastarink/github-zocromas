@@ -1,9 +1,10 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 
 #include "duf_dh.h"
 

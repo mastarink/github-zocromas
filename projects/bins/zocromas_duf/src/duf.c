@@ -282,6 +282,8 @@ duf_main( int argc, char **argv )
   }
 #endif
   global_status_reset(  );
+  T( "@config: %p; ptracecfg: %p; class_levels: %p", duf_get_config(  ), duf_get_config(  )->opt.ptracecfg,
+     duf_get_config(  )->opt.ptracecfg->class_levels );
   duf_config_delete(  );
   assert( !duf_config );
 

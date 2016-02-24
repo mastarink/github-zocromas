@@ -6,9 +6,9 @@
 # endif
 
 /* #define MAST_OUTPUT_LEVEL mas_output_level() */
-#  ifndef MAST_OUTPUT_LEVEL
-#    define MAST_OUTPUT_LEVEL 0
-#  endif
+/* #  ifndef MAST_OUTPUT_LEVEL     */
+/* #    define MAST_OUTPUT_LEVEL 0 */
+/* #  endif                        */
 /*                                       */
 /* #  ifndef MAST_OUTPUT_FORCE_COLOR     */
 /* #    define MAST_OUTPUT_FORCE_COLOR 0 */

@@ -1,10 +1,11 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
-#include <mastar/tools/mas_utils_path.h> /* mas_pathdepth */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_pathdepth */
 
 #include "duf_maintenance.h"
 
+#include "duf_config_util.h"
 
 #include "duf_levinfo_ref_def.h"
 /* #include "duf_levinfo_context.h" */
@@ -12,7 +13,6 @@
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
-
 
 #include "duf_dh.h"
 
@@ -60,7 +60,7 @@ duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd
   }
 
   assert( pi->depth == -1 );
-  /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
+/* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
   pi->maxdepth = max_rd ? max_rd : 20 + ( pi->topdepth ? pi->topdepth : 20 ); /* FIXME ??? */
 
   DUF_ENDR( r );

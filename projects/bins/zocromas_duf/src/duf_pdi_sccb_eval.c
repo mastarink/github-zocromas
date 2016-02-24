@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -6,6 +6,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"

@@ -61,7 +61,8 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int trace_index, 
   assert( tcfg->fun_width == fun_width );
 #else
   double time0 = tcfg->loadtime;
-  FILE *out = tcfg->stream.out;
+  FILE *out = tcfg->stream.out ? tcfg->stream.out : stderr;
+  /* FILE *out = tcfg->stream.out; */
   unsigned fun_width = tcfg->fun_width;
   int force_color = tcfg->stream.v.flag.force_color;
   int nocolor = tcfg->stream.v.flag.nocolor;

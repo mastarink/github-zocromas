@@ -1,6 +1,8 @@
 /* TODO rename to duf_optimpl_enum_trace.def */
 #ifdef ENUM_WRAPP
   /* trace */
+  ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
+  ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
   ENUM_WRAPP(ACTION_TRACE,  trace, action			)
   ENUM_WRAPP(CALLS_TRACE, trace, calls				)
   ENUM_WRAPP(CONFIG_TRACE, trace, config			)
@@ -10,8 +12,6 @@
   ENUM_WRAPP(DEPTH_TRACE, trace, depth				)
   ENUM_WRAPP(DIRENT_TRACE, trace, dirent			)
   ENUM_WRAPP(DRY_RUN_TRACE, trace, dry_run			)
-  ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
-  ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
   ENUM_WRAPP(EXIF_TRACE, trace, exif				)
   ENUM_WRAPP(EXPLAIN_TRACE, trace, explain			)
   ENUM_WRAPP(FINDOPT_TRACE, trace, findopt			)

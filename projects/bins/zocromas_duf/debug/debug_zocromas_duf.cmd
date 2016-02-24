@@ -10,7 +10,7 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 
-b duf.c:160
+b duf_config_credel.c:69
 
 # watch lo_extended_vtable_multi
 

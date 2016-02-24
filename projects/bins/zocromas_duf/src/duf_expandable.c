@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 #include <time.h>
 

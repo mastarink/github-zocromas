@@ -18,7 +18,9 @@
 #  define MAST_OTRACE_WHAT( _out, ...)				MAST_OTRACE_WHAT_C( _out, MAST_TRACE_CONFIG,			__VA_ARGS__ )
 
 #  define MAST_TRACE_WHAT_WP_C( _tcfg, _prefix, ...)		MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _tcfg?'*':'-', 0, 0,	__VA_ARGS__ )
-#  define MAST_OTRACE_WHAT_WP_C( _out, _tcfg, _prefix, ...)	MAST_OTRACE_WHAT_WP_BASE( _out, _tcfg, _prefix, _tcfg?'*':'-', 0, 0,	__VA_ARGS__ )
+#  define MAST_OTRACE_WHAT_WP_C( _out, _tcfg, _prefix, ...)	MAST_OTRACE_WHAT_WP_BASE( _out, _tcfg, _prefix, \
+    							_tcfg?'*':'-' /*signum*/, 0/* flags*/, 0/*_ern*/,	__VA_ARGS__ )
+
 #  define MAST_TRACE_WHAT_WP( ...)				MAST_TRACE_WHAT_WP_C( MAST_TRACE_CONFIG,			__VA_ARGS__ )
 #  define MAST_OTRACE_WHAT_WP( _out, ...)			MAST_OTRACE_WHAT_WP_C( _out, MAST_TRACE_CONFIG,			__VA_ARGS__ )
 

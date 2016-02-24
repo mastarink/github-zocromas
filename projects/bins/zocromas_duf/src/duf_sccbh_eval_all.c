@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <unistd.h>
 #include <libgen.h>
 #include <stddef.h>

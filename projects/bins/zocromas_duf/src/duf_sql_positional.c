@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <mastar/sqlite/mas_sqlite.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 

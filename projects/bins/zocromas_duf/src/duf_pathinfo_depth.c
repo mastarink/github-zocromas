@@ -1,4 +1,4 @@
-#undef MAS_TRACING
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include <mastar/tools/mas_utils_path.h> /* mas_pathdepth */
@@ -7,6 +7,7 @@
 #include "duf_fmt_defs.h"
 
 #include "duf_config.h"
+#include "duf_config_util.h"
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"

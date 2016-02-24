@@ -21,8 +21,6 @@
 
 #  define MAST_DEBUG(_lev, ...)  if ( MAST_IF_DEBUGN( _lev ) ) {  __VA_ARGS__ ; }
 
-#  define T(_fmt, ...) MAST_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
-#  define TT( ...) MAST_TRACE(temp,0,__VA_ARGS__)
 /* #  define TR(_r) if (MAST_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, duf_error_code_i(_r), duf_error_name_i(_r));} */
 
 
