@@ -24,6 +24,7 @@
 #include "duf_options_file.h"
 /* ###################################################################### */
 
+/* TODO: remove static; possibly to «duf_config_cli_t * cli»  */
 static char *config_file_path = NULL;
 
 static void destructor_options_file( void ) __attribute__ ( ( destructor( 101 ) ) );

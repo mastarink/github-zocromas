@@ -18,9 +18,7 @@
 #  endif
 #endif
 
-/* TODO :
- * DROP + CREATE AS => CREATE + DELETE + INSERT SELECT 
- * */
+/* changed: DROP + CREATE AS => CREATE + DELETE + INSERT SELECT */
 duf_sql_sequence_t sql_create_selected = {
   .name = "selected (create selected tables)",
   .done = 0,

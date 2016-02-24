@@ -11,7 +11,6 @@
 #include "duf_levinfo_ref.h"
 /* ###################################################################### */
 
-
 /************************************************************************/
 duf_levinfo_t *
 duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
@@ -49,27 +48,23 @@ DUF_LEVINFO_3GET( duf_node_type_t, node_type, node_type );
 
 /************************************************************************/
 
-
 struct stat *
 duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d )
 {
   struct stat *pst = NULL;
 
-  /* if ( pdi->opendir ) */
+/* if ( pdi->opendir ) */
   {
     if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rs > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_FS )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
   }
-  /* TODO NOT here: assert( pst->st_dev ); 
-   * (used to check presence, so no stat is OK)
-   * TODO */
+/*  NOT here: assert( pst->st_dev ); (used to check presence, so no stat is OK) */
   return pst;
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( struct stat, stat )
 DUF_LEVINFO_FC_UP_REF( struct stat, stat )
 /* *INDENT-ON*  */
-
 
 DUF_LEVINFO_ST_FLD_NAME( ino, inode );
 DUF_LEVINFO_ST_FLD( dev );
@@ -87,27 +82,23 @@ DUF_LEVINFO_ST_TYP_FLD_NAME( long, atim.tv_nsec, ansec );
 DUF_LEVINFO_ST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
 DUF_LEVINFO_ST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
 
-
 struct stat *
 duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d )
 {
   struct stat *pst = NULL;
 
-  /* if ( pdi->opendir ) */
+/* if ( pdi->opendir ) */
   {
     if ( d >= 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.rdb > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_DB )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
   }
-  /* TODO NOT here: assert( pst->st_dev ); 
-   * (used to check presence, so no stat is OK)
-   * TODO */
+/*  NOT here: assert( pst->st_dev ); (used to check presence, so no stat is OK) */
   return pst;
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( struct stat, dbstat )
 DUF_LEVINFO_FC_UP_REF( struct stat, dbstat )
 /* *INDENT-ON*  */
-
 
 DUF_LEVINFO_DBST_FLD_NAME( ino, inode );
 DUF_LEVINFO_DBST_FLD( dev );
@@ -124,10 +115,6 @@ DUF_LEVINFO_DBST_TYP_FLD_NAME( time, ctime, csec );
 DUF_LEVINFO_DBST_TYP_FLD_NAME( long, atim.tv_nsec, ansec );
 DUF_LEVINFO_DBST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
 DUF_LEVINFO_DBST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
-
-
-
-
 
 /* TODO st_nlink, st_uid, st_gid, st_blksize, st_blocks, st_?tim */
 /************************************************************************/
@@ -162,7 +149,7 @@ duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d )
 
   if ( d >= 0 )
     n = duf_levinfo_ptr_d( pdi, d )->itemname;
-  /* return n ? ( *n ? n : "/" ) : n; */
+/* return n ? ( *n ? n : "/" ) : n; */
   return n && !*n ? "/" : n;
 }
 
@@ -187,7 +174,7 @@ duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d )
 
   if ( d >= 0 )
     n = duf_levinfo_ptr_d( pdi, d )->itemname;
-  /* return n ? ( *n ? n : "/" ) : n; */
+/* return n ? ( *n ? n : "/" ) : n; */
   return n;
 }
 
@@ -204,7 +191,6 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
   p = duf_levinfo_itemtruename( pdi );
   return p ? p : q;
 }
-
 
 /************************************************************************/
 
@@ -233,7 +219,7 @@ DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
 /************************************************************************/
 
 #ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
+# error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3GET( int, numdir, numdir )
@@ -285,7 +271,6 @@ DUF_LEVINFO_3GET( int, source, lev_dh.source )
 DUF_LEVINFO_3GET( int, opened_copy, lev_dh.opened_copy )
 /* *INDENT-ON*  */
 
-
 /************************************************************************/
 
 const char *
@@ -302,11 +287,11 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
     assert( pdi->pathinfo.levinfo );
     assert( pdi->inited );
 #if 0
-#  if 0
+# if 0
     if ( duf_levinfo_ptr_d( pdi, d )->node_type == DUF_NODE_LEAF )
-#  else
+# else
     if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_LEAF )
-#  endif
+# endif
       d--;
 #endif
     path = duf_pi_path_d( &pdi->pathinfo, d );

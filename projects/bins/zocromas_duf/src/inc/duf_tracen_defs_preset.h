@@ -45,10 +45,12 @@
 # endif
 
 # ifndef MAST_TRACE_FORCE_COLOR_C
-#  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) duf_output_force_color()
+/* #  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) duf_output_force_color() */
+#  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) duf_trace_output_force_color_c(_tcfg)
 # endif
 # ifndef MAST_TRACE_NOCOLOR
-#  define MAST_TRACE_NOCOLOR_C( _tcfg )  duf_output_nocolor()
+/* #  define MAST_TRACE_NOCOLOR_C( _tcfg )  duf_output_nocolor() */
+#  define MAST_TRACE_NOCOLOR_C( _tcfg )  duf_trace_output_no_color_c(_tcfg)
 # endif
 
 # ifndef MAST_TRACE_LEVEL

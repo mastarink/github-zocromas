@@ -47,14 +47,10 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "force-color" ) /*      */ , DO_A_N /* */ , DO_VF( FORCE_COLOR )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /* */ DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*        */ , DO_H(  ... ) /*                      */ },
-   {.o = {DO_Q( "trace-force-color" ) /* */ , DO_A_N /* */ } /*                            */ , DO_CL( CONTROL ) /* */ ,
-    /* */ DO_OT( FLAG, output.stream.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*            */ , DO_H(  ... ) /*                      */ },
 
 /* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
    {.o = {DO_Q( "color" ) /*            */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( NOFLAG, opt.output.stream.v ), DO_FL( output, nocolor ) /*                   */ , DO_H(  ... ) /*                      */ },
-   {.o = {DO_Q( "trace-color" ) /*      */ , DO_A_N /* */ } /*                             */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OT( NOFLAG, output.stream.v ), DO_FL( output, nocolor ) /*                       */ , DO_H(  ... ) /*                      */ },
    {.o = {DO_Q( "escapecoloring" ) /*   */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.output.stream.v ), DO_FN( output, nocolor ) /*                     */ , DO_H(  ... ) /*                      */ },
 

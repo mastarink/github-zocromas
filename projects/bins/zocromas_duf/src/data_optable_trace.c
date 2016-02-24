@@ -33,23 +33,26 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
     /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
 
-#  define ENUM_WRAPP(_n, _rf, _rf2) \
+# define ENUM_WRAPP(_n, _rf, _rf2) \
    DUF_TRACE_OPTT(  _n, _rf2 ),
  /* {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OT(UPLUS,_rf2)  , DO_SET_STAGE( DEBUG, MAX)  , DO_H( trace # _rf2 )  }, */
-#  include "duf_options_enum_trace.def"
-#  undef ENUM_WRAPP
-
+# include "duf_options_enum_trace.def"
+# undef ENUM_WRAPP
 
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OT( FILE, output.stream ), DO_AT_STAGE( DEBUG ) /*                     */ , DO_H( trace output to file ) /*                */ },
+    /*      */ DO_OT( FILE, stream ), DO_AT_STAGE( DEBUG ) /*                     */ , DO_H( trace output to file ) /*                */ },
    {.o = {DO_Q( "trace-overwrite-file" ) /*  */ , DO_A_N /* */ , DO_V( TRACE_FILE_OVERWRITE )} /**/, DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OT( FLAG, output.stream.v ), DO_FL( output, overwrite ), DO_AT_STAGE( DEBUG ) /**/, DO_H( trace output to file ) /*        */ },
+    /*      */ DO_OT( FLAG, stream.v ), DO_FL( output, overwrite ), DO_AT_STAGE( DEBUG ) /**/, DO_H( trace output to file ) /*        */ },
    {.o = {DO_Q( "trace-append-file" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_FILE_APPEND )} /*  */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OT( FLAG, output.stream.v ), DO_FL( output, append ), DO_AT_STAGE( DEBUG ) /*  */ , DO_H( trace output to file ) /*        */ },
+    /*      */ DO_OT( FLAG, stream.v ), DO_FL( output, append ), DO_AT_STAGE( DEBUG ) /*  */ , DO_H( trace output to file ) /*        */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OT( FILE, output.stream ),.call = {.value = {.u = 2}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stderr ) /*      */ },
+    /*      */ DO_OT( FILE, stream ),.call = {.value = {.u = 2}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stderr ) /*      */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OT( FILE, output.stream ),.call = {.value = {.u = 1}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stdout ) /*      */ },
+    /*      */ DO_OT( FILE, stream ),.call = {.value = {.u = 1}}, DO_AT_STAGE( DEBUG ) /* */ , DO_H( trace output to stdout ) /*      */ },
+   {.o = {DO_Q( "trace-color" ) /*      */ , DO_A_N /* */ } /*                             */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OT( NOFLAG, stream.v ), DO_FL( output, nocolor ) /*                       */ , DO_H(  ... ) /*                      */ },
+   {.o = {DO_Q( "trace-force-color" ) /* */ , DO_A_N /* */ } /*                            */ , DO_CL( CONTROL ) /* */ ,
+    /* */ DO_OT( FLAG, stream.v ), DO_FL( output, force_color ), DO_STAGE_ALL /*            */ , DO_H(  ... ) /*                      */ },
    {.o = {.name = NULL}}
    }
 };

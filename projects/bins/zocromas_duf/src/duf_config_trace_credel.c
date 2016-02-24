@@ -21,6 +21,7 @@
 /* ###################################################################### */
 #include "duf_config_trace_credel.h"
 /* ###################################################################### */
+/* TODO 20160223.183423 move to trace-lib; rename accordingly */
 
 duf_config_trace_t *
 duf_config_trace_create( void )
@@ -67,8 +68,8 @@ duf_config_trace_create( void )
 void
 duf_config_trace_delete( duf_config_trace_t * tcfg )
 {
-  mas_free( tcfg->output.stream.file );
-  tcfg->output.stream.file = NULL;
+  mas_free( tcfg->stream.file );
+  tcfg->stream.file = NULL;
   mas_free( tcfg->class_levels );
   tcfg->class_levels = NULL;
   tcfg->num_classes = 0;

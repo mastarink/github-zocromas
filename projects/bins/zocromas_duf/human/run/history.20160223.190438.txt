@@ -1,0 +1,18 @@
+run --list-extended
+MSH_SHN_RUN_NAME=motest run --test-q-bflag
+MSH_SHN_RUN_NAME=motest run --no-test-q-bflag
+run  --allow-drop-table  --allow-create-tables --allow-create-database --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  `pwd`/test/tree  `pwd`/test/tree   
+run  --allow-drop-table  --allow-create-tables --allow-create-database --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  `pwd`/test/tree  `pwd`/test/tree    --progress
+run --force-color --db-name=test_tree  -dufR  --with-tag-file=test-gz  --evaluate-sccb=tree `pwd`/test
+run --output-file=@1.tmp --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --trace-file=@2.tmp --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --no-trace-nocolor --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --no-color --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --trace-force-color --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --trace-no-color --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --no-trace-color --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --trace-color --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+run --trace-temp=20 --trace-force-color --trace-file=@2.tmp --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4 
+

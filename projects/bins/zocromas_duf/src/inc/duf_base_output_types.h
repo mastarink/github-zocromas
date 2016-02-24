@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_BASE_OUTPUT_TYPES_H
 # define MAS_DUF_BASE_OUTPUT_TYPES_H
 
+#include <stdio.h> /* FILE */
+
 typedef struct
 {
   unsigned overwrite:1;                                              /* => output options */
@@ -24,7 +26,7 @@ typedef struct
   char *file;
   FILE *out;
   char *header_tty;
-} mas_basic_output_t;
+} mas_base_output_t;
 
 
 #endif

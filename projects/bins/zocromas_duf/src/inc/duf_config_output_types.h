@@ -3,7 +3,7 @@
 
 # include <stdio.h>                                                  /* FILE */
 # include "duf_format_types.h"                                       /* duf_asformats_t; duf_sformats_t */
-# include "duf_base_output_types.h"                                  /* mas_basic_output_t */
+# include "duf_base_output_types.h"                                  /* mas_base_output_t */
 
 typedef struct
 {
@@ -11,7 +11,7 @@ typedef struct
   unsigned max_width;
   duf_asformats_t as_formats;
   duf_sformats_t sformat;
-  mas_basic_output_t stream;
+  mas_base_output_t stream;
 /* char *history_filename; */
 /* duf_bformat_combo_t bformat; */
 } duf_config_output_t;
