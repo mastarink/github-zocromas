@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_maintenance.h"

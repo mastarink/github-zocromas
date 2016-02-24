@@ -11,13 +11,12 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_option_defs.h"
-#include "duf_options_enum.h" /* DUF_OPTION_VAL_... */
+#include "duf_options_enum.h"                                        /* DUF_OPTION_VAL_... */
 
 #include "duf_path2dirid.h"
 
 #include "duf_sql_stmt_defs.h"
 #include "duf_sql_bind.h"
-
 
 /* ###################################################################### */
 #include "duf_ufilter_bind.h"
@@ -56,7 +55,7 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
 {
   DUF_STARTR( r );
 #if 0
-#  define DUF_SQL_BIND_PAIR( _fld, _name ) \
+# define DUF_SQL_BIND_PAIR( _fld, _name ) \
   if ( DUF_CONFIGG(vars.puz)->_name.flag ) \
   { \
     DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(vars.puz)->_name.min, r, pstmt ); \
@@ -64,7 +63,7 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
   }
   assert( DUF_CONFIGX( vars.puz ) );
 #else
-#  define DUF_SQL_BIND_PAIR( _fld, _name ) \
+# define DUF_SQL_BIND_PAIR( _fld, _name ) \
   if ( pu->_name.flag ) \
   { \
     DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, pu->_name.min, r, pstmt ); \
@@ -76,14 +75,13 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
   if ( py )
   {
     DUF_SQL_BIND_LL_NZ_OPT( topDirID, py->topdirid, r, pstmt );
-    /* T( "(%d) BIND topdirid:%llu", r , py->topdirid ); */
-    /* assert( py->topdirid ); */
+  /* T( "(%d) BIND topdirid:%llu", r , py->topdirid ); */
+  /* assert( py->topdirid ); */
   }
   else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt ), 4 ) )
   {
     assert( 0 );
   }
-
 
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Md5Same, same.md5 );
@@ -218,7 +216,8 @@ _duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_
 }
 
 int
-duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused )
+duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused,
+                      const void *ptr DUF_UNUSED )
 {
   DUF_STARTR( r );
   if ( !pu )

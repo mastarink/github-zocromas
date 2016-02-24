@@ -1,5 +1,5 @@
 #ifndef MAS_DUF_OPTION_SOURCE_H
-#  define MAS_DUF_OPTION_SOURCE_H
+# define MAS_DUF_OPTION_SOURCE_H
 
 # include "duf_option_source_types.h"                                /* duf_option_source_t; duf_option_source_code_t */
 
@@ -16,9 +16,9 @@
  * 4. result: name
  * */
 
-const char *duf_optsourcecode_name( duf_option_source_code_t sourcecode );
-const char *duf_optsource_name( duf_option_source_t source );
-const char *duf_optsource_label( duf_option_source_t source );
-int duf_optsource_labelled( duf_option_source_t source );
+const char *duf_optsourcecode_name( duf_config_cli_t * cli, duf_option_source_code_t sourcecode );
+const char *duf_optsource_name( duf_config_cli_t * cli, duf_option_source_t source );
+const char *duf_optsource_label( duf_config_cli_t * cli, duf_option_source_t source );
+int duf_optsource_labelled( duf_config_cli_t * cli, duf_option_source_t source );
 
 #endif

@@ -1,4 +1,4 @@
-/* 20150819.134107 */
+#undef MAS_TRACING
 #include <string.h>
 #include <unistd.h>
 
@@ -96,7 +96,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
 
   /* DUF_SQL_BIND_LL_NZ_OPT( topDirID, duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) ), r, pstmt_selector ); */
   /* duf_yfilter_t yf={.topdirid= duf_levinfo_dirid_d( PDI, duf_pdi_topdepth( PDI ) )}; */
-  DOR( r, duf_bind_ufilter_uni( pstmt_selector, PU, PY, NULL ) );
+  DOR( r, duf_bind_ufilter_uni( pstmt_selector, PU, PY, NULL, NULL /* ptr */ ) );
 
   /* cal one of duf_sel_cb2_(leaf|node) by node_type
    * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )

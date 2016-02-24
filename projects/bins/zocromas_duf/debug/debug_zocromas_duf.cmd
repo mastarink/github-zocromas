@@ -10,6 +10,8 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 
+b duf.c:160
+
 # watch lo_extended_vtable_multi
 
 # watch global_status.pdilist

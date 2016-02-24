@@ -3,6 +3,7 @@
 
 #include <stdio.h> /* FILE */
 
+#if 0
 typedef struct
 {
   unsigned overwrite:1;                                              /* => output options */
@@ -27,6 +28,8 @@ typedef struct
   FILE *out;
   char *header_tty;
 } mas_base_output_t;
-
+#else
+# include <mastar/types/mas_base_output_types.h>                             /* mas_base_output_flags_t */
+#endif
 
 #endif

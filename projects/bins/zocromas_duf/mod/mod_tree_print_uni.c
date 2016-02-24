@@ -1,3 +1,4 @@
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include <mastar/error/mas_errors_maintenance.h>

@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -9,7 +10,6 @@
 
 #include "duf_config_util.h"
 
-
 #include "duf_tmp_types.h"
 
 #include "duf_option_config.h"
@@ -18,7 +18,7 @@
 /* ###################################################################### */
 
 char *
-duf_coption_names_d( duf_config_cli_t * cli,duf_option_code_t codeval, const char *delim )
+duf_coption_names_d( duf_config_cli_t * cli, duf_option_code_t codeval, const char *delim )
 {
   duf_longval_extended_vtable_t **xvtables;
   const duf_longval_extended_vtable_t *xtable;
@@ -27,9 +27,9 @@ duf_coption_names_d( duf_config_cli_t * cli,duf_option_code_t codeval, const cha
   static const char *wrap[2] = { "〈", "〉" };
 
 #if 0
-  xvtables = duf_cli_options_config()->xvtable_multi;
+  xvtables = duf_cli_options_config(  )->xvtable_multi;
 #else
-   xvtables =duf_cli_options_xvtable_multi( cli  );
+  xvtables = duf_cli_options_xvtable_multi( cli );
 #endif
 
   while ( ( xtable = *xvtables++ ) )
@@ -87,7 +87,7 @@ duf_coption_names( duf_option_code_t codeval )
 static duf_tmp_t *cnames_tmp = NULL;
 
 const char *
-duf_coption_cnames_tmp( duf_config_cli_t * cli,int index, duf_option_code_t codeval, const char *delim )
+duf_coption_cnames_tmp( duf_config_cli_t * cli, int index, duf_option_code_t codeval, const char *delim )
 {
   const char *x = NULL;
 
@@ -102,7 +102,7 @@ duf_coption_cnames_tmp( duf_config_cli_t * cli,int index, duf_option_code_t code
   {
     mas_free( cnames_tmp->tmp_string[index] );
     cnames_tmp->tmp_string[index] = NULL;
-    cnames_tmp->tmp_string[index] = duf_coption_names_d(  cli,codeval, delim );
+    cnames_tmp->tmp_string[index] = duf_coption_names_d( cli, codeval, delim );
     x = cnames_tmp->tmp_string[index];
   }
   return x;

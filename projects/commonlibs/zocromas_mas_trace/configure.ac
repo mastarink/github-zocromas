@@ -18,6 +18,7 @@ AX_LIB_SQLITE3([3.8])
 
 
 
+PKG_CHECK_MODULES([DEPS], [zocromas_mas_wrap])
 
 
 

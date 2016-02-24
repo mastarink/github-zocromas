@@ -16,6 +16,7 @@
 #include "duf_config_util.h"
 /* ###################################################################### */
 
+#if 0
 static void *
 duf_get_offset( void *ptr, unsigned long off )
 {
@@ -34,12 +35,7 @@ duf_get_config_puz_offset( unsigned long off )
 {
   return duf_config ? duf_get_offset( duf_config->vars.puz, off ) : NULL;
 }
-
-void *
-duf_get_pointer_ufilter( void )
-{
-  return duf_config ? duf_config->vars.puz : NULL;
-}
+#endif
 
 duf_config_cli_t *
 duf_get_config_cli( void )
@@ -52,29 +48,26 @@ duf_get_config_cli( void )
 #endif
 }
 
-void *
-duf_get_pointer_config_cli( void )
-{
-  return duf_get_config_cli(  );
-}
-
-void *
-duf_get_pointer_config_trace( void )
-{
-  return duf_get_config_opt(  )->ptracecfg;
-}
-void *
-duf_get_pointer_config_trace_enum( void )
-{
-  return duf_get_config_opt(  )->ptracecfg->class_levels;
-}
-
 duf_config_opt_t *
 duf_get_config_opt( void )
 {
   return duf_config ? &duf_config->opt : NULL;
 }
 
+duf_ufilter_t *
+duf_get_config_ufilter( void )
+{
+  return duf_config ? duf_config->vars.puz : NULL;
+}
+
+#ifdef MAS_TRACING
+mas_config_trace_t *
+duf_get_trace_config( void )
+{
+  assert( duf_config );
+  return duf_config->opt.ptracecfg;
+}
+#endif
 
 #if 0
 char

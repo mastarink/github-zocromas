@@ -35,6 +35,7 @@ struct duf_config_cli_s
   duf_option_adata_t aod;
 
   mas_arg_get_cb_arg_t varfunc;
+  const mas_config_trace_t  *ptracecfg;
 };
 typedef struct duf_config_cli_s duf_config_cli_t;
 

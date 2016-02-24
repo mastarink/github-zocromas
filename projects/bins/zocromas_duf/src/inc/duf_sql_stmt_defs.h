@@ -8,7 +8,7 @@
 #  define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
-	  DUF_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
+          DUF_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
           if ( DUF_NOERROR(_rt) ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
 

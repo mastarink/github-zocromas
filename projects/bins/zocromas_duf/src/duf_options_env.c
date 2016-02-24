@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -25,7 +26,7 @@ duf_env_options_at_var( duf_config_cli_t * cli, duf_option_stage_t istage, const
 
   eo = getenv( envvarname );
 
-  DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name( istage ), envvarname, eo );
+  DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name(cli,istage ), envvarname, eo );
   DOR( r, duf_boption_xclarify_at_stdx( cli, '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0, paod ) );
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
@@ -49,7 +50,7 @@ duf_source_env_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int
   const char *evname = NULL;
 
   DUF_STARTR( r );
-  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
+  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name(cli,sourcecode ) );
   evname = duf_cli_options_config_env_var_name( cli );
 #if 0
   DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_AOPTIONS", paod ) );

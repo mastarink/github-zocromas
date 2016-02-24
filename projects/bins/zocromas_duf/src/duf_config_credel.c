@@ -1,6 +1,8 @@
 /* #include <stdarg.h> */
 #include <string.h>
 
+#include <mastar/trace/mas_trace_credel.h>
+
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
@@ -9,7 +11,7 @@
 #include "duf_config_defs.h"
 
 #include "duf_config4trace_ref.h"
-#include "duf_config_trace_credel.h"
+/* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
 
 #include "duf_option_config.h"
@@ -27,9 +29,9 @@ duf_config_create( int argc, char **argv )
 {
   DUF_START(  );
   duf_config = duf_cfg_create(  );
-  duf_config->opt.ptracecfg = duf_config_trace_create(  );
   assert( duf_config );
 #ifdef MAS_TRACING
+  duf_config->opt.ptracecfg = mas_config_trace_create( DUF_TRACE_LEVEL_MAX  );
   duf_config4trace = duf_config;
   assert( duf_config4trace );
 #endif
@@ -44,7 +46,7 @@ duf_config_create( int argc, char **argv )
   duf_cli_init(  /* &duf_config->cli, */ argc, argv );
 # else
   duf_get_config(  )->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), DUF_CONFIGGS( conf.config_dir ),
-                                                     DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar );
+                                                     DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
 # endif
 
 #endif
@@ -66,7 +68,7 @@ duf_config_delete( void )
   mas_error_report_all( 0, /*FIXME: error output is not trace output */ duf_trace_file_c( duf_config->opt.ptracecfg ),
                         duf_verbose ? duf_verbose(  ) : 0 );
 
-  duf_config_trace_delete( duf_config->opt.ptracecfg );
+  mas_config_trace_delete( duf_config->opt.ptracecfg );
   duf_config->opt.ptracecfg = NULL;
 /* duf_cli_options_shut_global(  ); */
   duf_cfg_delete( duf_config );

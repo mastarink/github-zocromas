@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
@@ -190,7 +191,7 @@ duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
       DUF_SQL_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, rpr, pstmt );
       DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), rpr, pstmt );
 
-      DOR( rpr, duf_bind_ufilter_uni( pstmt, duf_pdi_pu( pdi ), duf_pdi_py( pdi ), NULL ) );
+      DOR( rpr, duf_bind_ufilter_uni( pstmt, duf_pdi_pu( pdi ), duf_pdi_py( pdi ), NULL, NULL /* ptr */ ) );
 
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )

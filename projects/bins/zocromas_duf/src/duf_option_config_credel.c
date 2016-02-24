@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -20,7 +21,7 @@
 /* ###################################################################### */
 
 static char *
-duf_cli_option_shorts_create( duf_longval_extended_vtable_t * *xvtables )
+duf_cli_option_shorts_create( duf_config_cli_t * cli DUF_UNUSED, duf_longval_extended_vtable_t * *xvtables )
 {
   const duf_longval_extended_vtable_t *xtable;
   char shorts[1024 * 4] = "";
@@ -68,29 +69,30 @@ duf_cli_option_shorts_create( duf_longval_extended_vtable_t * *xvtables )
 
 duf_config_cli_t *
 duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
-                        const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
+                        const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
 {
   duf_config_cli_t *cli;
 
   cli = mas_malloc( sizeof( duf_config_cli_t ) );
-  duf_cli_options_init( cli, argc, argv, xtable_list, config_dir, commands_dir, varfunc );
+  duf_cli_options_init( cli, argc, argv, xtable_list, config_dir, commands_dir, varfunc, ptracecfg );
   return cli;
 }
 
 void
 duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
-                      const char *commands_dir, mas_arg_get_cb_arg_t varfunc )
+                      const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
 {
   if ( cli )
   {
     memset( cli, 0, sizeof( duf_config_cli_t ) );
+    cli->ptracecfg = ptracecfg;
     cli->carg.argc = argc;
     cli->carg.argv = argv;
   /* const duf_longval_extended_vtable_t * const *xvtables
    * cli->xvtable_multi = xvtables;
    * */
-    cli->xvtable_multi = duf_cli_options_xtable_list2xvtable( xtable_list ); /* allocates */
-    cli->shorts = duf_cli_option_shorts_create( cli->xvtable_multi );
+    cli->xvtable_multi = duf_cli_options_xtable_list2xvtable( cli, xtable_list ); /* allocates */
+    cli->shorts = duf_cli_option_shorts_create( cli, cli->xvtable_multi );
     cli->varfunc = varfunc;
 
     cli->longopts_table = duf_options_create_longopts_table( cli->xvtable_multi );
@@ -159,9 +161,9 @@ duf_cli_options_shut( duf_config_cli_t * cli )
         pod = &cli->aod.pods[iod];
       /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
         if ( source.sourcecode != pod->source.sourcecode )
-          fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );
+          fprintf( f, "* SOURCE %s\n", duf_optsource_name( cli, ( source = pod->source ) ) );
         if ( stage != pod->stage )
-          fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
+          fprintf( f, "* STAGE %s\n", duf_optstage_name( cli, ( stage = pod->stage ) ) );
         if ( pod->doindex >= 0 )
         {
           fprintf( f, "\t%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,

@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <stddef.h>                                                  /* NULL */
 
 /* ###################################################################### */

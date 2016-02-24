@@ -2,11 +2,12 @@
 # define MAS_DUF_OPTION_TYPES_H
 # include <getopt.h>
 
+# include <mastar/types/mas_base_output_types.h>                     /* mas_base_output_flags_t */
+
 # include "duf_fun_types.h"                                          /* duf_void_int_func_t; duf_errc_int_func_t */
 # include "duf_option_source_types.h"                                /* duf_option_source_t */
 # include "duf_config_rec_etc_types.h"                               /* duf_config_rec_etc_flags_t */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  */
-# include "duf_base_output_types.h"                                  /* duf_base_output_flags_t */
 # include "duf_config_output_types.h"                                /* duf_config_output_flags_t */
 # include "duf_config_act_types.h"                                   /* duf_config_act_flags_t  */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
@@ -62,7 +63,7 @@ typedef enum
 typedef union
 {
   duf_config_act_flags_t act;
-  duf_base_output_flags_t output;
+  mas_base_output_flags_t output;
   duf_config_rec_etc_flags_t rec_etc;
   duf_config_flow_flags_t flow;
   duf_config_opt_disable_flags_t disable;

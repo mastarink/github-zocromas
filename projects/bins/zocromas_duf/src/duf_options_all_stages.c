@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 /* #include <stddef.h> */
 #include <string.h>
 
@@ -23,7 +24,7 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
     duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )
 {
   assert( cli );
-  DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( istage ) );
+  DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( cli, istage ) );
 /* TODO all (except INTERACTIVE) : call from paod, not real source */
   if ( istage == DUF_OPTION_STAGE_LOOP )
   {
@@ -55,7 +56,7 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
     CR( all_options, cli, istage, cb_do_interactive, cb_prompt_interactive, duf_cli_options_aod( cli ) /* paod */ ,
         ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
-  DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( istage ) );
+  DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( cli, istage ) );
 
   ER( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage,
       duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive );
@@ -79,10 +80,10 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
 {
   DUF_TRACE( options, 0, "@@@@@to do all options for all stages (%p:%p)", ( void * ) &cb_init_all_optstages, ( void * ) &cb_init_loop_optstage );
 
-  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( DUF_OPTION_STAGE_PRESETUP ) );
+  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name(cli,DUF_OPTION_STAGE_PRESETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_PRESETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( DUF_OPTION_STAGE_SETUP ) );
+  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name(cli,DUF_OPTION_STAGE_SETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_SETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 #if 0
   CR( config_optionally_show );                                      /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */

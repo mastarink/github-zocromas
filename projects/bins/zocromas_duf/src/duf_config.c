@@ -11,14 +11,8 @@
 duf_config_t *duf_config = NULL;
 
 duf_config_t *
-duf_get_pointer_config( void )
+duf_get_config( void )
 {
   assert( duf_config );
   return duf_config;
-}
-
-duf_config_t *
-duf_get_config( void )
-{
-  return duf_get_pointer_config(  );
 }

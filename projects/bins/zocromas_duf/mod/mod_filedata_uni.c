@@ -1,3 +1,4 @@
+/* #undef MAS_TRACING */
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
 
 #include <mastar/tools/mas_arg_tools.h>

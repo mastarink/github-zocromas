@@ -2,6 +2,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include <mastar/trace/mas_trace_credel.h>
+
 #include "duf_maintenance.h"
 
 #include "duf_config.h"
@@ -23,7 +25,10 @@
 /* ###################################################################### */
 /* TODO 20160223.183423 move to trace-lib; rename accordingly */
 
-duf_config_trace_t *
+
+#if 0
+
+mas_config_trace_t *
 duf_config_trace_create( void )
 {
   duf_config_trace_t *tcfg = NULL;
@@ -75,3 +80,4 @@ duf_config_trace_delete( duf_config_trace_t * tcfg )
   tcfg->num_classes = 0;
   mas_free( tcfg );
 }
+#endif

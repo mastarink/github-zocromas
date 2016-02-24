@@ -1,4 +1,6 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+
 #include <string.h>
 #include <ctype.h>
 
@@ -291,7 +293,7 @@ duf_cli_options_varfunc( const duf_config_cli_t * cli )
 
 /* 20160220.190632 */
 duf_longval_extended_vtable_t **
-duf_cli_options_xtable_list2xvtable( const duf_longval_extended_table_t * const *xtable_multi )
+duf_cli_options_xtable_list2xvtable( const duf_config_cli_t * cli, const duf_longval_extended_table_t * const *xtable_multi )
 {
   unsigned numtabs = 0;
   duf_option_code_t maxcodeval = 0;
@@ -359,4 +361,10 @@ duf_cli_options_xtable_list2xvtable( const duf_longval_extended_table_t * const 
     vtable_multi[itab] = vtable;
   }
   return vtable_multi;
+}
+
+const mas_config_trace_t *
+duf_get_cli_options_trace_config( const duf_config_cli_t * cli )
+{
+  return cli->ptracecfg;
 }

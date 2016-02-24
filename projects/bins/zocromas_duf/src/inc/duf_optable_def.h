@@ -2,8 +2,8 @@
 #  define MAS_DUF_OPTABLE_DEF_H
 
 #  include "duf_option_types.h"
-#  include "duf_config.h" /* duf_get_pointer_config */
-#  include "duf_config_util.h" /* duf_get_pointer_ufilter */
+#  include "duf_config.h" /* duf_get_duf_config_t_pointer */
+#  include "duf_config_pointers.h" /* duf_get_(.*)_pointer */
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
@@ -77,15 +77,15 @@
 
 
 
-#  define DO_AFFSET( _v, _styp, _fld, _offset )  .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
-#  define DOO_AFFSET( _v, _styp, _fld, _offset ) .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+#  define DO_AFFSET( _v, _styp, _fld, _offset )  .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+#  define DOO_AFFSET( _v, _styp, _fld, _offset ) .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
 
-#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
-#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_pointer_##_fld
+#  define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+#  define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
 
 
-#  define DO_AOO(_vt, _v, _styp, _fld, _offset)     DO_SET_VTYPE(_vt), DO_AFFSET( _v, _styp, _fld, _offset *sizeof(duf_## _styp ## _t) )
-#  define DOO_AOO(_vt, _v, _styp, _fld, _offset)   DOO_SET_VTYPE(_vt), DOO_AFFSET( _v, _styp, _fld, _offset *sizeof(duf_## _styp ## _t) )
+#  define DO_AOO(_vt, _v, _styp, _fld, _offset)     DO_SET_VTYPE(_vt), DO_AFFSET( _v, _styp, _fld, _offset *sizeof( _styp ) )
+#  define DOO_AOO(_vt, _v, _styp, _fld, _offset)   DOO_SET_VTYPE(_vt), DOO_AFFSET( _v, _styp, _fld, _offset *sizeof( _styp ) )
 
 #  define DO_OOO(_vt, _v, _styp, _fld)     DO_SET_VTYPE(_vt), DO_OFFSET( _v, _styp, _fld )
 #  define DOO_OOO(_vt, _v, _styp, _fld)   DOO_SET_VTYPE(_vt), DOO_OFFSET( _v, _styp, _fld )
@@ -100,24 +100,24 @@
 /* #  define DO_OP(_vt, _v)        DO_OO(_vt, _v, depthinfo) */
 /* Offset config */
 /* _vt is field at config, to get offset */
-#  define DO_OC(_vt, _v)        DO_OO(_vt, _v, config)
-#  define DOO_OC(_vt, _v)      DOO_OO(_vt, _v, config)
+#  define DO_OC(_vt, _v)        DO_OO(_vt, _v, duf_config_t)
+#  define DOO_OC(_vt, _v)      DOO_OO(_vt, _v, duf_config_t)
 
 
-#  define DO_OI(_vt, _v)        DO_OO(_vt, _v, config_cli)
-#  define DOO_OI(_vt, _v)      DOO_OO(_vt, _v, config_cli)
+#  define DO_OI(_vt, _v)        DO_OO(_vt, _v, duf_config_cli_t)
+#  define DOO_OI(_vt, _v)      DOO_OO(_vt, _v, duf_config_cli_t)
 
-#  define DO_OT(_vt, _v)        DO_OO(_vt, _v, config_trace)
-#  define DOO_OT(_vt, _v)      DOO_OO(_vt, _v, config_trace)
+#  define DO_OT(_vt, _v)        DO_OO(_vt, _v, mas_config_trace_t)
+#  define DOO_OT(_vt, _v)      DOO_OO(_vt, _v, mas_config_trace_t)
 
 
-#  define DO_ATT(_vt, _v,_offset)        DO_AO(_vt, _v, config_trace_enum,_offset)
-#  define DOO_ATT(_vt, _v,_offset)      DOO_AO(_vt, _v, config_trace_enum,_offset)
+#  define DO_ATT(_vt, _v,_offset)        DO_AO(_vt, _v, duf_config_trace_enum_t, _offset)
+#  define DOO_ATT(_vt, _v,_offset)      DOO_AO(_vt, _v, duf_config_trace_enum_t, _offset)
 
 
 /* Offset ufilter */
-#  define DO_OU(_vt, _v)        DO_OO(_vt, _v, ufilter)
-#  define DOO_OU(_vt, _v)      DOO_OO(_vt, _v, ufilter)
+#  define DO_OU(_vt, _v)        DO_OO(_vt, _v, duf_ufilter_t)
+#  define DOO_OU(_vt, _v)      DOO_OO(_vt, _v, duf_ufilter_t)
 
 
 #  define DO_BFL(_loc, _fld)             .flag_bitnum=DUF_FLAG_ ## _loc ## _ ## _fld, .can_no=1

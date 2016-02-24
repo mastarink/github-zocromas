@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_argv_string; mas_argv_delete */
@@ -14,6 +15,7 @@
 
 /* #include "duf_config_util.h" */
 
+#include "duf_option_config.h"
 #include "duf_option_tmpdb.h"
 
 #include "duf_option_stage.h"
@@ -28,7 +30,7 @@
 /* ###################################################################### */
 
 static FILE *
-duf_open_file_special( const char *pname, char **popenedname, int overwrite, int *pr )
+duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite, int *pr )
 {
   int rpr = 0;
   FILE *newfile = NULL;
@@ -70,7 +72,7 @@ duf_open_file_special( const char *pname, char **popenedname, int overwrite, int
 
 /*  20150924.120214 for DUF_OUTPUTFILE DUF_OUTPUTFILE_A */
 static int
-duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
+duf_set_file_special( duf_config_cli_t * cli, const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
 {
   DUF_STARTR( r );
   FILE *newout;
@@ -102,7 +104,7 @@ duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE *
       *pfilename = NULL;
     }
     if ( pname && *pname )
-      newout = duf_open_file_special( pname, pfilename, overwrite, &r );
+      newout = duf_open_file_special( cli, pname, pfilename, overwrite, &r );
     if ( !newout )
       newout = defout;
     if ( newout )
@@ -123,7 +125,7 @@ duf_get_offset( void *ptr, unsigned long off )
 }
 
 static void *
-duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
+duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli,const duf_longval_extended_t * extended )
 {
   void *byte_ptr = NULL;
 
@@ -176,8 +178,8 @@ duf_xoption_clarify_typed_byteptr( const duf_longval_extended_t * extended )
 }
 
 int
-duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const char *optargg, unsigned noo, duf_option_stage_t istage DUF_UNUSED,
-                               duf_option_source_t source DUF_UNUSED )
+duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg, unsigned noo,
+                               duf_option_stage_t istage DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -193,8 +195,8 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
     unsigned doplus = 0;
     void *byteptr = NULL;
 
-    byteptr = duf_xoption_clarify_typed_byteptr( extended );
-    DUF_TRACE( options, 60, "to check stage; istage:%s", duf_optstage_name( istage ) );
+    byteptr = duf_xoption_clarify_typed_byteptr( cli,extended );
+    DUF_TRACE( options, 60, "to check stage; istage:%s", duf_optstage_name(cli,istage ) );
   /* if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) *//* moved upper */
     {
       unsigned nof;
@@ -223,8 +225,8 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
           doplus = 1;
-        /* assert( 0 ); */
-        /* assert( ( ( char * ) ( duf_config->opt.ptracecfg->class_levels ) ) + ( extended->m_offset ) == ( ( char * ) byteptr ) ); */
+      /* assert( 0 ); */
+      /* assert( ( ( char * ) ( duf_config->opt.ptracecfg->class_levels ) ) + ( extended->m_offset ) == ( ( char * ) byteptr ) ); */
       case DUF_OPTION_VTYPE_NUM:                                    /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
         DUF_TRACE( options, 70, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
@@ -521,7 +523,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
 #endif
           }
           else if ( optargg && *optargg && duf_tmpdb_add )
-            DOR( r, duf_tmpdb_add( extended->o.val, extended->o.name, optargg ) );
+            DOR( r, duf_tmpdb_add( cli, extended->o.val, extended->o.name, optargg ) );
         }
         break;
       /*
@@ -563,7 +565,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
         if ( DUF_NOERROR( r ) )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s) : %d", extended->o.name, extended->call.value.u );
-          DUF_OUTPUTFILE( noo, r, mas_base_output_t, , stderr );
+          DUF_OUTPUTFILE( cli, noo, r, mas_base_output_t,, stderr );
         /* {                                                                                 */
         /*   char start_time[128] = "??";                                                    */
         /*                                                                                   */
@@ -584,7 +586,7 @@ duf_xoption_clarify_typed_gen( const duf_longval_extended_t * extended, const ch
     else
     {
       DUF_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
-                 duf_optstage_name( istage ) );
+                 duf_optstage_name(cli,istage ) );
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
 #endif

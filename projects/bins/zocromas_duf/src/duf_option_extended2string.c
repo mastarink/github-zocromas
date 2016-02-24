@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <stddef.h>
 #include <string.h>
 
@@ -282,10 +283,10 @@ duf_offset2stringid( unsigned offset DUF_UNUSED, duf_offset_to_t relto DUF_UNUSE
 /* duf_xarr_print */
 /* TODO : duf_codeval2string depends on optimpl !! */
 static void
-duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
+duf_xarr_print( const duf_config_cli_t * cli DUF_UNUSED,const duf_longval_extended_vtable_t * xtable, const char *name )
 {
   DUF_PRINTF( 0, ".@@@ [%s]", xtable->name );
-  duf_optstage_print( xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask, 0 );
+  duf_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask, 0 );
   DUF_PUTSL( 0 );
 
   for ( const duf_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++ )
@@ -331,7 +332,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
         }
         DUF_PUTSL( 0 );
       }
-      duf_optstage_print( xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
+      duf_optstage_print( cli, xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
                           xtended->stage_opts.stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
@@ -442,7 +443,7 @@ duf_xarr_print( const duf_longval_extended_vtable_t * xtable, const char *name )
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( duf_longval_extended_vtable_t ** xvtables, const char *name )
+duf_multix_print( const duf_config_cli_t * cli DUF_UNUSED,duf_longval_extended_vtable_t ** xvtables, const char *name )
 {
   for ( duf_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
   {
@@ -463,7 +464,7 @@ duf_multix_print( duf_longval_extended_vtable_t ** xvtables, const char *name )
     }
   /* if ( ( !matchtab || !*matchtab || 0 == strncmp( ( *xt )->name, matchtab, strlen( matchtab ) ) ) ) */
     if ( ( !matchtab || !*matchtab || strstr( ( *xt )->name, matchtab ) ) )
-      duf_xarr_print( *xt, matchopt );                               /* TODO :  depends on optimpl !! */
+      duf_xarr_print(cli, *xt, matchopt );                               /* TODO :  depends on optimpl !! */
     mas_free( matchtab );
     mas_free( matchopt );
   }
@@ -475,5 +476,5 @@ void
 duf_stdx_print( const duf_config_cli_t * cli, const char *name )
 {
 /* duf_multix_print( duf_extended_vtable_multi(  ), name ); */
-  duf_multix_print( duf_cli_options_xvtable_multi(cli ), name );
+  duf_multix_print( cli,duf_cli_options_xvtable_multi(cli ), name );
 }

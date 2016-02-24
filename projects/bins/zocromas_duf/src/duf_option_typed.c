@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -11,6 +12,7 @@
 /* #include "duf_config_util.h" */
 
 #include "duf_option_defs.h"
+#include "duf_option_config.h"
 
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
@@ -23,8 +25,8 @@
 /* ###################################################################### */
 
 int
-duf_xoption_clarify_typed( duf_config_cli_t * cli,const duf_longval_extended_t * extended, const char *optargg, const duf_longval_extended_vtable_t * xvtable, unsigned noo,
-                           duf_option_stage_t istage, duf_option_source_t source )
+duf_xoption_clarify_typed( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg,
+                           const duf_longval_extended_vtable_t * xvtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
   DUF_STARTR( r );
   duf_option_data_t od DUF_UNUSED;
@@ -38,16 +40,16 @@ duf_xoption_clarify_typed( duf_config_cli_t * cli,const duf_longval_extended_t *
   od.extended = extended;
 #endif
 
-  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xvtable ) )
+  if ( DUF_OPTION_CHECK_STAGE( cli, istage, extended, xvtable ) )
   {
     int nogen = 0;
 
     DUF_TRACE( options, 60, "to clarify typed:'%s'; `noo`:%d; stage:%s; source:%s", extended ? extended->o.name : "?", noo,
-               duf_optstage_name( istage ), duf_optsource_name( source ) );
+               duf_optstage_name(cli,istage ), duf_optsource_name(cli,source ) );
     if ( extended->calltype )
     {
       nogen = 1;
-      DOR( r, duf_xoption_clarify_typed_call(  cli,extended, optargg, noo, istage, source ) );
+      DOR( r, duf_xoption_clarify_typed_call( cli, extended, optargg, noo, istage, source ) );
 
     /* useless now: */
       if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_CLARIFIED ) )
@@ -58,13 +60,13 @@ duf_xoption_clarify_typed( duf_config_cli_t * cli,const duf_longval_extended_t *
     }
     if ( !nogen )
     {
-      DOR( r, duf_xoption_clarify_typed_gen( extended, optargg, noo, istage, source ) );
+      DOR( r, duf_xoption_clarify_typed_gen(cli, extended, optargg, noo, istage, source ) );
     }
   }
   else
   {
     DUF_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
-               duf_optstage_name( istage ) );
+               duf_optstage_name(cli,istage ) );
   /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   }
 

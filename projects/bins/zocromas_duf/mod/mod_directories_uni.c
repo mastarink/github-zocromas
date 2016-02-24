@@ -1,3 +1,4 @@
+/* #undef MAS_TRACING */
 #include <string.h>
 
 #include "duf_maintenance.h"
@@ -5,6 +6,7 @@
 #include "sql_beginning_types.h"                                     /* duf_sql_sequence_t */
 
 /* #include "duf_config.h" */
+#include "duf_config_util.h"
 
 #include "duf_levinfo_ref.h"
 

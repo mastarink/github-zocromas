@@ -8,11 +8,14 @@
 /* #include <unistd.h> */
 #include <sys/time.h>
 
+#include <mastar/wrap/mas_memory.h>
+
 #include "mas_print_defs.h"
 /* #include "mas_errors.h" */
 
 /* ###################################################################### */
 #include "mas_trace_utils_print.h"
+#include "mas_trace_types.h"
 #include "mas_trace.h"
 /* ###################################################################### */
 

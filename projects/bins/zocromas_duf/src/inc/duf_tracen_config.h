@@ -4,7 +4,6 @@
 # include "duf_config_types.h"
 
 #ifdef MAS_TRACING
-duf_config_trace_t *duf_get_trace_config( void );
 
 FILE *duf_trace_file( void );
 #endif

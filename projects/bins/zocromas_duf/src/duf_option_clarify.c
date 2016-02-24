@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -11,6 +12,7 @@
 
 #include "duf_option_descr.h"
 
+#include "duf_option_config.h"
 #include "duf_option_typed.h"
 
 #include "duf_option_stage.h"
@@ -33,7 +35,7 @@ duf_xoption_clarify( duf_config_cli_t * cli, const duf_longval_extended_t * exte
  *   errorcode<0  for error
  * */
     DUF_TRACE( options, 55, "@@@fully clarify option: [--%s='%s'] stage:%s; `noo`:%d; source:%s",
-               extended ? extended->o.name : "?", optargg, duf_optstage_name( istage ), noo, duf_optsource_name( source ) );
+               extended ? extended->o.name : "?", optargg, duf_optstage_name( cli, istage ), noo, duf_optsource_name( cli, source ) );
     DOR( r, duf_xoption_clarify_typed( cli, extended, optargg, xtable, noo, istage, source ) );
     DUF_TRACE( options, 55, "@clarified typed: --%s / [%s]; (%d:%s)", extended->o.name, duf_xoption_description_tmp( cli, -1, extended ), r,
                mas_error_name_i( r ) );
@@ -79,7 +81,7 @@ DUF_WRAPPED( duf_xoption_clarify ) ( const duf_longval_extended_t * extended, co
 
 /* 20150924.144102 */
 int
-duf_argv_clarify( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
+duf_argv_clarify( duf_config_cli_t * cli, mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
 {
   DUF_STARTR( r );
   mas_del_argv( ptarg->argc, ptarg->argv, 0 );

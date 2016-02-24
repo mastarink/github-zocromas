@@ -17,6 +17,6 @@ typedef struct
 /* #  include "duf_sql_types.h" */
 #  include "duf_sql_types.h"
 #  include "duf_ufilter_types.h"
-typedef int ( *duf_bind_cb_t ) ( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * arg );
+typedef int ( *duf_bind_cb_t ) ( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * arg, const void *ptr );
 
 #endif

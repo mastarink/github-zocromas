@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -39,10 +40,10 @@ duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage,
 #endif
   const char *prompt = NULL;
 
-  T( "@   source:%s", duf_optsourcecode_name( sourcecode ) );
+  T( "@   source:%s", duf_optsourcecode_name(cli,sourcecode ) );
   if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
-    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( istage ) );
+    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name(cli,istage ) );
 #if 0
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );

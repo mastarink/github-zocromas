@@ -20,13 +20,13 @@
 /* #  endif                             */
 
 
-#  ifndef MAST_TRACE_LOADTIME_C
-/* #    define MAST_TRACE_LOADTIME_C( _cfg )  ( _cfg ? _cfg->loadtime : 0.0) */
-#    define MAST_TRACE_LOADTIME_C( _cfg )  0.0
-#  endif
-#  ifndef MAST_TRACE_LOADTIME
-#    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(mas_get_trace_config(  ))
-#  endif
+/* #  ifndef MAST_TRACE_LOADTIME_C                                                 */
+/* (* #    define MAST_TRACE_LOADTIME_C( _cfg )  ( _cfg ? _cfg->loadtime : 0.0) *) */
+/* #    define MAST_TRACE_LOADTIME_C( _cfg )  0.0                                  */
+/* #  endif                                                                        */
+/* #  ifndef MAST_TRACE_LOADTIME                                                    */
+/* #    define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(mas_get_trace_config(  )) */
+/* #  endif                                                                         */
 
 #  ifndef MAST_TRACE_FILE_C
 /* #    define MAST_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->MAST_TRACE_AT_TCFG_ output.out ? _cfg->MAST_TRACE_AT_TCFG_ output.out : stdout ) */

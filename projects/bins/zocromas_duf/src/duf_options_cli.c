@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 /* #include <stddef.h> */
 
 #include "duf_maintenance_z.h"
@@ -101,7 +102,7 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t
              , optind                                                /* */
              , optopt                                                /* */
              , opterr                                                /* */
-             , duf_optstage_name( istage )                           /* */
+             , duf_optstage_name( cli, istage )                      /* */
            );
   {
     int optoptt = 0;
@@ -175,7 +176,7 @@ SR( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_sta
 
   carg = duf_cli_options_get_carg( cli );
   numxargv = carg->argc - optindd;
-  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optindd:%d;", duf_optstage_name( istage ), carg->argc, numxargv,
+  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optindd:%d;", duf_optstage_name( cli, istage ), carg->argc, numxargv,
              optindd );
 
 /* 20160129.121211 DUF_OPTION_STAGE_SETUP Changed to  DUF_OPTION_STAGE_BOOT */
@@ -183,7 +184,7 @@ SR( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_sta
   {
   /* to do once, at stage SETUP (?), for next stages */
     DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optindd, carg->argv[optindd] );
-    CR( argv_clarify, duf_cli_options_get_targ( cli ), carg, optindd );
+    CR( argv_clarify, cli, duf_cli_options_get_targ( cli ), carg, optindd );
 
     if ( QNOERR )
     /* DUF_CONFIGWN( cli.targ_offset, duf_reorder_argvc_at_sign( DUF_CONFIGA( cli.targ ) ) ); */
@@ -215,7 +216,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
 
   carg = duf_cli_options_get_carg( cli );
 
-  DUF_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( istage ), carg->argc );
+  DUF_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( cli, istage ), carg->argc );
 
   {
     duf_option_code_t codeval;
@@ -264,15 +265,15 @@ SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage
 {
 /* DUF_STARTR( r ); */
 
-  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( sourcecode ) );
-  DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( istage ) );
+  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
+  DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( cli, istage ) );
 
   CR( cli_parse, cli, duf_cli_options_get_shorts( cli ), istage, paod );
 
   if ( istage < DUF_OPTION_STAGE_SETUP )
     DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );
 
-  DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( istage ), QERRIND, QERRNAME );
+  DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 /* DUF_ENDR( r ); */
 
   ER( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,

@@ -1,3 +1,4 @@
+/* #undef MAS_TRACING */
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -462,28 +463,36 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   else if ( 0 )
   {
 #if 0
-# define exif_data_get_entry(d, t) (
-    exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) ?
-            exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) :
-            exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) ?
-            exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) :
-            exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) ?
-            exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) :
-            exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) ?
-            exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) :
+# define exif_data_get_entry(d, t) ( \
+    exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) ? \
+            exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) : \
+            exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) ? \
+            exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) : \
+            exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) ? \
+            exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) : \
+            exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) ? \
+            exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) : \
             exif_content_get_entry( d->ifd[EXIF_IFD_INTEROPERABILITY], t ) ? exif_content_get_entry( d->ifd[EXIF_IFD_INTEROPERABILITY], t ) : NULL )
 #endif
-          /* DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE ); */
+  /* DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE ); */
 #if 0
-            if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +1" );
+    }
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +2" );
+    }
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +3" );
+    }
 #else
-            if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +123" );
+    }
 #endif
 #if 0
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
@@ -494,7 +503,9 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       DUF_SHOW_ERRORO( "NO DATE - HAS +6" );
 #else
     else if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +456" );
+    }
 #endif
 
 #if 0
@@ -506,10 +517,14 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       DUF_SHOW_ERRORO( "NO DATE - HAS +9" );
 #else
     else if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME ) ) )
+    {
       DUF_SHOW_ERRORO( "NO DATE - HAS +789" );
+    }
 #endif
     else
+    {
       DUF_SHOW_ERRORO( "NO DATE" );
+    }
   /* ??? exif_entry_free( entry ); */
   }
 
@@ -520,7 +535,8 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   return timeepoch;
 }
 
-static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+static int
+dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
 
@@ -746,9 +762,10 @@ static int dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_n
          */
           {
             time_t timeepoch = 0;
-            char stime_original[1024] =
-            {
-            '\0'};
+
+            char stime_original[1024] = {
+              '\0'
+            };
             char *model = NULL;
 
             {

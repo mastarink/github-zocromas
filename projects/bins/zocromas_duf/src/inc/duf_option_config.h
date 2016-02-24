@@ -5,7 +5,7 @@
 # include "duf_option_types.h"                                       /* duf_option_t; duf_longval_extended_vtable_t */
 # include "duf_config_cli_types.h"                                   /* duf_config_cli_t */
 
-duf_longval_extended_vtable_t **duf_cli_options_xtable_list2xvtable( const duf_longval_extended_table_t * const *xtable_multi );
+duf_longval_extended_vtable_t **duf_cli_options_xtable_list2xvtable( const duf_config_cli_t * cli, const duf_longval_extended_table_t * const *xtable_multi );
 
 /* duf_config_cli_t *duf_cli_options_config( const duf_config_cli_t * cli ); */
 
@@ -46,5 +46,7 @@ mas_arg_get_cb_arg_t duf_cli_options_varfunc( const duf_config_cli_t * cli );
 const char *duf_cli_options_bin_name( const duf_config_cli_t * cli );
 const char *duf_cli_options_config_file_name( const duf_config_cli_t * cli );
 const char *duf_cli_options_config_env_var_name( const duf_config_cli_t * cli );
+
+const mas_config_trace_t *duf_get_cli_options_trace_config( const duf_config_cli_t * cli );
 
 #endif

@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include <mastar/tools/mas_arg_tools.h>
@@ -206,7 +207,7 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
       /*   T( "path:%s", duf_levinfo_path( PDI ) ); */
       /*   assert( PY );                            */
       /* }                                          */
-      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL ) );
+      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL, NULL /* ptr */ ) );
       assert( DUF_NOERROR( rpr ) );
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )

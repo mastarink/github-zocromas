@@ -7,4 +7,4 @@ libzocromas_mas_zoctypesinclude_HEADERS = mas_common_types.h mas_common_defs.h m
 		mas_list_def.h mas_listener_control_types.h mas_message_types.h \
 		mas_opts_types.h mas_autoset_types.h mas_autoobject_types.h \
 		mas_varvec_types.h mas_varset_types.h mas_thread_variables_types.h mas_th_types.h mas_transaction_control_types.h \
-		mas_evaluate_types.h mas_unidata_types.h mas_unimodule_types.h mas_modules_types.h
+		mas_evaluate_types.h mas_unidata_types.h mas_unimodule_types.h mas_modules_types.h mas_base_output_types.h

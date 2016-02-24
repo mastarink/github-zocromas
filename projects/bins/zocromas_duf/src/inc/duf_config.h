@@ -4,6 +4,5 @@
 # include "duf_config_types.h"
 
 duf_config_t *duf_get_config( void );
-duf_config_t *duf_get_pointer_config( void );
 
 #endif

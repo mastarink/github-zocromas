@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <string.h>
 
 #include <mastar/tools/mas_utils_path.h> /* mas_realpath */

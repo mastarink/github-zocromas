@@ -1,0 +1,50 @@
+# 20160224.110120 : 1456304480.855172449 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.110124 : 1456304484.774378158 ------------[r]--
+# 20160224.110129 : 1456304489.447321484 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.110129 : 1456304489.883838397 ------------[r]--
+# 20160224.110300 : 1456304580.071292724 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--force-color' '--db-name=test_tree' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160224.110300 : 1456304580.226956645 ------------[r]--
+# 20160224.111332 : 1456305212.829974045 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--force-color' '--db-name=test_tree' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160224.111333 : 1456305213.050842175 ------------[r]--
+# 20160224.111338 : 1456305218.463298434 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.111342 : 1456305222.673340911 ------------[r]--
+# 20160224.111403 : 1456305243.190105516 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.111403 : 1456305243.647296166 ------------[r]--
+# 20160224.144800 : 1456318080.017990647 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:139
+# 20160224.144800 : 1456318080.028733929 ------------[r]--
+# 20160224.144917 : 1456318157.799403947 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:139
+# 20160224.144917 : 1456318157.809624121 ------------[r]--
+# 20160224.145045 : 1456318245.666275885 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.145046 : 1456318246.104481009 ------------[r]--
+# 20160224.145655 : 1456318615.903659515 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=20' '--trace-force-color' '--trace-file=@2.tmp' '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160224.145656 : 1456318616.335401314 ------------[r]--

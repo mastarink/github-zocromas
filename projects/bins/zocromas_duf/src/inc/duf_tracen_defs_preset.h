@@ -28,9 +28,9 @@
 #  define MAST_TRACE_LOADTIME_C( _tcfg )  ( _tcfg ? _tcfg->loadtime : 0)
 # endif
 
-# ifndef MAST_TRACE_LOADTIME
-#  define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_trace_config(  ))
-# endif
+/* # ifndef MAST_TRACE_LOADTIME                                                   */
+/* #  define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_trace_config(  )) */
+/* # endif                                                                        */
 
 # ifndef MAST_TRACE_FILE_C
 #  define MAST_TRACE_FILE_C( _tcfg ) duf_trace_file_c(_tcfg)

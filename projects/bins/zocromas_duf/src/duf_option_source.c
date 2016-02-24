@@ -1,12 +1,15 @@
 /* #undef MAS_TRACING */
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <stddef.h>                                                  /* NULL */
+
+#include "duf_option_config.h"
 
 /* ###################################################################### */
 #include "duf_option_source.h"
 /* ###################################################################### */
 
 const char *
-duf_optsourcecode_name( duf_option_source_code_t sourcecode )
+duf_optsourcecode_name( duf_config_cli_t * cli __attribute__((unused)), duf_option_source_code_t sourcecode )
 {
   static const char *tail[] = {
     [DUF_OPTION_SOURCE_ENV] = "env",
@@ -25,19 +28,19 @@ duf_optsourcecode_name( duf_option_source_code_t sourcecode )
 }
 
 const char *
-duf_optsource_name( duf_option_source_t source )
+duf_optsource_name( duf_config_cli_t * cli, duf_option_source_t source )
 {
-  return duf_optsourcecode_name( source.sourcecode );
+  return duf_optsourcecode_name( cli, source.sourcecode );
 }
 
 const char *
-duf_optsource_label( duf_option_source_t source )
+duf_optsource_label( duf_config_cli_t * cli __attribute__((unused)), duf_option_source_t source )
 {
   return source.label ? source.label : "-";
 }
 
 int
-duf_optsource_labelled( duf_option_source_t source )
+duf_optsource_labelled( duf_config_cli_t * cli __attribute__((unused)), duf_option_source_t source )
 {
   return source.labelled;
 }

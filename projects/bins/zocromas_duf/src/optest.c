@@ -4,18 +4,17 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/trace/mas_trace_credel.h>
 
 #include "duf_maintenance_errors.h"
 #include "duf_maintenance_tracen.h"
-
-
 
 #include "duf_se.h"
 
 #include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"
 
-#include "duf_config_trace_credel.h"
+/* #include "duf_config_trace_credel.h" */
 
 typedef struct
 {
@@ -80,8 +79,8 @@ const duf_longval_extended_table_t optable_test = {                  /* zzzzzz *
 
 static const duf_longval_extended_table_t *const optable_test_list[] = { &optable_test, NULL };
 
-static duf_config_trace_t *config_trace = NULL;
-duf_config_trace_t *
+static mas_config_trace_t *config_trace = NULL;
+mas_config_trace_t *
 duf_get_trace_config( void )
 {
   return config_trace;
@@ -103,9 +102,9 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 {
   duf_config_cli_t *clio;
 
-  config_trace = duf_config_trace_create(  );
+  config_trace = mas_config_trace_create( 100 );
   clio = duf_cli_options_create( argc, argv, optable_test_list, NULL /* config_dir */ ,
-                                 NULL /* commands_dir */ , NULL /* varfunc */  );
+                                 NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
   T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
   CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
@@ -147,7 +146,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
     T( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
        ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
   }
-  duf_config_trace_delete( config_trace );
+  mas_config_trace_delete( config_trace );
   config_trace = NULL;
   ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }

@@ -1,3 +1,4 @@
+#undef MAS_TRACING
 #include <dirent.h>
 #include <string.h>
 
