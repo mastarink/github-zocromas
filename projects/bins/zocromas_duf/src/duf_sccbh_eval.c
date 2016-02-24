@@ -10,6 +10,7 @@
 
 #include "duf_config_util.h"
 #include "duf_config_ref.h" /* needed for DUF_PRINTF */
+#include "duf_config_output_util.h"
 
 #include "duf_pdi_filters.h"
 #include "duf_pdi_ref.h"

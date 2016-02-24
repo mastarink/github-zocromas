@@ -30,7 +30,8 @@
 			mas_trace( _tcfg, \
 			    /* MAST_TRACE_MODE_ ## _name, MAST_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
-	/* level */			MAST_TRACE_LEVEL_C( _tcfg, _what, _name ), \
+        /* (* level *)                     MAST_TRACE_LEVEL_C( _tcfg, _what, _name ),  */ \
+			    		MAST_TRACE_INDEX(_name), \
 	/* minlevel */			_min, \
 	/* funcid, linid */		MAST_FL, \
         /* (* time0 *)                     _tcfg->loadtime,  */ \

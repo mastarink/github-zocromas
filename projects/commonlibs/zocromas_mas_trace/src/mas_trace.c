@@ -24,7 +24,7 @@
 
 #if 0
 static int
-mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST_UNUSED, int level MAST_UNUSED, int ern,
+mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST_UNUSED, int trace_index MAST_UNUSED, int ern,
                   const char *funcid MAST_UNUSED, int linid MAST_UNUSED, unsigned flags MAST_UNUSED, int nerr MAST_UNUSED, FILE * out,
                   const char *prefix MAST_UNUSED, const char *fmt MAST_UNUSED, va_list args MAST_UNUSED )
 {
@@ -44,7 +44,7 @@ mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST
 }
 #endif
 int
-mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int minlevel, const char *funcid, int linid, /* double time0, */
+mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int trace_index, int minlevel, const char *funcid, int linid, /* double time0, */
             char signum,
             unsigned flags, int nerr, /* FILE * out, */ const char *prefix, /* unsigned fun_width, int force_color, int nocolor, */ const char *fmt,
             va_list args )
@@ -65,7 +65,8 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
   unsigned fun_width = tcfg->fun_width;
   int force_color = tcfg->stream.v.flag.force_color;
   int nocolor = tcfg->stream.v.flag.nocolor;
-
+  int level = trace_index >= 0 ? tcfg->class_levels[trace_index] : 0;
+  int output_level = tcfg->stream.level;
 #endif
   if ( !ftimez )
   {
@@ -88,7 +89,7 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
 #if 0
   if ( trace_mode == MAST_TRACE_MODE_errorr )
   {
-    r_ = mas_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
+    r_ = mas_vtrace_error( trace_mode, name, trace_index, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
   }
   else
 #endif
@@ -144,12 +145,22 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
       for ( unsigned i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-    /* MAST_FPRINTFONE( 0, out, force_color, nocolor, "\r%cL%-2d:%2d ", signum, level, minlevel ); */
-      MAST_FPRINTFONE( 0, out, force_color, nocolor, "%cL%-2d:%2d ", signum, level, minlevel );
+    /* MAST_FPRINTFONE( 0, out, force_color, nocolor, "\r%cL%-2d:%2d ", signum, trace_index, minlevel ); */
+
+#if 0
+      MAST_FPRINTFONE( 0, out, force_color, nocolor, "%cL%-2d:%2d ", signum, trace_index, minlevel );
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "[%s%-7s%s] ", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;34m" ), uname,
                        mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "%s%3u%s:", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;33m" ), linid,
                        mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+#else
+      mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, "%cL%-2d:%2d ", signum, trace_index,
+                   minlevel );
+      mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, "[%s%-7s%s] ",
+                   mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;34m" ), uname, mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+      mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, "%s%3u%s:",
+                   mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;33m" ), linid, mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+#endif
 #if 0
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "%-" T_FN_FMT "s", pfuncid );
 #else
@@ -160,7 +171,11 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
         snprintf( xfmt, sizeof( xfmt ), "%s%%-%ds%s", mas_fcoloro_s( out, force_color, nocolor, "\x1b[1;32m" ),
                   fun_width ? fun_width /* mas_config && mas_config->opt.output.fun_width ? mas_config->opt.output.fun_width */ : T_FN_FMTN,
                   mas_fcoloro_s( out, force_color, nocolor, "\x1b[m" ) );
+# if 0
         MAST_FPRINTFONE( 0, out, force_color, nocolor, xfmt, pfuncid );
+# else
+        mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, xfmt, pfuncid );
+# endif
       }
 #endif
     }
@@ -175,7 +190,12 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
         double timec = 0.;
 # endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+# if 0
         MAST_FPRINTFONE( 0, out, force_color, nocolor, " :%-6.4f:", timec - ( time0 ? time0 : timez ) );
+# else
+        mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, " :%-6.4f:",
+                     timec - ( time0 ? time0 : timez ) );
+# endif
       }
     }
 #endif
@@ -190,8 +210,16 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
         MAST_FPRINTFONE( 0, out, force_color, nocolor, " " );
     }
 #endif
+#if 0
     r_ = MAST_FPRINTFONE( 0, out, force_color, nocolor, prefix ? "%-16s " : "%s", prefix ? prefix : " " );
     r_ = MAST_VFPRINTFONE( 0, out, force_color, nocolor, fmt, args );
+#else
+    mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, prefix ? "%-16s " : "%s",
+                 prefix ? prefix : " " );
+    mas_vprintfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0,
+                  funcid, linid, out, force_color, nocolor, fmt, args );
+#endif
+
 #if 0
     if ( highlight )
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "\x1b[m" );
@@ -202,18 +230,27 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int mi
       char *s;
 
       s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
+#if 0
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "; errno:(%d) [%s]", nerr, s );
+#else
+      mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, "; errno:(%d) [%s]", nerr, s );
+#endif
     }
     if ( !noeol )
     {
+#if 0
       MAST_FPRINTFONE( 0, out, force_color, nocolor, "\n" );
+#else
+      mas_printfo( output_level, 1 /*noeol */ , 0 /* _min */ , 0, funcid, linid, out, force_color, nocolor, "\n" );
+#endif
     }
   }
   return r_;
 }
 
 int
-mas_trace( const mas_config_trace_t * tcfg, const char *name, int level, int minlevel, const char *funcid, int linid, /* double time0, */ char signum,
+mas_trace( const mas_config_trace_t * tcfg, const char *name, int trace_index, int minlevel, const char *funcid, int linid, /* double time0, */
+           char signum,
            unsigned flags, int nerr, /* FILE * out, */ const char *prefix, /* unsigned fun_width, int force_color, int nocolor, */ const char *fmt,
            ... )
 {
@@ -221,8 +258,8 @@ mas_trace( const mas_config_trace_t * tcfg, const char *name, int level, int min
   va_list args;
 
   va_start( args, fmt );
-/* takes ern - error index */
-  r_ = mas_vtrace( tcfg, name, level, minlevel, funcid, linid, /* time0, */ signum, flags, nerr, /* out, */ prefix, /* fun_width, force_color, nocolor, */
+/* takes ern - error trace_index */
+  r_ = mas_vtrace( tcfg, name, trace_index, minlevel, funcid, linid, /* time0, */ signum, flags, nerr, /* out, */ prefix, /* fun_width, force_color, nocolor, */
                    fmt, args );
   va_end( args );
   return r_;

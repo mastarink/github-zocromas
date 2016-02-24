@@ -15,6 +15,7 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_config_db.h"
+#include "duf_config_output_util.h"
 
 #include "duf_expandable.h"
 

@@ -7,6 +7,7 @@
 #include "duf_printn_defs.h"
 
 /* #include "duf_config_util.h" */
+#include "duf_config_output_util.h"
 
 #include "duf_xtended_table.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name */

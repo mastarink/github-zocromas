@@ -13,7 +13,7 @@
 #  define T_FN_FMTN 23
 #  define T_FN_FMT #T_FN_FMTN
 
-
+#if 0
 
 #  define DUF_WRITES( _min, _str)		MAST_WRITES( _min, _str)
 #  define DUF_PUTS( _min, _str)			MAST_PUTS( _min, _str)
@@ -33,7 +33,38 @@
 #  define DUF_PRINTF0( _min, ...)		MAST_PRINTF0( _min, __VA_ARGS__)
 
 #  define DUF_DIE( _min, ...)			MAST_DIE( _min, __VA_ARGS__)
+#else
+#  define DUF_WRITES( _min, _str)		mas_writes( duf_output_level(), _min, __func__, __LINE__, duf_output_file(), _str)
+#  define DUF_PUTS( _min, _str)			mas_puts( duf_output_level(), _min, __func__, __LINE__, duf_output_file(), _str)
+#  define DUF_PUTSL( _min )			mas_puts( duf_output_level(), _min, __func__, __LINE__, duf_output_file(), NULL)
 
+#  define DUF_VFPRINTF( _min, _out, ...)	mas_vprintfo( duf_output_level(), 0 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				_out, duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+#  define DUF_VFPRINTFNE( _min, _out, ...)	mas_vprintfo( duf_output_level(), 1 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				_out, duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+
+#  define DUF_FPRINTF0( _min, _out, ...)	mas_printfo( 0, 0 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				_out, duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+
+#  define DUF_FPRINTF( _min, _out, ...)		mas_printfo( duf_output_level(), 0 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				_out, duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+#  define DUF_FPRINTFNE( _min, _out, ...)	mas_printfo( duf_output_level(), 1 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				_out, duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+
+#  define DUF_PRINTF( _min, ...)		mas_printfo( duf_output_level(), 0 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				duf_output_file(), duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+#  define DUF_PRINTF0( _min, ...)	mas_printfo( 0, 0 /*noeol*/, _min, 0, __func__, __LINE__, \
+    				duf_output_file(), duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+#  define DUF_DIE( _min, ...)			mas_printfo( duf_output_level(), 0 /*noeol*/, _min, 1, __func__, __LINE__, \
+    				duf_output_file(), duf_output_force_color(), duf_output_nocolor(), __VA_ARGS__ )
+
+#endif
 
 
 

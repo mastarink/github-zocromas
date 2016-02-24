@@ -9,6 +9,7 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 #include "duf_config_util.h"
+#include "duf_config_output_util.h"
 
 #include "duf_action_table.h"
 #include "duf_sccb.h"

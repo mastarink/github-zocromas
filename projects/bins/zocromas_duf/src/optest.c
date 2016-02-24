@@ -86,13 +86,13 @@ duf_get_trace_config( void )
   return config_trace;
 }
 
-inline int
+int
 duf_output_nocolor( void )
 {
   return 0;
 }
 
-inline int
+int
 duf_output_force_color( void )
 {
   return 0;

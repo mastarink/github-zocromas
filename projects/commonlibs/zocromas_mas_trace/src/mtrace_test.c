@@ -29,7 +29,8 @@ typedef struct
 #define MAST_TRACE_LOADTIME_C( _cfg ) 0
 #define MAST_TRACE_FILE_C( _cfg ) stderr
 #define MAST_TRACE_CONFIG ptcfg
-#define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0
+/* #define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0 */
+#define MAST_TRACE_INDEX( _name ) -1
 
 #include "mas_trace_defs.h"
 #include "mas_trace.h"

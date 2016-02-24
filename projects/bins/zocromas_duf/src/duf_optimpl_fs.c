@@ -16,6 +16,7 @@
 
 #include "duf_config.h"
 #include "duf_config_util.h"
+#include "duf_config_output_util.h"
 
 /* ###################################################################### */
 #include "duf_optimpl_fs_types.h"

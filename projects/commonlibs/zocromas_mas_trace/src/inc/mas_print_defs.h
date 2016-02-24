@@ -16,6 +16,7 @@
 #  define T_FN_FMT #T_FN_FMTN
 
 
+#if 0
 
 #  define MAST_WRITES( _min, _str) \
     mas_writes( MAST_OUTPUT_LEVEL, _min, \
@@ -48,8 +49,8 @@
     mas_printfo( MAST_OUTPUT_LEVEL, 1 /*noeol*/, _min, 0, \
 		MAST_FL, _out, _force_color, _nocolor, __VA_ARGS__ )
 
-#  define MAST_FPRINTF0( _min, _out, ...) MAST_FPRINTFO0(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
-#  define MAST_FPRINTF( _min, _out, ...) MAST_FPRINTFO(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+#  define MAST_FPRINTF0( _min, _out, ...)  MAST_FPRINTFO0(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
+#  define MAST_FPRINTF( _min, _out, ...)   MAST_FPRINTFO(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
 #  define MAST_FPRINTFNE( _min, _out, ...) MAST_FPRINTFONE(_min, _out, MAST_OUTPUT_FORCE_COLOR, MAST_OUTPUT_NOCOLOR, __VA_ARGS__)
 
 
@@ -74,6 +75,7 @@
 #  define PF0(fmt, ...) MAST_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
 
 
+#endif
 #endif
 
 /*

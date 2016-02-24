@@ -14,6 +14,7 @@
 #include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
 
 /* #include "duf_config_util.h" */
+#include "duf_config_output_util.h"
 
 #include "duf_option_config.h"
 #include "duf_option_tmpdb.h"
