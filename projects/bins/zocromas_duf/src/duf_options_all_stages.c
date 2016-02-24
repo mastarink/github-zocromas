@@ -4,7 +4,18 @@
 #include <string.h>
 
 #include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
+#if 0
+# include "duf_maintenance_tracen.h"
+#else
+# include "duf_printn_defs_preset.h"
+# include "duf_tracen_defs_preset.h"
+# include "duf_tracen_defs.h"
+
+# include "duf_config_trace_enum.h"                                  /* DUF_TRACE_LEVEL_* ; duf_config_trace_enum_t */
+# include "duf_config_trace.h"
+# include "duf_tracen_config.h"
+#endif
+
 #include "duf_maintenance_errors.h"
 
 /* #include "duf_status_ref.h" */
@@ -80,10 +91,10 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
 {
   DUF_TRACE( options, 0, "@@@@@to do all options for all stages (%p:%p)", ( void * ) &cb_init_all_optstages, ( void * ) &cb_init_loop_optstage );
 
-  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name(cli,DUF_OPTION_STAGE_PRESETUP ) );
+  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( cli, DUF_OPTION_STAGE_PRESETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_PRESETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name(cli,DUF_OPTION_STAGE_SETUP ) );
+  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( cli, DUF_OPTION_STAGE_SETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_SETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 #if 0
   CR( config_optionally_show );                                      /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */

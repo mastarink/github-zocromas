@@ -102,25 +102,25 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 {
 /* DUF_STARTR( r ); */
   assert( cli );
-  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name(cli,istage ),
+  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( cli, istage ),
              cb_do_interactive ? cb_do_interactive(  ) : 0 );
 
 #if 1
-  DUF_TRACE( temp, +0, "@@@this is 0 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +1, "@@@@this is 1 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +2, "@@@@@this is 2 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +3, "@@@@@@this is 3 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +4, "@@@@@@@this is 4 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +5, "@@@@@@@@this is 5 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +6, "@@@@@@@@@this is 6 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +7, "@@@@@@@@@@this is 7 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +8, "@@@@@@@@@@@this is 8 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, +9, "@@@@@@@@@@@@this is 9 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
-  DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name(cli,istage ) );
+  DUF_TRACE( temp, +0, "@@@this is 0 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +1, "@@@@this is 1 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +2, "@@@@@this is 2 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +3, "@@@@@@this is 3 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +4, "@@@@@@@this is 4 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +5, "@@@@@@@@this is 5 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +6, "@@@@@@@@@this is 6 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +7, "@@@@@@@@@@this is 7 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +8, "@@@@@@@@@@@this is 8 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, +9, "@@@@@@@@@@@@this is 9 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
 #endif
 
-  DUF_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name(cli,istage ), istage );
+  DUF_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name( cli, istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
@@ -225,7 +225,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 
       DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
                  QERRNAME );
-      DUF_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name(cli,istage ), QERRIND, QERRNAME );
+      DUF_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
     }
     DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
   }

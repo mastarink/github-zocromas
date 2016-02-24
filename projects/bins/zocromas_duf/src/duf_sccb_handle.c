@@ -21,6 +21,8 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"
 
+#include "duf_config_output_util.h"
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql_stmt_defs.h"

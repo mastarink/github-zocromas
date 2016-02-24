@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,13 +44,29 @@ mas_vtrace_error( mas_trace_mode_t trace_mode MAST_UNUSED, const char *name MAST
 }
 #endif
 int
-mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum, unsigned flags, int nerr, FILE * out,
-            const char *prefix, int fun_width, int force_color, int nocolor, const char *fmt, va_list args )
+mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int level, int minlevel, const char *funcid, int linid, /* double time0, */
+            char signum,
+            unsigned flags, int nerr, /* FILE * out, */ const char *prefix, /* unsigned fun_width, int force_color, int nocolor, */ const char *fmt,
+            va_list args )
 {
   int r_ = -1;
   static int ftimez = 0;
   static double timez = 0;
 
+#if 0
+  assert( tcfg->stream.out == out );
+  assert( tcfg->loadtime == time0 );
+  assert( tcfg->stream.v.flag.force_color == force_color );
+  assert( tcfg->stream.v.flag.nocolor == nocolor );
+  assert( tcfg->fun_width == fun_width );
+#else
+  double time0 = tcfg->loadtime;
+  FILE *out = tcfg->stream.out;
+  unsigned fun_width = tcfg->fun_width;
+  int force_color = tcfg->stream.v.flag.force_color;
+  int nocolor = tcfg->stream.v.flag.nocolor;
+
+#endif
   if ( !ftimez )
   {
     int ry;
@@ -196,15 +213,17 @@ mas_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
 }
 
 int
-mas_trace( const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum, unsigned flags, int nerr, FILE * out,
-           const char *prefix, int fun_width, int force_color, int nocolor, const char *fmt, ... )
+mas_trace( const mas_config_trace_t * tcfg, const char *name, int level, int minlevel, const char *funcid, int linid, /* double time0, */ char signum,
+           unsigned flags, int nerr, /* FILE * out, */ const char *prefix, /* unsigned fun_width, int force_color, int nocolor, */ const char *fmt,
+           ... )
 {
   int r_ = 0;
   va_list args;
 
   va_start( args, fmt );
 /* takes ern - error index */
-  r_ = mas_vtrace( name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fun_width, force_color, nocolor, fmt, args );
+  r_ = mas_vtrace( tcfg, name, level, minlevel, funcid, linid, /* time0, */ signum, flags, nerr, /* out, */ prefix, /* fun_width, force_color, nocolor, */
+                   fmt, args );
   va_end( args );
   return r_;
 }

@@ -27,28 +27,32 @@
 /* takes ern - error index */
 #ifdef MAS_TRACING
 #  define MAST_OTRACE_WHAT_WP_BASE( _out, _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
-			mas_trace( \
+			mas_trace( _tcfg, \
 			    /* MAST_TRACE_MODE_ ## _name, MAST_TRACE_SUBMODE_SIMPLE, */ \
 					#_name, \
 	/* level */			MAST_TRACE_LEVEL_C( _tcfg, _what, _name ), \
 	/* minlevel */			_min, \
 	/* funcid, linid */		MAST_FL, \
-	/* time0 */			_tcfg->loadtime, \
+        /* (* time0 *)                     _tcfg->loadtime,  */ \
 	/* signum */			_signum, \
 	/* flags, nerr */		_flags, _ern, \
-	/* out */			_out, \
+        /* (* out *)                       _out,  */ \
 			    		_prefix, \
-			    		MAST_TRACE_FUNWIDTH_C( _tcfg ), \
-			    		MAST_TRACE_FORCE_COLOR_C( _tcfg ), \
-			    		MAST_TRACE_NOCOLOR_C( _tcfg ), \
+                                        /* _tcfg->fun_width                        (* MAST_TRACE_FUNWIDTH_C( _tcfg ) *),  */ \
+                                        /* _tcfg->stream.v.flag.force_color        (* MAST_TRACE_FORCE_COLOR_C( _tcfg ) *),  */ \
+                                        /* _tcfg->stream.v.flag.nocolor            (* MAST_TRACE_NOCOLOR_C( _tcfg ) *) ,  */ \
 			    		__VA_ARGS__ )
 #else
 #  define MAST_OTRACE_WHAT_WP_BASE( _out, _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) 
 #endif
 
+#if 0
 #  define MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
   			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( MAST_TRACE_AT_TCFG_CR(_tcfg)), _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
-
+#else
+#  define MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
+  			MAST_OTRACE_WHAT_WP_BASE( _tcfg->stream.out, _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
+#endif
 
 /* takes ern - error index */
 #  define      MAST_OTRACE_WHAT_BASE( _tcfg,          _signum, _flags, _ern, _what, _name, _min, ... ) \
