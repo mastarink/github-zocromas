@@ -13,20 +13,20 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
@@ -38,10 +38,10 @@
 /* #include "duf_path2db.h" */
 #include "duf_path2dirid.h"
 
-#include "duf_maindb.h"
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 #include "sql_beginning_selected.h"
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( dialog )

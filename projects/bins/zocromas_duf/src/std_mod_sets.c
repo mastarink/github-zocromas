@@ -10,8 +10,8 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_sql_defs.h"
-#include "sql_beginning_tables.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 #include "sql_beginning_selected.h"
 #include "sql_tables_global_defs.h"
 

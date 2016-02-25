@@ -10,14 +10,14 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_sql_defs.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_sql_set_types.h"                                       /* duf_fieldset_t */
 
 #include "duf_mod_defs.h"
 
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
-#include "duf_scan_types.h"
+#include "duf_scan_types.h"                                          /* duf_node_type_t; duf_scanstage_t ♠ */
 /* ###################################################################### */
 #include "std_fieldsets.h"
 /* ###################################################################### */

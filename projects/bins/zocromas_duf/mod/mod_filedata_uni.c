@@ -3,7 +3,7 @@
 #include <stddef.h>                                                  /* NULL */
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
 #include <mastar/wrap/mas_std_def.h>
 
@@ -13,20 +13,20 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_levinfo_ref.h"
-#include "duf_sql_defs.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_filedata.h"
 
 /* #include "duf_dbg.h" */
 
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 /* ########################################################################################## */
 static int register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );

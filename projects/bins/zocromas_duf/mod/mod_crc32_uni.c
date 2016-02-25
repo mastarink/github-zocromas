@@ -15,29 +15,29 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_sql_stmt_defs.h"
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
-#include "duf_sql_bind.h"
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 #include "duf_sql_prepared.h"
 
 /* #include "duf_dbg.h" */
 
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 /* ########################################################################################## */
 static int crc32_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 

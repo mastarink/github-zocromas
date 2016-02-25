@@ -12,15 +12,15 @@
 
 #include "duf_sql_set_types.h"                                       /* duf_selector_t */
 
-#include "duf_sql_defs.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 
 #include "duf_mod_defs.h"
 
 /* #include "sql_beginning_selected.h" */
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 #include "sql_selected_defs.h"
-#include "duf_scan_types.h"
+#include "duf_scan_types.h"                                          /* duf_node_type_t; duf_scanstage_t ♠ */
 /* ###################################################################### */
 #include "std_selectors.h"
 /* ###################################################################### */
