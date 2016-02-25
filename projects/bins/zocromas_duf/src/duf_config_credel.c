@@ -58,11 +58,8 @@ duf_config_create( int argc, char **argv )
 # endif
 
 #endif
-  duf_config->db.main.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
-  duf_config->db.tempo.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
-  duf_config->db.adm.name_x.varfunc = duf_string_options_at_string_xsdb_getvar;
-  duf_config->db.dir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
-  duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
+  duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
+          duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
   DUF_END(  );
 }
 
@@ -70,8 +67,8 @@ void
 duf_config_delete( void )
 {
   DUF_START(  );
-  assert( duf_config->opt.ptracecfg->stream.out );
-  assert( duf_get_trace_config(  )->stream.out );
+  /* assert( duf_config->opt.ptracecfg->stream.out ); */
+  /* assert( duf_get_trace_config(  )->stream.out );  */
 /* T( "@%p %p", duf_config->opt.ptracecfg, duf_config->opt.ptracecfg->class_levels ); */
   DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
 /* T( "@%p/%p %p", duf_config->opt.ptracecfg, duf_get_trace_config(  ), duf_config->opt.ptracecfg->class_levels ); */

@@ -2,6 +2,7 @@
 #  define MAS_DUF_OPTION_NAMES_H
 
 # include "duf_options_enum.h"                                       /* duf_option_code_t */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>

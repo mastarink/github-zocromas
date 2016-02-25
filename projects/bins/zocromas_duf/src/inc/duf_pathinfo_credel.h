@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_PATHINFO_CREDEL_H
 #  define MAS_DUF_PATHINFO_CREDEL_H
 
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ♠ */
 
 void duf_pi_levinfo_delete( duf_pathinfo_t * pi );
 int duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count );

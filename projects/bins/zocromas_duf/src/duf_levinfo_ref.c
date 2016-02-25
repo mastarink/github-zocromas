@@ -1,7 +1,9 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>  /* mas_(malloc|free|strdup); etc. ♣*/
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_context.h"

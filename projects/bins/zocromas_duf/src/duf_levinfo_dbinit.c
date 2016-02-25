@@ -1,7 +1,14 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_li.h" */
 /* #include "duf_levinfo.h" */
@@ -18,7 +25,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
 {
   assert( pdi );
 /* TODO: via duf_pi_dbinit_level_d; done 20160120.191056 */
-#if 0 
+#if 0
   assert( d >= 0 );
   assert( pdi->pathinfo.levinfo );
 

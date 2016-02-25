@@ -1,10 +1,8 @@
 #ifndef MAS_DUF_PATHINFO_REF_H
-#  define MAS_DUF_PATHINFO_REF_H
+# define MAS_DUF_PATHINFO_REF_H
 
-#  include "duf_levinfo_types.h"
-
-
-
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ♠ */
 
 duf_levinfo_t *duf_pi_ptr_d( const duf_pathinfo_t * pi, int d );
 duf_levinfo_t *duf_pi_ptr( const duf_pathinfo_t * pi );
@@ -42,7 +40,6 @@ unsigned long long duf_pi_nameid( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_nameid_up( const duf_pathinfo_t * pi );
 */
 
-
 unsigned long long duf_pi_items_files_d( const duf_pathinfo_t * pi, int d );
 unsigned long long duf_pi_items_files( const duf_pathinfo_t * pi );
 unsigned long long duf_pi_items_files_up( const duf_pathinfo_t * pi );
@@ -62,7 +59,6 @@ void duf_pi_set_context_up( duf_pathinfo_t * pi, void *ctx );
 void *duf_pi_context_d( const duf_pathinfo_t * pi, int d );
 void *duf_pi_context( const duf_pathinfo_t * pi );
 void *duf_pi_context_up( const duf_pathinfo_t * pi );
-
 
 int duf_pi_dfd_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_dfd( const duf_pathinfo_t * pi );
@@ -99,7 +95,6 @@ long_t duf_pi_stat_ansec( const duf_pathinfo_t * pi );
 long_t duf_pi_stat_mnsec( const duf_pathinfo_t * pi );
 long_t duf_pi_stat_cnsec( const duf_pathinfo_t * pi );
 
-
 struct stat *duf_pi_dbstat_d( const duf_pathinfo_t * pi, int d );
 struct stat *duf_pi_dbstat( const duf_pathinfo_t * pi );
 struct stat *duf_pi_dbstat_up( const duf_pathinfo_t * pi );
@@ -120,10 +115,6 @@ long_t duf_pi_dbstat_ansec( const duf_pathinfo_t * pi );
 long_t duf_pi_dbstat_mnsec( const duf_pathinfo_t * pi );
 long_t duf_pi_dbstat_cnsec( const duf_pathinfo_t * pi );
 
-
-
-
-
 const char *duf_pi_path_d( const duf_pathinfo_t * pi, int d );
 const char *duf_pi_path( const duf_pathinfo_t * pi );
 const char *duf_pi_path_up( const duf_pathinfo_t * pi );
@@ -140,9 +131,6 @@ duf_node_type_t duf_pi_node_type_up( const duf_pathinfo_t * pi );
 const char *duf_pi_path_q( const duf_pathinfo_t * pi, const char *q );
 char *duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q );
 
-
-
-
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/
@@ -155,7 +143,6 @@ int duf_pi_statat_dh_d( duf_pathinfo_t * pi, int d );
 int duf_pi_statat_dh( duf_pathinfo_t * pi );
 int duf_pi_statat_dh_up( duf_pathinfo_t * pi );
 
-
 int duf_pi_if_openat_dh_d( duf_pathinfo_t * pi, int d );
 int duf_pi_if_openat_dh( duf_pathinfo_t * pi );
 int duf_pi_if_openat_dh_up( duf_pathinfo_t * pi );
@@ -166,8 +153,6 @@ int duf_pi_openat_dh_d( duf_pathinfo_t * pi, int d );
 int duf_pi_openat_dh( duf_pathinfo_t * pi );
 int duf_pi_openat_dh_up( duf_pathinfo_t * pi );
 
-
-
 int duf_pi_opened_dh_d( duf_pathinfo_t * pi, int d );
 int duf_pi_opened_dh( duf_pathinfo_t * pi );
 int duf_pi_opened_dh_up( duf_pathinfo_t * pi );
@@ -175,8 +160,6 @@ int duf_pi_opened_dh_up( duf_pathinfo_t * pi );
 int duf_pi_closeat_dh_d( duf_pathinfo_t * pi, int d );
 int duf_pi_closeat_dh( duf_pathinfo_t * pi );
 int duf_pi_closeat_dh_up( duf_pathinfo_t * pi );
-
-
 
 int duf_pi_depth( const duf_pathinfo_t * pi );
 void duf_pi_set_topdepth( duf_pathinfo_t * pi );
@@ -188,6 +171,5 @@ duf_levinfo_t *duf_pi_levinfo( const duf_pathinfo_t * pi );
 int duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth( const duf_pathinfo_t * pi );
 int duf_pi_deltadepth_up( const duf_pathinfo_t * pi );
-
 
 #endif

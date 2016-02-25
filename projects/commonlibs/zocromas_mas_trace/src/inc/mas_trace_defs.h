@@ -9,7 +9,7 @@
 
 #  ifdef MAS_TRACING
 #    define MAST_TRACE_C( _tcfg, ... )				MAST_TRACE_WHAT_C( _tcfg,			MAST_TRACE_AT_TCFG_,	__VA_ARGS__ )
-#    define MAST_TRACE( ... )					MAST_TRACE_C(      MAST_TRACE_CONFIG, 			__VA_ARGS__ )
+#    define MAST_TRACE( ... )					(/*fprintf(stderr, "[%p]",MAST_TRACE_CONFIG),*/MAST_TRACE_C(      MAST_TRACE_CONFIG, 			__VA_ARGS__ ))
 #  else
 #    define MAST_TRACE( ... )
 #  endif

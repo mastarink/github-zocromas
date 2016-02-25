@@ -1,19 +1,27 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 /* #include <stddef.h> */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
-#include "duf_maintenance_errors.h"
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config_output_util.h"
 
 #include "duf_config_util.h"
 
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 #include "duf_option_clarify.h"
-#include "duf_option_cfind.h"
+#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
 
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
 #include "duf_option_clarify_batch.h"
 
@@ -23,7 +31,7 @@
 #include "duf_options_cli.h"
 /* ###################################################################### */
 
-DUF_UNUSED static char *
+MAS_UNUSED static char *
 duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_code_t codeval, int optindd, int optoptt )
 {
   const char *arg;
@@ -44,7 +52,7 @@ duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_code_t codeval, int 
 
 #if 0
 static void
-duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused MAS_UNUSED )
 {
 /* const char *arg; */
 /* static const char *msg = "Invalid option"; */
@@ -206,7 +214,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
   mas_cargvc_t *carg;
 
 /* int optoptt = 0; */
-  int optindd = 0, optindp DUF_UNUSED = 0;
+  int optindd = 0, optindp MAS_UNUSED = 0;
 
   DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
   optopt = 0;
@@ -260,8 +268,8 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
   ER( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_stage_t istage, duf_option_adata_t * paod );
 }
 
-SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-    duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
+SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
+    duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
 /* DUF_STARTR( r ); */
 
@@ -276,6 +284,6 @@ SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage
   DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 /* DUF_ENDR( r ); */
 
-  ER( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive DUF_UNUSED,
-      duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED );
+  ER( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
+      duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED );
 }

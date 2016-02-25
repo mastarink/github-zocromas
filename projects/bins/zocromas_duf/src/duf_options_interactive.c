@@ -1,25 +1,28 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <string.h>
+#include <stdlib.h>                                                  /* free */
 #include <stdio.h>
 #include <errno.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
-#include "duf_maintenance_errors.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 #include "duf_config_util.h"
 
-#include "duf_option_defs.h"
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 /* #include "duf_option_clarify_string.h" */
 #include "duf_option_clarify_batch.h"
 
@@ -32,7 +35,7 @@
 int
 duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
                               __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
-                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode DUF_UNUSED )
+                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
   DUF_STARTR( r );
 #if 0
@@ -40,10 +43,10 @@ duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage,
 #endif
   const char *prompt = NULL;
 
-  T( "@   source:%s", duf_optsourcecode_name(cli,sourcecode ) );
+  T( "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
-    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name(cli,istage ) );
+    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( cli, istage ) );
 #if 0
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );

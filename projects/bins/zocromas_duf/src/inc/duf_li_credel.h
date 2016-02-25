@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_LI_CREDEL_H
 #  define MAS_DUF_LI_CREDEL_H
 
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
+
 void duf_li_clear( duf_levinfo_t * pli );
 void duf_li_clear_alln( duf_levinfo_t * pli, unsigned maxcount );
 void duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type );

@@ -1,10 +1,15 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config ♠ */
 
 #include "duf_dh.h"
 
@@ -58,7 +63,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 
     if ( d > 0 )
     {
-      DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) ); /* may open pdhuplev->dfd */
+      DOR( r, duf_levinfo_if_openat_dh_d( pdi, d - 1 ) );            /* may open pdhuplev->dfd */
       assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     }
     assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
@@ -91,7 +96,6 @@ DUF_LEVINFO_F( int, statat_dh )
 DUF_LEVINFO_F_UP( int, statat_dh )
 /* *INDENT-ON*  */
 
-
 int
 duf_levinfo_if_deleted_d( duf_depthinfo_t * pdi, int d )
 {
@@ -102,10 +106,10 @@ duf_levinfo_if_deleted_d( duf_depthinfo_t * pdi, int d )
     int r = 0;
 
     DOR_LOWERE( r, duf_levinfo_if_statat_dh_d( pdi, d ), DUF_ERROR_STATAT_ENOENT );
-    /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT ); */
+  /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT ); */
   }
   rd = duf_levinfo_deleted_d( pdi, d );
-  /* assert( 0 ); */
+/* assert( 0 ); */
   return rd;
 }
 

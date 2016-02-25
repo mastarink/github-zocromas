@@ -1,29 +1,23 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 /* #include <stddef.h> */
 #include <string.h>
 
-#include "duf_maintenance_z.h"
-#if 0
-# include "duf_maintenance_tracen.h"
-#else
-/* # include "duf_printn_defs_preset.h" */
-# include "duf_tracen_defs_preset.h"
-# include "duf_tracen_defs.h"
+#include <mastar/wrap/mas_std_def.h>
 
-# include "duf_config_trace_enum.h"                                  /* DUF_TRACE_LEVEL_* ; duf_config_trace_enum_t */
-# include "duf_config_trace.h"
-# include "duf_tracen_config.h"
-#endif
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_maintenance_errors.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_status_ref.h" */
-#include "duf_config_util.h"
+/* #include "duf_config_util.h" */
 
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
-#include "duf_option_config.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_options.h"
 

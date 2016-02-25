@@ -1,16 +1,16 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-/* #include <stddef.h> */
-#include <string.h>
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
+#include <string.h>                                                  /* memset */
 
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_(strdup|strcat); etc. */
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance_z.h"                                       /* mas_(malloc|free); etc. */
-
-#include "duf_option_extended.h"                                     /* duf_longindex_extended_count */
+#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
 
 /* ###################################################################### */
-#include "duf_option_longopts.h"
+#include "duf_option_longopts.h"                                     /* duf_options_create_longopts_table ♠ */
 /* ###################################################################### */
 
 void
@@ -59,6 +59,8 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
  * objects: 
  *     duf_longval_extended_vtable_t
  *     duf_option_t
+ *
+ *     TODO: file duf_option_longopts_credel.c
  * */
 duf_option_t *
 duf_options_create_longopts_table( duf_longval_extended_vtable_t ** xvtables )

@@ -1,7 +1,9 @@
 #ifndef MAS_DUF_LEVINFO_REF_H
-#  define MAS_DUF_LEVINFO_REF_H
+# define MAS_DUF_LEVINFO_REF_H
 
-#  include "duf_levinfo_types.h"
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
+# include "duf_scan_types.h"                                         /* duf_node_type_t ♠ */
 
 duf_levinfo_t *duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d );
 duf_levinfo_t *duf_levinfo_ptr( const duf_depthinfo_t * pdi );
@@ -53,23 +55,22 @@ unsigned long long duf_levinfo_nameid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_nameid( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_nameid_up( const duf_depthinfo_t * pdi );
 
-
-#  ifndef  MAS_DUF_DEFS_H
-#    error use #include "duf_defs.h"
-#  elif defined( DUF_DO_NUMS )
+# ifndef  MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_NUMS )
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_numdir( const duf_depthinfo_t * pdi );
 int duf_levinfo_numdir_up( const duf_depthinfo_t * pdi );
-#  else
-#    if 0
+# else
+#  if 0
 unsigned long long duf_levinfo_childs_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_childs( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_childs_up( const duf_depthinfo_t * pdi );
-#    endif
+#  endif
 long long duf_levinfo_numchild_d( const duf_depthinfo_t * pdi, int d );
 long long duf_levinfo_numchild( const duf_depthinfo_t * pdi );
 long long duf_levinfo_numchild_up( const duf_depthinfo_t * pdi );
-#  endif
+# endif
 
 void duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d );
 void duf_levinfo_set_context( duf_depthinfo_t * pdi, void *ctx );
@@ -78,7 +79,6 @@ void duf_levinfo_set_context_up( duf_depthinfo_t * pdi, void *ctx );
 void *duf_levinfo_context_d( const duf_depthinfo_t * pdi, int d );
 void *duf_levinfo_context( const duf_depthinfo_t * pdi );
 void *duf_levinfo_context_up( const duf_depthinfo_t * pdi );
-
 
 int duf_levinfo_dfd_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_dfd( const duf_depthinfo_t * pdi );
@@ -125,7 +125,6 @@ long_t duf_levinfo_stat_ansec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_stat_mnsec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_stat_cnsec( const duf_depthinfo_t * pdi );
 
-
 struct stat *duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d );
 struct stat *duf_levinfo_dbstat( const duf_depthinfo_t * pdi );
 struct stat *duf_levinfo_dbstat_up( const duf_depthinfo_t * pdi );
@@ -146,10 +145,6 @@ long_t duf_levinfo_dbstat_ansec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_dbstat_mnsec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_dbstat_cnsec( const duf_depthinfo_t * pdi );
 
-
-
-
-
 const char *duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_path( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_up( const duf_depthinfo_t * pdi );
@@ -161,6 +156,5 @@ const char *duf_levinfo_relpath_up( const duf_depthinfo_t * pdi );
 
 const char *duf_levinfo_path_q( const duf_depthinfo_t * pdi, const char *q );
 char *duf_levinfo_path_qdup( const duf_depthinfo_t * pdi, const char *q );
-
 
 #endif

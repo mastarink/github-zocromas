@@ -3,6 +3,7 @@
 
 # include "duf_option_types.h"                                       /* duf_longval_extended_t ; duf_longval_extended_vtable_t */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t */
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>

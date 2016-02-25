@@ -1,9 +1,8 @@
 #ifndef MAS_DUF_PDI_H
-#  define MAS_DUF_PDI_H
+# define MAS_DUF_PDI_H
 
-#  include "duf_levinfo_types.h" /* duf_depthinfo_t */
-#  include "duf_hook_types.h" /* duf_sql_set_t */
-
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
+# include "duf_hook_types.h"                                         /* duf_sql_set_t */
 
 int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,
                                   const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );
@@ -15,6 +14,5 @@ int duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, un
 
 int duf_pdi_shut( duf_depthinfo_t * pdi );
 int duf_pdi_close( duf_depthinfo_t * pdi );
-
 
 #endif

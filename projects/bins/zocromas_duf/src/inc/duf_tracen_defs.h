@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_TRACEN_DEFS_H
 #  define MAS_DUF_TRACEN_DEFS_H
 
-
+#include "duf_printn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"
 /* #  include "duf_tracen_defs_base.h" */
 /* #  include "duf_tracen_defs_what.h" */
 /* #  include "duf_tracen_defs_sys.h" */

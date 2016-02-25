@@ -1,15 +1,20 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 /* #include <stddef.h> */
 #include <string.h>
+#include <stdlib.h>                                                  /* getenv */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
-#include "duf_maintenance_errors.h"
+#include <mastar/wrap/mas_std_def.h>
 
-#include "duf_option_config.h"
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
 #include "duf_option_clarify_batch.h"
 
@@ -26,7 +31,7 @@ duf_env_options_at_var( duf_config_cli_t * cli, duf_option_stage_t istage, const
 
   eo = getenv( envvarname );
 
-  DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name(cli,istage ), envvarname, eo );
+  DUF_TRACE( options, 1, "@@@@@@@stage:%s; source: env(%s='%s')", duf_optstage_name( cli, istage ), envvarname, eo );
   DOR( r, duf_boption_xclarify_at_stdx( cli, '=', istage, DUF_OPTION_SOURCE( ENV ), eo, 0, paod ) );
 
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
@@ -43,14 +48,14 @@ duf_env_options_at_var( duf_config_cli_t * cli, duf_option_stage_t istage, const
  * */
 int
 duf_source_env_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive DUF_UNUSED, duf_option_adata_t * paod,
-                      duf_option_source_code_t sourcecode DUF_UNUSED )
+                      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod,
+                      duf_option_source_code_t sourcecode MAS_UNUSED )
 {
 /* extern duf_config_t *duf_config; */
   const char *evname = NULL;
 
   DUF_STARTR( r );
-  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name(cli,sourcecode ) );
+  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   evname = duf_cli_options_config_env_var_name( cli );
 #if 0
   DOR( r, duf_env_options_at_var( cli, istage, "MSH_DUF_AOPTIONS", paod ) );

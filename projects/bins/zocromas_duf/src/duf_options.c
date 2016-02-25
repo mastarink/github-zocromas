@@ -1,25 +1,32 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 /* #include <stddef.h> */
 #include <string.h>
+#include <sys/stat.h>                                                /* struct stat */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
-#include "duf_maintenance_errors.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_config.h" */
 /* #include "duf_config_util.h" */
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
-#include "duf_option_types.h"
+#include "duf_option_types.h"                                        /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
 
 #include "duf_options_file.h"
 #include "duf_options_env.h"
 #include "duf_options_cli.h"
 #include "duf_options_interactive.h"
+#include "duf_config_trace_enum.h"
 
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
 #include "duf_option_clarify_new.h"
 /* ###################################################################### */
@@ -33,7 +40,7 @@ SR( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
+  int MAS_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #endif
 
   if ( istage <= DUF_OPTION_STAGE_SETUP )
@@ -64,7 +71,7 @@ SR( OPTIONS, all_options_paod, duf_config_cli_t * cli, duf_option_stage_t istage
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
+  int MAS_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #endif
   if ( istage <= DUF_OPTION_STAGE_SETUP )
   {
@@ -124,7 +131,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
+  int MAS_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #endif
 
 /* if ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX ) */

@@ -1,6 +1,7 @@
 #ifndef MAS_SQL_TABLES_DEFS_H
 #  define MAS_SQL_TABLES_DEFS_H
 
+#  include "duf_defs.h"
 #  include "duf_db_defs.h"
 #  include "sql_tables_global_defs.h"
 

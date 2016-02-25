@@ -7,4 +7,7 @@
 #  define FL __func__, __LINE__
 #  define IL __FILE__, __LINE__
 
+#  define MAS_UNUSED __attribute__(( unused ))
+
+
 #endif

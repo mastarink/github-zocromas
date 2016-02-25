@@ -3,13 +3,13 @@
 #include <stddef.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace_credel.h>
 
-#include "duf_maintenance_errors.h"
-#include "duf_maintenance_tracen.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_se.h"
+#include "duf_se.h"                                                  /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"
@@ -116,7 +116,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
   CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
   T( "@@@@@%d OPTEST", QERRIND );
 
-  mas_error_report_all(config_trace ,0 /*index*/,0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
+  mas_error_report_all( config_trace, 0 /*index */ , 0, stderr, /* duf_verbose ? duf_verbose(  ) : */ 3 );
   T( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
      , QERRIND                                                       /* */
      , som1.set1.bits                                                /* */

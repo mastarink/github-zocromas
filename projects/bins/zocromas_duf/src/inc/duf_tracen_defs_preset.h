@@ -2,6 +2,7 @@
 # define MAS_DUF_TRACEN_DEFS_PRESET_H
 
 # include "duf_config_trace_types.h"
+# include "duf_config_trace_enum.h"
 
 # ifndef MAST_TRACE_CONFIG
 /* #    include "duf_config4trace_ref.h" */

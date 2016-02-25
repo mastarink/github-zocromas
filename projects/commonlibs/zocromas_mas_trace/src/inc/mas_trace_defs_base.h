@@ -51,7 +51,7 @@
 #  define MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
   			MAST_OTRACE_WHAT_WP_BASE( MAST_TRACE_FILE_C( MAST_TRACE_AT_TCFG_CR(_tcfg)), _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
 #else
-#  define MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
+#  define                MAST_TRACE_WHAT_WP_BASE( _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, ... ) \
   			MAST_OTRACE_WHAT_WP_BASE( _tcfg->stream.out, _tcfg, _prefix, _signum, _flags, _ern, _what, _name, _min, __VA_ARGS__ )
 #endif
 

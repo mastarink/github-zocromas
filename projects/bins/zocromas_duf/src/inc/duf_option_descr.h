@@ -1,8 +1,9 @@
 #ifndef MAS_DUF_OPTION_DESCR_H
 # define MAS_DUF_OPTION_DESCR_H
 
-# include "duf_options_enum.h"                                       /* duf_option_code_t */
-# include "duf_option_types.h"                                       /* duf_longval_extended_t */
+# include "duf_options_enum.h"                                       /* duf_option_code_t ♠ */
+# include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
 
 /* char *duf_loption_description_d( int longindex, const char *delimh, const char *delim ); */
 char *duf_xoption_description_d( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *delimh, const char *delim );

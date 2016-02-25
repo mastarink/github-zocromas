@@ -1,29 +1,34 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
+#include <stdio.h>                                                   /* FILE */
 #include <string.h>
+#include <sys/stat.h>                                                /* struct stat */
 
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_argv_string; mas_argv_delete */
-#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path */
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path etc. ♣ */
 
-#include "duf_maintenance_z.h"                                       /* system calls wrappers, shortcut macros etc. */
-#include "duf_maintenance_errors.h"                                  /* errors subsystem access */
-#include "duf_maintenance_tracen.h"                                  /* DUF_TRACE, ... */
+#include "duf_base_types.h"                                          /* duf_limits_t */
 
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF */
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_se.h"                                                  /* QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
-/* #include "duf_config_util.h" */
-#include "duf_config_output_util.h"
+#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff etc. ♠ */
 
-#include "duf_option_config.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+
 #include "duf_option_tmpdb.h"
 
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
-#include "duf_option_config.h"
-
-#include "duf_expandable.h"
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
 
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"
@@ -126,7 +131,7 @@ duf_get_offset( void *ptr, unsigned long off )
 }
 
 static void *
-duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli,const duf_longval_extended_t * extended )
+duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli, const duf_longval_extended_t * extended )
 {
   void *byte_ptr = NULL;
 
@@ -180,7 +185,7 @@ duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli,const duf_longval_exte
 
 int
 duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg, unsigned noo,
-                               duf_option_stage_t istage DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
+                               duf_option_stage_t istage MAS_UNUSED, duf_option_source_t source MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -196,8 +201,8 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
     unsigned doplus = 0;
     void *byteptr = NULL;
 
-    byteptr = duf_xoption_clarify_typed_byteptr( cli,extended );
-    DUF_TRACE( options, 60, "to check stage; istage:%s", duf_optstage_name(cli,istage ) );
+    byteptr = duf_xoption_clarify_typed_byteptr( cli, extended );
+    DUF_TRACE( options, 60, "to check stage; istage:%s", duf_optstage_name( cli, istage ) );
   /* if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) *//* moved upper */
     {
       unsigned nof;
@@ -587,7 +592,7 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
     else
     {
       DUF_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
-                 duf_optstage_name(cli,istage ) );
+                 duf_optstage_name( cli, istage ) );
     /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
 #endif

@@ -1,33 +1,35 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_errors.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_config_util.h" */
 
-#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff ... */
+#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff etc. ♠ */
 
-#include "duf_option_defs.h"
-#include "duf_option_tmpdb.h"
+/* #include "duf_option_defs.h" */
 
-#include "duf_option_config.h"
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
-#include "duf_option_extended2string.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
 /* ###################################################################### */
-#include "duf_option_typed_defs.h"
 #include "duf_option_typed.h"
 /* ###################################################################### */
 
 int
-duf_xoption_clarify_typed_call( duf_config_cli_t * cli,const duf_longval_extended_t * extended, const char *optargg,
-                                unsigned noo, duf_option_stage_t istage DUF_UNUSED, duf_option_source_t source DUF_UNUSED )
+duf_xoption_clarify_typed_call( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg,
+                                unsigned noo, duf_option_stage_t istage MAS_UNUSED, duf_option_source_t source MAS_UNUSED )
 {
   DUF_STARTR( r );
   switch ( extended->calltype )
@@ -91,8 +93,7 @@ duf_xoption_clarify_typed_call( duf_config_cli_t * cli,const duf_longval_extende
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
   /* assert( DUF_CONFIGG( cli.carg.argc ) ); */
   /* assert( DUF_CONFIGG( cli.carg.argv ) ); */
-    assert( duf_cli_options_get_carg( cli ) && duf_cli_options_get_cargc( cli )
-            && duf_cli_options_get_cargv( cli ) );
+    assert( duf_cli_options_get_carg( cli ) && duf_cli_options_get_cargc( cli ) && duf_cli_options_get_cargv( cli ) );
 #if 0
     if ( DUF_NOERROR( r ) )
     {
@@ -183,8 +184,7 @@ duf_xoption_clarify_typed_call( duf_config_cli_t * cli,const duf_longval_extende
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
     assert( &duf_cli_options_get_targ( cli )->argc == duf_cli_options_get_ptargc( cli ) );
     assert( &duf_cli_options_get_targ( cli )->argv == duf_cli_options_get_ptargv( cli ) );
-    IF_DORF( r, extended->call.fdesc.tn2.func, duf_cli_options_get_ptargc( cli ),
-             duf_cli_options_get_ptargv( cli ), duf_strtol_suff( optargg, &r ) );
+    IF_DORF( r, extended->call.fdesc.tn2.func, duf_cli_options_get_ptargc( cli ), duf_cli_options_get_ptargv( cli ), duf_strtol_suff( optargg, &r ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED );
     break;
 #endif

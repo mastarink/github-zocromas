@@ -2,6 +2,7 @@
 #  define MAS_DUF_OPTION_TYPED_DEFS_H
 
 #include <unistd.h>
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF */
 
 #define DUF_NUMOPT( _no, _rt, _typ, _dopls, _conv) \
       if (_rt>=0) \

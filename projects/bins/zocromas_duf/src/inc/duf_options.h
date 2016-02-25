@@ -1,9 +1,11 @@
 #ifndef MAS_DUF_OPTIONS_H
 # define MAS_DUF_OPTIONS_H
 
-# include "duf_option_types.h"                                       /* duf_option_adata_t */
-# include "duf_option_stage_types.h"                                 /* duf_option_stage_t */
+# include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
+# include "duf_option_stage_types.h"                                 /* duf_option_stage_t ♠ */
 # include "duf_fun_types.h"                                          /* duf_int_void_func_t; duf_cpchar_void_func_t */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>

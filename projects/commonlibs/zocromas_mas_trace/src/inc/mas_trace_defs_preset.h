@@ -5,9 +5,9 @@
 #  define MAST_FL __func__,__LINE__
 # endif
 
-# ifndef MAST_TRACE_CONFIG
-#  define MAST_TRACE_CONFIG NULL
-# endif
+/* # ifndef MAST_TRACE_CONFIG       */
+/* #  define MAST_TRACE_CONFIG NULL */
+/* # endif                          */
 
 # ifndef MAST_TRACE_AT_TCFG_CR
 #  define MAST_TRACE_AT_TCFG_CR(_cfg)  *(_cfg)
@@ -65,8 +65,8 @@
 /* (* #    define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) MAST_IF_TRACE_WHAT_C( _cfg, _what, _name ) *) */
 /* #  define MAST_TRACE_LEVEL_C( _cfg, _what, _name ) 0                                                  */
 /* # endif                                                                                               */
-# ifndef MAST_TRACE_INDEX
-#  define MAST_TRACE_INDEX(_name)  -1
-# endif
+/* # ifndef MAST_TRACE_INDEX             */
+/* #  define MAST_TRACE_INDEX(_name)  -1 */
+/* # endif                               */
 
 #endif

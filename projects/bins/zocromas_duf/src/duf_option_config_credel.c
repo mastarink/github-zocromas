@@ -1,27 +1,33 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance_z.h"
-#include "duf_maintenance_tracen.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_option_extended.h"
-#include "duf_option_longopts.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_option_defs.h"
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
-#include "duf_options_enum.h"                                        /* duf_option_code_t */
+/* #include "duf_option_extended.h" */
+#include "duf_option_longopts.h"                                     /* duf_options_create_longopts_table ♠ */
+
+/* #include "duf_option_defs.h" */
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /* ###################################################################### */
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 #include "duf_option_config_credel.h"
 /* ###################################################################### */
 
 static char *
-duf_cli_option_shorts_create( duf_config_cli_t * cli DUF_UNUSED, duf_longval_extended_vtable_t * *xvtables )
+duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_extended_vtable_t * *xvtables )
 {
   const duf_longval_extended_vtable_t *xtable;
   char shorts[1024 * 4] = "";

@@ -15,10 +15,7 @@
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-
-
 #include "duf_dh.h"
-
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
@@ -30,8 +27,8 @@ duf_levinfo_t *
 duf_pi_ptr_d( const duf_pathinfo_t * pi, int d )
 {
   assert( pi );
-  /* assert( d >= 0 ); */
-  /* assert( pi->levinfo ); */
+/* assert( d >= 0 ); */
+/* assert( pi->levinfo ); */
 
   return pi && ( d >= 0 && d <= ( int ) pi->maxdepth ) && pi->levinfo ? &pi->levinfo[d] : NULL;
 }
@@ -159,9 +156,6 @@ duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q )
 DUF_PATHINFO_4GET( int, dfd, lev_dh.dfd )
 /* *INDENT-ON*  */
 
-
-
-
 /* 20150904.122200 */
 const char *
 duf_pi_itemshowname_d( const duf_pathinfo_t * pi, int d )
@@ -169,7 +163,7 @@ duf_pi_itemshowname_d( const duf_pathinfo_t * pi, int d )
   const char *n = NULL;
 
   n = duf_pi_itemtruename_d( pi, d );
-  /* return n ? ( *n ? n : "/" ) : n; */
+/* return n ? ( *n ? n : "/" ) : n; */
   return n && !*n ? "/" : n;
 }
 
@@ -199,7 +193,7 @@ duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d )
   pli = duf_pi_ptr_d( pi, d );
 
   n = pli ? pli->itemname : NULL;
-  /* return n ? ( *n ? n : "/" ) : n; */
+/* return n ? ( *n ? n : "/" ) : n; */
   return n;
 }
 
@@ -225,7 +219,7 @@ duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
 {
   struct stat *pst = NULL;
 
-  /* if ( pdi->opendir ) */
+/* if ( pdi->opendir ) */
   {
     duf_dirhandle_t *pdh;
 
@@ -234,9 +228,9 @@ duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
     if ( pdh->rs > 0 && pdh->source == DUF_DH_SOURCE_FS )
       pst = &pdh->st;
   }
-  /* TODO NOT here: assert( pst->st_dev ); 
-   * (used to check presence, so no stat is OK)
-   * TODO */
+/* TODO NOT here: assert( pst->st_dev ); 
+ * (used to check presence, so no stat is OK)
+ * TODO */
   return pst;
 }
 /* *INDENT-OFF*  */
@@ -305,5 +299,3 @@ duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 DUF_PATHINFO_FC( int, deltadepth )
 DUF_PATHINFO_FC_UP( int, deltadepth )
 /* *INDENT-ON*  */
-
-

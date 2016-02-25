@@ -62,13 +62,15 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int trace_index, 
 #else
   double time0 = tcfg->loadtime;
   FILE *out = tcfg->stream.out ? tcfg->stream.out : stderr;
-  /* FILE *out = tcfg->stream.out; */
+
+/* FILE *out = tcfg->stream.out; */
   unsigned fun_width = tcfg->fun_width;
   int force_color = tcfg->stream.v.flag.force_color;
   int nocolor = tcfg->stream.v.flag.nocolor;
   int level = trace_index >= 0 ? tcfg->class_levels[trace_index] : 0;
   int output_level = tcfg->stream.level;
 #endif
+  /* fprintf( stderr, "%p %s in trace level:%d; trace_index:%d\n", tcfg, name, level, trace_index ); */
   if ( !ftimez )
   {
     int ry;

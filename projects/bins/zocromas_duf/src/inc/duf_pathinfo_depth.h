@@ -2,6 +2,8 @@
 #  define MAS_DUF_PATHINFO_DEPTH_H
 
 
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ♠ */
+
 int duf_pi_calc_depth( duf_pathinfo_t * pi );
 
 int duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear );

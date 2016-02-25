@@ -1,12 +1,13 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include <mastar/tools/mas_arg_tools.h>
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+
+#include <mastar/wrap/mas_std_def.h>
 
 /* ###################################################################### */
-#include "duf_option_vtype.h"
+#include "duf_option_vtype.h"                                        /* duf_optvtype2string ♠ */
 /* ###################################################################### */
-
-
 
 const char *
 duf_optvtype2string( duf_option_vtype_t ovtype )
@@ -39,4 +40,3 @@ duf_extended_call_type2string( duf_option_call_type_t call_type )
   }
   return rs;
 }
-

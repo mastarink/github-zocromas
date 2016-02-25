@@ -1,20 +1,18 @@
 /* #undef MAS_TRACING */
-#   define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
-#include "duf_maintenance_z.h"
-/* #include "duf_maintenance_tracen.h" */
-/* #include "duf_maintenance_errors.h" */
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
 #include "duf_tmp_types.h"
 
-/* #include "duf_option_find.h" */
-#include "duf_option_cfind.h"
-#include "duf_option_lfind.h"
+#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
+/* #include "duf_option_lfind.h" */
 
-#include "duf_option_names.h"
+#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
 
 /* ###################################################################### */
 #include "duf_option_descr.h"
@@ -70,7 +68,7 @@ duf_xoption_description_d( duf_config_cli_t * cli, const duf_longval_extended_t 
 
   if ( extended )
   {
-    s = duf_coption_names_d( cli,extended->o.val, delim );
+    s = duf_coption_names_d( cli, extended->o.val, delim );
     if ( s )
     {
       const char *h;
@@ -89,7 +87,7 @@ duf_xoption_description_d( duf_config_cli_t * cli, const duf_longval_extended_t 
 static char *
 duf_xoption_description( duf_config_cli_t * cli, const duf_longval_extended_t * extended )
 {
-  return duf_xoption_description_d(  cli, extended, NULL, NULL );
+  return duf_xoption_description_d( cli, extended, NULL, NULL );
 }
 
 static duf_tmp_t *cnames_tmp = NULL;
@@ -110,7 +108,7 @@ duf_xoption_description_tmp( duf_config_cli_t * cli, int tmp_index, const duf_lo
   {
     mas_free( cnames_tmp->tmp_string[tmp_index] );
     cnames_tmp->tmp_string[tmp_index] = NULL;
-    cnames_tmp->tmp_string[tmp_index] = duf_xoption_description(  cli,extended );
+    cnames_tmp->tmp_string[tmp_index] = duf_xoption_description( cli, extended );
     x = cnames_tmp->tmp_string[tmp_index];
   }
   return x;

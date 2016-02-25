@@ -1,8 +1,17 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
+
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_fmt_defs.h"
 
-#include "duf_config.h"
+/* #include "duf_config.h" */
 #include "duf_config_util.h"
 
 #include "duf_pdi_ref.h"
@@ -19,7 +28,7 @@
 #include "duf_pathinfo_depth.h"
 /* #include "duf_pathinfo_ref.h" */
 
-#include "duf_sccb_scanstage.h" /* duf_nodetype_name, temporarily */
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name, temporarily */
 /* ###################################################################### */
 #include "duf_levinfo_updown.h"
 /* ###################################################################### */
@@ -98,14 +107,14 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
 /* 20151026.104256 */
 /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
 static int
-_duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf_node_type_t node_type, int flinear )
+_duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname MAS_UNUSED, duf_node_type_t node_type, int flinear )
 {
   DUF_STARTR( r );
   assert( pdi );
 #if 0
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
-  DOR( r, duf_levinfo_check_depth( pdi, node_type ) ); /* no side effects */
+  DOR( r, duf_levinfo_check_depth( pdi, node_type ) );               /* no side effects */
   if ( DUF_NOERROR( r ) )
   {
     int d;
@@ -127,7 +136,7 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname DUF_UNUSED, duf
                  duf_levinfo_itemshowname( pdi ) );
     }
     if ( node_type == DUF_NODE_NODE )
-      duf_levinfo_countdown_dirs( pdi ); /* may change levinfo (for upper level) */
+      duf_levinfo_countdown_dirs( pdi );                             /* may change levinfo (for upper level) */
     assert( pdi->pathinfo.depth - 1 /* not yet ... */  == duf_levinfo_calc_depth( pdi ) );
   }
 #else
@@ -144,9 +153,9 @@ duf_levinfo_godown_dirid( duf_depthinfo_t * pdi, const char *itemname, unsigned 
   DUF_STARTR( r );
   assert( pdi );
 
-  DOR( r, _duf_levinfo_godown( pdi, itemname, node_type, -1 ) ); /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
+  DOR( r, _duf_levinfo_godown( pdi, itemname, node_type, -1 ) );     /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
   if ( DUF_NOERROR( r ) )
-    duf_levinfo_init_level( pdi, itemname, dirid, node_type ); /* resets levinfo (currenl level) */
+    duf_levinfo_init_level( pdi, itemname, dirid, node_type );       /* resets levinfo (currenl level) */
 
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
@@ -162,9 +171,9 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t
 #if 0
   assert( pdi );
 
-  DOR( r, _duf_levinfo_godown( pdi, itemname, node_type, -1 ) ); /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
+  DOR( r, _duf_levinfo_godown( pdi, itemname, node_type, -1 ) );     /* check depth; may change levinfo (for upper level) via duf_levinfo_countdown_dirs */
   if ( DUF_NOERROR( r ) )
-    duf_levinfo_init_level( pdi, itemname, 0, 0, 0, node_type ); /* resets levinfo  (currenl level) */
+    duf_levinfo_init_level( pdi, itemname, 0, 0, 0, node_type );     /* resets levinfo  (currenl level) */
 #else
   DOR( r, duf_levinfo_godown_dirid( pdi, itemname, 0 /* dirid */ ,
                                     node_type ) );
@@ -201,7 +210,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stm
     assert( pdi->pathinfo.levinfo );
 
     if ( node_type == DUF_NODE_NODE )
-      duf_levinfo_countdown_dirs( pdi ); /* may change levinfo (for upper level) */
+      duf_levinfo_countdown_dirs( pdi );                             /* may change levinfo (for upper level) */
   /* ------------------------------------------- */
     assert( duf_levinfo_dirid( pdi ) == 0 );
     assert( !pdi->pathinfo.levinfo[d].itemname );
@@ -280,8 +289,8 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
 
     assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || pdi->pathinfo.levinfo[d].lev_dh.dfd == 0 );
 
-    /* if ( DUF_IS_ERROR( r ) )                                              */
-    /*   DUF_SHOW_ERRORO( "(%d) close error; L%d", r, pdi->pathinfo.depth ); */
+  /* if ( DUF_IS_ERROR( r ) )                                              */
+  /*   DUF_SHOW_ERRORO( "(%d) close error; L%d", r, pdi->pathinfo.depth ); */
     DUF_TRACE( explain, 2, "level up:   %d", d );
     assert( pdi->pathinfo.levinfo );
     duf_levinfo_clear_level_d( pdi, d );

@@ -1,9 +1,6 @@
 #ifndef MAS_MAST_TRACE_DEFS_PRESET_H
 #  define MAS_MAST_TRACE_DEFS_PRESET_H
 
-# ifndef MAST_TRACE_INDEX
-#  define MAST_TRACE_INDEX(_name)  -1
-# endif
 
 /* #define MAST_OUTPUT_LEVEL mas_output_level() */
 /* #  ifndef MAST_OUTPUT_LEVEL     */

@@ -1,7 +1,8 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
 
 #include "duf_pathinfo_credel.h"
 #include "duf_levinfo.h"
@@ -34,16 +35,16 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
       pli->itemname = mas_strdup( itemname );
     }
 
-#  ifndef MAS_DUF_DEFS_H
-#    error use #include "duf_defs.h"
-#  elif defined(DUF_DO_NUMS)
-    /* pdi->pathinfo.levinfo[d].numdir = ndirs;   */
-    /* pdi->pathinfo.levinfo[d].numfile = nfiles; */
-    /* duf_li_set_nums( pli, ndirs, nfiles ); *//* really never nz here */
-#  else
-    /* if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE ) */
-    /*   duf_levinfo_make_childs_d( pdi, d );                    */
-#  endif
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined(DUF_DO_NUMS)
+  /* pdi->pathinfo.levinfo[d].numdir = ndirs;   */
+  /* pdi->pathinfo.levinfo[d].numfile = nfiles; */
+  /* duf_li_set_nums( pli, ndirs, nfiles ); *//* really never nz here */
+# else
+  /* if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE ) */
+  /*   duf_levinfo_make_childs_d( pdi, d );                    */
+# endif
   }
 #elif 0
   duf_li_init( &pdi->pathinfo.levinfo[d], itemname, dirid, node_type );

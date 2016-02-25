@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_OPTION_SOURCE_H
 # define MAS_DUF_OPTION_SOURCE_H
 
-# include "duf_option_source_types.h"                                /* duf_option_source_t; duf_option_source_code_t */
+# include "duf_option_source_types.h"                                /* duf_option_source_t; duf_option_source_code_t ♠ */
+# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
 
 /* naming convention:
  * <gen.prefix>_<subject prefix><entity>[_<entity-details>]_<action-result>
