@@ -1,9 +1,18 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
@@ -127,7 +136,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 /* ########################################################################################## */
 
 static int
-register_pdifiledata( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+register_pdifiledata( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
   DOR( r, duf_pdistat2file( pdi ) );

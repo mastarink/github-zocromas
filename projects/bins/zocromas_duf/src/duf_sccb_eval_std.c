@@ -1,15 +1,21 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_action_table.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_defs.h"    /* DUF_ACTG_FLAG( summary ) */
+#include "duf_option_defs.h"                                         /* DUF_ACTG_FLAG( summary ) */
 
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
@@ -19,7 +25,6 @@
 /* ###################################################################### */
 #include "duf_sccb_eval_std.h"
 /* ###################################################################### */
-
 
 #if 0
 const duf_action_table_t *
@@ -50,8 +55,6 @@ duf_finor_load_d_sccb_by_evname_std( const char *name )
   return sccb;
 }
 
-
-
 int
 duf_ev_evnamed_list_std( const char *names )
 {
@@ -60,7 +63,7 @@ duf_ev_evnamed_list_std( const char *names )
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
-  /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) ); */
+/* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) ); */
   DOR( r, duf_ev_evnamed_list( names, duf_first_sccb(  ) ) );
 #endif
   DUF_ENDR( r );
@@ -132,8 +135,8 @@ int
 duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
 {
   DUF_STARTR( r );
-  /* assert( 0 );                                             */
-  /* assert( duf_levinfo_node_type( pdi ) == DUF_NODE_LEAF ); */
+/* assert( 0 );                                             */
+/* assert( duf_levinfo_node_type( pdi ) == DUF_NODE_LEAF ); */
 
 #if 0
   DOR( r, duf_ev_pdi_atable_evname_at( pdi, name, duf_action_table(  ), NULL, DUF_ACTG_FLAG( summary ) ) );

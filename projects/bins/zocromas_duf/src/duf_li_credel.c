@@ -1,19 +1,27 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_config_util.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_levinfo_updown.h"
-#include "duf_levinfo_ref.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+
+/* #include "duf_levinfo_updown.h" */
+/* #include "duf_levinfo_ref.h" */
 
 #include "duf_li.h"
 
 #include "duf_context.h"
 
 #include "duf_pdi.h"
-#include "duf_path2dirid.h"
+/* #include "duf_path2dirid.h" */
 
 /* ###################################################################### */
 #include "duf_li_credel.h"
@@ -127,7 +135,7 @@ duf_li_clone( const duf_levinfo_t * plisrc, unsigned maxdepth )
 }
 
 duf_levinfo_t *
-duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED, unsigned maxdepth, int *pr )
+duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename MAS_UNUSED, unsigned maxdepth, int *pr )
 {
   duf_levinfo_t *pli = NULL;
   int rpr = 0;

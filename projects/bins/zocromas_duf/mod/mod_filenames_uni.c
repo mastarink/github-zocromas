@@ -1,7 +1,16 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
@@ -161,16 +170,16 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 };
 
 /* ########################################################################################## */
-static int DUF_UNUSED
-filenames_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+static int MAS_UNUSED
+filenames_leaf2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 /* T( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
   DUF_ENDR( r );
 }
 
-static int DUF_UNUSED
-filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+static int MAS_UNUSED
+filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
@@ -179,7 +188,7 @@ filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t 
 }
 
 static int
-filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+filenames_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
   const char *fname = duf_levinfo_itemtruename( pdi );

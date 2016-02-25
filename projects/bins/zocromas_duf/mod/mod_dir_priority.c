@@ -1,8 +1,17 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 #include <unistd.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
@@ -40,9 +49,9 @@
 
 /* ########################################################################################## */
 /* DUF_MOD_DECLARE_ALL_FUNCS( set_dir_priority ) */
-static int set_dir_priority_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
-static int set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
-static int set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
+static int set_dir_priority_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
+static int set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
+static int set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -66,7 +75,7 @@ duf_scan_callbacks_t duf_set_dir_priority_callbacks = {
 /* ########################################################################################## */
 
 static int
-set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
+set_dir_priority_node_before2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
   DUF_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
@@ -90,7 +99,7 @@ set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
 }
 
 static int
-set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+set_dir_priority_node_middle2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -100,7 +109,7 @@ set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t *
 }
 
 static int
-set_dir_priority_node_after2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+set_dir_priority_node_after2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 

@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /*
 At duf_options_table.c:
@@ -19,7 +17,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_uplus = {
   .name = "uplus",
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
 
    {.o = {DO_Q( "sample" ) /*             */ , DO_A_O /* */ , DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*  */ ,

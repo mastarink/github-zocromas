@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_OPTIMPL_SCCB_H
-#  define MAS_DUF_OPTIMPL_SCCB_H
+# define MAS_DUF_OPTIMPL_SCCB_H
 
+# include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ♣ */
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 mas_error_code_t duf_option_O_list_sccbs( void );
 mas_error_code_t duf_option_O_evaluate_sccb( const char *name );

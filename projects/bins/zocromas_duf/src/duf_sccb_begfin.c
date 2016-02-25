@@ -1,14 +1,20 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_sccb.h"
 #include "evsql_begfin.h"
 
 #include "duf_sccbh_shortcuts.h"
-#include "duf_maindb.h"
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 /* ###################################################################### */
 #include "duf_sccb_begfin.h"

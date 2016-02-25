@@ -1,15 +1,7 @@
 /* #undef MAS_TRACING */
-#include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
-#include <time.h>
 
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-
-
-#include "duf_maintenance.h"
 
 /* ###################################################################### */
 #include "duf_service.h"
@@ -22,7 +14,7 @@ duf_check_field( const char *name, int have )
   if ( !have )
   {
     _DUF_SHOW_ERROR( "No such field: %s", name );
-    /* assert(have); */
+  /* assert(have); */
     return DUF_ERROR_NO_FIELD;
   }
   return 0;
@@ -41,17 +33,16 @@ duf_dbg_funname( duf_anyhook_t p )
   static char buf[512];
   int found = 0;
 
-
   static duf_fundesc_t table[] = {
-    /* DUF_FUN( duf_str_cb2_uni_scan_dir ), */
-    /* DUF_FUN( duf_str_cb1_leaf_scan ), */
+  /* DUF_FUN( duf_str_cb2_uni_scan_dir ), */
+  /* DUF_FUN( duf_str_cb1_leaf_scan ), */
 #ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),
-#endif    
-    /* DUF_FUN( duf_sel_cb_items ), */
-    /* DUF_FUN( duf_sel_cb_node ), */
-    /* DUF_FUN( duf_sel_cb_leaf ), */
-    /* DUF_FUN( duf_sel_cb_levinfo ), */
+#endif
+  /* DUF_FUN( duf_sel_cb_items ), */
+  /* DUF_FUN( duf_sel_cb_node ), */
+  /* DUF_FUN( duf_sel_cb_leaf ), */
+  /* DUF_FUN( duf_sel_cb_levinfo ), */
     {NULL},
   };
   for ( unsigned i = 0; i < sizeof( table ) / sizeof( table[0] ); i++ )

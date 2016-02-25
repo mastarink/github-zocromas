@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h"
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /*
 At duf_options_table.c:
@@ -20,7 +18,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_test = {
   .name = "test",
 //DO_AT_STAGE( SETUP ),
-  .xlist = /* */
+  .xlist =                                                           /* */
   {
 
    {.o = {DO_Q( "test-act-flag" ) /*            */ , DO_A_N /* */ , DO_VF( TEST_ACT_FLAG )} /*              */ , DO_CL( TEST ) /* */ ,
@@ -37,9 +35,6 @@ const duf_longval_extended_table_t optable_test = {
    {.o = {DO_Q( "test-act-nobflag" ) /*         */ , DO_A_N /* */ } /*              */ , DO_CL( TEST ) /* */ ,
     /* */ DO_OC( NOBFLAG, opt.act.v ), DO_BFL( act, testnoflag ), DO_STAGE_ALL /*                            */ , DO_H(  ... ) /*            */ },
 
-
-
-
    {.o = {DO_Q( "test-recetc-flag" ) /*         */ , DO_A_N /* */ , DO_VF( TEST_RECETC_FLAG )} /*           */ , DO_CL( TEST ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( rec_etc, testflag ), DO_STAGE_SPLS /*                               */ , DO_H( sflag ) /*           */ },
    {.o = {DO_Q( "test-recetc-iflag" ) /*        */ , DO_A_N /* */ , DO_VF( TEST_RECETC_IFLAG )} /*          */ , DO_CL( TEST ) /* */ ,
@@ -54,9 +49,6 @@ const duf_longval_extended_table_t optable_test = {
    {.o = {DO_Q( "test-recetc-nobflag" ) /*      */ , DO_A_N /* */ } /*                                      */ , DO_CL( TEST ) /* */ ,
     /*      */ DO_OU( NOBSFLAG, v ), DO_BFL( rec_etc, testnoflag ), DO_STAGE_SPLS /*                         */ , DO_H( sflag ) /*           */ },
 
-
-
-
    {.o = {DO_Q( "test-disable-flag" ) /*        */ , DO_A_N, DO_VF( TEST_DISABLE_FLAG )} /*                 */ , DO_CL( TEST ) /*    */ ,
     /*      */ DO_OC( SFLAG, opt.disable ), DO_FL( disable, testflag ) /*                                    */ , DO_H(  .... ) /*           */ },
    {.o = {DO_Q( "test-disable-iflag" ) /*       */ , DO_A_N, DO_VF( TEST_DISABLE_IFLAG )} /*                */ , DO_CL( TEST ) /*    */ ,
@@ -70,16 +62,12 @@ const duf_longval_extended_table_t optable_test = {
     /*      */ DO_OC( BSFLAG, opt.disable ), DO_BFN( disable, testiflag ) /*                                 */ , DO_H(  .... ) /*           */ },
    {DOO_Q( "test-disable-nobflag" ), DOO_BFL( NOBSFLAG, opt, disable, testnoflag ), DOO_CL( TEST ) /*       */ , DOO_H(  .... )},
 
-
-
    {DOO_Q( "test-cfg-num" ) /*                  */ , DOO_A_R /* */ , DOO_V( TEST_CFG_NUM ) /*               */ , DOO_CL( TEST ) /*  */ ,
     /*      */ DOO_OC( NUM, testnum ) /*          */ , DOO_AT_STAGE( SETUP ) /*                              */ , DOO_H(  .... ) /*          */ },
 
    {.o = {.name = NULL}}
    }
 };
-
-
 
 /* vi: et ft=c colorcolumn=3,4,52,67,68,112,113,131,145,146
 */

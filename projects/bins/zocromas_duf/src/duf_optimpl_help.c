@@ -1,16 +1,24 @@
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
-#include "duf_printn_defs.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_expandable.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_config.h"
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
-#include "duf_config_util.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_output_util.h"
 
 #include "duf_action_table.h"
@@ -21,14 +29,13 @@
 #include "duf_options_file.h"                                        /* duf_options_infilepath */
 
 #include "duf_option_descr.h"
-#include "duf_option_stage.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 /* #include "duf_option_extended.h" */
 #include "duf_option_extended2string.h"
 
-#include "duf_option_names.h"
-#include "duf_option_class.h"
-#include "duf_option_config.h"
-
+#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
+#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 /* ###################################################################### */
 #include "duf_optimpl_help.h"
@@ -116,10 +123,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
-  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(),DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
@@ -840,7 +847,7 @@ duf_uflag2cnames( unsigned long ufset )
   duf_option_code_t id = DUF_OPTION_VAL_NONE;
 
   id = duf_uflag2code( ufset );
-  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp(duf_get_config_cli(), -1, id, NULL );
+  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp( duf_get_config_cli(  ), -1, id, NULL );
 }
 
 static const char *
@@ -967,14 +974,14 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_O_list_options( long n_unused DUF_UNUSED )
+duf_option_O_list_options( long n_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
 
   int ntable = 0;
   int tbcount = 0;
 
-  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); *xvtables; xvtables++, ntable++ )
+  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++, ntable++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
 
@@ -983,7 +990,7 @@ duf_option_O_list_options( long n_unused DUF_UNUSED )
       char *s = NULL;
 
       if ( xtended->o.val )
-        s = duf_xoption_description_d(duf_get_config_cli(), xtended, "\t", " // " );
+        s = duf_xoption_description_d( duf_get_config_cli(  ), xtended, "\t", " // " );
       DUF_TEST_R( r );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );

@@ -4,9 +4,15 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_maintenance.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_printn_defs.h"
 
 #include "duf_config.h"
@@ -19,7 +25,6 @@
 #include "duf_pdi_pi_ref.h"
 
 #include "duf_pstmt_levinfo.h"
-
 
 /* ###################################################################### */
 #include "duf_print.h"
@@ -51,47 +56,47 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
 
 typedef enum
 {
-  DUF_SFMT_CHR_SUFFIX = /*             */ '~', /* suffix */
-  DUF_SFMT_CHR_UNDERLINE = /*          */ '_', /*  */
-  DUF_SFMT_CHR_SHA1SUM = /*            */ '.', /* sha1sum */
-  DUF_SFMT_CHR_MD5SUM = /*             */ '@', /* md5sum */
-  DUF_SFMT_CHR_DATAID = /*             */ '&', /*  */
-  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#', /* seq_leaf */
-  DUF_SFMT_CHR_CAMERAS = /*            */ 'a', /* camera */
-  DUF_SFMT_CHR_CAMERA = /*             */ 'A', /* camera */
-  DUF_SFMT_CHR_COLOR = /*              */ 'c', /*  */
-  DUF_SFMT_CHR_MIME = /*               */ 'e', /* mime */
-  DUF_SFMT_CHR_MIMEID = /*             */ 'E', /* mimeid */
-  DUF_SFMT_CHR_FILENAME = /*           */ 'f', /* filename */
-  DUF_SFMT_CHR_GROUP = /*              */ 'g', /* group */
-  DUF_SFMT_CHR_DEPTH = /*              */ 'h', /* depth */
-  DUF_SFMT_CHR_SHA1ID = /*             */ 'H', /* sha1id */
-  DUF_SFMT_CHR_DIRID = /*              */ 'I', /* dirid */
-  DUF_SFMT_CHR_MODE = /*               */ 'm', /* mimeid */
-  DUF_SFMT_CHR_MD5ID = /*              */ 'M', /* md5id */
-  DUF_SFMT_CHR_NLINK = /*              */ 'n', /* nlink */
-  DUF_SFMT_CHR_NAMEID = /*             */ 'N', /* nameid */
-  DUF_SFMT_CHR_INODE = /*              */ 'O', /* inode */
-  DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p', /* move to position */
-  DUF_SFMT_CHR_PREFIX = /*             */ 'P', /* prefix */
-  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q', /* seq_node */
-  DUF_SFMT_CHR_SEQ_ROW = /*            */ 'w', /* seq_row */
-  DUF_SFMT_CHR_SEQ = /*                */ 'Q', /* seq */
-  DUF_SFMT_CHR_REALPATH = /*           */ 'r', /* realpath */
-  DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R', /* relative realpath (relative to 'top level') */
-  DUF_SFMT_CHR_SPACE = /*              */ 's', /* << space >> */
-  DUF_SFMT_CHR_NSAME = /*              */ 'S', /* nsame_md5 */
-  DUF_SFMT_CHR_MTIME1 = /*             */ 't', /* tm,tc,ta: mtime */
-  DUF_SFMT_CHR_MTIME2 = /*             */ 'T', /*  */
-  DUF_SFMT_CHR_USER = /*               */ 'u', /* user */
-  DUF_SFMT_CHR_EXIFID = /*             */ 'X', /* exifid */
-  DUF_SFMT_CHR_FILESIZEH = /*          */ 'z', /* filesize */
-  DUF_SFMT_CHR_FILESIZE = /*           */ 'Z', /* filesize */
+  DUF_SFMT_CHR_SUFFIX = /*             */ '~',                       /* suffix */
+  DUF_SFMT_CHR_UNDERLINE = /*          */ '_',                       /*  */
+  DUF_SFMT_CHR_SHA1SUM = /*            */ '.',                       /* sha1sum */
+  DUF_SFMT_CHR_MD5SUM = /*             */ '@',                       /* md5sum */
+  DUF_SFMT_CHR_DATAID = /*             */ '&',                       /*  */
+  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',                       /* seq_leaf */
+  DUF_SFMT_CHR_CAMERAS = /*            */ 'a',                       /* camera */
+  DUF_SFMT_CHR_CAMERA = /*             */ 'A',                       /* camera */
+  DUF_SFMT_CHR_COLOR = /*              */ 'c',                       /*  */
+  DUF_SFMT_CHR_MIME = /*               */ 'e',                       /* mime */
+  DUF_SFMT_CHR_MIMEID = /*             */ 'E',                       /* mimeid */
+  DUF_SFMT_CHR_FILENAME = /*           */ 'f',                       /* filename */
+  DUF_SFMT_CHR_GROUP = /*              */ 'g',                       /* group */
+  DUF_SFMT_CHR_DEPTH = /*              */ 'h',                       /* depth */
+  DUF_SFMT_CHR_SHA1ID = /*             */ 'H',                       /* sha1id */
+  DUF_SFMT_CHR_DIRID = /*              */ 'I',                       /* dirid */
+  DUF_SFMT_CHR_MODE = /*               */ 'm',                       /* mimeid */
+  DUF_SFMT_CHR_MD5ID = /*              */ 'M',                       /* md5id */
+  DUF_SFMT_CHR_NLINK = /*              */ 'n',                       /* nlink */
+  DUF_SFMT_CHR_NAMEID = /*             */ 'N',                       /* nameid */
+  DUF_SFMT_CHR_INODE = /*              */ 'O',                       /* inode */
+  DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p',                       /* move to position */
+  DUF_SFMT_CHR_PREFIX = /*             */ 'P',                       /* prefix */
+  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q',                       /* seq_node */
+  DUF_SFMT_CHR_SEQ_ROW = /*            */ 'w',                       /* seq_row */
+  DUF_SFMT_CHR_SEQ = /*                */ 'Q',                       /* seq */
+  DUF_SFMT_CHR_REALPATH = /*           */ 'r',                       /* realpath */
+  DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R',                       /* relative realpath (relative to 'top level') */
+  DUF_SFMT_CHR_SPACE = /*              */ 's',                       /* << space >> */
+  DUF_SFMT_CHR_NSAME = /*              */ 'S',                       /* nsame_md5 */
+  DUF_SFMT_CHR_MTIME1 = /*             */ 't',                       /* tm,tc,ta: mtime */
+  DUF_SFMT_CHR_MTIME2 = /*             */ 'T',                       /*  */
+  DUF_SFMT_CHR_USER = /*               */ 'u',                       /* user */
+  DUF_SFMT_CHR_EXIFID = /*             */ 'X',                       /* exifid */
+  DUF_SFMT_CHR_FILESIZEH = /*          */ 'z',                       /* filesize */
+  DUF_SFMT_CHR_FILESIZE = /*           */ 'Z',                       /* filesize */
 } duf_sformat_char_t;
 
 static size_t
 duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
-                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb DUF_UNUSED, size_t * pwidth )
+                duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb MAS_UNUSED, size_t * pwidth )
 {
   size_t slen = 0;
   size_t swidth = 0;
@@ -110,7 +115,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
   c = *fmt++;
   switch ( c )
   {
-  case DUF_SFMT_CHR_DEPTH:     /* depth */
+  case DUF_SFMT_CHR_DEPTH:                                          /* depth */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "u" );
 #else
@@ -123,7 +128,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, duf_pdi_reldepth( pdi ) );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ:       /* seq */
+  case DUF_SFMT_CHR_SEQ:                                            /* seq */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -136,7 +141,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pdi->seq );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_NODE:  /* seq_node */
+  case DUF_SFMT_CHR_SEQ_NODE:                                       /* seq_node */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -149,7 +154,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_ROW:   /* seq_row */
+  case DUF_SFMT_CHR_SEQ_ROW:                                        /* seq_row */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -162,7 +167,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pdi->seq_row );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_LEAF:  /* seq_leaf */
+  case DUF_SFMT_CHR_SEQ_LEAF:                                       /* seq_leaf */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -175,7 +180,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_MD5ID:     /* md5id */
+  case DUF_SFMT_CHR_MD5ID:                                          /* md5id */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -187,7 +192,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SHA1ID:    /* sha1id */
+  case DUF_SFMT_CHR_SHA1ID:                                         /* sha1id */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -199,7 +204,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pfi->sha1id );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_NSAME:     /* nsame */
+  case DUF_SFMT_CHR_NSAME:                                          /* nsame */
     {
       char c2 = 0;
       unsigned long long ns = 0;
@@ -235,12 +240,12 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_UNDERLINE: /* underline */
+  case DUF_SFMT_CHR_UNDERLINE:                                      /* underline */
     memset( pbuffer, '_', v > 0 ? v : ( v < 0 ? -v : 1 ) );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SPACE:     /* space */
-    /* pbuffer += strlen( pbuffer ); */
+  case DUF_SFMT_CHR_SPACE:                                          /* space */
+  /* pbuffer += strlen( pbuffer ); */
     memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
     swidth += strlen( pbuffer );
     break;
@@ -249,19 +254,19 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       long vp = 0;
 
       vp = v - position;
-      /* memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? -vp : 1 ) ); */
+    /* memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? -vp : 1 ) ); */
       memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? 1 : 1 ) );
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_PREFIX:    /* prefix */
+  case DUF_SFMT_CHR_PREFIX:                                         /* prefix */
     if ( prefix_scb )
     {
       ( prefix_scb ) ( pbuffer, bfsz, pdi, &swidth );
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_DIRID:     /* dirid */
+  case DUF_SFMT_CHR_DIRID:                                          /* dirid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -274,7 +279,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_DATAID:    /* dataid */
+  case DUF_SFMT_CHR_DATAID:                                         /* dataid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -287,7 +292,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pfi->dataid );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_COLOR:     /* color */
+  case DUF_SFMT_CHR_COLOR:                                          /* color */
     {
       static char *hls[] = { "", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
 
@@ -300,12 +305,12 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       DUF_SNCOLOR_S( fcolor, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
 #endif
     }
-    /* Not here : swidth += strlen( pbuffer ); */
+  /* Not here : swidth += strlen( pbuffer ); */
     break;
-  case DUF_SFMT_CHR_SUFFIX:    /* suffix */
+  case DUF_SFMT_CHR_SUFFIX:                                         /* suffix */
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_INODE:     /* inode */
+  case DUF_SFMT_CHR_INODE:                                          /* inode */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -318,7 +323,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_MODE:      /* mode */
+  case DUF_SFMT_CHR_MODE:                                           /* mode */
     {
       char modebuf[] = "----------";
       char *pmode = modebuf;
@@ -354,7 +359,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_NLINK:     /* nlink */
+  case DUF_SFMT_CHR_NLINK:                                          /* nlink */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -367,7 +372,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_USER:      /* user */
+  case DUF_SFMT_CHR_USER:                                           /* user */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -380,7 +385,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_GROUP:     /* group */
+  case DUF_SFMT_CHR_GROUP:                                          /* group */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -393,7 +398,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_FILESIZE:  /* filesize */
+  case DUF_SFMT_CHR_FILESIZE:                                       /* filesize */
     {
       unsigned long long sz = pfi->st.st_size;
 
@@ -406,12 +411,11 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
         snprintf( format, fbsz, "%%llu." );
 #endif
 
-
       snprintf( pbuffer, bfsz, format, sz );
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_FILESIZEH: /* filesize */
+  case DUF_SFMT_CHR_FILESIZEH:                                      /* filesize */
     {
       unsigned long long sz = pfi->st.st_size;
 
@@ -470,8 +474,8 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_MTIME1:    /* time */
-  case DUF_SFMT_CHR_MTIME2:    /* time */
+  case DUF_SFMT_CHR_MTIME1:                                         /* time */
+  case DUF_SFMT_CHR_MTIME2:                                         /* time */
     {
       time_t timet;
       struct tm time_tm, *ptime_tm = NULL;
@@ -520,7 +524,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
             if ( efmt )
             {
               subfmt = mas_strndup( fmt, efmt - fmt );
-              /* DUF_TRACE( temp, 0, "=== '%s'", subfmt ); */
+            /* DUF_TRACE( temp, 0, "=== '%s'", subfmt ); */
               fmt = efmt;
               fmt++;
             }
@@ -546,7 +550,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_REALPATH:  /* realpath */
+  case DUF_SFMT_CHR_REALPATH:                                       /* realpath */
     {
       const char *real_path = NULL;
 
@@ -564,7 +568,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_RELATIVE_PATH: /* relative realpath */
+  case DUF_SFMT_CHR_RELATIVE_PATH:                                  /* relative realpath */
     {
       const char *rel_real_path = NULL;
 
@@ -582,7 +586,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     }
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_FILENAME:  /* filename */
+  case DUF_SFMT_CHR_FILENAME:                                       /* filename */
     {
 #if 1
       duf_convert_fmt( format, fbsz, fmt0, "s" );
@@ -593,13 +597,12 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
         snprintf( format, fbsz, "%%s" );
 #endif
 
-
       snprintf( pbuffer, bfsz, format, pfi->name );
     }
     swidth += strlen( pbuffer );
     break;
 #if 0
-  case 'f':                    /* itemname */
+  case 'f':                                                         /* itemname */
     {
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
@@ -611,21 +614,21 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     swidth += strlen( pbuffer );
     break;
 #endif
-  case DUF_SFMT_CHR_MD5SUM:    /* md5sum */
+  case DUF_SFMT_CHR_MD5SUM:                                         /* md5sum */
     if ( pfi->md5sum1 || pfi->md5sum2 )
       snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
     else
       snprintf( pbuffer, bfsz, "%-32s", "-" );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SHA1SUM:   /* sha1sum */
+  case DUF_SFMT_CHR_SHA1SUM:                                        /* sha1sum */
     if ( pfi->sha1sum1 || pfi->sha1sum2 || pfi->sha1sum3 )
       snprintf( pbuffer, bfsz, "%08llx:%016llx:%016llx", pfi->sha1sum1, pfi->sha1sum2, pfi->sha1sum3 );
     else
       snprintf( pbuffer, bfsz, "%-40s", "-" );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_EXIFID:    /* exifid */
+  case DUF_SFMT_CHR_EXIFID:                                         /* exifid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -641,8 +644,8 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       *pbuffer = '?';
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_CAMERAS:   /* camera */
-  case DUF_SFMT_CHR_CAMERA:    /* camera */
+  case DUF_SFMT_CHR_CAMERAS:                                        /* camera */
+  case DUF_SFMT_CHR_CAMERA:                                         /* camera */
     if ( pfi->camera && *pfi->camera )
     {
 #if 1
@@ -668,7 +671,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       *pbuffer = '?';
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_MIMEID:    /* mimeid */
+  case DUF_SFMT_CHR_MIMEID:                                         /* mimeid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -681,7 +684,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pfi->mimeid );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_MIME:      /* mime */
+  case DUF_SFMT_CHR_MIME:                                           /* mime */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "s" );
 #else
@@ -694,7 +697,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
     snprintf( pbuffer, bfsz, format, pfi->mime ? pfi->mime : "?" );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_NAMEID:    /* nameid */
+  case DUF_SFMT_CHR_NAMEID:                                         /* nameid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -730,7 +733,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
 
 char *
 duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int fcolor, const char *format, duf_pdi_scb_t prefix_scb,
-                       duf_pdi_scb_t suffix_scb, size_t max_width DUF_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
+                       duf_pdi_scb_t suffix_scb, size_t max_width MAS_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
 {
   size_t slen = 0;
   size_t swidth = 0;
@@ -758,7 +761,7 @@ duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int fc
       else if ( *fmt == 'r' )
         *pbuffer++ = '\r';
       else if ( *fmt == 't' )
-        *pbuffer++ = '\t';      /* FIXME swidth is wrong for \t */
+        *pbuffer++ = '\t';                                           /* FIXME swidth is wrong for \t */
       else
       {
         *pbuffer++ = '\\';
@@ -780,7 +783,7 @@ duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int fc
     *pslen = slen;
   if ( pwidth )
     *pwidth = swidth;
-  /* buffer[slen] = 0; */
+/* buffer[slen] = 0; */
   return buffer;
 }
 
@@ -794,16 +797,17 @@ duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, 
   FILE *out;
 
 #if 0
-  /* out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout; */
+/* out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout; */
 #else
-  out =  duf_output_file();
+  out = duf_output_file(  );
 #endif
-  
-  buffer = duf_sformat_file_info( pdi, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ))), format, prefix_scb, suffix_scb, max_width, &slen, &swidth, pover );
+
+  buffer = duf_sformat_file_info( pdi, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb, suffix_scb, max_width,
+                                  &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );
-  /* if ( duf_levinfo_count_gfiles( pdi ) )                                */
-  /*   DUF_PRINTF( 0, ".@ gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
+/* if ( duf_levinfo_count_gfiles( pdi ) )                                */
+/*   DUF_PRINTF( 0, ".@ gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
 
   mas_free( buffer );
   if ( pswidth )

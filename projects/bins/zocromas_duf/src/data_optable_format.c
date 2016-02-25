@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /*
 At duf_options_table.c:
@@ -20,7 +18,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_format = {
   .name = "format",
 //DO_AT_STAGE( SETUP ),
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
    {.o = {DO_Q( "bformat" ) /*                  */ , DO_A_R /* */ , DO_V( BFORMAT )} /*                     */ , DO_CL( PRINT ) /*   */
     /*                                                                                                       */ , DO_H( print w / bformat ) /* */ },
@@ -37,12 +35,10 @@ const duf_longval_extended_table_t optable_format = {
    {.o = {DO_Q( "format-prefix-dirs-tree" ) /*  */ , DO_A_R /* */ , DO_V( SFORMAT_PREFIX_DIRS_TREE )} /*    */ , DO_CL( PRINT ) /* */ ,
     /*      */ DO_OC( STR, opt.output.sformat.prefix_dirs_tree ) /*                                          */ , DO_H( format ) /*          */ },
 
-
    {.o = {DO_Q( "format-dirs-list" ) /*         */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_LIST )} /*           */ , DO_CL( PRINT ) /* */ ,
     /*      */ DO_OC( STR, opt.output.sformat.dirs_list ) /*                                                 */ , DO_H( format ) /*          */ },
    {.o = {DO_Q( "format-files-list" ) /*        */ , DO_A_R /* */ , DO_V( SFORMAT_FILES_LIST )} /*          */ , DO_CL( PRINT ) /* */ ,
     /*      */ DO_OC( STR, opt.output.sformat.files_list ) /*                                                */ , DO_H( format ) /*          */ },
-
 
    {.o = {DO_Q( "format-dirs-gen" ) /*              */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_GEN )} /*            */ , DO_CL( PRINT ) /* */ ,
     /*      */ DO_OC( STR, opt.output.sformat.dirs_gen ) /*                                                  */ , DO_H( format ) /*          */ },
@@ -73,12 +69,9 @@ const duf_longval_extended_table_t optable_format = {
    {.o = {DO_Q( "max-width" ) /*        */ , DO_A_R /* */ , DO_V( MAXWIDTH )} /*                            */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OC( NUM, opt.output.max_width ) /* */ , DO_AT_STAGE( SETUP ) /*                            */ , DO_H(  .... ) /*           */ },
 
-
    {.o = {.name = NULL}}
    }
 };
-
-
 
 /* vi: et ft=c colorcolumn=3,52,67,68,112,113,131,145,146
 */

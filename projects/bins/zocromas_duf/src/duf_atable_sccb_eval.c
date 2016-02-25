@@ -1,21 +1,24 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
 
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
-#include "duf_config_util.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
-#include "duf_option_defs.h"    /* DUF_ACTG_FLAG( summary ) */
+#include "duf_option_defs.h"                                         /* DUF_ACTG_FLAG( summary ) */
 
 #include "duf_pdi_global.h"
 #include "duf_pdi_atable_sccb_eval.h"
 /* ###################################################################### */
 #include "duf_atable_sccb_eval.h"
 /* ###################################################################### */
-
-
 
 int
 duf_ev_atable_evnamen( const char *name, size_t len, const duf_action_table_t * table )
@@ -41,7 +44,7 @@ duf_ev_atable_evnamed_list( const char *names, const duf_action_table_t * table 
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
-  /* assert( duf_pdi_global()->pyp ); */
+/* assert( duf_pdi_global()->pyp ); */
   DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_atable_evnamed_list( duf_pdi_global(  ), names, table, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );

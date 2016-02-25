@@ -1,9 +1,7 @@
 #include <string.h>
 
-#include "duf_maintenance.h"
-
-#include "duf_options_enum.h"
-#include "duf_option_config.h"
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 /* man getopt_long */
 
@@ -156,14 +154,14 @@ extended_table_multi_init( void )
 /* duf_extended_table_multi_init(  ); */
 }
 
-#if 0
+# if 0
 const duf_longval_extended_table_t **
 duf_extended_table_multi( void )                                     /* obsolete/not used 20160208.130331 */
 {
   duf_extended_table_multi_init(  );
   return lo_extended_table_multi;
 }
-#endif
+# endif
 static duf_longval_extended_vtable_t **
 _duf_extended_vtable_multi( void )
 {

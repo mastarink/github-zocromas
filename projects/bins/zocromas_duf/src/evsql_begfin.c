@@ -1,18 +1,23 @@
 /* #undef MAS_TRACING */
-#include <libgen.h>
+#include <assert.h>                                                  /* assert */
 
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_fmt_defs.h"
 
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
-
-#include "duf_config.h"
-#include "duf_config_util.h"
-
-#include "duf_sql_stmt_defs.h"
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 #include "duf_sql_prepared.h"
-#include "duf_sql_bind.h"
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 
 #include "duf_ufilter.h"
 #include "duf_ufilter_bind.h"
@@ -33,14 +38,14 @@ duf_bind_ufilter( duf_stmnt_t * pstmt, const mas_argvc_t * ttarg )
 {
   DUF_STARTR( r );
   DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
-#  if 0
+# if 0
   duf_ufilter_delete( global_status.selection_bound_ufilter );
-#    if 0
+#  if 0
   global_status.selection_bound_ufilter = duf_ufilter_create_from( DUF_CONFIGG( pu ) );
-#    else
+#  else
   global_status.selection_bound_ufilter = duf_ufilter_clone( DUF_CONFIGG( pu ) );
-#    endif
 #  endif
+# endif
   DUF_ENDR( r );
 }
 #endif
@@ -62,7 +67,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
   const char *worksql = NULL;
   char *tmpsql = NULL;
 
-  /* r = duf_sql( *p, &changes ); */
+/* r = duf_sql( *p, &changes ); */
 #if 0
   DORF( r, duf_main_db_open, pdi );
 #endif
@@ -90,7 +95,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
     DUF_SQL_END_STMT_LOCAL( duf_pdi_global(  ), r, pstmt );
 #endif
   }
-  /* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */
+/* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */
   if ( tmpsql )
     mas_free( tmpsql );
   if ( pchanges )
@@ -105,7 +110,7 @@ int
 duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db, int *pchanges )
 {
   DUF_STARTR( r );
-  DOR( r, duf_eval_sql_one_cb( sql, pu, py, NULL /* cb */ , NULL /* ttarg */ , selected_db, pchanges , NULL /* ptr */) );
+  DOR( r, duf_eval_sql_one_cb( sql, pu, py, NULL /* cb */ , NULL /* ttarg */ , selected_db, pchanges, NULL /* ptr */  ) );
   DUF_ENDR( r );
 }
 
@@ -113,8 +118,8 @@ duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END
  * */
 int
-duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title DUF_UNUSED, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback,
-                   const mas_argvc_t * ttarg, const char *selected_db, const void *ptr )
+duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title MAS_UNUSED, const duf_ufilter_t * pu, const duf_yfilter_t * py,
+                   duf_bind_cb_t callback, const mas_argvc_t * ttarg, const char *selected_db, const void *ptr )
 {
   DUF_STARTR( r );
 
@@ -127,7 +132,7 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title DUF_UNUSED, cons
 #ifdef MAS_TRACING
     int changes = 0;
 #else
-    int DUF_UNUSED changes = 0;
+    int MAS_UNUSED changes = 0;
 #endif
     assert( ssql );
     assert( ssql->name );
@@ -170,11 +175,10 @@ duf_eval_sqlsq( duf_sql_sequence_t * ssql, int bind, const char *title, const du
 {
   DUF_STARTR( r );
 
-
 #if 0
   DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
 #else
-  DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, py, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db, NULL /* ptr */ ) );
+  DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, py, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db, NULL /* ptr */  ) );
 #endif
 
   DUF_ENDR( r );

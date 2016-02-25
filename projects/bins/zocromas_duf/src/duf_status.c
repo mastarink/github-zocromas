@@ -2,14 +2,14 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance_options.h"
 
 /* #include "duf_pdi_credel.h" */
 #include "duf_pdi_global.h"
 
-#include "duf_status_types.h"
+#include "duf_status_types.h"                                        /* duf_status_t; duf_status_db_t; duf_status_dh_t; duf_status_scanner_t;  ♠ */
 #include "duf_ufilter.h"
 
 /* ###################################################################### */
@@ -47,7 +47,7 @@ void
 global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, unsigned noo,
                              duf_option_source_t source )
 {
-#  define XCMDS_STEP 64
+# define XCMDS_STEP 64
   if ( global_status.n_xcmds == global_status.alloc_xcmds )
   {
     size_t z, n;
@@ -55,9 +55,9 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     z = global_status.alloc_xcmds;
     global_status.alloc_xcmds += XCMDS_STEP;
     n = global_status.alloc_xcmds * sizeof( duf_xcmd_t );
-#  if 0
+# if 0
     global_status.xcmds = mas_realloc( global_status.xcmds, n );
-#  else
+# else
     {
       duf_xcmd_t *xc;
 
@@ -69,7 +69,7 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
       }
       global_status.xcmds = xc;
     }
-#  endif
+# endif
     memset( global_status.xcmds + z, 0, XCMDS_STEP * sizeof( duf_xcmd_t ) );
   }
   {
@@ -154,15 +154,15 @@ destructor_global_status( void )
 /* #define DUF_MEM_ROW "◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐◑◐" */
 #define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
 
-  /* global_status_reset(  ); */
+/* global_status_reset(  ); */
 #if 0
-#  ifdef MAS_TRACEMEM
-  print_memlist_msg( FL, stdout, /* */
-                     "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
-                     "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
-                     "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
+# ifdef MAS_TRACEMEM
+  print_memlist_msg( FL, stdout,                                     /* */
+                     "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.",      /* */
+                     "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.",      /* */
+                     "\x1b[0;1;7;32m    MEMORY FREE    ",            /* */
                      "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
-         );
-#  endif
+           );
+# endif
 #endif
 }

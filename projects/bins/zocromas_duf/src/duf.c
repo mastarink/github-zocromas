@@ -33,12 +33,20 @@
 
 */
 
+#include <assert.h>                                                  /* assert */
 #include <time.h>
 /* #include <signal.h> */
 /* #include <unistd.h> */
 #include <dlfcn.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 
 #include "duf_status_ref.h"
 #include "duf_status.h"
@@ -178,8 +186,8 @@ SR( TOP, main_with_config, int argc, char **argv )
 //          opt   disable  testnoflag
 #define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
   {
-    unsigned long long t1 DUF_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
-    unsigned long long t2 DUF_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
+    unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
+    unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
     T( "@>>>> %llx : %llx <<<<", t1, t2 );
   }
 

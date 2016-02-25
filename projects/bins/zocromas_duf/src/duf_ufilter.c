@@ -1,16 +1,21 @@
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_config_ref.h"
-
 
 /* ###################################################################### */
 #include "duf_ufilter.h"
 /* ###################################################################### */
-
-
 
 duf_ufilter_t *
 duf_ufilter_create( void )
@@ -27,14 +32,14 @@ duf_ufilter_create( void )
 void
 duf_ufilter_delete( duf_ufilter_t * pu )
 {
-  /* Don't forget to update duf_ufilter_copy too */
+/* Don't forget to update duf_ufilter_copy too */
   if ( pu )
   {
-    mas_free( pu->std_node_set_name ); /* 20160212.130932 */
-    pu->std_node_set_name = NULL; /* 20160212.130932 */
+    mas_free( pu->std_node_set_name );                               /* 20160212.130932 */
+    pu->std_node_set_name = NULL;                                    /* 20160212.130932 */
 
-    mas_free( pu->std_leaf_set_name ); /* 20160212.130932 */
-    pu->std_leaf_set_name = NULL; /* 20160212.130932 */
+    mas_free( pu->std_leaf_set_name );                               /* 20160212.130932 */
+    pu->std_leaf_set_name = NULL;                                    /* 20160212.130932 */
 
     mas_free( pu->filename );
     pu->filename = NULL;
@@ -105,12 +110,12 @@ duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
     pu->globx.include_fs_files.argc = 0;
     pu->globx.include_fs_files.argv = NULL;
     pu->globx.include_fs_files.argc =
-          mas_argv_clone( &pu->globx.include_fs_files.argv, pusrc->globx.exclude_fs_files.argc, pusrc->globx.exclude_fs_files.argv );
+            mas_argv_clone( &pu->globx.include_fs_files.argv, pusrc->globx.exclude_fs_files.argc, pusrc->globx.exclude_fs_files.argv );
 
     pu->globx.exclude_fs_files.argc = 0;
     pu->globx.exclude_fs_files.argv = NULL;
     pu->globx.include_fs_files.argc =
-          mas_argv_clone( &pu->globx.include_fs_files.argv, pusrc->globx.exclude_fs_files.argc, pusrc->globx.exclude_fs_files.argv );
+            mas_argv_clone( &pu->globx.include_fs_files.argv, pusrc->globx.exclude_fs_files.argc, pusrc->globx.exclude_fs_files.argv );
   }
 }
 

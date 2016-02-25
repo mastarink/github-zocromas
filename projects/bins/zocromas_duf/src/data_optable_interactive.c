@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h"
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 #include "duf_optimpl_misc.h"
 
@@ -28,7 +26,7 @@ void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak 
 const duf_longval_extended_table_t optable_interactive = {
   .name = "interactive",
 /* DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ), */
-  .xlist = /* */
+  .xlist =                                                           /* */
   {
 
  /*

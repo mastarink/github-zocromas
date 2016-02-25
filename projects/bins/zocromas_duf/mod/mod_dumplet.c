@@ -1,9 +1,18 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
 #include <unistd.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
@@ -77,7 +86,7 @@ DUF_MOD_DECLARE_ALL_FUNCS( dumplet )
 /* ########################################################################################## */
 
 static int
-dumplet_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -125,7 +134,7 @@ dumplet_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dumplet_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_leaf2_del( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -136,7 +145,7 @@ dumplet_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-dumplet_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -146,7 +155,7 @@ dumplet_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
 }
 
 static int
-dumplet_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_before2_del( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -156,7 +165,7 @@ dumplet_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t
 }
 
 static int
-dumplet_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -166,7 +175,7 @@ dumplet_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
 }
 
 static int
-dumplet_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_middle2_del( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -176,7 +185,7 @@ dumplet_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t
 }
 
 static int
-dumplet_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -186,7 +195,7 @@ dumplet_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pd
 }
 
 static int
-dumplet_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_node_after2_del( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -196,7 +205,7 @@ dumplet_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t 
 }
 
 static int
-dumplet_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_de_dir_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -206,7 +215,7 @@ dumplet_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t *
 }
 
 static int
-dumplet_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+dumplet_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 

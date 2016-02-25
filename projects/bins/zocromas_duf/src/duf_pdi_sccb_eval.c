@@ -1,12 +1,19 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
@@ -16,8 +23,7 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccbh_eval.h"
 
-#include "duf_maindb.h"
-
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 /* ###################################################################### */
 #include "duf_pdi_sccb_eval.h"
@@ -39,10 +45,10 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
 
   duf_sccb_handle_t *sccbh = NULL;
 
-  /* assert( duf_levinfo_dirid( pdi ) ); */
+/* assert( duf_levinfo_dirid( pdi ) ); */
   DUF_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb ? sccb->name : NULL, duf_levinfo_path( pdi ) );
   DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
-  /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+/* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
   sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv, &r );
   if ( sccbh )
   {
@@ -54,7 +60,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
     {
       int r1 = 0;
 
-      /* T( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+    /* T( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
       DOR( r1, duf_sccb_handle_close( sccbh ) );
       if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
         r = r1;
@@ -76,31 +82,30 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 
   assert( pdi );
 
-
   assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
 
 #if 0
   if ( 0 == strcmp( name, "NULL" ) )
   {
-    DOR( r, duf_ev_pdi_sccb( pdi, NULL, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
+    DOR( r, duf_ev_pdi_sccb( pdi, NULL, ptarg, f_summary ) );        /* XXX XXX XXX XXX */
   }
   else
 #endif
   {
 #if 0
     if ( DUF_NOERROR( r ) )
-      sccb = duf_find_sccb_by_evnamen( name, len, first ); /* XXX XXX */
+      sccb = duf_find_sccb_by_evnamen( name, len, first );           /* XXX XXX */
 #else
     if ( DUF_NOERROR( r ) )
-      sccb = duf_find_or_load_sccb_by_evnamen( name, len, first ); /* XXX XXX */
+      sccb = duf_find_or_load_sccb_by_evnamen( name, len, first );   /* XXX XXX */
 #endif
     DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccb ? sccb->name : "NONAME" );
     if ( sccb )
     {
       DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
 
-      /* T( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-      DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) ); /* XXX XXX XXX XXX */
+    /* T( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+      DOR( r, duf_ev_pdi_sccb( pdi, sccb, ptarg, f_summary ) );      /* XXX XXX XXX XXX */
     }
     else
     {
@@ -110,7 +115,6 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
   DUF_ENDR( r );
 }
 
-
 /* 20150922.123721 */
 int
 duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
@@ -118,11 +122,10 @@ duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t
   DUF_STARTR( r );
   assert( pdi );
 
-  /* T( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
+/* T( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
   DOR( r, duf_ev_pdi_evnamen( pdi, name, strlen( name ), first, ptarg /*, pu */ , f_summary ) );
   DUF_ENDR( r );
 }
-
 
 /* 20150922.123718 */
 int
@@ -144,7 +147,6 @@ duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, duf_scan_callback
   DUF_ENDR( r );
 }
 
-
 /* 20150922.123706 */
 int
 duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
@@ -159,7 +161,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_call
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
 
-  /* assert( pdi->pyp ); */
+/* assert( pdi->pyp ); */
   while ( DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;
@@ -168,7 +170,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_call
     ename = strchr( pnames, ',' );
 
     len = ename ? ( size_t ) ( ename - pnames ) : strlen( pnames );
-    /* T( "pnames:%s; dirid:%llu", pnames, duf_levinfo_dirid( pdi ) ); */
+  /* T( "pnames:%s; dirid:%llu", pnames, duf_levinfo_dirid( pdi ) ); */
     DOR( r, duf_ev_pdi_evnamen( pdi, pnames, len, first, ptarg /*, pu */ , f_summary ) );
     if ( DUF_NOERROR( r ) )
       ok++;
@@ -178,7 +180,7 @@ duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_call
   }
   if ( !ok )
   {
-    /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
+  /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
   DUF_ENDR( r );
 }

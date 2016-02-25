@@ -8,7 +8,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-/* #include "duf_maintenance.h" */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
 /* #include "duf_config_util.h" */

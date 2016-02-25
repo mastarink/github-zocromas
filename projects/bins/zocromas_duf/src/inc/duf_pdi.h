@@ -3,6 +3,7 @@
 
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
 # include "duf_hook_types.h"                                         /* duf_sql_set_t */
+# include "duf_debug_defs.h"                                         /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
 
 int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,
                                   const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );

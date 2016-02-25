@@ -1,31 +1,32 @@
+#include <assert.h>
 #include <string.h>
 #include <dlfcn.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_maintenance.h"
-#include "duf_printn_defs.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
-#include "duf_config_ref.h" /* DUF_PRINTF ; DUF_CONFIGG */
-#include "duf_config_defs.h"
-#include "duf_config_output_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_action_table.h"
 
 #include "duf_pdi_global.h"
-#include "duf_pdi_reinit.h"
-#include "duf_pdi_ref.h"
 
 #include "duf_sccb.h"
-#include "duf_sccb_eval.h"
 #include "duf_sccb_eval_std.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_path2dirid.h"
-#include "duf_maindb.h"
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 #include "duf_options_file.h"
 
@@ -56,7 +57,7 @@ duf_option_O_list_sccbs( void )
 
 #if 0
 mas_error_code_t
-duf_option_O_list_sccb( int x_unused DUF_UNUSED )
+duf_option_O_list_sccb( int x_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
   for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
@@ -119,9 +120,10 @@ duf_option_O_call_file( const char *name )
 SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 {
 /* DUF_STARTR( r ); */
-/* int r DUF_UNUSED = 0; */
+/* int r MAS_UNUSED = 0; */
 
-  CR( infile_options_at_filepath, duf_get_config_cli(), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name, ( duf_option_adata_t * ) NULL /* paod */  );
+  CR( infile_options_at_filepath, duf_get_config_cli(  ), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
+      ( duf_option_adata_t * ) NULL /* paod */  );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }
@@ -225,7 +227,7 @@ duf_option_O_error_level( long lev )
 }
 
 mas_error_code_t
-duf_option_O_set_dir_priority( long prio DUF_UNUSED )
+duf_option_O_set_dir_priority( long prio MAS_UNUSED )
 {
   DUF_STARTR( r );
 

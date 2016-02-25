@@ -1,5 +1,11 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 #include "duf_config.h"
 #include "duf_config_util.h"
@@ -25,7 +31,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     DORF( r, duf_main_db_open, pdi );
     DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
     DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-    /* assert( global_status.db_attached_selected == NULL ); */
+  /* assert( global_status.db_attached_selected == NULL ); */
     if ( !pdi->db_attached_selected )
     {
       static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS " DUF_DBSELECTEDALIAS;
@@ -34,7 +40,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 
       T( "(%d) to attach (%p:%s)", r, pdi, pdi->pdi_name );
       pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-      /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
+    /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
       DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
       DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
@@ -54,7 +60,6 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   static const char *sql1 = "DETACH DATABASE 'duf${PDI_NAME}'";
 
   int changes = 0;
-
 
   DOR( r, duf_eval_sql_one( sql1, pdi->pup, ( duf_yfilter_t * ) NULL, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );

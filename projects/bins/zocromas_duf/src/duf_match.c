@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <fnmatch.h>
 
 /* ###################################################################### */

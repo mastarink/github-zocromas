@@ -1,19 +1,26 @@
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 #include <unistd.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"        /* duf_pdi_depth */
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_depth */
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
@@ -31,7 +38,7 @@ DUF_WRAPSTATIC int
 duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
-  /*@ 1. go down + dbopenat */
+/*@ 1. go down + dbopenat */
   PDI->seq++;
   PDI->seq_node++;
 
@@ -43,13 +50,13 @@ duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   if ( str_cb2 )
   {
     DUF_TRACE( explain, 2, "=> str cb2" );
-    /*@ 3. str_cb2 */
+  /*@ 3. str_cb2 */
     DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
 
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
   }
 
-  /*@ 4. go up */
+/*@ 4. go up */
   DUF_ENDR( r );
 }
 
@@ -60,7 +67,7 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
-  /* data from db at pstmt */
+/* data from db at pstmt */
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
@@ -90,20 +97,17 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   assert( PDI );
   assert( PDI->pathinfo.depth >= 0 );
 
-
   assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
 
-
-  /* data from db at pstmt */
+/* data from db at pstmt */
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || str_cb2 == NULL );
 
-
   DUF_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
   {
-    /*@ 1. go down + dbopenat */
+  /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, sccbh, DUF_NODE_NODE /* node_type */  ) );
     DUF_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );

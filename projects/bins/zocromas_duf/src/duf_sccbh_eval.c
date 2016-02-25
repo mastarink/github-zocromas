@@ -1,9 +1,18 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+
 #include "duf_printn_defs.h"
 
 #include "duf_config.h"
@@ -158,7 +167,7 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
  *  - sccb
  *  */
 int
-duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
 /*
@@ -189,7 +198,7 @@ duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused 
 }
 
 int
-duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
 /* scan this files in this directory */
@@ -208,7 +217,7 @@ duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_un
 }
 
 int
-duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
 /* scan this files in this directory */
@@ -282,7 +291,7 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
 /* 20150820.085615 */
 /* TODO duf_sccb_handle_t * sccbh must be first in all such funcs 20160210.120016 */
 int
-duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
 

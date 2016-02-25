@@ -1,13 +1,18 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/error/mas_errors_maintenance.h>
 
-# include "duf_maintenance_z.h"
-# include "duf_maintenance_tracen.h"
-# include "duf_maintenance_errors.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t */
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF */
 
@@ -43,7 +48,7 @@
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
-static int tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi );
+static int tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
 static int tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
@@ -127,12 +132,12 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
                /* .nameid = 1, */
                  .mime = 1,
                  .mimeid = 0,
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_NUMS )
                  .nfiles_space = 1,
                  .ndirs_space = 1,
-#endif
+# endif
                  .inode = 0,
                  .mode = 1,
                  .nlink = 1,
@@ -212,8 +217,8 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           sformat_pref = "_%-6M =%-4S%P";
 #if 0
         {
-          int c1 DUF_UNUSED;
-          int c2 DUF_UNUSED;
+          int c1 MAS_UNUSED;
+          int c2 MAS_UNUSED;
 
           c1 = duf_output_force_color(  );
           c2 = duf_output_nocolor(  );
@@ -267,7 +272,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
 /* if ( duf_levinfo_count_gfiles( pdi ) ) */
@@ -284,18 +289,18 @@ tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi 
                  .exifdt = 0,
                  .camera = 0,
                  .mimeid = 0,
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_NUMS )
                  .nfiles = 1,
                  .ndirs = 1,
-#endif
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
+# endif
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_RNUMS )
                  .rnfiles = 1,
                  .rndirs = 1,
-#endif
+# endif
                  .inode = 0,
                  .mode = 0,
                  .nlink = 0,
@@ -626,7 +631,7 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
 
 /* 20151113.132643 */
 static int
-duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
+duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth MAS_UNUSED )
 {
   DUF_STARTR( r );
 

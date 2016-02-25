@@ -1,13 +1,22 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
 
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
@@ -230,7 +239,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 }
 
 static unsigned long long
-duf_insert_exif_uni( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed,
+duf_insert_exif_uni( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed,
                      const char *stime_original, int need_id, int *pr )
 {
   int lr = 0;

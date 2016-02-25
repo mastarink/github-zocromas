@@ -1,19 +1,26 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 #include <unistd.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_expandable.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
 
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
-#include "duf_config_util.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "std_fieldsets.h"
 #include "std_selectors.h"
@@ -58,7 +65,6 @@ duf_find_std_selector( const char *selector_name, duf_node_type_t type )
   }
   return selector;
 }
-
 
 static const char *
 duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr )
@@ -133,7 +139,7 @@ duf_expand_sql( const char *sql, const char *dbname )
   char *nsql;
 
   nsql = mas_expand_string_cb_arg_alloc( sql, duf_expand_sql_xsdb_getvar, dbname );
-  /* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
+/* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
   return nsql;
 }
 
@@ -231,7 +237,7 @@ duf_selector2sql_vcat_many_frag( char *sql, unsigned with_pref, const char *jfir
           sql = mas_strcat_x( sql, " /*3*/" );
         sql = mas_strcat_x( sql, " )" );
       }
-      /* T( "[%u:%u] quant=%s; %s", cnt, ( *phas ), quant, sql ); */
+    /* T( "[%u:%u] quant=%s; %s", cnt, ( *phas ), quant, sql ); */
       ( *phas )++;
       cnt++;
     }
@@ -348,11 +354,11 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
   const duf_sql_set_t *sql_set_uni;
 
   assert( sql_set );
-  /* T( "@%s : %p", sql_set->name, sql_set2 ); */
+/* T( "@%s : %p", sql_set->name, sql_set2 ); */
 
   sql_set_uni = ( sql_set2 ? sql_set2 : sql_set );
   if ( total )
-    cte_mode = sql_set->cte && sql_set->selector2_cte; /* ???????????????????? */
+    cte_mode = sql_set->cte && sql_set->selector2_cte;               /* ???????????????????? */
   else
     cte_mode = ( sql_set->selector2 ? 0 : ( ( sql_set->cte && sql_set->selector2_cte ) ? 1 : 0 ) );
 
@@ -418,23 +424,23 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
         sql = duf_selector2sql_filtercat_list_where_and( sql, 1, &has_where, NULL, sql_set->afilter,
                                                          sizeof( sql_set->afilter ) / sizeof( sql_set->afilter[0] ) );
         {
-          unsigned t DUF_UNUSED = has_where;
+          unsigned t MAS_UNUSED = has_where;
 
           if ( sql_set2 )
             sql = duf_selector2sql_filtercat_list_where_and( sql, 1, &has_where, NULL, sql_set2->afilter,
                                                              sizeof( sql_set2->afilter ) / sizeof( sql_set2->afilter[0] ) );
-          /* if ( t != has_where )                         */
-          /*   T( "@%s : %s", sql, sql_set2->afilter[0] ); */
+        /* if ( t != has_where )                         */
+        /*   T( "@%s : %s", sql, sql_set2->afilter[0] ); */
         }
         {
-          unsigned t DUF_UNUSED = has_where;
+          unsigned t MAS_UNUSED = has_where;
 
           sql = duf_selector2sql_filtercat_list_where_and( sql, 1, &has_where, "fFresh",
                                                            ( sql_set_uni->afilter_fresh ? sql_set_uni : sql_set )->afilter_fresh,
                                                            sizeof( sql_set_uni->afilter_fresh ) / sizeof( sql_set_uni->afilter_fresh[0] ) );
           sql = duf_selector2sql_filtercat_where_and( sql, 1, 1, &has_where, ( sql_set_uni->filter_fresh ? sql_set_uni : sql_set )->filter_fresh );
-          /* if ( t != has_where ) */
-          /*   T( "@%s", sql );    */
+        /* if ( t != has_where ) */
+        /*   T( "@%s", sql );    */
         }
 
 #if 0
@@ -442,14 +448,14 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
           sql = duf_selector2sql_filtercat_many_where_and( sql, "OR", &has_where, ":fFast  IS NULL", sql_set->filter_fast, NULL );
 #else
         {
-          unsigned t DUF_UNUSED = has_where;
+          unsigned t MAS_UNUSED = has_where;
 
           sql = duf_selector2sql_filtercat_list_where_and( sql, 1, &has_where, "fFast",
                                                            ( sql_set_uni->afilter_fast ? sql_set_uni : sql_set )->afilter_fast,
                                                            sizeof( sql_set_uni->afilter_fast ) / sizeof( sql_set_uni->afilter_fast[0] ) );
           sql = duf_selector2sql_filtercat_where_and( sql, 1, 1, &has_where, ( sql_set_uni->filter_fast ? sql_set_uni : sql_set )->filter_fast );
-          /* if ( t != has_where ) */
-          /*   T( "@%s", sql );    */
+        /* if ( t != has_where ) */
+        /*   T( "@%s", sql );    */
         }
 #endif
         if ( !total )
@@ -500,7 +506,7 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
   }
   if ( pr )
     *pr = rpr;
-  /* T( "@%s", sql ); */
+/* T( "@%s", sql ); */
   return sql;
 }
 

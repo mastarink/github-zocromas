@@ -1,10 +1,20 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
 #include <zlib.h>
 
-#include "duf_maintenance.h"
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
@@ -173,7 +183,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
 }
 
 static unsigned long long
-duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename DUF_UNUSED, int need_id, int *pr )
+duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename MAS_UNUSED, int need_id, int *pr )
 {
   unsigned long long crc32id = -1;
   int lr = 0;

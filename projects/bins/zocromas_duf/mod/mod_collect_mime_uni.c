@@ -1,12 +1,22 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 #include <errno.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
 /* TODO: see media-libs/libextractor */
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
 #include <magic.h>                                                   /* man libmagic */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 #include "duf_config.h"
@@ -143,7 +153,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
 /* ########################################################################################## */
 
 static unsigned long long
-duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DUF_UNUSED, const char *tail DUF_UNUSED, int need_id, int *pr )
+duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED, const char *tail MAS_UNUSED, int need_id, int *pr )
 {
   int lr = 0;
 

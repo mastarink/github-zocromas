@@ -1,11 +1,18 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
 
 #include "duf_pdi_credel.h"
 #include "duf_pdi_reinit.h"
@@ -15,22 +22,22 @@
 #include "duf_pdi_stmt.h"
 
 /* #include "duf_option_defs.h"    (* for DUF_ACTG_FLAG( progress ) !ONLY! *) */
-#include "duf_utils.h"          /* duf_percent */
+#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff etc. ♠ */
 
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_config_output_util.h"
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_sql_stmt_defs.h"
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 #include "duf_sql_prepared.h"
-#include "duf_sql_bind.h"
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
 #include "duf_sql_positional.h"
 
@@ -79,8 +86,8 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
     if ( !set )
       set = SCCB->leaf.type == DUF_NODE_NONE ? NULL : &SCCB->leaf;
   }
-  /* sccbh->active_leaf_set = setr; */
-  /* sccbh->second_leaf_set = &SCCB->leaf; */
+/* sccbh->active_leaf_set = setr; */
+/* sccbh->second_leaf_set = &SCCB->leaf; */
   assert( set );
   set_pair.active = set;
   set_pair.second = SCCB->leaf.type == DUF_NODE_NONE ? NULL : &SCCB->leaf;
@@ -88,15 +95,15 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
   assert( !set_pair.active || set_pair.active->type == DUF_NODE_LEAF );
   assert( !set_pair.second || set_pair.second->type == DUF_NODE_LEAF );
   assert( set_pair.active );
-  /* assert( set_pair.second ); */
+/* assert( set_pair.second ); */
 
-  /* assert( sccbh->second_leaf_set ); */
+/* assert( sccbh->second_leaf_set ); */
   return set_pair;
 }
 
 /* 20160212.130653 */
 static duf_sql_set_pair_t
-duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name DUF_UNUSED )
+duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED )
 {
   duf_sql_set_pair_t set_pair = { NULL, NULL };
   const duf_sql_set_t *set = NULL;
@@ -121,8 +128,8 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
     if ( !set )
       set = SCCB->node.type == DUF_NODE_NONE ? NULL : &SCCB->node;
   }
-  /* sccbh->active_node_set = setr; */
-  /* sccbh->second_node_set = &SCCB->node; */
+/* sccbh->active_node_set = setr; */
+/* sccbh->second_node_set = &SCCB->node; */
   assert( set );
   set_pair.active = set;
   set_pair.second = SCCB->node.type == DUF_NODE_NONE ? NULL : &SCCB->node;
@@ -130,7 +137,7 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
   assert( !set_pair.active || set_pair.active->type == DUF_NODE_NODE );
   assert( !set_pair.second || set_pair.second->type == DUF_NODE_NODE );
   assert( set_pair.active );
-  /* assert( set_pair.second ); */
+/* assert( set_pair.second ); */
   return set_pair;
 }
 
@@ -167,22 +174,21 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
 {
   DUF_STARTULL( cnt );
   int rpr = 0;
-  unsigned long long cnt1 DUF_UNUSED = 0;
+  unsigned long long cnt1 MAS_UNUSED = 0;
 
-  /* const char *leaf_selector_total2 = NULL; */
+/* const char *leaf_selector_total2 = NULL; */
 
   assert( SCCB );
-  /* leaf_selector_total2 = duf_get_leaf_sql_set( SCCB )->selector_total2; */
+/* leaf_selector_total2 = duf_get_leaf_sql_set( SCCB )->selector_total2; */
 
   if ( SCCB )
   {
     char *sqlt = NULL;
     duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
 
-
     sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
-    /* XXX TODO XXX */
+  /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, PDI->pdi_name, 1, &rpr );
 #else
     sqlt = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, PDI->pdi_name, 1, &rpr );
@@ -198,18 +204,18 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
  */
       csql = sqlt;
 #if 0
-      /* 20160205.121213 */
+    /* 20160205.121213 */
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
 #else
       DUF_SQL_START_STMT_LOCAL( PDI, csql, rpr, pstmt );
 #endif
       assert( DUF_NOERROR( rpr ) );
-      /* if ( !PY )                                 */
-      /* {                                          */
-      /*   T( "path:%s", duf_levinfo_path( PDI ) ); */
-      /*   assert( PY );                            */
-      /* }                                          */
-      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL, NULL /* ptr */ ) );
+    /* if ( !PY )                                 */
+    /* {                                          */
+    /*   T( "path:%s", duf_levinfo_path( PDI ) ); */
+    /*   assert( PY );                            */
+    /* }                                          */
+      DOR( rpr, duf_bind_ufilter_uni( pstmt, PU, PY, NULL, NULL /* ptr */  ) );
       assert( DUF_NOERROR( rpr ) );
       DUF_SQL_STEP( rpr, pstmt );
       if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
@@ -223,29 +229,29 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
         cntfull = DUF_GET_UFIELD2( CNT );
 #endif
         DUF_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cntfull, cnt1, csql );
-        /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
+      /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
         cnt = cntfull;
         if ( cntfull > 0 && !sql_set_pair.active->cte && SCCB->count_nodes )
         {
           cnt += duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) /* - 1 20160118.153828 */ ;
         }
-        /* rpr = 0; */
+      /* rpr = 0; */
       }
       DUF_TRACE( sql, 1, "@@@counted B %llu by %s", cnt, csql );
-      /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
+    /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, PY->topdirid ); */
 #if 0
-      /* 20160205.121213 */
+    /* 20160205.121213 */
       DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
 #else
       DUF_SQL_END_STMT_LOCAL( PDI, rpr, pstmt );
 #endif
       assert( DUF_NOERROR( rpr ) );
-      /* if ( !cnt )                                                                                         */
-      /* {                                                                                                   */
-      /*   T( "@%llu:%llu:%llu; %s; %s", PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql ); */
-      /* }                                                                                                   */
+    /* if ( !cnt )                                                                                         */
+    /* {                                                                                                   */
+    /*   T( "@%llu:%llu:%llu; %s; %s", PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( SCCB ), csql ); */
+    /* }                                                                                                   */
     }
-    /* T( "%llu : %s", cnt, sqlt ); */
+  /* T( "%llu : %s", cnt, sqlt ); */
     mas_free( sqlt );
   }
   else
@@ -256,7 +262,7 @@ duf_count_total_items( duf_sccb_handle_t * sccbh, int *pr )
   DUF_TEST_R( rpr );
   if ( pr )
     *pr = rpr;
-  /* T( "@(%llu) %llu:%d;", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ); */
+/* T( "@(%llu) %llu:%d;", cnt1, cnt, duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) ); */
   DUF_ENDULL( cnt );
 }
 
@@ -298,8 +304,8 @@ duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
     m = TOTITEMS;
 #endif
     DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-    /* assert( PDI->seq_node <= m ); FIXME counters! */
-    /*@ 2. progress bar */
+  /* assert( PDI->seq_node <= m ); FIXME counters! */
+  /*@ 2. progress bar */
     if ( m > 0 )
       duf_percent( PDI->seq_node, PDI->total_bytes, PDI->total_files, m, duf_uni_scan_action_title( SCCB ) );
   }
@@ -314,7 +320,7 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 
     m = TOTITEMS;
     DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-    /* assert( PDI->seq_node <= m ); FIXME counters! */
+  /* assert( PDI->seq_node <= m ); FIXME counters! */
     if ( m > 0 )
     {
       duf_percent( PDI->seq_leaf, PDI->total_bytes, PDI->total_files, m, duf_uni_scan_action_title( SCCB ) );
@@ -325,8 +331,8 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 
 /* 20151027.144501 */
 static void
-duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh DUF_UNUSED, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt DUF_UNUSED,
-                   duf_scanner_t scanner DUF_UNUSED, duf_node_type_t node_type DUF_UNUSED, int r DUF_UNUSED )
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt MAS_UNUSED,
+                   duf_scanner_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
 {
   static unsigned n = 0;
   char c = '-';
@@ -361,7 +367,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
   duf_sccb_handle_t *sccbh = NULL;
   int rpr = 0;
 
-  /* assert( pdi->pyp ); */
+/* assert( pdi->pyp ); */
   if ( sccb && pdi && duf_levinfo_dirid( pdi ) )
   {
     DUF_TRACE( fs, 2, "set def. opendir: %d", sccb->def_opendir );
@@ -390,7 +396,7 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PDI->total_files = 0;
     if ( SCCB->beginning_sql_seq )
       PDI->sql_selected_done = SCCB->beginning_sql_seq->set_selected_db;
-    /* duf_scan_qbeginning_sql( sccb ); */
+  /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 1, "@@beginning_sql for '%s'", SCCB->title );
 
     DOR( rpr, duf_sccbh_eval_sqlsq( sccbh /* , PU */  ) );
@@ -399,18 +405,18 @@ duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     {
       if ( !SCCB->no_count )
       {
-        TOTITEMS = duf_count_total_items( sccbh, &rpr ); /* reference */
+        TOTITEMS = duf_count_total_items( sccbh, &rpr );             /* reference */
         if ( DUF_NOERROR( rpr ) )
           TOTCOUNTED = 1;
       }
-      /* T( "TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) ); */
+    /* T( "TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) ); */
       DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
-      /* assert(TOTITEMS=38); */
+    /* assert(TOTITEMS=38); */
       DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu", TOTITEMS );
       DUF_TRACE( temporary, 0, "@@@@ %llu items registered in db", TOTITEMS );
       DUF_TRACE( explain, 0, "%llu items registered in db", TOTITEMS );
-      if ( duf_output_progress() )
+      if ( duf_output_progress(  ) )
       {
         sccbh->progress_node_cb = duf_sccbh_node_progress;
         sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;
@@ -434,7 +440,7 @@ TODO scan mode
         DUF_TRACE( explain, 0, "no init scan" );
       }
       assert( PDI->pathinfo.levinfo );
-      /* T(">>> %llu : %llu", PU->std_leaf_set_num,  PU->std_node_set_num); */
+    /* T(">>> %llu : %llu", PU->std_leaf_set_num,  PU->std_node_set_num); */
       DOR( rpr,
            duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_pdi_pu( PDI ),
                                    duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
@@ -444,7 +450,7 @@ TODO scan mode
   else
   {
     T( "sccb:%d; dirid:%llu - %s", SCCB ? 1 : 0, duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
-    /* assert(0); */
+  /* assert(0); */
   }
   if ( pr )
     *pr = rpr;
@@ -457,7 +463,7 @@ duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
   DUF_STARTR( r );
   if ( sccbh )
   {
-    /* final */
+  /* final */
     DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
     DOR( r, duf_sccb_eval_final_sqlsq( SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL ) );
     if ( PDICLONED )

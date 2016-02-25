@@ -4,8 +4,6 @@
 #include <mastar/tools/mas_tools.h>                                  /* mas_tstrflocaltime */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_concat_path */
 
-#include "duf_maintenance.h"
-
 #include "duf_expandable.h"
 
 #include "duf_config.h"
@@ -26,7 +24,7 @@ duf_get_duf_config_t_pointer( void )
 void *
 duf_get_duf_ufilter_t_pointer( void )
 {
-  return duf_get_config_ufilter();
+  return duf_get_config_ufilter(  );
 }
 
 void *

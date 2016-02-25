@@ -2,27 +2,28 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-/* #include "duf_maintenance.h" */
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_expandable.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
 
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
-#include "duf_config_util.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "std_fieldsets.h"
 #include "std_selectors.h"
 /* ###################################################################### */
 #include "evsql_selector.h"
 /* ###################################################################### */
-
-
-
 
 #if 0
 static const char *
@@ -62,7 +63,6 @@ duf_find_std_selector( const char *selector_name, duf_node_type_t type )
   }
   return selector;
 }
-
 
 static const char *
 duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr )
@@ -193,7 +193,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         {
           sql = mas_strcat_x( sql, selector );
         }
-#if 1
+# if 1
         if ( sql_set->filter )
         {
           if ( has_where )
@@ -203,8 +203,8 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
           has_where = 1;
           sql = mas_strcat_x( sql, sql_set->filter );
         }
-#endif
-#if 1
+# endif
+# if 1
         if ( sql_set->matcher )
         {
           if ( has_where )
@@ -214,8 +214,8 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
           has_where = 1;
           sql = mas_strcat_x( sql, sql_set->matcher );
         }
-#endif
-#if 1
+# endif
+# if 1
         if ( sql_set->group )
         {
           if ( has_group )
@@ -225,8 +225,8 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
           has_group = 1;
           sql = mas_strcat_x( sql, sql_set->order );
         }
-#endif
-#if 1
+# endif
+# if 1
         if ( sql_set->order )
         {
           if ( has_order )
@@ -236,7 +236,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
           has_order = 1;
           sql = mas_strcat_x( sql, sql_set->order );
         }
-#endif
+# endif
       }
     }
     mas_free( fieldset );
@@ -263,7 +263,6 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
   int rpr = 0;
   char *sql = NULL;
   const char *selector2 = NULL;
-
 
   assert( sql_set );
 
@@ -300,8 +299,7 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         sql = mas_strcat_x( sql, selector );
       }
 
-
-#if 1
+# if 1
       if ( sql_set->filter )
       {
         if ( has_where )
@@ -311,8 +309,8 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         has_where = 1;
         sql = mas_strcat_x( sql, sql_set->filter );
       }
-#endif
-#if 0
+# endif
+# if 0
       if ( sql_set->matcher )
       {
         if ( has_where )
@@ -322,8 +320,8 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         has_where = 1;
         sql = mas_strcat_x( sql, sql_set->matcher );
       }
-#endif
-#if 1
+# endif
+# if 1
       if ( sql_set->group )
       {
         if ( has_group )
@@ -333,8 +331,8 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         has_group = 1;
         sql = mas_strcat_x( sql, sql_set->order );
       }
-#endif
-#if 1
+# endif
+# if 1
       if ( sql_set->order )
       {
         if ( has_order )
@@ -344,7 +342,7 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         has_order = 1;
         sql = mas_strcat_x( sql, sql_set->order );
       }
-#endif
+# endif
     }
     DUF_TRACE( select, 0, "TOTAL: %s", sql );
   }

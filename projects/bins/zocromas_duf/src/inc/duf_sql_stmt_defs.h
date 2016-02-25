@@ -3,8 +3,7 @@
 
 # define DUF_SQL_PDI_STMT
 
-
-# include "duf_sql_types.h"
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ♠ */
 /* # include "duf_sql_bind.h" (* duf_sql_clear_bindings *) */
 
 # define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \

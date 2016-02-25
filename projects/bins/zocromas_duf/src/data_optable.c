@@ -1,11 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h"
-
-
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /*
 At duf_options_table.c:
@@ -21,7 +17,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_main = {
   .name = "main",
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
 
 #if 0
@@ -56,14 +52,9 @@ const duf_longval_extended_table_t optable_main = {
    {DOO_Q( "std-node-set-name" ) /*     */ , DOO_A_R /*                                    */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( STR, std_node_set_name ) /*      */ , DO_STAGES( FIRST, IA ) /*       */ , DO_H(  .... ) /*                            */ },
 
-
-
-
    {.o = {.name = NULL}}
    }
 };
-
-
 
 /* vi: et ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */

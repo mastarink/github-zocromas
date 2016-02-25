@@ -1,7 +1,5 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
 /*
 At duf_options_table.c:
@@ -15,12 +13,10 @@ At duf_options_table.c:
       };
 */
 
-
 const duf_longval_extended_table_t optable_flag_obsolete = {
   .name = "flag obsolete",
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
-
 
 #if 0
    {.o = {DO_Q( "collect" ) /* OBSOLETE */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
@@ -54,4 +50,3 @@ const duf_longval_extended_table_t optable_flag_obsolete = {
 
 /* vi: ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */
-

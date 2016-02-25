@@ -1,14 +1,11 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
 
 #include "duf_context.h"
 
 /* ###################################################################### */
 #include "duf_pdi_context.h"
 /* ###################################################################### */
-
-
-
 
 void
 duf_pdi_set_context( duf_depthinfo_t * pdi, void *ctx )

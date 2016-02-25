@@ -1,5 +1,11 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 #include "duf_config.h"
 #include "duf_config_util.h"
@@ -21,9 +27,9 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 {
   int rd = 0;
 
-  /* if ( duf_pdi_recursive( pdi ) ) */
+/* if ( duf_pdi_recursive( pdi ) ) */
   {
-    rd = d - duf_pdi_maxdepth( pdi ) < delta; /* d - pathinfo.maxdepth < delta */
+    rd = d - duf_pdi_maxdepth( pdi ) < delta;                        /* d - pathinfo.maxdepth < delta */
     DUF_TRACE( temp, 60, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pdi_maxdepth( pdi ), delta );
   }
   DUF_TRACE( temp, 30, "@@[R:%d] rd:%d max:%d; rel(%d):%d", rd, duf_pdi_recursive( pdi ), duf_pdi_maxdepth( pdi ), d, duf_pdi_reldepth_d( pdi, d ) );
@@ -31,12 +37,12 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
     rd = 1;
   else if ( rd && !duf_pdi_recursive( pdi ) /* && duf_pdi_allow_dirs( pdi ) */  )
   {
-    rd = duf_pdi_reldepth_d( pdi, d ) <= delta; /* d - topdepth <= delta */
+    rd = duf_pdi_reldepth_d( pdi, d ) <= delta;                      /* d - topdepth <= delta */
     DUF_TRACE( temp, 30, "(%d>0) duf_pdi_topdepth(pdi):%d; duf_pdi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
                duf_pdi_topdepth( pdi ), duf_pdi_reldepth_d( pdi, d ), delta );
   }
 
-  /* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
+/* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
   return rd;
 }
 

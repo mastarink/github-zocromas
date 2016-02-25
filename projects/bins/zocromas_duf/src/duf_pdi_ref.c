@@ -1,15 +1,18 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
+
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
 #include "duf_config.h"
 #include "duf_config_util.h"
 
-
-
 /* ###################################################################### */
 #include "duf_pdi_ref.h"
 /* ###################################################################### */
-
 
 duf_depthinfo_t *
 duf_pdi_root( duf_depthinfo_t * pdi )

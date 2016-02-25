@@ -1,13 +1,17 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_utils_path.h> /* mas_pathdepth */
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_maintenance.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_fmt_defs.h"
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
@@ -124,7 +128,7 @@ duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursi
       DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %s", duf_pi_depth( pi ), duf_pi_itemshowname( pi ) );
     }
     if ( node_type == DUF_NODE_NODE )
-      duf_pi_levinfo_countdown_dirs( pi ); /* may change levinfo (for upper level) */
+      duf_pi_levinfo_countdown_dirs( pi );                           /* may change levinfo (for upper level) */
     assert( pi->depth - 1 /* not yet ... */  == duf_pi_calc_depth( pi ) );
   }
 
@@ -153,7 +157,7 @@ duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * 
     assert( pi->levinfo );
 
     if ( node_type == DUF_NODE_NODE )
-      duf_pi_countdown_dirs( pi ); /* may change levinfo (for upper level) */
+      duf_pi_countdown_dirs( pi );                                   /* may change levinfo (for upper level) */
   /* ------------------------------------------- */
   /* assert( duf_levinfo_dirid( pdi ) == 0 ); */
     assert( !pi->levinfo[d].itemname );
@@ -198,7 +202,7 @@ duf_pi_is_good_depth_d( const duf_pathinfo_t * pi, int delta, unsigned frecursiv
   assert( flinear == 1 || flinear == 0 );
 /* if ( duf_pi_recursive( pi ) ) */
   {
-    rd = d - duf_pi_maxdepth( pi ) < delta; /* d - pathinfo.maxdepth < delta */
+    rd = d - duf_pi_maxdepth( pi ) < delta;                          /* d - pathinfo.maxdepth < delta */
     DUF_TRACE( levinfo, 60, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pi_maxdepth( pi ), delta );
   }
   DUF_TRACE( levinfo, 30, "@@rd:%d max:%d; rel(%d):%d", rd, duf_pi_maxdepth( pi ), d, duf_pi_deltadepth_d( pi, d ) );
@@ -207,7 +211,7 @@ duf_pi_is_good_depth_d( const duf_pathinfo_t * pi, int delta, unsigned frecursiv
     rd = 1;
   else if ( rd && !frecursive /* && duf_pi_allow_dirs( pi ) */  )
   {
-    rd = duf_pi_deltadepth_d( pi, d ) <= delta; /* d - topdepth <= delta */
+    rd = duf_pi_deltadepth_d( pi, d ) <= delta;                      /* d - topdepth <= delta */
     DUF_TRACE( levinfo, 40, "(%d>0) duf_pi_topdepth(pi):%d; duf_pi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
                duf_pi_topdepth( pi ), duf_pi_deltadepth_d( pi, d ), delta );
   /* T( "@B %d: %d : %d -> %d", d, duf_pi_maxdepth( pi ), delta, rd ); */

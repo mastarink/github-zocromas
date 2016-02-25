@@ -1,11 +1,9 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
-#include "duf_optimpl_sccb.h"    /* TODO : temp for duf_option_O_db_open               */
+#include "duf_optimpl_sccb.h"                                        /* TODO : temp for duf_option_O_db_open               */
 
 /*
 At duf_options_table.c:
@@ -19,10 +17,9 @@ At duf_options_table.c:
       };
 */
 
-
 const duf_longval_extended_table_t optable_db = {
   .name = "db",
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
    {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( DB ) /* */ ,
     /*      */ DO_OC( PATH, db.dir_x ) /*                                                   */ , DO_H( db directory ) /*                     */ },
@@ -39,12 +36,9 @@ const duf_longval_extended_table_t optable_db = {
    {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
     , DO_EV_CALL( db_open ), DO_STAGE_IPLS /*                                                */ , DO_H(  ... ) /*                             */ },
 
-
-
    {.o = {.name = NULL}}
    }
 };
 
 /* vi: ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */
-

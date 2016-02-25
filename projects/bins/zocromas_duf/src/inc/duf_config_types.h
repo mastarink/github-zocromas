@@ -15,18 +15,6 @@ typedef struct
 
 typedef struct
 {
-  unsigned nopen;
-  unsigned nclose;
-} duf_status_dh_t;
-
-typedef struct
-{
-/* struct duf_depthinfo_s *pdi; */
-  duf_depthinfo_t *pdi;
-} duf_status_scanner_t;
-
-typedef struct
-{
   char *config_dir;
   char *cmds_dir;
   char *config_file_path;

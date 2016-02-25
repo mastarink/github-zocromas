@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h"
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 /*
 At duf_options_table.c:
@@ -54,8 +52,8 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "escapecoloring" ) /*   */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, opt.output.stream.v ), DO_FN( output, nocolor ) /*                     */ , DO_H(  ... ) /*                      */ },
 
-   /* {.o = {DO_Q( "use-binformat" ) (*        *) , DO_A_N (* *) , DO_VF( USE_BINFORMAT )} (* *) , DO_CL( PRINT ) (*   *) ,                    */
-   /*  (*      *) DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, use_binformat ) (*               *) , DO_H( use bin format ) (*     *) }, */
+ /* {.o = {DO_Q( "use-binformat" ) (*        *) , DO_A_N (* *) , DO_VF( USE_BINFORMAT )} (* *) , DO_CL( PRINT ) (*   *) ,                    */
+ /*  (*      *) DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, use_binformat ) (*               *) , DO_H( use bin format ) (*     *) }, */
    {.o = {DO_Q( "progress" ) /*         */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, opt.output.stream.v ), DO_FL( output, progress ) /*             */ , DO_H( progress ) /*                         */ },
 

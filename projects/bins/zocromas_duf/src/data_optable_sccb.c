@@ -1,9 +1,7 @@
 #include <stddef.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_optable_def.h"
-#include "duf_options_enum.h" 
+#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
 
 #include "duf_optimpl_sccb.h"
 
@@ -19,12 +17,11 @@ At duf_options_table.c:
       };
 */
 
-
 const duf_longval_extended_table_t optable_sccb = {
   .name = "sccb",
-  /* DO_SET_STAGE( DUF_OPTION_STAGE_SETUP, DUF_OPTION_STAGE_INTERACTIVE ), */
+/* DO_SET_STAGE( DUF_OPTION_STAGE_SETUP, DUF_OPTION_STAGE_INTERACTIVE ), */
   DO_STG_NOT( SETUP ),
-  .xlist =                      /* */
+  .xlist =                                                           /* */
   {
    {.o = {DO_Q( "list-sccbs" ) /*       */ , DO_A_N /*  */ , DO_V( LIST_SCCBS )} /*        */ , DO_CL( SCCB ) /*  */
     , DO_EV_CALL( list_sccbs ) /*                                                           */ , DO_H(  ... ) /*                             */ },
@@ -37,8 +34,6 @@ const duf_longval_extended_table_t optable_sccb = {
 
    {.o = {DO_Q( "call-file" ) /*        */ , DO_A_R /*  */ , DO_V( CALL_FILE )} /*         */ , DO_CL( SCCB ) /*  */
     , DO_S_CALL( call_file ) /*         */ , DO_SET_STAGE( FIRST, LOOP ) /*                 */ , DO_H(  ... ) /*                             */ },
-
-
 
    {.o = {.name = NULL}}
    }

@@ -1,17 +1,24 @@
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_output_util.h"
 
-#include "duf_expandable.h"
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
 
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 /* ###################################################################### */
 #include "duf_config_show_etc.h"
@@ -29,7 +36,7 @@ duf_config_show( void )
     if ( duf_config->pcli )
       for ( int ia = 0; ia < duf_config->pcli->targ.argc; ia++ )
       /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
-        DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli() )->argv[ia] );
+        DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli(  ) )->argv[ia] );
   }
 
   DUF_ENDR( r );

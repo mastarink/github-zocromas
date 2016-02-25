@@ -2,7 +2,7 @@
 # define MAS_DUF_CONFIG_TRACE_H
 
 # include <stddef.h>                                                 /* FILE */
-#include <mastar/trace/mas_trace_types.h>
+# include <mastar/trace/mas_trace_types.h>
 
 /* # include "duf_config_trace_types.h"                                 (* duf_config_trace_t *) */
 

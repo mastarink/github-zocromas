@@ -1,32 +1,37 @@
-/* 20150901.122226 */
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_utils_path.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
 
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_pdi_stmt.h"
 
-#include "duf_sql_defs.h"
-#include "duf_sql_stmt_defs.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 
 /* #include "evsql_selector.h" */
 #include "evsql_selector_new.h"
 
 /* #include "duf_sql.h" */
-#include "duf_sql_bind.h"
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 #include "duf_sql_prepared.h"
-#include "duf_sql_field.h"
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
-#include "sql_beginning_tables.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 /* ###################################################################### */
 #include "duf_path2dirid.h"
@@ -60,7 +65,7 @@ duf_path2dirid( const char *path, int *pr )
 #endif
     if ( DUF_NOERROR( rpr ) )
       dirid = duf_levinfo_dirid( &di );
-    /* xchanges = di.changes; --- needless!? */
+  /* xchanges = di.changes; --- needless!? */
     duf_pdi_close( &di );
   }
   mas_free( real_path );
@@ -82,7 +87,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
     DUF_SQL_STEP( rpr, pstmt );
     if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
-      /* rpr = 0; */
+    /* rpr = 0; */
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
 
       name = mas_strdup( DUF_GET_SFIELD2( name ) );
@@ -111,13 +116,13 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 
   duf_sql_set_t def_node_set = {
     .fieldset = "pt.parentid AS parentid, pt." DUF_SQL_DIRNAMEFIELD " AS name " /* */
-          ,
-    .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
+            ,
+    .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "        /* */
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-          " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
+            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
     " WHERE pt." DUF_SQL_IDFIELD "=:dirID"
   };
@@ -170,7 +175,7 @@ duf_dirid2path( unsigned long long dirid, int *pr )
       opath = path;
       path = mas_normalize_path_plus( *name ? name : "/", opath, NULL );
       mas_free( opath );
-      /* T( "(%llu) '%s' => path:%s", dirid, name, path ); */
+    /* T( "(%llu) '%s' => path:%s", dirid, name, path ); */
       depth++;
     }
     else

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
@@ -8,15 +9,20 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_argvc_tools.h>
 
-#include "duf_maintenance.h"
-#include "duf_printn_defs.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
-#include "duf_config_output_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 /* ###################################################################### */
 #include "duf_optimpl_fs_types.h"
@@ -105,7 +111,7 @@ duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv 
 }
 
 mas_error_code_t
-duf_option_O_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
+duf_option_O_fs_ls_file( const char *fn, const void *pv MAS_UNUSED )
 {
   DUF_STARTR( r );
   int ry = 0;
@@ -176,7 +182,7 @@ duf_option_O_fs_rmfile( const char *fn, const void *pv )
 }
 
 static int
-duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_UNUSED, struct stat *pstfrom, struct stat *pstto DUF_UNUSED )
+duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv MAS_UNUSED, struct stat *pstfrom, struct stat *pstto MAS_UNUSED )
 {
   int ry = 0;
   int ry1 = 0;
@@ -217,26 +223,26 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
 
           if ( ferror( fto ) )
           {
-            /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error ", fn, to ); */
+          /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error ", fn, to ); */
             ry = -1;
             break;
           }
           else if ( nr != nw )
           {
-            /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to ); */
+          /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - write error (nr!=nw : impossible?)", fn, to ); */
             ry = -1;
             break;
           }
         }
         else if ( ferror( ffrom ) )
         {
-          /* DUF_SHOW_ERRORO( " @ Can 't copy %s %s - read error", fn, to ); */
+        /* DUF_SHOW_ERRORO( " @ Can 't copy %s %s - read error", fn, to ); */
           ry = -1;
           break;
         }
         else
         {
-          /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to ); */
+        /* DUF_SHOW_ERRORO( "@Can' t copy %s %s - read error (nr<=0 : impossible?)", fn, to ); */
           ry = -1;
           break;
         }
@@ -246,7 +252,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_
     }
     else
     {
-      /* DUF_SHOW_ERRORO( "@Can' t copy %s(%d) %s(%d) - open error", fn, ffrom ? 1 : 0, to, fto ? 1 : 0 ); */
+    /* DUF_SHOW_ERRORO( "@Can' t copy %s(%d) %s(%d) - open error", fn, ffrom ? 1 : 0, to, fto ? 1 : 0 ); */
       ry = -1;
     }
     if ( ry >= 0 && nrs > 0 && nrs == nws )
@@ -344,19 +350,19 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
     }
     else
     {
-      /* DUF_SHOW_ERRORO( "@Can't copy %s to %s - src is not a file", fn, to ); */
+    /* DUF_SHOW_ERRORO( "@Can't copy %s to %s - src is not a file", fn, to ); */
       ry = -1;
     }
   }
 
-  /* if ( ry < 0 )                                                */
-  /* {                                                            */
-  /*   char serr[1024] = "";                                      */
-  /*   char *ser;                                                 */
-  /*                                                              */
-  /*   ser = strerror_r( errno, serr, sizeof( serr ) );           */
-  /*   DUF_SHOW_ERRORO( "@Can't copy %s %s -- %s", fn, to, ser ); */
-  /* }                                                            */
+/* if ( ry < 0 )                                                */
+/* {                                                            */
+/*   char serr[1024] = "";                                      */
+/*   char *ser;                                                 */
+/*                                                              */
+/*   ser = strerror_r( errno, serr, sizeof( serr ) );           */
+/*   DUF_SHOW_ERRORO( "@Can't copy %s %s -- %s", fn, to, ser ); */
+/* }                                                            */
   return ry;
 }
 
@@ -380,7 +386,7 @@ duf_option_O_fs_cpfile( const char *fn, const char *to, const void *pv )
 }
 
 static mas_error_code_t
-duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv DUF_UNUSED )
+duf_option_fs_mvfile( const char *arg MAS_UNUSED, const char *to MAS_UNUSED, const void *pv MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_ENDR( r );

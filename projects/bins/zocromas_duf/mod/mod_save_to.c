@@ -1,4 +1,6 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+#include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
@@ -9,9 +11,16 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t */
 
 /* #include "duf_config.h" */
@@ -82,7 +91,7 @@ DUF_MOD_DECLARE_ALL_FUNCS( save_to )
 /* ########################################################################################## */
 
 static int
-save_to_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+save_to_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -198,7 +207,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
 
-/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
@@ -268,11 +277,11 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-save_to_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+save_to_de_content2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
-/* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
@@ -286,14 +295,14 @@ save_to_de_content2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi D
 }
 
 static int
-save_to_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+save_to_leaf2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_ENDR( r );
 }
 
 static int
-save_to_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+save_to_leaf2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
@@ -306,14 +315,14 @@ save_to_leaf2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNU
 }
 
 static int
-save_to_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+save_to_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_ENDR( r );
 }
 
 static int
-save_to_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+save_to_node_before2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
@@ -324,7 +333,7 @@ save_to_node_before2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi 
 }
 
 static int
-save_to_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+save_to_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -332,14 +341,14 @@ save_to_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * p
 }
 
 static int
-save_to_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+save_to_node_middle2_del( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_ENDR( r );
 }
 
 static int
-save_to_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+save_to_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -347,7 +356,7 @@ save_to_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pd
 }
 
 static int
-save_to_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+save_to_node_after2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
@@ -357,8 +366,8 @@ save_to_node_after2_del( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi D
   DUF_ENDR( r );
 }
 
-static int DUF_UNUSED
-save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+static int MAS_UNUSED
+save_to_de_dir_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -366,8 +375,8 @@ save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t *
   DUF_ENDR( r );
 }
 
-static int DUF_UNUSED
-save_to_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+static int MAS_UNUSED
+save_to_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
 

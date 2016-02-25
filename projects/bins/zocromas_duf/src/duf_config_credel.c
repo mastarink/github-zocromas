@@ -1,24 +1,31 @@
 /* #include <stdarg.h> */
+#include <assert.h>
 #include <string.h>
 
 #include <mastar/trace/mas_trace_credel.h>
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_trace.h"                                        /* duf_trace_file_c; duf_trace_output_force_color_c; duf_trace_output_no_color_c ♠ */
+#include "duf_config_output_util.h"
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_config4trace_ref.h"
 /* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
 
-#include "duf_option_config.h"
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 #include "duf_option_config_credel.h"
 #include "duf_xtended_table.h"
 
-#include "duf_expandable.h"
+#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
 
 /* ###################################################################### */
 #include "duf_config_credel.h"
@@ -67,10 +74,10 @@ void
 duf_config_delete( void )
 {
   DUF_START(  );
-  /* assert( duf_config->opt.ptracecfg->stream.out ); */
-  /* assert( duf_get_trace_config(  )->stream.out );  */
+/* assert( duf_config->opt.ptracecfg->stream.out ); */
+/* assert( duf_get_trace_config(  )->stream.out );  */
 /* T( "@%p %p", duf_config->opt.ptracecfg, duf_config->opt.ptracecfg->class_levels ); */
-  DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file(  ), stderr, stdout );
+  DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", duf_output_file(  ), duf_trace_file_c( duf_config->opt.ptracecfg ), stderr, stdout );
 /* T( "@%p/%p %p", duf_config->opt.ptracecfg, duf_get_trace_config(  ), duf_config->opt.ptracecfg->class_levels ); */
   mas_error_report_all( duf_get_trace_config(  ), DUF_TRACE_LEVEL_errors, 0, /*FIXME: error output is not trace output */
                         duf_trace_file_c( duf_config->opt.ptracecfg ), duf_verbose ? duf_verbose(  ) : 0 );

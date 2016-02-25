@@ -1,12 +1,19 @@
 /* #undef MAS_TRACING */
+#include <assert.h>
 #include <string.h>
 
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_maintenance.h"
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_atable_sccb.h"
 #include "duf_sccb_handle.h"
@@ -16,8 +23,7 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccbh_eval.h"
 
-#include "duf_maindb.h"
-
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
@@ -34,7 +40,6 @@
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 
-
 /* 20150922.123731 */
 int
 duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const mas_argvc_t * ptarg,
@@ -46,7 +51,7 @@ duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, 
   assert( pdi );
 
   if ( DUF_NOERROR( r ) )
-    act = duf_find_atable_sccb_by_evnamen( name, len, table ); /* XXX XXX */
+    act = duf_find_atable_sccb_by_evnamen( name, len, table );       /* XXX XXX */
   DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, act ? ( act->sccb ? act->sccb->name : "NONAME" ) : "-" );
   if ( act )
   {
@@ -107,7 +112,7 @@ duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const 
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
 
-  /* assert( pdi->pyp ); */
+/* assert( pdi->pyp ); */
   while ( DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;
@@ -125,7 +130,7 @@ duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const 
   }
   if ( !ok )
   {
-    /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
+  /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
   DUF_ENDR( r );
 }

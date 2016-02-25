@@ -1,11 +1,9 @@
 #include <string.h>
 
-#include "duf_maintenance.h"
-
 #include "duf_config_ref.h"
 
-#include "duf_config_util.h"
-#include "duf_config_trace.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_trace.h"                                        /* duf_trace_file_c; duf_trace_output_force_color_c; duf_trace_output_no_color_c ♠ */
 /* ###################################################################### */
 #include "duf_tracen_config.h"
 /* ###################################################################### */
@@ -19,5 +17,3 @@ duf_trace_file( void )
 }
 
 #endif
-
-

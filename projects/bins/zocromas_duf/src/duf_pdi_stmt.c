@@ -1,17 +1,25 @@
 /* #undef MAS_TRACING */
-#include "duf_maintenance.h"
+#include <assert.h>
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
+#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+#include "duf_dodefs.h"                                              /* DOR ♠ */
+
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_sql_prepared.h"
-#include "duf_maindb.h"
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 /* ###################################################################### */
 #include "duf_pdi.h"
 /* ###################################################################### */
-
 
 static duf_idstmt_t *
 duf_pdi_find_idstmt( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /*, const int *pindex */  )
@@ -23,11 +31,11 @@ duf_pdi_find_idstmt( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /*, const in
   {
     for ( int i = 0; i < pdi->num_idstatements; i++ )
     {
-      /* T( "@@@%d ? %d = %d", pdi->idstatements[i].id, stmtid (* pindex *) , pdi->idstatements[i].id == stmtid (* pindex *)  ); */
+    /* T( "@@@%d ? %d = %d", pdi->idstatements[i].id, stmtid (* pindex *) , pdi->idstatements[i].id == stmtid (* pindex *)  ); */
       if ( pdi->idstatements[i].id == stmtid /* pindex */  )
       {
         is = &pdi->idstatements[i];
-        /* T( "@@@@is:%p -> %p", is, is ? is->pstmt : NULL ); */
+      /* T( "@@@@is:%p -> %p", is, is ? is->pstmt : NULL ); */
         break;
       }
     }
@@ -95,17 +103,17 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
 #endif
     pdi->num_idstatements++;
   }
-  /* duf_main_db_open can't be called after setting 'is' and before using 'is'
-   *   - it may reallocate pdi->idstatements 
-   *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-   */
+/* duf_main_db_open can't be called after setting 'is' and before using 'is'
+ *   - it may reallocate pdi->idstatements 
+ *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+ */
   DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
 
   DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
   DUF_TEST_R( rpr );
 
   DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
-  /* assert( rpr >= 0 ); */
+/* assert( rpr >= 0 ); */
   if ( pstmt )
   {
 #if 0
@@ -136,16 +144,16 @@ int
 duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
 {
   DUF_STARTR( r );
-  /* int *pi; */
+/* int *pi; */
 
   assert( pdi );
 
   if ( pdi->idstatements[i].pstmt )
     DOR( r, duf_sql_finalize( pdi->idstatements[i].pstmt ) );
-  /* if ( pdi->xstatements[i] )  */
-  /*   pi = pdi->xstatements[i]; */
-  /* if ( pi )                   */
-  /*   *pi = -1;                 */
+/* if ( pdi->xstatements[i] )  */
+/*   pi = pdi->xstatements[i]; */
+/* if ( pi )                   */
+/*   *pi = -1;                 */
   pdi->idstatements[i].pstmt = NULL;
   DUF_ENDR( r );
 }
@@ -161,7 +169,7 @@ duf_pdi_finalize_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid
   if ( is && is->pstmt )
   {
     DOR( r, duf_sql_finalize( is->pstmt ) );
-    /* T( "@@@@@@@finalize %p", is->pstmt ); */
+  /* T( "@@@@@@@finalize %p", is->pstmt ); */
     is->pstmt = NULL;
   }
 
@@ -179,7 +187,7 @@ duf_pdi_finalize_statement_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
   if ( is && is->pstmt )
   {
     DOR( r, duf_sql_finalize( is->pstmt ) );
-    /* T( "@@@@@@@finalize %p", is->pstmt ); */
+  /* T( "@@@@@@@finalize %p", is->pstmt ); */
     is->pstmt = NULL;
   }
 

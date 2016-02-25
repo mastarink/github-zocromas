@@ -1,7 +1,9 @@
 #ifndef MAS_DUF_PDI_TYPES_H
 # define MAS_DUF_PDI_TYPES_H
+# include <stddef.h>                                                 /* size_t */
 
-# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t */
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ♠ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
 
 typedef struct
 {
