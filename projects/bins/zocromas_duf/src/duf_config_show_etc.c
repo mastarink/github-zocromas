@@ -16,7 +16,7 @@
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 #include "duf_config_output_util.h"
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 

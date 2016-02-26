@@ -25,7 +25,7 @@
 #include "duf_option_config_credel.h"
 #include "duf_xtended_table.h"
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 /* ###################################################################### */
 #include "duf_config_credel.h"

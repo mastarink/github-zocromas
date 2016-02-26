@@ -23,7 +23,7 @@
 #include "duf_option_config_credel.h"
 #include "duf_xtended_table.h"
 
-#include "duf_expandable.h"
+/* #include "duf_expandable.h" */
 
 /* ###################################################################### */
 #include "duf_config_trace_credel.h"

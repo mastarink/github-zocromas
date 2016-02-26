@@ -5,7 +5,7 @@
 #include <mastar/tools/mas_utils_path.h>                             /* mas_concat_path */
 
 
-#include "duf_expandable.h"
+/* #include "duf_expandable.h" */
 
 #include "duf_config.h"
 #include "duf_config_defs.h"

@@ -42,5 +42,5 @@ sfind duf_fileinfo.h
 tab sfind duftest.c
 sfind dufjtest.c
 
-tab sfind  duf_expandable.c
-sfind  duf_expandable.h
+" tab sfind  duf_expandable.c
+" sfind  duf_expandable.h

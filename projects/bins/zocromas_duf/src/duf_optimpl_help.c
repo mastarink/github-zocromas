@@ -13,7 +13,7 @@
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_ref.h"

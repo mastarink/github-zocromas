@@ -17,7 +17,7 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 /* ###################################################################### */
 #include "duf_config_db.h"

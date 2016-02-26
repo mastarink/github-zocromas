@@ -18,7 +18,7 @@ sfind duf_base_output_types.h
 tab sfind duf_config_types.h
 sfind duf_status_types.h
 
-tab sfind duf_expand_types.h
+" tab sfind duf_expand_types.h
 
 tab sfind duf_tmp_types.h
 
