@@ -12,9 +12,7 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_config_output_util.h"
-
-#include "duf_config_util.h"
+#include "duf_config_output_weak.h"
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 #include "duf_option_clarify.h"

@@ -11,7 +11,7 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_xtended_table.h"
+/* #include "duf_xtended_table.h" */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 

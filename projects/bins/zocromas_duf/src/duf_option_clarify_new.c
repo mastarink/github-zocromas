@@ -25,7 +25,7 @@
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
-#include "duf_xtended_table.h"
+/* #include "duf_xtended_table.h" */
 #include "duf_option_clarify.h"
 
 /* ###################################################################### */

@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <fnmatch.h>
 
+/* #include <mastar/types/mas_common_types.h> */
+
 /* ###################################################################### */
 #include "duf_match.h"
 /* ###################################################################### */
@@ -54,7 +56,7 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
 
 #if 0
 int
-duf_lim_match( duf_limits_t lim, int n )
+mas_lim_match( mas_limits_t lim, int n )
 {
   int rx = 0;
 
@@ -67,7 +69,7 @@ duf_lim_match( duf_limits_t lim, int n )
 }
 
 int
-duf_lim_matchll( duf_limitsll_t lim, int n )
+mas_lim_matchll( mas_limitsll_t lim, int n )
 {
   int rx = 0;
 

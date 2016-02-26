@@ -302,7 +302,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       else
         snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
 #else
-      DUF_SNCOLOR_S( fcolor, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
+      mas_sncolor_s( fcolor, pbuffer, bfsz, "\x1b[%sm", ( v > 0 && ( size_t ) v < sizeof( hls ) ) ? hls[v] : hls[0] );
 #endif
     }
   /* Not here : swidth += strlen( pbuffer ); */

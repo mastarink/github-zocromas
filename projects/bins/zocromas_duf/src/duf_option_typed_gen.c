@@ -6,6 +6,7 @@
 #include <sys/stat.h>                                                /* struct stat */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_types.h>                           /* mas_limits_t; mas_limitsll_t */
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_convert.h>                                /* mas_strtol_suff; mas_strtoll_suff; etc. ♣ */
 #include <mastar/tools/mas_expandable.h>
@@ -13,10 +14,10 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_base_types.h"                                          /* duf_limits_t */
+/* #include "duf_base_types.h"                                          (* duf_limits_t *) */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+/* #include "duf_printn_defs.h"                                         (* DUF_PRINTF etc. ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -262,38 +263,38 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype MIN" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limits_t, min, mas_strtol_suff );
+        DUF_MOPT( noo, r, mas_limits_t, min, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAX:                                    /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAX" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limits_t, max, mas_strtol_suff );
+        DUF_MOPT( noo, r, mas_limits_t, max, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAX:                                 /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINMAX" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, duf_limits_t, mas_strtol_suff );
+        DUF_MINMAXOPT( noo, r, mas_limits_t, mas_strtol_suff );
         break;
 
       case DUF_OPTION_VTYPE_MINLL:                                  /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limitsll_t, min, mas_strtol_suff );
+        DUF_MOPT( noo, r, mas_limitsll_t, min, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAXLL:                                  /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAXLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limitsll_t, max, mas_strtoll_suff );
+        DUF_MOPT( noo, r, mas_limitsll_t, max, mas_strtoll_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAXLL:                               /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINMAXLL" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, duf_limitsll_t, mas_strtoll_suff );
+        DUF_MINMAXOPT( noo, r, mas_limitsll_t, mas_strtoll_suff );
         break;
 #if 0
 # define DUF_OPTION_VTYPE_XFLAG_OBSOLETE(_typ) \
@@ -382,8 +383,8 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype %s %lx", QSTR( DUF_OPTION_VTYPE_BFLAG ) + 17, ( 1L << ( extended->flag_bitnum - 1 ) ) );
         DUF_OPTION_VTYPE_QBFLAG( unsigned );
 
-        /* assert( ( extended->flag_bitnum && !extended->afl_obsolete.bit )                                                            */
-        /*         || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit ); */
+      /* assert( ( extended->flag_bitnum && !extended->afl_obsolete.bit )                                                            */
+      /*         || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit ); */
 
         break;
       case DUF_OPTION_VTYPE_NOBSFLAG:                               /* stage SETUP */
@@ -393,8 +394,8 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_BSFLAG ) + 17 );
         DUF_OPTION_VTYPE_QBFLAG( unsigned short );
 
-        /* ssert( ( extended->flag_bitnum && !extended->afl_obsolete.bit )                                                             */
-        /*         || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit ); */
+      /* ssert( ( extended->flag_bitnum && !extended->afl_obsolete.bit )                                                             */
+      /*         || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit ); */
 
         break;
 
@@ -562,19 +563,19 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype MINMAXDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, duf_limitsll_t, mas_strtime2long );
+        DUF_MINMAXOPT( noo, r, mas_limitsll_t, mas_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MINDATETIME:                            /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limitsll_t, min, mas_strtime2long );
+        DUF_MOPT( noo, r, mas_limitsll_t, min, mas_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MAXDATETIME:                            /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAXDATETIME" );
         if ( noo )
           DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, duf_limitsll_t, max, mas_strtime2long );
+        DUF_MOPT( noo, r, mas_limitsll_t, max, mas_strtime2long );
         break;
       /* 
        * FILE

@@ -6,9 +6,9 @@
 
 # include "duf_fun_types.h"                                          /* duf_void_int_func_t; duf_errc_int_func_t */
 # include "duf_option_source_types.h"                                /* duf_option_source_t */
-# include "duf_config_rec_etc_types.h"                               /* duf_config_rec_etc_flags_t */
-# include "duf_config_opt_types.h"                                   /* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  */
-# include "duf_config_act_types.h"                                   /* duf_config_act_flags_t  */
+/* # include "duf_config_rec_etc_types.h"                               (* duf_config_rec_etc_flags_t *) */
+/* # include "duf_config_opt_types.h"                                   (* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  *) */
+/* # include "duf_config_act_types.h"                                   (* duf_config_act_flags_t  *) */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
 # include "duf_option_fun_types.h"                                   /*  *_func_t;  *_funcpair_t */
 # include "duf_option_class_types.h"                                 /* duf_option_class_t */
@@ -59,16 +59,16 @@ typedef enum
   DUF_OFFSET_funcptr,
 } duf_offset_to_t;
 
-typedef union
-{
-  duf_config_act_flags_t act;
-  mas_base_output_flags_t output;
-  duf_config_rec_etc_flags_t rec_etc;
-  duf_config_flow_flags_t flow;
-  duf_config_opt_disable_flags_t disable;
-  unsigned bit;
-  unsigned short sbit;
-} duf_option_anyflag_t;
+/* typedef union                             */
+/* {                                         */
+/*   duf_config_act_flags_t act;             */
+/*   mas_base_output_flags_t output;         */
+/*   duf_config_rec_etc_flags_t rec_etc;     */
+/*   duf_config_flow_flags_t flow;           */
+/*   duf_config_opt_disable_flags_t disable; */
+/*   unsigned bit;                           */
+/*   unsigned short sbit;                    */
+/* } duf_option_anyflag_t;                   */
 
 typedef struct
 {

@@ -4,6 +4,7 @@ shn_gvimer_plus_bin_nt ()
     for a in "$@" ; do c+=" '$a'" ; done
     [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
 #   echo "{${MSHCMD_GVIMC:=/usr/bin/gvim} $c}" >&2
+#   shn_msg "open $c"
     eval "${MSHCMD_GVIMC:=/usr/bin/gvim} $c"
 }
 shn_gvimer_plus_fuuid_nt ()
@@ -367,7 +368,6 @@ function shn_file_edit ()
   if [[ "$@" ]] ; then
     shn_project_file_cd $@
     shn_msg "2 pwd:$(pwd)" 
-    sleep 2
 #   for arg in "$@" ; do 
 #     shn_msg "$FUNCNAME: $arg" >&2
 #   done

@@ -38,6 +38,7 @@ sfind duf_config_pointers.h
 
 tab sfind duf_config_output_util.c
 sfind duf_config_output_util.h
+sfind duf_config_output_weak.h
 
 tab sfind duf_status.c
 sfind duf_status_ref.h

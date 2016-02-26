@@ -159,4 +159,21 @@ typedef struct mas_ucontrol_s
  /* \(serial\|thread\|tid\|pchannel\|status\|activity_time\) */
 typedef size_t( *mas_xvsnprintf_t ) ( char *str, size_t size, const char *format, va_list args );
 
+typedef unsigned char masboolean;
+typedef masboolean masbool;
+
+typedef struct
+{
+  unsigned flag:1;
+  unsigned min;
+  unsigned max;
+} mas_limits_t;
+typedef struct
+{
+  unsigned flag:1;
+  unsigned long long min;
+  unsigned long long max;
+} mas_limitsll_t;
+
+
 #endif

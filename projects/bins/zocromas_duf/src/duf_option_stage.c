@@ -11,7 +11,6 @@
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-/* #include "duf_config_output_util.h" */
 
 /* ###################################################################### */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */

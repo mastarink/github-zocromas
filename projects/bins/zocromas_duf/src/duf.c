@@ -184,12 +184,14 @@ SR( TOP, main_with_config, int argc, char **argv )
   T( "@test-num: %lu", DUF_CONFIGG( testnum ) );
 
 //          opt   disable  testnoflag
+#if 0
 #define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
   {
     unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
     unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
     T( "@>>>> %llx : %llx <<<<", t1, t2 );
   }
+#endif
 
   CR( main_db, argc, argv );
 

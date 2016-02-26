@@ -4,6 +4,7 @@
 typedef unsigned char boolean;
 typedef boolean bool;
 
+#if 0
 typedef struct
 {
   unsigned flag:1;
@@ -16,6 +17,7 @@ typedef struct
   unsigned long long min;
   unsigned long long max;
 } duf_limitsll_t;
+#endif
 
 #if 0
 typedef struct

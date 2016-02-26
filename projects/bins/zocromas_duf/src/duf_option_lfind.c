@@ -15,7 +15,7 @@
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
-#include "duf_xtended_table.h"
+/* #include "duf_xtended_table.h" */
 
 /* ###################################################################### */
 #include "duf_option_lfind.h"
