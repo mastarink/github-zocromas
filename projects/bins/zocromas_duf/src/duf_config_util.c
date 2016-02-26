@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_tools.h>                                  /* mas_tstrflocaltime */
+#include <mastar/tools/mas_time.h>                                   /* mas_xlocaltime; mas_double_time; mas_xgmtime; mas_xvstrftime; mas_xvstrftime_time; mas_tstrflocaltime; mas_strtime2long; mas_strflocaltime; mas_strfgmtime; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
@@ -13,7 +13,7 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */

@@ -11,6 +11,7 @@ commonlibs/zocromas_mas_init
 commonlibs/zocromas_mas_sqlite
 commonlibs/zocromas_mas_trace
 commonlibs/zocromas_mas_error
+commonlibs/zocromas_mas_multiconfig
 bins/zocromas_server
 bins/zocromas_runonce
 bins/zocromas_duf

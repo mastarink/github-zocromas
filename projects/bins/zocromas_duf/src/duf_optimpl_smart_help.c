@@ -103,7 +103,7 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
   /* duf_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( duf_get_config_cli(),extended, "\t", " // " );
+    s = duf_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -188,7 +188,7 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
   /* duf_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( duf_get_config_cli(),extended, "\t", " // " );
+    s = duf_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -232,13 +232,13 @@ duf_option_O_smart_help( duf_option_class_t oclass )
     tbcount = duf_longindex_extended_count( duf_extended_vtable_multi(  ) );
     for ( ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( pcli->longopts_table )[ilong].name && ilong < tbcount; ilong++ )
 #else
-    for ( duf_longval_extended_vtable_t ** xtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); *xtables; xtables++ )
+    for ( duf_longval_extended_vtable_t ** xtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xtables; xtables++ )
       for ( const duf_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
 #endif
       {
         const duf_longval_extended_t *extended;
 
-        extended = duf_loption_xfind_at_stdx( duf_get_config_cli(),ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
+        extended = duf_loption_xfind_at_stdx( duf_get_config_cli(  ), ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
         {
           int ie;
           duf_option_code_t codeval;
@@ -283,7 +283,7 @@ duf_option_O_help_set( const char *arg )
 {
   DUF_STARTR( r );
 
-  for ( duf_longval_extended_vtable_t * *xvtables = duf_cli_options_xvtable_multi(duf_get_config_cli()); *xvtables; xvtables++ )
+  for ( duf_longval_extended_vtable_t * *xvtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++ )
   {
     const duf_longval_extended_vtable_t *xvtable = *xvtables;
     int title_printed = 0;
@@ -325,7 +325,7 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_funcptr] = "funcptr",
                 [DUF_OFFSET_varptr] = "varptr",
               };
-              sl = duf_optstages_list( duf_get_config_cli(), xtended, xvtable );
+              sl = duf_optstages_list( duf_get_config_cli(  ), xtended, xvtable );
               if ( ashown[codeval] <= 0 )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;
@@ -341,7 +341,8 @@ duf_option_O_help_set( const char *arg )
                 DUF_PRINTF( 0, ". `%s`;", duf_optvtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )
               {
-                DUF_PRINTF( 0, ".%s + %-4lu & %x;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset, xtended->afl.bit );
+                DUF_PRINTF( 0, ".%s + %-4lu & %lx;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset,
+                            1L << xtended->flag_bitnum );
               }
               if ( xtended->call.funcname || xtended->calltype != DUF_OPTION_CALL_TYPE_NONE )
               {

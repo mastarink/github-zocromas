@@ -1,10 +1,10 @@
 #ifndef MAS_DUF_CONFIG_DISABLE_TYPES_H
-#define  MAS_DUF_CONFIG_DISABLE_TYPES_H
-
+# define  MAS_DUF_CONFIG_DISABLE_TYPES_H
 
 typedef enum
 {
-  DUF_FLAG_disable_calculate = 0,
+  DUF_FLAG_disable_NONE,
+  DUF_FLAG_disable_calculate = 1 /* !! */ ,
   DUF_FLAG_disable_insert,
   DUF_FLAG_disable_update,
   DUF_FLAG_disable_fs,
@@ -30,6 +30,5 @@ typedef union
   duf_config_opt_disable_flags_t flag;
   unsigned short sbit;
 } duf_config_opt_disable_flags_combo_t;
-
 
 #endif

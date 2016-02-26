@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_expandable.h>                              
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
@@ -13,7 +14,7 @@
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */

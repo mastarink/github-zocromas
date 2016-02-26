@@ -3,7 +3,8 @@
 
 typedef enum
 {
-  DUF_FLAG_rec_etc_recursive = 0,
+  DUF_FLAG_rec_etc_NONE,
+  DUF_FLAG_rec_etc_recursive = 1 /* !! */,
   DUF_FLAG_rec_etc_linear,
   DUF_FLAG_rec_etc_testflag,
   DUF_FLAG_rec_etc_testiflag,

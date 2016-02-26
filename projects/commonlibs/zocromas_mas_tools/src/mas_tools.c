@@ -4,10 +4,8 @@
 #include <stdlib.h>
 
 #include <sys/types.h>
-#include <sys/time.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <time.h>
 #include <string.h>
 
 #include <errno.h>
@@ -23,13 +21,16 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_memory.h>
-#include "mas_arg_tools.h"
 
-#include <mastar/types/mas_opts_types.h>
+/* #include "mas_arg_tools.h" */
+
+/* #include <mastar/types/mas_opts_types.h> */
 
 
 
+/* ########################################################################################## */
 #include "mas_tools.h"
+/* ########################################################################################## */
 
 
 /*
@@ -47,49 +48,6 @@ related:
 
 */
 
-size_t
-mas_tstrflocaltime( char *s, size_t max, const char *format, time_t t )
-{
-  struct tm *tmp;
-
-  tmp = localtime( &t );
-  return strftime( s, max, format, tmp );
-}
-
-struct tm *
-mas_xlocaltime( void )
-{
-  time_t t;
-  struct tm *tmp;
-
-  t = time( NULL );
-  tmp = localtime( &t );
-  /* if ( tmp != NULL && strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", tmp ) == 0 ) */
-  return tmp;
-}
-
-struct tm *
-mas_xgmtime( void )
-{
-  time_t t;
-  struct tm *tmp;
-
-  t = time( NULL );
-  tmp = gmtime( &t );
-  /* if ( tmp != NULL && strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", tmp ) == 0 ) */
-  return tmp;
-}
-
-double
-mas_double_time( void )
-{
-  struct timeval tv;
-  double t;
-
-  gettimeofday( &tv, NULL );
-  t = ( ( double ) tv.tv_sec ) + ( ( ( double ) tv.tv_usec ) * 1E-6 );
-  return t;
-}
 
 size_t
 mas_xvsnprintf( char *str, size_t size, const char *format, va_list args )
@@ -100,31 +58,6 @@ mas_xvsnprintf( char *str, size_t size, const char *format, va_list args )
   return r;
 }
 
-size_t
-mas_xvstrftime( char *str, size_t size, const char *format, va_list args )
-{
-  size_t r = 0;
-  const struct tm *times;
-
-  times = va_arg( args, const struct tm * );
-
-  r = strftime( str, size, format, times );
-  return r;
-}
-
-size_t
-mas_xvstrftime_time( char *str, size_t size, const char *format, va_list args )
-{
-  size_t r = 0;
-  const struct tm *times;
-  time_t time;
-
-  time = va_arg( args, time_t );
-
-  times = gmtime( &time );
-  r = strftime( str, size, format, times );
-  return r;
-}
 
 char *
 mas_dump1( const char *data, size_t len, size_t perline )

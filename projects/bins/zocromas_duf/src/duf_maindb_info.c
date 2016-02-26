@@ -2,7 +2,8 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|tstrflocal|strflocal|strfgm)time ; strtime2long; etc. ♣ */
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
@@ -11,21 +12,21 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_printn_defs.h"
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_ref.h"
 #include "duf_config_output_util.h"
 
-#include "duf_utils.h"
+#include "duf_utils.h"                                               /* duf_percent; duf_strtol_suff; duf_strtoll_suff etc. ♠ */
 
-#include "duf_sql_defs.h"
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 
 #include "duf_sql_prepared.h"
 #include "duf_sql_positional.h"
 #include "sql_tables_defs.h"
-#include "duf_sql_stmt_defs.h"
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 /* ###################################################################### */
 #include "duf_maindb_info.h"
 /* ###################################################################### */
@@ -84,9 +85,9 @@ duf_main_db_info( void )
       ,
 #endif
       {.title = "datas with reasonable date",.count = 5,.labels = {"#", "@min mtim", "@max mtim", "@min inow", "@max inow", NULL}
-       ,.sql = /* */
+       ,.sql =                                                       /* */
        "SELECT COUNT(*), STRFTIME('%s',min(mtim)), STRFTIME('%s',max(mtim)), STRFTIME('%s',min(inow)), STRFTIME('%s',max(inow)) " /* */
-       " FROM " DUF_SQL_TABLES_FILEDATAS_FULL /* */
+       " FROM " DUF_SQL_TABLES_FILEDATAS_FULL                        /* */
        " WHERE cast(STRFTIME('%s',mtim) as integer)>320000000 and cast(STRFTIME('%s',mtim) as integer)<1600000000"}
       ,
       {.title = "zero files",.count = 1,.labels = {"#", NULL}
@@ -187,7 +188,7 @@ duf_main_db_info( void )
             label++;
             char buf[64];
 
-            duf_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
+            mas_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
           /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
             DUF_PRINTF( 0, ". %s: %15s;  ", label, buf );
           }

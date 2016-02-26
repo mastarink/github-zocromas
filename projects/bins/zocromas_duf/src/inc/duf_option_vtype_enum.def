@@ -14,14 +14,14 @@
   ENUM_WRAP(MINLL				)
   ENUM_WRAP(MAXLL				)
   ENUM_WRAP(MINMAXLL				)
-
+#if 0
   ENUM_WRAP(FLAG				)
   /* PFLAG					) */
   ENUM_WRAP(NOFLAG				)
   ENUM_WRAP(SFLAG				)
   ENUM_WRAP(NOSFLAG				)
   /* PSFLAG					) */
-
+#endif
   ENUM_WRAP(BFLAG				)
   ENUM_WRAP(NOBFLAG				)
   ENUM_WRAP(BSFLAG				)

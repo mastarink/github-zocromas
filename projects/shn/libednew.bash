@@ -70,7 +70,8 @@ shn_gvimer_masedf_nt ()
     for masedf in $mased_dir/* ; do
       if [[ -f $masedf ]] && grep -q '\<\(tab\s\+sfind\|sfind\|find\|e\|sp\)\>\s\+\<'$filid'\s*$' $masedf ; then
 	echo -n $masedf
-	echo "masedf:$masedf" >&2
+	shn_msg "masedf:$masedf ($(pwd))"
+	shn_msg "masedf:$(realpath $masedf)"
 	return 0
       fi
     done
@@ -362,9 +363,11 @@ function shn_file_edit_simple ()
 }
 function shn_file_edit ()
 {
-  
+  shn_msg "1 pwd:$(pwd)" 
   if [[ "$@" ]] ; then
     shn_project_file_cd $@
+    shn_msg "2 pwd:$(pwd)" 
+    sleep 2
 #   for arg in "$@" ; do 
 #     shn_msg "$FUNCNAME: $arg" >&2
 #   done

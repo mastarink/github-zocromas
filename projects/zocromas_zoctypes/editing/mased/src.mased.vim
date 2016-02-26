@@ -13,6 +13,8 @@ sfind mas_common_cdefs.h
 
 tab sfind mas_evaluate_types.h
 
+tab sfind mas_base_output_types.h
+
 tab sfind mas_unidata_types.h
 sfind mas_fileinfo_types.h
 
@@ -36,6 +38,7 @@ sfind mas_modules_types.h
 
 sfind mas_thread_variables_types.h
 sfind mas_th_types.h
+
 
 tab sfind mas_channel_types.h 
 

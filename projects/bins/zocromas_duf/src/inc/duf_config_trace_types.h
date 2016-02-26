@@ -5,7 +5,7 @@
 #include <mastar/trace/mas_trace_types.h>
 
 # include "duf_base_output_types.h"                                  /* mas_base_output_t */
-# include "duf_config_output_types.h"                                /* duf_config_output_t */
+/* # include "duf_config_output_types.h"                                (* duf_config_output_t *) */
 
 #if 0
 typedef struct

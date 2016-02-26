@@ -67,7 +67,7 @@ duf_optstage_name( const duf_config_cli_t * cli MAS_UNUSED, duf_option_stage_t i
     stagename = "loop";
     break;
   case DUF_OPTION_STAGE_INTERACTIVE:
-    stagename = "interactive";
+    stagename = "Interactive";
     break;
   case DUF_OPTION_STAGE_ANY:
     stagename = "any";
@@ -194,10 +194,13 @@ duf_optstages_list( const duf_config_cli_t * cli, const duf_longval_extended_t *
 
   for ( duf_option_stage_t istg = DUF_OPTION_STAGE_MIN; istg <= DUF_OPTION_STAGE_MAX; istg++ )
   {
-    if ( DUF_OPTION_CHECK_STAGE( cli, istg, extended, xvtable ) )
-      s = mas_strncat_x( s, duf_optstage_name( cli, istg ), 1 );
-    else
-      s = mas_strcat_x( s, "_" );
+    if ( istg <= DUF_OPTION_STAGE_LOOP || istg > DUF_OPTION_STAGE_LOOPE )
+    {
+      if ( DUF_OPTION_CHECK_STAGE( cli, istg, extended, xvtable ) )
+        s = mas_strncat_x( s, duf_optstage_name( cli, istg ), 1 );
+      else
+        s = mas_strcat_x( s, "_" );
+    }
   }
   return s;
 }

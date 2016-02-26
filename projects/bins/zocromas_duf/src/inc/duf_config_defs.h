@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_CONFIG_DEFS_H
 # define MAS_DUF_CONFIG_DEFS_H
 
+#include <mastar/tools/mas_expandable_types.h>
+
 # define DUF_CONFIG_DIR_FROM_ENV "MSHDIRS_CONF_DIR"
 
 # define DUF_CFGX(_cfg, _lo)  _cfg->_lo
@@ -29,7 +31,7 @@
 # define DUF_CFGWSP(_cfg, _lo, _val) DUF_CFGW(_cfg, _lo.value)=(_val)
 
 # define DUF_CFGGS(_cfg, _lo) DUF_CFGG(_cfg, _lo)
-# define DUF_CFGGSP(_cfg, _lo) duf_string_expanded(&_cfg->_lo)
+# define DUF_CFGGSP(_cfg, _lo) mas_string_expanded(&_cfg->_lo)
 
 # define DUF_CONFIGX(_lo)  DUF_CFGX(duf_get_config(), _lo)
 # ifdef MAS_TRACING

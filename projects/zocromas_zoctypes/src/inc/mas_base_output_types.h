@@ -3,6 +3,16 @@
 
 # include <stdio.h>                                                  /* FILE */
 
+typedef enum
+{
+  MAS_FLAG_output_NONE,
+  MAS_FLAG_output_overwrite = 1 /* !! */ ,
+  MAS_FLAG_output_append,
+  MAS_FLAG_output_nocolor,
+  MAS_FLAG_output_force_color,
+  MAS_FLAG_output_progress,
+} mas_base_output_flags_enum_t;
+
 typedef struct
 {
   unsigned overwrite:1;                                              /* => output options */

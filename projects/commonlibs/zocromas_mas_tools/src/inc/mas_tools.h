@@ -1,23 +1,13 @@
 #ifndef MAS_TOOLS_H
-#  define MAS_TOOLS_H
+# define MAS_TOOLS_H
 
-#  include <stdio.h>
-#  include <stdarg.h>
-#  include <stdio.h>
-#  include <time.h>
-#  include <sys/types.h>
-
+# include <stdio.h>
+# include <stdarg.h>
+# include <stdio.h>
+# include <time.h>
+# include <sys/types.h>
 
 size_t mas_xvsnprintf( char *str, size_t size, const char *format, va_list args );
-
-struct tm *mas_xlocaltime( void );
-double mas_double_time( void );
-
-struct tm *mas_xgmtime( void );
-
-size_t mas_xvstrftime( char *str, size_t size, const char *format, va_list args );
-size_t mas_xvstrftime_time( char *str, size_t size, const char *format, va_list args );
-size_t mas_tstrflocaltime( char *s, size_t max, const char *format, time_t t );
 
 char *mas_ip_string( void *sin_addr );
 
@@ -32,9 +22,7 @@ char *mas_dump1( const char *data, size_t len, size_t perline );
 char *mas_dump2( const char *data, size_t len, size_t perline );
 char *mas_escape( char *str );
 
-
 void mas_common_constructor( const char *fname, int lin, int lev );
 void mas_common_destructor( const char *fname, int lin, int lev );
-
 
 #endif

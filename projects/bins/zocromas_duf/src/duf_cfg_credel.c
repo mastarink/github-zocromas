@@ -4,6 +4,7 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_expandable.h>
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -13,7 +14,7 @@
 
 #include "duf_config_defs.h"
 
-#include "duf_expandable.h"
+/* #include "duf_expandable.h" */
 
 #include "duf_ufilter.h"
 
@@ -140,12 +141,12 @@ duf_cfg_delete( duf_config_t * cfg )
 #else
     mas_free( cfg->db.path );
     cfg->db.path = NULL;
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.dir_x ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.subdir_x ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.main.name_x ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.adm.name_x ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.tempo.name_x ) );
-    duf_cfg_string_delete( DUF_CFGA( cfg, db.selected.name_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.dir_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.subdir_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.main.name_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.adm.name_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.tempo.name_x ) );
+    mas_expandable_string_delete( DUF_CFGA( cfg, db.selected.name_x ) );
 #endif
 
     mas_free( cfg->db.main.fpath );

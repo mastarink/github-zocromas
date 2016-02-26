@@ -6,6 +6,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_expandable.h>                             
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -17,7 +18,7 @@
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
-#include "duf_expandable.h"                                          /* duf_expandable_string_t; duf_string_expanded ♠ */
+/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 /* #include "duf_option_typed.h" */
 
@@ -80,11 +81,11 @@ SR( OPTIONS, split_string_od, duf_config_cli_t * cli, duf_option_data_t * pod )
     arg = duf_string_options_expand( barg, '?' );
 #else
     {
-      duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc( cli ) };
+      mas_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc( cli ) };
 
       cs_x.value = mas_strdup( barg );
-      arg = mas_strdup( duf_string_expanded( &cs_x ) );
-      duf_cfg_string_delete( &cs_x );
+      arg = mas_strdup( mas_string_expanded( &cs_x ) );
+      mas_expandable_string_delete( &cs_x );
     }
 #endif
   }
@@ -301,11 +302,11 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
       oa = duf_string_options_expand( pod->optarg, '?' );
 #else
       {
-        duf_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc( cli ) };
+        mas_expandable_string_t cs_x = { 0, 0, NULL, NULL,.protected_prefix = '?',.varfunc = duf_cli_options_varfunc( cli ) };
 
         cs_x.value = mas_strdup( pod->optarg );
-        oa = mas_strdup( duf_string_expanded( &cs_x ) );
-        duf_cfg_string_delete( &cs_x );
+        oa = mas_strdup( mas_string_expanded( &cs_x ) );
+        mas_expandable_string_delete( &cs_x );
       }
 #endif
       CRV( ( pod->clarifier ), cli, pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,

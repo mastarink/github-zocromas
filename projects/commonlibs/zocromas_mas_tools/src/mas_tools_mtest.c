@@ -8,6 +8,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include "mas_arg_tools.h"
 #include "mas_tools.h"
+#include "mas_time.h"
 
 int
 main( int argc, char *argv[] )

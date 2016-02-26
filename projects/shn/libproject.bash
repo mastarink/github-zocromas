@@ -72,10 +72,11 @@ function shn_project_by_file ()
   [[ -f "$file" ]] && rfile=`shn_realpath $file` && file=$rfile
   shn_dbgmsg "$file --- $rfile"
   if [[ "$file" ]] ; then
+  # TODO : first MSH_SHN_PROJECT_DIR !
     if pushd $MSH_SHN_PROJECTS_DIR &>/dev/null ; then
       [[ -f "$file" ]] && rfile=`shn_realpath $file` && file=$rfile
       shn_dbgmsg "$file --- $rfile"
-      for prj in ${MSH_SHN_PROJECTS[@]} ; do
+      for prj in $MSH_SHN_PROJECT_DIR ${MSH_SHN_PROJECTS[@]} ; do
 	prjdir="$MSH_SHN_PROJECTS_DIR/$prj"
 	if [[ -d "$prjdir" ]] ; then
 	  if [[ -f "$file" ]] && [[ "$file" == $prjdir/* ]] ; then
@@ -127,6 +128,7 @@ function shn_project_file_cd ()
 {
   local prj file=$1
   prj=`shn_project_by_file $@` || return $?
+  shn_msg "prj:$prj"
   shn_dbgmsg "$file => $prj"
   shn_project_cd "$prj"
 }

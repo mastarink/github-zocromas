@@ -126,11 +126,12 @@
 
 /* --flag-option sets flag to 1, --no-flag-option sets flag to 0 */
 /* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
-# define DO_FL(_loc, _fld)             .afl._loc={._fld=1}, .can_no=1
-# define DOO_FL(_vt, _prf, _loc, _fld) .afl._loc={._fld=1}, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#if 0
+# define DO_FL(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=1
+# define DOO_FL(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-# define DO_FS(_loc, _fld)             .afl._loc={._fld=1}, .can_no=0
-# define DOO_FS(_vt, _prf, _loc, _fld) .afl._loc={._fld=1}, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
+# define DO_FS(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=0
+# define DOO_FS(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
 # define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.unset=1
@@ -138,6 +139,7 @@
 
 # define DO_FNS(_loc,_fld)               DO_FS(_loc,_fld),.unset=1
 # define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#endif
 
 # define DO_SET_FUNC(_f)  .func=duf_option_O_ ## _f
 # define DOO_SET_FUNC(_f) .func=duf_option_O_ ## _f

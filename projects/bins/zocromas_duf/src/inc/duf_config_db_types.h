@@ -1,11 +1,13 @@
 #ifndef MAS_DUF_CONFIG_DB_TYPES_H
 # define MAS_DUF_CONFIG_DB_TYPES_H
 
-# include "duf_expand_types.h"                                       /* duf_expandable_string_t */
+#include <mastar/tools/mas_expandable.h>
+
+/* # include "duf_expand_types.h"                                       (* duf_expandable_string_t *) */
 
 typedef struct
 {
-  duf_expandable_string_t name_x;
+  mas_expandable_string_t name_x;
   char *fpath;
 } duf_db_config_t;
 
@@ -13,8 +15,8 @@ typedef struct
 typedef struct
 {
 /* unsigned opened:1; */
-  duf_expandable_string_t dir_x;
-  duf_expandable_string_t subdir_x;
+  mas_expandable_string_t dir_x;
+  mas_expandable_string_t subdir_x;
   char *path;
   duf_db_config_t main;
   duf_db_config_t adm;

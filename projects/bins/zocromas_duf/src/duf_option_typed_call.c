@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/tools/mas_convert.h>                                /* mas_strtol_suff; mas_strtoll_suff; etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
@@ -14,7 +15,7 @@
 
 /* #include "duf_config_util.h" */
 
-#include "duf_utils.h"                                               /* duf_strtol_suff duf_strtoll_suff etc. ♠ */
+/* #include "duf_utils.h"                                               (* duf_strtol_suff; duf_strtoll_suff etc. ♠ *) */
 
 /* #include "duf_option_defs.h" */
 
@@ -120,7 +121,7 @@ duf_xoption_clarify_typed_call( duf_config_cli_t * cli, const duf_longval_extend
         DUF_MAKE_ERROR( r, DUF_ERROR_NO_FUNC );
     }
 #else
-    IF_DORF( r, extended->call.fdesc.n.func, duf_strtol_suff( optargg, &r ) );
+    IF_DORF( r, extended->call.fdesc.n.func, mas_strtol_suff( optargg, &r ) );
 #endif
   /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
@@ -175,7 +176,7 @@ duf_xoption_clarify_typed_call( duf_config_cli_t * cli, const duf_longval_extend
   case DUF_OPTION_CALL_TYPE_TN1:
     if ( noo )
       DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-    IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ( cli ), duf_strtol_suff( optargg, &r ) ); /* targ as mas_argvc_t and numeric optarg */
+    IF_DORF( r, extended->call.fdesc.tn1.func, duf_cli_options_get_targ( cli ), mas_strtol_suff( optargg, &r ) ); /* targ as mas_argvc_t and numeric optarg */
   /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_CLARIFIED ); */
     break;
 #if 0

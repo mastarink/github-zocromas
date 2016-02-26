@@ -1,13 +1,15 @@
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
 #include <ctype.h>
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+/* ########################################################################################## */
 #include "mas_arg_tools.h"
+/* ########################################################################################## */
 
 size_t
 mas_wordlen( const char *s )

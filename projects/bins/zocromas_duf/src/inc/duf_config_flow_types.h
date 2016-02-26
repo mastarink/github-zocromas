@@ -1,6 +1,12 @@
 #ifndef MAS_DUF_CONFIG_FLOW_TYPES_H
 # define MAS_DUF_CONFIG_FLOW_TYPES_H
 
+typedef enum
+{
+  DUF_FLAG_flow_NONE,
+  DUF_FLAG_flow_dry_run = 1 /* !! */,
+} duf_config_flow_flags_enum_t;
+
 typedef struct
 {
   unsigned dry_run:1;
