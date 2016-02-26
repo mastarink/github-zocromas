@@ -1,11 +1,7 @@
 #ifndef MAS_DUF_TRACEN_DEFS_H
 #  define MAS_DUF_TRACEN_DEFS_H
 
-#include "duf_printn_defs_preset.h"
 #include "duf_tracen_defs_preset.h"
-/* #  include "duf_tracen_defs_base.h" */
-/* #  include "duf_tracen_defs_what.h" */
-/* #  include "duf_tracen_defs_sys.h" */
 
 #  define DUF_TRACE( _id, ... )		MAST_TRACE( _id, __VA_ARGS__ )
 #  define DUF_TRACE_WP( _id, ... )	MAST_TRACE_WP( _id, __VA_ARGS__ )

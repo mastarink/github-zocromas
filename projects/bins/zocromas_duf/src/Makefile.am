@@ -31,7 +31,7 @@ libzocromas_mas_multiconfig_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 #noinst_HEADERS=....cdef ....cdef
 
 zocromas_duf_SOURCES=				   \
-	duf.c duf_experiment.c 		\
+	duf.c \
 	duf_maindb_info.c duf_maindb.c duf_options_all_stages.c		    \
 	duf_config.c duf_tracen_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
 	duf_config_trace_credel.c duf_config_trace.c \

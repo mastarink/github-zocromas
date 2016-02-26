@@ -14,7 +14,6 @@
 # define T_FN_FMTN 23
 # define T_FN_FMT #T_FN_FMTN
 
-# include "duf_printn_defs_preset.h"
 # include "duf_config_output_weak.h"                                 /* duf_output_level ; duf_output_file ; duf_output_nocolor ; duf_output_force_color */
 
 # define DUF_WRITES( _min, _str)		mas_writes( duf_output_level? duf_output_level():0, _min, FL, duf_output_file? duf_output_file():stderr, _str)
