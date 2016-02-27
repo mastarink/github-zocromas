@@ -67,7 +67,11 @@ typedef struct
 # define DOCR(_rval, _x)			( (_rval>=0) ? ( (_rval=(_x))  ) : 0 )
 # define CR(            _funname, ... )		DOCR( QERRIND, F2N(duf_,_funname)( __VA_ARGS__ ) )
 # define CRV(           _fun    , ... )		DOCR( QERRIND, (_fun)( __VA_ARGS__) )
-# define CRW(		 _funname, ... )	DOCR( QERRIND, F2NW(duf_,_funname)( __VA_ARGS__))
+# define CRW(		_funname, ... )		DOCR( QERRIND, F2NW(duf_,_funname)( __VA_ARGS__))
+/* # define IF_CR( _fun, ...)                      { if (_fun) CR((_fun), __VA_ARGS__); else ERRMAKE( NO_FUNC ); } */
+# define IF_CR( _fun, ...)    			(_fun) ? CR((_fun), __VA_ARGS__) : ERRMAKE( NO_FUNC )
+# define IF_CRV( _fun, ...)    			(_fun) ? CRV((_fun), __VA_ARGS__) : ERRMAKE( NO_FUNC )
+
 # define SERRV(_errv)			DUF_MAKE_ERROR( QERRIND, _errv )
 # define SERRMV(_errv, ...)		DUF_MAKE_ERRORM( QERRIND, _errv, __VA_ARGS__ )
 # define SERR(_err)			SERRV( DUF_ERROR_ ## _err)

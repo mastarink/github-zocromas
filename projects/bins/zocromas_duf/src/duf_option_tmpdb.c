@@ -10,8 +10,10 @@
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
@@ -26,11 +28,11 @@
 /* ###################################################################### */
 
 /* TODO test, if still working */
-static int
-duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED, const mas_argvc_t * ttarg,
-              const void *ptr )
+static
+SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
+    const mas_argvc_t * ttarg, const void *ptr )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   duf_config_cli_t *cli = NULL;
 
   cli = ( duf_config_cli_t * ) ptr;
@@ -39,18 +41,19 @@ duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, c
   /* DUF_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
   /* DUF_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] ); */
   /* DUF_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] ); */
-    DUF_SQL_BIND_S_OPT( optVal, ttarg->argv[0], r, pstmt );
-    DUF_SQL_BIND_S_OPT( optName, ttarg->argv[1], r, pstmt );
-    DUF_SQL_BIND_S_OPT( optArg, ttarg->argv[2], r, pstmt );
+    DUF_SQL_BIND_S_OPTQ( optVal, ttarg->argv[0], pstmt );
+    DUF_SQL_BIND_S_OPTQ( optName, ttarg->argv[1], pstmt );
+    DUF_SQL_BIND_S_OPTQ( optArg, ttarg->argv[2], pstmt );
   /* DUF_TRACE( sql, 0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] ); */
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
+      const mas_argvc_t * ttarg, const void *ptr );
 }
 
-int
-duf_tmpdb_add( duf_config_cli_t * cli, int oval, const char *optname, const char *optargg )
+SR( OPTIONS, tmpdb_add, duf_config_cli_t * cli, int oval, const char *optname, const char *optargg )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   static duf_sql_sequence_t tmpseq = {                               /* */
     .name = "tmpseq",
     .sql = {
@@ -65,8 +68,9 @@ duf_tmpdb_add( duf_config_cli_t * cli, int oval, const char *optname, const char
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optname );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optargg );
 
-  DOR( r, duf_eval_sqlsq_cb( &tmpseq, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, duf_bind_tmp, &ttarg,
-                             NULL /* selected_db */ , cli /* ptr */  ) );
+  CR( eval_sqlsq_cb, &tmpseq, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, duf_bind_tmp, &ttarg,
+      NULL /* selected_db */ , cli /* ptr */  );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OPTIONS, tmpdb_add, duf_config_cli_t * cli, int oval, const char *optname, const char *optargg );
 }

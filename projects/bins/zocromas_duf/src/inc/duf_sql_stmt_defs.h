@@ -199,4 +199,14 @@
         DUF_TRACE(sql, 4, "(END:%d:%s) EACH ROW STEP:%s", _rt, mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
       }
 
+# define DUF_SQL_BIND_S_OPTQ(_name, _value, _pstmt_m) \
+ if ( QNOERR ) \
+		  { \
+		    DUF_TRACE( sql, 4, "@@bind s opt " # _name ": %s", _value); \
+		    MASE_E_LOWER( DUF_ERROR_BIND_NAME ); \
+		    CR( sql_bindn_string, _pstmt_m, ":" #_name, _value, 1 ); \
+		    ERRCLEAR( BIND_NAME ); \
+		    MASE_E_UPPER( DUF_ERROR_BIND_NAME ); \
+		  }
+
 #endif

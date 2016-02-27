@@ -33,6 +33,6 @@ DR( OPTIONS, source_incfg_parse, duf_config_cli_t * cli, duf_option_stage_t ista
     duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 
 const char *duf_options_infilepath( duf_config_cli_t * cli );
-int duf_infile_options_at_filepath( duf_config_cli_t * cli, duf_option_stage_t istage, const char *filepath, duf_option_adata_t * paod );
+DR( OPTIONS, infile_options_at_filepath, duf_config_cli_t * cli, duf_option_stage_t istage, const char *filepath, duf_option_adata_t * paod );
 
 #endif
