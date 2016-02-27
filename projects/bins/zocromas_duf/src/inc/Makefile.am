@@ -103,6 +103,7 @@ noinst_HEADERS=motest_config.h \
 	duf_tracen_defs_preset.h \
 	duf_start_end.h \
 	duf_se.h \
+	duf_se_only.h \
 	duf_dodefs.h \
 	duf_ufilter_types.h \
 	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \

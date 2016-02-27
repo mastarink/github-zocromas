@@ -11,12 +11,10 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-/* #include "duf_xtended_table.h" */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_lfind.h"
-
 /* ###################################################################### */
 #include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
 /* ###################################################################### */

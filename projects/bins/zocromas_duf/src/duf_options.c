@@ -1,7 +1,6 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <assert.h>                                                  /* assert */
-/* #include <stddef.h> */
 #include <string.h>
 #include <sys/stat.h>                                                /* struct stat */
 
@@ -10,11 +9,11 @@
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-/* #include "duf_config.h" */
-/* #include "duf_config_util.h" */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_types.h"                                        /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
@@ -33,7 +32,7 @@
 #include "duf_options_def.h"
 #include "duf_options.h"
 /* ###################################################################### */
-
+static
 SR( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod )
 {

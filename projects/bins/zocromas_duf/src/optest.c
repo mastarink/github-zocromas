@@ -14,8 +14,6 @@
 #include "duf_option_config_credel.h"
 #include "duf_options_all_stages.h"
 
-/* #include "duf_config_trace_credel.h" */
-
 typedef struct
 {
   unsigned one:1;

@@ -14,30 +14,26 @@
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-/* #include "duf_config_util.h" */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-/* #include "duf_option_clarify_string.h" */
 #include "duf_option_clarify_batch.h"
-
-/* #include "duf_levinfo_ref.h" */
 
 /* ###################################################################### */
 #include "duf_options_interactive.h"
 /* ###################################################################### */
 
-int
-duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-                              __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
-                              __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
+SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+    __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
+    __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 #if 0
   static char rl_prompt[256 * 10] = "";
 #endif
@@ -103,7 +99,7 @@ duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage,
         DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.history_filename ) );
       }
 #endif
-      while ( DUF_NOERROR( r ) /* && DUF_ACTG_FLAG( interactive ) */  && cb_do_interactive(  ) /* don't remove: this is for quit */
+      while ( QNOERR /* && DUF_ACTG_FLAG( interactive ) */  && cb_do_interactive(  ) /* don't remove: this is for quit */
               && isatty( STDIN_FILENO ) /* only when stdin is tty */  )
       {
         char *rl_buffer = NULL, *s = NULL;
@@ -126,15 +122,16 @@ duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage,
           DUF_TRACE( explain, 0, "read config line %s", s );
           {
             {
-              DOR( r, duf_boption_xclarify_at_stdx( cli, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod ) );
+              CR( boption_xclarify_at_stdx, cli, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod );
             }
-            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; s=%s", r, s );
+            DUF_TRACE( options, 0, "@@@@executed cmd; QERRIND=%d; s=%s", QERRIND, s );
           }
           free( rl_buffer );
           rl_buffer = NULL;
         }
-        DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-        TR( r );
+      /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+        ERRCLEAR( OPTION_NOT_FOUND );
+        TR( QERRIND );
       }
 #if 0
       if ( DUF_CONFIGG( cli.history_filename ) )
@@ -145,5 +142,8 @@ duf_source_interactive_parse( duf_config_cli_t * cli, duf_option_stage_t istage,
 #endif
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
+      __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
+      __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 }

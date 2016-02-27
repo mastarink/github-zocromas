@@ -1,7 +1,6 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
 #include <assert.h>                                                  /* assert */
-/* #include <stddef.h> */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>

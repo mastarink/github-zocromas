@@ -7,8 +7,6 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-/* #include "duf_config_util.h" */
-
 #include "duf_tmp_types.h"
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */

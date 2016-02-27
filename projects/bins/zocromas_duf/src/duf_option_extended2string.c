@@ -10,8 +10,6 @@
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-
-#include "duf_xtended_table.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
 #include "duf_option_val.h"                                          /* duf_codeval2string ♠ */

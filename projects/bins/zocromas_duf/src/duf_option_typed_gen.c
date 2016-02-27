@@ -14,25 +14,19 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-/* #include "duf_base_types.h"                                          (* duf_limits_t *) */
-
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-/* #include "duf_printn_defs.h"                                         (* DUF_PRINTF etc. ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_se.h"                                                  /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *)                        */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                                          */
 
-/* #include "duf_utils.h"                                               (* duf_strtol_suff duf_strtoll_suff etc. ♠ *) */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_tmpdb.h"
-
-/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 /* ###################################################################### */
 #include "duf_option_typed_defs.h"
@@ -81,10 +75,11 @@ duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popened
 }
 
 /*  20150924.120214 for DUF_OUTPUTFILE DUF_OUTPUTFILE_A */
-static int
-duf_set_file_special( duf_config_cli_t * cli, const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
+static
+SR( OPTIONS, set_file_special, duf_config_cli_t * cli, const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout,
+    int handleid )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   FILE *newout;
 
   newout = defout;
@@ -114,7 +109,7 @@ duf_set_file_special( duf_config_cli_t * cli, const char *pname, int overwrite, 
       *pfilename = NULL;
     }
     if ( pname && *pname )
-      newout = duf_open_file_special( cli, pname, pfilename, overwrite, &r );
+      newout = duf_open_file_special( cli, pname, pfilename, overwrite, QPERRIND );
     if ( !newout )
       newout = defout;
     if ( newout )
@@ -124,7 +119,9 @@ duf_set_file_special( duf_config_cli_t * cli, const char *pname, int overwrite, 
       *pfile = newout;
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OPTIONS, set_file_special, duf_config_cli_t * cli, const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout,
+      int handleid );
 }
 
 static void *
@@ -146,32 +143,6 @@ duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli, const duf_longval_ext
   case DUF_OFFSET_none:
     assert( extended->m_offset == 0 );
     break;
-#if 0
-  case DUF_OFFSET_config:
-    DUF_TRACE( options, 60, "relto=%d", extended->relto );
-# if 0
-    byte_ptr = ( ( ( char * ) duf_config ) + extended->m_offset );
-# else
-    byte_ptr = duf_get_config_offset( extended->m_offset );
-    if ( extended->reltoptr )
-      assert( byte_ptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
-  /* assert( byte_ptr == ( ( ( char * ) duf_config ) + extended->m_offset ) ); */
-# endif
-    break;
-# if 1
-  /* case DUF_OFFSET_depthinfo:                                              */
-  /*   DUF_TRACE( options, 60, "relto=%d", extended->relto );                */
-  /*   byte_ptr = ( ( ( char * ) duf_pdi_global(  ) ) + extended->m_offset ); */
-  /*   break;                                                                */
-  case DUF_OFFSET_ufilter:
-    DUF_TRACE( options, 60, "relto=%d", extended->relto );
-  /* byte_ptr = ( ( ( char * ) DUF_CONFIGG( vars.puz ) ) + extended->m_offset ); */
-    byte_ptr = duf_get_config_puz_offset( extended->m_offset );
-    if ( extended->reltoptr )
-      assert( byte_ptr == ( void * ) ( ( ( char * ) ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  ) ) + extended->m_offset ) );
-    break;
-# endif
-#endif
   case DUF_OFFSET_varptr:
     byte_ptr = duf_get_offset( extended->reltoptr, extended->m_offset );
     break;
@@ -187,20 +158,17 @@ duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli, const duf_longval_ext
   return byte_ptr;
 }
 
-int
-duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg, unsigned noo,
-                               duf_option_stage_t istage MAS_UNUSED, duf_option_source_t source MAS_UNUSED )
+SR( OPTIONS,
+    xoption_clarify_typed_gen, duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg, unsigned noo,
+    duf_option_stage_t istage MAS_UNUSED, duf_option_source_t source MAS_UNUSED )
 {
-  DUF_STARTR( r );
-
-/* if ( !extended )                         */
-/*   DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); */
+/* DUF_STARTR( r ); */
 
 /*
  * if arg is help option
  * return class id for options to display the help
  * */
-  if ( DUF_NOERROR( r ) )
+  if ( QNOERR )
   {
     unsigned doplus = 0;
     void *byteptr = NULL;
@@ -221,8 +189,8 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       case DUF_OPTION_VTYPE_NONE:
         DUF_TRACE( options, 70, "vtype NONE" );
 #if 0
-        if ( DUF_NOERROR( r ) )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );          // Why was ???
+        if ( QNOERR )
+          ERRMAKE( OPTION_NOT_PARSED );                              // Why was ???
       /* DUF_TEST_R( r ); */
 #endif
         break;
@@ -232,124 +200,79 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       case DUF_OPTION_VTYPE_UPLUS:                                  /* stage (?) not SETUP *//* --trace-...; --debug; --verbose */
         DUF_TRACE( options, 70, "vtype UPLUS" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( DUF_NOERROR( r ) )
+          ERRMAKE( OPTION_NOT_PARSED );
+        if ( QNOERR )
           doplus = 1;
       /* assert( 0 ); */
-      /* assert( ( ( char * ) ( duf_config->opt.ptracecfg->class_levels ) ) + ( extended->m_offset ) == ( ( char * ) byteptr ) ); */
+      /* assert( ( ( char * ) ( DUF_config->opt.ptracecfg->class_levels ) ) + ( extended->m_offset ) == ( ( char * ) byteptr ) ); */
       case DUF_OPTION_VTYPE_NUM:                                    /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
         DUF_TRACE( options, 70, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_NUMOPT( noo, r, unsigned, doplus, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_NUMOPT( noo, unsigned, doplus, mas_strtol_suff );
 
-        DUF_TRACE( options, 70, "(%d) vtype NUM --%s='%s'", r, extended->o.name, optargg ? optargg : "" );
+        DUF_TRACE( options, 70, "(%d) vtype NUM --%s='%s'", QERRIND, extended->o.name, optargg ? optargg : "" );
         break;
       case DUF_OPTION_VTYPE_NUML:                                   /* stage SETUP *//* not used ?! */
         DUF_TRACE( options, 70, "vtype NL" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_NUMOPT( noo, r, unsigned long, 0, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_NUMOPT( noo, unsigned long, 0, mas_strtol_suff );
 
         break;
       case DUF_OPTION_VTYPE_NUMLL:                                  /* stage SETUP *//* not used ?! */
         DUF_TRACE( options, 70, "vtype NLL" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_NUMOPT( noo, r, unsigned long long, 0, mas_strtoll_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_NUMOPT( noo, unsigned long long, 0, mas_strtoll_suff );
 
         break;
       case DUF_OPTION_VTYPE_MIN:                                    /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MIN" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limits_t, min, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limits_t, min, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAX:                                    /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAX" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limits_t, max, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limits_t, max, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAX:                                 /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINMAX" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, mas_limits_t, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( noo, mas_limits_t, mas_strtol_suff );
         break;
 
       case DUF_OPTION_VTYPE_MINLL:                                  /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINLL" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limitsll_t, min, mas_strtol_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limitsll_t, min, mas_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAXLL:                                  /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAXLL" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limitsll_t, max, mas_strtoll_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limitsll_t, max, mas_strtoll_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAXLL:                               /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINMAXLL" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, mas_limitsll_t, mas_strtoll_suff );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( noo, mas_limitsll_t, mas_strtoll_suff );
         break;
-#if 0
-# define DUF_OPTION_VTYPE_XFLAG_OBSOLETE(_typ) \
-	{ \
-	  if (!byteptr) \
-	    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); \
-          if ( extended->unset ) \
-            nof = !nof; \
-          assert( byteptr ); \
-          if ( DUF_NOERROR( r ) ) \
-          { \
-            _typ *pix; \
-            pix = ( _typ * ) byteptr; \
-            if ( nof ) \
-              ( *pix ) &= ~extended->afl_obsolete.bit; \
-            else \
-              ( *pix ) |= extended->afl_obsolete.bit; \
-            /* duf_config->opt.act.v.flag.info = 1; */ \
-            DUF_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %x %x (%x)", nof, byteptr, pix, extended->o.name, *pix, \
-                       extended->afl_obsolete.bit, ( *pix | extended->afl_obsolete.bit ) ); \
-            DUF_TEST_R( r ); \
-          } \
-        }
-      case DUF_OPTION_VTYPE_NOFLAG:                                 /* stage SETUP */
-        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOFLAG ) + 17 );
-        nof = !nof;
-      case DUF_OPTION_VTYPE_FLAG:                                   /* stage SETUP *//*  unsigned set of flags */
-        DUF_TRACE( options, 70, "vtype %s %x", QSTR( DUF_OPTION_VTYPE_FLAG ) + 17, extended->afl_obsolete.bit );
-        DUF_OPTION_VTYPE_XFLAG_OBSOLETE( unsigned );
-
-        assert( ( !extended->flag_bitnum && extended->afl_obsolete.bit )
-                || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit );
-
-        break;
-      case DUF_OPTION_VTYPE_NOSFLAG:                                /* stage SETUP */
-        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_NOSFLAG ) + 17 );
-        nof = !nof;
-      case DUF_OPTION_VTYPE_SFLAG:                                  /* stage SETUP *//*  unsigned short set of flags */
-        DUF_TRACE( options, 70, "vtype %s", QSTR( DUF_OPTION_VTYPE_SFLAG ) + 17 );
-        DUF_OPTION_VTYPE_XFLAG_OBSOLETE( unsigned short );
-
-        assert( ( !extended->flag_bitnum && extended->afl_obsolete.bit )
-                || ( ( typeof( extended->afl_obsolete.bit ) ) 1 << ( extended->flag_bitnum - 1 ) ) == extended->afl_obsolete.bit );
-
-        break;
-#endif
 
 #define DUF_OPTION_VTYPE_QBFLAG(_typ) \
 	{ \
 	  if (!byteptr) \
-	    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION ); \
+	    ERRMAKE( OPTION ); \
           if ( extended->unset ) \
             nof = !nof; \
           assert( byteptr ); \
-          if ( DUF_NOERROR( r ) ) \
+          if ( QNOERR ) \
           { \
             _typ *pix; \
 	    _typ nz=~0; \
@@ -358,10 +281,9 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
               ( *pix ) &= (_typ)((~(((_typ) 1)<<(extended->flag_bitnum-1))) & nz); \
             else \
               ( *pix ) |= (_typ)( ( ((_typ) 1)<<(extended->flag_bitnum-1)) & nz ); \
-            /* duf_config->opt.act.v.flag.info = 1; */ \
             DUF_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %llx %llx (%llx)", nof, byteptr, pix, extended->o.name, (unsigned long long)*pix, \
                        (unsigned long long)(1<<(extended->flag_bitnum-1)), (unsigned long long)( *pix | (1<<(extended->flag_bitnum-1)) ) ); \
-            DUF_TEST_R( r ); \
+            DUF_TEST_R( QERRIND ); \
           } \
         }
 #define DUF_OPTION_VTYPE_XQBFLAG \
@@ -408,44 +330,12 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
 
         break;
 
-#if 0
-      case DUF_OPTION_VTYPE_PFLAG:
-        DUF_TRACE( options, 70, "vtype PFLAG" );
-        if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr );
-        if ( DUF_NOERROR( r ) )
-        {
-          unsigned *pi;
-
-          pi = ( unsigned * ) byteptr;
-          DUF_PRINTF( 0, "%s is %s", extended->o.name, ( ( *pi ) & extended->afl_obsolete.bit ) ? "ON" : "OFF" );
-        /* DUF_TEST_R( r ); */
-        }
-        break;
-#endif
-#if 0
-      case DUF_OPTION_VTYPE_PSFLAG:
-        DUF_TRACE( options, 70, "vtype PSFLAG" );
-        if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        assert( byteptr );
-        if ( DUF_NOERROR( r ) )
-        {
-          unsigned *pi;
-
-          pi = ( unsigned * ) byteptr;
-          DUF_PRINTF( 0, "(s) %s is %s", extended->o.name, ( ( *pi ) & extended->afl_obsolete.sbit ) ? "ON" : "OFF" );
-        /* DUF_TEST_R( r ); */
-        }
-        break;
-#endif
       case DUF_OPTION_VTYPE_XCHR:                                   /* stage SETUP */
         DUF_TRACE( options, 70, "vtype XCHR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+          ERRMAKE( OPTION_NOT_PARSED );
         assert( byteptr );
-        if ( DUF_NOERROR( r ) )
+        if ( QNOERR )
         {
           char *pchr;
 
@@ -464,9 +354,9 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
         DUF_TRACE( options, 70, "vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+          ERRMAKE( OPTION_NOT_PARSED );
         assert( byteptr );
-        if ( DUF_NOERROR( r ) )
+        if ( QNOERR )
         {
           char **pstr;
 
@@ -487,9 +377,9 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       case DUF_OPTION_VTYPE_CSTR:                                   /* stage SETUP */
         DUF_TRACE( options, 70, "vtype %s for %s='%s'", QSTR( DUF_OPTION_VTYPE_CSTR ) + 17, extended->o.name, doptargg ? doptargg : "" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
+          ERRMAKE( OPTION_NOT_PARSED );
         assert( byteptr );
-        if ( DUF_NOERROR( r ) )
+        if ( QNOERR )
         {
           mas_expandable_string_t *pcs_x;
 
@@ -511,7 +401,7 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype PAA" );
 
         assert( byteptr );
-        if ( DUF_NOERROR( r ) )
+        if ( QNOERR )
         {
           mas_argvc_t *parg;
 
@@ -537,7 +427,7 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       case DUF_OPTION_VTYPE_TDB:                                    /* stage SETUP */
         DUF_TRACE( options, 70, "vtype TDB" );
 
-        if ( DUF_NOERROR( r ) )
+        if ( QNOERR )
         {
           if ( noo )
           {
@@ -546,7 +436,7 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
 #endif
           }
           else if ( optargg && *optargg && duf_tmpdb_add )
-            DOR( r, duf_tmpdb_add( cli, extended->o.val, extended->o.name, optargg ) );
+            CR( tmpdb_add, cli, extended->o.val, extended->o.name, optargg );
         }
         break;
       /*
@@ -555,27 +445,27 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
       case DUF_OPTION_VTYPE_DATETIME:                               /* stage SETUP */
         DUF_TRACE( options, 70, "vtype DATETIME" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_NUMOPT( noo, r, unsigned long long, 0, mas_strtime2long );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_NUMOPT( noo, unsigned long long, 0, mas_strtime2long );
 
         break;
       case DUF_OPTION_VTYPE_MINMAXDATETIME:                         /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINMAXDATETIME" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MINMAXOPT( noo, r, mas_limitsll_t, mas_strtime2long );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( noo, mas_limitsll_t, mas_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MINDATETIME:                            /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MINDATETIME" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limitsll_t, min, mas_strtime2long );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limitsll_t, min, mas_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MAXDATETIME:                            /* stage SETUP */
         DUF_TRACE( options, 70, "vtype MAXDATETIME" );
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        DUF_MOPT( noo, r, mas_limitsll_t, max, mas_strtime2long );
+          ERRMAKE( OPTION_NOT_PARSED );
+        DUF_MOPT( noo, mas_limitsll_t, max, mas_strtime2long );
         break;
       /* 
        * FILE
@@ -584,11 +474,11 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         DUF_TRACE( options, 70, "vtype FILE" );
       /* T( "@############ %d :: %s :: %s #############", extended->vtype, extended->o.name, duf_optsource_name(source) ); */
         if ( noo )
-          DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( DUF_NOERROR( r ) )
+          ERRMAKE( OPTION_NOT_PARSED );
+        if ( QNOERR )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s) : %d", extended->o.name, extended->call.value.u );
-          DUF_OUTPUTFILE( cli, noo, r, mas_base_output_t,, stderr );
+          DUF_OUTPUTFILE( cli, noo, mas_base_output_t /* _typ */ , /* _stream_dot */ , stderr /* _defout */  );
         /* {                                                                                 */
         /*   char start_time[128] = "??";                                                    */
         /*                                                                                   */
@@ -596,12 +486,12 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
         /*   PF( "%s", start_time );                                                         */
         /* }                                                                                 */
 
-        /* DUF_MAKE_ERROR(r, DUF_ERROR_OPTION_NOT_PARSED); */
+        /* ERRMAKE( OPTION_NOT_PARSED); */
         }
         break;
       }
       mas_free( doptargg );
-      DUF_TRACE( options, +150, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", mas_error_name_i( r ),
+      DUF_TRACE( options, +150, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", QERRNAME,
                  istage, extended->stage_opts.stage.min, extended->stage_opts.stage.max, extended->vtype, extended ? extended->o.name : "?",
                  optargg ? optargg : "", noo );
     }
@@ -610,10 +500,13 @@ duf_xoption_clarify_typed_gen( duf_config_cli_t * cli, const duf_longval_extende
     {
       DUF_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
                  duf_optstage_name( cli, istage ) );
-    /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+    /* ERRMAKE( OPTION_NOT_FOUND ); */
     }
 #endif
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
 /* DUF_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */
+  ER( OPTIONS,
+      xoption_clarify_typed_gen, duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg, unsigned noo,
+      duf_option_stage_t istage MAS_UNUSED, duf_option_source_t source MAS_UNUSED );
 }

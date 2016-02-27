@@ -13,12 +13,6 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-/* #include "duf_config_util.h" */
-
-/* #include "duf_utils.h"                                               (* duf_strtol_suff; duf_strtoll_suff etc. ♠ *) */
-
-/* #include "duf_option_defs.h" */
-
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */

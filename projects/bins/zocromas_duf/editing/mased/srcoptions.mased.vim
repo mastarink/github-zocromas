@@ -75,4 +75,4 @@ sfind optest.h
 " tab sfind duf_options_string.c
 " sfind duf_options_string.h
 
-tab sfind duf_maintenance_options.h
+" tab sfind duf_maintenance_options.h

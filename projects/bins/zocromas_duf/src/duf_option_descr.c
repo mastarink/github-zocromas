@@ -10,10 +10,8 @@
 #include "duf_tmp_types.h"
 
 #include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
-/* #include "duf_option_lfind.h" */
 
 #include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
-
 /* ###################################################################### */
 #include "duf_option_descr.h"
 /* ###################################################################### */
