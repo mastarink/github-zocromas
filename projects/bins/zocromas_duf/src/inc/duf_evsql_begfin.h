@@ -1,5 +1,5 @@
-#ifndef   MAS_EVSQL_BEGFIN_H
-# define MAS_EVSQL_BEGFIN_H
+#ifndef   MAS_DUF_EVSQL_BEGFIN_H
+# define MAS_DUF_EVSQL_BEGFIN_H
 
 # include "sql_beginning_types.h"                                    /* duf_bind_cb_t */
 

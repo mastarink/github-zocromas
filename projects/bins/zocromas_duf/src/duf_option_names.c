@@ -15,7 +15,7 @@
 /* ###################################################################### */
 
 char *
-duf_coption_names_d( duf_config_cli_t * cli, duf_option_code_t codeval, const char *delim )
+duf_coption_names_d( duf_config_cli_t * cli, duf_option_gen_code_t codeval, const char *delim )
 {
   duf_longval_extended_vtable_t **xvtables;
   const duf_longval_extended_vtable_t *xtable;
@@ -75,7 +75,7 @@ duf_coption_names_d( duf_config_cli_t * cli, duf_option_code_t codeval, const ch
 
 #if 0
 char *
-duf_coption_names( duf_option_code_t codeval )
+duf_coption_names( duf_option_gen_code_t codeval )
 {
   return duf_coption_names_d( codeval, NULL );
 }
@@ -84,7 +84,7 @@ duf_coption_names( duf_option_code_t codeval )
 static duf_tmp_t *cnames_tmp = NULL;
 
 const char *
-duf_coption_cnames_tmp( duf_config_cli_t * cli, int index, duf_option_code_t codeval, const char *delim )
+duf_coption_cnames_tmp( duf_config_cli_t * cli, int index, duf_option_gen_code_t codeval, const char *delim )
 {
   const char *x = NULL;
 

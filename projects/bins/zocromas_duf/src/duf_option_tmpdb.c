@@ -17,7 +17,7 @@
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
-#include "evsql_begfin.h"                                            /* duf_eval_sqlsq_cb */
+#include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq_cb */
 #include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 

@@ -74,7 +74,7 @@ noinst_HEADERS=motest_config.h \
 	duf_action_table.h \
 	duf_printn_defs.h \
 	duf_scan_types.h \
-	evsql_begfin.h evsql_selector.h evsql_selector_new.h \
+	duf_evsql_begfin.h duf_evsql_selector.h duf_evsql_selector_new.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_eval.h duf_sccbh_eval_fs.h duf_sccbh_eval_sql_set.h duf_sccb_scanstage.h \
 	duf_pdi_sccb_eval.h \
 	duf_sccb_eval.h duf_sccb_eval_std.h duf_sccb_begfin.h duf_sccbh_shortcuts.h \

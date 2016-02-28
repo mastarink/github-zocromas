@@ -84,7 +84,6 @@ duf_infile( duf_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const ch
   FILE *f = NULL;
   char *cfgpath = NULL;
 
-/* assert( duf_config ); */
   cfgpath = mas_normalize_path( at );
 
   assert( cfgpath );
@@ -275,7 +274,6 @@ SR( OPTIONS, infile_options_at_cfgfile, duf_config_cli_t * cli, duf_option_stage
 
 /*
  * get options/settings from standard configuration file(s)
- *    - global variable duf_config must be created/inited
  * ***********************************************
  * 1. set configuration file name (constant)
  * 2. call duf_infile_options_at_cfgfile
@@ -340,36 +338,6 @@ SR( OPTIONS, source_incfg_last_parse, duf_config_cli_t * cli, duf_option_stage_t
       duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 }
 
-#if 0
-int
-duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
-{
-  DUF_STARTR( r );
-  char *bfilename;
-
-  static const char *tail[] = {
-    [DUF_OPTION_SOURCE_NONE] = "none",
-    [DUF_OPTION_SOURCE_ENV] = "env",
-    [DUF_OPTION_SOURCE_STDIN] = "stdin",
-    [DUF_OPTION_SOURCE_STREAM] = "stream",
-    [DUF_OPTION_SOURCE_DUFFILE] = "file",
-    [DUF_OPTION_SOURCE_CFG] = "cfg",
-    [DUF_OPTION_SOURCE_CLI] = "cli",
-    [DUF_OPTION_SOURCE_INTERACTIVE] = "interactive",
-  };
-  if ( istage > DUF_OPTION_SOURCE_NONE && istage < DUF_OPTION_SOURCE_MAX )
-  {
-    bfilename = mas_strdup( DUF_CONFIG_FILE_NAME );
-    bfilename = mas_strcat_x( bfilename, "_" );
-    bfilename = mas_strcat_x( bfilename, tail[src] );
-    DOR( r, duf_incfgf_options( istage, bfilename, 1 /* optional */  ) );
-    mas_free( bfilename );
-  }
-
-  DUF_ENDR( r );
-}
-#endif
-
 /* per-stage config */
 SR( OPTIONS, source_incfg_stg_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
     duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
@@ -396,9 +364,8 @@ SR( OPTIONS, source_incfg_stg_parse, duf_config_cli_t * cli, duf_option_stage_t 
 }
 
 /* duf_source_stdin_parse - can be executed only once (direct stdin reading!)  */
-SR( OPTIONS,
-    source_stdin_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-    MAS_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
+SR( OPTIONS, source_stdin_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
+    duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
 /* DUF_STARTR( r ); */
   static int done = 0;
@@ -425,10 +392,8 @@ SR( OPTIONS,
   }
   DUF_TRACE( options, 22, "@@@@stdin options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 /* DUF_ENDR( r ); */
-  ER( OPTIONS,
-      source_stdin_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
-      MAS_UNUSED, duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod,
-      duf_option_source_code_t sourcecode MAS_UNUSED );
+  ER( OPTIONS, source_stdin_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive,
+      duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, duf_option_source_code_t sourcecode );
 }
 
 SR( OPTIONS, source_indirect_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,

@@ -39,6 +39,7 @@ PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 PKG_CHECK_MODULES([DEPSE], [zocromas_mas_trace  zocromas_mas_error zocromas_mas_wrap])
 PKG_CHECK_MODULES([DEPSS], [zocromas_mas_tools zocromas_mas_trace  zocromas_mas_error zocromas_mas_wrap] )
 PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools zocromas_mas_sqlite zocromas_mas_trace  zocromas_mas_error zocromas_mas_wrap])
+PKG_CHECK_MODULES([DEPSN], [zocromas_mas_multiconfig])
 
 # AC_CHECK_LIB([readline], [readline])
 MAS_LLLL=dufmod

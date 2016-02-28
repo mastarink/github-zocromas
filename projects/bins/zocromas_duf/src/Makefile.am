@@ -5,8 +5,8 @@ noinst_PROGRAMS=mtest mjtest motest
 motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_option_names.c duf_option_descr.c
 #duf_options.c duf_option_tmpdb.c
 #  duf_config_util_z.c duf_config_util.c
-motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@  -include motest_config.h
-motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@  @READLINE_LIBS@
+motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@ @DEPSN_CFLAGS@  -include motest_config.h
+motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@ @DEPSN_LIBS@  @READLINE_LIBS@
 
 
 mtest_SOURCES=duftest.c 
@@ -23,88 +23,169 @@ else
 endif
 
 
-lib_LTLIBRARIES = libzocromas_mas_multiconfig.la
-libzocromas_mas_multiconfig_la_SOURCES = duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_option_names.c duf_option_descr.c 
-libzocromas_mas_multiconfig_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
+# lib_LTLIBRARIES = libzocromas_mas_multiconfig.la
+# libzocromas_mas_multiconfig_la_SOURCES = duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_option_names.c duf_option_descr.c 
+# libzocromas_mas_multiconfig_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 
 
 #noinst_HEADERS=....cdef ....cdef
 
-zocromas_duf_SOURCES=				   \
+zocromas_duf_SOURCES= \
 	duf.c \
-	duf_maindb_info.c duf_maindb.c duf_options_all_stages.c		    \
-	duf_config.c duf_tracen_config.c duf_config_db.c duf_cfg_credel.c duf_config_credel.c duf_config_show_etc.c \
-	duf_config_trace_credel.c duf_config_trace.c \
-	duf_config_util.c duf_config_pointers.c duf_cfg_output_util.c duf_config_output_util.c \
-	duf_status.c	     \
-	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
-	duf_option_config_credel.c duf_option_config.c duf_options.c  duf_option_typed.c duf_option_typed_gen.c duf_option_typed_call.c  \
-	duf_option_cfind.c duf_option_lfind.c duf_xtended_table.c		\
-	duf_option_descr.c		\
-	duf_options_cli.c duf_options_env.c duf_options_file.c duf_options_interactive.c \
-	duf_option_extended.c duf_option_longopts.c duf_option_extended2string.c \
-	duf_option_names.c duf_option_stage.c duf_option_source.c duf_option_class.c duf_option_val.c duf_option_vtype.c \
-	duf_option_clarify.c duf_option_clarify_batch.c duf_option_tmpdb.c \
-	duf_option_clarify_new.c \
-							 \
-	duf_filedata.c					   \
-	duf_path2db.c    \
-	duf_path2dirid.c    \
-	duf_tags.c					     \
-	duf_sccbh_eval_leaf.c duf_sel_cb_leaf.c duf_sel_cb_node.c  duf_pstmt_levinfo.c		      \
-	duf_action_table.c \
-	evsql_begfin.c evsql_selector.c  evsql_selector_new.c \
-	duf_sccb.c duf_sccb_handle.c  duf_sccbh_eval.c duf_sccbh_eval_fs.c duf_sccbh_eval_sql_set.c duf_sccb_scanstage.c \
-	duf_pdi_sccb_eval.c \
-	duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
-	duf_sccbh_eval_all.c  \
-	\
-	duf_atable_sccb.c duf_pdi_atable_sccb_eval.c duf_atable_sccb_eval.c \
-	\
-	duf_context.c	\
-	duf_li.c duf_li_credel.c \
-	duf_levinfo.c duf_levinfo_init.c duf_levinfo_dbinit.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_count.c duf_levinfo_openclose.c duf_levinfo_stat.c \
-	duf_levinfo_updown.c duf_levinfo_context.c	\
-	duf_pathinfo_credel.c duf_pathinfo.c duf_pathinfo_depth.c duf_pathinfo_ref.c \
-	duf_pdi.c duf_pdi_global.c  duf_pdi_reinit.c duf_pdi_attach.c duf_pdi_credel.c \
-	duf_pdi_filters.c duf_pdi_depth.c duf_pdi_ref.c duf_pdi_pi_ref.c duf_pdi_context.c duf_pdi_stmt.c	\
-	duf_dirent.c 						    \
-	duf_sys_wrap.c duf_utils.c duf_match.c   \
-	duf_dh.c duf_service.c duf_print.c duf_fileinfo.c	     \
-								      \
-	duf_sql_error.c \
-	duf_sql_open.c duf_sql_positional.c duf_sql_prepared.c duf_sql_field.c duf_sql_bind.c 	       \
-									\
-	mod_dummy_uni.c	\
-	std_fieldsets.c std_selectors.c \
-	std_mod_sets.c \
-	sql_beginning_selected.c \
-	sql_update_selected.c \
-	sql_beginning_common.c \
-	sql_beginning_create.c \
-	sql_beginning_vacuum.c \
-	sql_beginning_tables.c \
-	duf_optimpl_help.c duf_optimpl_misc.c		\
-	data_optable_test.c	\
-	data_optable_flag.c	\
-	data_optable_flag_obsolete.c	\
-	data_optable_sflag.c	\
-	data_optable_str.c	\
-	data_optable_db.c	\
-	data_optable_redo_and_obsolete.c	\
-	data_optable_uplus.c	\
-	data_optable_debug.c	\
-	data_optable_filter.c	\
-	data_optable_help.c duf_optimpl_smart_help.c duf_optimpl_version.c	\
-	data_optable_trace.c	\
-	data_optable_format.c	\
-	data_optable_sccb.c  duf_optimpl_sccb.c \
+	data_optable.c \
+	data_optable_db.c \
+	data_optable_debug.c \
+	data_optable_experimental.c \
+	data_optable_filter.c \
+	data_optable_flag.c \
+	data_optable_flag_obsolete.c \
+	data_optable_format.c \
+	data_optable_fs.c \
+	data_optable_help.c \
 	data_optable_info.c \
 	data_optable_interactive.c \
 	data_optable_io.c \
-	data_optable_fs.c  duf_optimpl_fs.c \
-	data_optable_experimental.c \
-	data_optable.c
+	data_optable_redo_and_obsolete.c \
+	data_optable_sccb.c \
+	data_optable_sflag.c \
+	data_optable_str.c \
+	data_optable_test.c \
+	data_optable_trace.c \
+	data_optable_uplus.c \
+	duf_action_table.c \
+	duf_atable_sccb.c \
+	duf_atable_sccb_eval.c \
+	duf_cfg_credel.c \
+	duf_cfg_output_util.c \
+	duf_config.c \
+	duf_config_credel.c \
+	duf_config_db.c \
+	duf_config_output_util.c \
+	duf_config_pointers.c \
+	duf_config_show_etc.c \
+	duf_config_trace.c \
+	duf_config_trace_credel.c \
+	duf_config_util.c \
+	duf_context.c \
+	duf_dh.c \
+	duf_dirent.c \
+	duf_evsql_begfin.c \
+	duf_evsql_selector.c \
+	duf_evsql_selector_new.c \
+	duf_filedata.c \
+	duf_fileinfo.c \
+	duf_levinfo.c \
+	duf_levinfo_context.c \
+	duf_levinfo_count.c \
+	duf_levinfo_credel.c \
+	duf_levinfo_dbinit.c \
+	duf_levinfo_init.c \
+	duf_levinfo_openclose.c \
+	duf_levinfo_ref.c \
+	duf_levinfo_stat.c \
+	duf_levinfo_updown.c \
+	duf_li.c \
+	duf_li_credel.c \
+	duf_maindb.c \
+	duf_maindb_info.c \
+	duf_match.c \
+	duf_optimpl_fs.c \
+	duf_optimpl_help.c \
+	duf_optimpl_misc.c \
+	duf_optimpl_sccb.c \
+	duf_optimpl_smart_help.c \
+	duf_optimpl_version.c \
+	duf_option_cfind.c \
+	\
+	duf_option_clarify_batch.c \
+	duf_option_clarify.c \
+	duf_option_clarify_new.c \
+	duf_option_class.c \
+	duf_option_config.c \
+	duf_option_config_credel.c \
+	duf_option_descr.c \
+	duf_option_extended2string.c \
+	duf_option_extended.c \
+	duf_option_lfind.c \
+	duf_option_longopts.c \
+	duf_option_names.c \
+	duf_options_all_stages.c \
+	duf_options.c \
+	duf_options_cli.c \
+	duf_options_env.c \
+	duf_options_file.c \
+	duf_options_interactive.c \
+	\
+	duf_option_source.c \
+	duf_option_stage.c \
+	duf_option_tmpdb.c \
+	duf_option_typed.c \
+	duf_option_typed_call.c \
+	duf_option_typed_gen.c \
+	duf_option_val.c \
+	duf_option_vtype.c \
+	\
+	duf_path2db.c \
+	duf_path2dirid.c \
+	duf_pathinfo.c \
+	duf_pathinfo_credel.c \
+	duf_pathinfo_depth.c \
+	duf_pathinfo_ref.c \
+	duf_pdi_atable_sccb_eval.c \
+	duf_pdi_attach.c \
+	duf_pdi.c \
+	duf_pdi_context.c \
+	duf_pdi_credel.c \
+	duf_pdi_depth.c \
+	duf_pdi_filters.c \
+	duf_pdi_global.c \
+	duf_pdi_pi_ref.c \
+	duf_pdi_ref.c \
+	duf_pdi_reinit.c \
+	duf_pdi_sccb_eval.c \
+	duf_pdi_stmt.c \
+	duf_print.c \
+	duf_pstmt_levinfo.c \
+	duf_sccb_begfin.c \
+	duf_sccb.c \
+	duf_sccb_eval.c \
+	duf_sccb_eval_std.c \
+	duf_sccb_handle.c \
+	duf_sccbh_eval_all.c \
+	duf_sccbh_eval.c \
+	duf_sccbh_eval_fs.c \
+	duf_sccbh_eval_leaf.c \
+	duf_sccbh_eval_sql_set.c \
+	duf_sccb_scanstage.c \
+	duf_sel_cb_leaf.c \
+	duf_sel_cb_node.c \
+	duf_service.c \
+	duf_sql_bind.c \
+	duf_sql_error.c \
+	duf_sql_field.c \
+	duf_sql_open.c \
+	duf_sql_positional.c \
+	duf_sql_prepared.c \
+	duf_status.c \
+	duf_sys_wrap.c \
+	duf_tags.c \
+	duf_tracen_config.c \
+	duf_ufilter_bind.c \
+	duf_ufilter.c \
+	duf_ufilter_ref.c \
+	duf_utils.c \
+	duf_xtended_table.c \
+	mod_dummy_uni.c \
+	sql_beginning_common.c \
+	sql_beginning_create.c \
+	sql_beginning_selected.c \
+	sql_beginning_tables.c \
+	sql_beginning_vacuum.c \
+	sql_update_selected.c \
+	std_fieldsets.c \
+	std_mod_sets.c \
+	std_selectors.c
+
 
 #	duf_item_match2.c
 #	duf_file_pathid2.c
@@ -116,8 +197,8 @@ zocromas_duf_SOURCES=				   \
 #	duf_sql_field1.c
 #	duf_uni_scan1.c
 
-zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
-zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@    @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@ -ldl
+zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @DEPSN_CFLAGS@ @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@  @LIBEXIF_CFLAGS@
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@        @DEPS_LIBS@ @DEPSN_LIBS@     @LIBCRYPTO_LIBS@    @SQLITE3_LIBS@    @LIBEXIF_LIBS@    @LIBMAGIC_LIBS@ @ZLIB_LIBS@ @READLINE_LIBS@ -ldl
 
 
 

@@ -1,5 +1,5 @@
-#ifndef MAS_EVSQL_SELECTOR_NEW_H
-#  define MAS_EVSQL_SELECTOR_NEW_H
+#ifndef MAS_DUF_EVSQL_SELECTOR_NEW_H
+#  define MAS_DUF_EVSQL_SELECTOR_NEW_H
 
 #include "duf_hook_types.h" /* duf_sql_set_t */
 

@@ -25,11 +25,11 @@
 #include "duf_pdi_global.h"
 #include "duf_pdi_stmt.h"
 
-/* #include "evsql_selector.h" */
-#include "evsql_selector_new.h"
+/* #include "duf_evsql_selector.h" */
+#include "duf_evsql_selector_new.h"
 
 /* ###################################################################### */
-#include "evsql_begfin.h"
+#include "duf_evsql_begfin.h"
 /* ###################################################################### */
 
 #if 0

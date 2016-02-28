@@ -427,6 +427,7 @@ SR( OPTIONS,
       case DUF_OPTION_VTYPE_TDB:                                    /* stage SETUP */
         DUF_TRACE( options, 70, "vtype TDB" );
 
+	  /* TODO: reserved: out-of-multiconfig-library, weak - too expensive to include into tmpdb_add multiconfig library */
         if ( QNOERR )
         {
           if ( noo )
@@ -436,7 +437,7 @@ SR( OPTIONS,
 #endif
           }
           else if ( optargg && *optargg && duf_tmpdb_add )
-            CR( tmpdb_add, cli, extended->o.val, extended->o.name, optargg );
+            IF_CR( tmpdb_add, cli, extended->o.val, extended->o.name, optargg ); 
         }
         break;
       /*

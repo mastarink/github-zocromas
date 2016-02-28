@@ -23,10 +23,8 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 
-/* #include "evsql_selector.h" */
-#include "evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"
 
-/* #include "duf_sql.h" */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 #include "duf_sql_prepared.h"
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */

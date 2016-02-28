@@ -1,8 +1,8 @@
-find evsql_begfin.c
-sfind evsql_begfin.h
+find duf_evsql_begfin.c
+sfind duf_evsql_begfin.h
 
-tab sfind evsql_selector.c
-sfind evsql_selector.h
+tab sfind duf_evsql_selector.c
+sfind duf_evsql_selector.h
 
-tab sfind evsql_selector_new.c
-sfind evsql_selector_new.h
+tab sfind duf_evsql_selector_new.c
+sfind duf_evsql_selector_new.h

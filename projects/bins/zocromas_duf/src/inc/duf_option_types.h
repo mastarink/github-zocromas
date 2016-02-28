@@ -22,6 +22,8 @@
 /* };                  */
 typedef struct option duf_option_t;
 
+typedef long duf_option_gen_code_t;
+
 typedef enum
 {
 # define ENUM_WRAP(_n, ...)       DUF_OPTION_VTYPE_ ## _n __VA_ARGS__,

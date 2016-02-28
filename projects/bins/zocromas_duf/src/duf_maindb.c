@@ -41,10 +41,8 @@
 
 #include "duf_maindb_info.h"
 
-#include "evsql_begfin.h"
-/* #include "evsql_selector.h" */
+#include "duf_evsql_begfin.h"
 
-/* #include "sql_tables_defs.h" */
 #include "sql_beginning_common.h"
 #include "sql_beginning_tables.h"
 #include "sql_beginning_vacuum.h"

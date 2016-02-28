@@ -11,7 +11,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_sccb.h"
-#include "evsql_begfin.h"
+#include "duf_evsql_begfin.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */

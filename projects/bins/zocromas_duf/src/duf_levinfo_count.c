@@ -24,8 +24,7 @@
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 #include "duf_sql_prepared.h"
 
-/* #include "evsql_selector.h" */
-#include "evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"
 
 #include "duf_ufilter_bind.h"
 

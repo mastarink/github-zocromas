@@ -40,7 +40,6 @@
 
 #include "duf_path2db.h"
 
-/* #include "evsql_selector.h" */
 #include "duf_pdi_attach.h"
 
 /* ###################################################################### */
