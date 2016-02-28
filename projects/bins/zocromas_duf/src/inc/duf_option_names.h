@@ -2,7 +2,7 @@
 # define MAS_DUF_OPTION_NAMES_H
 
 # include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
-# include "duf_options_enum.h"                                       /* duf_option_gen_code_t ♠ */
+/* # include "duf_options_enum.h"                                       (* duf_option_code_t ♠ *) */
 # include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
 
 /* naming convention:

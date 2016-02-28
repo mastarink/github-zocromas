@@ -19,7 +19,7 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 

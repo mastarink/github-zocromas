@@ -31,7 +31,7 @@
 /* ###################################################################### */
 
 MAS_UNUSED static char *
-duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_code_t codeval, int optindd, int optoptt )
+duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int optindd, int optoptt )
 {
   const char *arg;
   static const char *msg = "Invalid option";
@@ -51,7 +51,7 @@ duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_code_t codeval, int 
 
 #if 0
 static void
-duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused MAS_UNUSED )
+duf_clrfy_cli_opts_msg( duf_option_gen_code_t codeval, int optindd, int optoptt, const char *shorts_unused MAS_UNUSED )
 {
 /* const char *arg; */
 /* static const char *msg = "Invalid option"; */
@@ -96,8 +96,8 @@ duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, con
 #endif
 
 static
-SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_code_t codeval, duf_option_stage_t istage,
-    duf_option_adata_t * paod )
+SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_gen_code_t codeval,
+    duf_option_gen_code_t maxcodeval, duf_option_stage_t istage, duf_option_adata_t * paod )
 {
 
   DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c')  li:%d; '%s'/'%s' oi:%d; oo:%d; oe:%d; stage:%s" /* */
@@ -147,7 +147,7 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t
       if ( longitem )
         longoptname = longitem->name;
       if ( !longoptname )
-        longoptname = duf_lcoption_find_name_at_std( cli, codeval, &longindex, QPERRIND );
+        longoptname = duf_lcoption_find_name_at_std( cli, codeval, maxcodeval, &longindex, QPERRIND );
       assert( ( longindex >= 0 && longoptname ) || ( longindex < 0 && !longoptname ) );
       if ( longindex < 0 /* && codeval == '?' */  && !longoptname && qarg && qarg[0] == '-' && qarg[1] == '-' && qarg[2] != '-' )
         longoptname = qarg + 2;
@@ -171,8 +171,8 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t
     }
 #endif
   }
-  ER( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_code_t codeval, duf_option_stage_t istage,
-      duf_option_adata_t * paod );
+  ER( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t * longitem, duf_option_gen_code_t codeval,
+      duf_option_gen_code_t maxcodeval, duf_option_stage_t istage, duf_option_adata_t * paod );
 }
 
 static
@@ -206,7 +206,8 @@ SR( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_sta
 
 /* 20160113.124316 */
 static
-SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_stage_t istage, duf_option_adata_t * paod )
+SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_gen_code_t maxcodeval, duf_option_stage_t istage,
+    duf_option_adata_t * paod )
 {
 /* DUF_STARTR( r ); */
 
@@ -226,7 +227,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
   DUF_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( cli, istage ), carg->argc );
 
   {
-    duf_option_code_t codeval;
+    duf_option_gen_code_t codeval;
     duf_option_t *longtable;
 
     longtable = duf_cli_options_get_longopts_table( cli );
@@ -247,7 +248,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
         optindd = optind;
       /* codeval >=0 && codeval!='?' && longindex<0 means short => in this case longindex=...  */
 #if 1
-        CR( lcoption_parse, cli, longindex, longindex >= 0 ? &longtable[longindex] : NULL, codeval, istage, paod );
+        CR( lcoption_parse, cli, longindex, longindex >= 0 ? &longtable[longindex] : NULL, codeval, maxcodeval, istage, paod );
 /* TODO */
 #else
         const duf_longval_extended_t *extended = NULL;
@@ -264,7 +265,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_s
 /* DUF_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
 /* DUF_ENDR( r ); */
-  ER( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_stage_t istage, duf_option_adata_t * paod );
+  ER( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_gen_code_t maxcodeval, duf_option_stage_t istage, duf_option_adata_t * paod );
 }
 
 SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
@@ -275,7 +276,7 @@ SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( cli, istage ) );
 
-  CR( cli_parse, cli, duf_cli_options_get_shorts( cli ), istage, paod );
+  CR( cli_parse, cli, duf_cli_options_get_shorts( cli ), duf_cli_options_get_maxcodeval( cli ), istage, paod );
 
   if ( istage < DUF_OPTION_STAGE_SETUP )
     DUF_CLEAR_ERROR( QERRIND, DUF_ERROR_OPTION_NOT_FOUND );

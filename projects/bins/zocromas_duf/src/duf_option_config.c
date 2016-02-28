@@ -22,7 +22,7 @@
 #include "duf_option_defs.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
-#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 
 /* ###################################################################### */
 #include "duf_option_config_credel.h"
@@ -172,7 +172,12 @@ duf_cli_options_config_env_var_name( const duf_config_cli_t * cli )
   }
   return *envvarname ? envvarname : "MSH_DUF_OPTIONS";
 }
-
+duf_option_gen_code_t
+duf_cli_options_get_maxcodeval( const duf_config_cli_t * cli )
+{
+/* return cli_options_shorts; */
+  return cli ? cli->maxcodeval : 0;
+}
 const char *
 duf_cli_options_get_shorts( const duf_config_cli_t * cli )
 {
@@ -303,7 +308,7 @@ duf_longval_extended_vtable_t **
 duf_cli_options_xtable_list2xvtable( const duf_config_cli_t * cli, const duf_longval_extended_table_t * const *xtable_multi )
 {
   unsigned numtabs = 0;
-  duf_option_code_t maxcodeval = 0;
+  duf_option_gen_code_t maxcodeval = 0;
   duf_longval_extended_vtable_t **vtable_multi = NULL;
 
   for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );

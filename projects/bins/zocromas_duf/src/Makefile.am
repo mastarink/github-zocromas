@@ -96,6 +96,7 @@ zocromas_duf_SOURCES= \
 	duf_optimpl_smart_help.c \
 	duf_optimpl_version.c \
 	duf_optimpl_extended2string.c \
+	duf_optimpl_val.c \
 	duf_option_cfind.c \
 	\
 	duf_option_clarify_batch.c \
@@ -122,7 +123,6 @@ zocromas_duf_SOURCES= \
 	duf_option_typed.c \
 	duf_option_typed_call.c \
 	duf_option_typed_gen.c \
-	duf_option_val.c \
 	duf_option_vtype.c \
 	\
 	duf_path2db.c \

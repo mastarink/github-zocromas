@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 /* man getopt_long */

@@ -21,12 +21,32 @@
 /* #include "duf_option_defs.h" */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
-#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 
 /* ###################################################################### */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 #include "duf_option_config_credel.h"
 /* ###################################################################### */
+
+static duf_option_gen_code_t
+duf_cli_option_count_maxcodeval( duf_config_cli_t * cli MAS_UNUSED, duf_longval_extended_vtable_t * *xvtables )
+{
+  const duf_longval_extended_vtable_t *xtable;
+  duf_option_gen_code_t maxcodeval = 0;
+
+  while ( ( xtable = *xvtables++ ) )
+  {
+    const duf_longval_extended_t *xtended;
+
+    xtended = xtable->xlist;
+    while ( xtended->o.name )
+    {
+      if (maxcodeval< xtended->o.val)maxcodeval=xtended->o.val;
+      xtended++;
+    }
+  }
+  return maxcodeval;
+}
 
 static char *
 duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_extended_vtable_t * *xvtables )
@@ -101,6 +121,7 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
    * */
     cli->xvtable_multi = duf_cli_options_xtable_list2xvtable( cli, xtable_list ); /* allocates */
     cli->shorts = duf_cli_option_shorts_create( cli, cli->xvtable_multi );
+    cli->maxcodeval = duf_cli_option_count_maxcodeval( cli, cli->xvtable_multi );
     cli->varfunc = varfunc;
 
     cli->longopts_table = duf_options_create_longopts_table( cli->xvtable_multi );

@@ -1,7 +1,7 @@
 #include <stddef.h>
 
 #include "duf_optable_def.h"
-#include "duf_options_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
 
 #include "duf_optimpl_sccb.h"
 

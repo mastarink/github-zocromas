@@ -22,7 +22,7 @@
 /* };                  */
 typedef struct option duf_option_t;
 
-typedef long duf_option_gen_code_t;
+typedef int duf_option_gen_code_t;
 
 typedef enum
 {

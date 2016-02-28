@@ -20,3 +20,6 @@ sfind duf_optimpl_version.h
 tab sfind duf_optimpl_extended2string.c
 sfind duf_optimpl_extended2string.h
 
+tab sfind duf_optimpl_val.c
+sfind duf_optimpl_val.h
+

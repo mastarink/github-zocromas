@@ -12,11 +12,12 @@
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
-#include "duf_option_val.h"                                          /* duf_codeval2string ♠ */
 #include "duf_option_vtype.h"                                        /* duf_optvtype2string ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
+
+#include "duf_optimpl_val.h"                                          /* duf_codeval2string ♠ */
 
 /* ###################################################################### */
 #include "duf_optimpl_extended2string.h"                                     

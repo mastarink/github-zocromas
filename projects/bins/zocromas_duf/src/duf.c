@@ -62,6 +62,7 @@
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
 
+
 #include <mastar/error/mas_error_reporting.h>
 
 #include "duf_option_stage.h"
@@ -73,6 +74,7 @@
 #include "duf_maindb.h"
 #include "duf_pdi_global.h"
 
+#include "duf_optimpl_enum.h" /* MEMUSAGE */
 /* צאַצקע */
 #include "duf_experiment.h"
 

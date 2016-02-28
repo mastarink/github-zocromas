@@ -74,8 +74,9 @@ tab sfind duf_option_types.h
 sfind duf_option_data_types.h
 sfind duf_option_fun_types.h
 sfind duf_option_class_types.h
-sfind duf_options_enum.h
 sfind duf_option_defs.h
+
+tab sfind duf_optimpl_enum.h
 tab sfind duf_option_source_types.h
 tab sfind duf_option_stage_types.h
 

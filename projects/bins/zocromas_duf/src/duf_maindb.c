@@ -48,6 +48,8 @@
 #include "sql_beginning_vacuum.h"
 #include "sql_beginning_create.h"
 
+#include "duf_optimpl_enum.h"
+
 /* ###################################################################### */
 #include "duf_maindb.h"
 /* ###################################################################### */

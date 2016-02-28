@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTIONS_ENUM_H
-#  define MAS_DUF_OPTIONS_ENUM_H
+#ifndef MAS_DUF_OPTIMPL_ENUM_H
+#  define MAS_DUF_OPTIMPL_ENUM_H
 
 /* #  define DUF_DECLARE_OPTION(_name)                                         */
 /* #  define DUF_DECLARE_OPTION_V(_name, _val) DUF_OPTION_VAL_ ## _name = _val */

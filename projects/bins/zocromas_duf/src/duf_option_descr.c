@@ -21,9 +21,9 @@
  *
  * */
 
-/* -= by duf_option_code_t codeval =- */
+/* -= by duf_option_gen_code_t codeval =- */
 static const char *
-_duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_code_t codeval, int *pr )
+_duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int *pr )
 {
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
@@ -36,7 +36,7 @@ _duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_code_t codev
 }
 
 const char *
-duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_code_t codeval, int *pr )
+duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int *pr )
 {
   const char *ph = _duf_coption_xfind_help_at_stdx( cli, codeval, pr );
 

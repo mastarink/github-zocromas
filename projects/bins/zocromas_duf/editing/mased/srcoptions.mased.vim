@@ -53,9 +53,6 @@ sfind duf_option_stage.h
 tab sfind duf_option_class.c
 sfind duf_option_class.h
 
-tab sfind duf_option_val.c
-sfind duf_option_val.h
-
 tab sfind duf_option_vtype.c
 sfind duf_option_vtype.h
 

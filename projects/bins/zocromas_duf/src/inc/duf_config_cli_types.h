@@ -21,6 +21,7 @@
 struct duf_config_cli_s
 {
   char *shorts;
+  duf_option_gen_code_t maxcodeval;
   mas_cargvc_t carg;
   mas_argvc_t targ;
   int targ_offset;
