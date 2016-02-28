@@ -29,13 +29,14 @@
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"
 #include "duf_option_extended.h"
-#include "duf_option_extended2string.h"
 #include "duf_option_lfind.h"
 
 #include "duf_option_names.h"
 #include "duf_option_class.h"
 #include "duf_option_vtype.h"
 #include "duf_option_config.h"
+
+#include "duf_optimpl_extended2string.h"
 
 /* ###################################################################### */
 #include "duf_optimpl_smart_help.h"

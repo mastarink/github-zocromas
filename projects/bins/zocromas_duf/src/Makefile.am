@@ -95,6 +95,7 @@ zocromas_duf_SOURCES= \
 	duf_optimpl_sccb.c \
 	duf_optimpl_smart_help.c \
 	duf_optimpl_version.c \
+	duf_optimpl_extended2string.c \
 	duf_option_cfind.c \
 	\
 	duf_option_clarify_batch.c \
@@ -104,7 +105,6 @@ zocromas_duf_SOURCES= \
 	duf_option_config.c \
 	duf_option_config_credel.c \
 	duf_option_descr.c \
-	duf_option_extended2string.c \
 	duf_option_extended.c \
 	duf_option_lfind.c \
 	duf_option_longopts.c \

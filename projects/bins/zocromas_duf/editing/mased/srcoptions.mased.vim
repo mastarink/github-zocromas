@@ -62,9 +62,6 @@ sfind duf_option_vtype.h
 tab sfind duf_option_extended.c
 sfind duf_option_extended.h
 
-tab sfind duf_option_extended2string.c
-sfind duf_option_extended2string.h
-
 tab sfind duf_option_longopts.c
 sfind duf_option_longopts.h
 

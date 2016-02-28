@@ -31,11 +31,12 @@
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 /* #include "duf_option_extended.h" */
-#include "duf_option_extended2string.h"
 
 #include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
 #include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+
+#include "duf_optimpl_extended2string.h"
 
 /* ###################################################################### */
 #include "duf_optimpl_help.h"
