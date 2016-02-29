@@ -95,7 +95,7 @@ duf_main_db_create_tables( void )
 {
   DUF_STARTR( r );
 /* DOR( r, duf_check_tables(  ) ); */
-  if ( duf_dry_run(  ) )
+  if ( mas_dry_run(  ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                 DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_CREATE_TABLES ) );
   else
@@ -119,7 +119,7 @@ duf_main_db_pre_action( void )
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_drop_tables ) )
   {
     DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
-    if ( duf_dry_run(  ) )
+    if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
     else
@@ -135,7 +135,7 @@ duf_main_db_pre_action( void )
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_clean_tables ) )
   {
     DUF_TRACE( explain, 0, "clean (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CLEAN_TABLES ) );
-    if ( duf_dry_run(  ) )
+    if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_CLEAN_TABLES ) );
     else
@@ -164,7 +164,7 @@ duf_main_db_pre_action( void )
   /* static const char *sql = "VACUUM"; */
 
   /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_VACUUM ) ); */
-    if ( duf_dry_run(  ) )
+    if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_VACUUM ) );
     else

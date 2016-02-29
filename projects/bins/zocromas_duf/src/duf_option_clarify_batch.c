@@ -70,13 +70,8 @@ SR( OPTIONS, boption_frag_xclarify_at_stdx, duf_config_cli_t * cli, const char *
 SR( OPTIONS, boption_xclarify_at_stdx, duf_config_cli_t * cli, char value_separator, duf_option_stage_t istage, duf_option_source_t source,
     const char *cmdstr, char delim, duf_option_adata_t * paod )
 {
-#if 0
-  if ( !delim )
-    delim = duf_option_delimiter(  );
-#else
   if ( !delim )
     delim = duf_cli_options_delimiter( cli );
-#endif
   if ( !delim )
     delim = ':';
   if ( cmdstr && *cmdstr == ':' )

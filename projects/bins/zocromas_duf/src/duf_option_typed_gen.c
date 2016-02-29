@@ -17,9 +17,6 @@
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *)                        */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                                          */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
@@ -134,7 +131,7 @@ duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli, const duf_longval_ext
   void *byte_ptr = NULL;
 
   MAST_TRACE( options, 60, "to switch by extended->relto=%d", extended->relto );
-/* TODO relto=duf_get_config_puz_offset etc. */
+/* TODO relto=..._get_config_puz_offset etc. */
   switch ( extended->relto )
   {
   case DUF_OFFSET_none:
@@ -431,7 +428,7 @@ SR( OPTIONS,
           if ( noo )
           {
 #if 0
-            duf_tmpdb_delete( extended->o.name, optargg );
+            ..._tmpdb_delete( extended->o.name, optargg );
 #endif
           }
           else if ( optargg && *optargg && F2N( duf_, tmpdb_add ) )
@@ -478,12 +475,6 @@ SR( OPTIONS,
         {
           MAST_TRACE( io, 0, "DUF_OUTPUTFILE (%s) : %d", extended->o.name, extended->call.value.u );
           DUF_OUTPUTFILE( cli, noo, mas_base_output_t /* _typ */ , /* _stream_dot */ , stderr /* _defout */  );
-        /* {                                                                                 */
-        /*   char start_time[128] = "??";                                                    */
-        /*                                                                                   */
-        /*   duf_strflocaltime( start_time, sizeof( start_time ), "%Y%m%d.%H:%M:%S", NULL ); */
-        /*   PF( "%s", start_time );                                                         */
-        /* }                                                                                 */
 
         /* ERRMAKE( OPTION_NOT_PARSED); */
         }

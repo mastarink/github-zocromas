@@ -17,27 +17,27 @@
 /* ###################################################################### */
 
 int
-duf_output_level( void )
+mas_output_level( void )
 {
   return duf_config ? duf_config->opt.output.stream.level : 0;
 }
 
 FILE *
-duf_output_file( void )
+mas_output_file( void )
 {
-  return duf_output_file_c( duf_config );
+  return mas_output_file_c( duf_config );
 }
 
 int
-duf_output_force_color( void )
+mas_output_force_color( void )
 {
-  return duf_output_force_color_c( duf_config );
+  return mas_output_force_color_c( duf_config );
 }
 
 int
-duf_output_nocolor( void )
+mas_output_nocolor( void )
 {
-  return duf_output_nocolor_c( duf_config );
+  return mas_output_nocolor_c( duf_config );
 }
 
 int

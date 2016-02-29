@@ -47,7 +47,7 @@ duf_config_optionally_show( void )
 {
   DUF_STARTR( r );
 
-  if ( duf_verbose && duf_verbose(  ) > 1 )
+  if ( mas_verbose && mas_verbose(  ) > 1 )
   {
     DOR( r, duf_config_show(  ) );
   }

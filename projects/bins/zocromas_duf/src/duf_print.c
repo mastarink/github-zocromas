@@ -799,7 +799,7 @@ duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, 
 #if 0
 /* out = duf_config && duf_config->opt.output.out ? duf_config->opt.output.out : stdout; */
 #else
-  out = duf_output_file(  );
+  out = mas_output_file(  );
 #endif
 
   buffer = duf_sformat_file_info( pdi, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb, suffix_scb, max_width,

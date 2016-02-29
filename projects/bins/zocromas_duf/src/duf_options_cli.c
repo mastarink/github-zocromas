@@ -42,7 +42,7 @@ duf_clrfy_cli_opts_msgs( duf_config_cli_t * cli, duf_option_gen_code_t codeval, 
 #else
   arg = duf_cli_options_get_cargvn( cli, optindd );
 #endif
-  if ( duf_verbose && duf_verbose(  ) > 0 )
+  if ( mas_verbose && mas_verbose(  ) > 0 )
     snprintf( buffer, sizeof( buffer ), "%s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
   else
     snprintf( buffer, sizeof( buffer ), " %s '%s'", msg, arg );
@@ -60,7 +60,7 @@ duf_clrfy_cli_opts_msg( duf_option_gen_code_t codeval, int optindd, int optoptt,
 # if 0
   if ( optoptt && codeval > ' ' && codeval <= 'z' )
   {
-    if ( !duf_verbose || duf_verbose(  ) == 0 )
+    if ( !mas_verbose || mas_verbose(  ) == 0 )
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ V %s '-%c'      ", msg, optoptt );
     else
     {
@@ -74,7 +74,7 @@ duf_clrfy_cli_opts_msg( duf_option_gen_code_t codeval, int optindd, int optoptt,
 # endif
   {
 # if 0
-    if ( duf_verbose && duf_verbose(  ) > 0 )
+    if ( mas_verbose && mas_verbose(  ) > 0 )
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s' arg[%d]=\"%s\" [%u/%c/%c]", msg, arg, optindd, arg, codeval, codeval, optoptt );
     else
       _DUF_SHOW_ERROR( "@@@@@@@@@@@ %s '%s'", msg, arg );

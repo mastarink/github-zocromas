@@ -7,20 +7,20 @@
 /* ###################################################################### */
 
 FILE *
-duf_output_file_c( const duf_config_t * cfg )
+mas_output_file_c( const duf_config_t * cfg )
 {
   return cfg && cfg->opt.output.stream.out ? cfg->opt.output.stream.out : stdout;
 }
 
 int
-duf_output_force_color_c( const duf_config_t * cfg )
+mas_output_force_color_c( const duf_config_t * cfg )
 {
   return cfg ? cfg->opt.output.stream.v.flag.force_color : 0;
 /* return DUF_ACTG_FLAG( force_color ); */
 }
 
 int
-duf_output_nocolor_c( const duf_config_t * cfg )
+mas_output_nocolor_c( const duf_config_t * cfg )
 {
   return cfg ? cfg->opt.output.stream.v.flag.nocolor : 0;
 /* return DUF_ACTG_FLAG( nocolor ); */

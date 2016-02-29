@@ -17,7 +17,7 @@
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
-#include "duf_config_output_util.h"                                  /* duf_output_force_color ; duf_output_nocolor */
+#include "duf_config_output_util.h"                                  /* mas_output_force_color ; mas_output_nocolor */
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
@@ -219,15 +219,15 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           int c1 MAS_UNUSED;
           int c2 MAS_UNUSED;
 
-          c1 = duf_output_force_color(  );
-          c2 = duf_output_nocolor(  );
+          c1 = mas_output_force_color(  );
+          c2 = mas_output_nocolor(  );
           T( "%d:%d", c1, c2 );
           assert( 0 );
         }
 #endif
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
+                                              duf_config->opt.output.max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
       if ( !over )
       {
@@ -257,7 +257,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
+                                              duf_config->opt.output.max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
       DUF_PUTSL( 0 );
     }
@@ -368,7 +368,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
           sformat_pref = " %6s  %4s%P";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
+                                              duf_config->opt.output.max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
       if ( !over )
       {
@@ -398,7 +398,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
           sformat = "%f\n";
         if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
           slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              duf_config->opt.output.max_width, duf_output_force_color(  ), duf_output_nocolor(  ), &rwidth, &over );
+                                              duf_config->opt.output.max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
       DUF_PUTSL( 0 );
     }

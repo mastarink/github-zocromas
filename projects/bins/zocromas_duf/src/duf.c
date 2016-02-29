@@ -40,6 +40,7 @@
 #include <dlfcn.h>
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/error/mas_error_reporting.h>
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -58,16 +59,24 @@
 
 #include "duf_config_credel.h"
 
+#if 1
 #include "duf_options.h"
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
 
-
-#include <mastar/error/mas_error_reporting.h>
-
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 #include "duf_options_all_stages.h"
+#else
+#include <mastar/multiconfig/muc_options.h>
+#include <mastar/multiconfig/muc_option_names.h>
+#include <mastar/multiconfig/muc_option_defs.h>
+
+#include <mastar/multiconfig/muc_option_stage.h>
+#include <mastar/multiconfig/muc_option_source.h>
+#include <mastar/multiconfig/muc_options_all_stages.h>
+
+#endif
 
 #include "duf_levinfo_ref.h"
 
@@ -122,13 +131,13 @@ constructor_main( void )
 
 #if 1
 int
-duf_verbose( void )
+mas_verbose( void )
 {
   return duf_config ? duf_config->opt.flow.verbose : 0;
 }
 
 int
-duf_dry_run( void )
+mas_dry_run( void )
 {
   return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0;
 }

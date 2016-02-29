@@ -158,7 +158,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --same-md5" );
   DUF_PRINTF( 0, "Debug ----------" );
   DUF_PRINTF( 0, "  --debug" );
-  DUF_PRINTF( 0, "  -v, --verbose=%d", duf_verbose(  ) );
+  DUF_PRINTF( 0, "  -v, --verbose=%d", MASE_STD_VERBOSE_LEVEL );
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
   DUF_PRINTF( 0, "Trace ----------" );
