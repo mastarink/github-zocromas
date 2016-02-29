@@ -19,7 +19,6 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
@@ -312,7 +311,7 @@ SR( OPTIONS, source_incfg_parse, duf_config_cli_t * cli, duf_option_stage_t ista
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg options; stage:%s", duf_optstage_name( cli, istage ) );
-  CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), NULL, 0, paod,
+  CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), NULL, !cli->mandatory_config /* optional */, paod,
       DUF_OPTION_SOURCE_NONE /* use default: DUF_OPTION_SOURCE_CFG */  );
   DUF_TRACE( options, 22, "@@@@incfg options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
@@ -329,7 +328,7 @@ SR( OPTIONS, source_incfg_last_parse, duf_config_cli_t * cli, duf_option_stage_t
 
   DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   DUF_TRACE( options, 20, "@@@@incfg `last` options; stage:%s", duf_optstage_name( cli, istage ) );
-  CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), "last", 1, paod, DUF_OPTION_SOURCE_CFGLAST );
+  CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), "last", 1 /* optional */ , paod, DUF_OPTION_SOURCE_CFGLAST );
   DUF_TRACE( options, 22, "@@@@incfg `last` options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
 /* DUF_ENDR( r ); */
@@ -352,8 +351,7 @@ SR( OPTIONS, source_incfg_stg_parse, duf_config_cli_t * cli, duf_option_stage_t 
     sn = duf_optstage_name( cli, istage );
     if ( sn )
     {
-      CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), sn, 1 /* optional */ ,
-          paod, DUF_OPTION_SOURCE_CFGSTG );
+      CR( incfgf_options, cli, istage, duf_cli_options_config_file_name( cli ), sn, 1 /* optional */ , paod, DUF_OPTION_SOURCE_CFGSTG );
     }
   }
   DUF_TRACE( options, 22, "@@@@incfg stg options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );

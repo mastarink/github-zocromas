@@ -176,7 +176,7 @@
 
   ENUM_WRAPP( ALL_TRACE, trace, all				)
   ENUM_WRAPP( NONEW_TRACE, trace, nonew				)
-#include "duf_options_enum_trace.def"
+#include "duf_optimpl_enum_trace.def"
   /* trace i/o */
   ENUM_WRAP( TRACE_FUN_WIDTH					)
   ENUM_WRAP( TRACE_FILE						)
@@ -302,10 +302,10 @@
   ENUM_WRAP( FILTER_MAXSAME_MIME				)
 #else
 #define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) ENUM_WRAP( FILTER_ ## _id) ENUM_WRAP( FILTER_MIN ## _id) ENUM_WRAP( FILTER_MAX ## _id)
-#include "duf_options_enum_filter_minmax.def"
+#include "duf_optimpl_enum_filter_minmax.def"
 #undef   ENUM_WRAPMM
 #define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) ENUM_WRAP( FILTER_ ## _id) ENUM_WRAP( FILTER_MIN ## _id) ENUM_WRAP( FILTER_MAX ## _id)
-#include "duf_options_enum_filter_same_minmax.def"
+#include "duf_optimpl_enum_filter_same_minmax.def"
 #undef   ENUM_WRAPMM
 #endif
   ENUM_WRAP( FILTER_FILENAME					)

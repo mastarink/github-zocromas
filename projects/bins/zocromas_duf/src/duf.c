@@ -74,6 +74,7 @@
 #include "duf_maindb.h"
 #include "duf_pdi_global.h"
 
+#include "duf_optimpl_defs.h"
 #include "duf_optimpl_enum.h" /* MEMUSAGE */
 /* צאַצקע */
 #include "duf_experiment.h"
@@ -232,8 +233,7 @@ static int
 duf_main( int argc, char **argv )
 {
   DUF_STARTR( r );
-/* fprintf(stderr, "◀"  ); */
-  duf_config_create( argc, argv );
+  duf_config_create( argc, argv, 1 /* mandatory_config */ );
 
   assert( duf_config );
 /* raise( SIGABRT ); */
@@ -242,57 +242,10 @@ duf_main( int argc, char **argv )
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );
-#if 0
-  DOR_LOWERE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_OPTION_NEW_NOT_FOUND );
-#else
   DORF( r, duf_main_with_config, argc, argv );
-#endif
-#if 0
-  if ( DUF_IS_ERROR( r ) )
-  {
-    _DUF_SHOW_ERROR( "@@@@@@@@(i:%d;c:%d:%s) %s (%s:%d)", r, mas_error_code_i( r ), mas_error_name_i( r ), mas_error_message_i( r ),
-                     mas_error_func_i( r ), mas_error_line_i( r ) );
-    _DUF_SHOW_ERROR( "@@@@@@@@@         at %s", argv[0] );
-  }
-#endif
 
   TR( r );
-#if 0
-  {
-    FILE *f = NULL;
 
-    f = fopen( "options.tmp", "w" );
-    if ( f )
-    {
-      duf_option_stage_t stage = DUF_OPTION_STAGE_NONE;
-      duf_option_source_t source = {.sourcecode = DUF_OPTION_SOURCE_NONE };
-
-      for ( size_t iod = 0; iod < global_status.aod.count; iod++ )
-      {
-        duf_option_data_t *pod;
-
-        pod = &global_status.aod.pods[iod];
-      /* T( "%lu. %s.pod %s => %s", iod, duf_optstage_name( pod->stage ), duf_optsource_name( pod->source ), pod->name ); */
-        if ( source.sourcecode != pod->source.sourcecode )
-          fprintf( f, "* SOURCE %s\n", duf_optsource_name( source = pod->source ) );
-        if ( stage != pod->stage )
-          fprintf( f, "* STAGE %s\n", duf_optstage_name( stage = pod->stage ) );
-        if ( pod->doindex >= 0 )
-        {
-          fprintf( f, "\t%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod,
-                   pod->xfound.xarray[pod->doindex].xtended->o.name );
-          if ( pod->optarg )
-            fprintf( f, "='%s'", pod->optarg );
-        }
-        fprintf( f, "\t\t[%c(%2ld) %lu. --%s", ( pod->clarified[stage] ? '+' : ' ' ), pod->doindex, iod, pod->name );
-        if ( pod->optarg )
-          fprintf( f, "='%s'", pod->optarg );
-        fprintf( f, "]\n" );
-      }
-      fclose( f );
-    }
-  }
-#endif
   global_status_reset(  );
   T( "@config: %p; ptracecfg: %p; class_levels: %p", duf_get_config(  ), duf_get_config(  )->opt.ptracecfg,
      duf_get_config(  )->opt.ptracecfg->class_levels );
@@ -302,9 +255,6 @@ duf_main( int argc, char **argv )
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = !DUF_NOERROR( r ) ? 31 : 0;
-/* fprintf(stderr, "▶"  ); */
-/* T( "@@@@%d %d %d -- %ld", DUF_SQL_ERROR, DUF_ERROR_ERROR_MAX, DUF_SQL_ERROR < DUF_ERROR_ERROR_MAX, mas_error_list_size(  ) ); */
-/* sleep( 3 ); */
   DUF_ENDR( r );
 }
 

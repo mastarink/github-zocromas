@@ -3,6 +3,8 @@
   /* trace */
   ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
   ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
+  ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary			)
+  ENUM_WRAPP(TEMP, trace, temp					)
   ENUM_WRAPP(ACTION_TRACE,  trace, action			)
   ENUM_WRAPP(CALLS_TRACE, trace, calls				)
   ENUM_WRAPP(CONFIG_TRACE, trace, config			)
@@ -42,14 +44,12 @@
   ENUM_WRAPP(SHA1_TRACE, trace, sha1				)
   ENUM_WRAPP(SQLITE_TRACE, trace, sqlite			)
   ENUM_WRAPP(SQL_TRACE, trace, sql				)
-  ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary			)
   ENUM_WRAPP(TODO_TRACE, trace, todo				)
   ENUM_WRAPP(TRACE_TRACE, trace, trace				)
   ENUM_WRAPP(UPDATE_TRACE, trace, update			)
   ENUM_WRAPP(OPTSTAGE, trace, optstage				)
   ENUM_WRAPP(OPTSOURCE, trace, optsource			)
   
-  ENUM_WRAPP(TEMP, trace, temp					)
   ENUM_WRAPP(ANY, trace, any					)
   ENUM_WRAPP(COLLECT, trace, collect				)
   ENUM_WRAPP(DIRS, trace,       dirs				)

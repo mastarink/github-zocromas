@@ -80,13 +80,10 @@ tab sfind duf_optimpl_enum.h
 tab sfind duf_option_source_types.h
 tab sfind duf_option_stage_types.h
 
-tab sfind duf_options_enum.def
-sfind duf_options_enum_trace.def
-sfind duf_option_vtype_enum.def
+tab sfind duf_option_vtype_enum.def
 sfind duf_option_call_type_enum.def
 sfind duf_option_class_enum.def
-sfind duf_options_enum_filter_minmax.def
-sfind duf_options_enum_filter_same_minmax.def 
+
 
 
 tab sfind duf_scan_types.h

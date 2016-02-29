@@ -5,7 +5,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
@@ -36,7 +36,7 @@ duf_loption_xfind_at_xarr( duf_config_cli_t * cli, int longindex, const duf_long
 
   for ( const duf_longval_extended_t * xtended = xarr; *ptbcount <= longindex && xtended->o.name; xtended++ )
   {
-    DUF_TRACE( options, +500, "li2ex %d [%s]", *ptbcount, xtended->o.name );
+    MAST_TRACE( options, +500, "li2ex %d [%s]", *ptbcount, xtended->o.name );
     if ( noo )
     {
       if ( xtended->can_no )

@@ -35,7 +35,7 @@ const duf_longval_extended_table_t optable_trace = {
 # define ENUM_WRAPP(_n, _rf, _rf2) \
    DUF_TRACE_OPTT(  _n, _rf2 ),
  /* {.o = {DO_Q( "trace-" #_rf2), DO_A_O, DO_V( _n )}, DO_CL( TRACE ), DO_OT(UPLUS,_rf2)  , DO_SET_STAGE( DEBUG, MAX)  , DO_H( trace # _rf2 )  }, */
-# include "duf_options_enum_trace.def"
+# include "duf_optimpl_enum_trace.def"
 # undef ENUM_WRAPP
 
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,

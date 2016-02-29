@@ -22,7 +22,6 @@
 #include "duf_option_defs.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
-/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 
 /* ###################################################################### */
 #include "duf_option_config_credel.h"

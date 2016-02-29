@@ -48,6 +48,7 @@
 #include "sql_beginning_vacuum.h"
 #include "sql_beginning_create.h"
 
+#include "duf_optimpl_defs.h"
 #include "duf_optimpl_enum.h"
 
 /* ###################################################################### */

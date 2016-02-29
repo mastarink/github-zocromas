@@ -21,7 +21,6 @@
 /* #include "duf_option_defs.h" */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
-/* #include "duf_options_enum.h"                                        (* duf_option_code_t ♠ *) */
 
 /* ###################################################################### */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
@@ -41,7 +40,8 @@ duf_cli_option_count_maxcodeval( duf_config_cli_t * cli MAS_UNUSED, duf_longval_
     xtended = xtable->xlist;
     while ( xtended->o.name )
     {
-      if (maxcodeval< xtended->o.val)maxcodeval=xtended->o.val;
+      if ( maxcodeval < xtended->o.val )
+        maxcodeval = xtended->o.val;
       xtended++;
     }
   }
@@ -96,26 +96,29 @@ duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_ext
 }
 
 duf_config_cli_t *
-duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
-                        const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
+duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, unsigned mandatory_config,
+                        const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
 {
   duf_config_cli_t *cli;
 
   cli = mas_malloc( sizeof( duf_config_cli_t ) );
-  duf_cli_options_init( cli, argc, argv, xtable_list, config_dir, commands_dir, varfunc, ptracecfg );
+  assert( cli );
+  duf_cli_options_init( cli, argc, argv, xtable_list, mandatory_config, config_dir, commands_dir, varfunc, ptracecfg );
   return cli;
 }
 
 void
-duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
-                      const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list,
+                      unsigned mandatory_config, const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc,
+                      const mas_config_trace_t * ptracecfg )
 {
-  if ( cli )
+  assert( cli );
   {
     memset( cli, 0, sizeof( duf_config_cli_t ) );
     cli->ptracecfg = ptracecfg;
     cli->carg.argc = argc;
     cli->carg.argv = argv;
+    cli->mandatory_config = mandatory_config;
   /* const duf_longval_extended_vtable_t * const *xvtables
    * cli->xvtable_multi = xvtables;
    * */
@@ -145,9 +148,10 @@ duf_cli_options_delete( duf_config_cli_t * cli )
   mas_free( cli );
 }
 
-void
-duf_cli_options_shut( duf_config_cli_t * cli )
+static void
+_duf_cli_options_shut( duf_config_cli_t * cli )
 {
+  cli->mandatory_config = 0;
   duf_options_delete_longopts_table( cli->longopts_table );
   cli->longopts_table = NULL;
   mas_del_argv( cli->targ.argc, cli->targ.argv, 0 );
@@ -227,4 +231,11 @@ duf_cli_options_shut( duf_config_cli_t * cli )
     cli->aod.pods = NULL;
     cli->aod.size = cli->aod.count = 0;
   }
+}
+
+void
+duf_cli_options_shut( duf_config_cli_t * cli )
+{
+  if ( cli )
+    _duf_cli_options_shut( cli );
 }

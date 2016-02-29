@@ -11,7 +11,7 @@ typedef enum
 /* #  define ENUM_WRAP_V(_n, _v) DUF_OPTION_VAL_ ## _n = _v, */
 #  define ENUM_WRAP_V(_n, _v) ENUM_WRAP(_n, = _v)
 #  define ENUM_WRAP_VP(_n, _v, _rf, _rf2) DUF_OPTION_VAL_ ## _n = _v,
-#  include "duf_options_enum.def"
+#  include "duf_optimpl_enum.def"
 #  undef ENUM_WRAP
 #  undef ENUM_WRAPP
 #  undef ENUM_WRAP_V

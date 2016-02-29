@@ -1,12 +1,16 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 if  MAS_TEST
-noinst_PROGRAMS=mtest mjtest motest
+noinst_PROGRAMS=mtest mjtest motest motestn
 motest_SOURCES=optest.c duf_options_all_stages.c duf_options.c duf_option_stage.c duf_option_config_credel.c duf_option_config.c duf_option_clarify_new.c duf_options_env.c duf_options_file.c duf_options_cli.c duf_options_interactive.c duf_option_source.c duf_option_longopts.c duf_option_clarify.c duf_option_clarify_batch.c duf_option_cfind.c duf_option_extended.c duf_option_typed.c duf_option_lfind.c duf_option_typed_call.c duf_option_typed_gen.c duf_option_names.c duf_option_descr.c
-#duf_options.c duf_option_tmpdb.c
+motestn_SOURCES=optest_n.c
+#duf_options.c duf_optmod_tmpdb.c
 #  duf_config_util_z.c duf_config_util.c
-motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@ @DEPSN_CFLAGS@  -include motest_config.h
-motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@ @DEPSN_LIBS@  @READLINE_LIBS@
+motest_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@   -include motest_config.h
+motest_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@   @READLINE_LIBS@
+
+motestn_CFLAGS=@AM_CFLAGS@ -pthread @DEPSS_CFLAGS@ @DEPSN_CFLAGS@  -include motest_config.h
+motestn_LDFLAGS=@AM_LDFLAGS@  @DEPSS_LIBS@ @DEPSN_LIBS@  @READLINE_LIBS@
 
 
 mtest_SOURCES=duftest.c 
@@ -119,11 +123,12 @@ zocromas_duf_SOURCES= \
 	\
 	duf_option_source.c \
 	duf_option_stage.c \
-	duf_option_tmpdb.c \
 	duf_option_typed.c \
 	duf_option_typed_call.c \
 	duf_option_typed_gen.c \
 	duf_option_vtype.c \
+	\
+	duf_optmod_tmpdb.c \
 	\
 	duf_path2db.c \
 	duf_path2dirid.c \

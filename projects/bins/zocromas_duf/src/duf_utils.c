@@ -102,7 +102,6 @@ duf_percent( unsigned long long curval, unsigned long long curval2, unsigned lon
       memset( &bar, 0, sizeof( bar ) );
       gettimeofday( &tv, NULL );
       time0 = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-    /* fprintf( stderr,"\n@###@"); */
     }
     gettimeofday( &tv, NULL );
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;

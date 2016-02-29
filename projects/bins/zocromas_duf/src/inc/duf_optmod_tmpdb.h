@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTION_TMPDB_H
-# define MAS_DUF_OPTION_TMPDB_H
+#ifndef MAS_DUF_OPTMOD_TMPDB_H
+# define MAS_DUF_OPTMOD_TMPDB_H
 
 # include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */

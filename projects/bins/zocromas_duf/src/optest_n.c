@@ -9,10 +9,11 @@
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_se.h"                                                  /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+/* #include "duf_se.h"                                                  (* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ *) */
+#include <mastar/multiconfig/muc_se.h>
 
-#include "duf_option_config_credel.h"
-#include "duf_options_all_stages.h"
+#include <mastar/multiconfig/muc_option_config_credel.h>
+#include <mastar/multiconfig/muc_options_all_stages.h>
 
 typedef struct
 {
@@ -53,7 +54,7 @@ something1_t som1 = {.set3.bits = 0x3f };
   .help        = _help \
 }
 
-const duf_longval_extended_table_t optable_test = {                  /* zzzzzz */
+const muc_longval_extended_table_t optable_test = {                  /* zzzzzz */
   .name = "test",
 /* DO_AT_STAGE( SETUP ), */
   .xlist = {
@@ -75,7 +76,7 @@ const duf_longval_extended_table_t optable_test = {                  /* zzzzzz *
             }
 };
 
-static const duf_longval_extended_table_t *const optable_test_list[] = { &optable_test, NULL };
+static const muc_longval_extended_table_t *const optable_test_list[] = { &optable_test, NULL };
 
 static mas_config_trace_t *config_trace = NULL;
 mas_config_trace_t *
@@ -98,13 +99,13 @@ duf_output_force_color( void )
 
 SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
-  duf_config_cli_t *clio;
+  muc_config_cli_t *clio;
 
   config_trace = mas_config_trace_create( 100 );
-  config_trace->class_levels[DUF_TRACE_LEVEL_temp] += 3;
+  config_trace->class_levels[DUF_TRACE_LEVEL_temp] += 2;
   config_trace->class_levels[DUF_TRACE_LEVEL_errors] += 2;
 
-  clio = duf_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */ , NULL /* config_dir */ ,
+  clio = muc_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */, NULL /* config_dir */ ,
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
   T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
@@ -124,7 +125,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
      , som1.set2.bits                                                /* */
      , som1.set3.bits                                                /* */
            );
-  duf_cli_options_delete( clio );
+  muc_cli_options_delete( clio );
   {
     unsigned char v0 = 0;
     unsigned short v1 = 0;
@@ -157,6 +158,6 @@ main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unuse
 {
   int r;
 
-  r = duf_main( argc, argv );
+  r = muc_main( argc, argv );
   return r == 0 ? r : 34;
 }

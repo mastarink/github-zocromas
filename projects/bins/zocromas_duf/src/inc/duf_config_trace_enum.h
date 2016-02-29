@@ -4,7 +4,7 @@
 typedef enum
 {
 # define ENUM_WRAPP(_n, _rf, _rf2)    DUF_TRACE_LEVEL_ ## _rf2,
-# include "duf_options_enum_trace.def"
+# include "duf_optimpl_enum_trace.def"
 # undef ENUM_WRAPP
 } duf_config_trace_enum_t;
 

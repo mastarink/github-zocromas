@@ -1,0 +1,190 @@
+# 20160229.112746 : 1456738066.427416889 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.112746 : 1456738066.442833373 ------------[r]--
+# 20160229.112835 : 1456738115.189799268 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.112835 : 1456738115.204531172 ------------[r]--
+# 20160229.112945 : 1456738185.536487898 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.112945 : 1456738185.551129238 ------------[r]--
+# 20160229.113640 : 1456738600.928267400 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.113640 : 1456738600.944064285 ------------[r]--
+# 20160229.113816 : 1456738696.136388102 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.113816 : 1456738696.152757064 ------------[r]--
+# 20160229.113820 : 1456738700.973792751 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--test-q-bflag'
+# retcode:0
+# 20160229.113820 : 1456738700.988256854 ------------[r]--
+# 20160229.114207 : 1456738927.088118357 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114207 : 1456738927.115490582 ------------[r]--
+# 20160229.114446 : 1456739086.921391136 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114446 : 1456739086.935019248 ------------[r]--
+# 20160229.114540 : 1456739140.604832451 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114540 : 1456739140.617477922 ------------[r]--
+# 20160229.114545 : 1456739145.619856186 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--test-q-bflag'
+# retcode:0
+# 20160229.114545 : 1456739145.634889177 ------------[r]--
+# 20160229.114553 : 1456739153.380193620 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.114553 : 1456739153.396600026 ------------[r]--
+# 20160229.114625 : 1456739185.058389749 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.114625 : 1456739185.073525391 ------------[r]--
+# 20160229.114633 : 1456739193.771213887 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.114633 : 1456739193.786978633 ------------[r]--
+# 20160229.114637 : 1456739197.487502250 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114637 : 1456739197.499988916 ------------[r]--
+# 20160229.114642 : 1456739202.402225987 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.114642 : 1456739202.414606363 ------------[r]--
+# 20160229.114648 : 1456739208.740009523 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114648 : 1456739208.752219520 ------------[r]--
+# 20160229.114701 : 1456739221.546532286 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.114701 : 1456739221.562722891 ------------[r]--
+# 20160229.114706 : 1456739226.136969898 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.114706 : 1456739226.149248178 ------------[r]--
+# 20160229.121154 : 1456740714.592286353 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.121154 : 1456740714.604730254 ------------[r]--
+# 20160229.121216 : 1456740736.294518755 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:34
+# 20160229.121216 : 1456740736.307417534 ------------[r]--
+# 20160229.121242 : 1456740762.109514557 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motestn.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--test-q-bflag'
+# retcode:0
+# 20160229.121242 : 1456740762.125496362 ------------[r]--
+# 20160229.121247 : 1456740767.939912830 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motestn.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.121247 : 1456740767.960030246 ------------[r]--
+# 20160229.121320 : 1456740800.719026988 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.121320 : 1456740800.731427760 ------------[r]--
+# 20160229.121626 : 1456740986.277332996 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.121626 : 1456740986.289502650 ------------[r]--
+# 20160229.122102 : 1456741262.676585708 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-tsest-q-bflag'
+# retcode:34
+# 20160229.122102 : 1456741262.692567118 ------------[r]--
+# 20160229.122106 : 1456741266.605649017 ++++++++++++++
+# cat /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/motest.conf
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.122106 : 1456741266.622285151 ------------[r]--
+# 20160229.122116 : 1456741276.565448678 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.122116 : 1456741276.580625927 ------------[r]--
+# 20160229.122140 : 1456741300.200650044 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.122140 : 1456741300.215153563 ------------[r]--
+# 20160229.123540 : 1456742140.123904486 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motest
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.123540 : 1456742140.138453051 ------------[r]--
+# 20160229.123548 : 1456742148.741392648 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.123548 : 1456742148.753799933 ------------[r]--
+# 20160229.123746 : 1456742266.121140974 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:34
+# 20160229.123746 : 1456742266.135446118 ------------[r]--
+# 20160229.123758 : 1456742278.993108578 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/motestn
+# run  '--no-test-q-bflag'
+# retcode:0
+# 20160229.123759 : 1456742279.007359165 ------------[r]--
+# 20160229.164919 : 1456757359.300308870 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160229.164923 : 1456757363.348476182 ------------[r]--
+# 20160229.164930 : 1456757370.086855986 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=test_tree' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160229.164930 : 1456757370.245501383 ------------[r]--
+# 20160229.164939 : 1456757379.198491355 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--no-color' '--db-name=test_tree' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160229.164939 : 1456757379.239272326 ------------[r]--

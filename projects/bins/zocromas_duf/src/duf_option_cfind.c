@@ -5,7 +5,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
@@ -32,12 +32,12 @@ duf_coption_find_at_arr( duf_config_cli_t * cli, duf_option_gen_code_t codeval, 
   {
     if ( arr )
     {
-      DUF_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", longindex, arr->name, arr->val, codeval );
+      MAST_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", longindex, arr->name, arr->val, codeval );
     /* assert( 0 ); */
       if ( arr->val == codeval )
       {
         roption = arr;
-        DUF_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", longindex, arr->name );
+        MAST_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", longindex, arr->name );
 #if 0
         ok = 1;
 #endif
@@ -103,12 +103,12 @@ duf_coption_xfind_at_xarr( duf_config_cli_t * cli, duf_option_gen_code_t codeval
 
   for ( ; !rxtended && xarr->o.name; xarr++, tbcount++ )
   {
-    DUF_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", tbcount, xarr->o.name, xarr->o.val, codeval );
+    MAST_TRACE( findopt, +1, "@li2ex %d [%s] %d:%d", tbcount, xarr->o.name, xarr->o.val, codeval );
   /* assert( 0 ); */
     if ( xarr->o.val == codeval )
     {
       rxtended = xarr;
-      DUF_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", tbcount, xarr->o.name );
+      MAST_TRACE( findopt, +1, "@li2ex FOUND %d [%s]", tbcount, xarr->o.name );
 #if 0
       ok = 1;
 #endif
@@ -158,22 +158,22 @@ duf_coption_xfind_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval
         {
           if ( xarr )
           {
-            DUF_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
+            MAST_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
             if ( xarr->o.val == codeval )
             {
               rxtended = xarr;
               if ( result_pxvtable )
                 *result_pxvtable = xvtable;
-              DUF_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
+              MAST_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
               break;                                                 /* ? */
             }
           }
         }
-        DUF_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
+        MAST_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
       }
 #else
       rxtended = duf_coption_xfind_at_xtable( cli, codeval, xvtable, result_pxvtable, pr );
-      DUF_TRACE( findopt, +1, "@li2ex ? %d [%s]", ntable, rxtended ? rxtended->o.name : NULL );
+      MAST_TRACE( findopt, +1, "@li2ex ? %d [%s]", ntable, rxtended ? rxtended->o.name : NULL );
 #endif
     }
   }

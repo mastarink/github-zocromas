@@ -26,7 +26,7 @@ typedef struct
     /**/
 # if 0
 #  define ENUM_WRAPP(_n, _rf, _rf2)      int _rf2;
-#  include "duf_options_enum_trace.def"
+#  include "duf_optimpl_enum_trace.def"
 #  undef ENUM_WRAPP
 # endif
     size_t num_classes;

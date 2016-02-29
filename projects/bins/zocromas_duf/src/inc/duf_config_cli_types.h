@@ -20,6 +20,7 @@
  * */
 struct duf_config_cli_s
 {
+  unsigned mandatory_config;
   char *shorts;
   duf_option_gen_code_t maxcodeval;
   mas_cargvc_t carg;

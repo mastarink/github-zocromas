@@ -7,13 +7,15 @@
 # include "duf_option_types.h"                                       /* duf_longval_extended_vtable_t; duf_longval_extended_table_t */
 # include "duf_config_cli_types.h"                                   /* duf_config_cli_t */
 
-duf_config_cli_t *duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, const char *config_dir,
-                                          const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg );
+duf_config_cli_t *duf_cli_options_create( int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list, unsigned mandatory_config,
+                                          const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc,
+                                          const mas_config_trace_t * ptracecfg );
 
 void duf_cli_options_delete( duf_config_cli_t * cli );
 
 void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t * const *xtable_list,
-                           const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg );
+                           unsigned mandatory_config, const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc,
+                           const mas_config_trace_t * ptracecfg );
 
 void duf_cli_options_shut( duf_config_cli_t * cli );
 

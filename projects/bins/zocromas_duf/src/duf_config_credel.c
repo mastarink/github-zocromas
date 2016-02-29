@@ -32,7 +32,7 @@
 /* ###################################################################### */
 
 void
-duf_config_create( int argc, char **argv )
+duf_config_create( int argc, char **argv, unsigned mandatory_config )
 {
   DUF_START(  );
   duf_config = duf_cfg_create(  );
@@ -59,7 +59,7 @@ duf_config_create( int argc, char **argv )
 # if 0
   duf_cli_init(  /* &duf_config->cli, */ argc, argv );
 # else
-  duf_get_config(  )->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), DUF_CONFIGGS( conf.config_dir ),
+  duf_get_config(  )->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
                                                      DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar,
                                                      duf_config->opt.ptracecfg );
 # endif

@@ -52,7 +52,7 @@ typedef struct
   mas_limitsll_t size;
 # else
 #  define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) mas_limitsll_t _rf;
-#  include "duf_options_enum_filter_same_minmax.def"
+#  include "duf_optimpl_enum_filter_same_minmax.def"
 #  undef   ENUM_WRAPMM
 # endif
 } duf_same_limits_t;
@@ -100,7 +100,7 @@ typedef struct
   mas_limitsll_t exifid;
 # else
 #  define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) mas_limitsll_t _rf;
-#  include "duf_options_enum_filter_minmax.def"
+#  include "duf_optimpl_enum_filter_minmax.def"
 #  undef   ENUM_WRAPMM
 # endif
   duf_same_limits_t same;

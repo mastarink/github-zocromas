@@ -10,7 +10,8 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 # b duf_options_cli.c:132
-b duf_option_clarify_new.c:314
+b muc_option_clarify_new.c:314
+b optest_n.c:120
 
 # watch lo_extended_vtable_multi
 

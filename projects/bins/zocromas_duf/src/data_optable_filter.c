@@ -174,7 +174,7 @@ const duf_longval_extended_table_t optable_filter = {
      DO_OU( MIN ## _ty, _rf ), DO_H( limit __VA_ARGS__ (minimum value) )  }, \
    {.o = {DO_Q( "max-" # _rf2 ),   DO_A_R  , DO_VUF( MAX ## _id )}  , DO_CL( FILTER )  , \
      DO_OU( MAX ## _ty, _rf )  , DO_H( limit __VA_ARGS__ (maximum value) )  },
-# include "duf_options_enum_filter_minmax.def"
+# include "duf_optimpl_enum_filter_minmax.def"
 # undef   ENUM_WRAPMM
 # define  ENUM_WRAPMM(_id, _ty, _rf, _rf2, ...) \
    {.o = {DO_Q( # _rf2 ),          DO_A_O  , DO_VUF( _id )}  , DO_CL( FILTER )  , \
@@ -183,7 +183,7 @@ const duf_longval_extended_table_t optable_filter = {
      DO_OU( MIN ## _ty, same._rf ), DO_H( limit  __VA_ARGS__ (minimum same counter) )  }, \
    {.o = {DO_Q( "max-" # _rf2 ),   DO_A_R  , DO_VUF( MAX ## _id )}  , DO_CL( FILTER )  , \
      DO_OU( MAX ## _ty, same._rf )  , DO_H( limit __VA_ARGS__ (maximum same counter)  )  },
-# include "duf_options_enum_filter_same_minmax.def"
+# include "duf_optimpl_enum_filter_same_minmax.def"
 # undef   ENUM_WRAPMM
 
 #endif

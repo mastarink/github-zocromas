@@ -6,7 +6,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/tools/mas_expandable.h>                             
+#include <mastar/tools/mas_expandable.h>
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -276,9 +276,10 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
     else                                                             /* if ( pod->xfound.count_soft < 1 ) */
     {
     /* NOT-FOUND-ERROR */
+#if 0
       fprintf( stderr, "_______NOT FOUND_______ %s {%s:%s}\n", pod->name, duf_optstage_name( cli, pod->stage ),
                duf_optsource_name( cli, pod->source ) );
-
+#endif
       T( "@ERR %s:%s", duf_optstage_name( cli, pod->stage ), duf_optsource_name( cli, pod->source ) );
       if ( pod->stage != DUF_OPTION_STAGE_BOOT )
         SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, duf_optsource_name( cli, pod->source ) );

@@ -7,7 +7,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
@@ -100,9 +100,9 @@ duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t 
     istage_check = DUF_OPTION_STAGE_LOOP;
   else
     istage_check = istage;
-  DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( cli, istage ),
+  MAST_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( cli, istage ),
              extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
-  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
+  MAST_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
              xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
   r0 = ( istage_check == DUF_OPTION_STAGE_ANY || istage_check == DUF_OPTION_STAGE_ALL );
 /* r0 = r0 || ( extended->stage_opts.stage.flag ? 1 : 0 ); (* ???? *) */
@@ -124,7 +124,7 @@ duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t 
   {
     r0 = 0;
   }
-  DUF_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( cli, istage ), r0 );
+  MAST_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( cli, istage ), r0 );
   return r0;
 }
 #endif
@@ -144,9 +144,9 @@ duf_optstage_check( const duf_config_cli_t * cli, duf_option_stage_t istage, con
   else
     istage_check = istage;
 
-  DUF_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( cli, istage ),
+  MAST_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( cli, istage ),
              extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
-  DUF_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
+  MAST_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
              xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
   r0 = ( istage_check == DUF_OPTION_STAGE_ANY || istage_check == DUF_OPTION_STAGE_ALL ) ? 1 : 0;
 /* if (r0>=0 && !extended->stage_opts.stage.flag ) r0=-1; (* ???? *) */
@@ -182,7 +182,7 @@ duf_optstage_check( const duf_config_cli_t * cli, duf_option_stage_t istage, con
       T( "@@>>>> %s @ %s : (r1:%d; r2:%d) => %d {old:%d}\n", extended->o.name, duf_optstage_name( cli, istage ), r1, r2, r0, old );
   }
 #endif
-  DUF_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( cli, istage ), r0 );
+  MAST_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( cli, istage ), r0 );
   return r0 > 0;
 }
 
