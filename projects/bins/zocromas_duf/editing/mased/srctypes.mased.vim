@@ -8,6 +8,7 @@ sfind duf_db_defs.h
 tab sfind duf_debug_defs.h
 sfind duf_compile_defs.h
 " sfind duf_print_defs.h
+sfind duf_output_defs.h
 sfind duf_printn_defs.h
 " sfind duf_print_defs_preset.h
 

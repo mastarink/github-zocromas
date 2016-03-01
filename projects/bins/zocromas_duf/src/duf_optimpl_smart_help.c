@@ -3,7 +3,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -11,12 +11,13 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
-#include "duf_printn_defs.h"
+#include "duf_output_defs.h"
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-#include "duf_config.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
-#include "duf_config_util.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_output_util.h"
 
 #include "duf_action_table.h"
@@ -27,17 +28,17 @@
 #include "duf_options_file.h"                                        /* duf_options_infilepath */
 
 #include "duf_option_descr.h"
-#include "duf_option_stage.h"
-#include "duf_option_extended.h"
+#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
 #include "duf_option_lfind.h"
 
-#include "duf_option_names.h"
-#include "duf_option_class.h"
-#include "duf_option_vtype.h"
-#include "duf_option_config.h"
+#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
+#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
+#include "duf_option_vtype.h"                                        /* duf_optvtype2string ♠ */
+#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_optimpl_extended2string.h"
-#include "duf_optimpl_enum.h"
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
 
 /* ###################################################################### */
 #include "duf_optimpl_smart_help.h"

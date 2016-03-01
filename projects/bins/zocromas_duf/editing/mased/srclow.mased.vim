@@ -28,8 +28,8 @@ sfind duf_service.h
 tab sfind duf_print.c
 sfind duf_print.h
 
-tab sfind duf_printb.c
-sfind duf_printb.h
+" tab sfind duf_printb.c
+" sfind duf_printb.h
 
 tab sfind duf_fileinfo.c
 sfind duf_fileinfo.h

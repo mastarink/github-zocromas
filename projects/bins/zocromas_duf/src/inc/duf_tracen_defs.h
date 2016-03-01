@@ -4,11 +4,11 @@
 # include "duf_tracen_defs_preset.h"
 
 # define DUF_TRACE( _id, ... )		MAST_TRACE( _id, __VA_ARGS__ )
-# define DUF_TRACE_WP( _id, ... )	MAST_TRACE_WP( _id, __VA_ARGS__ )
-# define DUF_TRACE_WHAT( _id, ... )	MAST_TRACE_WHAT( _id, __VA_ARGS__ )
-# define DUF_IF_TRACE( _id, ... )	MAST_IF_TRACE( _id, __VA_ARGS__ )
-# define DUF_TRACESYS( _id, ... )	MAST_TRACESYS( _id, __VA_ARGS__ )
-# define DUF_TRACESYSE( _id, ... )	MAST_TRACESYSE( _id, __VA_ARGS__ )
+/* # define ..._TRACE_WP( _id, ... )       MAST_TRACE_WP( _id, __VA_ARGS__ )   */
+/* # define ..._TRACE_WHAT( _id, ... )     MAST_TRACE_WHAT( _id, __VA_ARGS__ ) */
+/* # define ..._IF_TRACE( _id, ... )       MAST_IF_TRACE( _id, __VA_ARGS__ ) */
+/* # define ..._TRACESYS( _id, ... )       MAST_TRACESYS( _id, __VA_ARGS__ ) */
+/* # define ..._TRACESYSE( _id, ... )      MAST_TRACESYSE( _id, __VA_ARGS__ ) */
 
 # define DUF_DEBUG(_lev, ... )	MAST_DEBUG(_lev, __VA_ARGS__ )
 

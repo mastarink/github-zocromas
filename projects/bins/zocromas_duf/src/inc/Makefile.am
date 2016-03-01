@@ -155,6 +155,7 @@ noinst_HEADERS=motest_config.h \
 	duf_pdi_stmt.h \
 	duf_pdi_types.h \
 	duf_print.h \
+	duf_output_defs.h \
 	duf_printn_defs.h \
 	duf_pstmt_levinfo.h \
 	duf_scan_types.h \

@@ -13,6 +13,7 @@
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
+#include "duf_output_defs.h"
 #include "duf_printn_defs.h"
 
 #include "duf_config.h"
