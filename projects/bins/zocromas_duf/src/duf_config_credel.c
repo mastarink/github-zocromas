@@ -50,21 +50,10 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
   assert( duf_config4trace );
 #endif
 
-#if 0
-  duf_config->cli.carg.argc = argc;
-  duf_config->cli.carg.argv = argv;
-  if ( !duf_config->cli.shorts )
-    duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
-#else
-# if 0
-  duf_cli_init(  /* &duf_config->cli, */ argc, argv );
-# else
-  duf_get_config(  )->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
+  duf_config->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
                                                      DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar,
                                                      duf_config->opt.ptracecfg );
-# endif
 
-#endif
   duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
           duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
   DUF_END(  );
