@@ -4,7 +4,7 @@
 
 #include <mastar/trace/mas_trace_credel.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -77,7 +77,7 @@ duf_config_delete( void )
 /* assert( duf_config->opt.ptracecfg->stream.out ); */
 /* assert( duf_get_trace_config(  )->stream.out );  */
 /* T( "@%p %p", duf_config->opt.ptracecfg, duf_config->opt.ptracecfg->class_levels ); */
-  DUF_TRACE( config, 0, "deleting config %p:%p:%p:%p", mas_output_file(  ), duf_trace_file_c( duf_config->opt.ptracecfg ), stderr, stdout );
+  MAST_TRACE( config, 0, "deleting config %p:%p:%p:%p", mas_output_file(  ), duf_trace_file_c( duf_config->opt.ptracecfg ), stderr, stdout );
 /* T( "@%p/%p %p", duf_config->opt.ptracecfg, duf_get_trace_config(  ), duf_config->opt.ptracecfg->class_levels ); */
   mas_error_report_all( duf_get_trace_config(  ), DUF_TRACE_LEVEL_errors, 0, /*FIXME: error output is not trace output */
                         duf_trace_file_c( duf_config->opt.ptracecfg ), mas_verbose ? mas_verbose(  ) : 0 );

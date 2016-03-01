@@ -1,9 +1,12 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+/* #include "duf_tracen_defs_preset.h" */
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>                                                  /* memset */
 
 #include <mastar/wrap/mas_std_def.h>
+/* #include <mastar/trace/mas_trace.h> */
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 

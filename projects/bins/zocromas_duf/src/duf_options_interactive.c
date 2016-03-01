@@ -1,6 +1,7 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <string.h>
 #include <stdlib.h>                                                  /* free */
@@ -11,12 +12,13 @@
 #include <readline/history.h>
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-# include <mastar/error/mas_error_defs_ctrl.h>
-# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -41,10 +43,10 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
 #endif
   const char *prompt = NULL;
 
-  T( "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
+  QT( "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
   if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
-    DUF_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( cli, istage ) );
+    MAST_TRACE( options, 0, "@@@@stage:%s source: interactive", duf_optstage_name( cli, istage ) );
 #if 0
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );
@@ -98,7 +100,7 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
               DUF_PRINTF( 0, "%s:%s", he->timestamp, he->line );
           }
         }
-        DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.history_filename ) );
+        MAST_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.history_filename ) );
       }
 #endif
       while ( QNOERR /* && DUF_ACTG_FLAG( interactive ) */  && cb_do_interactive(  ) /* don't remove: this is for quit */
@@ -117,16 +119,16 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
         {
           s = mas_chomp( s );
           add_history( s );
-          DUF_TRACE( options, 0, "@@@@read cmd '%s'", s );
+          MAST_TRACE( options, 0, "@@@@read cmd '%s'", s );
           if ( s && ( ( *s == '#' ) || !*s ) )
             continue;
-        /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
-          DUF_TRACE( explain, 0, "read config line %s", s );
+        /* MAST_TRACE( any, 0, "buffer:[%s]", buffer ); */
+          MAST_TRACE( explain, 0, "read config line %s", s );
           {
             {
               CR( boption_xclarify_at_stdx, cli, 0 /* value_separator */ , istage, DUF_OPTION_SOURCE( INTERACTIVE ), s, 0, paod );
             }
-            DUF_TRACE( options, 0, "@@@@executed cmd; QERRIND=%d; s=%s", QERRIND, s );
+            MAST_TRACE( options, 0, "@@@@executed cmd; QERRIND=%d; s=%s", QERRIND, s );
           }
           free( rl_buffer );
           rl_buffer = NULL;

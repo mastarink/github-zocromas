@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -106,7 +106,7 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
   pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */  );
   duf_pdi_copy( pdi, pdisrc, no_li );
   pdi->root_pdi = duf_pdi_root( pdisrc );
-  DUF_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p (%p:%p:%p:%p)", pdi, pdisrc, pdi->root_pdi, pdisrc, duf_pdi_root( pdisrc ), pdisrc->root_pdi );
+  MAST_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p (%p:%p:%p:%p)", pdi, pdisrc, pdi->root_pdi, pdisrc, duf_pdi_root( pdisrc ), pdisrc->root_pdi );
   return pdi;
 }
 

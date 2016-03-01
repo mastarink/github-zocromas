@@ -1,7 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -35,7 +35,7 @@ duf_ev_atable_evname( const char *name, const duf_action_table_t * table )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
-  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
+  MAST_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_atable_evname( duf_pdi_global(  ), name, table, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
@@ -46,7 +46,7 @@ duf_ev_atable_evnamed_list( const char *names, const duf_action_table_t * table 
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
 /* assert( duf_pdi_global()->pyp ); */
-  DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
+  MAST_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_atable_evnamed_list( duf_pdi_global(  ), names, table, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }

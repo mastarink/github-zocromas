@@ -5,7 +5,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -34,7 +34,7 @@
 
 #include "duf_option_defs.h"
 #include "duf_print.h"
-#include "duf_printb.h"
+/* #include "duf_printb.h" */
 
 #include "duf_fileinfo.h"
 
@@ -241,16 +241,16 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
           fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-          DUF_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
+          MAST_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
           if ( use >= 0 && use < fmt->files.argc && !sformat )
             sformat = fmt->files.argv[use];
-          DUF_TRACE( temp, 5, "sformat A: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat A: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
-          DUF_TRACE( temp, 5, "sformat B: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat B: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
-          DUF_TRACE( temp, 5, "sformat C: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat C: %s", sformat );
         }
         if ( !sformat )
           sformat = "%f\n";
@@ -382,16 +382,16 @@ tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
           use = duf_pdi_pu( pdi )->use_format - 1;
 #endif
           fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-          DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
+          MAST_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
           if ( use >= 0 && use < fmt->dirs.argc && !sformat )
             sformat = fmt->dirs.argv[use];
-          DUF_TRACE( temp, 5, "sformat A: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat A: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
-          DUF_TRACE( temp, 5, "sformat B: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat B: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.dirs_tree );
-          DUF_TRACE( temp, 5, "sformat C: %s", sformat );
+          MAST_TRACE( temp, 5, "sformat C: %s", sformat );
         }
 
         if ( !sformat )

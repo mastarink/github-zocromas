@@ -4,7 +4,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -31,12 +31,12 @@ duf_config_show( void )
 
   if ( duf_config )
   {
-    DUF_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir_x ) );
-    DUF_TRACE( temp, 4, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
+    MAST_TRACE( temp, 4, "@@@db.dir: %s", DUF_CONFIGGSP( db.dir_x ) );
+    MAST_TRACE( temp, 4, "@@@db.path: %s", DUF_CONFIGGS( db.path ) );
     if ( duf_config->pcli )
       for ( int ia = 0; ia < duf_config->pcli->targ.argc; ia++ )
       /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
-        DUF_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli(  ) )->argv[ia] );
+        MAST_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli(  ) )->argv[ia] );
   }
 
   DUF_ENDR( r );
@@ -53,16 +53,16 @@ duf_config_optionally_show( void )
   }
   else
   {
-    DUF_TRACE( explain, 0, "not showing config: not verbose" );
+    MAST_TRACE( explain, 0, "not showing config: not verbose" );
   }
 
 #if 0
 /* Obsolete ??? */
-  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( vars.puz )->maxitems.total );
-  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( vars.puz )->maxitems.files );
-  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( vars.puz )->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( vars.puz )->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( vars.puz )->dirfiles.max );
+  MAST_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( vars.puz )->maxitems.total );
+  MAST_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( vars.puz )->maxitems.files );
+  MAST_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( vars.puz )->maxitems.dirs );
+  MAST_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( vars.puz )->dirfiles.min );
+  MAST_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( vars.puz )->dirfiles.max );
 #endif
 
 #ifdef MAS_TRACING
@@ -70,14 +70,14 @@ duf_config_optionally_show( void )
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->vars.puz->globx.include_fs_files.argc, duf_config->vars.puz->globx.include_fs_files.argv, 0 );
-    DUF_TRACE( config, 0, "@ include-fs %s", sif );
+    MAST_TRACE( config, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->vars.puz->globx.exclude_fs_files.argc, duf_config->vars.puz->globx.exclude_fs_files.argv, 0 );
-    DUF_TRACE( config, 0, "@ exclude-fs %s", sif );
+    MAST_TRACE( config, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }
 #endif

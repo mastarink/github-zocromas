@@ -5,7 +5,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 /* #include <mastar/tools/mas_utils_path.h>                             (* mas_normalize_path; mas_pathdepth etc. ♣ *) */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -88,7 +88,7 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
           if ( p == path || *( p - 1 ) != '/' )
             *p++ = '/';
           *p = 0;
-          DUF_TRACE( path, 4, "path:%s", path );
+          MAST_TRACE( path, 4, "path:%s", path );
           l = strlen( pi->levinfo[i].itemname );
           if ( l > 0 )
           {
@@ -108,7 +108,7 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
     path = pli->fullpath;
 #endif
   }
-  DUF_TRACE( path, 4, "fullpath:%s", path );
+  MAST_TRACE( path, 4, "fullpath:%s", path );
   return path;
 }
 /* *INDENT-OFF*  */

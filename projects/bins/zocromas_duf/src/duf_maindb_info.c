@@ -6,7 +6,7 @@
 #include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|tstrflocal|strflocal|strfgm)time ; strtime2long; etc. ♣ */
 #include <mastar/sqlite/mas_sqlite_const.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -135,14 +135,14 @@ duf_main_db_info( void )
        "SELECT COUNT(*), STRFTIME('%s',min(date_time)), STRFTIME('%s',max(date_time)), STRFTIME('%s',min(inow)), STRFTIME('%s',max(inow)) FROM exif WHERE  cast(STRFTIME('%s',date_time) as integer)>0"}
       ,
     };
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-    =-=-=-=-=-=-=-=-=-" );
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-                 -=-=-=-=-=-" );
-    DUF_TRACE( explain, 0, "-=-=-=                         =-==--=-=-=-" );
-    DUF_TRACE( explain, 0, "info                              info info info" );
-    DUF_TRACE( explain, 0, "-=-=-=                      -=-=-=-=-=-" );
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-=-       -=-=-=-=-=-=-=-=-=-" );
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-    =-=-=-=-=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-                 -=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=                         =-==--=-=-=-" );
+    MAST_TRACE( explain, 0, "info                              info info info" );
+    MAST_TRACE( explain, 0, "-=-=-=                      -=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-=-       -=-=-=-=-=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   /*
      SELECT  COUNT(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") ;
      SELECT COUNT(*), datetime(min(mtim), 'unixepoch'), datetime(max(mtim), 'unixepoch'), min(inow), max(inow) FROM filedatas WHERE mtim>320000000 and mtim<1600000000
@@ -160,7 +160,7 @@ duf_main_db_info( void )
       unsigned long *tuple;
       int nolab = 0;
 
-    /* DUF_TRACE( explain, 0, "#%d. SQL:'%s'", iop, infod[iop].sql ); */
+    /* MAST_TRACE( explain, 0, "#%d. SQL:'%s'", iop, infod[iop].sql ); */
       tuple = duf_info_from_db( infod[iop].count, infod[iop].sql );
       DUF_PRINTF( 0, ".#%2d. [ %30s ] -- ", iop, infod[iop].title );
       for ( int iv = 0; iv < infod[iop].count; iv++ )
@@ -201,7 +201,7 @@ duf_main_db_info( void )
       DUF_PRINTF( 0, ";" );
       mas_free( tuple );
     }
-    DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+    MAST_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   }
   DUF_ENDR( r );
 }

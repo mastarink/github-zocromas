@@ -1,17 +1,19 @@
 /* #undef MAS_TRACING */
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <assert.h>
 #include <stddef.h>
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace_credel.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se.h"                                                  /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -111,19 +113,19 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 
   clio = duf_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */ , NULL /* config_dir */ ,
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
-  T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
+  QT( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
-  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
-  T( "@@@@@%d OPTEST", QERRIND );
+  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following MAST_TRACE's */
+  QT( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
-  T( "@@@@@%d OPTEST", QERRIND );
+  QT( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
-  T( "@@@@@%d OPTEST", QERRIND );
+  QT( "@@@@@%d OPTEST", QERRIND );
 
   mas_error_report_all( config_trace, 0 /*index */ , 0, stderr, /* mas_verbose ? mas_verbose(  ) : */ 3 );
-  T( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
+  QT( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
      , QERRIND                                                       /* */
      , som1.set1.bits                                                /* */
      , som1.set2.bits                                                /* */
@@ -149,7 +151,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 
       v5 = ( ( typeof( v5 ) ) 1 ) << sh;
     }
-    T( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
+    QT( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
        ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
   }
   mas_config_trace_delete( config_trace );

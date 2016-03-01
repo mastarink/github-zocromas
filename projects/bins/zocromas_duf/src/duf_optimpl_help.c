@@ -5,7 +5,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -996,7 +996,7 @@ duf_option_O_list_options( long n_unused MAS_UNUSED )
         s = duf_xoption_description_d( duf_get_config_cli(  ), xtended, "\t", " // " );
       DUF_TEST_R( r );
 
-      DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
+      MAST_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
     /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name ); */
       DUF_PRINTF( 0, "%3d (%2d) %4d %d:%d\t--%-40s - %s", tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min,
                   xtended->stage_opts.stage.max, xtended->o.name, s ? s : "" );

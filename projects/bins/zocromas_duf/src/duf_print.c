@@ -7,7 +7,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -39,16 +39,16 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
     *format++ = '%';
     fbsz--;
   }
-  DUF_TRACE( temp, 50, ">%ld>> '%s' (%c:%d:%d) :: '%s'", fbsz, fmt, *fmt, ( ( *fmt == '+' ) || ( *fmt == '-' ) ) ? 1 : 0, *fmt - '-', tail );
+  MAST_TRACE( temp, 50, ">%ld>> '%s' (%c:%d:%d) :: '%s'", fbsz, fmt, *fmt, ( ( *fmt == '+' ) || ( *fmt == '-' ) ) ? 1 : 0, *fmt - '-', tail );
   if ( fbsz > 0 && ( *fmt == '+' || *fmt == '-' ) )
   {
-    DUF_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    MAST_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
     *format++ = *fmt++;
     fbsz--;
   }
   while ( fbsz > 0 && *fmt >= '0' && *fmt <= '9' )
   {
-    DUF_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    MAST_TRACE( temp, 50, ">%ld>> %s :: %s", fbsz, fmt, tail );
     *format++ = *fmt++;
     fbsz--;
   }
@@ -525,7 +525,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
             if ( efmt )
             {
               subfmt = mas_strndup( fmt, efmt - fmt );
-            /* DUF_TRACE( temp, 0, "=== '%s'", subfmt ); */
+            /* MAST_TRACE( temp, 0, "=== '%s'", subfmt ); */
               fmt = efmt;
               fmt++;
             }

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -32,7 +32,7 @@ duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
     DOR( r, duf_levinfo_openat_dh_d( pdi, d ) );
     assert( DUF_IS_ERROR( r ) || !pdi->opendir || duf_levinfo_deleted_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
   }
-  DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
+  MAST_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
 
   assert( DUF_IS_ERROR( r ) || !pdi->opendir || duf_levinfo_deleted_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
   DUF_ENDR( r );
@@ -82,7 +82,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       assert( *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
       DOR( r, duf_open_dh( pdhlev, duf_levinfo_itemshowname_d( pdi, d ) ) );
       assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
-      DUF_TRACE( levinfo, 0, "(%d)? levinfo openated %s; dfd:%d", r, duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
+      MAST_TRACE( levinfo, 0, "(%d)? levinfo openated %s; dfd:%d", r, duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     else                                                             /* d > 0 ! */
     {
@@ -92,14 +92,14 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       DOR_LOWERE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) /* asfile */  ),
                   DUF_ERROR_OPENAT_ENOENT );
       assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
-      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
+      MAST_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
                  duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     assert( r <= 0 || pdhlev->dfd );
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) )
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
-      DUF_TRACE( levinfo, r < 0 ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
+      MAST_TRACE( levinfo, r < 0 ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
                  duf_levinfo_itemshowname_d( pdi, d ), pdi->opendir );
       r = 0;
     }
@@ -111,8 +111,8 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
   }
   else
   {
-    DUF_TRACE( fs, 0, "@@@@@pdi->opendir not set" );
-    DUF_TRACE( levinfo, 0, "pdi->opendir not set" );
+    MAST_TRACE( fs, 0, "@@@@@pdi->opendir not set" );
+    MAST_TRACE( levinfo, 0, "pdi->opendir not set" );
   }
   assert( !pdi->opendir || DUF_IS_ERROR( r ) || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
   DUF_ENDR( r );

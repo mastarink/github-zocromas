@@ -1,15 +1,18 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
-# include <mastar/error/mas_error_defs_ctrl.h>
-# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+#include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -28,7 +31,7 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
     duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )
 {
   assert( cli );
-  DUF_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( options, 0, "@@@@@before all options for %s stage;", duf_optstage_name( cli, istage ) );
 /* TODO all (except INTERACTIVE) : call from paod, not real source */
   if ( istage == DUF_OPTION_STAGE_LOOP )
   {
@@ -40,11 +43,11 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
 
       targia = duf_cli_options_get_targi( cli, ia );
 
-      DUF_TRACE( path, 0, "@%d/%d. %s", ia, duf_cli_options_get_targc( cli ), targia );
+      MAST_TRACE( path, 0, "@%d/%d. %s", ia, duf_cli_options_get_targc( cli ), targia );
 
       if ( cb_init_loop_optstage )
         CRV( cb_init_loop_optstage, targia );                        /* optstage_cb */
-      
+
       CR( all_options, cli, istage_plus, cb_do_interactive, cb_prompt_interactive, duf_cli_options_aod( cli ) /* paod */ ,
           ( istage_plus > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
       istage_plus++;
@@ -56,7 +59,7 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
     CR( all_options, cli, istage, cb_do_interactive, cb_prompt_interactive, duf_cli_options_aod( cli ) /* paod */ ,
         ( istage > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
-  DUF_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( options, 0, "@@@@@after all options for %s stage;", duf_optstage_name( cli, istage ) );
 
   ER( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage,
       duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive );
@@ -78,12 +81,12 @@ SR( TOP, treat_option_stage_ne, duf_config_cli_t * cli, duf_option_stage_t istag
 SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_init_all_optstages, duf_errc_cs_func_t cb_init_loop_optstage,
     duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )
 {
-  DUF_TRACE( options, 0, "@@@@@to do all options for all stages (%p:%p)", ( void * ) &cb_init_all_optstages, ( void * ) &cb_init_loop_optstage );
+  MAST_TRACE( options, 0, "@@@@@to do all options for all stages (%p:%p)", ( void * ) &cb_init_all_optstages, ( void * ) &cb_init_loop_optstage );
 
-  DUF_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( cli, DUF_OPTION_STAGE_PRESETUP ) );
+  MAST_TRACE( options, 0, "@@I - stages from %s(presetup)", duf_optstage_name( cli, DUF_OPTION_STAGE_PRESETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_PRESETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( cli, DUF_OPTION_STAGE_SETUP ) );
+  MAST_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( cli, DUF_OPTION_STAGE_SETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_SETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 #if 0
   CR( config_optionally_show );                                      /* FIXME similar to ..._show_options, called from ..._main_with_config after calling ..._main_db ??? FIXME */
@@ -98,7 +101,7 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
 
   CR( treat_option_stage, cli, DUF_OPTION_STAGE_INIT, NULL, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
+  MAST_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
 #if 0
   if ( DUF_ACTG_FLAG( interactive ) )
 #else
@@ -112,7 +115,7 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
     CR( treat_option_stage, cli, DUF_OPTION_STAGE_FIRST, NULL, cb_do_interactive, cb_prompt_interactive );
     CR( treat_option_stage, cli, DUF_OPTION_STAGE_LOOP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
   }
-  DUF_TRACE( options, 0, "@@@@@after all options for all stages" );
+  MAST_TRACE( options, 0, "@@@@@after all options for all stages" );
   ER( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_init_all_optstages, duf_errc_cs_func_t cb_init_loop_optstage,
       duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive );
 }

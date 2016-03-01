@@ -1,16 +1,18 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-# include <mastar/error/mas_error_defs_ctrl.h>
-# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -52,16 +54,16 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t
     duf_option_gen_code_t maxcodeval, duf_option_stage_t istage, duf_option_adata_t * paod )
 {
 
-  DUF_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c')  li:%d; '%s'/'%s' oi:%d; oo:%d; oe:%d; stage:%s" /* */
-             , codeval                                               /* */
-             , codeval > ' ' && codeval <= 'z' ? codeval : '?'       /* */
-             , longindex                                             /* */
-             , longindex >= 0 ? duf_cli_options_get_longopts_table( cli )[longindex].name : "?" /* */
-             , longitem ? longitem->name : ""                        /* */
-             , optind                                                /* */
-             , optopt                                                /* */
-             , opterr                                                /* */
-             , duf_optstage_name( cli, istage )                      /* */
+  MAST_TRACE( options, 40, "@@@@@@getopt_long: cv:%-4d =>  ('%c')  li:%d; '%s'/'%s' oi:%d; oo:%d; oe:%d; stage:%s" /* */
+              , codeval                                              /* */
+              , codeval > ' ' && codeval <= 'z' ? codeval : '?'      /* */
+              , longindex                                            /* */
+              , longindex >= 0 ? duf_cli_options_get_longopts_table( cli )[longindex].name : "?" /* */
+              , longitem ? longitem->name : ""                       /* */
+              , optind                                               /* */
+              , optopt                                               /* */
+              , opterr                                               /* */
+              , duf_optstage_name( cli, istage )                     /* */
            );
   {
     int optoptt = 0;
@@ -75,7 +77,7 @@ SR( OPTIONS, lcoption_parse, duf_config_cli_t * cli, int longindex, duf_option_t
 
       msg = clrfy_cli_opts_msgs( cli, codeval, optind - 1, optoptt );
 
-      DUF_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, duf_cli_options_get_carg( cli )->argv[optind - 1] );
+      MAST_TRACE( options, +140, "@@@@@@@%d:%s", optind - 1, duf_cli_options_get_carg( cli )->argv[optind - 1] );
       if ( istage != DUF_OPTION_STAGE_BOOT )
         ERRMAKE_M( OPTION_NOT_FOUND, msg );
       mas_free( msg );
@@ -135,14 +137,14 @@ SR( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_sta
 
   carg = duf_cli_options_get_carg( cli );
   numxargv = carg->argc - optindd;
-  DUF_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optindd:%d;", duf_optstage_name( cli, istage ), carg->argc, numxargv,
-             optindd );
+  MAST_TRACE( options, 40, "@cli opts: stage:%s; carg->argc:%d; numxargv:%d; optindd:%d;", duf_optstage_name( cli, istage ), carg->argc, numxargv,
+              optindd );
 
 /* 20160129.121211 DUF_OPTION_STAGE_SETUP Changed to  DUF_OPTION_STAGE_BOOT */
   if ( QNOERR && istage == DUF_OPTION_STAGE_BOOT && /* optind < carg.argc && */ numxargv > 0 )
   {
   /* to do once, at stage SETUP (?), for next stages */
-    DUF_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optindd, carg->argv[optindd] );
+    MAST_TRACE( options, +150, "(for targ) carg.argv[%d]=\"%s\"", optindd, carg->argv[optindd] );
     CR( argv_clarify, cli, duf_cli_options_get_targ( cli ), carg, optindd );
 
     if ( QNOERR )
@@ -150,7 +152,7 @@ SR( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_sta
   }
   else
   {
-    DUF_TRACE( options, +150, "(no targ) optind:%d; optindd:%d; numxargv:%d", optind, optindd, numxargv );
+    MAST_TRACE( options, +150, "(no targ) optind:%d; optindd:%d; numxargv:%d", optind, optindd, numxargv );
   }
   ER( OPTIONS, cli_parse_targ, duf_config_cli_t * cli, int optindd, duf_option_stage_t istage );
 }
@@ -174,7 +176,7 @@ SR( OPTIONS, cli_parse, duf_config_cli_t * cli, const char *shorts, duf_option_g
 
   carg = duf_cli_options_get_carg( cli );
 
-  DUF_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( cli, istage ), carg->argc );
+  MAST_TRACE( options, 40, "@to clarify cli opts: stage:%s; carg->argc:%d", duf_optstage_name( cli, istage ), carg->argc );
 
   {
     duf_option_gen_code_t codeval;
@@ -223,15 +225,15 @@ SR( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage
     duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
 
-  DUF_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
-  DUF_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( optsource, 0, "@   source:%s", duf_optsourcecode_name( cli, sourcecode ) );
+  MAST_TRACE( options, 20, "@@@@cli options; stage:%s", duf_optstage_name( cli, istage ) );
 
   CR( cli_parse, cli, duf_cli_options_get_shorts( cli ), duf_cli_options_get_maxcodeval( cli ), istage, paod );
 
   if ( istage < DUF_OPTION_STAGE_SETUP )
     ERRCLEAR( OPTION_NOT_FOUND );
 
-  DUF_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
+  MAST_TRACE( options, 20, "@@@@cli options done; stage:%s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   ER( OPTIONS, source_cli_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive MAS_UNUSED,
       duf_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED );

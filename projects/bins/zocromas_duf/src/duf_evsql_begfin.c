@@ -4,7 +4,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -76,7 +76,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
   else
     worksql = sql;
   {
-    DUF_TRACE( sql, 3, worksql );
+    MAST_TRACE( sql, 3, worksql );
 #if 0
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
 #else
@@ -95,7 +95,7 @@ duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilte
     DUF_SQL_END_STMT_LOCAL( duf_pdi_global(  ), r, pstmt );
 #endif
   }
-/* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */
+/* MAST_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */
   if ( tmpsql )
     mas_free( tmpsql );
   if ( pchanges )
@@ -136,7 +136,7 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title MAS_UNUSED, cons
 #endif
     assert( ssql );
     assert( ssql->name );
-    DUF_TRACE( db, 0, "@@@@@@ssql:%s", ssql->name );
+    MAST_TRACE( db, 0, "@@@@@@ssql:%s", ssql->name );
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
       DOR( r, duf_eval_sql_one_cb( "BEGIN", pu, py, callback, ttarg, NULL, &changes, ptr ) );
@@ -147,13 +147,13 @@ duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title MAS_UNUSED, cons
       int nntr = 0;
 
       nntr++;
-      DUF_TRACE( sql, 3, "beginning psql #%d: %s", nntr, *psql );
-      DUF_TRACE( select, 0, "beginning psql #%d: %s", nntr, *psql );
+      MAST_TRACE( sql, 3, "beginning psql #%d: %s", nntr, *psql );
+      MAST_TRACE( select, 0, "beginning psql #%d: %s", nntr, *psql );
 
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );
       DOR( r, duf_eval_sql_one_cb( *psql, pu, py, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes, ptr ) );
 
-      DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", title ? title : "no-title",
+      MAST_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", title ? title : "no-title",
                  psql - psql0, *psql, changes, r < 0 ? "FAIL" : "OK" );
       psql++;
     }

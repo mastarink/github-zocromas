@@ -28,7 +28,7 @@
 		  ( *p ) += __v; \
 		else \
 		  ( *p ) = __v; \
-		DUF_TRACE( options, 120, "'--%s' : number set:%llu", extended->o.name, (unsigned long long) __v ); \
+		MAST_TRACE( options, 120, "'--%s' : number set:%llu", extended->o.name, (unsigned long long) __v ); \
 	      } \
 	    } \
 	  } \
@@ -80,7 +80,7 @@
 		{ \
 		  mm->min = mm->max = __v.min; \
 		} \
-		DUF_TRACE( options, 4, "%s: min/max set:%llu", extended->o.name, (unsigned long long) __v.min ); \
+		MAST_TRACE( options, 4, "%s: min/max set:%llu", extended->o.name, (unsigned long long) __v.min ); \
 	      } \
 	    } \
 	    else \
@@ -88,7 +88,7 @@
 	      mm->flag = 1; \
 	      mm->min = extended->call.value.u; \
 	      mm->max = extended->call.value2.u; \
-	      DUF_TRACE( options, 4, "%s: min/max set:%llu:%llu", extended->o.name, \
+	      MAST_TRACE( options, 4, "%s: min/max set:%llu:%llu", extended->o.name, \
 		  (unsigned long long) extended->call.value.u,  (unsigned long long) extended->call.value2.u ); \
 	    } \
 	  } \
@@ -113,7 +113,7 @@
 	    if ( __rl < 0 ) \
 	    {  ERRMAKE( OPTION_VALUE); } \
 	    else \
-	    { DUF_TRACE( options, 4, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
+	    { MAST_TRACE( options, 4, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
 	  } \
 	} \
 	else \

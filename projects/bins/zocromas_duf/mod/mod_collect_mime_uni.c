@@ -11,7 +11,7 @@
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
 #include <magic.h>                                                   /* man libmagic */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -176,7 +176,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
       DUF_SQL_STEP( lr, pstmt );
       if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
-        DUF_TRACE( mod, 0, "<selected>" );
+        MAST_TRACE( mod, 0, "<selected>" );
 #if 0
         mimeid = duf_sql_column_long_long( pstmt, 0 );
 #else
@@ -197,7 +197,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
     /* "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
-      DUF_TRACE( mod, 3, " S: %s ", sql );
+      MAST_TRACE( mod, 3, " S: %s ", sql );
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
     /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
     /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
@@ -208,7 +208,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
       if ( need_id && changes )
       {
         mimeid = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
+        MAST_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
       DUF_SQL_END_STMT( pdi, insert_mime, lr, pstmt_insert );
@@ -232,7 +232,7 @@ mime_destructor( void *ctx )
   magic_t magic = ( magic_t ) ctx;
 
   magic_close( magic );
-  DUF_TRACE( mime, 0, " closed mime " );
+  MAST_TRACE( mime, 0, " closed mime " );
 }
 
 /*
@@ -244,7 +244,7 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_STARTR( r );
   unsigned long long mimeid = 0;
 
-  DUF_TRACE( mod, 0, " mime" );
+  MAST_TRACE( mod, 0, " mime" );
 
   if ( DUF_NOERROR( r ) )
   {
@@ -261,7 +261,7 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     if ( !magic )
     {
       magic = magic_open(  /* MAGIC_MIME | */ MAGIC_PRESERVE_ATIME );
-      DUF_TRACE( mime, 0, " opened mime %s ", magic ? " OK " : " FAIL " );
+      MAST_TRACE( mime, 0, " opened mime %s ", magic ? " OK " : " FAIL " );
 #if 0
       duf_levinfo_set_context_up( pdi, magic );
       duf_levinfo_set_context_up_destructor( pdi, mime_destructor );
@@ -279,12 +279,12 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
     magic_setflags( magic, MAGIC_PRESERVE_ATIME );
     mime_plus = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
-  /* DUF_TRACE( mime, 0, " opened mime %s : %s ---", magic ? " OK " : " FAIL ", mime_plus ); */
+  /* MAST_TRACE( mime, 0, " opened mime %s : %s ---", magic ? " OK " : " FAIL ", mime_plus ); */
 
     magic_setflags( magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
     mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
 
-    DUF_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ),
+    MAST_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ),
                DUF_GET_SFIELD2( fname ) );
 
     if ( mime )
@@ -316,7 +316,7 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = :mimeID WHERE " DUF_SQL_IDFIELD " = :dataID ";
 
           DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt_update );
-          DUF_TRACE( mod, 3, " S: %s ", sql );
+          MAST_TRACE( mod, 3, " S: %s ", sql );
           DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
           DUF_SQL_BIND_LL( dataID, filedataid, r, pstmt_update );
           DUF_SQL_STEPC( r, pstmt_update );
@@ -332,7 +332,7 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         mas_free( charset );
         mas_free( tail );
       }
-    /* DUF_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
+    /* MAST_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
     mas_free( mime );
     mas_free( mime_plus );

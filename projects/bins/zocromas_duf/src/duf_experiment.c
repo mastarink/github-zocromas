@@ -13,7 +13,7 @@ duf_experiment( void )
   void *han;
 
   han = dlopen( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/lib/dufmod/crc32.so", RTLD_NOLOAD | RTLD_LAZY );
-  DUF_TRACE( temp, 0, "(so) han:%p", han );
+  MAST_TRACE( temp, 0, "(so) han:%p", han );
   if ( han )
   {
     dlclose( han );
@@ -21,7 +21,7 @@ duf_experiment( void )
   else
   {
     han = dlopen( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/lib/dufmod/crc32.so", RTLD_GLOBAL | RTLD_LAZY );
-    DUF_TRACE( temp, 0, "(so) han:%p", han );
+    MAST_TRACE( temp, 0, "(so) han:%p", han );
     if ( han )
     {
       duf_scan_callbacks_t *ps;
@@ -31,13 +31,13 @@ duf_experiment( void )
       if ( ps )
       {
         ps->dlhan = han;
-        DUF_TRACE( temp, 0, "[%p:%p] %s :: %s", han, ps, ( ps )->name, duf_collect_openat_crc32_callbacks.name );
+        MAST_TRACE( temp, 0, "[%p:%p] %s :: %s", han, ps, ( ps )->name, duf_collect_openat_crc32_callbacks.name );
       }
       dlclose( han );
     }
     else
     {
-      DUF_TRACE( temp, 0, "%s", dlerror(  ) );
+      MAST_TRACE( temp, 0, "%s", dlerror(  ) );
     }
   }
 

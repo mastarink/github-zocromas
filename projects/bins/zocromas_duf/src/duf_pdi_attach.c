@@ -1,7 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -29,8 +29,8 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
   if ( !pdi->attached_copy )
   {
     DORF( r, duf_main_db_open, pdi );
-    DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-    DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
+    MAST_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
+    MAST_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
   /* assert( global_status.db_attached_selected == NULL ); */
     if ( !pdi->db_attached_selected )
     {
@@ -40,13 +40,13 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 
       T( "(%d) to attach (%p:%s)", r, pdi, pdi->pdi_name );
       pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    /* DUF_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
-      DUF_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
+    /* MAST_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
+      MAST_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
       DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
       DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, pdi->db_attached_selected, &changes ) );
     }
-    DUF_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
+    MAST_TRACE( sql, 0, "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   }
   DUF_ENDR( r );
 }

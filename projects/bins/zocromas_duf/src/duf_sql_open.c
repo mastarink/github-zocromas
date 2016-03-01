@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -27,11 +27,11 @@ duf_sql_open( const char *dbpath )
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
+  MAST_TRACE( explain, 0, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
   DOR_SQLITE( r, mas_sqlite_open( dbpath ) );
 
-  DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
-  DUF_TRACE( explain, 0, "opened (?%d) database", r );
+  MAST_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
+  MAST_TRACE( explain, 0, "opened (?%d) database", r );
   DUF_ENDR( r );
 }
 

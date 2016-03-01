@@ -1,7 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -29,8 +29,8 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_sccb_handle_t * s
   DUF_STARTR( r );
 
 /* Not here : assert( DUF_GET_UFIELD2( dirid) == duf_levinfo_dirid( pdi ) ); */
-  DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
-  DUF_TRACE( explain, 2, "@ sel cb2 node" );
+  MAST_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
+  MAST_TRACE( explain, 2, "@ sel cb2 node" );
 
   DOR( r, duf_levinfo_godown_dbopenat_dh( PDI, node_type, pstmt ) );
 

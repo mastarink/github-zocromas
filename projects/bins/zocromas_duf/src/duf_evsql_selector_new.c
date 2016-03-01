@@ -8,7 +8,7 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -139,7 +139,7 @@ duf_expand_sql( const char *sql, const char *dbname )
   char *nsql;
 
   nsql = mas_expand_string_cb_arg_alloc( sql, duf_expand_sql_xsdb_getvar, dbname );
-/* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
+/* MAST_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
   return nsql;
 }
 

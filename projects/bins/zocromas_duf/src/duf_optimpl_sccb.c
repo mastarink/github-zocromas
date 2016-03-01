@@ -7,7 +7,7 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -179,7 +179,7 @@ duf_option_O_cd( const char *s )
     {
       new_path = mas_strdup( s );
     }
-    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_pdi_global(  ) ) );
+    MAST_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_pdi_global(  ) ) );
     {
 
     /* duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set, int caninsert, int frecursive ) */

@@ -9,7 +9,7 @@
 # define DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ) \
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
-          DUF_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
+          MAST_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
           if ( DUF_NOERROR(_rt) ) \
             _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
 
@@ -27,21 +27,21 @@
 #  define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	{ \
   	  duf_stmnt_t *_pstmt_m = NULL; \
-	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
+	  MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           /* TODO : static not always or never? */ \
           if ( DUF_NOERROR(_rt) ) \
             _pstmt_m = duf_pdi_find_statement_by_id( _pdi, DUF_SQL_STMD_ID_ ## _name ); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             _pstmt_m = duf_pdi_prepare_statement_by_id( _pdi, _sql,  DUF_SQL_STMD_ID_ ## _name, &_rt ); \
-	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
+	  MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           if ( DUF_NOERROR(_rt) && !_pstmt_m ) \
             DUF_MAKE_ERROR(_rt, DUF_ERROR_PDI_SQL); \
-	  DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
+	  MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
           DUF_TEST_R( _rt );
 # elif defined(DUF_SQL_NOPDI_STMT)
 #  define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ); \
-	DUF_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
+	MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
 #  else
 #  undef DUF_SQL_START_STMT
 # endif
@@ -92,19 +92,19 @@
 # define DUF_SQL_BIND_LL( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind ll " # _name ": %lld", (long long)_value); \
+		    MAST_TRACE( sql, 4, "@@bind ll " # _name ": %lld", (long long)_value); \
 		    DOR(_rt, duf_sql_bindn_long_long( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_LL_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind ll nz " # _name ": %lld", (long long)_value); \
+		    MAST_TRACE( sql, 4, "@@bind ll nz " # _name ": %lld", (long long)_value); \
   		    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_LL_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind ll nz opt " # _name ": %lld", (long long)_value); \
+		    MAST_TRACE( sql, 4, "@@bind ll nz opt " # _name ": %lld", (long long)_value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
@@ -114,19 +114,19 @@
 # define DUF_SQL_BIND_I( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i " # _name ": %d", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i " # _name ": %d", _value); \
 		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_I_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i nz " # _name ": %d", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i nz " # _name ": %d", _value); \
   		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_I_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i nz opt " # _name ": %d", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i nz opt " # _name ": %d", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
@@ -136,19 +136,19 @@
 # define DUF_SQL_BIND_U( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i " # _name ": %u", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i " # _name ": %u", _value); \
 		    DOR(_rt, duf_sql_bindn_int( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_U_NZ( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i nz " # _name ": %u", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i nz " # _name ": %u", _value); \
   		    DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_U_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  {  \
-		    DUF_TRACE( sql, 4, "@@bind i nz opt " # _name ": %u", _value); \
+		    MAST_TRACE( sql, 4, "@@bind i nz opt " # _name ": %u", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
                     DOR(_rt, duf_sql_bindn_int_nz( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
@@ -158,13 +158,13 @@
 # define DUF_SQL_BIND_S( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
                   { \
-		    DUF_TRACE( sql, 4, "@@bind s " # _name ": %s", _value); \
+		    MAST_TRACE( sql, 4, "@@bind s " # _name ": %s", _value); \
 		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value, 0 )); \
 		  }
 # define DUF_SQL_BIND_S_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( DUF_NOERROR(_rt) ) \
 		  { \
-		    DUF_TRACE( sql, 4, "@@bind s opt " # _name ": %s", _value); \
+		    MAST_TRACE( sql, 4, "@@bind s opt " # _name ": %s", _value); \
 		    DUF_E_LOWER( DUF_ERROR_BIND_NAME ); \
 		    DOR(_rt, duf_sql_bindn_string( _pstmt_m, ":" #_name, _value, 1 )); \
 		    DUF_CLEAR_ERROR(_rt, DUF_ERROR_BIND_NAME); \
@@ -184,25 +184,25 @@
       { \
 	while ( DUF_NOERROR(_rt) && !DUF_IS_ERROR_N(_rt, DUF_SQL_DONE ) ) \
 	{ \
-	  DUF_TRACE(sql, 4, "EACH ROW:%s", duf_sql_stmt(_pstmt1)); \
+	  MAST_TRACE(sql, 4, "EACH ROW:%s", duf_sql_stmt(_pstmt1)); \
 	  DUF_SQL_STEP( _rt, _pstmt1 ); \
-	  DUF_TRACE(sql, 4, "(%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+	  MAST_TRACE(sql, 4, "(%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	  if ( DUF_IS_ERROR_N(_rt, DUF_SQL_ROW) ) \
 	  { \
 	    DUF_CLEAR_ERROR(_rt, DUF_SQL_ROW ); \
-	    DUF_TRACE(sql, 4, "DO EACH ROW STEP:%s", duf_sql_stmt(_pstmt1)); \
+	    MAST_TRACE(sql, 4, "DO EACH ROW STEP:%s", duf_sql_stmt(_pstmt1)); \
 	    _ops ; \
-            DUF_TRACE(sql, 4, "(OPS:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+            MAST_TRACE(sql, 4, "(OPS:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	  } \
-          DUF_TRACE(sql, 4, "(NEXT:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+          MAST_TRACE(sql, 4, "(NEXT:%s) EACH ROW STEP:%s", mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
 	} \
-        DUF_TRACE(sql, 4, "(END:%d:%s) EACH ROW STEP:%s", _rt, mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
+        MAST_TRACE(sql, 4, "(END:%d:%s) EACH ROW STEP:%s", _rt, mas_error_name_i(_rt), duf_sql_stmt(_pstmt1)); \
       }
 
 # define DUF_SQL_BIND_S_OPTQ(_name, _value, _pstmt_m) \
  if ( QNOERR ) \
 		  { \
-		    DUF_TRACE( sql, 4, "@@bind s opt " # _name ": %s", _value); \
+		    MAST_TRACE( sql, 4, "@@bind s opt " # _name ": %s", _value); \
 		    MASE_E_LOWER( DUF_ERROR_BIND_NAME ); \
 		    CR( sql_bindn_string, _pstmt_m, ":" #_name, _value, 1 ); \
 		    ERRCLEAR( BIND_NAME ); \

@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -26,7 +26,7 @@ duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
+  MAST_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
   DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
 
 /* assert( r >= 0 ); */
@@ -40,7 +40,7 @@ duf_sql_step( mas_sqlite_stmt_t * stmt )
 
   DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
   mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb(  ) ) );
-  DUF_TRACE( sql, 2, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
+  MAST_TRACE( sql, 2, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
 /* assert( mas_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
   DUF_ENDR( r );
 }
@@ -51,7 +51,7 @@ duf_sql_finalize( mas_sqlite_stmt_t * stmt )
   DUF_STARTR( r );
 
   DOR_SQLITE( r, mas_sqlite_finalize( stmt ) );
-  DUF_TRACE( sql, 6, "-" );
+  MAST_TRACE( sql, 6, "-" );
   DUF_ENDR( r );
 }
 
@@ -61,7 +61,7 @@ duf_sql_reset( mas_sqlite_stmt_t * stmt )
   DUF_STARTR( r );
 
   DOR_SQLITE( r, mas_sqlite_reset( stmt ) );
-  DUF_TRACE( sql, 6, "-" );
+  MAST_TRACE( sql, 6, "-" );
   DUF_ENDR( r );
 }
 
@@ -71,7 +71,7 @@ duf_sql_changes( void )
   int changes = 0;
 
   changes = mas_sqlite_changes(  );
-  DUF_TRACE( sql, 4, "changes=%d", changes );
+  MAST_TRACE( sql, 4, "changes=%d", changes );
   return changes;
 }
 

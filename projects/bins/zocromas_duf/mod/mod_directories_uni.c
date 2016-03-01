@@ -5,7 +5,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -153,7 +153,7 @@ register_pdidirectory( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * 
 #endif
 
 /* fname === */
-  DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
                                   &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );

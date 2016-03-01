@@ -42,7 +42,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/error/mas_error_reporting.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -169,15 +169,15 @@ cb_prompt_interactive( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
   CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_TRACE( any, 1, "any test" );
-  DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
+  MAST_TRACE( any, 1, "any test" );
+  MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
   CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
   fputs( "\n", stderr );
-  DUF_TRACE( temp, 0, "∈0∋ Zero " );
+  MAST_TRACE( temp, 0, "∈0∋ Zero " );
   TT( "∈1∋ One " );
   TT( "∈2∋ Two " );
   TT( "∈1∋ Three " );
@@ -226,11 +226,11 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      DUF_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+      MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
     }
     else
     {
-      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+      MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
     }
   }
 #endif
@@ -250,7 +250,7 @@ duf_main( int argc, char **argv )
 /* mas_strdup( "abrakadabra" ); */
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
-  DUF_TRACE( explain, 1, "@main with config" );
+  MAST_TRACE( explain, 1, "@main with config" );
   DORF( r, duf_main_with_config, argc, argv );
 
   TR( r );

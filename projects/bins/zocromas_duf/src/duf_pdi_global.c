@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -34,7 +34,7 @@ int
 duf_pdi_init_global( void )
 {
   DUF_STARTR( r );
-  DUF_TRACE( pdi, 0, "@@@recursive:%d; NO real_path", DUF_UG_FLAG( recursive ) );
+  MAST_TRACE( pdi, 0, "@@@recursive:%d; NO real_path", DUF_UG_FLAG( recursive ) );
 #if 0
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( global_status.scn.pdi, global_status.scn.pdi->pup, NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,

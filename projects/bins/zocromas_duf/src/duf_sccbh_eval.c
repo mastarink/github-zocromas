@@ -5,7 +5,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -57,9 +57,9 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
   assert( sccbh );
   assert( SCCB );
 
-  DUF_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, SCCB->name );
+  MAST_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, SCCB->name );
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_scanstage_t ) NULL, ( duf_stmnt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
-  DUF_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", mas_error_name_i( r ), sccbh ? 1 : 0, SCCB->name );
+  MAST_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", mas_error_name_i( r ), sccbh ? 1 : 0, SCCB->name );
 
   if ( DUF_NOERROR( r ) && f_summary )
   {
@@ -85,9 +85,9 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh, b
   DUF_STARTR( r );
   if ( sccbh && SCCB )
   {
-    DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
-    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
-    DUF_TRACE( sccbh, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    MAST_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
+    MAST_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
+    MAST_TRACE( sccbh, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
 
     {
       HCHANGES = 0;
@@ -129,10 +129,10 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
      /* && sql_set_pair.active->selector2 && sql_set_pair.active->fieldset  FIXME for !sql_set_pair.active->selector2 && sql_set_pair.active->selector2_cte */
            )
   {
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
-    DUF_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );
+    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
+    MAST_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq_row, PDI->seq, SCCB->title );
 
-    DUF_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, duf_levinfo_dirid( PDI ),
+    MAST_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, duf_levinfo_dirid( PDI ),
                duf_uni_scan_action_title( SCCB ), SCCB->name );
 #if 0
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set_pair.active, str_cb2, sccbh, node_type ) );
@@ -143,19 +143,19 @@ duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_
     {
       if ( r > 0 )
       {
-        DUF_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+        MAST_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                    r, set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
       }
       else
       {
-        DUF_TRACE( explain, 3, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+        MAST_TRACE( explain, 3, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                    set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
       }
     }
   }
   else
   {
-    DUF_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", set_type_title );
+    MAST_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", set_type_title );
     DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
   }
   DUF_ENDR( r );
@@ -176,20 +176,20 @@ duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused 
  *
  * */
 /* scan this files in this directory */
-  DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
+  MAST_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
 /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
-    DUF_TRACE( sccbh, 2, "@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
+    MAST_TRACE( sccbh, 2, "@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( scanstage == DUF_SCANSTAGE_DB_LEAVES_FD && SCCB->leaf_scan_fd2 )
     {
-      DUF_TRACE( sccbh, 4, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
+      MAST_TRACE( sccbh, 4, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
     /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
     }
     if ( scanstage == DUF_SCANSTAGE_DB_LEAVES_NOFD && SCCB->leaf_scan2 )
     {
-      DUF_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
+      MAST_TRACE( sccbh, 10, "%s: leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, SCCB->leaf_scan_fd2 ? 1 : 0, SCCB->leaf_scan2 ? 1 : 0 );
     /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
       DOR( r, duf_eval_sccbh_db_items_str_cb( scanstage, DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
     }
@@ -204,9 +204,9 @@ duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_un
 /* scan this files in this directory */
 /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
-    DUF_TRACE( sccbh, 2, "@@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
-    DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan2 ? 1 : 0 );
+    MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
+    MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan2 ? 1 : 0 );
     if ( SCCB->leaf_scan2 )
     {
     /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
@@ -223,9 +223,9 @@ duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unus
 /* scan this files in this directory */
 /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
-    DUF_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
-    DUF_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan_fd2 ? 1 : 0 );
+    MAST_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", duf_uni_scan_action_title( SCCB ), SCCB->name );
+    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
+    MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", duf_uni_scan_action_title( SCCB ), SCCB->leaf_scan_fd2 ? 1 : 0 );
     if ( SCCB->leaf_scan_fd2 )
     {
     /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
@@ -241,7 +241,7 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+  MAST_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
 /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
   {
     duf_scanner_t scanner = NULL;
@@ -249,13 +249,13 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
     PDI->items.total++;
     PDI->items.dirs++;
 
-    DUF_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+    MAST_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
 #if 1
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && duf_levinfo_if_deleted( PDI ) )
     {
       sccbh->current_scanner = scanner;
       sccbh->current_node_type = DUF_NODE_NODE;
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+      MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb ) /* atom is fs-direntry(dir or reg) or item(node or leaf) */
@@ -265,7 +265,7 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
     {
       sccbh->current_scanner = scanner;
       sccbh->current_node_type = DUF_NODE_NODE;
-      DUF_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+      MAST_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb ) /* atom is fs-direntry(dir or reg) or item(node or leaf) */
@@ -275,13 +275,13 @@ duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_if_deleted( PDI ), DUF_NODE_NODE ) ) )
     {
       sccbh->current_scanner = scanner;
-      DUF_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
+      MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( PDI ) );
       DOR( r, ( scanner ) ( pstmt, PDI ) );
     }
 #endif
     else
     {
-      DUF_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", duf_scanstage_name( scanstage ),
+      MAST_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", duf_scanstage_name( scanstage ),
                  duf_levinfo_dirid( PDI ), duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) );
     }
   }
@@ -299,11 +299,11 @@ duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt MAS_U
   assert( SCCB );
 
 #ifdef DUF_NO_RNUMS
-  DUF_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt ) );
 #else
-  DUF_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt ? DUF_GET_UFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", duf_levinfo_dirid( PDI ), pstmt ? DUF_GET_UFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
 #endif
-  DUF_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DORF( r, duf_eval_sccbh_db_items_str_cb, scanstage, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );
   DUF_ENDR( r );

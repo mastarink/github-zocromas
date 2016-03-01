@@ -1,15 +1,20 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_tracen_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>                                                  /* strrchr; etc. */
 #include <ctype.h>                                                   /* toupper */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_option_longopts.h"                                     /* duf_options_create_longopts_table ♠ */
 
@@ -165,12 +170,14 @@ duf_cli_options_config_env_var_name( const duf_config_cli_t * cli )
   }
   return *envvarname ? envvarname : "MSH_DUF_OPTIONS";
 }
+
 duf_option_gen_code_t
 duf_cli_options_get_maxcodeval( const duf_config_cli_t * cli )
 {
 /* return cli_options_shorts; */
   return cli ? cli->maxcodeval : 0;
 }
+
 const char *
 duf_cli_options_get_shorts( const duf_config_cli_t * cli )
 {
@@ -354,7 +361,7 @@ duf_cli_options_xtable_list2xvtable( const duf_config_cli_t * cli, const duf_lon
       {
         if ( !vtable->xlist[xn].o.val )
         {
-          T( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, maxcodeval );
+          QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, maxcodeval );
           vtable->xlist[xn].o.val = maxcodeval++;
         }
         else

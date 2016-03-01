@@ -27,7 +27,7 @@
 /* #  include "duf_config_ref.h" */
 /* */
 #  ifdef MAS_TRACING
-#    define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
+#    define DUF_OPTIONG(_lo)          (MAST_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
 #  else
 #    define DUF_OPTIONG(_lo)          DUF_CONFIGG(_lo)
 #  endif

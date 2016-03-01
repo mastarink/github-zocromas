@@ -6,7 +6,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -55,8 +55,8 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
 {
   DUF_STARTR( r );
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
-  DUF_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
-  DUF_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ), node_type,
+  MAST_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( PDI ), sqlite3_sql( pstmt_selector ) );
+  MAST_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ), node_type,
              duf_levinfo_path( PDI ), DUF_GET_STMT_SFIELD2( pstmt_selector, dfname ), duf_levinfo_itemtruename( PDI ) );
 
   PDI->seq_row++;
@@ -66,7 +66,7 @@ duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   /* [DUF_NODE_MAX] = NULL, */
   };
   sccbh->current_node_type = node_type;
-  DUF_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ),
+  MAST_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( PDI ), duf_nodetype_name( node_type ),
              duf_uni_scan_action_title( SCCB ), SCCB->name );
   IF_DORF( r, cbs[node_type], scanstage, pstmt_selector, str_cb2, sccbh );
 
@@ -92,7 +92,7 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
 #endif
 
 /* TODO : sccbh->pstmt_selector = pstmt_selector OR via pdi */
-  DUF_TRACE( select, 1, "S:%s", sql_selector );
+  MAST_TRACE( select, 1, "S:%s", sql_selector );
 /* XXX With parent ! XXX */
   DUF_SQL_BIND_LL_NZ_OPT( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
 
@@ -104,8 +104,8 @@ duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type,
  * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )
  * */
 
-  DUF_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), TOTCOUNTED, TOTITEMS );
-  DUF_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", duf_levinfo_dirid( PDI ), PDI->seq, PDI->seq_node, PDI->seq_leaf, TOTITEMS,
+  MAST_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), TOTCOUNTED, TOTITEMS );
+  MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", duf_levinfo_dirid( PDI ), PDI->seq, PDI->seq_node, PDI->seq_leaf, TOTITEMS,
              sqlite3_sql( pstmt_selector ) );
 /* assert( !TOTCOUNTED || TOTITEMS ); */
   if ( !TOTCOUNTED || TOTITEMS )
@@ -143,12 +143,12 @@ duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_t
   if ( DUF_NOERROR( r ) )
     sql_selector = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, PDI->pdi_name, 0, &r );
 
-  DUF_TRACE( scan, 14, "sql:%s", sql_selector );
+  MAST_TRACE( scan, 14, "sql:%s", sql_selector );
   {
 #ifdef MAS_TRACING
     const char *set_type_title = duf_nodetype_name( node_type );
 #endif
-    DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
+    MAST_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
   }
 /*
  * str_cb2 (sub-item scanner ): (~~content-scanner!?)

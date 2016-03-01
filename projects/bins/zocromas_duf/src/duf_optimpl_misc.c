@@ -10,7 +10,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -55,8 +55,8 @@ duf_option_O_history( void )
         DUF_PRINTF( 0, "%s:%s", he->timestamp, he->line );
     }
   }
-  /* DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
-  DUF_TRACE( temp, 0, "@@history length:%d; offset:%d;", phstate->length, phstate->offset );
+  /* MAST_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
+  MAST_TRACE( temp, 0, "@@history length:%d; offset:%d;", phstate->length, phstate->offset );
 
   DUF_ENDR( r );
 }

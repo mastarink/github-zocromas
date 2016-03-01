@@ -4,7 +4,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -51,8 +51,8 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   DUF_STARTR( r );
   if ( str_cb2 )
   {
-    DUF_TRACE( explain, 2, "=> str cb2" );
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
+    MAST_TRACE( explain, 2, "=> str cb2" );
+    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
     assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 
 #if 1
@@ -97,7 +97,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
             assert( duf_levinfo_dirid( PDI ) == duf_levinfo_dirid_up( PDI ) );
           }
 
-          DUF_TRACE( sccbh, 0, "TEST %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( pdi2 ), duf_nodetype_name( DUF_NODE_LEAF ), DUF_NODE_LEAF,
+          MAST_TRACE( sccbh, 0, "TEST %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( pdi2 ), duf_nodetype_name( DUF_NODE_LEAF ), DUF_NODE_LEAF,
                      duf_levinfo_path_up( pdi2 ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), duf_levinfo_itemtruename( pdi2 ) );
 #  else
           duf_li_delete( pli, PDI->pathinfo.maxdepth );
@@ -131,7 +131,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
     {
       PDI->seq++;
       PDI->seq_leaf++;
-      DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
+      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
     }
     if ( sccbh->progress_leaf_cb )
       ( sccbh->progress_leaf_cb ) ( sccbh );
@@ -147,12 +147,12 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
 
 /* data from db at pstmt */
 
-  DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
-  DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
+  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
+  MAST_TRACE( explain, 4, "@ sel cb2 leaf" );
 
-  DUF_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_leaf, PDI->seq, TOTITEMS, SCCB->title );
+  MAST_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_leaf, PDI->seq, TOTITEMS, SCCB->title );
 
-  DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                 duf_levinfo_dfd( PDI ), PDI->opendir );
 /* #ifdef MAS_ASSERT */
   {
@@ -202,15 +202,15 @@ duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
 
 /* data from db at pstmt */
 
-  DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
-  DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
+  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
+  MAST_TRACE( explain, 4, "@ sel cb2 leaf" );
   assert( str_cb2 == duf_eval_sccbh_db_leaf_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == NULL );
 
-  DUF_TRACE( scan, 9, "LEAF %s", duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 9, "LEAF %s", duf_levinfo_path( PDI ) );
   {
   /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, sccbh, DUF_NODE_LEAF /* node_type */  ) );
-    DUF_TRACE( scan, 9, "(%s) LEAF down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
+    MAST_TRACE( scan, 9, "(%s) LEAF down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
     DOR( r, duf_sel_cb2_leaf_at( scanstage, pstmt, str_cb2, sccbh ) );
@@ -219,7 +219,7 @@ duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
 
     DOR( r, duf_levinfo_goup( PDI ) );
   }
-  DUF_TRACE( scan, 9, "/LEAF %s", duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 9, "/LEAF %s", duf_levinfo_path( PDI ) );
 
   DUF_ENDR( r );
 }

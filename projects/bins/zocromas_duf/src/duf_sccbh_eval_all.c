@@ -6,7 +6,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -78,10 +78,10 @@ duf_eval_sccbh_scanstage( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccb
     NULL
   };
 
-  DUF_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
+  MAST_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( PDI ),
              duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-  DUF_TRACE( sccbh, 2, "@%15s(%d). pass (%s)", duf_scanstage_name( scanstage ), scanstage, duf_uni_scan_action_title( SCCB ) );
+  MAST_TRACE( sccbh, 2, "@%15s(%d). pass (%s)", duf_scanstage_name( scanstage ), scanstage, duf_uni_scan_action_title( SCCB ) );
 /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
   if ( passes[scanstage] )
   {
@@ -89,7 +89,7 @@ duf_eval_sccbh_scanstage( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccb
     sccbh->current_scanstage = scanstage;
   /* T( "@@@############# hhh: %s @ %s", duf_scanstage_name( scanstage ), duf_uni_scan_action_title( SCCB ) ); */
     DOR( r, ( passes[scanstage] ) ( scanstage, pstmt_selector, sccbh ) );
-    DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+    MAST_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
     sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
     sccbh->current_statement = NULL;
   }
@@ -111,8 +111,8 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
  *   for each direntry from filesystem
  *                                     -- see duf_dir_scan2_passs.c
  * */
-  DUF_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-  DUF_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
+  MAST_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+  MAST_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
 /* T( "Q: TOTCOUNTED:%d; TOTITEMS:%llu for %s", TOTCOUNTED, TOTITEMS, duf_uni_scan_action_title( SCCB ) ); */
   if ( !SCCB->disabled /* && ( !TOTCOUNTED || TOTITEMS ) TODO FIXME */  )
   {
@@ -132,12 +132,12 @@ duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
   /* assert( 0 );                                                                                               */
   }
 
-  DUF_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
+  MAST_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( SCCB ) );
 
 /* FIXME */
   DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP );                          /* reset error if it was `MAX_DEPTH` */
 
-  DUF_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
   DUF_ENDR( r );
 }
@@ -166,19 +166,19 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake MAS_UNUSE
   unsigned long long diridpid;
 
   diridpid = duf_levinfo_dirid( PDI );
-  DUF_TRACE( scan, 3, "[%llu]", diridpid );
-  DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
+  MAST_TRACE( scan, 3, "[%llu]", diridpid );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
                 duf_pdi_reldepth( PDI ), diridpid );
 
-  DUF_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
+  MAST_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
 
-  DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
 
-  DUF_TRACE( explain, 2,
+  MAST_TRACE( explain, 2,
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( SCCB ) );
 
-  DUF_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", SCCB->name, duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
+  MAST_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", SCCB->name, duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
 
 # endif
   if ( !SCCB->disabled )
@@ -187,10 +187,10 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_scanstage_t scanstage_fake MAS_UNUSE
   }
   else
   {
-    DUF_TRACE( sccbh, 0, "@eval sccbh all disabled %s", SCCB->name );
+    MAST_TRACE( sccbh, 0, "@eval sccbh all disabled %s", SCCB->name );
   }
 
-  DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
+  MAST_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
   DUF_ENDR( r );
 }
 #endif

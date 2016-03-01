@@ -15,7 +15,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -95,7 +95,7 @@ save_to_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_U
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 0, "save_to_init %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( mod, 0, "save_to_init %s", duf_levinfo_path( pdi ) );
 
   DUF_ENDR( r );
 }
@@ -123,7 +123,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
   fpath = mas_strcat_x( fpath, save_path );
   fpath = mas_strcat_x( fpath, "//" );
   fpath = mas_strcat_x( fpath, duf_levinfo_itemtruename( pdi ) );
-  DUF_TRACE( mod, 0, "%s", fpath );
+  MAST_TRACE( mod, 0, "%s", fpath );
   fr = fopen( fpath, "r" );
   if ( fr )
   {
@@ -138,7 +138,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
     {
       int fd;
 
-      DUF_TRACE( mod, 0, "OPENED %s", fpath );
+      MAST_TRACE( mod, 0, "OPENED %s", fpath );
 
       fd = duf_levinfo_dfd( pdi );
       if ( fd > 0 )
@@ -157,7 +157,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
 
             len = read( fd, buffer, sizeof( buffer ) );
             lw = fwrite( buffer, 1, len, fw );
-            DUF_TRACE( mod, 0, "READ %lu of %s", len, fpath );
+            MAST_TRACE( mod, 0, "READ %lu of %s", len, fpath );
             if ( lw != len )
               DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
           }
@@ -195,7 +195,7 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
     }
     else
     {
-      DUF_TRACE( mod, 0, "NOT OPENED %s", fpath );
+      MAST_TRACE( mod, 0, "NOT OPENED %s", fpath );
     }
   }
   mas_free( fpath );
@@ -226,9 +226,9 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
     save_path = duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
                                        0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
-    DUF_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
-    DUF_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
-    DUF_TRACE( mod, 2, "@to => %s", save_path );
+    MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
+    MAST_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+    MAST_TRACE( mod, 2, "@to => %s", save_path );
     if ( *save_path == '/' )
     {
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
@@ -252,7 +252,7 @@ save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         sl = strchr( sl, '/' );
         if ( sl )
           *sl = 0;
-        DUF_TRACE( mod, 0, "%d. create => %s", nnsavp, save_path );
+        MAST_TRACE( mod, 0, "%d. create => %s", nnsavp, save_path );
         rt = fstatat( duf_levinfo_dfd_top( pdi ), save_path, &stdir, AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW );
         if ( rt < 0 && errno == ENOENT )
         {
@@ -306,7 +306,7 @@ save_to_leaf2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNU
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
@@ -326,7 +326,7 @@ save_to_node_before2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi 
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
   DUF_ENDR( r );
@@ -360,7 +360,7 @@ save_to_node_after2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi M
 {
   DUF_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
   DUF_ENDR( r );
@@ -371,7 +371,7 @@ save_to_de_dir_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t *
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 1, "save_to de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "save_to de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
   DUF_ENDR( r );
 }
 
@@ -380,7 +380,7 @@ save_to_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t 
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 1, "save_to de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "save_to de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   DUF_ENDR( r );
 }

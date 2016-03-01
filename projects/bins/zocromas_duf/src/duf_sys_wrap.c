@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -33,7 +33,7 @@ duf_unlink( const char *path )
   {
     int ry = 0;
 
-    DUF_TRACE( any, 0, "removing %s ...", path );
+    MAST_TRACE( any, 0, "removing %s ...", path );
     ry = unlink( path );
     if ( ry < 0 )
     {

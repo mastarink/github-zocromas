@@ -7,7 +7,7 @@
 
 # define DUF_CFGX(_cfg, _lo)  _cfg->_lo
 # ifdef MAS_TRACING
-#  define DUF_CFGG(_cfg, _lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CFGX(_cfg, _lo))
+#  define DUF_CFGG(_cfg, _lo)          (MAST_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CFGX(_cfg, _lo))
 # else
 #  define DUF_CFGG(_cfg, _lo)          DUF_CFGX(_cfg, _lo)
 # endif
@@ -35,7 +35,7 @@
 
 # define DUF_CONFIGX(_lo)  DUF_CFGX(duf_get_config(), _lo)
 # ifdef MAS_TRACING
-#  define DUF_CONFIGG(_lo)       (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGX(_lo))
+#  define DUF_CONFIGG(_lo)       (MAST_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGX(_lo))
 # else
 #  define DUF_CONFIGG(_lo)        DUF_CONFIGX(_lo)
 # endif

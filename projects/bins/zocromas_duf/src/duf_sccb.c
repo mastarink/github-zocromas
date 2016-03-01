@@ -8,7 +8,7 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -92,7 +92,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     {
       void *han = NULL;
 
-      DUF_TRACE( sccb, 0, "@@@@@@to load %s", path );
+      MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
       han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
       if ( !han )
       {
@@ -103,13 +103,13 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
           if ( sccb )
           {
             sccb->dlhan = han;
-            DUF_TRACE( sccb, 0, "[%p] %s => %s", han, path, sccb->name );
+            MAST_TRACE( sccb, 0, "[%p] %s => %s", han, path, sccb->name );
             for ( duf_scan_callbacks_t * tsccb = first; tsccb; tsccb = tsccb->next )
               prev = tsccb;
             if ( prev )
             {
               prev->next = sccb;
-              DUF_TRACE( sccb, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL );
+              MAST_TRACE( sccb, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL );
             }
             else
             {
@@ -118,7 +118,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
           }
         }
       }
-      DUF_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
+      MAST_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
     }
     mas_free( symbol );
     mas_free( path );
@@ -135,7 +135,7 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
   if ( !sccb )
   {
     sccb = duf_load_sccb_by_evnamen( name, namelen, first );
-    DUF_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
+    MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   }
   return sccb;
 }

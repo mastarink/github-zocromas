@@ -5,7 +5,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -182,7 +182,7 @@ static int MAS_UNUSED
 filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
   DUF_STARTR( r );
-  DUF_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 /* TODO remove or mark name from DB */
   DUF_ENDR( r );
 }
@@ -205,7 +205,7 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, " DUF_SQL_FILENAMEFIELD ", dataid) VALUES (:pathID, :Name, :dataID)";
 
     DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
-    DUF_TRACE( mod, 3, "S:%s", sql );
+    MAST_TRACE( mod, 3, "S:%s", sql );
     DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
     DUF_SQL_BIND_S( Name, fname, r, pstmt );
     DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
@@ -219,6 +219,6 @@ filenames_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_
     DUF_MAKE_ERRORM( r, DUF_ERROR_DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
     DUF_TEST_R( r );
   }
-/* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
+/* MAST_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
   DUF_ENDR( r );
 }

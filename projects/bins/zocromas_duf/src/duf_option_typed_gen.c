@@ -1,6 +1,7 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
 #include <stdio.h>                                                   /* FILE */
@@ -8,6 +9,7 @@
 #include <sys/stat.h>                                                /* struct stat */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/types/mas_common_types.h>                           /* mas_limits_t; mas_limitsll_t */
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_convert.h>                                /* mas_strtol_suff; mas_strtoll_suff; etc. ♣ */
@@ -15,12 +17,11 @@
 #include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
-# include <mastar/error/mas_error_defs_ctrl.h>
-# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -36,9 +37,9 @@
 #include "duf_option_typed_gen.h"
 /* ###################################################################### */
 
-static 
+static
 #if 0
-  FILE *
+FILE *
 duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite, int *pr )
 {
   int rpr = 0;
@@ -78,8 +79,8 @@ duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popened
 #else
 SRP( OPTIONS, FILE *, newfile = NULL, open_file_special, duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite )
 {
-  /* int rpr = 0; */
-  /* FILE *newfile = NULL; */
+/* int rpr = 0; */
+/* FILE *newfile = NULL; */
   int overw = 0;
   const char *mode = "w";
   struct stat st;
@@ -97,8 +98,8 @@ SRP( OPTIONS, FILE *, newfile = NULL, open_file_special, duf_config_cli_t * cli,
   ry = stat( pname, &st );
   if ( ry >= 0 && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
   {
-    ERRMAKE_M(  FILE_EXISTS, "can't open file %s for writing file exists %llu / %llu chr:%d", pname,
-                     ( unsigned long long ) st.st_dev, ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
+    ERRMAKE_M( FILE_EXISTS, "can't open file %s for writing file exists %llu / %llu chr:%d", pname,
+               ( unsigned long long ) st.st_dev, ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
   }
   else
   {

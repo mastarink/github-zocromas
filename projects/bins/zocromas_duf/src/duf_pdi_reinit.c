@@ -5,7 +5,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -47,10 +47,10 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   fwn = fallow_dirs < 0 ? duf_pdi_allow_dirs( pdi ) : fallow_dirs;
   flinear = flinear < 0 ? duf_pdi_linear( pdi ) : flinear;
   DOR( r, duf_pdi_shut( pdi ) );
-  DUF_TRACE( pdi, 0, "@@@frecursive:%d; duf_pdi_recursive( pdi ):%d; frec:%d; reinit real_path:%s", frecursive, duf_pdi_recursive( pdi ), frec,
+  MAST_TRACE( pdi, 0, "@@@frecursive:%d; duf_pdi_recursive( pdi ):%d; frec:%d; reinit real_path:%s", frecursive, duf_pdi_recursive( pdi ), frec,
              real_path );
-  DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
-  DUF_TRACE( pdi, 0, "@@@frecursive:%d/%d; real_path:%s", frecursive, frec, real_path );
+  MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
+  MAST_TRACE( pdi, 0, "@@@frecursive:%d/%d; real_path:%s", frecursive, frec, real_path );
 /* T( "%p real_path:%p:%s", pdi->pathinfo.levinfo ? pdi->pathinfo.levinfo->fullpath : 0, real_path, real_path ); */
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, pu, real_path, sql_set, caninsert, frec, fwn, flinear, opendir ) );
 /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
@@ -68,7 +68,7 @@ duf_pdi_reinit_min( duf_depthinfo_t * pdi )
   char *rpath;
 
   rpath = mas_strdup( duf_levinfo_path( pdi ) );
-  DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
+  MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
 /* T( "%p rpath:%p:%s", pdi->pathinfo.levinfo ? pdi->pathinfo.levinfo->fullpath : 0, rpath, rpath ); */
   DOR( r, duf_pdi_reinit( pdi, rpath, duf_pdi_pu( pdi ), ( const duf_sql_set_t * ) NULL /* sql_set */ , 0 /* caninsert */ , -1 /* recursive:auto */ ,
                           -1 /* allow_dirs:auto */ , -1 /* linear:auto */ , duf_pdi_opendir( pdi ) ) );
@@ -94,16 +94,16 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
       DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     {
     /* FIXME : does'nt copy pu - so mod_dialog not work ???  */
-      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
-      DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+      MAST_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
+      MAST_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
       assert( pdi->pdi_name );
-      DUF_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, pdi->sql_beginning_done );
+      MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, pdi->sql_beginning_done );
 
       DOR( r,
            duf_pdi_reinit( pdi, real_path, pu ? pu : DUF_CONFIGG( vars.puz ), sql_set, caninsert, frecursive, fallow_dirs, flinear,
                            duf_pdi_opendir( pdi ) ) );
-      DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
-      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
+      MAST_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+      MAST_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );
     }
     mas_free( real_path );
   }

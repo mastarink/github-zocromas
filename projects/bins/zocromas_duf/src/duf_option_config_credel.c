@@ -1,13 +1,16 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_tracen_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_option_longopts.h"                                     /* duf_options_create_longopts_table ♠ */
@@ -57,7 +60,7 @@ duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_ext
     {
       if ( xtended->o.val && xtended->o.val < 0xFF )
       {
-        DUF_TRACE( options, 50, "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
+        MAST_TRACE( options, 50, "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
         if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
           *p++ = ( char ) xtended->o.val;
@@ -79,7 +82,7 @@ duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_ext
       }
       else
       {
-        DUF_TRACE( options, 60, "@@@- shorts[%s]: %c : %x", xtended->o.name, ' ', xtended->o.val );
+        MAST_TRACE( options, 60, "@@@- shorts[%s]: %c : %x", xtended->o.name, ' ', xtended->o.val );
       }
       xtended++;
     }

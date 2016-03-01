@@ -1,9 +1,12 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+/* #include "duf_tracen_defs_preset.h" */
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
+/* #include <mastar/trace/mas_trace.h> */
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
@@ -45,15 +48,15 @@ duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t co
 
 #if 0
 /* -= by int longindex =- */
-char *
-..._loption_description_d( int longindex, const char *delimh, const char *delim )
+char *...
+_loption_description_d( int longindex, const char *delimh, const char *delim )
 {
   char *p = NULL;
-  const ..._longval_extended_t *extended;
+  const ... _longval_extended_t *extended;
 
-  extended = ..._loption_xfind_at_stdx( longindex, ( const ..._longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
+  extended = ... _loption_xfind_at_stdx( longindex, ( const ... _longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
   if ( extended )
-    p = ..._xoption_description_d( extended, delimh, delim );
+    p = ... _xoption_description_d( extended, delimh, delim );
   return p;
 }
 #endif

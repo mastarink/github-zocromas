@@ -4,7 +4,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -104,7 +104,7 @@ duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
       }
       else
       {
-        DUF_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
+        MAST_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
         T( "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
         assert( 0 );
       }
@@ -211,7 +211,7 @@ duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
       }
       else
       {
-        DUF_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
+        MAST_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
         T( "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
         assert( 0 );
       }

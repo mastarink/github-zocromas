@@ -9,7 +9,7 @@
 
 /* #include <mastar/wrap/mas_std_def.h> */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -46,7 +46,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 
   /* fstatat: If pathname is absolute, then dirfd is ignored. */
     ry = fstatat( updfd, path, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
-    DUF_TRACE( fs, 5, "lowlev. fstatated (%d) ≪%s≫", ry, path );
+    MAST_TRACE( fs, 5, "lowlev. fstatated (%d) ≪%s≫", ry, path );
 
     if ( ry < 0 )
     {
@@ -109,7 +109,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
     int ry = 0;
 
     ry = stat( path, &pdhandle->st );
-    DUF_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
+    MAST_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
 
     if ( ry < 0 )
     {
@@ -140,7 +140,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
-  DUF_TRACE( fs, 5, "(%d)? stated %s", r, path );
+  MAST_TRACE( fs, 5, "(%d)? stated %s", r, path );
   DUF_ENDR( r );
 }
 
@@ -187,15 +187,15 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       ry = openat( updfd, name, O_NOFOLLOW | O_RDONLY );
     else
       ry = openat( updfd, openname, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    DUF_TRACE( fs, 5, "lowlev. openated (%d) ≪%s≫", ry, name );
+    MAST_TRACE( fs, 5, "lowlev. openated (%d) ≪%s≫", ry, name );
 
     if ( ry > 0 )
     {
       pdhandle->dfd = ry;
       pdhandle->serial = ++open_serial;
-      DUF_TRACE( fs, 5, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      MAST_TRACE( fs, 5, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
 
-      DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
+      MAST_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
     /* ry = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT ); */
 
@@ -205,7 +205,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 
       global_status.dh.nopen++;
     /* DUF_CONFIGW( dh.nopen )++; */
-      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, global_status.dh.nopen, global_status.dh.nclose,
+      MAST_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, global_status.dh.nopen, global_status.dh.nclose,
                  global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
     }
     else if ( ry < 0 && errno == ENOENT )
@@ -259,12 +259,12 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     int ry = 0;
 
     ry = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    DUF_TRACE( fs, 2, "lowlev. opened (%d) ≪%s≫", r, path );
+    MAST_TRACE( fs, 2, "lowlev. opened (%d) ≪%s≫", r, path );
     if ( ry >= 0 )
     {
       pdhandle->dfd = ry;
       pdhandle->serial = ++open_serial;
-      DUF_TRACE( fs, 5, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      MAST_TRACE( fs, 5, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DOR( r, duf_stat_dh( pdhandle, path ) );
     }
     else
@@ -289,7 +289,7 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
     DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
-  DUF_TRACE( fs, 5, "(%d)? opened %s", r, path );
+  MAST_TRACE( fs, 5, "(%d)? opened %s", r, path );
   DUF_ENDR( r );
 }
 
@@ -354,8 +354,8 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       int ry = 0;
 
       ry = close( pdhandle->dfd );
-      DUF_TRACE( fs, 5, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
-      DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
+      MAST_TRACE( fs, 5, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+      MAST_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
       if ( ry )
       {
         {
@@ -374,7 +374,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
         DUF_TEST_R( r );
       }
-      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", global_status.dh.nopen, global_status.dh.nclose,
+      MAST_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", global_status.dh.nopen, global_status.dh.nclose,
                  global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
       global_status.dh.nclose++;
     }
@@ -384,7 +384,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       DUF_MAKE_ERRORM( r, DUF_ERROR_NOT_OPEN, "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
     }
 
-    DUF_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
+    MAST_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
   }
   DUF_ENDR( r );
@@ -411,7 +411,7 @@ _duf_check_dh( const char *msg )
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, global_status.dh.nopen, global_status.dh.nclose, global_status.dh.nopen - global_status.dh.nclose );
+  MAST_TRACE( fs, 2, "%s (%u - %u = %u)", msg, global_status.dh.nopen, global_status.dh.nclose, global_status.dh.nopen - global_status.dh.nclose );
   DUF_ENDR( r );
 }
 

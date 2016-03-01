@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -73,7 +73,7 @@ duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t
     pli = &pi->levinfo[d];
 
     duf_li_dbinit( pli, pstmt, node_type, d );
-    DUF_TRACE( levinfo, 10, "levinfo openated %s; dfd:%d", pi->levinfo[d].itemname, pli->lev_dh.dfd );
+    MAST_TRACE( levinfo, 10, "levinfo openated %s; dfd:%d", pi->levinfo[d].itemname, pli->lev_dh.dfd );
   }
 }
 

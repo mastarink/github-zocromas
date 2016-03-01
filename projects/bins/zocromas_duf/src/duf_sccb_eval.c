@@ -1,7 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -31,7 +31,7 @@ duf_ev_sccb( const duf_scan_callbacks_t * sccb )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
-  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, duf_pdi_global_name(  ) );
+  MAST_TRACE( sccb, 0, "evaluate name %s [%s]", sccb->name, duf_pdi_global_name(  ) );
 
 /* T( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( duf_pdi_global() ) ); */
   DOR( r, duf_ev_pdi_sccb( duf_pdi_global(  ), sccb, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
@@ -52,7 +52,7 @@ duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
-  DUF_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
+  MAST_TRACE( sccb, 0, "evaluate name %s [%s]", name, duf_pdi_global_name(  ) );
   DOR( r, duf_ev_pdi_evname( duf_pdi_global(  ), name, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
@@ -63,7 +63,7 @@ duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
   DUF_STARTR( r );
   assert( duf_pdi_global_name(  ) );
 /* assert( duf_pdi_global()->pyp ); */
-  DUF_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
+  MAST_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
 
 /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
   DOR( r, duf_ev_pdi_evnamed_list( duf_pdi_global(  ), names, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
@@ -98,13 +98,13 @@ duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
   int cnt = 0;
 
   assert( duf_pdi_global_name(  ) );
-  DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_pdi_global(  ) ) );
+  MAST_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_pdi_global(  ) ) );
 
   for ( int astep = 0; DUF_NOERROR( r ) && astep < sccb_num; astep++ )
   {
     if ( psccbs[astep] )
     {
-      DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( psccbs[astep] ), astep );
+      MAST_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( psccbs[astep] ), astep );
 
     /* duf_ev_sccb:
      * do everything needed from sccb, i.e. :

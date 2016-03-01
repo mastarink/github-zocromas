@@ -9,7 +9,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -160,12 +160,12 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_crc32, sql, rpr, pstmt );
-  DUF_TRACE( select, 3, "S:%s", sql );
+  MAST_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Crc32sum, crc32sum, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
-    DUF_TRACE( select, 10, "<selected>" );
+    MAST_TRACE( select, 10, "<selected>" );
   /* crc32id = duf_sql_column_long_long( pstmt, 0 ); */
     crc32id = DUF_GET_UFIELD2( crc32id );
   /* rpr = 0; */
@@ -173,7 +173,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   else
   {
   /* DUF_TEST_R( rpr ); */
-    DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
+    MAST_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
 /* DUF_TEST_R( rpr ); */
   DUF_SQL_END_STMT( pdi, select_crc32, rpr, pstmt );
@@ -202,9 +202,9 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_CRC32_FULL " (crc32sum) VALUES (:crc32sum)";
 
-      DUF_TRACE( crc32, 10, "%0llx %s%s", crc32sum, real_path, filename );
+      MAST_TRACE( crc32, 10, "%0llx %s%s", crc32sum, real_path, filename );
       DUF_SQL_START_STMT( pdi, insert_crc32, sql, lr, pstmt );
-      DUF_TRACE( insert, 0, "(%ld) S:%s", insert_cnt, sql );
+      MAST_TRACE( insert, 0, "(%ld) S:%s", insert_cnt, sql );
       DUF_SQL_BIND_LL( crc32sum, crc32sum, lr, pstmt );
       DUF_SQL_STEPC( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
@@ -269,7 +269,7 @@ duf_make_crc32_uni( int fd, unsigned long long *pbytes, unsigned long long *pcrc
         int ry;
 
         ry = read( fd, buffer, bufsz );
-        DUF_TRACE( crc32, 10, "read %d : crc32sum:%lx", ry, crc32sum );
+        MAST_TRACE( crc32, 10, "read %d : crc32sum:%lx", ry, crc32sum );
         if ( ry < 0 )
         {
           DUF_ERRSYS( "read file" );
@@ -286,12 +286,12 @@ duf_make_crc32_uni( int fd, unsigned long long *pbytes, unsigned long long *pcrc
             bytes += ry;
           }
         }
-        DUF_TRACE( crc32, 10, "ry:%d; r:%d; crc32sum:%lx", ry, r, crc32sum );
+        MAST_TRACE( crc32, 10, "ry:%d; r:%d; crc32sum:%lx", ry, r, crc32sum );
         if ( ry <= 0 )
           break;
 
       }
-      DUF_TRACE( crc32, 10, "last crc32sum:%lx", crc32sum );
+      MAST_TRACE( crc32, 10, "last crc32sum:%lx", crc32sum );
       mas_free( buffer );
     }
     else
@@ -314,7 +314,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   unsigned long long bytes = 0;
 
   DUF_SFIELD2( fname );
-  DUF_TRACE( crc32, 0, "+ %s", fname );
+  MAST_TRACE( crc32, 0, "+ %s", fname );
 
 /* assert( duf_levinfo_dbstat( pdi ) ); */
   assert( duf_levinfo_dfd( pdi ) );
@@ -330,7 +330,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
   {
     unsigned long long crc32id = 0;
 
-    DUF_TRACE( crc32, 10, "insert %s", fname );
+    MAST_TRACE( crc32, 10, "insert %s", fname );
 
     crc32id = duf_insert_crc32_uni( pdi, crc32sum, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( DUF_NOERROR( r ) && crc32id )
@@ -349,7 +349,7 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET crc32id=:crc32Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 
         DUF_SQL_START_STMT( pdi, update_crc32id, sql, r, pstmt );
-        DUF_TRACE( mod, 3, "S:%s", sql );
+        MAST_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_BIND_LL( crc32Id, crc32id, r, pstmt );
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEPC( r, pstmt );
@@ -360,8 +360,8 @@ crc32_dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needl
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, fname );
-  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
+    MAST_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, fname );
+  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   pdi->total_bytes += bytes;
   pdi->total_files++;

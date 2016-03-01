@@ -6,7 +6,7 @@
 #include <mastar/tools/mas_expandable.h>                              
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -345,7 +345,7 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
       }
 # endif
     }
-    DUF_TRACE( select, 0, "TOTAL: %s", sql );
+    MAST_TRACE( select, 0, "TOTAL: %s", sql );
   }
   else
   {

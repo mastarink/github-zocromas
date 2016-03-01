@@ -2,7 +2,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -44,7 +44,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
     DUF_SQL_CHANGES( changes, rpr, pstmt );
     DUF_SQL_END_STMT( pdi, insert_tagname, rpr, pstmt );
   }
-  DUF_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
+  MAST_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
   if ( ( DUF_IS_ERROR_N( rpr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) ) && !changes )
   {
     DUF_SQL_START_STMT( pdi, select_tagname, sqlv, rpr, pstmt );
@@ -54,14 +54,14 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
     if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
     /* rpr = 0; */
-      DUF_TRACE( select, 0, "<selected>" );
+      MAST_TRACE( select, 0, "<selected>" );
 #if 0
       tagnameid = duf_sql_column_long_long( pstmt, 0 );
 #else
       tagnameid = DUF_GET_UFIELD2( tagnameId );
 #endif
-      DUF_TRACE( sql, 4, "tagnameid from tagnameId:%llu", tagnameid );
-      DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
+      MAST_TRACE( sql, 4, "tagnameid from tagnameId:%llu", tagnameid );
+      MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
     }
 
     DUF_SQL_END_STMT( pdi, select_tagname, rpr, pstmt );
@@ -69,7 +69,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
   else
   {
     tagnameid = duf_sql_last_insert_rowid(  );
-    DUF_TRACE( path, 2, "@           inserting tag_name %s; last_insert tagnameid:%llu", tag_name, tagnameid );
+    MAST_TRACE( path, 2, "@           inserting tag_name %s; last_insert tagnameid:%llu", tag_name, tagnameid );
   }
   if ( pr )
     *pr = rpr;
@@ -100,7 +100,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     DUF_SQL_CHANGES( changes, rpr, pstmt );
     DUF_SQL_END_STMT( pdi, insert_tag, rpr, pstmt );
   }
-  DUF_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );
+  MAST_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );
   if ( ( DUF_IS_ERROR_N( rpr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) ) && !changes )
   {
     DUF_SQL_START_STMT( pdi, select_tag, sqlv, rpr, pstmt );
@@ -112,13 +112,13 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
     /* rpr = 0; */
-      DUF_TRACE( select, 0, "<selected>" );
+      MAST_TRACE( select, 0, "<selected>" );
 #if 0
       tagid = duf_sql_column_long_long( pstmt, 0 );
 #else
       tagid = DUF_GET_UFIELD2( tagId );
 #endif
-      DUF_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
+      MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
     }
 
     DUF_SQL_END_STMT( pdi, select_tag, rpr, pstmt );
@@ -126,7 +126,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
   else
   {
     tagid = duf_sql_last_insert_rowid(  );
-    DUF_TRACE( path, 2, "@           inserting tag_name %s; last_insert tagid:%llu", tag_name, tagnameid );
+    MAST_TRACE( path, 2, "@           inserting tag_name %s; last_insert tagid:%llu", tag_name, tagnameid );
   }
   if ( pr )
     *pr = rpr;

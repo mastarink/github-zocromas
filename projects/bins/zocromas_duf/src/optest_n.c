@@ -6,7 +6,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace_credel.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 /* #include "duf_se.h"                                                  (* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ *) */
@@ -109,7 +109,7 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
   T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
-  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following MAST_TRACE's */
   T( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_BOOT, NULL, NULL, NULL );

@@ -9,7 +9,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -179,13 +179,13 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
   assert( sizeof( unsigned long long ) == 8 );
 
   DUF_SQL_START_STMT( pdi, select_md5, sql, rpr, pstmt );
-  DUF_TRACE( select, 3, "S:%s", sql );
+  MAST_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( md5Sum1, md5sum1, rpr, pstmt );
   DUF_SQL_BIND_LL( md5Sum2, md5sum2, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
-    DUF_TRACE( select, 10, "<selected>" );
+    MAST_TRACE( select, 10, "<selected>" );
   /* md5id = duf_sql_column_long_long( pstmt, 0 ); */
     md5id = DUF_GET_UFIELD2( md5id );
   /* rpr = 0; */
@@ -193,7 +193,7 @@ duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, un
   else
   {
   /* DUF_TEST_R( rpr ); */
-    DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
+    MAST_TRACE( select, 10, "<NOT selected> (%d)", rpr );
   }
 /* DUF_TEST_R( rpr ); */
   DUF_SQL_END_STMT( pdi, select_md5, rpr, pstmt );
@@ -224,9 +224,9 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MD5_FULL " ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
-      DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
+      MAST_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
       DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
-      DUF_TRACE( insert, 0, "S:%s", sql );
+      MAST_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_BIND_LL( md5sum1, md64[1], lr, pstmt );
       DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
       DUF_SQL_STEPC( lr, pstmt );
@@ -273,7 +273,7 @@ duf_make_md5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
   MD5_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );
-  DUF_TRACE( md5, 0, "make" );
+  MAST_TRACE( md5, 0, "make" );
   {
     char *buffer;
 
@@ -291,9 +291,9 @@ duf_make_md5_uni( int fd, unsigned long long *pbytes, unsigned char *pmd )
         {
           int ry;
 
-          DUF_TRACE( md5, 10, "read fd:%u", fd );
+          MAST_TRACE( md5, 10, "read fd:%u", fd );
           ry = read( fd, buffer, bufsz );
-          DUF_TRACE( md5, 10, "read ry:%u", ry );
+          MAST_TRACE( md5, 10, "read ry:%u", ry );
           if ( ry < 0 )
           {
             DUF_ERRSYS( "read file" );
@@ -356,7 +356,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   unsigned char amd5r[MD5_DIGEST_LENGTH];
 
   DUF_SFIELD2( fname );
-  DUF_TRACE( md5, 0, "+ %s", fname );
+  MAST_TRACE( md5, 0, "+ %s", fname );
 
   if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
     DOR( r, duf_make_md5r_uni( pdi, amd5r ) );
@@ -366,7 +366,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     unsigned long long md5id = 0;
     unsigned long long *pmd = ( unsigned long long * ) &amd5r;
 
-    DUF_TRACE( md5, 0, "insert %s", fname );
+    MAST_TRACE( md5, 0, "insert %s", fname );
 
     md5id = duf_insert_md5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( md5id )
@@ -385,7 +385,7 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET md5id=:md5Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 
         DUF_SQL_START_STMT( pdi, update_md5id, sql, r, pstmt );
-        DUF_TRACE( mod, 3, "S:%s", sql );
+        MAST_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_BIND_LL( md5Id, md5id, r, pstmt );
         DUF_SQL_BIND_LL( dataId, filedataid, r, pstmt );
         DUF_SQL_STEPC( r, pstmt );
@@ -396,8 +396,8 @@ md5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       }
       DUF_TEST_R( r );
     }
-    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
-  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
+    MAST_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
+  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
   DUF_ENDR( r );
 }

@@ -6,7 +6,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -78,7 +78,7 @@ static int
 set_dir_priority_node_before2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi )
 {
   DUF_STARTR( r );
-  DUF_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  MAST_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
 
   {
@@ -86,7 +86,7 @@ set_dir_priority_node_before2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t *
     const char *sql = "UPDATE " DUF_SQL_TABLES_PATHS_FULL " SET priority=:priority WHERE " DUF_SQL_IDFIELD " =:dirId ";
 
     DUF_SQL_START_STMT( pdi, update_priority, sql, r, pstmt );
-    DUF_TRACE( mod, 3, "S:%s", sql );
+    MAST_TRACE( mod, 3, "S:%s", sql );
     DUF_SQL_BIND_LL( dirId, duf_levinfo_dirid( pdi ), r, pstmt );
     DUF_SQL_BIND_LL( priority, DUF_CONFIGG( vars.dir_priority ), r, pstmt );
     DUF_SQL_STEPC( r, pstmt );
@@ -103,7 +103,7 @@ set_dir_priority_node_middle2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t *
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  MAST_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DUF_ENDR( r );
 }
@@ -113,7 +113,7 @@ set_dir_priority_node_after2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * 
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
+  MAST_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DUF_ENDR( r );
 }

@@ -4,7 +4,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -45,13 +45,13 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   DUF_START(  );
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, rpr, pstmt );
-  DUF_TRACE( select, 3, "S:%s", sql );
+  MAST_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), rpr, pstmt );
   DUF_SQL_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
   if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
   {
-    DUF_TRACE( select, 10, "<selected>" );
+    MAST_TRACE( select, 10, "<selected>" );
 #if 0
     dataid = duf_sql_column_long_long( pstmt, 0 );
 #else
@@ -63,7 +63,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   else
   {
   /* DUF_TEST_R( rpr ); */
-    DUF_TRACE( select, 0, "@<NOT selected> (%d)", rpr );
+    MAST_TRACE( select, 0, "@<NOT selected> (%d)", rpr );
     assert( 0 );
   }
 /* DUF_TEST_R( rpr ); */
@@ -95,7 +95,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
               "datetime(:aTim, 'unixepoch'), :aTimn, " "datetime(:mTim, 'unixepoch'), :mTimn, " "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, rpr, pstmt );
-      DUF_TRACE( insert, 0, "S:%s", sql );
+      MAST_TRACE( insert, 0, "S:%s", sql );
 
       DUF_SQL_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), rpr, pstmt );
@@ -119,7 +119,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
       DUF_SQL_CHANGES( changes, rpr, pstmt );
       DUF_SQL_END_STMT( pdi, insert_filedata, rpr, pstmt );
     }
-    DUF_TRACE( select, 2, "<changes> : %d", changes );
+    MAST_TRACE( select, 2, "<changes> : %d", changes );
     if ( need_id )
     {
       if ( ( DUF_IS_ERROR_N( rpr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) ) && !changes )
@@ -138,7 +138,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, int need_id, int *pr )
         {
         }
         assert( dataid );
-        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );
+        MAST_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );
       }
       DUF_TEST_R( rpr );
     }

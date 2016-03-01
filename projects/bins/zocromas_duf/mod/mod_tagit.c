@@ -8,7 +8,7 @@
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -91,7 +91,7 @@ tagit_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNU
 {
   DUF_STARTR( r );
 
-  DUF_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
 
   DUF_ENDR( r );
 }
@@ -111,7 +111,7 @@ tagit_leaf2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi )
 
     duf_add_tag( pdi, "filename", duf_levinfo_nameid( pdi ), DUF_CONFIGG( vars.tag.file ) ? DUF_CONFIGG( vars.tag.file ) : "NONE", &r );
 
-    DUF_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
+    MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
   DUF_ENDR( r );
 }
@@ -122,14 +122,14 @@ tagit_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
   DUF_STARTR( r );
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_SFIELD2( fname );
 # endif
-    DUF_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
   DUF_ENDR( r );
@@ -142,14 +142,14 @@ tagit_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_SFIELD2( fname );
 # endif
-    DUF_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
   DUF_ENDR( r );
@@ -162,14 +162,14 @@ tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_SFIELD2( fname );
 # endif
-    DUF_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
   DUF_ENDR( r );

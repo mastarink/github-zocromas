@@ -7,7 +7,7 @@
 #include <mastar/tools/mas_time.h>                                   /* mas_xlocaltime; mas_double_time; mas_xgmtime; mas_xvstrftime; mas_xvstrftime_time; mas_tstrflocaltime; mas_strtime2long; mas_strflocaltime; mas_strfgmtime; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */

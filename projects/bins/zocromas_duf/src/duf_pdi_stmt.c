@@ -3,7 +3,7 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -76,10 +76,10 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
   duf_idstmt_t *chkids = NULL;
 
   assert( pdi );
-  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
+  MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   if ( !pdi->attached_copy )
     DORF( rpr, duf_main_db_open, pdi );
-  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
+  MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
   DUF_TEST_R( rpr );
   chkids = pdi->idstatements;
 
@@ -107,12 +107,12 @@ duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stm
  *   - it may reallocate pdi->idstatements 
  *   - is will become invalid XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
  */
-  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
+  MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
 
   DOR( rpr, duf_sql_prepare( sql, &pstmt ) );
   DUF_TEST_R( rpr );
 
-  DUF_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
+  MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", rpr, mas_error_name_i( rpr ), sql );
 /* assert( rpr >= 0 ); */
   if ( pstmt )
   {

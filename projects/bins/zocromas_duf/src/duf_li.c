@@ -5,7 +5,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -99,7 +99,7 @@ duf_li_path( const duf_levinfo_t * pli, int count )
       if ( p == path || *( p - 1 ) != '/' )
         *p++ = '/';
       *p = 0;
-      DUF_TRACE( path, 4, "path:%s", path );
+      MAST_TRACE( path, 4, "path:%s", path );
       l = strlen( pli[i].itemname );
       if ( l > 0 )
       {
@@ -176,7 +176,7 @@ _duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lon
     DUF_SQL_STEP( r, pstmt );
     if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
     {
-      DUF_TRACE( select, 0, "<selected> %s", sqlv );
+      MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       duf_li_dbinit( pli, pstmt, DUF_NODE_NODE, -2 );
       if ( pparentid )
@@ -184,7 +184,7 @@ _duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lon
     }
     else
     {
-      DUF_TRACE( select, 10, "<NOT selected> (%d)", r );
+      MAST_TRACE( select, 10, "<NOT selected> (%d)", r );
     }
   }
   DUF_SQL_END_STMT( pditemp, dirid2li_existed, r, pstmt );
@@ -243,7 +243,7 @@ _duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lo
     DUF_SQL_STEP( r, pstmt );
     if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
     {
-      DUF_TRACE( select, 0, "<selected> %s", sqlv );
+      MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       duf_li_dbinit( pli, pstmt, DUF_NODE_LEAF, -2 );
       if ( pdirid )
@@ -251,7 +251,7 @@ _duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lo
     }
     else
     {
-      DUF_TRACE( select, 10, "<NOT selected> (%d)", r );
+      MAST_TRACE( select, 10, "<NOT selected> (%d)", r );
     }
   }
   DUF_SQL_END_STMT( pditemp, nameid2li_existed, r, pstmt );

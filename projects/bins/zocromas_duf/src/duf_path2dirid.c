@@ -6,7 +6,7 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -86,7 +86,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
     if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
     /* rpr = 0; */
-      DUF_TRACE( select, 0, "<selected> %s", sqlv );
+      MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       name = mas_strdup( DUF_GET_SFIELD2( name ) );
       if ( pparentid )
@@ -94,7 +94,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
     }
     else
     {
-      DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
+      MAST_TRACE( select, 10, "<NOT selected> (%d)", rpr );
     }
   }
   DUF_SQL_END_STMT( pdi, dirid2name_existed, rpr, pstmt );

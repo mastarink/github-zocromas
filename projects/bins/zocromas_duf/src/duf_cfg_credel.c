@@ -6,7 +6,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_expandable.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -61,7 +61,7 @@ duf_cfg_create( void )
     const char *cfgdir;
 
     cfgdir = getenv( DUF_CONFIG_DIR_FROM_ENV );
-  /* DUF_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
+  /* MAST_TRACE( config, 0, "getting variable " DUF_CONFIG_DIR_FROM_ENV " value for config path : %s", cfgdir ); */
     DUF_CFGWS( cfg, conf.config_dir, mas_strdup( cfgdir ) );
 
   }

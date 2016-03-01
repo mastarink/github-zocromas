@@ -1,12 +1,15 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+/* #include "duf_tracen_defs_preset.h" */
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
+/* #include <mastar/trace/mas_trace.h> */
 
 /* ###################################################################### */
-#include "duf_option_extended.h"  /* duf_longindex_extended_count etc. ♠*/
+#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
 /* ###################################################################### */
 
 int

@@ -4,7 +4,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -52,10 +52,10 @@ duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, 
 
   if ( DUF_NOERROR( r ) )
     act = duf_find_atable_sccb_by_evnamen( name, len, table );       /* XXX XXX */
-  DUF_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, act ? ( act->sccb ? act->sccb->name : "NONAME" ) : "-" );
+  MAST_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, act ? ( act->sccb ? act->sccb->name : "NONAME" ) : "-" );
   if ( act )
   {
-    DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
+    MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
     DOR( r, duf_ev_pdi_sccb( pdi, act->sccb, ptarg /*, pu */ , f_summary ) ); /* XXX XXX XXX XXX */
   }
@@ -110,7 +110,7 @@ duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const 
   assert( pdi );
 
   pnames = names;
-  DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
 
 /* assert( pdi->pyp ); */
   while ( DUF_NOERROR( r ) && pnames && *pnames )

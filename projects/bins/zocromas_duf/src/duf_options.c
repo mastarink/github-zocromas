@@ -1,16 +1,19 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
-#include "duf_errorn_defs_preset.h" 
+#include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 #include <sys/stat.h>                                                /* struct stat */
 
 #include <mastar/wrap/mas_std_def.h>
-# include <mastar/error/mas_error_defs_ctrl.h>
-# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+#include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
@@ -47,7 +50,7 @@ SR( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage
   if ( istage <= DUF_OPTION_STAGE_SETUP )
     DUF_OPTSRC( cli, fr, incfg, istage, paod, CFG );                 /* config - only acts at stages <= DUF_OPTION_STAGE_SETUP (??) */
   DUF_OPTSRC( cli, sr, incfg_stg, istage, paod, CFGSTG );            /* per-stage config */
-  DUF_OPTSRC( cli, er, env, istage, paod, ENV );                     
+  DUF_OPTSRC( cli, er, env, istage, paod, ENV );
   {
     DUF_OPTSRC( cli, or, cli, istage, paod, CLI );
   }                                                                  /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
@@ -59,8 +62,8 @@ SR( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage
     DUF_OPTSRCI( cli, iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod, INTERAC );
   DUF_OPTSRC( cli, lr, incfg_last, istage, paod, CFGLAST );
 
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
-             QERRNAME );
+  MAST_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
+              QERRNAME );
 
   ER( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive,
       duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod );
@@ -98,8 +101,8 @@ SR( OPTIONS, all_options_paod, duf_config_cli_t * cli, duf_option_stage_t istage
   CR( soption_xclarify_new_booted_source, cli, istage, DUF_OPTION_SOURCE( CFGLAST ), paod );
   lr = QERRIND;
 
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
-             QERRNAME );
+  MAST_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
+              QERRNAME );
 
   ER( OPTIONS, all_options_paod, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive,
       duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod );
@@ -110,25 +113,25 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 {
 
   assert( cli );
-  DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( cli, istage ),
-             cb_do_interactive ? cb_do_interactive(  ) : 0 );
+  MAST_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( cli, istage ),
+              cb_do_interactive ? cb_do_interactive(  ) : 0 );
 
 #if 1
-  DUF_TRACE( temp, +0, "@@@this is 0 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +1, "@@@@this is 1 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +2, "@@@@@this is 2 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +3, "@@@@@@this is 3 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +4, "@@@@@@@this is 4 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +5, "@@@@@@@@this is 5 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +6, "@@@@@@@@@this is 6 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +7, "@@@@@@@@@@this is 7 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +8, "@@@@@@@@@@@this is 8 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, +9, "@@@@@@@@@@@@this is 9 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
-  DUF_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +0, "@@@this is 0 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +1, "@@@@this is 1 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +2, "@@@@@this is 2 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +3, "@@@@@@this is 3 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +4, "@@@@@@@this is 4 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +5, "@@@@@@@@this is 5 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +6, "@@@@@@@@@this is 6 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +7, "@@@@@@@@@@this is 7 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +8, "@@@@@@@@@@@this is 8 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, +9, "@@@@@@@@@@@@this is 9 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, 10, "@@@@@@@@@@@@@this is 10 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
+  MAST_TRACE( temp, 11, "@@@@@@@@@@@@@@this is 11 temp DUF_TRACE (stage:%s)", duf_optstage_name( cli, istage ) );
 #endif
 
-  DUF_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name( cli, istage ), istage );
+  MAST_TRACE( optstage, 0, "@@stage:%s(%d)", duf_optstage_name( cli, istage ), istage );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
@@ -196,44 +199,44 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 
         if ( fstat( STDIN_FILENO, &st_stdin ) >= 0 )
         {
-          DUF_TRACE( options, 120, "isatty:%d, st_dev:%04llx, st_rdev:%04llx, st_ino:%04llx, chr:%d, isfifo:%d", isatty( STDIN_FILENO ),
-                     ( unsigned long long ) st_stdin.st_dev, ( unsigned long long ) st_stdin.st_rdev, ( unsigned long long ) st_stdin.st_ino,
-                     S_ISCHR( st_stdin.st_mode ), S_ISFIFO( st_stdin.st_mode ) );
+          MAST_TRACE( options, 120, "isatty:%d, st_dev:%04llx, st_rdev:%04llx, st_ino:%04llx, chr:%d, isfifo:%d", isatty( STDIN_FILENO ),
+                      ( unsigned long long ) st_stdin.st_dev, ( unsigned long long ) st_stdin.st_rdev, ( unsigned long long ) st_stdin.st_ino,
+                      S_ISCHR( st_stdin.st_mode ), S_ISFIFO( st_stdin.st_mode ) );
 
           switch ( st_stdin.st_mode & S_IFMT )
           {
           case S_IFBLK:
-            DUF_TRACE( options, 120, "block device" );
+            MAST_TRACE( options, 120, "block device" );
             break;
           case S_IFCHR:
-            DUF_TRACE( options, 120, "character device" );
+            MAST_TRACE( options, 120, "character device" );
             break;
           case S_IFDIR:
-            DUF_TRACE( options, 120, "directory" );
+            MAST_TRACE( options, 120, "directory" );
             break;
           case S_IFIFO:
-            DUF_TRACE( options, 120, "FIFO/pipe" );
+            MAST_TRACE( options, 120, "FIFO/pipe" );
             break;
           case S_IFLNK:
-            DUF_TRACE( options, 120, "symlink" );
+            MAST_TRACE( options, 120, "symlink" );
             break;
           case S_IFREG:
-            DUF_TRACE( options, 120, "regular file" );
+            MAST_TRACE( options, 120, "regular file" );
             break;
           case S_IFSOCK:
-            DUF_TRACE( options, 120, "socket" );
+            MAST_TRACE( options, 120, "socket" );
             break;
           default:
-            DUF_TRACE( options, 120, "unknown?" );
+            MAST_TRACE( options, 120, "unknown?" );
             break;
           }
         }
       }
 #endif
 
-      DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
-                 QERRNAME );
-      DUF_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
+      MAST_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
+                  QERRNAME );
+      MAST_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
     }
     MASE_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
   }

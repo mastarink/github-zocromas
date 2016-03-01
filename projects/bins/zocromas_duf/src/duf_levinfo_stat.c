@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -68,7 +68,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
     }
     assert( DUF_IS_ERROR( r ) || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     DOR( r, duf_statat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ) ) );
-    DUF_TRACE( levinfo, 10, "(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
+    MAST_TRACE( levinfo, 10, "(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
 
 #if 0
     {
@@ -84,7 +84,7 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_STAT_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) ) /* FIXME ?? */
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
-      DUF_TRACE( levinfo, 10, "@@@(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
+      MAST_TRACE( levinfo, 10, "@@@(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
     }
     pdi->pathinfo.levinfo[d].deleted_tested = 1;
     pdi->pathinfo.levinfo[d].stat_tested = 1;

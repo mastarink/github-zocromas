@@ -11,7 +11,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -185,7 +185,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
     /* DUF_TEST_R( lr ); */
       if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
-        DUF_TRACE( select, 0, "<selected>" );
+        MAST_TRACE( select, 0, "<selected>" );
 #if 0
         modelid = duf_sql_column_long_long( pstmt, 0 );
 #else
@@ -205,7 +205,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 
       DUF_SQL_START_STMT( pdi, insert_model, sql, lr, pstmt_insert );
       DUF_TEST_R( lr );
-      DUF_TRACE( insert, 0, " S: %s ", sql );
+      MAST_TRACE( insert, 0, " S: %s ", sql );
       DUF_SQL_BIND_S( Model, model, lr, pstmt_insert );
       DUF_TEST_R( lr );
 
@@ -217,7 +217,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       if ( need_id && changes )
       {
         modelid = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
+        MAST_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
       DUF_SQL_END_STMT( pdi, insert_model, lr, pstmt_insert );
     }
@@ -270,7 +270,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, cons
     /* DUF_TEST_R( lr ); */
       if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
       {
-        DUF_TRACE( select, 0, "<selected>" );
+        MAST_TRACE( select, 0, "<selected>" );
 #if 0
         exifid = duf_sql_column_long_long( pstmt, 0 );
 #else
@@ -294,7 +294,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, cons
 
       DUF_SQL_START_STMT( pdi, insert_exif, sql, lr, pstmt_insert );
       DUF_TEST_R( lr );
-      DUF_TRACE( insert, 0, " S: %s ", sql );
+      MAST_TRACE( insert, 0, " S: %s ", sql );
       DUF_TEST_R( lr );
       if ( modelid )
       {
@@ -340,7 +340,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, cons
 #ifdef MAS_TRACING
         DUF_SFIELD2( fname );
 #endif
-        DUF_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
+        MAST_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
       }
 
@@ -395,7 +395,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         c = stime_original[i];
         if ( ( c < ' ' || c > 'z' ) && c != '?' && c != ':' && c != ' ' )
         {
-          DUF_TRACE( exif, 0, ">>>>>>>>>>>>>> %s <<<<<<<<<<<<<", stime_original );
+          MAST_TRACE( exif, 0, ">>>>>>>>>>>>>> %s <<<<<<<<<<<<<", stime_original );
         /* DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_BROKEN_DATE ); */
           date_is_broken = 1;
           break;
@@ -404,7 +404,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       if ( lr >= 0 )
         corrected_time = mas_strdup( stime_original );
     /* DUF_SHOW_ERRORO( "@@@@@@@@@@@@@@ %s", stime_original ); */
-      DUF_TRACE( exif, 3, "stime_original:%s", stime_original );
+      MAST_TRACE( exif, 3, "stime_original:%s", stime_original );
     /* 2008:06:21 13:18:19 */
     /* 0123:56:89 12:45:78 */
       if ( lr >= 0 )
@@ -572,7 +572,7 @@ dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */
         int rr;
 
         rr = read( duf_levinfo_dfd( pdi ), buffer, bufsz );
-        DUF_TRACE( exif, 5, "read %d", rr );
+        MAST_TRACE( exif, 5, "read %d", rr );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
@@ -814,15 +814,15 @@ dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */
 
               DUF_SFIELD2( fname );
               real_path = duf_levinfo_path( pdi );
-              DUF_TRACE( exif, 2, "%s%s", real_path, fname );
+              MAST_TRACE( exif, 2, "%s%s", real_path, fname );
 #endif
               noexif = !( timeepoch || *stime_original || model );
 
               if ( !noexif )
                 exifid = duf_insert_exif_uni( pstmt, pdi, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , &r );
-              DUF_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, r, sum, model, timeepoch, real_path, fname );
+              MAST_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, r, sum, model, timeepoch, real_path, fname );
 
-              DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
+              MAST_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 
               if ( DUF_NOERROR( r ) /* && exifid */  )
               {
@@ -831,7 +831,7 @@ dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */
                         " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET noexif = :noexif, exifid = :exifID WHERE " DUF_SQL_IDFIELD " = :dataID ";
 
                 DUF_SQL_START_STMT( pdi, update_exif, sql, r, pstmt_update );
-                DUF_TRACE( mod, 3, " S: %s ", sql );
+                MAST_TRACE( mod, 3, " S: %s ", sql );
               /* DUF_SQL_BIND_LL( exifID, exifid, r, pstmt_update ); */
                 DUF_SQL_BIND_LL_NZ_OPT( exifID, exifid, r, pstmt_update );
               /* DUF_SQL_BIND_LL( noexif, noexif, r, pstmt_update ); */
@@ -845,7 +845,7 @@ dirent_contnt2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */
             }
             else
             {
-              DUF_TRACE( exif, 3, "Nothing got for EXIF : (%d)", r );
+              MAST_TRACE( exif, 3, "Nothing got for EXIF : (%d)", r );
               assert( 0 );
             }
             mas_free( model );

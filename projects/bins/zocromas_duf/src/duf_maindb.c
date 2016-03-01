@@ -8,7 +8,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -80,12 +80,12 @@ duf_main_db_optionally_remove_files( void )
   DUF_STARTR( r );
   if ( DUF_ACTG_FLAG( allow_remove_database ) )
   {
-    DUF_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_REMOVE_DATABASE ) );
+    MAST_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_REMOVE_DATABASE ) );
     DORF( r, duf_main_db_remove_files );
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not removing database", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_REMOVE_DATABASE ) );
+    MAST_TRACE( explain, 1, "no %s option, not removing database", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_REMOVE_DATABASE ) );
   }
   DUF_ENDR( r );
 }
@@ -118,7 +118,7 @@ duf_main_db_pre_action( void )
   DUF_STARTR( r );
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_drop_tables ) )
   {
-    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
+    MAST_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
     if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
@@ -129,12 +129,12 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
+    MAST_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_clean_tables ) )
   {
-    DUF_TRACE( explain, 0, "clean (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CLEAN_TABLES ) );
+    MAST_TRACE( explain, 0, "clean (zero) tables: option %s", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CLEAN_TABLES ) );
     if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_CLEAN_TABLES ) );
@@ -145,25 +145,25 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
+    MAST_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_DROP_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_create_tables ) /* && DUF_ACTG_FLAG( allow_create_database ) */  )
   {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CREATE_TABLES ) );
+    MAST_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CREATE_TABLES ) );
     DOR( r, duf_main_db_create_tables(  ) );
   /* global_status.actions_done++; */
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CREATE_TABLES ) );
+    MAST_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_CREATE_TABLES ) );
   }
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( allow_vacuum ) )
   {
   /* static const char *sql = "VACUUM"; */
 
-  /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_VACUUM ) ); */
+  /* MAST_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME(duf_get_config_cli(), ALLOW_VACUUM ) ); */
     if ( mas_dry_run(  ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), DRY_RUN ),
                   DUF_OPT_FLAG_NAME2( duf_get_config_cli(  ), ALLOW_VACUUM ) );
@@ -174,7 +174,7 @@ duf_main_db_pre_action( void )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_VACUUM ) );
+    MAST_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( duf_get_config_cli(  ), ALLOW_VACUUM ) );
   }
 
   DORF( r, duf_eval_sqlsq, &sql_beginning_tables, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, NULL /* selected.db */  );
@@ -202,7 +202,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, DUF_DBADMALIAS, NULL /* &changes */  ) );
-    DUF_TRACE( db, 0, "(%d) %s", r, sql );
+    MAST_TRACE( db, 0, "(%d) %s", r, sql );
   }
 
 # ifndef DUF_SQL_TTABLES_TEMPORARY
@@ -211,7 +211,7 @@ duf_main_db_tune( void )
     static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_TTABLES_PATTERN "temp.db' AS " DUF_DBTEMPALIAS;
 
     DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, DUF_DBTEMPALIAS, NULL /* &changes */  ) );
-    DUF_TRACE( db, 0, "(%d) %s", r, sql );
+    MAST_TRACE( db, 0, "(%d) %s", r, sql );
   }
 # endif
 
@@ -231,18 +231,18 @@ duf_main_db_open( duf_depthinfo_t * pdi )
   assert( !pdi->attached_copy );
 /* global_status.db.opened_name */
 
-  DUF_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
-  DUF_TRACE( db, 5, "@@@@global_status.db.opened_name:%s => CFG->db.main.name:%s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
+  MAST_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
+  MAST_TRACE( db, 5, "@@@@global_status.db.opened_name:%s => CFG->db.main.name:%s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
 
-/* DUF_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db.opened_name ); */
+/* MAST_TRACE( temp, 0, "db:%s : %s", DUF_CONFIGGS(db.main.name), global_status.db.opened_name ); */
   if ( global_status.db.opened_name && 0 != strcmp( DUF_CONFIGGSP( db.main.name_x ), global_status.db.opened_name ) )
   {
-    DUF_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
-    DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
+    MAST_TRACE( db, 0, "@@@@autoclose db %s => %s", global_status.db.opened_name, DUF_CONFIGGSP( db.main.name_x ) );
+    MAST_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
     DOR( r, duf_main_db_close( pdi, 0 ) );
-    DUF_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
+    MAST_TRACE( db, 0, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
   }
-  DUF_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
+  MAST_TRACE( db, 5, "@@@@global_status.db.attached_selected:%s", global_status.db.attached_selected );
 #if 0
   if ( !DUF_CONFIGG( db.opened ) )
 #else
@@ -253,7 +253,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
 
-    DUF_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name_x ), DUF_CONFIGGS( db.main.fpath ) );
+    MAST_TRACE( db, 0, "@@@@@to open db %s [%s]", DUF_CONFIGGSP( db.main.name_x ), DUF_CONFIGGS( db.main.fpath ) );
     if ( DUF_CONFIGGS( db.main.fpath ) )
     {
       if ( !DUF_ACTG_FLAG( allow_create_database ) )
@@ -278,7 +278,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
       global_status.db.opened_name = mas_strdup( DUF_CONFIGGSP( db.main.name_x ) );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
-    DUF_TRACE( pdi, 0, "pdi-global %s", duf_levinfo_path( duf_pdi_global(  ) ) );
+    MAST_TRACE( pdi, 0, "pdi-global %s", duf_levinfo_path( duf_pdi_global(  ) ) );
 #if 0
   // removed 20151026.200517 - BAD here
     DOR( r, duf_pdi_reinit_min( duf_pdi_global(  ) ) );
@@ -299,7 +299,7 @@ duf_main_db_open( duf_depthinfo_t * pdi )
       pdi->next = global_status.pdilist;
       assert( !pdi->attached_copy );
       global_status.pdilist = pdi;
-      DUF_TRACE( db, 20, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+      MAST_TRACE( db, 20, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
     }
   }
   DUF_ENDR( r );
@@ -337,13 +337,13 @@ duf_main_db_close( duf_depthinfo_t * pdi MAS_UNUSED, int ra )
           prev_pdis->next = pdis->next;
         else
           global_status.pdilist = pdis->next;
-        DUF_TRACE( db, 20, "@unlink (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
+        MAST_TRACE( db, 20, "@unlink (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
         pdis->next = NULL;
       }
     }
     if ( pdis && !global_status.pdilist )                            /* close only if opened for this pdi */
     {
-      DUF_TRACE( db, 0, "@@@@closing db %s", global_status.db.opened_name );
+      MAST_TRACE( db, 0, "@@@@closing db %s", global_status.db.opened_name );
     /* don't DOR it directly! call allways! */
       DORF( rt, duf_sql_close );
       T( "@duf_sql_close: rt:%d", rt );
