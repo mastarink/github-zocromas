@@ -162,8 +162,8 @@ SR( OPTIONS, set_file_special, duf_config_cli_t * cli, const char *pname, int ov
       int handleid );
 }
 
-static void *
-duf_get_offset( void *ptr, unsigned long off )
+static inline void *
+get_offset( void *ptr, unsigned long off )
 {
   assert( ptr );
   return ptr ? ( void * ) ( ( ( char * ) ptr ) + off ) : NULL;
@@ -182,14 +182,14 @@ duf_xoption_clarify_typed_byteptr( duf_config_cli_t * cli, const duf_longval_ext
     assert( extended->m_offset == 0 );
     break;
   case DUF_OFFSET_varptr:
-    byte_ptr = duf_get_offset( extended->reltoptr, extended->m_offset );
+    byte_ptr = get_offset( extended->reltoptr, extended->m_offset );
     break;
   case DUF_OFFSET_funcptr:
     {
       void *aptr;
 
       aptr = ( ( duf_pvoid_void_func_t ) extended->reltoptr ) (  );
-      byte_ptr = duf_get_offset( aptr, extended->m_offset );
+      byte_ptr = get_offset( aptr, extended->m_offset );
     }
     break;
   }

@@ -16,8 +16,8 @@ sfind duf_tracen_config.h
 tab sfind duf_config_db.c
 sfind duf_config_db.h
 
-tab sfind duf_config_show_etc.c
-sfind duf_config_show_etc.h
+" tab sfind duf_config_show_etc.c
+" sfind duf_config_show_etc.h
 
 tab sfind duf_cfg_credel.c
 sfind duf_cfg_credel.h

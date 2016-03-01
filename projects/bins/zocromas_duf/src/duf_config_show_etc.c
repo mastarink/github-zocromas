@@ -38,7 +38,6 @@ duf_config_show( void )
       /* DUF_FPRINTF( 0, stderr, "@@@@targ.argv[%d]: %s", ia, duf_config->cli.targ.argv[ia] ); */
         MAST_TRACE( temp, 3, "@@@@targ.argv[%d]: %s", ia, duf_cli_options_get_targ( duf_get_config_cli(  ) )->argv[ia] );
   }
-
   DUF_ENDR( r );
 }
 

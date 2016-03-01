@@ -27,7 +27,7 @@
 /* TODO rename file ...... */
 
 static const char *
-duf_offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
+offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
 {
   const char *rs = NULL;
 
@@ -334,7 +334,7 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
 #endif
           }
           DUF_PRINTF( 0, ".offset( %lu, %s(%d), %s ) ", xtended->m_offset, srelto, xtended->relto,
-                      duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+                      offset2stringid( xtended->m_offset, xtended->relto ) );
         }
         DUF_PUTSL( 0 );
       }
@@ -366,7 +366,7 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.san.func, xtended->call.fdesc.san.arg );
         break;
       case DUF_OPTION_VTYPE_A_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(duf_get_config_cli())->argc,duf_cli_options_get_carg(duf_get_config_cli())->argv)",
+        DUF_PRINTF( 0, "  func:%p(..._cli_options_get_carg(duf_get_config_cli())->argc,..._cli_options_get_carg(duf_get_config_cli())->argv)",
                     xtended->call.fdesc.a.func );
         break;
       case DUF_OPTION_VTYPE_N_CALL:
@@ -378,16 +378,16 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         DUF_PRINTF( 0, "  func:%p(optargg)", xtended->call.fdesc.s.func );
         break;
       case DUF_OPTION_VTYPE_AA_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(duf_get_config_cli()))", xtended->call.fdesc.aa.func );
+        DUF_PRINTF( 0, "  func:%p(..._cli_options_get_carg(duf_get_config_cli()))", xtended->call.fdesc.aa.func );
         break;
       case DUF_OPTION_VTYPE_TN1_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.tn1.func );
+        DUF_PRINTF( 0, "  func:%p(..._cli_options_get_targ(duf_get_config_cli()), mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.tn1.func );
         break;
       case DUF_OPTION_VTYPE_TS1_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts1.func );
+        DUF_PRINTF( 0, "  func:%p(..._cli_options_get_targ(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts1.func );
         break;
       case DUF_OPTION_VTYPE_TS2_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_ptargc(duf_get_config_cli()), duf_cli_options_get_ptargv(duf_get_config_cli()), optargg)",
+        DUF_PRINTF( 0, "  func:%p(..._cli_options_get_ptargc(duf_get_config_cli()), ..._cli_options_get_ptargv(duf_get_config_cli()), optargg)",
                     xtended->call.fdesc.ts2.func );
         break;
       default:
@@ -425,12 +425,12 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
           break;
 #if 0
         case DUF_OFFSET_config:
-          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         case DUF_OFFSET_ufilter:
-          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_optvtype2string( xtended->vtype ), duf_offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;

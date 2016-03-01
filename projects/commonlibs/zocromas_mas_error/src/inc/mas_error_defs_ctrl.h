@@ -29,6 +29,32 @@
 # define MASE_IS_ERROR(_rt) ( _rt < 0 )
 # define MASE_NOERROR(_rt) ( _rt >= 0 )
 
+
+# define TER MASE_TEST_R( QERRIND )
+
+# define SERRV(_errv)			MASE_MAKE_ERROR( QERRIND, _errv )
+# define SERRMV(_errv, ...)		MASE_MAKE_ERRORM( QERRIND, _errv, __VA_ARGS__ )
+# define ERRCODE(_err)		DUF_ERROR_ ## _err
+# define SERR(_err)			SERRV( ERRCODE( _err ) )
+# define SERRM(_err, ...)		SERRMV( ERRCODE( _err ), __VA_ARGS__ )
+# define QNOERR				MASE_NOERROR( QERRIND )
+# define QNOERRV(_errv)			MASE_NOERROR( _errv )
+# define QISERR_N(_err)			MASE_IS_ERROR_N( QERRIND, ERRCODE( _err ) )
+# define QISERR				MASE_IS_ERROR( QERRIND )
+
+# define QERRIND fundecl_.r.ei
+# define QERRCODE mas_error_code_i(QERRIND)
+# define QPERRIND &(fundecl_.r.ei)
+# define QERRNAME			mas_error_name_i( QERRIND )
+# define ERRCLEAR(_err)			MASE_CLEAR_ERROR( QERRIND, ERRCODE( _err ) )
+# define ERRRCLEAR(_rt, _err)		MASE_CLEAR_ERROR( _rt, ERRCODE( _err ) )
+
+# define ERRMAKE_FL(_err)		MASE_MAKE_ERRORFL(QERRIND, _err, FL )
+# define ERRMAKE(_err)			MASE_MAKE_ERROR( QERRIND, ERRCODE( _err ) )
+# define ERRMAKE_M(_err, ...)		MASE_MAKE_ERRORM(QERRIND, ERRCODE( _err ), __VA_ARGS__ )
+
+
+
 #endif
 
 /*

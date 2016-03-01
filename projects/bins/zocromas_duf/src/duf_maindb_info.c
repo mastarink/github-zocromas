@@ -25,6 +25,7 @@
 #include "duf_sql_positional.h"
 #include "sql_tables_defs.h"
 #include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
+
 /* ###################################################################### */
 #include "duf_maindb_info.h"
 /* ###################################################################### */

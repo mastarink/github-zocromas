@@ -31,7 +31,6 @@ noinst_HEADERS=motest_config.h \
 	duf_config_pointers.h \
 	duf_config_rec_etc_types.h \
 	duf_config_ref.h \
-	duf_config_show_etc.h \
 	duf_config_trace_credel.h \
 	duf_config_trace_enum.h \
 	duf_config_trace.h \
