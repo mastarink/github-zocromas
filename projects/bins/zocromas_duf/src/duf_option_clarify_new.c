@@ -1,5 +1,7 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
@@ -7,27 +9,20 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_expandable.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-/* #include "duf_config_util.h" */
-
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-
-/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
-
-/* #include "duf_option_typed.h" */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
-/* #include "duf_xtended_table.h" */
 #include "duf_option_clarify.h"
 
 /* ###################################################################### */
@@ -166,7 +161,7 @@ SR( OPTIONS, soption_xclarify_new_at_xarr_od, duf_config_cli_t * cli, const duf_
     /* T( "@0b name_offset:%lu - %s ? %s", pod->name_offset, pod->name,  xtended->o.name ); */
     }
   /* 
-   * unset works at duf_option_typed_gen.c / DUF_OPTION_VTYPE_FLAG; not here:
+   * unset works at option_typed_gen.c / DUF_OPTION_VTYPE_FLAG; not here:
 
    if ( xtended->unset )
    pod->noo = !pod->noo;
@@ -324,7 +319,7 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
 /* pod->name = NULL;        */
 /* mas_free( pod->optarg ); */
 /* pod->optarg = NULL;      */
-  TR( QERRIND );
+  QTR;
 
   ER( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_longval_extended_vtable_t ** xvtables, duf_option_data_t * pod );
 }
@@ -332,7 +327,6 @@ SR( OPTIONS, soption_xclarify_new_at_multix_od, duf_config_cli_t * cli, duf_long
 static
 SR( OPTIONS, soption_xclarify_new_at_stdx_od, duf_config_cli_t * cli, duf_option_data_t * pod )
 {
-/* CR( soption_xclarify_new_at_multix_od, duf_extended_vtable_multi(  ), pod ); */
   CR( soption_xclarify_new_at_multix_od, cli, duf_cli_options_xvtable_multi( cli ), pod );
 
   ER( OPTIONS, soption_xclarify_new_at_stdx_od, duf_config_cli_t * cli, duf_option_data_t * pod );
@@ -575,7 +569,7 @@ SR( OPTIONS, soption_xclarify_new_booted_source, duf_config_cli_t * cli, duf_opt
     {
     /* duf_option_data_t *pod; */
     /* T( "@npod:%lu/%lu", npod, cntpod ); */
-    /* pod = duf_pod_from_paod_n( paod, DUF_OPTION_STAGE_BOOT, source, npod ); */
+    /* pod = ..._pod_from_paod_n( paod, DUF_OPTION_STAGE_BOOT, source, npod ); */
     /* DUF_TRACE( optsource, 0,  "@#############  %lu.", npod ); */
       CR( soption_xclarify_snac_new_at_stdx_default, cli, ( const char * ) NULL /* string */ , ( const char * ) NULL /* name */ ,
           ( const char * ) NULL /* arg */ , ( duf_xclarifier_t ) NULL, '\0' /* value_separator */ ,
@@ -587,4 +581,4 @@ SR( OPTIONS, soption_xclarify_new_booted_source, duf_config_cli_t * cli, duf_opt
 }
 
 /* for batch:                        */
-/* delim = duf_option_delimiter(  ); */
+/* delim = ..._option_delimiter(  ); */

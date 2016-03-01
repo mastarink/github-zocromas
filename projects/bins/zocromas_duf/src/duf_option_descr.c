@@ -9,21 +9,21 @@
 
 #include "duf_tmp_types.h"
 
-#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
+#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  ..._coption_*  etc... ♠ */
 
 #include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
 /* ###################################################################### */
 #include "duf_option_descr.h"
 /* ###################################################################### */
 
-/* TODO to new option system , see duf_option_clarify_new.c
+/* TODO to new option system , see ..._option_clarify_new.c
  * use soption_xclarify_new_at_stdx with specific `duf_xclarifier_t clarifier`
  *
  * */
 
 /* -= by duf_option_gen_code_t codeval =- */
 static const char *
-_duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int *pr )
+coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int *pr )
 {
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
@@ -38,7 +38,7 @@ _duf_coption_xfind_help_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t c
 const char *
 duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval, int *pr )
 {
-  const char *ph = _duf_coption_xfind_help_at_stdx( cli, codeval, pr );
+  const char *ph = coption_xfind_help_at_stdx( cli, codeval, pr );
 
   return ph ? ph : "-";
 }
@@ -46,19 +46,19 @@ duf_coption_xfind_desc_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t co
 #if 0
 /* -= by int longindex =- */
 char *
-duf_loption_description_d( int longindex, const char *delimh, const char *delim )
+..._loption_description_d( int longindex, const char *delimh, const char *delim )
 {
   char *p = NULL;
-  const duf_longval_extended_t *extended;
+  const ..._longval_extended_t *extended;
 
-  extended = duf_loption_xfind_at_stdx( longindex, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
+  extended = ..._loption_xfind_at_stdx( longindex, ( const ..._longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
   if ( extended )
-    p = duf_xoption_description_d( extended, delimh, delim );
+    p = ..._xoption_description_d( extended, delimh, delim );
   return p;
 }
 #endif
 
-/* -= by duf_longval_extended_t * extended =- */
+/* -= by ..._longval_extended_t * extended =- */
 char *
 duf_xoption_description_d( duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *delimh, const char *delim )
 {

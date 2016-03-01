@@ -35,21 +35,21 @@ typedef struct
 } something1_t;
 
 #define DOO_Q(_name) .o.name =_name
-#define DOO_BFL(_vt, _prf, _loc, _fld) .flag_bitnum=DUF_FLAG_ ## _loc ## _ ## _fld, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#define DOO_BFL(_vt, _prf, _loc, _fld) .flag_bitnum=MUC_FLAG_ ## _loc ## _ ## _fld, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 something1_t som1 = {.set3.bits = 0x3f };
 
 #define MAS_OPT_BXFLAG( _name, _set, _fld, _bitnum, _can_no, _oclass, _help ) { \
   .o.name      = _name, \
   .o.has_arg   = no_argument, \
-  .vtype       = DUF_OPTION_VTYPE_BXFLAG, \
+  .vtype       = MUC_OPTION_VTYPE_BXFLAG, \
   .vsize       = sizeof(_set._fld), \
   .m_hasoff    = 1, \
-  .relto       = DUF_OFFSET_varptr, \
+  .relto       = MUC_OFFSET_varptr, \
   .reltoptr    = &_set, \
   .m_offset    = offsetof( typeof(_set), _fld ), \
   .flag_bitnum = _bitnum, \
-  .oclass      = DUF_OPTION_CLASS_ ## _oclass, \
+  .oclass      = MUC_OPTION_CLASS_ ## _oclass, \
   .can_no      = _can_no, \
   .help        = _help \
 }
@@ -63,12 +63,12 @@ const muc_longval_extended_table_t optable_test = {                  /* zzzzzz *
              .flag_bitnum = 1,
              .can_no = 1,
              .o.has_arg = no_argument,
-             .vtype = DUF_OPTION_VTYPE_NOBSFLAG,
+             .vtype = MUC_OPTION_VTYPE_NOBSFLAG,
              .m_hasoff = 1,
-             .relto = DUF_OFFSET_varptr,
+             .relto = MUC_OFFSET_varptr,
              .reltoptr = &som1,
              .m_offset = offsetof( something1_t, set2 ),
-             .oclass = DUF_OPTION_CLASS_TEST,
+             .oclass = MUC_OPTION_CLASS_TEST,
              .help = "..."                                           /* */
              },
             MAS_OPT_BXFLAG( "test-q-bflag", som1, set3, 2, 1, TEST, "something to help" ),
@@ -109,10 +109,10 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
   T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
-  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
+  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following DUF_TRACE's */
   T( "@@@@@%d OPTEST", QERRIND );
 
-  CR( treat_option_stage_ne, clio, DUF_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_BOOT, NULL, NULL, NULL );
   T( "@@@@@%d OPTEST", QERRIND );
 
   CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );

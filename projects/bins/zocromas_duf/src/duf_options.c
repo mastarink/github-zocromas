@@ -1,16 +1,17 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h" 
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 #include <sys/stat.h>                                                /* struct stat */
 
 #include <mastar/wrap/mas_std_def.h>
+# include <mastar/error/mas_error_defs_ctrl.h>
+# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
@@ -46,7 +47,7 @@ SR( OPTIONS, all_options_heterogeneous, duf_config_cli_t * cli, duf_option_stage
   if ( istage <= DUF_OPTION_STAGE_SETUP )
     DUF_OPTSRC( cli, fr, incfg, istage, paod, CFG );                 /* config - only acts at stages <= DUF_OPTION_STAGE_SETUP (??) */
   DUF_OPTSRC( cli, sr, incfg_stg, istage, paod, CFGSTG );            /* per-stage config */
-  DUF_OPTSRC( cli, er, env, istage, paod, ENV );                     /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+  DUF_OPTSRC( cli, er, env, istage, paod, ENV );                     
   {
     DUF_OPTSRC( cli, or, cli, istage, paod, CLI );
   }                                                                  /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
@@ -107,7 +108,7 @@ SR( OPTIONS, all_options_paod, duf_config_cli_t * cli, duf_option_stage_t istage
 SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, int is_interactive */ , duf_int_void_func_t cb_do_interactive,
     duf_cpchar_void_func_t cb_prompt_interactive, duf_option_adata_t * paod, int from_paod )
 {
-/* DUF_STARTR( r ); */
+
   assert( cli );
   DUF_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", duf_optstage_name( cli, istage ),
              cb_do_interactive ? cb_do_interactive(  ) : 0 );
@@ -136,7 +137,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
 
 /* if ( istage >= DUF_OPTION_STAGE_MIN && istage <= DUF_OPTION_STAGE_MAX ) */
   {
-    DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+    MASE_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
     {
       if ( from_paod )
       {
@@ -175,7 +176,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
         if ( istage <= DUF_OPTION_STAGE_SETUP )
           DUF_OPTSRC( fr, incfg, istage, paod, CFG );                /* config - only acts at stages <= DUF_OPTION_STAGE_SETUP (??) */
         DUF_OPTSRC( sr, incfg_stg, istage, paod, CFGSTG );           /* per-stage config */
-        DUF_OPTSRC( er, env, istage, paod, ENV );                    /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+        DUF_OPTSRC( er, env, istage, paod, ENV );                    /* => ..._exec_cmd_long_xtables_std => ..._exec_cmd_xtable => ..._clarify_xcmd_full */
         DUF_OPTSRC( or, cli, istage, paod, CLI );
       /* if ( istage == DUF_OPTION_STAGE_FIRST (* XXX ???? XXX *)  ) */
         DUF_OPTSRC( isi, stdin, istage, paod, STDIN );
@@ -234,7 +235,7 @@ SR( OPTIONS, all_options, duf_config_cli_t * cli, duf_option_stage_t istage /*, 
                  QERRNAME );
       DUF_TRACE( options, 10, "@@@@@done all options for stage %s (%d:%s)", duf_optstage_name( cli, istage ), QERRIND, QERRNAME );
     }
-    DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+    MASE_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
   }
 /* DUF_ENDR_UPPER( QERRIND, DUF_ERROR_OPTION_NOT_FOUND ); */
   ER( OPTIONS, duf_all_options, duf_config_cli_t * cli, duf_option_stage_t istage, int is_interactive, duf_option_adata_t * paod );

@@ -370,8 +370,8 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         break;
       case DUF_OPTION_VTYPE_N_CALL:
       /* int rxx MAS_UNUSED = 0; */
-      /* DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.n.func, duf_strtol_suff( optargg, &rxx ) ); */
-        DUF_PRINTF( 0, "  func:%p(duf_strtol_suff( optargg, &r ))", xtended->call.fdesc.n.func );
+      /* DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.n.func, mas_strtol_suff( optargg, &rxx ) ); */
+        DUF_PRINTF( 0, "  func:%p(mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.n.func );
         break;
       case DUF_OPTION_VTYPE_S_CALL:
         DUF_PRINTF( 0, "  func:%p(optargg)", xtended->call.fdesc.s.func );
@@ -380,7 +380,7 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_carg(duf_get_config_cli()))", xtended->call.fdesc.aa.func );
         break;
       case DUF_OPTION_VTYPE_TN1_CALL:
-        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), duf_strtol_suff( optargg, &r ))", xtended->call.fdesc.tn1.func );
+        DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.tn1.func );
         break;
       case DUF_OPTION_VTYPE_TS1_CALL:
         DUF_PRINTF( 0, "  func:%p(duf_cli_options_get_targ(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts1.func );

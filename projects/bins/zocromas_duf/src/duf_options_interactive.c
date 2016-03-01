@@ -1,5 +1,7 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h" 
+
 #include <string.h>
 #include <stdlib.h>                                                  /* free */
 #include <stdio.h>
@@ -10,12 +12,12 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+# include <mastar/error/mas_error_defs_ctrl.h>
+# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
@@ -33,7 +35,7 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
     __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
     __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode MAS_UNUSED )
 {
-/* DUF_STARTR( r ); */
+
 #if 0
   static char rl_prompt[256 * 10] = "";
 #endif
@@ -131,7 +133,7 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
         }
       /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
         ERRCLEAR( OPTION_NOT_FOUND );
-        TR( QERRIND );
+        QTR;
       }
 #if 0
       if ( DUF_CONFIGG( cli.history_filename ) )
@@ -142,7 +144,7 @@ SR( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_
 #endif
     }
   }
-/* DUF_ENDR( r ); */
+
   ER( OPTIONS, source_interactive_parse, duf_config_cli_t * cli, duf_option_stage_t istage, duf_int_void_func_t cb_do_interactive
       __attribute__ ( ( unused ) ), duf_cpchar_void_func_t cb_prompt_interactive
       __attribute__ ( ( unused ) ), duf_option_adata_t * paod, duf_option_source_code_t sourcecode );

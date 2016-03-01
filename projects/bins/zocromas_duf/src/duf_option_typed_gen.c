@@ -1,5 +1,7 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h" 
+
 #include <assert.h>                                                  /* assert */
 #include <stdio.h>                                                   /* FILE */
 #include <string.h>
@@ -13,9 +15,13 @@
 #include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
+# include <mastar/error/mas_error_defs_ctrl.h>
+# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
+
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
@@ -30,7 +36,9 @@
 #include "duf_option_typed_gen.h"
 /* ###################################################################### */
 
-static FILE *
+static 
+#if 0
+  FILE *
 duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite, int *pr )
 {
   int rpr = 0;
@@ -67,7 +75,42 @@ duf_open_file_special( duf_config_cli_t * cli, const char *pname, char **popened
     *pr = rpr;
   return newfile;
 }
+#else
+SRP( OPTIONS, FILE *, newfile = NULL, open_file_special, duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite )
+{
+  /* int rpr = 0; */
+  /* FILE *newfile = NULL; */
+  int overw = 0;
+  const char *mode = "w";
+  struct stat st;
+  int skipchar = 0;
+  int ry;
 
+  MAST_TRACE( io, 0, "to open %s", pname );
+  if ( ( skipchar = ( *pname == '@' ) ) || overwrite )
+    overw = 1;
+  else if ( ( skipchar = ( *pname == '+' ) ) )
+    mode = "a";
+  if ( skipchar )
+    pname++;
+  *popenedname = mas_strdup( pname );
+  ry = stat( pname, &st );
+  if ( ry >= 0 && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
+  {
+    ERRMAKE_M(  FILE_EXISTS, "can't open file %s for writing file exists %llu / %llu chr:%d", pname,
+                     ( unsigned long long ) st.st_dev, ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
+  }
+  else
+  {
+    newfile = fopen( pname, mode );
+    if ( !newfile )
+    {
+      ERRMAKE_M( OPEN, "can't open file %s", pname );
+    }
+  }
+  ERP( OPTIONS, FILE *, newfile, open_file_special, duf_config_cli_t * cli, const char *pname, char **popenedname, int overwrite );
+}
+#endif
 /*  20150924.120214 for DUF_OUTPUTFILE DUF_OUTPUTFILE_A */
 static
 SR( OPTIONS, set_file_special, duf_config_cli_t * cli, const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout,
@@ -276,7 +319,7 @@ SR( OPTIONS,
               ( *pix ) |= (_typ)( ( ((_typ) 1)<<(extended->flag_bitnum-1)) & nz ); \
             MAST_TRACE( options, +140, "@@@@@@[%d] %p %p :%s: %llx %llx (%llx)", nof, byteptr, pix, extended->o.name, (unsigned long long)*pix, \
                        (unsigned long long)(1<<(extended->flag_bitnum-1)), (unsigned long long)( *pix | (1<<(extended->flag_bitnum-1)) ) ); \
-            DUF_TEST_R( QERRIND ); \
+            TER; \
           } \
         }
 #define DUF_OPTION_VTYPE_XQBFLAG \
@@ -428,7 +471,7 @@ SR( OPTIONS,
           if ( noo )
           {
 #if 0
-            ..._tmpdb_delete( extended->o.name, optargg );
+            ... _tmpdb_delete( extended->o.name, optargg );
 #endif
           }
           else if ( optargg && *optargg && F2N( duf_, tmpdb_add ) )

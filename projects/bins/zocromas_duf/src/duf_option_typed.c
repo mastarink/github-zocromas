@@ -1,22 +1,21 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h"
+
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+#include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-/* #include "duf_config_util.h" */
-
-/* #include "duf_option_defs.h" */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
@@ -32,7 +31,7 @@
 SR( OPTIONS, xoption_clarify_typed, duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg,
     const duf_longval_extended_vtable_t * xvtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source )
 {
-/* DUF_STARTR( r ); */
+
 
 #if 0
   duf_option_data_t od;
@@ -57,7 +56,7 @@ SR( OPTIONS, xoption_clarify_typed, duf_config_cli_t * cli, const duf_longval_ex
       CR( xoption_clarify_typed_call, cli, extended, optargg, noo, istage, source );
 
     /* useless now: */
-      if ( QISERR_N(  OPTION_NOT_CLARIFIED ) )
+      if ( QISERR_N( OPTION_NOT_CLARIFIED ) )
       {
         ERRCLEAR( OPTION_NOT_CLARIFIED );
         nogen = 0;
@@ -75,7 +74,7 @@ SR( OPTIONS, xoption_clarify_typed, duf_config_cli_t * cli, const duf_longval_ex
   /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   }
 
-/* DUF_ENDR( r ); */
+
   ER( OPTIONS, xoption_clarify_typed, duf_config_cli_t * cli, const duf_longval_extended_t * extended, const char *optargg,
       const duf_longval_extended_vtable_t * xvtable, unsigned noo, duf_option_stage_t istage, duf_option_source_t source );
 }

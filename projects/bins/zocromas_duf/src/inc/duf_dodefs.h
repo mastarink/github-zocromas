@@ -33,7 +33,6 @@
 #  define IF_DORF(_rval, _fun, ...)    { if (_fun) DOR(r,(_fun)(__VA_ARGS__)); else DUF_MAKE_ERROR(_rval,DUF_ERROR_NO_FUNC); }
 
 #  define DOCF(_rval, _fun, ...)         DOC(_rval, _fun(__VA_ARGS__))
-#  define DORFp(_rval, _fun, ...)        DORF(_rval, duf_ ## _fun, __VA_ARGS__)
 #  define DOR_LOWERE(_rval, _x, ...)       DUF_DO_TEST_R_LOWERE(_rval, _x, __VA_ARGS__)
 #  define DOR_LOWERE_N(_n, _rval, _x, ...) DUF_DO_TEST_R_LOWERE_N(_n, _rval, _x, __VA_ARGS__)
 #  define DORF_LOWERE(_rval, _fun, ...)    DOR_LOWERE(_rval, _fun(__VA_ARGS__))

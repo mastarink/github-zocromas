@@ -6,9 +6,6 @@
 
 # include "duf_fun_types.h"                                          /* duf_void_int_func_t; duf_errc_int_func_t */
 # include "duf_option_source_types.h"                                /* duf_option_source_t */
-/* # include "duf_config_rec_etc_types.h"                               (* duf_config_rec_etc_flags_t *) */
-/* # include "duf_config_opt_types.h"                                   (* duf_config_opt_disable_flags_t; duf_config_flow_flags_t  *) */
-/* # include "duf_config_act_types.h"                                   (* duf_config_act_flags_t  *) */
 # include "duf_option_stage_types.h"                                 /* duf_option_stage_t ; duf_limits_stage_t; duf_extended_stageopts_t */
 # include "duf_option_fun_types.h"                                   /*  *_func_t;  *_funcpair_t */
 # include "duf_option_class_types.h"                                 /* duf_option_class_t */
@@ -110,38 +107,30 @@ typedef struct
     union
     {
       duf_errc_int_arg_funcpair_t eia;
-    /* duf_int_void_funcpair_t iv; */
+    /* ..._int_void_funcpair_t iv; */
       duf_errc_void_funcpair_t ev;
       duf_errc_cargcv_funcpair_t a;
       duf_errc_cargv_funcpair_t aa;
       duf_errc_pargcv_funcpair_t t;
       duf_errc_n_funcpair_t n;
       duf_errc_argvn_funcpair_t tn1;
-    /* duf_errc_pargcvn_funcpair_t tn2; */
+    /* ..._errc_pargcvn_funcpair_t tn2; */
       duf_errc_cargvs_funcpair_t ts1;
       duf_errc_pcargcvcs_funcpair_t ts2;
       duf_errc_csv_funcpair_t s;
       duf_errc_psv_arg_funcpair_t sas;
       duf_errc_csn_arg_funcpair_t san;
-    /* duf_scan_hook2_item_pair_t hi; */
     } fdesc;
     const char *funcname;
   } call;
 } duf_longval_extended_t;
-typedef duf_longval_extended_t *duf_longval_pextended;
+typedef duf_longval_extended_t *duf_longval_pextended_t;
 
 typedef struct duf_longval_extended_table_s
 {
   int id;
   const char *name;
-# if 0
-  unsigned use_stage:1;
-  unsigned use_stage_mask:1;
-  duf_limits_stage_t stage;
-  unsigned long stage_mask;
-# else
   duf_extended_stageopts_t stage_opts;
-# endif
   duf_longval_extended_t xlist[];                                    /* the last ! => «flexible array member not at end of struct» */
 } duf_longval_extended_table_t;
 

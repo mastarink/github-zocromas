@@ -60,7 +60,7 @@ duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t 
  *     duf_longval_extended_vtable_t
  *     duf_option_t
  *
- *     TODO: file duf_option_longopts_credel.c
+ *     TODO: file ..._option_longopts_credel.c
  * */
 duf_option_t *
 duf_options_create_longopts_table( duf_longval_extended_vtable_t ** xvtables )

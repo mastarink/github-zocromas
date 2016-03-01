@@ -88,21 +88,21 @@ duf_optstage_name( const duf_config_cli_t * cli MAS_UNUSED, duf_option_stage_t i
  * */
 #if 0
 int
-duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_vtable_t * xvtable )
+..._optstage_check_old( ..._option_stage_t istage, const ..._longval_extended_t * extended, const ..._longval_extended_vtable_t * xvtable )
 {
   int r0 = 0;
   int r1 = 0;
   int r2 = 0;
-  duf_option_stage_t istage_check;
+  ..._option_stage_t istage_check;
 
   istage_check = istage;
   if ( istage > DUF_OPTION_STAGE_LOOP && istage <= DUF_OPTION_STAGE_LOOPE )
     istage_check = DUF_OPTION_STAGE_LOOP;
   else
     istage_check = istage;
-  MAST_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", duf_optstage_name( cli, istage ),
+  MAST_TRACE( options, +150, "checking stage(%s) xuse:%d xminmax:%d/%d", ..._optstage_name( cli, istage ),
              extended->stage_opts.use_stage, extended->stage_opts.stage.min, extended->stage_opts.stage.max );
-  MAST_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", duf_optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
+  MAST_TRACE( options, +150, "checking stage(%s) tuse:%d tminmax:%d/%d", ..._optstage_name( cli, istage ), xvtable->stage_opts.use_stage,
              xvtable->stage_opts.stage.min, xvtable->stage_opts.stage.max );
   r0 = ( istage_check == DUF_OPTION_STAGE_ANY || istage_check == DUF_OPTION_STAGE_ALL );
 /* r0 = r0 || ( extended->stage_opts.stage.flag ? 1 : 0 ); (* ???? *) */
@@ -124,7 +124,7 @@ duf_optstage_check_old( duf_option_stage_t istage, const duf_longval_extended_t 
   {
     r0 = 0;
   }
-  MAST_TRACE( options, +150, "checked stage(%s); r0:%d", duf_optstage_name( cli, istage ), r0 );
+  MAST_TRACE( options, +150, "checked stage(%s); r0:%d", ..._optstage_name( cli, istage ), r0 );
   return r0;
 }
 #endif
@@ -177,7 +177,7 @@ duf_optstage_check( const duf_config_cli_t * cli, duf_option_stage_t istage, con
   {
     int old;
 
-    old = duf_optstage_check_old( istage, extended, xvtable );
+    old = ..._optstage_check_old( istage, extended, xvtable );
     if ( ( old && r0 <= 0 ) || ( !old && r0 >= 0 ) || ( 0 == strcmp( extended->o.name, "help-set" ) ) )
       T( "@@>>>> %s @ %s : (r1:%d; r2:%d) => %d {old:%d}\n", extended->o.name, duf_optstage_name( cli, istage ), r1, r2, r0, old );
   }

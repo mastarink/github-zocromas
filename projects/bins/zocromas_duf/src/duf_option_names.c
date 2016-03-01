@@ -23,11 +23,7 @@ duf_coption_names_d( duf_config_cli_t * cli, duf_option_gen_code_t codeval, cons
   int cnt = 0;
   static const char *wrap[2] = { "〈", "〉" };
 
-#if 0
-  xvtables = duf_cli_options_config(  )->xvtable_multi;
-#else
   xvtables = duf_cli_options_xvtable_multi( cli );
-#endif
 
   while ( ( xtable = *xvtables++ ) )
   {
@@ -73,13 +69,11 @@ duf_coption_names_d( duf_config_cli_t * cli, duf_option_gen_code_t codeval, cons
   return names;
 }
 
-#if 0
 char *
-duf_coption_names( duf_option_gen_code_t codeval )
+duf_coption_names( duf_config_cli_t * cli, duf_option_gen_code_t codeval )
 {
-  return duf_coption_names_d( codeval, NULL );
+  return duf_coption_names_d( cli, codeval, NULL );
 }
-#endif
 
 static duf_tmp_t *cnames_tmp = NULL;
 

@@ -19,7 +19,7 @@
 
 const char *duf_coption_cnames_tmp( duf_config_cli_t * cli, int index, duf_option_gen_code_t codeval, const char *delim );
 
-/* char *duf_coption_names( duf_option_gen_code_t codeval ); */
+char *duf_coption_names(duf_config_cli_t * cli, duf_option_gen_code_t codeval );
 char *duf_coption_names_d( duf_config_cli_t * cli, duf_option_gen_code_t codeval, const char *delim );
 
 

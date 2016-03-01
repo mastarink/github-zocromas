@@ -174,11 +174,11 @@
 # define DO_AA_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */   DO_SET_CALL_TYPE( A ),  DO_SET_CALL(aa, _f)
 # define DOO_AA_CALL(_f)		/* DOO_SET_VTYPE( A_CALL ), */ DOO_SET_CALL_TYPE( A ), DOO_SET_CALL(aa, _f)
 
-      /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN1: targ and numeric) */
+      /* void f( &duf_config->targc, &duf_config->targv, mas_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN1: targ and numeric) */
 # define DO_TN1_CALL(_f)        /* DO_SET_VTYPE( TN1_CALL ), */   DO_SET_CALL_TYPE( TN1 ),  DO_SET_CALL(tn1, _f)
 # define DOO_TN1_CALL(_f)       /* DOO_SET_VTYPE( TN1_CALL ), */ DOO_SET_CALL_TYPE( TN1 ), DOO_SET_CALL(tn1, _f)
 
-      /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN2: targ and numeric) */
+      /* void f( &duf_config->targc, &duf_config->targv, mas_strtol_suff( optargg, &r ) ) ;;;; call with targ[cv] + numeric optarg (TN2: targ and numeric) */
 # define DO_TN2_CALL(_f)        /* DO_SET_VTYPE( TN2_CALL ), */    DO_SET_CALL_TYPE( TN2 ),  DO_SET_CALL(tn2, _f)
 # define DOO_TN2_CALL(_f)        /* DOO_SET_VTYPE( TN2_CALL ), */ DOO_SET_CALL_TYPE( TN2 ), DOO_SET_CALL(tn2, _f)
 
@@ -186,7 +186,7 @@
 # define DO_EV_CALL(_f)        /* DO_SET_VTYPE( EV_CALL ), */    DO_SET_CALL_TYPE( EV ),  DO_SET_CALL(ev, _f)
 # define DOO_EV_CALL(_f)        /* DOO_SET_VTYPE( EV_CALL ), */ DOO_SET_CALL_TYPE( EV ), DOO_SET_CALL(ev, _f)
 
-      /* void f( duf_strtol_suff( optargg, &r ) ) ;;;; call with numeric optarg (N:numeric) */
+      /* void f( mas_strtol_suff( optargg, &r ) ) ;;;; call with numeric optarg (N:numeric) */
 # define DO_N_CALL(_f)         /* DO_SET_VTYPE( N_CALL ), */    DO_SET_CALL_TYPE( N ),  DO_SET_CALL(n, _f)
 # define DOO_N_CALL(_f)         /* DOO_SET_VTYPE( N_CALL ), */ DOO_SET_CALL_TYPE( N ), DOO_SET_CALL(n, _f)
 

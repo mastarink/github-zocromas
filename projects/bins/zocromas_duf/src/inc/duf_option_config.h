@@ -8,8 +8,6 @@
 duf_longval_extended_vtable_t **duf_cli_options_xtable_list2xvtable( const duf_config_cli_t * cli,
                                                                      const duf_longval_extended_table_t * const *xtable_multi );
 
-/* duf_config_cli_t *duf_cli_options_config( const duf_config_cli_t * cli ); */
-
 duf_option_gen_code_t duf_cli_options_get_maxcodeval( const duf_config_cli_t * cli );
 const char *duf_cli_options_get_shorts( const duf_config_cli_t * cli );
 const char *duf_cli_options_config_dir( const duf_config_cli_t * cli );

@@ -71,6 +71,6 @@ function! MasIncludeComments()
   call MasIncludeComment2("duf_tmp_types", "duf_tmp_t")
   call MasIncludeComment2("duf_tracen_defs", "DUF_TRACE")
   call MasIncludeComment2("duf_ufilter_types", "duf_ufilter_t; duf_yfilter_t; etc.")
-  call MasIncludeComment2("duf_utils", "duf_percent; duf_strtol_suff; duf_strtoll_suff etc.")
+  call MasIncludeComment2("duf_utils", "duf_percent;  etc.")
   call MasIncludeComment2("sql_beginning_tables", "DUF_SQL_TABLES... etc.")
 endfunction

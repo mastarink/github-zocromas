@@ -6,19 +6,14 @@
 #include <mastar/wrap/mas_std_def.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
-
-/* #include "duf_se_only.h"                                             (* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_option_lfind.h"
 /* ###################################################################### */
-#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  duf_coption_*  etc... ♠ */
+#include "duf_option_cfind.h"                                        /* duf_coption_xfind_at_stdx;  ..._coption_*  etc... ♠ */
 /* ###################################################################### */
 
 static const duf_option_t *
@@ -63,24 +58,20 @@ duf_lcoption_find_at_std( duf_config_cli_t * cli, duf_option_gen_code_t codeval,
 {
   const duf_option_t *roption = NULL;
 
-  if ( *plongindex >= 0 && codeval > maxcodeval /* DUF_OPTION_VAL_LONG */ )
-#if 0
-    roption = &( duf_cli_options_get_longopts_table( cli )[longindex] );
-#else
+  if ( *plongindex >= 0 && codeval > maxcodeval /* DUF_OPTION_VAL_LONG */  )
     roption = duf_loption_find_at_std( cli, *plongindex );
-#endif
   else if ( codeval != '?' )
     roption = duf_coption_find_at_std( cli, codeval, plongindex, pr );
   return roption;
 }
 
 #if 0
-const char *
-duf_coption_find_name_at_std( duf_option_gen_code_t codeval, int *pr )
+const char *...
+_coption_find_name_at_std( ... _option_gen_code_t codeval, int *pr )
 {
-  const duf_option_t *longoption = NULL;
+  const ... _option_t *longoption = NULL;
 
-  longoption = duf_coption_find_at_std( codeval, pr );
+  longoption = ... _coption_find_at_std( codeval, pr );
   return longoption ? longoption->name : NULL;
 }
 #endif
@@ -90,7 +81,7 @@ duf_lcoption_find_name_at_std( duf_config_cli_t * cli, duf_option_gen_code_t cod
 {
   const duf_option_t *longoption = NULL;
 
-  longoption = duf_lcoption_find_at_std( cli, codeval, maxcodeval,plongindex, pr );
+  longoption = duf_lcoption_find_at_std( cli, codeval, maxcodeval, plongindex, pr );
   return longoption ? longoption->name : NULL;
 }
 
@@ -150,36 +141,13 @@ duf_coption_xfind_at_stdx( duf_config_cli_t * cli, duf_option_gen_code_t codeval
     {
       const duf_longval_extended_vtable_t *xvtable = *multix;
 
-#if 0
-      {
-        int tbcount = 0;
-
-        for ( const duf_longval_extended_t * xarr = xvtable->xlist; !rxtended && xarr->o.name; xarr++, tbcount++ )
-        {
-          if ( xarr )
-          {
-            MAST_TRACE( findopt, +1, "@li2ex %d:%d [%s] %d:%d", ntable, tbcount, xarr->o.name, xarr->o.val, codeval );
-            if ( xarr->o.val == codeval )
-            {
-              rxtended = xarr;
-              if ( result_pxvtable )
-                *result_pxvtable = xvtable;
-              MAST_TRACE( findopt, +1, "@li2ex FOUND %d:%d [%s]", ntable, tbcount, xarr->o.name );
-              break;                                                 /* ? */
-            }
-          }
-        }
-        MAST_TRACE( findopt, +1, "@li2ex ? %d:%d [%s]", ntable, tbcount, rxtended ? rxtended->o.name : NULL );
-      }
-#else
       rxtended = duf_coption_xfind_at_xtable( cli, codeval, xvtable, result_pxvtable, pr );
       MAST_TRACE( findopt, +1, "@li2ex ? %d [%s]", ntable, rxtended ? rxtended->o.name : NULL );
-#endif
     }
   }
 #if 0
   if ( !ok )
-    DUF_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
+    MASE_MAKE_ERROR( rpr, DUF_ERROR_OPTION_NOT_FOUND );
 #endif
   if ( pr )
     *pr = rpr;

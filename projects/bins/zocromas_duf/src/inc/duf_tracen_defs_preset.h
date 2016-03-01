@@ -5,9 +5,9 @@
 # include "duf_config_trace_enum.h"
 
 # ifndef MAST_TRACE_CONFIG
-/* #    include "duf_config4trace_ref.h" */
-/* #    define MAST_TRACE_CONFIG duf_config4trace */
-/* #    define MAST_TRACE_CONFIG duf_get_config() */
+/* #    include "..._config4trace_ref.h" */
+/* #    define MAST_TRACE_CONFIG ..._config4trace */
+/* #    define MAST_TRACE_CONFIG ..._get_config() */
 #  define MAST_TRACE_CONFIG duf_get_trace_config()
 # endif
 
@@ -30,15 +30,15 @@
 /* # endif                                                                  */
 
 /* # ifndef MAST_TRACE_LOADTIME                                                   */
-/* #  define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(duf_get_trace_config(  )) */
+/* #  define MAST_TRACE_LOADTIME  MAST_TRACE_LOADTIME_C(..._get_trace_config(  )) */
 /* # endif                                                                        */
 
 /* # ifndef MAST_TRACE_FILE_C                                                        */
-/* #  define MAST_TRACE_FILE_C( _tcfg ) duf_trace_file_c(_tcfg)                      */
+/* #  define MAST_TRACE_FILE_C( _tcfg ) ..._trace_file_c(_tcfg)                      */
 /* # endif                                                                           */
 /*                                                                                   */
 /* # ifndef MAST_TRACE_FILE                                                          */
-/* #  define MAST_TRACE_FILE          duf_trace_file()                               */
+/* #  define MAST_TRACE_FILE          ..._trace_file()                               */
 /* # endif                                                                           */
 /*                                                                                   */
 /* # ifndef MAST_TRACE_FUNWIDTH_C                                                    */
@@ -47,11 +47,11 @@
 /*                                                                                   */
 /* # ifndef MAST_TRACE_FORCE_COLOR_C                                                 */
 /* (* #  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) mas_output_force_color() *)        */
-/* #  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) duf_trace_output_force_color_c(_tcfg) */
+/* #  define MAST_TRACE_FORCE_COLOR_C( _tcfg ) ..._trace_output_force_color_c(_tcfg) */
 /* # endif                                                                           */
 /* # ifndef MAST_TRACE_NOCOLOR                                                       */
 /* (* #  define MAST_TRACE_NOCOLOR_C( _tcfg )  mas_output_nocolor() *)               */
-/* #  define MAST_TRACE_NOCOLOR_C( _tcfg )  duf_trace_output_no_color_c(_tcfg)       */
+/* #  define MAST_TRACE_NOCOLOR_C( _tcfg )  ..._trace_output_no_color_c(_tcfg)       */
 /* # endif                                                                           */
 
 /* # ifndef MAST_TRACE_LEVEL                                                                                              */

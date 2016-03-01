@@ -19,6 +19,4 @@ void duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const 
 
 void duf_cli_options_shut( duf_config_cli_t * cli );
 
-char *duf_cli_options_shorts_create( const duf_longval_extended_vtable_t * const *xvtables );
-
 #endif

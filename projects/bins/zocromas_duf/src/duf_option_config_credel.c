@@ -8,17 +8,10 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
-
-/* #include "duf_se_only.h"                                             (* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ *) */
-
-/* #include "duf_option_extended.h" */
 #include "duf_option_longopts.h"                                     /* duf_options_create_longopts_table ♠ */
 
-/* #include "duf_option_defs.h" */
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
 #include "duf_option_source.h"                                       /* duf_optsource_name ♠ */
 
@@ -65,7 +58,6 @@ duf_cli_option_shorts_create( duf_config_cli_t * cli MAS_UNUSED, duf_longval_ext
       if ( xtended->o.val && xtended->o.val < 0xFF )
       {
         DUF_TRACE( options, 50, "@@@+ shorts[%s]: %c : %x", xtended->o.name, xtended->o.val, xtended->o.val );
-      /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
         if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
           *p++ = ( char ) xtended->o.val;
@@ -135,9 +127,9 @@ duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_l
   }
 /*
   TODO
-    config_dir (duf_options_file.c)
-    cmds_dir (duf_options_file.c)
-    opt.output.history_filename (duf_options_interactive.c) =>  cli.history_filename
+    config_dir (..._options_file.c)
+    cmds_dir (..._options_file.c)
+    opt.output.history_filename (..._options_interactive.c) =>  cli.history_filename
 */
 }
 
@@ -149,7 +141,7 @@ duf_cli_options_delete( duf_config_cli_t * cli )
 }
 
 static void
-_duf_cli_options_shut( duf_config_cli_t * cli )
+cli_options_shut( duf_config_cli_t * cli )
 {
   cli->mandatory_config = 0;
   duf_options_delete_longopts_table( cli->longopts_table );
@@ -237,5 +229,5 @@ void
 duf_cli_options_shut( duf_config_cli_t * cli )
 {
   if ( cli )
-    _duf_cli_options_shut( cli );
+    cli_options_shut( cli );
 }

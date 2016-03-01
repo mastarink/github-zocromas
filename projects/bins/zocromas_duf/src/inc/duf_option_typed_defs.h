@@ -21,7 +21,7 @@
 	    { \
 	      __v = _conv( optargg, &__rl ); \
 	      if ( __rl < 0 ) \
-	      { ERRMAKE( OPTION_VALUE ); DUF_TEST_R( QERRIND ); } \
+	      { ERRMAKE( OPTION_VALUE ); TER; } \
 	      else \
 	      { \
 		if ( _dopls && ( *optargg=='-' || *optargg=='+' ) ) \
@@ -63,7 +63,7 @@
 		c = *optargg++; \
 	      __v.min = _conv( optargg, &__rl ); \
 	      if ( __rl < 0 ) \
-	      { ERRMAKE( OPTION_VALUE ); DUF_TEST_R( QERRIND ); } \
+	      { ERRMAKE( OPTION_VALUE ); TER; } \
 	      else \
 	      { \
 		if ( c=='+' ) \

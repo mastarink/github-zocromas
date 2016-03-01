@@ -18,7 +18,7 @@
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
 /* ###################################################################### */
-#include "duf_utils.h"                                               /* duf_percent; duf_strtol_suff; duf_strtoll_suff etc. ♠ */
+#include "duf_utils.h"                                               /* duf_percent;  etc. ♠ */
 /* ###################################################################### */
 
 #define DUF_SINGLE_QUOTES_2_NOQ_ZERO

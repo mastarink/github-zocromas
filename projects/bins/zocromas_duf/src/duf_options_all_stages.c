@@ -1,15 +1,16 @@
 /* #undef MAS_TRACING */
 #define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#include "duf_errorn_defs_preset.h" 
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
+# include <mastar/error/mas_error_defs_ctrl.h>
+# include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
+# include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
 #include "duf_tracen_defs.h"                                         /* DUF_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
@@ -41,13 +42,9 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
 
       DUF_TRACE( path, 0, "@%d/%d. %s", ia, duf_cli_options_get_targc( cli ), targia );
 
-#if 0
-      CR( pdi_reinit_anypath_global, targia );                       /* optstage_cb */
-#else
       if ( cb_init_loop_optstage )
         CRV( cb_init_loop_optstage, targia );                        /* optstage_cb */
-#endif
-    /* DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( duf_pdi_global(  ) ) ); */
+      
       CR( all_options, cli, istage_plus, cb_do_interactive, cb_prompt_interactive, duf_cli_options_aod( cli ) /* paod */ ,
           ( istage_plus > DUF_OPTION_STAGE_BOOT ) /* from_paod */  );
       istage_plus++;
@@ -68,11 +65,11 @@ SR( TOP, treat_option_stage, duf_config_cli_t * cli, duf_option_stage_t istage, 
 SR( TOP, treat_option_stage_ne, duf_config_cli_t * cli, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage,
     duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive )
 {
-  DUF_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
+  MASE_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
   CR( treat_option_stage, cli, istage, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 
-  DUF_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
+  MASE_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
 
   ER( TOP, treat_option_stage_ne, duf_config_cli_t * cli, duf_option_stage_t istage, duf_errc_cs_func_t cb_init_loop_optstage,
       duf_int_void_func_t cb_do_interactive, duf_cpchar_void_func_t cb_prompt_interactive );
@@ -89,7 +86,7 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
   DUF_TRACE( options, 0, "@@II - stages from %s(setup)", duf_optstage_name( cli, DUF_OPTION_STAGE_SETUP ) );
   CR( treat_option_stage_ne, cli, DUF_OPTION_STAGE_SETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 #if 0
-  CR( config_optionally_show );                                      /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
+  CR( config_optionally_show );                                      /* FIXME similar to ..._show_options, called from ..._main_with_config after calling ..._main_db ??? FIXME */
 #endif
 #if 0
   CR( pdi_create_global, "selected" );                               /* all_optstages_cb */
@@ -101,7 +98,6 @@ SR( OPTIONS, treat_all_optstages, duf_config_cli_t * cli, duf_errc_cs_func_t cb_
 
   CR( treat_option_stage, cli, DUF_OPTION_STAGE_INIT, NULL, cb_do_interactive, cb_prompt_interactive );
 
-/* DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( duf_pdi_global(  ) ) ); */
   DUF_TRACE( options, 0, "@@III %s - stages from first", QERRNAME );
 #if 0
   if ( DUF_ACTG_FLAG( interactive ) )

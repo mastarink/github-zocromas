@@ -19,8 +19,6 @@
 #include "duf_config_ref.h"
 #include "duf_config_output_util.h"
 
-#include "duf_utils.h"                                               /* duf_percent; duf_strtol_suff; duf_strtoll_suff etc. ♠ */
-
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 
 #include "duf_sql_prepared.h"

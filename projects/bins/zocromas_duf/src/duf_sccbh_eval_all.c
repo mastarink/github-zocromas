@@ -20,6 +20,7 @@
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
 #include "duf_option_defs.h"
+#include "duf_optimpl_defs.h"
 
 #include "duf_pdi.h"
 #include "duf_pdi_ref.h"
