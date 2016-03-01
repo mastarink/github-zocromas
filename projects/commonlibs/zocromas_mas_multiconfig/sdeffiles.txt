@@ -1,0 +1,3 @@
+duf_option_call_type_enum.def
+duf_option_class_enum.def
+duf_option_vtype_enum.def

@@ -103,30 +103,6 @@ zocromas_duf_SOURCES= \
 	duf_optimpl_val.c \
 	duf_option_cfind.c \
 	\
-	duf_option_clarify_batch.c \
-	duf_option_clarify.c \
-	duf_option_clarify_new.c \
-	duf_option_class.c \
-	duf_option_config.c \
-	duf_option_config_credel.c \
-	duf_option_descr.c \
-	duf_option_extended.c \
-	duf_option_lfind.c \
-	duf_option_longopts.c \
-	duf_option_names.c \
-	duf_options_all_stages.c \
-	duf_options.c \
-	duf_options_cli.c \
-	duf_options_env.c \
-	duf_options_file.c \
-	duf_options_interactive.c \
-	\
-	duf_option_source.c \
-	duf_option_stage.c \
-	duf_option_typed.c \
-	duf_option_typed_call.c \
-	duf_option_typed_gen.c \
-	duf_option_vtype.c \
 	\
 	duf_optmod_tmpdb.c \
 	\
@@ -189,7 +165,36 @@ zocromas_duf_SOURCES= \
 	sql_update_selected.c \
 	std_fieldsets.c \
 	std_mod_sets.c \
-	std_selectors.c
+	std_selectors.c \
+	\
+        duf_option_clarify_batch.c \
+        duf_option_clarify.c \
+        duf_option_clarify_new.c \
+        duf_option_class.c \
+        duf_option_config.c \
+        duf_option_config_credel.c \
+        duf_option_descr.c \
+        duf_option_extended.c \
+        duf_option_lfind.c \
+        duf_option_longopts.c \
+        duf_option_names.c \
+        duf_options_all_stages.c \
+        duf_options.c \
+        duf_options_cli.c \
+        duf_options_env.c \
+        duf_options_file.c \
+        duf_options_interactive.c \
+        \
+        duf_option_source.c \
+        duf_option_stage.c \
+        duf_option_typed.c \
+        duf_option_typed_call.c \
+        duf_option_typed_gen.c \
+        duf_option_vtype.c
+
+############################################################
+############################################################
+############################################################
 
 
 #	duf_item_match2.c

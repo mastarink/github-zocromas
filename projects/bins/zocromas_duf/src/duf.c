@@ -59,7 +59,6 @@
 
 #include "duf_config_credel.h"
 
-#if 1
 #include "duf_options.h"
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
@@ -67,16 +66,6 @@
 #include "duf_option_stage.h"
 #include "duf_option_source.h"
 #include "duf_options_all_stages.h"
-#else
-#include <mastar/multiconfig/muc_options.h>
-#include <mastar/multiconfig/muc_option_names.h>
-#include <mastar/multiconfig/muc_option_defs.h>
-
-#include <mastar/multiconfig/muc_option_stage.h>
-#include <mastar/multiconfig/muc_option_source.h>
-#include <mastar/multiconfig/muc_options_all_stages.h>
-
-#endif
 
 #include "duf_levinfo_ref.h"
 

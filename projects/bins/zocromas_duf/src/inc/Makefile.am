@@ -1,3 +1,9 @@
+#gggg.h: gggg.h.in
+#	pwd && echo "$@ :: $<" >/tmp/a.tmp && cp $< $@
+
+# .in.h:
+#	echo "$@ :: $<" >/tmp/b.tmp && cp $< gggg.h
+
 noinst_HEADERS=motest_config.h \
 	duf_action_table.h \
 	duf_atable_sccb_eval.h \
@@ -63,7 +69,7 @@ noinst_HEADERS=motest_config.h \
 	duf_levinfo_init.h \
 	duf_levinfo_openclose.h \
 	duf_levinfo_ref_def.h \
-	duf_levinfo_ref.h 
+	duf_levinfo_ref.h \
 	duf_levinfo_stat.h \
 	duf_levinfo_stmt_types.h \
 	duf_levinfo_types.h \
@@ -92,43 +98,6 @@ noinst_HEADERS=motest_config.h \
 	duf_optimpl_val.h  \
 	duf_optimpl_version.h \
 	\
-	duf_option_call_type_enum.def \
-	duf_option_cfind.h \
-	duf_option_clarify_batch.h  \
-	duf_option_clarify.h \
-	duf_option_clarify_new.h \
-	duf_option_class_enum.def \
-	duf_option_class.h \
-	duf_option_class_types.h \
-	duf_option_config_config.h \
-	duf_option_config.h \
-	duf_option_data_types.h \
-	duf_option_defs.h \
-	duf_option_descr.h \
-	duf_option_extended.h \
-	duf_option_fun_types.h \
-	duf_option_lfind.h \
-	duf_option_longopts.h \
-	duf_option_names.h \
-	duf_options_all_stages.h \
-	duf_options_cli.h \
-	duf_options_def.h \
-	duf_options_env.h \
-	duf_options_file.h \
-	duf_options.h \
-	duf_options_interactive.h \
-	duf_option_source.h \
-	duf_option_source.h \
-	duf_option_source_types.h \
-	duf_option_stage.h \
-	duf_option_stage_types.h \
-	duf_option_typed_call.h \
-	duf_option_typed_defs.h \
-	duf_option_typed_gen.h \
-	duf_option_typed.h \
-	duf_option_types.h \
-	duf_option_vtype_enum.def \
-	duf_option_vtype.h  \
 	\
 	duf_optmod_tmpdb.h \
 	\
@@ -202,7 +171,7 @@ noinst_HEADERS=motest_config.h \
 	duf_ufilter.h \
 	duf_ufilter_ref.h \
 	duf_ufilter_types.h \
-	duf_utils.h
+	duf_utils.h \
 	duf_xtended_table.h \
 	sql_beginning_common.h \
 	sql_beginning_create.h \
@@ -215,7 +184,50 @@ noinst_HEADERS=motest_config.h \
 	sql_tables_global_defs.h \
 	std_fieldsets.h \
 	std_mod_sets.h \
-	std_selectors.h
+	std_selectors.h \
+	\
+        duf_option_call_type_enum.def \
+        duf_option_cfind.h \
+        duf_option_clarify_batch.h  \
+        duf_option_clarify.h \
+        duf_option_clarify_new.h \
+        duf_option_class_enum.def \
+        duf_option_class.h \
+        duf_option_class_types.h \
+        duf_option_config.h \
+        duf_option_data_types.h \
+        duf_option_defs.h \
+        duf_option_descr.h \
+        duf_option_extended.h \
+        duf_option_fun_types.h \
+        duf_option_lfind.h \
+        duf_option_longopts.h \
+        duf_option_names.h \
+        duf_options_all_stages.h \
+        duf_options_cli.h \
+        duf_options_def.h \
+        duf_options_env.h \
+        duf_options_file.h \
+        duf_options.h \
+        duf_options_interactive.h \
+        duf_option_source.h \
+        duf_option_source.h \
+        duf_option_source_types.h \
+        duf_option_stage.h \
+        duf_option_stage_types.h \
+        duf_option_typed_call.h \
+        duf_option_typed_defs.h \
+        duf_option_typed_gen.h \
+        duf_option_typed.h \
+        duf_option_types.h \
+        duf_option_vtype_enum.def \
+        duf_option_vtype.h
+
+
+############################################################
+############################################################
+############################################################
+
 
 #	duf_item_match2.h	
 #	duf_file_pathid2.h

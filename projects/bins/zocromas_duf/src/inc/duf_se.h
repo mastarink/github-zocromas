@@ -47,7 +47,7 @@ typedef struct
 # define QSTR(_name) #_name
 
 # define F2N(_pref, _funname) _pref ## _funname
-# define F2NW(_pref, _funname) DUF_WRAPPED( _pref ## _funname )
+/* # define F2NW(_pref, _funname) DUF_WRAPPED( _pref ## _funname ) */
 
 # define STT {
 # define STTT(_typ, _rt) _rt=(_typ)0; STT
@@ -89,16 +89,18 @@ typedef struct
 # define SR( _layer_id, _funname, ... )		ST( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 # define SRP( _layer_id, _funtyp, _vini, _funname, ... )	STP( _layer_id, _funtyp, _vini,			,	ei, _funname, __VA_ARGS__ )
 
-# define TER MASE_TEST_R( QERRIND )
 # define ER( _layer_id, _funname, ... )		ET( _layer_id, TER,	ei, _funname, __VA_ARGS__ )
 # define ERP( _layer_id, _funtyp, _ret, _funname, ... )	ETP( _layer_id, _funtyp, _ret, TER,	ei, _funname, __VA_ARGS__ )
 # define DOCR(_rval, _x)			( (_rval>=0) ? ( (_rval=(_x))  ) : 0 )
 # define CR(            _funname, ... )		DOCR( QERRIND, F2N(duf_,_funname)( __VA_ARGS__ ) )
 # define CRV(           _fun    , ... )		DOCR( QERRIND, (_fun)( __VA_ARGS__) )
-# define CRW(		_funname, ... )		DOCR( QERRIND, F2NW(duf_,_funname)( __VA_ARGS__))
+/* # define CRW(           _funname, ... )         DOCR( QERRIND, F2NW(duf_,_funname)( __VA_ARGS__)) */
 /* # define IF_CR( _fun, ...)                      { if (_fun) CR(_fun, __VA_ARGS__); else ERRMAKE( NO_FUNC ); } */
 # define IF_CR( _funname, ...)    		(F2N(duf_,_funname)) ? CR(_funname, __VA_ARGS__) : ERRMAKE( NO_FUNC )
 # define IF_CRV( _fun, ...)    			(_fun) ? CRV((_fun), __VA_ARGS__) : ERRMAKE( NO_FUNC )
+
+/* following error macros ==> new error lib's mas_se.h */
+# define TER MASE_TEST_R( QERRIND )
 
 # define SERRV(_errv)			MASE_MAKE_ERROR( QERRIND, _errv )
 # define SERRMV(_errv, ...)		MASE_MAKE_ERRORM( QERRIND, _errv, __VA_ARGS__ )

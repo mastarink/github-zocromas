@@ -61,7 +61,7 @@ static const duf_longval_extended_table_t *const __lo_extended_table_multi[] = {
 /* static const duf_longval_extended_table_t *const *_lo_extended_table_multi = __lo_extended_table_multi; */
 
 /* static const duf_longval_extended_table_t **lo_extended_table_multi = NULL; */
-duf_longval_extended_vtable_t **lo_extended_vtable_multi = NULL;     /* lo_extended_vtable_multi ==>  config_cli->vtable_multi */
+/* duf_longval_extended_vtable_t **lo_extended_vtable_multi = NULL;     (* lo_extended_vtable_multi ==>  config_cli->vtable_multi *) */
 
 const duf_longval_extended_table_t *const *
 duf_xtable_list( void )

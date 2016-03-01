@@ -9,7 +9,6 @@
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-/* #include "duf_se.h"                                                  (* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ *) */
 #include <mastar/multiconfig/muc_se.h>
 
 #include <mastar/multiconfig/muc_option_config_credel.h>
@@ -97,7 +96,7 @@ mas_output_force_color( void )
   return 0;
 }
 
-SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
+muc_SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) )
 {
   muc_config_cli_t *clio;
 
@@ -107,19 +106,19 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 
   clio = muc_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */, NULL /* config_dir */ ,
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
-  T( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
+  muc_QT( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
-  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following MAST_TRACE's */
-  T( "@@@@@%d OPTEST", QERRIND );
+  muc_CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_DEBUG, NULL, NULL, NULL ); /* here to be before following MAST_TRACE's */
+  muc_QT( "@@@@@%d OPTEST", QERRIND );
 
-  CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_BOOT, NULL, NULL, NULL );
-  T( "@@@@@%d OPTEST", QERRIND );
+  muc_CR( treat_option_stage_ne, clio, MUC_OPTION_STAGE_BOOT, NULL, NULL, NULL );
+  muc_QT( "@@@@@%d OPTEST", QERRIND );
 
-  CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
-  T( "@@@@@%d OPTEST", QERRIND );
+  muc_CR( treat_all_optstages, clio, NULL, NULL, NULL, NULL );
+  muc_QT( "@@@@@%d OPTEST", QERRIND );
 
   mas_error_report_all( config_trace, 0 /*index */ , 0, stderr, /* mas_verbose ? mas_verbose(  ) : */ 3 );
-  T( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
+  muc_QT( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
      , QERRIND                                                       /* */
      , som1.set1.bits                                                /* */
      , som1.set2.bits                                                /* */
@@ -145,12 +144,12 @@ SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ 
 
       v5 = ( ( typeof( v5 ) ) 1 ) << sh;
     }
-    T( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
+    muc_QT( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
        ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
   }
   mas_config_trace_delete( config_trace );
   config_trace = NULL;
-  ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
+  muc_ER( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ) );
 }
 
 int

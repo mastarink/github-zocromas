@@ -62,16 +62,32 @@ duf_option_O_version( void )
     DUF_PUTSL( 0 );
     DUF_PRINTF( 0, "prefix    [%2lu]   %s", sizeof( MAS_CONFIG_PREFIX ), MAS_CONFIG_PREFIX );
     DUF_PRINTF( 0, "C version:[%2lu]   %lu", sizeof( __STDC_VERSION__ ), __STDC_VERSION__ );
+    DUF_PRINTF( 0, "GNUC version: %u.%u.%u", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
+    DUF_PRINTF( 0, "compiler version: %s", __VERSION__ );
     DUF_PRINTF( 0, "O.        [%2lu]   %s", sizeof( MAS_OSVER ), MAS_OSVER );
     DUF_PRINTF( 0, "U.        [%2lu]   %s", sizeof( MAS_UNAME ), MAS_UNAME );
     DUF_PRINTF( 0, "V.        [%2lu]   %s", sizeof( PACKAGE_STRING ), PACKAGE_STRING );
     DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
     DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%06lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
                 sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__, ( unsigned long ) &__MAS_LINK_TIME__ );
-    DUF_PRINTF( 0, "DATE/TIME          %s/%s", __DATE__, __TIME__ );
+    DUF_PRINTF( 0, "%s preprocessing DATE/TIME          %s/%s", basename(__FILE__), __DATE__, __TIME__ );
+    DUF_PRINTF( 0, "%s modif. TIMESTAMP          %s", basename(__FILE__), __TIMESTAMP__ );
+    DUF_PRINTF( 0, "MAS_BINDIR:%s", MAS_BINDIR );
+    DUF_PRINTF( 0, "MAS_SBINDIR:%s", MAS_SBINDIR );
+    DUF_PRINTF( 0, "MAS_DATADIR:%s", MAS_DATADIR );
+    DUF_PRINTF( 0, "MAS_DATAROOTDIR:%s", MAS_DATAROOTDIR );
+    DUF_PRINTF( 0, "MAS_SRCDIR:%s", MAS_SRCDIR );
+    DUF_PRINTF( 0, "MAS_PREFIX:%s", MAS_PREFIX );
+    DUF_PRINTF( 0, "MAS_EXEC_PREFIX:%s", MAS_EXEC_PREFIX );
+    DUF_PRINTF( 0, "MAS_SYSCONFDIR:%s", MAS_SYSCONFDIR );
     DUF_PRINTF( 0, "MAS_LIBDIR:%s", MAS_LIBDIR );
+    DUF_PRINTF( 0, "MAS_LIBEXECDIR:%s", MAS_LIBEXECDIR );
+    DUF_PRINTF( 0, "MAS_SHAREDSTATEDIR:%s", MAS_SHAREDSTATEDIR );
+    DUF_PRINTF( 0, "MAS_LOCALSTATEDIR:%s", MAS_LOCALSTATEDIR );
 # ifdef MAS_SPLIT_DB
     DUF_PRINTF( 0, "MAS_SPLIT_DB is set" );
+# else
+    DUF_PRINTF( 0, "MAS_SPLIT_DB is not set" );
 # endif
 
     DUF_PUTSL( 0 );

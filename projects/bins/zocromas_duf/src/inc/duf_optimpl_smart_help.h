@@ -1,7 +1,5 @@
 #ifndef MAS_DUF_OPTIMPL_SMART_HELP_H
-#  define MAS_DUF_OPTIMPL_SMART_HELP_H
-
-
+# define MAS_DUF_OPTIMPL_SMART_HELP_H
 
 # include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ♣ */
 
@@ -11,6 +9,4 @@ mas_error_code_t duf_option_O_smart_help_all( duf_option_class_t oclass );
 mas_error_code_t duf_option_O_smart_help( duf_option_class_t oclass );
 mas_error_code_t duf_option_O_help_set( const char *arg );
 
-
 #endif
-

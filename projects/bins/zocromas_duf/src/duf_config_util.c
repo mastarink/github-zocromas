@@ -51,7 +51,7 @@ duf_get_config_cli( void )
 #if 0
   return duf_config ? &duf_config->cli : NULL;
 #else
-  return duf_config ? duf_config->pcli : NULL;
+  return duf_config ? ( duf_config_cli_t * ) duf_config->pcli : NULL;
 #endif
 }
 
