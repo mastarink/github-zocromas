@@ -1,6 +1,7 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
@@ -9,6 +10,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
@@ -28,7 +30,7 @@
 
 static
 muc_SR( OPTIONS, boption_frag_xclarify_at_stdx, muc_config_cli_t * cli, const char **ppeo, char value_separator, muc_option_stage_t istage,
-    muc_option_source_t source, char delim, muc_option_adata_t * paod )
+        muc_option_source_t source, char delim, muc_option_adata_t * paod )
 {
   const char *estr;
   char *bstr;
@@ -57,7 +59,7 @@ muc_SR( OPTIONS, boption_frag_xclarify_at_stdx, muc_config_cli_t * cli, const ch
   *ppeo = estr;
 /* MAST_TRACE( explain, 0, "*ppeo \"%s\"", *ppeo ); */
   muc_ER( OPTIONS, boption_frag_xclarify_at_stdx, muc_config_cli_t * cli, const char **ppeo, char value_separator, muc_option_stage_t istage,
-      muc_option_source_t source, char delim, muc_option_adata_t * paod );
+          muc_option_source_t source, char delim, muc_option_adata_t * paod );
 }
 
 /*
@@ -70,7 +72,7 @@ muc_SR( OPTIONS, boption_frag_xclarify_at_stdx, muc_config_cli_t * cli, const ch
  * */
 /* look all std xvtables for cmd's separated with value_separator from string and exec if found */
 muc_SR( OPTIONS, boption_xclarify_at_stdx, muc_config_cli_t * cli, char value_separator, muc_option_stage_t istage, muc_option_source_t source,
-    const char *cmdstr, char delim, muc_option_adata_t * paod )
+        const char *cmdstr, char delim, muc_option_adata_t * paod )
 {
   if ( !delim )
     delim = muc_cli_options_delimiter( cli );
@@ -86,5 +88,5 @@ muc_SR( OPTIONS, boption_xclarify_at_stdx, muc_config_cli_t * cli, char value_se
     muc_CR( boption_frag_xclarify_at_stdx, cli, &cmdstr, value_separator, istage, source, delim, paod );
   }
   muc_ER( OPTIONS, boption_xclarify_at_stdx, muc_config_cli_t * cli, char value_separator, muc_option_stage_t istage, muc_option_source_t source,
-      const char *cmdstr, char delim, muc_option_adata_t * paod );
+          const char *cmdstr, char delim, muc_option_adata_t * paod );
 }

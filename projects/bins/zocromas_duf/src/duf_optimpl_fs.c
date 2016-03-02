@@ -9,10 +9,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_argvc_tools.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -29,10 +32,10 @@
 #include "duf_optimpl_fs.h"
 /* ###################################################################### */
 
-static duf_option_fs_mode_t
-duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
+static duf_optimpl_fs_mode_t
+duf_fs_ask( const char *msg, const char *fn, duf_optimpl_fs_mode_t mode )
 {
-  duf_option_fs_mode_t doit = DUF_OPTION_FS_MODE_NONE;
+  duf_optimpl_fs_mode_t doit = DUF_OPTION_FS_MODE_NONE;
   char buf[1024] = "";
   char *s = NULL;
 
@@ -77,7 +80,7 @@ duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
 }
 
 static mas_error_code_t
-duf_option_fs_each( const char *arg, muc_errc_psvv_func_t fun, const void *pv )
+duf_optimpl_fs_each( const char *arg, muc_errc_psvv_func_t fun, const void *pv )
 {
   DUF_STARTR( r );
   mas_argvc_t targ = { 0 };
@@ -94,7 +97,7 @@ duf_option_fs_each( const char *arg, muc_errc_psvv_func_t fun, const void *pv )
 }
 
 static mas_error_code_t
-duf_option_fs_each2( const char *arg, muc_errc_cscsv_func_t fun, const void *pv )
+duf_optimpl_fs_each2( const char *arg, muc_errc_cscsv_func_t fun, const void *pv )
 {
   DUF_STARTR( r );
   mas_argvc_t targ = { 0 };
@@ -111,7 +114,7 @@ duf_option_fs_each2( const char *arg, muc_errc_cscsv_func_t fun, const void *pv 
 }
 
 mas_error_code_t
-duf_option_O_fs_ls_file( const char *fn, const void *pv MAS_UNUSED )
+duf_optimpl_O_fs_ls_file( const char *fn, const void *pv MAS_UNUSED )
 {
   DUF_STARTR( r );
   int ry = 0;
@@ -132,16 +135,16 @@ duf_option_O_fs_ls_file( const char *fn, const void *pv MAS_UNUSED )
 }
 
 static int
-duf_option_fs_rmfile( const char *fn, const void *pv )
+duf_optimpl_fs_rmfile( const char *fn, const void *pv )
 {
   int ry = 0;
-  duf_option_fs_mode_t dorm = 0;
+  duf_optimpl_fs_mode_t dorm = 0;
   struct stat st = { 0 };
 
   ry = stat( fn, &st );
   if ( ry >= 0 )
   {
-    dorm = duf_fs_ask( "remove", fn, ( duf_option_fs_mode_t ) pv );
+    dorm = duf_fs_ask( "remove", fn, ( duf_optimpl_fs_mode_t ) pv );
     if ( dorm == DUF_OPTION_FS_MODE_FORCE )
     {
     /* T( "@removing %s", fn ); */
@@ -164,12 +167,12 @@ duf_option_fs_rmfile( const char *fn, const void *pv )
 }
 
 mas_error_code_t
-duf_option_O_fs_rmfile( const char *fn, const void *pv )
+duf_optimpl_O_fs_rmfile( const char *fn, const void *pv )
 {
   DUF_STARTR( r );
   int ry = 0;
 
-  ry = duf_option_fs_rmfile( fn, pv );
+  ry = duf_optimpl_fs_rmfile( fn, pv );
   if ( ry < 0 )
   {
     char serr[1024] = "";
@@ -182,7 +185,7 @@ duf_option_O_fs_rmfile( const char *fn, const void *pv )
 }
 
 static int
-duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv MAS_UNUSED, struct stat *pstfrom, struct stat *pstto MAS_UNUSED )
+duf_optimpl_fs_cpfile2absent( const char *fn, const char *to, const void *pv MAS_UNUSED, struct stat *pstfrom, struct stat *pstto MAS_UNUSED )
 {
   int ry = 0;
   int ry1 = 0;
@@ -325,7 +328,7 @@ duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv MAS_
 }
 
 static int
-duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
+duf_optimpl_fs_cpfile( const char *fn, const char *to, const void *pv )
 {
   struct stat stfrom = { 0 };
   struct stat stto = { 0 };
@@ -340,11 +343,11 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
       ry = stat( to, &stto );
       if ( ry >= 0 && ( S_ISREG( stto.st_mode ) || S_ISDIR( stto.st_mode ) ) )
       {
-        dorm = duf_option_fs_rmfile( to, pv );
+        dorm = duf_optimpl_fs_rmfile( to, pv );
         ry = stat( to, &stto );
       }
       if ( ( ry < 0 && errno == ENOENT ) || dorm == DUF_OPTION_FS_MODE_OVERWRITE )
-        ry = duf_option_fs_cpfile2absent( fn, to, pv, &stfrom, &stto );
+        ry = duf_optimpl_fs_cpfile2absent( fn, to, pv, &stfrom, &stto );
     /* else                                                               */
     /*   T( "@@@did'nt copy %s to %s - dst present (%d)", fn, to, dorm ); */
     }
@@ -367,12 +370,12 @@ duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
 }
 
 mas_error_code_t
-duf_option_O_fs_cpfile( const char *fn, const char *to, const void *pv )
+duf_optimpl_O_fs_cpfile( const char *fn, const char *to, const void *pv )
 {
   DUF_STARTR( r );
   int ry;
 
-  ry = duf_option_fs_cpfile( fn, to, pv );
+  ry = duf_optimpl_fs_cpfile( fn, to, pv );
   if ( ry == -1 )
   {
     char serr[1024] = "";
@@ -386,46 +389,46 @@ duf_option_O_fs_cpfile( const char *fn, const char *to, const void *pv )
 }
 
 static mas_error_code_t
-duf_option_fs_mvfile( const char *arg MAS_UNUSED, const char *to MAS_UNUSED, const void *pv MAS_UNUSED )
+duf_optimpl_fs_mvfile( const char *arg MAS_UNUSED, const char *to MAS_UNUSED, const void *pv MAS_UNUSED )
 {
   DUF_STARTR( r );
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_fs_ls( const char *arg )
+duf_optimpl_O_fs_ls( const char *arg )
 {
   DUF_STARTR( r );
   long v = 0;
 
 /* T( "ls %s", arg ); */
-  DOR( r, duf_option_fs_each( arg, duf_option_O_fs_ls_file, ( const void * ) v ) );
+  DOR( r, duf_optimpl_fs_each( arg, duf_optimpl_O_fs_ls_file, ( const void * ) v ) );
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_fs_rm( const char *arg, long v )
+duf_optimpl_O_fs_rm( const char *arg, long v )
 {
   DUF_STARTR( r );
 /* T( "rm %s", arg ); */
-  DOR( r, duf_option_fs_each( arg, duf_option_O_fs_rmfile, ( const void * ) v ) );
+  DOR( r, duf_optimpl_fs_each( arg, duf_optimpl_O_fs_rmfile, ( const void * ) v ) );
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_fs_cp( const char *arg, long v )
+duf_optimpl_O_fs_cp( const char *arg, long v )
 {
   DUF_STARTR( r );
 /* T( "cp %s", arg ); */
-  DOR( r, duf_option_fs_each2( arg, duf_option_O_fs_cpfile, ( const void * ) v ) );
+  DOR( r, duf_optimpl_fs_each2( arg, duf_optimpl_O_fs_cpfile, ( const void * ) v ) );
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_fs_mv( const char *arg, long v )
+duf_optimpl_O_fs_mv( const char *arg, long v )
 {
   DUF_STARTR( r );
 /* T( "mv %s", arg ); */
-  DOR( r, duf_option_fs_each2( arg, duf_option_fs_mvfile, ( const void * ) v ) );
+  DOR( r, duf_optimpl_fs_each2( arg, duf_optimpl_fs_mvfile, ( const void * ) v ) );
   DUF_ENDR( r );
 }

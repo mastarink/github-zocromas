@@ -2,7 +2,11 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/trace/mas_trace_credel.h>
+#include <mastar/trace/mas_trace.h>
+
 #include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 #include <mastar/multiconfig/muc_option_config_credel.h>
 

@@ -1,13 +1,16 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -27,13 +30,12 @@
 
 #include "duf_xtended_table.h"
 
-
 /* ###################################################################### */
 #include "duf_optimpl_version.h"
 /* ###################################################################### */
 
 mas_error_code_t
-duf_option_O_version( void )
+duf_optimpl_O_version( void )
 {
   char *sargv1;
 
@@ -64,8 +66,8 @@ duf_option_O_version( void )
     DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
     DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%06lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
                 sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__, ( unsigned long ) &__MAS_LINK_TIME__ );
-    DUF_PRINTF( 0, "%s preprocessing DATE/TIME          %s/%s", basename(__FILE__), __DATE__, __TIME__ );
-    DUF_PRINTF( 0, "%s modif. TIMESTAMP          %s", basename(__FILE__), __TIMESTAMP__ );
+    DUF_PRINTF( 0, "%s preprocessing DATE/TIME          %s/%s", basename( __FILE__ ), __DATE__, __TIME__ );
+    DUF_PRINTF( 0, "%s modif. TIMESTAMP          %s", basename( __FILE__ ), __TIMESTAMP__ );
     DUF_PRINTF( 0, "MAS_BINDIR:%s", MAS_BINDIR );
     DUF_PRINTF( 0, "MAS_SBINDIR:%s", MAS_SBINDIR );
     DUF_PRINTF( 0, "MAS_DATADIR:%s", MAS_DATADIR );

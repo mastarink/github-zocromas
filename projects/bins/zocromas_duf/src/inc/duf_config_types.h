@@ -1,9 +1,10 @@
 #ifndef MAS_DUF_CONFIG_TYPES_H
 # define MAS_DUF_CONFIG_TYPES_H
 
+# include <mastar/multiconfig/muc_config_cli_types.h>/* muc_config_cli_t */
+
 # include "duf_base_types.h"                                         /* duf_itemtag_t */
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t */
-# include <mastar/multiconfig/muc_config_cli_types.h>/* muc_config_cli_t */
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t */
 # include "duf_config_db_types.h"                                    /* duf_config_db_t */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_t */

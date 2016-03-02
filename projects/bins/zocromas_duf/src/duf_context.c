@@ -1,6 +1,10 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */

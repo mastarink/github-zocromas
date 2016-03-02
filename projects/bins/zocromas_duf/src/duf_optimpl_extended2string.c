@@ -11,17 +11,17 @@
 #include "duf_output_defs.h"
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-#include <mastar/multiconfig/muc_option_stage.h>                                        /* duf_optstage_name ♠ */
-#include <mastar/multiconfig/muc_option_class.h>                                        /* muc_optclass2string ♠ */
-#include <mastar/multiconfig/muc_option_vtype.h>                                        /* muc_optvtype2string ♠ */
-#include <mastar/multiconfig/muc_option_config.h>                                       /* duf_get_cli_options_trace_config ♠ */
+#include <mastar/multiconfig/muc_option_stage.h>                     /* duf_optstage_name ♠ */
+#include <mastar/multiconfig/muc_option_class.h>                     /* muc_optclass2string ♠ */
+#include <mastar/multiconfig/muc_option_vtype.h>                     /* muc_optvtype2string ♠ */
+#include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 
-#include <mastar/multiconfig/muc_option_extended.h>                                     /* duf_longindex_extended_count etc. ♠ */
+#include <mastar/multiconfig/muc_option_extended.h>                  /* duf_longindex_extended_count etc. ♠ */
 
-#include "duf_optimpl_val.h"                                          /* duf_codeval2string ♠ */
+#include "duf_optimpl_val.h"                                         /* duf_codeval2string ♠ */
 
 /* ###################################################################### */
-#include "duf_optimpl_extended2string.h"                                     
+#include "duf_optimpl_extended2string.h"
 /* ###################################################################### */
 
 /* TODO rename file ...... */

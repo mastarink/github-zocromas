@@ -1,7 +1,7 @@
 #ifndef MAS_MUC_OPTION_CLASS_TYPES_H
-#define MAS_MUC_OPTION_CLASS_TYPES_H
+# define MAS_MUC_OPTION_CLASS_TYPES_H
 
-typedef enum
+enum muc_option_class_e
 {
 # define ENUM_WRAP(_n, ...)       MUC_OPTION_CLASS_ ## _n __VA_ARGS__,
 /* #  define ENUM_WRAP_V(_n, _v) MUC_OPTION_CLASS_ ## _n = _v, */
@@ -9,8 +9,7 @@ typedef enum
 # include "muc_option_class_enum.def"
 # undef ENUM_WRAP
 # undef ENUM_WRAP_V
-} muc_option_class_t;
-
-
+};
+typedef enum muc_option_class_e muc_option_class_t;
 
 #endif

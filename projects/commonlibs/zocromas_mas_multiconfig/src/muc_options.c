@@ -1,6 +1,8 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
+/* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
@@ -113,7 +115,6 @@ muc_SR( OPTIONS, all_options, muc_config_cli_t * cli, muc_option_stage_t istage 
 {
 
   assert( cli );
-  fprintf( stderr, "%d:%d\n", MUC_TRACE_LEVEL_temp, muc_get_cli_options_trace_config( cli )->class_levels[MUC_TRACE_LEVEL_temp] );
   MAST_TRACE( options, 10, "@@@@@to do all options for stage %s; is_interactive:%d", muc_optstage_name( cli, istage ),
               cb_do_interactive ? cb_do_interactive(  ) : 0 );
 

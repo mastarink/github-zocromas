@@ -1,6 +1,6 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
 
 #include <assert.h>                                                  /* assert */
 #include <string.h>

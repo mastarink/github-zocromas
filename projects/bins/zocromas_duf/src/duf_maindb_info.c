@@ -1,10 +1,14 @@
 #include <assert.h>                                                  /* assert */
 
+#include "duf_tracen_defs_preset.h"
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|tstrflocal|strflocal|strfgm)time ; strtime2long; etc. ♣ */
 #include <mastar/sqlite/mas_sqlite_const.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */

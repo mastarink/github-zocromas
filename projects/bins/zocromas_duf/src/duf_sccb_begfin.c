@@ -1,6 +1,10 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -27,7 +31,7 @@ duf_sccb_eval_sqlsq( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu
 
   MAST_TRACE( sql, 6, "pu->md5id:%llu:%llu", pu ? pu->md5id.min : 99999, pu ? pu->md5id.min : 99999 );
   MAST_TRACE( sql, 6, "beginning_sql '%s'",
-             ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
+              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
 
   DOR( r, duf_eval_sqlsq( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ ,
                           pu, py, selected_db ) );

@@ -1,20 +1,23 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
 #include <mastar/multiconfig/muc_option_class.h>
-#include <mastar/multiconfig/muc_option_names.h>
+/* #include <mastar/multiconfig/muc_option_names.h> */
 #include <mastar/multiconfig/muc_option_descr.h>
 #include <mastar/multiconfig/muc_option_vtype.h>
 #include <mastar/multiconfig/muc_option_stage.h>
 #include <mastar/multiconfig/muc_option_lfind.h>
 #include <mastar/multiconfig/muc_option_config.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -33,7 +36,6 @@
 #include "duf_sccb.h"
 
 #include "duf_xtended_table.h"
-
 
 #include "duf_optimpl_extended2string.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
@@ -66,7 +68,7 @@ static const char *oclass_titles[MUC_OPTION_CLASS_MAX + 1] = {
 };
 
 mas_error_code_t
-duf_option_O_smart_help_all( muc_option_class_t oclass )
+duf_optimpl_O_smart_help_all( muc_option_class_t oclass )
 {
   DUF_STARTR( r );
 
@@ -74,7 +76,7 @@ duf_option_O_smart_help_all( muc_option_class_t oclass )
   {
     for ( muc_option_class_t oc = MUC_OPTION_CLASS_MIN + 1; oc < MUC_OPTION_CLASS_MAX; oc++ )
     {
-      DOR( r, duf_option_O_smart_help( oc ) );
+      DOR( r, duf_optimpl_O_smart_help( oc ) );
     }
   }
   DUF_ENDR( r );
@@ -207,7 +209,7 @@ duf_show_xoption_description( const muc_longval_extended_t * extended, int ilong
 }
 
 mas_error_code_t
-duf_option_O_smart_help( muc_option_class_t oclass )
+duf_optimpl_O_smart_help( muc_option_class_t oclass )
 {
   DUF_STARTR( r );
 
@@ -280,7 +282,7 @@ duf_option_O_smart_help( muc_option_class_t oclass )
 }
 
 mas_error_code_t
-duf_option_O_help_set( const char *arg )
+duf_optimpl_O_help_set( const char *arg )
 {
   DUF_STARTR( r );
 

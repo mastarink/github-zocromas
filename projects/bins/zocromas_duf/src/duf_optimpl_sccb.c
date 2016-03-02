@@ -2,14 +2,16 @@
 #include <string.h>
 #include <dlfcn.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_se.h>
 #include <mastar/multiconfig/muc_options_file.h>
-
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -39,7 +41,7 @@
 /* ###################################################################### */
 
 mas_error_code_t
-duf_option_O_list_sccbs( void )
+duf_optimpl_O_list_sccbs( void )
 {
   DUF_STARTR( r );
 #if 0
@@ -61,7 +63,7 @@ duf_option_O_list_sccbs( void )
 
 #if 0
 mas_error_code_t
-duf_option_O_list_sccb( int x_unused MAS_UNUSED )
+duf_optimpl_O_list_sccb( int x_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
   for ( duf_action_table_t * act = _duf_action_table(  ); act->sccb; act++ )
@@ -77,7 +79,7 @@ duf_option_O_list_sccb( int x_unused MAS_UNUSED )
  *
  * */
 mas_error_code_t
-duf_option_O_evaluate_sccb( const char *names )
+duf_optimpl_O_evaluate_sccb( const char *names )
 {
   DUF_STARTR( r );
 
@@ -119,21 +121,21 @@ duf_option_O_evaluate_sccb( const char *names )
  * */
 
 /*mas_error_code_t
-duf_option_O_call_file( const char *name )
+duf_optimpl_O_call_file( const char *name )
 */
-SR( SNIPPET_OPTION, option_O_call_file, const char *name )
+SR( SNIPPET_OPTION, optimpl_O_call_file, const char *name )
 {
 /* DUF_STARTR( r ); */
 /* int r MAS_UNUSED = 0; */
 
   muc_CR( infile_options_at_filepath, duf_get_config_cli(  ), MUC_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
-      ( muc_option_adata_t * ) NULL /* paod */  );
+          ( muc_option_adata_t * ) NULL /* paod */  );
 /* DUF_ENDR( r ); */
-  ER( SNIPPET_OPTION, option_O_call_file, const char *name );
+  ER( SNIPPET_OPTION, optimpl_O_call_file, const char *name );
 }
 
 mas_error_code_t
-duf_option_O_db_open( void )
+duf_optimpl_O_db_open( void )
 {
   DUF_STARTR( r );
 
@@ -143,7 +145,7 @@ duf_option_O_db_open( void )
 }
 
 mas_error_code_t
-duf_option_O_cd( const char *s )
+duf_optimpl_O_cd( const char *s )
 {
   DUF_STARTR( r );
   if ( s && *s )
@@ -208,7 +210,7 @@ duf_option_O_cd( const char *s )
 }
 
 mas_error_code_t
-duf_option_O_cdid( long topdirid )
+duf_optimpl_O_cdid( long topdirid )
 {
   DUF_STARTR( r );
   char *path;
@@ -216,13 +218,13 @@ duf_option_O_cdid( long topdirid )
   path = duf_dirid2path( topdirid, &r );
   T( "%lu: %s", topdirid, path );
   if ( DUF_NOERROR( r ) && path )
-    r = duf_option_O_cd( path );
+    r = duf_optimpl_O_cd( path );
   mas_free( path );
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_error_level( long lev )
+duf_optimpl_O_error_level( long lev )
 {
   DUF_STARTR( r );
 
@@ -231,7 +233,7 @@ duf_option_O_error_level( long lev )
 }
 
 mas_error_code_t
-duf_option_O_set_dir_priority( long prio MAS_UNUSED )
+duf_optimpl_O_set_dir_priority( long prio MAS_UNUSED )
 {
   DUF_STARTR( r );
 

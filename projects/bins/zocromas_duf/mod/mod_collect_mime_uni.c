@@ -4,8 +4,11 @@
 #include <string.h>
 #include <errno.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 /* TODO: see media-libs/libextractor */
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
@@ -285,7 +288,7 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
 
     MAST_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ),
-               DUF_GET_SFIELD2( fname ) );
+                DUF_GET_SFIELD2( fname ) );
 
     if ( mime )
     {

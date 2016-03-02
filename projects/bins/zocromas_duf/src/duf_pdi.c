@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
@@ -12,11 +16,7 @@
 
 #include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
 
-/* #include "duf_option_defs.h" */
-
-/* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
-/* #include "duf_config_defs.h" */
 
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"

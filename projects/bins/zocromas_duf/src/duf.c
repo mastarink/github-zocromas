@@ -15,13 +15,13 @@
 	  duf_main_db_open
 	  duf_main_db_close
 
-  duf_option_O_list_sccbs
-  duf_option_O_evaluate_sccb
+  duf_optimpl_O_list_sccbs
+  duf_optimpl_O_evaluate_sccb
 
-  duf_option_O_list_sccb
-  duf_option_O_db_open
+  duf_optimpl_O_list_sccb
+  duf_optimpl_O_db_open
 
-  duf_option_O_cd
+  duf_optimpl_O_cd
   ... ...
 */
 
@@ -39,8 +39,11 @@
 /* #include <unistd.h> */
 #include <dlfcn.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/error/mas_error_reporting.h>
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_se.h>
 #include <mastar/multiconfig/muc_options_all_stages.h>
@@ -51,14 +54,11 @@
 #include <mastar/multiconfig/muc_option_source.h>
 #include <mastar/multiconfig/muc_options_all_stages.h>
 
-
-
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
-
 
 #include "duf_status_ref.h"
 #include "duf_status.h"
@@ -70,14 +70,13 @@
 
 #include "duf_config_credel.h"
 
-
 #include "duf_levinfo_ref.h"
 
 #include "duf_maindb.h"
 #include "duf_pdi_global.h"
 
 #include "duf_optimpl_defs.h"
-#include "duf_optimpl_enum.h" /* MEMUSAGE */
+#include "duf_optimpl_enum.h"                                        /* MEMUSAGE */
 /* צאַצקע */
 #include "duf_experiment.h"
 
@@ -163,12 +162,14 @@ static
 SR( TOP, main_with_config, int argc, char **argv )
 {
   muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
-  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive,
+          cb_prompt_interactive );
 
   MAST_TRACE( any, 1, "any test" );
   MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
-  muc_CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  muc_CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive,
+          cb_prompt_interactive );
   fputs( "\n", stderr );
   MAST_TRACE( temp, 0, "∈0∋ Zero " );
   TT( "∈1∋ One " );
@@ -190,51 +191,51 @@ SR( TOP, main_with_config, int argc, char **argv )
 
 //          opt   disable  testnoflag
 #if 0
-#define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
-    unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
-    unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
-    T( "@>>>> %llx : %llx <<<<", t1, t2 );
-  }
+# define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
+  unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
+  unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
+  T( "@>>>> %llx : %llx <<<<", t1, t2 );
+}
 #endif
 
-  CR( main_db, argc, argv );
+CR( main_db, argc, argv );
 
 /* XXX XXX XXX XXX XXX XXX */
 
 #if 0
-  DUF_PUTS( 0, "------------------------------------(*)" );
-  DUF_PRINTF( 0, "------- main_db ended --------" );
-  DUF_TEST_R( r );                                                   /* don't remove! */
-  DUF_PUTS( 0, "---------------------------------------------(o)" );
+DUF_PUTS( 0, "------------------------------------(*)" );
+DUF_PRINTF( 0, "------- main_db ended --------" );
+DUF_TEST_R( r );                                                     /* don't remove! */
+DUF_PUTS( 0, "---------------------------------------------(o)" );
 #endif
 
 #ifdef MAS_TRACEMEM
-  {
-    extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
+{
+  extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
 
-    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
-    {
-      mas_mem_disable_print_usage = 1;
-    }
-    if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
-    {
-      MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
-    }
-    else
-    {
-      MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
-    }
+  if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
+  {
+    mas_mem_disable_print_usage = 1;
   }
+  if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
+  {
+    MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+  }
+  else
+  {
+    MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+  }
+}
 #endif
 
-  ER( TOP, main_with_config, int argc, char **argv );
+ER( TOP, main_with_config, int argc, char **argv );
 }
 
 static int
 duf_main( int argc, char **argv )
 {
   DUF_STARTR( r );
-  duf_config_create( argc, argv, 1 /* mandatory_config */ );
+  duf_config_create( argc, argv, 1 /* mandatory_config */  );
 
   assert( duf_config );
 /* raise( SIGABRT ); */

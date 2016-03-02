@@ -1,6 +1,8 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
+/* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <string.h>
@@ -50,8 +52,8 @@ muc_SR( OPTIONS, env_options_at_var, muc_config_cli_t * cli, muc_option_stage_t 
  * 2. call ..._env_options_at_var
  * */
 muc_SR( OPTIONS, source_env_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive
-    __attribute__ ( ( unused ) ), muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod,
-    muc_option_source_code_t sourcecode MAS_UNUSED )
+        __attribute__ ( ( unused ) ), muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod,
+        muc_option_source_code_t sourcecode MAS_UNUSED )
 {
   const char *evname = NULL;
 
@@ -66,5 +68,6 @@ muc_SR( OPTIONS, source_env_parse, muc_config_cli_t * cli, muc_option_stage_t is
 #endif
 
   muc_ER( OPTIONS, source_env_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive
-      __attribute__ ( ( unused ) ), muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          __attribute__ ( ( unused ) ), muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod,
+          muc_option_source_code_t sourcecode );
 }

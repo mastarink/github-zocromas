@@ -1,6 +1,10 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -39,7 +43,7 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
   {
     rd = duf_pdi_reldepth_d( pdi, d ) <= delta;                      /* d - topdepth <= delta */
     MAST_TRACE( temp, 30, "(%d>0) duf_pdi_topdepth(pdi):%d; duf_pdi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
-               duf_pdi_topdepth( pdi ), duf_pdi_reldepth_d( pdi, d ), delta );
+                duf_pdi_topdepth( pdi ), duf_pdi_reldepth_d( pdi, d ), delta );
   }
 
 /* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */

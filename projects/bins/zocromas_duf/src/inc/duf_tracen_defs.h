@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_TRACEN_DEFS_H
 # define MAS_DUF_TRACEN_DEFS_H
 
-# include "duf_tracen_defs_preset.h"
+/* # include "duf_tracen_defs_preset.h" */
 
 /* # define ..._TRACE( _id, ... )         MAST_TRACE( _id, __VA_ARGS__ ) */
 /* # define ..._TRACE_WP( _id, ... )       MAST_TRACE_WP( _id, __VA_ARGS__ )   */
@@ -17,7 +17,7 @@
 
 # define TR(_r) if (DUF_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, mas_error_code_i(_r), mas_error_name_i(_r));}
 
-# include <mastar/trace/mas_trace.h>
+/* # include <mastar/trace/mas_trace.h> */
 
 #endif
 

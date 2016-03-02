@@ -1,5 +1,5 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
+/* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
 /* #include "muc_tracen_defs_preset.h" */
 
 #include <assert.h>                                                  /* assert */

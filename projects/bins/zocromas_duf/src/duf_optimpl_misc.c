@@ -7,8 +7,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -25,13 +28,12 @@
 /* #include "duf_option_descr.h" */
 /* #include "duf_option_names.h" */
 
-
 /* ###################################################################### */
 #include "duf_optimpl_misc.h"
 /* ###################################################################### */
 
 mas_error_code_t
-duf_option_O_history( void )
+duf_optimpl_O_history( void )
 {
   DUF_STARTR( r );
 
@@ -55,14 +57,14 @@ duf_option_O_history( void )
         DUF_PRINTF( 0, "%s:%s", he->timestamp, he->line );
     }
   }
-  /* MAST_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
+/* MAST_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) ); */
   MAST_TRACE( temp, 0, "@@history length:%d; offset:%d;", phstate->length, phstate->offset );
 
   DUF_ENDR( r );
 }
 
 mas_error_code_t
-duf_option_O_list_targ1( mas_argvc_t * targ, long n )
+duf_optimpl_O_list_targ1( mas_argvc_t * targ, long n )
 {
   DUF_STARTR( r );
 
@@ -76,7 +78,7 @@ duf_option_O_list_targ1( mas_argvc_t * targ, long n )
 }
 
 mas_error_code_t
-duf_option_O_list_targ2( int *ptargc, char ***ptargv, long n )
+duf_optimpl_O_list_targ2( int *ptargc, char ***ptargv, long n )
 {
   DUF_STARTR( r );
 
@@ -96,7 +98,7 @@ duf_option_O_list_targ2( int *ptargc, char ***ptargv, long n )
 }
 
 mas_error_code_t
-duf_option_O_clear_targ1( mas_argvc_t * targ, long n )
+duf_optimpl_O_clear_targ1( mas_argvc_t * targ, long n )
 {
   DUF_STARTR( r );
 #if 0
@@ -111,7 +113,7 @@ duf_option_O_clear_targ1( mas_argvc_t * targ, long n )
 }
 
 mas_error_code_t
-duf_option_O_clear_targ2( int *ptargc, char ***ptargv, long n )
+duf_optimpl_O_clear_targ2( int *ptargc, char ***ptargv, long n )
 {
   DUF_STARTR( r );
 
@@ -122,7 +124,7 @@ duf_option_O_clear_targ2( int *ptargc, char ***ptargv, long n )
 }
 
 mas_error_code_t
-duf_option_O_add_targ1( mas_argvc_t * targ, const char *s )
+duf_optimpl_O_add_targ1( mas_argvc_t * targ, const char *s )
 {
   DUF_STARTR( r );
 
@@ -131,7 +133,7 @@ duf_option_O_add_targ1( mas_argvc_t * targ, const char *s )
 }
 
 mas_error_code_t
-duf_option_O_add_targ2( int *ptargc, char ***ptargv, const char *s )
+duf_optimpl_O_add_targ2( int *ptargc, char ***ptargv, const char *s )
 {
   DUF_STARTR( r );
 
@@ -141,9 +143,8 @@ duf_option_O_add_targ2( int *ptargc, char ***ptargv, const char *s )
   DUF_ENDR( r );
 }
 
-
 mas_error_code_t
-duf_option_O_echo( const char *arg )
+duf_optimpl_O_echo( const char *arg )
 {
   DUF_STARTR( r );
 

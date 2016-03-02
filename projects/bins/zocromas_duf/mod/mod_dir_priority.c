@@ -4,7 +4,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -79,7 +82,7 @@ set_dir_priority_node_before2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t *
 {
   DUF_STARTR( r );
   MAST_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
-             duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
+              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
 
   {
     int changes = 0;
@@ -104,7 +107,7 @@ set_dir_priority_node_middle2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t *
   DUF_STARTR( r );
 
   MAST_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
-             duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
+              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DUF_ENDR( r );
 }
 
@@ -114,6 +117,6 @@ set_dir_priority_node_after2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * 
   DUF_STARTR( r );
 
   MAST_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
-             duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
+              duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
   DUF_ENDR( r );
 }

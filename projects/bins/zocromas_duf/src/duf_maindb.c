@@ -4,9 +4,12 @@
 #include <errno.h>
 #include <time.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_option_names.h>
 
@@ -30,7 +33,6 @@
 /* #include "duf_expandable.h" */
 
 #include "duf_sys_wrap.h"
-
 
 #include "duf_levinfo_ref.h"
 

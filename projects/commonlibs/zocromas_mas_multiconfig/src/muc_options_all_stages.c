@@ -1,6 +1,8 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
+/* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
@@ -28,7 +30,7 @@
 /* ###################################################################### */
 
 muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
-    muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
+        muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
   assert( cli );
   MAST_TRACE( options, 0, "@@@@@before all options for %s stage;", muc_optstage_name( cli, istage ) );
@@ -46,10 +48,10 @@ muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t ista
       MAST_TRACE( path, 0, "@%d/%d. %s", ia, muc_cli_options_get_targc( cli ), targia );
 
       if ( cb_init_loop_optstage )
-        muc_CRV( cb_init_loop_optstage, targia );                        /* optstage_cb */
+        muc_CRV( cb_init_loop_optstage, targia );                    /* optstage_cb */
 
       muc_CR( all_options, cli, istage_plus, cb_do_interactive, cb_prompt_interactive, muc_cli_options_aod( cli ) /* paod */ ,
-          ( istage_plus > MUC_OPTION_STAGE_BOOT ) /* from_paod */  );
+              ( istage_plus > MUC_OPTION_STAGE_BOOT ) /* from_paod */  );
       istage_plus++;
     }
   }
@@ -57,16 +59,16 @@ muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t ista
   {
   /* TODO global_status.aod => global_cli_status.aod */
     muc_CR( all_options, cli, istage, cb_do_interactive, cb_prompt_interactive, muc_cli_options_aod( cli ) /* paod */ ,
-        ( istage > MUC_OPTION_STAGE_BOOT ) /* from_paod */  );
+            ( istage > MUC_OPTION_STAGE_BOOT ) /* from_paod */  );
   }
   MAST_TRACE( options, 0, "@@@@@after all options for %s stage;", muc_optstage_name( cli, istage ) );
 
   muc_ER( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
-      muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
+          muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
 }
 
 muc_SR( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
-    muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
+        muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
   MASE_E_LOWER( DUF_ERROR_OPTION_NOT_FOUND );
 
@@ -75,11 +77,11 @@ muc_SR( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t i
   MASE_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );
 
   muc_ER( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
-      muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
+          muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
 }
 
 muc_SR( OPTIONS, treat_all_optstages, muc_config_cli_t * cli, muc_errc_cs_func_t cb_init_all_optstages, muc_errc_cs_func_t cb_init_loop_optstage,
-    muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
+        muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
   MAST_TRACE( options, 0, "@@@@@to do all options for all stages (%p:%p)", ( void * ) &cb_init_all_optstages, ( void * ) &cb_init_loop_optstage );
 
@@ -89,10 +91,10 @@ muc_SR( OPTIONS, treat_all_optstages, muc_config_cli_t * cli, muc_errc_cs_func_t
   MAST_TRACE( options, 0, "@@II - stages from %s(setup)", muc_optstage_name( cli, MUC_OPTION_STAGE_SETUP ) );
   muc_CR( treat_option_stage_ne, cli, MUC_OPTION_STAGE_SETUP, cb_init_loop_optstage, cb_do_interactive, cb_prompt_interactive );
 #if 0
-  muc_CR( config_optionally_show );                                      /* FIXME similar to ..._show_options, called from ..._main_with_config after calling ..._main_db ??? FIXME */
+  muc_CR( config_optionally_show );                                  /* FIXME similar to ..._show_options, called from ..._main_with_config after calling ..._main_db ??? FIXME */
 #endif
 #if 0
-  muc_CR( pdi_create_global, "selected" );                               /* all_optstages_cb */
+  muc_CR( pdi_create_global, "selected" );                           /* all_optstages_cb */
 #else
   if ( cb_init_all_optstages )
     muc_CRV( cb_init_all_optstages, NULL );
@@ -117,5 +119,5 @@ muc_SR( OPTIONS, treat_all_optstages, muc_config_cli_t * cli, muc_errc_cs_func_t
   }
   MAST_TRACE( options, 0, "@@@@@after all options for all stages" );
   muc_ER( OPTIONS, treat_all_optstages, muc_config_cli_t * cli, muc_errc_cs_func_t cb_init_all_optstages, muc_errc_cs_func_t cb_init_loop_optstage,
-      muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
+          muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
 }

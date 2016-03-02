@@ -143,8 +143,8 @@
 #  define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 # endif
 
-# define DO_SET_FUNC(_f)  .func=duf_option_O_ ## _f
-# define DOO_SET_FUNC(_f) .func=duf_option_O_ ## _f
+# define DO_SET_FUNC(_f)  .func=duf_optimpl_O_ ## _f
+# define DOO_SET_FUNC(_f) .func=duf_optimpl_O_ ## _f
 
 # define DO_XFUNC(_f)	    {  DO_SET_FUNC(_f)	   }
 # define DOO_XFUNC(_f)	    { DOO_SET_FUNC(_f)	   }

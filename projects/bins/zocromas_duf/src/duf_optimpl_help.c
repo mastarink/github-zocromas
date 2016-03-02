@@ -1,9 +1,12 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
 #include <mastar/multiconfig/muc_option_names.h>
@@ -31,7 +34,6 @@
 #include "duf_sccb.h"
 
 #include "duf_xtended_table.h"
-
 
 /* #include "duf_option_descr.h" */
 /* #include "duf_option_stage.h"                                        (* duf_optstage_name ♠ *) */
@@ -125,7 +127,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
 #endif
 
 mas_error_code_t
-duf_option_O_help(  /* int argc, char *const *argv */ void )
+duf_optimpl_O_help(  /* int argc, char *const *argv */ void )
 {
   DUF_STARTR( r );
 
@@ -190,7 +192,7 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_O_examples(  /* int argc, char *const *argv */ void )
+duf_optimpl_O_examples(  /* int argc, char *const *argv */ void )
 {
   DUF_STARTR( r );
 
@@ -864,7 +866,7 @@ duf_unflag2cnames( unsigned unfset )
 }
 
 mas_error_code_t
-duf_option_O_showflags(  /* int argc, char *const *argv */ void )
+duf_optimpl_O_showflags(  /* int argc, char *const *argv */ void )
 {
   DUF_STARTR( r );
   {
@@ -981,7 +983,7 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
 }
 
 mas_error_code_t
-duf_option_O_list_options( long n_unused MAS_UNUSED )
+duf_optimpl_O_list_options( long n_unused MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -1011,7 +1013,7 @@ duf_option_O_list_options( long n_unused MAS_UNUSED )
 }
 
 mas_error_code_t
-duf_option_O_list_xtended( const char *s )
+duf_optimpl_O_list_xtended( const char *s )
 {
   DUF_STARTR( r );
   duf_stdx_print( duf_get_config_cli(  ), s );

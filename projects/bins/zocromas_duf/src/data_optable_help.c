@@ -6,7 +6,7 @@
 #include "duf_optimpl_help.h"
 #include "duf_optimpl_smart_help.h"
 /*
- * At duf_options_table.c:
+ * At duf_xtended_table.c:
  * 1. extern const muc_longval_extended_table_t optable_help[];
  * 2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
  *    ...

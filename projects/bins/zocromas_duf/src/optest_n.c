@@ -2,9 +2,12 @@
 #include <assert.h>
 #include <stddef.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace_credel.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -104,7 +107,7 @@ muc_SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribut
   config_trace->class_levels[DUF_TRACE_LEVEL_temp] += 2;
   config_trace->class_levels[DUF_TRACE_LEVEL_errors] += 2;
 
-  clio = muc_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */, NULL /* config_dir */ ,
+  clio = muc_cli_options_create( argc, argv, optable_test_list, 0 /* mandatory_config */ , NULL /* config_dir */ ,
                                  NULL /* commands_dir */ , NULL /* varfunc */ , config_trace );
   muc_QT( "@@@@@%d OPTEST ~ %lu", QERRIND, sizeof( something_bits1_combo_t ) );
 
@@ -118,11 +121,11 @@ muc_SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribut
   muc_QT( "@@@@@%d OPTEST", QERRIND );
 
   mas_error_report_all( config_trace, 0 /*index */ , 0, stderr, /* mas_verbose ? mas_verbose(  ) : */ 3 );
-  muc_QT( "@@@@@%d OPTEST %8x %8x %8x"                                    /* */
-     , QERRIND                                                       /* */
-     , som1.set1.bits                                                /* */
-     , som1.set2.bits                                                /* */
-     , som1.set3.bits                                                /* */
+  muc_QT( "@@@@@%d OPTEST %8x %8x %8x"                               /* */
+          , QERRIND                                                  /* */
+          , som1.set1.bits                                           /* */
+          , som1.set2.bits                                           /* */
+          , som1.set3.bits                                           /* */
            );
   muc_cli_options_delete( clio );
   {
@@ -145,7 +148,7 @@ muc_SR( TOP, main, int argc __attribute__ ( ( unused ) ), char **argv __attribut
       v5 = ( ( typeof( v5 ) ) 1 ) << sh;
     }
     muc_QT( "@%llx:%llx:%llx:%llx:%llx:%llx", ( unsigned long long ) v0, ( unsigned long long ) v1, ( unsigned long long ) v2,
-       ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
+            ( unsigned long long ) v3, ( unsigned long long ) v4, ( unsigned long long ) v5 );
   }
   mas_config_trace_delete( config_trace );
   config_trace = NULL;

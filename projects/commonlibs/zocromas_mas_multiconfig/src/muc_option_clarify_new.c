@@ -1,6 +1,8 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
+/* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
@@ -210,7 +212,8 @@ muc_SR( OPTIONS, soption_xclarify_new_at_xtable_od, muc_config_cli_t * cli, cons
   pod->xvtable = xvtable;
   muc_CR( soption_xclarify_new_at_xarr_od, cli, xvtable->xlist, pod );
 
-  muc_ER( OPTIONS, soption_xclarify_new_at_xtable_od, muc_config_cli_t * cli, const muc_longval_extended_vtable_t * xvtable, muc_option_data_t * pod );
+  muc_ER( OPTIONS, soption_xclarify_new_at_xtable_od, muc_config_cli_t * cli, const muc_longval_extended_vtable_t * xvtable,
+          muc_option_data_t * pod );
 }
 
 static
@@ -240,7 +243,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_
     if ( !( pod->doindex >= 0 || pod->stage < MUC_OPTION_STAGE_LOOP ) )
     {
       muc_QT( "@not match stage; %ld %s:%s hard:%lu; soft:%lu : \"%s\"", pod->doindex, muc_optstage_name( cli, pod->stage ),
-         muc_optsource_name( cli, pod->source ), pod->xfound.count_hard, pod->xfound.count_soft, pod->name );
+              muc_optsource_name( cli, pod->source ), pod->xfound.count_hard, pod->xfound.count_soft, pod->name );
     }
   /* assert( pod->doindex >= 0 || pod->stage < MUC_OPTION_STAGE_LOOP ); */
   }
@@ -300,7 +303,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_
         mas_expandable_string_delete( &cs_x );
       }
       muc_CRV( ( pod->clarifier ), cli, pod->xfound.xarray[pod->doindex].xtended, oa, pod->xfound.xarray[pod->doindex].xvtable,
-           pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
+               pod->xfound.xarray[pod->doindex].noo, pod->stage, pod->source );
       pod->clarified[pod->stage] = 1;
       mas_free( oa );
     }
@@ -312,7 +315,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_
   for ( size_t n = 0; n < pod->xfound.count_hard + pod->xfound.count_soft; n++ )
   {
     muc_QT( "@@ ========== s:%d; ch:%lu; cs:%lu; doi:%d {%d} --%s='%s' =======================", pod->xfound.xarray[n].soft, pod->xfound.count_hard,
-       pod->xfound.count_soft, doindex, pod->clarifier ? 1 : 0, pod->xfound.xarray[n].xtended->o.name, pod->optarg );
+            pod->xfound.count_soft, doindex, pod->clarifier ? 1 : 0, pod->xfound.xarray[n].xtended->o.name, pod->optarg );
   }
 #endif
 /* mas_free( pod->xfound.xarray ); */
@@ -370,8 +373,9 @@ muc_pod_from_paod( const muc_option_adata_t * paod, muc_option_stage_t basicstag
 }
 
 static
-muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const char *string, const char *name, const char *arg, muc_xclarifier_t clarifier,
-    char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod, muc_option_adata_t * paod )
+muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
+        muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
+        muc_option_adata_t * paod )
 {
   int pod_allocated = 0;
   const muc_option_data_t *bootpod = NULL;
@@ -506,59 +510,60 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const cha
     paod->source_count[istage][source.sourcecode]++;
   }
   muc_ER( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-      muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
-      muc_option_adata_t * paod );
+          muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
+          muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_new_at_stdx_default_with_pod, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-    muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
-    muc_option_adata_t * paod )
+        muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
+        muc_option_adata_t * paod )
 {
 /* muc_QT( "@last_stage: %s => %s (%s) %lu [%s:%s:%s]", muc_optstage_name(cli, paod->last_stage ), muc_optstage_name(cli, istage ), muc_optsource_name(cli, source ), */
 /*    paod->count, string, name, arg );                                                                                                              */
-  muc_CR( soption_xclarify_new_at_stdx, cli, string, name, arg, clarifier ? clarifier : muc_xoption_clarify, value_separator, istage, source, pod, paod );
+  muc_CR( soption_xclarify_new_at_stdx, cli, string, name, arg, clarifier ? clarifier : muc_xoption_clarify, value_separator, istage, source, pod,
+          paod );
 /* muc_QT( "@############### %s:%s : %lu:%lu", muc_optstage_name(cli, istage ), muc_optsource_name(cli, source ), paod->stage_count[istage], */
 /*    paod->source_count[istage][source.sourcecode] );                                                                          */
   muc_ER( OPTIONS, soption_xclarify_new_at_stdx_default_with_pod, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-      muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
-      muc_option_adata_t * paod );
+          muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
+          muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_snac_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-    muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
+        muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
   muc_CR( soption_xclarify_new_at_stdx_default_with_pod, cli, string, name, arg, clarifier, value_separator, istage, source, NULL /* pod */ , paod );
   muc_ER( OPTIONS, soption_xclarify_snac_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-      muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
+          muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_sna_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-    char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
+        char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
   muc_CR( soption_xclarify_snac_new_at_stdx_default, cli, string, name, arg, ( muc_xclarifier_t ) NULL, value_separator, istage, source, paod );
   muc_ER( OPTIONS, soption_xclarify_sna_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
-      char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
+          char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_na_new_at_stdx_default, muc_config_cli_t * cli, const char *name, const char *arg, char value_separator,
-    muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
+        muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
   muc_CR( soption_xclarify_sna_new_at_stdx_default, cli, ( const char * ) NULL /* string */ , name, arg, value_separator, istage, source, paod );
   muc_ER( OPTIONS, soption_xclarify_na_new_at_stdx_default, muc_config_cli_t * cli, const char *name, const char *arg, char value_separator,
-      muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
+          muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_s_new_at_stdx_default, muc_config_cli_t * cli, const char *string, char value_separator, muc_option_stage_t istage,
-    muc_option_source_t source, muc_option_adata_t * paod )
+        muc_option_source_t source, muc_option_adata_t * paod )
 {
   muc_CR( soption_xclarify_sna_new_at_stdx_default, cli, string, ( const char * ) NULL /* name */ , ( const char * ) NULL /* arg */ , value_separator,
-      istage, source, paod );
-  muc_ER( OPTIONS, soption_xclarify_s_new_at_stdx_default, muc_config_cli_t * cli, const char *string, char value_separator, muc_option_stage_t istage,
-      muc_option_source_t source, muc_option_adata_t * paod );
+          istage, source, paod );
+  muc_ER( OPTIONS, soption_xclarify_s_new_at_stdx_default, muc_config_cli_t * cli, const char *string, char value_separator,
+          muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, soption_xclarify_new_booted_source, muc_config_cli_t * cli, muc_option_stage_t istage, muc_option_source_t source,
-    muc_option_adata_t * paod )
+        muc_option_adata_t * paod )
 {
   size_t cntpod;
 
@@ -574,12 +579,12 @@ muc_SR( OPTIONS, soption_xclarify_new_booted_source, muc_config_cli_t * cli, muc
     /* pod = ..._pod_from_paod_n( paod, MUC_OPTION_STAGE_BOOT, source, npod ); */
     /* MAST_TRACE( optsource, 0,  "@#############  %lu.", npod ); */
       muc_CR( soption_xclarify_snac_new_at_stdx_default, cli, ( const char * ) NULL /* string */ , ( const char * ) NULL /* name */ ,
-          ( const char * ) NULL /* arg */ , ( muc_xclarifier_t ) NULL, '\0' /* value_separator */ ,
-          istage, source, paod );
+              ( const char * ) NULL /* arg */ , ( muc_xclarifier_t ) NULL, '\0' /* value_separator */ ,
+              istage, source, paod );
     }
   }
   muc_ER( OPTIONS, soption_xclarify_new_booted_source, muc_config_cli_t * cli, muc_option_stage_t istage, muc_option_source_t source,
-      muc_option_adata_t * paod );
+          muc_option_adata_t * paod );
 }
 
 /* for batch:                        */

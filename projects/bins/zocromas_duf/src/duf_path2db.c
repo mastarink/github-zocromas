@@ -2,8 +2,11 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -69,7 +72,7 @@ duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
   assert( DUF_IS_ERROR( r ) || duf_levinfo_stat_dev( pdi ) );
 
   MAST_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ),
-             duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
+              duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
 /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
   DUF_SQL_BIND_LL( Dev, /*    */ duf_levinfo_stat_dev( pdi ), /*    */ r, pstmt );
   DUF_SQL_BIND_LL( iNode, /*  */ duf_levinfo_stat_inode( pdi ), /*  */ r, pstmt );
@@ -146,7 +149,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
   assert( pdi->pdi_name );
   DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
   MAST_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu; '%s'", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ),
-             duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ), sqlv );
+              duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ), sqlv );
   {
     const char *truedirname;
 
@@ -163,7 +166,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') ~ '%s'; dirid:%llu", sqlv, duf_levinfo_dirid_up( pdi ), truedirname,
-                 duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ) );
+                  duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ) );
       if ( !DUF_GET_UFIELD2( dirid ) )
       {
       /* DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and " DUF_SQL_DIRNAMEFIELD "='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
@@ -174,7 +177,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
       else
       {
         MAST_TRACE( explain, 2, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ),
-                   duf_levinfo_dirid_up( pdi ) );
+                    duf_levinfo_dirid_up( pdi ) );
       }
       assert( DUF_GET_UFIELD2( dirid ) );
       DOR( r, duf_set_dirid_and_nums_from_pstmt( pdi, pstmt ) );     /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
@@ -184,7 +187,7 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
     {
     /* DUF_CLEAR_ERROR( r, DUF_SQL_DONE ); */
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
-                 duf_levinfo_itemshowname( pdi ) );
+                  duf_levinfo_itemshowname( pdi ) );
       MAST_TRACE( select, 10, "<NOT selected> (%d)", r );
       assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
@@ -263,7 +266,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 #endif
   DOR( r, duf_set_dirid_and_nums_from_sql( pdi, sqlv ) );            /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
   MAST_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
-             duf_levinfo_dirid_up( pdi ) );
+              duf_levinfo_dirid_up( pdi ) );
   if ( DUF_NOERROR( r ) )
     dirid = duf_levinfo_dirid( pdi );
   mas_free( sqlv );
@@ -284,7 +287,8 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   assert( pdi->pdi_name );
   assert( !sql_set || sql_set->type == DUF_NODE_NODE );              /* 20160214.162255 */
 
-  MAST_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
+  MAST_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert,
+              pdi ? 1 : 0 );
   MAST_TRACE( path, 2, "@inserting [%s] caninsert:%d", duf_levinfo_itemshowname( pdi ), caninsert );
   {
     int changes = 0;
@@ -292,7 +296,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
     DOR( r, duf_set_dirid_and_nums_from_sql_set( pdi, sql_set ) );   /* at levinfo current level:
                                                                         set dirid,numdir,numfile by pdi and sql set (duf_sql_set_t); */
     MAST_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", r, mas_error_name_i( r ), duf_levinfo_dirid( pdi ),
-               duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
+                duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 
     if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
     {
@@ -316,7 +320,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
           if ( duf_levinfo_dirid_up( pdi ) )
           {
             MAST_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),
-                       duf_levinfo_dirid_up( pdi ) );
+                        duf_levinfo_dirid_up( pdi ) );
           }
           if ( !duf_levinfo_dirid( pdi ) )
           {

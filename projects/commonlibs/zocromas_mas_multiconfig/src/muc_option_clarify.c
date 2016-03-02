@@ -1,6 +1,7 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
 #include "muc_tracen_defs_preset.h"
+#include "muc_config_trace_enum.h"
+
 #include "muc_errorn_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
@@ -32,7 +33,7 @@
 
 /* 20160227.123618 */
 muc_SR( OPTIONS, xoption_clarify, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-    const muc_longval_extended_vtable_t * xtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source )
+        const muc_longval_extended_vtable_t * xtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source )
 {
 
   if ( extended )
@@ -61,7 +62,7 @@ muc_SR( OPTIONS, xoption_clarify, muc_config_cli_t * cli, const muc_longval_exte
   MAST_TRACE( options, +170, "@[%s]; arg:%s; istage:%d; `noo`:%d", muc_xoption_description_tmp( cli, -1, extended ), optargg, istage, noo );
 
   muc_ER( OPTIONS, xoption_clarify, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-      const muc_longval_extended_vtable_t * xtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source );
+          const muc_longval_extended_vtable_t * xtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source );
 }
 
 /* 20150924.144102 */

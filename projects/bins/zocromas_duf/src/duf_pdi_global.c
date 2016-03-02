@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -13,7 +17,6 @@
 #include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
 
 #include "duf_status_ref.h"
-/* #include "duf_option_defs.h" */
 #include "duf_optimpl_defs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */

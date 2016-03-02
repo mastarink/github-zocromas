@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
@@ -24,7 +28,6 @@
 /* ###################################################################### */
 #include "duf_pdi_credel.h"
 /* ###################################################################### */
-
 
 duf_depthinfo_t *
 duf_pdi_create( const char *name )
@@ -62,7 +65,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
     else
       pdidst->pdi_name = pdisrc->pdi_name;
   }
-  /* pdidst->db_attached_selected = mas_strdup( pdisrc->db_attached_selected ); */
+/* pdidst->db_attached_selected = mas_strdup( pdisrc->db_attached_selected ); */
   assert( !pdidst->next );
   pdidst->attached_copy = 1;
   pdidst->num_idstatements = 0;
@@ -74,14 +77,14 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
     pdidst->pyp = mas_malloc( sizeof( *pdidst->pyp ) );
     memcpy( pdidst->pyp, pdisrc->pyp, sizeof( *pdidst->pyp ) );
   }
-  /* assert( pdisrc->num_idstatements == 0 ); */
-  /* assert( !pdisrc->idstatements ); */
+/* assert( pdisrc->num_idstatements == 0 ); */
+/* assert( !pdisrc->idstatements ); */
 
   duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li );
 #if 0
   duf_items_copy( pdidst->items, pdisrc->items );
 #else
-  /* it's OK: no allocations at duf_items_t */
+/* it's OK: no allocations at duf_items_t */
 #endif
 
   pdidst->context.ptr = NULL;
@@ -94,7 +97,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
 #if 0
   duf_modcnts_copy( pdidst->cnts, pdisrc->cnts );
 #else
-  /* it's OK: no allocations at duf_modcnts_t */
+/* it's OK: no allocations at duf_modcnts_t */
 #endif
 }
 
@@ -110,7 +113,6 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
   return pdi;
 }
 
-
 int
 duf_pdi_delete( duf_depthinfo_t * pdi )
 {
@@ -118,7 +120,7 @@ duf_pdi_delete( duf_depthinfo_t * pdi )
 
   assert( pdi && pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
-  /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
+/* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
   DOR( r, duf_pdi_close( pdi ) );
   if ( pdi->created_name )
     mas_free( pdi->pdi_name );

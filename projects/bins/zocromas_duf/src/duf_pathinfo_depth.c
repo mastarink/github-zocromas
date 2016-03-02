@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
+#include <mastar/trace/mas_trace.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -71,7 +75,7 @@ duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, unsign
     if ( !DUF_NOERROR( r ) )
     {
       MAST_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pi_depth( pi ), duf_pi_maxdepth( pi ),
-                 duf_pi_topdepth( pi ), delta, frecursive );
+                  duf_pi_topdepth( pi ), delta, frecursive );
     }
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
@@ -213,7 +217,7 @@ duf_pi_is_good_depth_d( const duf_pathinfo_t * pi, int delta, unsigned frecursiv
   {
     rd = duf_pi_deltadepth_d( pi, d ) <= delta;                      /* d - topdepth <= delta */
     MAST_TRACE( levinfo, 40, "(%d>0) duf_pi_topdepth(pi):%d; duf_pi_reldepth_d( pdi, %d ):%d ? delta:%d;", ( rd ), d,
-               duf_pi_topdepth( pi ), duf_pi_deltadepth_d( pi, d ), delta );
+                duf_pi_topdepth( pi ), duf_pi_deltadepth_d( pi, d ), delta );
   /* T( "@B %d: %d : %d -> %d", d, duf_pi_maxdepth( pi ), delta, rd ); */
   }
 

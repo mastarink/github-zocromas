@@ -4,7 +4,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
@@ -123,7 +126,7 @@ tagit_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-               duf_levinfo_itemshowname( pdi ) );
+                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING
@@ -143,7 +146,7 @@ tagit_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-               duf_levinfo_itemshowname( pdi ) );
+                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING
@@ -163,7 +166,7 @@ tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-               duf_levinfo_itemshowname( pdi ) );
+                duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 # ifdef MAS_TRACING

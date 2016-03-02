@@ -7,9 +7,12 @@
 #include <unistd.h>
 #include <time.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -341,7 +344,7 @@ duf_insert_exif_uni( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, cons
         DUF_SFIELD2( fname );
 #endif
         MAST_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
-                   ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
+                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
       }
 
       DUF_SQL_END_STMT( pdi, insert_exif, lr, pstmt_insert );

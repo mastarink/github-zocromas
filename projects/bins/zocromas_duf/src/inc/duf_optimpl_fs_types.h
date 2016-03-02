@@ -4,6 +4,6 @@
 typedef enum
 {
   DUF_OPTION_FS_MODE_NONE, DUF_OPTION_FS_MODE_IGNORE, DUF_OPTION_FS_MODE_FORCE, DUF_OPTION_FS_MODE_ASK, DUF_OPTION_FS_MODE_OVERWRITE
-} duf_option_fs_mode_t;
+} duf_optimpl_fs_mode_t;
 
 #endif

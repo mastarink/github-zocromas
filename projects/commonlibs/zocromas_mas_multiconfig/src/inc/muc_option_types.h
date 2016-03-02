@@ -21,7 +21,7 @@ typedef struct option muc_option_t;
 
 typedef int muc_option_gen_code_t;
 
-typedef enum
+enum muc_option_vtype_e
 {
 # define ENUM_WRAP(_n, ...)       MUC_OPTION_VTYPE_ ## _n __VA_ARGS__,
 /* #  define ENUM_WRAP_V(_n, _v) MUC_OPTION_VTYPE_ ## _n = _v, */
@@ -29,9 +29,10 @@ typedef enum
 # include "muc_option_vtype_enum.def"
 # undef ENUM_WRAP
 # undef ENUM_WRAP_V
-} muc_option_vtype_t;
+};
+typedef enum muc_option_vtype_e muc_option_vtype_t;
 
-typedef enum
+enum muc_option_call_type_e
 {
 # define ENUM_WRAP(_n, ...)       MUC_OPTION_CALL_TYPE_ ## _n __VA_ARGS__,
 /* #  define ENUM_WRAP_V(_n, _v) MUC_OPTION_CALL_TYPE_ ## _n = _v, */
@@ -39,24 +40,27 @@ typedef enum
 # include "muc_option_call_type_enum.def"
 # undef ENUM_WRAP
 # undef ENUM_WRAP_V
-} muc_option_call_type_t;
+};
+typedef enum muc_option_call_type_e muc_option_call_type_t;
 
-typedef union
+union muc_anynum_u
 {
   int i;
   unsigned u;
   unsigned long ul;
   unsigned long long ull;
-} muc_anynum_t;
+};
+typedef union muc_anynum_u muc_anynum_t;
 
-typedef enum
+enum muc_offset_to_e
 {
   MUC_OFFSET_none = 0,
 /* MUC_OFFSET_config, */
 /* MUC_OFFSET_ufilter, */
   MUC_OFFSET_varptr,
   MUC_OFFSET_funcptr,
-} muc_offset_to_t;
+};
+typedef enum muc_offset_to_e muc_offset_to_t;
 
 /* typedef union                             */
 /* {                                         */
@@ -68,7 +72,6 @@ typedef enum
 /*   unsigned bit;                           */
 /*   unsigned short sbit;                    */
 /* } muc_option_anyflag_t;                   */
-
 typedef struct
 {
   int shown;
@@ -86,7 +89,7 @@ typedef struct
 # else
   muc_extended_stageopts_t stage_opts;
 # endif
-  /* muc_option_anyflag_t afl_obsolete; */
+/* muc_option_anyflag_t afl_obsolete; */
   signed /* ! */ int flag_bitnum;
   unsigned long m_offset;
   muc_offset_to_t relto;

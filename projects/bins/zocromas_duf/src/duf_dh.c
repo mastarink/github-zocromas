@@ -2,12 +2,15 @@
 #include <assert.h>
 #include <string.h>
 
+#include "duf_tracen_defs_preset.h"
+
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 
 /* #include <mastar/wrap/mas_std_def.h> */
+#include <mastar/trace/mas_trace.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -206,7 +209,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       global_status.dh.nopen++;
     /* DUF_CONFIGW( dh.nopen )++; */
       MAST_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, global_status.dh.nopen, global_status.dh.nclose,
-                 global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
+                  global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
     }
     else if ( ry < 0 && errno == ENOENT )
     {
@@ -375,7 +378,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
         DUF_TEST_R( r );
       }
       MAST_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", global_status.dh.nopen, global_status.dh.nclose,
-                 global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
+                  global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
       global_status.dh.nclose++;
     }
     else
