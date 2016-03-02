@@ -7,6 +7,10 @@
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
+#include <mastar/multiconfig/muc_se.h>
+#include <mastar/multiconfig/muc_options_file.h>
+
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -122,8 +126,8 @@ SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 /* DUF_STARTR( r ); */
 /* int r MAS_UNUSED = 0; */
 
-  CR( infile_options_at_filepath, duf_get_config_cli(  ), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
-      ( duf_option_adata_t * ) NULL /* paod */  );
+  muc_CR( infile_options_at_filepath, duf_get_config_cli(  ), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
+      ( muc_option_adata_t * ) NULL /* paod */  );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );
 }

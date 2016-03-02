@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_OPTABLE_DEF_H
 # define MAS_DUF_OPTABLE_DEF_H
 
+# include <mastar/multiconfig/muc_config_cli_types.h>
 # include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
 # include "duf_config.h"                                             /* duf_get_config ♠ */
 # include "duf_config_pointers.h"                                    /* duf_get_(.*)_pointer */
@@ -99,8 +100,8 @@
 # define DO_OC(_vt, _v)        DO_OO(_vt, _v, duf_config_t)
 # define DOO_OC(_vt, _v)      DOO_OO(_vt, _v, duf_config_t)
 
-# define DO_OI(_vt, _v)        DO_OO(_vt, _v, duf_config_cli_t)
-# define DOO_OI(_vt, _v)      DOO_OO(_vt, _v, duf_config_cli_t)
+# define DO_OI(_vt, _v)        DO_OO(_vt, _v, muc_config_cli_t)
+# define DOO_OI(_vt, _v)      DOO_OO(_vt, _v, muc_config_cli_t)
 
 # define DO_OT(_vt, _v)        DO_OO(_vt, _v, mas_config_trace_t)
 # define DOO_OT(_vt, _v)      DOO_OO(_vt, _v, mas_config_trace_t)
@@ -126,20 +127,20 @@
 
 /* --flag-option sets flag to 1, --no-flag-option sets flag to 0 */
 /* DO_OC(NOFLAG, ...) + DO_FL eq. to DO_OC(FLAG, ...) + DO_FN */
-#if 0
-# define DO_FL(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=1
-# define DOO_FL(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+# if 0
+#  define DO_FL(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=1
+#  define DOO_FL(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-# define DO_FS(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=0
-# define DOO_FS(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DO_FS(_loc, _fld)             .afl_obsolete._loc={._fld=1}, .can_no=0
+#  define DOO_FS(_vt, _prf, _loc, _fld) .afl_obsolete._loc={._fld=1}, .can_no=0, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
 /* --flag-option sets flag to 0, --no-flag-option sets flag to 1 */
-# define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.unset=1
-# define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+#  define DO_FN(_loc,_fld)               DO_FL(_loc,_fld),.unset=1
+#  define DOO_FN(_vt, _prf, _loc, _fld) DOO_FL(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
 
-# define DO_FNS(_loc,_fld)               DO_FS(_loc,_fld),.unset=1
-# define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
-#endif
+#  define DO_FNS(_loc,_fld)               DO_FS(_loc,_fld),.unset=1
+#  define DOO_FNS(_vt, _prf, _loc, _fld) DOO_FS(_vt, _prf,_loc,_fld),.unset=1, DOO_A_N, DOO_OC(_vt, _prf._loc )
+# endif
 
 # define DO_SET_FUNC(_f)  .func=duf_option_O_ ## _f
 # define DOO_SET_FUNC(_f) .func=duf_option_O_ ## _f

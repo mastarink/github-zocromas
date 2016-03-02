@@ -5,6 +5,15 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
+#include <mastar/multiconfig/muc_options_file.h>
+#include <mastar/multiconfig/muc_option_class.h>
+#include <mastar/multiconfig/muc_option_names.h>
+#include <mastar/multiconfig/muc_option_descr.h>
+#include <mastar/multiconfig/muc_option_vtype.h>
+#include <mastar/multiconfig/muc_option_stage.h>
+#include <mastar/multiconfig/muc_option_lfind.h>
+#include <mastar/multiconfig/muc_option_config.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -25,17 +34,6 @@
 
 #include "duf_xtended_table.h"
 
-#include "duf_options_file.h"                                        /* duf_options_infilepath */
-
-#include "duf_option_descr.h"
-#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
-#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
-#include "duf_option_lfind.h"
-
-#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
-#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
-#include "duf_option_vtype.h"                                        /* duf_optvtype2string ♠ */
-#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_optimpl_extended2string.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
@@ -44,37 +42,37 @@
 #include "duf_optimpl_smart_help.h"
 /* ###################################################################### */
 
-static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
-  [DUF_OPTION_CLASS_HELP] = "Help",
-  [DUF_OPTION_CLASS_NO_HELP] = "No help",
-  [DUF_OPTION_CLASS_SYSTEM] = "System",
-  [DUF_OPTION_CLASS_CONTROL] = "Control",
-  [DUF_OPTION_CLASS_DB] = "Database",
-  [DUF_OPTION_CLASS_FS] = "File system",
-  [DUF_OPTION_CLASS_SCCB] = "SCCB system",
-  [DUF_OPTION_CLASS_REFERENCE] = "Reference",
-  [DUF_OPTION_CLASS_COLLECT] = "Collect",
-  [DUF_OPTION_CLASS_SCAN] = "Scan",
-  [DUF_OPTION_CLASS_FILTER] = "Filter",
-  [DUF_OPTION_CLASS_UPDATE] = "Update",
-  [DUF_OPTION_CLASS_REQUEST] = "Request",
-  [DUF_OPTION_CLASS_PRINT] = "Print",
-  [DUF_OPTION_CLASS_TRACE] = "Trace",
-  [DUF_OPTION_CLASS_OBSOLETE] = "Obsolete",
-  [DUF_OPTION_CLASS_OTHER] = "Other",
-  [DUF_OPTION_CLASS_NONE] = "None",
-  [DUF_OPTION_CLASS_DEBUG] = "DEBUG",
-  [DUF_OPTION_CLASS_NODESC] = "No desc",
+static const char *oclass_titles[MUC_OPTION_CLASS_MAX + 1] = {
+  [MUC_OPTION_CLASS_HELP] = "Help",
+  [MUC_OPTION_CLASS_NO_HELP] = "No help",
+  [MUC_OPTION_CLASS_SYSTEM] = "System",
+  [MUC_OPTION_CLASS_CONTROL] = "Control",
+  [MUC_OPTION_CLASS_DB] = "Database",
+  [MUC_OPTION_CLASS_FS] = "File system",
+  [MUC_OPTION_CLASS_SCCB] = "SCCB system",
+  [MUC_OPTION_CLASS_REFERENCE] = "Reference",
+  [MUC_OPTION_CLASS_COLLECT] = "Collect",
+  [MUC_OPTION_CLASS_SCAN] = "Scan",
+  [MUC_OPTION_CLASS_FILTER] = "Filter",
+  [MUC_OPTION_CLASS_UPDATE] = "Update",
+  [MUC_OPTION_CLASS_REQUEST] = "Request",
+  [MUC_OPTION_CLASS_PRINT] = "Print",
+  [MUC_OPTION_CLASS_TRACE] = "Trace",
+  [MUC_OPTION_CLASS_OBSOLETE] = "Obsolete",
+  [MUC_OPTION_CLASS_OTHER] = "Other",
+  [MUC_OPTION_CLASS_NONE] = "None",
+  [MUC_OPTION_CLASS_DEBUG] = "DEBUG",
+  [MUC_OPTION_CLASS_NODESC] = "No desc",
 };
 
 mas_error_code_t
-duf_option_O_smart_help_all( duf_option_class_t oclass )
+duf_option_O_smart_help_all( muc_option_class_t oclass )
 {
   DUF_STARTR( r );
 
-  if ( oclass == DUF_OPTION_CLASS_ALL )
+  if ( oclass == MUC_OPTION_CLASS_ALL )
   {
-    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
+    for ( muc_option_class_t oc = MUC_OPTION_CLASS_MIN + 1; oc < MUC_OPTION_CLASS_MAX; oc++ )
     {
       DOR( r, duf_option_O_smart_help( oc ) );
     }
@@ -83,7 +81,7 @@ duf_option_O_smart_help_all( duf_option_class_t oclass )
 }
 
 static void
-duf_show_option_description_x( const duf_longval_extended_t * extended )
+duf_show_option_description_x( const muc_longval_extended_t * extended )
 {
   int look = 1;
   const char *name;
@@ -103,10 +101,10 @@ duf_show_option_description_x( const duf_longval_extended_t * extended )
   {
     char *s = NULL;
 
-  /* duf_option_class_t hclass; */
+  /* muc_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
+    s = muc_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -145,7 +143,7 @@ duf_show_loption_description( int ilong )
   {
     char *s = NULL;
 
-  /* duf_option_class_t hclass; */
+  /* muc_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
     s = duf_loption_description_d( ilong, "\t", " // " );
@@ -166,7 +164,7 @@ duf_show_loption_description( int ilong )
 }
 #endif
 static void MAS_UNUSED
-duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong )
+duf_show_xoption_description( const muc_longval_extended_t * extended, int ilong )
 {
   int look = 1;
   const char *name;
@@ -188,10 +186,10 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
   {
     char *s = NULL;
 
-  /* duf_option_class_t hclass; */
+  /* muc_option_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
-    s = duf_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
+    s = muc_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
   /* s = mas_strcat_x( s, " ...................." ); */
     if ( s )
     {
@@ -209,7 +207,7 @@ duf_show_xoption_description( const duf_longval_extended_t * extended, int ilong
 }
 
 mas_error_code_t
-duf_option_O_smart_help( duf_option_class_t oclass )
+duf_option_O_smart_help( muc_option_class_t oclass )
 {
   DUF_STARTR( r );
 
@@ -224,24 +222,24 @@ duf_option_O_smart_help( duf_option_class_t oclass )
 /* for ( int ilong = 0; DUF_CONFIGG(pcli->longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
 /* {                                                                                                   */
 /* }                                                                                                   */
-  if ( oclass <= DUF_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
-    DUF_PRINTF( 0, "-=-=-=-=- %s (%s) -=-=-=-=-", oclass_titles[oclass], duf_optclass_name( oclass ) );
+  if ( oclass <= MUC_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
+    DUF_PRINTF( 0, "-=-=-=-=- %s (%s) -=-=-=-=-", oclass_titles[oclass], muc_optclass_name( oclass ) );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
   {
 #if 0
     int tbcount;
 
-    tbcount = duf_longindex_extended_count( duf_extended_vtable_multi(  ) );
+    tbcount = muc_longindex_extended_count( duf_extended_vtable_multi(  ) );
     for ( ilong = 0; DUF_NOERROR( r ) && DUF_CONFIGG( pcli->longopts_table )[ilong].name && ilong < tbcount; ilong++ )
 #else
-    for ( duf_longval_extended_vtable_t ** xtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xtables; xtables++ )
-      for ( const duf_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
+    for ( muc_longval_extended_vtable_t ** xtables = muc_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xtables; xtables++ )
+      for ( const muc_longval_extended_t * xtended = ( *xtables )->xlist; xtended->o.name; ilong++, xtended++ )
 #endif
       {
-        const duf_longval_extended_t *extended;
+        const muc_longval_extended_t *extended;
 
-        extended = duf_loption_xfind_at_stdx( duf_get_config_cli(  ), ilong, ( const duf_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
+        extended = muc_loption_xfind_at_stdx( duf_get_config_cli(  ), ilong, ( const muc_longval_extended_vtable_t ** ) NULL, NULL /* &no */  );
         {
           int ie;
           duf_option_code_t codeval;
@@ -255,8 +253,8 @@ duf_option_O_smart_help( duf_option_class_t oclass )
           {
             int cnd = 0;
 
-            cnd = ( !extended && ( oclass == DUF_OPTION_CLASS_ANY || oclass == DUF_OPTION_CLASS_NODESC ) )
-                    || ( extended && ( oclass == DUF_OPTION_CLASS_ANY || oclass == extended->oclass ) );
+            cnd = ( !extended && ( oclass == MUC_OPTION_CLASS_ANY || oclass == MUC_OPTION_CLASS_NODESC ) )
+                    || ( extended && ( oclass == MUC_OPTION_CLASS_ANY || oclass == extended->oclass ) );
             if ( cnd )
             {
               int shown = -1;
@@ -286,9 +284,9 @@ duf_option_O_help_set( const char *arg )
 {
   DUF_STARTR( r );
 
-  for ( duf_longval_extended_vtable_t * *xvtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++ )
+  for ( muc_longval_extended_vtable_t * *xvtables = muc_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++ )
   {
-    const duf_longval_extended_vtable_t *xvtable = *xvtables;
+    const muc_longval_extended_vtable_t *xvtable = *xvtables;
     int title_printed = 0;
 
     if ( xvtable && xvtable->name )
@@ -313,7 +311,7 @@ duf_option_O_help_set( const char *arg )
           memset( ( void * ) ashown, 0, ss );
           if ( !title_printed++ )
             DUF_PRINTF( 0, "# set '%-15s'", xvtable->name );
-          for ( const duf_longval_extended_t * xtended = xvtable->xlist; xtended->o.name; xtended++ )
+          for ( const muc_longval_extended_t * xtended = xvtable->xlist; xtended->o.name; xtended++ )
           {
             duf_option_code_t codeval;
 
@@ -328,7 +326,7 @@ duf_option_O_help_set( const char *arg )
                 [DUF_OFFSET_funcptr] = "funcptr",
                 [DUF_OFFSET_varptr] = "varptr",
               };
-              sl = duf_optstages_list( duf_get_config_cli(  ), xtended, xvtable );
+              sl = muc_optstages_list( duf_get_config_cli(  ), xtended, xvtable );
               if ( ashown[codeval] <= 0 )
                 duf_show_option_description_x( xtended );
               ashown[codeval]++;
@@ -339,56 +337,56 @@ duf_option_O_help_set( const char *arg )
                           xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->stage_opts.use_stage, /* */
                           xtended->unset, xtended->can_no,           /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
                           xtended->help,                             /* */
-                          duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
-              if ( xtended->vtype != DUF_OPTION_VTYPE_NONE )
-                DUF_PRINTF( 0, ". `%s`;", duf_optvtype2string( xtended->vtype ) );
+                          muc_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
+              if ( xtended->vtype != MUC_OPTION_VTYPE_NONE )
+                DUF_PRINTF( 0, ". `%s`;", muc_optvtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )
               {
                 DUF_PRINTF( 0, ".%s + %-4lu & %lx;", srelto[xtended->relto] ? srelto[xtended->relto] : "-", xtended->m_offset,
                             1L << xtended->flag_bitnum );
               }
-              if ( xtended->call.funcname || xtended->calltype != DUF_OPTION_CALL_TYPE_NONE )
+              if ( xtended->call.funcname || xtended->calltype != MUC_OPTION_CALL_TYPE_NONE )
               {
                 const char *sfargs = NULL;
 
-                DUF_PRINTF( 0, ". %s::%s( ", duf_extended_call_type2string( xtended->calltype ), /* */
+                DUF_PRINTF( 0, ". %s::%s( ", muc_extended_call_type2string( xtended->calltype ), /* */
                             xtended->call.funcname ? xtended->call.funcname : "-" );
 
                 switch ( xtended->calltype )
                 {
-                case DUF_OPTION_CALL_TYPE_NONE:
+                case MUC_OPTION_CALL_TYPE_NONE:
                   break;
-                case DUF_OPTION_CALL_TYPE_EIA:
+                case MUC_OPTION_CALL_TYPE_EIA:
                   sfargs = "int num_from_tab";
                   break;
-                case DUF_OPTION_CALL_TYPE_EV:
+                case MUC_OPTION_CALL_TYPE_EV:
                   sfargs = "void";
                   break;
-                case DUF_OPTION_CALL_TYPE_A:
+                case MUC_OPTION_CALL_TYPE_A:
                   sfargs = "int cargc, const char **cargv";
                   break;
-                case DUF_OPTION_CALL_TYPE_AA:
+                case MUC_OPTION_CALL_TYPE_AA:
                   sfargs = "mas_cargvc_t carg";
                   break;
-                case DUF_OPTION_CALL_TYPE_N:
+                case MUC_OPTION_CALL_TYPE_N:
                   sfargs = "long optarg";
                   break;
-                case DUF_OPTION_CALL_TYPE_S:
+                case MUC_OPTION_CALL_TYPE_S:
                   sfargs = "char *optarg";
                   break;
-                case DUF_OPTION_CALL_TYPE_SAS:
+                case MUC_OPTION_CALL_TYPE_SAS:
                   sfargs = "const char *str_from_tab";
                   break;
-                case DUF_OPTION_CALL_TYPE_SAN:
+                case MUC_OPTION_CALL_TYPE_SAN:
                   sfargs = "char *optarg, num_from_tab";
                   break;
-                case DUF_OPTION_CALL_TYPE_TN1:
+                case MUC_OPTION_CALL_TYPE_TN1:
                   sfargs = "mas_argvc_t targ, long optarg_with_units";
                   break;
-                case DUF_OPTION_CALL_TYPE_TS1:
+                case MUC_OPTION_CALL_TYPE_TS1:
                   sfargs = "mas_argvc_t targ, optarg";
                   break;
-                case DUF_OPTION_CALL_TYPE_TS2:
+                case MUC_OPTION_CALL_TYPE_TS2:
                   sfargs = "int targc, char **targv, optarg";
                   break;
                 }

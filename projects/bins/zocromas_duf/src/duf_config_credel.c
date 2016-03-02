@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include <mastar/trace/mas_trace_credel.h>
+#include <mastar/multiconfig/muc_option_config.h>                                       /* duf_get_cli_options_trace_config ♠ */
+#include <mastar/multiconfig/muc_option_config_credel.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -21,8 +23,7 @@
 /* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
 
-#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
-#include "duf_option_config_credel.h"
+
 #include "duf_xtended_table.h"
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
@@ -50,7 +51,7 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
   assert( duf_config4trace );
 #endif
 
-  duf_config->pcli = duf_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
+  duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
                                                      DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar,
                                                      duf_config->opt.ptracecfg );
 

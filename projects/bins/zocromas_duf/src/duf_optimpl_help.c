@@ -5,6 +5,11 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
+#include <mastar/multiconfig/muc_options_file.h>
+#include <mastar/multiconfig/muc_option_names.h>
+#include <mastar/multiconfig/muc_option_descr.h>
+#include <mastar/multiconfig/muc_option_config.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -27,7 +32,6 @@
 
 #include "duf_xtended_table.h"
 
-#include "duf_options_file.h"                                        /* duf_options_infilepath */
 
 #include "duf_option_descr.h"
 #include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
@@ -126,10 +130,10 @@ duf_option_O_help(  /* int argc, char *const *argv */ void )
   DUF_STARTR( r );
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
-  DUF_PRINTF( 0, "  -H, --help			[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
@@ -850,7 +854,7 @@ duf_uflag2cnames( unsigned long ufset )
   duf_option_code_t id = DUF_OPTION_VAL_NONE;
 
   id = duf_uflag2code( ufset );
-  return id == DUF_OPTION_VAL_NONE ? "" : duf_coption_cnames_tmp( duf_get_config_cli(  ), -1, id, NULL );
+  return id == DUF_OPTION_VAL_NONE ? "" : muc_coption_cnames_tmp( duf_get_config_cli(  ), -1, id, NULL );
 }
 
 static const char *
@@ -966,7 +970,7 @@ duf_option_O_showflags(  /* int argc, char *const *argv */ void )
       .flag.progress = 1
     };
     id = duf_flag2code( vv );
-    DUF_PRINTF( 0, "id:%u - %s", id, duf_coption_cnames_tmp( -1, id, NULL ) );
+    DUF_PRINTF( 0, "id:%u - %s", id, muc_coption_cnames_tmp( -1, id, NULL ) );
     for ( unsigned u = 0; u < 30; u++ )
     {
       DUF_PRINTF( 0, "====================== %u. %s", u, duf_unflag2cnames( u ) );
@@ -984,16 +988,16 @@ duf_option_O_list_options( long n_unused MAS_UNUSED )
   int ntable = 0;
   int tbcount = 0;
 
-  for ( duf_longval_extended_vtable_t ** xvtables = duf_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++, ntable++ )
+  for ( muc_longval_extended_vtable_t ** xvtables = muc_cli_options_xvtable_multi( duf_get_config_cli(  ) ); *xvtables; xvtables++, ntable++ )
   {
-    const duf_longval_extended_vtable_t *xvtable = *xvtables;
+    const muc_longval_extended_vtable_t *xvtable = *xvtables;
 
-    for ( const duf_longval_extended_t * xtended = xvtable->xlist; xtended->o.name; xtended++, tbcount++ )
+    for ( const muc_longval_extended_t * xtended = xvtable->xlist; xtended->o.name; xtended++, tbcount++ )
     {
       char *s = NULL;
 
       if ( xtended->o.val )
-        s = duf_xoption_description_d( duf_get_config_cli(  ), xtended, "\t", " // " );
+        s = muc_xoption_description_d( duf_get_config_cli(  ), xtended, "\t", " // " );
       DUF_TEST_R( r );
 
       MAST_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );

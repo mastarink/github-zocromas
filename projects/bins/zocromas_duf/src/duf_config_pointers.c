@@ -28,7 +28,7 @@ duf_get_duf_ufilter_t_pointer( void )
 }
 
 void *
-duf_get_duf_config_cli_t_pointer( void )
+duf_get_muc_config_cli_t_pointer( void )
 {
   return duf_get_config_cli(  );
 }

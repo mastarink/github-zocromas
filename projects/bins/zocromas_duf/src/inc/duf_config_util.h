@@ -1,14 +1,14 @@
 #ifndef MAS_DUF_CONFIG_UTIL_H
 # define MAS_DUF_CONFIG_UTIL_H
 
-# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
+# include <mastar/multiconfig/muc_config_cli_types.h>                /* muc_config_cli_t */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_t */
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ♠ */
 
 /* void *duf_get_config_offset( unsigned long off ); */
 /* void *duf_get_config_puz_offset( unsigned long off ); */
 
-duf_config_cli_t *duf_get_config_cli( void );
+muc_config_cli_t *duf_get_config_cli( void );
 duf_config_opt_t *duf_get_config_opt( void );
 duf_ufilter_t *duf_get_config_ufilter( void );
 

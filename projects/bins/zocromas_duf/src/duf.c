@@ -42,6 +42,17 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/error/mas_error_reporting.h>
 
+#include <mastar/multiconfig/muc_se.h>
+#include <mastar/multiconfig/muc_options_all_stages.h>
+#include <mastar/multiconfig/muc_options.h>
+#include <mastar/multiconfig/muc_option_names.h>
+#include <mastar/multiconfig/muc_option_defs.h>
+#include <mastar/multiconfig/muc_option_stage.h>
+#include <mastar/multiconfig/muc_option_source.h>
+#include <mastar/multiconfig/muc_options_all_stages.h>
+
+
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -59,13 +70,6 @@
 
 #include "duf_config_credel.h"
 
-#include "duf_options.h"
-#include "duf_option_names.h"
-#include "duf_option_defs.h"
-
-#include "duf_option_stage.h"
-#include "duf_option_source.h"
-#include "duf_options_all_stages.h"
 
 #include "duf_levinfo_ref.h"
 
@@ -158,13 +162,13 @@ cb_prompt_interactive( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
-  CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
+  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
 
   MAST_TRACE( any, 1, "any test" );
   MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
-  CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  muc_CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
   fputs( "\n", stderr );
   MAST_TRACE( temp, 0, "∈0∋ Zero " );
   TT( "∈1∋ One " );
@@ -187,7 +191,6 @@ SR( TOP, main_with_config, int argc, char **argv )
 //          opt   disable  testnoflag
 #if 0
 #define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
-  {
     unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
     unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
     T( "@>>>> %llx : %llx <<<<", t1, t2 );

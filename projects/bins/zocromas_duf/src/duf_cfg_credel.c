@@ -5,6 +5,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_expandable.h>
+#include <mastar/multiconfig/muc_option_config_credel.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -161,7 +162,7 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
-    duf_cli_options_delete( cfg->pcli );
+    muc_cli_options_delete( cfg->pcli );
 
     mas_free( cfg->help_string );
     cfg->help_string = NULL;

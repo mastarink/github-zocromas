@@ -1,11 +1,15 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+
+#include <mastar/multiconfig/muc_option_config.h>     
+
+/* #include "duf_config_util.h" */
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
@@ -15,7 +19,6 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
 
 #include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq_cb */
 #include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
@@ -33,9 +36,9 @@ SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_
     const mas_argvc_t * ttarg, const void *ptr )
 {
 /* DUF_STARTR( r ); */
-  duf_config_cli_t *cli = NULL;
+  muc_config_cli_t *cli = NULL;
 
-  cli = ( duf_config_cli_t * ) ptr;
+  cli = ( muc_config_cli_t * ) ptr;
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )
   {
   /* MAST_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
@@ -51,7 +54,7 @@ SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_
       const mas_argvc_t * ttarg, const void *ptr );
 }
 
-SR( OPTIONS, tmpdb_add, duf_config_cli_t * cli, int oval, const char *optname, const char *optargg )
+muc_SR( OPTIONS, tmpdb_add, muc_config_cli_t * cli, int oval, const char *optname, const char *optargg )
 {
 /* DUF_STARTR( r ); */
   static duf_sql_sequence_t tmpseq = {                               /* */
@@ -72,5 +75,5 @@ SR( OPTIONS, tmpdb_add, duf_config_cli_t * cli, int oval, const char *optname, c
       NULL /* selected_db */ , cli /* ptr */  );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
 /* DUF_ENDR( r ); */
-  ER( OPTIONS, tmpdb_add, duf_config_cli_t * cli, int oval, const char *optname, const char *optargg );
+  muc_ER( OPTIONS, tmpdb_add, muc_config_cli_t * cli, int oval, const char *optname, const char *optargg );
 }

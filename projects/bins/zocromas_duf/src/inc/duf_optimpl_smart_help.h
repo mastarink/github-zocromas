@@ -3,10 +3,10 @@
 
 # include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ♣ */
 
-/* duf_option_class_t duf_help_option2class( duf_option_code_t code ); */
+/* muc_option_class_t duf_help_option2class( duf_option_code_t code ); */
 
-mas_error_code_t duf_option_O_smart_help_all( duf_option_class_t oclass );
-mas_error_code_t duf_option_O_smart_help( duf_option_class_t oclass );
+mas_error_code_t duf_option_O_smart_help_all( muc_option_class_t oclass );
+mas_error_code_t duf_option_O_smart_help( muc_option_class_t oclass );
 mas_error_code_t duf_option_O_help_set( const char *arg );
 
 #endif

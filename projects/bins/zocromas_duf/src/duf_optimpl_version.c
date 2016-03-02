@@ -5,6 +5,8 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
+#include <mastar/multiconfig/muc_options_file.h>
+
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
@@ -25,14 +27,6 @@
 
 #include "duf_xtended_table.h"
 
-#include "duf_options_file.h"                                        /* duf_options_infilepath */
-
-#include "duf_option_descr.h"
-#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
-#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
-
-#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
-#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
 
 /* ###################################################################### */
 #include "duf_optimpl_version.h"
@@ -98,7 +92,7 @@ duf_option_O_version( void )
 # if 0
     DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_file_path ) );
 # else
-    DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_options_infilepath( duf_get_config_cli(  ) ) );
+    DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", muc_options_infilepath( duf_get_config_cli(  ) ) );
 # endif
     DUF_PRINTF( 0, "flow.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.flow.v.sbit ) ), DUF_CONFIGG( opt.flow.v.sbit ) );
     DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( vars.puz )->v.sbit ), DUF_CONFIGG( vars.puz )->v.sbit );

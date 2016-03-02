@@ -77,7 +77,7 @@ duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
 }
 
 static mas_error_code_t
-duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
+duf_option_fs_each( const char *arg, muc_errc_psvv_func_t fun, const void *pv )
 {
   DUF_STARTR( r );
   mas_argvc_t targ = { 0 };
@@ -94,7 +94,7 @@ duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
 }
 
 static mas_error_code_t
-duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv )
+duf_option_fs_each2( const char *arg, muc_errc_cscsv_func_t fun, const void *pv )
 {
   DUF_STARTR( r );
   mas_argvc_t targ = { 0 };

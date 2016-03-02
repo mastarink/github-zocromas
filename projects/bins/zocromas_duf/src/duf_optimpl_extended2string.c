@@ -1,5 +1,5 @@
 /* #undef MAS_TRACING */
-#define MAST_TRACE_CONFIG duf_get_cli_options_trace_config(cli)
+#define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli)
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>
 #include <stdio.h>
@@ -11,12 +11,12 @@
 #include "duf_output_defs.h"
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
-#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
-#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
-#include "duf_option_vtype.h"                                        /* duf_optvtype2string ♠ */
-#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+#include <mastar/multiconfig/muc_option_stage.h>                                        /* duf_optstage_name ♠ */
+#include <mastar/multiconfig/muc_option_class.h>                                        /* muc_optclass2string ♠ */
+#include <mastar/multiconfig/muc_option_vtype.h>                                        /* muc_optvtype2string ♠ */
+#include <mastar/multiconfig/muc_option_config.h>                                       /* duf_get_cli_options_trace_config ♠ */
 
-#include "duf_option_extended.h"                                     /* duf_longindex_extended_count etc. ♠ */
+#include <mastar/multiconfig/muc_option_extended.h>                                     /* duf_longindex_extended_count etc. ♠ */
 
 #include "duf_optimpl_val.h"                                          /* duf_codeval2string ♠ */
 
@@ -288,14 +288,14 @@ offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
 /* duf_xarr_print */
 /* TODO : duf_codeval2string depends on optimpl !! */
 static void
-duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_extended_vtable_t * xtable, const char *name )
+duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_extended_vtable_t * xtable, const char *name )
 {
   DUF_PRINTF( 0, ".@@@ [%s]", xtable->name );
-  duf_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask,
+  muc_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask,
                       0 );
   DUF_PUTSL( 0 );
 
-  for ( const duf_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++ )
+  for ( const muc_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++ )
   {
     if ( !name || strstr( xtended->o.name, name ) )
     {
@@ -338,7 +338,7 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         }
         DUF_PUTSL( 0 );
       }
-      duf_optstage_print( cli, xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
+      muc_optstage_print( cli, xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
                           xtended->stage_opts.stage_mask, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
@@ -346,8 +346,8 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
         DUF_PRINTF( 0, ".code:%s(%d)", duf_codeval2string( xtended->o.val ), xtended->o.val );
         DUF_PUTSL( 0 );
       }
-      DUF_PRINTF( 0, "  class:%s(%d)", duf_optclass2string( xtended->oclass ), xtended->oclass );
-      DUF_PRINTF( 0, "  vtype:%s(%d)", duf_optvtype2string( xtended->vtype ), xtended->vtype );
+      DUF_PRINTF( 0, "  class:%s(%d)", muc_optclass2string( xtended->oclass ), xtended->oclass );
+      DUF_PRINTF( 0, "  vtype:%s(%d)", muc_optvtype2string( xtended->vtype ), xtended->vtype );
       if ( xtended->call.funcname )
         DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
 #if 0
@@ -414,7 +414,7 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
       }
       DUF_PRINTF( 0, "., DO_V( %s )", duf_codeval2string( xtended->o.val ) );
       DUF_PRINTF( 0, ".  }" );
-      DUF_PRINTF( 0, "., DO_CL( %s )", duf_optclass2string( xtended->oclass ) );
+      DUF_PRINTF( 0, "., DO_CL( %s )", muc_optclass2string( xtended->oclass ) );
       if ( xtended->m_hasoff )
       {
         switch ( xtended->relto )
@@ -425,12 +425,12 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
           break;
 #if 0
         case DUF_OFFSET_config:
-          DUF_PRINTF( 0, "., DO_OC( %s,%s )", duf_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OC( %s,%s )", muc_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
         case DUF_OFFSET_ufilter:
-          DUF_PRINTF( 0, "., DO_OU( %s,%s )", duf_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
+          DUF_PRINTF( 0, "., DO_OU( %s,%s )", muc_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
@@ -449,9 +449,9 @@ duf_xarr_print( const duf_config_cli_t * cli MAS_UNUSED, const duf_longval_exten
 /* duf_multix_print */
 /* TODO :  depends on optimpl !! */
 static void
-duf_multix_print( const duf_config_cli_t * cli MAS_UNUSED, duf_longval_extended_vtable_t ** xvtables, const char *name )
+duf_multix_print( const muc_config_cli_t * cli MAS_UNUSED, muc_longval_extended_vtable_t ** xvtables, const char *name )
 {
-  for ( duf_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
+  for ( muc_longval_extended_vtable_t ** xt = xvtables; xt && *xt; xt++ )
   {
     char *se = NULL;
     char *matchtab = NULL;
@@ -479,8 +479,8 @@ duf_multix_print( const duf_config_cli_t * cli MAS_UNUSED, duf_longval_extended_
 /* duf_stdx_print */
 /* TODO :  depends on optimpl !! */
 void
-duf_stdx_print( const duf_config_cli_t * cli, const char *name )
+duf_stdx_print( const muc_config_cli_t * cli, const char *name )
 {
 /* duf_multix_print( duf_extended_vtable_multi(  ), name ); */
-  duf_multix_print( cli, duf_cli_options_xvtable_multi( cli ), name );
+  duf_multix_print( cli, muc_cli_options_xvtable_multi( cli ), name );
 }

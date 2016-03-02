@@ -44,14 +44,14 @@ duf_get_config_puz_offset( unsigned long off )
 }
 #endif
 
-duf_config_cli_t *
+muc_config_cli_t *
 duf_get_config_cli( void )
 {
   assert( duf_config );
 #if 0
   return duf_config ? &duf_config->cli : NULL;
 #else
-  return duf_config ? ( duf_config_cli_t * ) duf_config->pcli : NULL;
+  return duf_config ?  duf_config->pcli : NULL;
 #endif
 }
 
