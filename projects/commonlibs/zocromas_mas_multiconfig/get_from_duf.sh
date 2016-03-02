@@ -12,11 +12,11 @@ function fromduf ()
   readarray -t sdeffiles <sdeffiles.txt
   if [[ -d $srcdir ]] ; then
     if pushd src &>/dev/null ; then
-      rm *.c
+#     rm *.c
       if [[ ${#scfiles[@]} -gt 0 ]] ; then
 	for (( i=0 ; $i < ${#scfiles[@]} ; i++ )) ; do
 	  echo "$i: ${scfiles[$i]##duf_}"
-	  if [[ -f "$srcdir/src/${scfiles[$i]}" ]] && cp -a "$srcdir/src/${scfiles[$i]}" "${newpref}${scfiles[$i]##duf_}" ; then
+	  if [[ -f "$srcdir/src/${scfiles[$i]}" ]] && git mv "$srcdir/src/${scfiles[$i]}" "${newpref}${scfiles[$i]##duf_}" ; then
 	      cfiles+=(${newpref}${scfiles[$i]##duf_})
 	  else
 	    echo "Error copy $srcdir/src/${scfiles[$i]}" >&2
@@ -25,11 +25,11 @@ function fromduf ()
 	done
       fi
       if pushd inc &>/dev/null ; then
-        rm *.h *.def
+#       rm *.h *.def
 	if [[ ${#shfiles[@]} -gt 0 ]] ; then
 	  for (( i=0 ; $i < ${#shfiles[@]} ; i++ )) ; do
 	    echo "$i: ${shfiles[$i]##duf_}"
-	    if [[ -f "$srcdir/src/inc/${shfiles[$i]}" ]] && cp -a "$srcdir/src/inc/${shfiles[$i]}" "${newpref}${shfiles[$i]##duf_}" ; then
+	    if [[ -f "$srcdir/src/inc/${shfiles[$i]}" ]] && git mv "$srcdir/src/inc/${shfiles[$i]}" "${newpref}${shfiles[$i]##duf_}" ; then
 	      hfiles+=(${newpref}${shfiles[$i]##duf_})
 	    else
 	      echo "Error copy $srcdir/src/inc/${shfiles[$i]}" >&2
@@ -40,7 +40,7 @@ function fromduf ()
 	if [[ ${#sdeffiles[@]} -gt 0 ]] ; then
 	  for (( i=0 ; $i < ${#sdeffiles[@]} ; i++ )) ; do
 	    echo "$i: ${sdeffiles[$i]##duf_}"
-	    if [[ -f "$srcdir/src/inc/${sdeffiles[$i]}" ]] && cp -a "$srcdir/src/inc/${sdeffiles[$i]}" "${newpref}${sdeffiles[$i]##duf_}" ; then
+	    if [[ -f "$srcdir/src/inc/${sdeffiles[$i]}" ]] && git mv "$srcdir/src/inc/${sdeffiles[$i]}" "${newpref}${sdeffiles[$i]##duf_}" ; then
 	      deffiles+=(${newpref}${sdeffiles[$i]##duf_})
 	    else
 	      echo "Error copy $srcdir/src/inc/${sdeffiles[$i]}" >&2

@@ -17,7 +17,7 @@
 #include "duf_sccb.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_defs.h"                                         /* DUF_ACTG_FLAG( summary ) */
+/* #include "duf_option_defs.h"                                         (* DUF_ACTG_FLAG( summary ) *) */
 #include "duf_optimpl_defs.h"                                         /* DUF_ACTG_FLAG( summary ) */
 
 #include "duf_pdi_global.h"

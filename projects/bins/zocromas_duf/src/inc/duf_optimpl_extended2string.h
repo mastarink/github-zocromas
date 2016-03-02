@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_OPTIMPL_EXTENDED2STRING_H
 #  define MAS_DUF_OPTIMPL_EXTENDED2STRING_H
 
-# include "duf_config_cli_types.h"                                   /* duf_config_cli_t ♠ */
+/* # include "duf_config_cli_types.h"                                   (* duf_config_cli_t ♠ *) */
 
 /* #  include "duf_option_types.h" */
 /* const char *duf_longindex_extended_name( int longindex, int *pr ); */

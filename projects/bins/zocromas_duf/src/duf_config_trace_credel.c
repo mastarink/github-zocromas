@@ -19,8 +19,8 @@
 #include "duf_config4trace_ref.h"
 #include "duf_cfg_credel.h"
 
-#include "duf_option_config.h"
-#include "duf_option_config_credel.h"
+/* #include "duf_option_config.h" */
+/* #include "duf_option_config_credel.h" */
 #include "duf_xtended_table.h"
 
 /* #include "duf_expandable.h" */

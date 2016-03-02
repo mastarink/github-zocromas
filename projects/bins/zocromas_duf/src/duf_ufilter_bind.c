@@ -17,7 +17,7 @@
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
-#include "duf_option_defs.h"
+/* #include "duf_option_defs.h" */
 #include "duf_optimpl_defs.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
 

@@ -2,7 +2,8 @@
 # define MAS_DUF_OPTABLE_DEF_H
 
 # include <mastar/multiconfig/muc_config_cli_types.h>
-# include "duf_option_types.h"                                       /* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ */
+/* # include "duf_option_types.h"                                       (* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ *) */
+#include <mastar/multiconfig/muc_option_types.h>
 # include "duf_config.h"                                             /* duf_get_config ♠ */
 # include "duf_config_pointers.h"                                    /* duf_get_(.*)_pointer */
 /*
@@ -40,8 +41,8 @@
 # define DO_SET_OCLASS(_ocl)  .oclass = _ocl
 # define DOO_SET_OCLASS(_ocl) .oclass = _ocl
 
-# define DO_CL( _cl )    DO_SET_OCLASS( DUF_OPTION_CLASS_ ## _cl )
-# define DOO_CL( _cl )  DOO_SET_OCLASS( DUF_OPTION_CLASS_ ## _cl )
+# define DO_CL( _cl )    DO_SET_OCLASS( MUC_OPTION_CLASS_ ## _cl )
+# define DOO_CL( _cl )  DOO_SET_OCLASS( MUC_OPTION_CLASS_ ## _cl )
 
 /* #  define DO_VH( _vid ) DO_V( HELP_ ## _vid ) */
 
@@ -60,14 +61,14 @@
 # define DOO_HQ( _h ) .help = _h
 # define DO_HQ( _h )  .help = _h
 
-# define DO_SET_VTYPE(_vt)  .vtype=DUF_OPTION_VTYPE_ ## _vt
-# define DOO_SET_VTYPE(_vt) .vtype=DUF_OPTION_VTYPE_ ## _vt
+# define DO_SET_VTYPE(_vt)  .vtype=MUC_OPTION_VTYPE_ ## _vt
+# define DOO_SET_VTYPE(_vt) .vtype=MUC_OPTION_VTYPE_ ## _vt
 
 # define DO_T(_vt)   DO_SET_VTYPE(_vt)
 # define DOO_T(_vt) DOO_SET_VTYPE(_vt)
 
-# define DO_SET_CALL_TYPE(_ct)  .calltype=DUF_OPTION_CALL_TYPE_ ## _ct
-# define DOO_SET_CALL_TYPE(_ct) .calltype=DUF_OPTION_CALL_TYPE_ ## _ct
+# define DO_SET_CALL_TYPE(_ct)  .calltype=MUC_OPTION_CALL_TYPE_ ## _ct
+# define DOO_SET_CALL_TYPE(_ct) .calltype=MUC_OPTION_CALL_TYPE_ ## _ct
 
 # define DOC_CT(_ct)   DO_SET_CALL_TYPE(_ct)
 # define DOOC_CT(_ct) DOO_SET_CALL_TYPE(_ct)
@@ -75,11 +76,11 @@
 # define DO_TF(_vt, ...)   DO_SET_VTYPE(_vt),  DO_ ## _vt(__VA_ARGS__)
 # define DOO_TF(_vt, ...) DOO_SET_VTYPE(_vt), DOO_ ## _vt(__VA_ARGS__)
 
-# define DO_AFFSET( _v, _styp, _fld, _offset )  .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
-# define DOO_AFFSET( _v, _styp, _fld, _offset ) .m_hasoff=1,.m_offset = _offset,   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+# define DO_AFFSET( _v, _styp, _fld, _offset )  .m_hasoff=1,.m_offset = _offset,   .relto=MUC_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+# define DOO_AFFSET( _v, _styp, _fld, _offset ) .m_hasoff=1,.m_offset = _offset,   .relto=MUC_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
 
-# define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
-# define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=DUF_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+# define DO_OFFSET( _v, _styp, _fld )  .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=MUC_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
+# define DOO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof( _styp ,_v),   .relto=MUC_OFFSET_funcptr, .reltoptr= duf_get_ ## _styp ## _pointer
 
 # define DO_AOO(_vt, _v, _styp, _fld, _offset)     DO_SET_VTYPE(_vt), DO_AFFSET( _v, _styp, _fld, _offset *sizeof( _styp ) )
 # define DOO_AOO(_vt, _v, _styp, _fld, _offset)   DOO_SET_VTYPE(_vt), DOO_AFFSET( _v, _styp, _fld, _offset *sizeof( _styp ) )
@@ -161,11 +162,11 @@
 # define DO_EIA_CALL(_f, _a)		/* DO_SET_VTYPE( EIA_CALL ), */   DO_SET_CALL_TYPE( EIA ),  DO_SET_CALLA(eia, _f, _a)
 # define DOO_EIA_CALL(_f, _a)		/* DOO_SET_VTYPE( EIA_CALL ), */ DOO_SET_CALL_TYPE( EIA ), DOO_SET_CALLA(eia, _f, _a)
 
-# define DO_EIA_CALLH(_cl)		 DO_EIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
-# define DOO_EIA_CALLH(_cl)		DOO_EIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
+# define DO_EIA_CALLH(_cl)		 DO_EIA_CALL( smart_help, MUC_OPTION_CLASS_ ## _cl)
+# define DOO_EIA_CALLH(_cl)		DOO_EIA_CALL( smart_help, MUC_OPTION_CLASS_ ## _cl)
 
-# define DO_EIA_CALLCL(_f, _cl)	 DO_EIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
-# define DOO_EIA_CALLCL(_f, _cl)	DOO_EIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
+# define DO_EIA_CALLCL(_f, _cl)	 DO_EIA_CALL( _f, MUC_OPTION_CLASS_ ## _cl)
+# define DOO_EIA_CALLCL(_f, _cl)	DOO_EIA_CALL( _f, MUC_OPTION_CLASS_ ## _cl)
 
       /* void f( int argc, char *const *argv ) ;;;; call with carg[cv] (A:argv) */
 # define DO_A_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */   DO_SET_CALL_TYPE( A ),  DO_SET_CALL(a, _f)
@@ -214,8 +215,8 @@
 # define DO_TDB( ) 	DO_SET_VTYPE( TDB )
 # define DOO_TDB( ) 	DOO_SET_VTYPE( TDB )
 
-# define DO_SET_STAGE(_min, _max)  .stage_opts.stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
-# define DOO_SET_STAGE(_min, _max) .stage_opts.stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
+# define DO_SET_STAGE(_min, _max)  .stage_opts.stage={.min= MUC_OPTION_STAGE_ ## _min, .max= MUC_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
+# define DOO_SET_STAGE(_min, _max) .stage_opts.stage={.min= MUC_OPTION_STAGE_ ## _min, .max= MUC_OPTION_STAGE_ ## _max},.stage_opts.use_stage=1
 
 # define DO_STAGES(_min, _max)   DO_SET_STAGE(_min, _max)
 # define DOO_STAGES(_min, _max)  DOO_SET_STAGE(_min, _max)
@@ -235,8 +236,8 @@
 # define DO_STG_MASK(_v)  .stage_opts.use_stage_mask=1, .stage_opts.stage_mask= _v
 # define DOO_STG_MASK(_v) .stage_opts.use_stage_mask=1, .stage_opts.stage_mask= _v
 
-# define DO_STG_NOT(_v)   DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
-# define DOO_STG_NOT(_v) DOO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
+# define DO_STG_NOT(_v)   DO_STG_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+# define DOO_STG_NOT(_v) DOO_STG_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
 
 # define DO_CMD(_otxt, _oarg, _ocode , ...)  {.o={DO_Q(_otxt), DO_A_ ## _oarg , DO_V(_ocode)}, __VA_ARGS__}
 # define DOO_CMD(_otxt, _oarg, _ocode , ...) {DOO_Q(_otxt), DOO_A_ ##  _oarg , DOO_V(_ocode), __VA_ARGS__}

@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <mastar/trace/mas_trace_credel.h>
-#include <mastar/multiconfig/muc_option_config.h>                                       /* duf_get_cli_options_trace_config ♠ */
+#include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 #include <mastar/multiconfig/muc_option_config_credel.h>
 
 #include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
@@ -22,7 +22,6 @@
 #include "duf_config4trace_ref.h"
 /* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
-
 
 #include "duf_xtended_table.h"
 
@@ -46,14 +45,13 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 /* duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_options] = 11; */
 /* duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_options] = 71; */
   duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] += 2;
-
+  T( "@=== %d:%d", DUF_TRACE_LEVEL_temp, duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] );
   duf_config4trace = duf_config;
   assert( duf_config4trace );
 #endif
 
   duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
-                                                     DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar,
-                                                     duf_config->opt.ptracecfg );
+                                             DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
 
   duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
           duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;

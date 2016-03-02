@@ -6,8 +6,8 @@
 
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_trace[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_trace[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_trace,
 	 ...
@@ -21,7 +21,7 @@ At duf_options_table.c:
 #define DUF_TRACE_OPT(_uname,_lname) DUF_TRACE_OPTT(_uname ## _TRACE, _lname)
 
 #ifdef MAS_TRACING_OPTIONS
-const duf_longval_extended_table_t optable_trace = {
+const muc_longval_extended_table_t optable_trace = {
   .name = "trace_t",
   DO_STAGE_ALL,
   .xlist =                                                           /* */

@@ -7,8 +7,8 @@
 
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_sccb[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_sccb[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_sccb,
 	 ...
@@ -17,7 +17,7 @@ At duf_options_table.c:
       };
 */
 
-const duf_longval_extended_table_t optable_sccb = {
+const muc_longval_extended_table_t optable_sccb = {
   .name = "sccb",
 /* DO_SET_STAGE( DUF_OPTION_STAGE_SETUP, DUF_OPTION_STAGE_INTERACTIVE ), */
   DO_STG_NOT( SETUP ),

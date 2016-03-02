@@ -3,8 +3,8 @@
 #include "duf_optable_def.h"
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_flag[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_flag[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_flag,
 	 ...
@@ -13,7 +13,7 @@ At duf_options_table.c:
       };
 */
 
-const duf_longval_extended_table_t optable_flag_obsolete = {
+const muc_longval_extended_table_t optable_flag_obsolete = {
   .name = "flag obsolete",
   .xlist =                                                           /* */
   {

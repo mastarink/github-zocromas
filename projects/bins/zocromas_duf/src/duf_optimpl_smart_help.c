@@ -321,10 +321,10 @@ duf_option_O_help_set( const char *arg )
               char *sl = NULL;
 
               const char *srelto[] = {
-              /* [DUF_OFFSET_config] = "config",   */
-              /* [DUF_OFFSET_ufilter] = "ufilter", */
-                [DUF_OFFSET_funcptr] = "funcptr",
-                [DUF_OFFSET_varptr] = "varptr",
+              /* [MUC_OFFSET_config] = "config",   */
+              /* [MUC_OFFSET_ufilter] = "ufilter", */
+                [MUC_OFFSET_funcptr] = "funcptr",
+                [MUC_OFFSET_varptr] = "varptr",
               };
               sl = muc_optstages_list( duf_get_config_cli(  ), xtended, xvtable );
               if ( ashown[codeval] <= 0 )

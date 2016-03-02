@@ -5,8 +5,8 @@
 
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_sflag[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_sflag[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_sflag,
 	 ...
@@ -15,7 +15,7 @@ At duf_options_table.c:
       };
 */
 
-const duf_longval_extended_table_t optable_sflag = {
+const muc_longval_extended_table_t optable_sflag = {
   .name = "sflag",
   .xlist =                                                           /* */
   {

@@ -22,8 +22,8 @@
 #include "duf_config_util.h"
 #include "duf_config_output_util.h"
 
-#include "duf_option_descr.h"
-#include "duf_option_names.h"
+/* #include "duf_option_descr.h" */
+/* #include "duf_option_names.h" */
 
 
 /* ###################################################################### */

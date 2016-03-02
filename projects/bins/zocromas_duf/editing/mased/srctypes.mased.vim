@@ -61,7 +61,7 @@ tab sfind duf_config_opt_debug_types.h
 tab sfind duf_config_trace_types.h
 tab sfind duf_config_trace_enum.h
 
-tab sfind duf_config_cli_types.h
+" tab sfind duf_config_cli_types.h
 tab sfind duf_config_flow_types.h
 tab sfind duf_config_db_types.h
 tab sfind duf_config_act_types.h
@@ -71,19 +71,20 @@ tab sfind duf_config_opt_types.h
 tab sfind duf_config_output_types.h
 sfind duf_format_types.h
 
-tab sfind duf_option_types.h
-sfind duf_option_data_types.h
-sfind duf_option_fun_types.h
-sfind duf_option_class_types.h
-sfind duf_option_defs.h
-
 tab sfind duf_optimpl_enum.h
-tab sfind duf_option_source_types.h
-tab sfind duf_option_stage_types.h
 
-tab sfind duf_option_vtype_enum.def
-sfind duf_option_call_type_enum.def
-sfind duf_option_class_enum.def
+" tab sfind duf_option_types.h
+" sfind duf_option_data_types.h
+" sfind duf_option_fun_types.h
+" sfind duf_option_class_types.h
+" sfind duf_option_defs.h
+"
+" tab sfind duf_option_source_types.h
+" tab sfind duf_option_stage_types.h
+"
+" tab sfind duf_option_vtype_enum.def
+" sfind duf_option_call_type_enum.def
+" sfind duf_option_class_enum.def
 
 
 

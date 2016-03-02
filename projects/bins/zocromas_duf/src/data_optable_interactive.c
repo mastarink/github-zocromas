@@ -7,8 +7,8 @@
 
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_interactive[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_interactive[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_interactive,
 	 ...
@@ -23,7 +23,7 @@ void duf_list_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak )
 void duf_add_targ( int *targc, char ***targv, const char *s ) __attribute__ ( ( weak ) );
 void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak ) );
 */
-const duf_longval_extended_table_t optable_interactive = {
+const muc_longval_extended_table_t optable_interactive = {
   .name = "interactive",
 /* DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ), */
   .xlist =                                                           /* */

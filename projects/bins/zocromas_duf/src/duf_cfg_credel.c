@@ -19,8 +19,8 @@
 
 #include "duf_ufilter.h"
 
-#include "duf_option_names.h"
-#include "duf_option_config_credel.h"
+/* #include "duf_option_names.h" */
+/* #include "duf_option_config_credel.h" */
 
 /* ###################################################################### */
 #include "duf_cfg_credel.h"

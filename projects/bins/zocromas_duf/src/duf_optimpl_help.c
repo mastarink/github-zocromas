@@ -33,13 +33,13 @@
 #include "duf_xtended_table.h"
 
 
-#include "duf_option_descr.h"
-#include "duf_option_stage.h"                                        /* duf_optstage_name ♠ */
+/* #include "duf_option_descr.h" */
+/* #include "duf_option_stage.h"                                        (* duf_optstage_name ♠ *) */
 /* #include "duf_option_extended.h" */
 
-#include "duf_option_names.h"                                        /* duf_coption_names_d etc... ♠ */
-#include "duf_option_class.h"                                        /* duf_optclass2string ♠ */
-#include "duf_option_config.h"                                       /* duf_get_cli_options_trace_config ♠ */
+/* #include "duf_option_names.h"                                        (* duf_coption_names_d etc... ♠ *) */
+/* #include "duf_option_class.h"                                        (* duf_optclass2string ♠ *) */
+/* #include "duf_option_config.h"                                       (* duf_get_cli_options_trace_config ♠ *) */
 
 #include "duf_optimpl_enum.h"
 #include "duf_optimpl_extended2string.h"
@@ -49,34 +49,34 @@
 /* ###################################################################### */
 
 #if 0
-# define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
+# define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=MUC_OPTION_CLASS_ ## codename;
 /*
  * if arg is help option
  * return class id for options to display the help
  * */
 static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( duf_option_code_t codeval )
 {
-  duf_option_class_t rv = DUF_OPTION_CLASS_BAD;
+  duf_option_class_t rv = MUC_OPTION_CLASS_BAD;
 
 /*
-  DUF_OPTION_CLASS_NONE,
+  MUC_OPTION_CLASS_NONE,
 
-  DUF_OPTION_CLASS_HELP,
-  DUF_OPTION_CLASS_TEST,
-  DUF_OPTION_CLASS_SYSTEM,
-  DUF_OPTION_CLASS_CONTROL,
-  DUF_OPTION_CLASS_REFERENCE,
-  DUF_OPTION_CLASS_COLLECT,
-  DUF_OPTION_CLASS_SCAN,
-  DUF_OPTION_CLASS_UPDATE,
-  DUF_OPTION_CLASS_REQUEST,
-  DUF_OPTION_CLASS_PRINT,
+  MUC_OPTION_CLASS_HELP,
+  MUC_OPTION_CLASS_TEST,
+  MUC_OPTION_CLASS_SYSTEM,
+  MUC_OPTION_CLASS_CONTROL,
+  MUC_OPTION_CLASS_REFERENCE,
+  MUC_OPTION_CLASS_COLLECT,
+  MUC_OPTION_CLASS_SCAN,
+  MUC_OPTION_CLASS_UPDATE,
+  MUC_OPTION_CLASS_REQUEST,
+  MUC_OPTION_CLASS_PRINT,
   
-  DUF_OPTION_CLASS_TRACE,
-  DUF_OPTION_CLASS_DEBUG,
-  DUF_OPTION_CLASS_OBSOLETE,
-  DUF_OPTION_CLASS_NODESC,
-  DUF_OPTION_CLASS_OTHER,
+  MUC_OPTION_CLASS_TRACE,
+  MUC_OPTION_CLASS_DEBUG,
+  MUC_OPTION_CLASS_OBSOLETE,
+  MUC_OPTION_CLASS_NODESC,
+  MUC_OPTION_CLASS_OTHER,
 
 */
 
@@ -115,7 +115,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
     DUF_H2C( ALL, rv );
     break;
   case DUF_OPTION_SMART_HELP:
-    rv = DUF_OPTION_CLASS_ANY;
+    rv = MUC_OPTION_CLASS_ANY;
     break;
   default:
     break;

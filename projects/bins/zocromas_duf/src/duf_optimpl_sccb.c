@@ -32,7 +32,7 @@
 #include "duf_path2dirid.h"
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
-#include "duf_options_file.h"
+/* #include "duf_options_file.h" */
 
 /* ###################################################################### */
 #include "duf_optimpl_sccb.h"
@@ -126,7 +126,7 @@ SR( SNIPPET_OPTION, option_O_call_file, const char *name )
 /* DUF_STARTR( r ); */
 /* int r MAS_UNUSED = 0; */
 
-  muc_CR( infile_options_at_filepath, duf_get_config_cli(  ), DUF_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
+  muc_CR( infile_options_at_filepath, duf_get_config_cli(  ), MUC_OPTION_STAGE_ANY /* FIXME should be current stage! */ , name,
       ( muc_option_adata_t * ) NULL /* paod */  );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, option_O_call_file, const char *name );

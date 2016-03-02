@@ -162,8 +162,8 @@ cb_prompt_interactive( void )
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
-  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), DUF_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
+  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
+  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive );
 
   MAST_TRACE( any, 1, "any test" );
   MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );

@@ -27,7 +27,7 @@
 /* TODO rename file ...... */
 
 static const char *
-offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
+offset2stringid( unsigned offset MAS_UNUSED, muc_offset_to_t relto MAS_UNUSED )
 {
   const char *rs = NULL;
 
@@ -35,11 +35,11 @@ offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
 
   switch ( relto )
   {
-  case DUF_OFFSET_varptr:
-  case DUF_OFFSET_funcptr:
-  case DUF_OFFSET_none:
+  case MUC_OFFSET_varptr:
+  case MUC_OFFSET_funcptr:
+  case MUC_OFFSET_none:
     break;
-  case DUF_OFFSET_config:
+  case MUC_OFFSET_config:
     {
       switch ( offset )
       {
@@ -150,7 +150,7 @@ offset2stringid( unsigned offset MAS_UNUSED, duf_offset_to_t relto MAS_UNUSED )
         break;
       }
     }
-  case DUF_OFFSET_ufilter:
+  case MUC_OFFSET_ufilter:
     {
       switch ( offset )
       {
@@ -320,15 +320,15 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
 
           switch ( xtended->relto )
           {
-          case DUF_OFFSET_varptr:
-          case DUF_OFFSET_funcptr:
-          case DUF_OFFSET_none:
+          case MUC_OFFSET_varptr:
+          case MUC_OFFSET_funcptr:
+          case MUC_OFFSET_none:
             break;
 #if 0
-          case DUF_OFFSET_config:
+          case MUC_OFFSET_config:
             srelto = "config";
             break;
-          case DUF_OFFSET_ufilter:
+          case MUC_OFFSET_ufilter:
             srelto = "ufilter";
             break;
 #endif
@@ -353,40 +353,40 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
 #if 0
       switch ( xtended->vtype )
       {
-      case DUF_OPTION_VTYPE_EIA_CALL:
+      case MUC_OPTION_VTYPE_EIA_CALL:
         DUF_PRINTF( 0, "  func:%p(%d)", xtended->call.fdesc.eia.func, xtended->call.fdesc.eia.arg );
         break;
-      case DUF_OPTION_VTYPE_EV_CALL:
+      case MUC_OPTION_VTYPE_EV_CALL:
         DUF_PRINTF( 0, "  func:%p( )", xtended->call.fdesc.ev.func );
         break;
-      case DUF_OPTION_VTYPE_SAS_CALL:
+      case MUC_OPTION_VTYPE_SAS_CALL:
         DUF_PRINTF( 0, "  func:%p(%s)", xtended->call.fdesc.sas.func, xtended->call.fdesc.sas.arg );
         break;
-      case DUF_OPTION_VTYPE_SAN_CALL:
+      case MUC_OPTION_VTYPE_SAN_CALL:
         DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.san.func, xtended->call.fdesc.san.arg );
         break;
-      case DUF_OPTION_VTYPE_A_CALL:
+      case MUC_OPTION_VTYPE_A_CALL:
         DUF_PRINTF( 0, "  func:%p(..._cli_options_get_carg(duf_get_config_cli())->argc,..._cli_options_get_carg(duf_get_config_cli())->argv)",
                     xtended->call.fdesc.a.func );
         break;
-      case DUF_OPTION_VTYPE_N_CALL:
+      case MUC_OPTION_VTYPE_N_CALL:
       /* int rxx MAS_UNUSED = 0; */
       /* DUF_PRINTF( 0, "  func:%p(%ld)", xtended->call.fdesc.n.func, mas_strtol_suff( optargg, &rxx ) ); */
         DUF_PRINTF( 0, "  func:%p(mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.n.func );
         break;
-      case DUF_OPTION_VTYPE_S_CALL:
+      case MUC_OPTION_VTYPE_S_CALL:
         DUF_PRINTF( 0, "  func:%p(optargg)", xtended->call.fdesc.s.func );
         break;
-      case DUF_OPTION_VTYPE_AA_CALL:
+      case MUC_OPTION_VTYPE_AA_CALL:
         DUF_PRINTF( 0, "  func:%p(..._cli_options_get_carg(duf_get_config_cli()))", xtended->call.fdesc.aa.func );
         break;
-      case DUF_OPTION_VTYPE_TN1_CALL:
+      case MUC_OPTION_VTYPE_TN1_CALL:
         DUF_PRINTF( 0, "  func:%p(..._cli_options_get_targ(duf_get_config_cli()), mas_strtol_suff( optargg, &r ))", xtended->call.fdesc.tn1.func );
         break;
-      case DUF_OPTION_VTYPE_TS1_CALL:
+      case MUC_OPTION_VTYPE_TS1_CALL:
         DUF_PRINTF( 0, "  func:%p(..._cli_options_get_targ(duf_get_config_cli()), optargg)", xtended->call.fdesc.ts1.func );
         break;
-      case DUF_OPTION_VTYPE_TS2_CALL:
+      case MUC_OPTION_VTYPE_TS2_CALL:
         DUF_PRINTF( 0, "  func:%p(..._cli_options_get_ptargc(duf_get_config_cli()), ..._cli_options_get_ptargv(duf_get_config_cli()), optargg)",
                     xtended->call.fdesc.ts2.func );
         break;
@@ -419,17 +419,17 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
       {
         switch ( xtended->relto )
         {
-        case DUF_OFFSET_varptr:
-        case DUF_OFFSET_funcptr:
-        case DUF_OFFSET_none:
+        case MUC_OFFSET_varptr:
+        case MUC_OFFSET_funcptr:
+        case MUC_OFFSET_none:
           break;
 #if 0
-        case DUF_OFFSET_config:
+        case MUC_OFFSET_config:
           DUF_PRINTF( 0, "., DO_OC( %s,%s )", muc_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );
           break;
-        case DUF_OFFSET_ufilter:
+        case MUC_OFFSET_ufilter:
           DUF_PRINTF( 0, "., DO_OU( %s,%s )", muc_optvtype2string( xtended->vtype ), offset2stringid( xtended->m_offset, xtended->relto ) );
           if ( xtended->afl.bit )
             DUF_PRINTF( 0, "., DO_FL( %s,%s )", "??", "??" );

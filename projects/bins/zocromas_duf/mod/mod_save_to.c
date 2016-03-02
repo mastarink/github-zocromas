@@ -35,7 +35,7 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
-#include "duf_option_defs.h"
+/* #include "duf_option_defs.h" */
 
 /* #include "duf_dbg.h" */
 #include "duf_mod_defs.h"

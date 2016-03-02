@@ -8,8 +8,8 @@
 #include "duf_optimpl_version.h"
 /*
 At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_info[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+  1. extern const muc_longval_extended_table_t optable_info[];
+  2.  static const muc_longval_extended_table_t *_lo_extended_multi[] = {
          ...
 	optable_info,
 	 ...
@@ -17,7 +17,7 @@ At duf_options_table.c:
 	NULL
       };
 */
-const duf_longval_extended_table_t optable_info = {
+const muc_longval_extended_table_t optable_info = {
   .name = "info",
   .xlist =                                                           /* */
   {

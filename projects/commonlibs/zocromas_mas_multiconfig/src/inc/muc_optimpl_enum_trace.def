@@ -1,0 +1,22 @@
+#ifdef ENUM_WRAPP
+  /* trace */
+  ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
+  ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
+  ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary		)
+  ENUM_WRAPP(TEMP_TRACE, trace, temp				)
+
+  ENUM_WRAPP(ERRORS_ANY, trace, any			)
+  ENUM_WRAPP(ERRORS_EXPLAIN, trace, explain			)
+  ENUM_WRAPP(ERRORS_FINDOPT, trace, findopt			)
+  ENUM_WRAPP(ERRORS_IO, trace, io			)
+  ENUM_WRAPP(ERRORS_OPTIONS, trace, options			)
+  ENUM_WRAPP(ERRORS_OPTSOURCE, trace, optsource			)
+  ENUM_WRAPP(ERRORS_OPTSTAGE, trace, optstage			)
+  ENUM_WRAPP(ERRORS_PATH, trace, path			)
+
+  ENUM_WRAPP(MAX, trace, MAX					)
+
+#endif
+/*
+vi: ft=c
+*/
