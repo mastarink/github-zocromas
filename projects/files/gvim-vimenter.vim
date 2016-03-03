@@ -96,6 +96,7 @@ endif
 
 nnoremap <A-F4> "=expand("%:t")<CR>p
 inoremap <A-F4> <C-R>=expand("%:t")<CR>
+map! <M-F4> <C-R>=expand("%:t")<CR>
 
 " let shn_doall="shn/doall.sh"
 " if filereadable(shn_doall)

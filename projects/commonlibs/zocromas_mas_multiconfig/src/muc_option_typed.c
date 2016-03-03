@@ -15,9 +15,6 @@
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-/* #include "muc_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "muc_errorn_defs.h"                                         (* DUF_NOERROR; MUC_CLEAR_ERROR; DUF_E_(LOWER|UPPER); MUC_TEST_R ... ♠ *) */
-
 #include "muc_se_only.h"                                             /* Only muc_DR; muc_SR; muc_ER; muc_CR; muc_QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
@@ -33,7 +30,7 @@
 /* ###################################################################### */
 
 muc_SR( OPTIONS, xoption_clarify_typed, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-    const muc_longval_extended_vtable_t * xvtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source )
+        const muc_longval_extended_vtable_t * xvtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source )
 {
 
 #if 0
@@ -78,5 +75,5 @@ muc_SR( OPTIONS, xoption_clarify_typed, muc_config_cli_t * cli, const muc_longva
   }
 
   muc_ER( OPTIONS, xoption_clarify_typed, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-      const muc_longval_extended_vtable_t * xvtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source );
+          const muc_longval_extended_vtable_t * xvtable, unsigned noo, muc_option_stage_t istage, muc_option_source_t source );
 }

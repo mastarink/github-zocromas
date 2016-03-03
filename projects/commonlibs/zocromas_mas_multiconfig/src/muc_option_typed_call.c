@@ -16,9 +16,6 @@
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-/* #include "muc_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "muc_errorn_defs.h"                                         (* DUF_NOERROR; MUC_CLEAR_ERROR; DUF_E_(LOWER|UPPER); MUC_TEST_R ... ♠ *) */
-
 #include "muc_se_only.h"                                             /* Only muc_DR; muc_SR; muc_ER; muc_CR; muc_QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
@@ -31,7 +28,7 @@
 /* ###################################################################### */
 
 muc_SR( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-    unsigned noo, muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED )
+        unsigned noo, muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED )
 {
 
   switch ( extended->calltype )
@@ -68,7 +65,7 @@ muc_SR( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_l
         ERRMAKE( NO_FUNC );
     }
 #else
-    muc_IF_CRV( extended->call.fdesc.ev.func );                          /* fixed no arg */
+    muc_IF_CRV( extended->call.fdesc.ev.func );                      /* fixed no arg */
 #endif
   /* ERRMAKE(OPTION_NOT_CLARIFIED ); */
     break;
@@ -139,7 +136,7 @@ muc_SR( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_l
         ERRMAKE( NO_FUNC );
     }
 #else
-    muc_IF_CRV( extended->call.fdesc.s.func, optargg );                  /* optarg */
+    muc_IF_CRV( extended->call.fdesc.s.func, optargg );              /* optarg */
 #endif
   /* ERRMAKE(OPTION_NOT_CLARIFIED ); */
     break;
@@ -188,7 +185,7 @@ muc_SR( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_l
     assert( &muc_cli_options_get_targ( cli )->argc == muc_cli_options_get_ptargc( cli ) );
     assert( &muc_cli_options_get_targ( cli )->argv == muc_cli_options_get_ptargv( cli ) );
     muc_IF_CRV( extended->call.fdesc.tn2.func, muc_cli_options_get_ptargc( cli ), muc_cli_options_get_ptargv( cli ),
-            mas_strtol_suff( optargg, QPERRIND ) );
+                mas_strtol_suff( optargg, QPERRIND ) );
     ERRMAKE( OPTION_NOT_CLARIFIED );
     break;
 #endif
@@ -211,5 +208,5 @@ muc_SR( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_l
   }
 
   muc_ER( OPTIONS, xoption_clarify_typed_call, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg,
-      unsigned noo, muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED );
+          unsigned noo, muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED );
 }

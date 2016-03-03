@@ -1,7 +1,8 @@
 #ifndef MAS_MUC_OPTION_STAGE_TYPES_H
 # define MAS_MUC_OPTION_STAGE_TYPES_H
 
-typedef enum
+/* style verified 20160302.170208 */
+enum muc_option_stage_e
 {
   MUC_OPTION_STAGE_NONE = 0,
   MUC_OPTION_STAGE_MIN = 1,
@@ -20,23 +21,26 @@ typedef enum
   MUC_OPTION_STAGE_MAX = MUC_OPTION_STAGE_INTERACTIVE,
   MUC_OPTION_STAGE_ANY = 8888888,
   MUC_OPTION_STAGE_ALL = 9999999,
-} muc_option_stage_t;
+};
+typedef enum muc_option_stage_e muc_option_stage_t;
 
-typedef struct
+/* style verified 20160302.170208 */
+struct muc_limits_stage_s
 {
 /* unsigned flag:1; ??? */
   muc_option_stage_t min;
   muc_option_stage_t max;
-} muc_limits_stage_t;
+};
+typedef struct muc_limits_stage_s muc_limits_stage_t;
 
-typedef struct muc_extended_stageopts_s
+/* style verified 20160302.170208 */
+struct muc_extended_stageopts_s
 {
   unsigned use_stage:1;
   unsigned use_stage_mask:1;
   muc_limits_stage_t stage;
   unsigned long stage_mask;
-} muc_extended_stageopts_t;
-
-
+};
+typedef struct muc_extended_stageopts_s muc_extended_stageopts_t;
 
 #endif

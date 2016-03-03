@@ -9,9 +9,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-/* #include "muc_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "muc_errorn_defs.h"                                         (* DUF_NOERROR; MUC_CLEAR_ERROR; DUF_E_(LOWER|UPPER); MUC_TEST_R ... ♠ *) */
-
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 /* ###################################################################### */
 #include "muc_option_lfind.h"

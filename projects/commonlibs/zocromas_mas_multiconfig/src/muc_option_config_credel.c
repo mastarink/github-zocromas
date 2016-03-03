@@ -11,9 +11,6 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
-/* #include "muc_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "muc_errorn_defs.h"                                         (* DUF_NOERROR; MUC_CLEAR_ERROR; DUF_E_(LOWER|UPPER); MUC_TEST_R ... ♠ *) */
-
 #include "muc_option_longopts.h"                                     /* muc_options_create_longopts_table ♠ */
 
 #include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */

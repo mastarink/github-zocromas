@@ -19,9 +19,6 @@
 
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-/* #include "muc_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "muc_errorn_defs.h"                                         (* DUF_NOERROR; MUC_CLEAR_ERROR; DUF_E_(LOWER|UPPER); MUC_TEST_R ... ♠ *) */
-
 #include "muc_se_only.h"                                             /* Only muc_DR; muc_SR; muc_ER; muc_CR; muc_QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
@@ -134,7 +131,7 @@ muc_SRP( OPTIONS, FILE *, f = NULL, infile, muc_config_cli_t * cli MAS_UNUSED, i
 
 static
 muc_SR( OPTIONS, infile_options_at_stream, muc_config_cli_t * cli, muc_option_stage_t istage, FILE * f, muc_option_source_t source,
-    muc_option_adata_t * paod )
+        muc_option_adata_t * paod )
 {
 
   MAST_TRACE( options, 20, "@@@@stream options; stage:%s; source:%s", muc_optstage_name( cli, istage ), muc_optsource_name( cli, source ) );
@@ -169,7 +166,7 @@ muc_SR( OPTIONS, infile_options_at_stream, muc_config_cli_t * cli, muc_option_st
               muc_optsource_name( cli, source ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, infile_options_at_stream, muc_config_cli_t * cli, muc_option_stage_t istage, FILE * f, muc_option_source_t source,
-      muc_option_adata_t * paod );
+          muc_option_adata_t * paod );
 }
 
 muc_SR( OPTIONS, infile_options_at_filepath, muc_config_cli_t * cli, muc_option_stage_t istage, const char *filepath, muc_option_adata_t * paod )
@@ -208,7 +205,7 @@ muc_SR( OPTIONS, infile_options_at_filepath, muc_config_cli_t * cli, muc_option_
  * */
 static
 muc_SR( OPTIONS, infile_options_at_dir_and_file, muc_config_cli_t * cli, muc_option_stage_t istage, const char *cfgdir, const char *filename, int v,
-    int optional, muc_option_source_t source, muc_option_adata_t * paod )
+        int optional, muc_option_source_t source, muc_option_adata_t * paod )
 {
 
   FILE *f = NULL;
@@ -261,7 +258,7 @@ muc_SR( OPTIONS, infile_options_at_dir_and_file, muc_config_cli_t * cli, muc_opt
               cfgdir, filename, muc_optsource_name( cli, source ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, infile_options_at_dir_and_file, muc_config_cli_t * cli, muc_option_stage_t istage, const char *cfgdir, const char *filename, int v,
-      int optional, muc_option_source_t source, muc_option_adata_t * paod );
+          int optional, muc_option_source_t source, muc_option_adata_t * paod );
 }
 
 /* 20150122
@@ -269,7 +266,7 @@ muc_SR( OPTIONS, infile_options_at_dir_and_file, muc_config_cli_t * cli, muc_opt
  * */
 static
 muc_SR( OPTIONS, infile_options_at_cfgfile, muc_config_cli_t * cli, muc_option_stage_t istage, const char *filename, int optional,
-    muc_option_adata_t * paod, muc_option_source_code_t sourcecode )
+        muc_option_adata_t * paod, muc_option_source_code_t sourcecode )
 {
 
   muc_option_source_t source = MUC_OPTION_SOURCE_LABELLED( CFG, filename );
@@ -285,7 +282,7 @@ muc_SR( OPTIONS, infile_options_at_cfgfile, muc_config_cli_t * cli, muc_option_s
   MAST_TRACE( options, 22, "@@@@cfgfile options done; stage:%s; filename:%s (%d:%s)", muc_optstage_name( cli, istage ), filename, QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, infile_options_at_cfgfile, muc_config_cli_t * cli, muc_option_stage_t istage, const char *filename, int optional,
-      muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
 }
 
 /*
@@ -293,7 +290,7 @@ muc_SR( OPTIONS, infile_options_at_cfgfile, muc_config_cli_t * cli, muc_option_s
  * */
 static
 muc_SR( OPTIONS, incfgf_options, muc_config_cli_t * cli, muc_option_stage_t istage, const char *bfilename, const char *bsuffix, int optional,
-    muc_option_adata_t * paod, muc_option_source_code_t sourcecode )
+        muc_option_adata_t * paod, muc_option_source_code_t sourcecode )
 {
 
   char *filename;
@@ -315,26 +312,27 @@ muc_SR( OPTIONS, incfgf_options, muc_config_cli_t * cli, muc_option_stage_t ista
               QERRNAME );
 
   muc_ER( OPTIONS, incfgf_options, muc_config_cli_t * cli, muc_option_stage_t istage, const char *bfilename, const char *bsuffix, int optional,
-      muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
 }
 
 muc_SR( OPTIONS, source_incfg_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive
-    MAS_UNUSED, muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        MAS_UNUSED, muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod,
+        muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
   MAST_TRACE( optsource, 0, "@   source:%s", muc_optsourcecode_name( cli, sourcecode ) );
   MAST_TRACE( options, 20, "@@@@incfg options; stage:%s", muc_optstage_name( cli, istage ) );
   muc_CR( incfgf_options, cli, istage, muc_cli_options_config_file_name( cli ), NULL, !cli->mandatory_config /* optional */ , paod,
-      MUC_OPTION_SOURCE_NONE /* use default: MUC_OPTION_SOURCE_CFG */  );
+          MUC_OPTION_SOURCE_NONE /* use default: MUC_OPTION_SOURCE_CFG */  );
   MAST_TRACE( options, 22, "@@@@incfg options done; stage:%s (%d:%s)", muc_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, source_incfg_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive
-      MAS_UNUSED, muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod,
-      muc_option_source_code_t sourcecode MAS_UNUSED );
+          MAS_UNUSED, muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod,
+          muc_option_source_code_t sourcecode MAS_UNUSED );
 }
 
 muc_SR( OPTIONS, source_incfg_last_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-    muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
   MAST_TRACE( optsource, 0, "@   source:%s", muc_optsourcecode_name( cli, sourcecode ) );
@@ -343,12 +341,12 @@ muc_SR( OPTIONS, source_incfg_last_parse, muc_config_cli_t * cli, muc_option_sta
   MAST_TRACE( options, 22, "@@@@incfg `last` options done; stage:%s (%d:%s)", muc_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, source_incfg_last_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-      muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
 }
 
 /* per-stage config */
 muc_SR( OPTIONS, source_incfg_stg_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-    muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
   MAST_TRACE( optsource, 0, "@@@  source:%s", muc_optsourcecode_name( cli, sourcecode ) );
@@ -365,11 +363,11 @@ muc_SR( OPTIONS, source_incfg_stg_parse, muc_config_cli_t * cli, muc_option_stag
   MAST_TRACE( options, 22, "@@@@incfg stg options done; stage:%s (%d:%s)", muc_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, source_incfg_stg_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-      muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED );
+          muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED );
 }
 
 muc_SR( OPTIONS, source_stdin_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-    muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
   static int done = 0;
@@ -396,11 +394,11 @@ muc_SR( OPTIONS, source_stdin_parse, muc_config_cli_t * cli, muc_option_stage_t 
   MAST_TRACE( options, 22, "@@@@stdin options done; stage:%s (%d:%s)", muc_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, source_stdin_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive,
-      muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          muc_cpchar_void_func_t cb_prompt_interactive, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
 }
 
 muc_SR( OPTIONS, source_indirect_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-    muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
   MAST_TRACE( optsource, 0, "@   source:%s", muc_optsourcecode_name( cli, sourcecode ) );
@@ -419,7 +417,7 @@ muc_SR( OPTIONS, source_indirect_parse, muc_config_cli_t * cli, muc_option_stage
       const char *fname = cf + 1;
 
       muc_CR( infile_options_at_dir_and_file, cli, istage, muc_cli_options_commands_dir( cli ), fname, 0, 0,
-          MUC_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
+              MUC_OPTION_SOURCE_LABELLED( DUFFILE, fname ), paod );
 
       MAST_TRACE( temp, 2, "%s>> (%d) done targv[%d]='%s'", muc_optstage_name( cli, istage ), QERRIND, ia, cf );
     }
@@ -427,5 +425,5 @@ muc_SR( OPTIONS, source_indirect_parse, muc_config_cli_t * cli, muc_option_stage
   MAST_TRACE( options, 22, "@@@@indirect options done; stage:%s (%d:%s)", muc_optstage_name( cli, istage ), QERRIND, QERRNAME );
 
   muc_ER( OPTIONS, source_indirect_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive MAS_UNUSED,
-      muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
+          muc_cpchar_void_func_t cb_prompt_interactive MAS_UNUSED, muc_option_adata_t * paod, muc_option_source_code_t sourcecode );
 }

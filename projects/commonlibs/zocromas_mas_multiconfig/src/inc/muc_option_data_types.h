@@ -1,7 +1,7 @@
 #ifndef MAS_MUC_OPTION_DATA_TYPES_H
 # define MAS_MUC_OPTION_DATA_TYPES_H
 
-/* #include "muc_config_cli_types.h" */
+# include "muc_option_stage_types.h"                                 /* muc_option_stage_t ; muc_limits_stage_t; muc_extended_stageopts_t */
 struct muc_config_cli_s;
 
 /* typedef struct muc_config_cli_s muc_config_cli_t; */
@@ -10,7 +10,7 @@ typedef int ( *muc_xclarifier_t ) ( struct muc_config_cli_s * cli, const muc_lon
                                     const muc_longval_extended_vtable_t * xvtable, unsigned noo, muc_option_stage_t istage,
                                     muc_option_source_t source );
 
-typedef struct
+struct muc_option_data_s
 {
   unsigned string_split:1;
   unsigned noo:1;
@@ -31,9 +31,10 @@ typedef struct
   muc_found_extended_array_t xfound;
   signed long doindex;
   unsigned clarified[MUC_OPTION_STAGE_MAX + 1];
-} muc_option_data_t;
+};
+typedef struct muc_option_data_s muc_option_data_t;
 
-typedef struct
+struct muc_option_adata_s
 {
   size_t size;
   size_t count;
@@ -44,6 +45,7 @@ typedef struct
   size_t stage_count[MUC_OPTION_STAGE_MAX + 1];
   size_t source_index[MUC_OPTION_STAGE_MAX + 1][MUC_OPTION_SOURCE_MAX + 1];
   size_t source_count[MUC_OPTION_STAGE_MAX + 1][MUC_OPTION_SOURCE_MAX + 1];
-} muc_option_adata_t;
+};
+typedef struct muc_option_adata_s muc_option_adata_t;
 
 #endif
