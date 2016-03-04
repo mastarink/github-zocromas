@@ -13,6 +13,18 @@ if isdirectory(mas_localvimdirs)
   set undolevels=10000
   set virtualedit=block
 
+  if exists('g:loaded_gitgutter')
+    GitGutterSignsEnable
+    GitGutterLineHighlightsEnable
+    set number
+    hi LineNr guibg=black
+    hi GitGutterChange        guifg=yellow  guibg=#102510
+    hi GitGutterAdd           guifg=yellow  guibg=#102510
+    hi GitGutterDelete        guifg=yellow  guibg=#102510
+    hi GitGutterChangeDelete  guifg=yellow  guibg=#106510
+    hi CursorLineNr guifg=yellow  guibg=#102510
+    hi SignColumn guibg=#101510
+  endif
   if exists('v:servername')
     let mas_gvimworkbase=mas_localvimdirs . '.gvim/'
     let mas_gvimwork=mas_gvimworkbase . strftime( "%Y%m%d" ) . '/'
@@ -96,7 +108,7 @@ endif
 
 nnoremap <A-F4> "=expand("%:t")<CR>p
 inoremap <A-F4> <C-R>=expand("%:t")<CR>
-map! <M-F4> <C-R>=expand("%:t")<CR>
+noremap! <M-F4> <C-R>=expand("%:t")<CR>
 
 " let shn_doall="shn/doall.sh"
 " if filereadable(shn_doall)

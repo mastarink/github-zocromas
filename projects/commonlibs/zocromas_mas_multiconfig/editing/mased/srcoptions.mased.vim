@@ -2,7 +2,7 @@ tab sfind muc_base_output_types.h
 sfind muc_config_cli_types.h
 sfind muc_config_output_weak.h
 sfind muc_config_trace_enum.h
-sfind muc_config_trace_types.h
+" sfind muc_config_trace_types.h
 sfind muc_errorn_defs_preset.h
 sfind muc_fun_types.h
 sfind muc_option_fun_types.h

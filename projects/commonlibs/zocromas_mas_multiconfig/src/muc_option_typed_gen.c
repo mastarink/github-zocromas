@@ -76,7 +76,7 @@ muc_open_file_special( muc_config_cli_t * cli, const char *pname, char **popened
   return newfile;
 }
 #else
-muc_SRP( OPTIONS, FILE *, newfile = NULL, open_file_special, muc_config_cli_t * cli, const char *pname, char **popenedname, int overwrite )
+muc_SRP( OPTIONS, FILE *, newfile, NULL, open_file_special, muc_config_cli_t * cli, const char *pname, char **popenedname, int overwrite )
 {
 /* int rpr = 0; */
 /* FILE *newfile = NULL; */
@@ -103,12 +103,16 @@ muc_SRP( OPTIONS, FILE *, newfile = NULL, open_file_special, muc_config_cli_t * 
   else
   {
     newfile = fopen( pname, mode );
+# if 0
     if ( !newfile )
     {
       ERRMAKE_M( OPEN, "can't open file %s", pname );
     }
+# else
+    ERRMAKE_IF_M( !newfile, OPEN, "can't open file %s", pname );
+# endif
   }
-  muc_ERP( OPTIONS, FILE *, newfile, open_file_special, muc_config_cli_t * cli, const char *pname, char **popenedname, int overwrite );
+  muc_ERP( OPTIONS, FILE *, newfile, NULL, open_file_special, muc_config_cli_t * cli, const char *pname, char **popenedname, int overwrite );
 }
 #endif
 /*  20150924.120214 for MUC_OUTPUTFILE MUC_OUTPUTFILE_A */

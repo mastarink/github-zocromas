@@ -17,6 +17,7 @@ sfind duf_sql_types.h
 
 tab sfind duf_sql_defs.h 
 sfind duf_sql_stmt_defs.h 
+sfind duf_sql_se_stmt_defs.h 
 " sfind duf_sql_const.h
 
 " tab sfind duf_sqlite.c

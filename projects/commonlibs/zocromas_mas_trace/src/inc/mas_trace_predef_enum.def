@@ -1,0 +1,10 @@
+#ifdef ENUM_WRAPP
+  /* trace */
+  ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
+  ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
+  ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary			)
+  ENUM_WRAPP(TEMP, trace, temp					)
+#endif
+/*
+vi: ft=c
+*/

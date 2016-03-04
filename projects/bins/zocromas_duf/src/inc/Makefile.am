@@ -154,6 +154,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sql_prepared.h \
 	duf_sql_set_types.h \
 	duf_sql_stmt_defs.h \
+	duf_sql_se_stmt_defs.h \
 	duf_sql_types.h \
 	duf_start_end.h \
 	duf_status.h \

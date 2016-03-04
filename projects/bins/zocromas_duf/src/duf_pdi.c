@@ -8,7 +8,7 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -254,17 +254,16 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
 }
 
 /* 20150904.085731 */
-int
-duf_pdi_close( duf_depthinfo_t * pdi )
+SR( PDI, pdi_close, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
-  DOR( r, duf_pdi_shut( pdi ) );
+  CR( pdi_shut, pdi );
   if ( pdi->pdi_name /* && pdi->db_attached_selected */  && !pdi->attached_copy )
   {
-    DOR( r, duf_main_db_close( pdi, r ) );
+    CR( main_db_close, pdi );
     assert( !pdi->next );
     if ( pdi->db_attached_selected )
     {
@@ -304,5 +303,6 @@ duf_pdi_close( duf_depthinfo_t * pdi )
     }
   }
   assert( !pdi->next );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PDI, pdi_close, duf_depthinfo_t * pdi );
 }

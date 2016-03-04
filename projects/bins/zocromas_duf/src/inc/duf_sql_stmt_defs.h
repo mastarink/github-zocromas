@@ -11,7 +11,7 @@
   	  duf_stmnt_t *_pstmt_m = NULL; \
           MAST_TRACE(sql, 4, "START/NOPDI:%s", _sql); \
           if ( DUF_NOERROR(_rt) ) \
-            _rt = duf_sql_prepare( _sql, &_pstmt_m ); \
+            _rt = duf_sql_prepare( _sql, &_pstmt_m );
 
 # define DUF_SQL_END_STMT_NOPDI(_rt, _pstmt_m) \
 	  { \
@@ -41,8 +41,8 @@
 # elif defined(DUF_SQL_NOPDI_STMT)
 #  define DUF_SQL_START_STMT( _pdi, _name, _sql, _rt, _pstmt_m ) \
 	DUF_SQL_START_STMT_NOPDI( _sql, _rt, _pstmt_m ); \
-	MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt)); \
-#  else
+	MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, _rt, mas_error_name_i(_rt));
+# else
 #  undef DUF_SQL_START_STMT
 # endif
 

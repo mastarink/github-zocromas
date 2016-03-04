@@ -5,6 +5,8 @@
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ♠ */
 
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
 # ifndef  MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
 # elif defined( DUF_DO_NUMS)

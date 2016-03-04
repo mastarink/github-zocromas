@@ -6,6 +6,7 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "mas_trace_types.h"
+#include "mas_trace_defs.h"
 
 /* ###################################################################### */
 #include "mas_trace_credel.h"

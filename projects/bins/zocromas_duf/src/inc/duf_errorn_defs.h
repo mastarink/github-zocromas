@@ -4,11 +4,10 @@
 # include <mastar/error/mas_error_defs.h>                            /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 # include <mastar/error/mas_error_defs_make.h>                       /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-#include "duf_errorn_defs_preset.h"
-#include "duf_tracen_defs_preset.h"
+# include "duf_errorn_defs_preset.h"
+# include "duf_tracen_defs_preset.h"
 
-
-# define MASE_STD_VERBOSE_LEVEL mas_verbose?mas_verbose():0 /* TODO 20160226.163713: => ..._errorn_defs_preset.h*/
+# define MASE_STD_VERBOSE_LEVEL mas_verbose?mas_verbose():0          /* TODO 20160226.163713: => ..._errorn_defs_preset.h */
 
 # define DUF_CLEARED_ERROR(...) MASE_CLEARED_ERROR( __VA_ARGS__ )
 # define DUF_CLEAR_ERROR(...) MASE_CLEAR_ERROR( __VA_ARGS__ )

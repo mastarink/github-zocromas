@@ -24,6 +24,10 @@
 /* #  define TR(_r) if (MAST_IS_ERROR(_r)) {T("@@@@@@(i:%d:c:%d) %s", _r, duf_error_code_i(_r), duf_error_name_i(_r));} */
 
 
+# define QT(_fmt, ...) MAST_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
+# define QTT( ...) MAST_TRACE(temp,0,__VA_ARGS__)
+# define QTR if (QISERR) {QT("@@@@@@(i:%d:c:%d) %s", QERRIND, QERRCODE, QERRNAME);}
+
 #endif
 
 /*

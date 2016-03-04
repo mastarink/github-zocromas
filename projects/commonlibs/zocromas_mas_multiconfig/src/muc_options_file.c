@@ -106,7 +106,7 @@ muc_infile( muc_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const ch
   return f;
 }
 #else
-muc_SRP( OPTIONS, FILE *, f = NULL, infile, muc_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const char *filename )
+muc_SRP( OPTIONS, FILE *, f, NULL, infile, muc_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const char *filename )
 {
   int ry = 0;
 
@@ -125,7 +125,7 @@ muc_SRP( OPTIONS, FILE *, f = NULL, infile, muc_config_cli_t * cli MAS_UNUSED, i
     ERRMAKE_M( OPEN, "file %s", cfgpath );
   mas_free( cfgpath );
 
-  muc_ERP( OPTIONS, FILE *, f, infile, muc_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const char *filename );
+  muc_ERP( OPTIONS, FILE *, f, NULL, infile, muc_config_cli_t * cli MAS_UNUSED, int dot, const char *at, const char *filename );
 }
 #endif
 

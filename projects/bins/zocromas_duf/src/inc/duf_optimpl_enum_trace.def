@@ -1,10 +1,11 @@
 /* TODO rename to duf_optimpl_enum_trace.def */
 #ifdef ENUM_WRAPP
+#include <mastar/trace/mas_trace_predef_enum.def>
   /* trace */
-  ENUM_WRAPP(ERRORS_TRACE, trace, errors			)
-  ENUM_WRAPP(ERRORR_TRACE, trace, errorr			)
-  ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary			)
-  ENUM_WRAPP(TEMP, trace, temp					)
+  /* ENUM_WRAPP(ERRORS_TRACE, trace, errors                        ) */
+  /* ENUM_WRAPP(ERRORR_TRACE, trace, errorr                        ) */
+  /* ENUM_WRAPP(TEMPORARY_TRACE, trace, temporary                  ) */
+  /* ENUM_WRAPP(TEMP, trace, temp                                  ) */
   ENUM_WRAPP(ACTION_TRACE,  trace, action			)
   ENUM_WRAPP(CALLS_TRACE, trace, calls				)
   ENUM_WRAPP(CONFIG_TRACE, trace, config			)

@@ -40,9 +40,12 @@
 #include <dlfcn.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/error/mas_error_reporting.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_se.h>
@@ -54,11 +57,11 @@
 #include <mastar/multiconfig/muc_option_source.h>
 #include <mastar/multiconfig/muc_options_all_stages.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
 #include "duf_status_ref.h"
 #include "duf_status.h"
@@ -73,7 +76,7 @@
 #include "duf_levinfo_ref.h"
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
-#include "duf_pdi_global.h"
+#include "duf_pdi_global.h"                                          /* duf_pdi_global() ♠ */
 
 #include "duf_optimpl_defs.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
@@ -172,42 +175,35 @@ SR( TOP, main_with_config, int argc, char **argv )
           cb_prompt_interactive );
   fputs( "\n", stderr );
   MAST_TRACE( temp, 0, "∈0∋ Zero " );
-  TT( "∈1∋ One " );
-  TT( "∈2∋ Two " );
-  TT( "∈1∋ Three " );
-  TT( "∈3 Four " );
-  TT( "∈1∋ Five " );
-  TT( "∈4∋ Six " );
-  TT( "∈1∋ Seven " );
-  TT( "∈6 Eight " );
-  TT( "∈1∋ Nine " );
-  TT( "∈7∋ Ten " );
-  TT( "∈8∋ -= !! Split config : duf-related and opt/cfg+i/o related !! =- " );
-  T( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
-  T( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
-  T( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ),
-     DUF_CONFIGG( opt.disable.flag.testnoflag ) );
-  T( "@test-num: %lu", DUF_CONFIGG( testnum ) );
+  QTT( "∈1∋ One " );
+  QTT( "∈2∋ Two " );
+  QTT( "∈1∋ Three " );
+  QTT( "∈3 Four " );
+  QTT( "∈1∋ Five " );
+  QTT( "∈4∋ Six " );
+  QTT( "∈1∋ Seven " );
+  QTT( "∈6 Eight " );
+  QTT( "∈1∋ Nine " );
+  QTT( "∈7∋ Ten " );
+  QTT( "∈8∋ -= !! Split config : duf-related and opt/cfg+i/o related !! =- " );
+  QT( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
+  QT( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
+  QT( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ),
+      DUF_CONFIGG( opt.disable.flag.testnoflag ) );
+  QT( "@test-num: %lu", DUF_CONFIGG( testnum ) );
 
 //          opt   disable  testnoflag
 #if 0
 # define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
   unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
   unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
-  T( "@>>>> %llx : %llx <<<<", t1, t2 );
+  QT( "@>>>> %llx : %llx <<<<", t1, t2 );
 }
 #endif
 
 CR( main_db, argc, argv );
 
 /* XXX XXX XXX XXX XXX XXX */
-
-#if 0
-DUF_PUTS( 0, "------------------------------------(*)" );
-DUF_PRINTF( 0, "------- main_db ended --------" );
-DUF_TEST_R( r );                                                     /* don't remove! */
-DUF_PUTS( 0, "---------------------------------------------(o)" );
-#endif
 
 #ifdef MAS_TRACEMEM
 {
@@ -231,33 +227,32 @@ DUF_PUTS( 0, "---------------------------------------------(o)" );
 ER( TOP, main_with_config, int argc, char **argv );
 }
 
-static int
-duf_main( int argc, char **argv )
+static
+SRP( TOP, int, rval, 0, main, int argc, char **argv )
 {
-  DUF_STARTR( r );
   duf_config_create( argc, argv, 1 /* mandatory_config */  );
 
   assert( duf_config );
 /* raise( SIGABRT ); */
 /* *( ( int * ) NULL ) = 0; */
 /* mas_strdup( "abrakadabra" ); */
-  DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
+  MASE_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   MAST_TRACE( explain, 1, "@main with config" );
-  DORF( r, duf_main_with_config, argc, argv );
+  CR( main_with_config, argc, argv );
 
-  TR( r );
+  QTR;
 
   global_status_reset(  );
-  T( "@config: %p; ptracecfg: %p; class_levels: %p", duf_get_config(  ), duf_get_config(  )->opt.ptracecfg,
-     duf_get_config(  )->opt.ptracecfg->class_levels );
+  QT( "@config: %p; ptracecfg: %p; class_levels: %p", duf_get_config(  ), duf_get_config(  )->opt.ptracecfg,
+      duf_get_config(  )->opt.ptracecfg->class_levels );
   duf_config_delete(  );
   assert( !duf_config );
 
 /* make exit status */
-  DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
-  r = !DUF_NOERROR( r ) ? 31 : 0;
-  DUF_ENDR( r );
+  ERRCLEAR_X( ERRCODE( MAX_REACHED ), ERRCODE( NO_ACTIONS ) );
+  rval = !QNOERR ? 31 : 0;
+  ERP( TOP, int, rval, 0, main, int argc, char **argv );
 }
 
 /*
@@ -267,7 +262,9 @@ duf_main( int argc, char **argv )
 int
 main( int argc, char **argv )
 {
+  int errc = 0;
+
 /* setenv( "TZ", "Europe/Kiev", 0 ); */
   tzset(  );
-  return duf_main( argc, argv );
+  return duf_main( argc, argv, &errc );
 }

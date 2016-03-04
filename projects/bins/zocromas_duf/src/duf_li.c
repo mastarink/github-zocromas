@@ -3,19 +3,23 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
+/* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
@@ -23,7 +27,8 @@
 
 #include "duf_pdi_stmt.h"
 
-#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
+/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ♠ *) */
+#include "duf_sql_se_stmt_defs.h"
 
 #include "duf_evsql_selector_new.h"
 
@@ -168,16 +173,17 @@ duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t node_ty
   _duf_li_dbinit( pli, pstmt );
 }
 
-static int
-_duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
+static
+SR( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli,
+    unsigned long long *pparentid )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DUF_SQL_START_STMT( pditemp, dirid2li_existed, sqlv, r, pstmt );
+  DUF_SQL_SE_START_STMT( pditemp, dirid2li_existed, sqlv, pstmt );
   {
-    DUF_SQL_BIND_LL( dirID, dirid, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
+    DUF_SQL_SE_BIND_LL( dirID, dirid, pstmt );
+    DUF_SQL_SE_STEP( pstmt );
+    if ( QISERR1_N( SQL_ROW ) )
     {
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
@@ -187,18 +193,19 @@ _duf_dirid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lon
     }
     else
     {
-      MAST_TRACE( select, 10, "<NOT selected> (%d)", r );
+      MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
     }
   }
-  DUF_SQL_END_STMT( pditemp, dirid2li_existed, r, pstmt );
-  DUF_ENDR( r );
+  DUF_SQL_SE_END_STMT( pditemp, dirid2li_existed, pstmt );
+/* DUF_ENDR( r ); */
+  ER( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli,
+      unsigned long long *pparentid );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
-int
-duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
+SR( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
@@ -223,28 +230,30 @@ duf_dirid2li_existed( duf_depthinfo_t * pditemp, unsigned long long dirid, duf_l
 #if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
 #else
-    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, &r );
+    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, QPERRIND );
 #endif
     if ( sqlv )
     {
-      DOR( r, _duf_dirid2li_existed( pditemp, sqlv, dirid, pli, pparentid ) );
+      CR( dirid2li_sql_existed, pditemp, sqlv, dirid, pli, pparentid );
       mas_free( sqlv );
     }
   }
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid );
 }
 
-static int
-_duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
+static
+SR( LI, nameid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli,
+    unsigned long long *pdirid )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DUF_SQL_START_STMT( pditemp, nameid2li_existed, sqlv, r, pstmt );
+  DUF_SQL_SE_START_STMT( pditemp, nameid2li_existed, sqlv, pstmt );
   {
-    DUF_SQL_BIND_LL( nameID, nameid, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
+    DUF_SQL_SE_BIND_LL( nameID, nameid, pstmt );
+    DUF_SQL_SE_STEP( pstmt );
+    if ( QISERR1_N( SQL_ROW ) )
     {
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
@@ -254,18 +263,19 @@ _duf_nameid2li_existed( duf_depthinfo_t * pditemp, const char *sqlv, unsigned lo
     }
     else
     {
-      MAST_TRACE( select, 10, "<NOT selected> (%d)", r );
+      MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
     }
   }
-  DUF_SQL_END_STMT( pditemp, nameid2li_existed, r, pstmt );
-  DUF_ENDR( r );
+  DUF_SQL_SE_END_STMT( pditemp, nameid2li_existed, pstmt );
+/* DUF_ENDR( r ); */
+  ER( LI, nameid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli,
+      unsigned long long *pdirid );
 }
 
 /* dev, inode, rdev, mode, nlink, uid, gid, blksize, blocks, size, atim, atimn, mtim, mtimn, ctim, ctimn, dir_name, parentid, priority, last_updated, inow */
-int
-duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
+SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
@@ -292,14 +302,15 @@ duf_nameid2li_existed( duf_depthinfo_t * pditemp, unsigned long long nameid, duf
 #if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
 #else
-    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, &r );
+    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, QPERRIND );
 #endif
     if ( sqlv )
     {
-      DOR( r, _duf_nameid2li_existed( pditemp, sqlv, nameid, pli, pdirid ) );
+      CR( nameid2li_sql_existed, pditemp, sqlv, nameid, pli, pdirid );
       mas_free( sqlv );
     }
   }
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
 }

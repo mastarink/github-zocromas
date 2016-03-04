@@ -61,9 +61,9 @@ typedef struct
 			{ \
 			  muc_fundecl_t fundecl_={.layer_id= MUC_LAYER_ ## _layer_id,.r={.ul=0}}; \
   			  muc_STTT( typeof(fundecl_.r._typid), fundecl_.r._typid )
-# define muc_STP( _layer_id, _funtyp, _vini, _pre, _typid, _funname, ... ) _funtyp muc_DTP( _layer_id, , _typid, _funname, __VA_ARGS__ ) \
+# define muc_STP( _layer_id, _funtyp, _rvar, _vini, _pre, _typid, _funname, ... ) _funtyp muc_DTP( _layer_id, , _typid, _funname, __VA_ARGS__ ) \
 			{ /* S */ \
-			  _funtyp _vini; \
+			  _funtyp _rvar=((_funtyp)0); _rvar=_vini; \
 			  muc_fundecl_t fundecl_={.layer_id= MUC_LAYER_ ## _layer_id,.r={.ul=0}}; \
   			  muc_STTT( typeof(fundecl_.r._typid), fundecl_.r._typid )
 
@@ -74,23 +74,24 @@ typedef struct
 			  muc_ERT( fundecl_.r._typid );\
 			} \
 			muc_DT( _layer_id, , _typid, _funname, __VA_ARGS__ );
-# define muc_ETP( _layer_id, _funtyp, _ret, _pre, _typid, _funname, ... ) \
+# define muc_ETP( _layer_id, _funtyp, _rvar, _vini, _pre, _typid, _funname, ... ) \
 			  _pre; \
 			  muc_ETT;\
 			} /* E */ \
   			if (  prrrrrr_  ) \
 			  *prrrrrr_=fundecl_.r._typid; \
 			_funtyp muc_DTP( _layer_id, , _typid, _funname, __VA_ARGS__ ); \
-			return _ret;
+			return _rvar;
 
 # define muc_DR( _layer_id, _funname, ... )		muc_DT( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 # define muc_DRP( _layer_id, _funname, ... )	muc_DTP( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 
 # define muc_SR( _layer_id, _funname, ... )		muc_ST( _layer_id,				,	ei, _funname, __VA_ARGS__ )
-# define muc_SRP( _layer_id, _funtyp, _vini, _funname, ... )	muc_STP( _layer_id, _funtyp, _vini,			,	ei, _funname, __VA_ARGS__ )
+# define muc_SRP( _layer_id, _funtyp, _rvar, _vini, _funname, ... ) \
+  	muc_STP( _layer_id, _funtyp, _rvar, _vini,			,	ei, _funname, __VA_ARGS__ )
 
 # define muc_ER( _layer_id, _funname, ... )		muc_ET( _layer_id, TER,	ei, _funname, __VA_ARGS__ )
-# define muc_ERP( _layer_id, _funtyp, _ret, _funname, ... )	muc_ETP( _layer_id, _funtyp, _ret, TER,	ei, _funname, __VA_ARGS__ )
+# define muc_ERP( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	muc_ETP( _layer_id, _funtyp, _rvar, _vini, TER,	ei, _funname, __VA_ARGS__ )
 # define muc_DOCR(_rval, _x)			( (_rval>=0) ? ( (_rval=(_x))  ) : 0 )
 # define muc_CR(            _funname, ... )		muc_DOCR( QERRIND, muc_F2N(muc_,_funname)( __VA_ARGS__ ) )
 # define muc_CRV(           _fun    , ... )		muc_DOCR( QERRIND, (_fun)( __VA_ARGS__) )

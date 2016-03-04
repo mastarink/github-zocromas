@@ -56,6 +56,49 @@ if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
   else
     echo 'not found guienter: ' . guienter
   endif
+" let  tabenter=mas_localvimdirs . 'gvim-tabenter.vim'
+" if filereadable(tabenter)
+"   echo 'tabenter: ' . tabenter
+"   au TabEnter * sil so `=tabenter`
+" else
+"   echo 'not found tabenter: ' . tabenter
+" endif
+" let  bufenter=mas_localvimdirs . 'gvim-bufenter.vim'
+" if filereadable(bufenter)
+"   echo 'bufenter: ' . bufenter
+"   au BufEnter * sil so `=bufenter`
+" else
+"   echo 'not found bufenter: ' . bufenter
+" endif
+" let  bufreadpost=mas_localvimdirs . 'gvim-bufreadpost.vim'
+" if filereadable(bufreadpost)
+"   echo 'bufreadpost: ' . bufreadpost
+"   au BufReadPost * sil so `=bufreadpost`
+" else
+"   echo 'not found bufreadpost: ' . bufreadpost
+" endif
+" let  bufwinenter=mas_localvimdirs . 'gvim-bufwinenter.vim'
+" if filereadable(bufwinenter)
+"   echo 'bufwinenter: ' . bufwinenter
+"   au BufWinEnter * sil so `=bufwinenter`
+" else
+"   echo 'not found bufwinenter: ' . bufwinenter
+" endif
+" let  winenter=mas_localvimdirs . 'gvim-winenter.vim'
+" if filereadable(winenter)
+"   echo 'winenter: ' . winenter
+"   au WinEnter * sil so `=winenter`
+" else
+"   echo 'not found winenter: ' . winenter
+" endif
+"
+" let  mfiletype=mas_localvimdirs . 'gvim-filetype.vim'
+" if filereadable(mfiletype)
+"   echo 'mfiletype: ' . mfiletype
+"   au FileType * sil so `=mfiletype`
+" else
+"   echo 'not found mfiletype: ' . mfiletype
+" endif
 
   let  vimenter=mas_localvimdirs . 'gvim-vimenter.vim'
   if filereadable(vimenter)
