@@ -262,7 +262,7 @@ duf_sccbh_eval_db_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scan
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, r );
     }
     else if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
     {
@@ -272,7 +272,7 @@ duf_sccbh_eval_db_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scan
       DOR( r, ( scanner ) ( pstmt, PDI ) );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_NODE, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, r );
     }
 #else
     if ( ( scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_if_deleted( PDI ), DUF_NODE_NODE ) ) )

@@ -74,7 +74,7 @@ duf_sccbh_eval_db_leaf_fd_str_cb( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
       DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
       assert( sccbh->current_node_type == DUF_NODE_LEAF );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, scanstage, pstmt, scanner, DUF_NODE_LEAF, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_LEAF, r );
     }
     else
     {

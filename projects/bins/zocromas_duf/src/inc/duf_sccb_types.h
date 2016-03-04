@@ -3,7 +3,7 @@
 
 # include "duf_sql_set_types.h"                                      /* duf_sql_set_t */
 # include "sql_beginning_types.h"                                    /* duf_sql_sequence_t */
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
@@ -78,7 +78,8 @@ struct duf_scan_callbacks_s
 struct duf_sccb_handle_s;
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 typedef void ( *duf_sccbh_fun_t ) ( struct duf_sccb_handle_s * );
-typedef void ( *duf_rsccbh_fun_t ) ( const struct duf_sccb_handle_s *, duf_scanstage_t, duf_stmnt_t *, duf_scanner_t, duf_node_type_t, int );
+typedef void ( *duf_rsccbh_fun_t ) ( const struct duf_sccb_handle_s * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
+                                     duf_node_type_t node_type, int r );
 
 struct duf_sccb_handle_s
 {
