@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_PSTMT_LEVINFO_H
-# define MAS_DUF_PSTMT_LEVINFO_H
+#ifndef MAS_DUF_SCCBH_PSTMT_H
+# define MAS_DUF_SCCBH_PSTMT_H
 
 # include "duf_hook_types.h"                                         /* duf_action_table_t ♠ */
 

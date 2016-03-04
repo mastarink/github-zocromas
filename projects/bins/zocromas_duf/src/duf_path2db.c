@@ -24,7 +24,7 @@
 /* #include "duf_levinfo_openclose.h" */
 #include "duf_levinfo_stat.h"
 #include "duf_li.h"
-#include "duf_pstmt_levinfo.h"
+#include "duf_sccbh_pstmt.h"
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"

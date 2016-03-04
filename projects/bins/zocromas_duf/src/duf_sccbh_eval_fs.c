@@ -6,27 +6,26 @@
 #include <dirent.h>                                                  /* struct dirent  */
 #include <errno.h>
 
-
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ✗ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ✗ */
+#include "duf_dodefs.h"                                              /* DOR ✗ */
 
-#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
@@ -44,7 +43,7 @@
 
 /* 20151027.144614 */
 static int
-duf_sccbh_eval_fs_w_scanner_here( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh,
+duf_sccbh_eval_fs_w_scanner_here( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
                                   duf_scanner_t scanner )
 {
   DUF_STARTR( r );
@@ -58,7 +57,7 @@ duf_sccbh_eval_fs_w_scanner_here( duf_scanstage_t scanstage MAS_UNUSED, duf_stmn
     {
       sccbh->current_scanner = scanner;
       MAST_TRACE( scan, 2, "@@@@@@@%s +%d :: %s | %s", duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_pdi_depth( PDI ),
-                 duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
+                  duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
       DOR( r, ( scanner ) ( NULL /* pstmt */ , PDI ) );
       {
         duf_levinfo_t *pli = NULL;
@@ -91,8 +90,8 @@ duf_sccbh_eval_fs_w_scanner_here( duf_scanstage_t scanstage MAS_UNUSED, duf_stmn
 
 /* 20151027.104729 */
 static int
-duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED,
-                            duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_fs_direntry( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+                            duf_scanstage_t scanstage MAS_UNUSED )
 {
   DUF_STARTR( r );
   duf_node_type_t nt;
@@ -109,8 +108,8 @@ duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage MAS_UNU
     if ( scanner )
     {
       MAST_TRACE( scan, 2, "@@@@%s +%d :: %s | %-17s", duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_pdi_depth( PDI ),
-                 duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
-      DOR( r, duf_sccbh_eval_fs_w_scanner_here( scanstage, pstmt_unused, sccbh, scanner ) );
+                  duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
+      DOR( r, duf_sccbh_eval_fs_w_scanner_here( sccbh, pstmt_unused, scanstage, scanner ) );
     }
   }
 /* <-- */
@@ -136,7 +135,7 @@ duf_sccbh_eval_fs_w2scanners_sd( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt
     for ( int il = 0; il < nlist; il++ )
     {
       MAST_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_sccbh_eval_fs_direntry( list[il], scanstage, pstmt_unused, sccbh ) );
+      DOR( r, duf_sccbh_eval_fs_direntry( sccbh, pstmt_unused, list[il], scanstage ) );
 
       if ( list[il] )
         free( list[il] );
@@ -184,7 +183,7 @@ duf_sccbh_eval_fs_w2scanners_rd( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt
       if ( duf_direntry_filter( de ) )
       {
         MAST_TRACE( scan, 2, "@@@@@@dirent %s", de->d_name );
-        DOR( r, duf_sccbh_eval_fs_direntry( de, scanstage, pstmt_unused, sccbh ) );
+        DOR( r, duf_sccbh_eval_fs_direntry( sccbh, pstmt_unused, de, scanstage ) );
         il++;
       }
     }
@@ -213,7 +212,7 @@ duf_sccbh_eval_fs_w2scanners_rd( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt
 
 /* 20151013.130037 */
 DUF_WRAPSTATIC int
-duf_sccbh_eval_fs( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_fs( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
   DUF_STARTR( r );
 
@@ -222,7 +221,7 @@ duf_sccbh_eval_fs( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unu
   /* assert( PDI->opendir == 1 ); */
     duf_pdi_set_opendir( PDI, 1 );                                   /* TODO */
     MAST_TRACE( scan, 2, "@@@@@@@´%s´ : %s to scan FS at %s : %s", duf_scanstage_name( scanstage ),
-               duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
+                duf_nodetype_name( duf_levinfo_node_type( PDI ) ), duf_levinfo_relpath( PDI ), duf_levinfo_itemtruename( PDI ) );
     {
       DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_STATAT_ENOENT );
       assert( DUF_IS_ERROR( r ) || duf_levinfo_stat( PDI ) );
@@ -258,11 +257,11 @@ duf_sccbh_eval_fs( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unu
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
  *
- * call from duf_eval_sccbh_all(_wrap)
+ * call from duf_sccbh_eval_all(_wrap)
  *
  * fn of type: duf_str_cb2_t
  * */
-int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
   DUF_STARTR( r );
   assert( PDI );
@@ -280,7 +279,7 @@ int DUF_WRAPPED( duf_sccbh_eval_fs ) ( duf_scanstage_t scanstage MAS_UNUSED, duf
    *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
    * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
 
-    DOR( r, duf_sccbh_eval_fs( scanstage, pstmt_unused, sccbh ) );
+    DOR( r, duf_sccbh_eval_fs( sccbh, pstmt_unused, scanstage ) );
     MAST_TRACE( sccbh, 2, "(%s) stat (%s) %s", mas_error_name_i( r ), duf_uni_scan_action_title( SCCB ), SCCB->name );
   }
   DUF_ENDR( r );

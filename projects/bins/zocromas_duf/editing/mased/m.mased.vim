@@ -32,3 +32,5 @@ sfind srctoexpire.mased.vim
 sfind vimrc.mased.vim
 
 tab sfind srcerrors.mased.vim
+
+tab sfind srcsccbh.mased.vim

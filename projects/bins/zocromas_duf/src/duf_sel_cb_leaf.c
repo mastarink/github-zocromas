@@ -2,25 +2,25 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ✗ */
+#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ✗ */
+#include "duf_dodefs.h"                                              /* DOR ✗ */
 
-#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ */
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"                                      /* duf_levinfo_goup */
 
 #include "duf_pdi_ref.h"                                             /* duf_pdi_depth */
@@ -29,17 +29,17 @@
 #include "duf_sccb_def.h"                                            /* DUF_SCCB_PDI */
 #include "duf_sccb.h"                                                /* duf_uni_scan_action_title, contained at DUF_SCCB_PDI */
 
-#include "duf_sccbh_eval_leaf.h"                                     /* duf_eval_sccbh_db_leaf_fd_str_cb and duf_eval_sccbh_db_leaf_str_cb */
+#include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_fd_str_cb and duf_sccbh_eval_db_leaf_str_cb */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_sccbh_shortcuts.h"                                     /* PDI etc. */
-#include "duf_pstmt_levinfo.h"
+#include "duf_sccbh_pstmt.h"
 
 #include "duf_sccb_scanstage.h"
-#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ♠ */
-#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ♠ */
+#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ✗ */
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
@@ -49,15 +49,15 @@
 
 /* 20151027.114003 */
 /* DUF_WRAPSTATIC */
-int
-duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+static int
+duf_sel_cb2_leaf_at( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
   DUF_STARTR( r );
   if ( str_cb2 )
   {
     MAST_TRACE( explain, 2, "=> str cb2" );
     DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
-    assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
+    assert( str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_str_cb );
 
 #if 1
     {
@@ -130,7 +130,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
     }
 #endif
 
-    DOR( r, ( str_cb2 ) ( scanstage, pstmt, sccbh ) );
+    DOR( r, ( str_cb2 ) ( sccbh, pstmt, scanstage ) );
     if ( DUF_NOERROR( r ) )
     {
       PDI->seq++;
@@ -145,7 +145,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
 
 #if 0
 /* 20151027.114007 */
-int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
   DUF_STARTR( r );
   assert( PDI );
@@ -178,7 +178,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
   }
 /* #endif */
 
-  duf_sel_cb2_leaf_at( scanstage, pstmt, str_cb2, sccbh );
+  duf_sel_cb2_leaf_at( sccbh, pstmt, str_cb2, scanstage );
 
   DUF_ENDR( r );
 }
@@ -198,7 +198,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
  * */
 /* 20150820.085847 */
 int
-duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+duf_sel_cb2_leaf( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
   DUF_STARTR( r );
   assert( PDI );
@@ -210,16 +210,16 @@ duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
 
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
   MAST_TRACE( explain, 4, "@ sel cb2 leaf" );
-  assert( str_cb2 == duf_eval_sccbh_db_leaf_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == NULL );
+  assert( str_cb2 == duf_sccbh_eval_db_leaf_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == NULL );
 
   MAST_TRACE( scan, 9, "LEAF %s", duf_levinfo_path( PDI ) );
   {
   /*@ 1. go down + dbopenat */
-    DOR( r, duf_sccbh_pstmt_godown_dbopenat_dh(  sccbh, pstmt,DUF_NODE_LEAF /* node_type */  ) );
+    DOR( r, duf_sccbh_pstmt_godown_dbopenat_dh( sccbh, pstmt, DUF_NODE_LEAF /* node_type */  ) );
     MAST_TRACE( scan, 9, "(%s) LEAF down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
-    DOR( r, duf_sel_cb2_leaf_at( scanstage, pstmt, str_cb2, sccbh ) );
+    DOR( r, duf_sel_cb2_leaf_at( sccbh, pstmt, str_cb2, scanstage ) );
 
     assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
 

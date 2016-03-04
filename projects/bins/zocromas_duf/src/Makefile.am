@@ -124,7 +124,7 @@ zocromas_duf_SOURCES= \
 	duf_pdi_sccb_eval.c \
 	duf_pdi_stmt.c \
 	duf_print.c \
-	duf_pstmt_levinfo.c \
+	duf_sccbh_pstmt.c \
 	duf_sccb_begfin.c \
 	duf_sccb.c \
 	duf_sccb_eval.c \

@@ -57,7 +57,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
   {
     {
       MAST_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", r, sccbh ? 1 : 0, sccb ? SCCB->name : "-" );
-      DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
+      DOR( r, DUF_WRAPPED( duf_sccbh_eval_all_and_summary ) ( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
       DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
     }
     {

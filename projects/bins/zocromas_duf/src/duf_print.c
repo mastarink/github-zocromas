@@ -28,7 +28,7 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
 
-#include "duf_pstmt_levinfo.h"
+#include "duf_sccbh_pstmt.h"
 
 /* ###################################################################### */
 #include "duf_print.h"
