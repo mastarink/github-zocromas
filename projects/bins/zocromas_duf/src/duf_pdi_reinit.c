@@ -9,7 +9,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -54,7 +54,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
   MAST_TRACE( pdi, 0, "@@@frecursive:%d/%d; real_path:%s", frecursive, frec, real_path );
 /* T( "%p real_path:%p:%s", pdi->pathinfo.levinfo ? pdi->pathinfo.levinfo->fullpath : 0, real_path, real_path ); */
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, pu, real_path, sql_set, caninsert, frec, fwn, flinear, opendir ) );
+  DOR( r, duf_pdi_init( pdi, pu, real_path, sql_set, caninsert, frec, fwn, flinear, opendir ) );
 /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
   DUF_ENDR( r );
 }

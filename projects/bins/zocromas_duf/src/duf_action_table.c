@@ -8,9 +8,9 @@
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 
-#include "duf_sccb.h"
+/* #include "duf_sccb.h" */
 
 /* ###################################################################### */
 #include "duf_action_table.h"

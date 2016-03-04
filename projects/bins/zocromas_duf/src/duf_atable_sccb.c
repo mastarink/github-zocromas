@@ -7,7 +7,7 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -20,6 +20,7 @@
 #include "duf_sccb.h"
 /* ###################################################################### */
 
+#if 0
 const duf_action_table_t *
 duf_find_atable_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_table_t * table )
 {
@@ -47,3 +48,4 @@ duf_find_atable_sccb_by_evname( const char *name, const duf_action_table_t * tab
   act = duf_find_atable_sccb_by_evnamen( name, strlen( name ), table );
   return act;
 }
+#endif

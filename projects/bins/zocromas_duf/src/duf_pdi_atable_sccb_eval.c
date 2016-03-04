@@ -43,8 +43,9 @@
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 
+#if 0
 /* 20150922.123731 */
-int
+static int
 duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const mas_argvc_t * ptarg,
                            bool f_summary )
 {
@@ -101,7 +102,7 @@ duf_ev_pdi_atable_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_
 }
 
 /* 20150922.123706 */
-int
+static int
 duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, const mas_argvc_t * ptarg,
                                 bool f_summary )
 {
@@ -137,3 +138,4 @@ duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const 
   }
   DUF_ENDR( r );
 }
+#endif

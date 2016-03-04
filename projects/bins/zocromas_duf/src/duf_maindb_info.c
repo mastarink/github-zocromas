@@ -4,14 +4,14 @@
 #include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ♣ */
-#include <mastar/sqlite/mas_sqlite_const.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/trace/mas_trace.h>
 
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ♣ */
 /* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
@@ -29,12 +29,12 @@
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 
-#include "duf_sql_prepared.h"
-#include "duf_sql_positional.h"
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ♠ */
 #include "sql_tables_defs.h"
 
 /* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ♠ *) */
-#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_BIND_S_OPT etc. ♠ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ♠ */
 
 /* ###################################################################### */
 #include "duf_maindb_info.h"                                         /* duf_main_db_info() ♠ */

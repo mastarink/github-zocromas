@@ -5,7 +5,7 @@
 
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -19,12 +19,13 @@
 /* #include "duf_option_defs.h"                                         (* DUF_ACTG_FLAG( summary ) *) */
 #include "duf_optimpl_defs.h"                                        /* DUF_ACTG_FLAG( summary ) */
 
-#include "duf_pdi_global.h"
+#include "duf_pdi_global.h"                                          /* duf_pdi_global() ♠ */
 #include "duf_pdi_atable_sccb_eval.h"
 /* ###################################################################### */
 #include "duf_atable_sccb_eval.h"
 /* ###################################################################### */
 
+#if 0
 int
 duf_ev_atable_evnamen( const char *name, size_t len, const duf_action_table_t * table )
 {
@@ -54,3 +55,4 @@ duf_ev_atable_evnamed_list( const char *names, const duf_action_table_t * table 
   DOR( r, duf_ev_pdi_atable_evnamed_list( duf_pdi_global(  ), names, table, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) ) );
   DUF_ENDR( r );
 }
+#endif

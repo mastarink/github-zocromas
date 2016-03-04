@@ -5,7 +5,7 @@
 
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -42,7 +42,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
       static const char *sql1 = "DROP  TABLE IF EXISTS " DUF_DBSELECTEDALIAS "." DUF_SQL_SELECTED_TMP_FILENAMES;
       int changes = 0;
 
-      T( "(%d) to attach (%p:%s)", r, pdi, pdi->pdi_name );
+      QT( "(%d) to attach (%p:%s)", r, pdi, pdi->pdi_name );
       pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
     /* MAST_TRACE( sql, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql ); */
       MAST_TRACE( db, 0, "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
@@ -66,7 +66,7 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   int changes = 0;
 
   DOR( r, duf_eval_sql_one( sql1, pdi->pup, ( duf_yfilter_t * ) NULL, pdi->pdi_name, &changes ) );
-  T( "(%d) DETACH changes:%d", r, changes );
+  QT( "(%d) DETACH changes:%d", r, changes );
 
   DUF_ENDR( r );
 }

@@ -1,12 +1,12 @@
 #ifndef MAS_DUF_ACTION_TABLE_H
 # define MAS_DUF_ACTION_TABLE_H
 
-# include "duf_hook_types.h" /* duf_scan_callbacks_t */
+# include "duf_hook_types.h"                                         /* duf_scan_callbacks_t; duf_action_table_t etc. */
 
 /* duf_action_table_t *_duf_action_table( void ) __attribute__ ( ( warn_unused_result ) ); */
 duf_scan_callbacks_t *duf_first_sccb( void ) __attribute__ ( ( warn_unused_result ) );
 
-extern duf_scan_callbacks_t /* */
+extern duf_scan_callbacks_t                                          /* */
   /* duf_dirs_callbacks,    (* *) */
   /* duf_filedata_callbacks,       (* *) */
   /* duf_filenames_callbacks,      (* *) */
@@ -20,7 +20,7 @@ extern duf_scan_callbacks_t /* */
   /* duf_print_md5_callbacks ,      */
   /* duf_tree_callbacks,     (* *) */
   /* duf_listing_callbacks,      (* *) */
-  duf_dummy_callbacks, /* */
+  duf_dummy_callbacks,                                               /* */
   /* duf_dumplet_callbacks,        (* *) */
   /* duf_dialog_callbacks,         (* *) */
   /* duf_tagit_callbacks,          (* *) */

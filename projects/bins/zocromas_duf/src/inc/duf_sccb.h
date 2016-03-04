@@ -7,12 +7,12 @@
 const char *duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb );
 
 
-const duf_scan_callbacks_t *duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first );
+/* const duf_scan_callbacks_t *duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first ); */
 const duf_scan_callbacks_t *duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first );
-const duf_scan_callbacks_t *duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first );
+/* const duf_scan_callbacks_t *duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first ); */
 
 const duf_scan_callbacks_t *duf_find_sccb_by_evname( const char *name, const duf_scan_callbacks_t * first );
-const duf_scan_callbacks_t *duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first );
+/* const duf_scan_callbacks_t *duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first ); */
 
 
 /* const duf_sql_set_t *duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb ); */

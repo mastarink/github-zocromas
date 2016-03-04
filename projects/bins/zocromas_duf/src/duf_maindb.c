@@ -8,12 +8,14 @@
 #include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>
 #include <mastar/error/mas_error_defs_make.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_option_names.h>
 

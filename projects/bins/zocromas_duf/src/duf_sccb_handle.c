@@ -282,7 +282,7 @@ duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh )
   DUF_ENDR( r );
 }
 
-duf_sccb_handle_t *
+static duf_sccb_handle_t *
 duf_sccb_handle_create( void )
 {
   duf_sccb_handle_t *sccbh = NULL;

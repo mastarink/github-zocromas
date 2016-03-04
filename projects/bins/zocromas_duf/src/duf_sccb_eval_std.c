@@ -5,7 +5,7 @@
 
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -25,7 +25,7 @@
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 
-#include "duf_pdi_global.h"
+#include "duf_pdi_global.h"                                          /* duf_pdi_global() ♠ */
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
 #include "duf_sccb_eval_std.h"
@@ -51,6 +51,7 @@ duf_find_sccb_by_evname_std( const char *name )
   return sccb;
 }
 
+#if 0
 const duf_scan_callbacks_t *
 duf_finor_load_d_sccb_by_evname_std( const char *name )
 {
@@ -59,6 +60,7 @@ duf_finor_load_d_sccb_by_evname_std( const char *name )
   sccb = duf_find_or_load_sccb_by_evname( name, duf_first_sccb(  ) );
   return sccb;
 }
+#endif
 
 int
 duf_ev_evnamed_list_std( const char *names )
@@ -74,16 +76,17 @@ duf_ev_evnamed_list_std( const char *names )
   DUF_ENDR( r );
 }
 
+#if 0
 int
 duf_ev_evnamen_std( const char *name, size_t len )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_ufilter(  ) == DUF_CONFIGX( vars.puz ) );
-#if 0
+# if 0
   DOR( r, duf_ev_atable_evnamen( name, len, duf_action_table(  ) ) );
-#else
+# else
   DOR( r, duf_ev_evnamen( name, len, duf_first_sccb(  ) ) );
-#endif
+# endif
   DUF_ENDR( r );
 }
 
@@ -92,11 +95,11 @@ duf_ev_evname_std( const char *name )
 {
   DUF_STARTR( r );
   assert( duf_pdi_global_ufilter(  ) == DUF_CONFIGX( vars.puz ) );
-#if 0
+# if 0
   DOR( r, duf_ev_atable_evname( name, duf_action_table(  ) ) );
-#else
+# else
   DOR( r, duf_ev_evname( name, duf_first_sccb(  ) ) );
-#endif
+# endif
   DUF_ENDR( r );
 }
 
@@ -135,6 +138,7 @@ duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *a
 #endif
   DUF_ENDR( r );
 }
+#endif
 
 int
 duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )

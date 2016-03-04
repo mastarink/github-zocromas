@@ -77,7 +77,7 @@ duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const
 }
 
 /* 20150922.123731 */
-int
+static int
 duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
 {
   DUF_STARTR( r );
@@ -119,7 +119,7 @@ duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_sca
 }
 
 /* 20150922.123721 */
-int
+static int
 duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
 {
   DUF_STARTR( r );
