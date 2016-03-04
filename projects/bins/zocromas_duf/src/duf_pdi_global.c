@@ -17,7 +17,7 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
 
 #include "duf_status_ref.h"
 #include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ♠ */
@@ -72,6 +72,7 @@ SR( PDI, pdi_create_global, const char *name )
 
 /* duf_depthinfo_t *            */
 /* duf_pdi_global_pr( int *pr ) */
+static
 SRP0( PDI, duf_depthinfo_t *, pdi, global_status.scn.pdi, pdi_global_pr )
 {
 /* int rpr = 0; */
@@ -90,8 +91,8 @@ duf_pdi_global( void )
   return duf_pdi_global_pr( NULL );
 }
 
-const char *
-_duf_pdi_global_name( int *pr )
+static const char *
+duf_pdi_global_name_pr( int *pr )
 {
   duf_depthinfo_t *pdi;
 
@@ -102,11 +103,11 @@ _duf_pdi_global_name( int *pr )
 const char *
 duf_pdi_global_name( void )
 {
-  return _duf_pdi_global_name( NULL );
+  return duf_pdi_global_name_pr( NULL );
 }
 
-const duf_ufilter_t *
-_duf_pdi_global_ufilter( int *pr )
+static const duf_ufilter_t *
+duf_pdi_global_ufilter_pr( int *pr )
 {
   duf_depthinfo_t *pdi;
 
@@ -117,7 +118,7 @@ _duf_pdi_global_ufilter( int *pr )
 const duf_ufilter_t *
 duf_pdi_global_ufilter( void )
 {
-  return _duf_pdi_global_ufilter( NULL );
+  return duf_pdi_global_ufilter_pr( NULL );
 }
 
 SR( PDI, pdi_kill_global, void )

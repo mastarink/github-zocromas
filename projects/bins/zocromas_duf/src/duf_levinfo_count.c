@@ -1,38 +1,38 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
-#include "duf_config_util.h"                                         /* duf_get_trace_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
 #include "duf_levinfo_ref_def.h"
 
-#include "duf_pdi_filters.h"
-#include "duf_pdi_stmt.h"
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ♠ */
 
 #include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
-#include "duf_sql_prepared.h"
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
 
 #include "duf_evsql_selector_new.h"
 
 #include "duf_ufilter_bind.h"
 
 #include "sql_beginning_selected.h"
-#include "duf_sql_field.h"
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
 /* ###################################################################### */
 #include "duf_levinfo_count.h"

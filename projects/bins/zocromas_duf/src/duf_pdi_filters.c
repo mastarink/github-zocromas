@@ -1,15 +1,21 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
@@ -35,10 +41,9 @@ duf_pdi_py( const duf_depthinfo_t * pdi )
 
 /* 20151114.124337 */
 /* needless?!? TODO */
-int
-duf_pdi_max_filter( const duf_depthinfo_t * pdi )
+SR( PDI, pdi_max_filter, const duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( pdi );
 #if 0
@@ -51,7 +56,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   else if ( pdi->pup->maxitems.total && pdi->items.total >= pdi->pup->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
 #else
-  DOR( r, duf_ufilter_max_filter( pdi->pup, pdi->seq, &pdi->items ) );
+  CR( ufilter_max_filter, pdi->pup, pdi->seq, &pdi->items );
 
 #endif
 
@@ -59,5 +64,6 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 /*        && ( !pdi->pup->maxitems.files || ( pdi->items.files ) < pdi->pup->maxitems.files )    */
 /*        && ( !pdi->pup->maxitems.dirs || ( pdi->items.dirs ) < pdi->pup->maxitems.dirs )       */
 /*        && ( !pdi->pup->maxitems.total || ( pdi->items.total ) < pdi->pup->maxitems.total ) ); */
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PDI, pdi_max_filter, const duf_depthinfo_t * pdi );
 }

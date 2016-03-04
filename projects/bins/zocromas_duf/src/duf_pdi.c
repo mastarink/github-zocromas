@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 #include "duf_errorn_defs_preset.h"
 
 #include <mastar/trace/mas_trace.h>
@@ -19,10 +19,12 @@
 
 /* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
 
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ♠ */
 #include "duf_context.h"
 #include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ♠ */
@@ -30,7 +32,7 @@
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
 #include "duf_pdi_ref.h"
 /* #include "duf_pdi_pi_ref.h" */
-#include "duf_pdi_stmt.h"
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ♠ */
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ♠ */

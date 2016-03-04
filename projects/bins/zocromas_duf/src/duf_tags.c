@@ -11,6 +11,8 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
 #include "duf_db_defs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
@@ -33,7 +35,7 @@
 
 /* static unsigned long long                                               */
 /* duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr ) */
-SRP( OTHER, unsigned long long, tagnameid, 0, add_tagname, duf_depthinfo_t * pdi, const char *tag_name )
+static SRP( OTHER, unsigned long long, tagnameid, 0, add_tagname, duf_depthinfo_t * pdi, const char *tag_name )
 {
 /* int rpr = 0; */
 /* unsigned long long tagnameid = 0; */

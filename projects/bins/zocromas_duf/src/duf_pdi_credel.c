@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/trace/mas_trace.h>
 
@@ -11,10 +11,12 @@
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
+# include "duf_se_only.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
+/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
@@ -113,28 +115,28 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
   return pdi;
 }
 
-int
-duf_pdi_delete( duf_depthinfo_t * pdi )
+SR( PDI, pdi_delete, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( pdi && pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
 /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
-  DOR( r, duf_pdi_close( pdi ) );
+  CR( pdi_close, pdi );
   if ( pdi->created_name )
     mas_free( pdi->pdi_name );
   pdi->pdi_name = NULL;
   mas_free( pdi );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PDI, pdi_delete, duf_depthinfo_t * pdi );
 }
 
-int
-duf_pdi_kill( duf_depthinfo_t ** ppdi )
+SR(PDI,pdi_kill, duf_depthinfo_t ** ppdi )
 {
-  DUF_STARTR( r );
+  /* DUF_STARTR( r ); */
   if ( ppdi && *ppdi )
-    DOR( r, duf_pdi_delete( *ppdi ) );
+    CR( pdi_delete, *ppdi ) ;
   *ppdi = NULL;
-  DUF_ENDR( r );
+  /* DUF_ENDR( r ); */
+ER(PDI,pdi_kill, duf_depthinfo_t ** ppdi );
 }

@@ -2,23 +2,23 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
 #include "duf_dodefs.h"                                              /* DOR ♠ */
 
 /* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
-#include "duf_config_util.h"                                         /* duf_get_trace_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_dh.h"
 
 #include "duf_levinfo_ref_def.h"
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
 
 /* ###################################################################### */
 #include "duf_levinfo_openclose.h"
@@ -97,14 +97,14 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
                   DUF_ERROR_OPENAT_ENOENT );
       assert( DUF_IS_ERROR( r ) || pdhlev->dfd > 0 );
       MAST_TRACE( levinfo, r < 0 ? 0 : 2, "(%s)? levinfo openated %s : %s; dfd:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
-                 duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
+                  duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     assert( r <= 0 || pdhlev->dfd );
     if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) )
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
       MAST_TRACE( levinfo, r < 0 ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", mas_error_name_i( r ), duf_levinfo_path_d( pdi, d ),
-                 duf_levinfo_itemshowname_d( pdi, d ), pdi->opendir );
+                  duf_levinfo_itemshowname_d( pdi, d ), pdi->opendir );
       r = 0;
     }
     else

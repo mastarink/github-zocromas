@@ -124,7 +124,6 @@ constructor_main( void )
 #endif
 }
 
-#if 1
 int
 mas_verbose( void )
 {
@@ -136,8 +135,6 @@ mas_dry_run( void )
 {
   return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0;
 }
-
-#endif
 
 static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
 static void
@@ -192,39 +189,28 @@ SR( TOP, main_with_config, int argc, char **argv )
       DUF_CONFIGG( opt.disable.flag.testnoflag ) );
   QT( "@test-num: %lu", DUF_CONFIGG( testnum ) );
 
-//          opt   disable  testnoflag
-#if 0
-# define SFLAG_SET(_styp, _prf, _loc, _fld )  ((duf_ ## _styp ## _ ## _prf ## _ ## _loc ## _flags_combo_t) {.flag._fld = 1 }).sbit
-  unsigned long long t1 MAS_UNUSED = ( unsigned long long ) SFLAG_SET( config, opt, disable, testnoflag );
-  unsigned long long t2 MAS_UNUSED = ( unsigned long long ) ( ( duf_option_anyflag_t ) {.disable.testnoflag = 1 } ).sbit;
-  QT( "@>>>> %llx : %llx <<<<", t1, t2 );
-}
-#endif
-
-CR( main_db, argc, argv );
-
-/* XXX XXX XXX XXX XXX XXX */
+  CR( main_db, argc, argv );
 
 #ifdef MAS_TRACEMEM
-{
-  extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
+  {
+    extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
 
-  if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
-  {
-    mas_mem_disable_print_usage = 1;
+    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
+    {
+      mas_mem_disable_print_usage = 1;
+    }
+    if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
+    {
+      MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+    }
+    else
+    {
+      MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+    }
   }
-  if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
-  {
-    MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
-  }
-  else
-  {
-    MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
-  }
-}
 #endif
 
-ER( TOP, main_with_config, int argc, char **argv );
+  ER( TOP, main_with_config, int argc, char **argv );
 }
 
 static

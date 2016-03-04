@@ -15,7 +15,7 @@
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
@@ -29,7 +29,7 @@
 
 /* TODO rename _duf_uni_scan_action_title => _duf_sccb_title */
 static const char *
-_duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
+uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   const char *stitle;
 
@@ -55,7 +55,7 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   static char tbuf[1024];
 
-  snprintf( tbuf, sizeof( tbuf ), "◁ %s ▷", _duf_uni_scan_action_title( sccb ) );
+  snprintf( tbuf, sizeof( tbuf ), "◁ %s ▷", uni_scan_action_title( sccb ) );
   return tbuf;
 }
 

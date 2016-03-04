@@ -2,14 +2,14 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
 #include "duf_li_credel.h"
 
-#include "duf_pathinfo.h"
+#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ♠ */
 #include "duf_pathinfo_depth.h"
 /* #include "duf_pathinfo_credel.h" */
 

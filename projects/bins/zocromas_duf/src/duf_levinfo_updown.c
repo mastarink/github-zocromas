@@ -1,12 +1,12 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -15,16 +15,16 @@
 #include "duf_fmt_defs.h"
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
-#include "duf_pdi_depth.h"
+/* #include "duf_pdi_depth.h" */
 
-#include "duf_levinfo.h"
-#include "duf_levinfo_init.h"
+#include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ♠ */
+#include "duf_levinfo_init.h"                                        /* duf_levinfo_init_level; duf_levinfo_init_level_d; etc. ♠ */
 #include "duf_levinfo_dbinit.h"
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
 #include "duf_levinfo_openclose.h"
 
 /* #include "duf_pathinfo.h" */
@@ -79,7 +79,7 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
 
   /* T( "@%d: check depth #%llu: %s - %llu", duf_pdi_depth(pdi), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_nameid( pdi ) ); */
     MAST_TRACE( temp, 3, "@%d: check depth #%llu: %s - %llu: %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ),
-               duf_levinfo_nameid( pdi ), duf_levinfo_itemtruename( pdi ) );
+                duf_levinfo_nameid( pdi ), duf_levinfo_itemtruename( pdi ) );
     delta = ( node_type == DUF_NODE_LEAF ? 1 : 0 );
     delta = 0;
   /* if ( duf_pdi_recursive( pdi ) )               */
@@ -96,7 +96,7 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type 
 
     if ( !DUF_NOERROR( r ) )
       MAST_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ),
-                 duf_pdi_topdepth( pdi ), delta, duf_pdi_recursive( pdi ) );
+                  duf_pdi_topdepth( pdi ), delta, duf_pdi_recursive( pdi ) );
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
   /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH);    */
@@ -136,7 +136,7 @@ _duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname MAS_UNUSED, duf
     else
     {
       MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
-                 duf_levinfo_itemshowname( pdi ) );
+                  duf_levinfo_itemshowname( pdi ) );
     }
     if ( node_type == DUF_NODE_NODE )
       duf_levinfo_countdown_dirs( pdi );                             /* may change levinfo (for upper level) */
@@ -277,7 +277,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
   else
   {
     MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
-               duf_levinfo_itemshowname( pdi ) );
+                duf_levinfo_itemshowname( pdi ) );
   }
   {
     int d;
