@@ -23,17 +23,17 @@
 
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
-#include "duf_levinfo_credel.h"
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ♠ */
 #include "duf_context.h"
-#include "duf_path2dirid.h"
+#include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ♠ */
 
-#include "duf_pdi_filters.h"
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
 #include "duf_pdi_ref.h"
 /* #include "duf_pdi_pi_ref.h" */
 #include "duf_pdi_stmt.h"
 
-#include "duf_pathinfo_credel.h"
-#include "duf_pathinfo.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
+#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ♠ */
 
 #include "duf_ufilter_ref.h"
 
@@ -41,12 +41,12 @@
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
-#include "duf_path2db.h"
+#include "duf_path2db.h"                                             /* duf_real_path2db; etc. ♠ */
 
 #include "duf_pdi_attach.h"
 
 /* ###################################################################### */
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 /* ###################################################################### */
 
 /* 20150904.085609 */

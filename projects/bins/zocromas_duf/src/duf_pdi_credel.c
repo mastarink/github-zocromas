@@ -16,17 +16,17 @@
 
 #include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
+#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo.h"
 #include "duf_pdi_ref.h"
-#include "duf_pathinfo_credel.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
 
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 
 /* ###################################################################### */
-#include "duf_pdi_credel.h"
+#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ♠ */
 /* ###################################################################### */
 
 duf_depthinfo_t *

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 #include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
@@ -26,7 +26,7 @@
 
 #include "duf_context.h"
 
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 /* #include "duf_path2dirid.h" */
 
 /* ###################################################################### */

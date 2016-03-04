@@ -31,7 +31,7 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
 
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 #include "duf_pdi_ref.h"
 
 #include "duf_mod_defs.h"
@@ -39,7 +39,7 @@
 #include "duf_sccb_eval_std.h"
 
 /* #include "duf_path2db.h" */
-#include "duf_path2dirid.h"
+#include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ♠ */
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 

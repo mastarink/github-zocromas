@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 #include "duf_errorn_defs_preset.h"
 
 #include <mastar/trace/mas_trace.h>
@@ -20,15 +20,15 @@
 #include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ */
 
 #include "duf_status_ref.h"
-#include "duf_optimpl_defs.h"
+#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ♠ */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 
-#include "duf_pdi_credel.h"
+#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ♠ */
 
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 #include "duf_pdi_ref.h"
 #include "duf_pdi_reinit.h"
 /* ###################################################################### */

@@ -39,7 +39,7 @@
 #  define DUF_SQL_SE_START_STMT( _pdi, _name, _sql, _pstmt_m ) \
 	DUF_SQL_SE_START_STMT_NOPDI( _sql, _pstmt_m ); \
 	MAST_TRACE(sql, 4, "START:%s (%d:%s)", _sql, QERRIND, QERRNAME);
-#  else
+# else
 #  undef DUF_SQL_SE_START_STMT
 # endif
 

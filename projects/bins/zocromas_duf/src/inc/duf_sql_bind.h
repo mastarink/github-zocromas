@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SQL_BIND_H
-#  define MAS_DUF_SQL_BIND_H
+# define MAS_DUF_SQL_BIND_H
 
-#  include "duf_sql_types.h"
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ♠ */
 int duf_sql_bindu_long_long( duf_stmnt_t * stmt, const char *fldname, int pi, long long value, int opt );
 int duf_sql_bindu_long_long_nz( duf_stmnt_t * stmt, const char *fldname, int pi, long long value, int opt );
 int duf_sql_bindu_int( duf_stmnt_t * stmt, const char *fldname, int pi, int value, int opt );

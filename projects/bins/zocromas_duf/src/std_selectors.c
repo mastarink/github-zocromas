@@ -7,7 +7,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */

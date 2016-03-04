@@ -17,11 +17,11 @@
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
-#include "duf_sql_prepared.h"
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
 
 /* ###################################################################### */
-#include "duf_pdi.h"
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
 /* ###################################################################### */
 
 static duf_idstmt_t *

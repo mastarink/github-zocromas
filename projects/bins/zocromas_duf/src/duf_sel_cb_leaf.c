@@ -2,12 +2,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
 
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
+#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
 #include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
 #include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
@@ -20,7 +20,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 
 #include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
 #include "duf_levinfo_updown.h"                                      /* duf_levinfo_goup */
 
 #include "duf_pdi_ref.h"                                             /* duf_pdi_depth */
@@ -38,8 +38,8 @@
 #include "duf_pstmt_levinfo.h"
 
 #include "duf_sccb_scanstage.h"
-#include "duf_pdi_credel.h"
-#include "duf_levinfo_credel.h"
+#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ♠ */
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ♠ */
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
@@ -48,7 +48,8 @@
 /* ###################################################################### */
 
 /* 20151027.114003 */
-DUF_WRAPSTATIC int
+/* DUF_WRAPSTATIC */
+int
 duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DUF_STARTR( r );
@@ -101,7 +102,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
           }
 
           MAST_TRACE( sccbh, 0, "TEST %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( pdi2 ), duf_nodetype_name( DUF_NODE_LEAF ), DUF_NODE_LEAF,
-                     duf_levinfo_path_up( pdi2 ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), duf_levinfo_itemtruename( pdi2 ) );
+                      duf_levinfo_path_up( pdi2 ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), duf_levinfo_itemtruename( pdi2 ) );
 #  else
           duf_li_delete( pli, PDI->pathinfo.maxdepth );
           pli = NULL;
@@ -142,6 +143,7 @@ duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2
   DUF_ENDR( r );
 }
 
+#if 0
 /* 20151027.114007 */
 int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
@@ -180,6 +182,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_scanstage_t scanstage, duf_stmnt_t 
 
   DUF_ENDR( r );
 }
+#endif
 
 /* duf_sel_cb_leaves:
  * this is callback of type: duf_sel_cb_t (first range): 
