@@ -3,6 +3,6 @@
 
 # include "duf_hook_types.h"                                         /* duf_action_table_t ♠ */
 
-int duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh, duf_node_type_t node_type );
+int duf_sccbh_pstmt_godown_dbopenat_dh( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );
 
 #endif

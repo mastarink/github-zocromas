@@ -111,7 +111,7 @@ duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t 
   MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
   {
   /*@ 1. go down + dbopenat */
-    DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, sccbh, DUF_NODE_NODE /* node_type */  ) );
+    DOR( r, duf_sccbh_pstmt_godown_dbopenat_dh( sccbh, pstmt, DUF_NODE_NODE /* node_type */  ) );
     MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
