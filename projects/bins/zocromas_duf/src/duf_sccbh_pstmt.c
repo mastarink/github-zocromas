@@ -2,14 +2,20 @@
 #include <assert.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ✗ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -35,9 +41,9 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
   MAST_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
   MAST_TRACE( explain, 2, "@ sel cb2 node" );
 
-  CR( levinfo_godown_dbopenat_dh, PDI, node_type, pstmt );
+  CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
 
-  assert( QISERR || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( PDI ) ); /* was set by duf_levinfo_godown */
+  assert( QISERR || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( H_PDI ) ); /* was set by duf_levinfo_godown */
 
 /* DUF_ENDR( r ); */
   ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );

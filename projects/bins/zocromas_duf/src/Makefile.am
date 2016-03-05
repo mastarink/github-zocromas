@@ -57,8 +57,8 @@ zocromas_duf_SOURCES= \
 	data_optable_trace.c \
 	data_optable_uplus.c \
 	duf_action_table.c \
-	duf_atable_sccb.c \
-	duf_atable_sccb_eval.c \
+	 \
+	 \
 	duf_cfg_credel.c \
 	duf_cfg_output_util.c \
 	duf_config.c \
@@ -110,7 +110,7 @@ zocromas_duf_SOURCES= \
 	duf_pathinfo_credel.c \
 	duf_pathinfo_depth.c \
 	duf_pathinfo_ref.c \
-	duf_pdi_atable_sccb_eval.c \
+	 \
 	duf_pdi_attach.c \
 	duf_pdi.c \
 	duf_pdi_context.c \

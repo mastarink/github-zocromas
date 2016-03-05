@@ -10,6 +10,8 @@ sfind src.mased.vim
 tab sfind srclevinfo.mased.vim
 sfind srcli.mased.vim
 sfind srcpathinfo.mased.vim
+
+tab sfind srcsccbh.mased.vim
 sfind srcsccb.mased.vim
 
 tab sfind dufcmds.mased.vim
@@ -33,4 +35,3 @@ sfind vimrc.mased.vim
 
 tab sfind srcerrors.mased.vim
 
-tab sfind srcsccbh.mased.vim

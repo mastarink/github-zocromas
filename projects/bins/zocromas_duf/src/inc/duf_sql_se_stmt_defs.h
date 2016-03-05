@@ -101,10 +101,10 @@
 		  if ( QNOERR ) \
 		  {  \
 		    MAST_TRACE( sql, 4, "@@bind ll nz opt " # _name ": %lld", (long long)_value); \
-		    MASE_E_LOWER( BIND_NAME ); \
+		    ERRLOWER( BIND_NAME ); \
                     CR(sql_bindn_long_long_nz, _pstmt_m, ":" # _name, _value, 1 ); \
 		    ERRCLEAR( BIND_NAME); \
-		    MASE_E_UPPER( BIND_NAME ); \
+		    ERRUPPER( BIND_NAME ); \
 		  }
 
 # define DUF_SQL_SE_BIND_I( _name, _value, _pstmt_m ) \

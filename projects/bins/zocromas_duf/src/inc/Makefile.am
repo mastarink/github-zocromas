@@ -6,8 +6,8 @@
 
 noinst_HEADERS=motest_config.h \
 	duf_action_table.h \
-	duf_atable_sccb_eval.h \
-	duf_atable_sccb.h \
+	 \
+	 \
 	duf_base_output_types.h \
 	duf_base_types.h \
 	duf_cfg_credel.h \
@@ -107,7 +107,7 @@ noinst_HEADERS=motest_config.h \
 	duf_pathinfo_ref_def.h \
 	duf_pathinfo_ref.h \
 	duf_pathinfo_types.h \
-	duf_pdi_atable_sccb_eval.h \
+	 \
 	duf_pdi_attach.h \
 	duf_pdi_context.h \
 	duf_pdi_credel.h \

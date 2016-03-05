@@ -119,13 +119,14 @@ noremap! <M-F4> <C-R>=expand("%:t")<CR>
  
 " insert filename
 
-nmap <C-]> :call MasGoTag2()<CR>
+nnoremap <C-]> :call MasGoTag2()<CR>
 
 
 " winpos 0 35
 " winsize 155 50
 
-
+nnoremap <C-e> i#include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
+inoremap <C-e> #include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
 
 " sb `=dfile`
 " bd `=dfile`

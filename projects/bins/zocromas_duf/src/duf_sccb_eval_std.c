@@ -1,31 +1,35 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+/* #include <mastar/error/mas_error_defs_make.h> */
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_action_table.h"
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 /* #include "duf_option_defs.h"                                         (* DUF_ACTG_FLAG( summary ) *) */
-#include "duf_optimpl_defs.h"                                        /* DUF_ACTG_FLAG( summary ) */
+#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
 
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 
-#include "duf_pdi_global.h"                                          /* duf_pdi_global() ♠ */
+#include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
 #include "duf_sccb_eval_std.h"
@@ -62,18 +66,18 @@ duf_finor_load_d_sccb_by_evname_std( const char *name )
 }
 #endif
 
-int
-duf_ev_evnamed_list_std( const char *names )
+SR( OTHER, ev_evnamed_list_std, const char *names )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   assert( duf_pdi_global_ufilter(  ) == DUF_CONFIGX( vars.puz ) );
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
 /* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) ); */
-  DOR( r, duf_ev_evnamed_list( names, duf_first_sccb(  ) ) );
+  CR( ev_evnamed_list, names, duf_first_sccb(  ) );
 #endif
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, ev_evnamed_list_std, const char *names );
 }
 
 #if 0
@@ -107,11 +111,11 @@ int
 duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, const mas_argvc_t * ptarg )
 {
   DUF_STARTR( r );
-#if 0
+# if 0
   DOR( r, duf_ev_pdi_atable_evnamen( pdi, name, len, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
-#else
+# else
   DOR( r, duf_ev_pdi_evnamen( pdi, name, len, duf_first_sccb(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
-#endif
+# endif
   DUF_ENDR( r );
 }
 
@@ -119,11 +123,11 @@ int
 duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, const mas_argvc_t * ptarg )
 {
   DUF_STARTR( r );
-#if 0
+# if 0
   DOR( r, duf_ev_pdi_atable_evname( pdi, name, duf_action_table(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
-#else
+# else
   DOR( r, duf_ev_pdi_evname( pdi, name, duf_first_sccb(  ), ptarg, DUF_ACTG_FLAG( summary ) ) );
-#endif
+# endif
   DUF_ENDR( r );
 }
 
@@ -131,26 +135,26 @@ int
 duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg )
 {
   DUF_STARTR( r );
-#if 0
+# if 0
   DOR( r, duf_ev_pdi_atable_evname_at( pdi, name, duf_action_table(  ), arg, DUF_ACTG_FLAG( summary ) ) );
-#else
+# else
   DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_first_sccb(  ), arg, DUF_ACTG_FLAG( summary ) ) );
-#endif
+# endif
   DUF_ENDR( r );
 }
 #endif
 
-int
-duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
+SR( PDI, ev_pdi_evname_std, duf_depthinfo_t * pdi, const char *name )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 /* assert( 0 );                                             */
 /* assert( duf_levinfo_node_type( pdi ) == DUF_NODE_LEAF ); */
 
 #if 0
   DOR( r, duf_ev_pdi_atable_evname_at( pdi, name, duf_action_table(  ), NULL, DUF_ACTG_FLAG( summary ) ) );
 #else
-  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_first_sccb(  ), NULL, DUF_ACTG_FLAG( summary ) ) );
+  CR( ev_pdi_evname_at, pdi, name, duf_first_sccb(  ), NULL, DUF_ACTG_FLAG( summary ) );
 #endif
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PDI, ev_pdi_evname_std, duf_depthinfo_t * pdi, const char *name );
 }

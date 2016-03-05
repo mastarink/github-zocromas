@@ -62,10 +62,10 @@
 # define QPERRIND &(fundecl_.r.ei)
 # define QERRNAME			mas_error_name_i( QERRIND )
 
-# define ERRUPPER(_err)			MASE_CLEAR_UPPER( QERRIND, ERRCODE( _err ) )
-# define ERRRUPPER(_rt, _err)		MASE_CLEAR_UPPER( _rt, ERRCODE( _err ) )
-# define ERRLOWER(_err)			MASE_CLEAR_LOWER( QERRIND, ERRCODE( _err ) )
-# define ERRRLOWER(_rt, _err)		MASE_CLEAR_LOWER( _rt, ERRCODE( _err ) )
+# define ERRUPPER(_err)			MASE_E_UPPER( QERRIND, ERRCODE( _err ) )
+# define ERRRUPPER(_rt, _err)		MASE_E_UPPER( _rt, ERRCODE( _err ) )
+# define ERRLOWER(_err)			MASE_E_LOWER( QERRIND, ERRCODE( _err ) )
+# define ERRRLOWER(_rt, _err)		MASE_E_LOWER( _rt, ERRCODE( _err ) )
 
 # define ERRCLEAR_X(...)		MASE_CLEAR_ERROR( QERRIND, __VA_ARGS__ )
 # define ERRCLEAR(_err)			MASE_CLEAR_ERROR( QERRIND, ERRCODE( _err ) )

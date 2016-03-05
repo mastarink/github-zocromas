@@ -42,13 +42,13 @@ duf_sel_cb2_node_at( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2
 {
   DUF_STARTR( r );
 /*@ 1. go down + dbopenat */
-  PDI->seq++;
-  PDI->seq_node++;
+  H_PDI->seq++;
+  H_PDI->seq_node++;
 
-  MAST_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
+  MAST_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", H_PDI->seq_node, H_PDI->seq, H_TOTITEMS, H_SCCB->title );
   if ( sccbh->progress_node_cb )
     ( sccbh->progress_node_cb ) ( sccbh );
-  MAST_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
+  MAST_TRACE( seq, 0, "seq:%llu; seq_node:%llu", H_PDI->seq, H_PDI->seq_node );
 
   if ( str_cb2 )
   {
@@ -68,22 +68,22 @@ duf_sel_cb2_node_at( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2
 int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
   DUF_STARTR( r );
-  assert( PDI );
-  assert( PDI->pathinfo.depth >= 0 );
+  assert( H_PDI );
+  assert( H_PDI->pathinfo.depth >= 0 );
 
 /* data from db at pstmt */
 
-  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
+  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( H_PDI ) );
   MAST_TRACE( explain, 4, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 
-  MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
-  MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
-  assert( PDI->pathinfo.depth >= 0 );
+  MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( H_PDI ) );
+  MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( H_PDI ) );
+  assert( H_PDI->pathinfo.depth >= 0 );
   {
     DOR( r, duf_sel_cb2_node_at( sccbh, pstmt, str_cb2, scanstage ) );
   }
-  MAST_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( H_PDI ) );
 
   DUF_ENDR( r );
 }
@@ -98,31 +98,31 @@ int
 duf_sel_cb2_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
   DUF_STARTR( r );
-  assert( PDI );
-  assert( PDI->pathinfo.depth >= 0 );
+  assert( H_PDI );
+  assert( H_PDI->pathinfo.depth >= 0 );
 
-  assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
+  assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
 
 /* data from db at pstmt */
 
-  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
+  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( H_PDI ) );
   MAST_TRACE( explain, 4, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 
-  MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( H_PDI ) );
   {
   /*@ 1. go down + dbopenat */
     DOR( r, duf_sccbh_pstmt_godown_dbopenat_dh( sccbh, pstmt, DUF_NODE_NODE /* node_type */  ) );
-    MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( PDI ) );
-    assert( PDI->pathinfo.depth >= 0 );
+    MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), duf_levinfo_path( H_PDI ) );
+    assert( H_PDI->pathinfo.depth >= 0 );
 
     DOR( r, duf_sel_cb2_node_at( sccbh, pstmt, str_cb2, scanstage ) );
 
-    assert( PDI->pathinfo.depth == duf_levinfo_calc_depth( PDI ) );
+    assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
 
-    DOR( r, duf_levinfo_goup( PDI ) );
+    DOR( r, duf_levinfo_goup( H_PDI ) );
   }
-  MAST_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( PDI ) );
+  MAST_TRACE( scan, 6, "/NODE %s", duf_levinfo_path( H_PDI ) );
 
   DUF_ENDR( r );
 }

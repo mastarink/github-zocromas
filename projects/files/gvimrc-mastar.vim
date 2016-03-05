@@ -49,13 +49,13 @@ if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
   if !empty(mas_localvimdir)
     let mas_localvimdirs=mas_localvimdir . '/'
   endif
-  let  guienter=mas_localvimdirs . 'gvim-guienter.vim'
-  if filereadable(guienter)
-    echo 'guienter: ' . guienter
-    au GUIEnter * sil so `=guienter`
-  else
-    echo 'not found guienter: ' . guienter
-  endif
+" let  guienter=mas_localvimdirs . 'gvim-guienter.vim'
+" if filereadable(guienter)
+"   echo 'guienter: ' . guienter
+"   au GUIEnter * sil so `=guienter`
+" else
+"   echo 'not found guienter: ' . guienter
+" endif
 " let  tabenter=mas_localvimdirs . 'gvim-tabenter.vim'
 " if filereadable(tabenter)
 "   echo 'tabenter: ' . tabenter

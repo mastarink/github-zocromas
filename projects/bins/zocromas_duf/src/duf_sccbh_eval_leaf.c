@@ -4,14 +4,18 @@
 #include <stddef.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ✗ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ✗ */
-#include "duf_dodefs.h"                                              /* DOR ✗ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -39,55 +43,71 @@
  *  - pdi
  *  - sccb
  * */
-int
-duf_sccbh_eval_db_leaf_fd_str_cb( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
 #if 0
-  PDI->items.total++;
-  PDI->items.files++;
+  H_PDI->items.total++;
+  H_PDI->items.files++;
 #endif
-
-  DOR_LOWERE( r, duf_levinfo_if_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
-  DOR_LOWERE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED, DUF_ERROR_STATAT_ENOENT );
+  {
+    ERRLOWER( FS_DISABLED );
+    CR( levinfo_if_openat_dh, H_PDI );
+    {
+      ERRLOWER( STATAT_ENOENT );
+      CR( levinfo_if_statat_dh, H_PDI );
+      ERRUPPER( STATAT_ENOENT );
+    }
+    ERRUPPER( FS_DISABLED );
+  }
+/* DOR_LOWERE( r, duf_levinfo_if_openat_dh( H_PDI ), DUF_ERROR_FS_DISABLED );                          */
+/* DOR_LOWERE( r, duf_levinfo_if_statat_dh( H_PDI ), DUF_ERROR_FS_DISABLED, DUF_ERROR_STATAT_ENOENT ); */
 #if 1
-  if ( duf_levinfo_deleted( PDI ) )
-    DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
+  if ( duf_levinfo_deleted( H_PDI ) )
+  {
+    ERRCLEAR( OPENAT_ENOENT );
+    ERRCLEAR( STATAT_ENOENT );
+  }
 #endif
   {
     duf_scan_hook2_file_func_t scanner = NULL;
 
 #if 0
-    scanner = SCCB->leaf_scan_fd2;
-    if ( duf_levinfo_deleted( PDI ) )
+    scanner = H_SCCB->leaf_scan_fd2;
+    if ( duf_levinfo_deleted( H_PDI ) )
     {
-      scanner = SCCB->leaf_scan_fd2_deleted ? SCCB->leaf_scan_fd2_deleted : NULL;
+      scanner = H_SCCB->leaf_scan_fd2_deleted ? H_SCCB->leaf_scan_fd2_deleted : NULL;
     }
-    assert( scanner == duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF ) );
+    assert( scanner == duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF ) );
 #else
-    scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF );
+    scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
 #endif
     if ( scanner )
     {
       sccbh->current_scanner = scanner;
-      DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+      {
+        ERRLOWER( FS_DISABLED );
+        CRV( scanner, pstmt, H_PDI );
+        ERRUPPER( FS_DISABLED );
+      }
       assert( sccbh->current_node_type == DUF_NODE_LEAF );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_LEAF, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_LEAF, QERRIND );
     }
     else
     {
 #if 0
-      DUF_SHOW_ERRORO( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ), duf_levinfo_deleted( PDI ),
-                       duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
+      DUF_SHOW_ERRORO( "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( H_SCCB ), duf_levinfo_deleted( H_PDI ),
+                       duf_levinfo_relpath( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 #else
-      DUF_MAKE_ERRORM( r, DUF_ERROR_UNKNOWN, "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( SCCB ),
-                       duf_levinfo_deleted( PDI ), duf_levinfo_relpath( PDI ), duf_levinfo_itemshowname( PDI ) );
+      ERRMAKE_M( UNKNOWN, "no scanner at %s; deleted:%d for <path>/%s%s... ...", duf_uni_scan_action_title( H_SCCB ),
+                 duf_levinfo_deleted( H_PDI ), duf_levinfo_relpath( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 #endif
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage );
 }
 
 /*20150820.085324
@@ -99,30 +119,34 @@ duf_sccbh_eval_db_leaf_fd_str_cb( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
  *  - pdi
  *  - sccb
  * */
-int
-duf_sccbh_eval_db_leaf_str_cb( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  PDI->items.total++;
-  PDI->items.files++;
+  H_PDI->items.total++;
+  H_PDI->items.files++;
 
   {
     duf_scan_hook2_file_func_t scanner = NULL;
 
 #if 0
-    scanner = SCCB->leaf_scan2;
-    if ( SCCB->leaf_scan2_deleted && duf_levinfo_if_deleted( PDI ) )
+    scanner = H_SCCB->leaf_scan2;
+    if ( H_SCCB->leaf_scan2_deleted && duf_levinfo_if_deleted( H_PDI ) )
     {
-      scanner = SCCB->leaf_scan2_deleted;
+      scanner = H_SCCB->leaf_scan2_deleted;
       DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT );
     }
-    assert( scanner == duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF ) );
+    assert( scanner == duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF ) );
 #else
-    scanner = duf_scanstage_scanner( SCCB, scanstage, duf_levinfo_deleted( PDI ), DUF_NODE_LEAF );
+    scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
 #endif
     if ( scanner )
-      DOR_LOWERE( r, ( scanner ) ( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+    {
+      ERRLOWER( FS_DISABLED );
+      CRV( scanner, pstmt, H_PDI );
+      ERRUPPER( FS_DISABLED );
+    }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage );
 }

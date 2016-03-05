@@ -3,6 +3,7 @@
 
 /* * see duf_sccb_eval.h for names explanation * */
 
+#include "duf_se.h"                                                  /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 int duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary )
       __attribute__ ( ( warn_unused_result ) );
