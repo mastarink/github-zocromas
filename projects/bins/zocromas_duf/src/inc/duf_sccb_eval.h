@@ -34,8 +34,9 @@
  * */
 
 
+#include "duf_se.h"
 
-int duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first );
+DR(OTHER,ev_evnamed_list, const char *names, duf_scan_callbacks_t * first );
 
 /* int duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first ) __attribute__ ( ( warn_unused_result ) ); */
 

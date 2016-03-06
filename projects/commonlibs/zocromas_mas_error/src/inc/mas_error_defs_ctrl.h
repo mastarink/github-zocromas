@@ -10,7 +10,7 @@
 # define MASE_E_SET(_n, ...)       mas_enable_mereport_c(0, _n,  1, __VA_ARGS__, 0)
 # define MASE_E_SHIFT(_n, ...)     mas_enable_mereport_c(0, _n,  0, __VA_ARGS__, 0)
 
-# if 0
+# if 1
 #  define MASE_E_LOWER(...)       { mas_enable_mereport_c(0, -1,  0, __VA_ARGS__, 0)
 #  define MASE_E_LOWER_N(_n, ...) { mas_enable_mereport_c(0, -_n, 0, __VA_ARGS__, 0)
 #  define MASE_E_UPPER(...)         mas_enable_mereport_c(0,  1,  0, __VA_ARGS__, 0); }
@@ -62,9 +62,9 @@
 # define QPERRIND &(fundecl_.r.ei)
 # define QERRNAME			mas_error_name_i( QERRIND )
 
-# define ERRUPPER(_err)			MASE_E_UPPER( QERRIND, ERRCODE( _err ) )
+# define ERRUPPER(_err)			MASE_E_UPPER( ERRCODE( _err ) )
 # define ERRRUPPER(_rt, _err)		MASE_E_UPPER( _rt, ERRCODE( _err ) )
-# define ERRLOWER(_err)			MASE_E_LOWER( QERRIND, ERRCODE( _err ) )
+# define ERRLOWER(_err)			MASE_E_LOWER( ERRCODE( _err ) )
 # define ERRRLOWER(_rt, _err)		MASE_E_LOWER( _rt, ERRCODE( _err ) )
 
 # define ERRCLEAR_X(...)		MASE_CLEAR_ERROR( QERRIND, __VA_ARGS__ )

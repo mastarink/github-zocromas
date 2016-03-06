@@ -3,18 +3,24 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ✗ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ✗ */
-#include "duf_dodefs.h"                                              /* DOR ✗ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
-#include "duf_debug_defs.h"                                          /* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ *) */
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
@@ -51,20 +57,19 @@
 /* ###################################################################### */
 
 /* 20150819.164652 */
-DUF_WRAPSTATIC int
-duf_sccbh_eval_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
+SR( SCCBH, sccbh_eval_all_and_summary_checked, duf_sccb_handle_t * sccbh, bool f_summary )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DUF_E_LOWER( DUF_ERROR_TOO_DEEP );
+  ERRLOWER( TOO_DEEP );
   assert( sccbh );
   assert( H_SCCB );
 
   MAST_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, H_SCCB->name );
-  DORF( r, duf_sccbh_eval_all, sccbh, ( duf_stmnt_t * ) NULL, ( duf_scanstage_t ) NULL ); /* XXX XXX XXX XXX XXX XXX */
-  MAST_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", mas_error_name_i( r ), sccbh ? 1 : 0, H_SCCB->name );
+  CR( sccbh_eval_all, sccbh, ( duf_stmnt_t * ) NULL, ( duf_scanstage_t ) NULL ); /* XXX XXX XXX XXX XXX XXX */
+  MAST_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", QERRNAME, sccbh ? 1 : 0, H_SCCB->name );
 
-  if ( DUF_NOERROR( r ) && f_summary )
+  if ( QNOERR && f_summary )
   {
     DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( H_SCCB ) );
 
@@ -77,15 +82,16 @@ duf_sccbh_eval_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
     DUF_PRINTF( 0, " summary; changes:%llu", H_HCHANGES );
     DUF_PRINTF( 0, " summary; total-bytes:%llu", H_PDI->total_bytes );
   }
-  DUF_E_UPPER( DUF_ERROR_TOO_DEEP );
-  DUF_ENDR( r );
+  ERRUPPER( TOO_DEEP );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_all_and_summary_checked, duf_sccb_handle_t * sccbh, bool f_summary );
 }
 
 #ifdef MAS_WRAP_FUNC
 /* 20150819.164643 */
-int DUF_WRAPPED( duf_sccbh_eval_all_and_summary ) ( duf_sccb_handle_t * sccbh, bool f_summary ) /* duf_sccbh_eval_all */
+SR( SCCBH, sccbh_eval_all_and_summary, duf_sccb_handle_t * sccbh, bool f_summary )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   if ( sccbh && H_SCCB )
   {
     MAST_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( H_SCCB ) );
@@ -96,7 +102,7 @@ int DUF_WRAPPED( duf_sccbh_eval_all_and_summary ) ( duf_sccb_handle_t * sccbh, b
       H_HCHANGES = 0;
       if ( duf_levinfo_path( H_PDI ) )
       {
-        DOR( r, duf_sccbh_eval_all_and_summary( sccbh, f_summary ) ); /* XXX XXX XXX XXX XXX XXX */
+        CR( sccbh_eval_all_and_summary_checked, sccbh, f_summary );
       }
       else
       {
@@ -106,17 +112,18 @@ int DUF_WRAPPED( duf_sccbh_eval_all_and_summary ) ( duf_sccb_handle_t * sccbh, b
   }
   else
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_SCCB );
+    ERRMAKE( SCCB );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_all_and_summary, duf_sccb_handle_t * sccbh, bool f_summary );
 }
 #endif
 
 /* 20160212.130816 */
-static int
-duf_sccbh_eval_db_items_str_cb( duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+static
+SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
 
@@ -139,14 +146,14 @@ duf_sccbh_eval_db_items_str_cb( duf_sccb_handle_t * sccbh, duf_node_type_t node_
 #if 0
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set_pair.active, str_cb2, sccbh, node_type ) );
 #else
-    DOR( r, duf_eval_sccbh_sql_set_str_cb( sccbh, node_type, sql_set_pair, str_cb2, scanstage ) );
+    CR( eval_sccbh_sql_set_str_cb, sccbh, node_type, sql_set_pair, str_cb2, scanstage );
 #endif
-    if ( DUF_NOERROR( r ) )
+    if ( QNOERR )
     {
-      if ( r > 0 )
+      if ( QERRIND > 0 )
       {
         MAST_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
-                    r, set_type_title, duf_uni_scan_action_title( H_SCCB ), duf_levinfo_dirid( H_PDI ) );
+                    QERRIND, set_type_title, duf_uni_scan_action_title( H_SCCB ), duf_levinfo_dirid( H_PDI ) );
       }
       else
       {
@@ -158,9 +165,10 @@ duf_sccbh_eval_db_items_str_cb( duf_sccb_handle_t * sccbh, duf_node_type_t node_
   else
   {
     MAST_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", set_type_title );
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
+    ERRMAKE( PTR );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
 }
 
 /*20150820.085607
@@ -200,10 +208,9 @@ duf_sccbh_eval_db_leaves( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused 
   DUF_ENDR( r );
 }
 #endif
-int
-duf_sccbh_eval_db_leaves_nofd( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 /* scan this files in this directory */
 /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
@@ -213,16 +220,16 @@ duf_sccbh_eval_db_leaves_nofd( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_un
     if ( H_SCCB->leaf_scan2 )
     {
     /* duf_sccbh_eval_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
-      DOR( r, duf_sccbh_eval_db_items_str_cb( sccbh, DUF_NODE_LEAF, duf_sccbh_eval_db_leaf_str_cb, scanstage ) );
+      CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, duf_sccbh_eval_db_leaf_str_cb, scanstage );
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
 }
 
-int
-duf_sccbh_eval_db_leaves_fd( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 /* scan this files in this directory */
 /* if ( DUF_ACTG_FLAG( allow_files ) ) */
   {
@@ -232,17 +239,17 @@ duf_sccbh_eval_db_leaves_fd( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unus
     if ( H_SCCB->leaf_scan_fd2 )
     {
     /* duf_sccbh_eval_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
-      DOR( r, duf_sccbh_eval_db_items_str_cb( sccbh, DUF_NODE_LEAF, duf_sccbh_eval_db_leaf_fd_str_cb, scanstage ) );
+      CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, duf_sccbh_eval_db_leaf_fd_str_cb, scanstage );
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
 }
 
 /* 20151027.144606 */
-int
-duf_sccbh_eval_db_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   MAST_TRACE( scan, 4, "? scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
@@ -259,20 +266,20 @@ duf_sccbh_eval_db_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scan
       sccbh->current_scanner = scanner;
       sccbh->current_node_type = DUF_NODE_NODE;
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
-      DOR( r, ( scanner ) ( pstmt, H_PDI ) );
+      CRV( ( scanner ), pstmt, H_PDI );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
     }
     else if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
     {
       sccbh->current_scanner = scanner;
       sccbh->current_node_type = DUF_NODE_NODE;
       MAST_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
-      DOR( r, ( scanner ) ( pstmt, H_PDI ) );
+      CRV( ( scanner ), pstmt, H_PDI );
       assert( sccbh->current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, r );
+        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
     }
 #else
     if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_if_deleted( H_PDI ), DUF_NODE_NODE ) ) )
@@ -288,15 +295,15 @@ duf_sccbh_eval_db_node( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scan
                   duf_levinfo_dirid( H_PDI ), duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ) );
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage );
 }
 
 /* 20150820.085615 */
 /* TODO duf_sccb_handle_t * sccbh must be first in all such funcs 20160210.120016 */
-int
-duf_sccbh_eval_db_subnodes( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( sccbh );
   assert( H_SCCB );
@@ -308,6 +315,7 @@ duf_sccbh_eval_db_subnodes( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_U
 #endif
   MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( H_PDI ), duf_uni_scan_action_title( H_SCCB ), duf_levinfo_path( H_PDI ) );
 
-  DORF( r, duf_sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_NODE, duf_sccbh_eval_all, scanstage );
-  DUF_ENDR( r );
+  CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_NODE, duf_sccbh_eval_all, scanstage );
+/* DUF_ENDR( r ); */
+  ER( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage );
 }

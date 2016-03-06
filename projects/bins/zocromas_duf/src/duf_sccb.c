@@ -3,22 +3,22 @@
 #include <string.h>
 #include <dlfcn.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
@@ -31,9 +31,8 @@
 static const char *
 uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
-  const char *stitle;
+  const char *stitle = NULL;
 
-  DUF_START(  );
   if ( sccb && sccb->title )
   {
     stitle = strrchr( sccb->title, '/' );
@@ -46,7 +45,7 @@ uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   {
     stitle = "";
   }
-  DUF_ENDCS( stitle );
+  return stitle;
 }
 
 /* TODO rename duf_uni_scan_action_title => duf_sccb_title */
@@ -151,6 +150,7 @@ duf_find_sccb_by_evname( const char *name, const duf_scan_callbacks_t * first )
   sccb = duf_find_sccb_by_evnamen( name, strlen( name ), first );
   return sccb;
 }
+
 #if 0
 static const duf_scan_callbacks_t *
 duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first )

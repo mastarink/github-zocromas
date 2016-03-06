@@ -4,6 +4,7 @@
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ♠ */
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 int duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t node_type );
 int duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t node_type ); /* XXX equal XXX to duf_levinfo_godown ? XXX */

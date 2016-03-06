@@ -1,56 +1,64 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_ref_def.h"
 
-#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
-#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ♠ */
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ✗ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 #include "duf_evsql_selector_new.h"
 
 #include "duf_ufilter_bind.h"
 
 #include "sql_beginning_selected.h"
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 /* ###################################################################### */
 #include "duf_levinfo_count.h"
 /* ###################################################################### */
 
-unsigned long long
-duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
+/* unsigned long long                                               */
+/* duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d ) */
+SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depthinfo_t * pdi, int d )
 {
-  unsigned long long childs = 0;
+/* unsigned long long childs = 0; */
 
   if ( duf_levinfo_dirid_d( pdi, d ) && duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE )
   {
-    int rpr = 0;
+  /* int rpr = 0; */
     char *sql = NULL;
     unsigned ns = 0;
 
   /* assert( pdi->sql_selected_done ); */
-  /* T( ">> sql_selected_done:%d", pdi->sql_selected_done ); */
+  /* QT( ">> sql_selected_done:%d", pdi->sql_selected_done ); */
     const duf_sql_set_t set[] = {
       {
        .name = "childs",
@@ -89,39 +97,40 @@ duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
 #else
-    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, &rpr );
+    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, QPERRIND );
 #endif
-    if ( DUF_NOERROR( rpr ) && sql )
+    if ( QNOERR && sql )
     {
-    /* T( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
-      DUF_SQL_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, rpr, pstmt );
-      DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), rpr, pstmt );
-      DUF_SQL_STEP( rpr, pstmt );
-      if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
+    /* QT( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
+      DUF_SQL_SE_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, pstmt );
+      DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), pstmt );
+      DUF_SQL_SE_STEP( pstmt );
+      if ( QISERR1_N( SQL_ROW ) )
       {
         childs = DUF_GET_UFIELD2( childs );
       }
-      else if ( DUF_IS_ERROR_N( rpr, DUF_SQL_DONE ) )
+      else if ( QISERR1_N( SQL_DONE ) )
       {
         childs = 0;
       }
       else
       {
-        MAST_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
-        T( "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
+        MAST_TRACE( select, 0, "@<NOT selected> (%s)", QERRNAME );
+        QT( "@<NOT selected> (%s)", QERRNAME );
         assert( 0 );
       }
     /* DUF_TEST_R( rpr ); */
-      DUF_SQL_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, rpr, pstmt );
+      DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
 #if 0
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), childs );
 #endif
-    /* T( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), childs, sql ); */
+    /* QT( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), childs, sql ); */
 
       mas_free( sql );
     }
   }
-  return childs;
+/* return childs; */
+  ERX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depthinfo_t * pdi, int d );
 }
 
 /* *INDENT-OFF*  */
@@ -129,14 +138,15 @@ DUF_LEVINFO_FC(   unsigned long long, count_childs )
 DUF_LEVINFO_FC_UP( unsigned long long, count_childs )
 /* *INDENT-ON*  */
 
-unsigned long long
-duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
+/* unsigned long long                                               */
+/* duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d ) */
+SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depthinfo_t * pdi, int d )
 {
-  unsigned long long gfiles = 0;
+/* unsigned long long gfiles = 0; */
 
   if ( duf_levinfo_dirid_d( pdi, d ) && duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE )
   {
-    int rpr = 0;
+  /* int rpr = 0; */
     char *sql = NULL;
     unsigned ns = 0;
 
@@ -193,37 +203,37 @@ duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
 #else
-    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, &rpr );
+    sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, QPERRIND );
 #endif
-    if ( DUF_NOERROR( rpr ) && sql )
+    if ( QNOERR && sql )
     {
-    /* T( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
-      DUF_SQL_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, rpr, pstmt );
-      DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), rpr, pstmt );
+    /* QT( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
+      DUF_SQL_SE_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, pstmt );
+      DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), pstmt );
 
-      DOR( rpr, duf_bind_ufilter_uni( pstmt, duf_pdi_pu( pdi ), duf_pdi_py( pdi ), NULL, NULL /* ptr */  ) );
+      CR( bind_ufilter_uni, pstmt, duf_pdi_pu( pdi ), duf_pdi_py( pdi ), NULL, NULL /* ptr */  );
 
-      DUF_SQL_STEP( rpr, pstmt );
-      if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
+      DUF_SQL_SE_STEP( pstmt );
+      if ( QISERR1_N( SQL_ROW ) )
       {
         gfiles = DUF_GET_UFIELD2( gfiles );
       }
-      else if ( DUF_IS_ERROR_N( rpr, DUF_SQL_DONE ) )
+      else if ( QISERR1_N( SQL_DONE ) )
       {
         gfiles = 0;
       }
       else
       {
-        MAST_TRACE( select, 0, "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
-        T( "@<NOT selected> (%s)", mas_error_name_i( rpr ) );
+        MAST_TRACE( select, 0, "@<NOT selected> (%s)", QERRNAME );
+        QT( "@<NOT selected> (%s)", QERRNAME );
         assert( 0 );
       }
     /* DUF_TEST_R( rpr ); */
-      DUF_SQL_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, rpr, pstmt );
+      DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
 #if 0
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), gfiles );
 #endif
-    /* T( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), gfiles, sql ); */
+    /* QT( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), gfiles, sql ); */
 
       mas_free( sql );
     }
@@ -232,7 +242,8 @@ duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
   {
   /* assert( 0 ); */
   }
-  return gfiles;
+/* return gfiles; */
+  ERX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depthinfo_t * pdi, int d );
 }
 
 /* *INDENT-OFF*  */
