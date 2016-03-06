@@ -3,27 +3,33 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "std_fieldsets.h"
 #include "std_selectors.h"
@@ -69,8 +75,10 @@ duf_find_std_selector( const char *selector_name, duf_node_type_t type )
   return selector;
 }
 
-static const char *
-duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr )
+static
+/*   const char *                                                            */
+/* duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr ) */
+SRP( SQL, const char *, fieldset, fiel_dset, unref_fieldset, const char *fiel_dset, duf_node_type_t type )
 {
   if ( fieldset )
   {
@@ -80,15 +88,17 @@ duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr )
 
       fsn = fieldset + 1;
       fieldset = duf_find_std_fieldset( fsn, type );
-      if ( !fieldset && pr )
-        DUF_MAKE_ERROR( *pr, DUF_ERROR_PTR );
+      if ( !fieldset )
+        ERRMAKE( PTR );
     }
   }
-  return fieldset;
+/* return fieldset; */
+  ERP( SQL, const char *, fieldset, fiel_dset, unref_fieldset, const char *fieldset, duf_node_type_t type );
 }
 
-static const char *
-duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
+/* static const char *                                                       */
+/* duf_unref_selector( const char *selector, duf_node_type_t type, int *pr ) */
+SRP( SQL, const char *, selector, selector_, unref_selector, const char *selector_, duf_node_type_t type )
 {
   if ( selector )
   {
@@ -98,11 +108,12 @@ duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
 
       sln = selector + 1;
       selector = duf_find_std_selector( sln, type );
-      if ( !selector && pr )
-        DUF_MAKE_ERROR( *pr, DUF_ERROR_PTR );
+      if ( !selector )
+        ERRMAKE( PTR );
     }
   }
-  return selector;
+/* return selector; */
+  ERP( SQL, const char *, selector, selector_, unref_selector, const char *selector_, duf_node_type_t type );
 }
 
 /* TODO : move to common place with general substitutions */
@@ -146,23 +157,25 @@ duf_expand_sql( const char *sql, const char *dbname )
   return nsql;
 }
 
-static char *
-duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
+static
+/*   char *                                                   */
+/* duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr ) */
+SRP( SQL, char *, fieldset, NULL, fieldset2sql, const duf_sql_set_t * sql_set )
 {
-  int rpr = 0;
-  char *fieldset = NULL;
+/* int rpr = 0; */
+/* char *fieldset = NULL; */
 
   const char *const *pfs;
 
   pfs = sql_set->fieldsets;
   if ( *pfs )
   {
-    while ( DUF_NOERROR( rpr ) && pfs && *pfs )
+    while ( QNOERR && pfs && *pfs )
     {
       const char *fs;
 
-      fs = duf_unref_fieldset( *pfs, sql_set->type, &rpr );
-      if ( DUF_NOERROR( rpr ) )
+      fs = duf_unref_fieldset( *pfs, sql_set->type, QPERRIND );
+      if ( QNOERR )
       {
         assert( fs );
         if ( fieldset )
@@ -182,14 +195,15 @@ duf_fieldset2sql( const duf_sql_set_t * sql_set, int *pr )
   {
     const char *fs;
 
-    fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, &rpr );
-    if ( DUF_NOERROR( rpr ) )
+    fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, QPERRIND );
+    if ( QNOERR )
       fieldset = mas_strdup( fs );
   }
-  if ( pr )
-    *pr = rpr;
+/* if ( pr ) */
+/* *pr = rpr; */
 
-  return fieldset;
+/* return fieldset; */
+  ERP( SQL, char *, fieldset, NULL, fieldset2sql, const duf_sql_set_t * sql_set );
 }
 
 char *
@@ -347,11 +361,12 @@ duf_selector2sql_filtercat_list_where_and( char *sql, unsigned with_pref, unsign
 }
 
 /* 20150819.133515 */
-char *
-duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total, int *pr )
+/* char *                                                                                                                                   */
+/* duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total, int *pr ) */
+SRP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total)
 {
-  int rpr = 0;
-  char *sql = NULL;
+  /* int rpr = 0; */
+  /* char *sql = NULL; */
   const char *selector2 = NULL;
   unsigned cte_mode = 0;
   const duf_sql_set_t *sql_set_uni;
@@ -383,12 +398,12 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
       fieldset = mas_strcat_x( fieldset, ") AS nf" );
     }
     else
-      fieldset = duf_fieldset2sql( ( sql_set_uni->fieldset ? sql_set_uni : sql_set ), &rpr );
+      fieldset = duf_fieldset2sql( ( sql_set_uni->fieldset ? sql_set_uni : sql_set ), QPERRIND );
 
-    if ( DUF_NOERROR( rpr ) && fieldset )
+    if ( QNOERR && fieldset )
     {
-      selector = duf_unref_selector( selector2, sql_set->type, &rpr );
-      if ( DUF_NOERROR( rpr ) && selector && fieldset )
+      selector = duf_unref_selector( selector2, sql_set->type, QPERRIND );
+      if ( QNOERR && selector && fieldset )
       {
         if ( cte_mode )
           sql = mas_strcat_x( sql, sql_set->cte );
@@ -499,18 +514,19 @@ duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_
   }
   else
   {
-    DUF_MAKE_ERROR( rpr, DUF_ERROR_PTR );
+    ERRMAKE( PTR );
     assert( 0 );
   }
-  if ( DUF_IS_ERROR( rpr ) && sql )
+  if ( QISERR && sql )
   {
     mas_free( sql );
     sql = NULL;
   }
-  if ( pr )
-    *pr = rpr;
+  /* if ( pr ) */
+    /* *pr = rpr; */
 /* T( "@%s", sql ); */
-  return sql;
+  /* return sql; */
+ERP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total);
 }
 
 char *
