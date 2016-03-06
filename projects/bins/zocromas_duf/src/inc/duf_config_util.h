@@ -3,7 +3,8 @@
 
 # include <mastar/multiconfig/muc_config_cli_types.h>                /* muc_config_cli_t */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_t */
-# include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ♠ */
+# include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* void *duf_get_config_offset( unsigned long off ); */
 /* void *duf_get_config_puz_offset( unsigned long off ); */

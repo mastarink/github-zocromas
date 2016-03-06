@@ -7,11 +7,11 @@
 #include <mastar/tools/mas_expandable.h>
 #include <mastar/multiconfig/muc_option_config_credel.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
 #include "duf_config_defs.h"
 
@@ -42,7 +42,7 @@ duf_cfg_create( void )
 {
   duf_config_t *cfg = NULL;
 
-  DUF_START(  );
+  /* DUF_START(  ); */
 
   cfg = duf_cfg_create_main(  );
 
@@ -94,14 +94,14 @@ duf_cfg_create( void )
   assert( cfg->vars.puz );
 /* assert( cfg->cli.longopts_table ); */
 
-  DUF_END(  );
+  /* DUF_END(  ); */
   return cfg;
 }
 
 void
 duf_cfg_delete( duf_config_t * cfg )
 {
-  DUF_START(  );
+  /* DUF_START(  ); */
 
   if ( cfg )
   {
@@ -235,5 +235,5 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg );
     cfg = NULL;
   }
-  DUF_END(  );
+  /* DUF_END(  ); */
 }

@@ -215,7 +215,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
       csql = sqlt;
 #if 0
     /* 20160205.121213 */
-      DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
+      DUF_SQL_SE_START_STMT_NOPDI( csql, pstmt );
 #else
       DUF_SQL_SE_START_STMT_LOCAL( H_PDI, csql, pstmt );
 #endif
@@ -251,7 +251,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
     /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, H_PY->topdirid ); */
 #if 0
     /* 20160205.121213 */
-      DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
+      DUF_SQL_SE_END_STMT_NOPDI( pstmt );
 #else
       DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt );
 #endif
