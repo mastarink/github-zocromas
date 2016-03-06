@@ -124,7 +124,7 @@ constructor_main( void )
 #endif
 }
 
-int
+int  __attribute__ ((weak))
 mas_verbose( void )
 {
   return duf_config ? duf_config->opt.flow.verbose : 0;

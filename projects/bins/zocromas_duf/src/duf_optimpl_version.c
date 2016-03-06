@@ -2,19 +2,25 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_output_defs.h"
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
@@ -34,14 +40,13 @@
 #include "duf_optimpl_version.h"
 /* ###################################################################### */
 
-mas_error_code_t
-duf_optimpl_O_version( void )
+SR( SNIPPET_OPTION,optimpl_O_version, void )
 {
   char *sargv1;
 
 /* char *sargv2; */
 
-  DUF_STARTR( r );
+  /* DUF_STARTR( r ); */
 
   sargv1 = mas_argv_string( DUF_CONFIGG( pcli->carg.argc ), DUF_CONFIGG( pcli->carg.argv ), 1 );
 /* sargv2 = duf_restore_some_options( DUF_CONFIGG(pcli->carg.argv)[0] ); */
@@ -103,5 +108,6 @@ duf_optimpl_O_version( void )
 /* mas_free( sargv2 ); */
   mas_free( sargv1 );
 
-  DUF_ENDR( r );
+  /* DUF_ENDR( r ); */
+ER( SNIPPET_OPTION,optimpl_O_version, void );
 }

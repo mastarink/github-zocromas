@@ -2,41 +2,48 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
-#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth etc. ♣ */
+#include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref_def.h"
 /* #include "duf_levinfo_context.h" */
-#include "duf_levinfo_credel.h"
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-#include "duf_dh.h"
+#include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
-#include "duf_pathinfo_credel.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
 #include "duf_sccb_scanstage.h"
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
-#include "duf_pathinfo.h"
+#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 /* ###################################################################### */
 
-int
-duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
+SR( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( pi );
 
@@ -50,28 +57,29 @@ duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
     assert( pi->levinfo );
   }
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth );
 }
 
-int
-duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd )
+SR( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int max_rd )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   pi->depth = -1;
 
   if ( real_path )
   {
-    DOR( r, mas_pathdepth( real_path ) );
-    if ( DUF_NOERROR( r ) )
-      pi->topdepth = r;
+    CRV( mas_pathdepth, real_path );
+    if ( QNOERR )
+      pi->topdepth = QERRIND;
   }
 
   assert( pi->depth == -1 );
 /* MAST_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
   pi->maxdepth = max_rd ? max_rd : 20 + ( pi->topdepth ? pi->topdepth : 20 ); /* FIXME ??? */
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int max_rd );
 }
 
 void

@@ -1,8 +1,9 @@
 #ifndef MAS_DUF_PRINTN_DEFS_PRESET_H
-#  define MAS_DUF_PRINTN_DEFS_PRESET_H
+# define MAS_DUF_PRINTN_DEFS_PRESET_H
 
+#include "duf_config_output_weak.h"
 
-#    define MAST_ERRORS_FILE		stderr
-
+# define MAST_ERRORS_FILE		stderr
+# define MASE_STD_VERBOSE_LEVEL mas_verbose?mas_verbose():0          
 
 #endif

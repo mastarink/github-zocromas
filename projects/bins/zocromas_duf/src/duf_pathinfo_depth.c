@@ -2,31 +2,37 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
+
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_fmt_defs.h"
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
-#include "duf_levinfo_credel.h"
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-#include "duf_dh.h"
+#include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
-#include "duf_pathinfo_credel.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
 #include "duf_sccb_scanstage.h"
 
@@ -45,10 +51,9 @@ duf_pi_calc_depth( duf_pathinfo_t * pi )
   return d;
 }
 
-int
-duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
+SR( PI, pi_check_depth, const duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   assert( pi );
   {
     int delta;
@@ -64,24 +69,25 @@ duf_pi_check_depth( const duf_pathinfo_t * pi, duf_node_type_t node_type, unsign
   /* {                                             */
     if ( duf_pi_depth( pi ) > duf_pi_maxdepth( pi ) )
     {
-      DUF_MAKE_ERROR( r, DUF_ERROR_LEVINFO_SIZE );
+      ERRMAKE( LEVINFO_SIZE );
     }
     else if ( !( rgd = duf_pi_is_good_depth( pi, delta, frecursive, flinear ) ) )
     {
-      DUF_MAKE_ERRORM( r, DUF_ERROR_TOO_DEEP, "depth(%d); maxdepth(%d);rgd:%d dd:%d; delta:%d", duf_pi_depth( pi ), duf_pi_maxdepth( pi ), rgd,
-                       duf_pi_deltadepth( pi ), delta );
+      ERRMAKE_M( TOO_DEEP, "depth(%d); maxdepth(%d);rgd:%d dd:%d; delta:%d", duf_pi_depth( pi ), duf_pi_maxdepth( pi ), rgd,
+                 duf_pi_deltadepth( pi ), delta );
     }
 
-    if ( !DUF_NOERROR( r ) )
+    if ( QISERR )
     {
-      MAST_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pi_depth( pi ), duf_pi_maxdepth( pi ),
+      MAST_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", QERRIND, duf_pi_depth( pi ), duf_pi_maxdepth( pi ),
                   duf_pi_topdepth( pi ), delta, frecursive );
     }
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
   /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH);    */
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_check_depth, const duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear );
 }
 
 static void
@@ -104,16 +110,15 @@ duf_pi_levinfo_countdown_dirs( duf_pathinfo_t * pi )
   }
 }
 
-int
-duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
+SR( PI, pi_godown, duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   assert( pi );
 
   assert( pi->depth == duf_pi_calc_depth( pi ) );
 
-  DOR( r, duf_pi_check_depth( pi, node_type, frecursive, flinear ) ); /* no side effects */
-  if ( DUF_NOERROR( r ) )
+  CR( pi_check_depth, pi, node_type, frecursive, flinear );          /* no side effects */
+  if ( QNOERR )
   {
     int d;
 
@@ -136,18 +141,18 @@ duf_pi_godown( duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursi
     assert( pi->depth - 1 /* not yet ... */  == duf_pi_calc_depth( pi ) );
   }
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_godown, duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frecursive, unsigned flinear );
 }
 
-int
-duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear )
+SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   assert( pi );
 
-  DOR( r, duf_pi_check_depth( pi, node_type, frecursive, flinear ) );
-  MAST_TRACE( levinfo, 5, "@@(%s) maxdepth:%d;", mas_error_name_i( r ), duf_pi_maxdepth( pi ) );
-  if ( DUF_NOERROR( r ) )
+  CR( pi_check_depth, pi, node_type, frecursive, flinear ) ;
+  MAST_TRACE( levinfo, 5, "@@(%s) maxdepth:%d;", QERRNAME, duf_pi_maxdepth( pi ) );
+  if ( QNOERR )
   {
     int d;
 
@@ -174,7 +179,8 @@ duf_pi_godown_db( duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * 
     assert( pi->depth == duf_pi_calc_depth( pi ) );
     MAST_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear );
 }
 
 void

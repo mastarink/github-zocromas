@@ -1,33 +1,39 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
 #include <mastar/multiconfig/muc_option_names.h>
 #include <mastar/multiconfig/muc_option_descr.h>
 #include <mastar/multiconfig/muc_option_config.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_output_defs.h"
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"
 
 #include "duf_action_table.h"
@@ -43,7 +49,7 @@
 /* #include "duf_option_class.h"                                        (* duf_optclass2string ♠ *) */
 /* #include "duf_option_config.h"                                       (* duf_get_cli_options_trace_config ♠ *) */
 
-#include "duf_optimpl_enum.h"
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 #include "duf_optimpl_extended2string.h"
 
 /* ###################################################################### */
@@ -126,16 +132,15 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
 }
 #endif
 
-mas_error_code_t
-duf_optimpl_O_help(  /* int argc, char *const *argv */ void )
+SR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
-  DUF_PRINTF( 0, "  -H, --help			[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -H, --help			[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, QPERRIND ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, QPERRIND ) );
+  DUF_PRINTF( 0, "  -x, --example		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, QPERRIND ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, QPERRIND ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
@@ -188,13 +193,13 @@ duf_optimpl_O_help(  /* int argc, char *const *argv */ void )
 #endif
   DUF_PRINTF( 0, "----------------" );
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void );
 }
 
-mas_error_code_t
-duf_optimpl_O_examples(  /* int argc, char *const *argv */ void )
+SR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   DUF_PRINTF( 0, "Examples" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --allow-drop-tables --allow-create-tables" );
@@ -763,7 +768,8 @@ duf_optimpl_O_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --test-act-bflag --test-act-nobflag --test-recetc-bflag --test-disable-nobflag --no-test-disable-nobflag	 -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_examples, void );
 }
 
 duf_option_code_t
@@ -865,10 +871,9 @@ duf_unflag2cnames( unsigned unfset )
   return duf_uflag2cnames( 1 << unfset );
 }
 
-mas_error_code_t
-duf_optimpl_O_showflags(  /* int argc, char *const *argv */ void )
+SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   {
     typeof( duf_config->opt.act ) u = duf_config->opt.act;
   /* u.v.bit = 0;       */
@@ -979,13 +984,13 @@ duf_optimpl_O_showflags(  /* int argc, char *const *argv */ void )
     }
   }
 #endif
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_showflags, void );
 }
 
-mas_error_code_t
-duf_optimpl_O_list_options( long n_unused MAS_UNUSED )
+SR( SNIPPET_OPTION, optimpl_O_list_options, long n_unused MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   int ntable = 0;
   int tbcount = 0;
@@ -1000,7 +1005,7 @@ duf_optimpl_O_list_options( long n_unused MAS_UNUSED )
 
       if ( xtended->o.val )
         s = muc_xoption_description_d( duf_get_config_cli(  ), xtended, "\t", " // " );
-      DUF_TEST_R( r );
+    /* DUF_TEST_R( r ); */
 
       MAST_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
     /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->o.name ); */
@@ -1009,13 +1014,14 @@ duf_optimpl_O_list_options( long n_unused MAS_UNUSED )
       mas_free( s );
     }
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_list_options, long n_unused MAS_UNUSED );
 }
 
-mas_error_code_t
-duf_optimpl_O_list_xtended( const char *s )
+SR( SNIPPET_OPTION, optimpl_O_list_xtended, const char *s )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   duf_stdx_print( duf_get_config_cli(  ), s );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_list_xtended, const char *s );
 }

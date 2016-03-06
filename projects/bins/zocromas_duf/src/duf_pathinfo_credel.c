@@ -2,35 +2,41 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref_def.h"
 /* #include "duf_levinfo_context.h" */
-#include "duf_levinfo_credel.h"
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-#include "duf_dh.h"
+#include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
 #include "duf_pathinfo_ref.h"
-#include "duf_pathinfo.h"
+#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
-#include "duf_pathinfo_credel.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 /* ###################################################################### */
 
 void
@@ -80,16 +86,16 @@ duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t
   }
 }
 
-int
-duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t maxdepth )
+SR( PI, pi_levinfo_create, duf_pathinfo_t * pi, size_t maxdepth )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   duf_levinfo_t *pli = NULL;
 
   pli = duf_li_create( maxdepth );
-  DOR( r, duf_pi_levinfo_set( pi, pli, maxdepth ) );
+  CR( pi_levinfo_set, pi, pli, maxdepth );
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_levinfo_create, duf_pathinfo_t * pi, size_t maxdepth );
 }
 
 void
@@ -101,10 +107,9 @@ duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
   pidst->levinfo = ( no_li ) ? NULL : duf_li_clone( pisrc->levinfo, pisrc->maxdepth );
 }
 
-int
-duf_pi_shut( duf_pathinfo_t * pi )
+SR( PI, pi_shut, duf_pathinfo_t * pi )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   pi->depth = pi->topdepth = 0;
   pi->maxdepth = 0;
@@ -113,5 +118,6 @@ duf_pi_shut( duf_pathinfo_t * pi )
   assert( !pi->depth );
   assert( !pi->levinfo );
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( PI, pi_shut, duf_pathinfo_t * pi );
 }

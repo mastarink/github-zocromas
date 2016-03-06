@@ -20,6 +20,7 @@ typedef enum
   DUF_LAYER_SCCB,
   DUF_LAYER_SCCBH,
   DUF_LAYER_LI,
+  DUF_LAYER_PI,
   DUF_LAYER_OTHER,
 } duf_layer_t;
 

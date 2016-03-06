@@ -7,6 +7,7 @@
 /* const char *duf_longindex_extended_name( int longindex, int *pr ); */
 /* duf_option_code_t duf_longindex_extended_codeval( int longindex, int *pr ); */
 
+/* # include "duf_se.h"                                                 (* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ *) */
 
 
 void duf_stdx_print(  const muc_config_cli_t * cli, const char *name );
