@@ -27,7 +27,8 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq_cb */
-#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
+/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ♠ *) */
+#include "duf_sql_se_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
@@ -50,9 +51,9 @@ SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_
   /* MAST_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
   /* MAST_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] ); */
   /* MAST_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] ); */
-    DUF_SQL_BIND_S_OPTQ( optVal, ttarg->argv[0], pstmt );
-    DUF_SQL_BIND_S_OPTQ( optName, ttarg->argv[1], pstmt );
-    DUF_SQL_BIND_S_OPTQ( optArg, ttarg->argv[2], pstmt );
+    DUF_SQL_SE_BIND_S_OPTQ( optVal, ttarg->argv[0], pstmt );
+    DUF_SQL_SE_BIND_S_OPTQ( optName, ttarg->argv[1], pstmt );
+    DUF_SQL_SE_BIND_S_OPTQ( optArg, ttarg->argv[2], pstmt );
   /* MAST_TRACE( sql, 0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] ); */
   }
 /* DUF_ENDR( r ); */
