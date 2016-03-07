@@ -74,7 +74,7 @@
 #    define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, DUF_SQLITE2DUF( _r, _fun ), __VA_ARGS__ )
 #    define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, DUF_SQLITE2DUF( _r, _fun ), __VA_ARGS__ )
 #  else
-#    define DOR_SQLITE(_r, _fun)  DOR(_r, duf_sqlite2duf(_fun, FL))
+#    define DOR_SQLITE(_r, _fun)  { int r3=0; r3=_fun; DOR(_r, duf_sqlite2duf(r3, FL)); }
 #    define DOR_SQLITE_LOWERE(_r, _fun, ...) DOR_LOWERE( _r, duf_sqlite2duf( _fun, FL ), __VA_ARGS__ )
 #    define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...) DOR_LOWERE_N( _n, _r, duf_sqlite2duf( _fun, FL ), __VA_ARGS__ )
 #  endif

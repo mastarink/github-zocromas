@@ -3,19 +3,29 @@
 #include <dirent.h>
 #include <string.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs_preset.h"                                  (* MAST_TRACE_CONFIG; etc. ✗ *) */
+/* #include "duf_errorn_defs_preset.h"                                  (* MAST_ERRORS_FILE; etc. ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include <mastar/trace/mas_trace.h> */
+/* #include <mastar/error/mas_error_defs_ctrl.h> */
+/* #include <mastar/error/mas_error_defs_make.h> */
+/* #include <mastar/error/mas_error_defs.h> */
 
-#include "duf_config.h"
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
+
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+/* #include "duf_se_only.h"                                             (* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ *) */
+
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 
 #include "duf_match.h"
 
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 /* ###################################################################### */
 #include "duf_dirent.h"
@@ -26,7 +36,7 @@ duf_direntry_filter( const struct dirent *de )
 {
   int rx = 0;
 
-  DUF_START(  );
+  /* DUF_START(  ); */
   switch ( de->d_type )
   {
   case DT_UNKNOWN:
@@ -69,6 +79,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-  DUF_END(  );
+  /* DUF_END(  ); */
   return rx;
 }

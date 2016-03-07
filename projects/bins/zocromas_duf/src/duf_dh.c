@@ -2,7 +2,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <sys/types.h>
 #include <fcntl.h>
@@ -11,34 +12,39 @@
 
 /* #include <mastar/wrap/mas_std_def.h> */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_status_ref.h"
 
-#include "duf_config.h"
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 
-#include "duf_utils.h"
+#include "duf_utils.h"                                               /* duf_percent;  etc. ✗ */
 
-#include "duf_config_util.h"
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 /* ###################################################################### */
-#include "duf_dh.h"
+#include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 /* ###################################################################### */
 
 static unsigned long open_serial = 0;
 
 /* 20150820.142734 */
-static int
-_duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *path )
+static
+SR( OTHER, statat_dh_i, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *path )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( pdhandle && path /* && pdhandleup && pdhandleup->dfd */  )
   {
@@ -56,7 +62,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       if ( errno == ENOENT )
       {
       /* DUF_SHOW_ERROR( "No such entry %s", path ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "No such entry %s", path );
+        ERRMAKE_M( STATAT_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -65,61 +71,62 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 
         s = strerror_r( errno, serr, sizeof( serr ) );
       /* DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd );
+        ERRMAKE_M( STATAT, "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd );
       }
     }
     pdhandle->rs = ry;
     if ( !pdhandle->rs )
       pdhandle->rs++;
-    if ( DUF_NOERROR( r ) )
+    if ( QNOERR )
       pdhandle->source = DUF_DH_SOURCE_FS;
   }
   else
   {
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0, */
   /*                 path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );                                                           */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT, "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0,
-                     pdhandleup ? 1 : 0, path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
+    ERRMAKE_M( STATAT, "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0,
+               pdhandleup ? 1 : 0, path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, statat_dh_i, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *path );
 }
 
 /* 20150820.142729 */
-int
-duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
+SR( OTHER, statat_dh, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+    ERRMAKE( FS_DISABLED );
   }
   else
   {
-    DOR( r, _duf_statat_dh( pdhandle, pdhandleup, name ) );
+    CR( statat_dh_i, pdhandle, pdhandleup, name );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, statat_dh, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name );
 }
 
 /* 20150820.142723 */
-static int
-_duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
+static
+SR( OTHER, stat_dh_i, duf_dirhandle_t * pdhandle, const char *path )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( pdhandle && path )
   {
     int ry = 0;
 
     ry = stat( path, &pdhandle->st );
-    MAST_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
+    MAST_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", QERRIND, path );
 
     if ( ry < 0 )
     {
       if ( errno == ENOENT )
       {
       /* DUF_SHOW_ERROR( "No such entry %s", path ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STATAT_ENOENT, "No such entry %s", path );
+        ERRMAKE_M( STATAT_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -128,43 +135,44 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 
         s = strerror_r( errno, serr, sizeof( serr ) );
       /* DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
+        ERRMAKE_M( STAT, "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
       }
     }
 
     pdhandle->rs = ry;
     if ( !pdhandle->rs )
       pdhandle->rs++;
-    if ( DUF_NOERROR( r ) )
+    if ( QNOERR )
       pdhandle->source = DUF_DH_SOURCE_FS;
   }
   else if ( !path )
   {
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_STAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
+    ERRMAKE_M( STAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
-  MAST_TRACE( fs, 5, "(%d)? stated %s", r, path );
-  DUF_ENDR( r );
+  MAST_TRACE( fs, 5, "(%d)? stated %s", QERRIND, path );
+/* DUF_ENDR( r ); */
+  ER( OTHER, stat_dh_i, duf_dirhandle_t * pdhandle, const char *path );
 }
 
 /* 20150820.142714 */
-int
-duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
+SR( OTHER, stat_dh, duf_dirhandle_t * pdhandle, const char *path )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( !DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DOR( r, _duf_stat_dh( pdhandle, path ) );
+    CR( stat_dh_i, pdhandle, path );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, stat_dh, duf_dirhandle_t * pdhandle, const char *path );
 }
 
 /* 20150820.142710 */
-static int
-_duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
+static
+SR( OTHER, openat_dh_i, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
   int updfd = 0;
 
 #ifdef DUF_TMP_ASSERT0
@@ -213,7 +221,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     }
     else if ( ry < 0 && errno == ENOENT )
     {
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT_ENOENT, "No such entry %s", name );
+      ERRMAKE_M( OPENAT_ENOENT, "No such entry %s", name );
     }
     else if ( ry < 0 )
     {
@@ -222,39 +230,40 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
 
       s = strerror_r( errno, serr, sizeof( serr ) );
     /* DUF_SHOW_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd ); */
-      DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
+      ERRMAKE_M( OPENAT, "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", QERRIND, errno, s ? s : serr, name, updfd );
     }
   }
   else
   {
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd ); */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
+    ERRMAKE_M( OPENAT, "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, openat_dh_i, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile );
 }
 
 /* 20150820.142704 */
-int
-duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
+SR( OTHER, openat_dh, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+    ERRMAKE( FS_DISABLED );
   }
   else
   {
-    DOR( r, _duf_openat_dh( pdhandle, pdhandleup, name, asfile ) );
+    CR( openat_dh_i, pdhandle, pdhandleup, name, asfile );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, openat_dh, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile );
 }
 
 /* 20150820.142701 */
-static int
-_duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
+static
+SR( OTHER, open_dh_i, duf_dirhandle_t * pdhandle, const char *path )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
 /* assert( 0 ); */
   if ( pdhandle && path )
@@ -262,19 +271,19 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     int ry = 0;
 
     ry = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    MAST_TRACE( fs, 2, "lowlev. opened (%d) ≪%s≫", r, path );
+    MAST_TRACE( fs, 2, "lowlev. opened (%d) ≪%s≫", QERRIND, path );
     if ( ry >= 0 )
     {
       pdhandle->dfd = ry;
       pdhandle->serial = ++open_serial;
       MAST_TRACE( fs, 5, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
-      DOR( r, duf_stat_dh( pdhandle, path ) );
+      CR( stat_dh, pdhandle, path );
     }
     else
     {
       if ( errno == ENOENT )
       {
-        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN_ENOENT, "No such entry %s", path );
+        ERRMAKE_M( OPEN_ENOENT, "No such entry %s", path );
       }
       else
       {
@@ -283,70 +292,71 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 
         s = strerror_r( errno, serr, sizeof( serr ) );
       /* DUF_SHOW_ERROR( "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path ); */
-        DUF_MAKE_ERRORM( r, DUF_ERROR_OPEN, "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path );
+        ERRMAKE_M( OPEN, "(%d) errno:%d open_dh :%s; name:'%s'", QERRIND, errno, s ? s : serr, path );
       }
     }
   }
   else if ( !path )
   {
   /* DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 ); */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_OPENAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
+    ERRMAKE_M( OPENAT, "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
-  MAST_TRACE( fs, 5, "(%d)? opened %s", r, path );
-  DUF_ENDR( r );
+  MAST_TRACE( fs, 5, "(%d)? opened %s", QERRIND, path );
+/* DUF_ENDR( r ); */
+  ER( OTHER, open_dh_i, duf_dirhandle_t * pdhandle, const char *path );
 }
 
 /* 20150820.142754 */
-int
-duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
+SR( OTHER, open_dh, duf_dirhandle_t * pdhandle, const char *path )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+    ERRMAKE( FS_DISABLED );
   }
   else
   {
-    DOR( r, _duf_open_dh( pdhandle, path ) );
+    CR( open_dh_i, pdhandle, path );
   }
-  DUF_ENDR( r );
-}
+/* DUF_ENDR( r ); */
+ER( OTHER, open_dh, duf_dirhandle_t * pdhandle, const char *path )}
 
 /* returns handle >0 */
-static int
-_duf_opened_dh( duf_dirhandle_t * pdhandle )
+static
+SR( OTHER, opened_dh_i, duf_dirhandle_t * pdhandle )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( pdhandle )
-    r = pdhandle->dfd;
+    QERRIND = pdhandle->dfd;
   else
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
+    ERRMAKE( PTR );
 
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, opened_dh_i, duf_dirhandle_t * pdhandle );
 }
 
-int
-duf_opened_dh( duf_dirhandle_t * pdhandle )
+SR( OTHER, opened_dh, duf_dirhandle_t * pdhandle )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+    ERRMAKE( FS_DISABLED );
   }
   else
   {
-    DOR( r, _duf_opened_dh( pdhandle ) );
+    CR( opened_dh_i, pdhandle );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, opened_dh, duf_dirhandle_t * pdhandle );
 }
 
-static int
-_duf_close_dh( duf_dirhandle_t * pdhandle )
+static
+SR( OTHER, close_dh_i, duf_dirhandle_t * pdhandle )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   assert( pdhandle );
   if ( pdhandle )
@@ -371,11 +381,11 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
           s = strerror_r( errno, serr, sizeof( serr ) );
         /* DUF_SHOW_ERROR( "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd ); */
-          DUF_MAKE_ERRORM( r, DUF_ERROR_CLOSE, "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd );
+          ERRMAKE_M( CLOSE, "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd );
           assert( 0 );
         }
 
-        DUF_TEST_R( r );
+      /* DUF_TEST_R( r ); */
       }
       MAST_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", global_status.dh.nopen, global_status.dh.nclose,
                   global_status.dh.nopen - global_status.dh.nclose, pdhandle->dfd );
@@ -384,48 +394,50 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
     else
     {
     /* DUF_SHOW_ERROR( "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 ); */
-      DUF_MAKE_ERRORM( r, DUF_ERROR_NOT_OPEN, "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
+      ERRMAKE_M( NOT_OPEN, "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
     }
 
     MAST_TRACE( fs, 5, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, close_dh_i, duf_dirhandle_t * pdhandle );
 }
 
-int
-duf_close_dh( duf_dirhandle_t * pdhandle )
+SR( OTHER, close_dh, duf_dirhandle_t * pdhandle )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   if ( DUF_CONFIGG( opt.disable.flag.fs ) )
   {
-    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+    ERRMAKE( FS_DISABLED );
   }
   else
   {
-    DOR( r, _duf_close_dh( pdhandle ) );
+    CR( close_dh_i, pdhandle );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, close_dh, duf_dirhandle_t * pdhandle );
 }
 
-static int
-_duf_check_dh( const char *msg )
+static
+SR( OTHER, check_dh_i, const char *msg )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   MAST_TRACE( fs, 2, "%s (%u - %u = %u)", msg, global_status.dh.nopen, global_status.dh.nclose, global_status.dh.nopen - global_status.dh.nclose );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, check_dh_i, const char *msg );
 }
 
-int
-duf_check_dh( const char *msg )
+SR( OTHER, check_dh, const char *msg )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
 /* if ( !DUF_CONFIGG(opt.disable.flag.fs ) ) */
   {
-    DOR( r, _duf_check_dh( msg ) );
+    CR( check_dh_i, msg );
   }
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( OTHER, check_dh, const char *msg );
 }

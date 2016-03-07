@@ -9,30 +9,32 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* MAST_TRACE ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"
-#include "duf_config_util.h"
-
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 /* ###################################################################### */
-#include "duf_sys_wrap.h"
+#include "duf_sys_wrap.h"                                            /* duf_unlink() ✗ */
 /* ###################################################################### */
 
-
-int
-duf_unlink( const char *path )
+SR(OTHER,unlink, const char *path )
 {
-  DUF_STARTR( r );
+  /* DUF_STARTR( r ); */
   if ( path )
   {
     int ry = 0;
@@ -46,10 +48,11 @@ duf_unlink( const char *path )
 
       s = strerror_r( errno, serr, sizeof( serr ) );
 
-      /* DUF_SHOW_ERRORO( "unlink %s: [%s]", path, s ); */
+    /* DUF_SHOW_ERRORO( "unlink %s: [%s]", path, s ); */
       if ( errno != ENOENT )
-        DUF_MAKE_ERRORM( r, DUF_ERROR_UNLINK, "unlink %s: [%s]", path, s );
+        ERRMAKE_M( UNLINK, "unlink %s: [%s]", path, s );
     }
   }
-  DUF_ENDR( r );
+  /* DUF_ENDR( r ); */
+ER(OTHER,unlink, const char *path );
 }
