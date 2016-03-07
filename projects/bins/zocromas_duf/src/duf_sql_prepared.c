@@ -2,69 +2,84 @@
 #include <mastar/sqlite/mas_sqlite.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sql_error.h"
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 
 /* ###################################################################### */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 /* ###################################################################### */
 
-int
-duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
+SR( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
   MAST_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
-  DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
+  ERRLOWER1( SQL_ROW );
+  ERRLOWER1( SQL_DONE );
+/* DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE ); */
+  CRV_SQLITE( mas_sqlite_prepare, sql, pstmt );
+  ERRUPPER1( SQL_DONE );
+  ERRUPPER1( SQL_ROW );
 
 /* assert( r >= 0 ); */
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt );
 }
 
-int
-duf_sql_step( mas_sqlite_stmt_t * stmt )
+SR( SQL, sql_step, mas_sqlite_stmt_t * stmt )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE );
-  mas_set_error_message_i( r, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb(  ) ) );
-  MAST_TRACE( sql, 2, "(%s) [[%s]]", mas_error_name_i( r ), sqlite3_sql( stmt ) );
+  ERRLOWER1( SQL_ROW );
+  ERRLOWER1( SQL_DONE );
+/* DOR_SQLITE_LOWERE( r, mas_sqlite_step( stmt ), DUF_SQL_ROW, DUF_SQL_DONE ); */
+  CRV_SQLITE( mas_sqlite_step, stmt );
+  ERRUPPER1( SQL_DONE );
+  ERRUPPER1( SQL_ROW );
+  if ( QISERR )
+    mas_set_error_message_i( QERRIND, "sql:%s - %s", sqlite3_sql( stmt ), sqlite3_errmsg( mas_sqlite_pdb(  ) ) );
+  MAST_TRACE( sql, 2, "(%s) [[%s]]", QERRNAME, sqlite3_sql( stmt ) );
 /* assert( mas_error_code_i( r ) != DUF_SQL_CONSTRAINT_FOREIGNKEY ); */
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SQL, sql_step, mas_sqlite_stmt_t * stmt );
 }
 
-int
-duf_sql_finalize( mas_sqlite_stmt_t * stmt )
+SR( SQL, sql_finalize, mas_sqlite_stmt_t * stmt )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DOR_SQLITE( r, mas_sqlite_finalize( stmt ) );
+  CRV_SQLITE( mas_sqlite_finalize, stmt );
   MAST_TRACE( sql, 6, "-" );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SQL, sql_finalize, mas_sqlite_stmt_t * stmt );
 }
 
-int
-duf_sql_reset( mas_sqlite_stmt_t * stmt )
+SR( SQL, sql_reset, mas_sqlite_stmt_t * stmt )
 {
-  DUF_STARTR( r );
+/* DUF_STARTR( r ); */
 
-  DOR_SQLITE( r, mas_sqlite_reset( stmt ) );
+  CRV_SQLITE( mas_sqlite_reset, stmt );
   MAST_TRACE( sql, 6, "-" );
-  DUF_ENDR( r );
+/* DUF_ENDR( r ); */
+  ER( SQL, sql_reset, mas_sqlite_stmt_t * stmt );
 }
 
 int

@@ -63,8 +63,10 @@
 # define QERRNAME			mas_error_name_i( QERRIND )
 
 # define ERRUPPER(_err)			MASE_E_UPPER( ERRCODE( _err ) )
+# define ERRUPPER1(_err)		MASE_E_UPPER( ERRCODE1( _err ) )
 # define ERRRUPPER(_rt, _err)		MASE_E_UPPER( _rt, ERRCODE( _err ) )
 # define ERRLOWER(_err)			MASE_E_LOWER( ERRCODE( _err ) )
+# define ERRLOWER1(_err)		MASE_E_LOWER( ERRCODE1( _err ) )
 # define ERRRLOWER(_rt, _err)		MASE_E_LOWER( _rt, ERRCODE( _err ) )
 
 # define ERRCLEAR_X(...)		MASE_CLEAR_ERROR( QERRIND, __VA_ARGS__ )
@@ -73,6 +75,7 @@
 # define ERRCLEAR1(_err)		MASE_CLEAR_ERROR( QERRIND, ERRCODE1( _err ) )
 # define ERRRCLEAR1(_rt, _err)		MASE_CLEAR_ERROR( _rt, ERRCODE1( _err ) )
 
+# define ERRMAKE_FLV(_err, _func, _line)	MASE_MAKE_ERRORFL(QERRIND, _err, _func, _line )
 # define ERRMAKE_FL(_err)		MASE_MAKE_ERRORFL(QERRIND, _err, FL )
 
 # define ERRMAKE(_err)			MASE_MAKE_ERROR( QERRIND, ERRCODE( _err ) )

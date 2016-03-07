@@ -2,25 +2,31 @@
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+/* #include "duf_errorn_defs_preset.h"                                  (* MAST_ERRORS_FILE; etc. ✗ *) */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+/* #include <mastar/error/mas_error_defs_ctrl.h> */
+/* #include <mastar/error/mas_error_defs_make.h> */
+/* #include <mastar/error/mas_error_defs.h> */
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+
+/* #include "duf_se_only.h"                                             (* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ *) */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ♠ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 /* ###################################################################### */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 /* ###################################################################### */
 void
 __duf_sql_dump_row( duf_stmnt_t * pstmt )
@@ -38,20 +44,20 @@ __duf_sql_dump_row( duf_stmnt_t * pstmt )
     {
       if ( t && 0 == strcasecmp( t, "integer" ) )
       {
-        T( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( pstmt, icol ) );
+        QT( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( pstmt, icol ) );
       }
       else if ( t && 0 == strcasecmp( t, "text" ) )
       {
-        T( "%2d[%8s]:\t %11s = \t\"%s\"", icol, t ? t : "-", n, v );
+        QT( "%2d[%8s]:\t %11s = \t\"%s\"", icol, t ? t : "-", n, v );
       }
       else
       {
-        T( "%2d[%8s]:\t %11s = \t'%s'", icol, t ? t : "-", n, v );
+        QT( "%2d[%8s]:\t %11s = \t'%s'", icol, t ? t : "-", n, v );
       }
     }
     else
     {
-      T( "@@@%2d[%8s]:\t %11s = \t NULL", icol, t ? t : "-", n );
+      QT( "@@@%2d[%8s]:\t %11s = \t NULL", icol, t ? t : "-", n );
     }
   }
 }
@@ -63,21 +69,21 @@ __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
 
   for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
   {
-  /* T( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
+  /* QT( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
     if ( 0 == strcmp( duf_sql_column_name( pstmt, icol ), name ) )
     {
       pos = icol;
-    /* T( "@field %s  found (%d)", name, pos ); */
+    /* QT( "@field %s  found (%d)", name, pos ); */
       break;
     }
   }
-/* T( "@field %s  pos:%d", name, pos ); */
+/* QT( "@field %s  pos:%d", name, pos ); */
   if ( pos < 0 )
   {
-    T( "@field %s not found:", name );
+    QT( "@field %s not found:", name );
     for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
     {
-      T( "@@@- %s", duf_sql_column_name( pstmt, icol ) );
+      QT( "@@@- %s", duf_sql_column_name( pstmt, icol ) );
     }
     assert( 0 );
   }

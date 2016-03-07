@@ -219,14 +219,14 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
 #else
       DUF_SQL_SE_START_STMT_LOCAL( H_PDI, csql, pstmt );
 #endif
-      assert( QNOERR );
+      /* (* (* assert( QNOERR ); *) *) */
     /* if ( !H_PY )                                 */
     /* {                                          */
     /*   T( "path:%s", duf_levinfo_path( H_PDI ) ); */
     /*   assert( H_PY );                            */
     /* }                                          */
       CR( bind_ufilter_uni, pstmt, H_PU, H_PY, NULL, NULL /* ptr */  );
-      assert( QNOERR );
+      /* (* (* assert( QNOERR ); *) *) */
       DUF_SQL_SE_STEP( pstmt );
       if ( QISERR1_N( SQL_ROW ) )
       {
@@ -255,7 +255,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
 #else
       DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt );
 #endif
-      assert( QNOERR );
+      /* (* (* assert( QNOERR ); *) *) */
     /* if ( !cnt )                                                                                         */
     /* {                                                                                                   */
     /*   T( "@%llu:%llu:%llu; %s; %s", H_PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( H_SCCB ), csql ); */

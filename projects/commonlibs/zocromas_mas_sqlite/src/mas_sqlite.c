@@ -188,7 +188,7 @@ mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
       /* assert( 0 ); */
     }
     fprintf( stderr, "\nSQLITE ERROR %d: %s [%s]\n", r3, sqlite3_errmsg( pDb ), sql );
-    assert( 0 );
+    /* assert( 0 ); */
   }
   /* assert( r3 == 0 ); */
   /* assert( r3 != SQLITE_MISUSE ); */
