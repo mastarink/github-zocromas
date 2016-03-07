@@ -4,15 +4,19 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h" */                                         /* T; TT; TR ♠ */
+/* #include "duf_errorn_defs.h" */                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h" */                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+/* #include "duf_dodefs.h" */                                              /* DOR ♠ */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
@@ -50,8 +54,8 @@
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
-static int tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
-static int tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
+static int duf_tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -66,9 +70,9 @@ duf_scan_callbacks_t duf_tree_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 #endif
 /* .node_scan_before = tree_node_before, */
-  .node_scan_before2 = tree_node_before2,
+  .node_scan_before2 = duf_tree_node_before2,
 /* .leaf_scan = tree_leaf, */
-  .leaf_scan2 = tree_leaf2,
+  .leaf_scan2 = duf_tree_leaf2,
 
 /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
@@ -83,10 +87,10 @@ duf_scan_callbacks_t duf_tree_callbacks = {
 
 /* ########################################################################################## */
 
-static int
-tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+static 
+SR(MOD,tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 #if 0
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( fname );
@@ -190,7 +194,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
 #else
-    DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
+CR(fileinfo, pstmt, pdi, &fi ) ;
 #endif
 
 #if 0
@@ -224,7 +228,7 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
           c1 = mas_output_force_color(  );
           c2 = mas_output_nocolor(  );
-          T( "%d:%d", c1, c2 );
+          QT( "%d:%d", c1, c2 );
           assert( 0 );
         }
 #endif
@@ -270,13 +274,14 @@ tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
 /* DUF_PRINTF( 0, "%s", filename ); */
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 }
 
-static int
-tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+static 
+SR(MOD,tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 /* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
 #if 0
@@ -360,7 +365,7 @@ tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
       int over = 0;
 
     /* if ( duf_levinfo_count_gfiles( pdi ) )                  */
-    /*   T( "@gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
+    /*   QT( "@gfiles:%llu", duf_levinfo_count_gfiles( pdi ) ); */
 
       {
         sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
@@ -407,14 +412,15 @@ tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
     }
   }
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,tree_node_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi );
 }
 
 /* 20151113.132638 */
-static int
-duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
+static 
+SR(MOD,sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 /* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
 /* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
 /* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
@@ -628,23 +634,24 @@ duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinf
   }
 #endif
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d );
 }
 
 /* 20151113.132643 */
-static int
-duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth MAS_UNUSED )
+static 
+SR(MOD,sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
   int d0 = duf_pdi_topdepth( pdi );
   int maxd = duf_pdi_depth( pdi );
 
   if ( d0 == 0 )
     d0 = 1;
-  for ( int d = d0; DUF_NOERROR( r ) && d <= maxd; d++ )
+  for ( int d = d0; QNOERR && d <= maxd; d++ )
   {
-    DOR( r, duf_sql_print_tree_sprefix_uni_d( pbuffer, bfsz, pdi, d0, maxd, d ) );
+CR(sql_print_tree_sprefix_uni_d, pbuffer, bfsz, pdi, d0, maxd, d ) ;
     {
       size_t len = strlen( pbuffer );
 
@@ -653,20 +660,22 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_
     }
   }
   *pbuffer = 0;
-  DUF_PRINTF( 1, "@%03d", r );
+  DUF_PRINTF( 1, "@%03d", QERRIND );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth  );
 }
 
 #if 0
-static int
-duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
+static 
+SR(MOD,sql_print_tree_prefix_uni, const duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
   char buffer[1024];
 
   duf_sql_print_tree_sprefix_uni( buffer, sizeof( buffer ), pdi, NULL /* pwidth */  );
   DUF_WRITES( 0, buffer );
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,sql_print_tree_prefix_uni, const duf_depthinfo_t * pdi );
 }
 #endif

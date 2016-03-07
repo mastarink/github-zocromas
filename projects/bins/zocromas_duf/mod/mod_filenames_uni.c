@@ -3,46 +3,51 @@
 #include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+                                                                           /* #include "duf_tracen_defs.h" *//* T; TT; TR ♠ */
+                                                                           /* #include "duf_errorn_defs.h" *//* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+                                                                           /* #include "duf_start_end.h" *//* DUF_STARTR ; DUF_ENDR ♠ */
+                                                                           /* #include "duf_dodefs.h" *//* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
-#include "duf_pdi_stmt.h"
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_se_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ✗ */
+/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ *) */
 /* #include "duf_sql.h" */
-#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 #include "duf_filedata.h"
 
 /* #include "duf_dbg.h" */
 #include "duf_mod_defs.h"
 
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
 
-static int filenames_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
-static int filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
-static int filenames_de_file_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_filenames_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_filenames_de_file_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {                              /* */
@@ -65,11 +70,11 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-/* .dirent_file_scan_before = filenames_entry_reg, */
-  .dirent_file_scan_before2 = filenames_de_file_before2,
+/* .dirent_file_scan_before = duf_filenames_entry_reg, */
+  .dirent_file_scan_before2 = duf_filenames_de_file_before2,
 
-  .leaf_scan2 = filenames_leaf2,
-  .leaf_scan2_deleted = filenames_leaf2_deleted,
+  .leaf_scan2 = duf_filenames_leaf2,
+  .leaf_scan2_deleted = duf_filenames_leaf2_deleted,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -173,55 +178,60 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 };
 
 /* ########################################################################################## */
-static int MAS_UNUSED
-filenames_leaf2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
-/* T( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
-  DUF_ENDR( r );
+/*   DUF_STARTR( r ) */ ;
+/* QT( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
+/*  DUF_ENDR( r );*/
+  ER( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 }
 
-static int MAS_UNUSED
-filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */ ;
   MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 /* TODO remove or mark name from DB */
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+  ER( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 }
 
-static int
-filenames_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+static
+SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */ ;
   const char *fname = duf_levinfo_itemtruename( pdi );
 
   unsigned long long dataid;
 
-  DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
+/* DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, (* duf_levinfo_stat( pdi ), *) &r ) ); */
+  if ( QNOERR )
+    dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ QPERRIND );
   assert( dataid > 0 );
-  if ( DUF_NOERROR( r ) && fname && duf_levinfo_dirid_up( pdi ) )
+  if ( QNOERR && fname && duf_levinfo_dirid_up( pdi ) )
   {
     int changes = 0;
 
     const char *sql =
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, " DUF_SQL_FILENAMEFIELD ", dataid) VALUES (:pathID, :Name, :dataID)";
 
-    DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, insert_filename, sql, pstmt );
     MAST_TRACE( mod, 3, "S:%s", sql );
-    DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
-    DUF_SQL_BIND_S( Name, fname, r, pstmt );
-    DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
-    DUF_SQL_STEPC( r, pstmt );
-    DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( pdi, insert_filename, r, pstmt );
+    DUF_SQL_SE_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ),  pstmt );
+    DUF_SQL_SE_BIND_S( Name, fname,  pstmt );
+    DUF_SQL_SE_BIND_LL( dataID, dataid,  pstmt );
+    DUF_SQL_SE_STEPC(  pstmt );
+    DUF_SQL_SE_CHANGES( changes,  pstmt );
+    DUF_SQL_SE_END_STMT( pdi, insert_filename,  pstmt );
   }
   else
   {
   /* DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) ); */
-    DUF_MAKE_ERRORM( r, DUF_ERROR_DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
-    DUF_TEST_R( r );
+    ERRMAKE_M(DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
+/* DUF_TEST_R( r ); */
   }
 /* MAST_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+  ER( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 }

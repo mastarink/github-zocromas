@@ -23,6 +23,7 @@ typedef enum
   DUF_LAYER_LI,
   DUF_LAYER_PI,
   DUF_LAYER_SQL,
+  DUF_LAYER_MOD,
   DUF_LAYER_OTHER,
 } duf_layer_t;
 

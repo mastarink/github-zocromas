@@ -6,15 +6,19 @@
 #include <unistd.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h" */                                         /* T; TT; TR ♠ */
+/* #include "duf_errorn_defs.h" */                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h" */                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+/* #include "duf_dodefs.h" */                                              /* DOR ♠ */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
@@ -38,37 +42,37 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 /* ########################################################################################## */
-DUF_MOD_DECLARE_ALL_FUNCS( dummy )
+DUF_MOD_DECLARE_ALL_FUNCS( duf_dummy )
 /* ########################################################################################## */
 /* ########################################################################################## */
      duf_scan_callbacks_t duf_dummy_callbacks = {
        .title = "dummy",
        .name = "dummy",
        .def_opendir = 0,
-       .init_scan = dummy_init,
+       .init_scan = duf_dummy_init,
 #if 0
        .beginning_sql_seq = &sql_create_selected,
 #else
        .beginning_sql_seq = &sql_update_selected,
 #endif
 
-       .node_scan_before2 = dummy_node_before2,
-       .node_scan_before2_deleted = dummy_node_before2_del,
+       .node_scan_before2 = duf_dummy_node_before2,
+       .node_scan_before2_deleted = duf_dummy_node_before2_del,
 
-       .node_scan_after2 = dummy_node_after2,
-       .node_scan_after2_deleted = dummy_node_after2_del,
+       .node_scan_after2 = duf_dummy_node_after2,
+       .node_scan_after2_deleted = duf_dummy_node_after2_del,
 
-       .node_scan_middle2 = dummy_node_middle2,
-       .node_scan_middle2_deleted = dummy_node_middle2_del,
+       .node_scan_middle2 = duf_dummy_node_middle2,
+       .node_scan_middle2_deleted = duf_dummy_node_middle2_del,
 
-       .leaf_scan_fd2 = dummy_de_content2,
-       .leaf_scan_fd2_deleted = dummy_de_content2_del,
+       .leaf_scan_fd2 = duf_dummy_de_content2,
+       .leaf_scan_fd2_deleted = duf_dummy_de_content2_del,
 
-       .leaf_scan2 = dummy_leaf2,
-       .leaf_scan2_deleted = dummy_leaf2_del,
+       .leaf_scan2 = duf_dummy_leaf2,
+       .leaf_scan2_deleted = duf_dummy_leaf2_del,
 
-       .dirent_file_scan_before2 = dummy_de_file_before2,
-       .dirent_dir_scan_before2 = dummy_de_dir_before2,
+       .dirent_file_scan_before2 = duf_dummy_de_file_before2,
+       .dirent_dir_scan_before2 = duf_dummy_de_dir_before2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
        .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -79,20 +83,21 @@ DUF_MOD_DECLARE_ALL_FUNCS( dummy )
 
 /* ########################################################################################## */
 
-static int
-dummy_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
   MAST_TRACE( mod, 0, "dummy_init %s", duf_levinfo_path( pdi ) );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_init, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_de_content2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_de_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
 /* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
@@ -112,13 +117,14 @@ dummy_de_content2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNU
               0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
               duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_de_content2, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_de_content2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
 /* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
@@ -135,13 +141,14 @@ dummy_de_content2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS
               0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
               duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_de_content2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_leaf2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
@@ -157,13 +164,14 @@ dummy_leaf2( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
               duf_levinfo_dfd( pdi ), duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_dbstat_dev( pdi ),
               ( unsigned long long ) duf_levinfo_dbstat_inode( pdi ) );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_leaf2, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_leaf2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_leaf2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 #endif
@@ -171,13 +179,14 @@ dummy_leaf2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSE
 /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_leaf2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
   MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
@@ -186,25 +195,27 @@ dummy_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
 # endif
   MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_before2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_before2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 #endif
   MAST_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( pdi ), fname );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_before2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
   MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
@@ -215,25 +226,27 @@ dummy_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi
   MAST_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_middle2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_middle2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_middle2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 #endif
   MAST_TRACE( mod, 0, "@dummy node middle %s : %s", duf_levinfo_path( pdi ), fname );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_middle2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
   MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
@@ -244,25 +257,27 @@ dummy_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi 
   MAST_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( pdi ), fname );
 #endif
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_after2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_node_after2_del( duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_node_after2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 #ifdef MAS_TRACING
   DUF_SFIELD2( fname );
 #endif
   MAST_TRACE( mod, 0, "@dummy node after %s : %s", duf_levinfo_path( pdi ), fname );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_node_after2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_de_dir_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_de_dir_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
@@ -292,13 +307,14 @@ dummy_de_dir_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
   MAST_TRACE( scan, 3, "scan de - sub-directory scanned here %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   MAST_TRACE( mod, 1, "dummy de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_de_dir_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }
 
-static int
-dummy_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+
+SR(MOD,dummy_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
@@ -326,5 +342,6 @@ dummy_de_file_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * 
 
   MAST_TRACE( mod, 1, "dummy de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,dummy_de_file_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
 }

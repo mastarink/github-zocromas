@@ -4,49 +4,54 @@
 #include <string.h>
 #include <errno.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
 /* TODO: see media-libs/libextractor */
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
 #include <magic.h>                                                   /* man libmagic */
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+                                                                                                                                                                                                                                                     /* #include "duf_tracen_defs.h" *//* T; TT; TR ♠ */
+                                                                                                                                                                                                                                                     /* #include "duf_errorn_defs.h" *//* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+                                                                                                                                                                                                                                           /* #include "duf_start_end.h" *//* DUF_STARTR ; DUF_ENDR ♠ */
+                                                                                                                                                                                                                            /* #include "duf_dodefs.h" *//* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_pdi_context.h"
 #include "duf_pdi_ref.h"
-#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ♠ */
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_context.h"
 
-#include "duf_sql_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ♠ */
+/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
-#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ♠ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 /* #include "duf_dbg.h" */
 
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 /* ########################################################################################## */
-static int dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.mimeid IS NULL"
@@ -77,7 +82,7 @@ duf_scan_callbacks_t duf_mime_callbacks = {
   .name = "mime",
   .def_opendir = 1,
 
-  .leaf_scan_fd2 = dirent_content2,
+  .leaf_scan_fd2 = duf_dirent_content2,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -155,12 +160,13 @@ duf_scan_callbacks_t duf_mime_callbacks = {
 
 /* ########################################################################################## */
 
-static unsigned long long
-duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED, const char *tail MAS_UNUSED, int need_id, int *pr )
+static
+SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED,
+     const char *tail MAS_UNUSED, int need_id )
 {
-  int lr = 0;
+/* int lr = 0; */
 
-  DUF_STARTULL( mimeid );
+/* DUF_STARTULL( mimeid ); */
 
   if ( mime )
   {
@@ -172,12 +178,12 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
 
     /* const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
 
-      DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt );
-      DUF_SQL_BIND_S( Mime, mime, lr, pstmt );
-    /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt ); */
-    /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt ); */
-      DUF_SQL_STEP( lr, pstmt );
-      if ( DUF_IS_ERROR_N( lr, DUF_SQL_ROW ) )
+      DUF_SQL_SE_START_STMT( pdi, select_mime, sql, pstmt );
+      DUF_SQL_SE_BIND_S( Mime, mime, pstmt );
+    /* DUF_SQL_SE_BIND_S( charSet, chs,  pstmt ); */
+    /* DUF_SQL_SE_BIND_S( Tail, tail,  pstmt ); */
+      DUF_SQL_SE_STEP( pstmt );
+      if ( QISERR1_N( SQL_ROW ) )
       {
         MAST_TRACE( mod, 0, "<selected>" );
 #if 0
@@ -187,10 +193,10 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
 #endif
       /* lr = 0; */
       }
-    /* if ( DUF_IS_ERROR_N( lr, DUF_SQL_DONE ) ) */
+    /* if ( QISERR1_N(SQL_DONE ) ) */
     /*   lr = 0;                                 */
     /* DUF_TEST_R( lr ); */
-      DUF_SQL_END_STMT( pdi, select_mime, lr, pstmt );
+      DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt );
     }
 
     if ( !mimeid && !DUF_CONFIGG( opt.disable.flag.insert ) )
@@ -199,14 +205,14 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
 
     /* "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
-      DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
+      DUF_SQL_SE_START_STMT( pdi, insert_mime, sql, pstmt_insert );
       MAST_TRACE( mod, 3, " S: %s ", sql );
-      DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
-    /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
-    /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
-      DUF_SQL_STEPC( lr, pstmt_insert );
+      DUF_SQL_SE_BIND_S( Mime, mime, pstmt_insert );
+    /* DUF_SQL_SE_BIND_S( charSet, chs,  pstmt_insert ); */
+    /* DUF_SQL_SE_BIND_S( Tail, tail,  pstmt_insert ); */
+      DUF_SQL_SE_STEPC( pstmt_insert );
     /* DUF_TEST_R(lr); */
-      DUF_SQL_CHANGES( changes, lr, pstmt_insert );
+      DUF_SQL_SE_CHANGES( changes, pstmt_insert );
     /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
@@ -214,19 +220,21 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs MA
         MAST_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_END_STMT( pdi, insert_mime, lr, pstmt_insert );
+      DUF_SQL_SE_END_STMT( pdi, insert_mime, pstmt_insert );
     }
-    DUF_TEST_R( lr );
+  /* DUF_TEST_R( lr ); */
   }
   else
   {
   /* DUF_SHOW_ERROR( " Wrong data " ); */
-    DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
+    ERRMAKE( DATA );
   }
-  DUF_TEST_R( lr );
-  if ( pr )
-    *pr = lr;
-  DUF_ENDULL( mimeid );
+/* DUF_TEST_R( lr ); */
+/* if ( pr ) */
+/* *pr = lr; */
+/* DUF_ENDULL( mimeid ); */
+  ERP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED,
+       const char *tail MAS_UNUSED, int need_id );
 }
 
 static void
@@ -241,15 +249,15 @@ mime_destructor( void *ctx )
 /*
  * pstmt is needed for dataid
  * */
-static int
-dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+static
+SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */ ;
   unsigned long long mimeid = 0;
 
   MAST_TRACE( mod, 0, " mime" );
 
-  if ( DUF_NOERROR( r ) )
+  if ( QNOERR )
   {
     char *mime = NULL;
     char *mime_plus = NULL;
@@ -273,7 +281,8 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
       duf_pdi_set_context_destructor( pdi, mime_destructor );
 #endif
     }
-    DOR( r, magic_load( magic, NULL ) );
+    if ( QNOERR )
+     /* ry = */ magic_load( magic, NULL );
 
     {
     /* magic_setflags(magic,MAGIC_MIME_TYPE ); */
@@ -308,9 +317,9 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           charset = mas_strdup( p + 8 );
         else
           tail = mas_strdup( p );
-        mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , &r );
-        DUF_TEST_R( r );
-        if ( DUF_NOERROR( r ) && mimeid && !DUF_CONFIGG( opt.disable.flag.update ) )
+        mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , QPERRIND );
+/* DUF_TEST_R( r ); */
+        if ( QNOERR && mimeid && !DUF_CONFIGG( opt.disable.flag.update ) )
         {
           int changes = 0;
 
@@ -318,18 +327,18 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 
           const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = :mimeID WHERE " DUF_SQL_IDFIELD " = :dataID ";
 
-          DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt_update );
+          DUF_SQL_SE_START_STMT( pdi, update_mime, sql, pstmt_update );
           MAST_TRACE( mod, 3, " S: %s ", sql );
-          DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
-          DUF_SQL_BIND_LL( dataID, filedataid, r, pstmt_update );
-          DUF_SQL_STEPC( r, pstmt_update );
+          DUF_SQL_SE_BIND_LL( mimeID, mimeid, pstmt_update );
+          DUF_SQL_SE_BIND_LL( dataID, filedataid, pstmt_update );
+          DUF_SQL_SE_STEPC( pstmt_update );
         /* DUF_TEST_R(r); */
-          DUF_SQL_CHANGES( changes, r, pstmt_update );
-          DUF_SQL_END_STMT( pdi, update_mime, r, pstmt_update );
+          DUF_SQL_SE_CHANGES( changes, pstmt_update );
+          DUF_SQL_SE_END_STMT( pdi, update_mime, pstmt_update );
 
           duf_pdi_reg_changes( pdi, changes );
 
-          DUF_TEST_R( r );
+/* DUF_TEST_R( r ); */
         }
         mas_free( mimet );
         mas_free( charset );
@@ -341,5 +350,6 @@ dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     mas_free( mime_plus );
   }
   pdi->total_files++;
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+  ER( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 }

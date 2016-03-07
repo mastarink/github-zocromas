@@ -155,7 +155,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * 
 /* else                                   */
 /* {                                      */
 /*   DUF_SHOW_ERROR( "Wrong data" );      */
-/*   DUF_MAKE_ERROR( rpr, DUF_ERROR_DATA ); */
+/*   ERRMAKE(DATA ); */
 /* }                                      */
 /* if ( pr ) */
 /* *pr = rpr; */

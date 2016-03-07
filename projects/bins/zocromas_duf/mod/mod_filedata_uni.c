@@ -4,16 +4,20 @@
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h" */                                         /* T; TT; TR ♠ */
+/* #include "duf_errorn_defs.h" */                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h" */                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+/* #include "duf_dodefs.h" */                                              /* DOR ♠ */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
@@ -31,7 +35,7 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
 
 /* ########################################################################################## */
-static int register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int duf_register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -84,7 +88,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_file_scan_before2 = register_pdifiledata,
+  .dirent_file_scan_before2 = duf_register_pdifiledata,
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -137,10 +141,11 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 
 /* ########################################################################################## */
 
-static int
-register_pdifiledata( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+static 
+SR(MOD,register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
-  DOR( r, duf_pdistat2file( pdi ) );
-  DUF_ENDR( r );
+/*   DUF_STARTR( r ) */;
+CR(pdistat2file, pdi ) ;
+/*  DUF_ENDR( r );*/
+ER(MOD,register_pdifiledata, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi );
 }

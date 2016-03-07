@@ -3,34 +3,38 @@
 #include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+                                                                           /* #include "duf_tracen_defs.h" *//* T; TT; TR ♠ */
+                                                                           /* #include "duf_errorn_defs.h" *//* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+                                                                           /* #include "duf_start_end.h" *//* DUF_STARTR ; DUF_ENDR ♠ */
+                                                                           /* #include "duf_dodefs.h" *//* DOR ♠ */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 #include "sql_beginning_types.h"                                     /* duf_sql_sequence_t */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 
-#include "duf_path2db.h"                                             /* duf_real_path2db; etc. ♠ */
+#include "duf_path2db.h"                                             /* duf_real_path2db; etc. ✗ */
 
 #include "sql_beginning_selected.h"
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
-static int register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int duf_register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -63,7 +67,7 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_dir_scan_before2 = register_pdidirectory,
+  .dirent_dir_scan_before2 = duf_register_pdidirectory,
 
   .no_count = 1,
   .no_progress = 1,
@@ -127,10 +131,10 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
 /* ########################################################################################## */
 
 /* make sure dir name in db */
-static int
-register_pdidirectory( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+
+SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */ ;
 
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
@@ -158,7 +162,8 @@ register_pdidirectory( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * 
 /* fname === */
   MAST_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
-  DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
-                                  &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );
-  DUF_ENDR( r );
+  CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
+      &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  );
+/*  DUF_ENDR( r );*/
+  ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
 }

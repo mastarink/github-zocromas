@@ -4,15 +4,19 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"
+#include "duf_errorn_defs_preset.h"
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include "duf_tracen_defs.h"                                         /* T; TT; TR ♠ */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/* #include "duf_tracen_defs.h" */                                         /* T; TT; TR ♠ */
+/* #include "duf_errorn_defs.h" */                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
 
-#include "duf_start_end.h"                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-#include "duf_dodefs.h"                                              /* DOR ♠ */
+/* #include "duf_start_end.h" */                                           /* DUF_STARTR ; DUF_ENDR ♠ */
+/* #include "duf_dodefs.h" */                                              /* DOR ♠ */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
@@ -40,7 +44,7 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
-static int print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -69,7 +73,7 @@ duf_scan_callbacks_t duf_listing_callbacks = {
   .beginning_sql_seq = &sql_update_selected,
 # endif
 #endif
-  .leaf_scan2 = print_leaf2,
+  .leaf_scan2 = duf_print_leaf2,
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
@@ -79,10 +83,10 @@ duf_scan_callbacks_t duf_listing_callbacks = {
 
 /* ########################################################################################## */
 
-static int
-print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+static 
+SR(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  DUF_STARTR( r );
+/*   DUF_STARTR( r ) */;
 
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( fname );
@@ -229,5 +233,6 @@ print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     }
   }
 
-  DUF_ENDR( r );
+/*  DUF_ENDR( r );*/
+ER(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
 }
