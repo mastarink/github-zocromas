@@ -34,21 +34,22 @@
 */
 
 #include <assert.h>                                                  /* assert */
-#include <time.h>
+/* #include <time.h> */
 /* #include <signal.h> */
 /* #include <unistd.h> */
-#include <dlfcn.h>
+/* #include <dlfcn.h> */
 
-#include "duf_tracen_defs_preset.h"
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/error/mas_error_reporting.h>
-#include <mastar/error/mas_error_defs_ctrl.h>
-#include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/trace/mas_trace.h>
+/* #include <mastar/error/mas_error_reporting.h> */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
-#include <mastar/multiconfig/muc_se.h>
+/* #include <mastar/multiconfig/muc_se.h> */
 #include <mastar/multiconfig/muc_options_all_stages.h>
 #include <mastar/multiconfig/muc_options.h>
 #include <mastar/multiconfig/muc_option_names.h>
@@ -66,22 +67,22 @@
 #include "duf_status_ref.h"
 #include "duf_status.h"
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_config_credel.h"
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
-#include "duf_pdi_global.h"                                          /* duf_pdi_global() ♠ */
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
+#include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
-#include "duf_optimpl_defs.h"
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 /* צאַצקע */
-#include "duf_experiment.h"
+/* #include "duf_experiment.h" */
 
 /* ###################################################################### */
 #include "duf.h"
@@ -124,8 +125,7 @@ constructor_main( void )
 #endif
 }
 
-int  __attribute__ ((weak))
-mas_verbose( void )
+int __attribute__ ( ( weak ) ) mas_verbose( void )
 {
   return duf_config ? duf_config->opt.flow.verbose : 0;
 }

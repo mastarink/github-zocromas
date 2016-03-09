@@ -26,21 +26,17 @@ typedef enum
   DUF_LAYER_MOD,
   DUF_LAYER_OTHER,
 } duf_layer_t;
-typedef struct
-{
-  mas_error_index_t index;
-  int x;
-} mas_error_index_x_t;
-typedef struct
-{
-  duf_layer_t layer_id;
-  union
-  {
-    int r;
-    mas_error_index_t ei;
-    unsigned long long ul;
-  } r;
-} mas_fundecl_t;
+
+/* typedef struct             */
+/* {                          */
+/*   duf_layer_t layer_id;    */
+/*   union                    */
+/*   {                        */
+/*     int r;                 */
+/*     mas_error_index_t ei;  */
+/*     unsigned long long ul; */
+/*   } r;                     */
+/* } mas_fundecl_t;           */
 
 # define QT(_fmt, ...) MAST_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
 # define QTR if (QISERR) {QT("@@@@@@(i:%d:c:%d) %s", QERRIND, QERRCODE, QERRNAME);}
@@ -133,9 +129,9 @@ typedef struct
 # define ERX( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	ETX( _layer_id, _funtyp, _rvar, _vini, TER,	ei, _funname, __VA_ARGS__ )
 # define ERP( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	ETP( _layer_id, _funtyp, _rvar, _vini, TER,	ei, _funname, __VA_ARGS__ )
 # define ERP0( _layer_id, _funtyp, _rvar, _vini, _funname )	ETP0( _layer_id, _funtyp, _rvar, _vini, TER,	ei, _funname )
-# define DOCR(_rval, _x)			( (_rval>=0) ? ( (_rval=(_x))  ) : 0 )
-# define CR(            _funname, ... )		DOCR( QERRIND, F2N(duf_,_funname)( __VA_ARGS__ ) )
-# define CRV(           _fun    , ... )		DOCR( QERRIND, (_fun)( __VA_ARGS__) )
+/* # define DOCR(_rval, _x)                        ( (_rval>=0) ? ( (_rval=(_x))  ) : 0 ) */
+# define CR(            _funname, ... )		QDOCR( F2N(duf_,_funname)( __VA_ARGS__ ) )
+# define CRV(           _fun    , ... )		QDOCR( (_fun)( __VA_ARGS__) )
 /* # define CRW(           _funname, ... )         DOCR( QERRIND, F2NW(duf_,_funname)( __VA_ARGS__)) */
 /* # define IF_CR( _fun, ...)                      { if (_fun) CR(_fun, __VA_ARGS__); else ERRMAKE( NO_FUNC ); } */
 # define IF_CR( _funname, ...)    		(F2N(duf_,_funname)) ? CR(_funname, __VA_ARGS__) : ERRMAKE( NO_FUNC )
