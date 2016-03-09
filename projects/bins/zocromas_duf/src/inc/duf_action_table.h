@@ -4,7 +4,7 @@
 # include "duf_hook_types.h"                                         /* duf_scan_callbacks_t; duf_action_table_t etc. */
 
 /* duf_action_table_t *_duf_action_table( void ) __attribute__ ( ( warn_unused_result ) ); */
-duf_scan_callbacks_t *duf_first_sccb( void ) __attribute__ ( ( warn_unused_result ) );
+duf_action_table_t *duf_actions_table_std( void ) __attribute__ ( ( warn_unused_result ) );
 
 extern duf_scan_callbacks_t                                          /* */
   /* duf_dirs_callbacks,    (* *) */

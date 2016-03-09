@@ -23,6 +23,7 @@
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
 
+/* Working with sccb structure */
 /* ###################################################################### */
 #include "duf_sccb.h"
 /* ###################################################################### */
@@ -140,6 +141,17 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
     MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   }
   return sccb;
+}
+
+void
+duf_sccb_dlclose( duf_scan_callbacks_t * first )
+{
+  for ( duf_scan_callbacks_t * sccb = first; sccb; sccb = sccb->next )
+  {
+    if ( sccb->dlhan )
+      dlclose( sccb->dlhan );
+    sccb->dlhan = NULL;
+  }
 }
 
 const duf_scan_callbacks_t *

@@ -1,8 +1,9 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
+#include <dlfcn.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
-#include "duf_errorn_defs_preset.h"
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
@@ -45,6 +46,21 @@ duf_find_atable_sccb_by_evname_std( const char *name )
   return act;
 }
 #endif
+duf_scan_callbacks_t *
+duf_first_sccb( void )
+{
+  duf_action_table_t *at = NULL;
+
+  at = duf_actions_table_std(  );
+  return at ? at->sccb : NULL;
+}
+
+static void duf_sccb_dlclose_std( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+duf_sccb_dlclose_std( void )
+{
+  duf_sccb_dlclose( duf_first_sccb(  ) );
+}
 
 const duf_scan_callbacks_t *
 duf_find_sccb_by_evname_std( const char *name )

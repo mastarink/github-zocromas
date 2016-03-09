@@ -1,12 +1,11 @@
 #include <string.h>
-#include <dlfcn.h>
+/* #include <dlfcn.h> */
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 
 /* #include "duf_config_ref.h" */
 
@@ -16,69 +15,67 @@
 #include "duf_action_table.h"
 /* ###################################################################### */
 
-
-
 static duf_action_table_t actions_table[] = {
-  /* {.tovector = 1,.in_use = 1,                                        */
-  /*  .sccb = &duf_dirs_callbacks,                               */
-  /*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1,.allow_dirs = 1} */
-  /*  },                                                                */
-  /* {.tovector = 1,.in_use = 1,                                              */
-  /*  .sccb = &duf_filedata_callbacks,                                        */
-  /*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1 (* ,.filedata = 1 *) } */
-  /*  },                                                                      */
-  /* {.tovector = 1,.in_use = 1,                                               */
-  /*  .sccb = &duf_filenames_callbacks,                                        */
-  /*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1 (* ,.filenames = 1 *) } */
-  /*  },                                                                       */
-  /* {.tovector = 1,.in_use = 1,                                */
-  /*  .sccb = &duf_crc32_callbacks,                             */
-  /*  .on.flag = { (* .collect_obs = 1, *)(*.crc32_obs = 1 *) } */
-  /*  },                                                        */
-  /* {.tovector = 1,.in_use = 1,                              */
-  /*  .sccb = &duf_sd5_callbacks,                             */
-  /*  .on.flag = { (* .collect_obs = 1, *)(*.sd5_obs = 1 *) } */
-  /*  },                                                      */
-  /* {.tovector = 1,.in_use = 1,                              */
-  /*  .sccb = &duf_md5_callbacks,                             */
-  /*  .on.flag = { (* .collect_obs = 1, *)(*.md5_obs = 1 *) } */
-  /*  },                                                      */
-  /* {.tovector = 1,.in_use = 1,                               */
-  /*  .sccb = &duf_sha1_callbacks,                             */
-  /*  .on.flag = { (* .collect_obs = 1, *)(*.sha1_obs = 1 *) } */
-  /*  },                                                       */
-  /* {.tovector = 1,.in_use = 1,                                */
-  /*  .sccb = &duf_mime_callbacks,                              */
-  /*  .on.flag = { (* .collect_obs = 1, *)(* .mime_obs = 1 *) } */
-  /*  },                                                        */
-  /* {.tovector = 1,.in_use = 1,                                */
-  /*  .sccb = &duf_exif_callbacks,                              */
-  /*  .on.flag = { (* .collect_obs = 1, *)(* .exif_obs = 1 *) } */
-  /*  },                                                        */
-  /* {.sccb = &duf_mdpath_callbacks, */
-  /*  .on.flag = {.mdpath = 1}},             */
-  /* {.tovector = 0,.in_use = 1,    */
-  /*  .sccb = &duf_tagit_callbacks, */
-  /*  },                            */
-  /* {.tovector = 0,.in_use = 1,      */
-  /*  .sccb = &duf_save_to_callbacks, */
-  /*  },                              */
+/* {.tovector = 1,.in_use = 1,                                        */
+/*  .sccb = &duf_dirs_callbacks,                               */
+/*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1,.allow_dirs = 1} */
+/*  },                                                                */
+/* {.tovector = 1,.in_use = 1,                                              */
+/*  .sccb = &duf_filedata_callbacks,                                        */
+/*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1 (* ,.filedata = 1 *) } */
+/*  },                                                                      */
+/* {.tovector = 1,.in_use = 1,                                               */
+/*  .sccb = &duf_filenames_callbacks,                                        */
+/*  .on.flag = { (* .collect_obs = 1, *) .dirent = 1 (* ,.filenames = 1 *) } */
+/*  },                                                                       */
+/* {.tovector = 1,.in_use = 1,                                */
+/*  .sccb = &duf_crc32_callbacks,                             */
+/*  .on.flag = { (* .collect_obs = 1, *)(*.crc32_obs = 1 *) } */
+/*  },                                                        */
+/* {.tovector = 1,.in_use = 1,                              */
+/*  .sccb = &duf_sd5_callbacks,                             */
+/*  .on.flag = { (* .collect_obs = 1, *)(*.sd5_obs = 1 *) } */
+/*  },                                                      */
+/* {.tovector = 1,.in_use = 1,                              */
+/*  .sccb = &duf_md5_callbacks,                             */
+/*  .on.flag = { (* .collect_obs = 1, *)(*.md5_obs = 1 *) } */
+/*  },                                                      */
+/* {.tovector = 1,.in_use = 1,                               */
+/*  .sccb = &duf_sha1_callbacks,                             */
+/*  .on.flag = { (* .collect_obs = 1, *)(*.sha1_obs = 1 *) } */
+/*  },                                                       */
+/* {.tovector = 1,.in_use = 1,                                */
+/*  .sccb = &duf_mime_callbacks,                              */
+/*  .on.flag = { (* .collect_obs = 1, *)(* .mime_obs = 1 *) } */
+/*  },                                                        */
+/* {.tovector = 1,.in_use = 1,                                */
+/*  .sccb = &duf_exif_callbacks,                              */
+/*  .on.flag = { (* .collect_obs = 1, *)(* .exif_obs = 1 *) } */
+/*  },                                                        */
+/* {.sccb = &duf_mdpath_callbacks, */
+/*  .on.flag = {.mdpath = 1}},             */
+/* {.tovector = 0,.in_use = 1,    */
+/*  .sccb = &duf_tagit_callbacks, */
+/*  },                            */
+/* {.tovector = 0,.in_use = 1,      */
+/*  .sccb = &duf_save_to_callbacks, */
+/*  },                              */
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_dummy_callbacks,
    },
-  /* {.tovector = 0,.in_use = 1,      */
-  /*  .sccb = &duf_dumplet_callbacks, */
-  /*  },                              */
-  /* {.tovector = 0,.in_use = 1,     */
-  /*  .sccb = &duf_dialog_callbacks, */
-  /*  },                             */
+/* {.tovector = 0,.in_use = 1,      */
+/*  .sccb = &duf_dumplet_callbacks, */
+/*  },                              */
+/* {.tovector = 0,.in_use = 1,     */
+/*  .sccb = &duf_dialog_callbacks, */
+/*  },                             */
 
 #if 0
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_tree_callbacks,
-#  if 0
+# if 0
    .on.flag = {.print = 1,.tree = 1},
-#  endif
+# endif
    .off.flag = { /*.md5_obs = 1 */ }
    },
 #endif
@@ -93,9 +90,9 @@ static duf_action_table_t actions_table[] = {
 /* #endif                                            */
 /*                 }                                 */
 /*    },                                             */
-  /* {.sccb = &duf_print_md5_callbacks, */
-  /*  .on.flag = {.print = 1,.md5 = 1}, */
-  /*  },                                */
+/* {.sccb = &duf_print_md5_callbacks, */
+/*  .on.flag = {.print = 1,.md5 = 1}, */
+/*  },                                */
   {.sccb = NULL,.end_of_table = 1},
 };
 
@@ -117,7 +114,7 @@ init_list( void )
         prev = act;
       }
     }
-    /* TODO additionally load dynamic here */
+  /* TODO??? additionally load dynamic here */
   }
 }
 
@@ -128,24 +125,12 @@ init_list( void )
 /*   return actions_table;   */
 /* }                         */
 
-duf_scan_callbacks_t *
-duf_first_sccb( void )
+duf_action_table_t *
+duf_actions_table_std( void )
 {
   duf_action_table_t *at = NULL;
 
   init_list(  );
   at = actions_table;
-  return at ? at->sccb : NULL;
-}
-
-static void duf_sccb_dlclose( void ) __attribute__ ( ( destructor( 101 ) ) );
-static void
-duf_sccb_dlclose( void )
-{
-  for ( duf_scan_callbacks_t * sccb = duf_first_sccb(  ); sccb; sccb = sccb->next )
-  {
-    if ( sccb->dlhan )
-      dlclose( sccb->dlhan );
-    sccb->dlhan = NULL;
-  }
+  return at;
 }

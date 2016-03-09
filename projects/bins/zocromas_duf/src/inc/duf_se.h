@@ -2,7 +2,7 @@
 # define MAS_DUF_SE_H
 
 # include <mastar/wrap/mas_std_def.h>
-# include <mastar/error/mas_error_types.h>
+# include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ▤ */
 /* # include "duf_start_end.h" */
 
 /* #include "duf_debug_defs.h" 
@@ -26,7 +26,11 @@ typedef enum
   DUF_LAYER_MOD,
   DUF_LAYER_OTHER,
 } duf_layer_t;
-
+typedef struct
+{
+  mas_error_index_t index;
+  int x;
+} mas_error_index_x_t;
 typedef struct
 {
   duf_layer_t layer_id;
@@ -115,7 +119,6 @@ typedef struct
 			  *prrrrrr_=fundecl_.r._typid; \
 			DTP0( _layer_id, _funtyp, _rvar, _vini, , _typid, _funname ); \
 			return _rvar;
-
 
 # define DR( _layer_id, _funname, ... )		DT( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 # define DRX( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	DTX( _layer_id, _funtyp, _rvar, _vini,	 ,	ei, _funname, __VA_ARGS__ )

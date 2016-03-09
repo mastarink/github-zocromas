@@ -8,6 +8,8 @@
 
 /* * see duf_sccb_eval.h for names explanation * */
 
+duf_scan_callbacks_t *duf_first_sccb( void );
+
 /* const duf_action_table_t *duf_find_atable_sccb_by_evname_std( const char *name ); */
 const duf_scan_callbacks_t *duf_find_sccb_by_evname_std( const char *name );
 

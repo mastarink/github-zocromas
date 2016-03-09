@@ -14,22 +14,20 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include <mastar/multiconfig/muc_se.h>
+/* #include <mastar/multiconfig/muc_se.h> */
 #include <mastar/multiconfig/muc_options_file.h>
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
+/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
+/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
 
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
+/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
+/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
-#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-
-#include "duf_action_table.h"                                        /* duf_first_sccb */
 
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
@@ -98,13 +96,13 @@ SR( SNIPPET_OPTION, optimpl_O_evaluate_sccb, const char *names )
       void *v;
 
       v = dlsym( han, "duf_ev_evnamed_list_std" );
-      T( "han:%p : %p : %p", han, v, duf_ev_evnamed_list_std );
+      QT( "han:%p : %p : %p", han, v, duf_ev_evnamed_list_std );
 
       dlclose( han );
     }
-    T( "han:%p", han );
+    QT( "han:%p", han );
   }
-  T( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) );
+  QT( "@names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global(  ) ) );
 #endif
   if ( duf_levinfo_dirid( duf_pdi_global(  ) ) )
   {
@@ -206,7 +204,7 @@ SR( SNIPPET_OPTION, optimpl_O_cd, const char *s )
 #else
     {
 
-      T( "@@[%p] sql_beginning_done:%d", duf_pdi_global(  ), duf_pdi_root( duf_pdi_global(  ) )->sql_beginning_done );
+      QT( "@@[%p] sql_beginning_done:%d", duf_pdi_global(  ), duf_pdi_root( duf_pdi_global(  ) )->sql_beginning_done );
       DOR( r, duf_pdi_reinit_anypath( duf_pdi_global(  ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( duf_pdi_global(  ) ) ) );
     }
 #endif

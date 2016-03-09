@@ -3,6 +3,9 @@
 
 # include <mastar/wrap/mas_std_def.h>
 # include <mastar/error/mas_error_types.h>
+/* # define QERRIND fundecl_.r.ei */
+/* # define QPERRIND &(fundecl_.r.ei) */
+
 /* # include "muc_start_end.h" */
 
 /* #include "muc_debug_defs.h" 

@@ -1,4 +1,4 @@
-tab sfind muc_base_output_types.h
+find muc_base_output_types.h
 sfind muc_config_cli_types.h
 sfind muc_config_output_weak.h
 sfind muc_config_trace_enum.h
@@ -83,14 +83,15 @@ tab sfind muc_option_source_types.h
 tab sfind muc_option_stage.c
 sfind muc_option_stage.h
 
-
 tab sfind muc_option_typed.c
+sfind muc_option_typed.h
+
 tab sfind muc_option_typed_call.c
-tab sfind muc_option_typed_call.h
+sfind muc_option_typed_call.h
+
 tab sfind muc_option_typed_defs.h
-tab sfind muc_option_typed_gen.c
-tab sfind muc_option_typed_gen.h
-tab sfind muc_option_typed.h
+sfind muc_option_typed_gen.c
+sfind muc_option_typed_gen.h
 
 tab sfind muc_option_types.h
 
