@@ -16,7 +16,8 @@ set tbi
 
 if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
    
-  echo 'masedfile ok: ' . masedfile
+"20160308.155851 echo 'masedfile ok: ' . masedfile
+
 " if exists('v:servername')
 "   echo '(before) v:servername: ' . v:servername
 " endif
@@ -102,7 +103,7 @@ if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
 
   let  vimenter=mas_localvimdirs . 'gvim-vimenter.vim'
   if filereadable(vimenter)
-    echo 'vimenter: ' . vimenter
+"20160308.155917   echo 'vimenter: ' . vimenter
     au VimEnter * sil so `=vimenter`
   else
     echo 'not found vimenter: ' . vimenter

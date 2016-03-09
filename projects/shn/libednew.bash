@@ -118,6 +118,9 @@ shn_gvimer_plus_mased_file_here_nt ()
     eval "afpath=(${edfile_dirs[$typf]})"
 #   edpath="${afpath[@]}" ; edpath=${edpath// /,}
     fpath='' ; edpath=''
+    shn_msg "typf: ${typf[@]}"
+    shn_msg "edfile_dirs: ${edfile_dirs[$typf]}"
+    shn_msg "afpath: ${afpath[@]}"
     for p in ${afpath[@]} ; do
       if [[ -d $p ]] ; then
 #       shn_msg "- P : $p"
@@ -209,13 +212,16 @@ shn_gvimer_plus_mased_file_here_nt ()
 #     shn_msg "A : $msg (rfile:$rfile; resident: $resident)"
     shn_gvimer_plus_resident_nt "$rfile" "$resident" "$fline"
   elif [[ $typf ]] && [[ $masedf ]]; then
-#     shn_msg "B : $msg"
-    shn_gvimer_plus_bin_nt --servername "$fuuid" \
-        		${masedf:+--cmd "let masedfile=\"$masedf\""} \
-        		${fline:+--cmd "let masedline=\"$fline\""} \
-        		${edpath:+--cmd "let masedpath=\"$edpath\""} \
-        		${rfile:+--cmd "let maseddrop=\"$rfile\""} \
-        		${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""}
+     shn_msg "edpath : $edpath"
+     local -a opts=( \
+     		       ${masedf:+--cmd "let masedfile=\"$masedf\""} \
+			${fline:+--cmd "let masedline=\"$fline\""} \
+		       ${edpath:+--cmd "let masedpath=\"$edpath\""} \
+			${rfile:+--cmd "let maseddrop=\"$rfile\""} \
+		 ${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""} \
+		)
+    shn_msg "opts:${opts[@]}" >&2
+    shn_gvimer_plus_bin_nt --servername "$fuuid" "${opts[@]}"
   elif [[ $rfile ]] ; then
     # nomased || notype
 #    shn_msg "C : $msg"
@@ -301,7 +307,7 @@ shn_gvimer_plus_nt ()
   fi
   local  fuuid0=$( shn_gvimer_plus_uuid "$@" )
 # declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [cdef]='src/inc' [shn]='shn' [dufcmds]='test/duf/tests20151006' [mased_vim]="$mased_dir" [acm]="." )
-  declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [mased_vim]="$mased_dir" )
+  declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [mased_vim]="$mased_dir" [vimstd]="$localvim_dir" )
 # declare -A edfile_typs=(['src']='*.[ch]' [cdef]='*.def'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )
   declare -A edfile_typs=(['src']='*.[ch]'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )
 # declare -A  edfile_typs_re=([dufcmds]='(^.*\.(cmds|duf)$)' [shn]='(^.*\.(bash|sh)$)' [vimstd]='(^(.*\.vim|(gvim|vim).*)$)' )

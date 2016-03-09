@@ -264,7 +264,7 @@ duf_sql_sequence_t sql_beginning_create_two = {
           DUF_SQL_IDFIELD " INTEGER PRIMARY KEY autoincrement, "
 #endif
           "mime text NOT NULL, dupmimecnt INTEGER" /* */
-          /*", charset text NOT NULL, tail text" *//* */
+/* ", charset text NOT NULL, tail text"  (*   *) */
           ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
 
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_uniq ON " DUF_SQL_TABLES_MIME " (mime" /* */
@@ -274,7 +274,7 @@ duf_sql_sequence_t sql_beginning_create_two = {
 
           "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_MIME_FULL "_lastupdated " /* */
           " AFTER UPDATE OF " DUF_SQL_TABLES_MIME /* */
-          /* ", charset, tail " *//* */
+/*  ", charset, tail "  (*   *) */
           " ON " DUF_SQL_TABLES_MIME " FOR EACH ROW BEGIN " /* */
           "   UPDATE " DUF_SQL_TABLES_MIME " SET last_updated=DATETIME() WHERE " DUF_SQL_IDFIELD "=OLD." DUF_SQL_IDFIELD " ; END",
 
@@ -441,7 +441,7 @@ duf_sql_sequence_t sql_beginning_create_four = {
           " tagnameid INTEGER " /* " REFERENCES tagnames DEFERRABLE INITIALLY DEFERRED " *//* */
           " , itemtype TEXT NOT NULL " /* */
           " , itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
-          /*          " , FOREIGN KEY(itemid)  REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") " *//* */
+/*           " , FOREIGN KEY(itemid)  REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") "  (*   *) */
           /* " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDFIELD ") " (* *) */
           /* " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_FILENAMES "(" DUF_SQL_IDFIELD ") " (* *) */
           /* " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDFIELD ") " (* *)     */

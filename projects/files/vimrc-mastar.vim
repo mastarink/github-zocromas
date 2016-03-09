@@ -1,3 +1,4 @@
+    echo "edpath: " . masedpath
 "echo "+++++++++++++++++++++++++++++++++ : " . expand("<sfile>")
 "
 " au SourcePre *.mased exe "echo 'Hello'"

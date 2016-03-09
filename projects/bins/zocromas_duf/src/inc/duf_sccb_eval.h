@@ -1,5 +1,5 @@
 #ifndef MAS_DUF_SCCB_EVAL_H
-#  define MAS_DUF_SCCB_EVAL_H
+# define MAS_DUF_SCCB_EVAL_H
 
 /* fragment of func.name means:
  *
@@ -33,10 +33,9 @@
  *
  * */
 
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_se.h"
-
-DR(OTHER,ev_evnamed_list, const char *names, duf_scan_callbacks_t * first );
+DR( OTHER, ev_evnamed_list, const char *names, duf_scan_callbacks_t * first );
 
 /* int duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first ) __attribute__ ( ( warn_unused_result ) ); */
 

@@ -42,7 +42,7 @@ duf_sql_set_t std_leaf_sets[] = {                                    /* */
    .fieldset = "#std-leaf",
    .selector2 = "#std-ns-leaf",                                      /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
    .matcher = " fn.Pathid=:parentdirID "                             /*  +pu  */
- /* " ORDER BY fn." DUF_SQL_IDFIELD " " *//* */
+/*  " ORDER BY fn." DUF_SQL_IDFIELD " "  (*   *) */
    ,
 #if 0
    .filter = DUF_SQL_UFILTER_BINDINGS,                               /* */
@@ -158,7 +158,7 @@ duf_sql_set_t std_leaf_sets[] = {                                    /* */
    .fieldset = "#std-leaf",
    .selector2 = "#std-ns-fd-leaf",                                   /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
    .matcher = " fn.Pathid=:parentdirID "                             /*  +pu  */
- /* " ORDER BY fn." DUF_SQL_IDFIELD " " *//* */
+/*  " ORDER BY fn." DUF_SQL_IDFIELD " "  (*   *) */
    ,
 #if 0
    .filter = DUF_SQL_UFILTER_BINDINGS,                               /* */

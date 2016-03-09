@@ -22,11 +22,11 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h" */                                         /* T; TT; TR ♠ */
-/* #include "duf_errorn_defs.h" */                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ */
+/*  #include "duf_tracen_defs.h"  (*  T; TT; TR ♠  *) */
+/*  #include "duf_errorn_defs.h"  (*  DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠  *) */
 
-/* #include "duf_start_end.h" */                                           /* DUF_STARTR ; DUF_ENDR ♠ */
-/* #include "duf_dodefs.h" */                                              /* DOR ♠ */
+/*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
+/*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
 
