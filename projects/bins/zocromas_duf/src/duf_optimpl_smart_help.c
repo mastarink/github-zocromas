@@ -27,7 +27,7 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_output_defs.h"
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
@@ -38,7 +38,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"
 
-#include "duf_action_table.h"
+#include "duf_action_table.h"                                        /* duf_actions_table_std ✗ */
 #include "duf_sccb.h"
 
 #include "duf_xtended_table.h"
@@ -222,8 +222,11 @@ SR( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass )
   size_t ss;
   int ilong = 0;
 
+#if 0
   ss = DUF_OPTION_VAL_MAX_LONG * sizeof( int );
-
+#else
+  ss = ( muc_cli_options_get_maxcodeval( duf_get_config_cli(  ) ) + 1 ) * sizeof( int );
+#endif
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
 /* for ( int ilong = 0; DUF_CONFIGG(pcli->longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
@@ -312,7 +315,12 @@ SR( SNIPPET_OPTION, optimpl_O_help_set, const char *arg )
         if ( ( 0 == strcmp( arg, "%" ) || ( 0 == strncmp( xvtable->name, arg, len ) && ( arg[len] == 0 || arg[len] == ':' ) ) ) )
         {
           int *ashown;
+
+#if 0
           int ss = DUF_OPTION_VAL_MAX_LONG * sizeof( int );
+#else
+          int ss = ( muc_cli_options_get_maxcodeval( duf_get_config_cli(  ) ) + 1 ) * sizeof( int );
+#endif
 
           ashown = mas_malloc( ss );
           memset( ( void * ) ashown, 0, ss );
