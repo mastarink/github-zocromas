@@ -1,7 +1,7 @@
 #include <stddef.h>
 
 #include "duf_optable_def.h"
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 /*
 At duf_xtended_table.c:
@@ -37,14 +37,14 @@ const muc_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, allow_vacuum ) /*                      */ , DO_H( vacuum db ) /*                        */ },
 
    {.o = {DO_Q( "quit" ) /*             */ , DO_A_N /* */ , DO_VF( QUIT )} /*              */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_OC( NOBFLAG, opt.act.v ), DO_BFL( act, interactive ) /*                    */ , DO_H( quit ) /*                              */ },
+    /*      */ DO_OC( NOBFLAG, opt.act.v ), DO_BFL( act, interactive ) /*                   */ , DO_H( quit ) /*                             */ },
    {.o = {DO_Q( "add-path" ) /*         */ , DO_A_N /* */ , DO_VF( ADD_PATH )} /*          */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
+    /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, add_path ) /*                        */ , DO_H( reg.init path ) /*                    */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, interactive ) /*                       */ , DO_H(  ... ) /*                             */ },
+    /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, interactive ), DO_STAGE_SPLS /*      */ , DO_H(  ... ) /*                             */ },
 
    {.o = {DO_Q( "force-color" ) /*      */ , DO_A_N /* */ , DO_VF( FORCE_COLOR )} /*       */ , DO_CL( CONTROL ) /* */ ,
-    /* */ DO_OC( BFLAG, opt.output.stream.v ), DO_BFL( output, force_color ), DO_STAGE_ALL /*        */ , DO_H(  ... ) /*                      */ },
+    /* */ DO_OC( BFLAG, opt.output.stream.v ), DO_BFL( output, force_color ), DO_STAGE_ALL /*  */ , DO_H(  ... ) /*                      */ },
 
 /* DO_OC(NOBBFLAG, ...) + DO_BFL eq. to DO_OC(FLAG, ...) + DO_BFN */
    {.o = {DO_Q( "color" ) /*            */ , DO_A_N /* */ , DO_VF( NOCOLOR )} /*           */ , DO_CL( CONTROL ) /* */ ,
@@ -62,14 +62,14 @@ const muc_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "fresh" ) /*            */ , DO_A_N /* */ , DO_VF( FRESH )} /*             */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, fresh ) /*                             */ , DO_HQ( "only process for unset data" ) /*   */ },
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( BSFLAG, v ), DO_BFL( rec_etc, recursive ), DO_STAGE_SPLS /*             */ , DO_H( recursive ) /*                        */ },
+    /*      */ DO_OU( BSFLAG, v ), DO_BFL( puz, recursive ), DO_STAGE_SPLS /*             */ , DO_H( recursive ) /*                        */ },
 
 #if 0
    {.o = {DO_Q( "linear" ) /*           */ , DO_A_N /* */ , DO_VF( LINEAR )} /*            */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( BSFLAG, v ), DO_BFL( rec_etc, linear ), DO_STAGE_SPLS /*                */ , DO_H( linear ) /*                           */ },
+    /*      */ DO_OU( BSFLAG, v ), DO_BFL( puz, linear ), DO_STAGE_SPLS /*                */ , DO_H( linear ) /*                           */ },
 #else
    {.o = {DO_Q( "linear" ) /*           */ , DO_A_N /* */ , DO_VF( LINEAR )} /*            */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OU( BSFLAG, v ), DO_BFL( rec_etc, linear ), DO_STAGE_SPLS /*              */ , DO_H( linear ) /*                           */ },
+    /*      */ DO_OU( BSFLAG, v ), DO_BFL( puz, linear ), DO_STAGE_SPLS /*              */ , DO_H( linear ) /*                           */ },
 #endif
 
    {.o = {DO_Q( "dirent" ) /*           */ , DO_A_N /* */ , DO_VF( DIRENT )} /*            */ , DO_CL( COLLECT ) /* */ ,
@@ -90,7 +90,8 @@ const muc_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "information" ) /*      */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, info ) /*                              */ , DO_H( db info ) /*                          */ },
    {.o = {DO_Q( "dry-run" ) /*          */ , DO_A_N /* */ , DO_VF( DRY_RUN )} /*           */ , DO_CL( DEBUG ) /*   */ ,
-    /*      */ DO_OC( BFLAG, opt.flow ), DO_BFL( flow, dry_run ) /*                               */ , DO_H( dry ) /*                              */ },
+    /*      */ DO_OC( BFLAG, opt.flow ), DO_BFL( flow, dry_run ) /*                               */ ,
+    DO_H( dry ) /*                              */ },
 
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( BFLAG, opt.act.v ), DO_BFL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },

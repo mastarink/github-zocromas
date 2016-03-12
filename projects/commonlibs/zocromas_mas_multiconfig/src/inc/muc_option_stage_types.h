@@ -13,12 +13,12 @@ enum muc_option_stage_e
   MUC_OPTION_STAGE_SETUP,
   MUC_OPTION_STAGE_INIT,
   MUC_OPTION_STAGE_FIRST,
-  MUC_OPTION_STAGE_LOOP,
-  MUC_OPTION_STAGE_LOOPE = MUC_OPTION_STAGE_LOOP + 1000,
   MUC_OPTION_STAGE_INTERACTIVE,
   MUC_OPTION_STAGE_INTERAC = MUC_OPTION_STAGE_INTERACTIVE,
   MUC_OPTION_STAGE_IA = MUC_OPTION_STAGE_INTERACTIVE,
-  MUC_OPTION_STAGE_MAX = MUC_OPTION_STAGE_INTERACTIVE,
+  MUC_OPTION_STAGE_LOOP,
+  MUC_OPTION_STAGE_LOOPE = MUC_OPTION_STAGE_LOOP + 1000,
+  MUC_OPTION_STAGE_MAX = MUC_OPTION_STAGE_LOOPE,
   MUC_OPTION_STAGE_ANY = 8888888,
   MUC_OPTION_STAGE_ALL = 9999999,
 };
@@ -37,9 +37,11 @@ typedef struct muc_limits_stage_s muc_limits_stage_t;
 struct muc_extended_stageopts_s
 {
   unsigned use_stage:1;
-  unsigned use_stage_mask:1;
+  unsigned use_stage_mask_yes:1;
+  unsigned use_stage_mask_not:1;
   muc_limits_stage_t stage;
-  unsigned long stage_mask;
+  unsigned long stage_mask_yes;
+  unsigned long stage_mask_not;
 };
 typedef struct muc_extended_stageopts_s muc_extended_stageopts_t;
 

@@ -51,12 +51,12 @@
 
 /* #include <mastar/multiconfig/muc_se.h> */
 #include <mastar/multiconfig/muc_options_all_stages.h>
-#include <mastar/multiconfig/muc_options.h>
+/* #include <mastar/multiconfig/muc_options.h> */
 #include <mastar/multiconfig/muc_option_names.h>
-#include <mastar/multiconfig/muc_option_defs.h>
-#include <mastar/multiconfig/muc_option_stage.h>
-#include <mastar/multiconfig/muc_option_source.h>
-#include <mastar/multiconfig/muc_options_all_stages.h>
+/* #include <mastar/multiconfig/muc_option_defs.h> */
+/* #include <mastar/multiconfig/muc_option_stage.h> */
+/* #include <mastar/multiconfig/muc_option_source.h> */
+/* #include <mastar/multiconfig/muc_options_all_stages.h> */
 
 /* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
@@ -64,13 +64,13 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_status_ref.h"
+/* #include "duf_status_ref.h" */
 #include "duf_status.h"
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-#include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_ref.h" */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_config_credel.h"
 
@@ -79,8 +79,10 @@
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
+/* only for DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) */
 #include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
+
 /* צאַצקע */
 /* #include "duf_experiment.h" */
 
@@ -127,13 +129,15 @@ constructor_main( void )
 
 int __attribute__ ( ( weak ) ) mas_verbose( void )
 {
-  return duf_config ? duf_config->opt.flow.verbose : 0;
+  return duf_get_config_num_flow_verbose();
+  /* return duf_config ? duf_config->opt.flow.verbose : 0; */
 }
 
 int
 mas_dry_run( void )
 {
-  return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0;
+  return duf_get_config_flag_flow_dry_run();
+  /* return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0; */
 }
 
 static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
@@ -142,34 +146,38 @@ destructor_main( void )
 {
 }
 
+#if 0
 static int
 cb_do_interactive( void )
 {
   return DUF_ACTG_FLAG( interactive );
 }
-
+#endif
+/* 20160312.115753 */
 static const char *
 cb_prompt_interactive( void )
 {
   static char rl_prompt[256 * 10] = "";
 
-  snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
-            duf_levinfo_path( duf_pdi_global(  ) ) );
+  snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", duf_get_config_flag_act_allow_files(  ), duf_get_config_flag_act_allow_dirs(  ),
+            "db", CRX( levinfo_path, CRX( pdi_global ) ) );
   return rl_prompt;
 }
 
 static
 SR( TOP, main_with_config, int argc, char **argv )
 {
-  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_DEBUG, duf_pdi_reinit_anypath_global, cb_do_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
-  muc_CR( treat_option_stage_ne, duf_get_config_cli(  ), MUC_OPTION_STAGE_BOOT, duf_pdi_reinit_anypath_global, cb_do_interactive,
+/* config-cli created at M_config_create at M_main */
+  muc_CR( treat_option_stage_ne, CRX( get_config_cli ), MUC_OPTION_STAGE_DEBUG, F2ND( pdi_reinit_anypath_global ), duf_get_config_flag_act_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
+  muc_CR( treat_option_stage_ne, CRX( get_config_cli ), MUC_OPTION_STAGE_BOOT, F2ND( pdi_reinit_anypath_global ), duf_get_config_flag_act_interactive,
           cb_prompt_interactive );
 
   MAST_TRACE( any, 1, "any test" );
   MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );
 
-  muc_CR( treat_all_optstages, duf_get_config_cli(  ), duf_pdi_create_global, duf_pdi_reinit_anypath_global, cb_do_interactive,
-          cb_prompt_interactive );
+  muc_CR( treat_all_optstages, CRX( get_config_cli ), F2ND( pdi_create_global ), F2ND( pdi_reinit_anypath_global ),
+          duf_get_config_flag_act_interactive, cb_prompt_interactive );
+
   fputs( "\n", stderr );
   MAST_TRACE( temp, 0, "∈0∋ Zero " );
   QTT( "∈1∋ One " );
@@ -183,11 +191,13 @@ SR( TOP, main_with_config, int argc, char **argv )
   QTT( "∈1∋ Nine " );
   QTT( "∈7∋ Ten " );
   QTT( "∈8∋ -= !! Split config : duf-related and opt/cfg+i/o related !! =- " );
-  QT( "@act: %d; i: %d; no: %d;", DUF_ACTG_FLAG( testflag ), DUF_ACTG_FLAG( testiflag ), DUF_ACTG_FLAG( testnoflag ) );
-  QT( "@recetc: %d; i: %d; no: %d;", DUF_UG_FLAG( testflag ), DUF_UG_FLAG( testiflag ), DUF_UG_FLAG( testnoflag ) );
-  QT( "@disable: %d; i: %d; no: %d;", DUF_CONFIGG( opt.disable.flag.testflag ), DUF_CONFIGG( opt.disable.flag.testiflag ),
-      DUF_CONFIGG( opt.disable.flag.testnoflag ) );
-  QT( "@test-num: %lu", DUF_CONFIGG( testnum ) );
+  QT( "@act: %d; i: %d; no: %d;", duf_get_config_flag_act_testflag(  ), duf_get_config_flag_act_testiflag(  ),
+      duf_get_config_flag_act_testnoflag(  ) );
+  QT( "@recetc: %d; i: %d; no: %d;", duf_get_config_flag_puz_testflag(  ), duf_get_config_flag_puz_testiflag(  ),
+      duf_get_config_flag_puz_testnoflag(  ) );
+  QT( "@disable: %d; i: %d; no: %d;", duf_get_config_flag_disable_testflag(  ), duf_get_config_flag_disable_testiflag(  ),
+      duf_get_config_flag_disable_testnoflag(  ) );
+  QT( "@test-num: %lu", duf_get_config_num__testnum(  ) );
 
   CR( main_db, argc, argv );
 
@@ -195,7 +205,7 @@ SR( TOP, main_with_config, int argc, char **argv )
   {
     extern int mas_mem_disable_print_usage /* __attribute__ ( ( weak ) ) */ ;
 
-    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( opt.disable.flag.memusage ) )
+    if ( &mas_mem_disable_print_usage && duf_get_config_flag_disable_memusage(  ) /* DUF_CONFIGG( opt.disable.flag.memusage ) */  )
     {
       mas_mem_disable_print_usage = 1;
     }
@@ -218,7 +228,7 @@ SRP( TOP, int, rval, 0, main, int argc, char **argv )
 {
   duf_config_create( argc, argv, 1 /* mandatory_config */  );
 
-  assert( duf_config );
+  /* assert( duf_config ); */
 /* raise( SIGABRT ); */
 /* *( ( int * ) NULL ) = 0; */
 /* mas_strdup( "abrakadabra" ); */
@@ -230,10 +240,10 @@ SRP( TOP, int, rval, 0, main, int argc, char **argv )
   QTR;
 
   global_status_reset(  );
-  QT( "@config: %p; ptracecfg: %p; class_levels: %p", duf_get_config(  ), duf_get_config(  )->opt.ptracecfg,
-      duf_get_config(  )->opt.ptracecfg->class_levels );
+  QT( "@ptracecfg: %p; class_levels: %p",  duf_get_trace_config(  ),
+      duf_get_trace_config(  )->class_levels );
   duf_config_delete(  );
-  assert( !duf_config );
+  /* assert( !duf_config ); */
 
 /* make exit status */
   ERRCLEAR_X( ERRCODE( MAX_REACHED ), ERRCODE( NO_ACTIONS ) );

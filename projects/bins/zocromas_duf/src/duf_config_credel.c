@@ -43,7 +43,7 @@
 void
 duf_config_create( int argc, char **argv, unsigned mandatory_config )
 {
-  /* DUF_START(  ); */
+/* DUF_START(  ); */
   duf_config = duf_cfg_create(  );
   assert( duf_config );
 #ifdef MAS_TRACING
@@ -64,13 +64,13 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 
   duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
           duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
-  /* DUF_END(  ); */
+/* DUF_END(  ); */
 }
 
 void
 duf_config_delete( void )
 {
-  /* DUF_START(  ); */
+/* DUF_START(  ); */
 /* assert( duf_config->opt.ptracecfg->stream.out ); */
 /* assert( duf_get_trace_config(  )->stream.out );  */
 /* T( "@%p %p", duf_config->opt.ptracecfg, duf_config->opt.ptracecfg->class_levels ); */
@@ -87,5 +87,6 @@ duf_config_delete( void )
 #endif
           duf_config = NULL;
 
-  /* DUF_END(  ); */
+  assert( !duf_config );
+/* DUF_END(  ); */
 }

@@ -1,0 +1,28 @@
+#ifdef ENUM_WRAP
+ENUM_WRAP( info, info )                                                
+ENUM_WRAP( allow_vacuum, allow-vacuum )                                /* => processing / db options */
+ENUM_WRAP( allow_remove_database, allow-remove-database )              /* => processing / db options */
+ENUM_WRAP( allow_drop_tables, allow-drop-tables )                      /* => processing / db options */
+ENUM_WRAP( allow_clean_tables, allow-clean-tables )                    /* => processing / db options */
+ENUM_WRAP( allow_create_database, allow-create-database )              /* => processing / db options */
+ENUM_WRAP( allow_create_tables, allow-create-tables )                  /* => processing / db options */                                
+                                                                       
+ENUM_WRAP( allow_dirs, allow-dirs )                                    /* => processing / db options */
+ENUM_WRAP( allow_sub, allow-sub )                                      /* => processing / db options */
+ENUM_WRAP( allow_files, allow-files )                                  /* => processing / db options */
+                                                                                                       
+ENUM_WRAP( summary, summary )                                          /* statistic or processing */   
+ENUM_WRAP( interactive, interactive )                                  /* commands options */          
+ENUM_WRAP( fast, fast )                                                /* => processing / db options */
+ENUM_WRAP( fresh, fresh )                                              /* => processing / db options */
+
+ENUM_WRAP( nocolor, nocolor ) 
+ENUM_WRAP( force_color, force-color ) 
+                                                                                                       
+ENUM_WRAP( add_path, add-path )                                        /* => processing / db options */
+ENUM_WRAP( dirent, dirent )                                            /* => processing / db options */
+                                                                                                       
+ENUM_WRAP( testflag, testflag )                                        /* => test options */           
+ENUM_WRAP( testiflag, testiflag )                                      /* => test options */           
+ENUM_WRAP( testnoflag, testnoflag )                                    /* => test options */           
+#endif

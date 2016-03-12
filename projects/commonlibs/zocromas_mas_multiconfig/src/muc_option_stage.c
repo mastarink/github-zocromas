@@ -169,9 +169,12 @@ muc_optstage_check( const muc_config_cli_t * cli, muc_option_stage_t istage, con
   else if ( r2 < 0 )
     r0 = -1;
 
-  if ( ( extended->stage_opts.use_stage_mask && ( extended->stage_opts.stage_mask & ( 1 << istage_check ) ) )
-       || ( xvtable->stage_opts.use_stage_mask && ( xvtable->stage_opts.stage_mask & ( 1 << istage_check ) ) ) )
+  if ( ( extended->stage_opts.use_stage_mask_not && ( extended->stage_opts.stage_mask_not & ( 1 << istage_check ) ) )
+       || ( xvtable->stage_opts.use_stage_mask_not && ( xvtable->stage_opts.stage_mask_not & ( 1 << istage_check ) ) ) )
     r0 = -1;
+  if ( ( extended->stage_opts.use_stage_mask_yes && ( extended->stage_opts.stage_mask_yes & ( 1 << istage_check ) ) )
+       || ( xvtable->stage_opts.use_stage_mask_yes && ( xvtable->stage_opts.stage_mask_yes & ( 1 << istage_check ) ) ) )
+    r0 = 1;
   if ( r0 == 0 )
   {
     if ( istage_check > MUC_OPTION_STAGE_DEBUG )

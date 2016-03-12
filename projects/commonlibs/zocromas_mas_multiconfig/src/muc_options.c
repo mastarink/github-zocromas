@@ -58,7 +58,10 @@ muc_SR( OPTIONS, all_options_heterogeneous, muc_config_cli_t * cli, muc_option_s
   MUC_OPTSRC( cli, ir, indirect, istage, paod, DUFFILE );
 /* if ( DUF_ACTG_FLAG( interactive ) ) */
   if ( cb_do_interactive && cb_do_interactive(  ) )                  /* interactive - only at INTERACTIVE (`pseudo´) stage ´¨ˇ˘˙ ΞΞΞΞΞΞΞΞΞΞΞΞ ­ */
+  {
     MUC_OPTSRCI( cli, iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod, INTERAC );
+    QTT( "after OPTSRCI interactive" );
+  }
   MUC_OPTSRC( cli, lr, incfg_last, istage, paod, CFGLAST );
 
   MAST_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
@@ -95,6 +98,7 @@ muc_SR( OPTIONS, all_options_paod, muc_config_cli_t * cli, muc_option_stage_t is
   if ( cb_do_interactive && cb_do_interactive(  ) )                  /* interactive - only at INTERACTIVE (`pseudo´) stage ´¨ˇ˘˙ ΞΞΞΞΞΞΞΞΞΞΞΞ ­ */
   {
     MUC_OPTSRCI( cli, iir, interactive, istage, cb_do_interactive, cb_prompt_interactive, paod, INTERAC );
+    QTT( "after OPTSRCI interactive" );
     iir = QERRIND;
   }
   muc_CR( soption_xclarify_new_booted_source, cli, istage, MUC_OPTION_SOURCE( CFGLAST ), paod );

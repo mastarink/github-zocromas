@@ -1,10 +1,12 @@
 /* #undef MAS_TRACING */
 /* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
+
 #include "muc_tracen_defs_preset.h"
 #include "muc_config_trace_enum.h"
 
 #include "muc_errorn_defs_preset.h"
 
+#include <assert.h>                                                  /* assert */
 #include <string.h>
 #include <stdlib.h>                                                  /* free */
 #include <stdio.h>
@@ -34,7 +36,7 @@
 
 muc_SR( OPTIONS, source_interactive_parse, muc_config_cli_t * cli, muc_option_stage_t istage, muc_int_void_func_t cb_do_interactive
         __attribute__ ( ( unused ) ), muc_cpchar_void_func_t cb_prompt_interactive
-        __attribute__ ( ( unused ) ), muc_option_adata_t * paod, muc_option_source_code_t sourcecode MAS_UNUSED )
+        __attribute__ ( ( unused ) ), muc_option_adata_t * paod MAS_UNUSED, muc_option_source_code_t sourcecode MAS_UNUSED )
 {
 
 #if 0
@@ -125,7 +127,7 @@ muc_SR( OPTIONS, source_interactive_parse, muc_config_cli_t * cli, muc_option_st
           MAST_TRACE( explain, 0, "read config line %s", s );
           {
             {
-              muc_CR( boption_xclarify_at_stdx, cli, 0 /* value_separator */ , istage, MUC_OPTION_SOURCE( INTERACTIVE ), s, 0, paod );
+              muc_CR( boption_xclarify_at_stdx, cli, 0 /* value_separator */ , istage, MUC_OPTION_SOURCE( INTERACTIVE ), s, 0, NULL /* paod */  );
             }
             MAST_TRACE( options, 0, "@@@@executed cmd; QERRIND=%d; s=%s", QERRIND, s );
           }
@@ -134,6 +136,7 @@ muc_SR( OPTIONS, source_interactive_parse, muc_config_cli_t * cli, muc_option_st
         }
       /* MUC_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
         ERRCLEAR( OPTION_NOT_FOUND );
+        ERRCLEAR( OPTION_NEW_NOT_FOUND );
         muc_QTR;
       }
 #if 0

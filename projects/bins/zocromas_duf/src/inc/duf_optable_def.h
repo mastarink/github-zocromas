@@ -233,11 +233,20 @@
 # define DO_STAGE_ALL		 DO_SET_STAGE(DEBUG, MAX)
 # define DOO_STAGE_ALL		DOO_SET_STAGE(DEBUG, MAX)
 
-# define DO_STG_MASK(_v)  .stage_opts.use_stage_mask=1, .stage_opts.stage_mask= _v
-# define DOO_STG_MASK(_v) .stage_opts.use_stage_mask=1, .stage_opts.stage_mask= _v
+# define DO_STG_YES_MASK(_v)  .stage_opts.use_stage_mask_yes=1, .stage_opts.stage_mask_yes= _v
+# define DOO_STG_YES_MASK(_v) .stage_opts.use_stage_mask_yes=1, .stage_opts.stage_mask_yes= _v
 
-# define DO_STG_NOT(_v)   DO_STG_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
-# define DOO_STG_NOT(_v) DOO_STG_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+# define DO_STG_NOT(_v, ...)   DO_STG_NOT_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+# define DOO_STG_NOT(_v) DOO_STG_NOT_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+
+# define DO_STG_NOT_MASK(_v)  .stage_opts.use_stage_mask_not=1, .stage_opts.stage_mask_not= _v
+# define DOO_STG_NOT_MASK(_v) .stage_opts.use_stage_mask_not=1, .stage_opts.stage_mask_not= _v
+
+# define DO_STG_YES(_v, ...)   DO_STG_YES_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+# define DOO_STG_YES(_v) DOO_STG_YES_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+
+# define DO_STG_NOT(_v, ...)   DO_STG_NOT_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
+# define DOO_STG_NOT(_v) DOO_STG_NOT_MASK( (1<< MUC_OPTION_STAGE_ ## _v ) )
 
 # define DO_CMD(_otxt, _oarg, _ocode , ...)  {.o={DO_Q(_otxt), DO_A_ ## _oarg , DO_V(_ocode)}, __VA_ARGS__}
 # define DOO_CMD(_otxt, _oarg, _ocode , ...) {DOO_Q(_otxt), DOO_A_ ##  _oarg , DOO_V(_ocode), __VA_ARGS__}

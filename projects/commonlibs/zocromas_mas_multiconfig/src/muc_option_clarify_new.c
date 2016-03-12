@@ -442,7 +442,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const cha
   }
   else
   {
-    assert( 0 );
+    assert( 0 || istage == MUC_OPTION_STAGE_INTERACTIVE );
   }
 
 /* muc_QT( "@%s", paod->pods[0].string_copy ); */
@@ -494,6 +494,8 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const cha
   {
     mas_free( pod->xfound.xarray );
     pod->xfound.xarray = NULL;
+    mas_free( pod->string_copy );
+    pod->string_copy = NULL;
     mas_free( pod->name );
     pod->name = NULL;
     mas_free( pod->optarg );

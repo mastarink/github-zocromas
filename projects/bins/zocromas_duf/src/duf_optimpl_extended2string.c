@@ -291,7 +291,7 @@ static void
 duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_extended_vtable_t * xtable, const char *name )
 {
   DUF_PRINTF( 0, ".@@@ [%s]", xtable->name );
-  muc_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask, xtable->stage_opts.stage, xtable->stage_opts.stage_mask,
+  muc_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask_not, xtable->stage_opts.stage, xtable->stage_opts.stage_mask_not,
                       0 );
   DUF_PUTSL( 0 );
 
@@ -338,8 +338,8 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
         }
         DUF_PUTSL( 0 );
       }
-      muc_optstage_print( cli, xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, xtended->stage_opts.stage,
-                          xtended->stage_opts.stage_mask, 1 );
+      muc_optstage_print( cli, xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask_not, xtended->stage_opts.stage,
+                          xtended->stage_opts.stage_mask_not, 1 );
       {
         DUF_PRINTF( 0, ".%s", "  " );
 /* TODO : duf_codeval2string depends on optimpl !! */

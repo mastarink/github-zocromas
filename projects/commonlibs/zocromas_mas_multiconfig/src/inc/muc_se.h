@@ -26,6 +26,7 @@ typedef enum
 
 # define muc_QT(_fmt, ...) MAST_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
 # define muc_QTR if (QISERR) {muc_QT("@@@@@@(i:%d:c:%d) %s", QERRIND, QERRCODE, QERRNAME);}
+# define muc_QTT( ...) MAST_TRACE(temp,0,__VA_ARGS__)
 
 /*
  * Q... - query

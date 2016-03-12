@@ -24,7 +24,7 @@ const muc_longval_extended_table_t optable_info = {
    {.o = {DO_Q( "version" ) /*          */ , DO_A_N /* */ , DO_V( DUFVERSION )} /*         */ , DO_CL( REFERENCE ) /*  */ ,
     /*      */ DO_EV_CALL( version ), DO_AT_STAGE( SETUP ) /*                               */ , DO_H( version info ) /*                     */ },
    {.o = {DO_Q( "flags" ) /*            */ , DO_A_N /* */ , DO_V( FLAG_INFO )} /*          */ , DO_CL( REFERENCE ) /*  */ ,
-    /*      */ DO_EV_CALL( showflags ), DO_AT_STAGE( SETUP ) /*                             */ , DO_H( flags info ) /*                       */ },
+    /*      */ DO_EV_CALL( showflags ), DO_AT_STAGE( SETUP ), DO_STG_YES(IA) /*                             */ , DO_H( flags info ) /*                       */ },
 
  /* list-options, list-extended :: see help-set   */
    {.o = {DO_Q( "list-options" ) /*     */ , DO_A_O /* */ , DO_V( LIST_OPTIONS )} /*       */ , DO_CL( NODESC ) /*  */

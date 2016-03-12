@@ -878,6 +878,7 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
     typeof( duf_config->opt.act ) u = duf_config->opt.act;
   /* u.v.bit = 0;       */
   /* u.v.flag.info = 1; */
+    /* DUF_PRINTF(0,"stage:%s; source:%s", muc_optstage_name(duf_get_config_cli()), muc_optsource_name(duf_get_config_cli())); */
     DUF_PRINTF( 0, "opt.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.act.v ) ), sizeof( typeof( u.v.bit ) ),
                 ( unsigned long ) DUF_CONFIGG( opt.act.v.bit ) );
 

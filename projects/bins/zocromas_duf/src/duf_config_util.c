@@ -7,12 +7,15 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
 #include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ▤ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ */
+
+#include <mastar/multiconfig/muc_option_names.h>
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
@@ -27,6 +30,9 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 #include "duf_config_ref.h"
+
+#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 /* ###################################################################### */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -81,9 +87,89 @@ mas_config_trace_t *
 duf_get_trace_config( void )
 {
   assert( duf_config );
-  return duf_config->opt.ptracecfg;
+  return duf_config ? duf_config->opt.ptracecfg : NULL;
 }
 #endif
+
+#define DUF_GET_FLAG_BIT( _word, _num ) _word & ( ( ( typeof( _word ) ) 1 ) << ( _num - 1 ) ) ? 1 : 0
+static int
+duf_get_config_flag_opt_disable( int num )
+{
+  assert( duf_config );
+  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.disable.sbit, num );
+}
+
+static int
+duf_get_config_flag_opt_act( int num )
+{
+  assert( duf_config );
+  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.act.v.bit, num );
+}
+
+static int
+duf_get_config_flag_opt_flow( int num )
+{
+  assert( duf_config );
+  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.flow.v.sbit, num );
+}
+
+static int
+duf_get_config_flag_vars_puz( int num )
+{
+  assert( duf_config );
+  return duf_config && DUF_GET_FLAG_BIT( duf_config->vars.puz->v.sbit, num );
+}
+
+#define DUF_GET_FLAG_FUNC(_group, _rg, _set, _rs, _v, _name, _uname) \
+  int \
+  duf_get_config_flag_## _set ## _ ## _name( void ) \
+  { \
+    assert( duf_config ); \
+    assert( ( ( duf_config && duf_config->_group _rg _set _rs _v.flag._name ) ? 1 : 0 ) == duf_get_config_flag_ ## _group ## _ ## _set( DUF_FLAG_## _set ## _ ## _name ) ); \
+    return duf_get_config_flag_ ## _group ## _ ## _set( DUF_FLAG_ ## _set ## _ ## _name ); \
+  }
+#define DUF_GET_FLAGNAME_FUNC(_group, _rg, _set, _rs, _v, _name, _uname ) \
+  const char *duf_get_config_flagname_## _set ## _ ## _name( int nn ) \
+  { \
+    return     muc_coption_cnames_tmp( duf_get_config_cli(  ), nn, DUF_OPTION_VAL_FLAG_ ## _uname, NULL ); \
+  }
+#define DUF_GET_NUM_FUNC(_group, _rg, _set, _rs,  _name, _uname) \
+  unsigned long \
+  duf_get_config_num_ ## _set ## _ ## _name( void ) \
+  { \
+    assert( duf_config ); \
+    return duf_config ? duf_config->_group _rg _set _rs  _name : 0L ;\
+  }
+
+DUF_GET_FLAG_FUNC( opt,., act,., v, interactive, INTERACTIVE );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_files, ALLOW_FILES );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_dirs, ALLOW_DIRS );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_drop_tables, ALLOW_DROP_TABLES );
+DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_drop_tables, ALLOW_DROP_TABLES );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_clean_tables, ALLOW_CLEAN_TABLES );
+DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_clean_tables, ALLOW_CLEAN_TABLES );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_create_tables, ALLOW_CREATE_TABLES );
+DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_create_tables, ALLOW_CREATE_TABLES );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_create_database, ALLOW_CREATE_DATABASE );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_remove_database, ALLOW_REMOVE_DATABASE );
+DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_remove_database, ALLOW_REMOVE_DATABASE );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_vacuum, ALLOW_VACUUM );
+DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_vacuum, ALLOW_VACUUM );
+DUF_GET_FLAG_FUNC( opt,., act,., v, info, INFO );
+DUF_GET_FLAG_FUNC( opt,., act,., v, testflag, TESTFLAG );
+DUF_GET_FLAG_FUNC( opt,., act,., v, testiflag, TESTIFLAG );
+DUF_GET_FLAG_FUNC( opt,., act,., v, testnoflag, TESTNOFLAG );
+DUF_GET_FLAG_FUNC( opt,., disable,,, memusage, MEMUSAGE );
+DUF_GET_FLAG_FUNC( opt,., disable,,, testflag, TESTFLAG );
+DUF_GET_FLAG_FUNC( opt,., disable,,, testiflag, TESTIFLAG );
+DUF_GET_FLAG_FUNC( opt,., disable,,, testnoflag, TESTNOFLAG );
+DUF_GET_FLAG_FUNC( opt,., flow,., v, dry_run, DRY_RUN );
+DUF_GET_FLAGNAME_FUNC( opt,., flow,., v, dry_run, DRY_RUN );
+DUF_GET_NUM_FUNC( opt,., flow,., verbose, VERBOSE );
+DUF_GET_FLAG_FUNC( vars,., puz,->, v, testflag, TESTFLAG );
+DUF_GET_FLAG_FUNC( vars,., puz,->, v, testiflag, TESTIFLAG );
+DUF_GET_FLAG_FUNC( vars,., puz,->, v, testnoflag, TESTNOFLAG );
+DUF_GET_NUM_FUNC( ,,,, testnum, TESTNUM );
 
 #if 0
 char
@@ -91,9 +177,7 @@ duf_option_delimiter( void )
 {
   return duf_config ? duf_config->cli.option_delimiter : ':';
 }
-#endif
 
-#if 0
 char *
 duf_path_add_subdir( const char *dir, const char *subdir, int *pr )
 {

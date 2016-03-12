@@ -189,3 +189,27 @@ SR( CONFIG, config_make_db_paths, void )
 /* DUF_ENDR( r ); */
   ER( CONFIG, config_make_db_paths, void );
 }
+
+const char *
+duf_get_config_db_main_fpath( void )
+{
+  return DUF_CONFIGGS( db.main.fpath );
+}
+
+const char *
+duf_get_config_db_adm_fpath( void )
+{
+  return DUF_CONFIGGS( db.adm.fpath );
+}
+
+const char *
+duf_get_config_db_tempo_fpath( void )
+{
+  return DUF_CONFIGGS( db.tempo.fpath );
+}
+
+const char *
+duf_get_config_db_main_name( void )
+{
+  return DUF_CONFIGGSP( db.main.name_x );
+}

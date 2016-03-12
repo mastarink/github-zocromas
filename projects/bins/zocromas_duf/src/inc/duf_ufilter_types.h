@@ -67,7 +67,7 @@ typedef struct
 typedef struct
 {
   int use_format;
-  duf_config_rec_etc_flags_combo_t v;
+  duf_config_puz_flags_combo_t v;
   unsigned max_rel_depth;
   unsigned long long max_seq;
   unsigned long long std_node_set_num;
