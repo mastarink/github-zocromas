@@ -79,9 +79,8 @@
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
-/* only for DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) */
-#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
+/* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
+/* #include "duf_optimpl_enum.h"                                        (* duf_option_code_t ✗ *) */
 
 /* צאַצקע */
 /* #include "duf_experiment.h" */
@@ -211,11 +210,11 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      MAST_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+      MAST_TRACE( explain, 1, "@no %s option", /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */ duf_get_config_flagname_disable_memusage(-1) );
     }
     else
     {
-      MAST_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ) );
+      MAST_TRACE( explain, 0, "@     option %s", /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */ duf_get_config_flagname_disable_memusage(-1) );
     }
   }
 #endif

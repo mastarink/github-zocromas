@@ -206,7 +206,7 @@ SR( OTHER, openat_dh_i, duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdha
       pdhandle->serial = ++open_serial;
       MAST_TRACE( fs, 5, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
 
-      MAST_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
+      MAST_TRACE( explain, 50, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
     /* ry = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT ); */
 
@@ -368,7 +368,7 @@ SR( OTHER, close_dh_i, duf_dirhandle_t * pdhandle )
 
       ry = close( pdhandle->dfd );
       MAST_TRACE( fs, 5, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
-      MAST_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
+      MAST_TRACE( explain, 50, "lowlev. closed (%d)", pdhandle->dfd );
       if ( ry )
       {
         {

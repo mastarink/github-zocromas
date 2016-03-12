@@ -19,6 +19,7 @@ function shn_runname ()
 function shn_run ()
 {
   local retcode=0
+  local runretcode=0
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   local qargs
@@ -95,17 +96,18 @@ function shn_run ()
       mv -f mas_debug_memory_old.tmp  mas_debug_memory_old2.tmp
       mv -f mas_debug_memory.tmp  mas_debug_memory_old.tmp
     fi
-    shn_msg " exited with $retcode "
+    shn_msg "exited with $retcode "
   else
     retcode=1
   fi
   if [[ "$retcode" -eq $(( 128 + 11 ))  ]] ; then
     shn_msg "gdb by exitcode= $retcode"
     
+    local runretcode=$retcode
     shn G
   elif [[ "$retcode" -eq $(( 128 + 6 ))  ]] ; then
     shn_msg "gdb by exitcode= $retcode"
-    
+    local runretcode=$retcode
     shn G
   fi
 # shn_msg "Returned $retcode"

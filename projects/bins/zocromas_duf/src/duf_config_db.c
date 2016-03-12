@@ -213,3 +213,9 @@ duf_get_config_db_main_name( void )
 {
   return DUF_CONFIGGSP( db.main.name_x );
 }
+
+const char *
+duf_get_config_db_path( void )
+{
+  return DUF_CONFIGGS( db.path );
+}

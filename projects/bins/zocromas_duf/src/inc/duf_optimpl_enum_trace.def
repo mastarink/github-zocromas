@@ -1,6 +1,7 @@
 /* TODO rename to duf_optimpl_enum_trace.def */
 #ifdef ENUM_WRAPP
 #include <mastar/trace/mas_trace_predef_enum.def>
+/* *INDENT-OFF* */
   /* trace */
   /* ENUM_WRAPP(ERRORS_TRACE, trace, errors                        ) */
   /* ENUM_WRAPP(ERRORR_TRACE, trace, errorr                        ) */
@@ -62,6 +63,7 @@
 
   ENUM_WRAPP(MAX, trace, MAX					)
 
+/* *INDENT-ON* */
 #endif
 /*
 vi: ft=c

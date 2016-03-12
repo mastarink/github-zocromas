@@ -1,8 +1,9 @@
 /* TODO rename to duf_optimpl_enum.def */
 #ifdef ENUM_WRAP
-#ifdef ENUM_WRAPP
-#ifdef ENUM_WRAP_V
-#ifdef ENUM_WRAP_VP
+# ifdef ENUM_WRAPP
+#  ifdef ENUM_WRAP_V
+#   ifdef ENUM_WRAP_VP
+/* *INDENT-OFF* */
   ENUM_WRAP_V( ERR , -1						)
   ENUM_WRAP_V( NONE , 0						)
 
@@ -13,7 +14,7 @@
   ENUM_WRAP_V( VERBOSE , 'v'					)
   ENUM_WRAP_V( DEBUG , 'g'					)
   ENUM_WRAP_V( DUFVERSION , 'V'					)
-  ENUM_WRAP_V( MEMUSAGE , 'M'					)
+  ENUM_WRAP_V( FLAG_DISABLE_MEMUSAGE , 'M'			)
 /* db general */
   ENUM_WRAP_V( DB_DIRECTORY , 'Y'				)
   ENUM_WRAP_V( FLAG_ALLOW_CREATE_TABLES , 'O'			)
@@ -136,7 +137,7 @@
   ENUM_WRAP( FLAG_BEGINNING_SQL					)
 
   ENUM_WRAP( FLAG_DISABLE_FS					)
-  ENUM_WRAP( FLAG_DISABLE_MEMUSAGE				)
+  /* ENUM_WRAP( FLAG_DISABLE_MEMUSAGE                              ) */
 
   ENUM_WRAP( OPTION_DELIMITER					)
   ENUM_WRAP( ECHO						)
@@ -379,9 +380,10 @@
 
   ENUM_WRAP( ANY_OTHER						)
   ENUM_WRAP( MAX_LONG						)
-#endif
-#endif
-#endif
+/* *INDENT-ON* */
+#   endif
+#  endif
+# endif
 #endif
 
 /*

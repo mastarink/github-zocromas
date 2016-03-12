@@ -96,8 +96,10 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
-#else
+#elif 0
     sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, QPERRIND );
+#else
+    sql = CRP( selector2sql_new, &set[ns], pdi->pdi_name, 0 );
 #endif
     if ( QNOERR && sql )
     {
@@ -202,8 +204,10 @@ SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depth
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
-#else
+#elif 0
     sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, QPERRIND );
+#else
+    sql = CRP( selector2sql_new, &set[ns], pdi->pdi_name, 0 );
 #endif
     if ( QNOERR && sql )
     {

@@ -174,7 +174,7 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_select
                 duf_pdi_reldepth( H_PDI ), diridpid );
   MAST_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( H_PDI ) );
   DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( H_PDI ), H_PDI, " >>> 1." );
-  MAST_TRACE( explain, 2, "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */
+  MAST_TRACE( explain, 20, "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */
               " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪", duf_uni_scan_action_title( H_SCCB ) );
   MAST_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", H_SCCB->name, duf_levinfo_dirid( H_PDI ), duf_levinfo_path( H_PDI ) );
 #endif

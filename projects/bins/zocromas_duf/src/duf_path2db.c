@@ -194,7 +194,7 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       }
       else
       {
-        MAST_TRACE( explain, 2, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ),
+        MAST_TRACE( explain, 20, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ),
                     duf_levinfo_dirid_up( pdi ) );
       }
       assert( DUF_GET_UFIELD2( dirid ) );
@@ -339,7 +339,7 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
                                                                         set dirid from last inserted record (numdir=0,numfile=0) */
           if ( duf_levinfo_dirid_up( pdi ) )
           {
-            MAST_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),
+            MAST_TRACE( explain, 10, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),
                         duf_levinfo_dirid_up( pdi ) );
           }
           if ( !duf_levinfo_dirid( pdi ) )
@@ -507,7 +507,7 @@ SR( PDI, real_path2db, duf_depthinfo_t * pdi, int caninsert, const char *rpath, 
 
   MAST_TRACE( path, 6, "@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
   {
-    MAST_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
+    MAST_TRACE( explain, 10, "real_path: ≪%s≫", real_path );
   /* duf_real_path2db_i
    *  need a copy of real_path to modify during parse
    *

@@ -53,13 +53,13 @@ function shn_code ()
       shift
     ;;
     r)
-      shn_run $@ || { retcode=$? ; shn_errmsg 2.${code} shn  rc:$retcode ; }
+      shn_run "$@" || { retcode=$? ; shn_errmsg 2.${code} shn  rc:$retcode ; }
     ;;
     g)
-      shn_debug "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_uni_debug "-" "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
     ;;
     G)
-      shn_core_debug $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_uni_debug core $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
     ;;
     Y)
       shn_core_debug_installed $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }

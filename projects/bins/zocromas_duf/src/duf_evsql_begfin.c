@@ -24,7 +24,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_sql_se_stmt_defs.h"                                       /* DUF_SQL_BIND_S_OPT etc. ✗ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 /* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ *) */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
@@ -71,7 +71,6 @@ duf_bind_ufilter( duf_stmnt_t * pstmt, const mas_argvc_t * ttarg )
 SR( SQL, eval_sql_one_cb, const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback, const mas_argvc_t * ttarg,
     const char *selected_db, int *pchanges, const void *ptr )
 {
-/* DUF_STARTR( r ); */
   int changes = 0;
   const char *worksql = NULL;
   char *tmpsql = NULL;
@@ -109,7 +108,7 @@ SR( SQL, eval_sql_one_cb, const char *sql, const duf_ufilter_t * pu, const duf_y
     mas_free( tmpsql );
   if ( pchanges )
     *pchanges = changes;
-/* DUF_ENDR( r ); */
+
   ER( SQL, eval_sql_one_cb, const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback, const mas_argvc_t * ttarg,
       const char *selected_db, int *pchanges, const void *ptr );
 }
@@ -119,9 +118,7 @@ SR( SQL, eval_sql_one_cb, const char *sql, const duf_ufilter_t * pu, const duf_y
  * */
 SR( SQL, eval_sql_one, const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db, int *pchanges )
 {
-/* DUF_STARTR( r ); */
   CR( eval_sql_one_cb, sql, pu, py, NULL /* cb */ , NULL /* ttarg */ , selected_db, pchanges, NULL /* ptr */  );
-/* DUF_ENDR( r ); */
   ER( SQL, eval_sql_one, const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db, int *pchanges );
 }
 
@@ -131,8 +128,6 @@ SR( SQL, eval_sql_one, const char *sql, const duf_ufilter_t * pu, const duf_yfil
 SR( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED, const duf_ufilter_t * pu, const duf_yfilter_t * py,
     duf_bind_cb_t callback, const mas_argvc_t * ttarg, const char *selected_db, const void *ptr )
 {
-/* DUF_STARTR( r ); */
-
   if ( ssql /* && !ssql->done */  )
   {
     const char **psql = ssql->sql;
@@ -174,7 +169,7 @@ SR( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED,
     ssql->done++;
 
   }
-/* DUF_ENDR( r ); */
+
   ER( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED, const duf_ufilter_t * pu, const duf_yfilter_t * py,
       duf_bind_cb_t callback, const mas_argvc_t * ttarg, const char *selected_db, const void *ptr );
 }
@@ -185,15 +180,12 @@ SR( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED,
 SR( SQL, eval_sqlsq, duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const duf_yfilter_t * py,
     const char *selected_db )
 {
-/* DUF_STARTR( r ); */
-
 #if 0
   DOR( r, duf_eval_sqlsq_cb( ssql, title, pu, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
 #else
   CR( eval_sqlsq_cb, ssql, title, pu, py, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db, NULL /* ptr */  );
 #endif
 
-/* DUF_ENDR( r ); */
   ER( SQL, eval_sqlsq, duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const duf_yfilter_t * py,
       const char *selected_db );
 }

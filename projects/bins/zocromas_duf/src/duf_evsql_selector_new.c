@@ -23,12 +23,13 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
+#include "duf_config_db.h"
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
-#include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_ref.h" */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "std_fieldsets.h"
@@ -131,7 +132,7 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
     str = mas_strdup( DUF_CONFIGGSP( db.dir ) );
     str = duf_config_db_path_add_subdir( str, ( int * ) NULL /* &r */  );
 #else
-    str = mas_normalize_path( DUF_CONFIGGS( db.path ) );
+    str = mas_normalize_path(  /* DUF_CONFIGGS( db.path ) */ duf_get_config_db_path(  ) );
 #endif
   }
   else if ( 0 == strcmp( name, "PID" ) )
@@ -141,7 +142,7 @@ duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
   }
   else if ( 0 == strcmp( name, "DB_NAME" ) )
   {
-    str = mas_strdup( DUF_CONFIGGSP( db.main.name_x ) );
+    str = mas_strdup(  /* DUF_CONFIGGSP( db.main.name_x ) */ duf_get_config_db_main_name(  ) );
   }
   return str;
 }
@@ -174,7 +175,11 @@ SRP( SQL, char *, fieldset, NULL, fieldset2sql, const duf_sql_set_t * sql_set )
     {
       const char *fs;
 
+#if 0
       fs = duf_unref_fieldset( *pfs, sql_set->type, QPERRIND );
+#else
+      fs = CRP( unref_fieldset, *pfs, sql_set->type );
+#endif
       if ( QNOERR )
       {
         assert( fs );
@@ -195,7 +200,11 @@ SRP( SQL, char *, fieldset, NULL, fieldset2sql, const duf_sql_set_t * sql_set )
   {
     const char *fs;
 
+#if 0
     fs = duf_unref_fieldset( sql_set->fieldset, sql_set->type, QPERRIND );
+#else
+    fs = CRP( unref_fieldset, sql_set->fieldset, sql_set->type );
+#endif
     if ( QNOERR )
       fieldset = mas_strdup( fs );
   }
@@ -363,10 +372,11 @@ duf_selector2sql_filtercat_list_where_and( char *sql, unsigned with_pref, unsign
 /* 20150819.133515 */
 /* char *                                                                                                                                   */
 /* duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total, int *pr ) */
-SRP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total)
+SRP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db,
+     unsigned total )
 {
-  /* int rpr = 0; */
-  /* char *sql = NULL; */
+/* int rpr = 0; */
+/* char *sql = NULL; */
   const char *selector2 = NULL;
   unsigned cte_mode = 0;
   const duf_sql_set_t *sql_set_uni;
@@ -398,11 +408,20 @@ SRP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, co
       fieldset = mas_strcat_x( fieldset, ") AS nf" );
     }
     else
+    {
+#if 0
       fieldset = duf_fieldset2sql( ( sql_set_uni->fieldset ? sql_set_uni : sql_set ), QPERRIND );
-
+#else
+      fieldset = CRP( fieldset2sql, ( sql_set_uni->fieldset ? sql_set_uni : sql_set ) );
+#endif
+    }
     if ( QNOERR && fieldset )
     {
+#if 0
       selector = duf_unref_selector( selector2, sql_set->type, QPERRIND );
+#else
+      selector = CRP( unref_selector, selector2, sql_set->type );
+#endif
       if ( QNOERR && selector && fieldset )
       {
         if ( cte_mode )
@@ -522,11 +541,12 @@ SRP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, co
     mas_free( sql );
     sql = NULL;
   }
-  /* if ( pr ) */
-    /* *pr = rpr; */
+/* if ( pr ) */
+/* *pr = rpr; */
 /* T( "@%s", sql ); */
-  /* return sql; */
-ERP(SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total);
+/* return sql; */
+  ERP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db,
+       unsigned total );
 }
 
 char *

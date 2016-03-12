@@ -137,7 +137,7 @@ SR( PDI, levinfo_godown_i, duf_depthinfo_t * pdi, const char *itemname MAS_UNUSE
 
     assert( pdi->pathinfo.levinfo );
 
-    MAST_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_levinfo_itemshowname( pdi ) );
+    MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_levinfo_itemshowname( pdi ) );
     if ( node_type == DUF_NODE_LEAF )
       MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
     else
@@ -233,7 +233,7 @@ SR( PDI, levinfo_godown_db, duf_depthinfo_t * pdi, duf_node_type_t node_type, du
     assert( d == pdi->pathinfo.depth );
 
     assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
-    MAST_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_levinfo_itemshowname( pdi ) );
+    MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_levinfo_itemshowname( pdi ) );
   }
 /* DUF_ENDR( r ); */
   ER( PDI, levinfo_godown_db, duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stmnt_t * pstmt );
@@ -301,7 +301,7 @@ SR( PDI, levinfo_goup, duf_depthinfo_t * pdi )
     assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || pdi->pathinfo.levinfo[d].lev_dh.dfd == 0 );
   /* if ( DUF_IS_ERROR( r ) )                                              */
   /*   DUF_SHOW_ERRORO( "(%d) close error; L%d", r, pdi->pathinfo.depth ); */
-    MAST_TRACE( explain, 2, "level up:   %d", d );
+    MAST_TRACE( explain, 20, "level up:   %d", d );
     assert( pdi->pathinfo.levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->pathinfo.depth;

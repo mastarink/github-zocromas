@@ -94,7 +94,7 @@ SR( SCCBH, sccbh_eval_all_and_summary, duf_sccb_handle_t * sccbh, bool f_summary
 /* DUF_STARTR( r ); */
   if ( sccbh && H_SCCB )
   {
-    MAST_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( H_SCCB ) );
+    MAST_TRACE( explain, 10, "scan targ; action title: %s", duf_uni_scan_action_title( H_SCCB ) );
     MAST_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( H_SCCB ) );
     MAST_TRACE( sccbh, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan %s", duf_uni_scan_action_title( H_SCCB ), H_SCCB->name );
 
@@ -152,19 +152,19 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
     {
       if ( QERRIND > 0 )
       {
-        MAST_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+        MAST_TRACE( explain, 20, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                     QERRIND, set_type_title, duf_uni_scan_action_title( H_SCCB ), duf_levinfo_dirid( H_PDI ) );
       }
       else
       {
-        MAST_TRACE( explain, 3, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+        MAST_TRACE( explain, 30, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                     set_type_title, duf_uni_scan_action_title( H_SCCB ), duf_levinfo_dirid( H_PDI ) );
       }
     }
   }
   else
   {
-    MAST_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", set_type_title );
+    MAST_TRACE( explain, 10, "= ? ============ NO selector2 ≪%s≫", set_type_title );
     ERRMAKE( PTR );
   }
 /* DUF_ENDR( r ); */

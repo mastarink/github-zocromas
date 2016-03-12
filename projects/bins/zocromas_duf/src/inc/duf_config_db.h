@@ -15,4 +15,6 @@ const char *duf_get_config_db_tempo_fpath( void );
 const char *duf_get_config_db_main_name( void );
 const char *duf_get_config_db_opened_name( void );
 
+const char *duf_get_config_db_path( void );
+
 #endif

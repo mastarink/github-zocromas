@@ -1,5 +1,6 @@
 /* TODO rename to duf_optimpl_enum_filter_minmax.def */
 #ifdef ENUM_WRAPMM
+/* *INDENT-OFF* */
   ENUM_WRAPMM( NAMEID    ,  LL                          , nameid     , nameid, name id		)
   ENUM_WRAPMM( DATAID    ,  LL                          , dataid     , dataid, data id		)
   ENUM_WRAPMM( DIRID     ,  LL                          , dirid      , dirid, directory id	)
@@ -15,6 +16,7 @@
   ENUM_WRAPMM( MIMEID    ,  LL                          , mimeid     , mimeid, mime id		)
   ENUM_WRAPMM( EXIFID    ,  LL                          , exifid     , exifid, exif id		)
   ENUM_WRAPMM( SIZE      ,  LL                          , size       , size, file size		)
+/* *INDENT-ON* */
 #endif
 /*
 vi: ft=c

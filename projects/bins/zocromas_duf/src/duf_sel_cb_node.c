@@ -58,7 +58,7 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
 
   if ( str_cb2 )
   {
-    MAST_TRACE( explain, 2, "=> str cb2" );
+    MAST_TRACE( explain, 20, "=> str cb2" );
   /*@ 3. str_cb2 */
     CRV( ( str_cb2 ), sccbh, pstmt, scanstage );
 
@@ -82,7 +82,7 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t 
 /* data from db at pstmt */
 
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( H_PDI ) );
-  MAST_TRACE( explain, 4, "@ sel cb2 node" );
+  MAST_TRACE( explain, 40, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 
   MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( H_PDI ) );
@@ -113,7 +113,7 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str
 /* data from db at pstmt */
 
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( H_PDI ) );
-  MAST_TRACE( explain, 4, "@ sel cb2 node" );
+  MAST_TRACE( explain, 40, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 
   MAST_TRACE( scan, 6, "NODE %s", duf_levinfo_path( H_PDI ) );

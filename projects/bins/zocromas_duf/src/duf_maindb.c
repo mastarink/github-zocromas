@@ -8,6 +8,7 @@
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>
 #include <mastar/error/mas_error_defs_make.h>
@@ -15,7 +16,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
-#include <mastar/trace/mas_trace.h>
 
 #include <mastar/multiconfig/muc_option_names.h>
 
@@ -95,16 +95,14 @@ static
 SR( TOP, main_db_optionally_remove_files, void )
 {
 /* DUF_STARTR( r ); */
-  if (  /* duf_get_config_flag_act_allow_remove_database() */ duf_get_config_flag_act_allow_remove_database(  ) )
+  if ( duf_get_config_flag_act_allow_remove_database(  ) )
   {
-    MAST_TRACE( explain, 0, "     option %s, removing database",     /*, duf_get_config_flagname_act_allow_remove_database(-1) */
-                duf_get_config_flagname_act_allow_remove_database( -1 ) );
+    MAST_TRACE( explain, 0, "     option %s, removing database", duf_get_config_flagname_act_allow_remove_database( -1 ) );
     CR( main_db_remove_files );
   }
   else
   {
-    MAST_TRACE( explain, 1, "no %s option, not removing database",   /* duf_get_config_flagname_act_allow_remove_database(-1) */
-                duf_get_config_flagname_act_allow_remove_database( -1 ) );
+    MAST_TRACE( explain, 1, "no %s option, not removing database", duf_get_config_flagname_act_allow_remove_database( -1 ) );
   }
 /* DUF_ENDR( r ); */
   ER( TOP, main_db_optionally_remove_files, void );
@@ -116,8 +114,7 @@ SR( TOP, main_db_create_tables, void )
 /* DUF_STARTR( r ); */
 /* DOR( r, duf_check_tables(  ) ); */
   if ( duf_get_config_flag_flow_dry_run(  ) )
-    DUF_PRINTF( 0, "DRY %s : action '%s'", /* duf_get_config_flagname_flow_dry_run(-1) , */ duf_get_config_flagname_flow_dry_run( -1 ),
-              /* duf_get_config_flagname_act_allow_create_tables(2) */ duf_get_config_flagname_act_allow_create_tables( -1 ) );
+    DUF_PRINTF( 0, "DRY %s : action '%s'", duf_get_config_flagname_flow_dry_run( -1 ), duf_get_config_flagname_act_allow_create_tables( 2 ) );
   else
   {
     CR( eval_sqlsq, &sql_beginning_create_one, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
@@ -137,13 +134,11 @@ static
 SR( TOP, main_db_pre_action, void )
 {
 /* DUF_STARTR( r ); */
-  if ( QNOERR /* && duf_get_config_flag_act_allow_drop_tables() */  && duf_get_config_flag_act_allow_drop_tables(  ) )
+  if ( QNOERR && duf_get_config_flag_act_allow_drop_tables(  ) )
   {
-    MAST_TRACE( explain, 0, "drop (zero) tables: option %s",         /* duf_get_config_flagname_act_allow_drop_tables(-1) */
-                duf_get_config_flagname_act_allow_drop_tables( -1 ) );
+    MAST_TRACE( explain, 0, "drop (zero) tables: option %s", duf_get_config_flagname_act_allow_drop_tables( -1 ) );
     if ( duf_get_config_flag_flow_dry_run(  ) )
-      DUF_PRINTF( 0, "DRY %s : action '%s'", /* duf_get_config_flagname_flow_dry_run(-1) */ duf_get_config_flagname_flow_dry_run( -1 ),
-                /* duf_get_config_flagname_act_allow_drop_tables(2) */ duf_get_config_flagname_act_allow_drop_tables( 2 ) );
+      DUF_PRINTF( 0, "DRY %s : action '%s'", duf_get_config_flagname_flow_dry_run( -1 ), duf_get_config_flagname_act_allow_drop_tables( 2 ) );
     else
       CR( eval_sqlsq, &sql_beginning_drop, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
           NULL /* selected.db */  );
@@ -154,7 +149,7 @@ SR( TOP, main_db_pre_action, void )
     MAST_TRACE( explain, 1, "no %s option, not dropping tables", duf_get_config_flagname_act_allow_drop_tables( -1 ) );
   }
 
-  if ( QNOERR /* && duf_get_config_flag_act_allow_clean_tables() */  && duf_get_config_flag_act_allow_clean_tables(  ) )
+  if ( QNOERR && duf_get_config_flag_act_allow_clean_tables(  ) )
   {
     MAST_TRACE( explain, 0, "clean (zero) tables: option %s", duf_get_config_flagname_act_allow_clean_tables( -1 ) );
     if ( duf_get_config_flag_flow_dry_run(  ) )
@@ -169,8 +164,7 @@ SR( TOP, main_db_pre_action, void )
     MAST_TRACE( explain, 1, "no %s option, not dropping tables", duf_get_config_flagname_act_allow_drop_tables( -1 ) );
   }
 
-  if ( QNOERR                                                        /* && duf_get_config_flag_act_allow_create_tables() */
-       && duf_get_config_flag_act_allow_create_tables(  ) /* && duf_get_config_flag_act_allow_create_database() */  )
+  if ( QNOERR && duf_get_config_flag_act_allow_create_tables(  ) /* && duf_get_config_flag_act_allow_create_database() */  )
   {
     MAST_TRACE( explain, 0, "     option %s : to check / create db tables", duf_get_config_flagname_act_allow_create_tables( -1 ) );
     CR( main_db_create_tables );
@@ -181,7 +175,7 @@ SR( TOP, main_db_pre_action, void )
     MAST_TRACE( explain, 1, "no %s option", duf_get_config_flagname_act_allow_create_tables( -1 ) );
   }
 
-  if ( QNOERR /* && duf_get_config_flag_act_allow_vacuum() */  && duf_get_config_flag_act_allow_vacuum(  ) )
+  if ( QNOERR   && duf_get_config_flag_act_allow_vacuum(  ) )
   {
   /* static const char *sql = "VACUUM"; */
 

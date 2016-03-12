@@ -9,26 +9,28 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
+#include <mastar/multiconfig/muc_option_config.h>
+
 /* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_se_only.h"
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_fmt_defs.h"
+/* #include "duf_fmt_defs.h" */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-#include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_ref.h" */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_sccb.h"
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+/* #include "duf_levinfo_ref.h"                                         (* duf_levinfo_*; etc. ✗ *) */
 
 /* #include "duf_option_defs.h"                                         (* DUF_ACTG_FLAG( summary ) *) */
-#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
+/* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
 
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 #include "duf_pdi_sccb_eval.h"
@@ -74,9 +76,9 @@ SR( OTHER, ev_evnamed_list, const char *names, duf_scan_callbacks_t * first )
   assert( duf_pdi_global_name(  ) );
 /* assert( duf_pdi_global()->pyp ); */
   MAST_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
-
-/* T( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
-  CR( ev_pdi_evnamed_list, duf_pdi_global(  ), names, first, DUF_CONFIGA( pcli->targ ), DUF_ACTG_FLAG( summary ) );
+/* QT( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
+  CR( ev_pdi_evnamed_list, duf_pdi_global(  ), names, first, /* DUF_CONFIGA( pcli->targ ) */ muc_cli_options_get_targ( duf_get_config_cli(  ) ),
+      duf_get_config_flag_act_summary(  ) );
 /* DUF_ENDR( r ); */
   ER( OTHER, ev_evnamed_list, const char *names, duf_scan_callbacks_t * first );
 }

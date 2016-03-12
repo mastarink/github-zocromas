@@ -1,43 +1,43 @@
 #include <assert.h>                                                  /* assert */
 
-#include "duf_tracen_defs_preset.h"
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
-#include <mastar/trace/mas_trace.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
-#include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
+#include <mastar/tools/mas_time.h>                                   /* mas_(|double_|xlocal|xgm|xvstrf|xvstrftime_|(|t)strflocal|strfgm)time ; strtime2long; etc. ▤ */
 /* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
 
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
-#include "duf_config_ref.h"
-#include "duf_config_output_util.h"
+/* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
+/* #include "duf_config_ref.h" */
+/* #include "duf_config_output_util.h" */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ♠ */
-#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ♠ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "sql_tables_defs.h"
 
 /* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ♠ *) */
-#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ♠ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 /* ###################################################################### */
-#include "duf_maindb_info.h"                                         /* duf_main_db_info() ♠ */
+#include "duf_maindb_info.h"                                         /* duf_main_db_info() ✗ */
 /* ###################################################################### */
 
 static
@@ -72,6 +72,7 @@ SRP( TOP, unsigned long *, tuple, NULL, info_from_db, int count, const char *sql
   ERP( TOP, unsigned long *, tuple, NULL, info_from_db, int count, const char *sql );
 }
 
+/* 20160312.154756 */
 SR( TOP, main_db_info, void )
 {
   typedef struct
@@ -83,7 +84,7 @@ SR( TOP, main_db_info, void )
   } duf_infodata_t;
 
 /* DUF_STARTR( r ); */
-  if ( duf_config->opt.act.v.flag.info )
+  if (  /* duf_config->opt.act.v.flag.info */ duf_get_config_flag_act_info(  ) )
   {
     duf_infodata_t infod[] = {
 #if 0
@@ -169,49 +170,57 @@ SR( TOP, main_db_info, void )
    */
     for ( unsigned iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {
-      unsigned long *tuple;
+      unsigned long *tuple = NULL;
       int nolab = 0;
 
     /* MAST_TRACE( explain, 0, "#%d. SQL:'%s'", iop, infod[iop].sql ); */
+#if 0
       tuple = duf_info_from_db( infod[iop].count, infod[iop].sql, QPERRIND );
+#else
+      tuple = CRP( info_from_db, infod[iop].count, infod[iop].sql );
+#endif
+
       DUF_PRINTF( 0, ".#%2d. [ %30s ] -- ", iop, infod[iop].title );
-      for ( int iv = 0; iv < infod[iop].count; iv++ )
+      if ( tuple )
       {
-        const char *label;
+        for ( int iv = 0; iv < infod[iop].count; iv++ )
+        {
+          const char *label;
 
-        if ( !nolab && !infod[iop].labels[iv] )
-        {
-          nolab = 1;
-          label = NULL;
-        }
-        else
-        {
-          label = infod[iop].labels[iv];
-        }
-        if ( label )
-        {
-          time_t tv;
-
-          tv = ( time_t ) tuple[iv];
-          if ( *label == '@' )
+          if ( !nolab && !infod[iop].labels[iv] )
           {
-            label++;
-            char buf[64];
-
-            mas_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
-          /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
-            DUF_PRINTF( 0, ". %s: %15s;  ", label, buf );
+            nolab = 1;
+            label = NULL;
           }
           else
           {
-            DUF_PRINTF( 0, ". %s: %6lu;  ", label, tuple[iv] );
+            label = infod[iop].labels[iv];
           }
+          if ( label )
+          {
+            time_t tv;
+
+            tv = ( time_t ) tuple[iv];
+            if ( *label == '@' )
+            {
+              label++;
+              char buf[64];
+
+              mas_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
+            /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
+              DUF_PRINTF( 0, ". %s: %15s;  ", label, buf );
+            }
+            else
+            {
+              DUF_PRINTF( 0, ". %s: %6lu;  ", label, tuple[iv] );
+            }
+          }
+          else
+            DUF_PRINTF( 0, ". %6lu;  ", tuple[iv] );
         }
-        else
-          DUF_PRINTF( 0, ". %6lu;  ", tuple[iv] );
+        DUF_PRINTF( 0, ";" );
+        mas_free( tuple );
       }
-      DUF_PRINTF( 0, ";" );
-      mas_free( tuple );
     }
     MAST_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   }

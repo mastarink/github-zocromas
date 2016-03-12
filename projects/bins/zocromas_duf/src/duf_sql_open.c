@@ -35,11 +35,11 @@ SR( SQL, sql_open, const char *dbpath )
 {
 /* DUF_STARTR( r ); */
 
-  MAST_TRACE( explain, 0, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
+  MAST_TRACE( explain, 100, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
   CRV_SQLITE( mas_sqlite_open, dbpath );
 
   MAST_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, QERRIND );
-  MAST_TRACE( explain, 0, "opened (?%d) database", QERRIND );
+  MAST_TRACE( explain, 100, "opened (?%d) database", QERRIND );
 /* DUF_ENDR( r ); */
   ER( SQL, sql_open, const char *dbpath );
 }

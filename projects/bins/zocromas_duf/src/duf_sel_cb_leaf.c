@@ -61,7 +61,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
 /* DUF_STARTR( r ); */
   if ( str_cb2 )
   {
-    MAST_TRACE( explain, 2, "=> str cb2" );
+    MAST_TRACE( explain, 20, "=> str cb2" );
     DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( H_PDI ), H_PDI, " >>> 5. leaf str cb2" );
     assert( str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_str_cb );
 
@@ -160,7 +160,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t 
 /* data from db at pstmt */
 
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( H_PDI ) );
-  MAST_TRACE( explain, 4, "@ sel cb2 leaf" );
+  MAST_TRACE( explain, 40, "@ sel cb2 leaf" );
 
   MAST_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", H_PDI->seq_leaf, H_PDI->seq, H_TOTITEMS, H_SCCB->title );
 
@@ -215,7 +215,7 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str
 /* data from db at pstmt */
 
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( H_PDI ) );
-  MAST_TRACE( explain, 4, "@ sel cb2 leaf" );
+  MAST_TRACE( explain, 40, "@ sel cb2 leaf" );
   assert( str_cb2 == duf_sccbh_eval_db_leaf_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == NULL );
 
   MAST_TRACE( scan, 9, "LEAF %s", duf_levinfo_path( H_PDI ) );

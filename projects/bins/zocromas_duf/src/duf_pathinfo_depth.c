@@ -129,7 +129,7 @@ SR( PI, pi_godown, duf_pathinfo_t * pi, duf_node_type_t node_type, unsigned frec
 
     assert( pi->levinfo );
 
-    MAST_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
+    MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
     if ( node_type == DUF_NODE_LEAF )
       MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pi_depth( pi ), duf_pi_itemshowname( pi ) );
     else
@@ -177,7 +177,7 @@ SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_
     assert( d == pi->depth );
 
     assert( pi->depth == duf_pi_calc_depth( pi ) );
-    MAST_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
+    MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
   }
 /* DUF_ENDR( r ); */
   ER( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear );

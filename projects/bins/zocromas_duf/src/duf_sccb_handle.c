@@ -267,7 +267,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
   else
   {
     ERRMAKE( TOTALS );
-    MAST_TRACE( explain, 0, "didn't count files in db" );
+    MAST_TRACE( explain, 10, "didn't count files in db" );
   }
 /* if ( pr )    */
 /*   *pr = rpr; */
@@ -430,7 +430,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     /* assert(H_TOTITEMS=38); */
       DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu", H_TOTITEMS );
       MAST_TRACE( temporary, 0, "@@@@ %llu items registered in db", H_TOTITEMS );
-      MAST_TRACE( explain, 0, "%llu items registered in db", H_TOTITEMS );
+      MAST_TRACE( explain, 10, "%llu items registered in db", H_TOTITEMS );
       if ( duf_output_progress(  ) )
       {
         sccbh->progress_node_cb = duf_sccbh_node_progress;
@@ -447,12 +447,12 @@ TODO scan mode
     {
       if ( H_SCCB->init_scan )
       {
-        MAST_TRACE( explain, 0, "to init scan" );
+        MAST_TRACE( explain, 10, "to init scan" );
         CRV( H_SCCB->init_scan, NULL /* pstmt */ , pdi );
       }
       else
       {
-        MAST_TRACE( explain, 0, "no init scan" );
+        MAST_TRACE( explain, 10, "no init scan" );
       }
       assert( H_PDI->pathinfo.levinfo );
     /* T(">>> %llu : %llu", H_PU->std_leaf_set_num,  H_PU->std_node_set_num); */

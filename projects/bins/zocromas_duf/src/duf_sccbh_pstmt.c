@@ -39,7 +39,7 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
 
 /* Not here : assert( DUF_GET_UFIELD2( dirid) == duf_levinfo_dirid( pdi ) ); */
   MAST_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
-  MAST_TRACE( explain, 2, "@ sel cb2 node" );
+  MAST_TRACE( explain, 20, "@ sel cb2 node" );
 
   CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
 

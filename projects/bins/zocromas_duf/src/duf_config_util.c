@@ -156,10 +156,12 @@ DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_remove_database, ALLOW_REMOVE_DATA
 DUF_GET_FLAG_FUNC( opt,., act,., v, allow_vacuum, ALLOW_VACUUM );
 DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_vacuum, ALLOW_VACUUM );
 DUF_GET_FLAG_FUNC( opt,., act,., v, info, INFO );
+DUF_GET_FLAG_FUNC( opt,., act,., v, summary, SUMMARY );
 DUF_GET_FLAG_FUNC( opt,., act,., v, testflag, TESTFLAG );
 DUF_GET_FLAG_FUNC( opt,., act,., v, testiflag, TESTIFLAG );
 DUF_GET_FLAG_FUNC( opt,., act,., v, testnoflag, TESTNOFLAG );
-DUF_GET_FLAG_FUNC( opt,., disable,,, memusage, MEMUSAGE );
+DUF_GET_FLAG_FUNC( opt,., disable,,, memusage, DISABLE_MEMUSAGE );
+DUF_GET_FLAGNAME_FUNC( opt,., disable,,, memusage, DISABLE_MEMUSAGE );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testflag, TESTFLAG );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testiflag, TESTIFLAG );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testnoflag, TESTNOFLAG );
