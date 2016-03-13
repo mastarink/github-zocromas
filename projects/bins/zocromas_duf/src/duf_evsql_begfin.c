@@ -131,7 +131,6 @@ SR( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED,
   if ( ssql /* && !ssql->done */  )
   {
     const char **psql = ssql->sql;
-
     const char **psql0 = psql;
 
 #ifdef MAS_TRACING
@@ -142,19 +141,20 @@ SR( SQL, eval_sqlsq_cb, duf_sql_sequence_t * ssql, const char *title MAS_UNUSED,
     assert( ssql );
     assert( ssql->name );
     MAST_TRACE( db, 0, "@@@@@@ssql:%s", ssql->name );
-    if ( QNOERR && psql0 && *psql0 && ssql->beginend )
+    if ( psql0 && *psql0 && ssql->beginend )
     {
       CR( eval_sql_one_cb, "BEGIN", pu, py, callback, ttarg, NULL, &changes, ptr );
     }
 
     while ( QNOERR && psql && *psql )
     {
+#ifdef MAS_TRACING
       int nntr = 0;
 
       nntr++;
       MAST_TRACE( sql, 3, "beginning psql #%d: %s", nntr, *psql );
       MAST_TRACE( select, 0, "beginning psql #%d: %s", nntr, *psql );
-
+#endif
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );
       CR( eval_sql_one_cb, *psql, pu, py, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes, ptr );
 

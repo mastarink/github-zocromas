@@ -20,7 +20,7 @@
 #include "duf_se_only.h"                                              /* DOR ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
