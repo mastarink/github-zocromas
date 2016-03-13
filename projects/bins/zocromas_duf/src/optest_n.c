@@ -51,7 +51,7 @@ something1_t som1 = {.set3.bits = 0x3f };
   .reltoptr    = &_set, \
   .m_offset    = offsetof( typeof(_set), _fld ), \
   .flag_bitnum = _bitnum, \
-  .oclass      = MUC_OPTION_CLASS_ ## _oclass, \
+  /* .oclass      = DUF_OPTIMPL_CLASS_ ## _oclass, */ \
   .can_no      = _can_no, \
   .help        = _help \
 }
@@ -70,7 +70,7 @@ const muc_longval_extended_table_t optable_test = {                  /* zzzzzz *
              .relto = MUC_OFFSET_varptr,
              .reltoptr = &som1,
              .m_offset = offsetof( something1_t, set2 ),
-             .oclass = MUC_OPTION_CLASS_TEST,
+             /* .oclass = DUF_OPTIMPL_CLASS_TEST, */
              .help = "..."                                           /* */
              },
             MAS_OPT_BXFLAG( "test-q-bflag", som1, set3, 2, 1, TEST, "something to help" ),

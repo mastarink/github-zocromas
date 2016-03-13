@@ -13,13 +13,14 @@
 #include <mastar/error/mas_error_defs.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
-#include <mastar/multiconfig/muc_option_class.h>
 /* #include <mastar/multiconfig/muc_option_names.h> */
 #include <mastar/multiconfig/muc_option_descr.h>
 #include <mastar/multiconfig/muc_option_vtype.h>
 #include <mastar/multiconfig/muc_option_stage.h>
 #include <mastar/multiconfig/muc_option_lfind.h>
 #include <mastar/multiconfig/muc_option_config.h>
+
+#include "duf_optimpl_class.h"
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
@@ -50,42 +51,42 @@
 #include "duf_optimpl_smart_help.h"
 /* ###################################################################### */
 
-static const char *oclass_titles[MUC_OPTION_CLASS_MAX + 1] = {
-  [MUC_OPTION_CLASS_HELP] = "Help",
-  [MUC_OPTION_CLASS_NO_HELP] = "No help",
-  [MUC_OPTION_CLASS_SYSTEM] = "System",
-  [MUC_OPTION_CLASS_CONTROL] = "Control",
-  [MUC_OPTION_CLASS_DB] = "Database",
-  [MUC_OPTION_CLASS_FS] = "File system",
-  [MUC_OPTION_CLASS_SCCB] = "SCCB system",
-  [MUC_OPTION_CLASS_REFERENCE] = "Reference",
-  [MUC_OPTION_CLASS_COLLECT] = "Collect",
-  [MUC_OPTION_CLASS_SCAN] = "Scan",
-  [MUC_OPTION_CLASS_FILTER] = "Filter",
-  [MUC_OPTION_CLASS_UPDATE] = "Update",
-  [MUC_OPTION_CLASS_REQUEST] = "Request",
-  [MUC_OPTION_CLASS_PRINT] = "Print",
-  [MUC_OPTION_CLASS_TRACE] = "Trace",
-  [MUC_OPTION_CLASS_OBSOLETE] = "Obsolete",
-  [MUC_OPTION_CLASS_OTHER] = "Other",
-  [MUC_OPTION_CLASS_NONE] = "None",
-  [MUC_OPTION_CLASS_DEBUG] = "DEBUG",
-  [MUC_OPTION_CLASS_NODESC] = "No desc",
+static const char *oclass_titles[DUF_OPTIMPL_CLASS_MAX + 1] = {
+  [DUF_OPTIMPL_CLASS_HELP] = "Help",
+  [DUF_OPTIMPL_CLASS_NO_HELP] = "No help",
+  [DUF_OPTIMPL_CLASS_SYSTEM] = "System",
+  [DUF_OPTIMPL_CLASS_CONTROL] = "Control",
+  [DUF_OPTIMPL_CLASS_DB] = "Database",
+  [DUF_OPTIMPL_CLASS_FS] = "File system",
+  [DUF_OPTIMPL_CLASS_SCCB] = "SCCB system",
+  [DUF_OPTIMPL_CLASS_REFERENCE] = "Reference",
+  [DUF_OPTIMPL_CLASS_COLLECT] = "Collect",
+  [DUF_OPTIMPL_CLASS_SCAN] = "Scan",
+  [DUF_OPTIMPL_CLASS_FILTER] = "Filter",
+  [DUF_OPTIMPL_CLASS_UPDATE] = "Update",
+  [DUF_OPTIMPL_CLASS_REQUEST] = "Request",
+  [DUF_OPTIMPL_CLASS_PRINT] = "Print",
+  [DUF_OPTIMPL_CLASS_TRACE] = "Trace",
+  [DUF_OPTIMPL_CLASS_OBSOLETE] = "Obsolete",
+  [DUF_OPTIMPL_CLASS_OTHER] = "Other",
+  [DUF_OPTIMPL_CLASS_NONE] = "None",
+  [DUF_OPTIMPL_CLASS_DEBUG] = "DEBUG",
+  [DUF_OPTIMPL_CLASS_NODESC] = "No desc",
 };
 
-SR( SNIPPET_OPTION, optimpl_O_smart_help_all, muc_option_class_t oclass )
+SR( SNIPPET_OPTION, optimpl_O_smart_help_all, duf_optimpl_class_t oclass )
 {
 /* DUF_STARTR( r ); */
 
-  if ( oclass == MUC_OPTION_CLASS_ALL )
+  if ( oclass == DUF_OPTIMPL_CLASS_ALL )
   {
-    for ( muc_option_class_t oc = MUC_OPTION_CLASS_MIN + 1; oc < MUC_OPTION_CLASS_MAX; oc++ )
+    for ( duf_optimpl_class_t oc = DUF_OPTIMPL_CLASS_MIN + 1; oc < DUF_OPTIMPL_CLASS_MAX; oc++ )
     {
       CR( optimpl_O_smart_help, oc );
     }
   }
 /* DUF_ENDR( r ); */
-  ER( SNIPPET_OPTION, optimpl_O_smart_help_all, muc_option_class_t oclass );
+  ER( SNIPPET_OPTION, optimpl_O_smart_help_all, duf_optimpl_class_t oclass );
 }
 
 static void
@@ -109,7 +110,7 @@ duf_show_option_description_x( const muc_longval_extended_t * extended )
   {
     char *s = NULL;
 
-  /* muc_option_class_t hclass; */
+  /* duf_optimpl_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
     s = muc_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
@@ -151,7 +152,7 @@ duf_show_loption_description( int ilong )
   {
     char *s = NULL;
 
-  /* muc_option_class_t hclass; */
+  /* duf_optimpl_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
     s = duf_loption_description_d( ilong, "\t", " // " );
@@ -194,7 +195,7 @@ duf_show_xoption_description( const muc_longval_extended_t * extended, int ilong
   {
     char *s = NULL;
 
-  /* muc_option_class_t hclass; */
+  /* duf_optimpl_class_t hclass; */
 
   /* hclass = duf_help_option2class( codeval ); */
     s = muc_xoption_description_d( duf_get_config_cli(  ), extended, "\t", " // " );
@@ -214,7 +215,7 @@ duf_show_xoption_description( const muc_longval_extended_t * extended, int ilong
   }
 }
 
-SR( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass )
+SR( SNIPPET_OPTION, optimpl_O_smart_help, duf_optimpl_class_t oclass )
 {
 /* DUF_STARTR( r ); */
 
@@ -232,8 +233,8 @@ SR( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass )
 /* for ( int ilong = 0; DUF_CONFIGG(pcli->longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
 /* {                                                                                                   */
 /* }                                                                                                   */
-  if ( oclass <= MUC_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
-    DUF_PRINTF( 0, "-=-=-=-=- %s (%s) -=-=-=-=-", oclass_titles[oclass], muc_optclass_name( oclass ) );
+  if ( oclass <= DUF_OPTIMPL_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
+    DUF_PRINTF( 0, "-=-=-=-=- %s (%s) -=-=-=-=-", oclass_titles[oclass], duf_optclass_name( oclass ) );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
   {
@@ -263,8 +264,8 @@ SR( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass )
           {
             int cnd = 0;
 
-            cnd = ( !extended && ( oclass == MUC_OPTION_CLASS_ANY || oclass == MUC_OPTION_CLASS_NODESC ) )
-                    || ( extended && ( oclass == MUC_OPTION_CLASS_ANY || oclass == extended->oclass ) );
+            cnd = ( !extended && ( oclass == DUF_OPTIMPL_CLASS_ANY || oclass == DUF_OPTIMPL_CLASS_NODESC ) )
+                    || ( extended && ( oclass == DUF_OPTIMPL_CLASS_ANY || oclass == extended->oclass ) );
             if ( cnd )
             {
               int shown = -1;
@@ -287,7 +288,7 @@ SR( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass )
   mas_free( ashown );
 
 /* DUF_ENDR( r ); */
-  ER( SNIPPET_OPTION, optimpl_O_smart_help, muc_option_class_t oclass );
+  ER( SNIPPET_OPTION, optimpl_O_smart_help, duf_optimpl_class_t oclass );
 }
 
 SR( SNIPPET_OPTION, optimpl_O_help_set, const char *arg )
@@ -352,7 +353,7 @@ SR( SNIPPET_OPTION, optimpl_O_help_set, const char *arg )
                           xtended->stage_opts.stage.min, xtended->stage_opts.stage.max, xtended->stage_opts.use_stage, /* */
                           xtended->unset, xtended->can_no,           /* xtended->stage_opts.use_stage, xtended->stage_opts.use_stage_mask, *//* */
                           xtended->help,                             /* */
-                          muc_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
+                          duf_optclass_name( xtended->oclass ), oclass_titles[xtended->oclass] );
               if ( xtended->vtype != MUC_OPTION_VTYPE_NONE )
                 DUF_PRINTF( 0, ". `%s`;", muc_optvtype2string( xtended->vtype ) );
               if ( xtended->m_hasoff )

@@ -8,8 +8,9 @@
 # include "muc_option_source_types.h"                                /* muc_option_source_t */
 # include "muc_option_stage_types.h"                                 /* muc_option_stage_t ; muc_limits_stage_t; muc_extended_stageopts_t */
 # include "muc_option_fun_types.h"                                   /*  *_func_t;  *_funcpair_t */
-# include "muc_option_class_types.h"                                 /* muc_option_class_t */
+/* # include "muc_option_class_types.h"                                 (* muc_option_class_t *) */
 
+typedef int muc_option_gen_class_t;
 /* struct option       */
 /* {                   */
 /*   const char *name; */
@@ -96,7 +97,7 @@ typedef struct
   void *reltoptr;
 
   const char *help;
-  muc_option_class_t oclass;
+  muc_option_gen_class_t oclass;
   muc_option_vtype_t vtype;
   unsigned long long vmask;
   unsigned short vsize;

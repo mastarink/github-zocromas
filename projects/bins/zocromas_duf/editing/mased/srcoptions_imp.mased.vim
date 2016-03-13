@@ -23,6 +23,11 @@ sfind duf_optimpl_extended2string.h
 tab sfind duf_optimpl_val.c
 sfind duf_optimpl_val.h
 
+tab sfind duf_optimpl_class.c
+sfind duf_optimpl_class.h
+sfind duf_optimpl_class_types.h
+sfind duf_optimpl_class_enum.def
+
 tab sfind duf_optimpl_defs.h
 
 tab sfind duf_optmod_tmpdb.c

@@ -57,34 +57,34 @@
 /* ###################################################################### */
 
 #if 0
-# define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=MUC_OPTION_CLASS_ ## codename;
+# define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTIMPL_CLASS_ ## codename;
 /*
  * if arg is help option
  * return class id for options to display the help
  * */
-static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( duf_option_code_t codeval )
+static duf_optimpl_class_t __attribute__ ( ( unused ) ) duf_help_option2class( duf_option_code_t codeval )
 {
-  duf_option_class_t rv = MUC_OPTION_CLASS_BAD;
+  duf_optimpl_class_t rv = DUF_OPTIMPL_CLASS_BAD;
 
 /*
-  MUC_OPTION_CLASS_NONE,
+  DUF_OPTIMPL_CLASS_NONE,
 
-  MUC_OPTION_CLASS_HELP,
-  MUC_OPTION_CLASS_TEST,
-  MUC_OPTION_CLASS_SYSTEM,
-  MUC_OPTION_CLASS_CONTROL,
-  MUC_OPTION_CLASS_REFERENCE,
-  MUC_OPTION_CLASS_COLLECT,
-  MUC_OPTION_CLASS_SCAN,
-  MUC_OPTION_CLASS_UPDATE,
-  MUC_OPTION_CLASS_REQUEST,
-  MUC_OPTION_CLASS_PRINT,
+  DUF_OPTIMPL_CLASS_HELP,
+  DUF_OPTIMPL_CLASS_TEST,
+  DUF_OPTIMPL_CLASS_SYSTEM,
+  DUF_OPTIMPL_CLASS_CONTROL,
+  DUF_OPTIMPL_CLASS_REFERENCE,
+  DUF_OPTIMPL_CLASS_COLLECT,
+  DUF_OPTIMPL_CLASS_SCAN,
+  DUF_OPTIMPL_CLASS_UPDATE,
+  DUF_OPTIMPL_CLASS_REQUEST,
+  DUF_OPTIMPL_CLASS_PRINT,
   
-  MUC_OPTION_CLASS_TRACE,
-  MUC_OPTION_CLASS_DEBUG,
-  MUC_OPTION_CLASS_OBSOLETE,
-  MUC_OPTION_CLASS_NODESC,
-  MUC_OPTION_CLASS_OTHER,
+  DUF_OPTIMPL_CLASS_TRACE,
+  DUF_OPTIMPL_CLASS_DEBUG,
+  DUF_OPTIMPL_CLASS_OBSOLETE,
+  DUF_OPTIMPL_CLASS_NODESC,
+  DUF_OPTIMPL_CLASS_OTHER,
 
 */
 
@@ -123,7 +123,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
     DUF_H2C( ALL, rv );
     break;
   case DUF_OPTION_SMART_HELP:
-    rv = MUC_OPTION_CLASS_ANY;
+    rv = DUF_OPTIMPL_CLASS_ANY;
     break;
   default:
     break;

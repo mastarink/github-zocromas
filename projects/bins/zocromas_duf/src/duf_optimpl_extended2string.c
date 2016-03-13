@@ -6,19 +6,20 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 
 #include "duf_output_defs.h"
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include <mastar/multiconfig/muc_option_stage.h>                     /* duf_optstage_name ♠ */
-#include <mastar/multiconfig/muc_option_class.h>                     /* muc_optclass2string ♠ */
+/* #include <mastar/multiconfig/muc_option_class.h>                     (* muc_optclass2string ♠ *) */
 #include <mastar/multiconfig/muc_option_vtype.h>                     /* muc_optvtype2string ♠ */
 #include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 
 #include <mastar/multiconfig/muc_option_extended.h>                  /* duf_longindex_extended_count etc. ♠ */
 
-#include "duf_optimpl_val.h"                                         /* duf_codeval2string ♠ */
+#include "duf_optimpl_class.h"
+#include "duf_optimpl_val.h"                                         /* duf_codeval2string ✗ */
 
 /* ###################################################################### */
 #include "duf_optimpl_extended2string.h"
@@ -291,8 +292,8 @@ static void
 duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_extended_vtable_t * xtable, const char *name )
 {
   DUF_PRINTF( 0, ".@@@ [%s]", xtable->name );
-  muc_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask_not, xtable->stage_opts.stage, xtable->stage_opts.stage_mask_not,
-                      0 );
+  muc_optstage_print( cli, xtable->stage_opts.use_stage, xtable->stage_opts.use_stage_mask_not, xtable->stage_opts.stage,
+                      xtable->stage_opts.stage_mask_not, 0 );
   DUF_PUTSL( 0 );
 
   for ( const muc_longval_extended_t * xtended = xtable->xlist; xtended->o.name; xtended++ )
@@ -346,7 +347,7 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
         DUF_PRINTF( 0, ".code:%s(%d)", duf_codeval2string( xtended->o.val ), xtended->o.val );
         DUF_PUTSL( 0 );
       }
-      DUF_PRINTF( 0, "  class:%s(%d)", muc_optclass2string( xtended->oclass ), xtended->oclass );
+      DUF_PRINTF( 0, "  class:%s(%d)", duf_optclass2string( xtended->oclass ), xtended->oclass );
       DUF_PRINTF( 0, "  vtype:%s(%d)", muc_optvtype2string( xtended->vtype ), xtended->vtype );
       if ( xtended->call.funcname )
         DUF_PRINTF( 0, "  funcname:%s", xtended->call.funcname );
@@ -414,7 +415,7 @@ duf_xarr_print( const muc_config_cli_t * cli MAS_UNUSED, const muc_longval_exten
       }
       DUF_PRINTF( 0, "., DO_V( %s )", duf_codeval2string( xtended->o.val ) );
       DUF_PRINTF( 0, ".  }" );
-      DUF_PRINTF( 0, "., DO_CL( %s )", muc_optclass2string( xtended->oclass ) );
+      DUF_PRINTF( 0, "., DO_CL( %s )", duf_optclass2string( xtended->oclass ) );
       if ( xtended->m_hasoff )
       {
         switch ( xtended->relto )

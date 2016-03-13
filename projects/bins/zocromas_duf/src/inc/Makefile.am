@@ -95,6 +95,8 @@ noinst_HEADERS=motest_config.h \
 	duf_optimpl_sccb.h \
 	duf_optimpl_smart_help.h \
 	duf_optimpl_val.h  \
+	duf_optimpl_class.h  \
+	duf_optimpl_class_types.h \
 	duf_optimpl_version.h \
 	\
 	\

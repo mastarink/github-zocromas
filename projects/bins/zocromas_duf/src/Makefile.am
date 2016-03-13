@@ -100,6 +100,7 @@ zocromas_duf_SOURCES= \
 	duf_optimpl_version.c \
 	duf_optimpl_extended2string.c \
 	duf_optimpl_val.c \
+	duf_optimpl_class.c \
 	\
 	\
 	duf_optmod_tmpdb.c \

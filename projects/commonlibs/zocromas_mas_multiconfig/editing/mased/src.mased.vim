@@ -27,9 +27,6 @@ sfind muc_option_clarify.h
 tab sfind muc_option_clarify_new.c
 sfind muc_option_clarify_new.h
 
-tab sfind muc_option_class.c
-sfind muc_option_class.h
-sfind muc_option_class_types.h
 
 tab sfind muc_option_config.c
 sfind muc_option_config.h

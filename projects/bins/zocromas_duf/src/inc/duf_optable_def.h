@@ -3,8 +3,11 @@
 
 # include <mastar/multiconfig/muc_config_cli_types.h>
 /* # include "duf_option_types.h"                                       (* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ *) */
-#include <mastar/multiconfig/muc_option_types.h>
-# include "duf_config.h"                                             /* duf_get_config ♠ */
+# include <mastar/multiconfig/muc_option_types.h>
+
+# include "duf_optimpl_class.h"
+
+# include "duf_config.h"                                             /* duf_get_config ✗ */
 # include "duf_config_pointers.h"                                    /* duf_get_(.*)_pointer */
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
@@ -41,8 +44,8 @@
 # define DO_SET_OCLASS(_ocl)  .oclass = _ocl
 # define DOO_SET_OCLASS(_ocl) .oclass = _ocl
 
-# define DO_CL( _cl )    DO_SET_OCLASS( MUC_OPTION_CLASS_ ## _cl )
-# define DOO_CL( _cl )  DOO_SET_OCLASS( MUC_OPTION_CLASS_ ## _cl )
+# define DO_CL( _cl )    DO_SET_OCLASS( DUF_OPTIMPL_CLASS_ ## _cl )
+# define DOO_CL( _cl )  DOO_SET_OCLASS( DUF_OPTIMPL_CLASS_ ## _cl )
 
 /* #  define DO_VH( _vid ) DO_V( HELP_ ## _vid ) */
 
@@ -162,11 +165,11 @@
 # define DO_EIA_CALL(_f, _a)		/* DO_SET_VTYPE( EIA_CALL ), */   DO_SET_CALL_TYPE( EIA ),  DO_SET_CALLA(eia, _f, _a)
 # define DOO_EIA_CALL(_f, _a)		/* DOO_SET_VTYPE( EIA_CALL ), */ DOO_SET_CALL_TYPE( EIA ), DOO_SET_CALLA(eia, _f, _a)
 
-# define DO_EIA_CALLH(_cl)		 DO_EIA_CALL( smart_help, MUC_OPTION_CLASS_ ## _cl)
-# define DOO_EIA_CALLH(_cl)		DOO_EIA_CALL( smart_help, MUC_OPTION_CLASS_ ## _cl)
+# define DO_EIA_CALLH(_cl)		 DO_EIA_CALL( smart_help, DUF_OPTIMPL_CLASS_ ## _cl)
+# define DOO_EIA_CALLH(_cl)		DOO_EIA_CALL( smart_help, DUF_OPTIMPL_CLASS_ ## _cl)
 
-# define DO_EIA_CALLCL(_f, _cl)	 DO_EIA_CALL( _f, MUC_OPTION_CLASS_ ## _cl)
-# define DOO_EIA_CALLCL(_f, _cl)	DOO_EIA_CALL( _f, MUC_OPTION_CLASS_ ## _cl)
+# define DO_EIA_CALLCL(_f, _cl)	 DO_EIA_CALL( _f, DUF_OPTIMPL_CLASS_ ## _cl)
+# define DOO_EIA_CALLCL(_f, _cl)	DOO_EIA_CALL( _f, DUF_OPTIMPL_CLASS_ ## _cl)
 
       /* void f( int argc, char *const *argv ) ;;;; call with carg[cv] (A:argv) */
 # define DO_A_CALL(_f)		/* DO_SET_VTYPE( A_CALL ), */   DO_SET_CALL_TYPE( A ),  DO_SET_CALL(a, _f)
