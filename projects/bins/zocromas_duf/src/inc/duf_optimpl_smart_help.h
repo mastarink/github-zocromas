@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_OPTIMPL_SMART_HELP_H
-# define MAS_DUF_OPTIMPL_SMART_HELP_H
+#ifndef MAS_DUF_OPTIMPL_OCLASS_HELP_H
+# define MAS_DUF_OPTIMPL_OCLASS_HELP_H
 
 # include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ▤ */
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */

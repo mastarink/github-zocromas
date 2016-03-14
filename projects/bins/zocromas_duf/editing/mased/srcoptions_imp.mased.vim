@@ -11,8 +11,8 @@ sfind duf_optimpl_misc.h
 tab sfind duf_optimpl_help.c
 sfind duf_optimpl_help.h
 
-tab sfind duf_optimpl_smart_help.c
-sfind duf_optimpl_smart_help.h
+tab sfind duf_optimpl_oclass_help.c
+sfind duf_optimpl_oclass_help.h
 
 tab sfind duf_optimpl_version.c
 sfind duf_optimpl_version.h

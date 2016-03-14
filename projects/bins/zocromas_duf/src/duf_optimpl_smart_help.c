@@ -48,7 +48,7 @@
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 /* ###################################################################### */
-#include "duf_optimpl_smart_help.h"
+#include "duf_optimpl_oclass_help.h"
 /* ###################################################################### */
 
 SR( SNIPPET_OPTION, optimpl_O_oclass_help_all, duf_optimpl_class_t oclass )
