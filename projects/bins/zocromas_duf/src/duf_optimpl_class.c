@@ -11,6 +11,38 @@
 /* ###################################################################### */
 
 const char *
+duf_optclass_title( duf_optimpl_class_t oclass )
+{
+  const char *title = NULL;
+
+  static const char *oclass_titles[DUF_OPTIMPL_CLASS_MAX + 1] = {
+    [DUF_OPTIMPL_CLASS_HELP] = "Help",
+    [DUF_OPTIMPL_CLASS_NO_HELP] = "No help",
+    [DUF_OPTIMPL_CLASS_SYSTEM] = "System",
+    [DUF_OPTIMPL_CLASS_CONTROL] = "Control",
+    [DUF_OPTIMPL_CLASS_DB] = "Database",
+    [DUF_OPTIMPL_CLASS_FS] = "File system",
+    [DUF_OPTIMPL_CLASS_SCCB] = "SCCB system",
+    [DUF_OPTIMPL_CLASS_REFERENCE] = "Reference",
+    [DUF_OPTIMPL_CLASS_COLLECT] = "Collect",
+    [DUF_OPTIMPL_CLASS_SCAN] = "Scan",
+    [DUF_OPTIMPL_CLASS_FILTER] = "Filter",
+    [DUF_OPTIMPL_CLASS_UPDATE] = "Update",
+    [DUF_OPTIMPL_CLASS_REQUEST] = "Request",
+    [DUF_OPTIMPL_CLASS_PRINT] = "Print",
+    [DUF_OPTIMPL_CLASS_TRACE] = "Trace",
+    [DUF_OPTIMPL_CLASS_OBSOLETE] = "Obsolete",
+    [DUF_OPTIMPL_CLASS_OTHER] = "Other",
+    [DUF_OPTIMPL_CLASS_NONE] = "None",
+    [DUF_OPTIMPL_CLASS_DEBUG] = "DEBUG",
+    [DUF_OPTIMPL_CLASS_NODESC] = "No desc",
+  };
+  if ( oclass > DUF_OPTIMPL_CLASS_NONE && oclass <= DUF_OPTIMPL_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
+    title = oclass_titles[oclass];
+  return title;
+}
+
+const char *
 duf_optclass_name( duf_optimpl_class_t oclass )
 {
 #define ENUM_WRAP(_name) [DUF_OPTIMPL_CLASS_ ## _name]= #_name,

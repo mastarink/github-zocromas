@@ -7,7 +7,7 @@
   ENUM_WRAP_V( ERR , -1						)
   ENUM_WRAP_V( NONE , 0						)
 
-  ENUM_WRAP_V( SMART_HELP , 'h'					)
+  ENUM_WRAP_V( OCLASS_HELP , 'h'				)
   ENUM_WRAP_V( HELP , 'H'					)
   ENUM_WRAP_V( EXAMPLES , 'x'					)
   ENUM_WRAP_V( TEST , 't'					)

@@ -122,7 +122,7 @@ static duf_optimpl_class_t __attribute__ ( ( unused ) ) duf_help_option2class( d
     break;
     DUF_H2C( ALL, rv );
     break;
-  case DUF_OPTION_SMART_HELP:
+  case DUF_OPTION_OCLASS_HELP:
     rv = DUF_OPTIMPL_CLASS_ANY;
     break;
   default:
@@ -138,7 +138,7 @@ SR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
   DUF_PRINTF( 0, "  -H, --help			[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, QPERRIND ) );
-  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_SMART_HELP, QPERRIND ) );
+  DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OCLASS_HELP, QPERRIND ) );
   DUF_PRINTF( 0, "  -x, --example		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, QPERRIND ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, QPERRIND ) );
   DUF_PRINTF( 0, "Database ----------" );

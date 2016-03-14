@@ -1,0 +1,40 @@
+# 20160314.103013 : 1457944213.414274429 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help'
+# retcode:0
+# 20160314.103013 : 1457944213.490031057 ------------[r]--
+# 20160314.103021 : 1457944221.119266768 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class-all'
+# retcode:134
+# 20160314.103021 : 1457944221.143359696 ------------[r]--
+# 20160314.103306 : 1457944386.444351040 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class-all'
+# retcode:0
+# 20160314.103306 : 1457944386.496946235 ------------[r]--
+# 20160314.104246 : 1457944966.002808889 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class-all'
+# retcode:0
+# 20160314.104246 : 1457944966.057504354 ------------[r]--
+# 20160314.104330 : 1457945010.073243869 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class-all'
+# retcode:0
+# 20160314.104330 : 1457945010.124985737 ------------[r]--
+# 20160314.105154 : 1457945514.396392531 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class-nodesc'
+# retcode:0
+# 20160314.105154 : 1457945514.419707365 ------------[r]--
+# 20160314.105158 : 1457945518.946499064 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--help-class=nodesc'
+# retcode:31
+# 20160314.105158 : 1457945518.965729819 ------------[r]--
+# 20160314.105905 : 1457945945.307667218 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160314.105909 : 1457945949.114117175 ------------[r]--

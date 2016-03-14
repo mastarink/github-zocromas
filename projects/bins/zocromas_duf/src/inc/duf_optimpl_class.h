@@ -5,5 +5,6 @@
 
 const char *duf_optclass_name( duf_optimpl_class_t oclass );
 const char *duf_optclass2string( duf_optimpl_class_t oclass );
+const char *duf_optclass_title( duf_optimpl_class_t oclass );
 
 #endif

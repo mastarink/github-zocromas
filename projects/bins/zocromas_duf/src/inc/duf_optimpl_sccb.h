@@ -8,7 +8,7 @@ DR( SNIPPET_OPTION, optimpl_O_list_sccbs, void );
 DR( SNIPPET_OPTION, optimpl_O_evaluate_sccb, const char *name );
 
 /* mas_error_index_t duf_optimpl_O_call_file( const char *name ); */
-DR( OPTION_SNIPPET, optimpl_O_call_file, const char *name );
+DR( SNIPPET_OPTION, optimpl_O_call_file, const char *name );
 
 /* DR(SNIPPET_OPTION,optimpl_O_list_sccb, int x ); */
 DR( SNIPPET_OPTION, optimpl_O_db_open, void );

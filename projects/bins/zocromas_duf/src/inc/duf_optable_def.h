@@ -11,7 +11,7 @@
 # include "duf_config_pointers.h"                                    /* duf_get_(.*)_pointer */
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
-             example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
+             example: { .o = { .......  DO_V(OCLASS_HELP)} ... } ;;; DUF_OPTION_OCLASS_HELP should be defined as a char
  * */
 
 # define DO_A(_fld)    .has_arg = _fld ## _argument
@@ -165,8 +165,8 @@
 # define DO_EIA_CALL(_f, _a)		/* DO_SET_VTYPE( EIA_CALL ), */   DO_SET_CALL_TYPE( EIA ),  DO_SET_CALLA(eia, _f, _a)
 # define DOO_EIA_CALL(_f, _a)		/* DOO_SET_VTYPE( EIA_CALL ), */ DOO_SET_CALL_TYPE( EIA ), DOO_SET_CALLA(eia, _f, _a)
 
-# define DO_EIA_CALLH(_cl)		 DO_EIA_CALL( smart_help, DUF_OPTIMPL_CLASS_ ## _cl)
-# define DOO_EIA_CALLH(_cl)		DOO_EIA_CALL( smart_help, DUF_OPTIMPL_CLASS_ ## _cl)
+/* # define DO_EIA_CALLH(_cl)               DO_EIA_CALL( oclass_help, DUF_OPTIMPL_CLASS_ ## _cl) */
+/* # define DOO_EIA_CALLH(_cl)             DOO_EIA_CALL( oclass_help, DUF_OPTIMPL_CLASS_ ## _cl) */
 
 # define DO_EIA_CALLCL(_f, _cl)	 DO_EIA_CALL( _f, DUF_OPTIMPL_CLASS_ ## _cl)
 # define DOO_EIA_CALLCL(_f, _cl)	DOO_EIA_CALL( _f, DUF_OPTIMPL_CLASS_ ## _cl)
