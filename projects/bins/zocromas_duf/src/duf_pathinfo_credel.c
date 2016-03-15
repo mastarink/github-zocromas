@@ -74,7 +74,7 @@ duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t
 
   duf_pi_clear_d( pi, d );
 
-  if ( d >= 0 /* pdi->opendir */  )
+  if ( d >= 0 /* duf_pdi_opendir(pdi) */  )
   {
     duf_levinfo_t *pli;
 

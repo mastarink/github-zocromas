@@ -165,7 +165,7 @@ int DUF_WRAPPED( duf_sel_cb2_leaf_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t 
   MAST_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", H_PDI->seq_leaf, H_PDI->seq, H_TOTITEMS, H_SCCB->title );
 
   DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( H_PDI ), H_PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
-                duf_levinfo_dfd( H_PDI ), H_PDI->opendir );
+                duf_levinfo_dfd( H_PDI ), duf_pdi_opendir( H_PDI ) );
 /* #ifdef MAS_ASSERT */
   {
   /* DUF_SFIELD2( fname ); */

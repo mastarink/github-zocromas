@@ -410,7 +410,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     H_PDI->total_bytes = 0;
     H_PDI->total_files = 0;
     if ( H_SCCB->beginning_sql_seq )
-      H_PDI->sql_selected_done = H_SCCB->beginning_sql_seq->set_selected_db;
+      H_PDI->set_selected_db = H_SCCB->beginning_sql_seq->set_selected_db;
   /* duf_scan_qbeginning_sql( sccb ); */
     MAST_TRACE( sql, 1, "@@beginning_sql for '%s'", H_SCCB->title );
 

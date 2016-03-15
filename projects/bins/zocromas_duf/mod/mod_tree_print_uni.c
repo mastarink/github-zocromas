@@ -471,7 +471,7 @@ SR(MOD,sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_depth
 #elif defined( DUF_DO_NUMS )
   ndu = duf_levinfo_numdir_d( pdi, du );
 #else
-  ndu = duf_levinfo_count_childs_d( pdi, du );
+  ndu = duf_levinfo_count_childs_d( pdi, du ); /* beginning_sql_seq->set_selected_db */
   nchild = duf_levinfo_numchild_d( pdi, du );
   ndu -= nchild;
 #endif

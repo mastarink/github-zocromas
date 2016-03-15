@@ -5,7 +5,7 @@
 	{ \
 	  _typ _ref2 result = (0); \
 	  assert( pdi ); \
-	  /* if ( pdi->opendir ) */ \
+	  /* if ( duf_pdi_opendir(pdi) ) */ \
 	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth ); \
 	  return result; \
 	}
@@ -40,7 +40,7 @@
 	{ \
 	  _typ _ref2 result = (0); \
 	  assert( pdi ); \
-	  /* if ( pdi->opendir ) */ \
+	  /* if ( duf_pdi_opendir(pdi) ) */ \
 	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth ); \
 	  return result; \
 	}
@@ -71,7 +71,7 @@
   	void duf_levinfo_set_ ## _name( duf_depthinfo_t * pdi, _typ setarg ) \
 	{ \
 	  assert( pdi ); \
-	  /* if ( pdi->opendir ) */ \
+	  /* if ( duf_pdi_opendir(pdi) ) */ \
 	  duf_levinfo_set_ ## _name ## _d( pdi, setarg, pdi->pathinfo.depth ); \
 	}
 

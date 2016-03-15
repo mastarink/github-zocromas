@@ -34,7 +34,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node
 
   duf_levinfo_clear_level_d( pdi, d );
 
-  if ( d >= 0 /* pdi->opendir */  )
+  if ( d >= 0 /* duf_pdi_opendir(pdi) */  )
   {
     duf_levinfo_t *pli;
 

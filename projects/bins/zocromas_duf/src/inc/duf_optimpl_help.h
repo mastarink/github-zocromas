@@ -7,7 +7,6 @@
 /* duf_optimpl_class_t duf_help_option2class( duf_option_code_t code ); */
 
 DR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void );
-DR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void );
 DR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void );
 DR( SNIPPET_OPTION, optimpl_O_list_xtended, const char *s );
 

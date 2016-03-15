@@ -57,8 +57,8 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
     char *sql = NULL;
     unsigned ns = 0;
 
-  /* assert( pdi->sql_selected_done ); */
-  /* QT( ">> sql_selected_done:%d", pdi->sql_selected_done ); */
+  /* assert( pdi->set_selected_db ); */
+  /* QT( ">> set_selected_db:%d", pdi->set_selected_db ); */
     const duf_sql_set_t set[] = {
       {
        .name = "childs",
@@ -92,7 +92,8 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
     /* */ ,
     };
 
-    ns = pdi->sql_selected_done ? 0 : 1;
+    ns = pdi->set_selected_db ? 0 : 1;
+    assert( ns == 0 ); /* really ??? obsolete ????????????? */
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
@@ -140,6 +141,7 @@ DUF_LEVINFO_FC(   unsigned long long, count_childs )
 DUF_LEVINFO_FC_UP( unsigned long long, count_childs )
 /* *INDENT-ON*  */
 
+#if 0
 /* unsigned long long                                               */
 /* duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d ) */
 SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depthinfo_t * pdi, int d )
@@ -180,7 +182,7 @@ SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depth
      /* .filter = "fn.file_name LIKE '%a%'" (* *) , */
        .filter = DUF_SQL_UFILTER_BINDINGS,
        },
-#if 0
+# if 0
       {
        .name = "gchilds",
        .type = DUF_NODE_NODE,
@@ -198,17 +200,17 @@ SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depth
        .selector2_cte = "   FROM cte_paths  AS ptenud "              /* */
        "   LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS dpt ON (ptenud." DUF_SQL_IDFIELD "=dpt." DUF_SQL_IDFIELD ") " /* */
        }
-#endif
+# endif
     };
-  /* ns = pdi->sql_selected_done ? 0 : 1; */
+  /* ns = pdi->set_selected_db ? 0 : 1; */
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
-#if 0
+# if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
-#elif 0
+# elif 0
     sql = duf_selector2sql_new( &set[ns], pdi->pdi_name, 0, QPERRIND );
-#else
+# else
     sql = CRP( selector2sql_new, &set[ns], pdi->pdi_name, 0 );
-#endif
+# endif
     if ( QNOERR && sql )
     {
     /* QT( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
@@ -234,9 +236,9 @@ SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depth
       }
     /* DUF_TEST_R( rpr ); */
       DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
-#if 0
+# if 0
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), gfiles );
-#endif
+# endif
     /* QT( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), gfiles, sql ); */
 
       mas_free( sql );
@@ -254,3 +256,5 @@ SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depth
 DUF_LEVINFO_FC(   unsigned long long, count_gfiles )
 DUF_LEVINFO_FC_UP( unsigned long long, count_gfiles )
 /* *INDENT-ON*  */
+
+#endif

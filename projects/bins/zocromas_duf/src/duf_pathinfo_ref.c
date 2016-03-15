@@ -2,10 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 /* #include "duf_errorn_defs_preset.h"                                  (* MAST_ERRORS_FILE; etc. ✗ *) */
 
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 /* #include <mastar/tools/mas_utils_path.h>                             (* mas_normalize_path; mas_pathdepth etc. ♣ *) */
 #include <mastar/trace/mas_trace.h>
 /* #include <mastar/error/mas_error_defs_ctrl.h> */
@@ -18,17 +18,17 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref_def.h"
 /* #include "duf_levinfo_context.h" */
-#include "duf_levinfo_credel.h"
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-#include "duf_dh.h"
+#include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
@@ -232,7 +232,7 @@ duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
 {
   struct stat *pst = NULL;
 
-/* if ( pdi->opendir ) */
+  /* if ( duf_pdi_opendir( pdi ) ) */
   {
     duf_dirhandle_t *pdh;
 

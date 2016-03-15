@@ -11,7 +11,7 @@ DR( PDI, levinfo_if_openat_dh_up, duf_depthinfo_t * pdi );
 
 /* int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path ); */
 
-DR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d );
+/* DR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d ); */
 
 DR( PDI, levinfo_openat_dh, duf_depthinfo_t * pdi );
 DR( PDI, levinfo_openat_dh_up, duf_depthinfo_t * pdi );

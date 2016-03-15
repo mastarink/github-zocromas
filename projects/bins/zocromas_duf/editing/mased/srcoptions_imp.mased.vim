@@ -8,11 +8,17 @@ sfind duf_optimpl_fs_types.h
 tab sfind duf_optimpl_misc.c
 sfind duf_optimpl_misc.h
 
+tab sfind duf_optimpl_example.c
+sfind duf_optimpl_example.h
+
 tab sfind duf_optimpl_help.c
 sfind duf_optimpl_help.h
 
 tab sfind duf_optimpl_oclass_help.c
 sfind duf_optimpl_oclass_help.h
+
+tab sfind duf_optimpl_set_help.c
+sfind duf_optimpl_set_help.h
 
 tab sfind duf_optimpl_version.c
 sfind duf_optimpl_version.h

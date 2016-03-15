@@ -94,9 +94,11 @@ zocromas_duf_SOURCES= \
 	duf_match.c \
 	duf_optimpl_fs.c \
 	duf_optimpl_help.c \
+	duf_optimpl_example.c \
 	duf_optimpl_misc.c \
 	duf_optimpl_sccb.c \
-	duf_optimpl_smart_help.c \
+	duf_optimpl_oclass_help.c \
+	duf_optimpl_set_help.c \
 	duf_optimpl_version.c \
 	duf_optimpl_extended2string.c \
 	duf_optimpl_val.c \

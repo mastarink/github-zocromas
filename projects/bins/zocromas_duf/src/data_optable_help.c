@@ -4,7 +4,10 @@
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
 
 #include "duf_optimpl_help.h"
-#include "duf_optimpl_smart_help.h"
+#include "duf_optimpl_example.h"
+#include "duf_optimpl_oclass_help.h"
+#include "duf_optimpl_set_help.h"
+
 /*
  * At duf_xtended_table.c:
  * 1. extern const muc_longval_extended_table_t optable_help[];
@@ -22,6 +25,8 @@ const muc_longval_extended_table_t optable_help = {
   .xlist =                                                           /* */
   {
 
+   {.o = {DO_Q( "help-class" ) /*   */ , DO_A_R /*  */ } /*       */ , DO_CL( HELP ) /*       */ ,
+    /*      */ DO_S_CALL( oclass_help_str ) /*             */ , DO_H( help on ... ) /*                      */ },
    {.o = {DO_Q( "help-class-all" ) /*   */ , DO_A_N /*  */ , DO_V( HELP_CL_ALL )} /*       */ , DO_CL( HELP ) /*       */ ,
     /*      */ DO_EIA_CALLCL( oclass_help_all, ALL ) /*             */ , DO_H( help on all ) /*                      */ },
    {.o = {DO_Q( "help-class-collect" ) /**/, DO_A_N /*  */ , DO_V( HELP_CL_COLLECT )} /*   */ , DO_CL( HELP ) /*       */ ,
@@ -59,10 +64,10 @@ const muc_longval_extended_table_t optable_help = {
 
 #if 0
    {.o = {DO_Q( "help-set" ) /*         */ , DO_A_O /*  */ , DO_V( HELP_SET )} /*          */ , DO_CL( HELP ) /*       */ ,
-    /*      */ DO_S_CALL( help_set ) /*                            */ , DO_H( help on set / optfile ) /*            */ },
+    /*      */ DO_S_CALL( set_help ) /*                            */ , DO_H( help on set / optfile ) /*            */ },
 #elif 1
  /* see help-set :: see list-options, list-extended   */
-   DO_CMD( "help-set", O, HELP_SET, DO_CL( HELP ), DO_S_CALL( help_set ), DO_H( help on set / optfile ) ),
+   DO_CMD( "help-set", O, HELP_SET, DO_CL( HELP ), DO_S_CALL( set_help ), DO_H( help on set / optfile ) ),
 #endif
 
    {.o = {DO_Q( "help" ) /*              */ , DO_A_N /*  */ , DO_V( HELP )} /*             */ , DO_CL( HELP ) /*       */ ,

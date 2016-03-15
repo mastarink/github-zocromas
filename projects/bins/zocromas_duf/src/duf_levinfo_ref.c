@@ -59,7 +59,7 @@ duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d )
 {
   struct stat *pst = NULL;
 
-/* if ( pdi->opendir ) */
+/* if ( duf_pdi_opendir(pdi) ) */
   {
     if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rs > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_FS )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
@@ -93,7 +93,7 @@ duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d )
 {
   struct stat *pst = NULL;
 
-/* if ( pdi->opendir ) */
+/* if ( duf_pdi_opendir(pdi) ) */
   {
     if ( d >= 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.rdb > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_DB )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;

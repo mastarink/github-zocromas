@@ -22,19 +22,19 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
 
-#include "duf_output_defs.h"
+/* #include "duf_output_defs.h" */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
 
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 /* #include "duf_config_ref.h" */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
-#include "duf_config_output_util.h"
+/* #include "duf_config_output_util.h" */
 
-#include "duf_action_table.h"
-#include "duf_sccb.h"
+/* #include "duf_action_table.h" */
+/* #include "duf_sccb.h" */
 
-#include "duf_xtended_table.h"
+/* #include "duf_xtended_table.h" */
 
 /* ###################################################################### */
 #include "duf_optimpl_version.h"

@@ -168,6 +168,8 @@ DUF_GET_FLAG_FUNC( opt,., disable,,, testnoflag, TESTNOFLAG );
 DUF_GET_FLAG_FUNC( opt,., flow,., v, dry_run, DRY_RUN );
 DUF_GET_FLAGNAME_FUNC( opt,., flow,., v, dry_run, DRY_RUN );
 DUF_GET_NUM_FUNC( opt,., flow,., verbose, VERBOSE );
+DUF_GET_FLAG_FUNC( vars,., puz,->, v, recursive, RECURSIVE );
+DUF_GET_FLAG_FUNC( vars,., puz,->, v, linear, LINEAR );
 DUF_GET_FLAG_FUNC( vars,., puz,->, v, testflag, TESTFLAG );
 DUF_GET_FLAG_FUNC( vars,., puz,->, v, testiflag, TESTIFLAG );
 DUF_GET_FLAG_FUNC( vars,., puz,->, v, testnoflag, TESTNOFLAG );

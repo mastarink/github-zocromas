@@ -16,7 +16,7 @@ typedef struct duf_depthinfo_s
   unsigned attached_copy:1;
   unsigned inited:1;
   unsigned sql_beginning_done:1;
-  unsigned sql_selected_done:1;
+  unsigned set_selected_db:1;
   unsigned opendir:1;
   unsigned recursive:1;
   unsigned allow_dirs:1;

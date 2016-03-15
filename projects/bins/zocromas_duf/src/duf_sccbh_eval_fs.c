@@ -228,7 +228,7 @@ SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unus
 
   if ( H_SCCB->dirent_dir_scan_before2 || H_SCCB->dirent_file_scan_before2 )
   {
-  /* assert( H_PDI->opendir == 1 ); */
+  /* assert( duf_pdi_opendir(H_PDI) == 1 ); */
     duf_pdi_set_opendir( H_PDI, 1 );                                 /* TODO */
     MAST_TRACE( scan, 2, "@@@@@@@´%s´ : %s to scan FS at %s : %s", duf_scanstage_name( scanstage ),
                 duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );

@@ -8,6 +8,8 @@ const char *duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb );
 
 /* const duf_scan_callbacks_t *duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first ); */
 const duf_scan_callbacks_t *duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first );
+const duf_scan_callbacks_t **duf_find_or_load_sccb_by_evnamen_plus( const char *name, size_t namelen, duf_scan_callbacks_t * first );
+
 void duf_sccb_dlclose( duf_scan_callbacks_t * first );
 
 /* const duf_scan_callbacks_t *duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first ); */

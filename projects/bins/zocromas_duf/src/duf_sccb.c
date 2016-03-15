@@ -17,7 +17,7 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sccbh_shortcuts.h"
@@ -141,6 +141,42 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
     MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   }
   return sccb;
+}
+
+const duf_scan_callbacks_t **
+duf_find_or_load_sccb_by_evnamen_plus( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+{
+  const duf_scan_callbacks_t **psccb = NULL;
+  size_t cnt = 0;
+  const char *p;
+  const char *sname;
+
+  for ( cnt = 0, p = name; p < name + namelen && p && *p; p++, cnt++ )
+  {
+    QT( "@-- %lu: %s", cnt, p );
+    sname = p;
+    p = strchr( p, '+' );
+    if ( !p )
+      p = sname + strlen( sname );
+    QT( "@++ %lu: %s ~ %lu", cnt, sname, p - sname );
+  }
+  if ( cnt )
+  {
+    cnt += 2;
+    psccb = mas_malloc( sizeof( const duf_scan_callbacks_t ) * cnt );
+    memset( psccb, 0, sizeof( const duf_scan_callbacks_t ) * cnt );
+    for ( cnt = 0, p = name; p < name + namelen && p && *p; p++, cnt++ )
+    {
+      sname = p;
+      p = strchr( p, '+' );
+      if ( !p )
+        p = sname + strlen( sname );
+      psccb[cnt] = duf_find_or_load_sccb_by_evnamen( sname, p - sname, first );
+      QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] );
+    }
+  }
+/* while ( p < name + namelen && p && *p ); */
+  return psccb;
 }
 
 void
