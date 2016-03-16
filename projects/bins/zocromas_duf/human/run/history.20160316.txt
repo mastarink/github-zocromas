@@ -153,3 +153,13 @@
 # run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
 # retcode:0
 # 20160316.130233 : 1458126153.424058954 ------------[r]--
+# 20160316.130844 : 1458126524.167510555 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--linear' '--flags'
+# retcode:0
+# 20160316.130844 : 1458126524.194133233 ------------[r]--
+# 20160316.130853 : 1458126533.119699833 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--linear' '-R' '--flags'
+# retcode:0
+# 20160316.130853 : 1458126533.143915647 ------------[r]--
