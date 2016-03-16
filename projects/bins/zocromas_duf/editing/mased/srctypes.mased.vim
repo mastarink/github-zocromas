@@ -65,7 +65,7 @@ tab sfind duf_config_trace_enum.h
 tab sfind duf_config_flow_types.h
 tab sfind duf_config_db_types.h
 tab sfind duf_config_act_types.h
-tab sfind duf_config_rec_etc_types.h
+tab sfind duf_config_puz_types.h
 tab sfind duf_config_disable_types.h
 tab sfind duf_config_opt_types.h
 tab sfind duf_config_output_types.h

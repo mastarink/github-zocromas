@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_CONFIG_REC_ETC_TYPES_H
-# define MAS_DUF_CONFIG_REC_ETC_TYPES_H
+#ifndef MAS_DUF_CONFIG_PUZ_TYPES_H
+# define MAS_DUF_CONFIG_PUZ_TYPES_H
 
 typedef enum
 {

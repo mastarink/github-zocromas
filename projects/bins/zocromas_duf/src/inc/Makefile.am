@@ -29,7 +29,8 @@ noinst_HEADERS=motest_config.h \
 	duf_config_output_util.h \
 	duf_config_output_weak.h  \
 	duf_config_pointers.h \
-	duf_config_rec_etc_types.h \
+	duf_config_puz_enum.def \
+	duf_config_puz_types.h \
 	duf_config_ref.h \
 	duf_config_trace_credel.h \
 	duf_config_trace_enum.h \
