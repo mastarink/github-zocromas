@@ -7,6 +7,9 @@ sfind duf_sccbh_eval_fs.h
 tab sfind duf_sccbh_eval_leaf.c
 sfind duf_sccbh_eval_leaf.h
 
+tab sfind duf_sccbh_eval_node.c
+sfind duf_sccbh_eval_node.h
+
 tab sfind duf_sccbh_eval_sql_set.c
 sfind duf_sccbh_eval_sql_set.h
 

@@ -43,10 +43,12 @@
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
 #include "duf_sccbh_eval.h"
+#include "duf_sccbh_eval_node.h"
 #include "duf_sccbh_eval_fs.h"
 #include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
+
 /* ###################################################################### */
 #include "duf_sccbh_eval_all.h"
 /* ###################################################################### */
@@ -70,20 +72,20 @@ static
 SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
-  unsigned allow_fs = !/* DUF_CONFIGG( opt.disable.flag.fs ) */ duf_get_config_flag_disable_fs() ;
-  unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ duf_get_config_flag_act_allow_dirs();
-  unsigned allow_files = /* DUF_ACTG_FLAG( allow_files ) */ duf_get_config_flag_act_allow_files();
-  unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ duf_get_config_flag_act_allow_sub();
+  unsigned allow_fs = ! /* DUF_CONFIGG( opt.disable.flag.fs ) */ duf_get_config_flag_disable_fs(  );
+  unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ duf_get_config_flag_act_allow_dirs(  );
+  unsigned allow_files = /* DUF_ACTG_FLAG( allow_files ) */ duf_get_config_flag_act_allow_files(  );
+  unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ duf_get_config_flag_act_allow_sub(  );
   unsigned linear = duf_pdi_linear( H_PDI );
 
   duf_str_cb2_t passes[] = {
-    [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? duf_sccbh_eval_fs : NULL,
-    [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? duf_sccbh_eval_db_node : NULL,
-    [DUF_SCANSTAGE_DB_LEAVES_NOFD] /*  */  = /*      */ allow_files /*        */ ? duf_sccbh_eval_db_leaves_nofd : NULL,
-    [DUF_SCANSTAGE_DB_LEAVES_FD] /*    */  = /*      */ allow_files /*        */ ? duf_sccbh_eval_db_leaves_fd : NULL,
-    [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? duf_sccbh_eval_db_node : NULL,
-    [DUF_SCANSTAGE_DB_SUBNODES] /*     */  = !linear && allow_sub /*          */ ? duf_sccbh_eval_db_subnodes : NULL,
-    [DUF_SCANSTAGE_NODE_AFTER] /*      */  = !linear && allow_dirs /*         */ ? duf_sccbh_eval_db_node : NULL,
+    [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
+    [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
+    [DUF_SCANSTAGE_DB_LEAVES_NOFD] /*  */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_nofd ) : NULL,
+    [DUF_SCANSTAGE_DB_LEAVES_FD] /*    */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_fd ) : NULL,
+    [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
+    [DUF_SCANSTAGE_DB_SUBNODES] /*     */  = !linear && allow_sub /*          */ ? F2ND( sccbh_eval_db_subnodes ) : NULL,
+    [DUF_SCANSTAGE_NODE_AFTER] /*      */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
     NULL
   };
 
@@ -96,8 +98,10 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   {
     sccbh->current_statement = pstmt_selector;
     sccbh->current_scanstage = scanstage;
-  /* QT( "@@@############# hhh: %s @ %s", duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ) ); */
+    H_PDI->items.total = 0;
+    H_PDI->items.dirs = 0;
     CRV( ( passes[scanstage] ), sccbh, pstmt_selector, scanstage );
+  /* QT( "@%d. %llu", scanstage, H_PDI->items.total ); */
     MAST_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( H_PDI ) );
     sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
     sccbh->current_statement = NULL;

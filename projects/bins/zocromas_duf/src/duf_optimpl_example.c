@@ -625,9 +625,20 @@ SR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "========================= as for 20160213.185738 ============" );
   DUF_PRINTF( 0, "  run --test-act-bflag --test-act-nobflag --test-recetc-bflag --test-disable-nobflag --no-test-disable-nobflag	 -= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20160316.173058 ============" );
+  DUF_PRINTF( 0, "  alias t0='run --trace-explain=8  --allow-drop-table --allow-create-tables  --allow-create-database "
+              " --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif "
+              " `pwd`/test/tree  `pwd`/test/tree    --progress'	 -= \"\" =-" );
+  DUF_PRINTF( 0, "  alias t1='run   --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --sha1id=1351 "
+              " --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4'	 -= \"\" =-" );
+  DUF_PRINTF( 0, "  alias t2='run  --db-name=test_tree  -dufR  --with-tag-file=test-gz  --evaluate-sccb=tree "
+              " `pwd`/test --disable-memusage'	 -= \"\" =-" );
+  DUF_PRINTF( 0, "  alias t3='run  --db-name=test_tree  -dufR --max-depth=17 --with-tag-file=test-gz1 "
+              " --evaluate-sccb=listing+tree `pwd`/test'	 -= \"\" =-" );
+  DUF_PRINTF( 0, "  alias t4='run --trace-temp=-20 --disable-updat --disable-in  --disable-fs  --flags'	 -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, optimpl_O_examples, void );
 }
-

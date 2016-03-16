@@ -93,7 +93,7 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
     };
 
     ns = pdi->set_selected_db ? 0 : 1;
-    assert( ns == 0 ); /* really ??? obsolete ????????????? */
+    /* assert( ns == 0 ); (* really ??? obsolete ????????????? *) */
     assert( ns < sizeof( set ) / sizeof( set[0] ) );
 #if 0
     sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
