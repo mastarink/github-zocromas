@@ -3,7 +3,13 @@
 
 #  define H_PDI (sccbh->pdi)
 #  define H_PDICLONED (sccbh->pdi_cloned)
+#  define H_SCCBA (sccbh->sccb_array)
+#  define H_SCCBI (sccbh->sccb_index)
+#if 0
 #  define H_SCCB (sccbh->sccb)
+#else
+#  define H_SCCB (H_SCCBA[H_SCCBI])
+#endif
 #  define H_TOTITEMS (sccbh->total_items)
 #  define H_TOTCOUNTED (sccbh->total_counted)
 #if 0

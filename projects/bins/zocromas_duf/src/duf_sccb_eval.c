@@ -77,7 +77,7 @@ SR( OTHER, ev_evnamed_list, const char *names, duf_scan_callbacks_t * first )
 /* assert( duf_pdi_global()->pyp ); */
   MAST_TRACE( sccb, 0, "evaluate sccb list '%s' [%s]", names, duf_pdi_global_name(  ) );
 /* QT( "names:%s; dirid:%llu", names, duf_levinfo_dirid( duf_pdi_global() ) ); */
-  CR( ev_pdi_evnamed_list, duf_pdi_global(  ), names, first, /* DUF_CONFIGA( pcli->targ ) */ muc_cli_options_get_targ( duf_get_config_cli(  ) ),
+  CR( ev_pdi_evnamed_list, duf_pdi_global(  ), names, first, /* DUF_CONFIGA( pcli->targ ) */ muc_cli_options_get_carg( duf_get_config_cli(  ) ),
       duf_get_config_flag_act_summary(  ) );
 /* DUF_ENDR( r ); */
   ER( OTHER, ev_evnamed_list, const char *names, duf_scan_callbacks_t * first );

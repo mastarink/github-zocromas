@@ -144,21 +144,23 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
 }
 
 const duf_scan_callbacks_t **
-duf_find_or_load_sccb_by_evnamen_plus( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+duf_find_or_load_sccb_by_evnamen_plus( const char *name0, size_t namelen, duf_scan_callbacks_t * first )
 {
   const duf_scan_callbacks_t **psccb = NULL;
   size_t cnt = 0;
+  char *name = NULL;
   const char *p;
   const char *sname;
 
+  name = mas_strndup( name0, namelen );
   for ( cnt = 0, p = name; p < name + namelen && p && *p; p++, cnt++ )
   {
-    QT( "@-- %lu: %s", cnt, p );
+    /* QT( "@-- %lu: %s", cnt, p ); */
     sname = p;
     p = strchr( p, '+' );
     if ( !p )
       p = sname + strlen( sname );
-    QT( "@++ %lu: %s ~ %lu", cnt, sname, p - sname );
+    /* QT( "@++ %lu: %s ~ %lu", cnt, sname, p - sname ); */
   }
   if ( cnt )
   {
@@ -172,9 +174,10 @@ duf_find_or_load_sccb_by_evnamen_plus( const char *name, size_t namelen, duf_sca
       if ( !p )
         p = sname + strlen( sname );
       psccb[cnt] = duf_find_or_load_sccb_by_evnamen( sname, p - sname, first );
-      QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] );
+      /* QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] ); */
     }
   }
+  mas_free( name );
 /* while ( p < name + namelen && p && *p ); */
   return psccb;
 }

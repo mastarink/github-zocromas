@@ -5,8 +5,8 @@
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-DRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc,
-     char *const *targv );
+DRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const *psccb,
+     const mas_cargvc_t * ptarg );
 
 DR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh ) __attribute__ ( ( warn_unused_result ) );
 

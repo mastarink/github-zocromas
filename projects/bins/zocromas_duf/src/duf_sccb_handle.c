@@ -219,14 +219,14 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
 #else
       DUF_SQL_SE_START_STMT_LOCAL( H_PDI, csql, pstmt );
 #endif
-      /* (* (* assert( QNOERR ); *) *) */
+    /* (* (* assert( QNOERR ); *) *) */
     /* if ( !H_PY )                                 */
     /* {                                          */
     /*   T( "path:%s", duf_levinfo_path( H_PDI ) ); */
     /*   assert( H_PY );                            */
     /* }                                          */
       CR( bind_ufilter_uni, pstmt, H_PU, H_PY, NULL, NULL /* ptr */  );
-      /* (* (* assert( QNOERR ); *) *) */
+    /* (* (* assert( QNOERR ); *) *) */
       DUF_SQL_SE_STEP( pstmt );
       if ( QISERR1_N( SQL_ROW ) )
       {
@@ -255,7 +255,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
 #else
       DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt );
 #endif
-      /* (* (* assert( QNOERR ); *) *) */
+    /* (* (* assert( QNOERR ); *) *) */
     /* if ( !cnt )                                                                                         */
     /* {                                                                                                   */
     /*   T( "@%llu:%llu:%llu; %s; %s", H_PY->topdirid, cnt1, cnt, duf_uni_scan_action_title( H_SCCB ), csql ); */
@@ -293,12 +293,16 @@ SR( SCCBH, sccbh_eval_sqlsq, const duf_sccb_handle_t * sccbh )
 }
 
 static duf_sccb_handle_t *
-duf_sccb_handle_create( void )
+duf_sccb_handle_create( const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg )
 {
   duf_sccb_handle_t *sccbh = NULL;
 
   sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
   memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
+  sccbh->sccb_array = psccb;
+  sccbh->parg.argc = ptarg->argc;
+  sccbh->parg.argv = ptarg->argv;
+  assert( H_SCCB == ( *psccb ) );
   return sccbh;
 }
 
@@ -376,27 +380,34 @@ duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t
  * */
 /* duf_sccb_handle_t *                                                                                                      */
 /* duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, int *pr ) */
-SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc,
-     char *const *targv )
+SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const *psccb,
+     const mas_cargvc_t * ptarg )
 {
 /* duf_sccb_handle_t *sccbh = NULL; */
 /* int rpr = 0; */
 
 /* assert( pdi->pyp ); */
-  if ( sccb && pdi && duf_levinfo_dirid( pdi ) )
+  if ( *psccb && pdi && duf_levinfo_dirid( pdi ) )
   {
-    MAST_TRACE( fs, 2, "set def. opendir: %d", sccb->def_opendir );
-    duf_pdi_set_opendir( pdi, sccb->def_opendir );
+    MAST_TRACE( fs, 2, "set def. opendir: %d", ( *psccb )->def_opendir );
+    duf_pdi_set_opendir( pdi, ( *psccb )->def_opendir );
 
     assert( pdi );
     assert( pdi->pathinfo.levinfo );
     assert( duf_levinfo_dirid( pdi ) );
     assert( duf_levinfo_path( pdi ) );
-    sccbh = duf_sccb_handle_create(  );
+    sccbh = duf_sccb_handle_create( psccb, ptarg );
 
-    H_SCCB = sccb;
+#if 0
+    H_SCCBA = psccb;
+# if 0
+    H_SCCB = ( *psccb );
+# else
+    assert( H_SCCB == ( *psccb ) );
+# endif
     H_PARGC = targc;
     H_PARGV = targv;
+#endif
 #if 0
     H_PU = pu;
 #endif
@@ -469,8 +480,8 @@ TODO scan mode
 /* if ( pr )     */
 /*   *pr = rpr;  */
 /* return sccbh; */
-  ERP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc,
-       char *const *targv );
+  ERP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const *psccb,
+       const mas_cargvc_t * ptarg );
 }
 
 SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )

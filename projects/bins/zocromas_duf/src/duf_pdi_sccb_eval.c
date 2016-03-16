@@ -49,25 +49,26 @@
  * 4. calls duf_sccbh_eval_each_path
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
-SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary )
+static
+SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg, bool f_summary )
 {
 /* DUF_STARTR( r ); */
 
   duf_sccb_handle_t *sccbh = NULL;
 
 /* assert( duf_levinfo_dirid( pdi ) ); */
-  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", sccb ? sccb->name : NULL, duf_levinfo_path( pdi ) );
+  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", ( *psccb ) ? ( *psccb )->name : NULL, duf_levinfo_path( pdi ) );
   MAST_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
-/* QT( "sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+/* QT( "sccb:%d; dirid:%llu", (*psccb) ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
 #if 0
-  sccbh = duf_sccb_handle_open( pdi, sccb, ptarg->argc, ptarg->argv, QPERRIND );
+  sccbh = duf_sccb_handle_open( pdi, ( *psccb ), ptarg->argc, ptarg->argv, QPERRIND );
 #else
-  sccbh = CRP( sccb_handle_open, pdi, sccb, ptarg->argc, ptarg->argv );
+  sccbh = CRP( sccb_handle_open, pdi, psccb, ptarg );
 #endif
   if ( sccbh )
   {
     {
-      MAST_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", QERRIND, sccbh ? 1 : 0, sccb ? H_SCCB->name : "-" );
+      MAST_TRACE( sccbh, 0, "(%d) opened to eval all & summ sccb handle (%d) %s", QERRIND, sccbh ? 1 : 0, ( *psccb ) ? H_SCCB->name : "-" );
       CR( sccbh_eval_all_and_summary, sccbh, f_summary );            /* XXX XXX XXX XXX XXX XXX */
       ERRCLEAR( MAX_SEQ_REACHED );
     }
@@ -86,12 +87,12 @@ SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     QT( "sccbh not opened %d", sccbh ? 1 : 0 );
   }
 /* DUF_ENDR( r ); */
-  ER( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary );
+  ER( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg, bool f_summary );
 }
 
 /* 20150922.123731 */
 static
-SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg,
+SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg,
     bool f_summary )
 {
 /* DUF_STARTR( r ); */
@@ -107,48 +108,41 @@ SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, du
   else
 #endif
   {
+#if 0
     const duf_scan_callbacks_t *sccb = NULL;
-
-#if 0
-    {
-      const char *test = "dirs+filedata+filenames+crc32+sd5+md5+sha1+mime+exif";
-      const duf_scan_callbacks_t **sccbarr = NULL;
-
-      sccbarr = duf_find_or_load_sccb_by_evnamen_plus( test, strlen( test ), first );
-      assert( 0 );
-      mas_free( sccbarr );
-    }
-#endif
-
-#if 0
-    if ( DUF_NOERROR( r ) )
-      sccb = duf_find_sccb_by_evnamen( name, len, first );           /* XXX XXX */
 #else
+    const duf_scan_callbacks_t **sccbarr = NULL;
+#endif
 
     if ( QNOERR )
+#if 0
       sccb = duf_find_or_load_sccb_by_evnamen( name, len, first );   /* XXX XXX */
+#else
+      sccbarr = duf_find_or_load_sccb_by_evnamen_plus( name, len, first );
 #endif
-    MAST_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccb ? sccb->name : "NONAME" );
-    if ( sccb )
+
+    MAST_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccbarr && sccbarr[0] ? sccbarr[0]->name : "NONAME" );
+    if ( sccbarr && sccbarr[0] )
     {
-      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccb->name, duf_levinfo_path( pdi ) );
+      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccbarr[0]->name, duf_levinfo_path( pdi ) );
 
     /* QT( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-      CR( ev_pdi_sccb, pdi, sccb, ptarg, f_summary );                /* XXX XXX XXX XXX */
+      CR( ev_pdi_sccb, pdi, sccbarr, ptarg, f_summary );             /* XXX XXX XXX XXX */
     }
     else
     {
       ERRMAKE_M( SCCB_NOT_FOUND, "sccb module not found: '%s'", name );
     }
+    mas_free( sccbarr );
   }
 /* DUF_ENDR( r ); */
-  ER( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg,
+  ER( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg,
       bool f_summary );
 }
 
 /* 20150922.123721 */
 static
-SR( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
+SR( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg, bool f_summary )
 {
 /* DUF_STARTR( r ); */
   assert( pdi );
@@ -156,7 +150,7 @@ SR( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callba
 /* QT( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
   CR( ev_pdi_evnamen, pdi, name, strlen( name ), first, ptarg /*, pu */ , f_summary );
 /* DUF_ENDR( r ); */
-  ER( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary );
+  ER( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg, bool f_summary );
 }
 
 /* 20150922.123718 */
@@ -171,16 +165,20 @@ SR( PDI, ev_pdi_evname_at, duf_depthinfo_t * pdi, const char *name, duf_scan_cal
   if ( !arg )
     arg = duf_levinfo_path( pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
+  {
+    mas_cargvc_t ctarg;
 
-  CR( ev_pdi_evname, pdi, name, first, &targ /*, pu */ , f_summary );
-
+    ctarg.argc = targ.argc;
+    ctarg.argv = targ.argv;
+    CR( ev_pdi_evname, pdi, name, first, &ctarg /*, pu */ , f_summary );
+  }
   mas_del_argv( targ.argc, targ.argv, 0 );
 /* DUF_ENDR( r ); */
   ER( PDI, ev_pdi_evname_at, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const char *arg, bool f_summary );
 }
 
 /* 20150922.123706 */
-SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
+SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg, bool f_summary )
 {
 /* DUF_STARTR( r ); */
 
@@ -214,5 +212,5 @@ SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan
   /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
 /* DUF_ENDR( r ); */
-  ER( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary );
+  ER( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg, bool f_summary );
 }

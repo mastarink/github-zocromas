@@ -5,7 +5,7 @@
 # include "duf_fileinfo_types.h"
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 # include "duf_hook_types.h"                                         /* duf_action_table_t ✗ */
-# include "duf_format_types.h"
+/* # include "duf_format_types.h" */
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 

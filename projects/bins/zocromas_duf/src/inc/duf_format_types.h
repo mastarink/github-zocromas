@@ -8,6 +8,7 @@
 #  error use #include "duf_defs.h"
 # endif
 
+#if 0
 typedef struct
 {
   unsigned dataid:1;
@@ -118,6 +119,7 @@ typedef enum
   DUF_FORMAT_MAX,
   DUF_FORMAT_BOO,
 } duf_format_index_t;
+#endif
 
 typedef struct
 {

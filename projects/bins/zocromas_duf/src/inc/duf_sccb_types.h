@@ -97,6 +97,8 @@ struct duf_sccb_handle_s
   int pdi_cloned;
   duf_depthinfo_t *pdi;
   unsigned long long changes;
+  int sccb_index;
+  const duf_scan_callbacks_t *const *sccb_array;
   const duf_scan_callbacks_t *sccb;
 /* const duf_sql_set_t *active_leaf_set; */
 /* const duf_sql_set_t *second_leaf_set; */
