@@ -17,11 +17,13 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
 
-#include "duf_se_only.h"                                              /* DOR ✗ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config_db.h" */
+#include "duf_config_db_get.h"
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sql_error.h"
@@ -35,7 +37,7 @@ SR( SQL, sql_open, const char *dbpath )
 {
 /* DUF_STARTR( r ); */
 
-  MAST_TRACE( explain, 100, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
+  MAST_TRACE( explain, 100, "open database if fpath set; fpath:%s", /* DUF_CONFIGG( db.main.fpath ) */ duf_get_config_db_main_fpath(  ) );
   CRV_SQLITE( mas_sqlite_open, dbpath );
 
   MAST_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, QERRIND );

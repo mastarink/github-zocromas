@@ -27,7 +27,7 @@
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ♠ *) */
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 #include "duf_levinfo_ref.h"
@@ -213,7 +213,7 @@ SRP(MOD,unsigned long long,sha1id,-1,insert_sha1_uni, duf_depthinfo_t * pdi, uns
   assert( SHA_DIGEST_LENGTH == 2 * 64 / 8 + ASHA1_DELTA );
   if ( sha1 && sha1[2] && sha1[1] && sha1[0] )
   {
-    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( !duf_get_config_flag_disable_insert() )
     {
       static const char *sql =
               "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SHA1_FULL " ( sha1sum1, sha1sum2, sha1sum3 ) VALUES ( :sha1sum1, :sha1sum2, :sha1sum3 )";
@@ -276,7 +276,7 @@ SR(MOD,make_sha1_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && ( SHA1_Init( &ctx ) != 1 ) )
+      if ( !duf_get_config_flag_disable_calculate() && ( SHA1_Init( &ctx ) != 1 ) )
         ERRMAKE(SHA1 );
 /* DUF_TEST_R( r ); */
       {
@@ -302,7 +302,7 @@ SR(MOD,make_sha1_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
           }
           if ( ry > 0 )
           {
-            if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+            if ( !duf_get_config_flag_disable_calculate() )
             {
               if ( pbytes )
                 ( *pbytes ) += ry;
@@ -322,7 +322,7 @@ SR(MOD,make_sha1_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
       ERRMAKE(MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && SHA1_Final( pmd, &ctx ) != 1 )
+  if ( !duf_get_config_flag_disable_calculate() && SHA1_Final( pmd, &ctx ) != 1 )
     ERRMAKE(SHA1 );
 /*  DUF_ENDR( r );*/
 ER(MOD,make_sha1_uni, int fd, unsigned long long *pbytes, unsigned char *pmd );
@@ -360,7 +360,7 @@ SR(MOD,sha1_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( fname );
   MAST_TRACE( sha1, 0, "+ %s", fname );
   memset( asha1r, 0, sizeof( asha1r ) );
-  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+  if ( !duf_get_config_flag_disable_calculate() )
 CR(make_sha1r_uni, pdi, asha1r ) ;
 
   assert( sizeof( asha1r ) == 20 + ASHA1_DELTA );
@@ -377,7 +377,7 @@ CR(make_sha1r_uni, pdi, asha1r ) ;
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( !DUF_CONFIGG( opt.disable.flag.update ) )
+      if ( !duf_get_config_flag_disable_update() )
       {
         DUF_UFIELD2( filedataid );
 #if 0

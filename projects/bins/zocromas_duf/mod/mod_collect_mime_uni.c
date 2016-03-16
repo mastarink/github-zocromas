@@ -29,7 +29,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_pdi_context.h"
 #include "duf_pdi_ref.h"
@@ -199,7 +199,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
       DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt );
     }
 
-    if ( !mimeid && !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( !mimeid && !duf_get_config_flag_disable_insert() )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime ) VALUES ( :Mime )";
 
@@ -319,7 +319,7 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
           tail = mas_strdup( p );
         mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , QPERRIND );
 /* DUF_TEST_R( r ); */
-        if ( QNOERR && mimeid && !DUF_CONFIGG( opt.disable.flag.update ) )
+        if ( QNOERR && mimeid && !duf_get_config_flag_disable_update() )
         {
           int changes = 0;
 

@@ -27,7 +27,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
@@ -207,7 +207,7 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
   {
     static unsigned long insert_cnt = 0;
 
-    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( !duf_get_config_flag_disable_insert() )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_CRC32_FULL " (crc32sum) VALUES (:crc32sum)";
 
@@ -262,9 +262,9 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
   unsigned long crc32sum = 0;
   unsigned char *buffer;
 
-  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+  if ( !duf_get_config_flag_disable_calculate() )
     crc32sum = crc32( 0L, Z_NULL, 0 );
-/* if ( !DUF_CONFIGG(opt.disable.flag.calculate )) */
+/* if ( !duf_get_config_flag_disable_calculate()) */
   {
     size_t bytes = 0;
 
@@ -292,7 +292,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
         {
           if ( pbytes )
             ( *pbytes ) += ry;
-          if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+          if ( !duf_get_config_flag_disable_calculate() )
           {
             crc32sum = crc32( crc32sum, buffer, ry );
             bytes += ry;
@@ -333,7 +333,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_f
   assert( duf_levinfo_dfd( pdi ) );
   assert( duf_levinfo_stat( pdi ) );
 
-  if ( DUF_CONFIGG( opt.disable.flag.calculate ) )
+  if ( duf_get_config_flag_disable_calculate() )
     crc32sum = ( unsigned long long ) duf_levinfo_dirid( pdi );
   else
     CR( make_crc32_uni, duf_levinfo_dfd( pdi ), &bytes, &crc32sum );
@@ -351,7 +351,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_f
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( QNOERR && !DUF_CONFIGG( opt.disable.flag.update ) )
+      if ( QNOERR && !duf_get_config_flag_disable_update() )
       {
         DUF_UFIELD2( filedataid );
 #if 0

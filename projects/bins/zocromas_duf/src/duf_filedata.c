@@ -22,7 +22,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
@@ -95,7 +95,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * 
   {
     int changes = 0;
 
-    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( !duf_get_config_flag_disable_insert() )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILEDATAS_FULL /* */
               " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */

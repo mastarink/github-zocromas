@@ -17,7 +17,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_act_types.h \
 	duf_config_act_enum.def \
 	duf_config_credel.h \
-	duf_config_db.h \
+	duf_config_db.h duf_config_db_get.h \
 	duf_config_db_types.h \
 	duf_config_defs.h \
 	duf_config_disable_types.h \

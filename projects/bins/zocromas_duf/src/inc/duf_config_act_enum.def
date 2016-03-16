@@ -1,4 +1,5 @@
 #ifdef ENUM_WRAP
+/* *INDENT-OFF* */
 ENUM_WRAP( info, info )                                                
 ENUM_WRAP( allow_vacuum, allow-vacuum )                                /* => processing / db options */
 ENUM_WRAP( allow_remove_database, allow-remove-database )              /* => processing / db options */
@@ -25,4 +26,8 @@ ENUM_WRAP( dirent, dirent )                                            /* => pro
 ENUM_WRAP( testflag, testflag )                                        /* => test options */           
 ENUM_WRAP( testiflag, testiflag )                                      /* => test options */           
 ENUM_WRAP( testnoflag, testnoflag )                                    /* => test options */           
+/* *INDENT-ON* */
 #endif
+/*
+vi: ft=c
+*/

@@ -26,7 +26,7 @@
 #include "duf_config_trace.h"                                        /* duf_trace_file_c; duf_trace_output_force_color_c; duf_trace_output_no_color_c ✗ */
 #include "duf_config_output_weak.h"
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_config4trace_ref.h"
 /* #include "duf_config_trace_credel.h" */
@@ -59,8 +59,8 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
   assert( duf_config4trace );
 #endif
 
-  duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, DUF_CONFIGGS( conf.config_dir ),
-                                             DUF_CONFIGGS( conf.cmds_dir ), duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
+  duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, duf_config->conf.config_dir,
+                                             duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
 
   duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
           duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;

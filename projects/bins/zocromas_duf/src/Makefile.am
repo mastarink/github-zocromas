@@ -63,7 +63,7 @@ zocromas_duf_SOURCES= \
 	duf_cfg_output_util.c \
 	duf_config.c \
 	duf_config_credel.c \
-	duf_config_db.c \
+	duf_config_db.c duf_config_db_get.c \
 	duf_config_output_util.c \
 	duf_config_pointers.c \
 	duf_config_trace.c \

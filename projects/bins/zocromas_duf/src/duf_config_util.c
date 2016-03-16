@@ -27,9 +27,11 @@
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 #include "duf_config_ref.h"
+/* #include "duf_config_db.h" */
+#include "duf_config_db_get.h"
 
 #include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
@@ -82,6 +84,12 @@ duf_get_config_ufilter( void )
   return duf_config ? duf_config->vars.puz : NULL;
 }
 
+duf_config_db_t *
+duf_get_config_db( void )
+{
+  return duf_config ? &duf_config->db : NULL;
+}
+
 #ifdef MAS_TRACING
 mas_config_trace_t *
 duf_get_trace_config( void )
@@ -92,32 +100,53 @@ duf_get_trace_config( void )
 #endif
 
 #define DUF_GET_FLAG_BIT( _word, _num ) _word & ( ( ( typeof( _word ) ) 1 ) << ( _num - 1 ) ) ? 1 : 0
-static int
+
+typeof( duf_config->opt.disable.sbit ) duf_get_config_flag_opt_disable_bits( void )
+{
+  return duf_config->opt.disable.sbit;
+}
+
+static unsigned
 duf_get_config_flag_opt_disable( int num )
 {
   assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.disable.sbit, num );
+  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_disable_bits(  ), num );
 }
 
-static int
+typeof( duf_config->opt.act.v.bit ) duf_get_config_flag_opt_act_bits( void )
+{
+  return duf_config->opt.act.v.bit;
+}
+
+static unsigned
 duf_get_config_flag_opt_act( int num )
 {
   assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.act.v.bit, num );
+  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_act_bits(  ), num );
 }
 
-static int
+typeof( duf_config->opt.flow.v.sbit ) duf_get_config_flag_opt_flow_bits( void )
+{
+  return ( unsigned long long ) duf_config->opt.flow.v.sbit;
+}
+
+static unsigned
 duf_get_config_flag_opt_flow( int num )
 {
   assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_config->opt.flow.v.sbit, num );
+  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_flow_bits(  ), num );
 }
 
-static int
+typeof( duf_config->vars.puz->v.sbit ) duf_get_config_flag_vars_puz_bits( void )
+{
+  return duf_config->vars.puz->v.sbit;
+}
+
+static unsigned
 duf_get_config_flag_vars_puz( int num )
 {
   assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_config->vars.puz->v.sbit, num );
+  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_vars_puz_bits(), num );
 }
 
 #define DUF_GET_FLAG_FUNC(_group, _rg, _set, _rs, _v, _name, _uname) \
@@ -142,8 +171,11 @@ duf_get_config_flag_vars_puz( int num )
   }
 
 DUF_GET_FLAG_FUNC( opt,., act,., v, interactive, INTERACTIVE );
+DUF_GET_FLAG_FUNC( opt,., act,., v, fast, FAST );
+DUF_GET_FLAG_FUNC( opt,., act,., v, fresh, FRESH );
 DUF_GET_FLAG_FUNC( opt,., act,., v, allow_files, ALLOW_FILES );
 DUF_GET_FLAG_FUNC( opt,., act,., v, allow_dirs, ALLOW_DIRS );
+DUF_GET_FLAG_FUNC( opt,., act,., v, allow_sub, ALLOW_SUB );
 DUF_GET_FLAG_FUNC( opt,., act,., v, allow_drop_tables, ALLOW_DROP_TABLES );
 DUF_GET_FLAGNAME_FUNC( opt,., act,., v, allow_drop_tables, ALLOW_DROP_TABLES );
 DUF_GET_FLAG_FUNC( opt,., act,., v, allow_clean_tables, ALLOW_CLEAN_TABLES );
@@ -162,6 +194,10 @@ DUF_GET_FLAG_FUNC( opt,., act,., v, testiflag, TESTIFLAG );
 DUF_GET_FLAG_FUNC( opt,., act,., v, testnoflag, TESTNOFLAG );
 DUF_GET_FLAG_FUNC( opt,., disable,,, memusage, DISABLE_MEMUSAGE );
 DUF_GET_FLAGNAME_FUNC( opt,., disable,,, memusage, DISABLE_MEMUSAGE );
+DUF_GET_FLAG_FUNC( opt,., disable,,, fs, DISABLE_FS );
+DUF_GET_FLAG_FUNC( opt,., disable,,, insert, DISABLE_INSERT );
+DUF_GET_FLAG_FUNC( opt,., disable,,, update, DISABLE_UPDATE );
+DUF_GET_FLAG_FUNC( opt,., disable,,, calculate, DISABLE_CALCULATE );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testflag, TESTFLAG );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testiflag, TESTIFLAG );
 DUF_GET_FLAG_FUNC( opt,., disable,,, testnoflag, TESTNOFLAG );
@@ -233,58 +269,6 @@ duf_path_add_subdir( const char *dir, const char *subdir, int *pr )
 }
 #endif
 
-/* char *                                                    */
-/* duf_config_db_path_add_subdir( const char *dir, int *pr ) */
-SRP( OTHER, char *, path, NULL, config_db_path_add_subdir, const char *dir )
-{
-/* int rpr = 0; */
-/* char *path = NULL; */
-
-  if ( DUF_CONFIGGSP( db.subdir_x ) )
-  {
-    if ( strchr( DUF_CONFIGGSP( db.subdir_x ), '/' ) )
-    {
-      ERRMAKE( MKDIR );
-    }
-    else
-    {
-      int ry;
-
-      path = mas_concat_path( dir, DUF_CONFIGGSP( db.subdir_x ) );
-      {
-        struct stat st;
-
-        ry = stat( path, &st );
-        if ( ry < 0 )
-        {
-          if ( errno == ENOENT )
-          {
-            ry = mkdir( path, S_IRWXU );
-
-            if ( ry < 0 )
-            {
-              char serr[1024] = "";
-              char *s;
-
-              s = strerror_r( errno, serr, sizeof( serr ) );
-              ERRMAKE_M( MKDIR, "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path );
-            /* DUF_SHOW_ERROR( "(ry:%d) errno:%d mkdir :%s; path:'%s'", ry, errno, s ? s : serr, path ); */
-            }
-          }
-        }
-        else if ( !S_ISDIR( st.st_mode ) )
-        {
-          ERRMAKE( STAT );
-        }
-      }
-    }
-  }
-/* if ( pr )    */
-/*   *pr = rpr; */
-/* return path; */
-  ERP( OTHER, char *, path, NULL, config_db_path_add_subdir, const char *dir );
-}
-
 const char *
 duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg MAS_UNUSED )
 {
@@ -310,7 +294,7 @@ duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg MAS_
   else if ( *name == '+' )
   {
     if ( 0 == strcmp( name + 1, "db_name" ) || 0 == strcmp( name + 1, "dbname" ) || 0 == strcmp( name + 1, "db-name" ) )
-      pbuf = DUF_CONFIGGSP( db.main.name_x );
+      pbuf = duf_get_config_db_main_name(  );
   }
 /* T( "@@@@@@var %s => '%s'", name, pbuf ); */
   return pbuf;

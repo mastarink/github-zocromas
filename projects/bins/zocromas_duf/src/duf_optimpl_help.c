@@ -34,6 +34,8 @@
 #include "duf_config_ref.h"
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
+#include "duf_config_db.h"
+#include "duf_config_db_get.h"
 /* #include "duf_config_output_util.h" */
 
 /* #include "duf_action_table.h" */
@@ -136,14 +138,15 @@ SR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void )
 {
 /* DUF_STARTR( r ); */
 
-  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", DUF_CONFIGG( pcli->carg.argv )[0] );
+  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...",                  /* DUF_CONFIGG( pcli->carg.argv )[0], */
+              muc_cli_options_get_cargvn( duf_get_config_cli(  ), 0 ) );
   DUF_PRINTF( 0, "  -H, --help			[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_HELP, QPERRIND ) );
   DUF_PRINTF( 0, "  -h, --help-class-help	[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OCLASS_HELP, QPERRIND ) );
   DUF_PRINTF( 0, "  -x, --example		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_EXAMPLES, QPERRIND ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", muc_coption_xfind_desc_at_stdx( duf_get_config_cli(  ), DUF_OPTION_VAL_OUTPUT_LEVEL, QPERRIND ) );
   DUF_PRINTF( 0, "Database ----------" );
-  DUF_PRINTF( 0, "  -N, --db-name=%s", DUF_CONFIGGSP( db.main.name_x ) );
-  DUF_PRINTF( 0, "  -D, --db-directory=%s", DUF_CONFIGGSP( db.dir_x ) );
+  DUF_PRINTF( 0, "  -N, --db-name=%s", /* DUF_CONFIGGSP( db.main.name_x ) */ duf_get_config_db_main_name(  ) );
+  DUF_PRINTF( 0, "  -D, --db-directory=%s", /* DUF_CONFIGGSP( db.dir_x ) */ duf_get_config_db_dir(  ) );
   DUF_PRINTF( 0, "  --allow-drop-tables		DANGEROUS!" );
   DUF_PRINTF( 0, "  --allow-remove-database		DANGEROUS!" );
   DUF_PRINTF( 0, "  --allow-create-tables" );
@@ -171,8 +174,10 @@ SR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "Debug ----------" );
   DUF_PRINTF( 0, "  --debug" );
   DUF_PRINTF( 0, "  -v, --verbose=%d", MASE_STD_VERBOSE_LEVEL );
+#if 0
   DUF_PRINTF( 0, "  --min-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.max_line ) );
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", DUF_CONFIGG( opt.dbg.min_line ) );
+#endif
   DUF_PRINTF( 0, "Trace ----------" );
 #if 0
   DUF_PRINTF( 0, "  -A, --trace-action=%d", DUF_CONFIGG( opt.ptracecfg->action ) );
@@ -196,7 +201,6 @@ SR( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void )
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, optimpl_O_help, /* int argc, char *const *argv */ void );
 }
-
 
 duf_option_code_t
 duf_flag2code( duf_config_act_flags_combo_t fset )
@@ -304,7 +308,7 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
     typeof( duf_config->opt.act ) u = duf_config->opt.act;
   /* u.v.bit = 0;       */
   /* u.v.flag.info = 1; */
-    /* DUF_PRINTF(0,"stage:%s; source:%s", muc_optstage_name(duf_get_config_cli()), muc_optsource_name(duf_get_config_cli())); */
+  /* DUF_PRINTF(0,"stage:%s; source:%s", muc_optstage_name(duf_get_config_cli()), muc_optsource_name(duf_get_config_cli())); */
     DUF_PRINTF( 0, "opt.act   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.act.v ) ), sizeof( typeof( u.v.bit ) ),
                 ( unsigned long ) DUF_CONFIGG( opt.act.v.bit ) );
 
@@ -360,10 +364,11 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
-    unsigned u = DUF_CONFIGG( vars.puz )->v.sbit;
+    typeof( duf_get_config_flag_vars_puz_bits(  ) )u = /* DUF_CONFIGG( vars.puz )->v.sbit */ duf_get_config_flag_vars_puz_bits(  );
 
-    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( vars.puz )->v ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( vars.puz )->v.sbit );
+    /* "u   [%2lu->%2lu]   %8lx :: " */
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]  %8x :: ", sizeof( u ), sizeof( u ),
+              /* ( unsigned long ) DUF_CONFIGG( vars.puz )->v.sbit */ duf_get_config_flag_vars_puz_bits(  ) );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
@@ -375,13 +380,14 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
     }
     DUF_PUTSL( 0 );
   }
-  DUF_PRINTF( 0, "                                                                  └─ --recursive" );
+  DUF_PRINTF( 0, "                                │ └─ --recursive" );
+  DUF_PRINTF( 0, "                                └─ --linear" );
 
   {
-    unsigned u = DUF_CONFIGG( opt.disable.sbit );
+    typeof( duf_get_config_flag_opt_disable_bits(  ) )u = /* DUF_CONFIGG( opt.disable.sbit ) */ duf_get_config_flag_opt_disable_bits(  );
 
-    DUF_PRINTF( 0, "opt.disable   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( opt.disable ) ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( opt.disable.sbit ) );
+    DUF_PRINTF( 0, "opt.disable   [%2lu]  %8x :: ", sizeof( u ),
+              /* ( unsigned long ) DUF_CONFIGG( opt.disable.sbit ), */ duf_get_config_flag_opt_disable_bits(  ) );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
@@ -393,9 +399,11 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
     }
     DUF_PUTSL( 0 );
   }
-  DUF_PRINTF( 0, "                                                              │ │ └─ --disable-calculate" );
-  DUF_PRINTF( 0, "                                                              │ └─ --disable-insert" );
-  DUF_PRINTF( 0, "                                                              └─ --disable-update" );
+  DUF_PRINTF( 0, "                          │ │ │ │ └─  --disable-calculate" );
+  DUF_PRINTF( 0, "                          │ │ │ └─  --disable-insert" );
+  DUF_PRINTF( 0, "                          │ │ └─  --disable-update" );
+  DUF_PRINTF( 0, "                          │ └─  --disable-fs" );
+  DUF_PRINTF( 0, "                          └─  --disable-memusage" );
 #if 0
   {
     duf_option_code_t id = DUF_OPTION_VAL_NONE;

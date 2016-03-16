@@ -26,10 +26,10 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 /* #include "duf_option_defs.h" */
-#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
+/* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
 
 #include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
 #include "duf_pdi_ref.h"
@@ -70,10 +70,10 @@ static
 SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
-  unsigned allow_fs = !DUF_CONFIGG( opt.disable.flag.fs );
-  unsigned allow_dirs = DUF_ACTG_FLAG( allow_dirs );
-  unsigned allow_files = DUF_ACTG_FLAG( allow_files );
-  unsigned allow_sub = DUF_ACTG_FLAG( allow_sub );
+  unsigned allow_fs = !/* DUF_CONFIGG( opt.disable.flag.fs ) */ duf_get_config_flag_disable_fs() ;
+  unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ duf_get_config_flag_act_allow_dirs();
+  unsigned allow_files = /* DUF_ACTG_FLAG( allow_files ) */ duf_get_config_flag_act_allow_files();
+  unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ duf_get_config_flag_act_allow_sub();
   unsigned linear = duf_pdi_linear( H_PDI );
 
   duf_str_cb2_t passes[] = {

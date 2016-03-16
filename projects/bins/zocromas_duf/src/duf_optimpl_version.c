@@ -1,18 +1,19 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
 #include <mastar/multiconfig/muc_options_file.h>
+#include <mastar/multiconfig/muc_option_config.h>
 
 /* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
@@ -20,15 +21,15 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* #include "duf_output_defs.h" */
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_output_util.h" */
 
 /* #include "duf_action_table.h" */
@@ -40,15 +41,16 @@
 #include "duf_optimpl_version.h"
 /* ###################################################################### */
 
-SR( SNIPPET_OPTION,optimpl_O_version, void )
+SR( SNIPPET_OPTION, optimpl_O_version, void )
 {
   char *sargv1;
 
 /* char *sargv2; */
 
-  /* DUF_STARTR( r ); */
+/* DUF_STARTR( r ); */
 
-  sargv1 = mas_argv_string( DUF_CONFIGG( pcli->carg.argc ), DUF_CONFIGG( pcli->carg.argv ), 1 );
+  sargv1 = mas_argv_string(  /* DUF_CONFIGG( pcli->carg.argc ) */ muc_cli_options_get_cargc( duf_get_config_cli(  ) ),
+                          /* DUF_CONFIGG( pcli->carg.argv ) */ muc_cli_options_get_cargv( duf_get_config_cli(  ) ), 1 );
 /* sargv2 = duf_restore_some_options( DUF_CONFIGG(pcli->carg.argv)[0] ); */
 #if 1
   {
@@ -101,13 +103,15 @@ SR( SNIPPET_OPTION,optimpl_O_version, void )
 # else
     DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", muc_options_infilepath( duf_get_config_cli(  ) ) );
 # endif
-    DUF_PRINTF( 0, "flow.      [%2lu]   %x", sizeof( DUF_CONFIGG( opt.flow.v.sbit ) ), DUF_CONFIGG( opt.flow.v.sbit ) );
-    DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( vars.puz )->v.sbit ), DUF_CONFIGG( vars.puz )->v.sbit );
+    DUF_PRINTF( 0, "flow.      [%2lu]   %x",                         /* sizeof( DUF_CONFIGG( opt.flow.v.sbit ) ), DUF_CONFIGG( opt.flow.v.sbit ), */
+                sizeof( duf_get_config_flag_opt_flow_bits(  ) ), duf_get_config_flag_opt_flow_bits(  ) );
+    DUF_PRINTF( 0, "puz->      [%2lu]   %x",                         /* sizeof( DUF_CONFIGG( vars.puz )->v.sbit ), DUF_CONFIGG( vars.puz )->v.sbit, */
+                sizeof( duf_get_config_flag_vars_puz_bits(  ) ), duf_get_config_flag_vars_puz_bits(  ) );
   }
 #endif
 /* mas_free( sargv2 ); */
   mas_free( sargv1 );
 
-  /* DUF_ENDR( r ); */
-ER( SNIPPET_OPTION,optimpl_O_version, void );
+/* DUF_ENDR( r ); */
+  ER( SNIPPET_OPTION, optimpl_O_version, void );
 }

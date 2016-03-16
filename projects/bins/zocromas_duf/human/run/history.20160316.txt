@@ -1,0 +1,155 @@
+# 20160316.121620 : 1458123380.327543230 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--versio'
+# retcode:0
+# 20160316.121620 : 1458123380.521590002 ------------[r]--
+# 20160316.121639 : 1458123399.330798142 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '--versio'
+# retcode:0
+# 20160316.121639 : 1458123399.353991607 ------------[r]--
+# 20160316.121652 : 1458123412.985184570 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '--fast' '--versio'
+# retcode:0
+# 20160316.121653 : 1458123413.007577671 ------------[r]--
+# 20160316.121701 : 1458123421.722571127 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '--disable-update' '--versio'
+# retcode:0
+# 20160316.121701 : 1458123421.743490935 ------------[r]--
+# 20160316.121726 : 1458123446.667687034 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '--dry' '--versio'
+# retcode:0
+# 20160316.121726 : 1458123446.689631561 ------------[r]--
+# 20160316.121754 : 1458123474.590139050 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '-R' '--dry' '--versio'
+# retcode:0
+# 20160316.121754 : 1458123474.612196150 ------------[r]--
+# 20160316.121803 : 1458123483.440495148 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '-R' '--linear' '--dry' '--versio'
+# retcode:0
+# 20160316.121803 : 1458123483.461541294 ------------[r]--
+# 20160316.122159 : 1458123719.105131717 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '-R' '--linear' '--dry' '--versio'
+# retcode:0
+# 20160316.122159 : 1458123719.126964667 ------------[r]--
+# 20160316.122241 : 1458123761.615956460 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-20' '-R' '--linear' '--dry' '--versio'
+# retcode:0
+# 20160316.122241 : 1458123761.639019099 ------------[r]--
+# 20160316.123140 : 1458124300.036971425 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-H'
+# retcode:0
+# 20160316.123140 : 1458124300.059651855 ------------[r]--
+# 20160316.123225 : 1458124345.925933876 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-H'
+# retcode:0
+# 20160316.123225 : 1458124345.950690440 ------------[r]--
+# 20160316.123235 : 1458124355.439585715 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-temp=-29' '-H'
+# retcode:0
+# 20160316.123235 : 1458124355.461974253 ------------[r]--
+# 20160316.125021 : 1458125421.718832453 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--trace-optstage=6' '--db-name=temp20160310' '-Rfu' '--cd=/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/' '--fast' '--allow-sub' '--allow-directories' '--allow-files' '--allow-create-tables' '--summary' '--interac' '--flags'
+# retcode:0
+# 20160316.125025 : 1458125425.522100515 ------------[r]--
+# 20160316.125037 : 1458125437.030628051 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--flags'
+# retcode:0
+# 20160316.125037 : 1458125437.052193961 ------------[r]--
+# 20160316.125045 : 1458125445.913694358 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--flags'
+# retcode:0
+# 20160316.125045 : 1458125445.936862411 ------------[r]--
+# 20160316.125049 : 1458125449.899663738 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--flags'
+# retcode:0
+# 20160316.125049 : 1458125449.923812865 ------------[r]--
+# 20160316.125352 : 1458125632.114484972 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--flags'
+# retcode:0
+# 20160316.125352 : 1458125632.139093016 ------------[r]--
+# 20160316.125417 : 1458125657.407656818 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--linear' '--flags'
+# retcode:0
+# 20160316.125417 : 1458125657.432713907 ------------[r]--
+# 20160316.125458 : 1458125698.990729138 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--linear' '--flags'
+# retcode:0
+# 20160316.125459 : 1458125699.015380129 ------------[r]--
+# 20160316.125509 : 1458125709.825664685 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--linear' '--flags'
+# retcode:0
+# 20160316.125509 : 1458125709.847727696 ------------[r]--
+# 20160316.125540 : 1458125740.068198226 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-R' '--linear' '--flags'
+# retcode:0
+# 20160316.125540 : 1458125740.092203613 ------------[r]--
+# 20160316.125546 : 1458125746.514627014 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--linear' '--flags'
+# retcode:0
+# 20160316.125546 : 1458125746.540397247 ------------[r]--
+# 20160316.125600 : 1458125760.136202441 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-update' '--flags'
+# retcode:0
+# 20160316.125600 : 1458125760.161242495 ------------[r]--
+# 20160316.125614 : 1458125774.999912488 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-update' '--flags'
+# retcode:0
+# 20160316.125615 : 1458125775.025954668 ------------[r]--
+# 20160316.125657 : 1458125817.883652984 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-update' '--flags'
+# retcode:0
+# 20160316.125657 : 1458125817.906550037 ------------[r]--
+# 20160316.125709 : 1458125829.675722423 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-update' '--flags'
+# retcode:0
+# 20160316.125709 : 1458125829.697593165 ------------[r]--
+# 20160316.125727 : 1458125847.479547434 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-updat' '--disable-in' '--disable-cal' '--flags'
+# retcode:0
+# 20160316.125727 : 1458125847.506961678 ------------[r]--
+# 20160316.125804 : 1458125884.170987609 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-updat' '--disable-in' '--disable-cal' '--disable-fs' '--disable-memusage' '--flags'
+# retcode:0
+# 20160316.125804 : 1458125884.201337632 ------------[r]--
+# 20160316.125955 : 1458125995.267555517 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-updat' '--disable-in' '--disable-cal' '--disable-fs' '--disable-memusage' '--flags'
+# retcode:0
+# 20160316.125955 : 1458125995.291096952 ------------[r]--
+# 20160316.130201 : 1458126121.152128772 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--linear' '--flags'
+# retcode:0
+# 20160316.130201 : 1458126121.177774048 ------------[r]--
+# 20160316.130229 : 1458126149.384819304 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160316.130233 : 1458126153.424058954 ------------[r]--

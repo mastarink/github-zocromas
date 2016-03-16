@@ -43,20 +43,20 @@ SR( PDI, pdi_init_global, void )
 #if 0
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( global_status.scn.pdi, global_status.scn.pdi->pup, NULL /* real_path */ , NULL /* sql_set */ ,
                                         0 /* caninsert */ ,
-                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
+                                        /* DUF_UG_FLAG( recursive ) */ duf_get_config_flag_puz_recursive(  ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #else
-  /* assert( DUF_UG_FLAG( recursive ) == duf_get_config_flag_puz_recursive(  ) ); */
-  /* assert( DUF_UG_FLAG( linear ) == duf_get_config_flag_puz_linear(  ) ); */
-  /* assert( DUF_ACTG_FLAG( allow_dirs ) == duf_get_config_flag_act_allow_dirs(  ) ); */
-  CR( pdi_init, global_status.scn.pdi, /* DUF_CONFIGG( vars.puz ) */duf_get_config_ufilter(), NULL /* real_path */ , NULL /* sql_set */ ,
+/* assert( DUF_UG_FLAG( recursive ) == duf_get_config_flag_puz_recursive(  ) ); */
+/* assert( DUF_UG_FLAG( linear ) == duf_get_config_flag_puz_linear(  ) ); */
+/* assert( DUF_ACTG_FLAG( allow_dirs ) == duf_get_config_flag_act_allow_dirs(  ) ); */
+  CR( pdi_init, global_status.scn.pdi, /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter(  ), NULL /* real_path */ , NULL /* sql_set */ ,
       0 /* caninsert */ ,
       /* DUF_UG_FLAG( recursive ) */ duf_get_config_flag_puz_recursive(  ) /* frecursive */ ,
       /* DUF_ACTG_FLAG( allow_dirs ) */ duf_get_config_flag_act_allow_dirs(  ) /* fallow_dirs */ ,
       /* DUF_UG_FLAG( linear ) */ duf_get_config_flag_puz_linear(  ) /* flinear */ ,
       1 /* opendir */  );
 #endif
-  assert( global_status.scn.pdi->pup == /* DUF_CONFIGX( vars.puz ) */ duf_get_config_ufilter() );
+  assert( global_status.scn.pdi->pup == /* DUF_CONFIGX( vars.puz ) */ duf_get_config_ufilter(  ) );
 /* DUF_ENDR( r ); */
   ER( PDI, pdi_init_global, void );
 }
@@ -70,9 +70,9 @@ SR( PDI, pdi_create_global, const char *name )
   assert( duf_pdi_linear( duf_pdi_global(  ) ) == duf_get_config_flag_puz_linear(  ) );
   assert( duf_pdi_allow_dirs( duf_pdi_global(  ) ) == duf_get_config_flag_act_allow_dirs(  ) );
 
-  /* assert( DUF_UG_FLAG( recursive ) == duf_pdi_recursive( duf_pdi_global(  ) ) ); */
-  /* assert( DUF_UG_FLAG( linear ) == duf_pdi_linear( duf_pdi_global(  ) ) ); */
-  /* assert( DUF_ACTG_FLAG( allow_dirs ) == duf_pdi_allow_dirs( duf_pdi_global(  ) ) ); */
+/* assert( DUF_UG_FLAG( recursive ) == duf_pdi_recursive( duf_pdi_global(  ) ) ); */
+/* assert( DUF_UG_FLAG( linear ) == duf_pdi_linear( duf_pdi_global(  ) ) ); */
+/* assert( DUF_ACTG_FLAG( allow_dirs ) == duf_pdi_allow_dirs( duf_pdi_global(  ) ) ); */
 
   ER( PDI, pdi_create_global, const char *name );
 }
@@ -143,6 +143,6 @@ SR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * 
 
 SR( PDI, pdi_reinit_anypath_global, const char *cpath )
 {
-  CR( pdi_reinit_pu_anypath_global, cpath, /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter() );
+  CR( pdi_reinit_pu_anypath_global, cpath, /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter(  ) );
   ER( PDI, pdi_reinit_anypath_global, const char *cpath );
 }

@@ -29,7 +29,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
@@ -177,7 +177,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 
 /* DUF_STARTULL( modelid ); */
 
-  if ( model && *model && !DUF_CONFIGG( opt.disable.flag.insert ) )
+  if ( model && *model && !duf_get_config_flag_disable_insert() )
   {
     int changes = 0;
 
@@ -256,7 +256,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
 
 /* DUF_STARTULL( exifid ); */
   modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , QPERRIND );
-  if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !DUF_CONFIGG( opt.disable.flag.insert ) )
+  if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert() )
   {
     if ( need_id )
     {
@@ -816,7 +816,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_nee
             }
           /* DUF_SHOW_ERRORO( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
             if (  /* DUF_CLEARED_ERROR( r, DUF_ERROR_EXIF_BROKEN_DATE ) && */ QNOERR /* && ( timeepoch || *stime_original || model ) ::20151024.125417:: insert null's */
-                 && !DUF_CONFIGG( opt.disable.flag.update ) )
+                 && !duf_get_config_flag_disable_update() )
             {
               unsigned long long exifid = 0;
               unsigned noexif = 0;

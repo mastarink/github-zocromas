@@ -27,7 +27,7 @@
 #include "duf_config.h"                                              /* duf_get_config ♠ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ♠ *) */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
@@ -228,7 +228,7 @@ SRP(MOD,unsigned long long,md5id, -1, insert_md5_uni, duf_depthinfo_t * pdi, uns
   assert( MD5_DIGEST_LENGTH == 2 * 64 / 8 );
   if ( md64 && md64[1] && md64[0] )
   {
-    if ( !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( !duf_get_config_flag_disable_insert() )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MD5_FULL " ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
@@ -289,7 +289,7 @@ SR(MOD,make_md5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && ( MD5_Init( &ctx ) != 1 ) )
+      if ( !duf_get_config_flag_disable_calculate() && ( MD5_Init( &ctx ) != 1 ) )
         ERRMAKE(MD5 );
 /* DUF_TEST_R( r ); */
       {
@@ -316,7 +316,7 @@ SR(MOD,make_md5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
           {
             if ( pbytes )
               ( *pbytes ) += ry;
-            if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+            if ( !duf_get_config_flag_disable_calculate() )
             {
               if ( MD5_Update( &ctx, buffer, ry ) != 1 )
                 ERRMAKE(MD5 );
@@ -334,7 +334,7 @@ SR(MOD,make_md5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
       ERRMAKE(MEMORY );
     }
   }
-  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) && MD5_Final( pmd, &ctx ) != 1 )
+  if ( !duf_get_config_flag_disable_calculate() && MD5_Final( pmd, &ctx ) != 1 )
     ERRMAKE(MD5 );
 /*  DUF_ENDR( r );*/
 ER(MOD,make_md5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd );
@@ -370,7 +370,7 @@ SR(MOD,md5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( fname );
   MAST_TRACE( md5, 0, "+ %s", fname );
 
-  if ( !DUF_CONFIGG( opt.disable.flag.calculate ) )
+  if ( !duf_get_config_flag_disable_calculate() )
 CR(make_md5r_uni, pdi, amd5r ) ;
 
   if ( QNOERR )
@@ -385,7 +385,7 @@ CR(make_md5r_uni, pdi, amd5r ) ;
     {
 
       pdi->cnts.dirent_content2++;
-      if ( !DUF_CONFIGG( opt.disable.flag.update ) )
+      if ( !duf_get_config_flag_disable_update() )
       {
         int changes = 0;
 

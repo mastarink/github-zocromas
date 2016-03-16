@@ -17,7 +17,7 @@ typedef struct
   duf_config_opt_disable_flags_combo_t disable;
   duf_config_flow_t flow;
   duf_config_opt_actions_t act;
-  duf_config_opt_debug_t dbg;
+  /* duf_config_opt_debug_t dbg; */
   mas_config_trace_t *ptracecfg;
   duf_config_output_t output;
 } duf_config_opt_t;

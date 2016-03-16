@@ -25,9 +25,9 @@
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 /* #include "duf_option_defs.h" */
-#include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
+/* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 #include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ✗ */
@@ -226,8 +226,8 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   DUF_SQL_SE_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, pstmt );
-  DUF_SQL_SE_BIND_I_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), pstmt );
-  DUF_SQL_SE_BIND_I_NZ_OPT( fFresh, DUF_ACTG_FLAG( fresh ), pstmt );
+  DUF_SQL_SE_BIND_I_NZ_OPT( fFast, /* DUF_ACTG_FLAG( fast ) */ duf_get_config_flag_act_fast(  ), pstmt );
+  DUF_SQL_SE_BIND_I_NZ_OPT( fFresh, /* DUF_ACTG_FLAG( fresh ) */ duf_get_config_flag_act_fresh(  ), pstmt );
   MAST_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
 /* DUF_ENDR( r ); */

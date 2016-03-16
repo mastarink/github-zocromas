@@ -21,7 +21,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h"                                          (* opt.disable.flag.insert *) */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
+/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
@@ -318,7 +318,7 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
     MAST_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", QERRIND, QERRNAME, duf_levinfo_dirid( pdi ),
                 duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 
-    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !DUF_CONFIGG( opt.disable.flag.insert ) )
+    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !/* DUF_CONFIGG( opt.disable.flag.insert ) */ duf_get_config_flag_disable_insert() )
     {
       CR( levinfo_stat_insert2db, pdi, &changes );                   /* insert dir info to db by pdi and possbly fs */
     }
