@@ -163,3 +163,13 @@
 # run  '--linear' '-R' '--flags'
 # retcode:0
 # 20160316.130853 : 1458126533.143915647 ------------[r]--
+# 20160316.132359 : 1458127439.801540674 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-updat' '--disable-in' '--disable-cal' '--disable-fs' '--disable-memusage' '--flags'
+# retcode:0
+# 20160316.132359 : 1458127439.823569611 ------------[r]--
+# 20160316.132408 : 1458127448.007504336 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--disable-updat' '--disable-in' '--disable-fs' '--flags'
+# retcode:0
+# 20160316.132408 : 1458127448.032033473 ------------[r]--

@@ -21,6 +21,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_db_types.h \
 	duf_config_defs.h \
 	duf_config_disable_types.h \
+	duf_config_disable_enum.def \
 	duf_config_flow_types.h \
 	duf_config.h \
 	duf_config_opt_debug_types.h \

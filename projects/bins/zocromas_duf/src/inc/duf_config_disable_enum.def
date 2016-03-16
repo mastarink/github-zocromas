@@ -1,0 +1,16 @@
+#ifdef ENUM_WRAP
+/* *INDENT-OFF* */
+ENUM_WRAP( calculate,  calculate )                                                
+ENUM_WRAP( insert,     insert )
+ENUM_WRAP( update,     update )
+ENUM_WRAP( fs,         fs )
+ENUM_WRAP( memusage,   memusage )
+ENUM_WRAP( testflag,   testflag )
+ENUM_WRAP( testiflag,  testiflag )
+ENUM_WRAP( testnoflag, testnoflag )
+
+/* *INDENT-ON* */
+#endif
+/*
+vi: ft=c
+*/
