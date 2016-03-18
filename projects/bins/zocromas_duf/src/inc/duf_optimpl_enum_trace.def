@@ -14,6 +14,7 @@
   ENUM_WRAPP(DB_TRACE, trace, db				)
   ENUM_WRAPP(DELETED_TRACE, trace, deleted			)
   ENUM_WRAPP(DEPTH_TRACE, trace, depth				)
+  ENUM_WRAPP(DIGEST_TRACE, trace, digest			)
   ENUM_WRAPP(DIRENT_TRACE, trace, dirent			)
   ENUM_WRAPP(DRY_RUN_TRACE, trace, dry_run			)
   ENUM_WRAPP(EXIF_TRACE, trace, exif				)
