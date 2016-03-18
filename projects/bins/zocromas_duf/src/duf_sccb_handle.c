@@ -491,7 +491,13 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   {
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
-    CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );
+
+    for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
+    {
+      CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );
+    }
+    H_SCCBI = 0;
+
     if ( H_PDICLONED )
       duf_pdi_delete( H_PDI );
     mas_free( sccbh );

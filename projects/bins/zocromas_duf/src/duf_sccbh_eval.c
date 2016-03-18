@@ -73,12 +73,21 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
       H_PDI->items.files++;
     }
   /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
+    {
+      int fd;
+
+      fd = duf_levinfo_dfd( H_PDI );
+      if ( fd > 0 )
+        lseek( fd, 0, SEEK_SET );
+
+      assert( fd <= 0 || lseek( fd, 0, SEEK_CUR ) == 0 );
+    }
     CRV( ( scanner ), pstmt, H_PDI );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
       sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, node_type, QERRIND );
     assert( sccbh->current_node_type == node_type );
   }
-  /* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ), QERRNAME ); */
+/* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ), QERRNAME ); */
   ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
       duf_node_type_t node_type );
 }

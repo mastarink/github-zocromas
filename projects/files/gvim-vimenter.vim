@@ -15,13 +15,13 @@ if isdirectory(mas_localvimdirs)
 
   if exists('g:loaded_gitgutter')
     GitGutterSignsEnable
-    GitGutterLineHighlightsEnable
+"   GitGutterLineHighlightsEnable
     set number
     hi LineNr guibg=black
-    hi GitGutterChange        guifg=yellow  guibg=#102510
-    hi GitGutterAdd           guifg=yellow  guibg=#102510
-    hi GitGutterDelete        guifg=yellow  guibg=#102510
-    hi GitGutterChangeDelete  guifg=yellow  guibg=#106510
+    hi GitGutterChange        guifg=yellow  guibg=#406510
+    hi GitGutterAdd           guifg=yellow  guibg=#40f510
+    hi GitGutterDelete        guifg=yellow  guibg=#f02510
+    hi GitGutterChangeDelete  guifg=yellow  guibg=#f0f510
     hi CursorLineNr guifg=yellow  guibg=#102510
     hi SignColumn guibg=#101510
   endif
