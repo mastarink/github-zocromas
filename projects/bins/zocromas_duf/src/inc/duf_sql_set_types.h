@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SQL_SET_TYPES_H
 # define MAS_DUF_SQL_SET_TYPES_H
 
-# include "duf_scan_types.h"                                         /* duf_node_type_t */
+# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 
 typedef struct
 {
@@ -27,12 +27,14 @@ typedef struct
   const char *afilter_fast[10];
   const char *group;
   const char *order;
+  const char *orders[20];
   const char *count_aggregate;
 /* const char *selector_total2; */
 } duf_sql_set_t;
 
 typedef struct duf_sql_set_pair_s
 {
+  unsigned orderid;
   const duf_sql_set_t *active;
   const duf_sql_set_t *second;
 } duf_sql_set_pair_t;

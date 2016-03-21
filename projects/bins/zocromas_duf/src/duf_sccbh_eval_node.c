@@ -79,10 +79,10 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
     {
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 # if 0
-      sccbh->current_scanner = scanner;
-      sccbh->current_node_type = DUF_NODE_NODE;
+      /* sccbh->current_scanner = scanner; */
+      sccbh->assert__current_node_type = DUF_NODE_NODE;
       CRV( ( scanner ), pstmt, H_PDI );
-      assert( sccbh->current_node_type == DUF_NODE_NODE );
+      assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
 # else
@@ -93,10 +93,10 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
     {
       MAST_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 # if 0
-      sccbh->current_scanner = scanner;
-      sccbh->current_node_type = DUF_NODE_NODE;
+      /* sccbh->current_scanner = scanner; */
+      sccbh->assert__current_node_type = DUF_NODE_NODE;
       CRV( ( scanner ), pstmt, H_PDI );
-      assert( sccbh->current_node_type == DUF_NODE_NODE );
+      assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
 # else
@@ -106,7 +106,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 #else
     if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_if_deleted( H_PDI ), DUF_NODE_NODE ) ) )
     {
-      sccbh->current_scanner = scanner;
+      /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
       DOR( r, ( scanner ) ( pstmt, H_PDI ) );
     }

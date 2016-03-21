@@ -73,7 +73,6 @@ zocromas_duf_SOURCES= \
 	duf_dh.c \
 	duf_dirent.c \
 	duf_evsql_begfin.c \
-	duf_evsql_selector.c \
 	duf_evsql_selector_new.c \
 	duf_filedata.c \
 	duf_fileinfo.c \

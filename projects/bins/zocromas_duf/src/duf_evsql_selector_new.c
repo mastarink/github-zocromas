@@ -372,8 +372,8 @@ duf_selector2sql_filtercat_list_where_and( char *sql, unsigned with_pref, unsign
 /* 20150819.133515 */
 /* char *                                                                                                                                   */
 /* duf_selector2sql_2new( const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db, unsigned total, int *pr ) */
-SRP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db,
-     unsigned total )
+SRP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, unsigned orderid,
+     const char *selected_db, unsigned total )
 {
 /* int rpr = 0; */
 /* char *sql = NULL; */
@@ -525,7 +525,19 @@ SRP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, c
           sql = mas_strcat_x( sql, sql_set->order );
         }
 #else
-        sql = duf_selector2sql_cat_frag( sql, 1, "ORDER BY", ",", 0, &has_order, ( sql_set_uni->order ? sql_set_uni : sql_set )->order );
+        {
+          const char *order = NULL;
+
+          /* QT( "@%u", orderid ); */
+          if ( orderid > 0 && orderid <= ( sizeof( sql_set_uni->orders ) / sizeof( sql_set_uni->orders[0] ) ) && sql_set_uni && sql_set_uni->orders )
+            order = sql_set_uni->orders[orderid - 1];
+          if ( !order && sql_set_uni->order )
+            order = sql_set_uni->order;
+          if ( !order )
+            order = sql_set->order;
+        /* sql = duf_selector2sql_cat_frag( sql, 1, "ORDER BY", ",", 0, &has_order, ( sql_set_uni->order ? sql_set_uni : sql_set )->order ); */
+          sql = duf_selector2sql_cat_frag( sql, 1, "ORDER BY", ",", 0, &has_order, order );
+        }
 #endif
       }
     }
@@ -545,12 +557,12 @@ SRP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, c
 /* *pr = rpr; */
 /* T( "@%s", sql ); */
 /* return sql; */
-  ERP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, const char *selected_db,
-       unsigned total );
+  ERP( SQL, char *, sql, NULL, selector2sql_2new, const duf_sql_set_t * sql_set, const duf_sql_set_t * sql_set2, unsigned orderid,
+       const char *selected_db, unsigned total );
 }
 
 char *
-duf_selector2sql_new( const duf_sql_set_t * sql_set, const char *selected_db, unsigned total, int *pr )
+duf_selector2sql_new( const duf_sql_set_t * sql_set, unsigned orderid, const char *selected_db, unsigned total, int *pr )
 {
-  return duf_selector2sql_2new( sql_set, NULL, selected_db, total, pr );
+  return duf_selector2sql_2new( sql_set, NULL, orderid, selected_db, total, pr );
 }

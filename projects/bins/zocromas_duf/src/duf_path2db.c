@@ -281,7 +281,7 @@ SR( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_s
 #if 0
   sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name, &r );
 #else
-  sqlv = duf_selector2sql_new( sql_set ? sql_set : &def_node_set, pdi->pdi_name, 0 /*total */ , QPERRIND );
+  sqlv = duf_selector2sql_new( sql_set ? sql_set : &def_node_set, 0 /* orderid */ , pdi->pdi_name, 0 /*total */ , QPERRIND );
 #endif
   CR( set_dirid_and_nums_from_sql, pdi, sqlv );                      /* at levinfo current level: set dirid,numdir,numfile by pdi and sql; */
   MAST_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu", QERRIND, QERRNAME, duf_levinfo_dirid( pdi ), duf_levinfo_itemtruename( pdi ),
@@ -318,7 +318,7 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
     MAST_TRACE( path, 2, "(%d:%s) dirid before insert: %llu for '%s' at %llu", QERRIND, QERRNAME, duf_levinfo_dirid( pdi ),
                 duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 
-    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && !/* DUF_CONFIGG( opt.disable.flag.insert ) */ duf_get_config_flag_disable_insert() )
+    if ( duf_levinfo_dirid( pdi ) <= 0 && caninsert && ! /* DUF_CONFIGG( opt.disable.flag.insert ) */ duf_get_config_flag_disable_insert(  ) )
     {
       CR( levinfo_stat_insert2db, pdi, &changes );                   /* insert dir info to db by pdi and possbly fs */
     }
@@ -346,7 +346,7 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
           {
           /* DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu AND " DUF_SQL_DIRNAMEFIELD "='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
             ERRMAKE_M( NOT_IN_DB, "(2) no dirid by parentid=%llu AND " DUF_SQL_DIRNAMEFIELD "='%s'", duf_levinfo_dirid_up( pdi ),
-                             duf_levinfo_itemshowname( pdi ) );
+                       duf_levinfo_itemshowname( pdi ) );
           }
           MAST_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", duf_levinfo_dirid( pdi ), duf_levinfo_itemshowname( pdi ) );
         }
@@ -476,7 +476,7 @@ SR( PDI, real_path2db_i, duf_depthinfo_t * pdi, char *real_path, int caninsert, 
 
         up_d = duf_pdi_depth( pdi );
       /* down to next */
-        CR( levinfo_down_stat2dirid, pdi, path, caninsert, sql_set ) ; /* at levinfo down level: set dirid,numdir,numfile; make level current */
+        CR( levinfo_down_stat2dirid, pdi, path, caninsert, sql_set ); /* at levinfo down level: set dirid,numdir,numfile; make level current */
         assert( QISERR || up_d + 1 == duf_pdi_depth( pdi ) );
       }
       path = nextdir;

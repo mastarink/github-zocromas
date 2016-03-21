@@ -64,10 +64,11 @@ typedef struct
   char *exif;
 } duf_same_as_t;
 
-typedef struct
+struct duf_ufilter_s
 {
   int use_format;
   duf_config_puz_flags_combo_t v;
+  unsigned orderid;
   unsigned max_rel_depth;
   unsigned long long max_seq;
   unsigned long long std_node_set_num;
@@ -114,7 +115,8 @@ typedef struct
   duf_ufilter_exif_t exif;
   unsigned long testnum;
 /* unsigned long long filter_id; */
-} duf_ufilter_t;
+};
+typedef struct duf_ufilter_s duf_ufilter_t;
 
 typedef struct
 {

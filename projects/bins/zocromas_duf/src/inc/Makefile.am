@@ -50,7 +50,6 @@ noinst_HEADERS=motest_config.h \
 	duf_errorn_defs.h \
 	duf_errorn_defs_preset.h \
 	duf_evsql_begfin.h \
-	duf_evsql_selector.h \
 	duf_evsql_selector_new.h \
 	duf_filedata.h \
 	duf_fileinfo.h \

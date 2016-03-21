@@ -230,9 +230,9 @@ SR( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, d
 #if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
 #elif 0
-    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, QPERRIND );
+    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0, QPERRIND );
 #else
-    sqlv = CRP( selector2sql_new, &def_node_set, pditemp->pdi_name, 0 );
+    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0 );
 #endif
     if ( sqlv )
     {
@@ -304,9 +304,9 @@ SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid,
 #if 0
     sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
 #elif 0
-    sqlv = duf_selector2sql_new( &def_node_set, pditemp->pdi_name, 0, QPERRIND );
+    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0, QPERRIND );
 #else
-    sqlv = CRP(selector2sql_new, &def_node_set, pditemp->pdi_name, 0 );
+    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0 );
 #endif
     if ( sqlv )
     {

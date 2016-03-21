@@ -99,17 +99,17 @@ struct duf_sccb_handle_s
   unsigned long long changes;
   int sccb_index;
   const duf_scan_callbacks_t *const *sccb_array;
-  const duf_scan_callbacks_t *sccb;
+  /* const duf_scan_callbacks_t *sccb; */
 /* const duf_sql_set_t *active_leaf_set; */
 /* const duf_sql_set_t *second_leaf_set; */
 /* const duf_sql_set_t *active_node_set; */
 /* const duf_sql_set_t *second_node_set; */
   duf_sccbh_fun_t progress_leaf_cb;
   duf_sccbh_fun_t progress_node_cb;
-  duf_scanstage_t current_scanstage;
-  duf_stmnt_t *current_statement;
-  duf_scanner_t current_scanner;
-  duf_node_type_t current_node_type;
+  /* duf_scanstage_t current_scanstage; */
+  /* duf_stmnt_t *current_statement; */
+  /* duf_scanner_t current_scanner; */
+  duf_node_type_t assert__current_node_type;
   duf_rsccbh_fun_t atom_cb;
 };
 

@@ -82,11 +82,11 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
     {
       ERRLOWER( FS_DISABLED );
 #if 0
-      sccbh->current_scanner = scanner;
+      /* sccbh->current_scanner = scanner; */
       if ( scanner )
       {
         CRV( scanner, pstmt, H_PDI );
-        assert( sccbh->current_node_type == DUF_NODE_LEAF );
+        assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
         if ( sccbh->atom_cb )                                        /* atom is fs-direntry(dir or reg) or item(node or leaf) */
           sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_LEAF, QERRIND );
       }

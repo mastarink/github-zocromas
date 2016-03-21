@@ -147,7 +147,7 @@ SRP( OTHER, char *, name, NULL, dirid2name_existed, duf_depthinfo_t * pdi, unsig
 #if 0
     sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, pr );
 #else
-    sqlv = duf_selector2sql_new( &def_node_set, pdi->pdi_name, 0 /*total */ , QPERRIND );
+    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , pdi->pdi_name, 0 /*total */ , QPERRIND );
 #endif
     if ( sqlv )
     {

@@ -71,7 +71,7 @@
 static duf_sql_set_pair_t
 duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name )
 {
-  duf_sql_set_pair_t set_pair = { NULL, NULL };
+  duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
   const duf_sql_set_t *set = NULL;
 
   assert( H_SCCB );
@@ -113,7 +113,7 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
 static duf_sql_set_pair_t
 duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED )
 {
-  duf_sql_set_pair_t set_pair = { NULL, NULL };
+  duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
   const duf_sql_set_t *set = NULL;
 
   assert( H_SCCB );
@@ -139,6 +139,7 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
 /* sccbh->active_node_set = setr; */
 /* sccbh->second_node_set = &H_SCCB->node; */
   assert( set );
+/* set_pair.orderid = H_PU->orderid; */
   set_pair.active = set;
   set_pair.second = H_SCCB->node.type == DUF_NODE_NONE ? NULL : &H_SCCB->node;
 
@@ -154,7 +155,7 @@ duf_sql_set_pair_t
 duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   duf_sql_set_pair_t set_pair = {
-    NULL, NULL
+    .orderid = 0, NULL, NULL
   };
 
   assert( H_SCCB );
@@ -171,6 +172,7 @@ duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
   default:
     break;
   }
+  set_pair.orderid = H_PU->orderid;
   assert( !set_pair.active || set_pair.active->type == node_type );
   assert( !set_pair.second || set_pair.second->type == node_type );
   return set_pair;
@@ -194,14 +196,14 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
   if ( H_SCCB )
   {
     char *sqlt = NULL;
-    duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
+    duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
 
     sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
   /* XXX TODO XXX */
-    sqlt = duf_selector2sql_new( sql_set, H_PDI->pdi_name, 1, &rpr );
+    sqlt = duf_selector2sql_new( sql_set, sql_set_pair.orderid, H_PDI->pdi_name, 1, &rpr );
 #else
-    sqlt = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, H_PDI->pdi_name, 1, QPERRIND );
+    sqlt = duf_selector2sql_2new( sql_set_pair.active, sql_set_pair.second, sql_set_pair.orderid, H_PDI->pdi_name, 1, QPERRIND );
 #endif
     assert( QNOERR );
     if ( QNOERR && sqlt )

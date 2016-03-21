@@ -104,6 +104,41 @@ duf_sql_column_decltype( mas_sqlite_stmt_t * stmt, int index )
   return mas_sqlite_column_decltype( stmt, index );
 }
 
+duf_sqltype_t
+duf_sql_column_type( mas_sqlite_stmt_t * stmt, int index )
+{
+  int t;
+  duf_sqltype_t rt;
+
+/*
+ * SQLITE_INTEGER
+ * SQLITE_FLOAT
+ * SQLITE_TEXT
+ * SQLITE_BLOB
+ * SQLITE_NULL
+ * */
+  t = mas_sqlite_column_type( stmt, index );
+  switch ( t )
+  {
+  case SQLITE_INTEGER:
+    rt = DUF_SQLTYPE_INTEGER;
+    break;
+  case SQLITE_FLOAT:
+    rt = DUF_SQLTYPE_FLOAT;
+    break;
+  case SQLITE_TEXT:
+    rt = DUF_SQLTYPE_TEXT;
+    break;
+  case SQLITE_BLOB:
+    rt = DUF_SQLTYPE_BLOB;
+    break;
+  case SQLITE_NULL:
+    rt = DUF_SQLTYPE_NULL;
+    break;
+  }
+  return rt;
+}
+
 int
 duf_sql_column_count( mas_sqlite_stmt_t * stmt )
 {

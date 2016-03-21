@@ -44,7 +44,7 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
   CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
 
   assert( QISERR || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( H_PDI ) ); /* was set by duf_levinfo_godown */
-
+  /* QT( "@@%s", sqlite3_sql( pstmt ) ); */
 /* DUF_ENDR( r ); */
   ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );
 }

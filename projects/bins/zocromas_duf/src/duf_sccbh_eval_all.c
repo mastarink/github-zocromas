@@ -96,15 +96,15 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
 /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
   if ( passes[scanstage] )
   {
-    sccbh->current_statement = pstmt_selector;
-    sccbh->current_scanstage = scanstage;
+    /* sccbh->current_statement = pstmt_selector; */
+    /* sccbh->current_scanstage = scanstage; */
     H_PDI->items.total = 0;
     H_PDI->items.dirs = 0;
     CRV( ( passes[scanstage] ), sccbh, pstmt_selector, scanstage );
   /* QT( "@%d. %llu", scanstage, H_PDI->items.total ); */
     MAST_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( H_PDI ) );
-    sccbh->current_scanstage = DUF_SCANSTAGE_NONE;
-    sccbh->current_statement = NULL;
+    /* sccbh->current_scanstage = DUF_SCANSTAGE_NONE; */
+    /* sccbh->current_statement = NULL; */
   }
 /* QT( "@@@@%s - %s : %s", duf_scanstage_name( scanstage ), duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) ); */
 /* DUF_ENDR( r ); */

@@ -52,6 +52,9 @@
 /* #include "duf_sccbh_eval_fs.h" */
 #include "duf_sccbh_shortcuts.h"
 
+#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+
 /* ###################################################################### */
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
@@ -62,8 +65,8 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
   if ( scanner )
   {
     H_PDI->items.total++;
-    sccbh->current_scanner = scanner;
-    sccbh->current_node_type = node_type;
+  /* sccbh->current_scanner = scanner; */
+    sccbh->assert__current_node_type = node_type;
     if ( node_type == DUF_NODE_NODE )
     {
       H_PDI->items.dirs++;
@@ -82,10 +85,28 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 
       assert( fd <= 0 || lseek( fd, 0, SEEK_CUR ) == 0 );
     }
+#if 0
+    for ( int i = 0; i < duf_sql_column_count( pstmt ); i++ )        /* sqlite3_column_count( pstmt ) */
+    {
+      const char *s;
+      const char *n;
+      const char *st;
+      duf_sqltype_t it;
+
+      n = duf_sql_column_name( pstmt, i );                           /* sqlite3_column_name */
+      s = duf_sql_column_string( pstmt, i );                         /* sqlite3_column_text( pstmt, i ) */
+      st = duf_sql_column_decltype( pstmt, i );
+      it = duf_sql_column_type( pstmt, i );
+      if ( s )
+        QT( "@@%d. %s/%d %s='%s'", i, st, it, n, s );
+      else
+        QT( "@@%d. %s/%d %s=NULL", i, st, it, n );
+    }
+#endif
     CRV( ( scanner ), pstmt, H_PDI );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
       sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, node_type, QERRIND );
-    assert( sccbh->current_node_type == node_type );
+    assert( sccbh->assert__current_node_type == node_type );
   }
 /* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ), QERRNAME ); */
   ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
@@ -161,7 +182,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
 {
 /* DUF_STARTR( r ); */
 
-  duf_sql_set_pair_t sql_set_pair = { NULL, NULL };
+  duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
 
   assert( str_cb2 == duf_sccbh_eval_all || ( str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb ) || ( str_cb2 == duf_sccbh_eval_db_leaf_str_cb ) );
 #ifdef MAS_TRACING

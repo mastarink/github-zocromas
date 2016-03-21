@@ -1,20 +1,16 @@
 #ifndef MAS_SQLITE_H
-#  define MAS_SQLITE_H
+# define MAS_SQLITE_H
 
-#  include <sqlite3.h>
-#  include "mas_sqlite_types.h"
-
+# include <sqlite3.h>
+# include "mas_sqlite_types.h"
 
 int mas_sqlite2r_error_code( int r3 );
 int mas_r2sqlite_error_code( int rt );
 
-
 sqlite3 *mas_sqlite_pdb( void );
-
 
 int mas_sqlite_open( const char *dbpath );
 int mas_sqlite_close( void );
-
 
 /* int mas_sqlite_execcb_e( const char *sql, mas_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ); */
 /* int mas_sqlite_execcb( const char *sql, mas_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg ); */
@@ -27,10 +23,10 @@ int mas_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_
 
 /* int mas_vsqlite_e( const char *fmt, int *pchanges, va_list args ); */
 
-#  if 0
+# if 0
 int mas_sqlite_vselect( mas_sel_cb_t sel_cb, void *sel_cb_udata, mas_str_cb_t str_cb, void *str_cb_udata,
                         mas_sccb_handle_t * sccbh, const char *sqlfmt, va_list args );
-#  endif
+# endif
 
 unsigned long long mas_sqlite_last_insert_rowid( void );
 
@@ -53,15 +49,13 @@ long long mas_sqlite_column_long_long( mas_sqlite_stmt_t * stmt, int icol );
 int mas_sqlite_column_int( mas_sqlite_stmt_t * stmt, int icol );
 const char *mas_sqlite_column_string( mas_sqlite_stmt_t * stmt, int icol );
 
-
-
-
-
 const char *mas_sqlite_column_name( mas_sqlite_stmt_t * stmt, int index );
 const char *mas_sqlite_column_decltype( mas_sqlite_stmt_t * stmt, int index );
+int mas_sqlite_column_type( mas_sqlite_stmt_t * stmt, int index );
+
+/* sqlite3_value *mas_sqlite_column_value( mas_sqlite_stmt_t * stmt, int index ); */
+
 int mas_sqlite_column_count( mas_sqlite_stmt_t * stmt );
-
-
 
 char *mas_sqlite_vmprintf( const char *fmt, va_list args );
 
@@ -69,9 +63,6 @@ char *mas_sqlite_vmprintf( const char *fmt, va_list args );
 
 /* void mas_sqlite_free( char *s ); */
 void mas_sqlite_clear_bindings( mas_sqlite_stmt_t * stmt );
-
-
-
 
 /* As for sqlite 3.8.4.3 */
 /* #define SQLITE_OK           0   (* Successful result *)                          */
@@ -159,10 +150,5 @@ void mas_sqlite_clear_bindings( mas_sqlite_stmt_t * stmt );
 /* #define SQLITE_NOTICE_RECOVER_WAL      (SQLITE_NOTICE | (1<<8))     */
 /* #define SQLITE_NOTICE_RECOVER_ROLLBACK (SQLITE_NOTICE | (2<<8))     */
 /* #define SQLITE_WARNING_AUTOINDEX       (SQLITE_WARNING | (1<<8))    */
-
-
-
-
-
 
 #endif

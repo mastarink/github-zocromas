@@ -10,7 +10,6 @@
 #include "mas_sqlite.h"
 /* ###################################################################### */
 
-
 /* int mas_constraint = SQLITE_CONSTRAINT; */
 static sqlite3 *pDb = NULL;
 
@@ -38,7 +37,6 @@ mas_r2sqlite_error_code( int rt )
   return r3;
 }
 
-
 int
 mas_sqlite_open( const char *dbpath )
 {
@@ -49,7 +47,7 @@ mas_sqlite_open( const char *dbpath )
     r3 = sqlite3_initialize(  );
     if ( r3 == SQLITE_OK )
     {
-      /* r3 = sqlite3_open( dbpath, &pDb ); */
+    /* r3 = sqlite3_open( dbpath, &pDb ); */
       r3 = sqlite3_open_v2( dbpath, &pDb, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL );
       sqlite3_extended_result_codes( pDb, 1 );
     }
@@ -131,13 +129,11 @@ mas_sqlite_exec_c( const char *sql, int constraint_ignore __attribute__ ( ( unus
 /*   return r3;                                                                           */
 /* }                                                                                      */
 
-
 int
 mas_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
 {
   int r3 = 0;
   char *sql;
-
 
   sql = mas_sqlite_vmprintf( fmt, args );
   r3 = mas_sqlite_exec_c( sql, constraint_ignore, pchanges );
@@ -178,20 +174,20 @@ mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
 /* changed DUF_ERROR_SQL_NO_TABLE => mas_r2sqlite_error_code(DUF_ERROR_SQL_NO_TABLE)
  * Not tested */
 #if 0
-      r3 = mas_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE ); /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
+      r3 = mas_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE );        /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
       assert( mas_sqlite2r_error_code( r3 ) == DUF_ERROR_SQL_NO_TABLE );
 #endif
-      /* assert( 0 ); */
+    /* assert( 0 ); */
     }
     else
     {
-      /* assert( 0 ); */
+    /* assert( 0 ); */
     }
     fprintf( stderr, "\nSQLITE ERROR %d: %s [%s]\n", r3, sqlite3_errmsg( pDb ), sql );
-    /* assert( 0 ); */
+  /* assert( 0 ); */
   }
-  /* assert( r3 == 0 ); */
-  /* assert( r3 != SQLITE_MISUSE ); */
+/* assert( r3 == 0 ); */
+/* assert( r3 != SQLITE_MISUSE ); */
   return r3;
 }
 
@@ -235,7 +231,7 @@ mas_sqlite_step( mas_sqlite_stmt_t * stmt )
   int r3;
 
   r3 = sqlite3_step( stmt );
-  /* assert( r3 != SQLITE_LOCKED ); */
+/* assert( r3 != SQLITE_LOCKED ); */
   if ( !( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW ) )
   {
 #if 0
@@ -245,8 +241,8 @@ mas_sqlite_step( mas_sqlite_stmt_t * stmt )
     t = mas_error_name( r );
 #endif
   }
-  /* assert( r3 != SQLITE_MISUSE );                                      */
-  /* assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW ); */
+/* assert( r3 != SQLITE_MISUSE );                                      */
+/* assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW ); */
   return r3;
 }
 
@@ -276,8 +272,6 @@ mas_sqlite_bind_parameter_index( mas_sqlite_stmt_t * stmt, const char *name )
   r3 = sqlite3_bind_parameter_index( stmt, name );
   return r3;
 }
-
-
 
 int
 mas_sqlite_bind_long_long( mas_sqlite_stmt_t * stmt, int num, long long val )
@@ -367,6 +361,30 @@ mas_sqlite_column_decltype( mas_sqlite_stmt_t * stmt, int index )
 {
   return sqlite3_column_decltype( stmt, index );
 }
+
+int
+mas_sqlite_column_type( mas_sqlite_stmt_t * stmt, int index )
+{
+ /*
+  * SQLITE_INTEGER
+  * SQLITE_FLOAT
+  * SQLITE_TEXT
+  * SQLITE_BLOB
+  * SQLITE_NULL
+  * */
+  return sqlite3_column_type( stmt, index );
+}
+
+#if 0
+sqlite3_value *
+mas_sqlite_column_value( mas_sqlite_stmt_t * stmt, int index )
+{
+  sqlite3_value *v;
+
+  v = sqlite3_column_value( stmt, index );
+  return v;
+}
+#endif
 
 int
 mas_sqlite_column_count( mas_sqlite_stmt_t * stmt )

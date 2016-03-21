@@ -1,7 +1,7 @@
 #include <stddef.h>
 
 #include "duf_optable_def.h"
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 /*
 At duf_xtended_table.c:
@@ -41,6 +41,9 @@ const muc_longval_extended_table_t optable_main = {
     /*      */ DO_OU( NUM, max_seq ) /*                */ , DO_AT_STAGE( SETUP ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "set-max-seq" ) /*      */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( NUM, max_seq ) /*                */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
+
+   {.o = {DO_Q( "orderid" ) /*          */ , DO_A_R /* */ } /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, orderid ) /*                */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "std-leaf-set-num" ) /* */ , DO_A_R /* */ , DO_V( STD_LEAF_SET_NUM )} /*   */ , DO_CL( NODESC ) /*   */ ,
     /*      */ DO_OU( NUM, std_leaf_set_num ) /*       */ , DO_SET_STAGE( FIRST, IA ) /*    */ , DO_H(  .... ) /*                            */ },
