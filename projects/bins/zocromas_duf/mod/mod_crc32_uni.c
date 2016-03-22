@@ -47,7 +47,7 @@
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 /* ########################################################################################## */
-static int duf_crc32_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_crc32_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.crc32id IS NULL"
@@ -207,7 +207,7 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
   {
     static unsigned long insert_cnt = 0;
 
-    if ( !duf_get_config_flag_disable_insert() )
+    if ( !duf_get_config_flag_disable_insert(  ) )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_CRC32_FULL " (crc32sum) VALUES (:crc32sum)";
 
@@ -262,7 +262,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
   unsigned long crc32sum = 0;
   unsigned char *buffer;
 
-  if ( !duf_get_config_flag_disable_calculate() )
+  if ( !duf_get_config_flag_disable_calculate(  ) )
     crc32sum = crc32( 0L, Z_NULL, 0 );
 /* if ( !duf_get_config_flag_disable_calculate()) */
   {
@@ -283,7 +283,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
         MAST_TRACE( crc32, 10, "read %d : crc32sum:%lx", ry, crc32sum );
         if ( ry < 0 )
         {
-          /* DUF_ERRSYS( "read file" ); */
+        /* DUF_ERRSYS( "read file" ); */
           MASE_ERRSYS( "read file" );
           ERRMAKE( READ );
         }
@@ -292,7 +292,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
         {
           if ( pbytes )
             ( *pbytes ) += ry;
-          if ( !duf_get_config_flag_disable_calculate() )
+          if ( !duf_get_config_flag_disable_calculate(  ) )
           {
             crc32sum = crc32( crc32sum, buffer, ry );
             bytes += ry;
@@ -319,7 +319,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
 }
 
 static
-SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned long long crc32sum = 0;
@@ -333,7 +333,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_f
   assert( duf_levinfo_dfd( pdi ) );
   assert( duf_levinfo_stat( pdi ) );
 
-  if ( duf_get_config_flag_disable_calculate() )
+  if ( duf_get_config_flag_disable_calculate(  ) )
     crc32sum = ( unsigned long long ) duf_levinfo_dirid( pdi );
   else
     CR( make_crc32_uni, duf_levinfo_dfd( pdi ), &bytes, &crc32sum );
@@ -351,7 +351,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_f
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( QNOERR && !duf_get_config_flag_disable_update() )
+      if ( QNOERR && !duf_get_config_flag_disable_update(  ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0
@@ -379,5 +379,5 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_f
   pdi->total_bytes += bytes;
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi );
+  ER( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

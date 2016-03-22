@@ -3,8 +3,8 @@
 #include <stddef.h>                                                  /* NULL */
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
@@ -18,22 +18,22 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"                                  /* mas_output_force_color ; mas_output_nocolor */
 #include "duf_config_ref.h"
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
-#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 /* #include "duf_pdi_ref.h" */
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 /* #include "duf_option_defs.h" */
 #include "duf_print.h"
@@ -41,10 +41,12 @@
 
 #include "duf_fileinfo.h"
 
+#include "duf_sccb_row.h"
+
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
-static int duf_print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -83,10 +85,10 @@ duf_scan_callbacks_t duf_listing_callbacks = {
 
 /* ########################################################################################## */
 
-static 
-SR(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+static
+SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( fname );
@@ -174,7 +176,13 @@ SR(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_gid = ( gid_t ) gid;
     fi.st.st_nlink = ( nlink_t ) nlink;
     fi.st.st_size = ( off_t ) filesize;
-    fi.name = fname;
+    {
+    /* const char *prevs;                                      */
+    /*                                                         */
+    /* prevs = duf_sccbh_prevrow_get_string( sccbh, "fname" ); */
+    /* if ( !prevs || 0 != strcmp( fname, prevs ) )            */
+      fi.name = fname;
+    }
     fi.exifid = exifid;
     fi.exifdt = exifdt;
     fi.camera = camera;
@@ -182,7 +190,17 @@ SR(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     fi.mime = mime;
     fi.mimeid = mimeid;
     fi.md5id = md5id;
+#if 0
     fi.sha1id = sha1id;
+#else
+    {
+      unsigned long long prevn;
+
+      prevn = duf_sccbh_prevrow_get_number( sccbh, "sha1id" );
+      if ( !prevn || prevn != sha1id )
+        fi.sha1id = sha1id;
+    }
+#endif
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
@@ -234,5 +252,5 @@ SR(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   }
 
 /*  DUF_ENDR( r );*/
-ER(MOD,print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

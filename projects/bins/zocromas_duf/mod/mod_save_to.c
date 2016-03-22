@@ -11,12 +11,12 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
@@ -28,19 +28,19 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_ref.h"
 /* #include "duf_config_defs.h"                                         (* DUF_CONF... ♠ *) */
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 /* #include "duf_option_defs.h" */
 
@@ -48,7 +48,7 @@
 #include "duf_mod_defs.h"
 
 #include "sql_beginning_selected.h"
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 #include "duf_print.h"
 #include "duf_fileinfo.h"
@@ -97,32 +97,31 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
 
 /* ########################################################################################## */
 
-static 
-SR(MOD,save_to_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 0, "save_to_init %s", duf_levinfo_path( pdi ) );
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_init, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-
-SR(MOD,copy_to, duf_depthinfo_t * pdi, const char *save_path )
+SR( MOD, copy_to, duf_depthinfo_t * pdi, const char *save_path )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
   FILE *fw;
   FILE *fr;
   char *fpath = NULL;
 
   if ( *save_path == '/' )
   {
-    ERRMAKE(PATH );
+    ERRMAKE( PATH );
   }
   else if ( *save_path == '.' )
   {
-    ERRMAKE(PATH );
+    ERRMAKE( PATH );
   }
   else
   {
@@ -167,7 +166,7 @@ SR(MOD,copy_to, duf_depthinfo_t * pdi, const char *save_path )
             lw = fwrite( buffer, 1, len, fw );
             MAST_TRACE( mod, 0, "READ %lu of %s", len, fpath );
             if ( lw != len )
-              ERRMAKE(PATH );
+              ERRMAKE( PATH );
           }
           while ( QNOERR && len > 0 );
         }
@@ -193,7 +192,7 @@ SR(MOD,copy_to, duf_depthinfo_t * pdi, const char *save_path )
 
           s = strerror_r( errno, serr, sizeof( serr ) );
         /* DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath ); */
-          ERRMAKE_M(STATAT, "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
+          ERRMAKE_M( STATAT, "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
         }
       }
       else
@@ -208,13 +207,13 @@ SR(MOD,copy_to, duf_depthinfo_t * pdi, const char *save_path )
   }
   mas_free( fpath );
 /*  DUF_ENDR( r );*/
-ER(MOD,copy_to, duf_depthinfo_t * pdi, const char *save_path );
+  ER( MOD, copy_to, duf_depthinfo_t * pdi, const char *save_path );
 }
 
-static 
-SR(MOD,save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+static
+SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
 /* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
@@ -232,7 +231,7 @@ SR(MOD,save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   /* filename from db same as duf_levinfo_itemname( pdi ) */
     assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
-CR(fileinfo, pstmt, pdi, &fi ) ;
+    CR( fileinfo, pstmt, pdi, &fi );
     save_path = duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
                                        0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
     MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
@@ -240,11 +239,11 @@ CR(fileinfo, pstmt, pdi, &fi ) ;
     MAST_TRACE( mod, 2, "@to => %s", save_path );
     if ( *save_path == '/' )
     {
-      ERRMAKE(PATH );
+      ERRMAKE( PATH );
     }
     else if ( *save_path == '.' )
     {
-      ERRMAKE(PATH );
+      ERRMAKE( PATH );
     }
     else
     {
@@ -273,23 +272,23 @@ CR(fileinfo, pstmt, pdi, &fi ) ;
         if ( sl )
           *sl++ = '/';
         if ( rt < 0 )
-          ERRMAKE(PATH );
+          ERRMAKE( PATH );
 
         nnsavp++;
       }
-CR(copy_to, pdi, save_path ) ;
+      CR( copy_to, pdi, save_path );
     }
     mas_free( save_path );
   }
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
 /* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
@@ -302,21 +301,21 @@ SR(MOD,save_to_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t 
 * 2: 0 [MOD    ]  47:save_to_de_content2                 :3.8916 :  save_to de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_de_content2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
+static
+SR( MOD, save_to_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_leaf2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi_unused  );
+  ER( MOD, save_to_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,save_to_leaf2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_leaf2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 #ifdef MAS_TRACING
   MAST_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
@@ -324,84 +323,84 @@ SR(MOD,save_to_leaf2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi 
   assert( 0 );
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_leaf2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_leaf2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
+static
+SR( MOD, save_to_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi_unused  );
+  ER( MOD, save_to_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,save_to_node_before2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_node_before2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 #ifdef MAS_TRACING
   MAST_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_before2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_node_before2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
+static
+SR( MOD, save_to_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_middle2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi_unused  );
+  ER( MOD, save_to_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,save_to_node_middle2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
+static
+SR( MOD, save_to_node_middle2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_middle2_del, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi_unused  );
+  ER( MOD, save_to_node_middle2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,save_to_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED )
+static
+SR( MOD, save_to_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_after2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi_unused  );
+  ER( MOD, save_to_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,save_to_node_after2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_node_after2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 #ifdef MAS_TRACING
   MAST_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
 #endif
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_node_after2_del, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_node_after2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_de_dir_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_de_dir_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 1, "save_to de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_de_dir_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_de_dir_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-static 
-SR(MOD,save_to_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, save_to_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 1, "save_to de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-ER(MOD,save_to_de_file_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, save_to_de_file_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

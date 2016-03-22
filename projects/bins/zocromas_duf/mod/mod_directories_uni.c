@@ -34,7 +34,7 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
-static int duf_register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int duf_register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -132,7 +132,7 @@ duf_scan_callbacks_t duf_dirs_callbacks = {
 
 /* make sure dir name in db */
 
-SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -165,5 +165,5 @@ SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
   CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
       &duf_dirs_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  );
 /*  DUF_ENDR( r );*/
-  ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

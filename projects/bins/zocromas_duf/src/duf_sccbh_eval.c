@@ -103,7 +103,7 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
         QT( "@@%d. %s/%d %s=NULL", i, st, it, n );
     }
 #endif
-    CRV( ( scanner ), pstmt, H_PDI );
+    CRV( ( scanner ), pstmt, H_PDI, sccbh );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
       sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, node_type, QERRIND );
     assert( sccbh->assert__current_node_type == node_type );

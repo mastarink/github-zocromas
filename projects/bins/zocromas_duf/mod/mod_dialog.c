@@ -92,17 +92,17 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_dialog )
 
 /* ########################################################################################## */
 
-SR( MOD, dialog_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 0, "dialog_init %s", duf_levinfo_path( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+SR( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -112,10 +112,10 @@ SR( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   MAST_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+SR( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -123,10 +123,10 @@ SR( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   MAST_TRACE( mod, 6, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -181,7 +181,7 @@ SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
 #else
         duf_scanner_t scanner = duf_find_sccb_by_evname_std( "listing" )->leaf_scan2;
 
-        CRV( scanner, pstmt, pdi );
+        CRV( scanner, pstmt, pdi, sccbh );
 #endif
         MAST_TRACE( mod, 0, "@@@@dialog  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
       }
@@ -201,10 +201,10 @@ SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
     assert( !di.next );
   }
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -212,85 +212,85 @@ SR( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_
   MAST_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_before2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_before2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "@dialog node before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_before2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_before2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_middle2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_middle2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "@dialog node middle %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_middle2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_middle2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "dialog %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_node_after2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_node_after2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 10, "@dialog node after %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_node_after2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_node_after2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_dir_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_de_dir_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 8, "dialog de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_de_dir_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_de_dir_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+SR( MOD, dialog_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 6, "dialog de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 /*  DUF_ENDR( r );*/
-  ER( MOD, dialog_de_file_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+  ER( MOD, dialog_de_file_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

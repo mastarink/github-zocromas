@@ -47,7 +47,7 @@
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 /* ########################################################################################## */
-static int duf_digest_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_digest_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED );
 
 #define ADIGEST_DELTA 0
 
@@ -368,7 +368,7 @@ SR( MOD, make_digestr_uni, duf_depthinfo_t * pdi, unsigned char *pmdr )
 }
 
 static
-SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char adigestr[MOD_DIGEST_LENGTH + ADIGEST_DELTA];
@@ -417,5 +417,5 @@ SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
   /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pdgst[1], pdgst[0], digestid ); */
   }
 /*  DUF_ENDR( r );*/
-  ER( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+  ER( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

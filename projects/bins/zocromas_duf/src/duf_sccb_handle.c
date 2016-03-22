@@ -52,12 +52,13 @@
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
+#include "duf_sccb_row.h"
+#include "duf_sccb_begfin.h"
 
 #include "duf_evsql_selector_new.h"
 
 #include "std_mod_sets.h"
 
-#include "duf_sccb_begfin.h"
 #include "duf_ufilter_bind.h"
 
 #include "duf_sccb_scanstage.h"
@@ -461,7 +462,7 @@ TODO scan mode
       if ( H_SCCB->init_scan )
       {
         MAST_TRACE( explain, 10, "to init scan" );
-        CRV( H_SCCB->init_scan, NULL /* pstmt */ , pdi );
+        CRV( H_SCCB->init_scan, NULL /* pstmt */ , pdi, sccbh );
       }
       else
       {
@@ -493,6 +494,8 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   {
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
+    duf_sccb_row_delete( sccbh->row );
+    duf_sccb_row_delete( sccbh->previous_row );
 
     for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
     {

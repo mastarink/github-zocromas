@@ -144,8 +144,8 @@ duf_sql_set_t std_leaf_sets[] = {                                    /* */
                }
    ,                                                                 /* */
 #endif
-   .order = "sh.dupsha1cnt ASC, sha1id ASC",                             /* */
-   .orders = {"sh.dupsha1cnt ASC, sha1id ASC","sh.dupsha1cnt ASC, sha1id DESC", "file_name", "dataid ASC", "dataid DESC"},                             /* */
+   .order = "sh.dupsha1cnt ASC, sha1id ASC, file_name ASC",                             /* */
+   .orders = {"sh.dupsha1cnt ASC, sha1id ASC, file_name ASC","sh.dupsha1cnt ASC, sha1id DESC", "file_name", "dataid ASC", "dataid DESC"},                             /* */
    .matcher = NULL,
  /* To select ALL files under path
     WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)

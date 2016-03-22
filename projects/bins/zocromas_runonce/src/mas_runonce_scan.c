@@ -14,16 +14,13 @@
 #include "mas_runonce_pid.h"
 #include "mas_runonce_base.h"
 
-
 #include "mas_runonce_window.h"
-
 
 #include "mas_runonce_scan.h"
 
-
-
 int
-runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags, char *msg __attribute__ ( ( unused ) ), va_list args )
+runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags, char *msg
+                       __attribute__ ( ( unused ) ), va_list args )
 {
   int cnt = 0;
   va_list ids;
@@ -39,11 +36,12 @@ runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, 
 
     id = va_arg( ids, roaction_t );
 
-    /* printf( "id:%d\n", id ); */
+    if ( flags.verbose > 4 )
+      printf( "id:%d\n", id );
 
     if ( id == ROACTION_NONE )
       break;
-    /* if ( grp->sections && *sect->name != '@' ) */
+  /* if ( grp->sections && *sect->name != '@' ) */
     {
       switch ( id )
       {
@@ -65,16 +63,16 @@ runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, 
       case ROACTION_EXIT:
         done = runonce_exit( grp, sect, nsec, flags );
         break;
-        /* case ROACTION_STOP:                                      */
-        /* case ROACTION_RESTART:                                   */
-        /* case ROACTION_WINDOW:                                    */
-        /* case ROACTION_NONE:                                      */
-        /*   printf( "NONE %14s : %18s\n", grp->name, sect->name ); */
+      /* case ROACTION_STOP:                                      */
+      /* case ROACTION_RESTART:                                   */
+      /* case ROACTION_WINDOW:                                    */
+      /* case ROACTION_NONE:                                      */
+      /*   printf( "NONE %14s : %18s\n", grp->name, sect->name ); */
       default:
         break;
       }
     }
-    /* printf( "-------------------------------id:%d done:%d; cnt:%d\n", id, done, cnt ); */
+  /* printf( "-------------------------------id:%d done:%d; cnt:%d\n", id, done, cnt ); */
     cnt++;
   }
   if ( !done )
@@ -114,7 +112,7 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
       }
       else
       {
-        /* printf( "didn't match section %s (strict:%d; sectpatt:%s)\n", sect->name, !flags.nostrict, sectpatt ); */
+      /* printf( "didn't match section %s (strict:%d; sectpatt:%s)\n", sect->name, !flags.nostrict, sectpatt ); */
       }
     }
   }
@@ -134,14 +132,14 @@ runonce_vscan( const char *grppatt, const char *sectpatt, runonce_flags_t flags,
     config_group_t *grp = NULL;
 
     grp = configuration.groups + ngr;
-    /* printf( "ngr:%d\n", ngr ); */
+  /* printf( "ngr:%d\n", ngr ); */
     if ( !grppatt || strstr( grp->name, grppatt ) )
     {
       runonce_group_vscan( grp, sectpatt, &nsecg, flags, msg, args );
     }
     else
     {
-      /* printf( "didn't match group %s (strict:%d; grppatt:%s)\n", grp->name, !flags.nostrict, grppatt ); */
+    /* printf( "didn't match group %s (strict:%d; grppatt:%s)\n", grp->name, !flags.nostrict, grppatt ); */
     }
   }
   return 0;

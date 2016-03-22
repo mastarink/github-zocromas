@@ -5,7 +5,36 @@
 # include "sql_beginning_types.h"                                    /* duf_sql_sequence_t */
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
-typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+typedef struct duf_sccb_handle_s duf_sccb_handle_t;
+typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, struct duf_sccb_handle_s *sccbh );
+
+struct duf_sccb_data_value_s
+{
+/*
+   DUF_SQLTYPE_NONE,
+   DUF_SQLTYPE_INTEGER,
+   DUF_SQLTYPE_FLOAT,
+   DUF_SQLTYPE_TEXT,
+   DUF_SQLTYPE_BLOB,
+   DUF_SQLTYPE_NULL,
+ */
+  duf_sqltype_t typ;
+  char *name;
+  union
+  {
+    unsigned long long n;
+  /* char *s; */
+  } value;
+  char *svalue;
+};
+typedef struct duf_sccb_data_value_s duf_sccb_data_value_t;
+
+struct duf_sccb_data_row_s
+{
+  size_t cnt;
+  duf_sccb_data_value_t *fields;
+};
+typedef struct duf_sccb_data_row_s duf_sccb_data_row_t;
 
 struct duf_scan_callbacks_s
 {
@@ -99,20 +128,21 @@ struct duf_sccb_handle_s
   unsigned long long changes;
   int sccb_index;
   const duf_scan_callbacks_t *const *sccb_array;
-  /* const duf_scan_callbacks_t *sccb; */
+/* const duf_scan_callbacks_t *sccb; */
 /* const duf_sql_set_t *active_leaf_set; */
 /* const duf_sql_set_t *second_leaf_set; */
 /* const duf_sql_set_t *active_node_set; */
 /* const duf_sql_set_t *second_node_set; */
   duf_sccbh_fun_t progress_leaf_cb;
   duf_sccbh_fun_t progress_node_cb;
-  /* duf_scanstage_t current_scanstage; */
-  /* duf_stmnt_t *current_statement; */
-  /* duf_scanner_t current_scanner; */
+/* duf_scanstage_t current_scanstage; */
+/* duf_stmnt_t *current_statement; */
+/* duf_scanner_t current_scanner; */
   duf_node_type_t assert__current_node_type;
   duf_rsccbh_fun_t atom_cb;
+  duf_sccb_data_row_t previous_row;
+  duf_sccb_data_row_t row;
 };
 
-typedef struct duf_sccb_handle_s duf_sccb_handle_t;
 
 #endif

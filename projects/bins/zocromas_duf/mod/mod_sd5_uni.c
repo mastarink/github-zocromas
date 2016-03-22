@@ -47,7 +47,7 @@
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 /* ########################################################################################## */
-static int duf_sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_sd5_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA "fd.sd5id IS NULL"
@@ -199,7 +199,7 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
 /* DUF_START(  ); */
   if ( sd64 && sd64[1] && sd64[0] )
   {
-    if ( !duf_get_config_flag_disable_insert() )
+    if ( !duf_get_config_flag_disable_insert(  ) )
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SD5_FULL " ( sd5sum1, sd5sum2 ) VALUES ( :sd5sum1, :sd5sum2 )";
 
@@ -260,7 +260,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( !duf_get_config_flag_disable_calculate() && ( MD5_Init( &ctx ) != 1 ) )
+      if ( !duf_get_config_flag_disable_calculate(  ) && ( MD5_Init( &ctx ) != 1 ) )
         ERRMAKE( MD5 );
 /* DUF_TEST_R( r ); */
       {
@@ -276,7 +276,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
           MAST_TRACE( sd5, 10, "read ry:%u", ry );
           if ( ry < 0 )
           {
-            /* DUF_ERRSYS( "read file" ); */
+          /* DUF_ERRSYS( "read file" ); */
             MASE_ERRSYS( "read file" );
 
             ERRMAKE( READ );
@@ -287,7 +287,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
           {
             if ( pbytes )
               ( *pbytes ) += ry;
-            if ( !duf_get_config_flag_disable_calculate() )
+            if ( !duf_get_config_flag_disable_calculate(  ) )
             {
               if ( MD5_Update( &ctx, buffer, ry ) != 1 )
                 ERRMAKE( MD5 );
@@ -305,7 +305,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
       ERRMAKE( MEMORY );
     }
   }
-  if ( !duf_get_config_flag_disable_calculate() && MD5_Final( pmd, &ctx ) != 1 )
+  if ( !duf_get_config_flag_disable_calculate(  ) && MD5_Final( pmd, &ctx ) != 1 )
     ERRMAKE( MD5 );
 /*  DUF_ENDR( r );*/
   ER( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd );
@@ -313,7 +313,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
 
 /* 20150820.143755 */
 static
-SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char amd5r[MD5_DIGEST_LENGTH];
@@ -325,7 +325,7 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_fil
 
   memset( amd5, 0, sizeof( amd5 ) );
   MAST_TRACE( sd5, 0, "+ %s", fname );
-  if ( !duf_get_config_flag_disable_calculate() )
+  if ( !duf_get_config_flag_disable_calculate(  ) )
     CR( make_sd5_uni, duf_levinfo_dfd( pdi ), &bytes, amd5 );
   MAST_TRACE( sd5, 0, "+ %s", fname );
 /* DUF_TEST_R( r ); */
@@ -340,14 +340,14 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_fil
 
     pmd = ( unsigned long long * ) &amd5r;
     MAST_TRACE( sd5, 0, "insert %s", fname );
-    if ( duf_get_config_flag_disable_calculate() )
+    if ( duf_get_config_flag_disable_calculate(  ) )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74;               /* FIXME What is it? */
     sd5id = duf_insert_sd5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , QPERRIND );
     if ( sd5id )
     {
       int changes = 0;
 
-      if ( !duf_get_config_flag_disable_update() )
+      if ( !duf_get_config_flag_disable_update(  ) )
       {
         DUF_UFIELD2( filedataid );
 #if 0
@@ -374,5 +374,5 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_fil
   pdi->total_bytes += bytes;
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi );
+  ER( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

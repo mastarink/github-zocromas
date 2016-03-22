@@ -64,7 +64,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
       /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 2, "@@@@@@@%s +%d :: %s | %s", duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_pdi_depth( H_PDI ),
                   duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
-      CRV( ( scanner ), NULL /* pstmt */ , H_PDI );
+      CRV( ( scanner ), NULL /* pstmt */ , H_PDI, sccbh );
       {
         duf_levinfo_t *pli = NULL;
 

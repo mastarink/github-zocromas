@@ -4,8 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
@@ -13,7 +13,7 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 
 /*  #include "duf_tracen_defs.h"  (*  T; TT; TR ♠  *) */
 /*  #include "duf_errorn_defs.h"  (*  DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠  *) */
@@ -21,17 +21,17 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ♠ */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 /* #include "duf_option_defs.h" */
 
@@ -39,17 +39,17 @@
 #include "duf_mod_defs.h"
 
 #include "sql_beginning_selected.h"
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 #include "duf_tags.h"
 
 /* ########################################################################################## */
 /* DUF_MOD_DECLARE_ALL_FUNCS( tagit ) */
-static int duf_tagit_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
-static int duf_tagit_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
-static int duf_tagit_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
-static int duf_tagit_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
-static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi );
+static int duf_tagit_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -93,21 +93,21 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
 
 /* ########################################################################################## */
 
-static 
-SR(MOD,tagit_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, tagit_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
 
 /*  DUF_ENDR( r );*/
-ER(MOD,tagit_init, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, tagit_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi )
+static
+SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
   if ( DUF_CONFIGG( vars.tag.file ) )
   {
 #ifdef MAS_TRACING
@@ -122,13 +122,13 @@ SR(MOD,tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi )
     MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
 /*  DUF_ENDR( r );*/
-ER(MOD,tagit_leaf2, duf_stmnt_t * pstmt , duf_depthinfo_t * pdi );
+  ER( MOD, tagit_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
@@ -142,13 +142,13 @@ SR(MOD,tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_
 #endif
   }
 /*  DUF_ENDR( r );*/
-ER(MOD,tagit_node_before2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -163,13 +163,13 @@ SR(MOD,tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_
 #endif
   }
 /*  DUF_ENDR( r );*/
-ER(MOD,tagit_node_middle2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }
 
-static 
-SR(MOD,tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED )
+static
+SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
-/*   DUF_STARTR( r ) */;
+/*   DUF_STARTR( r ) */ ;
 
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -184,5 +184,5 @@ SR(MOD,tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
 #endif
   }
 /*  DUF_ENDR( r );*/
-ER(MOD,tagit_node_after2, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi  );
+  ER( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

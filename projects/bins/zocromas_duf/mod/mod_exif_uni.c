@@ -64,7 +64,7 @@ TODO
 */
 
 /* ########################################################################################## */
-static int duf_dirent_contnt2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi );
+static int duf_dirent_contnt2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA "(fd.noexif IS NULL AND fd.noexif IS NULL)"
@@ -85,7 +85,7 @@ duf_scan_callbacks_t duf_exif_callbacks = {
   .title = "collect exif",                                           /* */
   .name = "exif",                                                    /* */
   .def_opendir = 1,                                                  /* */
-  .leaf_scan_fd2 = duf_dirent_contnt2,                                   /* */
+  .leaf_scan_fd2 = duf_dirent_contnt2,                               /* */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -177,7 +177,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 
 /* DUF_STARTULL( modelid ); */
 
-  if ( model && *model && !duf_get_config_flag_disable_insert() )
+  if ( model && *model && !duf_get_config_flag_disable_insert(  ) )
   {
     int changes = 0;
 
@@ -256,7 +256,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
 
 /* DUF_STARTULL( exifid ); */
   modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , QPERRIND );
-  if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert() )
+  if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert(  ) )
   {
     if ( need_id )
     {
@@ -556,7 +556,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static
-SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -586,7 +586,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_nee
         MAST_TRACE( exif, 5, "read %d", rr );
         if ( rr < 0 )
         {
-          /* DUF_ERRSYS( "read file" ); */
+        /* DUF_ERRSYS( "read file" ); */
           MASE_ERRSYS( "read file" );
           ERRMAKE( READ );
         }
@@ -816,7 +816,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_nee
             }
           /* DUF_SHOW_ERRORO( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
             if (  /* DUF_CLEARED_ERROR( r, DUF_ERROR_EXIF_BROKEN_DATE ) && */ QNOERR /* && ( timeepoch || *stime_original || model ) ::20151024.125417:: insert null's */
-                 && !duf_get_config_flag_disable_update() )
+                 && !duf_get_config_flag_disable_update(  ) )
             {
               unsigned long long exifid = 0;
               unsigned noexif = 0;
@@ -892,5 +892,5 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_nee
 
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi );
+  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
 }

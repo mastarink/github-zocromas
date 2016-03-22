@@ -58,6 +58,8 @@
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
+#include "duf_sccb_row.h"
+
 /* ###################################################################### */
 #include "duf_sccbh_eval_sql_set.h"
 /* ###################################################################### */
@@ -84,70 +86,10 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
               duf_uni_scan_action_title( H_SCCB ), H_SCCB->name );
 
 #if 1
+  duf_sccb_row_delete( sccbh->previous_row );
+  sccbh->previous_row = sccbh->row;
 
-  struct duf_data_value_s
-  {
-    duf_sqltype_t typ;
-    char *name;
-    union
-    {
-      unsigned long long n;
-    /* char *s; */
-    } value;
-    char *svalue;
-  };
-  typedef struct duf_data_value_s duf_data_value_t;
-
-/* struct duf_data_row_s {}; typedef struct duf_data_row_s duf_data_row_t; */
-  duf_data_value_t *row MAS_UNUSED;
-  size_t ccnt;
-
-  ccnt = duf_sql_column_count( pstmt );
-  row = mas_malloc( ccnt * sizeof( duf_data_value_t ) );
-  memset( row, 0, ccnt * sizeof( duf_data_value_t ) );
-  for ( size_t i = 0; i < ccnt; i++ )                                /* sqlite3_column_count( pstmt ) */
-  {
-    row[i].typ = duf_sql_column_type( pstmt, i );
-    row[i].name = mas_strdup( duf_sql_column_name( pstmt, i ) );
-    row[i].svalue = mas_strdup( duf_sql_column_string( pstmt, i ) );
-    switch ( row[i].typ )
-    {
-    case DUF_SQLTYPE_NONE:
-      break;
-    case DUF_SQLTYPE_INTEGER:
-      row[i].value.n = duf_sql_column_long_long( pstmt, i );
-      break;
-    case DUF_SQLTYPE_FLOAT:
-      break;
-    case DUF_SQLTYPE_TEXT:
-    /* row[i].value.n = duf_sql_column_long_long( pstmt, i ); */
-      break;
-    case DUF_SQLTYPE_BLOB:
-      break;
-    case DUF_SQLTYPE_NULL:
-      break;
-    }
-    {
-# if 0
-      const char *s;
-      const char *n;
-      const char *st;
-      duf_sqltype_t it;
-
-      n = duf_sql_column_name( pstmt, i );                           /* sqlite3_column_name */
-      s = duf_sql_column_string( pstmt, i );                         /* sqlite3_column_text( pstmt, i ) */
-      st = duf_sql_column_decltype( pstmt, i );
-      it = duf_sql_column_type( pstmt, i );
-      if ( s )
-        QT( "@%lu. %s/%d %s='%s'", i, st, it, n, s );
-      else
-        QT( "@%lu. %s/%d %s=NULL", i, st, it, n );
-# endif
-    }
-    mas_free( row[i].svalue );
-    mas_free( row[i].name );
-  }
-  mas_free( row );
+  sccbh->row = duf_sccb_row_create( pstmt );
 #endif
 
 /* IF_DORF( r, cbs[node_type], sccbh, pstmt, str_cb2, scanstage ); */

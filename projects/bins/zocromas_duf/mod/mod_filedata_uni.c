@@ -3,11 +3,11 @@
 #include <stddef.h>                                                  /* NULL */
 #include <fcntl.h>                                                   /* Definition of AT_* constants */
 
-#include "duf_tracen_defs_preset.h"
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
@@ -19,23 +19,23 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ♠ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 
 /* #include "duf_config.h" */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* #include "duf_config_ref.h" */
 /* #include "duf_config_defs.h"                                         (* DUF_CONF... ♠ *) */
 
-#include "duf_levinfo_ref.h"
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_filedata.h"
 
 /* #include "duf_dbg.h" */
 
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
-static int duf_register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int duf_register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -141,11 +141,11 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 
 /* ########################################################################################## */
 
-static 
-SR(MOD,register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi )
+static
+SR( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */;
-CR(pdistat2file, pdi ) ;
+/*   DUF_STARTR( r ) */ ;
+  CR( pdistat2file, pdi );
 /*  DUF_ENDR( r );*/
-ER(MOD,register_pdifiledata, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi );
+  ER( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
