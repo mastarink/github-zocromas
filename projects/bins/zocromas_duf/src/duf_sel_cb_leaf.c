@@ -22,23 +22,24 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"                                      /* duf_levinfo_goup */
 
-#include "duf_pdi_ref.h"                                             /* duf_pdi_depth */
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_depth */
+#include "duf_pdi_ref.h"
+/* #include "duf_pdi_credel.h"                                          (* duf_pdi_create; duf_pdi_kill ✗ *) */
 
 #include "duf_sccb_def.h"                                            /* DUF_SCCB_PDI */
 #include "duf_sccb.h"                                                /* duf_uni_scan_action_title, contained at DUF_SCCB_PDI */
 
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_fd_str_cb and duf_sccbh_eval_db_leaf_str_cb */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+/* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ *) */
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_PDI etc. */
 #include "duf_sccbh_pstmt.h"
@@ -46,12 +47,11 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"
 
-#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ✗ */
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
-#include "duf_pdi_structs.h"
+/* #include "duf_pdi_structs.h"                                         (* seq, seq_leaf *) */
 /* ###################################################################### */
 #include "duf_sel_cb_leaf.h"
 /* ###################################################################### */
@@ -70,13 +70,13 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
 
 #if 1
     {
-      assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
+      assert( duf_pdi_depth( H_PDI ) == duf_levinfo_calc_depth( H_PDI ) );
       {
 # if 0
         duf_levinfo_t *pli = NULL;
 
-      /* pli = duf_dirid2li( duf_levinfo_dirid( H_PDI ), duf_levinfo_itemtruename( H_PDI ), H_PDI->pathinfo.maxdepth , &r ); */
-        pli = duf_nameid2li( duf_levinfo_nameid( H_PDI ), H_PDI->pathinfo.maxdepth, &r );
+      /* pli = duf_dirid2li( duf_levinfo_dirid( H_PDI ), duf_levinfo_itemtruename( H_PDI ), duf_pdi_maxdepth(H_PDI) , &r ); */
+        pli = duf_nameid2li( duf_levinfo_nameid( H_PDI ), duf_pdi_maxdepth( H_PDI ), &r );
         assert( pli[0].itemname );
 
         {
@@ -86,13 +86,13 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
 /*   duf_levinfo_create( pdi2 ); */
 #  if 1
         /* T( "B %d -- %d/%d", pdi2->pathinfo.depth, duf_levinfo_calc_depth( pdi2 ), duf_li_calc_depth( pli ) ); */
-          duf_levinfo_set_li( pdi2, pli, H_PDI->pathinfo.maxdepth );
+          duf_levinfo_set_li( pdi2, pli, duf_pdi_maxdepth( H_PDI ) );
           {
             if ( duf_levinfo_dirid( pdi2 ) != duf_levinfo_dirid_up( pdi2 ) || pdi2->pathinfo.depth != duf_levinfo_calc_depth( pdi2 ) )
             {
               __duf_sql_dump_row( pstmt );
               T( "P  nameid:%llu; (dirid:%3llu/%3llu) depth(%d/%d) [%s - %s:%llu/%s:%llu] %s(%d)", duf_levinfo_nameid( H_PDI ),
-                 duf_levinfo_dirid( H_PDI ), duf_levinfo_dirid_up( H_PDI ), H_PDI->pathinfo.depth, duf_levinfo_calc_depth( H_PDI ),
+                 duf_levinfo_dirid( H_PDI ), duf_levinfo_dirid_up( H_PDI ), duf_pdi_depth( H_PDI ), duf_levinfo_calc_depth( H_PDI ),
                  duf_levinfo_path( H_PDI ), duf_levinfo_itemtruename( H_PDI ), duf_levinfo_nameid( H_PDI ), duf_levinfo_itemtruename_up( H_PDI ),
                  duf_levinfo_nameid_up( H_PDI ), duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_levinfo_node_type( H_PDI ) );
               T( "p2 nameid:%llu; (dirid:%3llu/%3llu) depth(%d/%d) [%s - %s:%llu/%s:%llu] %s(%d)", duf_levinfo_nameid( pdi2 ),
@@ -113,27 +113,27 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
           MAST_TRACE( sccbh, 0, "TEST %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( pdi2 ), duf_nodetype_name( DUF_NODE_LEAF ), DUF_NODE_LEAF,
                       duf_levinfo_path_up( pdi2 ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), duf_levinfo_itemtruename( pdi2 ) );
 #  else
-          duf_li_delete( pli, H_PDI->pathinfo.maxdepth );
+          duf_li_delete( pli, duf_pdi_maxdepth( H_PDI ) );
           pli = NULL;
 #  endif
           duf_pdi_delete( pdi2 );
         }
 # else
 
-        if ( !( duf_levinfo_dirid( H_PDI ) == duf_levinfo_dirid_up( H_PDI ) && H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) ) )
+        if ( !( duf_levinfo_dirid( H_PDI ) == duf_levinfo_dirid_up( H_PDI ) && duf_pdi_depth( H_PDI ) == duf_levinfo_calc_depth( H_PDI ) ) )
         {
           duf_levinfo_t *pli = NULL;
 
-          pli = duf_nameid2li( duf_levinfo_nameid( H_PDI ), H_PDI->pathinfo.maxdepth, QPERRIND );
+          pli = duf_nameid2li( duf_levinfo_nameid( H_PDI ), duf_pdi_maxdepth( H_PDI ), QPERRIND );
           if ( QNOERR )
-            duf_levinfo_set_li( H_PDI, pli, H_PDI->pathinfo.maxdepth );
+            duf_levinfo_set_li( H_PDI, pli, duf_pdi_maxdepth( H_PDI ) );
           else
-            duf_li_delete( pli, H_PDI->pathinfo.maxdepth );
+            duf_li_delete( pli, duf_pdi_maxdepth( H_PDI ) );
         }
-        assert( H_PDI->pathinfo.depth > 0 );
-        assert( H_PDI->pathinfo.levinfo );
+        assert( duf_pdi_depth( H_PDI ) > 0 );
+        assert( duf_pdi_levinfo( H_PDI ) );
         assert( duf_levinfo_dirid( H_PDI ) == duf_levinfo_dirid_up( H_PDI ) );
-        assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
+        assert( duf_pdi_depth( H_PDI ) == duf_levinfo_calc_depth( H_PDI ) );
 # endif
       }
     }
@@ -142,9 +142,13 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
     CRV( ( str_cb2 ), sccbh, pstmt, scanstage );
     if ( QNOERR )
     {
+#if 0
       H_PDI->seq++;
       H_PDI->seq_leaf++;
-      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", H_PDI->seq, H_PDI->seq_leaf );
+#else
+  duf_pdi_seq_leaf_plus( H_PDI );
+#endif
+      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu",  duf_pdi_seq( H_PDI ) /* H_PDI->seq */, duf_pdi_seq_leaf( H_PDI ) /* H_PDI->seq_leaf */ );
     }
     if ( sccbh->progress_leaf_cb )
       ( sccbh->progress_leaf_cb ) ( sccbh );
@@ -211,9 +215,9 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str
 {
 /* DUF_STARTR( r ); */
   assert( H_PDI );
-  assert( H_PDI->pathinfo.depth >= 0 );
+  assert( duf_pdi_depth( H_PDI ) >= 0 );
 
-  assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
+  assert( duf_pdi_depth( H_PDI ) == duf_levinfo_calc_depth( H_PDI ) );
 
 /* data from db at pstmt */
 
@@ -226,11 +230,11 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str
   /*@ 1. go down + dbopenat */
     CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt, DUF_NODE_LEAF /* node_type */  );
     MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, duf_levinfo_path( H_PDI ) );
-    assert( H_PDI->pathinfo.depth >= 0 );
+    assert( duf_pdi_depth( H_PDI ) >= 0 );
 
     CR( sel_cb2_leaf_at, sccbh, pstmt, str_cb2, scanstage );
 
-    assert( H_PDI->pathinfo.depth == duf_levinfo_calc_depth( H_PDI ) );
+    assert( duf_pdi_depth( H_PDI ) == duf_levinfo_calc_depth( H_PDI ) );
 
     CR( levinfo_goup, H_PDI );
   }

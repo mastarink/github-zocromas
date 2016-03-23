@@ -26,12 +26,6 @@ duf_pdi_root( duf_depthinfo_t * pdi )
 }
 
 int
-duf_pdi_seq( const duf_depthinfo_t * pdi )
-{
-  return pdi ? pdi->seq : 0;
-}
-
-int
 duf_pdi_recursive( const duf_depthinfo_t * pdi )
 {
   return pdi ? ( pdi->recursive ? 1 : 0 ) : 0;
@@ -80,4 +74,42 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   MAST_TRACE( fs, 3, "set opendir:%d", od );
 
   return rd;
+}
+
+unsigned long long
+duf_pdi_seq( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->seq : 0;
+}
+
+unsigned long long
+duf_pdi_seq_leaf( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->seq_leaf : 0;
+}
+
+void
+duf_pdi_seq_leaf_plus( duf_depthinfo_t * pdi )
+{
+  if ( pdi )
+  {
+    pdi->seq++;
+    pdi->seq_leaf++;
+  }
+}
+
+unsigned long long
+duf_pdi_seq_node( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->seq_node : 0;
+}
+
+void
+duf_pdi_seq_node_plus( duf_depthinfo_t * pdi )
+{
+  if ( pdi )
+  {
+    pdi->seq++;
+    pdi->seq_node++;
+  }
 }

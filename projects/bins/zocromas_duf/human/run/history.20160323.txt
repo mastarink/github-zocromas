@@ -60,3 +60,13 @@
 # run  '--db-name=temp20160323' '-dufR' '--with-tag-file=test-gz1' '--max-depth=17' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
 # retcode:0
 # 20160323.163705 : 1458743825.704767479 ------------[r]--
+# 20160323.170253 : 1458745373.912365333 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=mpd' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--min-same-sha1=2' '--evaluate-sccb=listing' '/' '--use-format=4'
+# retcode:0
+# 20160323.170255 : 1458745375.904241084 ------------[r]--
+# 20160323.170337 : 1458745417.479265376 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160323.170337 : 1458745417.923039919 ------------[r]--
