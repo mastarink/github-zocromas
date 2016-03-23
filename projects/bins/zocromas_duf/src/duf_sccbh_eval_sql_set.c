@@ -58,8 +58,11 @@
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
+#include "duf_sccb_structs.h"
 #include "duf_sccb_row.h"
 
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_sql_set.h"
 /* ###################################################################### */

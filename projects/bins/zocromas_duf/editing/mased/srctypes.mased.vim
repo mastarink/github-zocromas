@@ -25,15 +25,16 @@ tab sfind duf_tmp_types.h
 tab sfind duf_pathinfo_types.h
 
 tab sfind duf_levinfo_types.h
+sfind duf_levinfo_structs.h
 sfind duf_levinfo_dirhandle_types.h
 sfind duf_levinfo_stmt_types.h
 
-" tab sfind duf_maintenance_errors.h
-" tab sfind duf_maintenance_tracen.h
+tab sfind duf_tracen_defs.h
+sfind duf_tracen_defs_preset.h
+" sfind duf_maintenance_errors.h
+" sfind duf_maintenance_tracen.h
 " sfind duf_trace_types.h
 " sfind duf_trace_defs.h
-sfind duf_tracen_defs.h
-sfind duf_tracen_defs_preset.h
 " sfind duf_trace_defs_if.h
 " sfind duf_trace_defs_preset.h
 " sfind duf_trace_defs_base.h
@@ -50,7 +51,9 @@ tab sfind duf_item_types.h
 tab sfind duf_ufilter_types.h
 tab sfind duf_fileinfo_types.h
 tab sfind duf_pdi_types.h
+tab sfind duf_pdi_structs.h
 tab sfind duf_hook_types.h
+tab sfind duf_sccb_structs.h
 tab sfind duf_sccb_types.h
 tab sfind duf_sql_set_types.h
 " tab sfind duf_record_types.h

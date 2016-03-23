@@ -10,6 +10,8 @@
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
 #include "duf_levinfo.h"
 
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_init.h"
 /* ###################################################################### */

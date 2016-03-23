@@ -18,7 +18,8 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_structs.h"
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 

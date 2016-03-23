@@ -22,6 +22,7 @@
 #include "duf_status_ref.h"
 #include "sql_selected_defs.h"
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_attach.h"
 /* ###################################################################### */

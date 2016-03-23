@@ -36,6 +36,8 @@
 #include "duf_pathinfo_ref.h"
 #include "duf_sccb_scanstage.h"
 
+#include "duf_levinfo_structs.h"
+
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
 #include "duf_pathinfo_depth.h"

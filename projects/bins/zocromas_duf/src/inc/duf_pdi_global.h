@@ -1,8 +1,10 @@
 #ifndef MAS_DUF_PDI_GLOBAL_H
 # define MAS_DUF_PDI_GLOBAL_H
 
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
-# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+# include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
+
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 DR( PDI, pdi_init_global, void );
 

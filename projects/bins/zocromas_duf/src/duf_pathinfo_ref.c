@@ -30,6 +30,8 @@
 
 #include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
+#include "duf_levinfo_structs.h"
+
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
 #include "duf_pathinfo_ref.h"

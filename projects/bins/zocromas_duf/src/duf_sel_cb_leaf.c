@@ -43,12 +43,15 @@
 #include "duf_sccbh_shortcuts.h"                                     /* H_PDI etc. */
 #include "duf_sccbh_pstmt.h"
 
+#include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"
+
 #include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ✗ */
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sel_cb_leaf.h"
 /* ###################################################################### */

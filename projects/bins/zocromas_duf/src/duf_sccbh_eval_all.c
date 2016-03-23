@@ -42,13 +42,15 @@
 
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
+#include "duf_sccb_structs.h"
+#include "duf_sccb_scanstage.h"
 #include "duf_sccbh_eval.h"
 #include "duf_sccbh_eval_node.h"
 #include "duf_sccbh_eval_fs.h"
-#include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_all.h"
 /* ###################################################################### */

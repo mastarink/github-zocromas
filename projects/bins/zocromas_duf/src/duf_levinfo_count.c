@@ -41,6 +41,8 @@
 #include "sql_beginning_selected.h"
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_count.h"
 /* ###################################################################### */

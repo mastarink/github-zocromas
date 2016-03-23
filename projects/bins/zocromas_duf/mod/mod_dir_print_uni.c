@@ -18,7 +18,9 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_structs.h"
+
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -176,13 +178,17 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handl
     fi.st.st_gid = ( gid_t ) gid;
     fi.st.st_nlink = ( nlink_t ) nlink;
     fi.st.st_size = ( off_t ) filesize;
+#if 1
+    fi.name = fname;
+#else
     {
-    /* const char *prevs;                                      */
-    /*                                                         */
-    /* prevs = duf_sccbh_prevrow_get_string( sccbh, "fname" ); */
-    /* if ( !prevs || 0 != strcmp( fname, prevs ) )            */
-      fi.name = fname;
+      const char *prevs;
+
+      prevs = duf_sccbh_prevrow_get_string( sccbh, "fname" );
+      if ( !prevs || 0 != strcmp( fname, prevs ) )
+        fi.name = fname;
     }
+#endif
     fi.exifid = exifid;
     fi.exifdt = exifdt;
     fi.camera = camera;
@@ -190,7 +196,7 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handl
     fi.mime = mime;
     fi.mimeid = mimeid;
     fi.md5id = md5id;
-#if 0
+#if 1
     fi.sha1id = sha1id;
 #else
     {

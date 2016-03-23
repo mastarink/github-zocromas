@@ -22,7 +22,8 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_structs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -46,8 +47,11 @@
 /* #include "duf_dbg.h" */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
+
+#include "duf_pdi_structs.h"
+/* #include "duf_levinfo_structs.h" */
 /* ########################################################################################## */
-static int duf_digest_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED );
+static int duf_digest_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 #define ADIGEST_DELTA 0
 
@@ -368,7 +372,7 @@ SR( MOD, make_digestr_uni, duf_depthinfo_t * pdi, unsigned char *pmdr )
 }
 
 static
-SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
+SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char adigestr[MOD_DIGEST_LENGTH + ADIGEST_DELTA];
@@ -417,5 +421,5 @@ SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , du
   /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pdgst[1], pdgst[0], digestid ); */
   }
 /*  DUF_ENDR( r );*/
-  ER( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
+  ER( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -3,7 +3,12 @@
 
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 
-typedef struct
+typedef struct duf_sql_set_s duf_sql_set_t;
+typedef struct duf_sql_set_pair_s duf_sql_set_pair_t;
+typedef struct duf_selector_s duf_selector_t;
+typedef struct duf_fieldset_s duf_fieldset_t;
+
+struct duf_sql_set_s
 {
 /* unsigned use_std_fieldset:1; */
 /* unsigned use_std_selector2:1; */
@@ -30,27 +35,27 @@ typedef struct
   const char *orders[20];
   const char *count_aggregate;
 /* const char *selector_total2; */
-} duf_sql_set_t;
+};
 
-typedef struct duf_sql_set_pair_s
+struct duf_sql_set_pair_s
 {
   unsigned orderid;
   const duf_sql_set_t *active;
   const duf_sql_set_t *second;
-} duf_sql_set_pair_t;
+};
 
-typedef struct
+struct duf_selector_s
 {
   duf_node_type_t type;
   const char *name;
   const char *selector2;
-} duf_selector_t;
+};
 
-typedef struct
+struct duf_fieldset_s
 {
   duf_node_type_t type;
   const char *name;
   const char *set;
-} duf_fieldset_t;
+};
 
 #endif

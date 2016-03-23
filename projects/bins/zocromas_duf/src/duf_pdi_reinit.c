@@ -36,6 +36,7 @@
 #include "duf_pdi_ref.h"
 /* #include "duf_pdi_credel.h" */
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_reinit.h"
 /* ###################################################################### */
@@ -111,8 +112,7 @@ SR( PDI, pdi_reinit_anypath, duf_depthinfo_t * pdi, const char *cpath, const duf
       MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, pdi->sql_beginning_done );
 
       CR( pdi_reinit, pdi, real_path, pu ? pu : /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter(  ), sql_set, caninsert, frecursive, fallow_dirs,
-          flinear,
-          duf_pdi_opendir( pdi ) );
+          flinear, duf_pdi_opendir( pdi ) );
       MAST_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", /* DUF_UG_FLAG( recursive ) */ duf_get_config_flag_puz_recursive(  ),
                   duf_pdi_recursive( pdi ), cpath, real_path );
       MAST_TRACE( pdi, 0, "@@@reinit_a real_path:%s : %llu", real_path, pdi->pup ? pdi->pup->md5id.min : 0 );

@@ -32,6 +32,7 @@
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
 #include "duf_sccb.h"
+#include "duf_sccb_structs.h"
 #include "duf_sccb_eval_std.h"
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */

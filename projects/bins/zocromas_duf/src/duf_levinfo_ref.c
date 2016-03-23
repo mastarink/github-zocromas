@@ -2,10 +2,10 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 
 #include "duf_levinfo_ref_def.h"
@@ -13,8 +13,11 @@
 
 #include "duf_pathinfo_ref.h"
 
+/* #include "duf_levinfo_structs.h" */
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 /* ###################################################################### */
 
 /************************************************************************/

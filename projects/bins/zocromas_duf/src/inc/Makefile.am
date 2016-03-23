@@ -73,6 +73,7 @@ noinst_HEADERS=motest_config.h \
 	duf_levinfo_stat.h \
 	duf_levinfo_stmt_types.h \
 	duf_levinfo_types.h \
+	duf_levinfo_structs.h \
 	duf_levinfo_updown.h \
 	duf_li_credel.h \
 	duf_li.h \
@@ -127,6 +128,7 @@ noinst_HEADERS=motest_config.h \
 	duf_pdi_sccb_eval.h \
 	duf_pdi_stmt.h \
 	duf_pdi_types.h \
+	duf_pdi_structs.h \
 	duf_print.h \
 	duf_output_defs.h \
 	duf_printn_defs.h \
@@ -148,6 +150,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sccbh_shortcuts.h \
 	duf_sccb_scanstage.h \
 	duf_sccb_types.h \
+	duf_sccb_structs.h \
 	duf_se.h \
 	duf_sel_cb_leaf.h \
 	duf_sel_cb_node.h \

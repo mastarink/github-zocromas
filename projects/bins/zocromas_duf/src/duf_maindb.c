@@ -56,6 +56,7 @@
 
 /* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
 /* #include "duf_optimpl_enum.h"                                        (* duf_option_code_t ✗ *) */
+#include "duf_pdi_structs.h"
 
 /* ###################################################################### */
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */

@@ -62,8 +62,11 @@
 #include "duf_ufilter_bind.h"
 
 #include "duf_sccb_scanstage.h"
+#include "duf_sccb_structs.h"
 
 #include "duf_sccbh_shortcuts.h"
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccb_handle.h"
 /* ###################################################################### */

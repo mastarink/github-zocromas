@@ -21,6 +21,8 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sccb.h"
+#include "duf_sccb_structs.h"
+
 #include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq() ✗ */
 
 #include "duf_sccbh_shortcuts.h"

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_PDI_REF_H
 # define MAS_DUF_PDI_REF_H
 
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 duf_depthinfo_t *duf_pdi_root( duf_depthinfo_t * pdi );
 
@@ -14,5 +14,7 @@ int duf_pdi_opendir( const duf_depthinfo_t * pdi ) __attribute__ ( ( warn_unused
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
 
 void duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes );
+
+const char *duf_pdi_name( const duf_depthinfo_t * pdi );
 
 #endif

@@ -33,9 +33,11 @@
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccbh_eval.h"
+#include "duf_sccb_structs.h"
 
 /* #include "duf_maindb.h"                                              (* duf_main_db; duf_main_db_open; duf_main_db_close ✗ *) */
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */

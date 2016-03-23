@@ -2,6 +2,7 @@
 # define MAS_DUF_LI_H
 
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
+# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ♠ */
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ♠ */
 

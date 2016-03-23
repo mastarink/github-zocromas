@@ -58,9 +58,11 @@
 #include "std_mod_sets.h"
 
 #include "duf_sccb_begfin.h"
+#include "duf_sccb_structs.h"
+#include "duf_sccb_scanstage.h"
+
 #include "duf_ufilter_bind.h"
 
-#include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */

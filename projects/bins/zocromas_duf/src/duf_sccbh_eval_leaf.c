@@ -27,6 +27,7 @@
 #include "duf_levinfo_stat.h"
 
 #include "duf_sccb.h"
+#include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"
 
 #include "duf_sccbh_shortcuts.h"
@@ -76,7 +77,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
 #endif
   for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
   {
-    duf_scan_hook2_file_func_t scanner = NULL;
+    duf_scanner_t scanner = NULL;
 
     scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
     {
@@ -130,7 +131,7 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
 #endif
   for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
   {
-    duf_scan_hook2_file_func_t scanner = NULL;
+    duf_scanner_t scanner = NULL;
 
     scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
     {

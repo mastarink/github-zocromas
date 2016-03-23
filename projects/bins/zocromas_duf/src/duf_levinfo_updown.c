@@ -38,6 +38,9 @@
 /* #include "duf_pathinfo_ref.h" */
 
 #include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name, temporarily */
+
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_updown.h"
 /* ###################################################################### */

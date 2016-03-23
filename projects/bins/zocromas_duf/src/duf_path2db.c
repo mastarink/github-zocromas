@@ -46,6 +46,8 @@
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
 #include "duf_path2db.h"                                             /* duf_real_path2db; etc. ✗ */
 /* ###################################################################### */

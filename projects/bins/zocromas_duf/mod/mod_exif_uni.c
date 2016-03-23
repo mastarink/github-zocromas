@@ -24,7 +24,8 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /* #include "duf_dodefs.h" (* DOR ♠ *) */
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_structs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -48,6 +49,8 @@
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
+#include "duf_pdi_structs.h"
+/* #include "duf_levinfo_structs.h" */
 /* ########################################################################################## */
 #include "mod_exif.h"
 /* ########################################################################################## */
@@ -556,7 +559,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static
-SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
+SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -892,5 +895,5 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_h
 
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
+  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

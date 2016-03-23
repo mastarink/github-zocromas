@@ -1,8 +1,10 @@
 #ifndef MAS_DUF_PATHINFO_REF_H
 # define MAS_DUF_PATHINFO_REF_H
 
-# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
-# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ♠ */
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ✗ */
+# include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
+# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 
 duf_levinfo_t *duf_pi_ptr_d( const duf_pathinfo_t * pi, int d );
 duf_levinfo_t *duf_pi_ptr( const duf_pathinfo_t * pi );

@@ -21,23 +21,26 @@
 
 /* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
 
-#include "duf_pdi_ref.h"
+/* #include "duf_pdi_ref.h" */
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_depth */
 
-#include "duf_sccb_def.h"
-#include "duf_sccb.h"
+/* #include "duf_sccb_def.h" */
+/* #include "duf_sccb.h" */
+#include "duf_sccb_structs.h"
 #include "duf_sccbh_eval_all.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccbh_pstmt.h"
 
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sel_cb_node.h"
 /* ###################################################################### */
@@ -112,7 +115,7 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str
 
 /* data from db at pstmt */
 
-  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( H_PDI ) );
+  MAST_TRACE( scan, 10, "   %d: =====> scan node2", duf_pdi_depth( H_PDI ) );
   MAST_TRACE( explain, 40, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 

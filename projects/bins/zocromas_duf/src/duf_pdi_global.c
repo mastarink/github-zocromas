@@ -31,6 +31,8 @@
 #include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
 #include "duf_pdi_ref.h"
 #include "duf_pdi_reinit.h"
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 /* ###################################################################### */

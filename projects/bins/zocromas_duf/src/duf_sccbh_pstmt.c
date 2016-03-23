@@ -24,6 +24,7 @@
 #include "duf_levinfo_updown.h"
 
 #include "duf_sccbh_shortcuts.h"
+#include "duf_sccb_structs.h"
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */

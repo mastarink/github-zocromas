@@ -42,7 +42,11 @@
 #include "duf_dirent.h"
 
 #include "duf_sccb_scanstage.h"
+#include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"
+
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_fs.h"
 /* ###################################################################### */

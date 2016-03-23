@@ -23,6 +23,8 @@
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
 
+#include "duf_sccb_structs.h"
+
 /* Working with sccb structure */
 /* ###################################################################### */
 #include "duf_sccb.h"

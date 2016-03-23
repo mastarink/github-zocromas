@@ -26,6 +26,7 @@
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
+#include "duf_pdi_ref.h"
 
 /* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ♠ *) */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
@@ -36,6 +37,9 @@
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
+
+/* #include "duf_pdi_structs.h" */
+#include "duf_levinfo_structs.h"
 
 /* ###################################################################### */
 #include "duf_li.h"
@@ -228,11 +232,11 @@ SR( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, d
 
   {
 #if 0
-    sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
+    sqlv = duf_selector2sql( &def_node_set, duf_pdi_name( pditemp ), &r );
 #elif 0
-    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0, QPERRIND );
+    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , duf_pdi_name( pditemp ), 0, QPERRIND );
 #else
-    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0 );
+    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , duf_pdi_name( pditemp ), 0 );
 #endif
     if ( sqlv )
     {
@@ -302,11 +306,11 @@ SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid,
 
   {
 #if 0
-    sqlv = duf_selector2sql( &def_node_set, pditemp->pdi_name, &r );
+    sqlv = duf_selector2sql( &def_node_set, duf_pdi_name( pditemp ), &r );
 #elif 0
-    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0, QPERRIND );
+    sqlv = duf_selector2sql_new( &def_node_set, 0 /* orderid */ , duf_pdi_name( pditemp ), 0, QPERRIND );
 #else
-    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , pditemp->pdi_name, 0 );
+    sqlv = CRP( selector2sql_new, &def_node_set, 0 /* orderid */ , duf_pdi_name( pditemp ), 0 );
 #endif
     if ( sqlv )
     {

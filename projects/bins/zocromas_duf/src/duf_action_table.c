@@ -11,8 +11,10 @@
 
 /* #include "duf_sccb.h" */
 
+#include "duf_sccb_structs.h"
+
 /* ###################################################################### */
-#include "duf_action_table.h"
+#include "duf_action_table.h"                                        /* duf_actions_table_std ✗ */
 /* ###################################################################### */
 
 static duf_action_table_t actions_table[] = {

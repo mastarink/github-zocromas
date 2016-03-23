@@ -28,6 +28,8 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
+#include "duf_pdi_structs.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_openclose.h"
 /* ###################################################################### */

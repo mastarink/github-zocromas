@@ -13,6 +13,7 @@
 #include "duf_pathinfo_depth.h"
 /* #include "duf_pathinfo_credel.h" */
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_levinfo.h"
 /* ###################################################################### */

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <errno.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */

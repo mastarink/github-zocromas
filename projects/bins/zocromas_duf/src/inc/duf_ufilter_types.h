@@ -9,39 +9,37 @@
 /* #  include "duf_flags_types.h" */
 # include "duf_config_puz_types.h"
 
-/* typedef struct                                  */
-/* {                                               */
-/*   int depth;                    (* signed !! *) */
-/*   const struct                                  */
-/*   {                                             */
-/*     int *pseq;                                  */
-/*     int dofiles;                                */
-/*   } c;                                          */
-/*   const duf_ufilter_t u;                        */
-/* } duf_filter_t;                                 */
+typedef struct duf_ufilter_s duf_ufilter_t;
+typedef struct duf_same_as_s duf_same_as_t;
+typedef struct duf_yfilter_s duf_yfilter_t;
+typedef struct duf_filter_globx_s duf_filter_globx_t;
+typedef struct duf_filepath_s duf_filepath_t;
+typedef struct duf_ufilter_mime_s duf_ufilter_mime_t;
+typedef struct duf_ufilter_exif_s duf_ufilter_exif_t;
+typedef struct duf_same_limits_s duf_same_limits_t;
 
-typedef struct globx
+struct duf_filter_globx_s
 {
   mas_argvc_t include_fs_files;
   mas_argvc_t exclude_fs_files;
-} duf_filter_globx_t;
+};
 
-typedef struct
+struct duf_filepath_s
 {
   unsigned long long dirid;
   char *name;
-} duf_filepath_t;
+};
 
-typedef struct
+struct duf_ufilter_mime_s
 {
   char *type;
-} duf_ufilter_mime_t;
-typedef struct
+};
+struct duf_ufilter_exif_s
 {
   char *camera;
-} duf_ufilter_exif_t;
+};
 
-typedef struct
+struct duf_same_limits_s
 {
 # if 0
   mas_limitsll_t md5;
@@ -55,14 +53,14 @@ typedef struct
 #  include "duf_optimpl_enum_filter_same_minmax.def"
 #  undef   ENUM_WRAPMM
 # endif
-} duf_same_limits_t;
+};
 
-typedef struct
+struct duf_same_as_s
 {
   char *md5;
   char *sha1;
   char *exif;
-} duf_same_as_t;
+};
 
 struct duf_ufilter_s
 {
@@ -116,12 +114,11 @@ struct duf_ufilter_s
   unsigned long testnum;
 /* unsigned long long filter_id; */
 };
-typedef struct duf_ufilter_s duf_ufilter_t;
 
-typedef struct
+struct duf_yfilter_s
 {
   unsigned long long topdirid;
-} duf_yfilter_t;
+};
 
 #endif
 

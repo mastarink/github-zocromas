@@ -1,7 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
 
@@ -11,13 +11,15 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
-#include "duf_config.h"                                              /* duf_get_config ♠ */
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pathinfo_ref.h"
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"
+
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_depth.h"
 /* ###################################################################### */

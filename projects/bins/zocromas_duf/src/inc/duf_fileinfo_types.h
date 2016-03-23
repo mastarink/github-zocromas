@@ -1,12 +1,13 @@
 #ifndef MAS_DUF_FILEINFO_TYPES_H
-#  define MAS_DUF_FILEINFO_TYPES_H
+# define MAS_DUF_FILEINFO_TYPES_H
 
-typedef struct
+typedef struct duf_fileinfo_s duf_fileinfo_t;
+struct duf_fileinfo_s
 {
   const char *name;
   struct stat st;
   unsigned long long dirid;
-  /* unsigned long long truedirid; */
+/* unsigned long long truedirid; */
   unsigned long long nsame;
   unsigned long long nsame_md5;
   unsigned long long nsame_sha1;
@@ -30,7 +31,7 @@ typedef struct
   unsigned long long crc32sum;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
-} duf_fileinfo_t;
+};
 
 #endif
 

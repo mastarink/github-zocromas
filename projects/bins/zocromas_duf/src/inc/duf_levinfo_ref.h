@@ -1,9 +1,12 @@
 #ifndef MAS_DUF_LEVINFO_REF_H
 # define MAS_DUF_LEVINFO_REF_H
 
-# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
-# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ♠ */
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
+# include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
+
+#include "duf_defs.h"
 
 duf_levinfo_t *duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d );
 duf_levinfo_t *duf_levinfo_ptr( const duf_depthinfo_t * pdi );

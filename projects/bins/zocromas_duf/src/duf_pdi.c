@@ -2,14 +2,14 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
-#include "duf_errorn_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 
 /* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
 /* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
@@ -19,36 +19,37 @@
 
 /* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
 
-#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ♠ */
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ♠ */
-#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ♠ */
+#include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 #include "duf_context.h"
-#include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ♠ */
+#include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ✗ */
 
-#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ♠ */
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_ref.h"
 /* #include "duf_pdi_pi_ref.h" */
-#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ♠ */
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
-#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ♠ */
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
+#include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 
 #include "duf_ufilter_ref.h"
 
 /* #include "sql_tables_defs.h" */
 
-#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ♠ */
+#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
 
-#include "duf_path2db.h"                                             /* duf_real_path2db; etc. ♠ */
+#include "duf_path2db.h"                                             /* duf_real_path2db; etc. ✗ */
 
 #include "duf_pdi_attach.h"
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
-#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ♠ */
+#include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
 /* ###################################################################### */
 
 /* 20150904.085609 */

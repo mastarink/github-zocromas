@@ -95,7 +95,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * 
   {
     int changes = 0;
 
-    if ( !duf_get_config_flag_disable_insert() )
+    if ( !duf_get_config_flag_disable_insert(  ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILEDATAS_FULL /* */
               " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */

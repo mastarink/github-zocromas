@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_LEVINFO_STMT_TYPES_H
 # define MAS_DUF_LEVINFO_STMT_TYPES_H
 
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
+
 typedef enum
 {
   DUF_SQL_STMD_ID_select_filedata = 0x10000000,

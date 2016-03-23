@@ -14,6 +14,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
+#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_ref.h"
 /* ###################################################################### */
@@ -61,6 +62,12 @@ duf_pdi_opendir( const duf_depthinfo_t * pdi )
   return pdi && pdi->opendir ? 1 : 0;
 }
 
+const char *
+duf_pdi_name( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->pdi_name : NULL;
+}
+
 int
 duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 {
@@ -69,7 +76,7 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   assert( pdi );
   rd = pdi->opendir;
   pdi->opendir = od;
-  /* QT( "@SET OPENDIR: %d", od ); */
+/* QT( "@SET OPENDIR: %d", od ); */
   MAST_TRACE( fs, 3, "set opendir:%d", od );
 
   return rd;
