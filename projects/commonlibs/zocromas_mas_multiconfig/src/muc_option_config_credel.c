@@ -22,8 +22,8 @@
 #include "muc_option_config_credel.h"
 /* ###################################################################### */
 
-static muc_option_gen_code_t
-muc_cli_option_count_maxcodeval( muc_config_cli_t * cli MAS_UNUSED, muc_longval_extended_vtable_t * *xvtables )
+muc_option_gen_code_t
+muc_cli_option_count_maxcodeval( const muc_config_cli_t * cli MAS_UNUSED, muc_longval_extended_vtable_t * *xvtables )
 {
   const muc_longval_extended_vtable_t *xtable;
   muc_option_gen_code_t maxcodeval = 0;
@@ -107,6 +107,7 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
                       const mas_config_trace_t * ptracecfg )
 {
   assert( cli );
+  if ( !cli->inited )
   {
     memset( cli, 0, sizeof( muc_config_cli_t ) );
     cli->ptracecfg = ptracecfg;
@@ -116,16 +117,49 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
   /* const muc_longval_extended_vtable_t * const *xvtables
    * cli->xvtable_multi = xvtables;
    * */
-    cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_list ); /* allocates */
-    cli->shorts = muc_cli_option_shorts_create( cli, cli->xvtable_multi );
-    cli->maxcodeval = muc_cli_option_count_maxcodeval( cli, cli->xvtable_multi );
+    assert( !cli->xvtable_multi );
+    cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_list, 0 /* numtabs */ , cli->xvtable_multi ); /* allocates */
+  /* cli->maxcodeval = muc_cli_option_count_maxcodeval( cli, cli->xvtable_multi ); */
+
     cli->varfunc = varfunc;
-
-    cli->longopts_table = muc_options_create_longopts_table( cli->xvtable_multi );
-    assert( cli->longopts_table );
-
     cli->config_dir = mas_strdup( config_dir );
     cli->cmds_dir = mas_strdup( commands_dir );
+    cli->inited = 1;
+  }
+/*
+  TODO
+    config_dir (..._options_file.c)
+    cmds_dir (..._options_file.c)
+    opt.output.history_filename (..._options_interactive.c) =>  cli.history_filename
+*/
+}
+
+void
+muc_cli_options_postinit_reset( muc_config_cli_t * cli )
+{
+  assert( cli );
+  if ( cli->postinited )
+  {
+    if ( cli->shorts )
+      mas_free( cli->shorts );
+    if ( cli->longopts_table )
+      muc_options_delete_longopts_table( cli->longopts_table );
+    cli->postinited = 0;
+  }
+}
+
+void
+muc_cli_options_postinit( muc_config_cli_t * cli )
+{
+  assert( cli );
+  if ( !cli->postinited )
+  {
+    cli->shorts = muc_cli_option_shorts_create( cli, cli->xvtable_multi );
+    cli->longopts_table = muc_options_create_longopts_table( cli->xvtable_multi );
+
+    assert( cli->longopts_table );
+    cli->postinited = 1;
+  /* assert( 0 ); */
   }
 /*
   TODO

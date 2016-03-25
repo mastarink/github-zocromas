@@ -302,17 +302,59 @@ muc_cli_options_varfunc( const muc_config_cli_t * cli )
   return cli ? cli->varfunc : NULL;
 }
 
+void
+muc_cli_options_xtable_add_one( muc_config_cli_t * cli, const muc_longval_extended_table_t * tab )
+{
+  muc_cli_options_xtable_list_add( cli, &tab, 1 );
+}
+
+void
+muc_cli_options_xtable_list_add( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, int numtabs )
+{
+  cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_multi, numtabs, cli->xvtable_multi ); /* allocates */
+  muc_cli_options_postinit_reset( cli );
+}
+
 /* 20160220.190632 */
 muc_longval_extended_vtable_t **
-muc_cli_options_xtable_list2xvtable( const muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi )
+muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, unsigned numtabs,
+                                     muc_longval_extended_vtable_t ** vtable_multi_basic )
 {
-  unsigned numtabs = 0;
-  muc_option_gen_code_t maxcodeval = 0;
+  unsigned numbtabs = 0;
+
+/* unsigned numtabs = 0; */
+
+/* muc_option_gen_code_t maxcodeval = 0; */
   muc_longval_extended_vtable_t **vtable_multi = NULL;
 
-  for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
+  if ( !numtabs )
+    for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
+
   assert( vtable_multi == NULL );
+
+#if 0
   vtable_multi = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+#else
+  if ( vtable_multi_basic )
+  {
+    for ( numbtabs = 0; vtable_multi_basic[numbtabs] && vtable_multi_basic[numbtabs]->xlist; numbtabs++ );
+# if 0
+    vtable_multi_basic = mas_realloc( vtable_multi_basic, sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+# else
+    muc_longval_extended_vtable_t **vtable_multi_basic_old = vtable_multi_basic;
+
+    vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) );
+    memcpy( vtable_multi_basic, vtable_multi_basic_old, sizeof( muc_longval_extended_vtable_t ** ) * numbtabs );
+    mas_free( vtable_multi_basic_old );
+# endif
+  }
+  else
+  {
+    vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+  }
+  vtable_multi = vtable_multi_basic + numbtabs;
+#endif
+
   memset( vtable_multi, 0, sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
   {
     for ( size_t itab = 0; itab < numtabs; itab++ )
@@ -324,13 +366,13 @@ muc_cli_options_xtable_list2xvtable( const muc_config_cli_t * cli, const muc_lon
       {
         size_t xn = x - xlist;
 
-        if ( xlist[xn].o.val && xlist[xn].o.val > maxcodeval )
-          maxcodeval = xlist[xn].o.val;
+        if ( xlist[xn].o.val && xlist[xn].o.val > cli->maxcodeval )
+          cli->maxcodeval = xlist[xn].o.val;
       }
     }
-    maxcodeval += 100;
-    maxcodeval /= 100;
-    maxcodeval *= 100;
+    cli->maxcodeval += 100;
+    cli->maxcodeval /= 100;
+    cli->maxcodeval *= 100;
   }
   for ( size_t itab = 0; itab < numtabs; itab++ )
   {
@@ -360,8 +402,8 @@ muc_cli_options_xtable_list2xvtable( const muc_config_cli_t * cli, const muc_lon
       {
         if ( !vtable->xlist[xn].o.val )
         {
-          muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, maxcodeval );
-          vtable->xlist[xn].o.val = maxcodeval++;
+          muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval );
+          vtable->xlist[xn].o.val = ++cli->maxcodeval;
         }
         else
         {
@@ -371,7 +413,7 @@ muc_cli_options_xtable_list2xvtable( const muc_config_cli_t * cli, const muc_lon
     }
     vtable_multi[itab] = vtable;
   }
-  return vtable_multi;
+  return vtable_multi_basic;
 }
 
 const mas_config_trace_t *

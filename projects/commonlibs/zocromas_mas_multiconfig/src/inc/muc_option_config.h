@@ -5,8 +5,10 @@
 # include "muc_option_types.h"                                       /* muc_option_t; muc_longval_extended_vtable_t */
 # include "muc_config_cli_types.h"                                   /* muc_config_cli_t */
 
-muc_longval_extended_vtable_t **muc_cli_options_xtable_list2xvtable( const muc_config_cli_t * cli,
-                                                                     const muc_longval_extended_table_t * const *xtable_multi );
+void muc_cli_options_xtable_add_one( muc_config_cli_t * cli, const muc_longval_extended_table_t * tab );
+void muc_cli_options_xtable_list_add( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, int numtabs );
+muc_longval_extended_vtable_t **muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi,
+                                                                     unsigned numtabs, muc_longval_extended_vtable_t ** vtable_multi );
 
 muc_option_gen_code_t muc_cli_options_get_maxcodeval( const muc_config_cli_t * cli );
 const char *muc_cli_options_get_shorts( const muc_config_cli_t * cli );

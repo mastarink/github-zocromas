@@ -9,5 +9,6 @@
 
 /* const duf_longval_extended_vtable_t *const *duf_extended_vtable_multi( void ); */
 const muc_longval_extended_table_t *const *duf_xtable_list( void );
+const muc_longval_extended_table_t *const *duf_xtable_list2( void );
 
 #endif

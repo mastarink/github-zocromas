@@ -53,7 +53,6 @@ static const muc_longval_extended_table_t *const __lo_extended_table_multi[] = {
   &optable_trace,
 #endif
   &optable_filter,
-  &optable_test,
   &optable_debug,
   &optable_help,
   &optable_format,
@@ -66,4 +65,15 @@ const muc_longval_extended_table_t *const *
 duf_xtable_list( void )
 {
   return __lo_extended_table_multi;
+}
+
+static const muc_longval_extended_table_t *const __lo_extended_table_multi2[] = {
+  &optable_test,
+  NULL
+};
+
+const muc_longval_extended_table_t *const *
+duf_xtable_list2( void )
+{
+  return __lo_extended_table_multi2;
 }

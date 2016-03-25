@@ -56,12 +56,29 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 /* duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_options] = 71; */
   duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] += 2;
   QT( "@=== %d:%d", DUF_TRACE_LEVEL_temp, duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] );
-  /* duf_config4trace = duf_config; */
-  /* assert( duf_config4trace ); */
+/* duf_config4trace = duf_config; */
+/* assert( duf_config4trace ); */
 #endif
 
   duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, duf_config->conf.config_dir,
                                              duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
+#if 0
+  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list2(  ), 0 );
+#elif 0
+  {
+    extern const muc_longval_extended_table_t optable_test;
+    const muc_longval_extended_table_t *t = &optable_test;
+
+    muc_cli_options_xtable_list_add( duf_config->pcli, &t, 1 );
+  }
+#else
+  {
+    extern const muc_longval_extended_table_t optable_test;
+
+    muc_cli_options_xtable_add_one( duf_config->pcli, &optable_test );
+  }
+#endif
+/* muc_cli_options_postinit( duf_config->pcli ); */
 
   duf_config->db.main.name_x.varfunc = duf_config->db.tempo.name_x.varfunc = duf_config->db.adm.name_x.varfunc = duf_config->db.dir_x.varfunc =
           duf_config->db.subdir_x.varfunc = duf_string_options_at_string_xsdb_getvar;
@@ -84,9 +101,9 @@ duf_config_delete( void )
 /* duf_cli_options_shut_global(  ); */
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
-  /* duf_config4trace = */
+/* duf_config4trace = */
 #endif
-          duf_config = NULL;
+  duf_config = NULL;
 
   assert( !duf_config );
 /* DUF_END(  ); */

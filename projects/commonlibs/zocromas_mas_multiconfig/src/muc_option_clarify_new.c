@@ -25,6 +25,7 @@
 #include "muc_option_source.h"                                       /* muc_optsource_name ♠ */
 
 #include "muc_option_clarify.h"
+#include "muc_option_config_credel.h"
 
 #include "muc_config_cli_structs.h"
 /* ###################################################################### */
@@ -98,6 +99,7 @@ muc_SR( OPTIONS, soption_xclarify_new_register, muc_config_cli_t * cli, const mu
   size_t alloc_step = 10;
   size_t index = 0;
 
+  muc_cli_options_postinit( cli );
 /* muc_QT( "@@i name_offset:%lu - '%s' (%s) noo:%c", pod->name_offset, pod->name, xtended->o.name, pod->noo ? '+' : '-' ); */
 /* muc_QT( "$$$$ SOFT:%d; n:%s; a:%s; s:%s -- o.n:%s (has_arg:%d) from %s", soft, pod->name, pod->optarg, pod->string_copy, xtended->o.name, pod->has_arg, */
 /*    muc_optsource_name(cli, pod->source ) );                                                                                                       */
@@ -141,6 +143,7 @@ muc_SR( OPTIONS, soption_xclarify_new_register, muc_config_cli_t * cli, const mu
 
 muc_SR( OPTIONS, soption_xclarify_new_at_xarr_od, muc_config_cli_t * cli, const muc_longval_extended_t * xarr, muc_option_data_t * pod )
 {
+  muc_cli_options_postinit( cli );
   for ( const muc_longval_extended_t * xtended = xarr; xtended->o.name; xtended++ )
   {
     size_t len_ask, len_tb;
@@ -187,13 +190,13 @@ muc_SR( OPTIONS, soption_xclarify_new_at_xarr_od, muc_config_cli_t * cli, const 
     {
       if ( 0 == strcmp( match, xtended->o.name ) )
       {
-      /* muc_QT( "@@1 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
+        /* muc_QT( "@@1 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb == len_ask );
         muc_CR( soption_xclarify_new_register, cli, xtended, 0 /* soft */ , pod );
       }
       else if ( 0 == strncmp( match, xtended->o.name, len_ask ) )
       {
-      /* muc_QT( "@@2 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
+        /* muc_QT( "@@2 name_offset:%lu - '%s' (%s|%s) noo:%c", pod->name_offset, pod->name, match, xtended->o.name, pod->noo ? '+' : '-' ); */
         assert( len_tb > len_ask );
         muc_CR( soption_xclarify_new_register, cli, xtended, len_tb - len_ask /* soft */ , pod );
       }
@@ -207,6 +210,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_xarr_od, muc_config_cli_t * cli, const 
 
 muc_SR( OPTIONS, soption_xclarify_new_at_xtable_od, muc_config_cli_t * cli, const muc_longval_extended_vtable_t * xvtable, muc_option_data_t * pod )
 {
+  muc_cli_options_postinit( cli );
   pod->xvtable = xvtable;
   muc_CR( soption_xclarify_new_at_xarr_od, cli, xvtable->xlist, pod );
 
@@ -218,12 +222,13 @@ static
 muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_longval_extended_vtable_t ** xvtables, muc_option_data_t * pod )
 {
 /* int doindex = -1; */
-
+  muc_cli_options_postinit( cli );
   pod->doindex = -1;
-  for ( ; *xvtables; xvtables++ )
+  for ( int cnt = 0; *xvtables; cnt++, xvtables++ )
   {
     const muc_longval_extended_vtable_t *xvtable = *xvtables;
 
+    /* muc_QT( "@T %d %s %s", cnt, pod->name, xvtable->name ); */
     muc_CR( soption_xclarify_new_at_xtable_od, cli, xvtable, pod );
   /* muc_QT( "@**%ld : %ld", pod->xfound.count_hard, pod->xfound.count_soft ); */
 /* if not found : clear error */
@@ -272,7 +277,8 @@ muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_
       fprintf( stderr, "_______NOT FOUND_______ %s {%s:%s}\n", pod->name, muc_optstage_name( cli, pod->stage ),
                muc_optsource_name( cli, pod->source ) );
 #endif
-      muc_QT( "@ERR %s:%s", muc_optstage_name( cli, pod->stage ), muc_optsource_name( cli, pod->source ) );
+      muc_QT( "@ERR %s:%s %lu:%lu", muc_optstage_name( cli, pod->stage ), muc_optsource_name( cli, pod->source ), pod->xfound.count_hard,
+              pod->xfound.count_soft );
       if ( pod->stage != MUC_OPTION_STAGE_BOOT )
         SERRM( OPTION_NEW_NOT_FOUND, "'--%s' '--%s' (from %s)", pod->string_copy, pod->name, muc_optsource_name( cli, pod->source ) );
     /* assert(0); */
@@ -330,6 +336,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_multix_od, muc_config_cli_t * cli, muc_
 static
 muc_SR( OPTIONS, soption_xclarify_new_at_stdx_od, muc_config_cli_t * cli, muc_option_data_t * pod )
 {
+  muc_cli_options_postinit( cli );
   muc_CR( soption_xclarify_new_at_multix_od, cli, muc_cli_options_xvtable_multi( cli ), pod );
 
   muc_ER( OPTIONS, soption_xclarify_new_at_stdx_od, muc_config_cli_t * cli, muc_option_data_t * pod );
@@ -378,6 +385,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx, muc_config_cli_t * cli, const cha
   int pod_allocated = 0;
   const muc_option_data_t *bootpod = NULL;
 
+  muc_cli_options_postinit( cli );
   if ( paod )
   {
     if ( !paod->size )
@@ -518,6 +526,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx_default_with_pod, muc_config_cli_t
         muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_data_t * pod,
         muc_option_adata_t * paod )
 {
+  muc_cli_options_postinit( cli );
 /* muc_QT( "@last_stage: %s => %s (%s) %lu [%s:%s:%s]", muc_optstage_name(cli, paod->last_stage ), muc_optstage_name(cli, istage ), muc_optsource_name(cli, source ), */
 /*    paod->count, string, name, arg );                                                                                                              */
   muc_CR( soption_xclarify_new_at_stdx, cli, string, name, arg, clarifier ? clarifier : muc_xoption_clarify, value_separator, istage, source, pod,
@@ -532,6 +541,7 @@ muc_SR( OPTIONS, soption_xclarify_new_at_stdx_default_with_pod, muc_config_cli_t
 muc_SR( OPTIONS, soption_xclarify_snac_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
         muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
+  muc_cli_options_postinit( cli );
   muc_CR( soption_xclarify_new_at_stdx_default_with_pod, cli, string, name, arg, clarifier, value_separator, istage, source, NULL /* pod */ , paod );
   muc_ER( OPTIONS, soption_xclarify_snac_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
           muc_xclarifier_t clarifier, char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
@@ -540,6 +550,7 @@ muc_SR( OPTIONS, soption_xclarify_snac_new_at_stdx_default, muc_config_cli_t * c
 muc_SR( OPTIONS, soption_xclarify_sna_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
         char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
+  muc_cli_options_postinit( cli );
   muc_CR( soption_xclarify_snac_new_at_stdx_default, cli, string, name, arg, ( muc_xclarifier_t ) NULL, value_separator, istage, source, paod );
   muc_ER( OPTIONS, soption_xclarify_sna_new_at_stdx_default, muc_config_cli_t * cli, const char *string, const char *name, const char *arg,
           char value_separator, muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
@@ -548,6 +559,7 @@ muc_SR( OPTIONS, soption_xclarify_sna_new_at_stdx_default, muc_config_cli_t * cl
 muc_SR( OPTIONS, soption_xclarify_na_new_at_stdx_default, muc_config_cli_t * cli, const char *name, const char *arg, char value_separator,
         muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod )
 {
+  muc_cli_options_postinit( cli );
   muc_CR( soption_xclarify_sna_new_at_stdx_default, cli, ( const char * ) NULL /* string */ , name, arg, value_separator, istage, source, paod );
   muc_ER( OPTIONS, soption_xclarify_na_new_at_stdx_default, muc_config_cli_t * cli, const char *name, const char *arg, char value_separator,
           muc_option_stage_t istage, muc_option_source_t source, muc_option_adata_t * paod );
@@ -556,6 +568,7 @@ muc_SR( OPTIONS, soption_xclarify_na_new_at_stdx_default, muc_config_cli_t * cli
 muc_SR( OPTIONS, soption_xclarify_s_new_at_stdx_default, muc_config_cli_t * cli, const char *string, char value_separator, muc_option_stage_t istage,
         muc_option_source_t source, muc_option_adata_t * paod )
 {
+  muc_cli_options_postinit( cli );
   muc_CR( soption_xclarify_sna_new_at_stdx_default, cli, string, ( const char * ) NULL /* name */ , ( const char * ) NULL /* arg */ , value_separator,
           istage, source, paod );
   muc_ER( OPTIONS, soption_xclarify_s_new_at_stdx_default, muc_config_cli_t * cli, const char *string, char value_separator,
@@ -567,6 +580,7 @@ muc_SR( OPTIONS, soption_xclarify_new_booted_source, muc_config_cli_t * cli, muc
 {
   size_t cntpod;
 
+  muc_cli_options_postinit( cli );
   cntpod = muc_pod_source_count( paod, MUC_OPTION_STAGE_BOOT, source );
   MAST_TRACE( optsource, 0, "@@@@@@@source_count: %lu %s %s", cntpod, muc_optstage_name( cli, istage ), muc_optsource_name( cli, source ) );
 
