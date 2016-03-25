@@ -8,6 +8,7 @@
 #include <mastar/wrap/mas_std_def.h>
 /* #include <mastar/trace/mas_trace.h> */
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_extended.h"                                     /* muc_longindex_extended_count etc. ♠ */
 /* ###################################################################### */

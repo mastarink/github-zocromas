@@ -1,6 +1,10 @@
 #ifndef MAS_DUF_PATHINFO_REF_H
 # define MAS_DUF_PATHINFO_REF_H
 
+/* # include <sys/types.h> */
+# include <sys/stat.h>
+/* # include <unistd.h> */
+
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
 # include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ✗ */
 # include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */

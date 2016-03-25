@@ -24,6 +24,7 @@
 #include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */
 #include "muc_option_source.h"                                       /* muc_optsource_name ♠ */
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_clarify.h"
 /* ###################################################################### */

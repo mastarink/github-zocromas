@@ -1,10 +1,17 @@
 #include <string.h>
 
-#include <mastar/tools/mas_tools.h>
+/* #include <mastar/tools/mas_tools.h> */
 
+#include "duf_config_structs.h"
 /* ###################################################################### */
 #include "duf_cfg_output_util.h"
 /* ###################################################################### */
+
+int
+mas_output_level_c( const duf_config_t * cfg )
+{
+  return cfg ? cfg->opt.output.stream.level : 0;
+}
 
 FILE *
 mas_output_file_c( const duf_config_t * cfg )

@@ -114,6 +114,7 @@ dev_t duf_levinfo_stat_dev_d( const duf_depthinfo_t * pdi, int d );
 dev_t duf_levinfo_stat_dev( const duf_depthinfo_t * pdi );
 dev_t duf_levinfo_stat_dev_up( const duf_depthinfo_t * pdi );
 
+dev_t duf_levinfo_stat_rdev( const duf_depthinfo_t * pdi );
 mode_t duf_levinfo_stat_mode( const duf_depthinfo_t * pdi );
 off_t duf_levinfo_stat_size( const duf_depthinfo_t * pdi );
 nlink_t duf_levinfo_stat_nlink( const duf_depthinfo_t * pdi );

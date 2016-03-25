@@ -1,8 +1,10 @@
 #ifndef MAS_DUF_PDI_CREDEL_H
 # define MAS_DUF_PDI_CREDEL_H
 
-# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
-# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 duf_depthinfo_t *duf_pdi_create( const char *name );
 

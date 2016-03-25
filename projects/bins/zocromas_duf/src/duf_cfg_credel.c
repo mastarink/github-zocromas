@@ -13,6 +13,7 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
+#include "duf_config_structs.h"
 #include "duf_config_defs.h"
 
 /* #include "duf_expandable.h" */

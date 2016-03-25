@@ -64,9 +64,14 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
 /* DUF_STARTR( r ); */
   int changes = 0;
 
-  static const char *sql =
-          "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL " ( dev, inode, " DUF_SQL_DIRNAMEFIELD
-          ", parentid )  VALUES (:Dev, :iNode, :dirName, :parentdirID )";
+  static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL /* */
+          " ( dev, rdev, inode,  mode,  size,  nlink,  uid,  gid,  blksize,  blocks, " /* */
+          "           atim,                atimn,           mtim,                mtimn,           ctim,                ctimn, " /* */
+          DUF_SQL_DIRNAMEFIELD ", parentid ) "                       /* */
+          "  VALUES "                                                /* */
+          " (:Dev, :rDev, :iNode, :Mode, :Size, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
+          " datetime(:aTim, 'unixepoch'), :aTimn, datetime(:mTim, 'unixepoch'), :mTimn, datetime(:cTim, 'unixepoch'), :cTimn, " /* */
+          " :dirName, :parentdirID )";
 
   DUF_SQL_SE_START_STMT( pdi, insert_path_table, sql, pstmt );
 
@@ -85,9 +90,27 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
   MAST_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ),
               duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
 /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
-  DUF_SQL_SE_BIND_LL( Dev, /*    */ duf_levinfo_stat_dev( pdi ), /*    */ pstmt );
-  DUF_SQL_SE_BIND_LL( iNode, /*  */ duf_levinfo_stat_inode( pdi ), /*  */ pstmt );
-  DUF_SQL_SE_BIND_S( dirName, /* */ duf_levinfo_itemtruename( pdi ), /**/ pstmt );
+  DUF_SQL_SE_BIND_S( dirName, /*  */ duf_levinfo_itemtruename( pdi ), /*  */ pstmt );
+
+  DUF_SQL_SE_BIND_LL( Dev, /*                          */ duf_levinfo_stat_dev( pdi ), /*      */ pstmt );
+  DUF_SQL_SE_BIND_LL( rDev, /*                         */ duf_levinfo_stat_rdev( pdi ), /*     */ pstmt );
+  DUF_SQL_SE_BIND_LL( iNode, /*                        */ duf_levinfo_stat_inode( pdi ), /*    */ pstmt );
+  DUF_SQL_SE_BIND_LL( Mode, ( unsigned long long ) /*  */ duf_levinfo_stat_mode( pdi ), /*     */ pstmt );
+  DUF_SQL_SE_BIND_LL( Size, /*                         */ duf_levinfo_stat_size( pdi ), /*     */ pstmt );
+  DUF_SQL_SE_BIND_LL( nLink, ( unsigned long long ) /* */ duf_levinfo_stat_nlink( pdi ), /*    */ pstmt );
+  DUF_SQL_SE_BIND_LL( UID, /*                          */ duf_levinfo_stat_uid( pdi ), /*      */ pstmt );
+  DUF_SQL_SE_BIND_LL( GID, /*                          */ duf_levinfo_stat_gid( pdi ), /*      */ pstmt );
+  DUF_SQL_SE_BIND_LL( blkSize, /*                      */ duf_levinfo_stat_blksize( pdi ), /*  */ pstmt );
+  DUF_SQL_SE_BIND_LL( Blocks, /*                       */ duf_levinfo_stat_blocks( pdi ), /*   */ pstmt );
+
+  DUF_SQL_SE_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), pstmt );
+
+  DUF_SQL_SE_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt );
+
 /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
   DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), pstmt );
 /* NO: duf_bind_ufilter_uni( pstmt_selector ); */

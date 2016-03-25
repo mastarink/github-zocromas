@@ -3,12 +3,14 @@
 
 # include <sys/stat.h>                                               /* struct stat */
 
+# include "duf_defs.h"
+
 # include "duf_fun_types.h"                                          /* duf_void_voidp_func_t etc. etc. ... ✗ */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 # include "duf_item_types.h"                                         /* duf_items_t */
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
-# include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
+# include "duf_levinfo_dirhandle_structs.h"
 # include "duf_levinfo_stmt_types.h"                                 /* duf_stmt_ident_t; duf_idstmt_t; ✗ */
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
 
@@ -30,7 +32,6 @@ struct duf_levinfo_child_count_s
   unsigned long long leaves;
 };
 
-# include "duf_defs.h"
 struct duf_levinfo_s
 {
 /* unsigned is__leaf:1; */

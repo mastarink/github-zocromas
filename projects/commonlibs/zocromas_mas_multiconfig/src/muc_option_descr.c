@@ -15,6 +15,8 @@
 #include "muc_option_cfind.h"                                        /* muc_coption_xfind_at_stdx;  ..._coption_*  etc... ♠ */
 
 #include "muc_option_names.h"                                        /* muc_coption_names_d etc... ♠ */
+
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_descr.h"
 /* ###################################################################### */

@@ -30,6 +30,7 @@
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 #include "muc_option_clarify_batch.h"
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_options_interactive.h"
 /* ###################################################################### */

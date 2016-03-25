@@ -9,15 +9,13 @@
 /* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
 /* #include "duf_dodefs.h"                                              (* DOR ♠ *)                   */
 
-
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 
 /* ###################################################################### */
-#include "duf_config.h"
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 /* ###################################################################### */
 
 duf_config_t *duf_config = NULL;
-
 duf_config_t *
 duf_get_config( void )
 {

@@ -1,6 +1,9 @@
 #ifndef MAS_DUF_MAINDB_H
 # define MAS_DUF_MAINDB_H
-# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 DR( TOP, main_db, int argc, char **argv ) __attribute__ ( ( warn_unused_result ) );
 

@@ -1,12 +1,14 @@
 #include <string.h>
-#include <errno.h>
+/* #include <errno.h> */
 
-#include <mastar/tools/mas_tools.h>                                  /* mas_tstrflocaltime */
-#include <mastar/tools/mas_utils_path.h>                             /* mas_concat_path */
+/* #include <mastar/tools/mas_tools.h>                                  (* mas_tstrflocaltime *) */
+/* #include <mastar/tools/mas_utils_path.h>                             (* mas_concat_path *) */
 
 /* #include "duf_expandable.h" */
 
 #include "duf_config.h"
+#include "duf_config_opt_structs.h"
+
 /* #include "duf_config_defs.h" */
 /* #include "duf_config_ref.h" */
 

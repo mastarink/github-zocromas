@@ -27,7 +27,7 @@
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
-/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 /* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 #include "duf_config_ref.h"
 /* #include "duf_config_db.h" */
@@ -36,6 +36,7 @@
 #include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
+#include "duf_config_structs.h"
 /* ###################################################################### */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* ###################################################################### */
@@ -51,110 +52,110 @@ duf_get_offset( void *ptr, unsigned long off )
 void *
 duf_get_config_offset( unsigned long off )
 {
-  return duf_get_offset( duf_config, off );
+  return duf_get_offset( duf_get_config(  ), off );
 }
 
 void *
 duf_get_config_puz_offset( unsigned long off )
 {
-  return duf_config ? duf_get_offset( duf_config->vars.puz, off ) : NULL;
+  return duf_get_config(  )? duf_get_offset( duf_get_config(  )->vars.puz, off ) : NULL;
 }
 #endif
 
 muc_config_cli_t *
 duf_get_config_cli( void )
 {
-  assert( duf_config );
+  assert( duf_get_config(  ) );
 #if 0
-  return duf_config ? &duf_config->cli : NULL;
+  return duf_get_config(  )? &duf_get_config(  )->cli : NULL;
 #else
-  return duf_config ? duf_config->pcli : NULL;
+  return duf_get_config(  )? duf_get_config(  )->pcli : NULL;
 #endif
 }
 
 duf_config_opt_t *
 duf_get_config_opt( void )
 {
-  return duf_config ? &duf_config->opt : NULL;
+  return duf_get_config(  )? &duf_get_config(  )->opt : NULL;
 }
 
 duf_ufilter_t *
 duf_get_config_ufilter( void )
 {
-  return duf_config ? duf_config->vars.puz : NULL;
+  return duf_get_config(  )? duf_get_config(  )->vars.puz : NULL;
 }
 
 duf_config_db_t *
 duf_get_config_db( void )
 {
-  return duf_config ? &duf_config->db : NULL;
+  return duf_get_config(  )? &duf_get_config(  )->db : NULL;
 }
 
 #ifdef MAS_TRACING
 mas_config_trace_t *
 duf_get_trace_config( void )
 {
-  assert( duf_config );
-  return duf_config ? duf_config->opt.ptracecfg : NULL;
+  assert( duf_get_config(  ) );
+  return duf_get_config(  )? duf_get_config(  )->opt.ptracecfg : NULL;
 }
 #endif
 
 #define DUF_GET_FLAG_BIT( _word, _num ) _word & ( ( ( typeof( _word ) ) 1 ) << ( _num - 1 ) ) ? 1 : 0
 
-typeof( duf_config->opt.disable.sbit ) duf_get_config_flag_opt_disable_bits( void )
+typeof( duf_get_config(  )->opt.disable.sbit ) duf_get_config_flag_opt_disable_bits( void )
 {
-  return duf_config->opt.disable.sbit;
+  return duf_get_config(  )->opt.disable.sbit;
 }
 
 static unsigned
 duf_get_config_flag_opt_disable( int num )
 {
-  assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_disable_bits(  ), num );
+  assert( duf_get_config(  ) );
+  return duf_get_config(  ) && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_disable_bits(  ), num );
 }
 
-typeof( duf_config->opt.act.v.bit ) duf_get_config_flag_opt_act_bits( void )
+typeof( duf_get_config(  )->opt.act.v.bit ) duf_get_config_flag_opt_act_bits( void )
 {
-  return duf_config->opt.act.v.bit;
+  return duf_get_config(  )->opt.act.v.bit;
 }
 
 static unsigned
 duf_get_config_flag_opt_act( int num )
 {
-  assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_act_bits(  ), num );
+  assert( duf_get_config(  ) );
+  return duf_get_config(  ) && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_act_bits(  ), num );
 }
 
-typeof( duf_config->opt.flow.v.sbit ) duf_get_config_flag_opt_flow_bits( void )
+typeof( duf_get_config(  )->opt.flow.v.sbit ) duf_get_config_flag_opt_flow_bits( void )
 {
-  return ( unsigned long long ) duf_config->opt.flow.v.sbit;
+  return ( unsigned long long ) duf_get_config(  )->opt.flow.v.sbit;
 }
 
 static unsigned
 duf_get_config_flag_opt_flow( int num )
 {
-  assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_flow_bits(  ), num );
+  assert( duf_get_config(  ) );
+  return duf_get_config(  ) && DUF_GET_FLAG_BIT( duf_get_config_flag_opt_flow_bits(  ), num );
 }
 
-typeof( duf_config->vars.puz->v.sbit ) duf_get_config_flag_vars_puz_bits( void )
+typeof( duf_get_config(  )->vars.puz->v.sbit ) duf_get_config_flag_vars_puz_bits( void )
 {
-  return duf_config->vars.puz->v.sbit;
+  return duf_get_config(  )->vars.puz->v.sbit;
 }
 
 static unsigned
 duf_get_config_flag_vars_puz( int num )
 {
-  assert( duf_config );
-  return duf_config && DUF_GET_FLAG_BIT( duf_get_config_flag_vars_puz_bits(), num );
+  assert( duf_get_config(  ) );
+  return duf_get_config(  ) && DUF_GET_FLAG_BIT( duf_get_config_flag_vars_puz_bits(  ), num );
 }
 
 #define DUF_GET_FLAG_FUNC(_group, _rg, _set, _rs, _v, _name, _uname) \
   int \
   duf_get_config_flag_## _set ## _ ## _name( void ) \
   { \
-    assert( duf_config ); \
-    assert( ( ( duf_config && duf_config->_group _rg _set _rs _v.flag._name ) ? 1 : 0 ) == duf_get_config_flag_ ## _group ## _ ## _set( DUF_FLAG_## _set ## _ ## _name ) ); \
+    assert( duf_get_config(  ) ); \
+    assert( ( ( duf_get_config(  ) && duf_get_config(  )->_group _rg _set _rs _v.flag._name ) ? 1 : 0 ) == duf_get_config_flag_ ## _group ## _ ## _set( DUF_FLAG_## _set ## _ ## _name ) ); \
     return duf_get_config_flag_ ## _group ## _ ## _set( DUF_FLAG_ ## _set ## _ ## _name ); \
   }
 #define DUF_GET_FLAGNAME_FUNC(_group, _rg, _set, _rs, _v, _name, _uname ) \
@@ -166,8 +167,8 @@ duf_get_config_flag_vars_puz( int num )
   unsigned long \
   duf_get_config_num_ ## _set ## _ ## _name( void ) \
   { \
-    assert( duf_config ); \
-    return duf_config ? duf_config->_group _rg _set _rs  _name : 0L ;\
+    assert( duf_get_config(  ) ); \
+    return duf_get_config(  ) ? duf_get_config(  )->_group _rg _set _rs  _name : 0L ;\
   }
 
 DUF_GET_FLAG_FUNC( opt,., act,., v, interactive, INTERACTIVE );
@@ -215,7 +216,7 @@ DUF_GET_NUM_FUNC( ,,,, testnum, TESTNUM );
 char
 duf_option_delimiter( void )
 {
-  return duf_config ? duf_config->cli.option_delimiter : ':';
+  return duf_get_config(  )? duf_get_config(  )->cli.option_delimiter : ':';
 }
 
 char *

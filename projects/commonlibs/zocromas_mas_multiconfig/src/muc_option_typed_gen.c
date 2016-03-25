@@ -31,6 +31,7 @@
 
 #include "muc_optmod_tmpdb.h"
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_typed_defs.h"
 #include "muc_option_typed_gen.h"

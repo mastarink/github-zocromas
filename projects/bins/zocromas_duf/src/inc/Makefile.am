@@ -19,6 +19,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_credel.h \
 	duf_config_db.h duf_config_db_get.h \
 	duf_config_db_types.h \
+	duf_config_db_structs.h \
 	duf_config_defs.h \
 	duf_config_disable_types.h \
 	duf_config_disable_enum.def \
@@ -26,6 +27,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config.h \
 	duf_config_opt_debug_types.h \
 	duf_config_opt_types.h \
+	duf_config_opt_structs.h \
 	duf_config_output_types.h \
 	duf_config_output_util.h \
 	duf_config_output_weak.h  \
@@ -38,6 +40,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_trace.h \
 	duf_config_trace_types.h \
 	duf_config_types.h \
+	duf_config_structs.h \
 	duf_config_util.h \
 	duf_config_wref.h \
 	duf_context.h \
@@ -65,6 +68,7 @@ noinst_HEADERS=motest_config.h \
 	duf_levinfo_credel.h \
 	duf_levinfo_dbinit.h \
 	duf_levinfo_dirhandle_types.h \
+	duf_levinfo_dirhandle_structs.h \
 	duf_levinfo.h \
 	duf_levinfo_init.h \
 	duf_levinfo_openclose.h \

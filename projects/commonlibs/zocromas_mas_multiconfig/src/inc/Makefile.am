@@ -1,6 +1,7 @@
 libzocromas_mas_multiconfigincludedir = $(includedir)/mastar/multiconfig
 libzocromas_mas_multiconfiginclude_HEADERS =  \
 		muc_config_cli_types.h \
+		muc_config_cli_structs.h \
 		muc_option_config_credel.h \
 		muc_option_config.h \
 		muc_option_defs.h \

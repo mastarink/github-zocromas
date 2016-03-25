@@ -11,6 +11,7 @@
 /* # include "muc_option_class_types.h"                                 (* muc_option_class_t *) */
 
 typedef int muc_option_gen_class_t;
+
 /* struct option       */
 /* {                   */
 /*   const char *name; */

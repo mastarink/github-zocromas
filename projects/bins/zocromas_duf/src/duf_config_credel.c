@@ -21,14 +21,14 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_trace.h"                                        /* duf_trace_file_c; duf_trace_output_force_color_c; duf_trace_output_no_color_c ✗ */
 #include "duf_config_output_weak.h"
 #include "duf_config_ref.h"
 /* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
-#include "duf_config4trace_ref.h"
+/* #include "duf_config4trace_ref.h" */
 /* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
 
@@ -36,6 +36,7 @@
 
 /* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
+#include "duf_config_structs.h"
 /* ###################################################################### */
 #include "duf_config_credel.h"
 /* ###################################################################### */
@@ -55,8 +56,8 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 /* duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_options] = 71; */
   duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] += 2;
   QT( "@=== %d:%d", DUF_TRACE_LEVEL_temp, duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_temp] );
-  duf_config4trace = duf_config;
-  assert( duf_config4trace );
+  /* duf_config4trace = duf_config; */
+  /* assert( duf_config4trace ); */
 #endif
 
   duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, duf_config->conf.config_dir,
@@ -83,7 +84,7 @@ duf_config_delete( void )
 /* duf_cli_options_shut_global(  ); */
   duf_cfg_delete( duf_config );
 #ifdef MAS_TRACING
-  duf_config4trace =
+  /* duf_config4trace = */
 #endif
           duf_config = NULL;
 

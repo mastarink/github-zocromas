@@ -31,6 +31,8 @@
 #include "muc_option_source.h"                                       /* muc_optsource_name ♠ */
 
 #include "muc_option_clarify_new.h"
+
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_options_def.h"
 #include "muc_options.h"

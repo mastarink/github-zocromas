@@ -254,7 +254,7 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static
-SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED)
+SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned long long mimeid = 0;
@@ -355,5 +355,5 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_
   }
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
+  ER( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

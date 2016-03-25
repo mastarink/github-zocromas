@@ -13,6 +13,8 @@
 #include "muc_tmp_types.h"
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
+
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_names.h"
 /* ###################################################################### */

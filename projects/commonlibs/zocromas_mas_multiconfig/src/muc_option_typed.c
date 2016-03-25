@@ -25,6 +25,7 @@
 #include "muc_option_typed_gen.h"
 #include "muc_option_typed_call.h"
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_typed.h"
 /* ###################################################################### */

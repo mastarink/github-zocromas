@@ -13,10 +13,10 @@
 
 #include "duf_config.h"
 #include "duf_config_util.h"
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_config_defs.h"
 
-#include "duf_config4trace_ref.h"
+/* #include "duf_config4trace_ref.h" */
 #include "duf_cfg_credel.h"
 
 /* #include "duf_option_config.h" */

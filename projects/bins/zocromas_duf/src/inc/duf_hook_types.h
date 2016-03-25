@@ -27,7 +27,8 @@ typedef int ( *duf_str_cb2_t ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt,
 
 typedef int ( *duf_sel_cb2_t ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb, duf_scanstage_t scanstage );
 
-typedef struct
+typedef struct duf_action_table_s duf_action_table_t;
+struct duf_action_table_s
 {
   unsigned end_of_table:1;
   unsigned in_use:1;
@@ -35,7 +36,7 @@ typedef struct
   duf_config_act_flags_combo_t on;
   duf_config_act_flags_combo_t off;
   duf_scan_callbacks_t *sccb;
-} duf_action_table_t;
+};
 
 #endif
 

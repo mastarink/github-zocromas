@@ -26,7 +26,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"                                  /* mas_output_force_color ; mas_output_nocolor */
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
@@ -250,8 +250,8 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handl
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      if ( duf_config->opt.output.max_width == 0 || duf_config->opt.output.max_width > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, duf_config->opt.output.max_width,
+      if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
                                             mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }

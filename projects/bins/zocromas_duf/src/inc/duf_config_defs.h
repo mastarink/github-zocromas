@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_CONFIG_DEFS_H
 # define MAS_DUF_CONFIG_DEFS_H
 
-#include <mastar/tools/mas_expandable_types.h>
+# include <mastar/tools/mas_expandable_types.h>
+# include "duf_config_structs.h"                                     /* bad here 20160323.173534 */
 
 # define DUF_CONFIG_DIR_FROM_ENV "MSHDIRS_CONF_DIR"
 

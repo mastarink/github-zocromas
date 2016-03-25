@@ -3,7 +3,6 @@
 #include "muc_tracen_defs_preset.h"
 #include "muc_config_trace_enum.h"
 
-
 #include <assert.h>                                                  /* assert */
 #include <string.h>
 
@@ -17,6 +16,7 @@
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */
 /* ###################################################################### */

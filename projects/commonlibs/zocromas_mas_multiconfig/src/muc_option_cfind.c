@@ -8,11 +8,12 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-
 #include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 
 #include "muc_option_lfind.h"
+
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_cfind.h"                                        /* muc_coption_xfind_at_stdx;  ..._coption_*  etc... ♠ */
 /* ###################################################################### */

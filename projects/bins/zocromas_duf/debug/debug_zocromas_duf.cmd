@@ -10,8 +10,8 @@ handle SIGPIPE nostop noprint
 set breakpoint pending on
 
 
-b duf_config_credel.c:69
-
+b mod_directories_uni.c:170
+# b duf_path2db.c:326
 # watch lo_extended_vtable_multi
 
 # watch global_status.pdilist

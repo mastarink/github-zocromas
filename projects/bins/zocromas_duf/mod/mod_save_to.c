@@ -31,10 +31,10 @@
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 #include "duf_sccb_structs.h"
 
-/* #include "duf_config.h" */
+#include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-#include "duf_config_ref.h"
-/* #include "duf_config_defs.h"                                         (* DUF_CONF... ♠ *) */
+/* #include "duf_config_ref.h" */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
@@ -233,8 +233,9 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
     assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
     CR( fileinfo, pstmt, pdi, &fi );
-    save_path = duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , duf_config->save.path, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
-                                       0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
+    save_path =
+            duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , DUF_CONFIGG( save.path ) /* duf_config->save.path */ , ( duf_pdi_scb_t ) NULL,
+                                   ( duf_pdi_scb_t ) NULL, 0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
     MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
     MAST_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     MAST_TRACE( mod, 2, "@to => %s", save_path );

@@ -4,27 +4,29 @@
 # include <mastar/multiconfig/muc_config_cli_types.h>                /* muc_config_cli_t */
 # include "duf_config_types.h"                                       /* duf_config_t; duf_config_save_t; duf_config_cfg_t; duf_config_vars_t ✗ */
 # include "duf_config_opt_types.h"                                   /* duf_config_opt_t */
+# include "duf_config_db_types.h"
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
+
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* void *duf_get_config_offset( unsigned long off ); */
 /* void *duf_get_config_puz_offset( unsigned long off ); */
 
-muc_config_cli_t *duf_get_config_cli( void ); /* TODO inline */
-duf_config_opt_t *duf_get_config_opt( void ); /* TODO inline */
-duf_ufilter_t *duf_get_config_ufilter( void ); /* TODO inline */
-duf_config_db_t *duf_get_config_db( void ); /* TODO inline */
+muc_config_cli_t *duf_get_config_cli( void );                        /* TODO inline */
+duf_config_opt_t *duf_get_config_opt( void );                        /* TODO inline */
+duf_ufilter_t *duf_get_config_ufilter( void );                       /* TODO inline */
+duf_config_db_t *duf_get_config_db( void );                          /* TODO inline */
 
-unsigned short duf_get_config_flag_vars_puz_bits( void ); /* TODO inline */
-unsigned short duf_get_config_flag_opt_disable_bits( void ); /* TODO inline */
-unsigned duf_get_config_flag_opt_act_bits( void ); /* TODO inline */
-unsigned short duf_get_config_flag_opt_flow_bits( void ); /* TODO inline */
+unsigned short duf_get_config_flag_vars_puz_bits( void );            /* TODO inline */
+unsigned short duf_get_config_flag_opt_disable_bits( void );         /* TODO inline */
+unsigned duf_get_config_flag_opt_act_bits( void );                   /* TODO inline */
+unsigned short duf_get_config_flag_opt_flow_bits( void );            /* TODO inline */
 
 # define DUF_DECL_FLAG_FUNC(     _group, _rg, _set, _rs, _v, _name, _uname)   int            duf_get_config_flag_    ## _set ## _ ## _name( void )
 # define DUF_DECL_FLAGNAME_FUNC( _group, _rg, _set, _rs, _v, _name, _uname)   const char    *duf_get_config_flagname_## _set ## _ ## _name( int nn )
 # define DUF_DECL_NUM_FUNC(      _group, _rg, _set, _rs,     _name, _uname)   unsigned long  duf_get_config_num_     ## _set ## _ ## _name( void )
 
-DUF_DECL_FLAG_FUNC( opt,., act,., v, interactive, INTERACTIVE ); /* TODO inline ....... */
+DUF_DECL_FLAG_FUNC( opt,., act,., v, interactive, INTERACTIVE );     /* TODO inline ....... */
 DUF_DECL_FLAG_FUNC( opt,., act,., v, fast, FAST );
 DUF_DECL_FLAG_FUNC( opt,., act,., v, fresh, FRESH );
 DUF_DECL_FLAG_FUNC( opt,., act,., v, allow_files, ALLOW_FILES );

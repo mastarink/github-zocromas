@@ -10,6 +10,8 @@
 #include <mastar/trace/mas_trace.h>
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
+
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_lfind.h"
 /* ###################################################################### */

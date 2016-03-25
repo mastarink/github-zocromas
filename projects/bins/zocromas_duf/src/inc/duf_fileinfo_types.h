@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_FILEINFO_TYPES_H
 # define MAS_DUF_FILEINFO_TYPES_H
 
+# include <sys/stat.h>
+
 typedef struct duf_fileinfo_s duf_fileinfo_t;
 struct duf_fileinfo_s
 {

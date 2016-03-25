@@ -77,6 +77,7 @@ DUF_LEVINFO_FC_UP_REF( struct stat, stat )
 
 DUF_LEVINFO_ST_FLD_NAME( ino, inode );
 DUF_LEVINFO_ST_FLD( dev );
+DUF_LEVINFO_ST_TYP_FLD( dev, rdev );
 DUF_LEVINFO_ST_FLD( mode );
 DUF_LEVINFO_ST_FLD( nlink );
 DUF_LEVINFO_ST_FLD( uid );

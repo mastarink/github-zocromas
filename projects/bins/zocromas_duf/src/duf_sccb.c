@@ -61,19 +61,19 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   return tbuf;
 }
 
+/* 20160324.113111 */
 static const duf_scan_callbacks_t *
 duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first )
 {
   const duf_scan_callbacks_t *sccb = NULL;
-  char *n;
 
-  n = mas_strndup( name, namelen );
-  for ( sccb = first; sccb; sccb = sccb->next )
-  {
-    if ( 0 == strcmp( n, sccb->name ) )
-      break;
-  }
-  mas_free( n );
+#if 1
+  for ( sccb = first; sccb && strncmp( name, sccb->name, namelen ); sccb = sccb->next );
+#else
+  sccb = first;
+  while ( sccb && strncmp( name, sccb->name, namelen ) )
+    sccb = sccb->next;
+#endif
   return sccb;
 }
 
@@ -128,6 +128,7 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     mas_free( symbol );
     mas_free( path );
   }
+  MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   return sccb;
 }
 
@@ -138,10 +139,7 @@ duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_cal
 
   sccb = duf_find_sccb_by_evnamen( name, namelen, first );
   if ( !sccb )
-  {
     sccb = duf_load_sccb_by_evnamen( name, namelen, first );
-    MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
-  }
   return sccb;
 }
 
@@ -157,12 +155,12 @@ duf_find_or_load_sccb_by_evnamen_plus( const char *name0, size_t namelen, duf_sc
   name = mas_strndup( name0, namelen );
   for ( cnt = 0, p = name; p < name + namelen && p && *p; p++, cnt++ )
   {
-    /* QT( "@-- %lu: %s", cnt, p ); */
+  /* QT( "@-- %lu: %s", cnt, p ); */
     sname = p;
     p = strchr( p, '+' );
     if ( !p )
       p = sname + strlen( sname );
-    /* QT( "@++ %lu: %s ~ %lu", cnt, sname, p - sname ); */
+  /* QT( "@++ %lu: %s ~ %lu", cnt, sname, p - sname ); */
   }
   if ( cnt )
   {
@@ -176,7 +174,7 @@ duf_find_or_load_sccb_by_evnamen_plus( const char *name0, size_t namelen, duf_sc
       if ( !p )
         p = sname + strlen( sname );
       psccb[cnt] = duf_find_or_load_sccb_by_evnamen( sname, p - sname, first );
-      /* QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] ); */
+    /* QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] ); */
     }
   }
   mas_free( name );

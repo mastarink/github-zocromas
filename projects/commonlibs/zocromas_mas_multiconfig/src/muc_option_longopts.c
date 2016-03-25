@@ -12,6 +12,7 @@
 
 #include "muc_option_extended.h"                                     /* muc_longindex_extended_count etc. ♠ */
 
+/* #include "muc_config_cli_structs.h" */
 /* ###################################################################### */
 #include "muc_option_longopts.h"                                     /* muc_options_create_longopts_table ♠ */
 /* ###################################################################### */

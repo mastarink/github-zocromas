@@ -15,13 +15,13 @@
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 #include <mastar/error/mas_error_defs_make.h>                        /* MASE_MAKE_ERROR; MASE_MAKE_ERRORFL; MASE_MAKE_ERRORM  ... */
 
-
 #include "muc_se_only.h"                                             /* Only muc_DR; muc_SR; muc_ER; muc_CR; muc_QSTR; QERRIND; QERRNAME etc. ♠ */
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 #include "muc_option_clarify_new.h"
 #include "muc_option_source.h"                                       /* muc_optsource_name ♠ */
 
+#include "muc_config_cli_structs.h"
 /* ###################################################################### */
 #include "muc_option_clarify_batch.h"
 /* ###################################################################### */

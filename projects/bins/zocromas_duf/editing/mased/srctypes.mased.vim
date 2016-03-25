@@ -16,7 +16,9 @@ tab sfind duf_base_types.h
 sfind duf_base_output_types.h
 
 tab sfind duf_config_types.h
-sfind duf_status_types.h
+sfind duf_config_structs.h
+
+tab sfind duf_status_types.h
 
 " tab sfind duf_expand_types.h
 
@@ -26,8 +28,11 @@ tab sfind duf_pathinfo_types.h
 
 tab sfind duf_levinfo_types.h
 sfind duf_levinfo_structs.h
-sfind duf_levinfo_dirhandle_types.h
-sfind duf_levinfo_stmt_types.h
+
+tab sfind duf_levinfo_dirhandle_types.h
+sfind duf_levinfo_dirhandle_structs.h
+
+tab sfind duf_levinfo_stmt_types.h
 
 tab sfind duf_tracen_defs.h
 sfind duf_tracen_defs_preset.h
@@ -66,13 +71,17 @@ tab sfind duf_config_trace_enum.h
 
 " tab sfind duf_config_cli_types.h
 tab sfind duf_config_flow_types.h
+
 tab sfind duf_config_db_types.h
+sfind duf_config_db_structs.h
 
 tab sfind duf_config_act_types.h
 sfind duf_config_puz_types.h
 sfind duf_config_disable_types.h
 
 tab sfind duf_config_opt_types.h
+sfind duf_config_opt_structs.h
+
 tab sfind duf_config_output_types.h
 sfind duf_format_types.h
 
