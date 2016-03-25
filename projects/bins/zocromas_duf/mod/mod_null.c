@@ -49,7 +49,7 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_null )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_null_callbacks = {
+     duf_scan_callbacks_t duf_mod_handler = {
        .title = "null",
        .name = "null",
        .def_opendir = 0,

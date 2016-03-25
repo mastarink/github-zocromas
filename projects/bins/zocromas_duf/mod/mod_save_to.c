@@ -60,7 +60,7 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_save_to_callbacks = {
+     duf_scan_callbacks_t duf_mod_handler = {
        .title = "save it to",
        .name = "save_to",
        .def_opendir = 1,

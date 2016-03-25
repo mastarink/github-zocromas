@@ -57,7 +57,7 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_dialog )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_dialog_callbacks = {
+     duf_scan_callbacks_t duf_mod_handler = {
        .title = "dialog",
        .name = "dialog",
        .def_opendir = 0,

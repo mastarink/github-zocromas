@@ -72,7 +72,7 @@ static duf_sql_sequence_t final_sql =                                /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_sd5_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect sd5",
   .name = "sd5",
   .init_scan = NULL,

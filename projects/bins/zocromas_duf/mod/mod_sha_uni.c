@@ -81,7 +81,7 @@ static duf_sql_sequence_t final_sql =                                /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_sha1_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect " MOD_DIGEST_DATA_S,
   .name = MOD_DIGEST_DATA_S,
   .init_scan = NULL,

@@ -81,7 +81,7 @@ static duf_sql_sequence_t final_sql =                                /* */
 #define Q_JOIN_ID( _up, _t, _as, _o )  " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." DUF_SQL_IDFIELD " ) "
 #define Q_JOIN_SYN( _up, _t, _as, _o ) " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." # _o ")"
 
-duf_scan_callbacks_t duf_mime_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect mime",
   .name = "mime",
   .def_opendir = 1,

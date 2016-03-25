@@ -65,7 +65,7 @@ static int duf_print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_listing_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "listing print",
   .name = "listing",
   .init_scan = NULL,                                                 /* */

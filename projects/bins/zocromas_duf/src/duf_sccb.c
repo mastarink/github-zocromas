@@ -77,6 +77,45 @@ duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callb
   return sccb;
 }
 
+static duf_scan_callbacks_t *
+duf_load_sccb_symbol( const char *path, const char *symbol )
+{
+  duf_scan_callbacks_t *sccb = NULL;
+  void *han = NULL;
+
+  MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
+  han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
+  if ( !han )
+    han = dlopen( path, RTLD_LOCAL | RTLD_LAZY );
+  if ( han )
+    sccb = ( duf_scan_callbacks_t * ) dlsym( han, symbol );
+  MAST_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
+  return sccb;
+}
+
+static void
+duf_register_sccb( duf_scan_callbacks_t * first, duf_scan_callbacks_t * sccb )
+{
+  if ( sccb )
+  {
+    duf_scan_callbacks_t *prev = NULL;
+
+  /* sccb->dlhan = han; */
+  /* MAST_TRACE( sccb, 0, "[%p] %s => %s", han, path, sccb->name ); */
+    for ( duf_scan_callbacks_t * tsccb = first; tsccb; tsccb = tsccb->next )
+      prev = tsccb;
+    if ( prev )
+    {
+      prev->next = sccb;
+    /* MAST_TRACE( sccb, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL ); */
+    }
+    else
+    {
+    /* dlclose ?? */
+    }
+  }
+}
+
 static const duf_scan_callbacks_t *
 duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first )
 {
@@ -84,48 +123,27 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
 
   if ( namelen && name && first )
   {
-    duf_scan_callbacks_t *prev = NULL;
     char *path = NULL;
-    char *symbol = NULL;
 
     path = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
     path = mas_strncat_x( path, name, namelen );
     path = mas_strcat_x( path, ".so" );
-    symbol = mas_strdup( "duf_" );
-    symbol = mas_strncat_x( symbol, name, namelen );
-    symbol = mas_strcat_x( symbol, "_callbacks" );
+    sccb = duf_load_sccb_symbol( path, "duf_mod_handler" );
+  /* QT( "@A sccb:%p (%s)", sccb, "duf_mod_handler" ); */
+    if ( 0 && !sccb )
     {
-      void *han = NULL;
+      char *symbol = NULL;
 
-      MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
-      han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
-      if ( !han )
-      {
-        han = dlopen( path, RTLD_LOCAL | RTLD_LAZY );
-        if ( han )
-        {
-          sccb = ( duf_scan_callbacks_t * ) dlsym( han, symbol );
-          if ( sccb )
-          {
-            sccb->dlhan = han;
-            MAST_TRACE( sccb, 0, "[%p] %s => %s", han, path, sccb->name );
-            for ( duf_scan_callbacks_t * tsccb = first; tsccb; tsccb = tsccb->next )
-              prev = tsccb;
-            if ( prev )
-            {
-              prev->next = sccb;
-              MAST_TRACE( sccb, 0, "[han:%p] : %s", han, sccb ? sccb->name : NULL );
-            }
-            else
-            {
-            /* dlclose ?? */
-            }
-          }
-        }
-      }
-      MAST_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
+      symbol = mas_strdup( "duf_" );
+      symbol = mas_strncat_x( symbol, name, namelen );
+      symbol = mas_strcat_x( symbol, "_callbacks" );
+      sccb = duf_load_sccb_symbol( path, symbol );
+      mas_free( symbol );
+    /* QT( "@B sccb:%p (%s)", sccb, symbol ); */
     }
-    mas_free( symbol );
+    if ( sccb )
+      duf_register_sccb( first, sccb );
+
     mas_free( path );
   }
   MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );

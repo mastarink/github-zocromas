@@ -13,7 +13,7 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 #include "duf_sccb_structs.h"
 
 /*  #include "duf_tracen_defs.h"  (*  T; TT; TR ♠  *) */
@@ -58,7 +58,7 @@ static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dep
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_tagit_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "tag it",
   .name = "tagit",
   .def_opendir = 0,

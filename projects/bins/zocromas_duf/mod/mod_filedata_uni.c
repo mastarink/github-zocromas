@@ -83,7 +83,7 @@ static duf_sql_sequence_t final_sql =                                /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_filedata_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "file data",
   .name = "filedata",
   .init_scan = NULL,

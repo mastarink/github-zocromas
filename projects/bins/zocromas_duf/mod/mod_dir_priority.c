@@ -64,7 +64,7 @@ static int duf_set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUS
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_set_dir_priority_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "set dir priority",
   .name = "set_dir_priority",
   .def_opendir = 0,                                                  /* ?? */

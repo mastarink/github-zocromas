@@ -22,7 +22,7 @@
 /*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
 /*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
 
-/* #include "duf_sccb_types.h"                                          (* duf_scan_callbacks_t ✗ *) */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
 #include "duf_sccb_structs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -94,7 +94,7 @@ static duf_sql_sequence_t final_sql =                                /* */
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_md5_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect " MOD_DIGEST_DATA_S,
   .name = MOD_DIGEST_DATA_S,
   .init_scan = NULL,

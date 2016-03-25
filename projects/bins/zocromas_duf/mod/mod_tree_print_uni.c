@@ -60,7 +60,7 @@ static int duf_tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_tree_callbacks = {
+duf_scan_callbacks_t duf_mod_handler = {
   .title = "tree print",
   .name = "tree",
   .init_scan = NULL,                                                 /* */

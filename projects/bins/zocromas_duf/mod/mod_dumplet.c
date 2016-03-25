@@ -54,7 +54,7 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_dumplet )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_dumplet_callbacks = {
+     duf_scan_callbacks_t duf_mod_handler = {
        .title = "dumplet",
        .name = "dumplet",
        .def_opendir = 0,
