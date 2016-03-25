@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_OPTIMPL_MISC_H
 # define MAS_DUF_OPTIMPL_MISC_H
 
+# include <mastar/tools/mas_argvc_types.h>                           /* mas_argvc_t ▤ */
+
 # include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ▤ */
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 

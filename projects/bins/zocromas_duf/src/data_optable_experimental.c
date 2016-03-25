@@ -1,7 +1,12 @@
 #include <stddef.h>
 
+#include "duf_optimpl_class.h"
+
+#include "duf_config_structs.h"
+#include "duf_config_pointers.h"                                     /* duf_get_( .* )_pointer */
+
 #include "duf_optable_def.h"
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 #include "duf_optimpl_misc.h"
 #include "duf_optimpl_sccb.h"                                        /* TODO : temp for duf_optimpl_O_cd               */
@@ -52,14 +57,6 @@ const muc_longval_extended_table_t optable_experimental = {
 #endif
    {.o = {DO_Q( "cd-id" ) /*            */ , DO_A_O /* */ , DO_V( CD_ID )} /*              */ , DO_CL( NODESC ) /*  */
     , DO_N_CALL( cdid ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*          */ , DO_H(  ... ) /*                             */ },
-
-#if 0                                                                /* 20160221.132919 */
-   {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( XCHR, pcli->option_delimiter ) /*                                     */ , DO_H( history filename ) /*                 */ },
-#else
-   {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OI( XCHR, option_delimiter ) /*                                           */ , DO_H( history filename ) /*                 */ },
-#endif
 
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
     , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },

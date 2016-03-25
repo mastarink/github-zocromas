@@ -1,16 +1,6 @@
 #ifndef MAS_DUF_OPTABLE_DEF_H
 # define MAS_DUF_OPTABLE_DEF_H
 
-# include <mastar/multiconfig/muc_config_cli_types.h>
-# include <mastar/multiconfig/muc_config_cli_structs.h>
-/* # include "duf_option_types.h"                                       (* duf_longval_extended_t; duf_longval_extended_vtable_t ♠ *) */
-# include <mastar/multiconfig/muc_option_types.h>
-
-# include "duf_optimpl_class.h"
-
-/* # include "duf_config.h"                                             (* duf_get_config ✗ *) */
-# include "duf_config_structs.h"
-# include "duf_config_pointers.h"                                    /* duf_get_( .* )_pointer */
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
              example: { .o = { .......  DO_V(OCLASS_HELP)} ... } ;;; DUF_OPTION_OCLASS_HELP should be defined as a char

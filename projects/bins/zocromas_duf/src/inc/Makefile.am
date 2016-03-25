@@ -35,7 +35,6 @@ noinst_HEADERS=motest_config.h \
 	duf_config_puz_enum.def \
 	duf_config_puz_types.h \
 	duf_config_ref.h \
-	duf_config_trace_credel.h \
 	duf_config_trace_enum.h \
 	duf_config_trace.h \
 	duf_config_trace_types.h \

@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ♠ */
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 #include <mastar/multiconfig/muc_option_types.h>
 
 /* man getopt_long */
@@ -15,10 +15,12 @@ extern const muc_longval_extended_table_t optable_experimental;
 extern const muc_longval_extended_table_t optable_fs;
 extern const muc_longval_extended_table_t optable_interactive;
 extern const muc_longval_extended_table_t optable_str;
+extern const muc_longval_extended_table_t optable_options;
 extern const muc_longval_extended_table_t optable_db;
 extern const muc_longval_extended_table_t optable_sccb;
 extern const muc_longval_extended_table_t optable_info;
 extern const muc_longval_extended_table_t optable_flag;
+extern const muc_longval_extended_table_t optable_flag_allow;
 extern const muc_longval_extended_table_t optable_sflag;
 extern const muc_longval_extended_table_t optable_uplus;
 extern const muc_longval_extended_table_t optable_help;
@@ -39,11 +41,13 @@ static const muc_longval_extended_table_t *const __lo_extended_table_multi[] = {
   &optable_io,
   &optable_interactive,
   &optable_str,
+  &optable_options,
   &optable_db,
   &optable_sccb,
   &optable_info,
   &optable_sflag,
   &optable_flag,
+  &optable_flag_allow,
   &optable_uplus,
 #ifdef MAS_TRACING_OPTIONS
   &optable_trace,
