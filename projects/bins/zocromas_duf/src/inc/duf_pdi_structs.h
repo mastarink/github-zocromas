@@ -7,6 +7,7 @@
 # include "duf_item_types.h"
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
 # include "duf_levinfo_structs.h"
+# include "duf_pathinfo_structs.h"
 
 struct duf_modcnts_s
 {

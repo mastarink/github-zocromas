@@ -117,6 +117,7 @@ noinst_HEADERS=motest_config.h \
 	duf_pathinfo_ref_def.h \
 	duf_pathinfo_ref.h \
 	duf_pathinfo_types.h \
+	duf_pathinfo_structs.h \
 	 \
 	duf_pdi_attach.h \
 	duf_pdi_context.h \

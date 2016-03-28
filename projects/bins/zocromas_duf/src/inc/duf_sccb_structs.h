@@ -2,6 +2,7 @@
 # define MAS_DUF_SCCB_STRUCTS_H
 
 #include "duf_sccb_types.h"
+#include "duf_pathinfo_structs.h"
 
 struct duf_sccb_data_value_s
 {
@@ -28,6 +29,7 @@ struct duf_sccb_data_row_s
   size_t cnt;
   duf_sccb_data_value_t *fields;
   duf_sccb_data_row_t *prev;
+  duf_pathinfo_t pathinfo;
 };
 
 struct duf_scan_callbacks_s

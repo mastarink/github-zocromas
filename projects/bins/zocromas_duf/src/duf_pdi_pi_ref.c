@@ -85,3 +85,9 @@ duf_pdi_levinfo( const duf_depthinfo_t * pdi )
 {
   return pdi ? duf_pi_levinfo( &pdi->pathinfo ) : NULL;
 }
+
+const duf_pathinfo_t *
+duf_pdi_pathinfo( const duf_depthinfo_t * pdi )
+{
+  return pdi ? &pdi->pathinfo : NULL;
+}

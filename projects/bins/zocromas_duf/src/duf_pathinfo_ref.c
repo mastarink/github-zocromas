@@ -32,6 +32,8 @@
 
 #include "duf_levinfo_structs.h"
 
+#include "duf_pathinfo_structs.h"
+
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
 #include "duf_pathinfo_ref.h"

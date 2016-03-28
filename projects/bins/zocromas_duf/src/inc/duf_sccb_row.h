@@ -1,7 +1,9 @@
 #ifndef MAS_DUF_SCCB_ROW_H
 # define MAS_DUF_SCCB_ROW_H
 
-duf_sccb_data_row_t *duf_sccb_row_create( duf_stmnt_t * pstmt );
+# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ✗ */
+
+duf_sccb_data_row_t *duf_sccb_row_create( duf_stmnt_t * pstmt, const duf_pathinfo_t * pi );
 void duf_sccb_row_delete( duf_sccb_data_row_t * row );
 
 int duf_sccb_row_list_count( const duf_sccb_data_row_t * rows );

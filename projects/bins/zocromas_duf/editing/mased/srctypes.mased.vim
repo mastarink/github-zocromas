@@ -25,6 +25,7 @@ tab sfind duf_status_types.h
 tab sfind duf_tmp_types.h
 
 tab sfind duf_pathinfo_types.h
+sfind duf_pathinfo_structs.h
 
 tab sfind duf_levinfo_types.h
 sfind duf_levinfo_structs.h
@@ -58,9 +59,11 @@ tab sfind duf_fileinfo_types.h
 tab sfind duf_pdi_types.h
 tab sfind duf_pdi_structs.h
 tab sfind duf_hook_types.h
-tab sfind duf_sccb_structs.h
-tab sfind duf_sccb_types.h
 tab sfind duf_sql_set_types.h
+
+tab sfind duf_sccb_types.h
+sfind duf_sccb_structs.h
+
 " tab sfind duf_record_types.h
 
 " tab sfind duf_flags_types.h

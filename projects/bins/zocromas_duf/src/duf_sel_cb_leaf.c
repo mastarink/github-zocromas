@@ -94,7 +94,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
       int eq = 0;
       duf_sccb_data_row_t *new_row = NULL;
 
-      new_row = duf_sccb_row_create( pstmt );
+      new_row = duf_sccb_row_create(  pstmt, duf_pdi_pathinfo( H_PDI ) );
 
       if ( sccbh->rows && sccbh->rows->prev )
       {

@@ -33,6 +33,7 @@
 
 #include "duf_pathinfo_ref.h"
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
+#include "duf_pathinfo_structs.h"
 
 #include "duf_levinfo_structs.h"
 

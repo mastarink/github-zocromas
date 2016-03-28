@@ -34,6 +34,8 @@
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
+#include "duf_pathinfo_structs.h"
+
 #include "duf_sccb_scanstage.h"
 
 #include "duf_levinfo_structs.h"

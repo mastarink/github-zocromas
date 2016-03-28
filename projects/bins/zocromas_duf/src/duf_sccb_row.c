@@ -13,63 +13,24 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
-
-#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ✗ */
-#include "duf_pdi_reinit.h"
-#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
-#include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
-#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
-
-#include "duf_utils.h"                                               /* duf_percent;  etc. ✗ */
-
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-/* #include "duf_config_ref.h" */
-/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
-
 #include "duf_config_output_util.h"
 
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-
-/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ *) */
-#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
-#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
-
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
-#include "duf_sccb_def.h"
-#include "duf_sccb.h"
-
-#include "duf_evsql_selector_new.h"
-
-#include "std_mod_sets.h"
-
-#include "duf_sccb_begfin.h"
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"
 
-#include "duf_ufilter_bind.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 
-#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccb_row.h"
 /* ###################################################################### */
 
 duf_sccb_data_row_t *
-duf_sccb_row_create( duf_stmnt_t * pstmt )
+duf_sccb_row_create( duf_stmnt_t * pstmt, const duf_pathinfo_t * pi MAS_UNUSED )
 {
   duf_sccb_data_row_t *row = NULL;
 
@@ -78,6 +39,8 @@ duf_sccb_row_create( duf_stmnt_t * pstmt )
 /* prow=mas_malloc(sizeof(duf_sccb_data_row_t)); */
   row->cnt = duf_sql_column_count( pstmt );
   row->fields = mas_malloc( row->cnt * sizeof( duf_sccb_data_value_t ) );
+  duf_pi_copy( &row->pathinfo, pi, 0 );
+
   memset( row->fields, 0, row->cnt * sizeof( duf_sccb_data_value_t ) );
   for ( size_t i = 0; i < row->cnt; i++ )                            /* sqlite3_column_count( pstmt ) */
   {
@@ -173,6 +136,7 @@ duf_sccb_row_delete( duf_sccb_data_row_t * row )
     mas_free( row->fields[i].svalue );
     mas_free( row->fields[i].name );
   }
+  duf_pi_levinfo_delete( &row->pathinfo );
   mas_free( row->fields );
   mas_free( row );
 }
