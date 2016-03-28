@@ -14,53 +14,34 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
-#include "duf_pdi_pi_ref.h"
-#include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
-/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ *) */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 #include "duf_ufilter_bind.h"
 
 #include "duf_evsql_selector_new.h"
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
-#include "duf_sccb_handle.h"
 #include "duf_sccb_scanstage.h"
 
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
 
-#include "duf_pdi_credel.h"                                          /* duf_pdi_create; duf_pdi_kill ✗ */
-#include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
-#include "duf_li_credel.h"
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
-#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 #include "duf_sccb_structs.h"
-#include "duf_sccb_row.h"
-
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -88,16 +69,9 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
   MAST_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( H_PDI ), duf_nodetype_name( node_type ),
               duf_uni_scan_action_title( H_SCCB ), H_SCCB->name );
 
-#if 1
-  duf_sccb_row_delete( sccbh->previous_row );
-  sccbh->previous_row = sccbh->row;
-
-  sccbh->row = duf_sccb_row_create( pstmt );
-#endif
-
 /* IF_DORF( r, cbs[node_type], sccbh, pstmt, str_cb2, scanstage ); */
   IF_CRV( cbs[node_type], sccbh, pstmt, str_cb2, scanstage );
-
+  
   CR( pdi_max_filter, H_PDI );                                       /* check if any of max's reached */
 /* DUF_ENDR( r ); */
   ER( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2,

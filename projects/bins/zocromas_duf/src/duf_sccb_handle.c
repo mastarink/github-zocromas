@@ -497,9 +497,8 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   {
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
-    duf_sccb_row_delete( sccbh->row );
-    duf_sccb_row_delete( sccbh->previous_row );
-
+    duf_sccb_row_list_delete_f( sccbh->rows, 0 );
+    sccbh->rows = NULL;
     for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
     {
       CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );

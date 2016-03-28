@@ -1,3 +1,4 @@
+#!/bin/sh
 alias t0='run --trace-explain=8  --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp$(/bin/date "+%Y%m%d")    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  $PWD/test/tree  $PWD/test/tree    --progress'
 alias t0a='run --trace-explain=8  --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp$(/bin/date "+%Y%m%d")    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32+sd5+md5+sha1+mime+exif  $PWD/test/tree  $PWD/test/tree    --progress'
 alias t0a1='run --db-name=temp$(/bin/date "+%Y%m%d")  -dufR   --evaluate-sccb=tree $PWD/test'

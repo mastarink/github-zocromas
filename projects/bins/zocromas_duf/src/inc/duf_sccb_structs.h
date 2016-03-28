@@ -128,8 +128,8 @@ struct duf_sccb_handle_s
 /* duf_scanner_t current_scanner; */
   duf_node_type_t assert__current_node_type;
   duf_rsccbh_fun_t atom_cb;
-  duf_sccb_data_row_t previous_row;
-  duf_sccb_data_row_t row;
+  /* duf_sccb_data_row_t previous_row; */
+  duf_sccb_data_row_t *rows;
 };
 
 #endif
