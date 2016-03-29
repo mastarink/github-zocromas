@@ -2,26 +2,15 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
-#include <mastar/tools/mas_arg_tools.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
+#include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/tools/mas_expandable.h>
 #include <mastar/multiconfig/muc_option_config_credel.h>
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_config_structs.h"
-#include "duf_config_defs.h"
-
-/* #include "duf_expandable.h" */
+#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_ufilter.h"
-
-/* #include "duf_option_names.h" */
-/* #include "duf_option_config_credel.h" */
 
 /* ###################################################################### */
 #include "duf_cfg_credel.h"
@@ -43,7 +32,7 @@ duf_cfg_create( void )
 {
   duf_config_t *cfg = NULL;
 
-  /* DUF_START(  ); */
+/* DUF_START(  ); */
 
   cfg = duf_cfg_create_main(  );
 
@@ -58,7 +47,7 @@ duf_cfg_create( void )
     }
   }
 #endif
-  
+
   {
     const char *cfgdir;
 
@@ -72,7 +61,7 @@ duf_cfg_create( void )
   DUF_CFGWSP( cfg, db.adm.name_x, mas_strdup( "duf-adm" ) );
   DUF_CFGWSP( cfg, db.tempo.name_x, mas_strdup( "duf-tempo" ) );
   DUF_CFGWSP( cfg, db.selected.name_x, mas_strdup( "duf-selected" ) );
- 
+
 #if 0
   {
     int ry;
@@ -95,14 +84,14 @@ duf_cfg_create( void )
   assert( cfg->vars.puz );
 /* assert( cfg->cli.longopts_table ); */
 
-  /* DUF_END(  ); */
+/* DUF_END(  ); */
   return cfg;
 }
 
 void
 duf_cfg_delete( duf_config_t * cfg )
 {
-  /* DUF_START(  ); */
+/* DUF_START(  ); */
 
   if ( cfg )
   {
@@ -236,5 +225,5 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg );
     cfg = NULL;
   }
-  /* DUF_END(  ); */
+/* DUF_END(  ); */
 }

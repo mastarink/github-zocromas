@@ -5,7 +5,6 @@
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 
-/* #include "duf_pdi_credel.h" */
 #include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
 
 #include "duf_status_types.h"                                        /* duf_status_t; duf_status_db_t; duf_status_dh_t; duf_status_scanner_t;  ✗ */

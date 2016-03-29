@@ -9,18 +9,10 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_service.h"
 
-/* #include "duf_config.h" */
-/* #include "duf_config_ref.h" */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include <mastar/sqlite/mas_sqlite.h>
@@ -84,7 +76,7 @@ SR( SQL, sql_bindu_int, mas_sqlite_stmt_t * stmt, const char *fldname, int pi, i
     pi = BI;
   if ( pi > 0 )
   {
-    CRV_SQLITE(mas_sqlite_bind_int, stmt, pi, value );
+    CRV_SQLITE( mas_sqlite_bind_int, stmt, pi, value );
     MAST_TRACE( sql, 5, "int %s='%d'", fldname, value );
   }
   else if ( QNOERR && !opt )
@@ -145,7 +137,7 @@ SR( SQL, sql_bindn_long_long, mas_sqlite_stmt_t * stmt, const char *fldname, lon
     pi = BI;
   if ( pi > 0 )
   {
-    CRV_SQLITE(mas_sqlite_bind_long_long, stmt, pi, value );
+    CRV_SQLITE( mas_sqlite_bind_long_long, stmt, pi, value );
     MAST_TRACE( sql, 5, "long long %s='%lld'", fldname, value );
   }
   else if ( QNOERR && !opt )
@@ -188,7 +180,7 @@ SR( SQL, sql_bindn_int, mas_sqlite_stmt_t * stmt, const char *fldname, int value
     pi = BI;
   if ( pi > 0 )
   {
-    CRV_SQLITE(mas_sqlite_bind_int, stmt, pi, value );
+    CRV_SQLITE( mas_sqlite_bind_int, stmt, pi, value );
     MAST_TRACE( sql, 5, "int %s='%d'", fldname, value );
   }
   else if ( QNOERR && !opt )
@@ -250,7 +242,7 @@ SR( SQL, sql_bind_long_long, mas_sqlite_stmt_t * stmt, const char *fldname, long
   pi = BI;
   if ( pi > 0 )
   {
-    CRV_SQLITE(mas_sqlite_bind_long_long, stmt, pi, value );
+    CRV_SQLITE( mas_sqlite_bind_long_long, stmt, pi, value );
     MAST_TRACE( sql, 5, "long long %s='%lld'", fldname, value );
   }
   else if ( QNOERR && !opt )
@@ -290,7 +282,7 @@ SR( SQL, sql_bind_int, mas_sqlite_stmt_t * stmt, const char *fldname, int value,
   pi = BI;
   if ( pi > 0 )
   {
-    CRV_SQLITE(mas_sqlite_bind_int, stmt, pi, value );
+    CRV_SQLITE( mas_sqlite_bind_int, stmt, pi, value );
     MAST_TRACE( sql, 0, "int %s='%d'", fldname, value );
   }
   else if ( QNOERR && !opt )

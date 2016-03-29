@@ -2,19 +2,13 @@
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
 
-#include "duf_tracen_defs_preset.h"
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ♠ */
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ♠ */
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 #include "sql_beginning_selected.h"
 #include "sql_tables_global_defs.h"
 
@@ -144,8 +138,9 @@ duf_sql_set_t std_leaf_sets[] = {                                    /* */
                }
    ,                                                                 /* */
 #endif
-   .order = "sh.dupsha1cnt ASC, sha1id ASC, file_name ASC",                             /* */
-   .orders = {"sh.dupsha1cnt ASC, sha1id ASC, file_name ASC","sh.dupsha1cnt ASC, sha1id DESC", "file_name", "dataid ASC", "dataid DESC"},                             /* */
+   .order = "sh.dupsha1cnt ASC, sha1id ASC, file_name ASC",          /* */
+   .orders = {"sh.dupsha1cnt ASC, sha1id ASC, file_name ASC", "sh.dupsha1cnt ASC, sha1id DESC", "file_name", "dataid ASC", "dataid DESC"}
+   ,                                                                 /* */
    .matcher = NULL,
  /* To select ALL files under path
     WITH RECURSIVE cte_paths(rowid,parentid) AS  (   SELECT pt.rowid,pt.parentid FROM main.paths  AS pt WHERE rowid=:PathID   UNION     SELECT ptustd.rowid,ptustd.parentid     FROM cte_paths     JOIN main.paths AS ptustd ON( ptustd.parentid=cte_paths.rowid                     )  ) SELECT fn.file_name FROM filenames AS fn  JOIN cte_paths AS pte ON(fn.Pathid=pte.rowid)

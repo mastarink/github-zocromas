@@ -17,12 +17,6 @@
 /* #include <mastar/multiconfig/muc_se.h> */
 #include <mastar/multiconfig/muc_options_file.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
@@ -38,8 +32,6 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ✗ */
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
-
-/* #include "duf_options_file.h" */
 
 /* ###################################################################### */
 #include "duf_optimpl_sccb.h"

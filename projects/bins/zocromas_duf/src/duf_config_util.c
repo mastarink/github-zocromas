@@ -17,20 +17,11 @@
 
 #include <mastar/multiconfig/muc_option_names.h>
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
-/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 #include "duf_config_ref.h"
-/* #include "duf_config_db.h" */
 #include "duf_config_db_get.h"
 
 #include "duf_optimpl_defs.h"                                        /* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ */

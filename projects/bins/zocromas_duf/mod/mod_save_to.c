@@ -22,18 +22,11 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/*  #include "duf_tracen_defs.h"  (*  T; TT; TR ♠  *) */
-/*  #include "duf_errorn_defs.h"  (*  DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠  *) */
-
-/*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
-/*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
-
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
 #include "duf_sccb_structs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-/* #include "duf_config_ref.h" */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_levinfo_openclose.h"
@@ -43,9 +36,7 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
-/* #include "duf_option_defs.h" */
 
-/* #include "duf_dbg.h" */
 #include "duf_mod_defs.h"
 
 #include "sql_beginning_selected.h"

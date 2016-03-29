@@ -13,28 +13,16 @@
 #include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 #include <mastar/multiconfig/muc_option_config_credel.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_trace.h"                                        /* duf_trace_file_c; duf_trace_output_force_color_c; duf_trace_output_no_color_c ✗ */
 #include "duf_config_output_weak.h"
 #include "duf_config_ref.h"
-/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
-/* #include "duf_config4trace_ref.h" */
-/* #include "duf_config_trace_credel.h" */
 #include "duf_cfg_credel.h"
 
 #include "duf_xtended_table.h"
-
-/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config_structs.h"
 /* ###################################################################### */

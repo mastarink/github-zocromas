@@ -12,18 +12,11 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/*  #include "duf_tracen_defs.h"  (*  T; TT; TR ♠  *) */
-/*  #include "duf_errorn_defs.h"  (*  DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠  *) */
-
-/*  #include "duf_start_end.h"  (*  DUF_STARTR ; DUF_ENDR ♠  *) */
-/*  #include "duf_dodefs.h"  (*  DOR ♠  *) */
-
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t ✗ */
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
 #include "duf_sccb_structs.h"
 
 #include "sql_beginning_types.h"                                     /* duf_sql_sequence_t */
 
-/* #include "duf_config.h" */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */

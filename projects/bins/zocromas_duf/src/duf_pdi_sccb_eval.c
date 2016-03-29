@@ -13,17 +13,8 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ *) */
-
-/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sccb.h"
@@ -34,8 +25,6 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccbh_eval.h"
 #include "duf_sccb_structs.h"
-
-/* #include "duf_maindb.h"                                              (* duf_main_db; duf_main_db_open; duf_main_db_close ✗ *) */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -59,8 +48,8 @@ SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const 
   duf_sccb_handle_t *sccbh = NULL;
 
 /* assert( CRX(levinfo_dirid, pdi ) ); */
-  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", ( *psccb ) ? ( *psccb )->name : NULL, CRX(levinfo_path, pdi ) );
-  MAST_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", CRX(levinfo_path, pdi ) );
+  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", ( *psccb ) ? ( *psccb )->name : NULL, CRX( levinfo_path, pdi ) );
+  MAST_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", CRX( levinfo_path, pdi ) );
 /* QT( "sccb:%d; dirid:%llu", (*psccb) ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
   sccbh = CRP( sccb_handle_open, pdi, psccb, ptarg );
   if ( sccbh )
@@ -96,12 +85,12 @@ SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, du
 /* DUF_STARTR( r ); */
 
   assert( pdi );
-  assert( CRX(levinfo_node_type, pdi ) == DUF_NODE_NODE );
+  assert( CRX( levinfo_node_type, pdi ) == DUF_NODE_NODE );
 
 #if 0
   if ( 0 == strcmp( name, "NULL" ) )
   {
-    DOR( r, CRX(ev_pdi_sccb, pdi, NULL, ptarg, f_summary ) );        /* XXX XXX XXX XXX */
+    DOR( r, CRX( ev_pdi_sccb, pdi, NULL, ptarg, f_summary ) );       /* XXX XXX XXX XXX */
   }
   else
 #endif
@@ -114,15 +103,15 @@ SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, du
 
     if ( QNOERR )
 #if 0
-      sccb = CRX(find_or_load_sccb_by_evnamen, name, len, first );   /* XXX XXX */
+      sccb = CRX( find_or_load_sccb_by_evnamen, name, len, first );  /* XXX XXX */
 #else
-      sccbarr = CRX(find_or_load_sccb_by_evnamen_plus, name, len, first );
+      sccbarr = CRX( find_or_load_sccb_by_evnamen_plus, name, len, first );
 #endif
 
     MAST_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccbarr && sccbarr[0] ? sccbarr[0]->name : "NONAME" );
     if ( sccbarr && sccbarr[0] )
     {
-      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccbarr[0]->name, CRX(levinfo_path, pdi ) );
+      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccbarr[0]->name, CRX( levinfo_path, pdi ) );
 
     /* QT( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
       CR( ev_pdi_sccb, pdi, sccbarr, ptarg, f_summary );             /* XXX XXX XXX XXX */
@@ -161,7 +150,7 @@ SR( PDI, ev_pdi_evname_at, duf_depthinfo_t * pdi, const char *name, duf_scan_cal
   assert( pdi );
 
   if ( !arg )
-    arg = CRX(levinfo_path, pdi );
+    arg = CRX( levinfo_path, pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
   {
     mas_cargvc_t ctarg;
@@ -186,7 +175,7 @@ SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan
   assert( pdi );
 
   pnames = names;
-  MAST_TRACE( path, 0, "@levinfo_path: %s", CRX(levinfo_path, pdi ) );
+  MAST_TRACE( path, 0, "@levinfo_path: %s", CRX( levinfo_path, pdi ) );
 
 /* assert( pdi->pyp ); */
   while ( QNOERR && pnames && *pnames )

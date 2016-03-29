@@ -5,13 +5,9 @@
 /* #include <mastar/tools/mas_tools.h>                                  (* mas_tstrflocaltime *) */
 /* #include <mastar/tools/mas_utils_path.h>                             (* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ *) */
 
-/* #include "duf_expandable.h" */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
-/* #include "duf_config_defs.h" */
-/* #include "duf_config_ref.h" */
 
-/* #include "duf_config_structs.h" */
 #include "duf_cfg_output_util.h"
 /* ###################################################################### */
 #include "duf_config_output_util.h"

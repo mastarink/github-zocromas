@@ -11,12 +11,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -51,7 +45,6 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
 {
 /* DUF_STARTR( r ); */
 
-
 #if 0
   H_PDI->items.total++;
   H_PDI->items.files++;
@@ -83,7 +76,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
     {
       ERRLOWER( FS_DISABLED );
 #if 0
-      /* sccbh->current_scanner = scanner; */
+    /* sccbh->current_scanner = scanner; */
       if ( scanner )
       {
         CRV( scanner, pstmt, H_PDI );

@@ -17,18 +17,9 @@
 #include <mastar/multiconfig/muc_option_descr.h>
 #include <mastar/multiconfig/muc_option_config.h>
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_output_defs.h" */
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
-
-/* #include "duf_expandable.h"                                          (* duf_expandable_string_t; duf_string_expanded ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_ref.h"
@@ -36,20 +27,6 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_db.h"
 #include "duf_config_db_get.h"
-/* #include "duf_config_output_util.h" */
-
-/* #include "duf_action_table.h" */
-/* #include "duf_sccb.h" */
-
-/* #include "duf_xtended_table.h" */
-
-/* #include "duf_option_descr.h" */
-/* #include "duf_option_stage.h"                                        (* duf_optstage_name ♠ *) */
-/* #include "duf_option_extended.h" */
-
-/* #include "duf_option_names.h"                                        (* duf_coption_names_d etc... ♠ *) */
-/* #include "duf_option_class.h"                                        (* duf_optclass2string ♠ *) */
-/* #include "duf_option_config.h"                                       (* duf_get_cli_options_trace_config ♠ *) */
 
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 #include "duf_optimpl_extended2string.h"
@@ -366,7 +343,7 @@ SR( SNIPPET_OPTION, optimpl_O_showflags, /* int argc, char *const *argv */ void 
   {
     typeof( duf_get_config_flag_vars_puz_bits(  ) )u = /* DUF_CONFIGG( vars.puz )->v.sbit */ duf_get_config_flag_vars_puz_bits(  );
 
-    /* "u   [%2lu->%2lu]   %8lx :: " */
+  /* "u   [%2lu->%2lu]   %8lx :: " */
     DUF_PRINTF( 0, "u   [%2lu->%2lu]  %8x :: ", sizeof( u ), sizeof( u ),
               /* ( unsigned long ) DUF_CONFIGG( vars.puz )->v.sbit */ duf_get_config_flag_vars_puz_bits(  ) );
 

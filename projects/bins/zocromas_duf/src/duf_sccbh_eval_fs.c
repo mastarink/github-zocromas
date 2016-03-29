@@ -15,15 +15,7 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ✗ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ✗ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ✗ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
-
-/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ✗ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -45,7 +37,6 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"
 
-
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_fs.h"
@@ -65,7 +56,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
   /* call hook frmo mod_ */
   /* if ( scanner ) */
     {
-      /* sccbh->current_scanner = scanner; */
+    /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 2, "@@@@@@@%s +%d :: %s | %s", duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_pdi_depth( H_PDI ),
                   duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
       CRV( ( scanner ), NULL /* pstmt */ , H_PDI, sccbh );
@@ -238,9 +229,9 @@ SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unus
                 duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
     {
       {
-	ERRLOWER(STATAT_ENOENT);
+        ERRLOWER( STATAT_ENOENT );
         CR( levinfo_if_statat_dh, H_PDI );
-	ERRUPPER(STATAT_ENOENT);
+        ERRUPPER( STATAT_ENOENT );
       }
       assert( QISERR || duf_levinfo_stat( H_PDI ) );
 

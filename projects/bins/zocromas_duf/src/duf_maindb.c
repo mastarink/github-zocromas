@@ -19,21 +19,11 @@
 
 #include <mastar/multiconfig/muc_option_names.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-/* #include "duf_config_output_weak.h"                                  (* mas_dry_run *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_status_ref.h"                                          /* global_status */
-
-/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
-/* #include "duf_config_defs.h"                                         (* DUF_CONF... ✗ *) */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_db.h"                                           /* duf_config_make_db_paths */
@@ -54,8 +44,6 @@
 #include "sql_beginning_vacuum.h"
 #include "sql_beginning_create.h"
 
-/* #include "duf_optimpl_defs.h"                                        (* DUF_UG_FLAG; DUF_ACT_FLAG etc. ✗ *) */
-/* #include "duf_optimpl_enum.h"                                        (* duf_option_code_t ✗ *) */
 #include "duf_pdi_structs.h"
 
 /* ###################################################################### */
@@ -177,7 +165,7 @@ SR( TOP, main_db_pre_action, void )
     MAST_TRACE( explain, 1, "no %s option", duf_get_config_flagname_act_allow_create_tables( -1 ) );
   }
 
-  if ( QNOERR   && duf_get_config_flag_act_allow_vacuum(  ) )
+  if ( QNOERR && duf_get_config_flag_act_allow_vacuum(  ) )
   {
   /* static const char *sql = "VACUUM"; */
 
