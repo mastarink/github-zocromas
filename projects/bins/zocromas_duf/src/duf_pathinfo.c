@@ -47,8 +47,6 @@
 
 SR( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
 {
-/* DUF_STARTR( r ); */
-
   assert( pi );
 
   if ( maxdepth )
@@ -61,13 +59,11 @@ SR( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdept
     assert( pi->levinfo );
   }
 
-/* DUF_ENDR( r ); */
   ER( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth );
 }
 
 SR( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int max_rd )
 {
-/* DUF_STARTR( r ); */
 
   pi->depth = -1;
 
@@ -82,7 +78,6 @@ SR( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int ma
 /* MAST_TRACE( temp, 0, "@@@@@@@ %u", max_rd ); */
   pi->maxdepth = max_rd ? max_rd : 20 + ( pi->topdepth ? pi->topdepth : 20 ); /* FIXME ??? */
 
-/* DUF_ENDR( r ); */
   ER( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int max_rd );
 }
 

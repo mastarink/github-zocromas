@@ -3,20 +3,15 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs.h>
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-#include "duf_errorn_defs.h"                                         /* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ✗ */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
-
-/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -83,7 +78,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
 /* assert( pdisrc->num_idstatements == 0 ); */
 /* assert( !pdisrc->idstatements ); */
 
-  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li, 1 /* no_clear */ );
+  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li, 1 /* no_clear */  );
 #if 0
   duf_items_copy( pdidst->items, pdisrc->items );
 #else
@@ -118,8 +113,6 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
 
 SR( PDI, pdi_delete, duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
-
   assert( pdi && pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
 /* assert( pdi->pathinfo.levinfo[pdi->pathinfo.depth].itemname ); */
@@ -128,16 +121,13 @@ SR( PDI, pdi_delete, duf_depthinfo_t * pdi )
     mas_free( pdi->pdi_name );
   pdi->pdi_name = NULL;
   mas_free( pdi );
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_delete, duf_depthinfo_t * pdi );
 }
 
 SR( PDI, pdi_kill, duf_depthinfo_t ** ppdi )
 {
-/* DUF_STARTR( r ); */
   if ( ppdi && *ppdi )
     CR( pdi_delete, *ppdi );
   *ppdi = NULL;
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_kill, duf_depthinfo_t ** ppdi );
 }

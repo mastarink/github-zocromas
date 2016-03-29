@@ -12,17 +12,10 @@
 /* #include <mastar/error/mas_error_defs_make.h> */
 /* #include <mastar/error/mas_error_defs.h> */
 
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref_def.h"
-/* #include "duf_levinfo_context.h" */
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
 #include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
@@ -64,7 +57,7 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
   duf_node_type_t nt;
 
   nt = duf_pi_node_type_d( pi, d );
-  if ( d >= 0 /* && nt != DUF_NODE_NONE */ )
+  if ( d >= 0 /* && nt != DUF_NODE_NONE */  )
   {
     duf_levinfo_t *pli = NULL;
 
@@ -76,55 +69,10 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
     pli = duf_pi_ptr_d( pi, d );
     assert( pli );
 
-#if 0
-    if ( pli->fullpath )
-    {
-      path = pli->fullpath;
-    }
-    else
-    {
-      {
-        size_t len = 2;
-        char *p;
-
-        assert( pi );
-        assert( d >= 0 );
-        for ( int i = 0; i <= d; i++ )
-        {
-          assert( &pli[i - d] == &pi->levinfo[i] );
-          assert( pi->levinfo[i].itemname );
-          len += strlen( pi->levinfo[i].itemname ) + 1;
-        }
-        path = mas_malloc( len );
-        p = path;
-
-        for ( int i = 0; i <= d; i++ )
-        {
-          size_t l;
-
-          if ( p == path || *( p - 1 ) != '/' )
-            *p++ = '/';
-          *p = 0;
-          MAST_TRACE( path, 4, "path:%s", path );
-          l = strlen( pi->levinfo[i].itemname );
-          if ( l > 0 )
-          {
-            strcpy( p, pi->levinfo[i].itemname );
-            p += l;
-            *p++ = '/';
-          }
-          *p = 0;
-        }
-      }
-      assert( d >= 0 );
-      pli->fullpath = path;
-    }
-#else
   /* QT( "@%d d:%d", pi->maxdepth, d ); */
     if ( !pli->fullpath )
       pli->fullpath = duf_li_path( duf_pi_ptr_d( pi, 0 ), d + 1 );
     path = pli->fullpath;
-#endif
   }
   MAST_TRACE( path, 4, "fullpath:%s", path );
   return path;
@@ -154,6 +102,7 @@ DUF_PATHINFO_FC( const char *, relpath )
 DUF_PATHINFO_FC_UP( const char *, relpath )
 /* *INDENT-ON*  */
 
+#if 0
 /* 20150904.122152 */
 const char *
 duf_pi_path_q( const duf_pathinfo_t * pi, const char *q )
@@ -173,6 +122,7 @@ duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q )
   p = duf_pi_path_q( pi, q );
   return p ? mas_strdup( p ) : NULL;
 }
+#endif
 
 /* *INDENT-OFF*  */
 DUF_PATHINFO_4GET( int, dfd, lev_dh.dfd )
@@ -224,6 +174,7 @@ DUF_PATHINFO_FC_REF( const char, itemtruename )
 DUF_PATHINFO_FC_UP_REF( const char, itemtruename )
 /* *INDENT-ON*  */
 
+#if 0
 /* 20150904.122217 */
 const char *
 duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
@@ -233,7 +184,7 @@ duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
   p = duf_pi_itemtruename( pi );
   return p ? p : q;
 }
-
+#endif
 /************************************************************************/
 /* 20150904.122223 */
 struct stat *
@@ -247,7 +198,7 @@ duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
 
     pdh = duf_pi_pdh_d( pi, d );
 
-    if ( pdh->rs > 0 && pdh->source == DUF_DH_SOURCE_FS )
+    if ( pdh && pdh->rs > 0 && pdh->source == DUF_DH_SOURCE_FS )
       pst = &pdh->st;
   }
 /* TODO NOT here: assert( pst->st_dev ); 
@@ -288,6 +239,7 @@ duf_pi_set_topdepth( duf_pathinfo_t * pi )
     pi->topdepth = pi->depth;
 }
 
+#if 0
 int
 duf_pi_topdepth( const duf_pathinfo_t * pi )
 {
@@ -312,6 +264,29 @@ duf_pi_levinfo( const duf_pathinfo_t * pi )
   return pi ? pi->levinfo : NULL;
 }
 
+#else
+/* *INDENT-OFF*  */
+DUF_PATHINFO_GET_VAL( int, topdepth)
+DUF_PATHINFO_GET_VAL( int, maxdepth)
+DUF_PATHINFO_GET_VAL( int, depth)
+DUF_PATHINFO_GET_VAL( duf_levinfo_t *, levinfo)
+/* *INDENT-ON*  */
+#endif
+
+duf_levinfo_t *
+duf_pi_li_d( const duf_pathinfo_t * pi, int d )
+{
+  duf_levinfo_t *li = NULL;
+
+  if ( pi && pi->levinfo && d >= 0 && d <= ( int ) pi->maxdepth )
+    li = &pi->levinfo[d];
+  return li;
+}
+/* *INDENT-OFF*  */
+DUF_PATHINFO_FC( duf_levinfo_t *, li )
+DUF_PATHINFO_FC_UP( duf_levinfo_t *, li )
+/* *INDENT-ON*  */
+
 int
 duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 {
@@ -325,8 +300,5 @@ DUF_PATHINFO_FC_UP( int, deltadepth )
 const char *
 duf_pi_itemname( const duf_pathinfo_t * pi )
 {
-  duf_levinfo_t *pli;
-
-  pli = &pi->levinfo[pi->depth];
-  return duf_li_itemname( pli );
+  return pi ? duf_li_itemname( duf_pi_li( pi ) /* &pi->levinfo[pi->depth] */  ) : NULL;
 }

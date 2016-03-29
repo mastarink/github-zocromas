@@ -52,7 +52,7 @@ duf_li_create_array( unsigned maxdepth )
   {
     size_t lsz;
 
-    lsz = duf_li_size_array( maxdepth, 1 )  /* +1 more for duf_levinfo_calc_depth */ ;
+    lsz = duf_li_size_array( maxdepth, 1 ) /* +1 more for duf_levinfo_calc_depth */ ;
     pli = mas_malloc( lsz );
     memset( pli, 0, lsz );
     assert( pli[maxdepth + 1].d == 0 );
@@ -120,7 +120,6 @@ duf_li_copy_array( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigne
   assert( plidst );
   assert( plisrc );
   memcpy( plidst, plisrc, duf_li_size_array( maxdepth, 1 ) );
-  /* QT( "@@li %d(%d) : %d(%d)", plidst[maxdepth].node_type, maxdepth, plisrc[maxdepth].node_type, maxdepth ); */
   for ( unsigned i = 0; i <= maxdepth; i++ )
   {
     plidst[i].fullpath = mas_strdup( plisrc[i].fullpath );
@@ -130,15 +129,12 @@ duf_li_copy_array( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigne
     assert( !plisrc[i].context.ptr );
     assert( !plisrc[i].context.destructor );
 
-    /* QT( "@@Li %d(%d) : %d(%d)", plidst[i].node_type, i, plisrc[i].node_type, i ); */
-
 #if 0
     duf_items_copy( plidst[i].items, plisrc[i].items );
 #else
   /* it's OK: no allocations at duf_items_t */
 #endif
   }
-  /* QT( "@LI %d(%d) : %d(%d)", plidst[maxdepth].node_type, maxdepth, plisrc[maxdepth].node_type, maxdepth ); */
 }
 
 duf_levinfo_t *
@@ -158,53 +154,45 @@ duf_li_clone_array( const duf_levinfo_t * plisrc, unsigned maxdepth )
 
 SRP( LI, duf_levinfo_t *, pli, duf_li_create_array( maxdepth ), nameid2li, unsigned long long nameid, unsigned maxdepth )
 {
-/* duf_levinfo_t *pli = NULL; */
-
-/* int rpr = 0; */
-
-/* pli = duf_li_create_array( maxdepth ); */
-
   unsigned count = 0;
   unsigned long long dirid = 0;
 
-/* char *name = NULL; */
   duf_levinfo_t *plirev = NULL;
 
-/* unsigned long long cdirid, pdirid; */
-
   plirev = duf_li_create_array( maxdepth );
-
-  duf_depthinfo_t di = {.pdi_name = "nameid2li" };
-  CR( pdi_init_min_r, &di, NULL /* real_path */  );
+  {
+    duf_depthinfo_t di = {.pdi_name = "nameid2li" };
+    CR( pdi_init_min_r, &di, NULL /* real_path */  );
 /* cdirid = dirid; */
-  CR( nameid2li_existed, &di, nameid, &plirev[count], &dirid );
-  if ( QNOERR )
-    count++;
-  assert( count <= maxdepth );
-  while ( QNOERR )
-  {
-    CR( dirid2li_existed, &di, dirid, &plirev[count], &dirid );
-    if ( QISERR || !plirev[count].itemname )
-      break;
-  /* plirev[count].itemname = name; */
-  /* plirev[count].db.dirid = pdirid; */
-  /* pdirid = cdirid; */
-  /* plirev[count].node_type = DUF_NODE_NODE; */
-  /* plirev[count].source = DUF_DH_SOURCE_DB; */
-  /* T( "@@@count:%d [%llu:%llu] %s", count, dirid, plirev[count].db.dirid, plirev[count].itemname ); */
+    CR( nameid2li_existed, &di, nameid, &plirev[count], &dirid );
+    if ( QNOERR )
+      count++;
     assert( count <= maxdepth );
-    count++;
-  }
-  if ( QNOERR )
-  {
-    for ( unsigned i = 0; i < count; i++ )
+    while ( QNOERR )
     {
-      pli[i] = plirev[count - i - 1];
-      pli[i].d = i;
-    /* reverse */
+      CR( dirid2li_existed, &di, dirid, &plirev[count], &dirid );
+      if ( QISERR || !plirev[count].itemname )
+        break;
+    /* plirev[count].itemname = name; */
+    /* plirev[count].db.dirid = pdirid; */
+    /* pdirid = cdirid; */
+    /* plirev[count].node_type = DUF_NODE_NODE; */
+    /* plirev[count].source = DUF_DH_SOURCE_DB; */
+    /* T( "@@@count:%d [%llu:%llu] %s", count, dirid, plirev[count].db.dirid, plirev[count].itemname ); */
+      assert( count <= maxdepth );
+      count++;
     }
+    if ( QNOERR )
+    {
+      for ( unsigned i = 0; i < count; i++ )
+      {
+        pli[i] = plirev[count - i - 1];
+        pli[i].d = i;
+      /* reverse */
+      }
+    }
+    duf_pdi_close( &di );
   }
-  duf_pdi_close( &di );
   mas_free( plirev );
 
   ERP( LI, duf_levinfo_t *, pli, NULL, nameid2li, unsigned long long nameid, unsigned maxdepth );

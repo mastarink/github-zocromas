@@ -26,7 +26,7 @@ const char *duf_pi_itemshowname_q( const duf_pathinfo_t * pi, const char *q );
 const char *duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d );
 const char *duf_pi_itemtruename( const duf_pathinfo_t * pi );
 const char *duf_pi_itemtruename_up( const duf_pathinfo_t * pi );
-const char *duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q );
+/* const char *duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q ); */
 
 /*
 void duf_pi_set_dirid_d( duf_pathinfo_t * pi, unsigned long long dirid, int d );
@@ -134,8 +134,8 @@ duf_node_type_t duf_pi_node_type_d( const duf_pathinfo_t * pi, int d );
 duf_node_type_t duf_pi_node_type( const duf_pathinfo_t * pi );
 duf_node_type_t duf_pi_node_type_up( const duf_pathinfo_t * pi );
 
-const char *duf_pi_path_q( const duf_pathinfo_t * pi, const char *q );
-char *duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q );
+/* const char *duf_pi_path_q( const duf_pathinfo_t * pi, const char *q ); */
+/* char *duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q ); */
 
 /********************************************************************************************/
 /********************************************************************************************/
@@ -172,7 +172,11 @@ void duf_pi_set_topdepth( duf_pathinfo_t * pi );
 
 int duf_pi_topdepth( const duf_pathinfo_t * pi );
 int duf_pi_maxdepth( const duf_pathinfo_t * pi );
+
 duf_levinfo_t *duf_pi_levinfo( const duf_pathinfo_t * pi );
+
+duf_levinfo_t *duf_pi_li( const duf_pathinfo_t * pi );
+duf_levinfo_t *duf_pi_li_d( const duf_pathinfo_t * pi, int d );
 
 int duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth( const duf_pathinfo_t * pi );

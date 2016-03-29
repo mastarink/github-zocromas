@@ -77,7 +77,6 @@ zocromas_duf_SOURCES= \
 	duf_filedata.c \
 	duf_fileinfo.c \
 	duf_levinfo.c \
-	duf_levinfo_context.c \
 	duf_levinfo_count.c \
 	duf_levinfo_credel.c \
 	duf_levinfo_dbinit.c \

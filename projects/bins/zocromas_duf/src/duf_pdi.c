@@ -11,14 +11,6 @@
 
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
-/* #include "duf_debug_defs.h"                                          (* DUF_WRAPSTATIC; DUF_WRAPPED ...  ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -31,15 +23,12 @@
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_ref.h"
-/* #include "duf_pdi_pi_ref.h" */
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 
 #include "duf_ufilter_ref.h"
-
-/* #include "sql_tables_defs.h" */
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
 
@@ -57,8 +46,6 @@
 SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
     int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
 {
-/* DUF_STARTR( r ); */
-
   assert( pdi );
   assert( !sql_set || sql_set->type == DUF_NODE_NODE );              /* 20160214.162255 */
 
@@ -71,35 +58,9 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
     pdi->inited = 1;
     pdi->pup = pu;
     MAST_TRACE( pdi, 3, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
-#if 0
-    pdi->pathinfo.depth = -1;
-    if ( real_path )
-    {
-      DOR( r, duf_pathdepth( real_path ) );
-      if ( DUF_NOERROR( r ) )
-        pdi->pathinfo.topdepth = r;
-    }
-    assert( pdi->pathinfo.depth == -1 );
-    {
-      int max_rel_depth = 0;
 
-      max_rel_depth = pdi && pdi->pup ? pdi->pup->max_rel_depth : 20;
-      assert( pdi->pathinfo.depth == -1 );
-    /* MAST_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
-      assert( max_rel_depth /* FIXME */  );
-      {
-        pdi->pathinfo.maxdepth = max_rel_depth + ( pdi->pathinfo.topdepth ? pdi->pathinfo.topdepth : 20 );
-      }
-    }
-#else
-
-# if 0
-    duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, pdi->pup ? pdi->pup->max_rel_depth : 0 );
-# else
     duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, duf_ufilter_max_rel_depth( duf_pdi_pu( pdi ) ) );
-# endif
 
-#endif
     pdi->recursive = frecursive ? 1 : 0;
     pdi->allow_dirs = fallow_dirs ? 1 : 0;
     pdi->linear = flinear ? 1 : 0;
@@ -140,45 +101,17 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
     MAST_TRACE( pdi, 5, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
   MAST_TRACE( pdi, 7, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
       int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );
 }
-
-#if 0
-# ifdef MAS_WRAP_FUNC
-/* 20150904.085443 */
-int
-DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path,
-                              const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
-{
-  DUF_STARTR( r );
-
-  MAST_TRACE( pdi, 3, "@@@frecursive:%d; real_path:%s", frecursive, real_path );
-/* QT( "real_path:%p:%s", real_path, real_path ); */
-  DOR( r, duf_pdi_init( pdi, pu, real_path, sql_set, caninsert, frecursive, fallow_dirs, flinear, opendir ) );
-
-  if ( DUF_NOERROR( r ) )
-  {
-    MAST_TRACE( explain, 1, "converted to real_path: %s", real_path );
-    MAST_TRACE( explain, 0, "added path: %s", real_path );
-  /* MAST_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) ); */
-  }
-/* TODO */ assert( duf_pdi_levinfo( pdi ) );
-  DUF_ENDR( r );
-}
-# endif
-#endif
 
 /* 20151113.105524 */
 /* min, recursive */
 SR( PDI, pdi_init_min_r, duf_depthinfo_t * pdi, const char *real_path )
 {
-/* DUF_STARTR( r ); */
 
   CR( pdi_init, pdi, ( duf_ufilter_t * ) NULL, real_path, NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
       1 /* allow_dirs */ , 0 /* linear */ , 0 /* opendir */  );
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_init_min_r, duf_depthinfo_t * pdi, const char *real_path );
 }
 
@@ -186,7 +119,6 @@ SR( PDI, pdi_init_min_r, duf_depthinfo_t * pdi, const char *real_path )
 SR( PDI, pdi_init_from_dirid, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid,
     const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir )
 {
-/* DUF_STARTR( r ); */
   char *path = NULL;
 
   path = duf_dirid2path( dirid, QPERRIND );
@@ -194,14 +126,12 @@ SR( PDI, pdi_init_from_dirid, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, u
   CR( pdi_init, pdi, pu, path, sql_set, caninsert, frecursive, fallow_dirs, flinear, opendir );
   MAST_TRACE( pdi, 8, "%d: %s / %s", QERRIND, path, duf_levinfo_path( pdi ) );
   mas_free( path );
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_init_from_dirid, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid,
       const duf_sql_set_t * sql_set, int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );
 }
 
 SR( PDI, pdi_shut, duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
 
   assert( pdi );
   if ( pdi->inited )
@@ -260,14 +190,12 @@ SR( PDI, pdi_shut, duf_depthinfo_t * pdi )
     assert( !pdi->pup );
     assert( !pdi->pyp );
   }
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_shut, duf_depthinfo_t * pdi );
 }
 
 /* 20150904.085731 */
 SR( PDI, pdi_close, duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
 
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
@@ -286,8 +214,6 @@ SR( PDI, pdi_close, duf_depthinfo_t * pdi )
 
 # if 0
       DOR( r, duf_pdi_detach_selected( pdi ) );
-# endif
-# if 0
       {
         int ry DUF_UNUSED = 0;
         char *selected_db_file;
@@ -314,6 +240,5 @@ SR( PDI, pdi_close, duf_depthinfo_t * pdi )
     }
   }
   assert( !pdi->next );
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_close, duf_depthinfo_t * pdi );
 }

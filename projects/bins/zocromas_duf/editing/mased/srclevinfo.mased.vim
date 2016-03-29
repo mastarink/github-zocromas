@@ -19,8 +19,8 @@ sfind duf_levinfo_openclose.h
 tab sfind duf_levinfo_stat.c
 sfind duf_levinfo_stat.h
 
-tab sfind duf_levinfo_context.c
-sfind duf_levinfo_context.h
+" tab sfind duf_levinfo_context.c
+" sfind duf_levinfo_context.h
 
 tab sfind duf_levinfo_updown.c
 sfind duf_levinfo_updown.h

@@ -6,14 +6,7 @@
 
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
-#include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
-
-/* #include "duf_tracen_defs.h"                                         (* MAST_TRACE ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
@@ -44,8 +37,6 @@ duf_pdi_py( const duf_depthinfo_t * pdi )
 /* needless?!? TODO */
 SR( PDI, pdi_max_filter, const duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
-
   assert( pdi );
 #if 0
   if ( pdi->pup->max_seq && pdi->seq >= pdi->pup->max_seq )
@@ -65,6 +56,5 @@ SR( PDI, pdi_max_filter, const duf_depthinfo_t * pdi )
 /*        && ( !pdi->pup->maxitems.files || ( pdi->items.files ) < pdi->pup->maxitems.files )    */
 /*        && ( !pdi->pup->maxitems.dirs || ( pdi->items.dirs ) < pdi->pup->maxitems.dirs )       */
 /*        && ( !pdi->pup->maxitems.total || ( pdi->items.total ) < pdi->pup->maxitems.total ) ); */
-/* DUF_ENDR( r ); */
   ER( PDI, pdi_max_filter, const duf_depthinfo_t * pdi );
 }

@@ -553,3 +553,23 @@
 # run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4' '--trace-temp=-20'
 # retcode:0
 # 20160329.155153 : 1459255913.122431813 ------------[r]--
+# 20160329.164619 : 1459259179.310718082 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160329' '-dufR' '--with-tag-file=test-gz1' '--max-depth=17' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test' '--trace-temp=-20'
+# retcode:0
+# 20160329.164619 : 1459259179.351135266 ------------[r]--
+# 20160329.164623 : 1459259183.812646833 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160329' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test' '--trace-temp=-20'
+# retcode:0
+# 20160329.164623 : 1459259183.851699597 ------------[r]--
+# 20160329.164630 : 1459259190.017276198 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4' '--trace-temp=-20'
+# retcode:0
+# 20160329.164630 : 1459259190.471352816 ------------[r]--
+# 20160329.164641 : 1459259201.952567316 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--min-same-sha1=8' '--glob=*.jpg' '--std-leaf-set-name=std-all-under' '-df' '--evaluate-sccb=listing' '/home/' '--use-format=4' '--trace-temp=-20'
+# retcode:0
+# 20160329.164643 : 1459259203.873340340 ------------[r]--

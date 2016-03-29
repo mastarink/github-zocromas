@@ -62,7 +62,6 @@ noinst_HEADERS=motest_config.h \
 	duf.h \
 	duf_hook_types.h \
 	duf_item_types.h \
-	duf_levinfo_context.h \
 	duf_levinfo_count.h \
 	duf_levinfo_credel.h \
 	duf_levinfo_dbinit.h \
