@@ -13,7 +13,6 @@
 
 #include "duf_pathinfo_ref.h"
 
-/* #include "duf_levinfo_structs.h" */
 #include "duf_pdi_structs.h"
 
 /* ###################################################################### */
@@ -26,14 +25,7 @@ duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->inited );
-#if 0
-  assert( pdi->pathinfo.levinfo );
-  return d >= 0 && pdi ? &pdi->pathinfo.levinfo[d] : NULL;
-#elif 0
-  return ( d >= 0 && d <= ( int ) pdi->pathinfo.maxdepth ) ? duf_pi_ptr_d( &pdi->pathinfo, d ) : NULL;
-#else
-  return duf_pi_ptr_d( &pdi->pathinfo, d );
-#endif
+ return duf_pi_ptr_d( &pdi->pathinfo, d );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( duf_levinfo_t , ptr )

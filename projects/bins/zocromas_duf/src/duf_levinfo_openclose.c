@@ -10,24 +10,16 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_dh.h"                                                  /* duf_openat_dh; duf_open_dh; duf_opened_dh; duf_close_dh; duf_statat_dh; etc. ✗ */
 
-#include "duf_pdi_ref.h"
-
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
+#include "duf_pdi_ref.h"
 #include "duf_pdi_structs.h"
 
 /* ###################################################################### */
@@ -38,7 +30,6 @@
 static
 SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
 {
-/* DUF_STARTR( r ); */
   assert( pdi );
   assert( d >= 0 );
 
@@ -54,13 +45,8 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
   {
     duf_levinfo_t *pli, *pliu;
 
-#if 0
-    pli = &pdi->pathinfo.levinfo[d];
-    pliu = d > 0 ? &pdi->pathinfo.levinfo[d - 1] : NULL;
-#else
     pli = duf_levinfo_ptr_d( pdi, d );
     pliu = duf_levinfo_ptr_d( pdi, d - 1 );
-#endif
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
     duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
 
@@ -117,7 +103,6 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
     MAST_TRACE( levinfo, 0, "duf_pdi_opendir(pdi) not set" );
   }
   assert( !duf_pdi_opendir( pdi ) || QISERR || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
-/* DUF_ENDR( r ); */
   ER( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d );
 }
 /* *INDENT-OFF*  */
@@ -127,7 +112,6 @@ DUF_LEVINFO_F_UP( int, openat_dh )
 
 SR( PDI, levinfo_if_openat_dh_d, duf_depthinfo_t * pdi, int d )
 {
-/* DUF_STARTR( r ); */
   assert( pdi );
   assert( d >= 0 );
 
@@ -139,7 +123,6 @@ SR( PDI, levinfo_if_openat_dh_d, duf_depthinfo_t * pdi, int d )
   MAST_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
 
   assert( QISERR || !duf_pdi_opendir( pdi ) || duf_levinfo_deleted_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
-/* DUF_ENDR( r ); */
   ER( PDI, levinfo_if_openat_dh_d, duf_depthinfo_t * pdi, int d );
 }
 /* *INDENT-OFF*  */
@@ -158,25 +141,9 @@ duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
 {
   int dfd = 0;
 
-/* DUF_STARTR( r ); */
   assert( pdi );
   assert( d >= 0 );
-#if 0
-  if ( duf_pdi_opendir( pdi ) || duf_levinfo_dfd_d( pdi, d ) )
-    DOR( r, duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
-#else
   dfd = duf_levinfo_dfd_d( pdi, d );
-#endif
-#if 0
-  if ( d < 0 )
-    d = 0;
-  assert( d > 0 );
-#endif
-/*
- * duf_levinfo_dfd_d( pdi, d )    returns : duf_levinfo_ptr_d( pdi, d )->lev_dh.dfd
- * duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) returns :  duf_levinfo_ptr_d( pdi, d )->lev_dh->dfd
- */
-/* DUF_ENDR( r ); */
   return dfd;
 }
 
@@ -187,10 +154,8 @@ DUF_LEVINFO_F_UP( int, opened_dh )
 
 SR( PDI, levinfo_opened_here_dh_d, duf_depthinfo_t * pdi, int d )
 {
-/* DUF_STARTR( r ); */
   if ( !duf_levinfo_opened_copy_d( pdi, d ) )
     CR( levinfo_opened_dh_d, pdi, d );
-/* DUF_ENDR( r ); */
   ER( PDI, levinfo_opened_here_dh_d, duf_depthinfo_t * pdi, int d );
 }
 
@@ -203,21 +168,15 @@ DUF_LEVINFO_F_UP( int, opened_here_dh )
 /* 20150904.120506 */
 SR( PDI, levinfo_closeat_dh_d, duf_depthinfo_t * pdi, int d )
 {
-/* DUF_STARTR( r ); */
   assert( pdi );
   assert( d >= 0 );
 
   if ( duf_levinfo_opened_here_dh_d( pdi, d ) > 0 )
   {
-#if 0
-    DOR( r, duf_close_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
-#else
     CR( close_dh, duf_levinfo_pdh_d( pdi, d ) );
-#endif
   }
   assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) == 0 );
 
-/* DUF_ENDR( r ); */
   ER( PDI, levinfo_closeat_dh_d, duf_depthinfo_t * pdi, int d );
 }
 

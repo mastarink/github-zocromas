@@ -36,7 +36,7 @@
 #include "duf_pathinfo_ref.h"
 #include "duf_pathinfo_structs.h"
 
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_levinfo_structs.h"
 
@@ -90,6 +90,7 @@ void
 duf_pi_clear_d( duf_pathinfo_t * pi, int d )
 {
   assert( pi );
+  assert( pi->levinfo );
   duf_li_clear( &pi->levinfo[d] );
 }
 /* *INDENT-OFF*  */

@@ -2,18 +2,19 @@
 #include <assert.h>
 #include <string.h>
 
-#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ♠ */
+#include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
 
-#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ♠ */
-#include "duf_levinfo.h"
+#include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
+
+#include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 
 #include "duf_pdi_structs.h"
 
 /* ###################################################################### */
-#include "duf_levinfo_init.h"
+#include "duf_levinfo_init.h"                                        /* duf_levinfo_init_level; duf_levinfo_init_level_d; etc. ✗ */
 /* ###################################################################### */
 
 /* 20150831.000000 */
@@ -23,39 +24,7 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
   assert( pdi );
   assert( d >= 0 );
   assert( pdi->pathinfo.levinfo );
-#if 0
-  duf_levinfo_clear_level_d( pdi, d );
-  assert( !pdi->pathinfo.levinfo[d].itemname );
-
-  {
-    duf_levinfo_t *pli;
-
-    pli = &pdi->pathinfo.levinfo[d];
-    pli->node_type = node_type;
-    pli->db.dirid = dirid;
-
-    if ( itemname )
-    {
-      assert( !pdi->pathinfo.levinfo[d].itemname );
-      pli->itemname = mas_strdup( itemname );
-    }
-
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined(DUF_DO_NUMS)
-  /* pdi->pathinfo.levinfo[d].numdir = ndirs;   */
-  /* pdi->pathinfo.levinfo[d].numfile = nfiles; */
-/*  duf_li_set_nums( pli, ndirs, nfiles );  (*  really never nz here  *) */
-# else
-  /* if ( duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE ) */
-  /*   duf_levinfo_make_childs_d( pdi, d );                    */
-# endif
-  }
-#elif 0
-  duf_li_init( &pdi->pathinfo.levinfo[d], itemname, dirid, node_type );
-#else
   duf_pi_init_level_d( &pdi->pathinfo, itemname, dirid, node_type, d );
-#endif
 }
 
 /* 20150901.173353 */

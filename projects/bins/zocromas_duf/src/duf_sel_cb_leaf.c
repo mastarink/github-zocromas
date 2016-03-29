@@ -72,7 +72,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_
     assert( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
     {
-          assert( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
+      assert( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
       CRV( ( str_cb2 ), sccbh, pstmt, scanstage );
     }
 

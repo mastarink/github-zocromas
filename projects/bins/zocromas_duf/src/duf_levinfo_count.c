@@ -11,15 +11,8 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include "duf_tracen_defs.h"                                         (* T; TT; TR ♠ *) */
-/* #include "duf_errorn_defs.h"                                         (* DUF_NOERROR; DUF_CLEAR_ERROR; DUF_E_(LOWER|UPPER); DUF_TEST_R ... ♠ *) */
-
-/* #include "duf_start_end.h"                                           (* DUF_STARTR ; DUF_ENDR ♠ *) */
-/* #include "duf_dodefs.h"                                              (* DOR ♠ *) */
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_config.h"                                              (* duf_get_config ♠ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
@@ -28,15 +21,14 @@
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-/* #include "duf_sql_stmt_defs.h"                                       (* DUF_SQL_BIND_S_OPT etc. ✗ *) */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
-#include "duf_evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
 
-#include "duf_ufilter_bind.h"
+#include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
 #include "sql_beginning_selected.h"
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
@@ -142,121 +134,3 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
 DUF_LEVINFO_FC(   unsigned long long, count_childs )
 DUF_LEVINFO_FC_UP( unsigned long long, count_childs )
 /* *INDENT-ON*  */
-
-#if 0
-/* unsigned long long                                               */
-/* duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d ) */
-SRX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depthinfo_t * pdi, int d )
-{
-/* unsigned long long gfiles = 0; */
-
-  if ( duf_levinfo_dirid_d( pdi, d ) && duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE )
-  {
-  /* int rpr = 0; */
-    char *sql = NULL;
-    unsigned ns = 0;
-
-    const duf_sql_set_t set[] = {
-      {
-       .name = "gfiles",
-       .type = DUF_NODE_NODE,
-       .expand_sql = 1,
-       .fieldset = "COUNT(*) AS gfiles" /* */ ,
-       .cte = "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS  ( " /* */
-       " SELECT fpt." DUF_SQL_IDFIELD ",fpt.parentid "               /* */
-       "   FROM " DUF_SQL_TABLES_PATHS_FULL "  AS fpt  "             /* */
-       "     WHERE (parentid=:parentdirID OR " DUF_SQL_IDFIELD "=:parentdirID)" /* */
-       "     UNION "                                                 /* */
-       "     SELECT ptu." DUF_SQL_IDFIELD ",ptu.parentid "           /* */
-       "      FROM cte_paths "                                       /* */
-       "      JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " /* */
-       "     ) ",                                                    /* */
-       .selector2_cte = " FROM cte_paths  AS ptenuf "                /* */
-       " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (ptenuf." DUF_SQL_IDFIELD "=fn.Pathid) " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDFIELD ") " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
-       " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDFIELD "=fd.md5id) " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL /*                    */ " AS x  ON (x." DUF_SQL_IDFIELD "=fd.exifid) " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDFIELD ") " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDFIELD "=fd.mimeid) " /* */
-       " LEFT JOIN " DUF_SQL_TABLES_SHA1_FULL /*                     */ " AS sh ON (sh." DUF_SQL_IDFIELD "=fd.sha1id) " /* */
-       ,
-     /* .filter = "fn.file_name LIKE '%a%'" (* *) , */
-       .filter = DUF_SQL_UFILTER_BINDINGS,
-       },
-# if 0
-      {
-       .name = "gchilds",
-       .type = DUF_NODE_NODE,
-       .expand_sql = 1,
-       .fieldset = "COUNT(*) AS gchilds" /* */ ,
-       .cte = "WITH RECURSIVE cte_paths(" DUF_SQL_IDFIELD ",parentid) AS  ( " /* */
-       " SELECT dpt." DUF_SQL_IDFIELD ",dpt.parentid "               /* */
-       "   FROM " DUF_SQL_TABLES_PATHS_FULL "  AS dpt "              /* */
-       "     WHERE parentid=:parentdirID"                            /* */
-       "     UNION "                                                 /* */
-       "     SELECT ptu." DUF_SQL_IDFIELD ",ptu.parentid "           /* */
-       "      FROM cte_paths "                                       /* */
-       "      JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptu ON( ptu.parentid=cte_paths." DUF_SQL_IDFIELD " ) " /* */
-       "     ) " /* */ ,
-       .selector2_cte = "   FROM cte_paths  AS ptenud "              /* */
-       "   LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS dpt ON (ptenud." DUF_SQL_IDFIELD "=dpt." DUF_SQL_IDFIELD ") " /* */
-       }
-# endif
-    };
-  /* ns = pdi->set_selected_db ? 0 : 1; */
-    assert( ns < sizeof( set ) / sizeof( set[0] ) );
-# if 0
-    sql = duf_selector2sql( &set[ns], pdi->pdi_name, &rpr );
-# elif 0
-    sql = duf_selector2sql_new( &set[ns], 0 /*orderid */ , pdi->pdi_name, 0, QPERRIND );
-# else
-    sql = CRP( selector2sql_new, &set[ns], pdi->pdi_name, 0 );
-# endif
-    if ( QNOERR && sql )
-    {
-    /* QT( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
-      DUF_SQL_SE_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, pstmt );
-      DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), pstmt );
-
-      CR( bind_ufilter_uni, pstmt, duf_pdi_pu( pdi ), duf_pdi_py( pdi ), NULL, NULL /* ptr */  );
-
-      DUF_SQL_SE_STEP( pstmt );
-      if ( QISERR1_N( SQL_ROW ) )
-      {
-        gfiles = DUF_GET_UFIELD2( gfiles );
-      }
-      else if ( QISERR1_N( SQL_DONE ) )
-      {
-        gfiles = 0;
-      }
-      else
-      {
-        MAST_TRACE( select, 0, "@<NOT selected> (%s)", QERRNAME );
-        QT( "@<NOT selected> (%s)", QERRNAME );
-        assert( 0 );
-      }
-    /* DUF_TEST_R( rpr ); */
-      DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
-# if 0
-      duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), gfiles );
-# endif
-    /* QT( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), gfiles, sql ); */
-
-      mas_free( sql );
-    }
-  }
-  else
-  {
-  /* assert( 0 ); */
-  }
-/* return gfiles; */
-  ERX( PDI, unsigned long long, gfiles, 0, levinfo_count_gfiles_d, const duf_depthinfo_t * pdi, int d );
-}
-
-/* *INDENT-OFF*  */
-DUF_LEVINFO_FC(   unsigned long long, count_gfiles )
-DUF_LEVINFO_FC_UP( unsigned long long, count_gfiles )
-/* *INDENT-ON*  */
-
-#endif
