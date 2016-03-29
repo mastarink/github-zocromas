@@ -83,7 +83,7 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
 /* assert( pdisrc->num_idstatements == 0 ); */
 /* assert( !pdisrc->idstatements ); */
 
-  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li );
+  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo, no_li, 1 /* no_clear */ );
 #if 0
   duf_items_copy( pdidst->items, pdisrc->items );
 #else

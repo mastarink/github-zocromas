@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_SCCB_EVAL_H
 # define MAS_DUF_SCCB_EVAL_H
 
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
+
 /* fragment of func.name means:
  *
  * _ev_ : evaluate one of so-called "sccb's"

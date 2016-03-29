@@ -58,15 +58,11 @@ SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const 
 
   duf_sccb_handle_t *sccbh = NULL;
 
-/* assert( duf_levinfo_dirid( pdi ) ); */
-  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", ( *psccb ) ? ( *psccb )->name : NULL, duf_levinfo_path( pdi ) );
-  MAST_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
-/* QT( "sccb:%d; dirid:%llu", (*psccb) ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
-#if 0
-  sccbh = duf_sccb_handle_open( pdi, ( *psccb ), ptarg->argc, ptarg->argv, QPERRIND );
-#else
+/* assert( CRX(levinfo_dirid, pdi ) ); */
+  MAST_TRACE( sccbh, 0, "to open sccb handle %s at %s", ( *psccb ) ? ( *psccb )->name : NULL, CRX(levinfo_path, pdi ) );
+  MAST_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", CRX(levinfo_path, pdi ) );
+/* QT( "sccb:%d; dirid:%llu", (*psccb) ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
   sccbh = CRP( sccb_handle_open, pdi, psccb, ptarg );
-#endif
   if ( sccbh )
   {
     {
@@ -78,7 +74,7 @@ SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const 
       int r1 = QERRIND;
 
       QERRIND = 0;
-    /* QT( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+    /* QT( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
       CR( sccb_handle_close, sccbh );
       if ( QNOERR )
         QERRIND = r1;
@@ -100,12 +96,12 @@ SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, du
 /* DUF_STARTR( r ); */
 
   assert( pdi );
-  assert( duf_levinfo_node_type( pdi ) == DUF_NODE_NODE );
+  assert( CRX(levinfo_node_type, pdi ) == DUF_NODE_NODE );
 
 #if 0
   if ( 0 == strcmp( name, "NULL" ) )
   {
-    DOR( r, duf_ev_pdi_sccb( pdi, NULL, ptarg, f_summary ) );        /* XXX XXX XXX XXX */
+    DOR( r, CRX(ev_pdi_sccb, pdi, NULL, ptarg, f_summary ) );        /* XXX XXX XXX XXX */
   }
   else
 #endif
@@ -118,17 +114,17 @@ SR( PDI, ev_pdi_evnamen, duf_depthinfo_t * pdi, const char *name, size_t len, du
 
     if ( QNOERR )
 #if 0
-      sccb = duf_find_or_load_sccb_by_evnamen( name, len, first );   /* XXX XXX */
+      sccb = CRX(find_or_load_sccb_by_evnamen, name, len, first );   /* XXX XXX */
 #else
-      sccbarr = duf_find_or_load_sccb_by_evnamen_plus( name, len, first );
+      sccbarr = CRX(find_or_load_sccb_by_evnamen_plus, name, len, first );
 #endif
 
     MAST_TRACE( sccb, 0, "evaluate sccb name '%s' [%s] : found act:%s", name, pdi->pdi_name, sccbarr && sccbarr[0] ? sccbarr[0]->name : "NONAME" );
     if ( sccbarr && sccbarr[0] )
     {
-      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccbarr[0]->name, duf_levinfo_path( pdi ) );
+      MAST_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", sccbarr[0]->name, CRX(levinfo_path, pdi ) );
 
-    /* QT( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, duf_levinfo_dirid( pdi ) ); */
+    /* QT( "@sccb:%d; dirid:%llu", sccb ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
       CR( ev_pdi_sccb, pdi, sccbarr, ptarg, f_summary );             /* XXX XXX XXX XXX */
     }
     else
@@ -149,7 +145,7 @@ SR( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callba
 /* DUF_STARTR( r ); */
   assert( pdi );
 
-/* QT( "name:%s; dirid:%llu", name, duf_levinfo_dirid( pdi ) ); */
+/* QT( "name:%s; dirid:%llu", name, CRX(levinfo_dirid, pdi ) ); */
   CR( ev_pdi_evnamen, pdi, name, strlen( name ), first, ptarg /*, pu */ , f_summary );
 /* DUF_ENDR( r ); */
   ER( PDI, ev_pdi_evname, duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_cargvc_t * ptarg, bool f_summary );
@@ -165,7 +161,7 @@ SR( PDI, ev_pdi_evname_at, duf_depthinfo_t * pdi, const char *name, duf_scan_cal
   assert( pdi );
 
   if ( !arg )
-    arg = duf_levinfo_path( pdi );
+    arg = CRX(levinfo_path, pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
   {
     mas_cargvc_t ctarg;
@@ -190,7 +186,7 @@ SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan
   assert( pdi );
 
   pnames = names;
-  MAST_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( path, 0, "@levinfo_path: %s", CRX(levinfo_path, pdi ) );
 
 /* assert( pdi->pyp ); */
   while ( QNOERR && pnames && *pnames )
@@ -201,7 +197,7 @@ SR( PDI, ev_pdi_evnamed_list, duf_depthinfo_t * pdi, const char *names, duf_scan
     ename = strchr( pnames, ',' );
 
     len = ename ? ( size_t ) ( ename - pnames ) : strlen( pnames );
-  /* QT( "pnames:%s; dirid:%llu", pnames, duf_levinfo_dirid( pdi ) ); */
+  /* QT( "pnames:%s; dirid:%llu", pnames, CRX(levinfo_dirid, pdi ) ); */
     CR( ev_pdi_evnamen, pdi, pnames, len, first, ptarg /*, pu */ , f_summary );
     if ( QNOERR )
       ok++;

@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_SCCB_EVAL_STD_H
 # define MAS_DUF_SCCB_EVAL_STD_H
 
-# include <mastar/tools/mas_argvc_types.h>
-# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 

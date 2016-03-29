@@ -26,6 +26,9 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccb_structs.h"
 
+#include "duf_pdi_structs.h"
+#include "duf_pathinfo_structs.h"
+
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
@@ -37,6 +40,7 @@
 SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type )
 {
 /* DUF_STARTR( r ); */
+  assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
 
 /* Not here : assert( DUF_GET_UFIELD2( dirid) == duf_levinfo_dirid( pdi ) ); */
   MAST_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
@@ -45,7 +49,7 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
   CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
 
   assert( QISERR || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( H_PDI ) ); /* was set by duf_levinfo_godown */
-  /* QT( "@@%s", sqlite3_sql( pstmt ) ); */
+/* QT( "@@%s", sqlite3_sql( pstmt ) ); */
 /* DUF_ENDR( r ); */
   ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );
 }

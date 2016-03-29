@@ -94,20 +94,25 @@ SR( PI, pi_levinfo_create, duf_pathinfo_t * pi, size_t maxdepth )
 /* DUF_STARTR( r ); */
   duf_levinfo_t *pli = NULL;
 
-  pli = duf_li_create( maxdepth );
+  pli = duf_li_create_array( maxdepth );
+  assert( pli[maxdepth + 1].d == 0 );
   CR( pi_levinfo_set, pi, pli, maxdepth );
-
+  assert( pli[maxdepth + 1].d == 0 );
 /* DUF_ENDR( r ); */
   ER( PI, pi_levinfo_create, duf_pathinfo_t * pi, size_t maxdepth );
 }
 
 void
-duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
+duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li, int no_clear )
 {
   assert( pidst );
   assert( pisrc );
+  if ( !no_clear )
+    duf_pi_levinfo_delete( pidst );
+
   memcpy( pidst, pisrc, sizeof( duf_pathinfo_t ) );
-  pidst->levinfo = ( no_li ) ? NULL : duf_li_clone( pisrc->levinfo, pisrc->maxdepth );
+  pidst->levinfo = ( no_li ) ? NULL : duf_li_clone_array( pisrc->levinfo, pisrc->maxdepth );
+  /* QT( "@I %d(%d) : %d(%d)", pidst->levinfo[pisrc->maxdepth].node_type, pidst->maxdepth, pisrc->levinfo[pisrc->maxdepth].node_type, pisrc->maxdepth ); */
 }
 
 SR( PI, pi_shut, duf_pathinfo_t * pi )

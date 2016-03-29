@@ -101,5 +101,5 @@ void
 duf_pi_clear_all( duf_pathinfo_t * pi )
 {
   assert( pi );
-  duf_li_clear_alln( pi->levinfo, pi->maxdepth );
+  duf_li_clear_array( pi->levinfo, pi->maxdepth );
 }

@@ -53,9 +53,10 @@
 /* #include "duf_sccbh_eval_fs.h" */
 #include "duf_sccbh_shortcuts.h"
 
+#include "duf_sccb_row.h"
+
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
-
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -106,7 +107,37 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
         QT( "@@%d. %s/%d %s=NULL", i, st, it, n );
     }
 #endif
+
+    int eq = 0;
+    duf_sccb_data_row_t *new_row = NULL;
+
+    new_row = CRX( datarow_create, pstmt, CRX( pdi_pathinfo, H_PDI ) );
+  /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
+    if ( sccbh->rows && sccbh->rows->prev )
+    {
+      unsigned long long sha1id0;
+      unsigned long long sha1id1;
+
+      sha1id0 = CRX( datarow_get_number, new_row, "sha1id" );
+      sha1id1 = CRX( datarow_get_number, sccbh->rows, "sha1id" );
+    /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
+      eq = ( sha1id0 == sha1id1 );
+      {
+        if ( !eq )
+        {
+          QT( "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
+        /* assert(0); */
+          CRX( sccbh_rows_eval, sccbh );
+        }
+      }
+    }
+
     CRV( ( scanner ), pstmt, H_PDI, sccbh );
+    if ( new_row )
+    {
+      new_row->prev = sccbh->rows;
+      sccbh->rows = new_row;
+    }
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
       sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, node_type, QERRIND );
     assert( sccbh->assert__current_node_type == node_type );

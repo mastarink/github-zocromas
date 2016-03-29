@@ -32,9 +32,11 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccb_scanstage.h"
 
+#include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all(...) for assert() only?! */
+#include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_fd_str_cb(...) for assert() only?! */
+
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
-
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
@@ -55,23 +57,42 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
 {
 /* DUF_STARTR( r ); */
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
+  assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
+
   MAST_TRACE( sql, 3, "EACH %llu ... %s", duf_levinfo_dirid( H_PDI ), sqlite3_sql( pstmt ) );
   MAST_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", duf_levinfo_dirid( H_PDI ), duf_nodetype_name( node_type ), node_type,
               duf_levinfo_path( H_PDI ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), duf_levinfo_itemtruename( H_PDI ) );
 
   H_PDI->seq_row++;
+  sccbh->assert__current_node_type = node_type;
+  MAST_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( H_PDI ), duf_nodetype_name( node_type ),
+              duf_uni_scan_action_title( H_SCCB ), H_SCCB->name );
+#if 0
   duf_sel_cb2_t cbs[] = {
     [DUF_NODE_NODE] = duf_sel_cb2_node,                              /* str_cb2 is duf_sccbh_eval_all */
     [DUF_NODE_LEAF] = duf_sel_cb2_leaf,                              /* str_cb2 is duf_sccbh_eval_db_leaf_str_cb or duf_sccbh_eval_db_leaf_fd_str_cb */
   /* [DUF_NODE_MAX] = NULL, */
   };
-  sccbh->assert__current_node_type = node_type;
-  MAST_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, duf_levinfo_dirid( H_PDI ), duf_nodetype_name( node_type ),
-              duf_uni_scan_action_title( H_SCCB ), H_SCCB->name );
 
 /* IF_DORF( r, cbs[node_type], sccbh, pstmt, str_cb2, scanstage ); */
   IF_CRV( cbs[node_type], sccbh, pstmt, str_cb2, scanstage );
-  
+#else
+  switch ( node_type )
+  {
+  case DUF_NODE_LEAF:
+    CR( sel_cb2_leaf, sccbh, pstmt, str_cb2, scanstage );
+    break;
+  case DUF_NODE_NODE:
+    CR( sel_cb2_node, sccbh, pstmt, str_cb2, scanstage );
+    break;
+  /* case DUF_NODE_NONE:    */
+  /* case DUF_NODE_FS:      */
+  /* case DUF_NODE_FS_FILE: */
+  /* case DUF_NODE_FS_DIR:  */
+  default:
+    break;
+  }
+#endif
   CR( pdi_max_filter, H_PDI );                                       /* check if any of max's reached */
 /* DUF_ENDR( r ); */
   ER( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2,
@@ -157,12 +178,8 @@ SR( SCCBH, eval_sccbh_sql_set_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
 #endif
     MAST_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
   }
-/*
- * str_cb2 (sub-item scanner ): (~~content-scanner!?)
- *       duf_scan_dirs_by_pdi_maxdepth
- *     ( duf_sccbh_eval_db_leaf_str_cb    )
- *     ( duf_str_cb2_scan_file_fd )
- * */
+
+  assert( str_cb2 == duf_sccbh_eval_all || ( str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb ) || ( str_cb2 == duf_sccbh_eval_db_leaf_str_cb ) );
   CR( eval_sccbh_sql_str_cb, sccbh, node_type, sql_selector, str_cb2, scanstage );
   mas_free( sql_selector );
   sql_selector = NULL;

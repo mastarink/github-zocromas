@@ -25,6 +25,8 @@
 /* #include "duf_levinfo_context.h" */
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+
 #include "duf_li_credel.h"
 #include "duf_li.h"
 
@@ -59,12 +61,16 @@ const char *
 duf_pi_path_d( const duf_pathinfo_t * pi, int d )
 {
   char *path = NULL;
+  duf_node_type_t nt;
 
-  if ( d >= 0 )
+  nt = duf_pi_node_type_d( pi, d );
+  if ( d >= 0 /* && nt != DUF_NODE_NONE */ )
   {
     duf_levinfo_t *pli = NULL;
 
-    if ( duf_pi_node_type_d( pi, d ) == DUF_NODE_LEAF )
+  /* QT( "@@%d d:%d - %s", pi->maxdepth, d, duf_nodetype_name( duf_pi_node_type_d( pi, d ) ) ); */
+    assert( nt == DUF_NODE_LEAF || nt == DUF_NODE_NODE );
+    if ( nt == DUF_NODE_LEAF )
       d--;
 
     pli = duf_pi_ptr_d( pi, d );
@@ -114,6 +120,7 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
       pli->fullpath = path;
     }
 #else
+  /* QT( "@%d d:%d", pi->maxdepth, d ); */
     if ( !pli->fullpath )
       pli->fullpath = duf_li_path( duf_pi_ptr_d( pi, 0 ), d + 1 );
     path = pli->fullpath;
@@ -137,12 +144,10 @@ duf_pi_relpath_d( const duf_pathinfo_t * pi, int d )
 {
   const char *toppath;
   const char *path;
-  size_t len;
 
   toppath = duf_pi_path_top( pi );
-  len = strlen( toppath );
   path = duf_pi_path_d( pi, d );
-  return path + len;
+  return path ? path + ( toppath ? strlen( toppath ) : 0 ) : NULL;
 }
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC( const char *, relpath )
@@ -236,7 +241,7 @@ duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
 {
   struct stat *pst = NULL;
 
-  /* if ( duf_pdi_opendir( pdi ) ) */
+/* if ( duf_pdi_opendir( pdi ) ) */
   {
     duf_dirhandle_t *pdh;
 
@@ -316,3 +321,12 @@ duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 DUF_PATHINFO_FC( int, deltadepth )
 DUF_PATHINFO_FC_UP( int, deltadepth )
 /* *INDENT-ON*  */
+
+const char *
+duf_pi_itemname( const duf_pathinfo_t * pi )
+{
+  duf_levinfo_t *pli;
+
+  pli = &pi->levinfo[pi->depth];
+  return duf_li_itemname( pli );
+}

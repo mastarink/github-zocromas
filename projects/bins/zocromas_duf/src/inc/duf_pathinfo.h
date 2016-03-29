@@ -14,4 +14,5 @@ void duf_pi_clear_all( duf_pathinfo_t * pi );
 DR( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t count );
 DR( PI, pi_set_max_rel_depth, duf_pathinfo_t * pi, const char *real_path, int max_rd );
 
+
 #endif

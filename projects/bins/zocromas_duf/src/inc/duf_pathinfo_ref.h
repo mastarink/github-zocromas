@@ -178,4 +178,6 @@ int duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth( const duf_pathinfo_t * pi );
 int duf_pi_deltadepth_up( const duf_pathinfo_t * pi );
 
+const char *duf_pi_itemname( const duf_pathinfo_t * pi );
+
 #endif

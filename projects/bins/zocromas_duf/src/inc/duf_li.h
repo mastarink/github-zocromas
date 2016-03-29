@@ -1,14 +1,14 @@
 #ifndef MAS_DUF_LI_H
 # define MAS_DUF_LI_H
 
-#include "duf_defs.h"
+# include "duf_defs.h"
 
-# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ♠ */
-# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ♠ */
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ♠ */
-# include "duf_sql_types.h"                                          /* duf_stmnt_t ♠ */
+# include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
+# include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
-# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ♠ */
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 # ifndef  MAS_DUF_DEFS_H
 #  error use #include "duf_defs.h"
@@ -27,5 +27,7 @@ void duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t no
 
 int duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
 int duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid );
+
+const char *duf_li_itemname( duf_levinfo_t * pli );
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef MAS_DUF_PDI_SCCB_EVAL_H
 # define MAS_DUF_PDI_SCCB_EVAL_H
 
+# include <mastar/tools/mas_argvc_types.h>                           /* mas_argvc_t; mas_cargvc_t; ▤ */
+
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
+
 /* * see duf_sccb_eval.h for names explanation * */
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */

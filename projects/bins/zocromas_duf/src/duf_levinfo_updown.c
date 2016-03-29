@@ -206,13 +206,21 @@ SR( PDI, levinfo_godown_db, duf_depthinfo_t * pdi, duf_node_type_t node_type, du
 /* DUF_STARTR( r ); */
   assert( pdi );
 
+  assert( pdi->pathinfo.levinfo[pdi->pathinfo.maxdepth + 1].d == 0 );
+
   CR( levinfo_check_depth, pdi, node_type );
   MAST_TRACE( temp, 50, "@@(%s) maxdepth:%d;", QERRNAME, duf_pdi_maxdepth( pdi ) );
   if ( QNOERR )
   {
     int d;
 
-    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
+    {
+      int calcdepth;
+
+      calcdepth = duf_levinfo_calc_depth( pdi );
+      /* QT( "@A %d ? %d", pdi->pathinfo.depth, duf_levinfo_calc_depth( pdi ) ); */
+      assert( pdi->pathinfo.depth == calcdepth );
+    }
 
     d = ++pdi->pathinfo.depth;
     assert( d >= 0 );
@@ -226,16 +234,24 @@ SR( PDI, levinfo_godown_db, duf_depthinfo_t * pdi, duf_node_type_t node_type, du
 
     if ( node_type == DUF_NODE_NODE )
       duf_levinfo_countdown_dirs( pdi );                             /* may change levinfo (for upper level) */
+    /* QT( "@- %d ? %d", pdi->pathinfo.depth, duf_levinfo_calc_depth( pdi ) ); */
   /* ------------------------------------------- */
     assert( duf_levinfo_dirid( pdi ) == 0 );
     assert( !pdi->pathinfo.levinfo[d].itemname );
     duf_levinfo_dbinit_level_d( pdi, pstmt, node_type, d );
+    /* QT( "@- %d ? %d (%d)", pdi->pathinfo.depth, duf_levinfo_calc_depth( pdi ), d ); */
     assert( pdi->pathinfo.levinfo[d].itemname );
 
     assert( duf_levinfo_dirid( pdi ) != 0 );
     assert( d == pdi->pathinfo.depth );
 
-    assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
+    {
+      int calcdepth;
+
+      calcdepth = duf_levinfo_calc_depth( pdi );
+      /* QT( "@B %d ? %d", pdi->pathinfo.depth, calcdepth ); */
+      assert( pdi->pathinfo.depth == calcdepth );
+    }
     MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_levinfo_itemshowname( pdi ) );
   }
 /* DUF_ENDR( r ); */
@@ -271,6 +287,8 @@ SR( PDI, levinfo_godown_dbopenat_dh, duf_depthinfo_t * pdi, duf_node_type_t node
 {
 /* DUF_STARTR( r ); */
   assert( pdi );
+  assert( pdi->pathinfo.levinfo[pdi->pathinfo.maxdepth + 1].d == 0 );
+
   ERRLOWER( TOO_DEEP );
   CR( levinfo_godown_db, pdi, node_type, pstmt );
 /* DOR_LOWERE( r, duf_levinfo_godown_db( pdi, node_type, pstmt ), DUF_ERROR_TOO_DEEP ); */

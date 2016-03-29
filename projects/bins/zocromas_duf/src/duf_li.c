@@ -322,3 +322,9 @@ SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid,
 /* DUF_ENDR( r ); */
   ER( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
 }
+
+const char *
+duf_li_itemname( duf_levinfo_t * pli )
+{
+  return pli ? pli->itemname : NULL;
+}
