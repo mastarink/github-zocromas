@@ -11,7 +11,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
@@ -45,6 +44,7 @@ SR( PI, pi_levinfo_set, duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdept
 
   if ( maxdepth )
   {
+    assert( duf_pi_closed_all( pi ) );
     duf_pi_levinfo_delete( pi );
     assert( !pi->levinfo );
     pi->maxdepth = maxdepth;
@@ -87,9 +87,17 @@ DUF_PATHINFO_VF( void, clear )
 DUF_PATHINFO_VF_UP( void, clear )
 /* *INDENT-ON*  */
 
+int
+duf_pi_closed_all( const duf_pathinfo_t * pi )
+{
+  return duf_li_closed_array( pi->levinfo, pi->maxdepth );
+}
+
 void
 duf_pi_clear_all( duf_pathinfo_t * pi )
 {
   assert( pi );
+  assert( duf_li_closed_array( pi->levinfo, pi->maxdepth ) );
+  assert( duf_pi_closed_all( pi ) );
   duf_li_clear_array( pi->levinfo, pi->maxdepth );
 }

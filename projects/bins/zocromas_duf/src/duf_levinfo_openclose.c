@@ -19,6 +19,8 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+
 #include "duf_pdi_ref.h"
 #include "duf_pdi_structs.h"
 
@@ -103,6 +105,8 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
     MAST_TRACE( levinfo, 0, "duf_pdi_opendir(pdi) not set" );
   }
   assert( !duf_pdi_opendir( pdi ) || QISERR || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
+  /* QT( "@d:%d dfd:%d - %s / %s", d, duf_levinfo_dfd_d( pdi, d ), duf_levinfo_itemshowname_d( pdi, d ), */
+  /*     duf_nodetype_name( duf_levinfo_node_type_d( pdi, d ) ) );                                       */
   ER( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d );
 }
 /* *INDENT-OFF*  */

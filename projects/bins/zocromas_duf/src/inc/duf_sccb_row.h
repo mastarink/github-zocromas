@@ -16,8 +16,8 @@ duf_sccb_data_value_t *duf_datarow_field_find( const duf_sccb_data_row_t * row, 
 unsigned long long duf_datarow_get_number( const duf_sccb_data_row_t * row, const char *name );
 const char *duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name );
 
-unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name );
-const char *duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name );
+/* unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ); */
+/* const char *duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name );        */
 
 void duf_sccbh_rows_eval( duf_sccb_handle_t * sccbh );
 

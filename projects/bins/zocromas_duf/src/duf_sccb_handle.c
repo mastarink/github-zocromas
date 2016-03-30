@@ -33,7 +33,7 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* CRX(sql_,prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
@@ -45,13 +45,13 @@
 #include "duf_sccb_row.h"
 #include "duf_sccb_begfin.h"
 
-#include "duf_evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
 
 #include "std_mod_sets.h"
 
-#include "duf_ufilter_bind.h"
+#include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 
 #include "duf_sccbh_shortcuts.h"
@@ -63,7 +63,7 @@
 
 /* 20160212.130632 */
 static duf_sql_set_pair_t
-CRX(sccbh_get_leaf_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name )
+duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name )
 {
   duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
   const duf_sql_set_t *set = NULL;
@@ -105,7 +105,7 @@ CRX(sccbh_get_leaf_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
 
 /* 20160212.130653 */
 static duf_sql_set_pair_t
-CRX(sccbh_get_node_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED )
+duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED )
 {
   duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
   const duf_sql_set_t *set = NULL;
@@ -146,7 +146,7 @@ CRX(sccbh_get_node_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_node_i
 
 /* 20160212.130701 */
 duf_sql_set_pair_t
-CRX(sccbh_get_sql_set_f, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   duf_sql_set_pair_t set_pair = {
     .orderid = 0, NULL, NULL
@@ -156,10 +156,10 @@ CRX(sccbh_get_sql_set_f, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set_pair = CRX(sccbh_get_leaf_sql_set, sccbh, H_PU->std_leaf_set_num, H_PU->std_leaf_set_name );
+    set_pair = CRX( sccbh_get_leaf_sql_set, sccbh, H_PU->std_leaf_set_num, H_PU->std_leaf_set_name );
     break;
   case DUF_NODE_NODE:
-    set_pair = CRX(sccbh_get_node_sql_set, sccbh, H_PU->std_node_set_num, H_PU->std_node_set_name );
+    set_pair = CRX( sccbh_get_node_sql_set, sccbh, H_PU->std_node_set_num, H_PU->std_node_set_name );
     break;
   case DUF_NODE_NONE:
     break;
@@ -192,7 +192,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
     char *sqlt = NULL;
     duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
 
-    sql_set_pair = CRX(sccbh_get_sql_set_f, sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
+    sql_set_pair = CRX( sccbh_get_sql_set_f, sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
   /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, sql_set_pair.orderid, H_PDI->pdi_name, 1, &rpr );
@@ -229,7 +229,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
         long long cntfull = 0;
 
 #if 1
-        cntfull = CRX(sql_column_long_long, pstmt, 0 );
+        cntfull = CRX( sql_column_long_long, pstmt, 0 );
         cnt1 = DUF_GET_UFIELD2( nf );
 #else
         cntfull = DUF_GET_UFIELD2( CNT );
@@ -239,7 +239,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
         cnt = cntfull;
         if ( cntfull > 0 && !sql_set_pair.active->cte && H_SCCB->count_nodes )
         {
-          cnt += CRX(pdi_reldepth, H_PDI ) - CRX(pdi_depth, H_PDI ) /* - 1 20160118.153828 */ ;
+          cnt += CRX( pdi_reldepth, H_PDI ) - CRX( pdi_depth, H_PDI ) /* - 1 20160118.153828 */ ;
         }
       /* rpr = 0; */
       }
@@ -276,12 +276,12 @@ static
 SR( SCCBH, sccbh_eval_sqlsq, const duf_sccb_handle_t * sccbh )
 {
 /* DUF_STARTR( r ); */
-  if ( !CRX(pdi_root, H_PDI )->sql_beginning_done )
+  if ( !CRX( pdi_root, H_PDI )->sql_beginning_done )
   {
     CR( sccb_eval_sqlsq, H_SCCB, H_PU, ( duf_yfilter_t * ) NULL, H_PDI->pdi_name );
     if ( QNOERR )
     {
-      CRX(pdi_root, H_PDI )->sql_beginning_done = 1;
+      CRX( pdi_root, H_PDI )->sql_beginning_done = 1;
     }
   }
 /* DUF_ENDR( r ); */
@@ -289,7 +289,7 @@ SR( SCCBH, sccbh_eval_sqlsq, const duf_sccb_handle_t * sccbh )
 }
 
 static duf_sccb_handle_t *
-CRX(sccb_handle_create, const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg )
+duf_sccb_handle_create( const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg )
 {
   duf_sccb_handle_t *sccbh = NULL;
 
@@ -303,38 +303,38 @@ CRX(sccb_handle_create, const duf_scan_callbacks_t * const *psccb, const mas_car
 }
 
 void
-CRX(sccbh_node_progress, duf_sccb_handle_t * sccbh )
+duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
 {
   if ( H_SCCB->count_nodes && !H_SCCB->no_count && !H_SCCB->no_progress && H_TOTITEMS > 0 )
   {
     long long m;
 
 #if 0
-    m = H_TOTITEMS + CRX(pdi_reldepth, H_PDI ) - CRX(pdi_depth, H_PDI ) - 1;
+    m = H_TOTITEMS + CRX( pdi_reldepth, H_PDI ) - CRX( pdi_depth, H_PDI ) - 1;
 #else
     m = H_TOTITEMS;
 #endif
-    DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX(pdi_reldepth, H_PDI ), CRX(pdi_depth, H_PDI ) );
+    DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX( pdi_reldepth, H_PDI ), CRX( pdi_depth, H_PDI ) );
   /* assert( H_PDI->seq_node <= m ); FIXME counters! */
   /*@ 2. progress bar */
     if ( m > 0 )
-      CRX(percent, H_PDI->seq_node, H_PDI->total_bytes, H_PDI->total_files, m, CRX(uni_scan_action_title, H_SCCB ) );
+      CRX( percent, H_PDI->seq_node, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
   }
 }
 
 void
-CRX(sccbh_leaf_progress, duf_sccb_handle_t * sccbh )
+duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 {
   if ( !H_SCCB->count_nodes && !H_SCCB->no_count && !H_SCCB->no_progress && H_TOTITEMS > 0 )
   {
     long long m;
 
     m = H_TOTITEMS;
-    DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX(pdi_reldepth, H_PDI ), CRX(pdi_depth, H_PDI ) );
+    DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX( pdi_reldepth, H_PDI ), CRX( pdi_depth, H_PDI ) );
   /* assert( H_PDI->seq_node <= m ); FIXME counters! */
     if ( m > 0 )
     {
-      CRX(percent, H_PDI->seq_leaf, H_PDI->total_bytes, H_PDI->total_files, m, CRX(uni_scan_action_title, H_SCCB ) );
+      CRX( percent, H_PDI->seq_leaf, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
       MAST_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", H_PDI->seq, H_PDI->seq_leaf, m );
     }
   }
@@ -344,7 +344,7 @@ CRX(sccbh_leaf_progress, duf_sccb_handle_t * sccbh )
 /* void ( *duf_rsccbh_fun_t )
  *                ( const struct duf_sccb_handle_s *, duf_stmnt_t *, duf_scanstage_t, duf_scanner_t, duf_node_type_t, int ) */
 static void
-CRX(sccbh_atom_cb, const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
                    duf_scanner_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
 {
   static unsigned n = 0;
@@ -367,7 +367,7 @@ CRX(sccbh_atom_cb, const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t
     c = '/';
     break;
   }
-  fprintf( stderr, "\r%c%1s\r", c, CRX(scanstage_shortname, scanstage ) );
+  fprintf( stderr, "\r%c%1s\r", c, CRX( scanstage_shortname, scanstage ) );
 }
 
 /* 20151027.144450 */
@@ -383,16 +383,16 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
 /* int rpr = 0; */
 
 /* assert( pdi->pyp ); */
-  if ( *psccb && pdi && CRX(levinfo_dirid, pdi ) )
+  if ( *psccb && pdi && CRX( levinfo_dirid, pdi ) )
   {
     MAST_TRACE( fs, 2, "set def. opendir: %d", ( *psccb )->def_opendir );
-    CRX(pdi_set_opendir, pdi, ( *psccb )->def_opendir );
+    CRX( pdi_set_opendir, pdi, ( *psccb )->def_opendir );
 
     assert( pdi );
     assert( pdi->pathinfo.levinfo );
-    assert( CRX(levinfo_dirid, pdi ) );
-    assert( CRX(levinfo_path, pdi ) );
-    sccbh = CRX(sccb_handle_create, psccb, ptarg );
+    assert( CRX( levinfo_dirid, pdi ) );
+    assert( CRX( levinfo_path, pdi ) );
+    sccbh = CRX( sccb_handle_create, psccb, ptarg );
 
 #if 0
     H_SCCBA = psccb;
@@ -408,7 +408,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     H_PU = pu;
 #endif
 #if 1
-    H_PDI = CRX(pdi_clone, pdi, 0 /* no_li */  );
+    H_PDI = CRX( pdi_clone, pdi, 0 /* no_li */  );
     assert( H_PDI->pathinfo.levinfo );
     H_PDICLONED = 1;
 #else
@@ -427,7 +427,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     {
       if ( !H_SCCB->no_count )
       {
-        H_TOTITEMS = CRX(count_total_items, sccbh, QPERRIND );       /* reference */
+        H_TOTITEMS = CRX( count_total_items, sccbh, QPERRIND );      /* reference */
         if ( QNOERR )
           H_TOTCOUNTED = 1;
       }
@@ -438,7 +438,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
       DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu", H_TOTITEMS );
       MAST_TRACE( temporary, 0, "@@@@ %llu items registered in db", H_TOTITEMS );
       MAST_TRACE( explain, 10, "%llu items registered in db", H_TOTITEMS );
-      if ( CRX(output_progress,  ) )
+      if ( CRX( output_progress, ) )
       {
         sccbh->progress_node_cb = duf_sccbh_node_progress;
         sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;
@@ -463,14 +463,14 @@ TODO scan mode
       }
       assert( H_PDI->pathinfo.levinfo );
     /* T(">>> %llu : %llu", H_PU->std_leaf_set_num,  H_PU->std_node_set_num); */
-      CR( pdi_reinit_anypath, H_PDI, CRX(levinfo_path, H_PDI ), CRX(pdi_pu, H_PDI ),
-          CRX(sccbh_get_sql_set_f, sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
-          CRX(pdi_recursive, H_PDI ), CRX(pdi_allow_dirs, H_PDI ), CRX(pdi_linear, H_PDI ) );
+      CR( pdi_reinit_anypath, H_PDI, CRX( levinfo_path, H_PDI ), CRX( pdi_pu, H_PDI ),
+          CRX( sccbh_get_sql_set_f, sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
+          CRX( pdi_recursive, H_PDI ), CRX( pdi_allow_dirs, H_PDI ), CRX( pdi_linear, H_PDI ) );
     }
   }
   else
   {
-    QT( "sccb:%d; dirid:%llu - %s", H_SCCB ? 1 : 0, CRX(levinfo_dirid, pdi ), CRX(levinfo_path, pdi ) );
+    QT( "sccb:%d; dirid:%llu - %s", H_SCCB ? 1 : 0, CRX( levinfo_dirid, pdi ), CRX( levinfo_path, pdi ) );
   /* assert(0); */
   }
 /* if ( pr )     */
@@ -488,9 +488,9 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
 
-    CRX(sccbh_rows_eval, sccbh );
+    CRX( sccbh_rows_eval, sccbh );
 
-    CRX(datarow_list_delete_f, sccbh->rows, 0 );
+    CRX( datarow_list_delete_f, sccbh->rows, 0 );
     sccbh->rows = NULL;
     for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
     {
@@ -499,7 +499,7 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
     H_SCCBI = 0;
 
     if ( H_PDICLONED )
-      CRX(pdi_delete, H_PDI );
+      CRX( pdi_delete, H_PDI );
     mas_free( sccbh );
   }
 /* DUF_ENDR( r ); */

@@ -1,6 +1,7 @@
 /* #undef MAS_TRACING */
 #include <assert.h>
 #include <string.h>
+#include <errno.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
@@ -14,7 +15,6 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -23,7 +23,7 @@
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_openclose.h"
@@ -32,7 +32,7 @@
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_sccb_handle.h"
 #include "duf_sccbh_eval_leaf.h"
@@ -70,16 +70,31 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
     else if ( node_type == DUF_NODE_LEAF )
     {
       H_PDI->items.files++;
-    }
-  /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
-    {
-      int fd;
+    /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
+      {
+        int fd;
 
-      fd = duf_levinfo_dfd( H_PDI );
-      if ( fd > 0 )
-        lseek( fd, 0, SEEK_SET );
+        fd = duf_levinfo_dfd( H_PDI );
+        {
+          off_t rls MAS_UNUSED = 0;
+          off_t rls1 = 0;
 
-      assert( fd <= 0 || lseek( fd, 0, SEEK_CUR ) == 0 );
+          if ( fd > 0 )
+          {
+            rls = lseek( fd, 0, SEEK_SET );
+            if ( ( ( int ) rls ) < 0 )
+            {
+              QT( "@========================================ERROR %s %d / %s", strerror( errno ), fd, duf_nodetype_name( node_type ) );
+            }
+            rls1 = lseek( fd, 0, SEEK_CUR );
+            if ( ( ( int ) rls ) < 0 )
+            {
+              QT( "@========================================ERROR %s %d / %s", strerror( errno ), fd, duf_nodetype_name( node_type ) );
+            }
+            assert( fd <= 0 || rls1 == 0 );
+          }
+        }
+      }
     }
 #if 0
     for ( int i = 0; i < duf_sql_column_count( pstmt ); i++ )        /* sqlite3_column_count( pstmt ) */

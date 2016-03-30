@@ -54,6 +54,7 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
   if ( !pdi->inited )
   {
     assert( pdi->pdi_name );
+    assert( duf_levinfo_closed( pdi ) );
   /* assert( real_path ); */
     pdi->inited = 1;
     pdi->pup = pu;
@@ -88,7 +89,9 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
     if ( real_path )
     {
     /* QT( "real_path:%p:%s", real_path, real_path ); */
+      assert( duf_levinfo_closed( pdi ) );
       CR( real_path2db, pdi, caninsert, real_path, sql_set );
+    /* assert( !duf_levinfo_closed( pdi ) ); */
       if ( !pdi->pyp )
       {
         pdi->pyp = mas_malloc( sizeof( *pdi->pyp ) );
@@ -100,6 +103,7 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
     }
     MAST_TRACE( pdi, 5, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
+  /* QT( "@%p closed:%d", pdi, duf_levinfo_closed( pdi ) ); */
   MAST_TRACE( pdi, 7, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
   ER( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
       int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );
@@ -132,7 +136,6 @@ SR( PDI, pdi_init_from_dirid, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, u
 
 SR( PDI, pdi_shut, duf_depthinfo_t * pdi )
 {
-
   assert( pdi );
   if ( pdi->inited )
   {
@@ -160,6 +163,7 @@ SR( PDI, pdi_shut, duf_depthinfo_t * pdi )
 #else
     CR( pi_shut, &pdi->pathinfo );
 #endif
+    assert( duf_levinfo_closed( pdi ) );
     pdi->changes = 0;
     pdi->pup = NULL;
     if ( pdi->pyp_created )

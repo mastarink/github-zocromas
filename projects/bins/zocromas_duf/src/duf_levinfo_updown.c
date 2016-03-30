@@ -17,7 +17,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 #include "duf_levinfo_init.h"                                        /* duf_levinfo_init_level; duf_levinfo_init_level_d; etc. ✗ */
@@ -25,9 +25,9 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_openclose.h"
 
-#include "duf_pathinfo_depth.h"
+#include "duf_pathinfo_depth.h"                                      /* duf_pi_calc_depth; duf_pi_is_good_depth; duf_pi_check_depth; duf_pi_godown; ✗ */
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name, temporarily */
+#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_pdi_structs.h"
 
@@ -228,4 +228,20 @@ SR( PDI, levinfo_goup, duf_depthinfo_t * pdi )
   }
   CR( levinfo_goup_i, pdi );
   ER( PDI, levinfo_goup, duf_depthinfo_t * pdi );
+}
+
+SR( PDI, levinfo_gotop, duf_depthinfo_t * pdi )
+{
+  if ( duf_pdi_levinfo( pdi ) /* pdi->pathinfo.levinfo */  )
+  {
+    while ( QNOERR && duf_pdi_depth( pdi ) /* pdi->pathinfo.depth */  >= 0 )
+    {
+      assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
+      CRX( levinfo_goup, pdi );
+    }
+    assert( duf_levinfo_closed( pdi ) );
+    assert( pdi->pathinfo.depth == -1 );
+  }
+
+  ER( PDI, levinfo_gotop, duf_depthinfo_t * pdi );
 }

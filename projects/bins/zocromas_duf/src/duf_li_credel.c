@@ -11,11 +11,9 @@
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs.h>                             /* MASE_TEST_R; MASE_TEST_R_LOWERE; ... */
 
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-
 
 #include "duf_li.h"
 
@@ -72,11 +70,25 @@ duf_li_clear( duf_levinfo_t * pli )
   memset( pli, 0, sizeof( *pli ) );
 }
 
+int
+duf_li_closed_array( const duf_levinfo_t * pli, unsigned maxdepth )
+{
+  int closed = 1;
+
+  for ( unsigned i = 0; i <= maxdepth; i++ )
+  {
+    if ( pli && !( pli[i].lev_dh.opened_copy || pli[i].lev_dh.dfd == 0 ) )
+      closed = 0;
+  }
+  return closed;
+}
+
 void
 duf_li_clear_array( duf_levinfo_t * pli, unsigned maxdepth )
 {
   for ( unsigned i = 0; i <= maxdepth; i++ )
   {
+    assert( pli[i].lev_dh.opened_copy || pli[i].lev_dh.dfd == 0 );
     duf_li_clear( pli + i );
   }
 }
@@ -120,7 +132,6 @@ duf_li_copy_array( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigne
     memset( &plidst[i].context, 0, sizeof( plidst[i].context ) );
     assert( !plisrc[i].context.ptr );
     assert( !plisrc[i].context.destructor );
-
 #if 0
     duf_items_copy( plidst[i].items, plisrc[i].items );
 #else

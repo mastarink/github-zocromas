@@ -11,7 +11,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -42,6 +41,7 @@ duf_pi_levinfo_delete( duf_pathinfo_t * pi )
   assert( pi );
   if ( pi->levinfo )
   {
+    /* assert( duf_pi_closed_all( pi ) ); */
 #if 0
     duf_li_clear_n( pi->levinfo, pi->maxdepth );
 #else
@@ -106,7 +106,7 @@ duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li, in
 
   memcpy( pidst, pisrc, sizeof( duf_pathinfo_t ) );
   pidst->levinfo = ( no_li ) ? NULL : duf_li_clone_array( pisrc->levinfo, pisrc->maxdepth );
-  /* QT( "@I %d(%d) : %d(%d)", pidst->levinfo[pisrc->maxdepth].node_type, pidst->maxdepth, pisrc->levinfo[pisrc->maxdepth].node_type, pisrc->maxdepth ); */
+/* QT( "@I %d(%d) : %d(%d)", pidst->levinfo[pisrc->maxdepth].node_type, pidst->maxdepth, pisrc->levinfo[pisrc->maxdepth].node_type, pisrc->maxdepth ); */
 }
 
 SR( PI, pi_shut, duf_pathinfo_t * pi )

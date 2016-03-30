@@ -23,7 +23,7 @@
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 #include "duf_pdi_structs.h"
 
 /* ###################################################################### */
@@ -32,7 +32,8 @@
 
 SR( PDI, levinfo_set_li, duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
 {
-
+  CR( levinfo_gotop, pdi );
+  assert( duf_levinfo_closed( pdi ) );
   CR( pi_levinfo_set, duf_pdi_pathinfo_p( pdi ) /* &pdi->pathinfo */ , pli, maxdepth );
 
   ER( PDI, levinfo_set_li, duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth );
@@ -61,15 +62,19 @@ SR( PDI, levinfo_delete, duf_depthinfo_t * pdi )
 
   assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
 
-  if ( duf_pdi_levinfo( pdi ) /* pdi->pathinfo.levinfo */ )
+  if ( duf_pdi_levinfo( pdi ) /* pdi->pathinfo.levinfo */  )
   {
-    while ( QNOERR && duf_pdi_depth( pdi ) /* pdi->pathinfo.depth */ >= 0 )
+#if 0
+    while ( QNOERR && duf_pdi_depth( pdi ) /* pdi->pathinfo.depth */  >= 0 )
     {
       assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
-      duf_levinfo_goup( pdi );
+      CRX( levinfo_goup, pdi );
     }
+    assert( duf_levinfo_closed( pdi ) );
     assert( pdi->pathinfo.depth == -1 );
-
+#else
+    CRX( levinfo_gotop, pdi );
+#endif
     mas_free( pdi->pathinfo.levinfo );
     pdi->pathinfo.levinfo = NULL;
   }

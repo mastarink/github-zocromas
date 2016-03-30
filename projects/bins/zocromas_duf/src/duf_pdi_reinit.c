@@ -20,6 +20,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 
 #include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
@@ -48,6 +49,7 @@ SR( PDI, pdi_reinit, duf_depthinfo_t * pdi, const char *real_path, const duf_ufi
               real_path );
   MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
   MAST_TRACE( pdi, 0, "@@@frecursive:%d/%d; real_path:%s", frecursive, frec, real_path );
+  assert( duf_levinfo_closed( pdi ) );
   CR( pdi_init, pdi, pu, real_path, sql_set, caninsert, frec, fwn, flinear, opendir );
 /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
 
