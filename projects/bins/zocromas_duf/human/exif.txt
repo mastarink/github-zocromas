@@ -1,0 +1,46 @@
+EXIF tags in '/home/space/owncloud/data/mastarink/files/Camera/20150617_210134_Burst22.jpg' ('Motorola' byte order):
+--------------------+----------------------------------------------------------
+Tag                 |Value
+--------------------+----------------------------------------------------------
+Model               |LG-D855
+YCbCr Positioning   |Centered
+Resolution Unit     |Inch
+Y-Resolution        |72
+Orientation         |Top-left
+X-Resolution        |72
+Manufacturer        |LG Electronics
+Y-Resolution        |72
+Orientation         |Top-left
+Compression         |JPEG compression
+Resolution Unit     |Inch
+X-Resolution        |72
+Color Space         |sRGB
+Date and Time (Digit|2015:06:17 21:01:38
+F-Number            |f/2.4
+Focal Length        |4.0 mm
+White Balance       |Auto white balance
+Pixel X Dimension   |4160
+Metering Mode       |Center-weighted average
+Date and Time (Origi|2015:06:17 21:01:38
+User Comment        |    FocusArea=011111101
+Components Configura|Y Cb Cr -
+Pixel Y Dimension   |2340
+Flash               |Flash did not fire
+Exif Version        |Exif Version 2.2
+Exposure Bias       |0.00 EV
+ISO Speed Ratings   |50
+FlashPixVersion     |FlashPix Version 1.0
+Digital Zoom Ratio  |1.00
+Exposure Time       |1/307 sec.
+GPS Date            |2015:06:17
+Altitude Reference  |Sea level
+East or West Longitu|E
+Longitude           |31,  3, 20.2878
+North or South Latit|N
+GPS Time (Atomic Clo|18:01:32.00
+Altitude            |147.000
+Latitude            |49, 27, 13.5088
+Interoperability Ind|R98
+Interoperability Ver|0100
+--------------------+----------------------------------------------------------
+EXIF data contains a thumbnail (19308 bytes).

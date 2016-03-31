@@ -1,0 +1,66 @@
+ExifTool Version Number         : 9.98
+File Name                       : 20150617_210134_Burst22.jpg
+Directory                       : /home/space/owncloud/data/mastarink/files/Camera
+File Size                       : 2030 kB
+File Modification Date/Time     : 2016:01:13 23:09:35+02:00
+File Access Date/Time           : 2016:01:25 15:30:07+02:00
+File Inode Change Date/Time     : 2016:01:13 23:09:35+02:00
+File Permissions                : rw-r--r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Big-endian (Motorola, MM)
+GPS Date Stamp                  : 2015:06:17
+GPS Altitude Ref                : Above Sea Level
+GPS Longitude Ref               : East
+GPS Latitude Ref                : North
+GPS Time Stamp                  : 18:01:32
+Camera Model Name               : LG-D855
+Y Cb Cr Positioning             : Centered
+Resolution Unit                 : inches
+Y Resolution                    : 72
+Orientation                     : Horizontal (normal)
+Color Space                     : sRGB
+Create Date                     : 2015:06:17 21:01:38
+F Number                        : 2.4
+Focal Length                    : 4.0 mm
+White Balance                   : Auto
+Exif Image Width                : 4160
+Metering Mode                   : Center-weighted average
+Date/Time Original              : 2015:06:17 21:01:38
+Warning                         : Invalid EXIF text encoding for UserComment
+User Comment                    :     FocusArea=011111101
+Components Configuration        : Y, Cb, Cr, -
+Exif Image Height               : 2340
+Flash                           : No Flash
+Exif Version                    : 0220
+Interoperability Index          : R98 - DCF basic file (sRGB)
+Interoperability Version        : 0100
+Exposure Compensation           : 0
+ISO                             : 50
+Flashpix Version                : 0100
+Digital Zoom Ratio              : 1
+Exposure Time                   : 1/307
+X Resolution                    : 72
+Make                            : LG Electronics
+Thumbnail Length                : 19308
+Thumbnail Offset                : 1328
+Compression                     : JPEG (old-style)
+Image Width                     : 4160
+Image Height                    : 2340
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Aperture                        : 2.4
+GPS Altitude                    : 147 m Above Sea Level
+GPS Date/Time                   : 2015:06:17 18:01:32Z
+GPS Latitude                    : 49 deg 27' 13.51" N
+GPS Longitude                   : 31 deg 3' 20.29" E
+GPS Position                    : 49 deg 27' 13.51" N, 31 deg 3' 20.29" E
+Image Size                      : 4160x2340
+Megapixels                      : 9.7
+Shutter Speed                   : 1/307
+Thumbnail Image                 : (Binary data 19308 bytes, use -b option to extract)
+Focal Length                    : 4.0 mm
+Light Value                     : 11.8

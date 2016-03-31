@@ -1,0 +1,1850 @@
+int
+duf_ev_pdi_atable_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, const duf_action_table_t * table, const mas_argvc_t * ptarg,
+--
+int
+duf_ev_pdi_atable_evname( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const mas_argvc_t * ptarg, bool f_summary )
+--
+int
+duf_ev_pdi_atable_evname_at( duf_depthinfo_t * pdi, const char *name, const duf_action_table_t * table, const char *arg, bool f_summary )
+--
+int
+duf_ev_pdi_atable_evnamed_list( duf_depthinfo_t * pdi, const char *names, const duf_action_table_t * table, const mas_argvc_t * ptarg,
+--
+static const char *
+duf_find_std_fieldset( const char *fieldset_name, duf_node_type_t type )
+--
+static const char *
+duf_find_std_selector( const char *selector_name, duf_node_type_t type )
+--
+static const char *
+duf_unref_fieldset( const char *fieldset, duf_node_type_t type, int *pr )
+--
+static const char *
+duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
+--
+static const char *
+duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
+--
+char *
+duf_expand_sql( const char *sql, const char *dbname )
+--
+char *
+duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
+--
+char *
+duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *pr )
+--
+static duf_tmp_t *
+duf_tmp_create( void )
+--
+static void
+duf_tmp_delete( duf_tmp_t * tmp )
+--
+void
+global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no,
+--
+void
+global_status_init( void )
+--
+void
+global_status_reset( void )
+--
+unsigned long long
+duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
+--
+unsigned long long
+duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, */ int need_id, int *pr )
+--
+int
+duf_pdistat2file( duf_depthinfo_t * pdi )
+--
+int
+duf_filename_match( duf_filter_globx_t * globx, const char *filename )
+--
+int
+duf_lim_match( duf_limits_t lim, int n )
+--
+int
+duf_lim_matchll( duf_limitsll_t lim, int n )
+--
+int
+duf_init_filepath( duf_filepath_t * pfp, const char *filepath )
+--
+static void
+duf_clear_filepath( duf_filepath_t * pfp )
+--
+int
+duf_bind_ufilter_uni( duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused DUF_UNUSED )
+--
+duf_config_t *
+duf_get_config( void )
+--
+void *
+duf_get_config_offset( unsigned long off )
+--
+void *
+duf_get_config_puz_offset( unsigned long off )
+--
+duf_config_cli_t *
+duf_get_config_cli( void )
+--
+duf_config_opt_t *
+duf_get_config_opt( void )
+--
+int
+duf_verbose( void )
+--
+int
+duf_output_level( void )
+--
+FILE *
+duf_output_file_c( const duf_config_t * cfg )
+--
+FILE *
+duf_output_file( void )
+--
+FILE *
+duf_trace_file_c( const duf_config_t * cfg )
+--
+FILE *
+duf_trace_file( void )
+--
+char
+duf_option_delimiter( void )
+--
+static const char *
+duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg DUF_UNUSED )
+--
+char *
+duf_string_options_expand( const char *s, char protected_prefix )
+--
+char *
+duf_config_string_expanded( duf_config_string_t * cs )
+--
+char *
+duf_config_db_path_add_subdir( const char *dir, int *pr )
+--
+const char *
+duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
+--
+const duf_scan_callbacks_t *
+duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first )
+--
+const duf_scan_callbacks_t *
+duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+--
+const duf_scan_callbacks_t *
+duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+--
+const duf_scan_callbacks_t *
+duf_find_sccb_by_evname( const char *name, const duf_scan_callbacks_t * first )
+--
+const duf_scan_callbacks_t *
+duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first )
+--
+static const duf_sql_set_t *
+duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_leaf_index )
+--
+static const duf_sql_set_t *
+duf_get_node_sql_set( const duf_scan_callbacks_t * sccb, unsigned force_node_index )
+--
+const duf_sql_set_t *
+duf_sccb_get_sql_set_f( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type, unsigned force_leaf_index, unsigned force_node_index )
+--
+const duf_sql_set_t *
+duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
+--
+static unsigned long *
+duf_info_from_db( int count, const char *sql )
+--
+int
+duf_main_db_info( void )
+--
+duf_depthinfo_t *
+duf_pdi_root( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_seq( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_recursive( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_allow_dirs( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_linear( const duf_depthinfo_t * pdi )
+--
+void
+duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )
+--
+int
+duf_pdi_opendir( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
+--
+int
+duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
+--
+int
+duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta )
+--
+unsigned long long
+duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d )
+--
+unsigned long long
+duf_levinfo_count_gfiles_d( const duf_depthinfo_t * pdi, int d )
+--
+static int
+duf_eval_sccbh_sql_row_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_stmnt_t * pstmt_selector, duf_str_cb2_t str_cb2,
+--
+static int
+duf_eval_sccbh_sql_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
+--
+int
+duf_eval_sccbh_sql_set_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2,
+--
+int
+duf_pdi_attach_selected( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_detach_selected( duf_depthinfo_t * pdi )
+--
+static unsigned long long
+duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
+--
+static int
+duf_sccbh_eval_sqlsq( const duf_sccb_handle_t * sccbh )
+--
+duf_sccb_handle_t *
+duf_sccb_handle_create( void )
+--
+void
+duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
+--
+void
+duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
+--
+static void
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh DUF_UNUSED, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt DUF_UNUSED,
+--
+duf_sccb_handle_t *
+duf_sccb_handle_open( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, int *pr )
+--
+int
+duf_sccb_handle_close( duf_sccb_handle_t * sccbh )
+--
+static const duf_longval_extended_t *
+duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended, char vseparator, char **parg, int *pno, int *pcnt, int *pr )
+--
+static int
+duf_exec_cmd_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage, int all_matched,
+--
+static int
+duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_t ** xtables, char vseparator, duf_option_stage_t istage,
+--
+int
+duf_exec_cmd_long_xtables_std( const char *string, char vseparator, duf_option_stage_t istage, int all_matched, duf_option_source_t source )
+--
+int
+duf_check_field( const char *name, int have )
+--
+const char *
+duf_dbg_funname( duf_anyhook_t p )
+--
+static void
+init_list( void )
+--
+duf_scan_callbacks_t *
+duf_first_sccb( void )
+--
+int
+duf_sccb_eval_sqlsq( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db )
+--
+int
+duf_sccb_eval_final_sqlsq( const duf_scan_callbacks_t * sccb, const duf_ufilter_t * pu, const duf_yfilter_t * py )
+--
+static duf_option_fs_mode_t
+duf_fs_ask( const char *msg, const char *fn, duf_option_fs_mode_t mode )
+--
+static mas_error_code_t
+duf_option_fs_each( const char *arg, duf_errc_psvv_func_t fun, const void *pv )
+--
+static mas_error_code_t
+duf_option_fs_each2( const char *arg, duf_errc_cscsv_func_t fun, const void *pv )
+--
+mas_error_code_t
+duf_option_$_fs_ls_file( const char *fn, const void *pv DUF_UNUSED )
+--
+static int
+duf_option_fs_rmfile( const char *fn, const void *pv )
+--
+mas_error_code_t
+duf_option_$_fs_rmfile( const char *fn, const void *pv )
+--
+static int
+duf_option_fs_cpfile2absent( const char *fn, const char *to, const void *pv DUF_UNUSED, struct stat *pstfrom, struct stat *pstto DUF_UNUSED )
+--
+static int
+duf_option_fs_cpfile( const char *fn, const char *to, const void *pv )
+--
+mas_error_code_t
+duf_option_$_fs_cpfile( const char *fn, const char *to, const void *pv )
+--
+static mas_error_code_t
+duf_option_fs_mvfile( const char *arg DUF_UNUSED, const char *to DUF_UNUSED, const void *pv DUF_UNUSED )
+--
+mas_error_code_t
+duf_option_$_fs_ls( const char *arg )
+--
+mas_error_code_t
+duf_option_$_fs_rm( const char *arg, long v )
+--
+mas_error_code_t
+duf_option_$_fs_cp( const char *arg, long v )
+--
+mas_error_code_t
+duf_option_$_fs_mv( const char *arg, long v )
+--
+int
+duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_opened_here_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
+--
+void
+duf_levinfo_set_nums_d( duf_depthinfo_t * pdi, unsigned long long ndirs, unsigned long long nfiles, int d )
+--
+void
+duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_calc_depth( duf_depthinfo_t * pdi )
+--
+static char *
+duf_clrfy_cli_opts_msgs( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+--
+static void
+duf_clrfy_cli_opts_msg( duf_option_code_t codeval, int optindd, int optoptt, const char *shorts_unused DUF_UNUSED )
+--
+static int
+duf_clarify_cli_opts( const char *shorts, duf_option_stage_t istage )
+--
+int
+duf_cli_options( duf_option_stage_t istage )
+--
+int
+duf_ev_atable_evnamen( const char *name, size_t len, const duf_action_table_t * table )
+--
+int
+duf_ev_atable_evname( const char *name, const duf_action_table_t * table )
+--
+int
+duf_ev_atable_evnamed_list( const char *names, const duf_action_table_t * table )
+--
+const char *
+duf_find_longval_help( duf_option_code_t codeval, int *pr )
+--
+char *
+duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim )
+--
+char *
+duf_option_description_d( int longindex, const char *delimh, const char *delim )
+--
+static char *
+duf_option_description_x( const duf_longval_extended_t * extended )
+--
+const char *
+duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended )
+--
+static int
+duf_print_file_info_depth( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_seq(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_seq_node(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_seq_leaf(const  duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_md5id( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_nsame( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+int
+duf_print_file_info_prefix( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+--
+static int
+duf_print_file_info_dirid( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_nfiles( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_ndirs( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_dataid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+int
+duf_print_file_info_suffix( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb DUF_UNUSED,
+--
+static int
+duf_print_file_info_inode( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_mode( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_nlink( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_user( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_group( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_filesize( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_mtime( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_realpath( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi DUF_UNUSED, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_filename( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_md5( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_exifid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_exif_date_time( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_mimeid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_mime( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+static int
+duf_print_file_info_nameid( const duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat )
+--
+int
+duf_print_bformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bformat_combo_t * bformat, duf_pdi_cb_t prefix_cb,
+--
+void
+duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, duf_node_type_t node_type, int d )
+--
+void
+duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
+--
+int
+duf_ev_sccb( const duf_scan_callbacks_t * sccb )
+--
+int
+duf_ev_evnamen( const char *name, size_t len, duf_scan_callbacks_t * first )
+--
+int
+duf_ev_evname( const char *name, duf_scan_callbacks_t * first )
+--
+int
+duf_ev_evnamed_list( const char *names, duf_scan_callbacks_t * first )
+--
+static int
+duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
+--
+int
+duf_ev_sccb_array( const duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
+--
+duf_levinfo_t *
+duf_pi_ptr_d( const duf_pathinfo_t * pi, int d )
+--
+const char *
+duf_pi_path_d( const duf_pathinfo_t * pi, int d )
+--
+const char *
+duf_pi_relpath_d( const duf_pathinfo_t * pi, int d )
+--
+const char *
+duf_pi_path_q( const duf_pathinfo_t * pi, const char *q )
+--
+char *
+duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q )
+--
+const char *
+duf_pi_itemshowname_d( const duf_pathinfo_t * pi, int d )
+--
+const char *
+duf_pi_itemshowname_q( const duf_pathinfo_t * pi, const char *q )
+--
+const char *
+duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d )
+--
+const char *
+duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
+--
+struct stat *
+duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
+--
+void
+duf_pi_set_topdepth( duf_pathinfo_t * pi )
+--
+int
+duf_pi_topdepth( const duf_pathinfo_t * pi )
+--
+int
+duf_pi_maxdepth( const duf_pathinfo_t * pi )
+--
+duf_levinfo_t *
+duf_pi_levinfo( const duf_pathinfo_t * pi )
+--
+int
+duf_pi_depth( const duf_pathinfo_t * pi )
+--
+int
+duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
+--
+void
+duf_pdi_set_context( duf_depthinfo_t * pdi, void *ctx )
+--
+void
+duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_func_t destr )
+--
+void *
+duf_pdi_context( const duf_depthinfo_t * pdi )
+--
+int
+duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * extended, const duf_longval_extended_table_t * xtable )
+--
+const duf_longval_extended_t *
+duf_find_codeval_extended_std( duf_option_code_t codeval, const duf_longval_extended_table_t ** pxtable, int *pr )
+--
+static const duf_longval_extended_t *
+duf_find_name_long_exact( const char *name, int witharg_unused DUF_UNUSED, const duf_longval_extended_t * xtended, int *pcnt /*, int *pr */  )
+--
+static const duf_longval_extended_t *
+duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extended_t * xtended, int *pcnt, int *pr )
+--
+static const duf_longval_extended_t *
+duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pcnt, int *pr )
+--
+const duf_longval_extended_t *
+duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pno, int *pcnt, int *pr )
+--
+void
+duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
+--
+static size_t
+duf_sformat_id( int is_atty, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi,
+--
+char *
+duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int is_atty, const char *format, duf_pdi_scb_t prefix_scb,
+--
+size_t
+duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb,
+--
+duf_config_cli_t *
+duf_cli_options_config( void )
+--
+char *
+duf_cli_option_shorts_create( const duf_longval_extended_table_t ** xtables )
+--
+void
+duf_cli_options_init( duf_config_cli_t * cli, int argc, char **argv, const duf_longval_extended_table_t ** xtables )
+--
+void
+duf_cli_options_shut( duf_config_cli_t * cli )
+--
+mas_argvc_t *
+duf_cli_options_get_targ( void )
+--
+int
+duf_cli_options_get_targc( void )
+--
+int *
+duf_cli_options_get_ptargc( void )
+--
+char **
+duf_cli_options_get_targv( void )
+--
+char ***
+duf_cli_options_get_ptargv( void )
+--
+char *
+duf_cli_options_get_targi( int ia )
+--
+char **
+duf_cli_options_get_ptargi( int ia )
+--
+mas_cargvc_t *
+duf_cli_options_get_carg( void )
+--
+int
+duf_cli_options_get_cargc( void )
+--
+char *const *
+duf_cli_options_get_cargv( void )
+--
+const char *
+duf_cli_options_get_shorts( void )
+--
+int
+duf_cli_options_get_targ_offset( void )
+--
+void
+duf_cli_options_set_targ_offset( int targ_offset )
+--
+static int
+duf_reorder_argv_at_sign( int argc, char *argv[] )
+--
+static int
+duf_reorder_argvc_at_sign( mas_argvc_t * ptarg )
+--
+void
+duf_cli_options_reset_targ_offset( void )
+--
+duf_option_t *
+duf_cli_options_get_longopts_table( void )
+--
+int
+duf_sql_column_int( mas_sqlite_stmt_t * stmt, int icol )
+--
+long long
+duf_sql_column_long_long( mas_sqlite_stmt_t * stmt, int icol )
+--
+const char *
+duf_sql_column_string( mas_sqlite_stmt_t * stmt, int icol )
+--
+DUF_WRAPSTATIC int
+duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh, bool f_summary )
+--
+static int
+duf_eval_sccbh_db_items_str_cb( duf_scanstage_t scanstage, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sccbh_eval_db_leaves( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sccbh_eval_db_leaves_nofd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sccbh_eval_db_leaves_fd( duf_scanstage_t scanstage, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sccbh_eval_db_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sccbh_eval_db_subnodes( duf_scanstage_t scanstage, duf_stmnt_t * pstmt DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+static int
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu,
+--
+int
+duf_pdi_reinit_min( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, const duf_sql_set_t * sql_set,
+--
+int
+duf_sql_bindu_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value, int opt )
+--
+int
+duf_sql_bindu_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value, int opt )
+--
+int
+duf_sql_bindu_int( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int value, int opt )
+--
+int
+duf_sql_bindu_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, int value, int opt )
+--
+int
+duf_sql_bindu_string( mas_sqlite_stmt_t * stmt, const char *fldname, int pi, const char *value, int opt )
+--
+int
+duf_sql_bindn_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
+--
+int
+duf_sql_bindn_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
+--
+int
+duf_sql_bindn_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
+--
+int
+duf_sql_bindn_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
+--
+int
+duf_sql_bindn_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char *value, int opt )
+--
+int
+duf_sql_bind_long_long( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
+--
+int
+duf_sql_bind_long_long_nz( mas_sqlite_stmt_t * stmt, const char *fldname, long long value, int opt )
+--
+int
+duf_sql_bind_int( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
+--
+int
+duf_sql_bind_int_nz( mas_sqlite_stmt_t * stmt, const char *fldname, int value, int opt )
+--
+int
+duf_sql_bind_string( mas_sqlite_stmt_t * stmt, const char *fldname, const char *value, int opt )
+--
+void
+duf_sql_clear_bindings( mas_sqlite_stmt_t * stmt )
+--
+const char *
+duf_sql_stmt( mas_sqlite_stmt_t * stmt )
+--
+const duf_ufilter_t *
+duf_pdi_pu( const duf_depthinfo_t * pdi )
+--
+const duf_yfilter_t *
+duf_pdi_py( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_max_filter( const duf_depthinfo_t * pdi )
+--
+int
+duf_eval_sccbh_db_leaf_fd_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+--
+int
+duf_eval_sccbh_db_leaf_str_cb( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_sccb_handle_t * sccbh )
+--
+int
+duf_levinfo_set_li( duf_depthinfo_t * pdi, duf_levinfo_t * pli, size_t maxdepth )
+--
+int
+duf_levinfo_create( duf_depthinfo_t * pdi )
+--
+int
+duf_levinfo_delete( duf_depthinfo_t * pdi )
+--
+DUF_WRAPSTATIC int
+duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
+--
+int
+duf_pdi_init_min_r( duf_depthinfo_t * pdi, const char *real_path )
+--
+int
+duf_pdi_init_at_config( void )
+--
+int
+duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, unsigned long long dirid,
+--
+int
+duf_pdi_shut( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_close( duf_depthinfo_t * pdi )
+--
+void
+duf_levinfo_clear_context( duf_levinfo_t * pli )
+--
+void
+duf_levinfo_set_context_up_destructor( duf_depthinfo_t * pdi, duf_void_voidp_func_t destr )
+--
+duf_levinfo_t *
+duf_li_create( int maxdepth )
+--
+void
+duf_li_clear( duf_levinfo_t * pli )
+--
+void
+duf_li_clear_n( duf_levinfo_t * pli, unsigned maxdepth )
+--
+void
+duf_li_delete( duf_levinfo_t * pli, unsigned maxdepth )
+--
+static void
+duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth )
+--
+duf_levinfo_t *
+duf_li_clone( const duf_levinfo_t * plisrc, unsigned maxdepth )
+--
+duf_levinfo_t *
+duf_dirid2li( unsigned long long dirid, const char *leaf_itemtruename DUF_UNUSED, unsigned maxdepth, int *pr )
+--
+duf_levinfo_t *
+duf_nameid2li( unsigned long long nameid, unsigned maxdepth, int *pr )
+--
+static duf_idstmt_t *
+duf_pdi_find_idstmt( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /*, const int *pindex */  )
+--
+static duf_idstmt_t *
+duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+--
+duf_stmnt_t *
+duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid /*, const int *pindex */ , int *pr )
+--
+duf_stmnt_t *
+duf_pdi_find_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* const int *pindex */  )
+--
+int
+duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
+--
+int
+duf_pdi_finalize_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* const int *pindex */  )
+--
+int
+duf_pdi_finalize_statement_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+--
+int
+duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi DUF_UNUSED, duf_fileinfo_t * pfi )
+--
+void
+duf_extended_table_multi_init( void )
+--
+const duf_longval_extended_table_t **
+duf_extended_table_multi( void )
+--
+int
+duf_pi_levinfo_calc_depth( duf_pathinfo_t * pi )
+--
+void
+duf_pi_levinfo_delete( duf_pathinfo_t * pi )
+--
+int
+duf_pi_levinfo_set( duf_pathinfo_t * pi, duf_levinfo_t * pli, size_t maxdepth )
+--
+int
+duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t maxdepth )
+--
+void
+duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc, int no_li )
+--
+int
+duf_pi_shut( duf_pathinfo_t * pi )
+--
+int
+duf_pi_set_max_rel_depth( duf_pathinfo_t * pi, const char *real_path, int max_rd )
+--
+const char *
+duf_optstage_name( duf_option_stage_t istage )
+--
+char *
+duf_option_names_d( duf_option_code_t codeval, const char *delim )
+--
+char *
+duf_option_names( duf_option_code_t codeval )
+--
+const char *
+duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
+--
+int
+duf_pstmt_levinfo_godown_dbopenat_dh( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_node_type_t node_type )
+--
+int
+duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
+--
+static int
+duf_bind_ufilter( duf_stmnt_t * pstmt, const mas_argvc_t * ttarg )
+--
+int
+duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback, const mas_argvc_t * ttarg,
+--
+int
+duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db, int *pchanges )
+--
+int
+duf_eval_sqlsq_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, const duf_yfilter_t * py, duf_bind_cb_t callback,
+--
+int
+duf_eval_sqlsq( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const duf_yfilter_t * py, const char *selected_db )
+--
+int
+duf_sql_open( const char *dbpath )
+--
+int
+duf_sql_close( void )
+--
+int
+duf_unlink( const char *path )
+--
+static int
+duf_main_db_attach_selected( const char *name )
+--
+static int
+duf_main_db_locate( void )
+--
+static int
+duf_main_db_remove_files( void )
+--
+static int
+duf_main_db_optionally_remove_files( void )
+--
+static int
+duf_main_db_create_tables( void )
+--
+static int
+duf_main_db_pre_action( void )
+--
+static int
+duf_main_db_tune( void )
+--
+int
+duf_main_db_open( void )
+--
+int
+duf_main_db_close( int ra )
+--
+static int DUF_UNUSED
+duf_store_log( int argc DUF_UNUSED, char *const argv[]DUF_UNUSED )
+--
+int
+duf_main_db( int argc DUF_UNUSED, char **argv DUF_UNUSED )
+--
+
+size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
+--
+
+size_t std_node_nsets = sizeof( std_node_sets ) / sizeof( std_node_sets[0] );
+--
+mas_error_code_t
+duf_option_$_smart_help( duf_option_class_t oclass )
+--
+mas_error_code_t
+duf_option_$_smart_help_all( duf_option_class_t oclass )
+--
+mas_error_code_t
+duf_option_$_help(  /* int argc, char *const *argv */ void )
+--
+mas_error_code_t
+duf_option_$_examples(  /* int argc, char *const *argv */ void )
+--
+mas_error_code_t
+duf_option_$_version( void )
+--
+duf_option_code_t
+duf_flag2code( duf_config_act_flags_combo_t fset )
+--
+duf_option_code_t
+duf_uflag2code( unsigned long ufset )
+--
+static const char *
+duf_uflag2cnames( unsigned long ufset )
+--
+static const char *
+duf_unflag2cnames( unsigned unfset )
+--
+mas_error_code_t
+duf_option_$_showflags(  /* int argc, char *const *argv */ void )
+--
+mas_error_code_t
+duf_option_$_list_options( long n_unused DUF_UNUSED )
+--
+mas_error_code_t
+duf_option_$_list_xtended( const char *s )
+--
+DUF_WRAPSTATIC int
+duf_sel_cb2_leaf_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sel_cb2_leaf( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+--
+static void
+duf_dbgfuncv_pref( FILE * out, const char *pref, int line, const char *func, unsigned g, int eol )
+--
+int
+duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
+--
+int
+duf_dbgfunc( duf_dbgcode_t code, const char *func, int line, ... )
+--
+int
+duf_ufilter_max_rel_depth( const duf_ufilter_t * pu )
+--
+int
+duf_ufilter_max_filter( const duf_ufilter_t * pu, unsigned seq, const duf_items_t * pitems )
+--
+duf_ufilter_t *
+duf_ufilter_create( void )
+--
+void
+duf_ufilter_delete( duf_ufilter_t * pu )
+--
+void
+duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
+--
+duf_ufilter_t *
+duf_ufilter_clone( const duf_ufilter_t * pusrc )
+--
+duf_ufilter_t *
+duf_ufilter_create_from( const duf_ufilter_t * pusrc )
+--
+DUF_WRAPSTATIC int
+duf_eval_sccbh_all( duf_stmnt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+--
+static FILE *
+duf_open_file_special( const char *pname, char **popenedname, int overwrite, int *pr )
+--
+static int
+duf_set_file_special( const char *pname, int overwrite, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
+--
+int
+duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+--
+char *
+duf_single_quotes_2( const char *s )
+--
+size_t
+duf_strflocaltime( char *s, size_t max, const char *format, const time_t * ptim )
+--
+size_t
+duf_strfgmtime( char *s, size_t max, const char *format, const time_t * ptim )
+--
+long
+duf_strtol_suff( const char *s, int *pr )
+--
+long long
+duf_strtoll_suff( const char *s, int *pr )
+--
+unsigned long long
+duf_strtime2long( const char *s, int *pr )
+--
+void
+duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg )
+--
+int
+duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage, int is_interactive )
+--
+int
+duf_show_options( const char *a0 DUF_UNUSED )
+--
+int
+duf_direntry_filter( const struct dirent *de )
+--
+DUF_WRAPSTATIC int
+duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+--
+int
+duf_clarify_opt( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
+--
+int
+duf_clarify_opt_x( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
+--
+int
+duf_clarify_argv( mas_argvc_t * ptarg, mas_cargvc_t * pcarg, int pos )
+--
+duf_config_t *
+duf_cfg_create( void )
+--
+void
+duf_cfg_string_delete( duf_config_string_t * cs )
+--
+void
+duf_cfg_delete( duf_config_t * cfg )
+--
+void
+duf_config_create( int argc, char **argv )
+--
+void
+duf_config_delete( void )
+--
+int
+duf_config_show( void )
+--
+int
+duf_config_optionally_show( void )
+--
+int
+duf_config_make_db_main_path( void )
+--
+int
+duf_config_make_db_adm_path( void )
+--
+int
+duf_config_make_db_temp_path( void )
+--
+int
+duf_config_make_db_paths( void )
+--
+unsigned long long
+duf_path2dirid( const char *path, int *pr )
+--
+char *
+duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigned long long *pparentid, int *pr )
+--
+char *
+duf_dirid2path( unsigned long long dirid, int *pr )
+--
+void
+duf_cli_init( duf_config_cli_t * cli, int argc, char **argv )
+--
+void
+duf_cli_shut( duf_config_cli_t * cli )
+--
+int
+duf_pdi_depth( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_reldepth_d( const duf_depthinfo_t * pdi, int d )
+--
+int
+duf_pdi_reldepth( const duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_topdepth( const duf_depthinfo_t * pdi )
+--
+void
+duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
+--
+duf_levinfo_t *
+duf_pdi_levinfo( const duf_depthinfo_t * pdi )
+--
+static void
+duf_print_stage( int use_stage, int use_stage_mask, duf_limits_stage_t stage, unsigned long stage_mask, unsigned eol )
+--
+const char *
+duf_extended_code2string( duf_option_code_t code )
+--
+const char *
+duf_extended_class2string( duf_option_class_t oclass )
+--
+const char *
+duf_extended_vtype2string( duf_option_vtype_t ovtype )
+--
+const char *
+duf_offset2stringid( unsigned offset, duf_offset_to_t relto )
+--
+void
+duf_extended_table_print( const duf_longval_extended_table_t * xtable, const char *name )
+--
+void
+duf_extended_table_multi_print( const duf_longval_extended_table_t ** xtables, const char *name )
+--
+void
+duf_extended_table_multi_std_print( const char *name )
+--
+const char *
+duf_longindex_extended_name( int longindex, int *pr )
+--
+duf_option_code_t
+duf_longindex_extended_codeval( int longindex, int *pr )
+--
+static void
+duf_xtable2options( duf_option_t ** plongopts_ptr, const duf_longval_extended_t * xtended, int no )
+--
+void
+duf_options_delete_longopts_table( duf_option_t * longopts )
+--
+duf_option_t *
+duf_options_create_longopts_table( const duf_longval_extended_table_t ** pxtable )
+--
+const duf_longval_extended_t *
+duf_longindex2extended( int longindex, const duf_longval_extended_table_t ** pxtable, int *pno )
+--
+int
+duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
+--
+int
+duf_experiment( void )
+--
+static unsigned long long
+duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
+--
+unsigned long long
+duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long itemid, const char *tag_name, int *pr )
+--
+mas_error_code_t
+duf_option_$_list_sccbs( void )
+--
+mas_error_code_t
+duf_option_$_list_sccb( int x_unused DUF_UNUSED )
+--
+mas_error_code_t
+duf_option_$_evaluate_sccb( const char *names )
+--
+mas_error_code_t
+duf_option_$_call_file( const char *name )
+--
+mas_error_code_t
+duf_option_$_db_open( void )
+--
+mas_error_code_t
+duf_option_$_cd( const char *s )
+--
+mas_error_code_t
+duf_option_$_cdid( long topdirid )
+--
+mas_error_code_t
+duf_option_$_error_level( long lev )
+--
+mas_error_code_t
+duf_option_$_set_dir_priority( long prio )
+--
+int
+duf_levinfo_if_statat_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_if_deleted_d( duf_depthinfo_t * pdi, int d )
+--
+mas_error_code_t
+duf_sqlite2r_error_code( int r3 )
+--
+int
+duf_r2sqlite_error_code( int rt )
+--
+mas_error_index_t
+duf_sqlite2duf( int r3, const char *func, int line )
+--
+int
+duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
+--
+int
+duf_sql_step( mas_sqlite_stmt_t * stmt )
+--
+int
+duf_sql_finalize( mas_sqlite_stmt_t * stmt )
+--
+int
+duf_sql_reset( mas_sqlite_stmt_t * stmt )
+--
+int
+duf_sql_changes( void )
+--
+const char *
+duf_sql_column_name( mas_sqlite_stmt_t * stmt, int index )
+--
+const char *
+duf_sql_column_decltype( mas_sqlite_stmt_t * stmt, int index )
+--
+int
+duf_sql_column_count( mas_sqlite_stmt_t * stmt )
+--
+unsigned long long
+duf_sql_last_insert_rowid( void )
+--
+static int
+duf_bind_tmp( duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused DUF_UNUSED, const duf_yfilter_t * py_unused DUF_UNUSED, const mas_argvc_t * ttarg )
+--
+int
+duf_tmpdb_add( int oval, const char *optname, const char *optargg )
+--
+int
+duf_interactive_options( duf_option_stage_t istage )
+--
+DUF_WRAPSTATIC int
+duf_sel_cb2_node_at( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+--
+int
+duf_sel_cb2_node( duf_scanstage_t scanstage, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+--
+void
+duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+--
+static int
+duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges )
+--
+static int
+duf_set_dirid_and_nums( duf_depthinfo_t * pdi, unsigned long long dirid
+--
+static int
+duf_set_dirid_and_nums_from_pstmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+--
+static int
+duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
+--
+static int
+duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set )
+--
+int
+duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set )
+--
+static int
+duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *directory_name, int caninsert, const duf_sql_set_t * sql_set )
+--
+int
+duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set )
+--
+mas_error_code_t
+duf_option_$_history( void )
+--
+mas_error_code_t
+duf_option_$_list_targ1( mas_argvc_t * targ, long n )
+--
+mas_error_code_t
+duf_option_$_list_targ2( int *ptargc, char ***ptargv, long n )
+--
+mas_error_code_t
+duf_option_$_clear_targ1( mas_argvc_t * targ, long n )
+--
+mas_error_code_t
+duf_option_$_clear_targ2( int *ptargc, char ***ptargv, long n )
+--
+mas_error_code_t
+duf_option_$_add_targ1( mas_argvc_t * targ, const char *s )
+--
+mas_error_code_t
+duf_option_$_add_targ2( int *ptargc, char ***ptargv, const char *s )
+--
+mas_error_code_t
+duf_option_$_echo( const char *arg )
+--
+static void
+duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
+--
+static int
+duf_levinfo_check_depth( const duf_depthinfo_t * pdi, duf_node_type_t node_type )
+--
+static int
+duf_levinfo_godown_dirid( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
+--
+int
+duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t node_type )
+--
+static int
+duf_levinfo_godown_db( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stmnt_t * pstmt )
+--
+int
+duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, duf_node_type_t node_type )
+--
+int
+duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, duf_node_type_t node_type, duf_stmnt_t * pstmt )
+--
+int
+duf_levinfo_goup( duf_depthinfo_t * pdi )
+--
+static int
+dummy_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dummy_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_middle2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dummy_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dummy_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dummy_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+duf_sccbh_eval_fs_with_scanner_here( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh,
+--
+static int
+duf_sccbh_eval_fs_direntry( struct dirent *de, duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED,
+--
+static int
+duf_sccbh_eval_fs_dirat_with2scanners( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+DUF_WRAPSTATIC int
+duf_sccbh_eval_fs( duf_scanstage_t scanstage DUF_UNUSED, duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_sccb_handle_t * sccbh )
+--
+const char *
+duf_options_infilepath( void )
+--
+static FILE *
+duf_infilepath( const char *filepath, int *pry )
+--
+static FILE *
+duf_infile( int dot, const char *at, const char *filename, int *pr )
+--
+int
+duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_source_t source )
+--
+int
+duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath )
+--
+static int
+duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdir, const char *filename, int v, int optional,
+--
+int
+duf_infile_options_at_cfgfile( duf_option_stage_t istage, const char *filename, int optional )
+--
+int
+duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int optional )
+--
+int
+duf_incfg_options( duf_option_stage_t istage )
+--
+int
+duf_incfg_last_options( duf_option_stage_t istage )
+--
+int
+duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
+--
+int
+duf_incfg_stg_options( duf_option_stage_t istage )
+--
+int
+duf_stdin_options( duf_option_stage_t istage )
+--
+int
+duf_indirect_options( duf_option_stage_t istage )
+--
+int
+duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
+--
+int
+duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
+--
+int
+duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
+--
+int
+duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
+--
+int
+duf_opened_dh( duf_dirhandle_t * pdhandle )
+--
+int
+duf_close_dh( duf_dirhandle_t * pdhandle )
+--
+int
+duf_check_dh( const char *msg )
+--
+duf_levinfo_t *
+duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
+--
+int
+duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d )
+--
+struct stat *
+duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d )
+--
+struct stat *
+duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_itemshowname_q( const duf_depthinfo_t * pdi, const char *q )
+--
+const char *
+duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
+--
+unsigned long long
+duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d )
+--
+void
+duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d )
+--
+void *
+duf_levinfo_context_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d )
+--
+const char *
+duf_levinfo_path_q( const duf_depthinfo_t * pdi, const char *q )
+--
+char *
+duf_levinfo_path_qdup( const duf_depthinfo_t * pdi, const char *q )
+--
+duf_scanner_t
+duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt )
+--
+const char *
+duf_scanstage_name( duf_scanstage_t scanstage )
+--
+const char *
+duf_scanstage_shortname( duf_scanstage_t scanstage )
+--
+const char *
+duf_nodetype_name( duf_node_type_t nt )
+--
+const duf_action_table_t *
+duf_find_atable_sccb_by_evname_std( const char *name )
+--
+const duf_scan_callbacks_t *
+duf_find_sccb_by_evname_std( const char *name )
+--
+const duf_scan_callbacks_t *
+duf_finor_load_d_sccb_by_evname_std( const char *name )
+--
+int
+duf_ev_evnamed_list_std( const char *names )
+--
+int
+duf_ev_evnamen_std( const char *name, size_t len )
+--
+int
+duf_ev_evname_std( const char *name )
+--
+int
+duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, const mas_argvc_t * ptarg )
+--
+int
+duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, const mas_argvc_t * ptarg )
+--
+int
+duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg )
+--
+int
+duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name )
+--
+static int
+duf_main_with_config( int argc, char **argv )
+--
+static int
+duf_main( int argc, char **argv )
+--
+void
+duf_li_set_nums( duf_levinfo_t * pli, unsigned long long ndirs, unsigned long long nfiles )
+--
+void
+duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs )
+--
+int
+duf_li_calc_depth( const duf_levinfo_t * pli )
+--
+char *
+duf_li_path( const duf_levinfo_t * pli, int count )
+--
+void
+duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+--
+int
+duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid )
+--
+int
+duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid )
+--
+int
+duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
+--
+int
+duf_env_options( duf_option_stage_t istage )
+--
+duf_depthinfo_t *
+duf_pdi_create( const char *name )
+--
+void
+duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc, int no_li )
+--
+duf_depthinfo_t *
+duf_pdi_clone( duf_depthinfo_t * pdisrc, int no_li )
+--
+int
+duf_pdi_delete( duf_depthinfo_t * pdi )
+--
+int
+duf_pdi_kill( duf_depthinfo_t ** ppdi )
+--
+int
+duf_ev_pdi_sccb( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, const mas_argvc_t * ptarg, bool f_summary )
+--
+int
+duf_ev_pdi_evnamen( duf_depthinfo_t * pdi, const char *name, size_t len, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
+--
+int
+duf_ev_pdi_evname( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
+--
+int
+duf_ev_pdi_evname_at( duf_depthinfo_t * pdi, const char *name, duf_scan_callbacks_t * first, const char *arg, bool f_summary )
+--
+int
+duf_ev_pdi_evnamed_list( duf_depthinfo_t * pdi, const char *names, duf_scan_callbacks_t * first, const mas_argvc_t * ptarg, bool f_summary )
+--
+const duf_action_table_t *
+duf_find_atable_sccb_by_evnamen( const char *name, size_t namelen, const duf_action_table_t * table )
+--
+const duf_action_table_t *
+duf_find_atable_sccb_by_evname( const char *name, const duf_action_table_t * table )
+--
+void
+duf_clear_context( duf_levinfo_context_t * pcontext )
+--
+void *
+duf_context( const duf_levinfo_context_t * pcontext )
+--
+void
+duf_set_context( duf_levinfo_context_t * pcontext, void *ptr )
+--
+void
+duf_set_context_destructor( duf_levinfo_context_t * pcontext, duf_void_voidp_func_t destr )
+--
+static int
+set_dir_priority_node_before2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+set_dir_priority_node_middle2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+set_dir_priority_node_after2( duf_stmnt_t * pstmt DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dumplet_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+register_pdifiledata( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static unsigned long long
+duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int *pr )
+--
+static unsigned long long
+duf_insert_exif_uni( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
+--
+static time_t
+duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, size_t stime_original_size, int *pr )
+--
+unsigned long long
+duf_pdistat2file_md5id_existed( duf_depthinfo_t * pdi, unsigned long md5sum1, unsigned long md5sum2, int *pr )
+--
+static unsigned long long
+duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *msg, int need_id, int *pr )
+--
+static int
+duf_make_md5_uni( int fd, unsigned char *pmd )
+--
+static int
+duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
+--
+static int
+tagit_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+tagit_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+tagit_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+tagit_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+tagit_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+unsigned long long
+duf_pdistat2file_sha1id_existed( duf_depthinfo_t * pdi, unsigned long sha1sum1, unsigned long sha1sum2, unsigned long sha1sum3, int *pr )
+--
+static unsigned long long
+duf_insert_sha1_uni( duf_depthinfo_t * pdi, unsigned long long *sha1, const char *msg, int need_id, int *pr )
+--
+static int
+duf_make_sha1_uni( int fd, unsigned char *pmd )
+--
+static int
+duf_make_sha1r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
+--
+static int
+register_pdidirectory( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dialog_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dialog_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+dialog_leaf2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_before2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_node_after2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+dialog_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+unsigned long long
+duf_pdistat2file_sd5id_existed( duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2, int *pr )
+--
+static unsigned long long
+duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *sd64, const char *msg, int need_id, int *pr )
+--
+static int
+duf_make_sd5_uni( int fd, unsigned char *pmd )
+--
+static int
+print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+tree_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+duf_sql_print_tree_sprefix_uni_d( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
+--
+static int
+duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth DUF_UNUSED )
+--
+static int
+duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi )
+--
+static int
+save_to_init( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+int
+duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
+--
+static int
+save_to_de_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+save_to_de_content2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+save_to_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+--
+static int
+save_to_leaf2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+save_to_node_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+--
+static int
+save_to_node_before2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int
+save_to_node_middle2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+--
+static int
+save_to_node_middle2_del( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+--
+static int
+save_to_node_after2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi_unused DUF_UNUSED )
+--
+static int
+save_to_node_after2_del( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi )
+--
+static int DUF_UNUSED
+save_to_de_dir_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int DUF_UNUSED
+save_to_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static unsigned long long
+duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs DUF_UNUSED, const char *tail DUF_UNUSED, int need_id, int *pr )
+--
+static void
+mime_destructor( void *ctx )
+--
+static int
+dirent_content2( duf_stmnt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+--
+static int DUF_UNUSED
+filenames_leaf2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi DUF_UNUSED )
+--
+static int DUF_UNUSED
+filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+static int
+filenames_de_file_before2( duf_stmnt_t * pstmt_unused DUF_UNUSED, duf_depthinfo_t * pdi )
+--
+unsigned long long
+duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum, int *pr )
+--
+static unsigned long long
+duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename, int need_id, int *pr )
+--
+static int
+duf_make_crc32_uni( int fd, unsigned long long *pcrc32sum )
