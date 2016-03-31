@@ -192,7 +192,7 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
     char *sqlt = NULL;
     duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
 
-    sql_set_pair = CRX( sccbh_get_sql_set_f, sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
+    sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
   /* XXX TODO XXX */
     sqlt = duf_selector2sql_new( sql_set, sql_set_pair.orderid, H_PDI->pdi_name, 1, &rpr );
@@ -464,7 +464,7 @@ TODO scan mode
       assert( H_PDI->pathinfo.levinfo );
     /* T(">>> %llu : %llu", H_PU->std_leaf_set_num,  H_PU->std_node_set_num); */
       CR( pdi_reinit_anypath, H_PDI, CRX( levinfo_path, H_PDI ), CRX( pdi_pu, H_PDI ),
-          CRX( sccbh_get_sql_set_f, sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
+          duf_sccbh_get_sql_set_f( sccbh, DUF_NODE_NODE ).active, 0 /* caninsert */ ,
           CRX( pdi_recursive, H_PDI ), CRX( pdi_allow_dirs, H_PDI ), CRX( pdi_linear, H_PDI ) );
     }
   }

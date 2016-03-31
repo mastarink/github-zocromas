@@ -32,7 +32,7 @@
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_sccb_handle.h"
 #include "duf_sccbh_eval_leaf.h"
@@ -49,6 +49,8 @@
 
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */

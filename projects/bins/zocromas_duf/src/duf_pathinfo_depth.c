@@ -24,12 +24,13 @@
 #include "duf_pathinfo_ref.h"
 #include "duf_pathinfo_structs.h"
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_levinfo_structs.h"
 
 /* ###################################################################### */
-#include "duf_pathinfo_depth.h"
+#include "duf_pathinfo_depth.h"                                      /* duf_pi_calc_depth; duf_pi_is_good_depth; duf_pi_check_depth; duf_pi_godown; ✗ */
 /* ###################################################################### */
 
 int

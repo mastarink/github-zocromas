@@ -24,13 +24,13 @@
 
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_ufilter_bind.h"
+#include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
-#include "duf_evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all(...) for assert() only?! */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_fd_str_cb(...) for assert() only?! */
@@ -44,6 +44,8 @@
 #include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
 
 #include "duf_sccb_structs.h"
+
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */

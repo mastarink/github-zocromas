@@ -20,7 +20,7 @@
 
 /* 20151013.113751 */
 duf_scanner_t
-duf_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt )
+duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt )
 {
   duf_scanner_t scanner = NULL;
 
@@ -167,8 +167,3 @@ duf_scanstage_shortname( duf_scanstage_t scanstage )
   return rs;
 }
 
-const char *
-duf_nodetype_name( duf_node_type_t nt )
-{
-  return ( nt == DUF_NODE_LEAF ? "LEAF" : ( nt == DUF_NODE_NODE ? "NODE" : "UNKNOWN" ) );
-}

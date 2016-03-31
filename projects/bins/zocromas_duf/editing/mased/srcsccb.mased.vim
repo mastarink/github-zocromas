@@ -16,6 +16,9 @@ sfind duf_sccb_eval_std.h
 tab sfind duf_sccb_scanstage.c
 sfind duf_sccb_scanstage.h
 
+tab sfind duf_nodetype.c
+sfind duf_nodetype.h
+
 tab sfind duf_sccb.c
 sfind duf_sccb.h
 sfind duf_sccb_def.h

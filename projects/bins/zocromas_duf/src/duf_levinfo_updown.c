@@ -25,6 +25,7 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_openclose.h"
 
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 #include "duf_pathinfo_depth.h"                                      /* duf_pi_calc_depth; duf_pi_is_good_depth; duf_pi_check_depth; duf_pi_godown; ✗ */
 
 #include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */

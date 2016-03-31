@@ -129,6 +129,7 @@ typedef enum
 
 # define DR( _layer_id, _funname, ... )		DT( _layer_id,				,	ei, _funname, __VA_ARGS__ )
 # define DRX( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	DTX( _layer_id, _funtyp, _rvar, _vini,	 ,	ei, _funname, __VA_ARGS__ )
+# define DRN( _layer_id, _funtyp,               _funname, ... )	DTN( _layer_id, _funtyp,              	 ,	ei, _funname, __VA_ARGS__ )
 # define DRP( _layer_id, _funtyp, _rvar, _vini, _funname, ... )	DTP( _layer_id, _funtyp, _rvar, _vini,	 ,	ei, _funname, __VA_ARGS__ )
 
 # define SR( _layer_id, _funname, ... )		ST( _layer_id,				,	ei, _funname, __VA_ARGS__ )

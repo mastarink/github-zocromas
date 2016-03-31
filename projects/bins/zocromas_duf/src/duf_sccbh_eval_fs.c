@@ -21,7 +21,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
@@ -33,9 +33,11 @@
 
 #include "duf_dirent.h"
 
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_sccb_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"
+
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -104,9 +106,9 @@ SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
   {
     duf_scanner_t scanner;
 
-    scanner = duf_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt );
-  /* assert(duf_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt )); */
-  /* QT( "SCANNER: %d : %s", duf_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ? 1 : 0, duf_uni_scan_action_title( H_SCCB ) ); */
+    scanner = duf_sccb_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt );
+  /* assert(duf_sccb_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt )); */
+  /* QT( "SCANNER: %d : %s", duf_sccb_scanstage_scanner( H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt ) ? 1 : 0, duf_uni_scan_action_title( H_SCCB ) ); */
     if ( scanner )
     {
       MAST_TRACE( scan, 2, "@@@@%s +%d :: %s | %-17s", duf_nodetype_name( duf_levinfo_node_type( H_PDI ) ), duf_pdi_depth( H_PDI ),

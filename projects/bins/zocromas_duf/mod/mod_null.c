@@ -15,7 +15,7 @@
 #include <mastar/error/mas_error_defs.h>
 
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
@@ -28,6 +28,8 @@
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_mod_defs.h"
+
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */

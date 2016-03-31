@@ -12,7 +12,7 @@
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_action_table.h"
+#include "duf_action_table.h"                                        /* duf_actions_table_std ✗ */
 
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
@@ -45,16 +45,18 @@ static void duf_sccb_dlclose_std( void ) __attribute__ ( ( destructor( 101 ) ) )
 static void
 duf_sccb_dlclose_std( void )
 {
-  duf_sccb_dlclose( duf_first_sccb(  ) );
+  CRX( sccb_dlclose, CRX( first_sccb ) );
 }
 
-const duf_scan_callbacks_t *
-duf_find_sccb_by_evname_std( const char *name )
+/* const duf_scan_callbacks_t *                    */
+/* duf_find_sccb_by_evname_std( const char *name ) */
+SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname_std, const char *name )
 {
-  const duf_scan_callbacks_t *sccb;
+/* const duf_scan_callbacks_t *sccb; */
 
   sccb = duf_find_sccb_by_evname( name, duf_first_sccb(  ) );
-  return sccb;
+/* return sccb; */
+  ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname_std, const char *name );
 }
 
 #if 0
@@ -71,7 +73,7 @@ duf_finor_load_d_sccb_by_evname_std( const char *name )
 SR( OTHER, ev_evnamed_list_std, const char *names )
 {
 /* DUF_STARTR( r ); */
-  /* assert( duf_pdi_global_ufilter(  ) == DUF_CONFIGX( vars.puz ) ); */
+/* assert( duf_pdi_global_ufilter(  ) == DUF_CONFIGX( vars.puz ) ); */
 #if 0
   DOR( r, duf_ev_atable_evnamed_list( names, duf_action_table(  ) ) );
 #else
@@ -155,7 +157,7 @@ SR( PDI, ev_pdi_evname_std, duf_depthinfo_t * pdi, const char *name )
 #if 0
   DOR( r, duf_ev_pdi_atable_evname_at( pdi, name, duf_action_table(  ), NULL, DUF_ACTG_FLAG( summary ) ) );
 #else
-  CR( ev_pdi_evname_at, pdi, name, duf_first_sccb(  ), NULL, /* DUF_ACTG_FLAG( summary ) */ duf_get_config_flag_act_summary() );
+  CR( ev_pdi_evname_at, pdi, name, duf_first_sccb(  ), NULL, /* DUF_ACTG_FLAG( summary ) */ duf_get_config_flag_act_summary(  ) );
 #endif
 /* DUF_ENDR( r ); */
   ER( PDI, ev_pdi_evname_std, duf_depthinfo_t * pdi, const char *name );

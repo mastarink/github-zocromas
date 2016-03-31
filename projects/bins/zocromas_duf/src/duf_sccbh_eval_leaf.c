@@ -72,7 +72,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
   {
     duf_scanner_t scanner = NULL;
 
-    scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
+    scanner = duf_sccb_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
     {
       ERRLOWER( FS_DISABLED );
 #if 0
@@ -126,7 +126,7 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
   {
     duf_scanner_t scanner = NULL;
 
-    scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
+    scanner = duf_sccb_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_deleted( H_PDI ), DUF_NODE_LEAF );
     {
       ERRLOWER( FS_DISABLED );
 #if 0

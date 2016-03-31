@@ -68,7 +68,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 
     MAST_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 #if 1
-    if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && duf_levinfo_if_deleted( H_PDI ) )
+    if ( ( scanner = duf_sccb_scanstage_scanner( H_SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && duf_levinfo_if_deleted( H_PDI ) )
     {
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 # if 0
@@ -82,7 +82,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
       CR( sccbh_call_scanner, sccbh, pstmt,  scanstage, scanner, DUF_NODE_NODE );
 # endif
     }
-    else if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
+    else if ( ( scanner = duf_sccb_scanstage_scanner( H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
     {
       MAST_TRACE( scan, 4, "scan node %s by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
 # if 0
@@ -97,7 +97,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 # endif
     }
 #else
-    if ( ( scanner = duf_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_if_deleted( H_PDI ), DUF_NODE_NODE ) ) )
+    if ( ( scanner = duf_sccb_scanstage_scanner( H_SCCB, scanstage, duf_levinfo_if_deleted( H_PDI ), DUF_NODE_NODE ) ) )
     {
       /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", duf_scanstage_name( scanstage ), duf_levinfo_dirid( H_PDI ) );
