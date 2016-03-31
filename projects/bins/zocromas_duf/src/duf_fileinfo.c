@@ -18,14 +18,17 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
+
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 /* ###################################################################### */
 #include "duf_fileinfo.h"
 /* ###################################################################### */
 
-SR( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi MAS_UNUSED, duf_fileinfo_t * pfi )
+SR( OTHER, fileinfo, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED, duf_fileinfo_t * pfi )
 {
 /* DUF_STARTR( r ); */
   if ( pfi )
@@ -89,5 +92,5 @@ SR( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi MAS_UNUSED, duf_
     pfi->sha1sum3 = sha1sum3;
   }
 /* DUF_ENDR( r ); */
-  ER( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi MAS_UNUSED, duf_fileinfo_t * pfi );
+  ER( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi );
 }

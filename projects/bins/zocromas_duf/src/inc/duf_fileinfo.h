@@ -4,6 +4,6 @@
 # include "duf_fileinfo_types.h"
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-int duf_fileinfo( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi );
+DR( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi );
 
 #endif

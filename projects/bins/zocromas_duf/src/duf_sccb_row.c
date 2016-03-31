@@ -18,11 +18,11 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"
 
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
 #include "duf_sccb_structs.h"
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
@@ -56,18 +56,25 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
     row->fields[i].typ = CRX( sql_column_type, pstmt, i );
     row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt, i ) );
     row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt, i ) );
+/*     if ( 0 == strcmp( row->fields[i].name, "mtime" ) )                                                                                     */
+/*     {                                                                                                                                      */
+/* #include <mastar/sqlite/mas_sqlite.h>                                                                                                      */
+/*                                                                                                                                            */
+/*     (* assert( strcmp( row->fields[i].name, "mtime" ) ); *)                                                                                */
+/*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt, i ), mas_sqlite_column_type( pstmt, i ), mas_sqlite_column_decltype( pstmt, i ) ); */
+/*     }                                                                                                                                      */
     switch ( row->fields[i].typ )
     {
     case DUF_SQLTYPE_NONE:
       break;
     case DUF_SQLTYPE_INTEGER:
       row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i );
-      /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
+    /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
       break;
     case DUF_SQLTYPE_FLOAT:
       break;
     case DUF_SQLTYPE_TEXT:
-    /* row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i ); */
+      row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i );
       break;
     case DUF_SQLTYPE_BLOB:
       break;
@@ -179,8 +186,8 @@ SRX( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_ro
 
   field = CRX( datarow_field_find, row, name );
   n = field ? field->value.n : 0;
-  /* QT( "@found %s for %s at %p (%lld)", field ? field->name : NULL, name, row, field ? field->value.n : 0 ); */
-  assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL );
+/* QT( "@found %s for %s at %p (%lld)", field ? field->name : NULL, name, row, field ? field->value.n : 0 ); */
+  assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL || field->typ == DUF_SQLTYPE_TEXT );
 /* return field ? field->value.n : 0; */
   ERX( SCCBH, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );
 }
@@ -198,7 +205,7 @@ SRX( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row
   ERX( SCCBH, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
 }
 
-#if 0
+#if 1
 unsigned long long
 duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name )
 /* SRX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name ) */

@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -30,6 +31,7 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
@@ -163,7 +165,8 @@ duf_scan_callbacks_t duf_mod_handler = {
 
 /* ########################################################################################## */
 static
-SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, unsigned long digestsum1, unsigned long digestsum2 )
+SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
+     unsigned long digestsum1, unsigned long digestsum2 )
 {
 /* int rpr = 0; */
 /* unsigned long long digestid = 0; */
@@ -184,7 +187,7 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
   if ( QISERR1_N( SQL_ROW ) )
   {
     MAST_TRACE( select, 10, "<selected>" );
-    digestid = DUF_GET_UFIELD2( digestid );
+    digestid = DUF_QGET_UFIELD2( digestid );
   /* rpr = 0; */
   }
   else
@@ -197,13 +200,13 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
 /* if ( pr ) */
 /* *pr = rpr; */
 /* DUF_ENDULL( digestid ); */
-  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, unsigned long digestsum1,
-       unsigned long digestsum2 );
+  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh,
+       unsigned long digestsum1, unsigned long digestsum2 );
 }
 
 static
-SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, unsigned long long *digest64, const char *msg MAS_UNUSED,
-     int need_id )
+SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
+     const char *msg MAS_UNUSED, int need_id )
 {
 /* unsigned long long digestid = -1; */
 /* int lr = 0; */
@@ -244,7 +247,7 @@ SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t *
 #if 0
         digestid = duf_pdistat2file_digestid_existed( pdi, digest64[1], digest64[0], QPERRIND );
 #else
-        digestid = CRP( pdistat2file_digestid_existed, pdi, digest64[1], digest64[0] );
+        digestid = CRP( pdistat2file_digestid_existed, pdi, sccbh, digest64[1], digest64[0] );
 #endif
     }
     else if ( QNOERR /* assume SQLITE_OK */  )
@@ -267,8 +270,8 @@ SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t *
 
 /* DUF_ENDULL( digestid ); */
 /* return digestid; */
-  ERP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, unsigned long long *digest64, const char *msg MAS_UNUSED,
-       int need_id );
+  ERP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
+       const char *msg MAS_UNUSED, int need_id );
 }
 
 static
@@ -383,7 +386,7 @@ SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf
 #if 0
     digestid = duf_insert_digest_uni( pdi, pdgst, fname /* for dbg message only */ , 1 /*need_id */ , QPERRIND );
 #else
-    digestid = CRP( insert_digest_uni, pdi, pdgst, fname /* for dbg message only */ , 1 /*need_id */  );
+    digestid = CRP( insert_digest_uni, pdi, sccbh, pdgst, fname /* for dbg message only */ , 1 /*need_id */  );
 #endif
     if ( digestid )
     {

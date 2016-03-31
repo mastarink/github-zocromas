@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -31,6 +32,8 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
@@ -163,7 +166,8 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, const char *model, int need_id )
+SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model,
+     int need_id )
 {
 /* int lr = 0; */
 
@@ -236,18 +240,18 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 /* DUF_TEST_R( lr ); */
 /* assert( modelid ); */
 /* DUF_ENDULL( modelid ); */
-  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, const char *model, int need_id );
+  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, const char *model, int need_id );
 }
 
 static
-SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, const char *model, time_t timeepoch,
-     int dtfixed, const char *stime_original, int need_id )
+SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
+     const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
 {
 /* int lr = 0; */
   unsigned long long modelid = 0;
 
 /* DUF_STARTULL( exifid ); */
-  modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , QPERRIND );
+  modelid = duf_insert_model_uni( pdi, sccbh, model, 1 /*need_id */ , QPERRIND );
   if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert(  ) )
   {
     if ( need_id )
@@ -359,8 +363,8 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
 /* if ( pr ) */
 /* *pr = lr; */
 /* DUF_ENDULL( exifid ); */
-  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, const char *model,
-       time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
+  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh,
+       const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
 }
 
 static time_t
@@ -823,7 +827,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
               noexif = !( timeepoch || *stime_original || model );
 
               if ( !noexif )
-                exifid = duf_insert_exif_uni( pstmt, pdi, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , QPERRIND );
+                exifid = duf_insert_exif_uni( pstmt, pdi, sccbh, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , QPERRIND );
               MAST_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, QERRIND, sum, model, timeepoch, real_path, fname );
 
               MAST_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );

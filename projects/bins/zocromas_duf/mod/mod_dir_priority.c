@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -24,6 +25,8 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_mod_defs.h"

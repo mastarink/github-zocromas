@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -222,7 +223,7 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
   /* filename from db same as duf_levinfo_itemname( pdi ) */
     assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
-    CR( fileinfo, pstmt, pdi, &fi );
+    CR( fileinfo, pstmt, pdi, sccbh, &fi );
     save_path =
             duf_sformat_file_info( pdi, &fi, 0 /* is_atty // color */ , DUF_CONFIGG( save.path ) /* duf_config->save.path */ , ( duf_pdi_scb_t ) NULL,
                                    ( duf_pdi_scb_t ) NULL, 0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );

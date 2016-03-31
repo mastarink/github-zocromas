@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -29,13 +30,13 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
-
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
@@ -150,7 +151,8 @@ duf_scan_callbacks_t duf_mod_handler = {
 };
 
 /* ########################################################################################## */
-SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi, unsigned long crc32sum )
+SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
+     unsigned long crc32sum )
 {
 /* int rpr = 0; */
 /* unsigned long long crc32id = 0; */
@@ -181,12 +183,12 @@ SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_dept
 /* if ( pr ) */
 /* *pr = rpr; */
 /* DUF_ENDULL( crc32id ); */
-  ERP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi, unsigned long crc32sum );
+  ERP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long crc32sum );
 }
 
 static
-SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename MAS_UNUSED,
-     int need_id )
+SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED, unsigned long long crc32sum,
+     const char *filename MAS_UNUSED, int need_id )
 {
 /* unsigned long long crc32id = -1; */
 /* int lr = 0; */
@@ -218,7 +220,7 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
     {
       if ( need_id )
-        crc32id = duf_pdistat2file_crc32id_existed( pdi, crc32sum, QPERRIND );
+        crc32id = CRP( pdistat2file_crc32id_existed, pdi, sccbh, crc32sum );
     }
     else if ( QNOERR /* assume SQLITE_OK */  )
     {
@@ -244,8 +246,8 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
 
 /* DUF_ENDULL( crc32id ); */
 /* return crc32id; */
-  ERP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * pdi, unsigned long long crc32sum, const char *filename MAS_UNUSED,
-       int need_id );
+  ERP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long long crc32sum,
+       const char *filename MAS_UNUSED, int need_id );
 }
 
 static
@@ -313,7 +315,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
 }
 
 static
-SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned long long crc32sum = 0;
@@ -339,7 +341,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_
 
     MAST_TRACE( crc32, 10, "insert %s", fname );
 
-    crc32id = duf_insert_crc32_uni( pdi, crc32sum, fname /* for dbg message only */ , 1 /*need_id */ , QPERRIND );
+    crc32id = CRP( insert_crc32_uni, pdi, sccbh, crc32sum, fname /* for dbg message only */ , 1 /*need_id */  );
     if ( QNOERR && crc32id )
     {
       int changes = 0;
@@ -373,5 +375,5 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_
   pdi->total_bytes += bytes;
   pdi->total_files++;
 /*  DUF_ENDR( r );*/
-  ER( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi , duf_sccb_handle_t *sccbh MAS_UNUSED);
+  ER( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -1,3 +1,4 @@
+#define DUF_GET_FIELD_FROM_ROW
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -26,13 +27,15 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 
 #include "duf_print.h"
 
 #include "duf_fileinfo.h"
 
-#include "duf_sccb_row.h"
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "sql_beginning_selected.h"
 
@@ -77,7 +80,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
 
@@ -94,6 +97,7 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handl
   DUF_UFIELD2( sha1sum2 );
   DUF_UFIELD2( sha1sum3 );
   DUF_UFIELD2( mtime );
+  assert( mtime == duf_sccbh_row_get_number( sccbh, "mtime" ) );
   DUF_UFIELD2( dev );
   DUF_UFIELD2( uid );
   DUF_UFIELD2( gid );

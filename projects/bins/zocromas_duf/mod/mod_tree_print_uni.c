@@ -1,3 +1,4 @@
+#define DUF_GET_FIELD_FROM_ROW
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -182,7 +183,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
 #else
-    CR( fileinfo, pstmt, pdi, &fi );
+    CR( fileinfo, pstmt, pdi, sccbh, &fi );
 #endif
 
 #if 0

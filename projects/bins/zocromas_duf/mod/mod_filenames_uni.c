@@ -1,3 +1,4 @@
+/* #define DUF_GET_FIELD_FROM_ROW */
 /* #undef MAS_TRACING */
 #include <assert.h>                                                  /* assert */
 #include <stddef.h>                                                  /* NULL */
@@ -197,9 +198,12 @@ SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_d
 
   unsigned long long dataid;
 
-/* DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, (* duf_levinfo_stat( pdi ), *) &r ) ); */
   if ( QNOERR )
-    dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ QPERRIND );
+#if 0
+    dataid = duf_pdistat2file_dataid_existed( pdi, sccbh, QPERRIND );
+#else
+    dataid = CRP( pdistat2file_dataid_existed, pdi, sccbh );
+#endif
   assert( dataid > 0 );
   if ( QNOERR && fname && duf_levinfo_dirid_up( pdi ) )
   {
