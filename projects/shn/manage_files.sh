@@ -2,46 +2,71 @@
 # bash
 function read_makefile_am ()
 {
+  local -a files
+  local -A hfiles
   local mark
   mark=$1
   local lin i fn
   local -a lines
   local inblock last
-  local -i got=0
+# local -i got=0
   readarray -t lines
 # echo " ${#lines[@]} -- ($mark)" >&2
   for (( i=0; i<${#lines[@]}; i++ )) ; do
     lin=${lines[$i]}
-    if ! [[ $inblock ]] && [[ $lin =~ $mark[[:blank:]]*=[[:blank:]]*(.*[^[:blank:]]|)[[:blank:]]*(\\|)$ ]] ; then
+#   echo "0 ${inblock:-not} [$lin] --- mark:[$mark] [${BASH_REMATCH[1]}] [${BASH_REMATCH[2]}]" >&2
+    if ! [[ $inblock ]] && [[ $lin =~ ^[[:blank:]]*[_[:alnum:]]*$mark[[:blank:]]*=[[:blank:]]*([^\\]*[^\\[:blank:]]|)[[:blank:]]*(\\|)$ ]] ; then
       lin=${BASH_REMATCH[1]}
-#     echo "[$lin]"
-      inblock=yes
-      got+=1
-    elif [[ $inblock ]] && [[ $lin =~ [[:blank:]]*([^[:blank:]\\].*[^[:blank:]\\]|)[[:blank:]]*(\\|)$ ]] ; then
+      if [[ "$lin" ]] ; then
+#       echo "1 ${inblock:-not} [$lin] --- [${BASH_REMATCH[1]}] [${BASH_REMATCH[2]}]" >&2
+        files=(${files[@]} $lin)
+#       got+=1
+      fi
+      if [[ "${BASH_REMATCH[2]}" ]] ; then
+        inblock=yes
+      else
+        unset inblock
+      fi
+    elif [[ $inblock ]] && [[ $lin =~ ^[[:blank:]]*([^[:blank:]\\][^\\]*[^\\[:blank:]\\]|)[[:blank:]]*(\\|)$ ]] ; then
       lin=${BASH_REMATCH[1]}
-#     echo "[$lin]"
+      if [[ "$lin" ]] ; then
+#       echo "2 ${inblock:-not} [$lin] --- [${BASH_REMATCH[1]}] [${BASH_REMATCH[2]}]" >&2
+        files=(${files[@]} $lin)
+      fi
       if ! [[ ${BASH_REMATCH[2]} ]] ; then
         last=yes
+	unset inblock
+#	echo 'last ****' >&2
       fi
     elif [[ $inblock ]] ; then
+#     echo "3 ${inblock:-not} [$lin] --- [${BASH_REMATCH[1]}] [${BASH_REMATCH[2]}]" >&2
       echo "Why ($lin)" >&2
       unset lin
 #   else
 #     echo "--- Why ($lin -- $mark)" >&2
     fi
-    if [[ $inblock ]] && [[ $got -gt 0 ]] ; then
-      for fn in $lin ; do
-	echo $fn
-      done
-      if [[ $last ]] ; then
-        unset inblock
-#	break
-      fi
-    fi    
+#     if [[ $inblock ]] && [[ ${#files[@]} -gt 0 ]] ; then
+#         for fn in ${files[@]} ; do
+# #	echo "T [$fn]" >&2
+#          echo $fn
+#        done
+#       if [[ $last ]] ; then
+#         unset inblock
+# #	break
+#       fi
+#     fi    
   done
+  for fn in ${files[@]} ; do
+    hfiles[$fn]=1
+  done
+  for fn in ${!hfiles[@]} ; do
+#   echo "T [$fn]" >&2
+    echo $fn
+  done | sort
 }
 function manage_makefile_am ()
 {
+  local -a new_files
   local at
   at=$1
   local mark=$2
@@ -49,8 +74,11 @@ function manage_makefile_am ()
   file="$at/Makefile.am"
 # shift
   if [[ -f $file ]] ; then
-#   echo $file >&2
-    files=(${files[@]} $( read_makefile_am $mark < $file | sort ))
+#   echo "$file : xxxxxxxxxxxxxx ----------------"
+    new_files=($(read_makefile_am $mark < $file))
+#   echo "new_files: ${new_files[@]}"
+    files=(${files[@]} ${new_files[@]})
+#   echo "$file : xxxxxxxxxxxxxx ${files[@]}"
   fi
 }
 function manage_makefiles_am ()
@@ -63,11 +91,20 @@ function manage_makefiles_am ()
   local -i cnt=0 cntc=0 cnth=0
   local -i cntf=0 cntfc=0 cntfh=0
   manage_makefile_am src _SOURCES
+# echo "1 zzzzzzzzzzzzz ${files[@]}" >&2
+  manage_makefile_am mod _SOURCES
+# echo "2 zzzzzzzzzzzzz ${files[@]}" >&2
   manage_makefile_am src/inc noinst_HEADERS
-# echo ${files[@]} >&2
+# echo "3 zzzzzzzzzzzzz ${files[@]}" >&2
+  manage_makefile_am mod/inc noinst_HEADERS
+# echo "4 zzzzzzzzzzzzz ${files[@]}" >&2
 # echo ${#files[@]} >&2
   for fn in ${files[@]} ; do
     if [[ $fn == *.c ]] && [[ -f src/$fn ]] ; then
+      cntc+=1
+      in_make[$fn]=1
+      in_any[$fn]+=1
+    elif [[ $fn == *.c ]] && [[ -f mod/$fn ]] ; then
       cntc+=1
       in_make[$fn]=1
       in_any[$fn]+=1
@@ -75,16 +112,28 @@ function manage_makefiles_am ()
       cnth+=1
       in_make[$fn]=1
       in_any[$fn]+=1
+    elif [[ $fn == *.h ]] && [[ -f mod/inc/$fn ]] ; then
+      cnth+=1
+      in_make[$fn]=1
+      in_any[$fn]+=1
     fi
   done
   cnt=$(( $cntc + $cnth ))
-  for fnf in src/*.c src/inc/*.h ; do
+  for fnf in {src,mod}/*.c {src,mod}/inc/*.h  ; do
     fn=$(basename $fnf)
-    if [[ $fn == *.c ]] && [[ -f src/$fn ]] ; then
+    if [[ $fn == *.c ]] && [[ -f "src/$fn" ]] ; then
       cntfc+=1
       in_path[$fn]=1
       in_any[$fn]+=1
-    elif [[ $fn == *.h ]] && [[ -f src/inc/$fn ]] ; then
+    elif [[ $fn == *.c ]] && [[ -f "mod/$fn" ]] ; then
+      cntfc+=1
+      in_path[$fn]=1
+      in_any[$fn]+=1
+    elif [[ $fn == *.h ]] && [[ -f "src/inc/$fn" ]] ; then
+      cntfh+=1
+      in_path[$fn]=1
+      in_any[$fn]+=1
+    elif [[ $fn == *.h ]] && [[ -f "mod/inc/$fn" ]] ; then
       cntfh+=1
       in_path[$fn]=1
       in_any[$fn]+=1
@@ -98,7 +147,7 @@ function manage_makefiles_am ()
     in_any[$fn]+=1
   done
 # incfiles=($(grep  -hr --inc='*.c' '^\s*#include\s\+"[a-z_]\+\.h"' src/ | sed 's@^\s*#include\s\+"\([a-z_]\+\.h\).*$"@\1@' | sort | uniq))
-  incfiles=($(grep  -hr --inc='*.[ch]' '^\s*#\s*include\s\+"[a-z0-9_]\+\.h"' src/ | sed -ne 's@^\s*#\s*include\s\+\"\([a-z0-9_]\+\.h\)\".*$@\1@p' | sort | uniq))
+  incfiles=($(grep  -hr --inc='*.[ch]' '^\s*#\s*include\s\+"[a-z0-9_]\+\.h"' src/ mod/ | sed -ne 's@^\s*#\s*include\s\+\"\([a-z0-9_]\+\.h\)\".*$@\1@p' | sort | uniq))
   for fn in ${incfiles[@]} ; do
     in_include[$fn]=1
     in_any[$fn]+=1
@@ -112,10 +161,18 @@ function manage_makefiles_am ()
   echo "in_any:${#in_any[@]}" >&2
   for fn in ${!in_any[@]} ; do
     if  ( ! [[ ${in_make[$fn]} ]] || ! [[ ${in_path[$fn]} ]] || ! [[ ${in_edit[$fn]} ]]  || ( [[ $fn == *.h ]] && ! [[ ${in_include[$fn]} ]] ) ) ; then
-      if [[ ${in_make[$fn]:-0} -gt 0 ]]    ; then printf "make:%8d  " ${in_make[$fn]:-0} ; else printf "               " ; fi
-      if [[ ${in_path[$fn]:-0} -gt 0 ]]    ; then printf "path:%8d  " ${in_path[$fn]:-0} ; else printf "               " ; fi
-      if [[ ${in_edit[$fn]:-0} -gt 0 ]]    ; then printf "edit:%8d  " ${in_edit[$fn]:-0} ; else printf "               " ; fi
-      if [[ ${in_include[$fn]:-0} -gt 0 ]] ; then printf "include:%5d  " ${in_include[$fn]:-0} ; else printf "               " ; fi
+      if ! [[ ${in_make[$fn]:-0} -gt 0 ]]    ; then printf "\t%s" "NOT make "
+      else                                          printf "\t%s" "    MAKE "
+      fi
+      if ! [[ ${in_path[$fn]:-0} -gt 0 ]]    ; then printf "\t%s" "NOT path "
+      else                                          printf "\t%s" "    PATH "
+      fi
+      if ! [[ ${in_edit[$fn]:-0} -gt 0 ]]    ; then printf "\t%s" "NOT edit "
+      else                                          printf "\t%s" "    EDIT "
+      fi
+      if ! [[ ${in_include[$fn]:-0} -gt 0 ]] ; then printf "\t%s" "NOT incl "
+      else                                          printf "\t%s" "    INCL "
+      fi
       echo " -- $fn"
     fi
   done

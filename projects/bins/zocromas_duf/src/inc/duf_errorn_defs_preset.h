@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_PRINTN_DEFS_PRESET_H
-# define MAS_DUF_PRINTN_DEFS_PRESET_H
+#ifndef MAS_DUF_ERRORN_DEFS_PRESET_H
+# define MAS_DUF_ERRORN_DEFS_PRESET_H
 
 #include "duf_config_output_weak.h"
 

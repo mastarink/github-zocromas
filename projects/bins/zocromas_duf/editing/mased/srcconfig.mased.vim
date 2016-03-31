@@ -26,9 +26,9 @@ tab sfind duf_cfg_credel.c
 sfind duf_cfg_credel.h
 
 tab sfind duf_config_ref.h
-sfind duf_config_wref.h
+" sfind duf_config_wref.h
 sfind duf_config_defs.h
-sfind duf_config4trace_ref.h
+" sfind duf_config4trace_ref.h
 
 tab sfind duf_config_util.c
 sfind duf_config_util.h

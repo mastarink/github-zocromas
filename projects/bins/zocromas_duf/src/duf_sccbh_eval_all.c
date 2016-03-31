@@ -20,26 +20,23 @@
 
 #include "duf_pdi.h"                                                 /* duf_pdi_init; duf_pdi_shut; duf_pdi_close ✗ */
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-
-/* #include "duf_dir_scan2_stages.h" */
-/* #include "duf_item_scan2.h" */
 
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccbh_eval.h"
 #include "duf_sccbh_eval_node.h"
 #include "duf_sccbh_eval_fs.h"
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_pdi_structs.h"                                         /* H_PDI->items */
 /* ###################################################################### */
-#include "duf_sccbh_eval_all.h"
+#include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 /* ###################################################################### */
 
 /* duf_sccbh_eval_all:
@@ -60,12 +57,11 @@
 static
 SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage )
 {
-/* DUF_STARTR( r ); */
-  unsigned allow_fs = ! /* DUF_CONFIGG( opt.disable.flag.fs ) */ duf_get_config_flag_disable_fs(  );
-  unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ duf_get_config_flag_act_allow_dirs(  );
-  unsigned allow_files = /* DUF_ACTG_FLAG( allow_files ) */ duf_get_config_flag_act_allow_files(  );
-  unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ duf_get_config_flag_act_allow_sub(  );
-  unsigned linear = duf_pdi_linear( H_PDI );
+  unsigned allow_fs = ! /* DUF_CONFIGG( opt.disable.flag.fs ) */ CRX( get_config_flag_disable_fs, );
+  unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ CRX( get_config_flag_act_allow_dirs, );
+  unsigned allow_files = /* DUF_ACTG_FLAG( allow_files ) */ CRX( get_config_flag_act_allow_files, );
+  unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ CRX( get_config_flag_act_allow_sub, );
+  unsigned linear = CRX( pdi_linear, H_PDI );
 
   duf_str_cb2_t passes[] = {
     [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
@@ -78,10 +74,10 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
     NULL
   };
 
-  MAST_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", duf_scanstage_name( scanstage ), scanstage, duf_levinfo_dirid( H_PDI ),
-              duf_uni_scan_action_title( H_SCCB ), duf_levinfo_path( H_PDI ) );
+  MAST_TRACE( scan, 4, "scan stage %s(%d) by %5llu:%s; %s", CRX( scanstage_name, scanstage ), scanstage, CRX( levinfo_dirid, H_PDI ),
+              CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
 
-  MAST_TRACE( sccbh, 2, "@%15s(%d). pass (%s)", duf_scanstage_name( scanstage ), scanstage, duf_uni_scan_action_title( H_SCCB ) );
+  MAST_TRACE( sccbh, 2, "@%15s(%d). pass (%s)", CRX( scanstage_name, scanstage ), scanstage, CRX( uni_scan_action_title, H_SCCB ) );
 /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
   if ( passes[scanstage] )
   {
@@ -91,12 +87,11 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
     H_PDI->items.dirs = 0;
     CRV( ( passes[scanstage] ), sccbh, pstmt_selector, scanstage );
   /* QT( "@%d. %llu", scanstage, H_PDI->items.total ); */
-    MAST_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( H_PDI ) );
+    MAST_TRACE( scan, 4, "[%llu]", CRX( levinfo_dirid, H_PDI ) );
   /* sccbh->current_scanstage = DUF_SCANSTAGE_NONE; */
   /* sccbh->current_statement = NULL; */
   }
-/* QT( "@@@@%s - %s : %s", duf_scanstage_name( scanstage ), duf_levinfo_relpath( H_PDI ), duf_levinfo_itemtruename( H_PDI ) ); */
-/* DUF_ENDR( r ); */
+/* QT( "@@@@%s - %s : %s", CRX(scanstage_name, scanstage ), CRX(levinfo_relpath, H_PDI ), CRX(levinfo_itemtruename, H_PDI ) ); */
 
   ER( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage );
 }
@@ -104,21 +99,20 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
 static
 SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector )
 {
-/* DUF_STARTR( r ); */
   assert( H_SCCB );
-/* QT( "@@@%s", duf_levinfo_path( H_PDI ) ); */
-/* duf_scan_qbeginning_sql( H_SCCB ); */
+/* QT( "@@@%s", CRX(levinfo_path, H_PDI ) ); */
+/* CRX(scan_qbeginning_sql, H_SCCB ); */
 /*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem
  *                                     -- see duf_dir_scan2_passs.c
  * */
-  MAST_TRACE( scan, 3, "scan passes by %5llu:%s; %s", duf_levinfo_dirid( H_PDI ), duf_uni_scan_action_title( H_SCCB ), duf_levinfo_path( H_PDI ) );
-  MAST_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( H_SCCB ) );
-/* QT( "Q: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, duf_uni_scan_action_title( H_SCCB ) ); */
+  MAST_TRACE( scan, 3, "scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
+  MAST_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
+/* QT( "Q: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
   if ( !H_SCCB->disabled /* && ( !H_TOTCOUNTED || H_TOTITEMS ) TODO FIXME */  )
   {
-  /* QT( "DO: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, duf_uni_scan_action_title( H_SCCB ) ); */
+  /* QT( "DO: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
 
     for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage <= DUF_SCANSTAGE_MAX; scanstage++ )
     {
@@ -127,17 +121,17 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   }
   else
   {
-  /* QT( "SKIP: H_TOTCOUNTED:%d; H_TOTITEMS:%llu [%s] for %s", H_TOTCOUNTED, H_TOTITEMS, duf_scanstage_name( scanstage ), duf_uni_scan_action_title( H_SCCB ) ); */
+  /* QT( "SKIP: H_TOTCOUNTED:%d; H_TOTITEMS:%llu [%s] for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(scanstage_name, scanstage ), CRX(uni_scan_action_title, H_SCCB ) ); */
 
-    QT( "SKIP: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, duf_uni_scan_action_title( H_SCCB ) );
+    QT( "SKIP: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX( uni_scan_action_title, H_SCCB ) );
   /* assert( 0 );                                                                                               */
   }
 
-  MAST_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, duf_uni_scan_action_title( H_SCCB ) );
+  MAST_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
 /* FIXME */
   ERRCLEAR( TOO_DEEP );                                              /* reset error if it was `MAX_DEPTH` */
-  MAST_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", duf_levinfo_dirid( H_PDI ), duf_uni_scan_action_title( H_SCCB ), duf_levinfo_path( H_PDI ) );
-/* DUF_ENDR( r ); */
+  MAST_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ),
+              CRX( levinfo_path, H_PDI ) );
   ER( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector );
 }
 
@@ -153,23 +147,24 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
  * */
 SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage_fake MAS_UNUSED )
 {
-/* DUF_STARTR( r ); */
   assert( H_PDI );
-  assert( duf_pdi_depth( H_PDI ) /* H_PDI->pathinfo.depth */  >= 0 );
+  assert( CRX( pdi_depth, H_PDI ) /* H_PDI->pathinfo.depth */  >= 0 );
   assert( sccbh );
 /* assert( pstmt_selector ); */
 #ifdef MAS_TRACING
-  unsigned long long diridpid;
+  unsigned long long diridpdi;
 
-  diridpid = duf_levinfo_dirid( H_PDI );
-  MAST_TRACE( scan, 3, "[%llu]", diridpid );
-  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( H_PDI ), H_PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( H_PDI ),
-                duf_pdi_reldepth( H_PDI ), diridpid );
-  MAST_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( H_PDI ) );
-  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + duf_pdi_reldepth( H_PDI ), H_PDI, " >>> 1." );
+  diridpdi = CRX( levinfo_dirid, H_PDI );
+
+  MAST_TRACE( scan, 3, "[%llu]", diridpdi );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, "** depth:%d/%d; diridpdi:%llu", CRX( pdi_depth, H_PDI ),
+                CRX( pdi_reldepth, H_PDI ), diridpdi );
+  MAST_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpdi, CRX( pdi_depth, H_PDI ) );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 1." );
   MAST_TRACE( explain, 20, "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */
-              " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪", duf_uni_scan_action_title( H_SCCB ) );
-  MAST_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", H_SCCB->name, duf_levinfo_dirid( H_PDI ), duf_levinfo_path( H_PDI ) );
+              " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪", CRX( uni_scan_action_title, H_SCCB ) );
+  MAST_TRACE( sccbh, 1, "eval sccbh all %s at %llu:%s", H_SCCB->name, CRX( levinfo_dirid, H_PDI ), CRX( levinfo_path, H_PDI ) );
+
 #endif
   if ( !H_SCCB->disabled )
   {                                                                  /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
@@ -180,7 +175,8 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_select
     MAST_TRACE( sccbh, 0, "@eval sccbh all disabled %s", H_SCCB->name );
   }
 
-  MAST_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( H_PDI ) );
-/* DUF_ENDR( r ); */
+#ifdef MAS_TRACING
+  MAST_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpdi, CRX( pdi_depth, H_PDI ) );
+#endif
   ER( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage_fake );
 }

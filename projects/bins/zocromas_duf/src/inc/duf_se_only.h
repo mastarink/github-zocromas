@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_DODEFS_ONLY_H
-# define MAS_DUF_DODEFS_ONLY_H
+#ifndef MAS_DUF_SE_ONLY_H
+# define MAS_DUF_SE_ONLY_H
 
 # include "duf_se.h"
 # undef DUF_STARTR

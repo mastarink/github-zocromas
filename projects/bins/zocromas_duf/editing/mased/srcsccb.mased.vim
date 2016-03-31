@@ -32,6 +32,8 @@ sfind duf_sccb_handle.h
 tab sfind duf_sccb_row.c
 sfind duf_sccb_row.h
 
+tab sfind duf_sccb_row_field_defs.h 
+
 tab sfind duf_sccb_begfin.c
 sfind duf_sccb_begfin.h
 

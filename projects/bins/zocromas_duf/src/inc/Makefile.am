@@ -13,7 +13,6 @@ noinst_HEADERS=motest_config.h \
 	duf_cfg_credel.h \
 	duf_cfg_output_util.h \
 	duf_compile_defs.h \
-	duf_config4trace_ref.h \
 	duf_config_act_types.h \
 	duf_config_act_enum.def \
 	duf_config_credel.h \
@@ -25,7 +24,6 @@ noinst_HEADERS=motest_config.h \
 	duf_config_disable_enum.def \
 	duf_config_flow_types.h \
 	duf_config.h \
-	duf_config_opt_debug_types.h \
 	duf_config_opt_types.h \
 	duf_config_opt_structs.h \
 	duf_config_output_types.h \
@@ -41,14 +39,12 @@ noinst_HEADERS=motest_config.h \
 	duf_config_types.h \
 	duf_config_structs.h \
 	duf_config_util.h \
-	duf_config_wref.h \
 	duf_context.h \
 	duf_db_defs.h \
 	duf_debug_defs.h \
 	duf_defs.h \
 	duf_dh.h \
 	duf_dirent.h \
-	duf_dodefs.h \
 	duf_errorn_defs.h \
 	duf_errorn_defs_preset.h \
 	duf_evsql_begfin.h \
@@ -144,6 +140,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sccb.h \
 	duf_sccb_handle.h \
 	duf_sccb_row.h \
+	duf_sccb_row_field_defs.h \
 	duf_sccbh_eval_all.h  \
 	duf_sccbh_eval_fs.h \
 	duf_sccbh_eval.h \
@@ -152,6 +149,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sccbh_eval_sql_set.h \
 	duf_sccbh_shortcuts.h \
 	duf_sccb_scanstage.h \
+	duf_nodetype.h \
 	duf_sccb_types.h \
 	duf_sccb_structs.h \
 	duf_se.h \
@@ -161,13 +159,13 @@ noinst_HEADERS=motest_config.h \
 	duf_service.h \
 	duf_sql_bind.h \
 	duf_sql_defs.h \
+	duf_sql_field_defs.h \
 	duf_sql_error.h \
 	duf_sql_field.h \
 	duf_sql_open.h \
 	duf_sql_positional.h \
 	duf_sql_prepared.h \
 	duf_sql_set_types.h \
-	duf_sql_stmt_defs.h \
 	duf_sql_se_stmt_defs.h \
 	duf_sql_types.h \
 	duf_start_end.h \

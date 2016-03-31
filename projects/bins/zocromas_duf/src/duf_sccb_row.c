@@ -62,6 +62,7 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
       break;
     case DUF_SQLTYPE_INTEGER:
       row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i );
+      /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
       break;
     case DUF_SQLTYPE_FLOAT:
       break;
@@ -177,6 +178,8 @@ SRX( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_ro
   duf_sccb_data_value_t *field;
 
   field = CRX( datarow_field_find, row, name );
+  n = field ? field->value.n : 0;
+  /* QT( "@found %s for %s at %p (%lld)", field ? field->name : NULL, name, row, field ? field->value.n : 0 ); */
   assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL );
 /* return field ? field->value.n : 0; */
   ERX( SCCBH, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );

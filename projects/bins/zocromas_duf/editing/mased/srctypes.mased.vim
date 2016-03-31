@@ -49,7 +49,7 @@ sfind duf_tracen_defs_preset.h
 sfind duf_start_end.h
 sfind duf_se.h
 sfind duf_se_only.h
-sfind duf_dodefs.h
+" sfind duf_dodefs.h
 
 tab sfind duf_fun_types.h
 
@@ -68,7 +68,7 @@ sfind duf_sccb_structs.h
 
 " tab sfind duf_flags_types.h
 
-tab sfind duf_config_opt_debug_types.h
+" tab sfind duf_config_opt_debug_types.h
 tab sfind duf_config_trace_types.h
 tab sfind duf_config_trace_enum.h
 

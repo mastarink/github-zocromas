@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_CONFIG_DB_STRUCTSS_H
-# define MAS_DUF_CONFIG_DB_STRUCTSS_H
+#ifndef MAS_DUF_CONFIG_DB_STRUCTS_H
+# define MAS_DUF_CONFIG_DB_STRUCTS_H
 
 # include <mastar/tools/mas_expandable.h>                            /* mas_expandable_string_t */
 

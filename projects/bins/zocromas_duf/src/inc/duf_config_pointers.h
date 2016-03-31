@@ -1,5 +1,5 @@
-#ifndef DUF_CONFIG_POINTERS_H
-# define DUF_CONFIG_POINTERS_H
+#ifndef MAS_DUF_CONFIG_POINTERS_H
+# define MAS_DUF_CONFIG_POINTERS_H
 
 void *duf_get_duf_config_t_pointer( void );
 

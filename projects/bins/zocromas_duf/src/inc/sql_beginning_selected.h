@@ -1,13 +1,13 @@
 #ifndef MAS_SQL_BEGINNING_SELECTED_H
-#  define MAS_SQL_BEGINNING_SELECTED_H
+# define MAS_SQL_BEGINNING_SELECTED_H
 
+# include "sql_tables_global_defs.h"
+# include "sql_tables_defs.h"
+# include "sql_selected_defs.h"
 
-#  include "sql_tables_global_defs.h"
-#  include "sql_tables_defs.h"
-#  include "sql_selected_defs.h"
+#include "duf_sql_defs.h"
 
-
-#  define DUF_SQL_UFILTER_BINDINGS \
+# define DUF_SQL_UFILTER_BINDINGS \
            " (:minSize     IS NULL OR  fd.size     >=:minSize "                                        ") AND "  \
            " (:maxSize     IS NULL OR  fd.size     <=:maxSize "                                        ") AND "  \
 \
@@ -108,16 +108,13 @@
   	    " ) AND " \
 */
 
-
         /* "         OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))" \ */
 
         /* " AND (:TagDir  IS NULL OR tgn.name=:TagDir)" \  */
         /* " AND (:TagFile IS NULL OR tgn.name=:TagFile)" \ */
 /* " AND ((SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL ") == 0 OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
 
-
-
-#  include "sql_beginning_types.h"
+# include "sql_beginning_types.h"
 extern duf_sql_sequence_t sql_create_selected;
 extern duf_sql_sequence_t sql_update_selected;
 
