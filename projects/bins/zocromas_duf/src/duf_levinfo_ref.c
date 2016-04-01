@@ -25,7 +25,7 @@ duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->inited );
- return duf_pi_ptr_d( &pdi->pathinfo, d );
+  return duf_pi_ptr_d( &pdi->pathinfo, d );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( duf_levinfo_t , ptr )
@@ -185,6 +185,7 @@ DUF_LEVINFO_FC_REF( const char, itemtruename )
 DUF_LEVINFO_FC_UP_REF( const char, itemtruename )
 /* *INDENT-ON*  */
 
+#if 0
 const char *
 duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
 {
@@ -193,7 +194,7 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
   p = duf_levinfo_itemtruename( pdi );
   return p ? p : q;
 }
-
+#endif
 /************************************************************************/
 
 

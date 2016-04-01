@@ -41,15 +41,11 @@
 #include "duf_levinfo_count.h"
 /* ###################################################################### */
 
-/* unsigned long long                                               */
-/* duf_levinfo_count_childs_d( const duf_depthinfo_t * pdi, int d ) */
+/* TODO li_count_childs(...) */
 SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depthinfo_t * pdi, int d )
 {
-/* unsigned long long childs = 0; */
-
   if ( duf_levinfo_dirid_d( pdi, d ) && duf_levinfo_node_type_d( pdi, d ) == DUF_NODE_NODE )
   {
-  /* int rpr = 0; */
     char *sql = NULL;
     unsigned ns = 0;
 
@@ -123,11 +119,9 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), childs );
 #endif
     /* QT( "@%llu => %lld (%s)", duf_levinfo_dirid_d( pdi, d ), childs, sql ); */
-
-      mas_free( sql );
     }
+    mas_free( sql );
   }
-/* return childs; */
   ERX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depthinfo_t * pdi, int d );
 }
 
