@@ -57,7 +57,7 @@
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
 
-SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
+SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_t scanner,
     duf_node_type_t node_type )
 {
   if ( scanner )
@@ -99,17 +99,17 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
       }
     }
 #if 0
-    for ( int i = 0; i < CRX( sql_column_count, pstmt ); i++ )       /* sqlite3_column_count( pstmt ) */
+    for ( int i = 0; i < CRX( sql_column_count, pstmt_arg ); i++ )       /* sqlite3_column_count( pstmt_arg ) */
     {
       const char *s;
       const char *n;
       const char *st;
       duf_sqltype_t it;
 
-      n = CRX( sql_column_name, pstmt, i );                          /* sqlite3_column_name */
-      s = CRX( sql_column_string, pstmt, i );                        /* sqlite3_column_text( pstmt, i ) */
-      st = CRX( sql_column_decltype, pstmt, i );
-      it = CRX( sql_column_type, pstmt, i );
+      n = CRX( sql_column_name, pstmt_arg, i );                          /* sqlite3_column_name */
+      s = CRX( sql_column_string, pstmt_arg, i );                        /* sqlite3_column_text( pstmt_arg, i ) */
+      st = CRX( sql_column_decltype, pstmt_arg, i );
+      it = CRX( sql_column_type, pstmt_arg, i );
       if ( s )
         QT( "@@%d. %s/%d %s='%s'", i, st, it, n, s );
       else
@@ -120,7 +120,7 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
     int eq = 0;
     duf_sccb_data_row_t *new_row = NULL;
 
-    new_row = CRX( datarow_create, pstmt, CRX( pdi_pathinfo, H_PDI ) );
+    new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) );
   /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
     if ( sccbh->rows && sccbh->rows->prev )
     {
@@ -147,13 +147,13 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
       sccbh->rows = new_row;
     }
     assert( H_PDI == sccbh->pdi );
-    CRV( ( scanner ), pstmt, H_PDI, sccbh );
+    CRV( ( scanner ), pstmt_arg, H_PDI, sccbh );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-      sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, node_type, QERRIND );
+      sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, node_type, QERRIND );
     assert( sccbh->assert__current_node_type == node_type );
   }
 /* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, CRX(scanstage_name, scanstage ), CRX(uni_scan_action_title, H_SCCB ), QERRNAME ); */
-  ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
+  ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_t scanner,
       duf_node_type_t node_type );
 }
 
@@ -267,7 +267,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
 }
 
 /*20150820.085607
- *  - pstmt - for 1 node data, obtained from db
+ *  - pstmt_arg - for 1 node data, obtained from db
  *  - pdi
  *  - sccb
  *  */

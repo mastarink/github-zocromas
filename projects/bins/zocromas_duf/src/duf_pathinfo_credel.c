@@ -63,7 +63,7 @@ duf_pi_init_level_d( duf_pathinfo_t * pi, const char *itemname, unsigned long lo
 
 /* 20160120.190820 */
 void
-duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
 {
   assert( pi );
   assert( d >= 0 );
@@ -78,7 +78,7 @@ duf_pi_dbinit_level_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt, duf_node_type_t
     assert( !pi->levinfo[d].itemname );
     pli = &pi->levinfo[d];
 
-    duf_li_dbinit( pli, pstmt, node_type, d );
+    duf_li_dbinit( pli, pstmt_arg, node_type, d );
     MAST_TRACE( levinfo, 10, "levinfo openated %s; dfd:%d", pi->levinfo[d].itemname, pli->lev_dh.dfd );
   }
 }

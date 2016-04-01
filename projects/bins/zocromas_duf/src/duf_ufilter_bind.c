@@ -59,34 +59,34 @@ duf_clear_filepath( duf_filepath_t * pfp )
 }
 
 static
-SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused MAS_UNUSED )
+SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused MAS_UNUSED )
 {
 /* DUF_STARTR( r ); */
 #if 0
 # define DUF_SQL_SE_BIND_PAIR( _fld, _name ) \
   if ( DUF_CONFIGG(vars.puz)->_name.flag ) \
   { \
-    DUF_SQL_SE_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(vars.puz)->_name.min, pstmt ); \
-    DUF_SQL_SE_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(vars.puz)->_name.max, pstmt ); \
+    DUF_SQL_SE_BIND_LL_NZ_OPT( min ## _fld, DUF_CONFIGG(vars.puz)->_name.min, pstmt_arg ); \
+    DUF_SQL_SE_BIND_LL_NZ_OPT( max ## _fld, DUF_CONFIGG(vars.puz)->_name.max, pstmt_arg ); \
   }
   assert( DUF_CONFIGX( vars.puz ) );
 #else
 # define DUF_SQL_SE_BIND_PAIR( _fld, _name ) \
   if ( pu->_name.flag ) \
   { \
-    DUF_SQL_SE_BIND_LL_NZ_OPT( min ## _fld, pu->_name.min,  pstmt ); \
-    DUF_SQL_SE_BIND_LL_NZ_OPT( max ## _fld, pu->_name.max,  pstmt ); \
+    DUF_SQL_SE_BIND_LL_NZ_OPT( min ## _fld, pu->_name.min,  pstmt_arg ); \
+    DUF_SQL_SE_BIND_LL_NZ_OPT( max ## _fld, pu->_name.max,  pstmt_arg ); \
     MAST_TRACE(sql, 3, "@@@bind %s: %llu-%llu", # _name, pu->_name.min, pu->_name.max ); \
   }
 #endif
   MAST_TRACE( sql, 3, "py:%d - %llu", py ? 1 : 0, py ? py->topdirid : 0 );
   if ( py )
   {
-    DUF_SQL_SE_BIND_LL_NZ_OPT( topDirID, py->topdirid, pstmt );
+    DUF_SQL_SE_BIND_LL_NZ_OPT( topDirID, py->topdirid, pstmt_arg );
   /* T( "(%d) BIND topdirid:%llu", r , py->topdirid ); */
   /* assert( py->topdirid ); */
   }
-  else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt ), 4 ) )
+  else if ( 0 == strncmp( "WITH", sqlite3_sql( pstmt_arg ), 4 ) )
   {
     assert( 0 );
   }
@@ -113,27 +113,27 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
   DUF_SQL_SE_BIND_PAIR( ExifID, exifid );
   if ( pu->mime.type )
   {
-    DUF_SQL_SE_BIND_S_OPT( MimeType, pu->mime.type, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( MimeType, pu->mime.type, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind MimeType: %s", pu->mime.type );
   }
   if ( pu->filename )
   {
-    DUF_SQL_SE_BIND_S_OPT( Name, pu->filename, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( Name, pu->filename, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db )
   {
-    DUF_SQL_SE_BIND_S_OPT( GName, pu->glob_db, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( GName, pu->glob_db, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db_include )
   {
-    DUF_SQL_SE_BIND_S_OPT( GNameI, pu->glob_db_include, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( GNameI, pu->glob_db_include, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->glob_db_exclude )
   {
-    DUF_SQL_SE_BIND_S_OPT( GNameX, pu->glob_db_exclude, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( GNameX, pu->glob_db_exclude, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->exif.camera )
@@ -143,7 +143,7 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
     t = mas_strdup( "%" );
     t = mas_strcat_x( t, pu->exif.camera );
     t = mas_strcat_x( t, "%" );
-    DUF_SQL_SE_BIND_S_OPT( Camera, t, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( Camera, t, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
     mas_free( t );
   }
@@ -154,8 +154,8 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
 	  duf_filepath_t fp; \
  \
 	  CR( init_filepath, &fp, pu->same_as._l ); \
-	  DUF_SQL_SE_BIND_LL_NZ_OPT( GSame ## _u ## PathID, fp.dirid,  pstmt ); \
-	  DUF_SQL_SE_BIND_S_OPT( GSameAs ## _u, fp.name,  pstmt ); \
+	  DUF_SQL_SE_BIND_LL_NZ_OPT( GSame ## _u ## PathID, fp.dirid,  pstmt_arg ); \
+	  DUF_SQL_SE_BIND_S_OPT( GSameAs ## _u, fp.name,  pstmt_arg ); \
 	  MAST_TRACE( sql, 0, "@@@bind GSame" # _u "PathID:%llu", fp.dirid ); \
 	  duf_clear_filepath( &fp ); \
 	  if ( QNOERR && !fp.dirid ) \
@@ -167,8 +167,8 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
     duf_filepath_t fp;
 
     CR( init_filepath, &fp, pu->same_as.md5 );
-    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt );
-    DUF_SQL_SE_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt );
+    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameMd5PathID, fp.dirid, r, pstmt_arg );
+    DUF_SQL_SE_BIND_S_OPT( GSameAsMd5, fp.name, r, pstmt_arg );
     MAST_TRACE( sql, 0, "@@@bind GSameMd5PathID:%llu", fp.dirid );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
@@ -179,8 +179,8 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
     duf_filepath_t fp;
 
     DOR( r, duf_init_filepath( &fp, pu->same_as.sha1 ) );
-    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt );
-    DUF_SQL_SE_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt );
+    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameSha1PathID, fp.dirid, r, pstmt_arg );
+    DUF_SQL_SE_BIND_S_OPT( GSameAsSha1, fp.name, r, pstmt_arg );
     MAST_TRACE( sql, 0, "@@@bind GSameSha1PathID:%llu", fp.dirid );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
@@ -191,8 +191,8 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
     duf_filepath_t fp;
 
     DOR( r, duf_init_filepath( &fp, pu->same_as.exif ) );
-    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameExifPathID, fp.dirid, r, pstmt );
-    DUF_SQL_SE_BIND_S_OPT( GSameAsExif, fp.name, r, pstmt );
+    DUF_SQL_SE_BIND_LL_NZ_OPT( GSameExifPathID, fp.dirid, r, pstmt_arg );
+    DUF_SQL_SE_BIND_S_OPT( GSameAsExif, fp.name, r, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
     duf_clear_filepath( &fp );
     if ( DUF_NOERROR( r ) && !fp.dirid )
@@ -207,34 +207,34 @@ SR( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, co
 #if 1
   if ( pu->tag.file )
   {
-    DUF_SQL_SE_BIND_S_OPT( TagFile, pu->tag.file, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( TagFile, pu->tag.file, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
   if ( pu->tag.dir )
   {
-    DUF_SQL_SE_BIND_S_OPT( TagDir, pu->tag.dir, pstmt );
+    DUF_SQL_SE_BIND_S_OPT( TagDir, pu->tag.dir, pstmt_arg );
     MAST_TRACE( sql, 3, "@@@bind " );
   }
-  DUF_SQL_SE_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, pstmt );
-  DUF_SQL_SE_BIND_I_NZ_OPT( fFast, /* DUF_ACTG_FLAG( fast ) */ duf_get_config_flag_act_fast(  ), pstmt );
-  DUF_SQL_SE_BIND_I_NZ_OPT( fFresh, /* DUF_ACTG_FLAG( fresh ) */ duf_get_config_flag_act_fresh(  ), pstmt );
+  DUF_SQL_SE_BIND_I_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, pstmt_arg );
+  DUF_SQL_SE_BIND_I_NZ_OPT( fFast, /* DUF_ACTG_FLAG( fast ) */ duf_get_config_flag_act_fast(  ), pstmt_arg );
+  DUF_SQL_SE_BIND_I_NZ_OPT( fFresh, /* DUF_ACTG_FLAG( fresh ) */ duf_get_config_flag_act_fresh(  ), pstmt_arg );
   MAST_TRACE( sql, 3, "@@@bind Option_Val_With_Tag_File='%d'", DUF_OPTION_VAL_FILTER_WITH_TAG_FILE );
 #endif
 /* DUF_ENDR( r ); */
-  ER( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused );
+  ER( OTHER, bind_ufilter_uni_i, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused );
 }
 
-SR( OTHER, bind_ufilter_uni, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused,
+SR( OTHER, bind_ufilter_uni, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused,
     const void *ptr MAS_UNUSED )
 {
 /* DUF_STARTR( r ); */
   if ( pu )
-    CR( bind_ufilter_uni_i, pstmt, pu, py, ttarg_unused );
+    CR( bind_ufilter_uni_i, pstmt_arg, pu, py, ttarg_unused );
   else
   {
     MAST_TRACE( sql, 3, "@@@bind - no pu!" );
   }
 /* DUF_ENDR( r ); */
-  ER( OTHER, bind_ufilter_uni, duf_stmnt_t * pstmt, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused,
+  ER( OTHER, bind_ufilter_uni, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu, const duf_yfilter_t * py, const mas_argvc_t * ttarg_unused,
       const void *ptr );
 }

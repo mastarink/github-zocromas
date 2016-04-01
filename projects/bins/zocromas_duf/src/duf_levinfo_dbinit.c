@@ -17,8 +17,8 @@
 
 /* 20151029.114756 */
 void
-duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
 {
   assert( pdi );
-  duf_pi_dbinit_level_d( duf_pdi_pathinfo_p( pdi ) /* &pdi->pathinfo */ , pstmt, node_type, d );
+  duf_pi_dbinit_level_d( duf_pdi_pathinfo_p( pdi ) /* &pdi->pathinfo */ , pstmt_arg, node_type, d );
 }

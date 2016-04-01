@@ -42,7 +42,7 @@ duf_pdi_find_idstmt( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /*, const in
 }
 
 static duf_idstmt_t *
-duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_pdi )
 {
   duf_idstmt_t *is = NULL;
 
@@ -51,7 +51,7 @@ duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
   {
     for ( int i = 0; i < pdi->num_idstatements; i++ )
     {
-      if ( pdi->idstatements[i].pstmt == pstmt )
+      if ( pdi->idstatements[i].statement == pstmt_pdi )
       {
         is = &pdi->idstatements[i];
         break;
@@ -64,7 +64,7 @@ duf_pdi_find_idstmt_by_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 /* must be checked it's absent */
 /* duf_stmnt_t *                                                                                                                         */
 /* duf_pdi_prepare_statement_by_id( duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid (*, const int *pindex *) , int *pr ) */
-SRP( PDI, duf_stmnt_t *, pstmt, NULL, pdi_prepare_statement_by_id, duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid )
+SRP( PDI, duf_stmnt_t *, pstmt_pdi, NULL, pdi_prepare_statement_by_id, duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid )
 {
   duf_idstmt_t *is = NULL;
   duf_idstmt_t *chkids = NULL;
@@ -88,7 +88,7 @@ SRP( PDI, duf_stmnt_t *, pstmt, NULL, pdi_prepare_statement_by_id, duf_depthinfo
       pdi->idstatements = mas_realloc( pdi->idstatements, ( pdi->num_idstatements + 1 ) * sizeof( duf_idstmt_t ) );
     chkids = pdi->idstatements;
     is = &( pdi->idstatements[pdi->num_idstatements] );
-    is->pstmt = NULL;
+    is->statement = NULL;
     is->id = ( duf_stmt_ident_t ) 0;
     pdi->num_idstatements++;
   }
@@ -98,17 +98,17 @@ SRP( PDI, duf_stmnt_t *, pstmt, NULL, pdi_prepare_statement_by_id, duf_depthinfo
  */
   MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", QERRIND, QERRNAME, sql );
 
-  CR( sql_prepare, sql, &pstmt );
+  CR( sql_prepare, sql, &pstmt_pdi );
 
   MAST_TRACE( sql, 4, "@@@@@(%d:%s): %s", QERRIND, QERRNAME, sql );
-  if ( pstmt )
+  if ( pstmt_pdi )
   {
     is->id = stmtid;
-    is->pstmt = pstmt;
+    is->statement = pstmt_pdi;
   }
   assert( chkids == pdi->idstatements );
 
-  ERP( PDI, duf_stmnt_t *, pstmt, NULL, pdi_prepare_statement_by_id, duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid );
+  ERP( PDI, duf_stmnt_t *, pstmt_pdi, NULL, pdi_prepare_statement_by_id, duf_depthinfo_t * pdi, const char *sql, duf_stmt_ident_t stmtid );
 }
 
 duf_stmnt_t *
@@ -117,16 +117,16 @@ duf_pdi_find_statement_by_id( duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* 
   duf_idstmt_t *is = NULL;
 
   is = duf_pdi_find_idstmt( pdi, stmtid /* pindex */  );
-  return is ? is->pstmt : NULL;
+  return is ? is->statement : NULL;
 }
 
 SR( PDI, pdi_finalize_idstmt, duf_depthinfo_t * pdi, int i )
 {
   assert( pdi );
 
-  if ( pdi->idstatements[i].pstmt )
-    CR( sql_finalize, pdi->idstatements[i].pstmt );
-  pdi->idstatements[i].pstmt = NULL;
+  if ( pdi->idstatements[i].statement )
+    CR( sql_finalize, pdi->idstatements[i].statement );
+  pdi->idstatements[i].statement = NULL;
   ER( PDI, pdi_finalize_idstmt, duf_depthinfo_t * pdi, int i );
 }
 
@@ -136,26 +136,26 @@ SR( PDI, pdi_finalize_statement_by_id, duf_depthinfo_t * pdi, duf_stmt_ident_t s
 
   assert( pdi->inited );
   is = duf_pdi_find_idstmt( pdi, stmtid /* pindex */  );
-  if ( is && is->pstmt )
+  if ( is && is->statement )
   {
-    CR( sql_finalize, is->pstmt );
-    is->pstmt = NULL;
+    CR( sql_finalize, is->statement );
+    is->statement = NULL;
   }
 
   ER( PDI, pdi_finalize_statement_by_id, duf_depthinfo_t * pdi, duf_stmt_ident_t stmtid /* const int *pindex */  );
 }
 
-SR( PDI, pdi_finalize_statement_by_stmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+SR( PDI, pdi_finalize_statement_by_stmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
 {
   duf_idstmt_t *is = NULL;
 
   assert( pdi->inited );
-  is = duf_pdi_find_idstmt_by_stmt( pdi, pstmt /* pindex */  );
-  if ( is && is->pstmt )
+  is = duf_pdi_find_idstmt_by_stmt( pdi, pstmt_arg /* pindex */  );
+  if ( is && is->statement )
   {
-    CR( sql_finalize, is->pstmt );
-    is->pstmt = NULL;
+    CR( sql_finalize, is->statement );
+    is->statement = NULL;
   }
 
-  ER( PDI, pdi_finalize_statement_by_stmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt );
+  ER( PDI, pdi_finalize_statement_by_stmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_pdi );
 }

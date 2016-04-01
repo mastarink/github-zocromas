@@ -38,9 +38,9 @@
 
 /* ########################################################################################## */
 
-static int duf_filenames_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_leaf2_deleted( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_de_file_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {                              /* */
@@ -209,14 +209,14 @@ SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_d
     const char *sql =
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, " DUF_SQL_FILENAMEFIELD ", dataid) VALUES (:pathID, :Name, :dataID)";
 
-    DUF_SQL_SE_START_STMT( pdi, insert_filename, sql, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, insert_filename, sql, pstmt_local );
     MAST_TRACE( mod, 3, "S:%s", sql );
-    DUF_SQL_SE_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), pstmt );
-    DUF_SQL_SE_BIND_S( Name, fname, pstmt );
-    DUF_SQL_SE_BIND_LL( dataID, dataid, pstmt );
-    DUF_SQL_SE_STEPC( pstmt );
-    DUF_SQL_SE_CHANGES( changes, pstmt );
-    DUF_SQL_SE_END_STMT( pdi, insert_filename, pstmt );              /* clears SQL_ROW / SQL_DONE */
+    DUF_SQL_SE_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_S( Name, fname, pstmt_local );
+    DUF_SQL_SE_BIND_LL( dataID, dataid, pstmt_local );
+    DUF_SQL_SE_STEPC( pstmt_local );
+    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_END_STMT( pdi, insert_filename, pstmt_local );              /* clears SQL_ROW / SQL_DONE */
   }
   else
   {

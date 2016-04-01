@@ -5,6 +5,6 @@
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
-void duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d );
+void duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
 
 #endif

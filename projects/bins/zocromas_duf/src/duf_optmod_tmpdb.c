@@ -30,7 +30,7 @@
 
 /* TODO test, if still working */
 static
-SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
+SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
     const mas_argvc_t * ttarg, const void *ptr )
 {
 /* DUF_STARTR( r ); */
@@ -42,13 +42,13 @@ SR( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_
   /* MAST_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
   /* MAST_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] ); */
   /* MAST_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] ); */
-    DUF_SQL_SE_BIND_S_OPTQ( optVal, ttarg->argv[0], pstmt );
-    DUF_SQL_SE_BIND_S_OPTQ( optName, ttarg->argv[1], pstmt );
-    DUF_SQL_SE_BIND_S_OPTQ( optArg, ttarg->argv[2], pstmt );
+    DUF_SQL_SE_BIND_S_OPTQ( optVal, ttarg->argv[0], pstmt_arg );
+    DUF_SQL_SE_BIND_S_OPTQ( optName, ttarg->argv[1], pstmt_arg );
+    DUF_SQL_SE_BIND_S_OPTQ( optArg, ttarg->argv[2], pstmt_arg );
   /* MAST_TRACE( sql, 0, "@@@@bind: argv[]={'%s', '%s', '%s'}", ttarg->argv[0], ttarg->argv[1], ttarg->argv[2] ); */
   }
 /* DUF_ENDR( r ); */
-  ER( OPTIONS, bind_tmp, duf_stmnt_t * pstmt, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
+  ER( OPTIONS, bind_tmp, duf_stmnt_t * pstmt_arg, const duf_ufilter_t * pu_unused MAS_UNUSED, const duf_yfilter_t * py_unused MAS_UNUSED,
       const mas_argvc_t * ttarg, const void *ptr );
 }
 

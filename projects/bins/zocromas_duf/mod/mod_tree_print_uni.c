@@ -43,8 +43,8 @@
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
-static int duf_tree_node_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
-static int duf_tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static int duf_tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static int duf_tree_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -77,10 +77,10 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SR( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   duf_fileinfo_t fi = { 0 };
-  CR( fileinfo, pstmt, pdi, sccbh, &fi );
+  CR( fileinfo, /* pstmt_unused, pdi, */ sccbh, &fi );
 
   {
     const char *sformat_pref = NULL;
@@ -134,7 +134,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle
 
 /* DUF_PRINTF( 0, "%s", filename ); */
 
-  ER( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static

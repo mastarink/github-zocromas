@@ -5,7 +5,7 @@
 
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
-DR( SQL, sql_prepare, const char *sql, duf_stmnt_t ** pstmt );
+DR( SQL, sql_prepare, const char *sql, duf_stmnt_t ** psqlstmt );
 int duf_sql_step( duf_stmnt_t * stmt );
 int duf_sql_finalize( duf_stmnt_t * stmt );
 int duf_sql_reset( duf_stmnt_t * stmt );

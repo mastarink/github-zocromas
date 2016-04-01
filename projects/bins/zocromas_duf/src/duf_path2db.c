@@ -66,7 +66,7 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
           " datetime(:aTim, 'unixepoch'), :aTimn, datetime(:mTim, 'unixepoch'), :mTimn, datetime(:cTim, 'unixepoch'), :cTimn, " /* */
           " :dirName, :parentdirID )";
 
-  DUF_SQL_SE_START_STMT( pdi, insert_path_table, sql, pstmt );
+  DUF_SQL_SE_START_STMT( pdi, insert_path_table, sql, pstmt_local );
 
 #if 0
   if ( !duf_levinfo_stat_dev( pdi ) )
@@ -83,34 +83,34 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
   MAST_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ),
               duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
 /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
-  DUF_SQL_SE_BIND_S( dirName, /*  */ duf_levinfo_itemtruename( pdi ), /*  */ pstmt );
+  DUF_SQL_SE_BIND_S( dirName, /*  */ duf_levinfo_itemtruename( pdi ), /*  */ pstmt_local );
 
-  DUF_SQL_SE_BIND_LL( Dev, /*                          */ duf_levinfo_stat_dev( pdi ), /*      */ pstmt );
-  DUF_SQL_SE_BIND_LL( rDev, /*                         */ duf_levinfo_stat_rdev( pdi ), /*     */ pstmt );
-  DUF_SQL_SE_BIND_LL( iNode, /*                        */ duf_levinfo_stat_inode( pdi ), /*    */ pstmt );
-  DUF_SQL_SE_BIND_LL( Mode, ( unsigned long long ) /*  */ duf_levinfo_stat_mode( pdi ), /*     */ pstmt );
-  DUF_SQL_SE_BIND_LL( Size, /*                         */ duf_levinfo_stat_size( pdi ), /*     */ pstmt );
-  DUF_SQL_SE_BIND_LL( nLink, ( unsigned long long ) /* */ duf_levinfo_stat_nlink( pdi ), /*    */ pstmt );
-  DUF_SQL_SE_BIND_LL( UID, /*                          */ duf_levinfo_stat_uid( pdi ), /*      */ pstmt );
-  DUF_SQL_SE_BIND_LL( GID, /*                          */ duf_levinfo_stat_gid( pdi ), /*      */ pstmt );
-  DUF_SQL_SE_BIND_LL( blkSize, /*                      */ duf_levinfo_stat_blksize( pdi ), /*  */ pstmt );
-  DUF_SQL_SE_BIND_LL( Blocks, /*                       */ duf_levinfo_stat_blocks( pdi ), /*   */ pstmt );
+  DUF_SQL_SE_BIND_LL( Dev, /*                          */ duf_levinfo_stat_dev( pdi ), /*      */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( rDev, /*                         */ duf_levinfo_stat_rdev( pdi ), /*     */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( iNode, /*                        */ duf_levinfo_stat_inode( pdi ), /*    */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( Mode, ( unsigned long long ) /*  */ duf_levinfo_stat_mode( pdi ), /*     */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( Size, /*                         */ duf_levinfo_stat_size( pdi ), /*     */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( nLink, ( unsigned long long ) /* */ duf_levinfo_stat_nlink( pdi ), /*    */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( UID, /*                          */ duf_levinfo_stat_uid( pdi ), /*      */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( GID, /*                          */ duf_levinfo_stat_gid( pdi ), /*      */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( blkSize, /*                      */ duf_levinfo_stat_blksize( pdi ), /*  */ pstmt_local );
+  DUF_SQL_SE_BIND_LL( Blocks, /*                       */ duf_levinfo_stat_blocks( pdi ), /*   */ pstmt_local );
 
-  DUF_SQL_SE_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), pstmt );
-  DUF_SQL_SE_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), pstmt );
-  DUF_SQL_SE_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), pstmt_local );
+  DUF_SQL_SE_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), pstmt_local );
+  DUF_SQL_SE_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), pstmt_local );
 
-  DUF_SQL_SE_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), pstmt );
-  DUF_SQL_SE_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), pstmt );
-  DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt );
+  DUF_SQL_SE_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), pstmt_local );
+  DUF_SQL_SE_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), pstmt_local );
+  DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt_local );
 
-/* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
-  DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), pstmt );
+/* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt_local ); */
+  DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), pstmt_local );
 /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
 
-  DUF_SQL_SE_STEP( pstmt );
-  DUF_SQL_SE_CHANGES( changes, pstmt );
-  DUF_SQL_SE_END_STMT( pdi, insert_path_table, pstmt );
+  DUF_SQL_SE_STEP( pstmt_local );
+  DUF_SQL_SE_CHANGES( changes, pstmt_local );
+  DUF_SQL_SE_END_STMT( pdi, insert_path_table, pstmt_local );
   if ( pchanges )
     *pchanges = changes;
 
@@ -158,19 +158,19 @@ SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
 /* at levinfo current level: set dirid,numdir,numfile
  * WRAPper for duf_set_dirid_and_nums */
 static
-SR( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
+SR( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
 {
 
-  CR( set_dirid_and_nums, pdi, DUF_GET_QUFIELD2( dirid )
+  CR( set_dirid_and_nums, pdi, DUF_GET_QUFIELD3( pstmt_arg, dirid )
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-      , DUF_GET_QUFIELD2( nfiles ), DUF_GET_QUFIELD2( ndirs )
+      , DUF_GET_QUFIELD3( pstmt_arg, nfiles ), DUF_GET_QUFIELD2( ndirs )
 #endif
            );                                                        /* at levinfo current level: set dirid,numdir,numfile */
-  assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+  assert( DUF_GET_QUFIELD3( pstmt_arg, dirid ) == duf_levinfo_dirid( pdi ) );
 
-  ER( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt );
+  ER( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg );
 }
 
 /* 20151026.111126 */
@@ -180,17 +180,17 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
 {
 
   assert( pdi->pdi_name );
-  DUF_SQL_SE_START_STMT( pdi, select_path, sqlv, pstmt );
+  DUF_SQL_SE_START_STMT( pdi, select_path, sqlv, pstmt_local );
   MAST_TRACE( path, 2, "(%d:%s) dirid: %llu for '%s' at %llu; '%s'", QERRIND, QERRNAME, duf_levinfo_dirid( pdi ),
               duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ), sqlv );
   {
     const char *truedirname;
 
     truedirname = duf_levinfo_itemtruename( pdi );
-    DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), pstmt );
+    DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), pstmt_local );
   /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
-    DUF_SQL_SE_BIND_S( dirName, truedirname, pstmt );
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_BIND_S( dirName, truedirname, pstmt_local );
+    DUF_SQL_SE_STEP( pstmt_local );
   /* assert( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) || DUF_IS_ERROR_N( r, DUF_SQL_DONE ) ); */
     if ( QISERR1_N( SQL_ROW ) )
     {
@@ -199,8 +199,8 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') ~ '%s'; dirid:%llu", sqlv, duf_levinfo_dirid_up( pdi ), truedirname,
-                  duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD2( dirid ) );
-      if ( !DUF_GET_QUFIELD2( dirid ) )
+                  duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD3( pstmt_local, dirid ) );
+      if ( !DUF_GET_QUFIELD3( pstmt_local, dirid ) )
       {
       /* DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and " DUF_SQL_DIRNAMEFIELD "='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
         if ( QNOERR )
@@ -209,12 +209,12 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       }
       else
       {
-        MAST_TRACE( explain, 20, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD2( dirid ),
+        MAST_TRACE( explain, 20, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD3( pstmt_local, dirid ),
                     duf_levinfo_dirid_up( pdi ) );
       }
-      assert( DUF_GET_QUFIELD2( dirid ) );
-      CR( set_dirid_and_nums_from_pstmt, pdi, pstmt );               /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
-      assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+      assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) );
+      CR( set_dirid_and_nums_from_pstmt, pdi, pstmt_local );               /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
+      assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else if ( QISERR1_N( SQL_DONE ) )
     {
@@ -222,15 +222,15 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
                   duf_levinfo_itemshowname( pdi ) );
       MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
-      assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+      assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else
     {
-    /* assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); */
+    /* assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) == duf_levinfo_dirid( pdi ) ); */
     }
   }
-  assert( QISERR || ( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ) );
-  DUF_SQL_SE_END_STMT( pdi, select_path, pstmt );
+  assert( QISERR || ( DUF_GET_QUFIELD3( pstmt_local, dirid ) == duf_levinfo_dirid( pdi ) ) );
+  DUF_SQL_SE_END_STMT( pdi, select_path, pstmt_local );
 
   ER( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv );
 }

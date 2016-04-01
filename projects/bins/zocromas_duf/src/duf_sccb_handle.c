@@ -212,9 +212,9 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
       csql = sqlt;
 #if 0
     /* 20160205.121213 */
-      DUF_SQL_SE_START_STMT_NOPDI( csql, pstmt );
+      DUF_SQL_SE_START_STMT_NOPDI( csql, pstmt_local );
 #else
-      DUF_SQL_SE_START_STMT_LOCAL( H_PDI, csql, pstmt );
+      DUF_SQL_SE_START_STMT_LOCAL( H_PDI, csql, pstmt_local );
 #endif
     /* (* (* assert( QNOERR ); *) *) */
     /* if ( !H_PY )                                 */
@@ -222,18 +222,18 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
     /*   T( "path:%s", CRX(levinfo_path, H_PDI ) ); */
     /*   assert( H_PY );                            */
     /* }                                          */
-      CR( bind_ufilter_uni, pstmt, H_PU, H_PY, NULL, NULL /* ptr */  );
+      CR( bind_ufilter_uni, pstmt_local, H_PU, H_PY, NULL, NULL /* ptr */  );
     /* (* (* assert( QNOERR ); *) *) */
-      DUF_SQL_SE_STEP( pstmt );
+      DUF_SQL_SE_STEP( pstmt_local );
       if ( QISERR1_N( SQL_ROW ) )
       {
         long long cntfull = 0;
 
 #if 1
-        cntfull = CRX( sql_column_long_long, pstmt, 0 );
-        cnt1 = DUF_GET_QUFIELD2( nf );
+        cntfull = CRX( sql_column_long_long, pstmt_local, 0 );
+        cnt1 = DUF_GET_QUFIELD3( pstmt_local, nf );
 #else
-        cntfull = DUF_GET_QUFIELD2( CNT );
+        cntfull = DUF_GET_QUFIELD3( pstmt_local, CNT );
 #endif
         MAST_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cntfull, cnt1, csql );
       /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */
@@ -248,9 +248,9 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
     /* T( "@@counted B %llu:%llu by %s (%llu)", cnt, cnt1, csql, H_PY->topdirid ); */
 #if 0
     /* 20160205.121213 */
-      DUF_SQL_SE_END_STMT_NOPDI( pstmt );
+      DUF_SQL_SE_END_STMT_NOPDI( pstmt_local );
 #else
-      DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt );
+      DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt_local );
 #endif
     /* (* (* assert( QNOERR ); *) *) */
     /* if ( !cnt )                                                                                         */
@@ -345,7 +345,7 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 /* void ( *duf_rsccbh_fun_t )
  *                ( const struct duf_sccb_handle_s *, duf_stmnt_t *, duf_scanstage_t, duf_scanner_t, duf_node_type_t, int ) */
 static void
-duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
                    duf_scanner_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
 {
   static unsigned n = 0;
@@ -456,7 +456,7 @@ TODO scan mode
       if ( H_SCCB->init_scan )
       {
         MAST_TRACE( explain, 10, "to init scan" );
-        CRV( H_SCCB->init_scan, NULL /* pstmt */ , pdi, sccbh );
+        CRV( H_SCCB->init_scan, NULL /* pstmt_x */ , pdi, sccbh );
       }
       else
       {

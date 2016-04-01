@@ -120,40 +120,40 @@ duf_li_path( const duf_levinfo_t * pli, int count )
 }
 
 static void
-_duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt )
+_duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
 {
   assert( pli );
-  pli->db.dirid = DUF_GET_QUFIELD2( dirid );
-  if ( DUF_GET_QSFIELD2( dfname ) )
+  pli->db.dirid = DUF_GET_QUFIELD3( pstmt_arg, dirid );
+  if ( DUF_GET_QSFIELD3( pstmt_arg, dfname ) )
   {
     assert( !pli->itemname );
-    pli->itemname = mas_strdup( DUF_GET_QSFIELD2( dfname ) );
+    pli->itemname = mas_strdup( DUF_GET_QSFIELD3( pstmt_arg, dfname ) );
   }
 
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-/* pli->numdir = DUF_GET_QUFIELD2( ndirs );   */
-/* pli->numfile = DUF_GET_QUFIELD2( nfiles ); */
-  duf_li_set_nums( pli, DUF_GET_QUFIELD2( ndirs ), DUF_GET_QUFIELD2( nfiles ) );
+/* pli->numdir = DUF_GET_QUFIELD3(pstmt_arg, ndirs );   */
+/* pli->numfile = DUF_GET_QUFIELD3(pstmt_arg, nfiles ); */
+  duf_li_set_nums( pli, DUF_GET_QUFIELD3( pstmt_arg, ndirs ), DUF_GET_QUFIELD3( pstmt_arg, nfiles ) );
 #else
 /* if ( duf_levinfo_node_type_d( pditemp, d ) == DUF_NODE_NODE ) */
 /*   duf_levinfo_make_childs_d( pditemp, d );                    */
 #endif
-  pli->db.nameid = DUF_GET_QUFIELD2( nameid );
+  pli->db.nameid = DUF_GET_QUFIELD3( pstmt_arg, nameid );
   {
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
 
-    pdhlev->st.st_dev = DUF_GET_QUFIELD2( dev );
-    pdhlev->st.st_ino = DUF_GET_QUFIELD2( inode );
-    pdhlev->st.st_mode = DUF_GET_QUFIELD2( filemode );
-    pdhlev->st.st_nlink = DUF_GET_QUFIELD2( nlink );
-    pdhlev->st.st_uid = DUF_GET_QUFIELD2( uid );
-    pdhlev->st.st_gid = DUF_GET_QUFIELD2( gid );
-    pdhlev->st.st_rdev = DUF_GET_QUFIELD2( rdev );
-    pdhlev->st.st_size = DUF_GET_QUFIELD2( filesize );
-    pdhlev->st.st_blksize = DUF_GET_QUFIELD2( blksize );
-    pdhlev->st.st_blocks = DUF_GET_QUFIELD2( blocks );
+    pdhlev->st.st_dev = DUF_GET_QUFIELD3( pstmt_arg, dev );
+    pdhlev->st.st_ino = DUF_GET_QUFIELD3( pstmt_arg, inode );
+    pdhlev->st.st_mode = DUF_GET_QUFIELD3( pstmt_arg, filemode );
+    pdhlev->st.st_nlink = DUF_GET_QUFIELD3( pstmt_arg, nlink );
+    pdhlev->st.st_uid = DUF_GET_QUFIELD3( pstmt_arg, uid );
+    pdhlev->st.st_gid = DUF_GET_QUFIELD3( pstmt_arg, gid );
+    pdhlev->st.st_rdev = DUF_GET_QUFIELD3( pstmt_arg, rdev );
+    pdhlev->st.st_size = DUF_GET_QUFIELD3( pstmt_arg, filesize );
+    pdhlev->st.st_blksize = DUF_GET_QUFIELD3( pstmt_arg, blksize );
+    pdhlev->st.st_blocks = DUF_GET_QUFIELD3( pstmt_arg, blocks );
   /* pdhlev->st.st_atim =; */
   /* pdhlev->st.st_mtim =; */
   /* pdhlev->st.st_ctim =; */
@@ -164,11 +164,11 @@ _duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt )
 }
 
 void
-duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt, duf_node_type_t node_type, int d )
+duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
 {
   pli->d = d;
   pli->node_type = node_type;
-  _duf_li_dbinit( pli, pstmt );
+  _duf_li_dbinit( pli, pstmt_arg );
 }
 
 static
@@ -177,24 +177,24 @@ SR( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsig
 {
 /* DUF_STARTR( r ); */
 
-  DUF_SQL_SE_START_STMT( pditemp, dirid2li_existed, sqlv, pstmt );
+  DUF_SQL_SE_START_STMT( pditemp, dirid2li_existed, sqlv, pstmt_local );
   {
-    DUF_SQL_SE_BIND_LL( dirID, dirid, pstmt );
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_BIND_LL( dirID, dirid, pstmt_local );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
-      duf_li_dbinit( pli, pstmt, DUF_NODE_NODE, -2 );
+      duf_li_dbinit( pli, pstmt_local, DUF_NODE_NODE, -2 );
       if ( pparentid )
-        *pparentid = DUF_GET_QUFIELD2( parentid );
+        *pparentid = DUF_GET_QUFIELD3( pstmt_local, parentid );
     }
     else
     {
       MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
     }
   }
-  DUF_SQL_SE_END_STMT( pditemp, dirid2li_existed, pstmt );
+  DUF_SQL_SE_END_STMT( pditemp, dirid2li_existed, pstmt_local );
 /* DUF_ENDR( r ); */
   ER( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long dirid, duf_levinfo_t * pli,
       unsigned long long *pparentid );
@@ -249,24 +249,24 @@ SR( LI, nameid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsi
 {
 /* DUF_STARTR( r ); */
 
-  DUF_SQL_SE_START_STMT( pditemp, nameid2li_existed, sqlv, pstmt );
+  DUF_SQL_SE_START_STMT( pditemp, nameid2li_existed, sqlv, pstmt_local );
   {
-    DUF_SQL_SE_BIND_LL( nameID, nameid, pstmt );
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_BIND_LL( nameID, nameid, pstmt_local );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
-      duf_li_dbinit( pli, pstmt, DUF_NODE_LEAF, -2 );
+      duf_li_dbinit( pli, pstmt_local, DUF_NODE_LEAF, -2 );
       if ( pdirid )
-        *pdirid = DUF_GET_QUFIELD2( dirid );
+        *pdirid = DUF_GET_QUFIELD3( pstmt_local, dirid );
     }
     else
     {
       MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
     }
   }
-  DUF_SQL_SE_END_STMT( pditemp, nameid2li_existed, pstmt );
+  DUF_SQL_SE_END_STMT( pditemp, nameid2li_existed, pstmt_local );
 /* DUF_ENDR( r ); */
   ER( LI, nameid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsigned long long nameid, duf_levinfo_t * pli,
       unsigned long long *pdirid );

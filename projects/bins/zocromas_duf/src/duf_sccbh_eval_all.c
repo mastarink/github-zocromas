@@ -48,7 +48,7 @@
  * i.e. [ evaluate sccb for current dir ]
  *
  * args:
- *   pstmt: sql(ite) prepared statement
+ *   pstmt_x: sql(ite) prepared statement
  *   pdi:  depthinfo structure ptr
  *   sccb: module callbacs structure
  *
@@ -108,7 +108,7 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
  *                                     -- see duf_dir_scan2_passs.c
  * */
   MAST_TRACE( scan, 3, "scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
-  MAST_TRACE( sccbh, 4, "(pstmt:%d) passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
+  MAST_TRACE( sccbh, 4, "(pstmt_x:%d) passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
 /* QT( "Q: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
   if ( !H_SCCB->disabled /* && ( !H_TOTCOUNTED || H_TOTITEMS ) TODO FIXME */  )
   {
@@ -127,7 +127,7 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   /* assert( 0 );                                                                                               */
   }
 
-  MAST_TRACE( sccbh, 4, "(pstmt:%d) /passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
+  MAST_TRACE( sccbh, 4, "(pstmt_x:%d) /passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
 /* FIXME */
   ERRCLEAR( TOO_DEEP );                                              /* reset error if it was `MAX_DEPTH` */
   MAST_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ),

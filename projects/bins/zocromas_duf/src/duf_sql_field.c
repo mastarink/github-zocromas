@@ -17,22 +17,22 @@
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
 /* ###################################################################### */
 void
-__duf_sql_dump_row( duf_stmnt_t * pstmt )
+__duf_sql_dump_row( duf_stmnt_t * psqlstmt )
 {
-  for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+  for ( int icol = 0; icol < duf_sql_column_count( psqlstmt ); icol++ )
   {
     const char *t;
     const char *n MAS_UNUSED;
     const char *v;
 
-    t = duf_sql_column_decltype( pstmt, icol );
-    n = duf_sql_column_name( pstmt, icol );
-    v = duf_sql_column_string( pstmt, icol );
+    t = duf_sql_column_decltype( psqlstmt, icol );
+    n = duf_sql_column_name( psqlstmt, icol );
+    v = duf_sql_column_string( psqlstmt, icol );
     if ( v )
     {
       if ( t && 0 == strcasecmp( t, "integer" ) )
       {
-        QT( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( pstmt, icol ) );
+        QT( "@@@@%2d[%8s]:\t %11s = \t %lld", icol, t ? t : "-", n, duf_sql_column_long_long( psqlstmt, icol ) );
       }
       else if ( t && 0 == strcasecmp( t, "text" ) )
       {
@@ -51,14 +51,14 @@ __duf_sql_dump_row( duf_stmnt_t * pstmt )
 }
 
 int
-__duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
+__duf_sql_pos_by_name2( duf_stmnt_t * psqlstmt, const char *name )
 {
   int pos = -1;
 
-  for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+  for ( int icol = 0; icol < duf_sql_column_count( psqlstmt ); icol++ )
   {
-  /* QT( "@field %s ? %s (%d)", name, duf_sql_column_name( pstmt, icol ), pos ); */
-    if ( 0 == strcmp( duf_sql_column_name( pstmt, icol ), name ) )
+  /* QT( "@field %s ? %s (%d)", name, duf_sql_column_name( psqlstmt, icol ), pos ); */
+    if ( 0 == strcmp( duf_sql_column_name( psqlstmt, icol ), name ) )
     {
       pos = icol;
     /* QT( "@field %s  found (%d)", name, pos ); */
@@ -69,9 +69,9 @@ __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
   if ( pos < 0 )
   {
     QT( "@field %s not found:", name );
-    for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+    for ( int icol = 0; icol < duf_sql_column_count( psqlstmt ); icol++ )
     {
-      QT( "@@@- %s", duf_sql_column_name( pstmt, icol ) );
+      QT( "@@@- %s", duf_sql_column_name( psqlstmt, icol ) );
     }
     assert( 0 );
   }
@@ -79,29 +79,29 @@ __duf_sql_pos_by_name2( duf_stmnt_t * pstmt, const char *name )
 }
 
 const char *
-__duf_sql_str_by_name2( duf_stmnt_t * pstmt, const char *name, int opt )
+__duf_sql_str_by_name2( duf_stmnt_t * psqlstmt, const char *name, int opt )
 {
   const char *ptr = NULL;
-  int pos = __duf_sql_pos_by_name2( pstmt, name );
+  int pos = __duf_sql_pos_by_name2( psqlstmt, name );
 
   assert( opt || pos >= 0 );
 
   if ( pos >= 0 )
-    ptr = duf_sql_column_string( pstmt, pos );
+    ptr = duf_sql_column_string( psqlstmt, pos );
 
   return ptr;
 }
 
 unsigned long long
-__duf_sql_ull_by_name2( duf_stmnt_t * pstmt, const char *name, int opt )
+__duf_sql_ull_by_name2( duf_stmnt_t * psqlstmt, const char *name, int opt )
 {
   unsigned long long val = 0;
-  int pos = __duf_sql_pos_by_name2( pstmt, name );
+  int pos = __duf_sql_pos_by_name2( psqlstmt, name );
 
   assert( opt || pos >= 0 );
 
   if ( pos >= 0 )
-    val = duf_sql_column_long_long( pstmt, pos );
+    val = duf_sql_column_long_long( psqlstmt, pos );
 
   return val;
 }

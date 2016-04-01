@@ -30,19 +30,15 @@
 #include "duf_levinfo_structs.h"
 
 /* ###################################################################### */
-#include "duf_sccb_row.h"
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 /* ###################################################################### */
 
-/* duf_sccb_data_row_t *                                                           */
-/* duf_datarow_create( duf_stmnt_t * pstmt, const duf_pathinfo_t * pi MAS_UNUSED ) */
-SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt, const duf_pathinfo_t * pi MAS_UNUSED )
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED )
 {
-/* duf_sccb_data_row_t *row = NULL; */
-
   row = mas_malloc( sizeof( duf_sccb_data_row_t ) );
   memset( row, 0, sizeof( duf_sccb_data_row_t ) );
 /* prow=mas_malloc(sizeof(duf_sccb_data_row_t)); */
-  row->cnt = CRX( sql_column_count, pstmt );
+  row->cnt = CRX( sql_column_count, pstmt_arg );
 
   row->fields = mas_malloc( row->cnt * sizeof( duf_sccb_data_value_t ) );
   memset( row->fields, 0, row->cnt * sizeof( duf_sccb_data_value_t ) );
@@ -51,30 +47,30 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 
 /* QT( "@X %d : %d", pi->levinfo[17].node_type, row->pathinfo.levinfo[17].node_type ); */
 
-  for ( size_t i = 0; i < row->cnt; i++ )                            /* sqlite3_column_count( pstmt ) */
+  for ( size_t i = 0; i < row->cnt; i++ )                            /* sqlite3_column_count( pstmt_arg ) */
   {
-    row->fields[i].typ = CRX( sql_column_type, pstmt, i );
-    row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt, i ) );
-    row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt, i ) );
+    row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
+    row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt_arg, i ) );
+    row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, i ) );
 /*     if ( 0 == strcmp( row->fields[i].name, "mtime" ) )                                                                                     */
 /*     {                                                                                                                                      */
 /* #include <mastar/sqlite/mas_sqlite.h>                                                                                                      */
 /*                                                                                                                                            */
 /*     (* assert( strcmp( row->fields[i].name, "mtime" ) ); *)                                                                                */
-/*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt, i ), mas_sqlite_column_type( pstmt, i ), mas_sqlite_column_decltype( pstmt, i ) ); */
+/*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt_arg, i ), mas_sqlite_column_type( pstmt_arg, i ), mas_sqlite_column_decltype( pstmt_arg, i ) ); */
 /*     }                                                                                                                                      */
     switch ( row->fields[i].typ )
     {
     case DUF_SQLTYPE_NONE:
       break;
     case DUF_SQLTYPE_INTEGER:
-      row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i );
+      row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
     /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
       break;
     case DUF_SQLTYPE_FLOAT:
       break;
     case DUF_SQLTYPE_TEXT:
-      row->fields[i].value.n = CRX( sql_column_long_long, pstmt, i );
+      row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
       break;
     case DUF_SQLTYPE_BLOB:
       break;
@@ -88,10 +84,10 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
       const char *st;
       duf_sqltype_t it;
 
-      n = CRX( sql_column_name, pstmt, i );                          /* sqlite3_column_name */
-      s = CRX( sql_column_string, pstmt, i );                        /* sqlite3_column_text( pstmt, i ) */
-      st = CRX( sql_column_decltype, pstmt, i );
-      it = CRX( sql_column_type, pstmt, i );
+      n = CRX( sql_column_name, pstmt_arg, i );                      /* sqlite3_column_name */
+      s = CRX( sql_column_string, pstmt_arg, i );                    /* sqlite3_column_text( pstmt_arg, i ) */
+      st = CRX( sql_column_decltype, pstmt_arg, i );
+      it = CRX( sql_column_type, pstmt_arg, i );
       if ( s )
         QT( "@%lu. %s/%d %s='%s'", i, st, it, n, s );
       else
@@ -99,8 +95,7 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 #endif
     }
   }
-/* return row; */
-  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt, const duf_pathinfo_t * pi MAS_UNUSED );
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED );
 }
 
 /* int                                                        */

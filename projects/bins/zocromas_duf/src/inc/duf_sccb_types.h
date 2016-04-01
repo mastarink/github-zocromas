@@ -6,7 +6,7 @@
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 typedef struct duf_sccb_handle_s duf_sccb_handle_t;
-typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+typedef int ( *duf_scanner_t ) ( duf_stmnt_t * pstmt_arg, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 typedef struct duf_sccb_data_value_s duf_sccb_data_value_t;
 
@@ -15,7 +15,7 @@ typedef struct duf_sccb_data_row_s duf_sccb_data_row_t;
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
 typedef void ( *duf_sccbh_fun_t ) ( duf_sccb_handle_t * );
-typedef void ( *duf_rsccbh_fun_t ) ( const duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage, duf_scanner_t scanner,
+typedef void ( *duf_rsccbh_fun_t ) ( const duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_t scanner,
                                      duf_node_type_t node_type, int r );
 
 #endif

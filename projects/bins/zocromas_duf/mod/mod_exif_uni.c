@@ -59,7 +59,7 @@ TODO
 */
 
 /* ########################################################################################## */
-static int duf_dirent_contnt2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 #define FILTER_DATA "(fd.noexif IS NULL AND fd.noexif IS NULL)"
@@ -80,7 +80,7 @@ duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect exif",                                           /* */
   .name = "exif",                                                    /* */
   .def_opendir = 1,                                                  /* */
-  .leaf_scan_fd2 = duf_dirent_contnt2,                               /* */
+  .leaf_scan_fd2 = F2ND( dirent_contnt2 ),                           /* */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -177,23 +177,23 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
     {
       const char *sql = "SELECT " DUF_SQL_IDFIELD " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
 
-      DUF_SQL_SE_START_STMT( pdi, select_model, sql, pstmt );
-      DUF_SQL_SE_BIND_S( Model, model, pstmt );
-      DUF_SQL_SE_STEP( pstmt );
+      DUF_SQL_SE_START_STMT( pdi, select_model, sql, pstmt_local );
+      DUF_SQL_SE_BIND_S( Model, model, pstmt_local );
+      DUF_SQL_SE_STEP( pstmt_local );
       if ( QISERR1_N( SQL_ROW ) )
       {
         ERRCLEAR1( SQL_ROW );
         MAST_TRACE( select, 0, "<selected>" );
 #if 0
-        modelid = duf_sql_column_long_long( pstmt, 0 );
+        modelid = duf_sql_column_long_long( pstmt_local, 0 );
 #else
-        modelid = DUF_GET_QUFIELD2( modelid );
+        modelid = DUF_GET_QUFIELD3( pstmt_local, modelid );
 #endif
       /* lr = 0; */
       }
     /* if ( QISERR1_N(SQL_DONE ) ) */
     /*   lr = 0;                                 */
-      DUF_SQL_SE_END_STMT( pdi, select_model, pstmt );               /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, select_model, pstmt_local );         /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !modelid )
@@ -226,8 +226,8 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 }
 
 static
-SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
-     const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
+SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_depthinfo_t * pdi,
+     duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
 {
   unsigned long long modelid = 0;
 
@@ -241,27 +241,27 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
       sql = "SELECT " DUF_SQL_IDFIELD " AS exifid FROM " DUF_SQL_TABLES_EXIF_FULL
               " WHERE ( :modelID IS NULL OR modelid=:modelID ) AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
-      DUF_SQL_SE_START_STMT( pdi, select_exif, sql, pstmt );
+      DUF_SQL_SE_START_STMT( pdi, select_exif, sql, pstmt_local );
       if ( modelid )
       {
-      /* DUF_SQL_SE_BIND_LL( modelID, modelid,  pstmt ); */
-        DUF_SQL_SE_BIND_LL_NZ_OPT( modelID, modelid, pstmt );
+      /* DUF_SQL_SE_BIND_LL( modelID, modelid,  pstmt_local ); */
+        DUF_SQL_SE_BIND_LL_NZ_OPT( modelID, modelid, pstmt_local );
       }
-      DUF_SQL_SE_BIND_LL( timeEpoch, timeepoch, pstmt );
-      DUF_SQL_SE_STEP( pstmt );
+      DUF_SQL_SE_BIND_LL( timeEpoch, timeepoch, pstmt_local );
+      DUF_SQL_SE_STEP( pstmt_local );
       if ( QISERR1_N( SQL_ROW ) )
       {
         ERRCLEAR1( SQL_ROW );
         MAST_TRACE( select, 0, "<selected>" );
 #if 0
-        exifid = duf_sql_column_long_long( pstmt, 0 );
+        exifid = duf_sql_column_long_long( pstmt_local, 0 );
 #else
-        exifid = DUF_GET_QUFIELD2( exifid );
+        exifid = DUF_GET_QUFIELD3( pstmt_local, exifid );
 #endif
       /* lr = 0; */
       }
     /* DUF_CLEAR_ERROR( lr, DUF_SQL_DONE ); */
-      DUF_SQL_SE_END_STMT( pdi, select_exif, pstmt );                /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, select_exif, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
     /* if ( !exifid )                        */
     /*   DUF_SHOW_ERRORO( "exifid NOT SELECTED" ); */
     }
@@ -327,8 +327,8 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
     ERRMAKE( DATA );
   }
 
-  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh,
-       const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
+  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_depthinfo_t * pdi,
+       duf_sccb_handle_t * sccbh, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
 }
 
 static time_t
@@ -516,7 +516,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static
-SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   DUF_RUFIELD2( dataid );
 
@@ -786,7 +786,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
               noexif = !( timeepoch || *stime_original || model );
 
               if ( !noexif )
-                exifid = duf_insert_exif_uni( pstmt, pdi, sccbh, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , QPERRIND );
+                exifid = CRP( insert_exif_uni, /* pstmt_unused, */ pdi, sccbh, model, timeepoch, date_changed, stime_original, 1 /* need_id */  );
               MAST_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, QERRIND, sum, model, timeepoch, real_path, fname );
 
               MAST_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
@@ -846,5 +846,5 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
 
   pdi->total_files++;
 
-  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

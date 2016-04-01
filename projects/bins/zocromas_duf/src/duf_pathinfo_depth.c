@@ -153,7 +153,7 @@ duf_pi_countdown_dirs( duf_pathinfo_t * pi )
   }
 }
 
-SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear )
+SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt_arg, unsigned frecursive, unsigned flinear )
 {
   assert( pi );
 
@@ -177,7 +177,7 @@ SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_
   /* ------------------------------------------- */
   /* assert( duf_levinfo_dirid( pdi ) == 0 ); */
     assert( !pi->levinfo[d].itemname );
-    duf_pi_dbinit_level_d( pi, pstmt, node_type, d );
+    duf_pi_dbinit_level_d( pi, pstmt_arg, node_type, d );
     assert( pi->levinfo[d].itemname );
 
   /* assert( duf_levinfo_dirid( pdi ) != 0 ); */
@@ -186,7 +186,7 @@ SR( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_
     assert( pi->depth == duf_pi_calc_depth( pi ) );
     MAST_TRACE( explain, 20, "level down: %d; ≪%s≫  [%s]", d, duf_nodetype_name( node_type ), duf_pi_itemshowname( pi ) );
   }
-  ER( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt, unsigned frecursive, unsigned flinear );
+  ER( PI, pi_godown_db, duf_pathinfo_t * pi, duf_node_type_t node_type, duf_stmnt_t * pstmt_arg, unsigned frecursive, unsigned flinear );
 }
 
 static int

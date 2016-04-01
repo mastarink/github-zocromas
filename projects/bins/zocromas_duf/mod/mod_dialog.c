@@ -68,7 +68,7 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_dialog )
        .leaf_scan_fd2 = duf_dialog_de_content2,
        .leaf_scan_fd2_deleted = duf_dialog_de_content2_del,
 
-       .leaf_scan2 = duf_dialog_leaf2,
+       .leaf_scan2 = F2ND( dialog_leaf2 ),
        .leaf_scan2_deleted = duf_dialog_leaf2_del,
 
        .dirent_file_scan_before2 = duf_dialog_de_file_before2,
@@ -90,25 +90,25 @@ SR( MOD, dialog_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
   ER( MOD, dialog_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dialog_de_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_if_deleted( pdi ) );
   assert( duf_levinfo_stat( pdi ) || duf_levinfo_if_deleted( pdi ) );
   MAST_TRACE( mod, 4, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
-  ER( MOD, dialog_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dialog_de_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   MAST_TRACE( mod, 6, "dialog %s : %s -a-", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 
-  ER( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dialog_de_content2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt_arg_spc, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
@@ -156,11 +156,11 @@ SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, du
     /* DUF_PRINTF( 0, "@@@@@@ %s%s", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ) ); */
       {
 #if 0
-        CR( find_atable_sccb_by_evname_std, "listing" )->sccb->leaf_scan2( pstmt, pdi );
+        CR( find_atable_sccb_by_evname_std, "listing" )->sccb->leaf_scan2( pstmt_arg_spc, pdi );
 #else
         duf_scanner_t scanner = duf_find_sccb_by_evname_std( "listing" )->leaf_scan2;
 
-        CRV( scanner, pstmt, pdi, sccbh );
+        CRV( scanner, pstmt_arg_spc, pdi, sccbh );
 #endif
         MAST_TRACE( mod, 0, "@@@@dialog  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
       }
@@ -180,7 +180,7 @@ SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, du
     assert( !di.next );
   }
 
-  ER( MOD, dialog_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dialog_leaf2, duf_stmnt_t * pstmt_arg_spc, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 SR( MOD, dialog_leaf2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )

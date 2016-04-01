@@ -22,21 +22,21 @@
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 /* ###################################################################### */
 
-SR( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt )
+SR( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** psqlstmt )
 {
 /* DUF_STARTR( r ); */
   assert( sql );
   MAST_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
   ERRLOWER1( SQL_ROW );
   ERRLOWER1( SQL_DONE );
-/* DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE ); */
-  CRV_SQLITEQpS( mas_sqlite_prepare, sql, pstmt, sql, pstmt );
+/* DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, psqlstmt ), DUF_SQL_ROW, DUF_SQL_DONE ); */
+  CRV_SQLITEQpS( mas_sqlite_prepare, sql, psqlstmt, sql, psqlstmt );
   ERRUPPER1( SQL_DONE );
   ERRUPPER1( SQL_ROW );
 
 /* assert( r >= 0 ); */
 /* DUF_ENDR( r ); */
-  ER( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt );
+  ER( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** psqlstmt );
 }
 
 SR( SQL, sql_step, mas_sqlite_stmt_t * stmt )

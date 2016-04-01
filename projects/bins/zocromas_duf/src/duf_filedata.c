@@ -44,19 +44,19 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid_existed, duf_depthi
           "SELECT " DUF_SQL_IDFIELD " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
           " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
 
-  DUF_SQL_SE_START_STMT( pdi, select_filedata, sql, pstmt );
+  DUF_SQL_SE_START_STMT( pdi, select_filedata, sql, pstmt_local );
   MAST_TRACE( select, 3, "S:%s", sql );
-  DUF_SQL_SE_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), pstmt );
-  DUF_SQL_SE_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), pstmt );
-  DUF_SQL_SE_STEP( pstmt );
+  DUF_SQL_SE_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), pstmt_local );
+  DUF_SQL_SE_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), pstmt_local );
+  DUF_SQL_SE_STEP( pstmt_local );
   if ( QISERR1_N( SQL_ROW ) )
   {
     ERRCLEAR1( SQL_ROW );
     MAST_TRACE( select, 10, "<selected>" );
 #if 0
-    dataid = duf_sql_column_long_long( pstmt, 0 );
+    dataid = duf_sql_column_long_long( pstmt_local, 0 );
 #else
-    dataid = DUF_GET_QUFIELD2( dataid );
+    dataid = DUF_GET_QUFIELD3( pstmt_local, dataid );
 #endif
     assert( dataid > 0 );
   /* rpr = 0; */
@@ -66,7 +66,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid_existed, duf_depthi
     MAST_TRACE( select, 0, "@<NOT selected> (%d)", QERRIND );
     assert( 0 );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_filedata, pstmt );                /* clears SQL_ROW / SQL_DONE */
+  DUF_SQL_SE_END_STMT( pdi, select_filedata, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
   assert( dataid > 0 );
   ERP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 }
@@ -83,30 +83,30 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * 
             " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
             "datetime(:aTim, 'unixepoch'), :aTimn, " "datetime(:mTim, 'unixepoch'), :mTimn, " "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
 
-    DUF_SQL_SE_START_STMT( pdi, insert_filedata, sql, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, insert_filedata, sql, pstmt_local );
     MAST_TRACE( insert, 0, "S:%s", sql );
 
-    DUF_SQL_SE_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( Mode, ( unsigned long long ) duf_levinfo_stat_mode( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( Size, ( unsigned long long ) duf_levinfo_stat_size( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( nLink, ( unsigned long long ) duf_levinfo_stat_nlink( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( UID, ( unsigned long long ) duf_levinfo_stat_uid( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( GID, ( unsigned long long ) duf_levinfo_stat_gid( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( blkSize, ( unsigned long long ) duf_levinfo_stat_blksize( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( Blocks, ( unsigned long long ) duf_levinfo_stat_blocks( pdi ), pstmt );
+    DUF_SQL_SE_BIND_LL( Dev, ( unsigned long long ) duf_levinfo_stat_dev( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( iNode, ( unsigned long long ) duf_levinfo_stat_inode( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( Mode, ( unsigned long long ) duf_levinfo_stat_mode( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( Size, ( unsigned long long ) duf_levinfo_stat_size( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( nLink, ( unsigned long long ) duf_levinfo_stat_nlink( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( UID, ( unsigned long long ) duf_levinfo_stat_uid( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( GID, ( unsigned long long ) duf_levinfo_stat_gid( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( blkSize, ( unsigned long long ) duf_levinfo_stat_blksize( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( Blocks, ( unsigned long long ) duf_levinfo_stat_blocks( pdi ), pstmt_local );
 
-    DUF_SQL_SE_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), pstmt );
+    DUF_SQL_SE_BIND_LL( aTim, ( unsigned long long ) duf_levinfo_stat_asec( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( mTim, ( unsigned long long ) duf_levinfo_stat_msec( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( cTim, ( unsigned long long ) duf_levinfo_stat_csec( pdi ), pstmt_local );
 
-    DUF_SQL_SE_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), pstmt );
-    DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt );
+    DUF_SQL_SE_BIND_LL( aTimn, ( unsigned long long ) duf_levinfo_stat_ansec( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( mTimn, ( unsigned long long ) duf_levinfo_stat_mnsec( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt_local );
 
-    DUF_SQL_SE_STEPC( pstmt );
-    DUF_SQL_SE_CHANGES( changes, pstmt );
-    DUF_SQL_SE_END_STMT( pdi, insert_filedata, pstmt );              /* clears SQL_ROW / SQL_DONE */
+    DUF_SQL_SE_STEPC( pstmt_local );
+    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_END_STMT( pdi, insert_filedata, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
   }
   MAST_TRACE( select, 2, "<changes> : %d", changes );
   if ( need_id )

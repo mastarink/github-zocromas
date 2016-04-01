@@ -33,23 +33,23 @@
 /* ###################################################################### */
 
 /* 20150831.202009 */
-SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type )
+SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type )
 {
   assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
 /* {                                                     */
-/*   unsigned long long di1 = DUF_GET_QUFIELD2( dirid ); */
+/*   unsigned long long di1 = DUF_GET_QUFIELD3(pstmt_arg, dirid ); */
 /*   unsigned long long di2 = DUF_GET_RUFIELD2( dirid ); */
 /*                                                       */
 /*   QT( "@%lld -- %lld", di1, di2 );                    */
 /*   assert( 0 );                                        */
 /* }                                                     */
-/* Not here : assert( DUF_GET_QUFIELD2( dirid) == CRX( levinfo_dirid, pdi ) ); */
-  MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_QUFIELD2( dirid ) );
+/* Not here : assert( DUF_GET_QUFIELD3(pstmt_arg, dirid) == CRX( levinfo_dirid, pdi ) ); */
+  MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_QUFIELD3( pstmt_arg, dirid ) );
   MAST_TRACE( explain, 20, "@ sel cb2 node" );
 
-  CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
+  CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt_arg );
 
-  assert( QISERR || DUF_GET_QUFIELD2( dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */
-/* QT( "@@%s", sqlite3_sql( pstmt ) ); */
-  ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );
+  assert( QISERR || DUF_GET_QUFIELD3( pstmt_arg, dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */
+/* QT( "@@%s", sqlite3_sql( pstmt_arg ) ); */
+  ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type );
 }

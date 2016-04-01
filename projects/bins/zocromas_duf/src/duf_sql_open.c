@@ -21,7 +21,7 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 
 /* ###################################################################### */
-#include "duf_sql_open.h"                                            /* duf_sql_open() ✗ */
+#include "duf_sql_open.h"                                            /* duf_sql_open ✗ */
 /* ###################################################################### */
 
 SR( SQL, sql_open, const char *dbpath )

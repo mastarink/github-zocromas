@@ -69,25 +69,25 @@ SRP( OTHER, unsigned long long, dirid, 0, path2dirid, const char *path )
 static
 SRP( PDI, char *, name, NULL, dirid2name_existed_i, duf_depthinfo_t * pdi, const char *sqlv, unsigned long long dirid, unsigned long long *pparentid )
 {
-  DUF_SQL_SE_START_STMT( pdi, dirid2name_existed, sqlv, pstmt );
+  DUF_SQL_SE_START_STMT( pdi, dirid2name_existed, sqlv, pstmt_local );
   {
-    DUF_SQL_SE_BIND_LL( dirID, dirid, pstmt );
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_BIND_LL( dirID, dirid, pstmt_local );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
     /* rpr = 0; */
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
-      name = mas_strdup( DUF_GET_QSFIELD2( name ) );
+      name = mas_strdup( DUF_GET_QSFIELD3( pstmt_local, name ) );
       if ( pparentid )
-        *pparentid = DUF_GET_QUFIELD2( parentid );
+        *pparentid = DUF_GET_QUFIELD3( pstmt_local, parentid );
     }
     else
     {
       MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
     }
   }
-  DUF_SQL_SE_END_STMT( pdi, dirid2name_existed, pstmt );
+  DUF_SQL_SE_END_STMT( pdi, dirid2name_existed, pstmt_local );
   ERP( PDI, char *, name, NULL, dirid2name_existed_i, duf_depthinfo_t * pdi, const char *sqlv, unsigned long long dirid,
        unsigned long long *pparentid );
 }

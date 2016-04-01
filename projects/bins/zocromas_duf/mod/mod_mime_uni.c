@@ -44,7 +44,7 @@
 
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
-static int duf_dirent_content2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.mimeid IS NULL"
@@ -163,29 +163,20 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
 
     if ( need_id )
     {
-      const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime";
+      const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime " /* " AND charset=:charSet" */ ;
 
-    /* const char *sql = "SELECT " DUF_SQL_IDFIELD " AS mimeId FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
-
-      DUF_SQL_SE_START_STMT( pdi, select_mime, sql, pstmt );
-      DUF_SQL_SE_BIND_S( Mime, mime, pstmt );
-    /* DUF_SQL_SE_BIND_S( charSet, chs,  pstmt ); */
-    /* DUF_SQL_SE_BIND_S( Tail, tail,  pstmt ); */
-      DUF_SQL_SE_STEP( pstmt );
+      DUF_SQL_SE_START_STMT( pdi, select_mime, sql, pstmt_local );
+      DUF_SQL_SE_BIND_S( Mime, mime, pstmt_local );
+    /* DUF_SQL_SE_BIND_S( charSet, chs,  pstmt_local ); */
+    /* DUF_SQL_SE_BIND_S( Tail, tail,  pstmt_local ); */
+      DUF_SQL_SE_STEP( pstmt_local );
       if ( QISERR1_N( SQL_ROW ) )
       {
         ERRCLEAR1( SQL_ROW );
         MAST_TRACE( mod, 0, "<selected>" );
-#if 0
-        mimeid = duf_sql_column_long_long( pstmt, 0 );
-#else
-        mimeid = DUF_GET_QUFIELD2( mimeId );
-#endif
-      /* lr = 0; */
+        mimeid = DUF_GET_QUFIELD3( pstmt_local, mimeId );
       }
-    /* if ( QISERR1_N(SQL_DONE ) ) */
-    /*   lr = 0;                                 */
-      DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt );                /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !mimeid && !duf_get_config_flag_disable_insert(  ) )
@@ -229,9 +220,6 @@ mime_destructor( void *ctx )
   MAST_TRACE( mime, 0, " closed mime " );
 }
 
-/*
- * pstmt is needed for dataid
- * */
 static
 SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
@@ -332,5 +320,5 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
   }
   pdi->total_files++;
 
-  ER( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

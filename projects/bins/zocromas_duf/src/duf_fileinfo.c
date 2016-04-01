@@ -29,7 +29,8 @@
 #include "duf_fileinfo.h"
 /* ###################################################################### */
 
-SR( OTHER, fileinfo, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED, duf_fileinfo_t * pfi )
+SR( OTHER, fileinfo, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused MAS_UNUSED, */ duf_sccb_handle_t * sccbh,
+    duf_fileinfo_t * pfi )
 {
 /* DUF_STARTR( r ); */
   if ( pfi )
@@ -93,5 +94,5 @@ SR( OTHER, fileinfo, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_U
     pfi->sha1sum3 = sha1sum3;
   }
 /* DUF_ENDR( r ); */
-  ER( OTHER, fileinfo, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi );
+  ER( OTHER, fileinfo, /* duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused, */ duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi );
 }

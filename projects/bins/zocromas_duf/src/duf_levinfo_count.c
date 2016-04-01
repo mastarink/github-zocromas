@@ -101,12 +101,12 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
     if ( QNOERR && sql )
     {
     /* QT( "@%llu (%s)", duf_levinfo_dirid_d( pdi, d ), sql ); */
-      DUF_SQL_SE_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, pstmt );
-      DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), pstmt );
-      DUF_SQL_SE_STEP( pstmt );
+      DUF_SQL_SE_START_STMT( ( duf_depthinfo_t * ) pdi, select_childs, sql, pstmt_local );
+      DUF_SQL_SE_BIND_LL( parentdirID, duf_levinfo_dirid_d( pdi, d ), pstmt_local );
+      DUF_SQL_SE_STEP( pstmt_local );
       if ( QISERR1_N( SQL_ROW ) )
       {
-        childs = DUF_GET_QUFIELD2( childs );
+        childs = DUF_GET_QUFIELD3( pstmt_local, childs );
       }
       else if ( QISERR1_N( SQL_DONE ) )
       {
@@ -118,7 +118,7 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
         QT( "@<NOT selected> (%s)", QERRNAME );
         assert( 0 );
       }
-      DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
+      DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt_local );
 #if 0
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), childs );
 #endif

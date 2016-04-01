@@ -34,23 +34,6 @@
 #include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq() ✗ */
 /* ###################################################################### */
 
-#if 0
-static int
-duf_bind_ufilter( duf_stmnt_t * pstmt, const mas_argvc_t * ttarg )
-{
-  DUF_STARTR( r );
-  DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
-# if 0
-  duf_ufilter_delete( global_status.selection_bound_ufilter );
-#  if 0
-  global_status.selection_bound_ufilter = duf_ufilter_create_from( DUF_CONFIGG( pu ) );
-#  else
-  global_status.selection_bound_ufilter = duf_ufilter_clone( DUF_CONFIGG( pu ) );
-#  endif
-# endif
-  DUF_ENDR( r );
-}
-#endif
 
 /* 20150913.101022
  *  evaluate one sql statement with callback
@@ -78,21 +61,21 @@ SR( SQL, eval_sql_one_cb, const char *sql, const duf_ufilter_t * pu, const duf_y
   {
     MAST_TRACE( sql, 3, worksql );
 #if 0
-    DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+    DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt_local );
 #else
-    DUF_SQL_SE_START_STMT_LOCAL( duf_pdi_global(  ), worksql, pstmt );
+    DUF_SQL_SE_START_STMT_LOCAL( duf_pdi_global(  ), worksql, pstmt_local );
 #endif
     if ( callback )
-      CRV( ( callback ), pstmt, pu, py, ttarg, ptr );
+      CRV( ( callback ), pstmt_local, pu, py, ttarg, ptr );
     if ( QNOERR )
     {
-      DUF_SQL_SE_STEPC( pstmt );
-      DUF_SQL_SE_CHANGES_NOPDI( changes, pstmt );
+      DUF_SQL_SE_STEPC( pstmt_local );
+      DUF_SQL_SE_CHANGES_NOPDI( changes, pstmt_local );
     }
 #if 0
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt_local );
 #else
-    DUF_SQL_SE_END_STMT_LOCAL( duf_pdi_global(  ), pstmt );
+    DUF_SQL_SE_END_STMT_LOCAL( duf_pdi_global(  ), pstmt_local );
 #endif
   }
 /* MAST_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, worksql, changes ); */

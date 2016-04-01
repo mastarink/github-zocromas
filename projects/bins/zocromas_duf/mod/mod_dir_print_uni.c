@@ -38,7 +38,7 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
-static int duf_print_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -78,7 +78,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   DUF_RUFIELD2( dirid );
   DUF_RSFIELD2( fname );
@@ -185,5 +185,5 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
     }
   }
 
-  ER( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, print_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

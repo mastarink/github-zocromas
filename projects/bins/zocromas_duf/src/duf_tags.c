@@ -42,34 +42,34 @@ SRP( OTHER, unsigned long long, tagnameid, 0, add_tagname, duf_depthinfo_t * pdi
   static const char *sqlv = "SELECT " DUF_SQL_IDFIELD " AS tagnameId FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
 
   {
-    DUF_SQL_SE_START_STMT( pdi, insert_tagname, sql, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, insert_tagname, sql, pstmt_local );
 
-    DUF_SQL_SE_BIND_S( tagName, tag_name, pstmt );
-    DUF_SQL_SE_STEPC( pstmt );
-    DUF_SQL_SE_CHANGES( changes, pstmt );
-    DUF_SQL_SE_END_STMT( pdi, insert_tagname, pstmt );
+    DUF_SQL_SE_BIND_S( tagName, tag_name, pstmt_local );
+    DUF_SQL_SE_STEPC( pstmt_local );
+    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_END_STMT( pdi, insert_tagname, pstmt_local );
   }
   MAST_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
   if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
   {
-    DUF_SQL_SE_START_STMT( pdi, select_tagname, sqlv, pstmt );
-    DUF_SQL_SE_BIND_S( tagName, tag_name, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, select_tagname, sqlv, pstmt_local );
+    DUF_SQL_SE_BIND_S( tagName, tag_name, pstmt_local );
 
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
     /* rpr = 0; */
       MAST_TRACE( select, 0, "<selected>" );
 #if 0
-      tagnameid = duf_sql_column_long_long( pstmt, 0 );
+      tagnameid = duf_sql_column_long_long( pstmt_local, 0 );
 #else
-      tagnameid = DUF_GET_QUFIELD2( tagnameId );
+      tagnameid = DUF_GET_QUFIELD3( pstmt_local, tagnameId );
 #endif
       MAST_TRACE( sql, 4, "tagnameid from tagnameId:%llu", tagnameid );
       MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
     }
 
-    DUF_SQL_SE_END_STMT( pdi, select_tagname, pstmt );
+    DUF_SQL_SE_END_STMT( pdi, select_tagname, pstmt_local );
   }
   else
   {
@@ -97,38 +97,38 @@ SRP( OTHER, unsigned long long, tagid, 0, add_tag, duf_depthinfo_t * pdi, const 
 
   tagnameid = duf_add_tagname( pdi, tag_name, QPERRIND );
   {
-    DUF_SQL_SE_START_STMT( pdi, insert_tag, sql, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, insert_tag, sql, pstmt_local );
 
     assert( tagnameid );
-    DUF_SQL_SE_BIND_LL( tagNameID, tagnameid, pstmt );
-    DUF_SQL_SE_BIND_S( itemType, itemtype, pstmt );
-    DUF_SQL_SE_BIND_LL( itemID, itemid, pstmt );
-    DUF_SQL_SE_STEPC( pstmt );
-    DUF_SQL_SE_CHANGES( changes, pstmt );
-    DUF_SQL_SE_END_STMT( pdi, insert_tag, pstmt );
+    DUF_SQL_SE_BIND_LL( tagNameID, tagnameid, pstmt_local );
+    DUF_SQL_SE_BIND_S( itemType, itemtype, pstmt_local );
+    DUF_SQL_SE_BIND_LL( itemID, itemid, pstmt_local );
+    DUF_SQL_SE_STEPC( pstmt_local );
+    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_END_STMT( pdi, insert_tag, pstmt_local );
   }
   MAST_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );
   if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
   {
-    DUF_SQL_SE_START_STMT( pdi, select_tag, sqlv, pstmt );
-    DUF_SQL_SE_BIND_LL( tagNameID, tagnameid, pstmt );
-    DUF_SQL_SE_BIND_S( itemType, itemtype, pstmt );
-    DUF_SQL_SE_BIND_LL( itemID, itemid, pstmt );
+    DUF_SQL_SE_START_STMT( pdi, select_tag, sqlv, pstmt_local );
+    DUF_SQL_SE_BIND_LL( tagNameID, tagnameid, pstmt_local );
+    DUF_SQL_SE_BIND_S( itemType, itemtype, pstmt_local );
+    DUF_SQL_SE_BIND_LL( itemID, itemid, pstmt_local );
 
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
     /* rpr = 0; */
       MAST_TRACE( select, 0, "<selected>" );
 #if 0
-      tagid = duf_sql_column_long_long( pstmt, 0 );
+      tagid = duf_sql_column_long_long( pstmt_local, 0 );
 #else
-      tagid = DUF_GET_QUFIELD2( tagId );
+      tagid = DUF_GET_QUFIELD3( pstmt_local, tagId );
 #endif
       MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
     }
 
-    DUF_SQL_SE_END_STMT( pdi, select_tag, pstmt );
+    DUF_SQL_SE_END_STMT( pdi, select_tag, pstmt_local );
   }
   else
   {

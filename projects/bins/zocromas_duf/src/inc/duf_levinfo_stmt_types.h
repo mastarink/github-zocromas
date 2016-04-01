@@ -49,7 +49,7 @@ typedef struct
 # else
   duf_stmt_ident_t id;
 # endif
-  duf_stmnt_t *pstmt;
+  duf_stmnt_t *statement;
 } duf_idstmt_t;
 
 #endif

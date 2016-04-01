@@ -56,15 +56,15 @@
 
 /* 20151014.093121 */
 static
-SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2,
+SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2,
     duf_scanstage_t scanstage )
 {
   assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
   assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
 
-  MAST_TRACE( sql, 3, "EACH %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 3, "EACH %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt_arg ) );
   MAST_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", CRX( levinfo_dirid, H_PDI ), CRX( nodetype_name, node_type ), node_type,
-              CRX( levinfo_path, H_PDI ), DUF_GET_STMT_SFIELD2( pstmt, dfname ), CRX( levinfo_itemtruename, H_PDI ) );
+              CRX( levinfo_path, H_PDI ), DUF_GET_STMT_SFIELD2( pstmt_arg, dfname ), CRX( levinfo_itemtruename, H_PDI ) );
 
   H_PDI->seq_row++;
   sccbh->assert__current_node_type = node_type;
@@ -77,16 +77,16 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
   /* [DUF_NODE_MAX] = NULL, */
   };
 
-/* IF_DORF( r, cbs[node_type], sccbh, pstmt, str_cb2, scanstage ); */
-  IF_CRV( cbs[node_type], sccbh, pstmt, str_cb2, scanstage );
+/* IF_DORF( r, cbs[node_type], sccbh, pstmt_arg, str_cb2, scanstage ); */
+  IF_CRV( cbs[node_type], sccbh, pstmt_arg, str_cb2, scanstage );
 #else
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    CR( sel_cb2_leaf, sccbh, pstmt, str_cb2, scanstage );
+    CR( sel_cb2_leaf, sccbh, pstmt_arg, str_cb2, scanstage );
     break;
   case DUF_NODE_NODE:
-    CR( sel_cb2_node, sccbh, pstmt, str_cb2, scanstage );
+    CR( sel_cb2_node, sccbh, pstmt_arg, str_cb2, scanstage );
     break;
   /* case DUF_NODE_NONE:    */
   /* case DUF_NODE_FS:      */
@@ -97,7 +97,7 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
   }
 #endif
   CR( pdi_max_filter, H_PDI );                                       /* check if any of max's reached */
-  ER( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt, duf_str_cb2_t str_cb2,
+  ER( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2,
       duf_scanstage_t scanstage );
 }
 
@@ -112,28 +112,27 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 {
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
-  DUF_SQL_SE_START_STMT_NOPDI( sql_selector, pstmt );
+  DUF_SQL_SE_START_STMT_NOPDI( sql_selector, pstmt_local );
 #else
-  DUF_SQL_SE_START_STMT_LOCAL( H_PDI, sql_selector, pstmt );
+  DUF_SQL_SE_START_STMT_LOCAL( H_PDI, sql_selector, pstmt_local );
 #endif
 
-/* TODO : sccbh->pstmt = pstmt OR via pdi */
   MAST_TRACE( select, 1, "S:%s", sql_selector );
 /* XXX With parent ! XXX */
-  DUF_SQL_SE_BIND_LL_NZ_OPT( parentdirID, CRX( levinfo_dirid, H_PDI ), pstmt );
+  DUF_SQL_SE_BIND_LL_NZ_OPT( parentdirID, CRX( levinfo_dirid, H_PDI ), pstmt_local );
 
-/* DUF_SQL_SE_BIND_LL_NZ_OPT( topDirID, CRX(levinfo_dirid_d, H_PDI, CRX(pdi_topdepth, H_PDI ) ), pstmt ); */
+/* DUF_SQL_SE_BIND_LL_NZ_OPT( topDirID, CRX(levinfo_dirid_d, H_PDI, CRX(pdi_topdepth, H_PDI ) ), pstmt_local ); */
 /* duf_yfilter_t yf={.topdirid= CRX(levinfo_dirid_d, H_PDI, CRX(pdi_topdepth, H_PDI ) )}; */
-  CR( bind_ufilter_uni, pstmt, H_PU, H_PY, NULL, NULL /* ptr */  );
+  CR( bind_ufilter_uni, pstmt_local, H_PU, H_PY, NULL, NULL /* ptr */  );
 
 /* cal one of duf_sel_cb2_(leaf|node) by node_type
- * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt, str_cb2, sccbh ) )
+ * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_local, str_cb2, sccbh ) )
  * */
 
   MAST_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), H_TOTCOUNTED,
               H_TOTITEMS );
   MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seq, H_PDI->seq_node, H_PDI->seq_leaf,
-              H_TOTITEMS, sqlite3_sql( pstmt ) );
+              H_TOTITEMS, sqlite3_sql( pstmt_local ) );
 /* assert( !H_TOTCOUNTED || H_TOTITEMS ); */
   if ( !H_TOTCOUNTED || H_TOTITEMS )
   {
@@ -141,7 +140,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
   /* H_PDI->total_bytes = 0; */
   /* T( "@pdi->total_bytes:%llu", H_PDI->total_bytes ); */
 
-    DUF_SQL_SE_EACH_ROW( pstmt, CR( eval_sccbh_sql_row_str_cb, sccbh, node_type, pstmt, str_cb2, scanstage ) );
+    DUF_SQL_SE_EACH_ROW( pstmt_local, CR( eval_sccbh_sql_row_str_cb, sccbh, node_type, pstmt_local, str_cb2, scanstage ) );
 
   /* mas_force_count_ereport( 1 ); */
   /* DUF_TEST_R( r ); */
@@ -153,9 +152,9 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
   /* assert( 0 );                                                                                               */
   }
 #if 1
-  DUF_SQL_SE_END_STMT_NOPDI( pstmt );
+  DUF_SQL_SE_END_STMT_NOPDI( pstmt_local );
 #else
-  DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt );
+  DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt_local );
 #endif
   ER( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
       duf_scanstage_t scanstage );

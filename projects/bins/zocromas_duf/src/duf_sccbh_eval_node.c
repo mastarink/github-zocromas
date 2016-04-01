@@ -50,7 +50,7 @@
 /* ###################################################################### */
 
 /* 20151027.144606 */
-SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
 
   MAST_TRACE( scan, 4, "? scan node [%s] by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
@@ -72,12 +72,12 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 # if 0
     /* sccbh->current_scanner = scanner; */
       sccbh->assert__current_node_type = DUF_NODE_NODE;
-      CRV( ( scanner ), pstmt, H_PDI );
+      CRV( ( scanner ), pstmt_arg, H_PDI );
       assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
+        sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE, QERRIND );
 # else
-      CR( sccbh_call_scanner, sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE );
+      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE );
 # endif
     }
     else if ( ( scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
@@ -86,12 +86,12 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
 # if 0
     /* sccbh->current_scanner = scanner; */
       sccbh->assert__current_node_type = DUF_NODE_NODE;
-      CRV( ( scanner ), pstmt, H_PDI );
+      CRV( ( scanner ), pstmt_arg, H_PDI );
       assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE, QERRIND );
+        sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE, QERRIND );
 # else
-      CR( sccbh_call_scanner, sccbh, pstmt, scanstage, scanner, DUF_NODE_NODE );
+      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE );
 # endif
     }
 #else
@@ -99,7 +99,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
     {
     /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-      DOR( r, ( scanner ) ( pstmt, H_PDI ) );
+      DOR( r, ( scanner ) ( pstmt_arg, H_PDI ) );
     }
 #endif
     else
@@ -108,24 +108,24 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, d
                   CRX( levinfo_dirid, H_PDI ), CRX( scanstage_name, scanstage ), CRX( uni_scan_action_title, H_SCCB ) );
     }
   }
-  ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }
 
 /* 20150820.085615 */
 /* TODO duf_sccb_handle_t * sccbh must be first in all such funcs 20160210.120016 */
-SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg MAS_UNUSED, duf_scanstage_t scanstage )
 {
 
   assert( sccbh );
   assert( H_SCCB );
 
 #ifdef DUF_NO_RNUMS
-  MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt_arg ) );
 #else
-  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", CRX( levinfo_dirid, H_PDI ), pstmt ? DUF_GET_RUFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", CRX( levinfo_dirid, H_PDI ), pstmt_arg ? DUF_GET_RUFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt_arg ) );
 #endif
   MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
 
   CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_NODE, F2ND( sccbh_eval_all ), scanstage );
-  ER( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt MAS_UNUSED, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg MAS_UNUSED, duf_scanstage_t scanstage );
 }

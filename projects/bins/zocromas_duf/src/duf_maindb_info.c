@@ -40,9 +40,9 @@ SRP( TOP, unsigned long *, tuple, NULL, info_from_db, int count, const char *sql
 
   if ( count > 0 )
   {
-    DUF_SQL_SE_START_STMT_NOPDI( sql, pstmt );
+    DUF_SQL_SE_START_STMT_NOPDI( sql, pstmt_local );
 
-    DUF_SQL_SE_STEP( pstmt );
+    DUF_SQL_SE_STEP( pstmt_local );
     if ( QISERR1_N( SQL_ROW ) )
     {
       tuple = mas_malloc( count * sizeof( unsigned long ) );
@@ -51,11 +51,11 @@ SRP( TOP, unsigned long *, tuple, NULL, info_from_db, int count, const char *sql
       {
         long long val;
 
-        val = duf_sql_column_long_long( pstmt, iv );
+        val = duf_sql_column_long_long( pstmt_local, iv );
         tuple[iv] = val;
       }
     }
-    DUF_SQL_SE_END_STMT_NOPDI( pstmt );
+    DUF_SQL_SE_END_STMT_NOPDI( pstmt_local );
   }
 
 /* return tuple; */
