@@ -52,7 +52,7 @@ sha1_la_SOURCES	= mod_sha_uni.c
 
 mime_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 mime_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
-mime_la_SOURCES	= mod_collect_mime_uni.c
+mime_la_SOURCES	= mod_mime_uni.c
 
 exif_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 exif_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@ @LIBEXIF_CFLAGS@
