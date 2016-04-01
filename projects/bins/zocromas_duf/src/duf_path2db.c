@@ -12,7 +12,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
@@ -24,7 +23,7 @@
 #include "duf_sccbh_pstmt.h"
 
 #include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
@@ -32,11 +31,11 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
-#include "duf_evsql_selector_new.h"
+#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
@@ -55,7 +54,7 @@
 static
 SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
 {
-/* DUF_STARTR( r ); */
+
   int changes = 0;
 
   static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL /* */
@@ -114,7 +113,7 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
   DUF_SQL_SE_END_STMT( pdi, insert_path_table, pstmt );
   if ( pchanges )
     *pchanges = changes;
-/* DUF_ENDR( r ); */
+
   ER( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges );
 }
 
@@ -129,7 +128,7 @@ SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
 #endif
          )
 {
-/* DUF_STARTR( r ); */
+
   duf_levinfo_t *pli;
 
   pli = duf_levinfo_ptr( pdi );
@@ -145,7 +144,7 @@ SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
 /* duf_levinfo_make_childs( pdi ); */
 #endif
   assert( dirid == duf_levinfo_dirid( pdi ) );
-/* DUF_ENDR( r ); */
+
   ER( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
@@ -161,18 +160,16 @@ SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
 static
 SR( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt )
 {
-/* DUF_STARTR( r ); */
 
-  CR( set_dirid_and_nums, pdi, DUF_GET_UFIELD2( dirid )
+  CR( set_dirid_and_nums, pdi, DUF_GET_QUFIELD2( dirid )
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-      , DUF_GET_UFIELD2( nfiles ), DUF_GET_UFIELD2( ndirs )
+      , DUF_GET_QUFIELD2( nfiles ), DUF_GET_QUFIELD2( ndirs )
 #endif
            );                                                        /* at levinfo current level: set dirid,numdir,numfile */
-  assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+  assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
 
-/* DUF_ENDR( r ); */
   ER( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt );
 }
 
@@ -181,7 +178,6 @@ SR( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pst
 static
 SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
 {
-/* DUF_STARTR( r ); */
 
   assert( pdi->pdi_name );
   DUF_SQL_SE_START_STMT( pdi, select_path, sqlv, pstmt );
@@ -203,8 +199,8 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') ~ '%s'; dirid:%llu", sqlv, duf_levinfo_dirid_up( pdi ), truedirname,
-                  duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ) );
-      if ( !DUF_GET_UFIELD2( dirid ) )
+                  duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD2( dirid ) );
+      if ( !DUF_GET_QUFIELD2( dirid ) )
       {
       /* DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and " DUF_SQL_DIRNAMEFIELD "='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) ); */
         if ( QNOERR )
@@ -213,12 +209,12 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       }
       else
       {
-        MAST_TRACE( explain, 20, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_UFIELD2( dirid ),
+        MAST_TRACE( explain, 20, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), DUF_GET_QUFIELD2( dirid ),
                     duf_levinfo_dirid_up( pdi ) );
       }
-      assert( DUF_GET_UFIELD2( dirid ) );
+      assert( DUF_GET_QUFIELD2( dirid ) );
       CR( set_dirid_and_nums_from_pstmt, pdi, pstmt );               /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
-      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+      assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else if ( QISERR1_N( SQL_DONE ) )
     {
@@ -226,16 +222,16 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
       MAST_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
                   duf_levinfo_itemshowname( pdi ) );
       MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
-      assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
+      assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else
     {
-    /* assert( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); */
+    /* assert( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); */
     }
   }
-  assert( QISERR || ( DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ) );
+  assert( QISERR || ( DUF_GET_QUFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ) );
   DUF_SQL_SE_END_STMT( pdi, select_path, pstmt );
-/* DUF_ENDR( r ); */
+
   ER( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv );
 }
 
@@ -292,7 +288,6 @@ SR( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_s
 #endif
             " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)" /* */
   };
-/* DUF_STARTR( r ); */
 
   assert( pdi );
   assert( pdi->pdi_name );
@@ -311,7 +306,7 @@ SR( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_s
   MAST_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, duf_levinfo_itemshowname( pdi ) );
   assert( dirid == duf_levinfo_dirid( pdi ) );
 /* assert( !need_id || dirid ); */
-/* DUF_ENDR( r ); */
+
   ER( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set );
 }
 
@@ -320,7 +315,6 @@ SR( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_s
 static
 SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id )
 {
-/* DUF_STARTR( r ); */
 
   assert( pdi );
   assert( pdi->pdi_name );
@@ -403,7 +397,6 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
       /* assert( 0 );            (*  *) */
       }
 
-    /* DUF_TEST_R( r ); */
     }
   }
   if ( need_id && !duf_levinfo_dirid( pdi ) )
@@ -415,7 +408,7 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
                      duf_levinfo_itemshowname( pdi ) );
 #endif
   }
-/* DUF_ENDR( r ); */
+
   ER( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id );
 }
 
@@ -423,9 +416,9 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
 /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_levinfo_stat2dirid_i */
 SR( PDI, levinfo_stat2dirid, duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set )
 {
-/* DUF_STARTR( r ); */
+
   CR( levinfo_stat2dirid_i, pdi, caninsert, sql_set, 1 );            /* at levinfo current level: set dirid,numdir,numfile */
-/* DUF_ENDR( r ); */
+
   ER( PDI, levinfo_stat2dirid, duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set );
 }
 
@@ -434,7 +427,7 @@ SR( PDI, levinfo_stat2dirid, duf_depthinfo_t * pdi, int caninsert, const duf_sql
 static
 SR( PDI, levinfo_down_stat2dirid, duf_depthinfo_t * pdi, const char *directory_name, int caninsert, const duf_sql_set_t * sql_set )
 {
-/* DUF_STARTR( r ); */
+
   int up_d = 0;
 
   assert( pdi );
@@ -454,7 +447,6 @@ SR( PDI, levinfo_down_stat2dirid, duf_depthinfo_t * pdi, const char *directory_n
                                                                                                                       set dirid,numdir,numfile;
                                                                                                                       WRAPper for duf_levinfo_stat2dirid_i */
 
-/* DUF_ENDR( r ); */
   ER( PDI, levinfo_down_stat2dirid, duf_depthinfo_t * pdi, const char *directory_name, int caninsert, const duf_sql_set_t * sql_set );
 }
 
@@ -464,7 +456,7 @@ SR( PDI, levinfo_down_stat2dirid, duf_depthinfo_t * pdi, const char *directory_n
 static
 SR( PDI, real_path2db_i, duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
 {
-/* DUF_STARTR( r ); */
+
   int od = 0;
 
 /* unsigned long long parentid = 0; */
@@ -505,14 +497,14 @@ SR( PDI, real_path2db_i, duf_depthinfo_t * pdi, char *real_path, int caninsert, 
   duf_pdi_set_opendir( pdi, od );                                    /* restore saved open status */
   assert( QISERR || !caninsert || !real_path || duf_levinfo_dirid( pdi ) > 0 );
   assert( QISERR || !caninsert || !real_path || duf_levinfo_path( pdi ) );
-/* DUF_ENDR( r ); */
+
   ER( PDI, real_path2db_i, duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set );
 }
 
 /* parse real_path to components and store/check each to db, setting each level info to levinfo */
 SR( PDI, real_path2db, duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set )
 {
-/* DUF_STARTR( r ); */
+
   char *real_path;
 
   assert( pdi );
@@ -539,6 +531,5 @@ SR( PDI, real_path2db, duf_depthinfo_t * pdi, int caninsert, const char *rpath, 
   }
   mas_free( real_path );
 
-/* DUF_ENDR( r ); */
   ER( PDI, real_path2db, duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set );
 }

@@ -35,7 +35,9 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
 
 #include "duf_mod_defs.h"
 
@@ -205,7 +207,7 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) > 0 );
   assert( duf_levinfo_stat( pdi ) );
 
@@ -215,7 +217,7 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
     duf_fileinfo_t fi = { 0 };
 #ifdef MAS_TRACING
   /* filename from db same as duf_levinfo_itemname( pdi ) */
-    assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
+    assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
     CR( fileinfo, pstmt, pdi, sccbh, &fi );
     save_path =
@@ -278,7 +280,7 @@ SR( MOD, save_to_de_content2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_
 #ifdef MAS_TRACING
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
 
 /*
@@ -298,7 +300,7 @@ static
 SR( MOD, save_to_leaf2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
-  MAST_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 1, "@@save_to %s : %s", duf_levinfo_path( pdi ), DUF_GET_RSFIELD2( fname ) );
 #endif
 /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
@@ -316,7 +318,7 @@ static
 SR( MOD, save_to_node_before2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
-  MAST_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 0, "@save_to node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_RSFIELD2( fname ) );
 #endif
 
   ER( MOD, save_to_node_before2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
@@ -345,7 +347,7 @@ static
 SR( MOD, save_to_node_after2_del, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
-  MAST_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( fname ) );
+  MAST_TRACE( mod, 0, "@save_to node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_RSFIELD2( fname ) );
 #endif
 
   ER( MOD, save_to_node_after2_del, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );

@@ -32,9 +32,10 @@
 
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
@@ -178,7 +179,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
 #if 0
         mimeid = duf_sql_column_long_long( pstmt, 0 );
 #else
-        mimeid = DUF_GET_UFIELD2( mimeId );
+        mimeid = DUF_GET_QUFIELD2( mimeId );
 #endif
       /* lr = 0; */
       }
@@ -232,7 +233,7 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static
-SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   unsigned long long mimeid = 0;
 
@@ -278,7 +279,7 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_h
     mime = mas_strdup( magic_descriptor( magic, duf_levinfo_dfd( pdi ) ) );
 
     MAST_TRACE( mime, 0, " opened mime %s : %s :: %s ---%s/%s", magic ? " OK " : " FAIL ", mime, mime_plus, duf_levinfo_path( pdi ),
-                DUF_GET_SFIELD2( fname ) );
+                DUF_GET_RSFIELD2( fname ) );
 
     if ( mime )
     {
@@ -304,7 +305,7 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_h
         {
           int changes = 0;
 
-          DUF_UFIELD2( filedataid );
+          DUF_RUFIELD2( filedataid );
 
           const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = :mimeID WHERE " DUF_SQL_IDFIELD " = :dataID ";
 

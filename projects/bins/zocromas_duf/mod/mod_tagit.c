@@ -26,7 +26,9 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
 
 #include "duf_mod_defs.h"
 
@@ -101,7 +103,7 @@ SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
 #ifdef MAS_TRACING
     assert( !duf_levinfo_dfd( pdi ) );
   /* filename from db same as duf_levinfo_itemname( pdi ) */
-    assert( 0 == strcmp( DUF_GET_SFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
+    assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
     assert( duf_levinfo_dbstat( pdi ) );
 #endif
 
@@ -123,7 +125,7 @@ SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
 
 #if 0
 # ifdef MAS_TRACING
-    DUF_SFIELD2( fname );
+    DUF_RSFIELD2( fname );
 # endif
     MAST_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
@@ -142,7 +144,7 @@ SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
 
 #if 0
 # ifdef MAS_TRACING
-    DUF_SFIELD2( fname );
+    DUF_RSFIELD2( fname );
 # endif
     MAST_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
@@ -161,7 +163,7 @@ SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
 
 #if 0
 # ifdef MAS_TRACING
-    DUF_SFIELD2( fname );
+    DUF_RSFIELD2( fname );
 # endif
     MAST_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif

@@ -32,19 +32,18 @@
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 
 /* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
-#include "duf_sccb_row.h"
+#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccb_begfin.h"
 
 #include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
@@ -53,10 +52,10 @@
 
 #include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -232,9 +231,9 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
 
 #if 1
         cntfull = CRX( sql_column_long_long, pstmt, 0 );
-        cnt1 = DUF_GET_UFIELD2( nf );
+        cnt1 = DUF_GET_QUFIELD2( nf );
 #else
-        cntfull = DUF_GET_UFIELD2( CNT );
+        cntfull = DUF_GET_QUFIELD2( CNT );
 #endif
         MAST_TRACE( sql, 1, "@@@counted A %llu : %llu by %s", cntfull, cnt1, csql );
       /* with .cte sql counts all childs recursively, without .cte counts ALL nodes, so need subtract upper... */

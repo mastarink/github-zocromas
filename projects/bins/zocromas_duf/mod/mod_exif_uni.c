@@ -34,7 +34,7 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
@@ -187,7 +187,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 #if 0
         modelid = duf_sql_column_long_long( pstmt, 0 );
 #else
-        modelid = DUF_GET_UFIELD2( modelid );
+        modelid = DUF_GET_QUFIELD2( modelid );
 #endif
       /* lr = 0; */
       }
@@ -256,7 +256,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
 #if 0
         exifid = duf_sql_column_long_long( pstmt, 0 );
 #else
-        exifid = DUF_GET_UFIELD2( exifid );
+        exifid = DUF_GET_QUFIELD2( exifid );
 #endif
       /* lr = 0; */
       }
@@ -292,7 +292,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
     /*     c++;                                                                                        */
     /*   n++;                                                                                          */
     /*                                                                                                 */
-    /*   DUF_SFIELD2( fname );                                                                      */
+    /*   DUF_RSFIELD2( fname );                                                                      */
     /*   real_path = duf_levinfo_path( pdi );                                                          */
     /*                                                                                                 */
     /*   DUF_SHOW_ERRORO( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
@@ -312,7 +312,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
 
       {
 #ifdef MAS_TRACING
-        DUF_SFIELD2( fname );
+        DUF_RSFIELD2( fname );
 #endif
         MAST_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
                     ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
@@ -518,7 +518,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 static
 SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  DUF_UFIELD2( dataid );
+  DUF_RUFIELD2( dataid );
 
   {
     size_t bufsz = 1024;
@@ -549,7 +549,6 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
           ERRMAKE( READ );
         }
 
-
         if ( rr > 0 )
         {
           int rx = 0;
@@ -561,7 +560,6 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
         }
         if ( rr <= 0 )
           break;
-
 
       }
 #if 0
@@ -781,7 +779,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
 #ifdef MAS_TRACING
               const char *real_path = NULL;
 
-              DUF_SFIELD2( fname );
+              DUF_RSFIELD2( fname );
               real_path = duf_levinfo_path( pdi );
               MAST_TRACE( exif, 2, "%s%s", real_path, fname );
 #endif
@@ -824,7 +822,6 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
         /* sleep(1); */
 
         /* ??? exif_entry_free( entry ); */
-
 
         /* edata = exif_data_new_from_file( filepath ); */
           if ( edata )

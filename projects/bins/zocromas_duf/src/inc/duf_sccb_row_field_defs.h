@@ -1,55 +1,55 @@
 #ifndef MAS_DUF_SCCB_ROW_FIELD_DEFS_H
 # define MAS_DUF_SCCB_ROW_FIELD_DEFS_H
 
-#  include "duf_sql_field_defs.h"
+# include "duf_sql_field_defs.h"
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
+# if 0
+#  if defined(DUF_GET_FIELD_FROM_SQL) || (!defined(DUF_GET_FIELD_FROM_ROW) && !defined(DUF_GET_FIELD_FROM_SQL))
+#   define DUF_GET_SFIELD2Q(_name, _opt)			DUF_GET_STMT_SFIELD2Q( pstmt, _name, _opt)
+#   define DUF_GET_UFIELD2Q(_name, _opt)			DUF_GET_STMT_UFIELD2Q( pstmt, _name, _opt)
 
-# if defined(DUF_GET_FIELD_FROM_SQL) || (!defined(DUF_GET_FIELD_FROM_ROW) && !defined(DUF_GET_FIELD_FROM_SQL))
-#  define DUF_GET_SFIELD2Q(_name, _opt)			DUF_GET_STMT_SFIELD2Q( pstmt, _name, _opt)
-#  define DUF_GET_UFIELD2Q(_name, _opt)			DUF_GET_STMT_UFIELD2Q( pstmt, _name, _opt)
+#   define DUF_GET_SFIELD2(_name)			DUF_GET_SFIELD2Q(_name, 0)
+#   define DUF_GET_UFIELD2(_name)			DUF_GET_UFIELD2Q(_name, 0)
 
-#  define DUF_GET_SFIELD2(_name)			DUF_GET_SFIELD2Q(_name, 0)
-#  define DUF_GET_UFIELD2(_name)			DUF_GET_UFIELD2Q(_name, 0)
+#   define DUF_GET_SFIELD2OPT(_name)			DUF_GET_SFIELD2Q(_name, 1)
+#   define DUF_GET_UFIELD2OPT(_name)			DUF_GET_UFIELD2Q(_name, 1)
 
-#  define DUF_GET_SFIELD2OPT(_name)			DUF_GET_SFIELD2Q(_name, 1)
-#  define DUF_GET_UFIELD2OPT(_name)			DUF_GET_UFIELD2Q(_name, 1)
+#  elif defined(DUF_GET_FIELD_FROM_ROW)
 
-# elif defined(DUF_GET_FIELD_FROM_ROW)
+#   define DUF_GET_SFIELD2(_name)			duf_sccbh_row_get_string(sccbh, #_name)
+#   define DUF_GET_UFIELD2(_name)			duf_sccbh_row_get_number(sccbh, #_name)
 
-#  define DUF_GET_SFIELD2(_name)			duf_sccbh_row_get_string(sccbh, #_name)
-#  define DUF_GET_UFIELD2(_name)			duf_sccbh_row_get_number(sccbh, #_name)
+#   define DUF_GET_SFIELD2OPT(_name)			duf_sccbh_row_get_string(sccbh, #_name)
+#   define DUF_GET_UFIELD2OPT(_name)			duf_sccbh_row_get_number(sccbh, #_name)
 
-#  define DUF_GET_SFIELD2OPT(_name)			duf_sccbh_row_get_string(sccbh, #_name)
-#  define DUF_GET_UFIELD2OPT(_name)			duf_sccbh_row_get_number(sccbh, #_name)
+#  endif
 
+/* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
+
+#  define DUF_SET_SFIELD2(_name)			_name =	DUF_GET_SFIELD2(_name)
+#  define DUF_SET_UFIELD2(_name)			_name = DUF_GET_UFIELD2(_name)
+
+#  define DUF_SFIELD2(_name)				const char*         DUF_SET_SFIELD2(_name)
+#  define DUF_UFIELD2(_name)				unsigned long long  DUF_SET_UFIELD2(_name)
+
+#  define DUF_SET_SFIELD2OPT(_name)			_name = DUF_GET_SFIELD2OPT(_name)
+#  define DUF_SET_UFIELD2OPT(_name)			_name = DUF_GET_UFIELD2OPT(_name)
+
+#  define DUF_SFIELD2OPT(_name)				const char*         DUF_SET_SFIELD2OPT(_name)
+#  define DUF_UFIELD2OPT(_name)				unsigned long long  DUF_SET_UFIELD2OPT(_name)
 # endif
-
-/* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
-
-# define DUF_SET_SFIELD2(_name)			_name =	DUF_GET_SFIELD2(_name)
-# define DUF_SET_UFIELD2(_name)			_name = DUF_GET_UFIELD2(_name)
-
-# define DUF_SFIELD2(_name)				const char*         DUF_SET_SFIELD2(_name)
-# define DUF_UFIELD2(_name)				unsigned long long  DUF_SET_UFIELD2(_name)
-
-# define DUF_SET_SFIELD2OPT(_name)			_name = DUF_GET_SFIELD2OPT(_name)
-# define DUF_SET_UFIELD2OPT(_name)			_name = DUF_GET_UFIELD2OPT(_name)
-
-# define DUF_SFIELD2OPT(_name)				const char*         DUF_SET_SFIELD2OPT(_name)
-# define DUF_UFIELD2OPT(_name)				unsigned long long  DUF_SET_UFIELD2OPT(_name)
-
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 
-#  define DUF_GET_QSFIELD2Q(_name, _opt)			DUF_GET_STMT_SFIELD2Q( pstmt, _name, _opt)
-#  define DUF_GET_QUFIELD2Q(_name, _opt)			DUF_GET_STMT_UFIELD2Q( pstmt, _name, _opt)
+# define DUF_GET_QSFIELD2Q(_name, _opt)			DUF_GET_STMT_SFIELD2Q( pstmt, _name, _opt)
+# define DUF_GET_QUFIELD2Q(_name, _opt)			DUF_GET_STMT_UFIELD2Q( pstmt, _name, _opt)
 
-#  define DUF_GET_QSFIELD2(_name)			DUF_GET_QSFIELD2Q(_name, 0)
-#  define DUF_GET_QUFIELD2(_name)			DUF_GET_QUFIELD2Q(_name, 0)
+# define DUF_GET_QSFIELD2(_name)			DUF_GET_QSFIELD2Q(_name, 0)
+# define DUF_GET_QUFIELD2(_name)			DUF_GET_QUFIELD2Q(_name, 0)
 
-#  define DUF_GET_QSFIELD2OPT(_name)			DUF_GET_QSFIELD2Q(_name, 1)
-#  define DUF_GET_QUFIELD2OPT(_name)			DUF_GET_QUFIELD2Q(_name, 1)
+# define DUF_GET_QSFIELD2OPT(_name)			DUF_GET_QSFIELD2Q(_name, 1)
+# define DUF_GET_QUFIELD2OPT(_name)			DUF_GET_QUFIELD2Q(_name, 1)
 
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 
@@ -68,14 +68,14 @@
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 
-#  define DUF_GET_RSFIELD2Q(_name, _opt)			duf_sccbh_row_get_string(sccbh, #_name)
-#  define DUF_GET_RUFIELD2Q(_name, _opt)			duf_sccbh_row_get_number(sccbh, #_name)
+# define DUF_GET_RSFIELD2Q(_name, _opt)			duf_sccbh_row_get_string(sccbh, #_name)
+# define DUF_GET_RUFIELD2Q(_name, _opt)			duf_sccbh_row_get_number(sccbh, #_name)
 
-#  define DUF_GET_RSFIELD2(_name)			DUF_GET_RSFIELD2Q(_name, 0)
-#  define DUF_GET_RUFIELD2(_name)			DUF_GET_RUFIELD2Q(_name, 0)
+# define DUF_GET_RSFIELD2(_name)			DUF_GET_RSFIELD2Q(_name, 0)
+# define DUF_GET_RUFIELD2(_name)			DUF_GET_RUFIELD2Q(_name, 0)
 
-#  define DUF_GET_RSFIELD2OPT(_name)			DUF_GET_RSFIELD2Q(_name, 1)
-#  define DUF_GET_RUFIELD2OPT(_name)			DUF_GET_RUFIELD2Q(_name, 1)
+# define DUF_GET_RSFIELD2OPT(_name)			DUF_GET_RSFIELD2Q(_name, 1)
+# define DUF_GET_RUFIELD2OPT(_name)			DUF_GET_RUFIELD2Q(_name, 1)
 
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 
@@ -90,7 +90,6 @@
 
 # define DUF_RSFIELD2OPT(_name)				const char*         DUF_SET_RSFIELD2OPT(_name)
 # define DUF_RUFIELD2OPT(_name)				unsigned long long  DUF_SET_RUFIELD2OPT(_name)
-
 
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */

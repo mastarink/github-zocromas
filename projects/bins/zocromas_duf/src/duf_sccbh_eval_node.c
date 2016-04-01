@@ -36,7 +36,7 @@
 #include "duf_sccb_structs.h"
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_sql_set.h"
@@ -122,7 +122,7 @@ SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
 #ifdef DUF_NO_RNUMS
   MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt ) );
 #else
-  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", CRX( levinfo_dirid, H_PDI ), pstmt ? DUF_GET_UFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
+  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", CRX( levinfo_dirid, H_PDI ), pstmt ? DUF_GET_RUFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt ) );
 #endif
   MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
 

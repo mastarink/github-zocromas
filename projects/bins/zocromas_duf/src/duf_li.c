@@ -17,7 +17,7 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
@@ -29,7 +29,7 @@
 #include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
@@ -123,37 +123,37 @@ static void
 _duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt )
 {
   assert( pli );
-  pli->db.dirid = DUF_GET_UFIELD2( dirid );
-  if ( DUF_GET_SFIELD2( dfname ) )
+  pli->db.dirid = DUF_GET_QUFIELD2( dirid );
+  if ( DUF_GET_QSFIELD2( dfname ) )
   {
     assert( !pli->itemname );
-    pli->itemname = mas_strdup( DUF_GET_SFIELD2( dfname ) );
+    pli->itemname = mas_strdup( DUF_GET_QSFIELD2( dfname ) );
   }
 
 #ifndef MAS_DUF_DEFS_H
 # error use #include "duf_defs.h"
 #elif defined( DUF_DO_NUMS )
-/* pli->numdir = DUF_GET_UFIELD2( ndirs );   */
-/* pli->numfile = DUF_GET_UFIELD2( nfiles ); */
-  duf_li_set_nums( pli, DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ) );
+/* pli->numdir = DUF_GET_QUFIELD2( ndirs );   */
+/* pli->numfile = DUF_GET_QUFIELD2( nfiles ); */
+  duf_li_set_nums( pli, DUF_GET_QUFIELD2( ndirs ), DUF_GET_QUFIELD2( nfiles ) );
 #else
 /* if ( duf_levinfo_node_type_d( pditemp, d ) == DUF_NODE_NODE ) */
 /*   duf_levinfo_make_childs_d( pditemp, d );                    */
 #endif
-  pli->db.nameid = DUF_GET_UFIELD2( nameid );
+  pli->db.nameid = DUF_GET_QUFIELD2( nameid );
   {
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
 
-    pdhlev->st.st_dev = DUF_GET_UFIELD2( dev );
-    pdhlev->st.st_ino = DUF_GET_UFIELD2( inode );
-    pdhlev->st.st_mode = DUF_GET_UFIELD2( filemode );
-    pdhlev->st.st_nlink = DUF_GET_UFIELD2( nlink );
-    pdhlev->st.st_uid = DUF_GET_UFIELD2( uid );
-    pdhlev->st.st_gid = DUF_GET_UFIELD2( gid );
-    pdhlev->st.st_rdev = DUF_GET_UFIELD2( rdev );
-    pdhlev->st.st_size = DUF_GET_UFIELD2( filesize );
-    pdhlev->st.st_blksize = DUF_GET_UFIELD2( blksize );
-    pdhlev->st.st_blocks = DUF_GET_UFIELD2( blocks );
+    pdhlev->st.st_dev = DUF_GET_QUFIELD2( dev );
+    pdhlev->st.st_ino = DUF_GET_QUFIELD2( inode );
+    pdhlev->st.st_mode = DUF_GET_QUFIELD2( filemode );
+    pdhlev->st.st_nlink = DUF_GET_QUFIELD2( nlink );
+    pdhlev->st.st_uid = DUF_GET_QUFIELD2( uid );
+    pdhlev->st.st_gid = DUF_GET_QUFIELD2( gid );
+    pdhlev->st.st_rdev = DUF_GET_QUFIELD2( rdev );
+    pdhlev->st.st_size = DUF_GET_QUFIELD2( filesize );
+    pdhlev->st.st_blksize = DUF_GET_QUFIELD2( blksize );
+    pdhlev->st.st_blocks = DUF_GET_QUFIELD2( blocks );
   /* pdhlev->st.st_atim =; */
   /* pdhlev->st.st_mtim =; */
   /* pdhlev->st.st_ctim =; */
@@ -187,7 +187,7 @@ SR( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsig
 
       duf_li_dbinit( pli, pstmt, DUF_NODE_NODE, -2 );
       if ( pparentid )
-        *pparentid = DUF_GET_UFIELD2( parentid );
+        *pparentid = DUF_GET_QUFIELD2( parentid );
     }
     else
     {
@@ -259,7 +259,7 @@ SR( LI, nameid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsi
 
       duf_li_dbinit( pli, pstmt, DUF_NODE_LEAF, -2 );
       if ( pdirid )
-        *pdirid = DUF_GET_UFIELD2( dirid );
+        *pdirid = DUF_GET_QUFIELD2( dirid );
     }
     else
     {

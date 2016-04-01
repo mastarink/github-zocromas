@@ -33,7 +33,7 @@
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
@@ -167,7 +167,7 @@ SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_dept
     ERRCLEAR1( SQL_ROW );
     MAST_TRACE( select, 10, "<selected>" );
   /* crc32id = duf_sql_column_long_long( pstmt, 0 ); */
-    crc32id = DUF_GET_UFIELD2( crc32id );
+    crc32id = DUF_GET_QUFIELD2( crc32id );
   /* rpr = 0; */
   }
   else
@@ -303,7 +303,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t 
   static unsigned long content_cnt = 0;
   unsigned long long bytes = 0;
 
-  DUF_SFIELD2( fname );
+  DUF_RSFIELD2( fname );
   MAST_TRACE( crc32, 0, "+ %s", fname );
 
 /* assert( duf_levinfo_dbstat( pdi ) ); */
@@ -330,7 +330,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t 
       pdi->cnts.dirent_content2++;
       if ( QNOERR && !duf_get_config_flag_disable_update(  ) )
       {
-        DUF_UFIELD2( filedataid );
+        DUF_RUFIELD2( filedataid );
 #if 0
         DOR( r,
              duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET crc32id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, crc32id,

@@ -24,8 +24,9 @@
 #include "duf_pathinfo_structs.h"
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
 
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 /* ###################################################################### */
 #include "duf_sccbh_pstmt.h"
@@ -35,14 +36,20 @@
 SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type )
 {
   assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
-
-/* Not here : assert( DUF_GET_UFIELD2( dirid) == CRX( levinfo_dirid, pdi ) ); */
-  MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
+/* {                                                     */
+/*   unsigned long long di1 = DUF_GET_QUFIELD2( dirid ); */
+/*   unsigned long long di2 = DUF_GET_RUFIELD2( dirid ); */
+/*                                                       */
+/*   QT( "@%lld -- %lld", di1, di2 );                    */
+/*   assert( 0 );                                        */
+/* }                                                     */
+/* Not here : assert( DUF_GET_QUFIELD2( dirid) == CRX( levinfo_dirid, pdi ) ); */
+  MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_QUFIELD2( dirid ) );
   MAST_TRACE( explain, 20, "@ sel cb2 node" );
 
   CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt );
 
-  assert( QISERR || DUF_GET_UFIELD2( dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */
+  assert( QISERR || DUF_GET_QUFIELD2( dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */
 /* QT( "@@%s", sqlite3_sql( pstmt ) ); */
   ER( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt, duf_node_type_t node_type );
 }

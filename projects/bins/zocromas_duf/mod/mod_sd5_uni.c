@@ -30,9 +30,10 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
@@ -161,7 +162,7 @@ SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinf
     ERRCLEAR1( SQL_ROW );
     MAST_TRACE( select, 10, "<selected>" );
   /* sd5id = duf_sql_column_long_long( pstmt, 0 ); */
-    sd5id = DUF_GET_UFIELD2( sd5id );
+    sd5id = DUF_GET_QUFIELD2( sd5id );
   /* rpr = 0; */
   }
   else
@@ -291,14 +292,14 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
 
 /* 20150820.143755 */
 static
-SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
   unsigned long long bytes = 0;
 
-  DUF_SFIELD2( fname );
+  DUF_RSFIELD2( fname );
   MAST_TRACE( sd5, 0, "+ %s", fname );
 
   memset( amd5, 0, sizeof( amd5 ) );
@@ -327,7 +328,7 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
 
       if ( !duf_get_config_flag_disable_update(  ) )
       {
-        DUF_UFIELD2( filedataid );
+        DUF_RUFIELD2( filedataid );
 #if 0
         DOR( r,
              duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id='%llu' WHERE " DUF_SQL_IDFIELD "='%lld'", &changes, sd5id, filedataid ) );

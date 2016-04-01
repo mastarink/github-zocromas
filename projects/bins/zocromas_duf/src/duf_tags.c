@@ -21,9 +21,9 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 
 /* ###################################################################### */
@@ -63,7 +63,7 @@ SRP( OTHER, unsigned long long, tagnameid, 0, add_tagname, duf_depthinfo_t * pdi
 #if 0
       tagnameid = duf_sql_column_long_long( pstmt, 0 );
 #else
-      tagnameid = DUF_GET_UFIELD2( tagnameId );
+      tagnameid = DUF_GET_QUFIELD2( tagnameId );
 #endif
       MAST_TRACE( sql, 4, "tagnameid from tagnameId:%llu", tagnameid );
       MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagnameid:%llu", tag_name, tagnameid );
@@ -123,7 +123,7 @@ SRP( OTHER, unsigned long long, tagid, 0, add_tag, duf_depthinfo_t * pdi, const 
 #if 0
       tagid = duf_sql_column_long_long( pstmt, 0 );
 #else
-      tagid = DUF_GET_UFIELD2( tagId );
+      tagid = DUF_GET_QUFIELD2( tagId );
 #endif
       MAST_TRACE( path, 2, "@           inserting tag_name %s; selected tagid:%llu", tag_name, tagnameid );
     }
