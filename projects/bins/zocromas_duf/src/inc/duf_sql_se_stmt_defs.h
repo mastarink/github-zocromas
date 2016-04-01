@@ -15,8 +15,8 @@
 
 # define DUF_SQL_SE_END_STMT_NOPDI( _pstmt_m) \
 	  { \
-	    CR(sql_finalize, _pstmt_m ); \
 	    MASE_CLEAR_ERROR(QERRIND, ERRCODE1(SQL_ROW), ERRCODE1(SQL_DONE)); \
+	    CR( sql_finalize, _pstmt_m ); \
 	    _pstmt_m = NULL; \
 	  } \
 	}

@@ -138,8 +138,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
   CR( pdistat2file, pdi, sccbh );
-/*  DUF_ENDR( r );*/
+
   ER( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

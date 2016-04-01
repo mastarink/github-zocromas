@@ -79,7 +79,9 @@
 # define ERRRCLEAR1(_rt, _err)		MASE_CLEAR_ERROR( _rt, ERRCODE1( _err ) )
 
 # define ERRMAKE_FLV(_err, _func, _line)	MASE_MAKE_ERRORFL(QERRIND, _err, _func, _line )
+# define ERRMAKE_M_FLV(_err, _func, _line, ...)	MASE_MAKE_ERRORMFL(QERRIND, _err, _func, _line, __VA_ARGS__ )
 # define ERRMAKE_FL(_err)		MASE_MAKE_ERRORFL(QERRIND, _err, FL )
+# define ERRMAKE_M_FL(_err, ...)	MASE_MAKE_ERRORMFL(QERRIND, _err, FL, __VA_ARGS__ )
 
 # define ERRMAKE(_err)			MASE_MAKE_ERROR( QERRIND, ERRCODE( _err ) )
 # define ERRMAKE_M(_err, ...)		MASE_MAKE_ERRORM(QERRIND, ERRCODE( _err ), __VA_ARGS__ )

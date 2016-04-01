@@ -169,10 +169,6 @@ static
 SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model,
      int need_id )
 {
-/* int lr = 0; */
-
-/* DUF_STARTULL( modelid ); */
-
   if ( model && *model && !duf_get_config_flag_disable_insert(  ) )
   {
     int changes = 0;
@@ -182,13 +178,11 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
       const char *sql = "SELECT " DUF_SQL_IDFIELD " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
 
       DUF_SQL_SE_START_STMT( pdi, select_model, sql, pstmt );
-/* DUF_TEST_R( lr ); */
       DUF_SQL_SE_BIND_S( Model, model, pstmt );
-/* DUF_TEST_R( lr ); */
       DUF_SQL_SE_STEP( pstmt );
-    /* DUF_TEST_R( lr ); */
       if ( QISERR1_N( SQL_ROW ) )
       {
+        ERRCLEAR1( SQL_ROW );
         MAST_TRACE( select, 0, "<selected>" );
 #if 0
         modelid = duf_sql_column_long_long( pstmt, 0 );
@@ -199,8 +193,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
       }
     /* if ( QISERR1_N(SQL_DONE ) ) */
     /*   lr = 0;                                 */
-    /* DUF_TEST_R( lr ); */
-      DUF_SQL_SE_END_STMT( pdi, select_model, pstmt );
+      DUF_SQL_SE_END_STMT( pdi, select_model, pstmt );               /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !modelid )
@@ -208,24 +201,19 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_EXIF_MODEL_FULL " ( model ) VALUES ( :Model )";
 
       DUF_SQL_SE_START_STMT( pdi, insert_model, sql, pstmt_insert );
-/* DUF_TEST_R( lr ); */
       MAST_TRACE( insert, 0, " S: %s ", sql );
       DUF_SQL_SE_BIND_S( Model, model, pstmt_insert );
-/* DUF_TEST_R( lr ); */
 
       DUF_SQL_SE_STEP( pstmt_insert );
-    /* DUF_TEST_R( lr ); */
       DUF_SQL_SE_CHANGES( changes, pstmt_insert );
-    /* DUF_TEST_R( lr ); */
     /* DUF_SHOW_ERRORO( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         modelid = duf_sql_last_insert_rowid(  );
         MAST_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
-      DUF_SQL_SE_END_STMT( pdi, insert_model, pstmt_insert );
+      DUF_SQL_SE_END_STMT( pdi, insert_model, pstmt_insert );        /* clears SQL_ROW / SQL_DONE */
     }
-/* DUF_TEST_R( lr ); */
   }
   else
   {
@@ -233,13 +221,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
   /* DUF_SHOW_ERRORO( " Wrong data " ); */
   /* ERRMAKE(DATA);          */
   }
-/* DUF_TEST_R( lr ); */
-
-/* if ( pr ) */
-/* *pr = lr; */
-/* DUF_TEST_R( lr ); */
 /* assert( modelid ); */
-/* DUF_ENDULL( modelid ); */
   ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, const char *model, int need_id );
 }
 
@@ -247,10 +229,8 @@ static
 SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
      const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
 {
-/* int lr = 0; */
   unsigned long long modelid = 0;
 
-/* DUF_STARTULL( exifid ); */
   modelid = duf_insert_model_uni( pdi, sccbh, model, 1 /*need_id */ , QPERRIND );
   if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert(  ) )
   {
@@ -262,19 +242,16 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
               " WHERE ( :modelID IS NULL OR modelid=:modelID ) AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
       DUF_SQL_SE_START_STMT( pdi, select_exif, sql, pstmt );
-/* DUF_TEST_R( lr ); */
       if ( modelid )
       {
       /* DUF_SQL_SE_BIND_LL( modelID, modelid,  pstmt ); */
         DUF_SQL_SE_BIND_LL_NZ_OPT( modelID, modelid, pstmt );
-      /* DUF_TEST_R( lr ); */
       }
       DUF_SQL_SE_BIND_LL( timeEpoch, timeepoch, pstmt );
-    /* DUF_TEST_R( lr ); */
       DUF_SQL_SE_STEP( pstmt );
-    /* DUF_TEST_R( lr ); */
       if ( QISERR1_N( SQL_ROW ) )
       {
+        ERRCLEAR1( SQL_ROW );
         MAST_TRACE( select, 0, "<selected>" );
 #if 0
         exifid = duf_sql_column_long_long( pstmt, 0 );
@@ -284,8 +261,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
       /* lr = 0; */
       }
     /* DUF_CLEAR_ERROR( lr, DUF_SQL_DONE ); */
-    /* DUF_TEST_R( lr ); */
-      DUF_SQL_SE_END_STMT( pdi, select_exif, pstmt );
+      DUF_SQL_SE_END_STMT( pdi, select_exif, pstmt );                /* clears SQL_ROW / SQL_DONE */
     /* if ( !exifid )                        */
     /*   DUF_SHOW_ERRORO( "exifid NOT SELECTED" ); */
     }
@@ -298,21 +274,15 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
               " VALUES ( :modelID, datetime(:timeEpoch, 'unixepoch'), :origTime, :dtFixed )";
 
       DUF_SQL_SE_START_STMT( pdi, insert_exif, sql, pstmt_insert );
-/* DUF_TEST_R( lr ); */
       MAST_TRACE( insert, 0, " S: %s ", sql );
-/* DUF_TEST_R( lr ); */
       if ( modelid )
       {
       /* DUF_SQL_SE_BIND_LL( modelID, modelid,  pstmt_insert ); */
         DUF_SQL_SE_BIND_LL_NZ_OPT( modelID, modelid, pstmt_insert );
-/* DUF_TEST_R( lr ); */
       }
       DUF_SQL_SE_BIND_LL_NZ_OPT( timeEpoch, timeepoch, pstmt_insert );
-/* DUF_TEST_R( lr ); */
       DUF_SQL_SE_BIND_LL_NZ_OPT( dtFixed, dtfixed, pstmt_insert );
-/* DUF_TEST_R( lr ); */
       DUF_SQL_SE_BIND_S( origTime, stime_original, pstmt_insert );
-/* DUF_TEST_R( lr ); */
     /* {                                                                                               */
     /*   const char *real_path = NULL;                                                                 */
     /*   static int c = 0;                                                                             */
@@ -328,7 +298,6 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
     /*   DUF_SHOW_ERRORO( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
     /* }                                                                                               */
       DUF_SQL_SE_STEPC( pstmt_insert );
-    /* DUF_TEST_R(lr); */
       DUF_SQL_SE_CHANGES( changes, pstmt_insert );
       if ( need_id && changes )
       {
@@ -349,9 +318,8 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
                     ( long ) timeepoch, changes, duf_levinfo_path( pdi ), fname );
       }
 
-      DUF_SQL_SE_END_STMT( pdi, insert_exif, pstmt_insert );
+      DUF_SQL_SE_END_STMT( pdi, insert_exif, pstmt_insert );         /* clears SQL_ROW / SQL_DONE */
     }
-/* DUF_TEST_R( lr ); */
   }
   else
   {
@@ -359,10 +327,6 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MA
     ERRMAKE( DATA );
   }
 
-/* DUF_TEST_R( lr ); */
-/* if ( pr ) */
-/* *pr = lr; */
-/* DUF_ENDULL( exifid ); */
   ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh,
        const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
 }
@@ -554,8 +518,6 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 static
 SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   DUF_UFIELD2( dataid );
 
   {
@@ -586,7 +548,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
           MASE_ERRSYS( "read file" );
           ERRMAKE( READ );
         }
-/* DUF_TEST_R( r ); */
+
 
         if ( rr > 0 )
         {
@@ -600,7 +562,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
         if ( rr <= 0 )
           break;
 
-/* DUF_TEST_R( r ); */
+
       }
 #if 0
       DUF_CLEAR_ERROR( r, DUF_ERROR_EOF, DUF_ERROR_EXIF_END );
@@ -790,7 +752,6 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
 
               if ( edata )
               {
-
 #if 0
                 entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_MODEL );
 #else
@@ -846,9 +807,9 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
                 DUF_SQL_SE_BIND_LL_NZ_OPT( noexif, noexif, pstmt_update );
                 DUF_SQL_SE_BIND_LL( dataID, dataid, pstmt_update );
                 DUF_SQL_SE_STEPC( pstmt_update );
-              /* DUF_TEST_R(r); */
+
                 DUF_SQL_SE_CHANGES( changes, pstmt_update );
-                DUF_SQL_SE_END_STMT( pdi, update_exif, pstmt_update );
+                DUF_SQL_SE_END_STMT( pdi, update_exif, pstmt_update ); /* clears SQL_ROW / SQL_DONE */
               }
             }
             else
@@ -863,7 +824,7 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
         /* sleep(1); */
 
         /* ??? exif_entry_free( entry ); */
-/* DUF_TEST_R( r ); */
+
 
         /* edata = exif_data_new_from_file( filepath ); */
           if ( edata )
@@ -876,17 +837,17 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_ha
       }
       mas_free( buffer );
       buffer = NULL;
-/* DUF_TEST_R( r ); */
+
     }
     else
     {
       ERRMAKE( MEMORY );
     }
-/* DUF_TEST_R( r ); */
+
   }
 /* DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_DATE, DUF_ERROR_EXIF_NO_MODEL ); */
 
   pdi->total_files++;
-/*  DUF_ENDR( r );*/
+
   ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -88,18 +88,14 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, tagit_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
 
-/*  DUF_ENDR( r );*/
   ER( MOD, tagit_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
   if ( DUF_CONFIGG( vars.tag.file ) )
   {
 #ifdef MAS_TRACING
@@ -113,14 +109,13 @@ SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
 
     MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
-/*  DUF_ENDR( r );*/
+
   ER( MOD, tagit_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
@@ -133,15 +128,13 @@ SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
     MAST_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-/*  DUF_ENDR( r );*/
+
   ER( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
@@ -154,15 +147,13 @@ SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
     MAST_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-/*  DUF_ENDR( r );*/
+
   ER( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
     MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
@@ -175,6 +166,6 @@ SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
     MAST_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
   }
-/*  DUF_ENDR( r );*/
+
   ER( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

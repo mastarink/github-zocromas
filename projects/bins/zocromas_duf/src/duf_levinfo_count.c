@@ -106,7 +106,7 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
       DUF_SQL_SE_STEP( pstmt );
       if ( QISERR1_N( SQL_ROW ) )
       {
-        childs = DUF_GET_UFIELD2( childs );
+        childs = DUF_GET_QUFIELD2( childs );
       }
       else if ( QISERR1_N( SQL_DONE ) )
       {
@@ -118,7 +118,6 @@ SRX( PDI, unsigned long long, childs, 0, levinfo_count_childs_d, const duf_depth
         QT( "@<NOT selected> (%s)", QERRNAME );
         assert( 0 );
       }
-    /* DUF_TEST_R( rpr ); */
       DUF_SQL_SE_END_STMT( ( duf_depthinfo_t * ) pdi, select_childs, pstmt );
 #if 0
       duf_li_set_childs( duf_levinfo_ptr_d( pdi, d ), childs );

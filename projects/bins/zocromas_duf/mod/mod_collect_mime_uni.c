@@ -19,7 +19,6 @@
 /* man libmagic : LIBMAGIC(3)              Gentoo Library Functions Manual            LIBMAGIC(3) */
 #include <magic.h>                                                   /* man libmagic */
 
-
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
@@ -157,10 +156,6 @@ static
 SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED,
      const char *tail MAS_UNUSED, int need_id )
 {
-/* int lr = 0; */
-
-/* DUF_STARTULL( mimeid ); */
-
   if ( mime )
   {
     int changes = 0;
@@ -178,6 +173,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
       DUF_SQL_SE_STEP( pstmt );
       if ( QISERR1_N( SQL_ROW ) )
       {
+        ERRCLEAR1( SQL_ROW );
         MAST_TRACE( mod, 0, "<selected>" );
 #if 0
         mimeid = duf_sql_column_long_long( pstmt, 0 );
@@ -188,8 +184,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
       }
     /* if ( QISERR1_N(SQL_DONE ) ) */
     /*   lr = 0;                                 */
-    /* DUF_TEST_R( lr ); */
-      DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt );
+      DUF_SQL_SE_END_STMT( pdi, select_mime, pstmt );                /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !mimeid && !duf_get_config_flag_disable_insert(  ) )
@@ -204,7 +199,6 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
     /* DUF_SQL_SE_BIND_S( charSet, chs,  pstmt_insert ); */
     /* DUF_SQL_SE_BIND_S( Tail, tail,  pstmt_insert ); */
       DUF_SQL_SE_STEPC( pstmt_insert );
-    /* DUF_TEST_R(lr); */
       DUF_SQL_SE_CHANGES( changes, pstmt_insert );
     /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
@@ -213,19 +207,14 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi,
         MAST_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_SE_END_STMT( pdi, insert_mime, pstmt_insert );
+      DUF_SQL_SE_END_STMT( pdi, insert_mime, pstmt_insert );         /* clears SQL_ROW / SQL_DONE */
     }
-  /* DUF_TEST_R( lr ); */
   }
   else
   {
   /* DUF_SHOW_ERROR( " Wrong data " ); */
     ERRMAKE( DATA );
   }
-/* DUF_TEST_R( lr ); */
-/* if ( pr ) */
-/* *pr = lr; */
-/* DUF_ENDULL( mimeid ); */
   ERP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi, const char *mime, const char *chs MAS_UNUSED,
        const char *tail MAS_UNUSED, int need_id );
 }
@@ -245,7 +234,6 @@ mime_destructor( void *ctx )
 static
 SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
   unsigned long long mimeid = 0;
 
   MAST_TRACE( mod, 0, " mime" );
@@ -311,7 +299,7 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_h
         else
           tail = mas_strdup( p );
         mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , QPERRIND );
-/* DUF_TEST_R( r ); */
+
         if ( QNOERR && mimeid && !duf_get_config_flag_disable_update(  ) )
         {
           int changes = 0;
@@ -325,13 +313,12 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_h
           DUF_SQL_SE_BIND_LL( mimeID, mimeid, pstmt_update );
           DUF_SQL_SE_BIND_LL( dataID, filedataid, pstmt_update );
           DUF_SQL_SE_STEPC( pstmt_update );
-        /* DUF_TEST_R(r); */
+
           DUF_SQL_SE_CHANGES( changes, pstmt_update );
-          DUF_SQL_SE_END_STMT( pdi, update_mime, pstmt_update );
+          DUF_SQL_SE_END_STMT( pdi, update_mime, pstmt_update );     /* clears SQL_ROW / SQL_DONE */
 
           duf_pdi_reg_changes( pdi, changes );
 
-/* DUF_TEST_R( r ); */
         }
         mas_free( mimet );
         mas_free( charset );
@@ -343,6 +330,6 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_h
     mas_free( mime_plus );
   }
   pdi->total_files++;
-/*  DUF_ENDR( r );*/
+
   ER( MOD, dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -147,13 +147,9 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 )
 {
-/* int rpr = 0; */
-/* unsigned long long sd5id = 0; */
   const char *sql = "SELECT " DUF_SQL_IDFIELD " AS sd5id FROM " DUF_SQL_TABLES_SD5_FULL " WHERE sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2 */
           ;
-
-/* DUF_START(  ); */
 
   DUF_SQL_SE_START_STMT( pdi, select_sd5, sql, pstmt );
   MAST_TRACE( select, 3, "S:%s", sql );
@@ -162,6 +158,7 @@ SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinf
   DUF_SQL_SE_STEP( pstmt );
   if ( QISERR1_N( SQL_ROW ) )
   {
+    ERRCLEAR1( SQL_ROW );
     MAST_TRACE( select, 10, "<selected>" );
   /* sd5id = duf_sql_column_long_long( pstmt, 0 ); */
     sd5id = DUF_GET_UFIELD2( sd5id );
@@ -169,29 +166,21 @@ SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinf
   }
   else
   {
-  /* DUF_TEST_R( rpr ); */
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-/* DUF_TEST_R( rpr ); */
-  DUF_SQL_SE_END_STMT( pdi, select_sd5, pstmt );
-/* if ( pr ) */
-/* *pr = rpr; */
-/* DUF_ENDULL( sd5id ); */
+  DUF_SQL_SE_END_STMT( pdi, select_sd5, pstmt );                     /* clears SQL_ROW / SQL_DONE */
   ERP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 );
 }
 
 static
 SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, unsigned long long *sd64, const char *msg MAS_UNUSED, int need_id )
 {
-/* unsigned long long sd5id = -1; */
-/* int lr = 0; */
   int changes = 0;
 
 #ifdef MAS_TRACING
   const char *real_path = duf_levinfo_path( pdi );
 #endif
 
-/* DUF_START(  ); */
   if ( sd64 && sd64[1] && sd64[0] )
   {
     if ( !duf_get_config_flag_disable_insert(  ) )
@@ -205,7 +194,7 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
       DUF_SQL_SE_BIND_LL( sd5sum2, sd64[0], pstmt );
       DUF_SQL_SE_STEPC( pstmt );
       DUF_SQL_SE_CHANGES( changes, pstmt );
-      DUF_SQL_SE_END_STMT( pdi, insert_sd5, pstmt );
+      DUF_SQL_SE_END_STMT( pdi, insert_sd5, pstmt );                 /* clears SQL_ROW / SQL_DONE */
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
@@ -229,14 +218,8 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
   {
   /* DUF_SHOW_ERROR( "Wrong data" ); */
     ERRMAKE( DATA );
-  /* DUF_TEST_R( lr ); */
   }
 
-/* if ( pr ) */
-/* *pr = lr; */
-
-/* DUF_ENDULL( sd5id ); */
-/* return sd5id; */
   ERP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, unsigned long long *sd64, const char *msg MAS_UNUSED, int need_id );
 }
 
@@ -257,7 +240,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
     {
       if ( !duf_get_config_flag_disable_calculate(  ) && ( MD5_Init( &ctx ) != 1 ) )
         ERRMAKE( MD5 );
-/* DUF_TEST_R( r ); */
+
       {
         int maxcnt = 2;
         int cnt = 0;
@@ -275,7 +258,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
             MASE_ERRSYS( "read file" );
 
             ERRMAKE( READ );
-/* DUF_TEST_R( r ); */
+
             break;
           }
           if ( ry > 0 )
@@ -290,7 +273,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
           }
           if ( ry <= 0 )
             break;
-/* DUF_TEST_R( r ); */
+
         }
       }
       mas_free( buffer );
@@ -302,7 +285,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
   }
   if ( !duf_get_config_flag_disable_calculate(  ) && MD5_Final( pmd, &ctx ) != 1 )
     ERRMAKE( MD5 );
-/*  DUF_ENDR( r );*/
+
   ER( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd );
 }
 
@@ -323,7 +306,7 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
   if ( !duf_get_config_flag_disable_calculate(  ) )
     CR( make_sd5_uni, duf_levinfo_dfd( pdi ), &bytes, amd5 );
   MAST_TRACE( sd5, 0, "+ %s", fname );
-/* DUF_TEST_R( r ); */
+
 /* reverse */
   for ( unsigned i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     amd5r[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
@@ -357,7 +340,7 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt );
         DUF_SQL_SE_STEPC( pstmt );
         DUF_SQL_SE_CHANGES( changes, pstmt );
-        DUF_SQL_SE_END_STMT( pdi, update_sd5id, pstmt );
+        DUF_SQL_SE_END_STMT( pdi, update_sd5id, pstmt );             /* clears SQL_ROW / SQL_DONE */
 #endif
 
       }
@@ -368,6 +351,6 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sc
   }
   pdi->total_bytes += bytes;
   pdi->total_files++;
-/*  DUF_ENDR( r );*/
+
   ER( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

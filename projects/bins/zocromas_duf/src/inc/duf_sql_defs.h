@@ -20,7 +20,11 @@
 /* #  define DOR_SQLITE_LOWERE(_r, _fun, ...)              { int r3=0; r3=_fun; DOR_LOWERE( _r, duf_sqlite2duf( r3, FL ), __VA_ARGS__ ); } */
 /* #  define DOR_SQLITE_LOWERE_N(_n, _r, _fun, ...)        { int r3=0; r3=_fun; DOR_LOWERE_N( _n, _r, duf_sqlite2duf( r3, FL ), __VA_ARGS__ ); } */
 /* #  define CR_SQLITE( _fun, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL); } */
-#  define CRV_SQLITE( _fun, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL); }
+#  define CRV_SQLITE( _fun, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL, NULL, NULL); }
+#  define CRV_SQLITEQ( _fun, _sql, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL, _sql, NULL); }
+#  define CRV_SQLITES( _fun, _stmt, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL, NULL, _stmt); }
+#  define CRV_SQLITEQpS( _fun, _sql, _pstmt, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL, _sql, *_pstmt); }
+#  define CRV_SQLITEQS( _fun, _sql, _stmt, ... )  { int r3=0; r3=_fun(__VA_ARGS__); QERRIND=duf_sqlite2duf(r3, FL, _sql, _stmt); }
 # endif
 /* #  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE2R_ERROR_CODE(_x)) */
 #endif

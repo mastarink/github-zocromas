@@ -36,15 +36,15 @@ duf_r2sqlite_error_code( mas_error_code_t rc )
   return r3;
 }
 
-SR( SQL, sqlite2duf, int r3, const char *func, int line )
+SR( SQL, sqlite2duf, int r3, const char *func, int line, const char *sql, mas_sqlite_stmt_t * stmt )
 {
 /* DUF_STARTR( r ); */
   mas_error_code_t rc = 0;
 
   rc = duf_sqlite2r_error_code( r3 );
   if ( rc < 0 )
-    ERRMAKE_FLV( rc, func, line );
+    ERRMAKE_M_FLV( rc, func, line, "sql:[%s] / [%s]", sql, stmt ? sqlite3_sql( stmt ) : NULL );
 /* DUF_MAKE_ERRORFL( r, rc, func, line ); */
 /* DUF_ENDR( r ); */
-  ER( SQL, sqlite2duf, int r3, const char *func, int line );
+  ER( SQL, sqlite2duf, int r3, const char *func, int line, const char *sql, mas_sqlite_stmt_t * stmt );
 }

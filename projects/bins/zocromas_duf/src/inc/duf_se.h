@@ -60,7 +60,7 @@ typedef enum
 # define STT {
 # define STTT(_typ, _rt) _rt=(_typ)0; STT
 
-# define T2T(_typid) typeof((*((mas_fundecl_t *)NULL)).r._typid)
+# define T2T(_typid) typeof((*((mas_fundecl_t *)0)).r._typid)
 
 # define DT( _layer_id, _pre, _typid, _funname, ... )                    T2T(_typid)  F2ND(_funname)( __VA_ARGS__ )
 # define DTX( _layer_id, _funtyp, _rvar, _vini, _pre, _typid, _funname, ... ) _funtyp F2ND(_funname)( __VA_ARGS__ )

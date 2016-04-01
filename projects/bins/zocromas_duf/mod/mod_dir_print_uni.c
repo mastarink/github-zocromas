@@ -82,80 +82,40 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
-  DUF_UFIELD2( dirid );
-  DUF_SFIELD2( fname );
-  DUF_UFIELD2( filesize );
-  DUF_UFIELD2( filemode );
-  DUF_UFIELD2( md5id );
-  DUF_UFIELD2( sha1id );
-  DUF_UFIELD2( dataid );
-  DUF_UFIELD2( md5sum1 );
-  DUF_UFIELD2( md5sum2 );
-  DUF_UFIELD2( sha1sum1 );
-  DUF_UFIELD2( sha1sum2 );
-  DUF_UFIELD2( sha1sum3 );
-  DUF_UFIELD2( mtime );
+  DUF_RUFIELD2( dirid );
+  DUF_RSFIELD2( fname );
+  DUF_RUFIELD2( filesize );
+  DUF_RUFIELD2( filemode );
+  DUF_RUFIELD2( md5id );
+  DUF_RUFIELD2( sha1id );
+  DUF_RUFIELD2( dataid );
+  DUF_RUFIELD2( md5sum1 );
+  DUF_RUFIELD2( md5sum2 );
+  DUF_RUFIELD2( sha1sum1 );
+  DUF_RUFIELD2( sha1sum2 );
+  DUF_RUFIELD2( sha1sum3 );
+  DUF_RUFIELD2( mtime );
   assert( mtime == duf_sccbh_row_get_number( sccbh, "mtime" ) );
-  DUF_UFIELD2( dev );
-  DUF_UFIELD2( uid );
-  DUF_UFIELD2( gid );
-  DUF_UFIELD2( nlink );
-  DUF_UFIELD2( inode );
-  DUF_UFIELD2( exifid );
-  DUF_UFIELD2( exifdt );
-  DUF_SFIELD2( camera );
-  DUF_UFIELD2( filenameid );
-  DUF_UFIELD2( mimeid );
-  DUF_SFIELD2( mime );
-  DUF_UFIELD2( nsame );
-  DUF_UFIELD2( nsame_md5 );
-  DUF_UFIELD2( nsame_sha1 );
-  DUF_UFIELD2( nsame_exif );
+  DUF_RUFIELD2( dev );
+  DUF_RUFIELD2( uid );
+  DUF_RUFIELD2( gid );
+  DUF_RUFIELD2( nlink );
+  DUF_RUFIELD2( inode );
+  DUF_RUFIELD2( exifid );
+  DUF_RUFIELD2( exifdt );
+  DUF_RSFIELD2( camera );
+  DUF_RUFIELD2( filenameid );
+  DUF_RUFIELD2( mimeid );
+  DUF_RSFIELD2( mime );
+  DUF_RUFIELD2( nsame );
+  DUF_RUFIELD2( nsame_md5 );
+  DUF_RUFIELD2( nsame_sha1 );
+  DUF_RUFIELD2( nsame_exif );
 /* DUF_SFIELD( mtimef ); */
 /* DUF_SFIELD( dowmtime ); */
 /* DUF_SFIELD( monthmtime ); */
 
   {
-#if 0
-    duf_bformat_combo_t bformat = {                                  /* */
-      .v.flag = {
-                 .filename = 1,
-               /* .short_filename = 1, */
-                 .depth = 1,
-                 .seq = 1,
-                 .seq_leaf = 1,
-                 .dirid = 1,
-                 .dirid_space = 1,
-                 .exifid = 1,
-                 .exifdt = 1,
-                 .camera = 1,
-                 .nameid = 1,
-                 .mime = 1,
-                 .mimeid = 1,
-               /* .nfiles_space = 1, */
-               /* .ndirs_space = 1,  */
-                 .inode = 1,
-                 .mode = 1,
-                 .nlink = 1,
-                 .user = 1,
-                 .group = 1,
-                 .filesize = 1,
-                 .md5 = 1,
-                 .md5id = 1,
-               /* .sha1id = 1, */
-                 .mtime = 1,
-                 .dataid = 1,
-               /* .prefix = 1, */
-               /* .suffix = 1, */
-                 },
-      .nsame = 1,
-      .nsame_md5 = 1,
-      .nsame_sha1 = 1,
-      .nsame_exif = 1,
-    };
-#endif
     duf_fileinfo_t fi = { 0 };
     fi.nsame = nsame;
     fi.nsame_md5 = nsame_md5;
@@ -189,17 +149,7 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
     fi.mime = mime;
     fi.mimeid = mimeid;
     fi.md5id = md5id;
-#if 1
     fi.sha1id = sha1id;
-#else
-    {
-      unsigned long long prevn;
-
-      prevn = duf_sccbh_prevrow_get_number( sccbh, "sha1id" );
-      if ( !prevn || prevn != sha1id )
-        fi.sha1id = sha1id;
-    }
-#endif
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
@@ -207,16 +157,6 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
     fi.sha1sum2 = sha1sum2;
     fi.sha1sum3 = sha1sum3;
 
-#if 0
-    if ( duf_output_use_binformat(  ) )
-    {
-      if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
-        DUF_PUTSL( 0 );
-      else
-        DUF_PUTS( 0, "????????????" );
-    }
-    else
-#endif
     {
       const char *sformat = NULL;
       size_t slen = 0;
@@ -227,11 +167,8 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
         int use;
         duf_filedirformat_t *fmt;
 
-#if 0
-        use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
-#else
         use = duf_pdi_pu( pdi )->use_format - 1;
-#endif
+
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
@@ -250,6 +187,5 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf
     }
   }
 
-/*  DUF_ENDR( r );*/
   ER( MOD, print_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

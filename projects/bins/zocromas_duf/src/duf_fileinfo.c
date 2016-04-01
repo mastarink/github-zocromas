@@ -1,3 +1,4 @@
+#define DUF_GET_FIELD_FROM_ROW
 /* #undef MAS_TRACING */
 #include <string.h>
 #include <stdlib.h>
@@ -33,33 +34,33 @@ SR( OTHER, fileinfo, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_U
 /* DUF_STARTR( r ); */
   if ( pfi )
   {
-    DUF_UFIELD2( dirid );
-    DUF_SFIELD2( fname );
-    DUF_UFIELD2( filesize );
-    DUF_UFIELD2( filemode );
-    DUF_UFIELD2( md5id );
-    DUF_UFIELD2( dataid );
-    DUF_UFIELD2( md5sum1 );
-    DUF_UFIELD2( md5sum2 );
-    DUF_UFIELD2( sha1sum1 );
-    DUF_UFIELD2( sha1sum2 );
-    DUF_UFIELD2( sha1sum3 );
-    DUF_UFIELD2( mtime );
-    DUF_UFIELD2( dev );
-    DUF_UFIELD2( uid );
-    DUF_UFIELD2( gid );
-    DUF_UFIELD2( nlink );
-    DUF_UFIELD2( inode );
-    DUF_UFIELD2( exifid );
-    DUF_UFIELD2( exifdt );
-    DUF_SFIELD2( camera );
-    DUF_UFIELD2( filenameid );
-    DUF_UFIELD2( mimeid );
-    DUF_SFIELD2( mime );
-    DUF_UFIELD2( nsame );
-    DUF_UFIELD2( nsame_md5 );
-    DUF_UFIELD2( nsame_sha1 );
-    DUF_UFIELD2( nsame_exif );
+    DUF_RUFIELD2( dirid );
+    DUF_RSFIELD2( fname );
+    DUF_RUFIELD2( filesize );
+    DUF_RUFIELD2( filemode );
+    DUF_RUFIELD2( md5id );
+    DUF_RUFIELD2( dataid );
+    DUF_RUFIELD2( md5sum1 );
+    DUF_RUFIELD2( md5sum2 );
+    DUF_RUFIELD2( sha1sum1 );
+    DUF_RUFIELD2( sha1sum2 );
+    DUF_RUFIELD2( sha1sum3 );
+    DUF_RUFIELD2( mtime );
+    DUF_RUFIELD2( dev );
+    DUF_RUFIELD2( uid );
+    DUF_RUFIELD2( gid );
+    DUF_RUFIELD2( nlink );
+    DUF_RUFIELD2( inode );
+    DUF_RUFIELD2( exifid );
+    DUF_RUFIELD2( exifdt );
+    DUF_RSFIELD2( camera );
+    DUF_RUFIELD2( filenameid );
+    DUF_RUFIELD2( mimeid );
+    DUF_RSFIELD2( mime );
+    DUF_RUFIELD2( nsame );
+    DUF_RUFIELD2( nsame_md5 );
+    DUF_RUFIELD2( nsame_sha1 );
+    DUF_RUFIELD2( nsame_exif );
 
     memset( pfi, 0, sizeof( duf_fileinfo_t ) );
     pfi->nsame = nsame;

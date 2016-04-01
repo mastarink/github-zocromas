@@ -30,7 +30,7 @@
 #include "duf_levinfo_count.h"
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ */
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_UFIELD2 etc. ✗ *) */
 
 #include "duf_print.h"
 
@@ -43,8 +43,8 @@
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
-static int duf_tree_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tree_node_before2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static int duf_tree_leaf2( duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -79,246 +79,69 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-#if 0
-  DUF_UFIELD2( dirid );
-  DUF_SFIELD2( fname );
-  DUF_UFIELD2( filesize );
-  DUF_UFIELD2( filemode );
-  DUF_UFIELD2( md5id );
-  DUF_UFIELD2( sha1id );
-  DUF_UFIELD2( dataid );
-  DUF_UFIELD2( md5sum1 );
-  DUF_UFIELD2( md5sum2 );
-  DUF_UFIELD2( mtime );
-  DUF_UFIELD2( dev );
-  DUF_UFIELD2( uid );
-  DUF_UFIELD2( gid );
-  DUF_UFIELD2( nlink );
-  DUF_UFIELD2( inode );
-  DUF_UFIELD2( exifid );
-  DUF_UFIELD2( exifdt );
-  DUF_SFIELD2( camera );
-  DUF_UFIELD2( filenameid );
-  DUF_UFIELD2( mimeid );
-  DUF_SFIELD2( mime );
-  DUF_UFIELD2( nsame );
-  DUF_UFIELD2( nsame_md5 );
-  DUF_UFIELD2( nsame_sha1 );
-  DUF_UFIELD2( nsame_exif );
-/* DUF_SFIELD( mtimef ); */
-/* DUF_SFIELD( dowmtime ); */
-/* DUF_SFIELD( monthmtime ); */
-#endif
+  duf_fileinfo_t fi = { 0 };
+  CR( fileinfo, pstmt, pdi, sccbh, &fi );
+
   {
-#if 0
-    duf_bformat_combo_t bformat = {                                  /* */
-      .v.flag = {
-                 .filename = 1,
-                 .short_filename = 1,
-                 .depth = 1,
-                 .seq = 1,
-               /* .seq_leaf = 1, */
-               /* .dirid = 1, */
-                 .dirid_space = 1,
-                 .exifid = 1,
-                 .exifdt = 1,
-                 .camera = 1,
-               /* .nameid = 1, */
-                 .mime = 1,
-                 .mimeid = 0,
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_NUMS )
-                 .nfiles_space = 1,
-                 .ndirs_space = 1,
-# endif
-                 .inode = 0,
-                 .mode = 1,
-                 .nlink = 1,
-                 .user = 1,
-                 .group = 1,
-                 .filesize = 1,
-                 .md5 = 1,
-                 .md5id = 1,
-               /* .sha1id = 1, */
-                 .mtime = 1,
-                 .dataid = 1,
-                 .prefix = 1,
-                 .suffix = 1,
-                 },
-      .nsame = 1,
-      .nsame_md5 = 1,
-      .nsame_sha1 = 1,
-      .nsame_exif = 1,
-    };
-#endif
+    const char *sformat_pref = NULL;
+    const char *sformat = NULL;
+    size_t slen = 0;
+    size_t rwidth = 0;
+    int over = 0;
 
-    duf_fileinfo_t fi = { 0 };
-#if 0
-    fi.nsame = nsame;
-    fi.nsame_md5 = nsame_md5;
-    fi.nsame_sha1 = nsame_sha1;
-    fi.nsame_exif = nsame_exif;
-    fi.dirid = dirid;
-    fi.st.st_mode = ( mode_t ) filemode;
-    fi.st.st_ino = ( ino_t ) inode;
-    fi.st.st_mtim.tv_sec = mtime;
-    fi.st.st_mtim.tv_nsec = 0;
-    fi.st.st_dev = ( dev_t ) dev;
-    fi.st.st_uid = ( uid_t ) uid;
-    fi.st.st_gid = ( gid_t ) gid;
-    fi.st.st_nlink = ( nlink_t ) nlink;
-    fi.st.st_size = ( off_t ) filesize;
-    fi.name = filename;
-    fi.exifid = exifid;
-    fi.exifdt = exifdt;
-    fi.camera = camera;
-    fi.nameid = filenameid;
-    fi.mime = mime;
-    fi.mimeid = mimeid;
-    fi.md5id = md5id;
-    fi.sha1id = sha1id;
-    fi.dataid = dataid;
-    fi.md5sum1 = md5sum1;
-    fi.md5sum2 = md5sum2;
-#else
-    CR( fileinfo, pstmt, pdi, sccbh, &fi );
-#endif
-
-#if 0
-    if ( duf_output_use_binformat(  ) )
     {
-      if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
-        DUF_PUTSL( 0 );
-      else
-        DUF_PUTS( 0, "????????????" );
+      sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
+      if ( !sformat_pref )
+        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_files_tree );
+
+      if ( !sformat_pref )
+        sformat_pref = "_%-6M =%-4S%P";
+      if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                            DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
-    else
-#endif
+    if ( !over )
     {
-      const char *sformat_pref = NULL;
-      const char *sformat = NULL;
-      size_t slen = 0;
-      size_t rwidth = 0;
-      int over = 0;
-
       {
-        sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_gen_tree );
-        if ( !sformat_pref )
-          sformat_pref = DUF_CONFIGG( opt.output.sformat.prefix_files_tree );
+        int use;
+        duf_filedirformat_t *fmt;
 
-        if ( !sformat_pref )
-          sformat_pref = "_%-6M =%-4S%P";
-#if 0
-        {
-          int c1 MAS_UNUSED;
-          int c2 MAS_UNUSED;
+        use = duf_pdi_pu( pdi )->use_format - 1;
 
-          c1 = mas_output_force_color(  );
-          c2 = mas_output_nocolor(  );
-          QT( "%d:%d", c1, c2 );
-          assert( 0 );
-        }
-#endif
-        if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
-                                              &over );
-      }
-      if ( !over )
-      {
-        {
-          int use;
-          duf_filedirformat_t *fmt;
-
-#if 0
-          use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
-#else
-          use = duf_pdi_pu( pdi )->use_format - 1;
-#endif
-          fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-          MAST_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
-          if ( use >= 0 && use < fmt->files.argc && !sformat )
-            sformat = fmt->files.argv[use];
-          MAST_TRACE( temp, 5, "sformat A: %s", sformat );
-          if ( !sformat )
-            sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
-          MAST_TRACE( temp, 5, "sformat B: %s", sformat );
-          if ( !sformat )
-            sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
-          MAST_TRACE( temp, 5, "sformat C: %s", sformat );
-        }
+        fmt = DUF_CONFIGA( opt.output.as_formats.tree );
+        MAST_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
+        if ( use >= 0 && use < fmt->files.argc && !sformat )
+          sformat = fmt->files.argv[use];
+        MAST_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = "%f\n";
-
-        if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
-                                              DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
-                                              &over );
+          sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
+        MAST_TRACE( temp, 5, "sformat B: %s", sformat );
+        if ( !sformat )
+          sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
+        MAST_TRACE( temp, 5, "sformat C: %s", sformat );
       }
-      DUF_PUTSL( 0 );
+      if ( !sformat )
+        sformat = "%f\n";
+
+      if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+                                            DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
+    DUF_PUTSL( 0 );
   }
 
 /* SQL at duf_scan_files_by_dirid */
 
 /* DUF_PRINTF( 0, "%s", filename ); */
 
-/*  DUF_ENDR( r );*/
   ER( MOD, tree_leaf2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
 /* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
-#if 0
-    duf_bformat_combo_t bformat = {                                  /* */
-      .v.flag = {
-                 .filename = 1,
-                 .short_filename = 1,
-                 .depth = 1,
-                 .seq = 1,
-                 .dirid = 1,
-                 .exifid = 0,
-                 .exifdt = 0,
-                 .camera = 0,
-                 .mimeid = 0,
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_NUMS )
-                 .nfiles = 1,
-                 .ndirs = 1,
-# endif
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_RNUMS )
-                 .rnfiles = 1,
-                 .rndirs = 1,
-# endif
-                 .inode = 0,
-                 .mode = 0,
-                 .nlink = 0,
-                 .user = 0,
-                 .group = 0,
-                 .filesize = 0,
-                 .md5 = 0,
-                 .md5id = 1,
-               /* .sha1id = 1, */
-                 .mtime = 0,
-                 .prefix = 1,
-                 .suffix = 1,
-                 }
-      ,
-      .nsame = 1,
-      .nsame_md5 = 1,
-      .nsame_sha1 = 1,
-      .nsame_exif = 1,
-    };
-#endif
     duf_fileinfo_t fi = { 0 };
   /* fi.nsame = nsame; */
   /* fi.nsame_md5 = nsame_md5;   */
@@ -338,16 +161,6 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
   /* fi.md5sum1 = md5sum1; */
   /* fi.md5sum2 = md5sum2; */
 
-#if 0
-    if ( duf_output_use_binformat(  ) )
-    {
-      if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
-        DUF_PUTSL( 0 );
-      else
-        DUF_PUTS( 0, "????????????" );
-    }
-    else
-#endif
     {
       const char *sformat_pref = NULL;
       const char *sformat = NULL;
@@ -376,11 +189,8 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
           int use;
           duf_filedirformat_t *fmt;
 
-#if 0
-          use = DUF_CONFIGG( opt.output.as_formats.use ) - 1;
-#else
           use = duf_pdi_pu( pdi )->use_format - 1;
-#endif
+
           fmt = DUF_CONFIGA( opt.output.as_formats.tree );
           MAST_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
           if ( use >= 0 && use < fmt->dirs.argc && !sformat )
@@ -405,7 +215,6 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
     }
   }
 
-/*  DUF_ENDR( r );*/
   ER( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
@@ -413,7 +222,6 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
 static
 SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d )
 {
-/*   DUF_STARTR( r ) */ ;
 /* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
 /* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
 /* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
@@ -627,7 +435,6 @@ SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_dep
   }
 #endif
 
-/*  DUF_ENDR( r );*/
   ER( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, int d0, int maxd, int d );
 }
 
@@ -635,8 +442,6 @@ SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_dep
 static
 SR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   int d0 = duf_pdi_topdepth( pdi );
   int maxd = duf_pdi_depth( pdi );
 
@@ -655,20 +460,5 @@ SR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depth
   *pbuffer = 0;
   DUF_PRINTF( 1, "@%03d", QERRIND );
 
-/*  DUF_ENDR( r );*/
   ER( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 }
-
-#if 0
-static
-SR( MOD, sql_print_tree_prefix_uni, const duf_depthinfo_t * pdi )
-{
-/*   DUF_STARTR( r ) */ ;
-  char buffer[1024];
-
-  duf_sql_print_tree_sprefix_uni( buffer, sizeof( buffer ), pdi, NULL /* pwidth */  );
-  DUF_WRITES( 0, buffer );
-/*  DUF_ENDR( r );*/
-  ER( MOD, sql_print_tree_prefix_uni, const duf_depthinfo_t * pdi );
-}
-#endif

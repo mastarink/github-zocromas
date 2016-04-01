@@ -1,4 +1,6 @@
 /* #undef MAS_TRACING */
+#include <assert.h>                                                  /* assert */
+
 #include <mastar/sqlite/mas_sqlite.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
@@ -17,18 +19,18 @@
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 
 /* ###################################################################### */
-#include "duf_sql_prepared.h"                                        /* duf_sql_(prepare|step|finalize) ✗ */
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 /* ###################################################################### */
 
 SR( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
 /* DUF_STARTR( r ); */
-
+  assert( sql );
   MAST_TRACE( sql, 2, "@@@@@          [[%s]]", sql );
   ERRLOWER1( SQL_ROW );
   ERRLOWER1( SQL_DONE );
 /* DOR_SQLITE_LOWERE( r, mas_sqlite_prepare( sql, pstmt ), DUF_SQL_ROW, DUF_SQL_DONE ); */
-  CRV_SQLITE( mas_sqlite_prepare, sql, pstmt );
+  CRV_SQLITEQpS( mas_sqlite_prepare, sql, pstmt, sql, pstmt );
   ERRUPPER1( SQL_DONE );
   ERRUPPER1( SQL_ROW );
 
@@ -40,6 +42,7 @@ SR( SQL, sql_prepare, const char *sql, mas_sqlite_stmt_t ** pstmt )
 SR( SQL, sql_step, mas_sqlite_stmt_t * stmt )
 {
 /* DUF_STARTR( r ); */
+  assert( stmt );
 
   ERRLOWER1( SQL_ROW );
   ERRLOWER1( SQL_DONE );

@@ -72,7 +72,6 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
   MAST_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
 
@@ -86,32 +85,28 @@ SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt MAS_UNUSED, duf_dept
     DUF_SQL_SE_BIND_LL( priority, DUF_CONFIGG( vars.dir_priority ), pstmt );
     DUF_SQL_SE_STEPC( pstmt );
     DUF_SQL_SE_CHANGES( changes, pstmt );
-    DUF_SQL_SE_END_STMT( pdi, update_priority, pstmt );
+    DUF_SQL_SE_END_STMT( pdi, update_priority, pstmt ); /* clears SQL_ROW / SQL_DONE */
     duf_pdi_reg_changes( pdi, changes );
-/* DUF_TEST_R( r ); */
+
   }
-/*  DUF_ENDR( r );*/
+
   ER( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   MAST_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
-/*  DUF_ENDR( r );*/
+
   ER( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
 SR( MOD, set_dir_priority_node_after2, duf_stmnt_t * pstmt MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
   MAST_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), pstmt ? DUF_GET_SFIELD2( dname ) : "-" );
-/*  DUF_ENDR( r );*/
+
   ER( MOD, set_dir_priority_node_after2, duf_stmnt_t * pstmt, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

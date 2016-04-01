@@ -130,8 +130,6 @@ duf_scan_callbacks_t duf_mod_handler = {
 
 SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/*   DUF_STARTR( r ) */ ;
-
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
   {
@@ -160,6 +158,6 @@ SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
 
   CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
       &duf_mod_handler.node /*, 0 need_id - no error (1=error) if there is no record */  );
-/*  DUF_ENDR( r );*/
+
   ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
