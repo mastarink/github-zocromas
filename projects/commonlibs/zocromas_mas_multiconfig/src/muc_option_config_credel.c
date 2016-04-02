@@ -21,6 +21,11 @@
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 #include "muc_option_config_credel.h"
 /* ###################################################################### */
+/* void                                                                                                                */
+/* _init( void )                                                                                                       */
+/* {                                                                                                                   */
+/*   fprintf( stderr, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n" ); */
+/* }                                                                                                                   */
 
 muc_option_gen_code_t
 muc_cli_option_count_maxcodeval( const muc_config_cli_t * cli MAS_UNUSED, muc_longval_extended_vtable_t * *xvtables )

@@ -14,11 +14,13 @@
 # include "duf_levinfo_stmt_types.h"                                 /* duf_stmt_ident_t; duf_idstmt_t; ✗ */
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
 
+# if 0
 struct duf_levinfo_context_s
 {
   void *ptr;
   duf_void_voidp_func_t destructor;
 };
+# endif
 
 struct duf_levinfo_db_s
 {
@@ -54,7 +56,7 @@ struct duf_levinfo_s
   duf_levinfo_child_count_t scanned_childs;
   char *fullpath;
   char *itemname;
-  duf_levinfo_context_t context;
+/* duf_levinfo_context_t context; */
   duf_dirhandle_t lev_dh;
   int d;
 };

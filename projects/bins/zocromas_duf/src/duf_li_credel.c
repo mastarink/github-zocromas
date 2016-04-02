@@ -65,7 +65,7 @@ duf_li_clear( duf_levinfo_t * pli )
 #if 0
   duf_levinfo_clear_context( pli );
 #else
-  duf_clear_context( &pli->context );
+  /* duf_clear_context( &pli->context ); */
 #endif
   memset( pli, 0, sizeof( *pli ) );
 }
@@ -129,9 +129,7 @@ duf_li_copy_array( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigne
     plidst[i].fullpath = mas_strdup( plisrc[i].fullpath );
     plidst[i].itemname = mas_strdup( plisrc[i].itemname );
     plidst[i].lev_dh.opened_copy = 1;
-    memset( &plidst[i].context, 0, sizeof( plidst[i].context ) );
-    assert( !plisrc[i].context.ptr );
-    assert( !plisrc[i].context.destructor );
+    /* memset( &plidst[i].context, 0, sizeof( plidst[i].context ) ); */
 #if 0
     duf_items_copy( plidst[i].items, plisrc[i].items );
 #else

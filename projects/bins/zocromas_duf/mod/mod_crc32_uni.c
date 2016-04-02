@@ -350,7 +350,7 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
       duf_pdi_reg_changes( pdi, changes );
 
     }
-    MAST_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, fname );
+    MAST_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat_size( pdi ) /* duf_levinfo_stat( pdi )->st_size */, fname );
   /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   pdi->total_bytes += bytes;

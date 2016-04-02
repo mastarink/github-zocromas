@@ -27,6 +27,7 @@
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
+#include "duf_levinfo_structs.h"
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"

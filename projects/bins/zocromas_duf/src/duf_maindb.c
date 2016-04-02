@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <time.h>
+#include <sys/stat.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
@@ -29,15 +30,15 @@
 #include "duf_config_db.h"                                           /* duf_config_make_db_paths */
 #include "duf_config_db_get.h"
 
-#include "duf_sys_wrap.h"                                            /* duf_unlink() ✗ */
+#include "duf_sys_wrap.h"                                            /* duf_unlink ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-#include "duf_sql_open.h"                                            /* duf_sql_open() ✗ */
-#include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
+#include "duf_sql_open.h"                                            /* duf_sql_open ✗ */
+#include "duf_pdi_global.h"                                          /* duf_pdi_global ✗ */
 
-#include "duf_maindb_info.h"                                         /* duf_main_db_info() ✗ */
+#include "duf_maindb_info.h"                                         /* duf_main_db_info ✗ */
 
-#include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq() ✗ */
+#include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq ✗ */
 
 #include "sql_beginning_common.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */

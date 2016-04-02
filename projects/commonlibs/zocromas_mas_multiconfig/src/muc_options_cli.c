@@ -28,6 +28,7 @@
 #include "muc_option_clarify_batch.h"
 
 #include "muc_option_clarify_new.h"
+#include "muc_option_config_credel.h"
 
 #include "muc_config_cli_structs.h"
 /* ###################################################################### */
@@ -182,8 +183,9 @@ muc_SR( OPTIONS, cli_parse, muc_config_cli_t * cli, const char *shorts, muc_opti
     muc_option_gen_code_t codeval;
     muc_option_t *longtable;
 
+    muc_cli_options_postinit( cli );
     longtable = muc_cli_options_get_longopts_table( cli );
-
+    assert( longtable );
   /* optind
    *   inside loop means next arg to process in non-permuted list
    *   outside loop means first not processed arg in permuted list
@@ -194,7 +196,7 @@ muc_SR( OPTIONS, cli_parse, muc_config_cli_t * cli, const char *shorts, muc_opti
 
       optopt = 0, longindex = -1;
 
-      codeval = getopt_long( carg->argc, carg->argv, shorts, longtable, &longindex );
+      codeval = getopt_long( carg->argc, carg->argv, shorts ? shorts : "", longtable, &longindex );
       if ( codeval >= 0 )
       {
         optindd = optind;

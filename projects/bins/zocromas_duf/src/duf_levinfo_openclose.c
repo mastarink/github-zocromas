@@ -18,8 +18,9 @@
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_levinfo_structs.h"
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_structs.h"
@@ -60,7 +61,7 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
       assert( duf_levinfo_itemshowname_d( pdi, d )[0] == '/' );
       assert( duf_levinfo_itemshowname_d( pdi, d )[1] == 0 );
       assert( *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
-      CR( open_dh, pdhlev, duf_levinfo_itemshowname_d( pdi, d ) );
+      CR( open_dh, pdhlev, CRX( levinfo_itemshowname_d, pdi, d ) );
       assert( QISERR || pdhlev->dfd > 0 );
       MAST_TRACE( levinfo, 0, "(%d)? levinfo openated %s; dfd:%d", QERRIND, duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
@@ -105,8 +106,8 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
     MAST_TRACE( levinfo, 0, "duf_pdi_opendir(pdi) not set" );
   }
   assert( !duf_pdi_opendir( pdi ) || QISERR || pdi->pathinfo.levinfo[d].deleted || duf_levinfo_dfd_d( pdi, d ) > 0 );
-  /* QT( "@d:%d dfd:%d - %s / %s", d, duf_levinfo_dfd_d( pdi, d ), duf_levinfo_itemshowname_d( pdi, d ), */
-  /*     duf_nodetype_name( duf_levinfo_node_type_d( pdi, d ) ) );                                       */
+/* QT( "@d:%d dfd:%d - %s / %s", d, duf_levinfo_dfd_d( pdi, d ), duf_levinfo_itemshowname_d( pdi, d ), */
+/*     duf_nodetype_name( duf_levinfo_node_type_d( pdi, d ) ) );                                       */
   ER( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d );
 }
 /* *INDENT-OFF*  */
@@ -119,7 +120,7 @@ SR( PDI, levinfo_if_openat_dh_d, duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( d >= 0 );
 
-  if ( duf_levinfo_opened_dh_d( pdi, d ) <= 0 )
+  if ( CRX( levinfo_opened_dh_d, pdi, d ) <= 0 )
   {
     CR( levinfo_openat_dh_d, pdi, d );
     assert( QISERR || !duf_pdi_opendir( pdi ) || duf_levinfo_deleted_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) > 0 );
@@ -140,15 +141,12 @@ DUF_LEVINFO_F_UP( int, if_openat_dh )
 /* returns handle >0 
  * <0 --- ERROR?
  * */
-int
-duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
+SRX( PDI, int, dfd, 0, levinfo_opened_dh_d, duf_depthinfo_t * pdi, int d )
 {
-  int dfd = 0;
-
   assert( pdi );
   assert( d >= 0 );
-  dfd = duf_levinfo_dfd_d( pdi, d );
-  return dfd;
+  dfd = CRX( levinfo_dfd_d, pdi, d );
+  ERX( PDI, int, dfd, 0, levinfo_opened_dh_d, duf_depthinfo_t * pdi, int d );
 }
 
 /* *INDENT-OFF*  */
@@ -158,7 +156,7 @@ DUF_LEVINFO_F_UP( int, opened_dh )
 
 SR( PDI, levinfo_opened_here_dh_d, duf_depthinfo_t * pdi, int d )
 {
-  if ( !duf_levinfo_opened_copy_d( pdi, d ) )
+  if ( !CRX( levinfo_opened_copy_d, pdi, d ) )
     CR( levinfo_opened_dh_d, pdi, d );
   ER( PDI, levinfo_opened_here_dh_d, duf_depthinfo_t * pdi, int d );
 }

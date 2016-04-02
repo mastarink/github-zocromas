@@ -18,6 +18,7 @@
 
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_levinfo_structs.h"
 
 #include "duf_pdi_structs.h"
 
@@ -32,7 +33,7 @@ SR( PDI, levinfo_if_statat_dh_d, duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( d >= 0 );
 
-  if ( !duf_levinfo_stat_d( pdi, d ) )
+  if ( !CRX( levinfo_stat_d, pdi, d ) )
     CR( levinfo_statat_dh_d, pdi, d );
   ER( PDI, levinfo_if_statat_dh_d, duf_depthinfo_t * pdi, int d );
 }
@@ -55,8 +56,8 @@ SR( PDI, levinfo_statat_dh_d, duf_depthinfo_t * pdi, int d )
   assert( QISERR || d > 0 || 0 == strcmp( duf_levinfo_itemshowname_d( pdi, d ), "/" ) );
 
   {
-    duf_dirhandle_t *pdhlev = duf_levinfo_pdh_d( pdi, d );
-    duf_dirhandle_t *pdhuplev = duf_levinfo_pdh_d( pdi, d - 1 );
+    duf_dirhandle_t *pdhlev = CRX( levinfo_pdh_d, pdi, d );
+    duf_dirhandle_t *pdhuplev = CRX( levinfo_pdh_d, pdi, d - 1 );
 
     assert( QISERR || d > 0 || !pdhuplev );
     assert( QISERR || d == 0 || pdhuplev );
@@ -68,7 +69,7 @@ SR( PDI, levinfo_statat_dh_d, duf_depthinfo_t * pdi, int d )
       assert( QISERR || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     }
     assert( QISERR || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
-    CR( statat_dh, pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ) );
+    CR( statat_dh, pdhlev, pdhuplev, CRX( levinfo_itemshowname_d, pdi, d ) );
     MAST_TRACE( levinfo, 10, "(%d)? levinfo statated %s", QERRIND, pdi->pathinfo.levinfo[d].itemname );
 
 #if 0
@@ -99,17 +100,16 @@ DUF_LEVINFO_F_UP( mas_error_index_t, statat_dh )
 
 SRX( PDI, int, rd, 0, levinfo_if_deleted_d, duf_depthinfo_t * pdi, int d )
 {
-  if ( !duf_levinfo_deleted_tested_d( pdi, d ) )
+  if ( !CRX( levinfo_deleted_tested_d, pdi, d ) )
   {
   /* int r = 0; */
 
     ERRLOWER( STATAT_ENOENT );
     CR( levinfo_if_statat_dh_d, pdi, d );
     ERRUPPER( STATAT_ENOENT );
-  /* DOR_LOWERE( r, duf_levinfo_if_statat_dh_d( pdi, d ), DUF_ERROR_STATAT_ENOENT ); */
   /* DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT, DUF_ERROR_STATAT_ENOENT ); */
   }
-  rd = duf_levinfo_deleted_d( pdi, d );
+  rd = CRX( levinfo_deleted_d, pdi, d );
   ERX( PDI, int, rd, 0, levinfo_if_deleted_d, duf_depthinfo_t * pdi, int d );
 }
 

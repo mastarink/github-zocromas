@@ -275,6 +275,7 @@ muc_cli_options_reset_targ_offset( muc_config_cli_t * cli )
 muc_option_t *
 muc_cli_options_get_longopts_table( const muc_config_cli_t * cli )
 {
+  assert( cli->postinited );
   return cli ? cli->longopts_table : NULL;
 }
 

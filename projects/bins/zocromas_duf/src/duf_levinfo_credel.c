@@ -19,6 +19,7 @@
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
+#include "duf_levinfo_structs.h"
 
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */

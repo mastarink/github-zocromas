@@ -234,10 +234,11 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
 
     magic_t magic = NULL;
 
-    if ( 1 )
-      magic = ( magic_t ) duf_pdi_context( pdi );
-    else
+#if 0
       magic = ( magic_t ) duf_levinfo_context_up( pdi );
+#else
+      magic = ( magic_t ) duf_pdi_context( pdi );
+#endif
 
     if ( !magic )
     {

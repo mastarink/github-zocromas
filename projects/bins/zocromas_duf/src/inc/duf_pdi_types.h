@@ -3,6 +3,7 @@
 # include <stddef.h>                                                 /* size_t */
 
 
+typedef struct duf_pdi_context_s duf_pdi_context_t;
 typedef struct duf_modcnts_s duf_modcnts_t;
 typedef struct duf_depthinfo_s duf_depthinfo_t;
 typedef int ( *duf_pdi_cb_t ) ( const duf_depthinfo_t * pdi );

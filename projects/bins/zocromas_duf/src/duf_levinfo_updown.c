@@ -24,11 +24,12 @@
 #include "duf_levinfo_dbinit.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_structs.h"
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 #include "duf_pathinfo_depth.h"                                      /* duf_pi_calc_depth; duf_pi_is_good_depth; duf_pi_check_depth; duf_pi_godown; ✗ */
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_pdi_structs.h"
 
@@ -198,17 +199,17 @@ SR( PDI, levinfo_goup_i, duf_depthinfo_t * pdi )
 {
   int d;
 
-  assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
+  assert( pdi->pathinfo.depth == CRX( levinfo_calc_depth, pdi ) );
   d = pdi->pathinfo.depth--;
   assert( d >= 0 );
-  if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
+  if ( CRX( levinfo_opened_dh_d, pdi, d ) > 0 )
     CR( levinfo_closeat_dh_d, pdi, d );
   assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || pdi->pathinfo.levinfo[d].lev_dh.dfd == 0 );
 /* if ( DUF_IS_ERROR( r ) )                                              */
 /*   DUF_SHOW_ERRORO( "(%d) close error; L%d", r, pdi->pathinfo.depth ); */
   MAST_TRACE( explain, 20, "level up:   %d", d );
   assert( pdi->pathinfo.levinfo );
-  duf_levinfo_clear_level_d( pdi, d );
+  CRX( levinfo_clear_level_d, pdi, d );
   d = pdi->pathinfo.depth;
 /* Not here: assert( d >= 0 ); */
 
@@ -218,7 +219,7 @@ SR( PDI, levinfo_goup_i, duf_depthinfo_t * pdi )
 SR( PDI, levinfo_goup, duf_depthinfo_t * pdi )
 {
   assert( pdi );
-  if ( duf_levinfo_is_leaf( pdi ) )
+  if ( CRX( levinfo_is_leaf, pdi ) )
   {
     MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf  <=             - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
   }
@@ -233,9 +234,9 @@ SR( PDI, levinfo_goup, duf_depthinfo_t * pdi )
 
 SR( PDI, levinfo_gotop, duf_depthinfo_t * pdi )
 {
-  if ( duf_pdi_levinfo( pdi ) /* pdi->pathinfo.levinfo */  )
+  if ( CRX( pdi_levinfo, pdi ) )
   {
-    while ( QNOERR && duf_pdi_depth( pdi ) /* pdi->pathinfo.depth */  >= 0 )
+    while ( QNOERR && CRX( pdi_depth, pdi ) >= 0 )
     {
       assert( pdi->pathinfo.depth == duf_levinfo_calc_depth( pdi ) );
       CRX( levinfo_goup, pdi );

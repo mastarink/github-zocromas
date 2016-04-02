@@ -3,17 +3,26 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+/* #include "duf_config_util.h"                                         (* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ *) */
+
 #include "duf_levinfo_ref_def.h"
-#include "duf_context.h"
+#include "duf_levinfo_structs.h"
+
+#include "duf_pdi_structs.h"
+
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_pathinfo_ref.h"
 
-#include "duf_pdi_structs.h"
+#include "duf_context.h"
 
 /* ###################################################################### */
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
@@ -25,7 +34,7 @@ duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->inited );
-  return duf_pi_ptr_d( &pdi->pathinfo, d );
+  return duf_pi_ptr_d( duf_pdi_pathinfo( pdi ), d );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( duf_levinfo_t , ptr )
@@ -175,7 +184,8 @@ duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d )
   const char *n = NULL;
 
   if ( d >= 0 )
-    n = duf_levinfo_ptr_d( pdi, d )->itemname;
+    n = duf_pi_itemtruename_d( duf_pdi_pathinfo( pdi ) /* duf_pdi_pathinfo( pdi ) */ , d );
+  assert( 0 == strcmp( n, duf_levinfo_ptr_d( pdi, d )->itemname ) );
 /* return n ? ( *n ? n : "/" ) : n; */
   return n;
 }
@@ -240,6 +250,7 @@ DUF_LEVINFO_3GET(  long long, numchild, numchild )
 
 /* SET */
 
+#if 0
 void
 duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d )
 {
@@ -264,7 +275,7 @@ duf_levinfo_context_d( const duf_depthinfo_t * pdi, int d )
 DUF_LEVINFO_FC( void *, context )
 DUF_LEVINFO_FC_UP( void *, context )
 /* *INDENT-ON*  */
-
+#endif
 /************************************************************************/
 
 /* *INDENT-OFF*  */
@@ -297,7 +308,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
 # endif
       d--;
 #endif
-    path = duf_pi_path_d( &pdi->pathinfo, d );
+    path = duf_pi_path_d( duf_pdi_pathinfo( pdi ), d );
   }
 #if 0
   if ( !path )
@@ -328,7 +339,7 @@ duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d )
   path = duf_levinfo_path_d( pdi, d );
   return path + len;
 #else
-  return pdi ? duf_pi_relpath_d( &pdi->pathinfo, d ) : NULL;
+  return pdi ? duf_pi_relpath_d( duf_pdi_pathinfo( pdi ), d ) : NULL;
 #endif
 }
 /* *INDENT-OFF*  */

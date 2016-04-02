@@ -5,7 +5,7 @@
 
 /* # include "duf_record_types.h" */
 # include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t ✗ */
-# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+/* # include "duf_pdi_types.h"                                          (* duf_depthinfo_t ✗ *) */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 # include "duf_config_act_types.h"                                   /* duf_config_act_flags(_combo|_enum|)_t; duf_config_opt_actions_t ✗ */

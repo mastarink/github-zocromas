@@ -6,7 +6,9 @@
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 # include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
 
-#include "duf_defs.h"
+# include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
+
+# include "duf_defs.h"
 
 duf_levinfo_t *duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d );
 duf_levinfo_t *duf_levinfo_ptr( const duf_depthinfo_t * pdi );
@@ -40,6 +42,7 @@ const char *duf_levinfo_itemshowname_q( const duf_depthinfo_t * pdi, const char 
 const char *duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_itemtruename( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_itemtruename_up( const duf_depthinfo_t * pdi );
+
 /* const char *duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q ); */
 
 void duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d );
@@ -75,6 +78,7 @@ long long duf_levinfo_numchild( const duf_depthinfo_t * pdi );
 long long duf_levinfo_numchild_up( const duf_depthinfo_t * pdi );
 # endif
 
+#if 0
 void duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d );
 void duf_levinfo_set_context( duf_depthinfo_t * pdi, void *ctx );
 void duf_levinfo_set_context_up( duf_depthinfo_t * pdi, void *ctx );
@@ -82,6 +86,7 @@ void duf_levinfo_set_context_up( duf_depthinfo_t * pdi, void *ctx );
 void *duf_levinfo_context_d( const duf_depthinfo_t * pdi, int d );
 void *duf_levinfo_context( const duf_depthinfo_t * pdi );
 void *duf_levinfo_context_up( const duf_depthinfo_t * pdi );
+#endif
 
 int duf_levinfo_dfd_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_dfd( const duf_depthinfo_t * pdi );

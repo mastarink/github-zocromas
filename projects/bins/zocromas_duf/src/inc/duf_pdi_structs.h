@@ -2,16 +2,26 @@
 # define MAS_DUF_PDI_STRUCTS_H
 # include <stddef.h>                                                 /* size_t */
 
-# include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ✗ */
-/* # include "duf_levinfo_structs.h" */
+# include "duf_fun_types.h"                                          /* duf_void_voidp_func_t etc. etc. ... ✗ */
+
+/* # include "duf_pathinfo_types.h"                                     (* duf_pathinfo_t ✗ *) */
+# include "duf_pathinfo_structs.h"
+# include "duf_levinfo_stmt_types.h"                                 /* duf_stmt_ident_t; duf_idstmt_t; ✗ */
 # include "duf_item_types.h"
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
-# include "duf_levinfo_structs.h"
-# include "duf_pathinfo_structs.h"
+
+/* # include "duf_levinfo_structs.h" */
+
+# include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 struct duf_modcnts_s
 {
   unsigned long long dirent_content2;
+};
+struct duf_pdi_context_s
+{
+  void *ptr;
+  duf_void_voidp_func_t destructor;
 };
 
 struct duf_depthinfo_s
@@ -49,7 +59,11 @@ struct duf_depthinfo_s
   duf_items_t items;
   const duf_ufilter_t *pup;
   duf_yfilter_t *pyp;
+# if 0
   duf_levinfo_context_t context;
+# else
+  struct duf_pdi_context_s context;
+# endif
   int num_idstatements;
 /* duf_stmnt_t **statements; */
   duf_idstmt_t *idstatements;

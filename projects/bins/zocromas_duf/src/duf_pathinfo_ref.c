@@ -84,7 +84,7 @@ DUF_PATHINFO_FC_TOP( const char *, path )
 /* *INDENT-ON*  */
 
 DUF_PATHINFO_3GET( duf_node_type_t, node_type, node_type );
-DUF_PATHINFO_3GET_REF( void, context, context );
+/* DUF_PATHINFO_3GET_REF( void, context, context ); */
 
 /* 20150904.122510 */
 const char *
