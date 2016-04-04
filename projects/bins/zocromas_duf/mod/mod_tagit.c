@@ -101,7 +101,16 @@ SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
 #ifdef MAS_TRACING
     assert( !duf_levinfo_dfd( pdi ) );
   /* filename from db same as duf_levinfo_itemname( pdi ) */
-    assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( pdi ) ) );
+    {
+      const char *fn1;
+      const char *fn2;
+
+      fn1 = DUF_GET_RSFIELD2( fname );
+      fn2 = duf_levinfo_itemtruename( pdi );
+      assert( fn1 );
+      assert( fn2 );
+      assert( 0 == strcmp( fn1, fn2 ) );
+    }
     assert( duf_levinfo_dbstat( pdi ) );
 #endif
 

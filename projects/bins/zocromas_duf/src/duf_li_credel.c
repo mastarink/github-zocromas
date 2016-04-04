@@ -27,31 +27,34 @@
 /* ###################################################################### */
 #include "duf_li_credel.h"
 /* ###################################################################### */
-size_t
-duf_li_size_array( unsigned maxdepth, unsigned r )
+static size_t
+li_size_array( unsigned maxdepth, unsigned r )
 {
   return sizeof( duf_levinfo_t ) * ( maxdepth + 1 + r );
 }
 
-duf_levinfo_t *
-duf_li_create_array( unsigned maxdepth )
+/* duf_levinfo_t *                          */
+/* CRX(li_create_array, unsigned maxdepth ) */
+SRX( LI, duf_levinfo_t *, pli, NULL, li_create_array, unsigned maxdepth )
 {
-  duf_levinfo_t *pli = NULL;
+/* duf_levinfo_t *pli = NULL; */
 
   if ( maxdepth )
   {
     size_t lsz;
 
-    lsz = duf_li_size_array( maxdepth, 1 ) /* +1 more for duf_levinfo_calc_depth */ ;
+    lsz = li_size_array( maxdepth, 1 ) /* +1 more for duf_levinfo_calc_depth */ ;
     pli = mas_malloc( lsz );
     memset( pli, 0, lsz );
     assert( pli[maxdepth + 1].d == 0 );
   }
-  return pli;
+/* return pli; */
+  ERX( LI, duf_levinfo_t *, pli, NULL, li_create_array, unsigned maxdepth );
 }
 
-void
-duf_li_clear( duf_levinfo_t * pli )
+/* void                                */
+/* CRX(li_clear, duf_levinfo_t * pli ) */
+SRN( LI, void, li_clear, duf_levinfo_t * pli )
 {
   assert( pli );
   assert( pli->lev_dh.opened_copy || pli->lev_dh.dfd == 0 );
@@ -63,42 +66,48 @@ duf_li_clear( duf_levinfo_t * pli )
     mas_free( pli->fullpath );
   pli->fullpath = NULL;
 #if 0
-  duf_levinfo_clear_context( pli );
+  CRX(levinfo_clear_context, pli );
 #else
-  /* duf_clear_context( &pli->context ); */
+/* CRX(clear_context, &pli->context ); */
 #endif
   memset( pli, 0, sizeof( *pli ) );
+  ERN( LI, void, li_clear, duf_levinfo_t * pli );
 }
 
-int
-duf_li_closed_array( const duf_levinfo_t * pli, unsigned maxdepth )
+/* int                                                                 */
+/* CRX(li_closed_array, const duf_levinfo_t * pli, unsigned maxdepth ) */
+SRX( LI, int, closed, 1, li_closed_array, const duf_levinfo_t * pli, unsigned maxdepth )
 {
-  int closed = 1;
+/* int closed = 1; */
 
   for ( unsigned i = 0; i <= maxdepth; i++ )
   {
     if ( pli && !( pli[i].lev_dh.opened_copy || pli[i].lev_dh.dfd == 0 ) )
       closed = 0;
   }
-  return closed;
+/* return closed; */
+  ERX( LI, int, closed, 1, li_closed_array, const duf_levinfo_t * pli, unsigned maxdepth );
 }
 
-void
-duf_li_clear_array( duf_levinfo_t * pli, unsigned maxdepth )
+/* void                                                         */
+/* CRX(li_clear_array, duf_levinfo_t * pli, unsigned maxdepth ) */
+SRN( LI, void, li_clear_array, duf_levinfo_t * pli, unsigned maxdepth )
 {
   for ( unsigned i = 0; i <= maxdepth; i++ )
   {
     assert( pli[i].lev_dh.opened_copy || pli[i].lev_dh.dfd == 0 );
-    duf_li_clear( pli + i );
+    CRX( li_clear, pli + i );
   }
+  ERN( LI, void, li_clear_array, duf_levinfo_t * pli, unsigned maxdepth );
 }
 
-void
-duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
+/* void                                                                                                          */
+/* CRX(li_init, duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type ) */
+SRN( LI, void, li_init, duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type )
 {
   assert( pli );
 
-  duf_li_clear( pli );
+  CRX( li_clear, pli );
   assert( !pli->itemname );
 
   pli->node_type = node_type;
@@ -109,58 +118,66 @@ duf_li_init( duf_levinfo_t * pli, const char *itemname, unsigned long long dirid
     assert( !pli->itemname );
     pli->itemname = mas_strdup( itemname );
   }
+  ERN( LI, void, li_init, duf_levinfo_t * pli, const char *itemname, unsigned long long dirid, duf_node_type_t node_type );
 }
 
-void
-duf_li_delete_array( duf_levinfo_t * pli, unsigned maxdepth )
+/* void                                                          */
+/* CRX(li_delete_array, duf_levinfo_t * pli, unsigned maxdepth ) */
+SRN( LI, void, li_delete_array, duf_levinfo_t * pli, unsigned maxdepth )
 {
-  duf_li_clear_array( pli, maxdepth );
+  CRX(li_clear_array, pli, maxdepth );
   mas_free( pli );
+  ERN( LI, void, li_delete_array, duf_levinfo_t * pli, unsigned maxdepth );
 }
 
-static void
-duf_li_copy_array( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth )
+static
+/*   void                                                                                       */
+/* CRX(li_copy_array, duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth ) */
+SRN( LI, void, li_copy_array, duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth )
 {
   assert( plidst );
   assert( plisrc );
-  memcpy( plidst, plisrc, duf_li_size_array( maxdepth, 1 ) );
+  memcpy( plidst, plisrc, li_size_array( maxdepth, 1 ) );
   for ( unsigned i = 0; i <= maxdepth; i++ )
   {
     plidst[i].fullpath = mas_strdup( plisrc[i].fullpath );
     plidst[i].itemname = mas_strdup( plisrc[i].itemname );
     plidst[i].lev_dh.opened_copy = 1;
-    /* memset( &plidst[i].context, 0, sizeof( plidst[i].context ) ); */
+  /* memset( &plidst[i].context, 0, sizeof( plidst[i].context ) ); */
 #if 0
-    duf_items_copy( plidst[i].items, plisrc[i].items );
+    CRX(items_copy, plidst[i].items, plisrc[i].items );
 #else
   /* it's OK: no allocations at duf_items_t */
 #endif
   }
+  ERN( LI, void, li_copy_array, duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, unsigned maxdepth );
 }
 
-duf_levinfo_t *
-duf_li_clone_array( const duf_levinfo_t * plisrc, unsigned maxdepth )
+/* duf_levinfo_t *                                                       */
+/* CRX(li_clone_array, const duf_levinfo_t * plisrc, unsigned maxdepth ) */
+SRX( LI, duf_levinfo_t *, pli, NULL, li_clone_array, const duf_levinfo_t * plisrc, unsigned maxdepth )
 {
-  duf_levinfo_t *pli = NULL;
+/* duf_levinfo_t *pli = NULL; */
 
-  pli = duf_li_create_array( maxdepth );
+  pli = CRX( li_create_array, maxdepth );
   assert( ( pli && maxdepth > 0 ) || ( !pli && maxdepth == 0 ) );
   if ( pli )
   {
-    duf_li_copy_array( pli, plisrc, maxdepth );
+    CRX( li_copy_array, pli, plisrc, maxdepth );
   }
 /* TODO .......... */
-  return pli;
+/* return pli; */
+  ERX( LI, duf_levinfo_t *, pli, NULL, li_clone_array, const duf_levinfo_t * plisrc, unsigned maxdepth );
 }
 
-SRP( LI, duf_levinfo_t *, pli, duf_li_create_array( maxdepth ), nameid2li, unsigned long long nameid, unsigned maxdepth )
+SRP( LI, duf_levinfo_t *, pli, NULL, nameid2li, unsigned long long nameid, unsigned maxdepth )
 {
   unsigned count = 0;
   unsigned long long dirid = 0;
 
   duf_levinfo_t *plirev = NULL;
 
-  plirev = duf_li_create_array( maxdepth );
+  plirev = CRX(li_create_array, maxdepth );
   {
     duf_depthinfo_t di = {.pdi_name = "nameid2li" };
     CR( pdi_init_min_r, &di, NULL /* real_path */  );
@@ -185,6 +202,7 @@ SRP( LI, duf_levinfo_t *, pli, duf_li_create_array( maxdepth ), nameid2li, unsig
     }
     if ( QNOERR )
     {
+      pli = CRX(li_create_array, maxdepth );
       for ( unsigned i = 0; i < count; i++ )
       {
         pli[i] = plirev[count - i - 1];
@@ -192,7 +210,7 @@ SRP( LI, duf_levinfo_t *, pli, duf_li_create_array( maxdepth ), nameid2li, unsig
       /* reverse */
       }
     }
-    duf_pdi_close( &di );
+    CRX(pdi_close, &di );
   }
   mas_free( plirev );
 

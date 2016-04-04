@@ -27,9 +27,11 @@ shn_find_c_mastar_function ()
       sname=$name
       pname="duf_${name}"
     fi
+    shn_msg "is it function? sname:$sname; pname:$pname; name:$name"
     if afileq=($( grep -rl --inc='*.c' "^$name\>(" $finddirs )) \
+    || afileq=($( grep -rl --inc='*.c' "^$pname\>(" $finddirs )) \
     || afileq=($( grep -rl --inc='*.c' "^DUF_WRAPPED(\s*${name}\>\s*)\s*(" $finddirs )) \
-    || afileq=($( grep -rl --inc='*.c' "^SR(\s*[A-Z]\+, ${sname}\>" $finddirs )) ; then
+    || afileq=($( grep -rl --inc='*.c' "^\(SR\|SRX\|SRN\|SRP\|SRP0\)(\s*[A-Z]\+,.*\<${sname}\>" $finddirs )) ; then
       echo $afileq
       res=0
     fi

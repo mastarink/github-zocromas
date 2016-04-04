@@ -57,79 +57,70 @@
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
 
-SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_t scanner,
-    duf_node_type_t node_type )
+SR( SCCBH, sccbh_preset_leaf_scanner, duf_sccb_handle_t * sccbh )
 {
-  if ( scanner )
+  int fd;
+
+  fd = CRX( levinfo_dfd, H_PDI );
   {
-    H_PDI->items.total++;
-  /* sccbh->current_scanner = scanner; */
-    sccbh->assert__current_node_type = node_type;
-    if ( node_type == DUF_NODE_NODE )
+    off_t rls MAS_UNUSED = 0;
+    off_t rls1 = 0;
+
+    if ( fd > 0 )
     {
-      H_PDI->items.dirs++;
-    }
-    else if ( node_type == DUF_NODE_LEAF )
-    {
-      H_PDI->items.files++;
-    /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
+      rls = lseek( fd, 0, SEEK_SET );
+      if ( ( ( int ) rls ) < 0 )
       {
-        int fd;
-
-        fd = CRX( levinfo_dfd, H_PDI );
-        {
-          off_t rls MAS_UNUSED = 0;
-          off_t rls1 = 0;
-
-          if ( fd > 0 )
-          {
-            rls = lseek( fd, 0, SEEK_SET );
-            if ( ( ( int ) rls ) < 0 )
-            {
-              QT( "@========================================ERROR %s %d / %s", strerror( errno ), fd, CRX( nodetype_name, node_type ) );
-            }
-            rls1 = lseek( fd, 0, SEEK_CUR );
-            if ( ( ( int ) rls ) < 0 )
-            {
-              QT( "@========================================ERROR %s %d / %s", strerror( errno ), fd, CRX( nodetype_name, node_type ) );
-            }
-            assert( fd <= 0 || rls1 == 0 );
-          }
-        }
+        QT( "@========================================ERROR %s %d / LEAF", strerror( errno ), fd );
       }
+      rls1 = lseek( fd, 0, SEEK_CUR );
+      if ( ( ( int ) rls ) < 0 )
+      {
+        QT( "@========================================ERROR %s %d / LEAF", strerror( errno ), fd );
+      }
+      assert( fd <= 0 || rls1 == 0 );
     }
-#if 0
-    for ( int i = 0; i < CRX( sql_column_count, pstmt_arg ); i++ )       /* sqlite3_column_count( pstmt_arg ) */
-    {
-      const char *s;
-      const char *n;
-      const char *st;
-      duf_sqltype_t it;
+  }
+  ER( SCCBH, sccbh_preset_leaf_scanner, duf_sccb_handle_t * sccbh );
+}
 
-      n = CRX( sql_column_name, pstmt_arg, i );                          /* sqlite3_column_name */
-      s = CRX( sql_column_string, pstmt_arg, i );                        /* sqlite3_column_text( pstmt_arg, i ) */
-      st = CRX( sql_column_decltype, pstmt_arg, i );
-      it = CRX( sql_column_type, pstmt_arg, i );
-      if ( s )
-        QT( "@@%d. %s/%d %s='%s'", i, st, it, n, s );
-      else
-        QT( "@@%d. %s/%d %s=NULL", i, st, it, n );
-    }
-#endif
+SR( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+{
+  H_PDI->items.total++;
+/* sccbh->current_scanner = scanner; */
+  sccbh->assert__current_node_type = node_type;
+  if ( node_type == DUF_NODE_NODE )
+  {
+    H_PDI->items.dirs++;
+  }
+  else if ( node_type == DUF_NODE_LEAF )
+  {
+    H_PDI->items.files++;
+  /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
+    CRX( sccbh_preset_leaf_scanner, sccbh );
+  }
+  ER( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node_type );
+}
 
+SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
+{
+  /* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
+  CRX( sccbh_preset_leaf_scanner, sccbh );
+  {
     int eq = 0;
-    duf_sccb_data_row_t *new_row = NULL;
 
-    new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) );
+  /* duf_sccb_data_row_t *new_row = NULL; */
+
+  /* sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) ); */
   /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
     if ( sccbh->rows && sccbh->rows->prev )
     {
       unsigned long long sha1id0;
       unsigned long long sha1id1;
 
-      sha1id0 = CRX( datarow_get_number, new_row, "sha1id" );
-      sha1id1 = CRX( datarow_get_number, sccbh->rows, "sha1id" );
-    /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
+      sha1id0 = CRX( datarow_get_number, sccbh->rows, "sha1id" );
+      sha1id1 = CRX( datarow_get_number, sccbh->rows->prev, "sha1id" );
+    /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, sccbh->new_row->pathinfo.levinfo[17].node_type ); */
       eq = ( sha1id0 == sha1id1 );
       {
         if ( !eq )
@@ -141,11 +132,27 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_ar
       }
     }
 
-    if ( new_row )
-    {
-      new_row->prev = sccbh->rows;
-      sccbh->rows = new_row;
-    }
+  /* if ( sccbh->new_row )                 */
+  /* {                                     */
+  /*   sccbh->new_row->prev = sccbh->rows; */
+  /*   sccbh->rows = sccbh->new_row;       */
+  /*   sccbh->new_row = NULL;              */
+  /* }                                     */
+  }
+  assert( H_PDI == sccbh->pdi );
+/* CRV( ( scanner ), pstmt_arg, H_PDI, sccbh ); */
+/* if ( sccbh->atom_cb )                                            (* atom is fs-direntry(dir or reg) or item(node or leaf) *) */
+/* sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, node_type, QERRIND ); */
+
+  ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_t scanner,
+    duf_node_type_t node_type )
+{
+  if ( scanner )
+  {
+    CRX( sccbh_preset_scanner, sccbh, node_type );
     assert( H_PDI == sccbh->pdi );
     CRV( ( scanner ), pstmt_arg, H_PDI, sccbh );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */

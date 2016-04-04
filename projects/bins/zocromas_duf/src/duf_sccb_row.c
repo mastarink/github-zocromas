@@ -24,6 +24,8 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
+
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
 
@@ -35,23 +37,25 @@
 
 SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED )
 {
-  row = mas_malloc( sizeof( duf_sccb_data_row_t ) );
-  memset( row, 0, sizeof( duf_sccb_data_row_t ) );
+/* if ( pstmt_arg ) */
+  {
+    row = mas_malloc( sizeof( duf_sccb_data_row_t ) );
+    memset( row, 0, sizeof( duf_sccb_data_row_t ) );
 /* prow=mas_malloc(sizeof(duf_sccb_data_row_t)); */
-  row->cnt = CRX( sql_column_count, pstmt_arg );
+    row->cnt = pstmt_arg ? CRX( sql_column_count, pstmt_arg ) : 0;
 
-  row->fields = mas_malloc( row->cnt * sizeof( duf_sccb_data_value_t ) );
-  memset( row->fields, 0, row->cnt * sizeof( duf_sccb_data_value_t ) );
+    row->fields = mas_malloc( row->cnt * sizeof( duf_sccb_data_value_t ) );
+    memset( row->fields, 0, row->cnt * sizeof( duf_sccb_data_value_t ) );
 
-  CRX( pi_copy, &row->pathinfo, pi, 0 /* no_li */ , 0 /* no_copy */  );
+    CRX( pi_copy, &row->pathinfo, pi, 0 /* no_li */ , 0 /* no_copy */  );
 
 /* QT( "@X %d : %d", pi->levinfo[17].node_type, row->pathinfo.levinfo[17].node_type ); */
 
-  for ( size_t i = 0; i < row->cnt; i++ )                            /* sqlite3_column_count( pstmt_arg ) */
-  {
-    row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
-    row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt_arg, i ) );
-    row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, i ) );
+    for ( size_t i = 0; pstmt_arg && i < row->cnt; i++ )             /* sqlite3_column_count( pstmt_arg ) */
+    {
+      row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
+      row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt_arg, i ) );
+      row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, i ) );
 /*     if ( 0 == strcmp( row->fields[i].name, "mtime" ) )                                                                                     */
 /*     {                                                                                                                                      */
 /* #include <mastar/sqlite/mas_sqlite.h>                                                                                                      */
@@ -59,40 +63,41 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 /*     (* assert( strcmp( row->fields[i].name, "mtime" ) ); *)                                                                                */
 /*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt_arg, i ), mas_sqlite_column_type( pstmt_arg, i ), mas_sqlite_column_decltype( pstmt_arg, i ) ); */
 /*     }                                                                                                                                      */
-    switch ( row->fields[i].typ )
-    {
-    case DUF_SQLTYPE_NONE:
-      break;
-    case DUF_SQLTYPE_INTEGER:
-      row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
-    /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
-      break;
-    case DUF_SQLTYPE_FLOAT:
-      break;
-    case DUF_SQLTYPE_TEXT:
-      row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
-      break;
-    case DUF_SQLTYPE_BLOB:
-      break;
-    case DUF_SQLTYPE_NULL:
-      break;
-    }
-    {
+      switch ( row->fields[i].typ )
+      {
+      case DUF_SQLTYPE_NONE:
+        break;
+      case DUF_SQLTYPE_INTEGER:
+        row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
+      /* QT( "field %lu: '%s' = %lld", i, row->fields[i].name, row->fields[i].value.n ); */
+        break;
+      case DUF_SQLTYPE_FLOAT:
+        break;
+      case DUF_SQLTYPE_TEXT:
+        row->fields[i].value.n = CRX( sql_column_long_long, pstmt_arg, i );
+        break;
+      case DUF_SQLTYPE_BLOB:
+        break;
+      case DUF_SQLTYPE_NULL:
+        break;
+      }
+      {
 #if 0
-      const char *s;
-      const char *n;
-      const char *st;
-      duf_sqltype_t it;
+        const char *s;
+        const char *n;
+        const char *st;
+        duf_sqltype_t it;
 
-      n = CRX( sql_column_name, pstmt_arg, i );                      /* sqlite3_column_name */
-      s = CRX( sql_column_string, pstmt_arg, i );                    /* sqlite3_column_text( pstmt_arg, i ) */
-      st = CRX( sql_column_decltype, pstmt_arg, i );
-      it = CRX( sql_column_type, pstmt_arg, i );
-      if ( s )
-        QT( "@%lu. %s/%d %s='%s'", i, st, it, n, s );
-      else
-        QT( "@%lu. %s/%d %s=NULL", i, st, it, n );
+        n = CRX( sql_column_name, pstmt_arg, i );                    /* sqlite3_column_name */
+        s = CRX( sql_column_string, pstmt_arg, i );                  /* sqlite3_column_text( pstmt_arg, i ) */
+        st = CRX( sql_column_decltype, pstmt_arg, i );
+        it = CRX( sql_column_type, pstmt_arg, i );
+        if ( s )
+          QT( "@%lu. %s/%d %s='%s'", i, st, it, n, s );
+        else
+          QT( "@%lu. %s/%d %s=NULL", i, st, it, n );
 #endif
+      }
     }
   }
   ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED );
@@ -212,39 +217,75 @@ duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name )
 /* ERX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name ); */
 }
 
-const char *
-duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name )
-/* SRX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name ) */
+/* const char *                                                            */
+/* duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name ) */
+SRX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name )
 {
-  const char *s = NULL;
+/* const char *s = NULL; */
 
   s = sccbh ? CRX( datarow_get_string, sccbh->rows, name ) : NULL;
-  return s;
-/* ERX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name ); */
+/* return s; */
+  ERX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 }
 #endif
 /* void                                             */
 /* duf_sccbh_rows_eval( duf_sccb_handle_t * sccbh ) */
 SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
 {
-  int n = 0;
-
-/* TODO move to new sccb->shut callback */
-  for ( duf_sccb_data_row_t * trow = sccbh->rows; trow; trow = trow->prev )
+  if ( sccbh && sccbh->rows )
   {
-    const char *path;
-    const char *rpath;
-    const char *iname;
+    int n = 0;
 
-    path = CRX( pi_path, &trow->pathinfo );
-    rpath = CRX( pi_relpath, &trow->pathinfo );
-    iname = CRX( pi_itemname, &trow->pathinfo );
-    QT( "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-    QT( "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
-    n++;
+    for ( duf_sccb_data_row_t * trow = sccbh->rows->prev; trow; trow = trow->prev )
+    {
+      if ( trow && trow->cnt )
+      {
+        const char *path;
+        const char *rpath;
+        const char *iname;
+
+        path = CRX( pi_path, &trow->pathinfo );
+        rpath = CRX( pi_relpath, &trow->pathinfo );
+        iname = CRX( pi_itemname, &trow->pathinfo );
+        QT( "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+        QT( "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+        n++;
+      }
+    }
+    CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
+    QTT( "@@@@ ===========================================" );
+    sccbh->rows->prev = NULL;
   }
-  CRX( datarow_list_delete_f, sccbh->rows, 0 );
-  QTT( "@@@@ ===========================================" );
-  sccbh->rows = NULL;
   ERN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );
+}
+
+SRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
+{
+  if ( sccbh )
+  {
+    assert( !sccbh->new_row );
+    sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) );
+  }
+  ERN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
+}
+
+SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
+{
+  if ( sccbh && sccbh->new_row )
+  {
+  /* assert( sccbh->new_row ); */
+    sccbh->new_row->prev = sccbh->rows;
+    sccbh->rows = sccbh->new_row;
+    sccbh->new_row = NULL;
+  }
+
+  ERN( SCCBH, void, sccbh_close_row, duf_sccb_handle_t * sccbh );
+}
+
+SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
+{
+  CRX( sccbh_row_open, sccbh, pstmt_arg );
+  CRX( sccbh_row_close, sccbh );
+
+  ERN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
 }

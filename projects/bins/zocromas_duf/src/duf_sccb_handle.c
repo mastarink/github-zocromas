@@ -54,6 +54,7 @@
 
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
+#include "duf_sccbh_eval.h"
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
@@ -489,7 +490,9 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
 
-    CRX( sccbh_rows_eval, sccbh );
+    CRX( sccbh_row_next, sccbh, NULL /* pstmt_arg */  );             /* XXX FIXME XXX */
+  /* CR( sccbh_call_leaf_pack_scanner, sccbh, 0 (* scanstage *)  );     XXX FIXME XXX */
+    CRX( sccbh_rows_eval, sccbh );                                   /* XXX FIXME XXX */
 
     CRX( datarow_list_delete_f, sccbh->rows, 0 );
     sccbh->rows = NULL;

@@ -20,14 +20,22 @@ void duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs );
 #  endif
 # endif
 
-int duf_li_calc_depth( const duf_levinfo_t * pli );
-char *duf_li_path( const duf_levinfo_t * pli, int count );
+/* int duf_li_calc_depth( const duf_levinfo_t * pli ); */
+DRX( LI, int, d, -1, li_calc_depth, const duf_levinfo_t * pli );
 
-void duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
+/* char *duf_li_path( const duf_levinfo_t * pli, int count ); */
+DRX( LI, char *, path, NULL, li_path, const duf_levinfo_t * pli, int count );
 
-int duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
-int duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid );
+/* void duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d ); */
+DRN( LI, void, li_dbinit, duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
 
-const char *duf_li_itemname( duf_levinfo_t * pli );
+/* int duf_nameid2li_existed( duf_depthinfo_t * pdi, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid ); */
+DR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
+
+/* int duf_dirid2li_existed( duf_depthinfo_t * pdi, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid ); */
+DR( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, duf_levinfo_t * pli, unsigned long long *pparentid );
+
+/* const char *duf_li_itemname( duf_levinfo_t * pli ); */
+DRX( LI, const char *, itemname, NULL, li_itemname, duf_levinfo_t * pli );
 
 #endif

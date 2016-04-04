@@ -65,10 +65,11 @@ duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs )
 # endif
 #endif
 
-int
-duf_li_calc_depth( const duf_levinfo_t * pli )
+/* int                                            */
+/* duf_li_calc_depth( const duf_levinfo_t * pli ) */
+SRX( LI, int, d, -1, li_calc_depth, const duf_levinfo_t * pli )
 {
-  int d = -1;
+/* int d = -1; */
 
   while ( pli && pli->itemname )
   {
@@ -77,50 +78,51 @@ duf_li_calc_depth( const duf_levinfo_t * pli )
     d++;
     pli++;
   }
-  return d;
+/* return d; */
+  ERX( LI, int, d, 0, li_calc_depth, const duf_levinfo_t * pli );
 }
 
-char *
-duf_li_path( const duf_levinfo_t * pli, int count )
+/* char *                                              */
+/* duf_li_path( const duf_levinfo_t * pli, int count ) */
+SRX( LI, char *, path, NULL, li_path, const duf_levinfo_t * pli, int count )
 {
-  char *path = NULL;
+/* char *path = NULL; */
+  size_t len = 2;
+  char *p;
 
+  assert( count > 0 );
+  for ( int i = 0; i < count; i++ )
   {
-    size_t len = 2;
-    char *p;
-
-    assert( count > 0 );
-    for ( int i = 0; i < count; i++ )
-    {
-      assert( pli[i].itemname );
-      len += strlen( pli[i].itemname ) + 1;
-    }
-    path = mas_malloc( len );
-    p = path;
-
-    for ( int i = 0; i < count; i++ )
-    {
-      size_t l;
-
-      if ( p == path || *( p - 1 ) != '/' )
-        *p++ = '/';
-      *p = 0;
-      MAST_TRACE( path, 4, "path:%s", path );
-      l = strlen( pli[i].itemname );
-      if ( l > 0 )
-      {
-        strcpy( p, pli[i].itemname );
-        p += l;
-        *p++ = '/';
-      }
-      *p = 0;
-    }
+    assert( pli[i].itemname );
+    len += strlen( pli[i].itemname ) + 1;
   }
-  return path;
+  path = mas_malloc( len );
+  p = path;
+
+  for ( int i = 0; i < count; i++ )
+  {
+    size_t l;
+
+    if ( p == path || *( p - 1 ) != '/' )
+      *p++ = '/';
+    *p = 0;
+    MAST_TRACE( path, 4, "path:%s", path );
+    l = strlen( pli[i].itemname );
+    if ( l > 0 )
+    {
+      strcpy( p, pli[i].itemname );
+      p += l;
+      *p++ = '/';
+    }
+    *p = 0;
+  }
+
+/* return path; */
+  ERX( LI, char *, path, NULL, li_path, const duf_levinfo_t * pli, int count );
 }
 
 static void
-_duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
+li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
 {
   assert( pli );
   pli->db.dirid = DUF_GET_QUFIELD3( pstmt_arg, dirid );
@@ -163,12 +165,14 @@ _duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
 /* mas_free( sp ); */
 }
 
-void
-duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
+/* void                                                                                            */
+/* duf_li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d ) */
+SRN( LI, void, li_dbinit, duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
 {
   pli->d = d;
   pli->node_type = node_type;
-  _duf_li_dbinit( pli, pstmt_arg );
+  li_dbinit( pli, pstmt_arg );
+  ERN( LI, void, li_dbinit, duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
 }
 
 static
@@ -317,8 +321,10 @@ SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid,
   ER( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid, duf_levinfo_t * pli, unsigned long long *pdirid );
 }
 
-const char *
-duf_li_itemname( duf_levinfo_t * pli )
+/* const char *                           */
+/* duf_li_itemname( duf_levinfo_t * pli ) */
+SRX( LI, const char *, itemname, NULL, li_itemname, duf_levinfo_t * pli )
 {
-  return pli ? pli->itemname : NULL;
+  itemname = pli ? pli->itemname : NULL;
+  ERX( LI, const char *, itemname, NULL, li_itemname, duf_levinfo_t * pli );
 }

@@ -99,6 +99,7 @@ shn_gvimer_plus_mased_file_here_nt ()
     filid=${BASH_REMATCH[1]}
     fline=${BASH_REMATCH[2]}
   fi
+  shn_msg "fline:$fline; filid:$filid"
 # shn_msg "1 $FUNCNAME:$LINENO: filid here: $filid; rfile:$rfile;"
   if ! typf=$( shn_gvimer_plus_filtyp "${filid}" )  \
   		&& afileq=`shn_find_c_mastar_function "$filid" ${edfile_dirs[src]}` ; then
@@ -148,6 +149,7 @@ shn_gvimer_plus_mased_file_here_nt ()
     fi
     if masedf=`shn_gvimer_masedf_nt $filid $typf $fpath` ; then
       fuuid=$( shn_gvimer_plus_uuid "$masedf" )
+      shn_msg "fuuid:fuuid by masedf=$masedf"
       way='mased'
     else
       way='nomased'
@@ -306,6 +308,7 @@ shn_gvimer_plus_nt ()
     fi
   fi
   local  fuuid0=$( shn_gvimer_plus_uuid "$@" )
+  shn_msg "fuuid0:fuuid0 by $@"
 # declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [cdef]='src/inc' [shn]='shn' [dufcmds]='test/duf/tests20151006' [mased_vim]="$mased_dir" [acm]="." )
   declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [mased_vim]="$mased_dir" [vimstd]="$localvim_dir" )
 # declare -A edfile_typs=(['src']='*.[ch]' [cdef]='*.def'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )

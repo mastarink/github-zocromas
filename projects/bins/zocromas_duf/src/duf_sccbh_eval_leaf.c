@@ -23,6 +23,7 @@
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
@@ -94,7 +95,10 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
 # endif
       }
 #else
+
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
+
+      assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
 #endif
       ERRUPPER( FS_DISABLED );
     }
@@ -130,7 +134,9 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
       if ( scanner )
         CRV( scanner, pstmt_arg, H_PDI );
 #else
+
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
+
 #endif
       ERRUPPER( FS_DISABLED );
     }

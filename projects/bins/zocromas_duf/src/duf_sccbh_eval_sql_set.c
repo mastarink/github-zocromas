@@ -32,21 +32,22 @@
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_structs.h"
 
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
+#include "duf_sccbh_eval.h"
 
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 /* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
-
-#include "duf_sccb_structs.h"
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
@@ -111,6 +112,7 @@ static
 SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
     duf_scanstage_t scanstage )
 {
+  /* int have_rows=0; */
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
   DUF_SQL_SE_START_STMT_NOPDI( sql_selector, pstmt_local );
@@ -142,7 +144,10 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
   /* T( "@pdi->total_bytes:%llu", H_PDI->total_bytes ); */
 
     DUF_SQL_SE_EACH_ROW( pstmt_local, CR( eval_sccbh_sql_row_str_cb, sccbh, node_type, pstmt_local, str_cb2, scanstage ) );
+    /* have_rows=1; */
 
+    /* QT( "@%s", H_SCCB->name ); */
+    assert( str_cb2 == duf_sccbh_eval_db_leaf_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_all );
   /* mas_force_count_ereport( 1 ); */
   /* DUF_TEST_R( r ); */
   }
@@ -157,6 +162,13 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 #else
   DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt_local );
 #endif
+/* QT( "@@xxx : %s", QERRNAME ); */
+
+  
+  /* CRX( sccbh_row_next, sccbh, NULL );                     */
+  /* if ( have_rows && node_type == DUF_NODE_LEAF )          */
+  /*   CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
+
   ER( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
       duf_scanstage_t scanstage );
 }
