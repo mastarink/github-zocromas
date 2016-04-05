@@ -69,7 +69,7 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .leaf_scan_fd2 = duf_crc32_dirent_content2,
+  .leaf_scan_fd2 = F2ND( crc32_dirent_content2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = -1,                                        /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -174,7 +174,7 @@ SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_dept
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_crc32, pstmt_local );                   /* clears SQL_ROW / SQL_DONE */
+  DUF_SQL_SE_END_STMT( pdi, select_crc32, pstmt_local );             /* clears SQL_ROW / SQL_DONE */
   ERP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long crc32sum );
 }
 
@@ -202,7 +202,7 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
       DUF_SQL_SE_BIND_LL( crc32sum, crc32sum, pstmt_local );
       DUF_SQL_SE_STEPC( pstmt_local );
       DUF_SQL_SE_CHANGES( changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( pdi, insert_crc32, pstmt_local );               /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, insert_crc32, pstmt_local );         /* clears SQL_ROW / SQL_DONE */
       insert_cnt++;
     }
     duf_pdi_reg_changes( pdi, changes );
@@ -344,13 +344,14 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
         DUF_SQL_SE_CHANGES( changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( pdi, update_crc32id, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
+        DUF_SQL_SE_END_STMT( pdi, update_crc32id, pstmt_local );     /* clears SQL_ROW / SQL_DONE */
 #endif
       }
       duf_pdi_reg_changes( pdi, changes );
 
     }
-    MAST_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat_size( pdi ) /* duf_levinfo_stat( pdi )->st_size */, fname );
+    MAST_TRACE( crc32, 0, "(%lu) %04llx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id,
+                duf_levinfo_stat_size( pdi ) /* duf_levinfo_stat( pdi )->st_size */ , fname );
   /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   pdi->total_bytes += bytes;

@@ -55,30 +55,30 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
        .title = "save it to",
        .name = "save_to",
        .def_opendir = 1,
-       .init_scan = duf_save_to_init,
+       .init_scan = F2ND( save_to_init ),
 #if 0
        .beginning_sql_seq = &sql_create_selected,
 #else
        .beginning_sql_seq = &sql_update_selected,
 #endif
 
-       .node_scan_before2 = duf_save_to_node_before2,
-       .node_scan_before2_deleted = duf_save_to_node_before2_del,
+     /* .node_scan_before2 = F2ND( save_to_node_before2 ), */
+     /* .node_scan_before2_deleted = F2ND( save_to_node_before2_del ), */
 
-       .node_scan_after2 = duf_save_to_node_after2,
-       .node_scan_after2_deleted = duf_save_to_node_after2_del,
+     /* .node_scan_after2 = F2ND( save_to_node_after2 ), */
+     /* .node_scan_after2_deleted = F2ND( save_to_node_after2_del ), */
 
-       .node_scan_middle2 = duf_save_to_node_middle2,
-       .node_scan_middle2_deleted = duf_save_to_node_middle2_del,
+     /* .node_scan_middle2 = F2ND( save_to_node_middle2 ), */
+     /* .node_scan_middle2_deleted = F2ND( save_to_node_middle2_del ), */
 
-       .leaf_scan_fd2 = duf_save_to_de_content2,
-       .leaf_scan_fd2_deleted = duf_save_to_de_content2_del,
+       .leaf_scan_fd2 = F2ND( save_to_de_content2 ),
+       .leaf_scan_fd2_deleted = F2ND( save_to_de_content2_del ),
 
-       .leaf_scan2 = duf_save_to_leaf2,
-       .leaf_scan2_deleted = duf_save_to_leaf2_del,
+     /* .leaf_scan2 = F2ND( save_to_leaf2 ), */
+     /* .leaf_scan2_deleted = F2ND( save_to_leaf2_del ), */
 
-     /* .dirent_file_scan_before2 = duf_save_to_de_file_before2, */
-     /* .dirent_dir_scan_before2 = duf_save_to_de_dir_before2, */
+     /* .dirent_file_scan_before2 = F2ND(save_to_de_file_before2), */
+     /* .dirent_dir_scan_before2 = F2ND(save_to_de_dir_before2), */
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
        .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -224,11 +224,7 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthin
     MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( pdi ) );
     MAST_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     MAST_TRACE( mod, 2, "@to => %s", save_path );
-    if ( *save_path == '/' )
-    {
-      ERRMAKE( PATH );
-    }
-    else if ( *save_path == '.' )
+    if ( *save_path == '/' || *save_path == '.' )
     {
       ERRMAKE( PATH );
     }
@@ -252,9 +248,6 @@ SR( MOD, save_to_de_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthin
         if ( rt < 0 && errno == ENOENT )
         {
           rt = mkdirat( duf_levinfo_dfd_top( pdi ), save_path, S_IRWXU );
-        }
-        else
-        {
         }
         if ( sl )
           *sl++ = '/';

@@ -4,16 +4,22 @@
 #include <dlfcn.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ▤ */
 #include <mastar/tools/mas_utils_path.h>                             /* mas_normalize_path; mas_pathdepth; mas_realpath etc. ▤ */
 #include <mastar/trace/mas_trace.h>
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
+
+#include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "std_mod_sets.h"
 
 #include "duf_sccb_structs.h"
@@ -22,6 +28,31 @@
 /* ###################################################################### */
 #include "duf_sccb.h"
 /* ###################################################################### */
+
+SRX( OTHER, int, n, -1, set_name2set_index, const char *set_name, duf_sql_set_t * std_sets, int nsets )
+{
+  if ( set_name )
+    for ( unsigned i = 0; i < ( unsigned ) nsets; i++ )
+      if ( std_sets[i].name && 0 == strcmp( std_sets[i].name, set_name ) )
+        n = i;
+  ERX( OTHER, int, n, -1, set_name2set_index, const char *set_name, duf_sql_set_t * std_sets, int nsets );
+}
+
+SRX( OTHER, const duf_sql_set_t *, set, NULL, set_index2set, unsigned set_index, duf_sql_set_t * std_sets, int nsets )
+{
+  set = ( set_index <= ( unsigned ) nsets ) ? &std_sets[set_index - 1] : NULL;
+  ERX( OTHER, const duf_sql_set_t *, set, NULL, set_index2set, unsigned set_index, duf_sql_set_t * std_sets, int nsets );
+}
+
+SRX( OTHER, const duf_sql_set_t *, set, NULL, set_name2set, const char *set_name, duf_sql_set_t * std_sets, int nsets )
+{
+  int n;
+
+  n = CRX( set_name2set_index, set_name, std_sets, nsets );
+  if ( n >= 0 )
+    set = &std_sets[n];
+  ERX( OTHER, const duf_sql_set_t *, set, NULL, set_name2set, const char *set_name, duf_sql_set_t * std_sets, int nsets );
+}
 
 /* TODO rename _duf_uni_scan_action_title => _duf_sccb_title */
 static const char *
@@ -105,6 +136,17 @@ duf_register_sccb( duf_scan_callbacks_t * first, duf_scan_callbacks_t * sccb )
     else
     {
     /* dlclose ?? */
+    }
+
+    {
+    /* int n; */
+
+    /* n = CRX( set_name2set_index, sccb->std_leaf_set_name, std_leaf_sets, std_leaf_nsets ); */
+    /* assert( n == sccb->use_std_leaf_set_num ); */
+      assert( sccb->use_std_leaf_set_num == -1 || CRX( set_name2set, sccb->std_leaf_set_name, std_leaf_sets, std_leaf_nsets ) ==
+              CRX( set_index2set, sccb->use_std_leaf_set_num, std_leaf_sets, std_leaf_nsets ) );
+      assert( sccb->use_std_node_set_num == -1 || CRX( set_name2set, sccb->std_node_set_name, std_node_sets, std_node_nsets ) ==
+              CRX( set_index2set, sccb->use_std_node_set_num, std_node_sets, std_node_nsets ) );
     }
   }
 }

@@ -82,7 +82,7 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_file_scan_before2 = duf_register_pdifiledata,
+  .dirent_file_scan_before2 = F2ND( register_pdifiledata ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -99,23 +99,25 @@ duf_scan_callbacks_t duf_mod_handler = {
            .name = "fd-node",
            .type = DUF_NODE_NODE,
            .expand_sql = 1,                                          /* */
+#if 1
            .fieldset =                                               /* */
            "'filedata-node' AS fieldset_id, "                        /* */
            "  pt." DUF_SQL_IDFIELD " AS dirid"                       /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid "                     /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_NUMS )
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-#endif
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
+# endif
+# ifndef MAS_DUF_DEFS_H
+#  error use #include "duf_defs.h"
+# elif defined( DUF_DO_RNUMS )
            ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                 /* */
            ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles "            /* */
-#endif
+# endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+#endif
            ,
            .selector2 =                                              /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "              /* */
@@ -126,7 +128,8 @@ duf_scan_callbacks_t duf_mod_handler = {
            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
 #endif
            ,
-           .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName ) " /* */
+           .matcher = "pt.parentid = :parentdirID"                  /* */
+      /*     " AND ( :dirName IS NULL OR dname=:dirName ) "    */        /* */
            ,
            .filter = NULL                                            /* */
            },

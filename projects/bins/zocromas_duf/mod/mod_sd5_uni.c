@@ -70,10 +70,10 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .leaf_scan_fd2 = duf_sd5_dirent_content2,
+  .leaf_scan_fd2 = F2ND( sd5_dirent_content2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 /* .std_leaf_set_name = "std-leaf-no-sel", */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
@@ -169,7 +169,7 @@ SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinf
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_sd5, pstmt_local );                     /* clears SQL_ROW / SQL_DONE */
+  DUF_SQL_SE_END_STMT( pdi, select_sd5, pstmt_local );               /* clears SQL_ROW / SQL_DONE */
   ERP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 );
 }
 
@@ -195,7 +195,7 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
       DUF_SQL_SE_BIND_LL( sd5sum2, sd64[0], pstmt_local );
       DUF_SQL_SE_STEPC( pstmt_local );
       DUF_SQL_SE_CHANGES( changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( pdi, insert_sd5, pstmt_local );                 /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, insert_sd5, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
@@ -341,7 +341,7 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthin
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
         DUF_SQL_SE_CHANGES( changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( pdi, update_sd5id, pstmt_local );             /* clears SQL_ROW / SQL_DONE */
+        DUF_SQL_SE_END_STMT( pdi, update_sd5id, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
 #endif
 
       }

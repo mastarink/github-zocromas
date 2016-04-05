@@ -35,8 +35,11 @@ DRX( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_ro
 /* const char *duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name ); */
 DRX( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
 
-unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name );
-const char *duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name );
+/* unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ); */
+DRX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
+
+/* const char *duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name ); */
+DRX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 
 DRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );
 

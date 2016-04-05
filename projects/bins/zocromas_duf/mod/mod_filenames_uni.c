@@ -63,11 +63,11 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-/* .dirent_file_scan_before = duf_filenames_entry_reg, */
-  .dirent_file_scan_before2 = duf_filenames_de_file_before2,
+/* .dirent_file_scan_before = F2ND(filenames_entry_reg), */
+  .dirent_file_scan_before2 = F2ND( filenames_de_file_before2 ),
 
-  .leaf_scan2 = duf_filenames_leaf2,
-  .leaf_scan2_deleted = duf_filenames_leaf2_deleted,
+  .leaf_scan2 = F2ND( filenames_leaf2 ),
+  .leaf_scan2_deleted = F2ND( filenames_leaf2_deleted ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -216,7 +216,7 @@ SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_d
     DUF_SQL_SE_BIND_LL( dataID, dataid, pstmt_local );
     DUF_SQL_SE_STEPC( pstmt_local );
     DUF_SQL_SE_CHANGES( changes, pstmt_local );
-    DUF_SQL_SE_END_STMT( pdi, insert_filename, pstmt_local );              /* clears SQL_ROW / SQL_DONE */
+    DUF_SQL_SE_END_STMT( pdi, insert_filename, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
   }
   else
   {

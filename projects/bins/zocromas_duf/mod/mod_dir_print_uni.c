@@ -67,7 +67,9 @@ duf_scan_callbacks_t duf_mod_handler = {
   .beginning_sql_seq = &sql_update_selected,
 # endif
 #endif
-  .leaf_scan2 = duf_print_leaf2,
+
+  .leaf_scan2 = F2ND( print_leaf2 ),
+
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */

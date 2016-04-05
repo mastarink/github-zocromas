@@ -55,9 +55,9 @@ duf_scan_callbacks_t duf_mod_handler = {
   .name = "set_dir_priority",
   .def_opendir = 0,                                                  /* ?? */
 
-  .node_scan_before2 = duf_set_dir_priority_node_before2,
-  .node_scan_after2 = duf_set_dir_priority_node_after2,
-  .node_scan_middle2 = duf_set_dir_priority_node_middle2,
+  .node_scan_before2 = F2ND( set_dir_priority_node_before2 ),
+  .node_scan_after2 = F2ND( set_dir_priority_node_after2 ),
+  .node_scan_middle2 = F2ND( set_dir_priority_node_middle2 ),
 
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -73,7 +73,7 @@ static
 SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
-              duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */ );
+              duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
 
   {
     int changes = 0;
@@ -85,7 +85,7 @@ SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, d
     DUF_SQL_SE_BIND_LL( priority, DUF_CONFIGG( vars.dir_priority ), pstmt_local );
     DUF_SQL_SE_STEPC( pstmt_local );
     DUF_SQL_SE_CHANGES( changes, pstmt_local );
-    DUF_SQL_SE_END_STMT( pdi, update_priority, pstmt_local );              /* clears SQL_ROW / SQL_DONE */
+    DUF_SQL_SE_END_STMT( pdi, update_priority, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
     duf_pdi_reg_changes( pdi, changes );
 
   }
@@ -98,7 +98,7 @@ SR( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, d
     duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
-              duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */ );
+              duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
 
   ER( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

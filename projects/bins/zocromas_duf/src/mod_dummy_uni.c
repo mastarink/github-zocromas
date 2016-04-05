@@ -41,30 +41,30 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_dummy )
        .title = "dummy",
        .name = "dummy",
        .def_opendir = 0,
-       .init_scan = duf_dummy_init,
+       .init_scan = F2ND( dummy_init ),
 #if 0
        .beginning_sql_seq = &sql_create_selected,
 #else
        .beginning_sql_seq = &sql_update_selected,
 #endif
 
-       .node_scan_before2 = duf_dummy_node_before2,
-       .node_scan_before2_deleted = duf_dummy_node_before2_del,
+       .node_scan_before2 = F2ND( dummy_node_before2 ),
+       .node_scan_before2_deleted = F2ND( dummy_node_before2_del ),
 
-       .node_scan_after2 = duf_dummy_node_after2,
-       .node_scan_after2_deleted = duf_dummy_node_after2_del,
+       .node_scan_after2 = F2ND( dummy_node_after2 ),
+       .node_scan_after2_deleted = F2ND( dummy_node_after2_del ),
 
-       .node_scan_middle2 = duf_dummy_node_middle2,
-       .node_scan_middle2_deleted = duf_dummy_node_middle2_del,
+       .node_scan_middle2 = F2ND( dummy_node_middle2 ),
+       .node_scan_middle2_deleted = F2ND( dummy_node_middle2_del ),
 
-       .leaf_scan_fd2 = duf_dummy_de_content2,
-       .leaf_scan_fd2_deleted = duf_dummy_de_content2_del,
+       .leaf_scan_fd2 = F2ND( dummy_de_content2 ),
+       .leaf_scan_fd2_deleted = F2ND( dummy_de_content2_del ),
 
-       .leaf_scan2 = duf_dummy_leaf2,
-       .leaf_scan2_deleted = duf_dummy_leaf2_del,
+       .leaf_scan2 = F2ND( dummy_leaf2 ),
+       .leaf_scan2_deleted = F2ND( dummy_leaf2_del ),
 
-       .dirent_file_scan_before2 = duf_dummy_de_file_before2,
-       .dirent_dir_scan_before2 = duf_dummy_de_dir_before2,
+       .dirent_file_scan_before2 = F2ND( dummy_de_file_before2 ),
+       .dirent_dir_scan_before2 = F2ND( dummy_de_dir_before2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
        .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */

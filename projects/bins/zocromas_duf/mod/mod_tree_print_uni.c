@@ -59,9 +59,10 @@ duf_scan_callbacks_t duf_mod_handler = {
   .beginning_sql_seq = &sql_update_selected,
 #endif
 /* .node_scan_before = tree_node_before, */
-  .node_scan_before2 = duf_tree_node_before2,
+  .node_scan_before2 = F2ND( tree_node_before2 ),
+
 /* .leaf_scan = tree_leaf, */
-  .leaf_scan2 = duf_tree_leaf2,
+  .leaf_scan2 = F2ND( tree_leaf2 ),
 
 /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
@@ -97,7 +98,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                             DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     if ( !over )
@@ -124,7 +125,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
         sformat = "%f\n";
 
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+        slen = duf_print_sformat_file_info( pdi, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                             DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     DUF_PUTSL( 0 );
@@ -179,7 +180,7 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
         if ( !sformat_pref )
           sformat_pref = " %6s  %4s%P";
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+          slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                               DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
                                               &over );
       }
@@ -207,7 +208,7 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
         if ( !sformat )
           sformat = "%f\n";
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL,
+          slen = duf_print_sformat_file_info( pdi, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                               DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
                                               &over );
       }

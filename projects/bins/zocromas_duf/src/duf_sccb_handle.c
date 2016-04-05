@@ -64,29 +64,48 @@
 /* ###################################################################### */
 
 /* 20160212.130632 */
-static duf_sql_set_pair_t
-duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name )
+static
+/* duf_sql_set_pair_t                                                                                                    */
+/* duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index, const char *force_leaf_set_name ) */
+SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_leaf_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index,
+     const char *force_leaf_set_name )
 {
-  duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
+/* duf_sql_set_pair_t set_pair = { */
+/*   .orderid = 0, NULL, NULL      */
+/* };                              */
   const duf_sql_set_t *set = NULL;
 
   assert( H_SCCB );
   {
     if ( !set && force_leaf_set_name )
+#if 0
       for ( unsigned i = 0; i < ( unsigned ) std_leaf_nsets; i++ )
         if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, force_leaf_set_name ) )
           set = &std_leaf_sets[i];
-
+#else
+      set = CRX( set_name2set, force_leaf_set_name, std_leaf_sets, std_leaf_nsets );
+#endif
     if ( !set && force_set_leaf_index > 0 )
+#if 0
       set = ( force_set_leaf_index <= ( unsigned ) std_leaf_nsets ) ? &std_leaf_sets[force_set_leaf_index - 1] : NULL;
+#else
+      set = CRX( set_index2set, force_set_leaf_index, std_leaf_sets, std_leaf_nsets );
+#endif
 
     if ( !set && H_SCCB->std_leaf_set_name )
+#if 0
       for ( unsigned i = 0; i < ( unsigned ) std_leaf_nsets; i++ )
         if ( std_leaf_sets[i].name && 0 == strcmp( std_leaf_sets[i].name, H_SCCB->std_leaf_set_name ) )
           set = &std_leaf_sets[i];
-
+#else
+      set = CRX( set_name2set, H_SCCB->std_leaf_set_name, std_leaf_sets, std_leaf_nsets );
+#endif
     if ( !set && H_SCCB->use_std_leaf_set_num > 0 )
+#if 0
       set = ( H_SCCB->use_std_leaf_set_num <= std_leaf_nsets ) ? &std_leaf_sets[H_SCCB->use_std_leaf_set_num - 1] : NULL;
+#else
+      set = CRX( set_index2set, force_set_leaf_index, std_leaf_sets, std_leaf_nsets );
+#endif
     if ( !set )
       set = H_SCCB->leaf.type == DUF_NODE_NONE ? NULL : &H_SCCB->leaf;
   }
@@ -102,14 +121,21 @@ duf_sccbh_get_leaf_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_leaf_i
 /* assert( set_pair.second ); */
 
 /* assert( sccbh->second_leaf_set ); */
-  return set_pair;
+/* return set_pair; */
+  ERS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_leaf_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_leaf_index,
+       const char *force_leaf_set_name );
 }
 
 /* 20160212.130653 */
-static duf_sql_set_pair_t
-duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED )
+static
+/* duf_sql_set_pair_t                                                                                                                                                       */
+/* duf_sccbh_get_node_sql_set(                                       duf_sccb_handle_t * sccbh, unsigned force_set_node_index, const char *force_node_set_name MAS_UNUSED ) */
+SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_node_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_node_index,
+     const char *force_node_set_name MAS_UNUSED )
 {
-  duf_sql_set_pair_t set_pair = {.orderid = 0, NULL, NULL };
+/* duf_sql_set_pair_t set_pair = { */
+/*   .orderid = 0, NULL, NULL      */
+/* };                              */
   const duf_sql_set_t *set = NULL;
 
   assert( H_SCCB );
@@ -143,16 +169,19 @@ duf_sccbh_get_node_sql_set( duf_sccb_handle_t * sccbh, unsigned force_set_node_i
   assert( !set_pair.second || set_pair.second->type == DUF_NODE_NODE );
   assert( set_pair.active );
 /* assert( set_pair.second ); */
-  return set_pair;
+/* return set_pair; */
+  ERS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_node_sql_set, duf_sccb_handle_t * sccbh, unsigned force_set_node_index,
+       const char *force_node_set_name MAS_UNUSED );
 }
 
 /* 20160212.130701 */
-duf_sql_set_pair_t
-duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+/* duf_sql_set_pair_t                                                              */
+/* duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type ) */
+SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_sql_set_f, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
-  duf_sql_set_pair_t set_pair = {
-    .orderid = 0, NULL, NULL
-  };
+/* duf_sql_set_pair_t set_pair = { */
+/*   .orderid = 0, NULL, NULL      */
+/* };                              */
 
   assert( H_SCCB );
   switch ( node_type )
@@ -171,7 +200,8 @@ duf_sccbh_get_sql_set_f( duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
   set_pair.orderid = H_PU->orderid;
   assert( !set_pair.active || set_pair.active->type == node_type );
   assert( !set_pair.second || set_pair.second->type == node_type );
-  return set_pair;
+/* return set_pair; */
+  ERS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_sql_set_f, duf_sccb_handle_t * sccbh, duf_node_type_t node_type );
 }
 
 /* 20160212.130712 */
@@ -192,7 +222,10 @@ SRP( SCCBH, unsigned long long, cnt, 0, count_total_items, duf_sccb_handle_t * s
   if ( H_SCCB )
   {
     char *sqlt = NULL;
-    duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
+
+    duf_sql_set_pair_t sql_set_pair = {
+      .orderid = 0, NULL, NULL
+    };
 
     sql_set_pair = duf_sccbh_get_sql_set_f( sccbh, H_SCCB->count_nodes ? DUF_NODE_NODE : DUF_NODE_LEAF );
 #if 0
@@ -346,8 +379,8 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 /* void ( *duf_rsccbh_fun_t )
  *                ( const struct duf_sccb_handle_s *, duf_stmnt_t *, duf_scanstage_t, duf_scanner_t, duf_node_type_t, int ) */
 static void
-duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
-                   duf_scanner_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED,
+                   duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
 {
   static unsigned n = 0;
   char c = '-';
@@ -435,6 +468,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
       }
     /* T( "H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
       MAST_TRACE( temporary, 0, "counted for %s... %lld", H_SCCB->title, H_TOTITEMS );
+
 /* total_files for progress bar only :( */
     /* assert(H_TOTITEMS=38); */
       DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu", H_TOTITEMS );

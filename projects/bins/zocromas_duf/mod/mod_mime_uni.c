@@ -75,10 +75,10 @@ duf_scan_callbacks_t duf_mod_handler = {
   .name = "mime",
   .def_opendir = 1,
 
-  .leaf_scan_fd2 = duf_dirent_content2,
+  .leaf_scan_fd2 = F2ND( dirent_content2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
@@ -235,9 +235,9 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
     magic_t magic = NULL;
 
 #if 0
-      magic = ( magic_t ) duf_levinfo_context_up( pdi );
+    magic = ( magic_t ) duf_levinfo_context_up( pdi );
 #else
-      magic = ( magic_t ) duf_pdi_context( pdi );
+    magic = ( magic_t ) duf_pdi_context( pdi );
 #endif
 
     if ( !magic )

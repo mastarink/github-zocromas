@@ -1,4 +1,5 @@
 /* #undef MAS_TRACING */
+#include <mastar/sqlite/mas_sqlite.h>
 #include <mastar/sqlite/mas_sqlite_const.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
@@ -43,7 +44,8 @@ SR( SQL, sqlite2duf, int r3, const char *func, int line, const char *sql, mas_sq
 
   rc = duf_sqlite2r_error_code( r3 );
   if ( rc < 0 )
-    ERRMAKE_M_FLV( rc, func, line, "sql:[%s] / [%s]", sql, stmt ? sqlite3_sql( stmt ) : NULL );
+    ERRMAKE_M_FLV( rc, func, line, "%s @@@ sql:[%s] / [%s]", sqlite3_errmsg( mas_sqlite_pdb(  ) ), sql ? sql : "-",
+                   stmt ? sqlite3_sql( stmt ) : "-" );
 /* DUF_MAKE_ERRORFL( r, rc, func, line ); */
 /* DUF_ENDR( r ); */
   ER( SQL, sqlite2duf, int r3, const char *func, int line, const char *sql, mas_sqlite_stmt_t * stmt );

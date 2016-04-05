@@ -80,10 +80,10 @@ duf_scan_callbacks_t duf_mod_handler = {
   .def_opendir = 1,
 /* .dirent_dir_scan_before = NULL, */
 /* .dirent_file_scan_before = NULL, */
-  .leaf_scan_fd2 = duf_digest_dirent_content2,
+  .leaf_scan_fd2 = F2ND( digest_dirent_content2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
@@ -181,7 +181,7 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_sha1, pstmt_local );                    /* clears SQL_ROW / SQL_DONE */
+  DUF_SQL_SE_END_STMT( pdi, select_sha1, pstmt_local );              /* clears SQL_ROW / SQL_DONE */
   ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, unsigned long digestsum1, unsigned long digestsum2,
        unsigned long digestsum3 );
 }
@@ -212,7 +212,7 @@ SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t *
       DUF_SQL_SE_BIND_LL( digestsum3, digest64[0], pstmt_local );
       DUF_SQL_SE_STEPC( pstmt_local );
       DUF_SQL_SE_CHANGES( changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( pdi, insert_sha1, pstmt_local );                /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( pdi, insert_sha1, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
@@ -369,7 +369,7 @@ SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dept
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
         DUF_SQL_SE_CHANGES( changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( pdi, update_sha1id, pstmt_local );            /* clears SQL_ROW / SQL_DONE */
+        DUF_SQL_SE_END_STMT( pdi, update_sha1id, pstmt_local );      /* clears SQL_ROW / SQL_DONE */
         duf_pdi_reg_changes( pdi, changes );
       }
 
