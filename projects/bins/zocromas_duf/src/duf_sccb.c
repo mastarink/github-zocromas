@@ -139,10 +139,6 @@ duf_register_sccb( duf_scan_callbacks_t * first, duf_scan_callbacks_t * sccb )
     }
 
     {
-    /* int n; */
-
-    /* n = CRX( set_name2set_index, sccb->std_leaf_set_name, std_leaf_sets, std_leaf_nsets ); */
-    /* assert( n == sccb->use_std_leaf_set_num ); */
       assert( sccb->use_std_leaf_set_num == -1 || CRX( set_name2set, sccb->std_leaf_set_name, std_leaf_sets, std_leaf_nsets ) ==
               CRX( set_index2set, sccb->use_std_leaf_set_num, std_leaf_sets, std_leaf_nsets ) );
       assert( sccb->use_std_node_set_num == -1 || CRX( set_name2set, sccb->std_node_set_name, std_node_sets, std_node_nsets ) ==

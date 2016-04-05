@@ -15,20 +15,19 @@
 #include "duf_sccb_structs.h"
 
 /* ###################################################################### */
-#include "duf_sccb_scanstage.h"
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 /* ###################################################################### */
 
 /* 20151013.113751 */
-duf_scanner_t
+duf_scanner_fun_t
 duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt )
 {
-  duf_scanner_t scanner = NULL;
+  duf_scanner_fun_t scanner = NULL;
 
   assert( deleted == 1 || deleted == 0 );
   switch ( scanstage )
   {
   case DUF_SCANSTAGE_FS_ITEMS:
-
     if ( !deleted )
     {
       assert( nt == DUF_NODE_LEAF || nt == DUF_NODE_NODE );
@@ -44,6 +43,8 @@ duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t s
       }
     }
     break;
+  /* case DUF_SCANSTAGE_DB_LEAVES: */
+  /*   break;                      */
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     assert( nt == DUF_NODE_LEAF );
     if ( nt == DUF_NODE_LEAF )
@@ -95,8 +96,11 @@ duf_scanstage_name( duf_scanstage_t scanstage )
   case DUF_SCANSTAGE_FS_ITEMS:
     rs = "fs_items";                                                 /* F */
     break;
+  /* case DUF_SCANSTAGE_DB_LEAVES:                                              */
+  /*   rs = "db_leaves_any";                                            (* M *) */
+  /*   break;                                                                   */
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
-    rs = "db_leaves";                                                /* L */
+    rs = "db_leaves_nofd";                                           /* L */
     break;
   case DUF_SCANSTAGE_DB_LEAVES_FD:
     rs = "db_leaves_fd";                                             /* D */
@@ -136,6 +140,9 @@ duf_scanstage_shortname( duf_scanstage_t scanstage )
   case DUF_SCANSTAGE_FS_ITEMS:
     rs = "F";                                                        /* F */
     break;
+  /* case DUF_SCANSTAGE_DB_LEAVES:                                              */
+  /*   rs = "M";                                                        (* M *) */
+  /*   break;                                                                   */
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     rs = "L";                                                        /* L */
     break;
@@ -166,4 +173,3 @@ duf_scanstage_shortname( duf_scanstage_t scanstage )
   }
   return rs;
 }
-

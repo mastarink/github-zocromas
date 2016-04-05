@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_SCCB_STRUCTS_H
 # define MAS_DUF_SCCB_STRUCTS_H
 
-#include "duf_sccb_types.h"
-#include "duf_pathinfo_structs.h"
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
+# include "duf_pathinfo_structs.h"
 
 struct duf_sccb_data_value_s
 {
@@ -56,25 +56,25 @@ struct duf_scan_callbacks_s
 /* const char *leaf_selector_total2; */
   void *dlhan;
 # if 1
-  duf_scanner_t init_scan;
+  duf_scanner_fun_t init_scan;
 
-  duf_scanner_t node_scan_before2;
-  duf_scanner_t node_scan_before2_deleted;
+  duf_scanner_fun_t node_scan_before2;
+  duf_scanner_fun_t node_scan_before2_deleted;
 
-  duf_scanner_t node_scan_middle2;
-  duf_scanner_t node_scan_middle2_deleted;
+  duf_scanner_fun_t node_scan_middle2;
+  duf_scanner_fun_t node_scan_middle2_deleted;
 
-  duf_scanner_t node_scan_after2;
-  duf_scanner_t node_scan_after2_deleted;
+  duf_scanner_fun_t node_scan_after2;
+  duf_scanner_fun_t node_scan_after2_deleted;
 
-  duf_scanner_t leaf_scan2;
-  duf_scanner_t leaf_scan2_deleted;
-/* duf_scanner_t leaf_scan_fd2; */
-  duf_scanner_t leaf_scan_fd2;
-  duf_scanner_t leaf_scan_fd2_deleted;
+  duf_scanner_fun_t leaf_scan2;
+  duf_scanner_fun_t leaf_scan2_deleted;
+/* duf_scanner_fun_t leaf_scan_fd2; */
+  duf_scanner_fun_t leaf_scan_fd2;
+  duf_scanner_fun_t leaf_scan_fd2_deleted;
 
-  duf_scanner_t dirent_file_scan_before2;
-  duf_scanner_t dirent_dir_scan_before2;
+  duf_scanner_fun_t dirent_file_scan_before2;
+  duf_scanner_fun_t dirent_dir_scan_before2;
 # else
   duf_scan_hook_init_t init_scan;
 
@@ -96,6 +96,7 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;
 # endif
+  const duf_scanner_set_t *scanners;
   duf_sql_sequence_t *beginning_sql_seq;
   duf_sql_sequence_t *final_sql_seq;
 };
@@ -127,12 +128,24 @@ struct duf_sccb_handle_s
   duf_sccbh_fun_t progress_node_cb;
 /* duf_scanstage_t current_scanstage; */
 /* duf_stmnt_t *current_statement; */
-/* duf_scanner_t current_scanner; */
+/* duf_scanner_fun_t current_scanner; */
   duf_node_type_t assert__current_node_type;
   duf_rsccbh_fun_t atom_cb;
-  /* duf_sccb_data_row_t previous_row; */
+/* duf_sccb_data_row_t previous_row; */
   duf_sccb_data_row_t *rows;
   duf_sccb_data_row_t *new_row;
+};
+
+struct duf_scanner_set_s
+{
+  unsigned open:1;
+  unsigned dirent:1;
+  unsigned db:1;
+  unsigned deleted:1;
+  unsigned deleted_only:1;
+  duf_node_type_t type;
+  duf_scanstage_t scanstage;
+  duf_scanner_fun_t fun;
 };
 
 #endif

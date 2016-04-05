@@ -66,6 +66,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   duf_str_cb2_t passes[] = {
     [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
     [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
+    /* [DUF_SCANSTAGE_DB_LEAVES] (*       *)  = (*      *) allow_files (*        *) ? F2ND( sccbh_eval_db_leaves ) : NULL, */
     [DUF_SCANSTAGE_DB_LEAVES_NOFD] /*  */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_nofd ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_FD] /*    */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_fd ) : NULL,
     [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,

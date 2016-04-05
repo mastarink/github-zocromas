@@ -48,7 +48,7 @@
 /* 20151027.144614 */
 static
 SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
-    duf_scanner_t scanner )
+    duf_scanner_fun_t scanner )
 {
 
   CR( levinfo_statat_dh, H_PDI );
@@ -89,11 +89,11 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
     ERRMAKE_M( STAT, "No such entry %s/%s", CRX( levinfo_path, H_PDI ), CRX( levinfo_itemshowname, H_PDI ) );
   }
   ER( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
-      duf_scanner_t scanner );
+      duf_scanner_fun_t scanner );
 }
 
 /* 20151027.104729 */
-SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+SR( SCCBH, sccbh_eval_fs_direntry_old, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
     duf_scanstage_t scanstage MAS_UNUSED )
 {
   duf_node_type_t nt;
@@ -102,7 +102,7 @@ SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
 /* --> */
   CR( levinfo_godown, H_PDI, de->d_name, nt );
   {
-    duf_scanner_t scanner;
+    duf_scanner_fun_t scanner;
 
     scanner = CRX( sccb_scanstage_scanner, H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt );
   /* assert(CRX(sccb_scanstage_scanner, H_SCCB, DUF_SCANSTAGE_FS_ITEMS, 0, nt )); */
@@ -117,10 +117,42 @@ SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
 /* <-- */
   CR( levinfo_goup, H_PDI );
 
-
-  ER( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_fs_direntry_old, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+      duf_scanstage_t scanstage );
 }
 
+SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+    duf_scanstage_t scanstage MAS_UNUSED )
+{
+  duf_node_type_t nt;
+
+  nt = ( de->d_type == DT_DIR ) ? DUF_NODE_NODE : DUF_NODE_LEAF;
+/* --> */
+  CR( levinfo_godown, H_PDI, de->d_name, nt );
+
+  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set->fun; scanner_set++ )
+  {
+    if ( ( scanner_set->scanstage == scanstage || scanner_set->scanstage == DUF_SCANSTAGE_NONE ) && scanner_set->dirent
+         && ( scanner_set->type == nt || scanner_set->type == DUF_NODE_NONE ) )
+      CR( sccbh_eval_fs_w_scanner_here, sccbh, pstmt_unused, scanstage, scanner_set->fun );
+  }
+/* <-- */
+  CR( levinfo_goup, H_PDI );
+
+  ER( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+      duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+    duf_scanstage_t scanstage MAS_UNUSED )
+{
+  CR( sccbh_eval_fs_direntry_old, sccbh, pstmt_unused, de, scanstage );
+  /* CR( sccbh_eval_fs_direntry_scanner_set, sccbh, pstmt_unused, de, scanstage ); */
+  ER( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+      duf_scanstage_t scanstage MAS_UNUSED );
+}
+
+#if 0
 /* 20151013.130021 */
 SR( SCCBH, sccbh_eval_fs_w2scanners_sd, duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
@@ -166,6 +198,7 @@ SR( SCCBH, sccbh_eval_fs_w2scanners_sd, duf_scanstage_t scanstage MAS_UNUSED, du
   }
   ER( SCCBH, sccbh_eval_fs_w2scanners_sd, duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh );
 }
+#endif
 
 static
 SR( SCCBH, sccbh_eval_fs_w2scanners_rd, duf_scanstage_t scanstage MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )

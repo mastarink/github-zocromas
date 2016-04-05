@@ -158,7 +158,7 @@ SR( MOD, dialog_leaf2, duf_stmnt_t * pstmt_arg_spc, duf_depthinfo_t * pdi, duf_s
 #if 0
         CR( find_atable_sccb_by_evname_std, "listing" )->sccb->leaf_scan2( pstmt_arg_spc, pdi );
 #else
-        duf_scanner_t scanner = duf_find_sccb_by_evname_std( "listing" )->leaf_scan2;
+        duf_scanner_fun_t scanner = duf_find_sccb_by_evname_std( "listing" )->leaf_scan2;
 
         CRV( scanner, pstmt_arg_spc, pdi, sccbh );
 #endif

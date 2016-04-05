@@ -54,6 +54,17 @@ static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, d
 /* /NOTES */
 
 /* ########################################################################################## */
+/* duf_scanner_set_t scanners[] = {                                           */
+/*   {                                                                        */
+/*    .type = DUF_NODE_LEAF,                                            (* *) */
+/*    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                                   */
+/*    .open = 0,                                                        (* *) */
+/*    .dirent = 0,                                                      (* *) */
+/*    .db = 1,                                                          (* *) */
+/*    .fun = F2ND( print_leaf2 ),                                       (* *) */
+/*    },                                                                      */
+/*   {.fun = NULL}                                                            */
+/* };                                                                         */
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "listing print",
@@ -69,6 +80,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 #endif
 
   .leaf_scan2 = F2ND( print_leaf2 ),
+  /* .scanners = scanners, */
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */

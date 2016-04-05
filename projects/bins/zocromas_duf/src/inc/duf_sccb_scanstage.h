@@ -5,7 +5,7 @@
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 # include "duf_hook_types.h"                                         /* duf_action_table_t ✗ */
 
-duf_scanner_t duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt );
+duf_scanner_fun_t duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t scanstage, int deleted, duf_node_type_t nt );
 
 const char *duf_scanstage_name( duf_scanstage_t scanstage );
 const char *duf_scanstage_shortname( duf_scanstage_t scanstage );

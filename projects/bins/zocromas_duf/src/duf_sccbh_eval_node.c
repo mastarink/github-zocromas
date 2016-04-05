@@ -52,56 +52,23 @@
 /* 20151027.144606 */
 SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
-
   MAST_TRACE( scan, 4, "? scan node [%s] by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
 /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
   {
-    duf_scanner_t scanner = NULL;
+    duf_scanner_fun_t scanner = NULL;
 
 #if 0
     H_PDI->items.total++;
     H_PDI->items.dirs++;
 #endif
-  /* QT( "@@%d. %llu", scanstage, H_PDI->items.total ); */
 
     MAST_TRACE( scan, 4, "? (dirs+) scan node [%s] by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-#if 1
-    if ( ( scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, 1 /* deleted */ , DUF_NODE_NODE ) ) && CRX( levinfo_if_deleted, H_PDI ) )
-    {
-      MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-# if 0
-    /* sccbh->current_scanner = scanner; */
-      sccbh->assert__current_node_type = DUF_NODE_NODE;
-      CRV( ( scanner ), pstmt_arg, H_PDI );
-      assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
-      if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE, QERRIND );
-# else
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE );
-# endif
-    }
-    else if ( ( scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE ) ) )
+    scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, 0 /* deleted */ , DUF_NODE_NODE );
+    if ( scanner )
     {
       MAST_TRACE( scan, 4, "scan node %s by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-# if 0
-    /* sccbh->current_scanner = scanner; */
-      sccbh->assert__current_node_type = DUF_NODE_NODE;
-      CRV( ( scanner ), pstmt_arg, H_PDI );
-      assert( sccbh->assert__current_node_type == DUF_NODE_NODE );
-      if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE, QERRIND );
-# else
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE );
-# endif
     }
-#else
-    if ( ( scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, CRX( levinfo_if_deleted, H_PDI ), DUF_NODE_NODE ) ) )
-    {
-    /* sccbh->current_scanner = scanner; */
-      MAST_TRACE( scan, 4, "scan node %s_deleted by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-      DOR( r, ( scanner ) ( pstmt_arg, H_PDI ) );
-    }
-#endif
     else
     {
       MAST_TRACE( scan, 4, "NOT scan node %s by %5llu - sccb->node_scan_%s empty for %s", CRX( scanstage_name, scanstage ),
@@ -109,6 +76,25 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_ar
     }
   }
   ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+{
+  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set->fun; scanner_set++ )
+  {
+    if ( ( scanner_set->scanstage == scanstage || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
+         && ( scanner_set->type == DUF_NODE_NODE || scanner_set->type == DUF_NODE_NONE ) )
+      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_NODE );
+  }
+
+  ER( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+{
+  CR( sccbh_eval_db_node, sccbh, pstmt_arg, scanstage );
+/* CR( sccbh_eval_db_node_scanner_set, sccbh, pstmt_arg, scanstage ); */
+  ER( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }
 
 /* 20150820.085615 */
