@@ -100,12 +100,6 @@ SRP( OTHER, char *, name, NULL, dirid2name_existed, duf_depthinfo_t * pdi, unsig
     .fieldset = "pt.parentid AS parentid, pt." DUF_SQL_DIRNAMEFIELD " AS name " /* */
             ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "        /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#endif
     " WHERE pt." DUF_SQL_IDFIELD "=:dirID"
   };
 

@@ -47,13 +47,7 @@ duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
   up = duf_levinfo_ptr_up( pdi );
   if ( up )
   {
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-    up->numdir--;
-#else
     up->numchild++;
-#endif
   }
 }
 

@@ -88,15 +88,8 @@ duf_pi_levinfo_countdown_dirs( duf_pathinfo_t * pi )
   up = duf_pi_ptr_up( pi );
   if ( up )
   {
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-    up->numdir--;
-  /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
-#else
     up->numchild++;
   /* T( "@@@{%p:%p} numchild:%lld => %lld - %s", pdi, up, up->numchild - 1, up->numchild, duf_levinfo_path_up( pdi ) ); */
-#endif
   }
 }
 
@@ -141,15 +134,8 @@ duf_pi_countdown_dirs( duf_pathinfo_t * pi )
   up = duf_pi_ptr_up( pi );
   if ( up )
   {
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-    up->numdir--;
-  /* T( "@@@numdir:%ld => %ld", up->numdir + 1, up->numdir ); */
-#else
     up->numchild++;
   /* T( "@@@{%p:%p} numchild:%lld => %lld - %s", pdi, up, up->numchild - 1, up->numchild, duf_levinfo_path_up( pdi ) ); */
-#endif
   }
 }
 

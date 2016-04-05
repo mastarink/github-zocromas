@@ -44,15 +44,8 @@ struct duf_levinfo_s
   duf_node_type_t node_type;
   duf_levinfo_db_t db;
 /* const char *name; */
-# ifndef  MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_NUMS )
-  long numdir;
-  long numfile;
-# else
   unsigned long long childs;                                         /* not used!? */
   long long numchild;
-# endif
   duf_levinfo_child_count_t scanned_childs;
   char *fullpath;
   char *itemname;

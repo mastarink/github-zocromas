@@ -1,24 +1,21 @@
 #ifndef MAS_DUF_DEFS_H
-#  define MAS_DUF_DEFS_H
+# define MAS_DUF_DEFS_H
 
+# define DUF_USE_CTE yes
 
-#  define DUF_USE_CTE yes
-
+# if 0
 #  define DUF_NO_RNUMS yes
 #  define DUF_NO_NUMS yes
 #  ifndef DUF_NO_RNUMS
-#    define DUF_DO_RNUMS yes
+#   define DUF_DO_RNUMS yes
 #  endif
 #  ifndef DUF_NO_NUMS
-#    define DUF_DO_NUMS yes
+#   define DUF_DO_NUMS yes
 #  endif
-
+# endif
 
 /* #  define DUF_RECURSIVE_NO DUF_FALSE */
 /* #  define DUF_RECURSIVE_YES DUF_TRUE */
-
-
-
 
 /* ###################################################################### */
 
@@ -38,6 +35,5 @@
 /* ###################################################################### */
 
 /* ###################################################################### */
-
 
 #endif

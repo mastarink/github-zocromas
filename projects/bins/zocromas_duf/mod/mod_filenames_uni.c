@@ -87,17 +87,6 @@ duf_scan_callbacks_t duf_mod_handler = {
            " pt." DUF_SQL_IDFIELD " AS dirid"                        /* */
            ", pt." DUF_SQL_IDFIELD " AS nameid "                     /* */
            ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname,  pt.parentid " /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-#endif
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
-           ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                 /* */
-           ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles "            /* */
-#endif
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
 
@@ -113,11 +102,6 @@ duf_scan_callbacks_t duf_mod_handler = {
            " ( "                                                     /* */
            "  SELECT paths." DUF_SQL_IDFIELD ",paths.parentid FROM paths " /* */
            "   WHERE parentid=:topDirID "                            /* */
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_RNUMS )
-         /* " AND " DUF_SQL_RNUMDIRS( pt ) " > 0 AND (" DUF_SQL__RNUMFILES( pt ) ") > 0 " (* *) */
-# endif
            "  UNION "                                                /* */
            "   SELECT paths." DUF_SQL_IDFIELD ",paths.parentid "     /* */
            "    FROM cte_paths "                                     /* */
@@ -140,32 +124,14 @@ duf_scan_callbacks_t duf_mod_handler = {
            .selector2_cte =                                          /* */
            " FROM cte_paths " /*                                  */ " AS pte " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL /*             */ " AS pt ON (pte." DUF_SQL_IDFIELD "=pt." DUF_SQL_IDFIELD ") " /* */
-# ifndef MAS_DUF_DEFS_H
-#  error use #include "duf_defs.h"
-# elif defined( DUF_DO_NUMS )
-           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-# endif
            ,
 #endif
            .selector2 =                                              /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL /*                  */ " AS pt " /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#endif
            ,
            .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dname=:dirName ) " /* */
            ,
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-         /* .filter = "rndirs > 0 AND rnfiles > 0"       (* *) */
-#else
            .filter = NULL                                            /* */
-#endif
            },
   .final_sql_seq = &final_sql,
 };

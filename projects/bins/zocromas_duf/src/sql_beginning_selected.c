@@ -68,49 +68,6 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ , /* XXX */
           "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ ,     /* XXX */
 
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-# ifdef DUF_SQL_SELECTED_DROP
-        /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL (* *) , */
-# endif
-          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
-          " AS "                                                     /* */
-          " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
-# if 0
-          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn "           /* */
-# else
-          " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel "    /* */
-          " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDFIELD ") " /* */
-# endif
-          " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
-          " GROUP BY fn.Pathid " /* */ ,                             /* XXX */
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (Pathid)"
-        /* */ ,
-        /* XXX */
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (numfiles)" /* */ , /* XXX */
-          "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ , /* XXX */
-        /* XXX */
-
-# ifdef DUF_SQL_SELECTED_DROP
-        /* "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL (* *) , */
-# endif
-          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
-          " AS "                                                     /* */
-          " SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
-          " FROM "                                                   /* */
-# if 0
-          DUF_SQL_TABLES_PATHS_FULL " "                              /* */
-# else
-          DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts "                 /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
-# endif
-          " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
-          " GROUP BY parents." DUF_SQL_IDFIELD " ",                  /* XXX */
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid)", /* XXX */
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)", /* XXX */
-          "DELETE FROM " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL,     /* XXX */
-#endif
 
           NULL}
 };

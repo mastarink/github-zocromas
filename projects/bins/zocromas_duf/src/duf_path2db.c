@@ -120,13 +120,7 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
 /* 20151026.110612 */
 /* at levinfo current level: set dirid,numdir,numfile */
 static
-SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-    , unsigned long long nfiles, unsigned long long ndirs
-#endif
-         )
+SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid )
 {
 
   duf_levinfo_t *pli;
@@ -134,24 +128,9 @@ SR( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
   pli = duf_levinfo_ptr( pdi );
   assert( pli );
   duf_levinfo_set_dirid( pdi, dirid );
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-/* pli->numfile = nfiles; */
-/* pli->numdir = ndirs;   */
-  duf_li_set_nums( pli, ndirs, nfiles );
-#else
-/* duf_levinfo_make_childs( pdi ); */
-#endif
   assert( dirid == duf_levinfo_dirid( pdi ) );
 
-  ER( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-      , unsigned long long nfiles, unsigned long long ndirs
-#endif
-           );
+  ER( PDI, set_dirid_and_nums, duf_depthinfo_t * pdi, unsigned long long dirid );
 }
 
 /* 20151026.110729 */
@@ -161,13 +140,7 @@ static
 SR( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
 {
 
-  CR( set_dirid_and_nums, pdi, DUF_GET_QUFIELD3( pstmt_arg, dirid )
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-      , DUF_GET_QUFIELD3( pstmt_arg, nfiles ), DUF_GET_QUFIELD2( ndirs )
-#endif
-           );                                                        /* at levinfo current level: set dirid,numdir,numfile */
+  CR( set_dirid_and_nums, pdi, DUF_GET_QUFIELD3( pstmt_arg, dirid ) ); /* at levinfo current level: set dirid,numdir,numfile */
   assert( DUF_GET_QUFIELD3( pstmt_arg, dirid ) == duf_levinfo_dirid( pdi ) );
 
   ER( PDI, set_dirid_and_nums_from_pstmt, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg );
@@ -213,7 +186,7 @@ SR( PDI, set_dirid_and_nums_from_sql, duf_depthinfo_t * pdi, const char *sqlv )
                     duf_levinfo_dirid_up( pdi ) );
       }
       assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) );
-      CR( set_dirid_and_nums_from_pstmt, pdi, pstmt_local );               /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
+      CR( set_dirid_and_nums_from_pstmt, pdi, pstmt_local );         /* at levinfo current level: set dirid,numdir,numfile; WRAPper for duf_set_dirid_and_nums */
       assert( DUF_GET_QUFIELD3( pstmt_local, dirid ) == duf_levinfo_dirid( pdi ) );
     }
     else if ( QISERR1_N( SQL_DONE ) )
@@ -247,45 +220,8 @@ SR( PDI, set_dirid_and_nums_from_sql_set, duf_depthinfo_t * pdi, const duf_sql_s
   duf_sql_set_t def_node_set = {
     .fieldset = "pt." DUF_SQL_IDFIELD " AS dirid "                   /* */
             ", pt." DUF_SQL_DIRNAMEFIELD " AS dname "                /*      */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-            ", tf.numfiles AS nfiles"                                /* */
-            ", td.numdirs AS ndirs  "                                /*      */
-#endif
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_RNUMS )
-            ", " DUF_SQL_RNUMDIRS( pt ) " AS rndirs "                /* */
-            ", (" DUF_SQL__RNUMFILES( pt ) ") AS rnfiles "           /* */
-#endif
             ,
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "        /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-# ifdef DUF_USE_TMP_PATHTOT_DIRS_TABLE
-            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-# else
-            " LEFT JOIN ( SELECT parents." DUF_SQL_IDFIELD " AS Pathid, COUNT( * ) AS numdirs " /* */
-            "   FROM " DUF_SQL_TABLES_PATHS_FULL " AS pts "          /* */
-#  if 1
-            "       LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDFIELD " ) " /* */
-            "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = ptsp.parentid ) " /* */
-#  else
-            "            JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDFIELD " = pts.parentid ) " /* */
-#  endif
-            "   GROUP BY parents." DUF_SQL_IDFIELD ") AS td  ON (td.Pathid=pt." DUF_SQL_IDFIELD ") "
-# endif
-# ifdef DUF_USE_TMP_PATHTOT_FILES_TABLE
-            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-# else
-            " LEFT JOIN ( SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
-            "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn "       /* */
-            "       LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDFIELD " ) " /* */
-            "   GROUP BY fn.Pathid ) AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD " ) "
-# endif
-#endif
             " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dname=:dirName)" /* */
   };
 
@@ -342,14 +278,8 @@ SR( PDI, levinfo_stat2dirid_i, duf_depthinfo_t * pdi, int caninsert, const duf_s
       {
         if ( QNOERR )
         {
-          CR( set_dirid_and_nums, pdi, duf_sql_last_insert_rowid(  )
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-              , 0, 0
-#endif
-                   );                                                /* at levinfo current level:
-                                                                        set dirid from last inserted record (numdir=0,numfile=0) */
+          CR( set_dirid_and_nums, pdi, duf_sql_last_insert_rowid(  ) ); /* at levinfo current level:
+                                                                           set dirid from last inserted record (numdir=0,numfile=0) */
           if ( duf_levinfo_dirid_up( pdi ) )
           {
             MAST_TRACE( explain, 10, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ),

@@ -38,32 +38,6 @@
 /* ###################################################################### */
 #include "duf_li.h"
 /* ###################################################################### */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-void
-duf_li_set_nums( duf_levinfo_t * pli, unsigned long long ndirs, unsigned long long nfiles )
-{
-  if ( pli )
-  {
-    pli->numdir = ndirs;
-    pli->numfile = nfiles;
-  /* T("@@@@ %s>>%llu", pli->itemname, ndirs ); */
-  }
-}
-#else
-# if 0
-void
-duf_li_set_childs( duf_levinfo_t * pli, unsigned long long childs )
-{
-  if ( pli )
-  {
-    pli->childs = childs;
-  /* pli->numchild = childs; */
-  }
-}
-# endif
-#endif
 
 /* int                                            */
 /* duf_li_calc_depth( const duf_levinfo_t * pli ) */
@@ -132,16 +106,6 @@ li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
     pli->itemname = mas_strdup( DUF_GET_QSFIELD3( pstmt_arg, dfname ) );
   }
 
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-/* pli->numdir = DUF_GET_QUFIELD3(pstmt_arg, ndirs );   */
-/* pli->numfile = DUF_GET_QUFIELD3(pstmt_arg, nfiles ); */
-  duf_li_set_nums( pli, DUF_GET_QUFIELD3( pstmt_arg, ndirs ), DUF_GET_QUFIELD3( pstmt_arg, nfiles ) );
-#else
-/* if ( duf_levinfo_node_type_d( pditemp, d ) == DUF_NODE_NODE ) */
-/*   duf_levinfo_make_childs_d( pditemp, d );                    */
-#endif
   pli->db.nameid = DUF_GET_QUFIELD3( pstmt_arg, nameid );
   {
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
@@ -217,12 +181,6 @@ SR( LI, dirid2li_existed, duf_depthinfo_t * pditemp, unsigned long long dirid, d
             ", pt.dev, pt.inode, pt.rdev, pt.mode, pt.nlink, pt.uid, pt.gid, pt.blksize, pt.blocks " /* */
             ", pt.size, pt.atim, pt.atimn, pt.mtim, pt.mtimn, pt.ctim, pt.ctimn ",
     .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "        /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#endif
     " WHERE pt." DUF_SQL_IDFIELD "=:dirID"
   };
 
@@ -291,12 +249,6 @@ SR( LI, nameid2li_existed, duf_depthinfo_t * pditemp, unsigned long long nameid,
     .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn "    /* */
             " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON(pt." DUF_SQL_IDFIELD "=fn.Pathid) " /* */
             " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON(fd." DUF_SQL_IDFIELD "=fn.dataid) " /* */
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_DIRS_FULL " AS td ON (td.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-            " LEFT JOIN " DUF_SQL_TABLES_PSEUDO_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDFIELD ") " /* */
-#endif
     " WHERE fn." DUF_SQL_IDFIELD "=:nameID"
   };
 

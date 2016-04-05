@@ -119,11 +119,7 @@ SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
   assert( sccbh );
   assert( H_SCCB );
 
-#ifdef DUF_NO_RNUMS
   MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt_arg ) );
-#else
-  MAST_TRACE( sql, 0, "@@@EACH SUB %llu {%llu}... %s", CRX( levinfo_dirid, H_PDI ), pstmt_arg ? DUF_GET_RUFIELD2( rnfiles ) : 0, sqlite3_sql( pstmt_arg ) );
-#endif
   MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
 
   CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_NODE, F2ND( sccbh_eval_all ), scanstage );

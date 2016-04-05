@@ -268,15 +268,9 @@ SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_dep
 # define DUF_TREE_FLAG_TOO_DEEP 0x8
 #endif
 
-#ifndef MAS_DUF_DEFS_H
-# error use #include "duf_defs.h"
-#elif defined( DUF_DO_NUMS )
-  ndu = duf_levinfo_numdir_d( pdi, du );
-#else
   ndu = duf_levinfo_count_childs_d( pdi, du );                       /* beginning_sql_seq->set_selected_db */
   nchild = duf_levinfo_numchild_d( pdi, du );
   ndu -= nchild;
-#endif
 #if 0
   if ( ndu > 0 && d > d0 )
     flags |= DUF_TREE_FLAG_CONTINUE;                                 /* set continue */

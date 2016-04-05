@@ -3,7 +3,6 @@
 
 /* see duf_defs.h : */
 /* #  define DUF_USE_CTE yes */
-/* #  define DUF_NO_RNUMS    */
 
 /* # define DUF_SQL_DATETIME_TYPE             "REAL" */
 # define DUF_SQL_DATETIME_TYPE             "DATETIME"
