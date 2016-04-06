@@ -82,10 +82,11 @@ duf_scan_callbacks_t duf_mod_handler = {
 # endif
 #endif
 
-  .scanners = scanners,
 /* 20160406.125422 */
 #if 0
   .leaf_scan2 = F2ND( print_leaf2 ),
+#else
+  .scanners = scanners,
 #endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */

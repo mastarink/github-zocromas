@@ -51,6 +51,7 @@ SR( PDI, levinfo_statat_dh_d, duf_depthinfo_t * pdi, int d )
 
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.levinfo[d].itemname );
+  assert( !pdi->pathinfo.levinfo[d].deleted );
   assert( QISERR || d > 0 || !duf_levinfo_ptr_d( pdi, d - 1 ) );
   assert( QISERR || d > 0 || *duf_levinfo_itemtruename_d( pdi, d ) == 0 );
   assert( QISERR || d > 0 || 0 == strcmp( duf_levinfo_itemshowname_d( pdi, d ), "/" ) );
@@ -87,6 +88,8 @@ SR( PDI, levinfo_statat_dh_d, duf_depthinfo_t * pdi, int d )
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
       MAST_TRACE( levinfo, 10, "@@@(%d)? levinfo statated %s", QERRIND, pdi->pathinfo.levinfo[d].itemname );
+      ERRCLEAR( OPEN_ENOENT );
+      ERRCLEAR( OPENAT_ENOENT );
     }
     pdi->pathinfo.levinfo[d].deleted_tested = 1;
     pdi->pathinfo.levinfo[d].stat_tested = 1;

@@ -75,6 +75,19 @@ static duf_sql_sequence_t final_sql =                                /* */
 };
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_FS_ITEMS,                              /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 1,                                                      /* */
+   .db = 0,                                                          /* */
+   .fun = F2ND( register_pdifiledata ),                              /* */
+   },
+
+  {.fun = NULL}
+};
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "file data",
@@ -82,8 +95,12 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
+/* 20160406.163421 */
+#if 0
   .dirent_file_scan_before2 = F2ND( register_pdifiledata ),
-
+#else
+  .scanners = scanners,
+#endif
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -111,8 +128,8 @@ duf_scan_callbacks_t duf_mod_handler = {
            .selector2 =                                              /* */
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt "              /* */
            ,
-           .matcher = "pt.parentid = :parentdirID"                  /* */
-      /*     " AND ( :dirName IS NULL OR dname=:dirName ) "    */        /* */
+           .matcher = "pt.parentid = :parentdirID"                   /* */
+         /*     " AND ( :dirName IS NULL OR dname=:dirName ) "    *//* */
            ,
            .filter = NULL                                            /* */
            },
@@ -125,6 +142,5 @@ static
 SR( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   CR( pdistat2file, pdi, sccbh );
-
   ER( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

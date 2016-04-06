@@ -37,7 +37,7 @@
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
-#include "duf_sccbh_scanner.h" 
+#include "duf_sccbh_scanner.h"
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
@@ -51,7 +51,6 @@ static
 SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED,
     duf_scanner_fun_t scanner )
 {
-
   CR( levinfo_statat_dh, H_PDI );
 
   if ( QNOERR )
@@ -134,7 +133,9 @@ SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_st
   {
     if ( scanner_set->dirent && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
          && ( ( scanner_set->type & nt ) || scanner_set->type == DUF_NODE_NONE ) )
+    {
       CR( sccbh_eval_fs_w_scanner_here, sccbh, pstmt_unused, scanstage, scanner_set->fun );
+    }
   }
 /* <-- */
   CR( levinfo_goup, H_PDI );
@@ -252,7 +253,7 @@ static
 SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
   if ( H_SCCB->dirent_dir_scan_before2 || H_SCCB->dirent_file_scan_before2
-       || CRX( sccb_has_new_scanner, sccbh, DUF_NODE_LEAF, scanstage, 0 /* db */ , 1 /* dirent */  ) )
+       || CRX( sccb_has_new_scanner, sccbh, DUF_NODE_NODE | DUF_NODE_LEAF, scanstage, 0 /* db */ , 1 /* dirent */  ) )
   {
   /* assert( CRX(pdi_opendir,H_PDI) == 1 ); */
     CRX( pdi_set_opendir, H_PDI, 1 );                                /* TODO */

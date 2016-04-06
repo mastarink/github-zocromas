@@ -53,7 +53,7 @@ static duf_scanner_set_t scanners[] = {
   {
    .disabled = 0,                                                    /* */
    .type = DUF_NODE_NODE,                                            /* */
-   .scanstage = DUF_SCANSTAGE_NODE_BEFORE | DUF_SCANSTAGE_DB_LEAVES, /* */
+   .scanstage = DUF_SCANSTAGE_NODE_BEFORE /* | DUF_SCANSTAGE_DB_LEAVES */ , /* */
    .to_open = 0,                                                     /* */
    .dirent = 0,                                                      /* */
    .db = 1,                                                          /* */
@@ -83,11 +83,12 @@ duf_scan_callbacks_t duf_mod_handler = {
   .beginning_sql_seq = &sql_update_selected,
 #endif
 
-  .scanners = scanners,
 /* 20160406.124048 */
 #if 0
   .node_scan_before2 = F2ND( tree_node_before2 ),
   .leaf_scan2 = F2ND( tree_leaf2 ),
+#else
+  .scanners = scanners,
 #endif
 
 /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */

@@ -56,6 +56,28 @@ static duf_sql_sequence_t final_sql = {                              /* */
 };
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_FS_ITEMS,                              /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 1,                                                      /* */
+   .db = 0,                                                          /* */
+   .fun = F2ND( filenames_de_file_before2 ),                         /* */
+   },
+ {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                              /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( filenames_leaf2 ),                         /* */
+   },
+
+  {.fun = NULL}
+};
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "file names",
@@ -64,9 +86,12 @@ duf_scan_callbacks_t duf_mod_handler = {
   .def_opendir = 1,
 
 /* .dirent_file_scan_before = F2ND(filenames_entry_reg), */
+#if 0
   .dirent_file_scan_before2 = F2ND( filenames_de_file_before2 ),
-
   .leaf_scan2 = F2ND( filenames_leaf2 ),
+#else
+  .scanners = scanners,
+#endif
   .leaf_scan2_deleted = F2ND( filenames_leaf2_deleted ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
@@ -140,7 +165,10 @@ duf_scan_callbacks_t duf_mod_handler = {
 static
 SR( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/* QT( "@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) ); */
+  if ( 0 == strcmp( duf_levinfo_itemtruename( pdi ), "paths-with-jpg" ) )
+  {
+    QT( "@[%d] %s :: %s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  }
 
   ER( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
@@ -150,7 +178,7 @@ SR( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dep
 {
   MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 /* TODO remove or mark name from DB */
-
+  assert( 0 );
   ER( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 

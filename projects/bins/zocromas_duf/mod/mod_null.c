@@ -110,7 +110,7 @@ SR( MOD, null_de_content2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthi
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
 #endif
-
+  QT( "@deleted %s :: %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 /*
 * 2: 0 [MOD    ]  47:null_de_content2                 :3.8916 :  null de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
@@ -126,6 +126,7 @@ SR( MOD, null_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 
+  QT( "@@** %s :: %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
   assert( !duf_levinfo_dfd( pdi ) );
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
@@ -147,7 +148,6 @@ SR( MOD, null_leaf2_del, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t 
 #endif
   MAST_TRACE( mod, 0, "@@null %s : %s", duf_levinfo_path( pdi ), fname );
 /* Never called (no deleted flag - didn't try to open !!) */
-  assert( 0 );
 
   ER( MOD, null_leaf2_del, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
@@ -161,9 +161,9 @@ SR( MOD, null_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
 
     pli = duf_levinfo_ptr( pdi );
 
-    QT( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ),
-        duf_nodetype_name( duf_levinfo_node_type( pdi ) ), pli ? ( long long ) pli->scanned_childs.nodes : -1,
-        pli ? ( long long ) pli->scanned_childs.leaves : -1 );
+    /* QT( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ),      */
+    /*     duf_nodetype_name( duf_levinfo_node_type( pdi ) ), pli ? ( long long ) pli->scanned_childs.nodes : -1, */
+    /*     pli ? ( long long ) pli->scanned_childs.leaves : -1 );                                                 */
   }
 #if 0
 # ifdef MAS_TRACING

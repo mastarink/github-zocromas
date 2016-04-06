@@ -14,23 +14,23 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-#include "duf_config.h"                                              /* duf_get_config ✗ */
+/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-#include "duf_levinfo_openclose.h"
-#include "duf_levinfo_stat.h"
+/* #include "duf_levinfo_openclose.h" */
+/* #include "duf_levinfo_stat.h" */
 
 #include "duf_pdi_structs.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
-#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
+/* #include "duf_sccb_scanstage.h"                                      (* duf_scanstage_name; duf_scanstage_scanner; ✗ *) */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
-#include "duf_sccbh_eval.h"
+/* #include "duf_sccbh_eval.h" */
 /* ###################################################################### */
 #include "duf_sccbh_scanner.h"
 /* ###################################################################### */
@@ -122,7 +122,7 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
       {
         if ( !eq )
         {
-          QT( "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
+          MAST_TRACE(temp,5, "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
         /* assert(0); */
           CRX( sccbh_rows_eval, sccbh );
         }

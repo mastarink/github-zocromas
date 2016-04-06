@@ -78,6 +78,11 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
       {
         ERRLOWER( OPENAT_ENOENT );
         CR( openat_dh, pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) /* asfile */  );
+        if ( QISERR_N( OPENAT_ENOENT ) )
+        {
+          ERRCLEAR( OPENAT_ENOENT );
+          ERRMAKE_M( OPENAT_ENOENT, "Can't open '%s'", duf_levinfo_itemshowname_d( pdi, d ) );
+        }
         ERRUPPER( OPENAT_ENOENT );
       }
     /* DOR_LOWERE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) (* asfile *)  ), */
@@ -92,7 +97,9 @@ SR( PDI, levinfo_openat_dh_d, duf_depthinfo_t * pdi, int d )
       pdi->pathinfo.levinfo[d].deleted = 1;
       MAST_TRACE( levinfo, QISERR ? 0 : 2, "@(%s)? levinfo [deleted] %s : %s; opendir:%d", QERRNAME, duf_levinfo_path_d( pdi, d ),
                   duf_levinfo_itemshowname_d( pdi, d ), duf_pdi_opendir( pdi ) );
-      QERRIND = 0;
+    /* QERRIND = 0; */
+      ERRCLEAR( OPEN_ENOENT );
+      ERRCLEAR( OPENAT_ENOENT );
     }
     else
     {

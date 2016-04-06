@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_LEVINFO_REF_H
 # define MAS_DUF_LEVINFO_REF_H
 
+# include <sys/types.h>                                              /* ino_t, dev_t, mode_t etc. */
+
 # include "duf_levinfo_types.h"                                      /* duf_levinfo_t ✗ */
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */

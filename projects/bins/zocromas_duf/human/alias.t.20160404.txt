@@ -11,6 +11,7 @@ alias t3='run  --db-name=test_tree  -dufR --max-depth=17 --with-tag-file=test-gz
 alias t4='run --trace-temp=-20 --disable-updat --disable-in  --disable-fs  --flags'
 alias t5='run --db-name=temp$(/bin/date "+%Y%m%d") -dufR --evaluate-sccb=tree $PWD/test'
 alias t5c='run   --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  `pwd`/test/tree  `pwd`/test/tree    --progress'
+alias t5r='run                                                                      --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  `pwd`/test/tree  `pwd`/test/tree    --progress'
 alias t5ca='t5c ; t5gz ; t5gz1'
 alias t5cz='run --trace-explain=8  --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames  `pwd`/test/tree  `pwd`/test/tree    --progress'
 alias t5gz='run --db-name=temp$(/bin/date "+%Y%m%d") -dufR --open-db --glob="*.gz" --tag-file=test-gz                  --evaluate-sccb=tagit test/tree'
@@ -33,3 +34,5 @@ alias tr='/bin/tr'
 alias tt='run'
 alias tts1='run --force-color --test-cfg-num=728453'
 alias tts2='run --no-test-disable-iflag'
+alias tnull1='run  --db-name=temp`datem`   -dufR  --evaluate-sccb=null `pwd`/test/tree'
+

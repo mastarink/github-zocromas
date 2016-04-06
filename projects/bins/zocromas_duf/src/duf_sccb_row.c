@@ -247,13 +247,13 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
         path = CRX( pi_path, &trow->pathinfo );
         rpath = CRX( pi_relpath, &trow->pathinfo );
         iname = CRX( pi_itemname, &trow->pathinfo );
-        QT( "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-        QT( "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+        MAST_TRACE(temp,5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+        MAST_TRACE(temp,5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
         n++;
       }
     }
     CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
-    QTT( "@@@@ ===========================================" );
+    MAST_TRACE( temp, 5, "@@@@ ===========================================" );
     sccbh->rows->prev = NULL;
   }
   ERN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );

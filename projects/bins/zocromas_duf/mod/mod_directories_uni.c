@@ -56,6 +56,19 @@ static duf_sql_sequence_t final_sql =                                /* */
 };
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_NODE,                                            /* */
+   .scanstage = DUF_SCANSTAGE_FS_ITEMS,                            /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 1,                                                      /* */
+   .db = 0,                                                          /* */
+   .fun = F2ND( register_pdidirectory ),                             /* */
+   },
+
+  {.fun = NULL}
+};
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "directories",
@@ -63,8 +76,11 @@ duf_scan_callbacks_t duf_mod_handler = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_dir_scan_before2 = duf_register_pdidirectory,
-
+#if 0
+  .dirent_dir_scan_before2 = F2ND( register_pdidirectory ),
+#elif 1
+  .scanners = scanners,
+#endif
   .no_count = 1,
   .no_progress = 1,
   .count_nodes = 1,
