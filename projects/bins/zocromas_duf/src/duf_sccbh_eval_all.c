@@ -65,13 +65,13 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
 
   duf_str_cb2_t passes[] = {
     [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
-    [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
-    /* [DUF_SCANSTAGE_DB_LEAVES] (*       *)  = (*      *) allow_files (*        *) ? F2ND( sccbh_eval_db_leaves ) : NULL, */
+    [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
+    [DUF_SCANSTAGE_DB_LEAVES] /*       */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_new ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_NOFD] /*  */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_nofd ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_FD] /*    */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_fd ) : NULL,
-    [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
+    [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
     [DUF_SCANSTAGE_DB_SUBNODES] /*     */  = !linear && allow_sub /*          */ ? F2ND( sccbh_eval_db_subnodes ) : NULL,
-    [DUF_SCANSTAGE_NODE_AFTER] /*      */  = !linear && allow_dirs /*         */ ? F2ND( sccbh_eval_db_node ) : NULL,
+    [DUF_SCANSTAGE_NODE_AFTER] /*      */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
     NULL
   };
 
@@ -115,8 +115,9 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   {
   /* QT( "DO: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
 
-    for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage <= DUF_SCANSTAGE_MAX; scanstage++ )
+    for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage <= DUF_SCANSTAGE_MAX; scanstage = scanstage << 1 )
     {
+      assert( scanstage );
       CR( eval_sccbh_scanstage, sccbh, pstmt_selector, scanstage );
     }
   }

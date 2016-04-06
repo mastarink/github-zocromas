@@ -29,6 +29,7 @@
 
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 #include "duf_sccbh_eval.h"                                          /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
+#include "duf_sccbh_scanner.h"
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_pstmt.h"
@@ -54,7 +55,8 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
     MAST_TRACE( explain, 20, "=> str cb2" );
     DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 5. leaf str cb2" );
 
-    assert( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
+    assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
+            || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
     if ( !( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) && CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) ) )
@@ -74,7 +76,8 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
     assert( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
     {
-      assert( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
+      assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
+              || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
       CRV( str_cb2, sccbh, pstmt_arg, scanstage );
     }
 
@@ -117,7 +120,8 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
 /* data from db at pstmt_arg */
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", CRX( pdi_depth, H_PDI ) );
   MAST_TRACE( explain, 40, "@ sel cb2 leaf" );
-  assert( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == NULL );
+  assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == NULL );
   MAST_TRACE( scan, 9, "LEAF %s", CRX( levinfo_path, H_PDI ) );
   {
   /*@ 1. go down + dbopenat */
@@ -125,7 +129,7 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) >= 0 );
     CRX( sccbh_row_next, sccbh, pstmt_arg );
-    
+
     CR( sel_cb2_leaf_at, sccbh, pstmt_arg, str_cb2, scanstage );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 

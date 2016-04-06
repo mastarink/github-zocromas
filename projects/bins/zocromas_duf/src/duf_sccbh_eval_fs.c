@@ -37,6 +37,7 @@
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_scanner.h" 
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
@@ -93,7 +94,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
 }
 
 /* 20151027.104729 */
-SR( SCCBH, sccbh_eval_fs_direntry_old, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
     duf_scanstage_t scanstage MAS_UNUSED )
 {
   duf_node_type_t nt;
@@ -117,8 +118,7 @@ SR( SCCBH, sccbh_eval_fs_direntry_old, duf_sccb_handle_t * sccbh, duf_stmnt_t * 
 /* <-- */
   CR( levinfo_goup, H_PDI );
 
-  ER( SCCBH, sccbh_eval_fs_direntry_old, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
-      duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de, duf_scanstage_t scanstage );
 }
 
 SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
@@ -130,10 +130,10 @@ SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_st
 /* --> */
   CR( levinfo_godown, H_PDI, de->d_name, nt );
 
-  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set->fun; scanner_set++ )
+  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
   {
-    if ( ( scanner_set->scanstage == scanstage || scanner_set->scanstage == DUF_SCANSTAGE_NONE ) && scanner_set->dirent
-         && ( scanner_set->type == nt || scanner_set->type == DUF_NODE_NONE ) )
+    if ( scanner_set->dirent && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
+         && ( ( scanner_set->type & nt ) || scanner_set->type == DUF_NODE_NONE ) )
       CR( sccbh_eval_fs_w_scanner_here, sccbh, pstmt_unused, scanstage, scanner_set->fun );
   }
 /* <-- */
@@ -143,12 +143,12 @@ SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_st
       duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+SR( SCCBH, sccbh_eval_fs_direntry_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
     duf_scanstage_t scanstage MAS_UNUSED )
 {
-  CR( sccbh_eval_fs_direntry_old, sccbh, pstmt_unused, de, scanstage );
-  /* CR( sccbh_eval_fs_direntry_scanner_set, sccbh, pstmt_unused, de, scanstage ); */
-  ER( SCCBH, sccbh_eval_fs_direntry, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
+  CR( sccbh_eval_fs_direntry, sccbh, pstmt_unused, de, scanstage );
+  CR( sccbh_eval_fs_direntry_scanner_set, sccbh, pstmt_unused, de, scanstage );
+  ER( SCCBH, sccbh_eval_fs_direntry_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, struct dirent *de,
       duf_scanstage_t scanstage MAS_UNUSED );
 }
 
@@ -216,7 +216,11 @@ SR( SCCBH, sccbh_eval_fs_w2scanners_rd, duf_scanstage_t scanstage MAS_UNUSED, du
       if ( CRX( direntry_filter, de ) )
       {
         MAST_TRACE( scan, 2, "@@@@@@dirent %s", de->d_name );
+#if 0
         CR( sccbh_eval_fs_direntry, sccbh, pstmt_unused, de, scanstage );
+#else
+        CR( sccbh_eval_fs_direntry_new, sccbh, pstmt_unused, de, scanstage );
+#endif
         il++;
       }
     }
@@ -247,8 +251,8 @@ SR( SCCBH, sccbh_eval_fs_w2scanners_rd, duf_scanstage_t scanstage MAS_UNUSED, du
 static
 SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
-
-  if ( H_SCCB->dirent_dir_scan_before2 || H_SCCB->dirent_file_scan_before2 )
+  if ( H_SCCB->dirent_dir_scan_before2 || H_SCCB->dirent_file_scan_before2
+       || CRX( sccb_has_new_scanner, sccbh, DUF_NODE_LEAF, scanstage, 0 /* db */ , 1 /* dirent */  ) )
   {
   /* assert( CRX(pdi_opendir,H_PDI) == 1 ); */
     CRX( pdi_set_opendir, H_PDI, 1 );                                /* TODO */
@@ -300,23 +304,22 @@ SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unus
 SR( SCCBH, sccbh_eval_fs, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
   assert( H_PDI );
-  if ( H_SCCB->dirent_dir_scan_before2 || H_SCCB->dirent_file_scan_before2 )
-  {
-    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>>q +dirent" );
-    MAST_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ),
-                CRX( levinfo_path, H_PDI ) );
 
-    MAST_TRACE( sccbh, 2, "(%s) stat (%s) %s", QERRNAME, CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>>q +dirent" );
+  MAST_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ),
+              CRX( levinfo_path, H_PDI ) );
 
-  /* assert( CRX(levinfo_dfd, H_PDI ) ); */
-  /*
-   *   -- call for each direntry
-   *      - for directory                - sccb->dirent_dir_scan_before2
-   *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
-   * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+  MAST_TRACE( sccbh, 2, "(%s) stat (%s) %s", QERRNAME, CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
 
-    CR( sccbh_eval_fs_in, sccbh, pstmt_unused, scanstage );
-    MAST_TRACE( sccbh, 2, "(%s) stat (%s) %s", QERRNAME, CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
-  }
+/* assert( CRX(levinfo_dfd, H_PDI ) ); */
+/*
+ *   -- call for each direntry
+ *      - for directory                - sccb->dirent_dir_scan_before2
+ *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
+ * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+
+  CR( sccbh_eval_fs_in, sccbh, pstmt_unused, scanstage );
+  MAST_TRACE( sccbh, 2, "(%s) stat (%s) %s", QERRNAME, CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
+
   ER( SCCBH, sccbh_eval_fs, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED );
 }

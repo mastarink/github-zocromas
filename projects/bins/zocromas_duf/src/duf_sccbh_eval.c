@@ -29,6 +29,8 @@
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
 
+#include "duf_pdi_structs.h"
+
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
@@ -37,132 +39,26 @@
 #include "duf_sccb_handle.h"
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 
-#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
-/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
+
 
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_sql_set.h"
 /* #include "duf_sccbh_eval_fs.h" */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_scanner.h"
 
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
-#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
-
-SR( SCCBH, sccbh_preset_leaf_scanner, duf_sccb_handle_t * sccbh )
-{
-  int fd;
-
-  fd = CRX( levinfo_dfd, H_PDI );
-  {
-    off_t rls MAS_UNUSED = 0;
-    off_t rls1 = 0;
-
-    if ( fd > 0 )
-    {
-      rls = lseek( fd, 0, SEEK_SET );
-      if ( ( ( int ) rls ) < 0 )
-      {
-        QT( "@========================================ERROR %s %d / LEAF", strerror( errno ), fd );
-      }
-      rls1 = lseek( fd, 0, SEEK_CUR );
-      if ( ( ( int ) rls ) < 0 )
-      {
-        QT( "@========================================ERROR %s %d / LEAF", strerror( errno ), fd );
-      }
-      assert( fd <= 0 || rls1 == 0 );
-    }
-  }
-  ER( SCCBH, sccbh_preset_leaf_scanner, duf_sccb_handle_t * sccbh );
-}
-
-SR( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
-{
-  H_PDI->items.total++;
-/* sccbh->current_scanner = scanner; */
-  sccbh->assert__current_node_type = node_type;
-  if ( node_type == DUF_NODE_NODE )
-  {
-    H_PDI->items.dirs++;
-  }
-  else if ( node_type == DUF_NODE_LEAF )
-  {
-    H_PDI->items.files++;
-  /* QT( "@X %d : %s : %p", H_SCCBI, H_SCCB->name,scanner  ); */
-    CRX( sccbh_preset_leaf_scanner, sccbh );
-  }
-  ER( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node_type );
-}
-
-SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
-{
-/* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
-  CRX( sccbh_preset_leaf_scanner, sccbh );
-  {
-    int eq = 0;
-
-  /* duf_sccb_data_row_t *new_row = NULL; */
-
-  /* sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) ); */
-  /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
-    if ( sccbh->rows && sccbh->rows->prev )
-    {
-      unsigned long long sha1id0;
-      unsigned long long sha1id1;
-
-      sha1id0 = CRX( datarow_get_number, sccbh->rows, "sha1id" );
-      sha1id1 = CRX( datarow_get_number, sccbh->rows->prev, "sha1id" );
-    /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, sccbh->new_row->pathinfo.levinfo[17].node_type ); */
-      eq = ( sha1id0 == sha1id1 );
-      {
-        if ( !eq )
-        {
-          QT( "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
-        /* assert(0); */
-          CRX( sccbh_rows_eval, sccbh );
-        }
-      }
-    }
-
-  /* if ( sccbh->new_row )                 */
-  /* {                                     */
-  /*   sccbh->new_row->prev = sccbh->rows; */
-  /*   sccbh->rows = sccbh->new_row;       */
-  /*   sccbh->new_row = NULL;              */
-  /* }                                     */
-  }
-  assert( H_PDI == sccbh->pdi );
-/* CRV( ( scanner ), pstmt_arg, H_PDI, sccbh ); */
-/* if ( sccbh->atom_cb )                                            (* atom is fs-direntry(dir or reg) or item(node or leaf) *) */
-/* sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, node_type, QERRIND ); */
-
-  ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
-}
-
-SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_fun_t scanner,
-    duf_node_type_t node_type )
-{
-  if ( scanner )
-  {
-    CRX( sccbh_preset_scanner, sccbh, node_type );
-    assert( H_PDI == sccbh->pdi );
-    CRV( ( scanner ), pstmt_arg, H_PDI, sccbh );
-    if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-      sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, node_type, QERRIND );
-    assert( sccbh->assert__current_node_type == node_type );
-  }
-/* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, CRX(scanstage_name, scanstage ), CRX(uni_scan_action_title, H_SCCB ), QERRNAME ); */
-  ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_fun_t scanner,
-      duf_node_type_t node_type );
-}
 
 /* 20150819.164652 */
 SR( SCCBH, sccbh_eval_all_and_summary_i, duf_sccb_handle_t * sccbh, bool f_summary )
@@ -231,7 +127,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
   duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
 
   assert( str_cb2 == F2ND( sccbh_eval_all ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) )
-          || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) ) );
+          || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) ) );
 #ifdef MAS_TRACING
   const char *set_type_title = CRX( nodetype_name, node_type );
 #endif
@@ -247,11 +143,8 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
 
     MAST_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, CRX( levinfo_dirid, H_PDI ),
                 CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
-#if 0
-    DOR( r, CRX( scan_db_items_with_str_cb_sql_set, sql_set_pair.active, str_cb2, sccbh, node_type ) );
-#else
     CR( eval_sccbh_sql_set_str_cb, sccbh, node_type, sql_set_pair, str_cb2, scanstage );
-#endif
+
     if ( QNOERR )
     {
       if ( QERRIND > 0 )
@@ -312,16 +205,13 @@ CRX( sccbh_eval_db_leaves, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused
 SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
 /* scan this files in this directory */
-/* if ( DUF_ACTG_FLAG( allow_files ) ) */
+  MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
+  MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan2 ? 1 : 0 );
+  if ( H_SCCB->leaf_scan2 )
   {
-    MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
-    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
-    MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan2 ? 1 : 0 );
-    if ( H_SCCB->leaf_scan2 )
-    {
-    /* duf_sccbh_eval_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
-      CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb ), scanstage );
-    }
+  /* duf_sccbh_eval_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
+    CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb ), scanstage );
   }
   ER( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
 }
@@ -329,39 +219,25 @@ SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
 SR( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
 /* scan this files in this directory */
-/* if ( DUF_ACTG_FLAG( allow_files ) ) */
+  MAST_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
+  MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan_fd2 ? 1 : 0 );
+  if ( H_SCCB->leaf_scan_fd2 )
   {
-    MAST_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
-    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
-    MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan fd:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan_fd2 ? 1 : 0 );
-    if ( H_SCCB->leaf_scan_fd2 )
-    {
-    /* duf_sccbh_eval_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
-      CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_fd_str_cb ), scanstage );
-    }
+  /* duf_sccbh_eval_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
+    CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_fd_str_cb ), scanstage );
   }
   ER( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_leaves, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
+SR( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
 {
 /* scan this files in this directory */
-  if ( 0 )
-  {
-    MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
-    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
-    MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan2 ? 1 : 0 );
-  /* TODO:  */
-#if 1
-    for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set->fun; scanner_set++ )
-    {
-      if ( ( scanner_set->scanstage == scanstage || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
-           && ( scanner_set->type == DUF_NODE_LEAF || scanner_set->type == DUF_NODE_NONE ) )
-      {
-        CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_qfd_str_cb ), scanstage );
-      }
-    }
-#endif
-  }
-  ER( SCCBH, sccbh_eval_db_leaves, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
+  MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
+  MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan2 ? 1 : 0 );
+  if ( CRX( sccb_has_new_scanner, sccbh, DUF_NODE_LEAF, scanstage, 1 /* db */ , 0 /* dirent */  ) )
+    CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb_new ), scanstage );
+
+  ER( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
 }

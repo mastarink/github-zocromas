@@ -144,6 +144,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sccbh_eval_all.h  \
 	duf_sccbh_eval_fs.h \
 	duf_sccbh_eval.h \
+	duf_sccbh_scanner.h \
 	duf_sccbh_eval_leaf.h  \
 	duf_sccbh_eval_node.h  \
 	duf_sccbh_eval_sql_set.h \

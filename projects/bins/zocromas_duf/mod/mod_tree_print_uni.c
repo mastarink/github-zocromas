@@ -13,7 +13,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_structs.h"
 
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
@@ -29,8 +28,10 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_count.h"
 
+#include "duf_sccb_structs.h"
 /* #include "duf_sccb_row_field_defs.h"                                 (* DUF_*FIELD2* ✗ *)                                    */
 /* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_print.h"
 
@@ -48,6 +49,29 @@ static int duf_tree_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, du
 
 /* ########################################################################################## */
 
+static duf_scanner_set_t scanners[] = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_NODE,                                            /* */
+   .scanstage = DUF_SCANSTAGE_NODE_BEFORE | DUF_SCANSTAGE_DB_LEAVES, /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( tree_node_before2 ),                                 /* */
+   },
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( tree_leaf2 ),                                        /* */
+   },
+
+  {.fun = NULL}
+};
+
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "tree print",
   .name = "tree",
@@ -58,11 +82,13 @@ duf_scan_callbacks_t duf_mod_handler = {
 #else
   .beginning_sql_seq = &sql_update_selected,
 #endif
-/* .node_scan_before = tree_node_before, */
-  .node_scan_before2 = F2ND( tree_node_before2 ),
 
-/* .leaf_scan = tree_leaf, */
+  .scanners = scanners,
+/* 20160406.124048 */
+#if 0
+  .node_scan_before2 = F2ND( tree_node_before2 ),
   .leaf_scan2 = F2ND( tree_leaf2 ),
+#endif
 
 /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
@@ -78,9 +104,10 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   duf_fileinfo_t fi = { 0 };
+  assert( H_PDI == pdi_unused );
   CR( fileinfo, /* pstmt_unused, pdi, */ sccbh, &fi );
 
   {
@@ -98,7 +125,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
+        slen = duf_print_sformat_file_info( H_PDI, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                             DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     if ( !over )
@@ -107,7 +134,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_pdi_pu( pdi )->use_format - 1;
+        use = duf_pdi_pu( H_PDI )->use_format - 1;
 
         fmt = DUF_CONFIGA( opt.output.as_formats.tree );
         MAST_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
@@ -125,7 +152,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
         sformat = "%f\n";
 
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
+        slen = duf_print_sformat_file_info( H_PDI, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
                                             DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     DUF_PUTSL( 0 );
@@ -135,7 +162,7 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
 
 /* DUF_PRINTF( 0, "%s", filename ); */
 
-  ER( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static

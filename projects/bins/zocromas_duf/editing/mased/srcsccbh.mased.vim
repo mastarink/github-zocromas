@@ -16,6 +16,9 @@ sfind duf_sccbh_eval_sql_set.h
 tab sfind duf_sccbh_eval_all.c
 sfind duf_sccbh_eval_all.h
 
+tab sfind duf_sccbh_scanner.c
+sfind duf_sccbh_scanner.h
+
 tab sfind duf_sccbh_pstmt.c
 sfind duf_sccbh_pstmt.h
 

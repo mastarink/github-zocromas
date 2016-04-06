@@ -134,6 +134,7 @@ zocromas_duf_SOURCES= \
 	duf_sccb_row.c \
 	duf_sccbh_eval_all.c \
 	duf_sccbh_eval.c \
+	duf_sccbh_scanner.c \
 	duf_sccbh_eval_fs.c \
 	duf_sccbh_eval_leaf.c \
 	duf_sccbh_eval_node.c \

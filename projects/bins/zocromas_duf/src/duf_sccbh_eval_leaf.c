@@ -26,19 +26,21 @@
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_scanner.h"
 
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 /* ###################################################################### */
 
-SR( SCCBH, sccbh_eval_db_leaf_qfd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+static
+SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open )
 {
 #if 0
   H_PDI->items.total++;
   H_PDI->items.files++;
 #endif
-  if ( scanstage == DUF_SCANSTAGE_DB_LEAVES_FD )
+  if ( to_open )
   {
     ERRLOWER( FS_DISABLED );
     CR( levinfo_if_openat_dh, H_PDI );
@@ -64,17 +66,60 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t
     duf_scanner_fun_t scanner = NULL;
 
     scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, CRX( levinfo_deleted, H_PDI ), DUF_NODE_LEAF );
+    ERRLOWER( FS_DISABLED );
     {
-      ERRLOWER( FS_DISABLED );
-
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
 
       assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
-      ERRUPPER( FS_DISABLED );
+    }
+    ERRUPPER( FS_DISABLED );
+  }
+  H_SCCBI = 0;
+  ER( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open );
+}
+
+static
+SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+{
+  for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
+  {
+    int n = 0;
+
+    for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
+    {
+      QT( "@a %d", n );
+      if ( scanner_set->db && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
+           && ( ( scanner_set->type & DUF_NODE_LEAF ) || scanner_set->type == DUF_NODE_NONE ) )
+      {
+        if ( scanner_set->to_open )
+        {
+          ERRLOWER( FS_DISABLED );
+          CR( levinfo_if_openat_dh, H_PDI );
+          {
+            ERRLOWER( STATAT_ENOENT );
+            CR( levinfo_if_statat_dh, H_PDI );
+            ERRUPPER( STATAT_ENOENT );
+          }
+          ERRUPPER( FS_DISABLED );
+#if 1
+          if ( CRX( levinfo_deleted, H_PDI ) )
+          {
+            ERRCLEAR( OPENAT_ENOENT );
+            ERRCLEAR( STATAT_ENOENT );
+          }
+#endif
+        }
+
+        ERRLOWER( FS_DISABLED );
+        CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_LEAF );
+        ERRUPPER( FS_DISABLED );
+      }
+      QT( "@b %d", n );
+      n++;
     }
   }
   H_SCCBI = 0;
-  ER( SCCBH, sccbh_eval_db_leaf_qfd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open );
 }
 
 /* 20151027.144543 */
@@ -89,7 +134,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t
  * */
 SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
-#if 1
+#if 0
 # if 0
   H_PDI->items.total++;
   H_PDI->items.files++;
@@ -129,7 +174,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
   }
   H_SCCBI = 0;
 #else
-  CR( sccbh_eval_db_leaf_qfd_str_cb, sccbh, pstmt_arg, scanstage );
+  CR( sccbh_eval_db_leaf_qfd, sccbh, pstmt_arg, scanstage, 1 );
 #endif
   ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }
@@ -145,7 +190,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
  * */
 SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
-#if 1
+#if 0
 # if 0
   H_PDI->items.total++;
   H_PDI->items.files++;
@@ -165,7 +210,13 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
   }
   H_SCCBI = 0;
 #else
-  CR( sccbh_eval_db_leaf_qfd_str_cb, sccbh, pstmt_arg, scanstage );
+  CR( sccbh_eval_db_leaf_qfd, sccbh, pstmt_arg, scanstage, 0 );
 #endif
   ER( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+{
+  CR( sccbh_eval_db_leaf_qfd_new, sccbh, pstmt_arg, scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }

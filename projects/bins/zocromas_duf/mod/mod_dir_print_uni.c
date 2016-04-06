@@ -13,8 +13,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_structs.h"
-
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -26,8 +24,11 @@
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
+#include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_print.h"
 
@@ -54,17 +55,19 @@ static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, d
 /* /NOTES */
 
 /* ########################################################################################## */
-/* duf_scanner_set_t scanners[] = {                                           */
-/*   {                                                                        */
-/*    .type = DUF_NODE_LEAF,                                            (* *) */
-/*    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                                   */
-/*    .open = 0,                                                        (* *) */
-/*    .dirent = 0,                                                      (* *) */
-/*    .db = 1,                                                          (* *) */
-/*    .fun = F2ND( print_leaf2 ),                                       (* *) */
-/*    },                                                                      */
-/*   {.fun = NULL}                                                            */
-/* };                                                                         */
+static duf_scanner_set_t scanners[] = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .to_open = 0,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( print_leaf2 ),                                       /* */
+   },
+
+  {.fun = NULL}
+};
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "listing print",
@@ -79,8 +82,11 @@ duf_scan_callbacks_t duf_mod_handler = {
 # endif
 #endif
 
+  .scanners = scanners,
+/* 20160406.125422 */
+#if 0
   .leaf_scan2 = F2ND( print_leaf2 ),
-  /* .scanners = scanners, */
+#endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) ; XXX index in std_leaf_sets */
@@ -92,7 +98,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 /* ########################################################################################## */
 
 static
-SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
 {
   DUF_RUFIELD2( dirid );
   DUF_RSFIELD2( fname );
@@ -126,6 +132,8 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
 /* DUF_SFIELD( mtimef ); */
 /* DUF_SFIELD( dowmtime ); */
 /* DUF_SFIELD( monthmtime ); */
+
+  assert( H_PDI == pdi_unused );
 
   {
     duf_fileinfo_t fi = { 0 };
@@ -179,7 +187,7 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_pdi_pu( pdi )->use_format - 1;
+        use = duf_pdi_pu( H_PDI )->use_format - 1;
 
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
@@ -193,11 +201,11 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
+        slen = duf_print_sformat_file_info( H_PDI, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
                                             mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }
   }
 
-  ER( MOD, print_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, print_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

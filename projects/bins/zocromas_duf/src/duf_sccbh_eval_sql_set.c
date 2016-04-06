@@ -112,7 +112,7 @@ static
 SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
     duf_scanstage_t scanstage )
 {
-  /* int have_rows=0; */
+/* int have_rows=0; */
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
   DUF_SQL_SE_START_STMT_NOPDI( sql_selector, pstmt_local );
@@ -144,10 +144,11 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
   /* T( "@pdi->total_bytes:%llu", H_PDI->total_bytes ); */
 
     DUF_SQL_SE_EACH_ROW( pstmt_local, CR( eval_sccbh_sql_row_str_cb, sccbh, node_type, pstmt_local, str_cb2, scanstage ) );
-    /* have_rows=1; */
+  /* have_rows=1; */
 
-    /* QT( "@%s", H_SCCB->name ); */
-    assert( str_cb2 == duf_sccbh_eval_db_leaf_str_cb || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_all );
+  /* QT( "@%s", H_SCCB->name ); */
+    assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == duf_sccbh_eval_db_leaf_str_cb
+            || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_all );
   /* mas_force_count_ereport( 1 ); */
   /* DUF_TEST_R( r ); */
   }
@@ -164,10 +165,9 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 #endif
 /* QT( "@@xxx : %s", QERRNAME ); */
 
-  
-  /* CRX( sccbh_row_next, sccbh, NULL );                     */
-  /* if ( have_rows && node_type == DUF_NODE_LEAF )          */
-  /*   CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
+/* CRX( sccbh_row_next, sccbh, NULL );                     */
+/* if ( have_rows && node_type == DUF_NODE_LEAF )          */
+/*   CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
 
   ER( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2_t str_cb2,
       duf_scanstage_t scanstage );
@@ -190,7 +190,8 @@ SR( SCCBH, eval_sccbh_sql_set_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
     MAST_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, CRX( levinfo_dirid, H_PDI ), CRX( levinfo_itemshowname, H_PDI ) );
   }
 
-  assert( str_cb2 == duf_sccbh_eval_all || ( str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb ) || ( str_cb2 == duf_sccbh_eval_db_leaf_str_cb ) );
+  assert( str_cb2 == F2ND( sccbh_eval_all ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) )
+          || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) ) );
   CR( eval_sccbh_sql_str_cb, sccbh, node_type, sql_selector, str_cb2, scanstage );
   mas_free( sql_selector );
   sql_selector = NULL;

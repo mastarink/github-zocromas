@@ -43,6 +43,7 @@
 /* #include "duf_sccbh_eval_fs.h" */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
+#include "duf_sccbh_scanner.h"
 
 #include "duf_sccbh_eval.h"
 /* ###################################################################### */
@@ -80,11 +81,18 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_ar
 
 SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
-  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set->fun; scanner_set++ )
+  int n = 0;
+
+  for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
   {
-    if ( ( scanner_set->scanstage == scanstage || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
-         && ( scanner_set->type == DUF_NODE_NODE || scanner_set->type == DUF_NODE_NONE ) )
+    if ( scanner_set->db && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
+         && ( (scanner_set->type & DUF_NODE_NODE) || scanner_set->type == DUF_NODE_NONE ) )
+    {
+      QT( "@A %d", n );
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_NODE );
+      QT( "@@B %d", n );
+    }
+    n++;
   }
 
   ER( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
@@ -93,7 +101,7 @@ SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_
 SR( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
   CR( sccbh_eval_db_node, sccbh, pstmt_arg, scanstage );
-/* CR( sccbh_eval_db_node_scanner_set, sccbh, pstmt_arg, scanstage ); */
+  CR( sccbh_eval_db_node_scanner_set, sccbh, pstmt_arg, scanstage );
   ER( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }
 

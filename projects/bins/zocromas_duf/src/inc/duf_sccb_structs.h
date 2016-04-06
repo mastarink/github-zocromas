@@ -138,7 +138,8 @@ struct duf_sccb_handle_s
 
 struct duf_scanner_set_s
 {
-  unsigned open:1;
+  unsigned disabled:1;
+  unsigned to_open:1;
   unsigned dirent:1;
   unsigned db:1;
   unsigned deleted:1;
