@@ -46,7 +46,6 @@ zocromas_duf_SOURCES= \
 	data_optable_format.c \
 	data_optable_fs.c \
 	data_optable_help.c \
-	data_optable_info.c \
 	data_optable_interactive.c \
 	data_optable_io.c \
 	data_optable_redo_and_obsolete.c \

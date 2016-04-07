@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <string.h>
 #include <dlfcn.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
@@ -23,25 +25,119 @@
 /* ###################################################################### */
 #include "duf_mod_handle.h"
 /* ###################################################################### */
+static char *libpath = NULL;
+const char *
+duf_libpath( void )
+{
+  if ( !libpath )
+    libpath = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
+  return libpath;
+}
+
+char **
+duf_liblist( int *psize )
+{
+  char **liblist = NULL;
+  DIR *dh = NULL;
+
+  dh = opendir( duf_libpath(  ) );
+  if ( dh )
+  {
+    int cnt = 0;
+    struct dirent *de;
+
+    while ( ( de = readdir( dh ) ) )
+    {
+      if ( 0 == strcmp( de->d_name + strlen( de->d_name ) - 3, ".so" ) )
+      {
+        cnt++;
+      }
+    }
+    if ( cnt > 0 )
+    {
+      char **ll;
+
+      rewinddir( dh );
+      liblist = mas_malloc( sizeof( char * ) * ( cnt + 1 ) );
+      memset( liblist, 0, sizeof( char * ) * ( cnt + 1 ) );
+      ll = liblist;
+      cnt = 0;
+      while ( ( de = readdir( dh ) ) )
+      {
+        if ( 0 == strcmp( de->d_name + strlen( de->d_name ) - 3, ".so" ) )
+        {
+          *ll++ = mas_strndup( de->d_name, strlen( de->d_name ) - 3 );
+          cnt++;
+        }
+      }
+      if ( psize )
+        *psize = cnt;
+    }
+    closedir( dh );
+  }
+  return liblist;
+}
+
+void
+duf_delete_libpath( void )
+{
+  mas_free( libpath );
+  libpath = NULL;
+}
+
+void
+duf_delete_liblist( char **liblist )
+{
+  if ( liblist )
+  {
+    for ( char **lp = liblist; lp && *lp; lp++ )
+    {
+      mas_free( *lp );
+    }
+    mas_free( liblist );
+  }
+}
+
+static void mod_handle_destructor( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+mod_handle_destructor( void )
+{
+  duf_delete_libpath(  );
+}
+
+char *
+duf_libname2sopath( const char *libname )
+{
+  char *sopath = NULL;
+
+  sopath = mas_strdup( duf_libpath(  ) );
+  sopath = mas_strcat_x( sopath, libname );
+  sopath = mas_strcat_x( sopath, ".so" );
+  return sopath;
+}
 
 void *
 duf_load_symbol( const char *libname, const char *symbol )
 {
   void *psym = NULL;
   void *han = NULL;
-  char *path = NULL;
+  char *sopath = NULL;
 
-  path = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
-  path = mas_strcat_x( path, libname );
-  path = mas_strcat_x( path, ".so" );
-
-  han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
+#if 0
+/* sopath = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL ); */
+  sopath = mas_strdup( duf_libpath(  ) );
+  sopath = mas_strcat_x( sopath, libname );
+  sopath = mas_strcat_x( sopath, ".so" );
+#else
+  sopath = duf_libname2sopath( libname );
+#endif
+  han = dlopen( sopath, RTLD_NOLOAD | RTLD_LAZY );
   if ( !han )
-    han = dlopen( path, RTLD_LOCAL | RTLD_LAZY );
+    han = dlopen( sopath, RTLD_LOCAL | RTLD_LAZY );
   if ( han )
     psym = ( void * ) dlsym( han, symbol );
   MAST_TRACE( sccb, 0, "[han:%p] %s : %p", han, symbol, psym );
-  mas_free( path );
+  mas_free( sopath );
   return psym;
 }
 
@@ -66,6 +162,6 @@ duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol 
     if ( 0 == strcmp( mhan->name, masmodsymbol ) )
       ptr = mhan->handler;
   }
-  /* QT( "@%s::%s ~ %p", libname, masmodsymbol, ptr ); */
+/* QT( "@%s::%s ~ %p", libname, masmodsymbol, ptr ); */
   return ptr;
 }

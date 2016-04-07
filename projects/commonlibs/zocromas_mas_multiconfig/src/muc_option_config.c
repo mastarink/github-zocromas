@@ -306,13 +306,15 @@ muc_cli_options_varfunc( const muc_config_cli_t * cli )
 void
 muc_cli_options_xtable_add_one( muc_config_cli_t * cli, const muc_longval_extended_table_t * tab )
 {
-  muc_cli_options_xtable_list_add( cli, &tab, 1 );
+  if ( tab )
+    muc_cli_options_xtable_list_add( cli, &tab, 1 );
 }
 
 void
 muc_cli_options_xtable_list_add( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, int numtabs )
 {
-  cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_multi, numtabs, cli->xvtable_multi ); /* allocates */
+  if ( xtable_multi )
+    cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_multi, numtabs, cli->xvtable_multi ); /* allocates */
   muc_cli_options_postinit_reset( cli );
 }
 
@@ -321,98 +323,100 @@ muc_longval_extended_vtable_t **
 muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, unsigned numtabs,
                                      muc_longval_extended_vtable_t ** vtable_multi_basic )
 {
-  unsigned numbtabs = 0;
+  if ( xtable_multi )
+  {
+    unsigned numbtabs = 0;
+    muc_longval_extended_vtable_t **vtable_multi = NULL;
 
-/* unsigned numtabs = 0; */
+    if ( !numtabs )
+      for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
 
-/* muc_option_gen_code_t maxcodeval = 0; */
-  muc_longval_extended_vtable_t **vtable_multi = NULL;
-
-  if ( !numtabs )
-    for ( numtabs = 0; xtable_multi[numtabs] && xtable_multi[numtabs]->xlist; numtabs++ );
-
-  assert( vtable_multi == NULL );
+    assert( vtable_multi == NULL );
 
 #if 0
-  vtable_multi = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+    vtable_multi = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
 #else
-  if ( vtable_multi_basic )
-  {
-    for ( numbtabs = 0; vtable_multi_basic[numbtabs] && vtable_multi_basic[numbtabs]->xlist; numbtabs++ );
+    if ( vtable_multi_basic )
+    {
+      for ( numbtabs = 0; vtable_multi_basic[numbtabs] && vtable_multi_basic[numbtabs]->xlist; numbtabs++ );
+      {
 # if 0
-    vtable_multi_basic = mas_realloc( vtable_multi_basic, sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+        vtable_multi_basic = mas_realloc( vtable_multi_basic, sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
 # else
-    muc_longval_extended_vtable_t **vtable_multi_basic_old = vtable_multi_basic;
+        muc_longval_extended_vtable_t **vtable_multi_basic_old = vtable_multi_basic;
 
-    vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) );
-    memcpy( vtable_multi_basic, vtable_multi_basic_old, sizeof( muc_longval_extended_vtable_t ** ) * numbtabs );
-    mas_free( vtable_multi_basic_old );
+        vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numbtabs + numtabs + 1 ) );
+        memcpy( vtable_multi_basic, vtable_multi_basic_old, sizeof( muc_longval_extended_vtable_t ** ) * numbtabs );
+        mas_free( vtable_multi_basic_old );
+      }
 # endif
-  }
-  else
-  {
-    vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
-  }
-  vtable_multi = vtable_multi_basic + numbtabs;
+    }
+    else
+    {
+      vtable_multi_basic = mas_malloc( sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+    }
+    vtable_multi = vtable_multi_basic + numbtabs;
 #endif
 
-  memset( vtable_multi, 0, sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
-  {
+    memset( vtable_multi, 0, sizeof( muc_longval_extended_vtable_t ** ) * ( numtabs + 1 ) ); /* +1 to allocate for terminating NULL */
+    {
+    /* scan pre-set codevals */
+      for ( size_t itab = 0; itab < numtabs; itab++ )
+      {
+        const muc_longval_extended_t *xlist;
+
+        xlist = xtable_multi[itab]->xlist;
+        for ( const muc_longval_extended_t * x = xlist; x->o.name; x++ )
+        {
+          size_t xn = x - xlist;
+
+          if ( xlist[xn].o.val && xlist[xn].o.val > cli->maxcodeval )
+            cli->maxcodeval = xlist[xn].o.val;
+        }
+      }
+      cli->maxcodeval += 100;
+      cli->maxcodeval /= 100;
+      cli->maxcodeval *= 100;
+    }
     for ( size_t itab = 0; itab < numtabs; itab++ )
     {
-      const muc_longval_extended_t *xlist;
+      muc_longval_extended_vtable_t *vtable;
 
-      xlist = xtable_multi[itab]->xlist;
-      for ( const muc_longval_extended_t * x = xlist; x->o.name; x++ )
-      {
-        size_t xn = x - xlist;
-
-        if ( xlist[xn].o.val && xlist[xn].o.val > cli->maxcodeval )
-          cli->maxcodeval = xlist[xn].o.val;
-      }
-    }
-    cli->maxcodeval += 100;
-    cli->maxcodeval /= 100;
-    cli->maxcodeval *= 100;
-  }
-  for ( size_t itab = 0; itab < numtabs; itab++ )
-  {
-    muc_longval_extended_vtable_t *vtable;
-
-    vtable = mas_malloc( sizeof( muc_longval_extended_t ) );
-    memset( vtable, 0, sizeof( muc_longval_extended_t ) );
+      vtable = mas_malloc( sizeof( muc_longval_extended_t ) );
+      memset( vtable, 0, sizeof( muc_longval_extended_t ) );
 #if 0
-    memcpy( &vtable, &xtable_multi[itab], sizeof( vtable ) );
+      memcpy( &vtable, &xtable_multi[itab], sizeof( vtable ) );
 #else
-    vtable->name = xtable_multi[itab]->name;
-    vtable->id = xtable_multi[itab]->id;
-    vtable->stage_opts = xtable_multi[itab]->stage_opts;
+      vtable->name = xtable_multi[itab]->name;
+      vtable->id = xtable_multi[itab]->id;
+      vtable->stage_opts = xtable_multi[itab]->stage_opts;
 #endif
-  /* T( "@@%lu. tab.name: '%s' : [%p:%p]", itab, vtable->name, vtable, vtable->xlist ); */
-    {
-      size_t xcnt = 0;
+    /* T( "@@%lu. tab.name: '%s' : [%p:%p]", itab, vtable->name, vtable, vtable->xlist ); */
+      {
+        size_t xcnt = 0;
 
-      for ( const muc_longval_extended_t * x = xtable_multi[itab]->xlist; x->o.name; x++ )
-        xcnt++;
-      vtable->xlist = mas_malloc( sizeof( muc_longval_extended_t ) * ( xcnt + 1 ) );
-      for ( size_t xn = 0; xn < xcnt; xn++ )
-      {
-        vtable->xlist[xn] = xtable_multi[itab]->xlist[xn];
-      }
-      for ( size_t xn = 0; xn < xcnt; xn++ )
-      {
-        if ( !vtable->xlist[xn].o.val )
+        for ( const muc_longval_extended_t * x = xtable_multi[itab]->xlist; x->o.name; x++ )
+          xcnt++;
+        vtable->xlist = mas_malloc( sizeof( muc_longval_extended_t ) * ( xcnt + 1 ) );
+        for ( size_t xn = 0; xn < xcnt; xn++ )
         {
-          muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval );
-          vtable->xlist[xn].o.val = ++cli->maxcodeval;
+          vtable->xlist[xn] = xtable_multi[itab]->xlist[xn];
         }
-        else
+        for ( size_t xn = 0; xn < xcnt; xn++ )
         {
-        /* T( "@@%s --", vtable->xlist[xn].o.name ); */
+          if ( !vtable->xlist[xn].o.val )
+          {
+            muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval );
+            vtable->xlist[xn].o.val = ++cli->maxcodeval;
+          }
+          else
+          {
+          /* T( "@@%s --", vtable->xlist[xn].o.name ); */
+          }
         }
       }
+      vtable_multi[itab] = vtable;
     }
-    vtable_multi[itab] = vtable;
   }
   return vtable_multi_basic;
 }

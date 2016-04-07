@@ -63,6 +63,7 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
   duf_config->pcli = muc_cli_options_create( argc, argv, NULL /* duf_xtable_list(  ) */ , mandatory_config, duf_config->conf.config_dir,
                                              duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
   muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list(  ), 0 /* numtabs */  );
+  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list_mod(  ), 0 /* numtabs */  );
 #endif
 #if 0
   muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list2(  ), 0 );

@@ -11,6 +11,9 @@
 #include "duf_optimpl_misc.h"
 #include "duf_optimpl_help.h"
 #include "duf_optimpl_version.h"
+
+# include "duf_mod_types.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_info[];
@@ -22,7 +25,16 @@ At duf_xtended_table.c:
 	NULL
       };
 */
-const muc_longval_extended_table_t optable_info = {
+muc_longval_extended_table_t optable_info;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable_info},
+  {NULL, NULL}
+};
+
+
+
+muc_longval_extended_table_t optable_info = {
   .name = "info",
   .xlist =                                                           /* */
   {

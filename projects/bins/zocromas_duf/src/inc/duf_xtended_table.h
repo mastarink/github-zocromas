@@ -11,4 +11,6 @@
 const muc_longval_extended_table_t *const *duf_xtable_list( void );
 const muc_longval_extended_table_t *const *duf_xtable_list2( void );
 
+const muc_longval_extended_table_t *const*duf_xtable_list_mod( void );
+
 #endif

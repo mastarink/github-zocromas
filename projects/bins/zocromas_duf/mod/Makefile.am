@@ -3,8 +3,12 @@ SUBDIRS= inc
 
 moduledir=$(libdir)/dufmod
 module_LTLIBRARIES = \
-	null.la set_dir_priority.la tree.la \
+	ot_info.la null.la set_dir_priority.la tree.la \
 	crc32.la dialog.la dirs.la dumplet.la exif.la filedata.la filenames.la listing.la md5.la mime.la save_to.la sd5.la sha1.la tagit.la
+
+ot_info_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_info_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_info_la_SOURCES          = mod_data_optable_info.c
 
 null_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 null_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
