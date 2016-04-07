@@ -19,4 +19,7 @@ sfind duf_maindb_info.h
 tab sfind duf_action_table.c
 sfind duf_action_table.h
 
+tab sfind duf_mod_handle.c
+sfind duf_mod_handle.h
+
 

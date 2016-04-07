@@ -48,10 +48,11 @@
 #include "duf_tags.h"
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_handler = {
+     duf_scan_callbacks_t duf_mod_sccb_handler = {
        .title = "save it to",
        .name = "save_to",
        .def_opendir = 1,

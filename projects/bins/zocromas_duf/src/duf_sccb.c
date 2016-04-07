@@ -22,6 +22,8 @@
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "std_mod_sets.h"
 
+#include "duf_mod_handle.h"
+
 #include "duf_sccb_structs.h"
 
 /* Working with sccb structure */
@@ -105,15 +107,10 @@ static duf_scan_callbacks_t *
 duf_load_sccb_symbol( const char *path, const char *symbol )
 {
   duf_scan_callbacks_t *sccb = NULL;
-  void *han = NULL;
 
   MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
-  han = dlopen( path, RTLD_NOLOAD | RTLD_LAZY );
-  if ( !han )
-    han = dlopen( path, RTLD_LOCAL | RTLD_LAZY );
-  if ( han )
-    sccb = ( duf_scan_callbacks_t * ) dlsym( han, symbol );
-  MAST_TRACE( sccb, 0, "[han:%p] %s : %s", han, symbol, sccb ? sccb->name : NULL );
+  sccb = ( duf_scan_callbacks_t * ) duf_load_symbol( path, symbol );
+  MAST_TRACE( sccb, 0, "%s : %s", symbol, sccb ? sccb->name : NULL );
   return sccb;
 }
 
@@ -152,30 +149,33 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
 {
   duf_scan_callbacks_t *sccb = NULL;
 
-  if ( namelen && name && first )
+  if ( name && namelen )
   {
-    char *path = NULL;
+    char *libname;
 
-    path = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
-    path = mas_strncat_x( path, name, namelen );
-    path = mas_strcat_x( path, ".so" );
-    sccb = duf_load_sccb_symbol( path, "duf_mod_handler" );
-  /* QT( "@A sccb:%p (%s)", sccb, "duf_mod_handler" ); */
-    if ( 0 && !sccb )
+    libname = mas_strndup( name, namelen );
+    if ( libname && first )
     {
-      char *symbol = NULL;
+      sccb = duf_load_mod_handler_symbol_find( libname, "sccb" );
+      if ( !sccb )
+        sccb = duf_load_sccb_symbol( libname, "duf_mod_sccb_handler" );
+    /* QT( "@A sccb:%p (%s)", sccb, "duf_mod_sccb_handler" ); */
+      if ( !sccb )
+      {
+        char *symbol = NULL;
 
-      symbol = mas_strdup( "duf_" );
-      symbol = mas_strncat_x( symbol, name, namelen );
-      symbol = mas_strcat_x( symbol, "_callbacks" );
-      sccb = duf_load_sccb_symbol( path, symbol );
-      mas_free( symbol );
-    /* QT( "@B sccb:%p (%s)", sccb, symbol ); */
+        symbol = mas_strdup( "duf_" );
+        symbol = mas_strcat_x( symbol, libname );
+        symbol = mas_strcat_x( symbol, "_callbacks" );
+        sccb = duf_load_sccb_symbol( libname, symbol );
+        mas_free( symbol );
+      /* QT( "@B sccb:%p (%s)", sccb, symbol ); */
+      }
+      if ( sccb )
+        duf_register_sccb( first, sccb );
+
     }
-    if ( sccb )
-      duf_register_sccb( first, sccb );
-
-    mas_free( path );
+    mas_free( libname );
   }
   MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
   return sccb;

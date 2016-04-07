@@ -30,6 +30,7 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 static int duf_register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
@@ -58,19 +59,16 @@ static duf_sql_sequence_t final_sql =                                /* */
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {
-   .disabled = 0,                                                    /* */
+  .flags = DUF_SCANNER_SET_FLAG_DIRENT,                             /* */
    .type = DUF_NODE_NODE,                                            /* */
    .scanstage = DUF_SCANSTAGE_FS_ITEMS,                            /* */
-   .to_open = 0,                                                     /* */
-   .dirent = 1,                                                      /* */
-   .db = 0,                                                          /* */
    .fun = F2ND( register_pdidirectory ),                             /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "directories",
   .name = "dirs",
   .init_scan = NULL,
@@ -156,7 +154,7 @@ SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
   MAST_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
-      &duf_mod_handler.node /*, 0 need_id - no error (1=error) if there is no record */  );
+      &duf_mod_sccb_handler.node /*, 0 need_id - no error (1=error) if there is no record */  );
 
   ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -41,10 +41,11 @@
 
 #define DUF_MOD_NAME dumplet
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_dumplet )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_handler = {
+     duf_scan_callbacks_t duf_mod_sccb_handler = {
        .title = "dumplet",
        .name = "dumplet",
        .def_opendir = 0,

@@ -13,7 +13,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-
 #include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
@@ -40,6 +39,7 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 /* static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * pdi ); */
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
@@ -49,30 +49,33 @@ static int duf_tree_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, du
 
 /* ########################################################################################## */
 
+static duf_scanner_set_t scanners[];
+static duf_scan_callbacks_t duf_sccb_dispatch;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+
+/* ########################################################################################## */
 static duf_scanner_set_t scanners[] = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */
    .type = DUF_NODE_NODE,                                            /* */
    .scanstage = DUF_SCANSTAGE_NODE_BEFORE /* | DUF_SCANSTAGE_DB_LEAVES */ , /* */
-   .to_open = 0,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
    .fun = F2ND( tree_node_before2 ),                                 /* */
    },
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .to_open = 0,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
    .fun = F2ND( tree_leaf2 ),                                        /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "tree print",
   .name = "tree",
   .init_scan = NULL,                                                 /* */

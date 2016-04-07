@@ -131,7 +131,9 @@ SR( SCCBH, sccbh_eval_fs_direntry_scanner_set, duf_sccb_handle_t * sccbh, duf_st
 
   for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
   {
-    if ( scanner_set->dirent && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
+    if ( ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DIRENT )
+         && !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DISABLED )
+         && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
          && ( ( scanner_set->type & nt ) || scanner_set->type == DUF_NODE_NONE ) )
     {
       CR( sccbh_eval_fs_w_scanner_here, sccbh, pstmt_unused, scanstage, scanner_set->fun );

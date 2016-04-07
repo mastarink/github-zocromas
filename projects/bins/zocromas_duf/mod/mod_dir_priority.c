@@ -43,6 +43,7 @@
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( set_dir_priority ) */
 static int duf_set_dir_priority_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 static int duf_set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
@@ -50,7 +51,7 @@ static int duf_set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUS
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "set dir priority",
   .name = "set_dir_priority",
   .def_opendir = 0,                                                  /* ?? */

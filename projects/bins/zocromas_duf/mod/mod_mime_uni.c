@@ -43,6 +43,7 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 #include "duf_pdi_structs.h"
+#include "duf_mod_types.h"
 /* ########################################################################################## */
 static int duf_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
@@ -72,19 +73,16 @@ static duf_sql_sequence_t final_sql =                                /* */
 
 static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_TO_OPEN | DUF_SCANNER_SET_FLAG_DB,  /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .to_open = 1,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
-   .fun = F2ND( dirent_content2 ),                               /* */
+   .fun = F2ND( dirent_content2 ),                                   /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "collect mime",
   .name = "mime",
   .def_opendir = 1,
@@ -96,7 +94,7 @@ duf_scan_callbacks_t duf_mod_handler = {
 #endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = -1,                                        /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",

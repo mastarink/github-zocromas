@@ -38,10 +38,11 @@
 #include "duf_levinfo_structs.h"
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_null )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_handler = {
+     duf_scan_callbacks_t duf_mod_sccb_handler = {
        .title = "null",
        .name = "null",
        .def_opendir = 0,

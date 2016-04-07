@@ -1,4 +1,6 @@
 #!/bin/sh
+alias  datem='/bin/date "+%Y%m%d"'
+
 # list files from "owncloud_mega_zip_copy" db with sha1id=1351; tag them with 'test-one'
 alias t__1='run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4'
 # list files from "owncloud_mega_zip_copy" db same as /home/mastar/.mas/lib/big/misc/media/photo/LG_G3/20150617_210134_Burst22.jpg

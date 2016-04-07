@@ -39,6 +39,7 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
@@ -55,21 +56,27 @@ static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, d
 /* /NOTES */
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[];
+static duf_scan_callbacks_t duf_sccb_dispatch;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+/* ########################################################################################## */
+
 static duf_scanner_set_t scanners[] = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .to_open = 0,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
    .fun = F2ND( print_leaf2 ),                                       /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "listing print",
   .name = "listing",
   .init_scan = NULL,                                                 /* */

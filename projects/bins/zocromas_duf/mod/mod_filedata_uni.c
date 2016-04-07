@@ -29,6 +29,7 @@
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 static int duf_register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
@@ -77,19 +78,16 @@ static duf_sql_sequence_t final_sql =                                /* */
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_DIRENT,                             /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_FS_ITEMS,                              /* */
-   .to_open = 0,                                                     /* */
-   .dirent = 1,                                                      /* */
-   .db = 0,                                                          /* */
    .fun = F2ND( register_pdifiledata ),                              /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "file data",
   .name = "filedata",
   .init_scan = NULL,

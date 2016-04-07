@@ -58,6 +58,7 @@ zocromas_duf_SOURCES= \
 	data_optable_trace.c \
 	data_optable_uplus.c \
 	duf_action_table.c \
+	duf_mod_handle.c \
 	 \
 	 \
 	duf_cfg_credel.c \

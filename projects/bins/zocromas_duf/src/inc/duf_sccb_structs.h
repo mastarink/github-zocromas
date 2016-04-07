@@ -135,15 +135,37 @@ struct duf_sccb_handle_s
   duf_sccb_data_row_t *rows;
   duf_sccb_data_row_t *new_row;
 };
+enum duf_scanner_set_flags_n_e
+{
+  DUF_SCANNER_SET_FLAG_N_MIN,
+  DUF_SCANNER_SET_FLAG_N_DISABLED = DUF_SCANNER_SET_FLAG_N_MIN,
+  DUF_SCANNER_SET_FLAG_N_DIRENT,
+  DUF_SCANNER_SET_FLAG_N_DELETED,
+  DUF_SCANNER_SET_FLAG_N_DELETED_ONLY,
+  DUF_SCANNER_SET_FLAG_N_TO_OPEN,
+  DUF_SCANNER_SET_FLAG_N_DB,
+  DUF_SCANNER_SET_FLAG_N_MAX = DUF_SCANNER_SET_FLAG_N_DB,
+};
+
+enum duf_scanner_set_flags_e
+{
+  DUF_SCANNER_SET_FLAG_DISABLED = 1 << DUF_SCANNER_SET_FLAG_N_DISABLED,
+  DUF_SCANNER_SET_FLAG_DIRENT = 1 << DUF_SCANNER_SET_FLAG_N_DIRENT,
+  DUF_SCANNER_SET_FLAG_DELETED = 1 << DUF_SCANNER_SET_FLAG_N_DELETED,
+  DUF_SCANNER_SET_FLAG_DELETED_ONLY = 1 << DUF_SCANNER_SET_FLAG_N_DELETED_ONLY,
+  DUF_SCANNER_SET_FLAG_TO_OPEN = 1 << DUF_SCANNER_SET_FLAG_N_TO_OPEN,
+  DUF_SCANNER_SET_FLAG_DB = 1 << DUF_SCANNER_SET_FLAG_N_DB,
+};
 
 struct duf_scanner_set_s
 {
-  unsigned disabled:1;
-  unsigned to_open:1;
-  unsigned dirent:1;
-  unsigned db:1;
-  unsigned deleted:1;
-  unsigned deleted_only:1;
+  /* unsigned disabled:1;     */
+  /* unsigned to_open:1;      */
+  /* unsigned dirent:1;       */
+  /* unsigned db:1;           */
+  /* unsigned deleted:1;      */
+  /* unsigned deleted_only:1; */
+  unsigned long long flags;
   duf_node_type_t type;
   duf_scanstage_t scanstage;
   duf_scanner_fun_t fun;

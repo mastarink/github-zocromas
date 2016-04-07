@@ -42,10 +42,11 @@
 
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_dialog )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_handler = {
+     duf_scan_callbacks_t duf_mod_sccb_handler = {
        .title = "dialog",
        .name = "dialog",
        .def_opendir = 0,

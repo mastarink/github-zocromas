@@ -44,6 +44,7 @@
 
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 #include "mod_exif.h"
 /* ########################################################################################## */
 
@@ -77,19 +78,16 @@ static duf_sql_sequence_t final_sql = {
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_TO_OPEN | DUF_SCANNER_SET_FLAG_DB,  /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .to_open = 1,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
    .fun = F2ND( dirent_content2 ),                                   /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "collect exif",                                           /* */
   .name = "exif",                                                    /* */
   .def_opendir = 1,                                                  /* */

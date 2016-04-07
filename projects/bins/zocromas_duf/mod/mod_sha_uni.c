@@ -43,6 +43,7 @@
 #include "duf_pdi_structs.h"
 /* #include "duf_levinfo_structs.h" */
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 static int duf_digest_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 #define ADIGEST_DELTA 4
@@ -74,19 +75,16 @@ static duf_sql_sequence_t final_sql =                                /* */
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {
-   .disabled = 0,                                                    /* */
+   .flags = DUF_SCANNER_SET_FLAG_TO_OPEN | DUF_SCANNER_SET_FLAG_DB,  /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .to_open = 1,                                                     /* */
-   .dirent = 0,                                                      /* */
-   .db = 1,                                                          /* */
    .fun = F2ND( digest_dirent_content2 ),                                       /* */
    },
 
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "collect " MOD_DIGEST_DATA_S,
   .name = MOD_DIGEST_DATA_S,
   .init_scan = NULL,

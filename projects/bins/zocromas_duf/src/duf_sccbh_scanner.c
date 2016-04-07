@@ -40,9 +40,11 @@ SRX( SCCBH, unsigned, has, 0, sccb_has_new_scanner, duf_sccb_handle_t * sccbh, d
   if ( sccbh && H_SCCB )
     for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
     {
-      if ( ( db == 0 || ( db == 1 && scanner_set->db ) || ( db == -1 && !scanner_set->db ) )
-           && ( dirent == 0 || ( dirent == 1 && scanner_set->dirent ) || ( dirent == -1 && !scanner_set->dirent ) )
-           && ( !scanner_set->disabled )
+      if ( ( db == 0 || ( db == 1 && ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DB ) )
+             || ( db == -1 && !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DB ) ) )
+           && ( dirent == 0 || ( dirent == 1 && ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DIRENT ) )
+                || ( dirent == -1 && !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DIRENT ) ) )
+           && ( !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DISABLED ) )
            && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
            && ( ( scanner_set->type & nt ) || scanner_set->type == DUF_NODE_NONE ) )
       {
@@ -122,7 +124,7 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
       {
         if ( !eq )
         {
-          MAST_TRACE(temp,5, "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
+          MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
         /* assert(0); */
           CRX( sccbh_rows_eval, sccbh );
         }

@@ -79,6 +79,8 @@ noinst_HEADERS=motest_config.h \
 	duf_maindb_info.h \
 	duf_match.h \
 	duf_mod_defs.h \
+	duf_mod_types.h \
+	duf_mod_handle.h \
 	\
 	duf_optable_def.h \
 	duf_optimpl_defs.h \

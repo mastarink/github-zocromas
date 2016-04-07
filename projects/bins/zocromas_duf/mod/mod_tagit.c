@@ -36,6 +36,7 @@
 #include "duf_tags.h"
 
 /* ########################################################################################## */
+#include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( tagit ) */
 static int duf_tagit_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 static int duf_tagit_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
@@ -47,7 +48,7 @@ static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dep
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_mod_handler = {
+duf_scan_callbacks_t duf_mod_sccb_handler = {
   .title = "tag it",
   .name = "tagit",
   .def_opendir = 0,

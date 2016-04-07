@@ -19,4 +19,7 @@ typedef void ( *duf_rsccbh_fun_t ) ( const duf_sccb_handle_t * sccbh, duf_stmnt_
                                      duf_node_type_t node_type, int r );
 typedef struct duf_scanner_set_s duf_scanner_set_t;
 
+typedef enum duf_scanner_set_flags_n_e duf_scanner_set_flags_n_t;
+typedef enum duf_scanner_set_flags_e duf_scanner_set_flags_t;
+
 #endif
