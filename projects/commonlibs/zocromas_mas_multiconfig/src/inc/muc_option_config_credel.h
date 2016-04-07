@@ -8,6 +8,7 @@
 # include "muc_config_cli_types.h"                                   /* muc_config_cli_t */
 
 muc_config_cli_t *muc_cli_options_allocate( void );
+void muc_cli_options_reg_argv( muc_config_cli_t * cli, int argc, char **argv );
 muc_config_cli_t *muc_cli_options_create( int argc, char **argv, const muc_longval_extended_table_t * const *xtable_list, unsigned mandatory_config,
                                           const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc,
                                           const mas_config_trace_t * ptracecfg );

@@ -117,6 +117,17 @@ muc_cli_options_create( int argc, char **argv, const muc_longval_extended_table_
 }
 
 void
+muc_cli_options_reg_argv( muc_config_cli_t * cli, int argc, char **argv )
+{
+  assert( cli );
+  if ( argv )
+  {
+    cli->carg.argc = argc;
+    cli->carg.argv = argv;
+  }
+}
+
+void
 muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_longval_extended_table_t * const *xtable_list,
                       unsigned mandatory_config, const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc,
                       const mas_config_trace_t * ptracecfg )
@@ -125,8 +136,7 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
   if ( !cli->inited )
   {
     cli->ptracecfg = ptracecfg;
-    cli->carg.argc = argc;
-    cli->carg.argv = argv;
+    muc_cli_options_reg_argv( cli, argc, argv );
     cli->mandatory_config = mandatory_config;
   /* const muc_longval_extended_vtable_t * const *xvtables
    * cli->xvtable_multi = xvtables;
