@@ -88,9 +88,7 @@ SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_
     if ( scanner_set->db && !scanner_set->disabled && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
          && ( (scanner_set->type & DUF_NODE_NODE) || scanner_set->type == DUF_NODE_NONE ) )
     {
-      QT( "@A %d", n );
       CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_NODE );
-      QT( "@@B %d", n );
     }
     n++;
   }

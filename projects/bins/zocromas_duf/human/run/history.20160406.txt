@@ -978,3 +978,38 @@
 # run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
 # retcode:0
 # 20160406.172233 : 1459952553.437369772 ------------[r]--
+# 20160406.172839 : 1459952919.331290343 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.172842 : 1459952922.097297592 ------------[r]--
+# 20160406.172908 : 1459952948.486244397 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.172910 : 1459952950.055537861 ------------[r]--
+# 20160406.172952 : 1459952992.338172061 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.172953 : 1459952993.902285794 ------------[r]--
+# 20160406.173008 : 1459953008.322098246 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.173009 : 1459953009.187039587 ------------[r]--
+# 20160406.173139 : 1459953099.673997073 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.173142 : 1459953102.961301682 ------------[r]--
+# 20160406.173201 : 1459953121.108175780 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160406.173203 : 1459953123.342146528 ------------[r]--
+# 20160406.173634 : 1459953394.637579039 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160406' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress' '--trace-temp=-20'
+# retcode:0
+# 20160406.173654 : 1459953414.319627607 ------------[r]--

@@ -59,7 +59,7 @@ TODO
 */
 
 /* ########################################################################################## */
-static DR( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static DR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 #define FILTER_DATA "(fd.noexif IS NULL AND fd.noexif IS NULL)"
@@ -75,16 +75,33 @@ static duf_sql_sequence_t final_sql = {
 };
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .to_open = 1,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( dirent_content2 ),                                   /* */
+   },
+
+  {.fun = NULL}
+};
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect exif",                                           /* */
   .name = "exif",                                                    /* */
   .def_opendir = 1,                                                  /* */
 
-  .leaf_scan_fd2 = F2ND( dirent_contnt2 ),                           /* */
+#if 0
+  .leaf_scan_fd2 = F2ND( dirent_content2 ),                          /* */
+#else
+  .scanners = scanners,
+#endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-  .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf_set_num = -1,                                        /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .std_leaf_set_name = "std-leaf-no-sel-fd",
   .std_node_set_name = "std-node-two",
@@ -491,7 +508,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static
-SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   DUF_RUFIELD2( dataid );
 
@@ -821,5 +838,5 @@ SR( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t 
 
   pdi->total_files++;
 
-  ER( MOD, dirent_contnt2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -70,12 +70,30 @@ static duf_sql_sequence_t final_sql =                                /* */
 #define Q_JOIN_ID( _up, _t, _as, _o )  " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." DUF_SQL_IDFIELD " ) "
 #define Q_JOIN_SYN( _up, _t, _as, _o ) " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." # _o ")"
 
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .to_open = 1,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( dirent_content2 ),                               /* */
+   },
+
+  {.fun = NULL}
+};
+
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect mime",
   .name = "mime",
   .def_opendir = 1,
 
+#if 0
   .leaf_scan_fd2 = F2ND( dirent_content2 ),
+#else
+  .scanners = scanners,
+#endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = -1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */

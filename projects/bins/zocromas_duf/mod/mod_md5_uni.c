@@ -85,6 +85,20 @@ static duf_sql_sequence_t final_sql =                                /* */
 };
 
 /* ########################################################################################## */
+static duf_scanner_set_t scanners[] MAS_UNUSED = {
+  {
+   .disabled = 0,                                                    /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .to_open = 1,                                                     /* */
+   .dirent = 0,                                                      /* */
+   .db = 1,                                                          /* */
+   .fun = F2ND( digest_dirent_content2 ),                                       /* */
+   },
+
+  {.fun = NULL}
+};
+
 
 duf_scan_callbacks_t duf_mod_handler = {
   .title = "collect " MOD_DIGEST_DATA_S,
@@ -93,7 +107,12 @@ duf_scan_callbacks_t duf_mod_handler = {
   .def_opendir = 1,
 /* .dirent_dir_scan_before = NULL, */
 /* .dirent_file_scan_before = NULL, */
+
+#if 0
   .leaf_scan_fd2 = F2ND( digest_dirent_content2 ),
+#else
+  .scanners = scanners,
+#endif
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
   .use_std_leaf_set_num = -1,                                        /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
