@@ -95,13 +95,23 @@ muc_cli_option_shorts_create( muc_config_cli_t * cli MAS_UNUSED, muc_longval_ext
 }
 
 muc_config_cli_t *
-muc_cli_options_create( int argc, char **argv, const muc_longval_extended_table_t * const *xtable_list, unsigned mandatory_config,
-                        const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
+muc_cli_options_allocate( void )
 {
   muc_config_cli_t *cli;
 
   cli = mas_malloc( sizeof( muc_config_cli_t ) );
   assert( cli );
+  memset( cli, 0, sizeof( muc_config_cli_t ) );
+  return cli;
+}
+
+muc_config_cli_t *
+muc_cli_options_create( int argc, char **argv, const muc_longval_extended_table_t * const *xtable_list, unsigned mandatory_config,
+                        const char *config_dir, const char *commands_dir, mas_arg_get_cb_arg_t varfunc, const mas_config_trace_t * ptracecfg )
+{
+  muc_config_cli_t *cli;
+
+  cli = muc_cli_options_allocate(  );
   muc_cli_options_init( cli, argc, argv, xtable_list, mandatory_config, config_dir, commands_dir, varfunc, ptracecfg );
   return cli;
 }
@@ -114,7 +124,6 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
   assert( cli );
   if ( !cli->inited )
   {
-    memset( cli, 0, sizeof( muc_config_cli_t ) );
     cli->ptracecfg = ptracecfg;
     cli->carg.argc = argc;
     cli->carg.argv = argv;
@@ -123,12 +132,15 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
    * cli->xvtable_multi = xvtables;
    * */
     assert( !cli->xvtable_multi );
-    cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_list, 0 /* numtabs */ , cli->xvtable_multi ); /* allocates */
+    if ( xtable_list )
+      cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_list, 0 /* numtabs */ , cli->xvtable_multi ); /* allocates */
   /* cli->maxcodeval = muc_cli_option_count_maxcodeval( cli, cli->xvtable_multi ); */
 
     cli->varfunc = varfunc;
-    cli->config_dir = mas_strdup( config_dir );
-    cli->cmds_dir = mas_strdup( commands_dir );
+    if ( config_dir )
+      cli->config_dir = mas_strdup( config_dir );
+    if ( commands_dir )
+      cli->cmds_dir = mas_strdup( commands_dir );
     cli->inited = 1;
   }
 /*

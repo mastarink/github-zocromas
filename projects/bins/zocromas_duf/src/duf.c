@@ -67,7 +67,7 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
-#include "duf_pdi_global.h"                                          /* duf_pdi_global() ✗ */
+#include "duf_pdi_global.h"                                          /* duf_pdi_global ✗ */
 
 /* צאַצקע */
 /* #include "duf_experiment.h" */
@@ -197,12 +197,12 @@ SR( TOP, main_with_config, int argc, char **argv )
     }
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      MAST_TRACE( explain, 1, "@no %s option", /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */
+      MAST_TRACE( explain, 1, "@no %s option",                       /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */
                   duf_get_config_flagname_disable_memusage( -1 ) );
     }
     else
     {
-      MAST_TRACE( explain, 0, "@     option %s", /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */
+      MAST_TRACE( explain, 0, "@     option %s",                     /* DUF_OPT_NAME( duf_get_config_cli(  ), MEMUSAGE ), */
                   duf_get_config_flagname_disable_memusage( -1 ) );
     }
   }
@@ -214,6 +214,7 @@ SR( TOP, main_with_config, int argc, char **argv )
 static
 SRP( TOP, int, rval, 0, main, int argc, char **argv )
 {
+  duf_config_allocate(  );
   duf_config_create( argc, argv, 1 /* mandatory_config */  );
 
 /* assert( duf_config ); */
@@ -229,11 +230,11 @@ SRP( TOP, int, rval, 0, main, int argc, char **argv )
 
   global_status_reset(  );
   QT( "@ptracecfg: %p; class_levels: %p", duf_get_trace_config(  ), duf_get_trace_config(  )->class_levels );
+  ERRCLEAR_X( ERRCODE( MAX_REACHED ), ERRCODE( NO_ACTIONS ) );
   duf_config_delete(  );
 /* assert( !duf_config ); */
 
 /* make exit status */
-  ERRCLEAR_X( ERRCODE( MAX_REACHED ), ERRCODE( NO_ACTIONS ) );
   rval = !QNOERR ? 31 : 0;
   ERP( TOP, int, rval, 0, main, int argc, char **argv );
 }

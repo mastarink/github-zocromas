@@ -64,7 +64,15 @@ static duf_sql_sequence_t final_sql =                                /* */
 };
 
 /* ########################################################################################## */
-static duf_scanner_set_t scanners[] MAS_UNUSED = {
+static duf_scan_callbacks_t duf_sccb_dispatch;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+
+/* ########################################################################################## */
+static duf_scanner_set_t scanners[] = {
   {
    .flags = DUF_SCANNER_SET_FLAG_TO_OPEN | DUF_SCANNER_SET_FLAG_DB,  /* */
    .type = DUF_NODE_LEAF,                                            /* */
@@ -75,7 +83,7 @@ static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_sccb_handler = {
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "collect sd5",
   .name = "sd5",
   .init_scan = NULL,
@@ -139,6 +147,7 @@ duf_scan_callbacks_t duf_mod_sccb_handler = {
 };
 
 /* ########################################################################################## */
+static
 SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 )
 {
   const char *sql = "SELECT " DUF_SQL_IDFIELD " AS sd5id FROM " DUF_SQL_TABLES_SD5_FULL " WHERE sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2"

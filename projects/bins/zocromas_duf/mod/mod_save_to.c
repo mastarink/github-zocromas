@@ -52,41 +52,49 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_sccb_handler = {
-       .title = "save it to",
-       .name = "save_to",
-       .def_opendir = 1,
-       .init_scan = F2ND( save_to_init ),
+     static duf_scan_callbacks_t duf_sccb_dispatch;
+
+     const duf_mod_handler_t duf_mod_handler_uni[] = {
+       {"sccb", &duf_sccb_dispatch},
+       {NULL, NULL}
+     };
+
+/* ########################################################################################## */
+static duf_scan_callbacks_t duf_sccb_dispatch = {
+  .title = "save it to",
+  .name = "save_to",
+  .def_opendir = 1,
+  .init_scan = F2ND( save_to_init ),
 #if 0
-       .beginning_sql_seq = &sql_create_selected,
+  .beginning_sql_seq = &sql_create_selected,
 #else
-       .beginning_sql_seq = &sql_update_selected,
+  .beginning_sql_seq = &sql_update_selected,
 #endif
 
-     /* .node_scan_before2 = F2ND( save_to_node_before2 ), */
-     /* .node_scan_before2_deleted = F2ND( save_to_node_before2_del ), */
+/* .node_scan_before2 = F2ND( save_to_node_before2 ), */
+/* .node_scan_before2_deleted = F2ND( save_to_node_before2_del ), */
 
-     /* .node_scan_after2 = F2ND( save_to_node_after2 ), */
-     /* .node_scan_after2_deleted = F2ND( save_to_node_after2_del ), */
+/* .node_scan_after2 = F2ND( save_to_node_after2 ), */
+/* .node_scan_after2_deleted = F2ND( save_to_node_after2_del ), */
 
-     /* .node_scan_middle2 = F2ND( save_to_node_middle2 ), */
-     /* .node_scan_middle2_deleted = F2ND( save_to_node_middle2_del ), */
+/* .node_scan_middle2 = F2ND( save_to_node_middle2 ), */
+/* .node_scan_middle2_deleted = F2ND( save_to_node_middle2_del ), */
 
-       .leaf_scan_fd2 = F2ND( save_to_de_content2 ),
-       .leaf_scan_fd2_deleted = F2ND( save_to_de_content2_del ),
+  .leaf_scan_fd2 = F2ND( save_to_de_content2 ),
+  .leaf_scan_fd2_deleted = F2ND( save_to_de_content2_del ),
 
-     /* .leaf_scan2 = F2ND( save_to_leaf2 ), */
-     /* .leaf_scan2_deleted = F2ND( save_to_leaf2_del ), */
+/* .leaf_scan2 = F2ND( save_to_leaf2 ), */
+/* .leaf_scan2_deleted = F2ND( save_to_leaf2_del ), */
 
-     /* .dirent_file_scan_before2 = F2ND(save_to_de_file_before2), */
-     /* .dirent_dir_scan_before2 = F2ND(save_to_de_dir_before2), */
+/* .dirent_file_scan_before2 = F2ND(save_to_de_file_before2), */
+/* .dirent_dir_scan_before2 = F2ND(save_to_de_dir_before2), */
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-       .use_std_leaf_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-       .use_std_node_set_num = 1,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-       .std_leaf_set_name = "std-leaf-one",
-       .std_node_set_name = "std-node-one",
-     };
+  .use_std_leaf_set_num = 1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 1,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-one",
+  .std_node_set_name = "std-node-one",
+};
 
 /* ########################################################################################## */
 
@@ -98,6 +106,7 @@ SR( MOD, save_to_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * 
   ER( MOD, save_to_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
+static
 SR( MOD, copy_to, duf_depthinfo_t * pdi, const char *save_path )
 {
   FILE *fw;

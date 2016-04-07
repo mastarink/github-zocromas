@@ -54,18 +54,13 @@
 static
 SR( TOP, main_db_locate, void )
 {
-/* DUF_STARTR( r ); */
-
   CR( config_make_db_paths );
-
-/* DUF_ENDR( r ); */
   ER( TOP, main_db_locate, void );
 }
 
 static
 SR( TOP, main_db_remove_files, void )
 {
-/* DUF_STARTR( r ); */
 #if 0
   if ( duf_get_config_db_main_fpath(  ) )
     CR( unlink, duf_get_config_db_main_fpath(  ) );
@@ -78,14 +73,13 @@ SR( TOP, main_db_remove_files, void )
       CR( unlink, fp );
   }
 #endif
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_remove_files, void );
 }
 
 static
 SR( TOP, main_db_optionally_remove_files, void )
 {
-/* DUF_STARTR( r ); */
   if ( duf_get_config_flag_act_allow_remove_database(  ) )
   {
     MAST_TRACE( explain, 0, "     option %s, removing database", duf_get_config_flagname_act_allow_remove_database( -1 ) );
@@ -95,15 +89,13 @@ SR( TOP, main_db_optionally_remove_files, void )
   {
     MAST_TRACE( explain, 1, "no %s option, not removing database", duf_get_config_flagname_act_allow_remove_database( -1 ) );
   }
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_optionally_remove_files, void );
 }
 
 static
 SR( TOP, main_db_create_tables, void )
-{
-/* DUF_STARTR( r ); */
-/* DOR( r, duf_check_tables(  ) ); */
+{                                                                    /* DOR( r, duf_check_tables(  ) ); */
   if ( duf_get_config_flag_flow_dry_run(  ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", duf_get_config_flagname_flow_dry_run( -1 ), duf_get_config_flagname_act_allow_create_tables( 2 ) );
   else
@@ -117,14 +109,13 @@ SR( TOP, main_db_create_tables, void )
     CR( eval_sqlsq, &sql_beginning_create_four, 0, ( const char * ) NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL,
         ( const char * ) NULL /* selected.db */  );
   }
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_create_tables, void );
 }
 
 static
 SR( TOP, main_db_pre_action, void )
 {
-/* DUF_STARTR( r ); */
   if ( QNOERR && duf_get_config_flag_act_allow_drop_tables(  ) )
   {
     MAST_TRACE( explain, 0, "drop (zero) tables: option %s", duf_get_config_flagname_act_allow_drop_tables( -1 ) );
@@ -185,7 +176,6 @@ SR( TOP, main_db_pre_action, void )
 
   CR( eval_sqlsq, &sql_beginning_tables, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, NULL /* selected.db */  );
 
-/* DUF_ENDR( r ); */
   ER( TOP, main_db_pre_action, void );
 }
 
@@ -202,7 +192,6 @@ SR( TOP, main_db_pre_action, void )
 static
 SR( TOP, main_db_tune, void )
 {
-/* DUF_STARTR( r ); */
 #ifdef MAS_SPLIT_DB
   if ( duf_get_config_db_adm_fpath(  ) )
   {
@@ -226,14 +215,12 @@ SR( TOP, main_db_tune, void )
 
 /* TODO : part to only after possible tables creation */
   CR( eval_sqlsq, &sql_beginning_common, 0, NULL /* title */ , ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL, NULL /* selected.db */  ); /* PRAGMAs etc. */
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_tune, void );
 }
 
 SR( TOP, main_db_open, duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
-
   assert( pdi );
   assert( !pdi->attached_copy );
 /* global_status.db.opened_name */
@@ -307,13 +294,12 @@ SR( TOP, main_db_open, duf_depthinfo_t * pdi )
       MAST_TRACE( db, 20, "@  link (%-14p=>%-14p) pdi:%-14p => %-14p", global_status.pdilist, global_status.pdilist->next, pdi, pdi->next );
     }
   }
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_open, duf_depthinfo_t * pdi );
 }
 
 SR( TOP, main_db_close, duf_depthinfo_t * pdi )
 {
-/* DUF_STARTR( r ); */
   assert( pdi );
   assert( !pdi->attached_copy );
 /* QERRIND = ra; */
@@ -361,7 +347,7 @@ SR( TOP, main_db_close, duf_depthinfo_t * pdi )
       global_status.db.attached_selected = NULL;
     }
   }
-/* DUF_ENDR( r ); */
+
   ER( TOP, main_db_close, duf_depthinfo_t * pdi MAS_UNUSED );
 }
 

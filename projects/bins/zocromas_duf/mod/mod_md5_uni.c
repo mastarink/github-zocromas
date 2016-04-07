@@ -86,7 +86,15 @@ static duf_sql_sequence_t final_sql =                                /* */
 };
 
 /* ########################################################################################## */
-static duf_scanner_set_t scanners[] MAS_UNUSED = {
+static duf_scan_callbacks_t duf_sccb_dispatch;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+
+/* ########################################################################################## */
+static duf_scanner_set_t scanners[] = {
   {
    .flags = DUF_SCANNER_SET_FLAG_TO_OPEN | DUF_SCANNER_SET_FLAG_DB,  /* */
    .type = DUF_NODE_LEAF,                                            /* */
@@ -97,7 +105,7 @@ static duf_scanner_set_t scanners[] MAS_UNUSED = {
   {.fun = NULL}
 };
 
-duf_scan_callbacks_t duf_mod_sccb_handler = {
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "collect " MOD_DIGEST_DATA_S,
   .name = MOD_DIGEST_DATA_S,
   .init_scan = NULL,

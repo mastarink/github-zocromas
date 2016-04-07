@@ -56,15 +56,14 @@ static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, d
 /* /NOTES */
 
 /* ########################################################################################## */
-static duf_scanner_set_t scanners[];
 static duf_scan_callbacks_t duf_sccb_dispatch;
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
   {NULL, NULL}
 };
-/* ########################################################################################## */
 
+/* ########################################################################################## */
 static duf_scanner_set_t scanners[] = {
   {
    .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */

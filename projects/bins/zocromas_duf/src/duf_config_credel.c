@@ -30,11 +30,19 @@
 /* ###################################################################### */
 
 void
-duf_config_create( int argc, char **argv, unsigned mandatory_config )
+duf_config_allocate( void )
 {
-/* DUF_START(  ); */
   duf_config = duf_cfg_create(  );
   assert( duf_config );
+}
+
+void
+duf_config_create( int argc, char **argv, unsigned mandatory_config )
+{
+  if ( !duf_config )
+    duf_config_allocate(  );
+  assert( duf_config );
+/* DUF_START(  ); */
 #ifdef MAS_TRACING
   duf_config->opt.ptracecfg = mas_config_trace_create( DUF_TRACE_LEVEL_MAX );
   duf_config->opt.ptracecfg->class_levels[DUF_TRACE_LEVEL_errors] += 2;
@@ -48,8 +56,14 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 /* assert( duf_config4trace ); */
 #endif
 
+#if 0
   duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, duf_config->conf.config_dir,
                                              duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
+#else
+  duf_config->pcli = muc_cli_options_create( argc, argv, NULL /* duf_xtable_list(  ) */ , mandatory_config, duf_config->conf.config_dir,
+                                             duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
+  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list(  ), 0 /* numtabs */  );
+#endif
 #if 0
   muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list2(  ), 0 );
 #elif 0

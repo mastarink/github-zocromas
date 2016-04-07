@@ -3,6 +3,7 @@
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
+void duf_config_allocate( void );
 void duf_config_create( int argc, char **argv, unsigned mandatory_config );
 void duf_config_delete( void );
 

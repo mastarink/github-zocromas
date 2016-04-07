@@ -48,7 +48,15 @@ static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dep
 
 /* ########################################################################################## */
 
-duf_scan_callbacks_t duf_mod_sccb_handler = {
+static duf_scan_callbacks_t duf_sccb_dispatch;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+
+/* ########################################################################################## */
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "tag it",
   .name = "tagit",
   .def_opendir = 0,

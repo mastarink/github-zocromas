@@ -19,7 +19,7 @@ alias t__5c5='run   --allow-drop-table --allow-create-tables  --allow-create-dat
 # create "today" db, scan dirs
 alias t__5cD='run        --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs  `pwd`/test/tree  `pwd`/test/tree    --progress'
 # create "today" db, scan all main + all digests + mime, exif and tag it with 2 test tags
-alias t__5cg='t5c ; t5gz ; t5gz1'
+alias t__5cg='t__5c ; t__5gz ; t__5gz1'
 # create "today" db, scan dirs, files (data+names)
 alias t__5cf='run   --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata,filenames  `pwd`/test/tree  `pwd`/test/tree    --progress'
 # create "today" db, scan dirs, files data

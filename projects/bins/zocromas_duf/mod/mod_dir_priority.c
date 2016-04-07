@@ -50,8 +50,15 @@ static int duf_set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNU
 static int duf_set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
+static duf_scan_callbacks_t duf_sccb_dispatch;
 
-duf_scan_callbacks_t duf_mod_sccb_handler = {
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"sccb", &duf_sccb_dispatch},
+  {NULL, NULL}
+};
+
+/* ########################################################################################## */
+static duf_scan_callbacks_t duf_sccb_dispatch = {
   .title = "set dir priority",
   .name = "set_dir_priority",
   .def_opendir = 0,                                                  /* ?? */

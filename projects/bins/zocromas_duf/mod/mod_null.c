@@ -42,36 +42,44 @@
 DUF_MOD_DECLARE_ALL_FUNCS( duf_null )
 /* ########################################################################################## */
 /* ########################################################################################## */
-     duf_scan_callbacks_t duf_mod_sccb_handler = {
-       .title = "null",
-       .name = "null",
-       .def_opendir = 0,
-       .init_scan = F2ND( null_init ),
+     static duf_scan_callbacks_t duf_sccb_dispatch;
 
-       .node_scan_before2 = F2ND( null_node_before2 ),
-       .node_scan_before2_deleted = F2ND( null_node_before2_del ),
+     const duf_mod_handler_t duf_mod_handler_uni[] = {
+       {"sccb", &duf_sccb_dispatch},
+       {NULL, NULL}
+     };
 
-       .node_scan_after2 = F2ND( null_node_after2 ),
-       .node_scan_after2_deleted = F2ND( null_node_after2_del ),
+/* ########################################################################################## */
+static duf_scan_callbacks_t duf_sccb_dispatch = {
+  .title = "null",
+  .name = "null",
+  .def_opendir = 0,
+  .init_scan = F2ND( null_init ),
 
-       .node_scan_middle2 = F2ND( null_node_middle2 ),
-       .node_scan_middle2_deleted = F2ND( null_node_middle2_del ),
+  .node_scan_before2 = F2ND( null_node_before2 ),
+  .node_scan_before2_deleted = F2ND( null_node_before2_del ),
 
-       .leaf_scan_fd2 = F2ND( null_de_content2 ),
-       .leaf_scan_fd2_deleted = F2ND( null_de_content2_del ),
+  .node_scan_after2 = F2ND( null_node_after2 ),
+  .node_scan_after2_deleted = F2ND( null_node_after2_del ),
 
-       .leaf_scan2 = F2ND( null_leaf2 ),
-       .leaf_scan2_deleted = F2ND( null_leaf2_del ),
+  .node_scan_middle2 = F2ND( null_node_middle2 ),
+  .node_scan_middle2_deleted = F2ND( null_node_middle2_del ),
 
-       .dirent_file_scan_before2 = F2ND( null_de_file_before2 ),
-       .dirent_dir_scan_before2 = F2ND( null_de_dir_before2 ),
+  .leaf_scan_fd2 = F2ND( null_de_content2 ),
+  .leaf_scan_fd2_deleted = F2ND( null_de_content2_del ),
+
+  .leaf_scan2 = F2ND( null_leaf2 ),
+  .leaf_scan2_deleted = F2ND( null_leaf2_del ),
+
+  .dirent_file_scan_before2 = F2ND( null_de_file_before2 ),
+  .dirent_dir_scan_before2 = F2ND( null_de_dir_before2 ),
 
 /* TODO : explain values of use_std_leaf_set_num and use_std_node_set_num TODO */
-       .use_std_leaf_set_num = 2,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-       .use_std_node_set_num = 2,                                    /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-       .std_leaf_set_name = "std-leaf-no-sel",
-       .std_node_set_name = "std-node-two",
-     };
+  .use_std_leaf_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node_set_num = 2,                                         /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .std_leaf_set_name = "std-leaf-no-sel",
+  .std_node_set_name = "std-node-two",
+};
 
 /* ########################################################################################## */
 
@@ -162,9 +170,9 @@ SR( MOD, null_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
 
     pli = duf_levinfo_ptr( pdi );
 
-    /* QT( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ),      */
-    /*     duf_nodetype_name( duf_levinfo_node_type( pdi ) ), pli ? ( long long ) pli->scanned_childs.nodes : -1, */
-    /*     pli ? ( long long ) pli->scanned_childs.leaves : -1 );                                                 */
+  /* QT( "@======== %s : %s; %s {%lld:%lld}", duf_levinfo_relpath( pdi ), duf_levinfo_itemtruename( pdi ),      */
+  /*     duf_nodetype_name( duf_levinfo_node_type( pdi ) ), pli ? ( long long ) pli->scanned_childs.nodes : -1, */
+  /*     pli ? ( long long ) pli->scanned_childs.leaves : -1 );                                                 */
   }
 #if 0
 # ifdef MAS_TRACING

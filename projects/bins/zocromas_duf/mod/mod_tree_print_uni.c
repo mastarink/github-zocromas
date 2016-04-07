@@ -48,8 +48,6 @@ static int duf_tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * 
 static int duf_tree_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
-
-static duf_scanner_set_t scanners[];
 static duf_scan_callbacks_t duf_sccb_dispatch;
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
