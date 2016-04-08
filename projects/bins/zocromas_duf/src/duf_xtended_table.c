@@ -83,7 +83,7 @@ static const muc_longval_extended_table_t *const __lo_extended_table_multi[] = {
 };
 
 const muc_longval_extended_table_t *const *
-duf_xtable_list( void )
+duf_optable_xtable_list( void )
 {
   return __lo_extended_table_multi;
 }
@@ -94,21 +94,21 @@ static const muc_longval_extended_table_t *const __lo_extended_table_multi2[] = 
 };
 
 const muc_longval_extended_table_t *const *
-duf_xtable_list2( void )
+duf_optable_xtable_list2( void )
 {
   return __lo_extended_table_multi2;
 }
 
 muc_longval_extended_table_t **list_mod = NULL;
 const muc_longval_extended_table_t *const *
-duf_xtable_list_mod( void )
+duf_optable_xtable_list_mod( void )
 {
   if ( !list_mod )
   {
     char **liblist;
     int num = 0, i = 0;
 
-    liblist = duf_liblist( &num );
+    liblist = duf_liblist( "ot_*.so", &num );
     list_mod = mas_malloc( sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
     memset( list_mod, 0, sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
     muc_longval_extended_table_t **lm = list_mod;
@@ -118,14 +118,10 @@ duf_xtable_list_mod( void )
       muc_longval_extended_table_t *mod;
 
       mod = duf_load_mod_handler_symbol_find( *ll, "optab" );
-      QT( "@lib: %s : %p", *ll, mod );
+      /* QT( "@lib: %s : %p", *ll, mod ); */
       if ( mod )
-      {
         *lm++ = mod;
-      /* assert( 0 ); */
-      }
-      QT( "@%d of %d : %s", i, num, *ll );
-    /* QT( "@%s",  *ll ); */
+    /* QT( "@%d of %d : %s", i, num, *ll ); */
       i++;
     }
   /* TODO realloc list_mod ? */

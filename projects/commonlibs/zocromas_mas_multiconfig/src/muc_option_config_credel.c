@@ -21,11 +21,13 @@
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 #include "muc_option_config_credel.h"
 /* ###################################################################### */
-/* void                                                                                                                */
-/* _init( void )                                                                                                       */
-/* {                                                                                                                   */
-/*   fprintf( stderr, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n" ); */
-/* }                                                                                                                   */
+
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
+{
+  fprintf( stderr, "%s : %d\n", __FILE__, argc );
+}
 
 muc_option_gen_code_t
 muc_cli_option_count_maxcodeval( const muc_config_cli_t * cli MAS_UNUSED, muc_longval_extended_vtable_t * *xvtables )
@@ -120,8 +122,9 @@ void
 muc_cli_options_reg_argv( muc_config_cli_t * cli, int argc, char **argv )
 {
   assert( cli );
-  if ( argv )
+  if ( argc && argv && !cli->argv_set )
   {
+    cli->argv_set = 1;
     cli->carg.argc = argc;
     cli->carg.argv = argv;
   }

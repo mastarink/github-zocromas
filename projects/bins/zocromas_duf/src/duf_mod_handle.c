@@ -3,6 +3,7 @@
 #include <dlfcn.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <fnmatch.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
@@ -35,7 +36,7 @@ duf_libpath( void )
 }
 
 char **
-duf_liblist( int *psize )
+duf_liblist( const char *pat, int *psize )
 {
   char **liblist = NULL;
   DIR *dh = NULL;
@@ -48,7 +49,7 @@ duf_liblist( int *psize )
 
     while ( ( de = readdir( dh ) ) )
     {
-      if ( 0 == strcmp( de->d_name + strlen( de->d_name ) - 3, ".so" ) )
+      if ( ( !pat && 0 == fnmatch( "*.so", de->d_name, 0 ) ) || ( pat && 0 == fnmatch( pat, de->d_name, 0 ) ) )
       {
         cnt++;
       }
@@ -64,9 +65,10 @@ duf_liblist( int *psize )
       cnt = 0;
       while ( ( de = readdir( dh ) ) )
       {
-        if ( 0 == strcmp( de->d_name + strlen( de->d_name ) - 3, ".so" ) )
+        if ( ( 0 == fnmatch( "*.so", de->d_name, 0 ) ) && ( !pat || 0 == fnmatch( pat, de->d_name, 0 ) ) )
         {
           *ll++ = mas_strndup( de->d_name, strlen( de->d_name ) - 3 );
+          /* QT( "@@%d matched %s", cnt, de->d_name ); */
           cnt++;
         }
       }
@@ -117,7 +119,7 @@ duf_libname2sopath( const char *libname )
 }
 
 void *
-duf_load_symbol( const char *libname, const char *symbol )
+duf_load_symbol( const char *libname, const char *symbol, void **plibhan )
 {
   void *psym = NULL;
   void *han = NULL;
@@ -138,16 +140,18 @@ duf_load_symbol( const char *libname, const char *symbol )
     psym = ( void * ) dlsym( han, symbol );
   MAST_TRACE( sccb, 0, "[han:%p] %s : %p", han, symbol, psym );
   mas_free( sopath );
+  if ( plibhan )
+    *plibhan = han;
   return psym;
 }
 
 const duf_mod_handler_t *
-duf_load_mod_handler_symbol( const char *libname )
+duf_load_mod_handler_symbol( const char *libname, void **plibhan )
 {
   const duf_mod_handler_t *mhan = NULL;
 
   MAST_TRACE( mod, 0, "@@@@@@to load lib: %s", libname );
-  mhan = ( const duf_mod_handler_t * ) duf_load_symbol( libname, "duf_mod_handler_uni" );
+  mhan = ( const duf_mod_handler_t * ) duf_load_symbol( libname, "duf_mod_handler_uni", plibhan );
   MAST_TRACE( mod, 0, "%s", mhan ? mhan->name : NULL );
   return mhan;
 }
@@ -156,12 +160,20 @@ void *
 duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol )
 {
   void *ptr = NULL;
+  void *libhan = NULL;
 
-  for ( const duf_mod_handler_t * mhan = duf_load_mod_handler_symbol( libname ); !ptr && mhan && mhan->name; mhan++ )
+  for ( const duf_mod_handler_t * mhan = duf_load_mod_handler_symbol( libname, &libhan ); !ptr && mhan && mhan->name; mhan++ )
   {
     if ( 0 == strcmp( mhan->name, masmodsymbol ) )
       ptr = mhan->handler;
   }
+/*
+   if ( unload_not_needed && !ptr && libhan )
+   {
+   fprintf(stderr, "closing %s\n", libname);
+   dlclose( libhan );
+   }
+ */
 /* QT( "@%s::%s ~ %p", libname, masmodsymbol, ptr ); */
   return ptr;
 }

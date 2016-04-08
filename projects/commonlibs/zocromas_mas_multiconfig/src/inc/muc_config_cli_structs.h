@@ -20,6 +20,7 @@ struct muc_config_cli_s
 {
   unsigned inited:1;
   unsigned postinited:1;
+  unsigned argv_set:1;
   unsigned mandatory_config;
   char *shorts;
   muc_option_gen_code_t maxcodeval;
@@ -45,4 +46,3 @@ struct muc_config_cli_s
 /*
 vi: ft=c
 */
-

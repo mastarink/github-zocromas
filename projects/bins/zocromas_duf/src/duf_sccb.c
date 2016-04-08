@@ -109,7 +109,7 @@ duf_load_sccb_symbol( const char *path, const char *symbol )
   duf_scan_callbacks_t *sccb = NULL;
 
   MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
-  sccb = ( duf_scan_callbacks_t * ) duf_load_symbol( path, symbol );
+  sccb = ( duf_scan_callbacks_t * ) duf_load_symbol( path, symbol, NULL );
   MAST_TRACE( sccb, 0, "%s : %s", symbol, sccb ? sccb->name : NULL );
   return sccb;
 }

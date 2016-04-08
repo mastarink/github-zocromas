@@ -125,7 +125,7 @@ duf_sql_sequence_t sql_beginning_create_one = {
 
           NULL}
 };
-
+/* TODO move to modules respectively ?! */
 duf_sql_sequence_t sql_beginning_create_two = {
   .name = "create (main tables)",
   .done = 0,

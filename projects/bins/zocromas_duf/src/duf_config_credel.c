@@ -57,16 +57,19 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
 #endif
 
 #if 0
-  duf_config->pcli = muc_cli_options_create( argc, argv, duf_xtable_list(  ), mandatory_config, duf_config->conf.config_dir,
+  duf_config->pcli = muc_cli_options_create( argc, argv, CRX( optable_xtable_list ), mandatory_config, duf_config->conf.config_dir,
                                              duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
 #else
-  duf_config->pcli = muc_cli_options_create( argc, argv, NULL /* duf_xtable_list(  ) */ , mandatory_config, duf_config->conf.config_dir,
+  duf_config->pcli = muc_cli_options_create( argc, argv, NULL /* CRX( optable_xtable_list ) */ , mandatory_config, duf_config->conf.config_dir,
                                              duf_config->conf.cmds_dir, duf_string_options_at_string_xsdb_getvar, duf_config->opt.ptracecfg );
-  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list(  ), 0 /* numtabs */  );
-  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list_mod(  ), 0 /* numtabs */  );
+  muc_cli_options_xtable_list_add( duf_config->pcli, CRX( optable_xtable_list ), 0 /* numtabs */  );
+  muc_cli_options_xtable_list_add( duf_config->pcli, CRX( optable_xtable_list_mod ), 0 /* numtabs */  );
+
+  muc_cli_options_reg_argv( duf_config->pcli, argc, argv );
+
 #endif
 #if 0
-  muc_cli_options_xtable_list_add( duf_config->pcli, duf_xtable_list2(  ), 0 );
+  muc_cli_options_xtable_list_add( duf_config->pcli, CRX( optable_xtable_list2 ), 0 );
 #elif 0
   {
     extern const muc_longval_extended_table_t optable_test;

@@ -351,11 +351,11 @@ SR( TOP, main_db_close, duf_depthinfo_t * pdi )
   ER( TOP, main_db_close, duf_depthinfo_t * pdi MAS_UNUSED );
 }
 
-SR( TOP, main_db, int argc MAS_UNUSED, char **argv MAS_UNUSED )
+SR( TOP, main_db )
 {
   if ( duf_get_config_flag_act_info(  ) )
     CR( main_db_info );
 
   CR( main_db_close, duf_pdi_global(  ) );                           /* [@] */
-  ER( TOP, main_db, int argc MAS_UNUSED, char **argv MAS_UNUSED );
+  ER( TOP, main_db );
 }

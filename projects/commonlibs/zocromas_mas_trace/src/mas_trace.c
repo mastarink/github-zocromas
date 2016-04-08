@@ -20,6 +20,13 @@
 #include "mas_trace.h"
 /* ###################################################################### */
 
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
+{
+  fprintf( stderr, "%s : %d\n", __FILE__, argc );
+}
+
 /* #define MAST_NOTIMING */
 
 #if 0
@@ -70,7 +77,7 @@ mas_vtrace( const mas_config_trace_t * tcfg, const char *name, int trace_index, 
   int level = trace_index >= 0 ? tcfg->class_levels[trace_index] : 0;
   int output_level = tcfg->stream.level;
 #endif
-  /* fprintf( stderr, "%p %s in trace level:%d; trace_index:%d\n", tcfg, name, level, trace_index ); */
+/* fprintf( stderr, "%p %s in trace level:%d; trace_index:%d\n", tcfg, name, level, trace_index ); */
   if ( !ftimez )
   {
     int ry;

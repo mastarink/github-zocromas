@@ -27,36 +27,26 @@
 
 /*
 
-   tput reset ; run  --drop-tables /home/mastar/big/misc/media/photo/20130507/ -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress
-
    run  /mnt/new_media/media/photo/20130507/  -dfR --ls
 
 */
 
 #include <assert.h>                                                  /* assert */
-/* #include <time.h> */
-/* #include <signal.h> */
-/* #include <unistd.h> */
-/* #include <dlfcn.h> */
+#include <stdlib.h>
+#include <stdio.h>
+#include <link.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/trace/mas_trace.h>
-/* #include <mastar/error/mas_error_reporting.h> */
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-/* #include <mastar/multiconfig/muc_se.h> */
 #include <mastar/multiconfig/muc_options_all_stages.h>
-/* #include <mastar/multiconfig/muc_options.h> */
 #include <mastar/multiconfig/muc_option_names.h>
-/* #include <mastar/multiconfig/muc_option_defs.h> */
-/* #include <mastar/multiconfig/muc_option_stage.h> */
-/* #include <mastar/multiconfig/muc_option_source.h> */
-/* #include <mastar/multiconfig/muc_options_all_stages.h> */
 
 #include "duf_status.h"
 
@@ -76,22 +66,22 @@
 #include "duf.h"
 /* ###################################################################### */
 
+static int
+lcb( struct dl_phdr_info *info MAS_UNUSED, size_t size MAS_UNUSED, void *data MAS_UNUSED )
+{
+  fprintf( stderr, "-=- %s\n", info->dlpi_name );
+  return 0;
+}
+
 /*
 TODO Ideas: count for each dir pair number of matching files => path_pairs
 
-INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT COUNT(*), fna.Pathid, fnb.Pathid
-	FROM filenames AS fna
-	JOIN filedatas AS fda ON (fna.dataid=fda.rowid)
-  	JOIN md5 AS mda ON (fda.md5id=mda.rowid)
-  	JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)
-  	JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)
-  WHERE fna.Pathid != fnb.Pathid
-  GROUP BY mda.rowid;
 */
-static void constructor_main( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
 static void
-constructor_main( void )
+constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
 {
+  fprintf( stderr, "%s : %d\n", __FILE__, argc );
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
   {
@@ -102,15 +92,18 @@ constructor_main( void )
       mas_mem_disable_print_usage = 0;
     }
   }
-  {
-  /* enale debug function ... Is is obolete/useless? */
-    extern int dbgfunc_enabled __attribute__ ( ( weak ) );
-
-    if ( &dbgfunc_enabled )
-       /**/ dbgfunc_enabled = 1;
-  }
 
 #endif
+  duf_config_allocate(  );
+  duf_config_create( argc, argv, 1 /* mandatory_config */  );
+  dl_iterate_phdr( lcb, NULL );
+}
+
+static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void
+destructor_main( void )
+{
+  duf_config_delete(  );
 }
 
 int __attribute__ ( ( weak ) ) mas_verbose( void )
@@ -124,12 +117,6 @@ mas_dry_run( void )
 {
   return duf_get_config_flag_flow_dry_run(  );
 /* return duf_config ? duf_config->opt.flow.v.flag.dry_run : 0; */
-}
-
-static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
-static void
-destructor_main( void )
-{
 }
 
 #if 0
@@ -151,7 +138,7 @@ cb_prompt_interactive( void )
 }
 
 static
-SR( TOP, main_with_config, int argc, char **argv )
+SR( TOP, main_with_config )
 {
 /* config-cli created at M_config_create at M_main */
   muc_CR( treat_option_stage_ne, CRX( get_config_cli ), MUC_OPTION_STAGE_DEBUG, F2ND( pdi_reinit_anypath_global ), duf_get_config_flag_act_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
@@ -159,7 +146,7 @@ SR( TOP, main_with_config, int argc, char **argv )
           cb_prompt_interactive );
 
   MAST_TRACE( any, 1, "any test" );
-  MAST_TRACE( explain, 0, "to run main_db( argc, argv )" );
+  MAST_TRACE( explain, 0, "to run main_db" );
 
   muc_CR( treat_all_optstages, CRX( get_config_cli ), F2ND( pdi_create_global ), F2ND( pdi_reinit_anypath_global ),
           duf_get_config_flag_act_interactive, cb_prompt_interactive );
@@ -185,7 +172,7 @@ SR( TOP, main_with_config, int argc, char **argv )
       duf_get_config_flag_disable_testnoflag(  ) );
   QT( "@test-num: %lu", duf_get_config_num__testnum(  ) );
 
-  CR( main_db, argc, argv );
+  CR( main_db );
 
 #ifdef MAS_TRACEMEM
   {
@@ -208,14 +195,18 @@ SR( TOP, main_with_config, int argc, char **argv )
   }
 #endif
 
-  ER( TOP, main_with_config, int argc, char **argv );
+  ER( TOP, main_with_config );
 }
 
+
+
 static
-SRP( TOP, int, rval, 0, main, int argc, char **argv )
+SRP( TOP, int, rval, 0, main, int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
 {
-  duf_config_allocate(  );
-  duf_config_create( argc, argv, 1 /* mandatory_config */  );
+
+#if 0
+  int dl_iterate_phdr( int ( *callback ) ( struct dl_phdr_info * info, size_t size, void *data ), void *data );
+#endif
 
 /* assert( duf_config ); */
 /* raise( SIGABRT ); */
@@ -224,19 +215,18 @@ SRP( TOP, int, rval, 0, main, int argc, char **argv )
   MASE_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   MAST_TRACE( explain, 1, "@main with config" );
-  CR( main_with_config, argc, argv );
+  CR( main_with_config );
 
   QTR;
 
   global_status_reset(  );
   QT( "@ptracecfg: %p; class_levels: %p", duf_get_trace_config(  ), duf_get_trace_config(  )->class_levels );
   ERRCLEAR_X( ERRCODE( MAX_REACHED ), ERRCODE( NO_ACTIONS ) );
-  duf_config_delete(  );
 /* assert( !duf_config ); */
 
 /* make exit status */
   rval = !QNOERR ? 31 : 0;
-  ERP( TOP, int, rval, 0, main, int argc, char **argv );
+  ERP( TOP, int, rval, 0, main, int argc, char **argv, char **envp );
 }
 
 /*
@@ -244,11 +234,11 @@ SRP( TOP, int, rval, 0, main, int argc, char **argv )
  * 2. call duf_main
  * */
 int
-main( int argc, char **argv )
+main( int argc, char **argv, char **envp )
 {
   int errc = 0;
 
 /* setenv( "TZ", "Europe/Kiev", 0 ); */
   tzset(  );
-  return duf_main( argc, argv, &errc );
+  return duf_main( argc, argv, envp, &errc );
 }

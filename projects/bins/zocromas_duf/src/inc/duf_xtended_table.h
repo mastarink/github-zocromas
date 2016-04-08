@@ -8,9 +8,9 @@
 /* const duf_longval_extended_table_t **duf_extended_table_multi( void ); (* obsolete/not used 20160208.130331 *) */
 
 /* const duf_longval_extended_vtable_t *const *duf_extended_vtable_multi( void ); */
-const muc_longval_extended_table_t *const *duf_xtable_list( void );
-const muc_longval_extended_table_t *const *duf_xtable_list2( void );
+const muc_longval_extended_table_t *const *duf_optable_xtable_list( void );
+const muc_longval_extended_table_t *const *duf_optable_xtable_list2( void );
 
-const muc_longval_extended_table_t *const*duf_xtable_list_mod( void );
+const muc_longval_extended_table_t *const*duf_optable_xtable_list_mod( void );
 
 #endif

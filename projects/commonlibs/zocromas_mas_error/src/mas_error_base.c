@@ -12,6 +12,13 @@
 #include "mas_error_base.h"
 /* ###################################################################### */
 
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
+{
+  fprintf( stderr, "%s : %d\n", __FILE__, argc );
+}
+
 /* #define DUF_NOTIMING */
 
 /* get err number by error code */
@@ -59,7 +66,7 @@ mas_error_name_c( mas_error_code_t c )
 {
   const char *pserr = NULL;
 
-  /* static char buf[2048]; */
+/* static char buf[2048]; */
   int found = 0;
 
   for ( int i = 0; i < mas_error_descriptions_table_size; i++ )
@@ -80,7 +87,7 @@ mas_error_name_c( mas_error_code_t c )
   }
   if ( !found )
     pserr = "Unknown errcode";
-  /* snprintf( buf, sizeof( buf ), "Unknown errcode %d", c ); */
+/* snprintf( buf, sizeof( buf ), "Unknown errcode %d", c ); */
   assert( pserr );
   return pserr;
 }
@@ -250,7 +257,6 @@ mas_set_error_message_i( mas_error_index_t ri, const char *fmt, ... )
   va_end( args );
 }
 
-
 /* get err reported counter by error list pointer */
 int
 mas_icount_reported_rev( const mas_error_event_t * rev )
@@ -259,7 +265,7 @@ mas_icount_reported_rev( const mas_error_event_t * rev )
 
   if ( rev )
     cnt = rev->count_reported;
-  /* msg = global_error_list[-ri - 1].message; */
+/* msg = global_error_list[-ri - 1].message; */
   return cnt;
 }
 
@@ -277,13 +283,13 @@ __attribute__ ( ( destructor( 50000 ) ) )
 #define DUF_MEM_ROW " ▤▤▤▤▤▤▤▤▤▤▤▤▤ "
 
 #if 0
-#  ifdef MAS_TRACEMEM
-  print_memlist_msg( FL, stdout, /* */
-                     "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
-                     "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
-                     "\x1b[0;1;7;32m    MEMORY FREE    ", /* */
+# ifdef MAS_TRACEMEM
+  print_memlist_msg( FL, stdout,                                     /* */
+                     "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.",      /* */
+                     "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.",      /* */
+                     "\x1b[0;1;7;32m    MEMORY FREE    ",            /* */
                      "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
-         );
-#  endif
+           );
+# endif
 #endif
 }
