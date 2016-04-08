@@ -8,6 +8,8 @@
 #include "duf_optable_def.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
+#include "duf_mod_types.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_redo_and_obsolete[];

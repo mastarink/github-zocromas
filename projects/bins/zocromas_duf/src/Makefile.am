@@ -37,12 +37,8 @@ endif
 zocromas_duf_SOURCES= \
 	duf.c \
 	data_optable.c \
-	data_optable_db.c \
 	data_optable_debug.c \
 	data_optable_experimental.c \
-	data_optable_filter.c \
-	data_optable_flag.c \
-	data_optable_flag_allow.c \
 	data_optable_format.c \
 	data_optable_fs.c \
 	data_optable_help.c \
@@ -51,9 +47,7 @@ zocromas_duf_SOURCES= \
 	data_optable_redo_and_obsolete.c \
 	data_optable_sccb.c \
 	data_optable_sflag.c \
-	data_optable_str.c \
 	data_optable_options.c \
-	data_optable_test.c \
 	data_optable_trace.c \
 	data_optable_uplus.c \
 	duf_action_table.c \

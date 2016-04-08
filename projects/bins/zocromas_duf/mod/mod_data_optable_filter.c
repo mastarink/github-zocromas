@@ -8,6 +8,8 @@
 #include "duf_optable_def.h"
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
+#include "duf_mod_types.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_filter[];
@@ -20,7 +22,14 @@ At duf_xtended_table.c:
       };
 */
 
-const muc_longval_extended_table_t optable_filter = {
+static muc_longval_extended_table_t optable;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable},
+  {NULL, NULL}
+};
+
+static muc_longval_extended_table_t optable = {
   .name = "filter",
   .xlist =                                                           /* */
   {

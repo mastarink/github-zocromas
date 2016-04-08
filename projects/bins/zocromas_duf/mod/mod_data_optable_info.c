@@ -12,7 +12,7 @@
 #include "duf_optimpl_help.h"
 #include "duf_optimpl_version.h"
 
-# include "duf_mod_types.h"
+#include "duf_mod_types.h"
 
 /*
 At duf_xtended_table.c:
@@ -25,16 +25,14 @@ At duf_xtended_table.c:
 	NULL
       };
 */
-muc_longval_extended_table_t optable_info;
+static muc_longval_extended_table_t optable;
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
-  {"optab", &optable_info},
+  {"optab", &optable},
   {NULL, NULL}
 };
 
-
-
-muc_longval_extended_table_t optable_info = {
+static muc_longval_extended_table_t optable = {
   .name = "info",
   .xlist =                                                           /* */
   {

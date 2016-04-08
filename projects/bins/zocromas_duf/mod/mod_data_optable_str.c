@@ -10,6 +10,8 @@
 
 /* #include "duf_optimpl_sccb.h"                                        (* TODO : temp for duf_optimpl_O_db_open               *) */
 
+#include "duf_mod_types.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_str[];
@@ -21,8 +23,14 @@ At duf_xtended_table.c:
 	NULL
       };
 */
+static muc_longval_extended_table_t optable;
 
-const muc_longval_extended_table_t optable_str = {
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable},
+  {NULL, NULL}
+};
+
+static muc_longval_extended_table_t optable = {
   .name = "str",
   .xlist =                                                           /* */
   {

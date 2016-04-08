@@ -3,8 +3,33 @@ SUBDIRS= inc
 
 moduledir=$(libdir)/dufmod
 module_LTLIBRARIES = \
-	ot_info.la null.la set_dir_priority.la tree.la \
+	ot_info.la ot_flag.la ot_flag_allow.la ot_str.la ot_db.la ot_filter.la ot_test.la \
+	null.la set_dir_priority.la tree.la \
 	crc32.la dialog.la dirs.la dumplet.la exif.la filedata.la filenames.la listing.la md5.la mime.la save_to.la sd5.la sha1.la tagit.la
+
+ot_flag_allow_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_flag_allow_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_flag_allow_la_SOURCES          = mod_data_optable_flag_allow.c
+
+ot_str_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_str_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_str_la_SOURCES          = mod_data_optable_str.c
+
+ot_db_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_db_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_db_la_SOURCES          = mod_data_optable_db.c
+
+ot_flag_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_flag_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_flag_la_SOURCES          = mod_data_optable_flag.c
+
+ot_test_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_test_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_test_la_SOURCES          = mod_data_optable_test.c
+
+ot_filter_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_filter_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_filter_la_SOURCES          = mod_data_optable_filter.c
 
 ot_info_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 ot_info_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@

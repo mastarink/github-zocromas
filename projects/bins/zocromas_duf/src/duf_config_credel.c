@@ -79,9 +79,8 @@ duf_config_create( int argc, char **argv, unsigned mandatory_config )
   }
 #else
   {
-    extern const muc_longval_extended_table_t optable_test;
-
-    muc_cli_options_xtable_add_one( duf_config->pcli, &optable_test );
+    /* extern const muc_longval_extended_table_t optable_test; */
+    muc_cli_options_xtable_add_one( duf_config->pcli, duf_optable_xtable_list2(  )[0] );
   }
 #endif
 /* muc_cli_options_postinit( duf_config->pcli ); */

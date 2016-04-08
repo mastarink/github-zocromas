@@ -11,6 +11,8 @@
 #include "duf_optimpl_fs_types.h"
 #include "duf_optimpl_fs.h"                                          /* TODO : temp for duf_optimpl_O_fs_...               */
 
+#include "duf_mod_types.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_main[];

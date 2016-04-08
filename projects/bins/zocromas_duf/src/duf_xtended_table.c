@@ -34,14 +34,14 @@ extern const muc_longval_extended_table_t optable_io;
 extern const muc_longval_extended_table_t optable_experimental;
 extern const muc_longval_extended_table_t optable_fs;
 extern const muc_longval_extended_table_t optable_interactive;
-extern const muc_longval_extended_table_t optable_str;
+/* extern const muc_longval_extended_table_t optable_str; */
 extern const muc_longval_extended_table_t optable_options;
-extern const muc_longval_extended_table_t optable_db;
+/* extern const muc_longval_extended_table_t optable_db; */
 extern const muc_longval_extended_table_t optable_sccb;
 
 /* extern const muc_longval_extended_table_t optable_info; */
-extern const muc_longval_extended_table_t optable_flag;
-extern const muc_longval_extended_table_t optable_flag_allow;
+/* extern const muc_longval_extended_table_t optable_flag; */
+/* extern const muc_longval_extended_table_t optable_flag_allow; */
 extern const muc_longval_extended_table_t optable_sflag;
 extern const muc_longval_extended_table_t optable_uplus;
 extern const muc_longval_extended_table_t optable_help;
@@ -50,8 +50,9 @@ extern const muc_longval_extended_table_t optable_help;
 extern const muc_longval_extended_table_t optable_trace;
 #endif
 extern const muc_longval_extended_table_t optable_format;
-extern const muc_longval_extended_table_t optable_filter;
-extern const muc_longval_extended_table_t optable_test;
+
+/* extern const muc_longval_extended_table_t optable_filter; */
+/* extern const muc_longval_extended_table_t optable_test; */
 extern const muc_longval_extended_table_t optable_debug;
 extern const muc_longval_extended_table_t optable_redo_and_obsolete;
 
@@ -61,20 +62,19 @@ static const muc_longval_extended_table_t *const __lo_extended_table_multi[] = {
   &optable_fs,
   &optable_io,
   &optable_interactive,
-  &optable_str,
+  /* &optable_str, */
   &optable_options,
-  &optable_db,
+  /* &optable_db, */
   &optable_sccb,
 /* &optable_info, */
   &optable_sflag,
-  &optable_flag,
-  &optable_flag_allow,
+  /* &optable_flag, */
+  /* &optable_flag_allow, */
   &optable_uplus,
 #ifdef MAS_TRACING_OPTIONS
   &optable_trace,
 #endif
-  &optable_filter,
-  &optable_debug,
+/* &optable_filter, */
   &optable_help,
   &optable_format,
   &optable_redo_and_obsolete,
@@ -88,8 +88,10 @@ duf_optable_xtable_list( void )
   return __lo_extended_table_multi;
 }
 
+#if 1
 static const muc_longval_extended_table_t *const __lo_extended_table_multi2[] = {
-  &optable_test,
+  &optable_debug,
+  /* &optable_test, */
   NULL
 };
 
@@ -98,6 +100,7 @@ duf_optable_xtable_list2( void )
 {
   return __lo_extended_table_multi2;
 }
+#endif
 
 muc_longval_extended_table_t **list_mod = NULL;
 const muc_longval_extended_table_t *const *
@@ -118,7 +121,7 @@ duf_optable_xtable_list_mod( void )
       muc_longval_extended_table_t *mod;
 
       mod = duf_load_mod_handler_symbol_find( *ll, "optab" );
-      /* QT( "@lib: %s : %p", *ll, mod ); */
+    /* QT( "@lib: %s : %p", *ll, mod ); */
       if ( mod )
         *lm++ = mod;
     /* QT( "@%d of %d : %s", i, num, *ll ); */
