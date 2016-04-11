@@ -44,7 +44,7 @@
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static DR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 #define ADIGEST_DELTA 0
 
@@ -345,7 +345,7 @@ SR( MOD, make_digestr_uni, duf_depthinfo_t * pdi, unsigned char *pmdr )
 }
 
 static
-SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   unsigned char adigestr[MOD_DIGEST_LENGTH + ADIGEST_DELTA];
 
@@ -386,5 +386,5 @@ SR( MOD, digest_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_dept
     MAST_TRACE( digest, 4, "%016llx%016llx : " MOD_DIGEST_DATA_S "id: %llu", pdgst[1], pdgst[0], digestid );
   /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pdgst[1], pdgst[0], digestid ); */
   }
-  ER( MOD, digest_dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

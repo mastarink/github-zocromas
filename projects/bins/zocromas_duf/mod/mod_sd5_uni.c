@@ -44,7 +44,7 @@
 /* #include "duf_levinfo_structs.h" */
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_sd5_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_sd5_dirent_content2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA "fd.sd5id IS NULL"
@@ -294,7 +294,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
 
 /* 20150820.143755 */
 static
-SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char amd5r[MD5_DIGEST_LENGTH];
@@ -355,5 +355,5 @@ SR( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthin
   pdi->total_bytes += bytes;
   pdi->total_files++;
 
-  ER( MOD, sd5_dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

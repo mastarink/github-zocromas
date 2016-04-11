@@ -45,9 +45,9 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( set_dir_priority ) */
-static int duf_set_dir_priority_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_set_dir_priority_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_set_dir_priority_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_set_dir_priority_node_before2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_set_dir_priority_node_middle2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_set_dir_priority_node_after2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 static duf_scan_callbacks_t duf_sccb_dispatch;
@@ -78,7 +78,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, set_dir_priority_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 1, "before %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
@@ -98,24 +98,23 @@ SR( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, d
 
   }
 
-  ER( MOD, set_dir_priority_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, set_dir_priority_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED,
-    duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, set_dir_priority_node_middle2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 1, "middle %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
 
-  ER( MOD, set_dir_priority_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, set_dir_priority_node_middle2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, set_dir_priority_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, set_dir_priority_node_after2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( pdi ), duf_levinfo_relpath( pdi ),
               duf_levinfo_itemshowname( pdi ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
 
-  ER( MOD, set_dir_priority_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, set_dir_priority_node_after2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

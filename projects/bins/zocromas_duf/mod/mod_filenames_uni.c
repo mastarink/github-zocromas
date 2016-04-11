@@ -39,9 +39,9 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 
-static int duf_filenames_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_leaf2_deleted( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_de_file_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_leaf2(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_leaf2_deleted(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_filenames_de_file_before2(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {                              /* */
@@ -166,27 +166,27 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 static
-SR( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_leaf2,  duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( 0 == strcmp( duf_levinfo_itemtruename( pdi ), "paths-with-jpg" ) )
   {
     QT( "@[%d] %s :: %s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
   }
 
-  ER( MOD, filenames_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_leaf2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_leaf2_deleted,  duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
 /* TODO remove or mark name from DB */
   assert( 0 );
-  ER( MOD, filenames_leaf2_deleted, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_leaf2_deleted,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_de_file_before2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   const char *fname = duf_levinfo_itemtruename( pdi );
 
@@ -223,5 +223,5 @@ SR( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_d
   }
 /* MAST_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
 
-  ER( MOD, filenames_de_file_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_de_file_before2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -60,7 +60,7 @@ TODO
 */
 
 /* ########################################################################################## */
-static DR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static DR( MOD, dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 #define FILTER_DATA "(fd.noexif IS NULL AND fd.noexif IS NULL)"
@@ -224,7 +224,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
 }
 
 static
-SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_depthinfo_t * pdi,
+SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t * pdi,
      duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
 {
   unsigned long long modelid = 0;
@@ -325,7 +325,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /* duf_stmnt_t * pstmt
     ERRMAKE( DATA );
   }
 
-  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_depthinfo_t * pdi,
+  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t * pdi,
        duf_sccb_handle_t * sccbh, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
 }
 
@@ -514,7 +514,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static
-SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   DUF_RUFIELD2( dataid );
 
@@ -844,5 +844,5 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
 
   pdi->total_files++;
 
-  ER( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -379,8 +379,9 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
 /* void ( *duf_rsccbh_fun_t )
  *                ( const struct duf_sccb_handle_s *, duf_stmnt_t *, duf_scanstage_t, duf_scanner_fun_t, duf_node_type_t, int ) */
 static void
-duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, duf_stmnt_t * pstmt_unused MAS_UNUSED,
-                   duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_fun_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
+duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+                   duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_fun_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED,
+                   int r MAS_UNUSED )
 {
   static unsigned n = 0;
   char c = '-';
@@ -491,7 +492,7 @@ TODO scan mode
       if ( H_SCCB->init_scan )
       {
         MAST_TRACE( explain, 10, "to init scan" );
-        CRV( H_SCCB->init_scan, NULL /* pstmt_x */ , pdi, sccbh );
+        CRV( H_SCCB->init_scan, /* ( duf_stmnt_t * ) NULL, */ pdi, sccbh );
       }
       else
       {

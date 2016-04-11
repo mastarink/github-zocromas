@@ -38,11 +38,11 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( tagit ) */
-static int duf_tagit_init( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_before2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_middle2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_after2( duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_init( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_before2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_middle2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_tagit_node_after2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -95,15 +95,15 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, tagit_init, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_init, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
 
-  ER( MOD, tagit_init, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_init, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_leaf2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.file ) )
   {
@@ -128,11 +128,11 @@ SR( MOD, tagit_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
     MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
 
-  ER( MOD, tagit_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_leaf2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -147,11 +147,11 @@ SR( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
 #endif
   }
 
-  ER( MOD, tagit_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_middle2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -166,11 +166,11 @@ SR( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinf
 #endif
   }
 
-  ER( MOD, tagit_node_middle2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_middle2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_after2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
@@ -185,5 +185,5 @@ SR( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
 #endif
   }
 
-  ER( MOD, tagit_node_after2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_after2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

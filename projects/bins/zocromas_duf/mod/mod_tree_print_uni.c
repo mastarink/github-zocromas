@@ -44,8 +44,8 @@
 static int duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi, size_t * pwidth );
 
 /* ########################################################################################## */
-static int duf_tree_node_before2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
-static int duf_tree_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static int duf_tree_node_before2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+static int duf_tree_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 static duf_scan_callbacks_t duf_sccb_dispatch;
@@ -106,7 +106,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   duf_fileinfo_t fi = { 0 };
   assert( H_PDI == pdi_unused );
@@ -164,11 +164,11 @@ SR( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pd
 
 /* DUF_PRINTF( 0, "%s", filename ); */
 
-  ER( MOD, tree_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tree_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /* if ( duf_levinfo_count_gfiles( pdi ) ) */
   {
@@ -245,7 +245,7 @@ SR( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo
     }
   }
 
-  ER( MOD, tree_node_before2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tree_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 /* 20151113.132638 */

@@ -30,7 +30,7 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_register_pdifiledata( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_register_pdifiledata(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -145,8 +145,8 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, register_pdifiledata,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   CR( pdistat2file, pdi, sccbh );
-  ER( MOD, register_pdifiledata, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, register_pdifiledata,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -40,7 +40,7 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_print_leaf2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_print_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -105,7 +105,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
+SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
 {
   DUF_RUFIELD2( dirid );
   DUF_RSFIELD2( fname );
@@ -214,5 +214,5 @@ SR( MOD, print_leaf2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * p
     }
   }
 
-  ER( MOD, print_leaf2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -45,7 +45,7 @@
 #include "duf_pdi_structs.h"
 #include "duf_mod_types.h"
 /* ########################################################################################## */
-static int duf_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_dirent_content2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.mimeid IS NULL"
@@ -223,7 +223,7 @@ mime_destructor( void *ctx )
 }
 
 static
-SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   unsigned long long mimeid = 0;
 
@@ -323,5 +323,5 @@ SR( MOD, dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t
   }
   pdi->total_files++;
 
-  ER( MOD, dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

@@ -43,7 +43,7 @@
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_crc32_dirent_content2( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static int duf_crc32_dirent_content2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 #define FILTER_DATA  "fd.crc32id IS NULL"
@@ -300,7 +300,7 @@ SR( MOD, make_crc32_uni, int fd, unsigned long long *pbytes, unsigned long long 
 }
 
 static
-SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, crc32_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   unsigned long long crc32sum = 0;
   static unsigned long content_cnt = 0;
@@ -360,5 +360,5 @@ SR( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
   pdi->total_bytes += bytes;
   pdi->total_files++;
 
-  ER( MOD, crc32_dirent_content2, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, crc32_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

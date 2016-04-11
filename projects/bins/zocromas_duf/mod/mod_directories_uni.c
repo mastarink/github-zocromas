@@ -31,8 +31,8 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-/* static int duf_register_pdidirectory( duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
-static DR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused , duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh  );
+/* static int duf_register_pdidirectory(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -134,7 +134,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* make sure dir name in db */
 
-SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
@@ -165,5 +165,5 @@ SR( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_depth
   CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
       &duf_sccb_dispatch.node /*, 0 need_id - no error (1=error) if there is no record */  );
 
-  ER( MOD, register_pdidirectory, duf_stmnt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

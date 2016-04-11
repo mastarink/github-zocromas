@@ -61,7 +61,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
     /* sccbh->current_scanner = scanner; */
       MAST_TRACE( scan, 2, "@@@@@@@%s +%d :: %s | %s", CRX( nodetype_name, CRX( levinfo_node_type, H_PDI ) ), CRX( pdi_depth, H_PDI ),
                   CRX( levinfo_relpath, H_PDI ), CRX( levinfo_itemtruename, H_PDI ) );
-      CRV( ( scanner ), NULL /* pstmt_x */ , H_PDI, sccbh );
+      CRV( ( scanner ), /* ( duf_stmnt_t * ) NULL, */ H_PDI, sccbh );
       {
         duf_levinfo_t *pli = NULL;
 
@@ -80,7 +80,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, duf_stmnt_t 
       }
       assert( sccbh->assert__current_node_type == DUF_NODE_FS );
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-        sccbh->atom_cb( sccbh, NULL /* pstmt_x */ , scanstage, scanner, DUF_NODE_FS, QERRIND );
+        sccbh->atom_cb( sccbh, /* ( duf_stmnt_t * ) NULL, */ scanstage, scanner, DUF_NODE_FS, QERRIND );
     }
   }
   else if ( QISERR_N( STATAT_ENOENT ) )
