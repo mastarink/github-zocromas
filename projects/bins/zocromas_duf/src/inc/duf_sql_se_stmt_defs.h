@@ -179,7 +179,7 @@
 # define DUF_SQL_SE_CHANGES_NOPDI( _changes, _pstmt_m ) \
   		  if ( QNOERR || QISERR1_N( SQL_ROW) || QISERR1_N( SQL_DONE ) ) \
                     _changes = duf_sql_changes(  )
-# define DUF_SQL_SE_CHANGES( _changes, _pstmt_m )  DUF_SQL_SE_CHANGES_NOPDI( _changes, _pstmt_m );  duf_pdi_reg_changes( pdi, _changes )
+# define DUF_SQL_SE_CHANGES( _pdi, _changes, _pstmt_m )  DUF_SQL_SE_CHANGES_NOPDI( _changes, _pstmt_m );  duf_pdi_reg_changes( _pdi, _changes )
 
 # define DUF_SQL_SE_EACH_ROW( _pstmt1, _ops) \
       { \

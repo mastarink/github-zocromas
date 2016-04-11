@@ -16,6 +16,8 @@
 
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
@@ -30,7 +32,7 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_register_pdifiledata(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR( MOD, register_pdifiledata, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -145,8 +147,8 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, register_pdifiledata,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, register_pdifiledata, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  CR( pdistat2file, pdi, sccbh );
-  ER( MOD, register_pdifiledata,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  CR( pdistat2file, H_PDI, sccbh );
+  ER( MOD, register_pdifiledata, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

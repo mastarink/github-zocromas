@@ -46,7 +46,7 @@ SRP( OTHER, unsigned long long, tagnameid, 0, add_tagname, duf_depthinfo_t * pdi
 
     DUF_SQL_SE_BIND_S( tagName, tag_name, pstmt_local );
     DUF_SQL_SE_STEPC( pstmt_local );
-    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_CHANGES( pdi, changes, pstmt_local );
     DUF_SQL_SE_END_STMT( pdi, insert_tagname, pstmt_local );
   }
   MAST_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
@@ -104,7 +104,7 @@ SRP( OTHER, unsigned long long, tagid, 0, add_tag, duf_depthinfo_t * pdi, const 
     DUF_SQL_SE_BIND_S( itemType, itemtype, pstmt_local );
     DUF_SQL_SE_BIND_LL( itemID, itemid, pstmt_local );
     DUF_SQL_SE_STEPC( pstmt_local );
-    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_CHANGES( pdi, changes, pstmt_local );
     DUF_SQL_SE_END_STMT( pdi, insert_tag, pstmt_local );
   }
   MAST_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );

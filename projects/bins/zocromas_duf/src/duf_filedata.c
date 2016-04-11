@@ -22,8 +22,11 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
+#include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
@@ -105,7 +108,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * 
     DUF_SQL_SE_BIND_LL( cTimn, ( unsigned long long ) duf_levinfo_stat_cnsec( pdi ), pstmt_local );
 
     DUF_SQL_SE_STEPC( pstmt_local );
-    DUF_SQL_SE_CHANGES( changes, pstmt_local );
+    DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
     DUF_SQL_SE_END_STMT( pdi, insert_filedata, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
   }
   MAST_TRACE( select, 2, "<changes> : %d", changes );

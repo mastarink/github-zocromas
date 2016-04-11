@@ -33,6 +33,8 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
@@ -44,7 +46,7 @@
 #include "duf_pdi_structs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static DR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 #define ADIGEST_DELTA 0
 
@@ -167,7 +169,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 static
-SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED,
+SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED,
      unsigned long digestsum1, unsigned long digestsum2 )
 {
 /* int rpr = 0; */
@@ -180,7 +182,7 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
   assert( sizeof( unsigned long ) == 8 );
   assert( sizeof( unsigned long long ) == 8 );
 
-  DUF_SQL_SE_START_STMT( pdi, select_md5, sql, pstmt_local );
+  DUF_SQL_SE_START_STMT( H_PDI, select_md5, sql, pstmt_local );
   MAST_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_SE_BIND_LL( digestSum1, digestsum1, pstmt_local );
   DUF_SQL_SE_BIND_LL( digestSum2, digestsum2, pstmt_local );
@@ -197,19 +199,19 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_md5, pstmt_local );               /* clears SQL_ROW / SQL_DONE */
-  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh,
+  DUF_SQL_SE_END_STMT( H_PDI, select_md5, pstmt_local );               /* clears SQL_ROW / SQL_DONE */
+  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh,
        unsigned long digestsum1, unsigned long digestsum2 );
 }
 
 static
-SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
+SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
      const char *msg MAS_UNUSED, int need_id )
 {
   int changes = 0;
 
 #ifdef MAS_TRACING
-  const char *real_path = duf_levinfo_path( pdi );
+  const char *real_path = duf_levinfo_path( H_PDI );
 #endif
 
   assert( sizeof( unsigned long long ) == 8 );
@@ -225,23 +227,23 @@ SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t *
               " )";
 
       MAST_TRACE( digest, 0, "%016llx%016llx %s%s", digest64[1], digest64[0], real_path, msg );
-      DUF_SQL_SE_START_STMT( pdi, insert_md5, sql, pstmt_local );
+      DUF_SQL_SE_START_STMT( H_PDI, insert_md5, sql, pstmt_local );
       MAST_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_SE_BIND_LL( digestsum1, digest64[1], pstmt_local );
       DUF_SQL_SE_BIND_LL( digestsum2, digest64[0], pstmt_local );
 
       DUF_SQL_SE_STEPC( pstmt_local );
-      DUF_SQL_SE_CHANGES( changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( pdi, insert_md5, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
+      DUF_SQL_SE_END_STMT( H_PDI, insert_md5, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
     }
-    duf_pdi_reg_changes( pdi, changes );
+    duf_pdi_reg_changes( H_PDI, changes );
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
     {
       if ( need_id )
 #if 0
-        digestid = duf_pdistat2file_digestid_existed( pdi, digest64[1], digest64[0], QPERRIND );
+        digestid = duf_pdistat2file_digestid_existed( H_PDI, digest64[1], digest64[0], QPERRIND );
 #else
-        digestid = CRP( pdistat2file_digestid_existed, pdi, sccbh, digest64[1], digest64[0] );
+        digestid = CRP( pdistat2file_digestid_existed, H_PDI, sccbh, digest64[1], digest64[0] );
 #endif
     }
     else if ( QNOERR /* assume SQLITE_OK */  )
@@ -258,7 +260,7 @@ SRP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t *
     ERRMAKE( DATA );
   }
 
-  ERP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
+  ERP( MOD, unsigned long long, digestid, -1, insert_digest_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, unsigned long long *digest64,
        const char *msg MAS_UNUSED, int need_id );
 }
 
@@ -324,28 +326,28 @@ SR( MOD, make_digest_uni, int fd, unsigned long long *pbytes, unsigned char *pdg
 }
 
 static
-SR( MOD, make_digestr_uni, duf_depthinfo_t * pdi, unsigned char *pmdr )
+SR( MOD, make_digestr_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh, unsigned char *pmdr )
 {
   int fd;
   unsigned char adigest[MOD_DIGEST_LENGTH];
   unsigned long long bytes = 0;
 
   memset( adigest, 0, sizeof( adigest ) );
-  fd = duf_levinfo_dfd( pdi );
+  fd = duf_levinfo_dfd( H_PDI );
   CR( make_digest_uni, fd, &bytes, adigest );
 
 /* reverse */
   for ( unsigned i = 0; i < sizeof( adigest ) / sizeof( adigest[0] ); i++ )
     pmdr[i] = adigest[sizeof( adigest ) / sizeof( adigest[0] ) - i - 1];
 
-  pdi->total_bytes += bytes;
-  pdi->total_files++;
+  H_PDI->total_bytes += bytes;
+  H_PDI->total_files++;
 
-  ER( MOD, make_digestr_uni, duf_depthinfo_t * pdi, unsigned char *pmdr );
+  ER( MOD, make_digestr_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, unsigned char *pmdr );
 }
 
 static
-SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   unsigned char adigestr[MOD_DIGEST_LENGTH + ADIGEST_DELTA];
 
@@ -353,7 +355,7 @@ SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccb
   MAST_TRACE( digest, 0, "+ %s", fname );
   memset( adigestr, 0, sizeof( adigestr ) );
   if ( !CRX( get_config_flag_disable_calculate ) )
-    CR( make_digestr_uni, pdi, adigestr );
+    CR( make_digestr_uni, H_PDI, sccbh, adigestr );
 
   if ( QNOERR )
   {
@@ -362,10 +364,10 @@ SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccb
 
     MAST_TRACE( digest, 0, "insert %s", fname );
 
-    digestid = CRP( insert_digest_uni, pdi, sccbh, pdgst, fname /* for dbg message only */ , 1 /*need_id */  );
+    digestid = CRP( insert_digest_uni, H_PDI, sccbh, pdgst, fname /* for dbg message only */ , 1 /*need_id */  );
     if ( digestid )
     {
-      pdi->cnts.dirent_content2++;
+      H_PDI->cnts.dirent_content2++;
       if ( !CRX( get_config_flag_disable_update ) )
       {
         int changes = 0;
@@ -373,18 +375,18 @@ SR( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccb
 
         DUF_RUFIELD2( filedataid );
 
-        DUF_SQL_SE_START_STMT( pdi, update_md5id, sql, pstmt_local );
+        DUF_SQL_SE_START_STMT( H_PDI, update_md5id, sql, pstmt_local );
         MAST_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_SE_BIND_LL( digestId, digestid, pstmt_local );
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
-        DUF_SQL_SE_CHANGES( changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( pdi, update_md5id, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
-        CRX( pdi_reg_changes, pdi, changes );
+        DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
+        DUF_SQL_SE_END_STMT( H_PDI, update_md5id, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
+        CRX( pdi_reg_changes, H_PDI, changes );
       }
     }
     MAST_TRACE( digest, 4, "%016llx%016llx : " MOD_DIGEST_DATA_S "id: %llu", pdgst[1], pdgst[0], digestid );
-  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pdgst[1], pdgst[0], digestid ); */
+  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( H_PDI ), pdgst[1], pdgst[0], digestid ); */
   }
-  ER( MOD, digest_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, digest_dirent_content2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

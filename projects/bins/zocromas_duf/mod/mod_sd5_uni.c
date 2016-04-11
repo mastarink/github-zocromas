@@ -32,6 +32,8 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
@@ -44,7 +46,8 @@
 /* #include "duf_levinfo_structs.h" */
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_sd5_dirent_content2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+/* static int duf_sd5_dirent_content2( duf_depthinfo_t * H_PDI, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 #define FILTER_DATA "fd.sd5id IS NULL"
@@ -148,13 +151,14 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 static
-SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 )
+SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED,
+     unsigned long sd5sum1, unsigned long sd5sum2 )
 {
   const char *sql = "SELECT " DUF_SQL_IDFIELD " AS sd5id FROM " DUF_SQL_TABLES_SD5_FULL " WHERE sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2"
         /* " INDEXED BY " DUF_SQL_TABLES_SD5 "_uniq WHERE  sd5sum1=:sd5Sum1 AND sd5sum2=:sd5Sum2 */
           ;
 
-  DUF_SQL_SE_START_STMT( pdi, select_sd5, sql, pstmt_local );
+  DUF_SQL_SE_START_STMT( H_PDI, select_sd5, sql, pstmt_local );
   MAST_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_SE_BIND_LL( sd5Sum1, sd5sum1, pstmt_local );
   DUF_SQL_SE_BIND_LL( sd5Sum2, sd5sum2, pstmt_local );
@@ -171,17 +175,19 @@ SRP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinf
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( pdi, select_sd5, pstmt_local );               /* clears SQL_ROW / SQL_DONE */
-  ERP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi, unsigned long sd5sum1, unsigned long sd5sum2 );
+  DUF_SQL_SE_END_STMT( H_PDI, select_sd5, pstmt_local );             /* clears SQL_ROW / SQL_DONE */
+  ERP( MOD, unsigned long long, sd5id, 0, pdistat2file_sd5id_existed, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED,
+       unsigned long sd5sum1, unsigned long sd5sum2 );
 }
 
 static
-SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, unsigned long long *sd64, const char *msg MAS_UNUSED, int need_id )
+SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh, unsigned long long *sd64,
+     const char *msg MAS_UNUSED, int need_id )
 {
   int changes = 0;
 
 #ifdef MAS_TRACING
-  const char *real_path = duf_levinfo_path( pdi );
+  const char *real_path = duf_levinfo_path( H_PDI );
 #endif
 
   if ( sd64 && sd64[1] && sd64[0] )
@@ -191,19 +197,19 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
       static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SD5_FULL " ( sd5sum1, sd5sum2 ) VALUES ( :sd5sum1, :sd5sum2 )";
 
       MAST_TRACE( sd5, 0, "%016llx%016llx %s%s", sd64[1], sd64[0], real_path, msg );
-      DUF_SQL_SE_START_STMT( pdi, insert_sd5, sql, pstmt_local );
+      DUF_SQL_SE_START_STMT( H_PDI, insert_sd5, sql, pstmt_local );
       MAST_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_SE_BIND_LL( sd5sum1, sd64[1], pstmt_local );
       DUF_SQL_SE_BIND_LL( sd5sum2, sd64[0], pstmt_local );
       DUF_SQL_SE_STEPC( pstmt_local );
-      DUF_SQL_SE_CHANGES( changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( pdi, insert_sd5, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
+      DUF_SQL_SE_END_STMT( H_PDI, insert_sd5, pstmt_local );         /* clears SQL_ROW / SQL_DONE */
     }
-    duf_pdi_reg_changes( pdi, changes );
+    duf_pdi_reg_changes( H_PDI, changes );
     if ( ( QISERR1_N( SQL_CONSTRAINT ) || QNOERR ) && !changes )
     {
       if ( need_id )
-        sd5id = duf_pdistat2file_sd5id_existed( pdi, sd64[1], sd64[0], QPERRIND );
+        sd5id = CRP(pdistat2file_sd5id_existed, H_PDI, sccbh, sd64[1], sd64[0] );
     }
     else if ( QNOERR /* assume SQLITE_OK */  )
     {
@@ -223,7 +229,8 @@ SRP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, 
     ERRMAKE( DATA );
   }
 
-  ERP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi, unsigned long long *sd64, const char *msg MAS_UNUSED, int need_id );
+  ERP( MOD, unsigned long long, sd5id, -1, insert_sd5_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, unsigned long long *sd64,
+       const char *msg MAS_UNUSED, int need_id );
 }
 
 static
@@ -294,7 +301,7 @@ SR( MOD, make_sd5_uni, int fd, unsigned long long *pbytes, unsigned char *pmd )
 
 /* 20150820.143755 */
 static
-SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 /*   DUF_STARTR( r ) */ ;
   unsigned char amd5r[MD5_DIGEST_LENGTH];
@@ -307,7 +314,7 @@ SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh M
   memset( amd5, 0, sizeof( amd5 ) );
   MAST_TRACE( sd5, 0, "+ %s", fname );
   if ( !duf_get_config_flag_disable_calculate(  ) )
-    CR( make_sd5_uni, duf_levinfo_dfd( pdi ), &bytes, amd5 );
+    CR( make_sd5_uni, duf_levinfo_dfd( H_PDI ), &bytes, amd5 );
   MAST_TRACE( sd5, 0, "+ %s", fname );
 
 /* reverse */
@@ -322,8 +329,8 @@ SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh M
     pmd = ( unsigned long long * ) &amd5r;
     MAST_TRACE( sd5, 0, "insert %s", fname );
     if ( duf_get_config_flag_disable_calculate(  ) )
-      pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74;               /* FIXME What is it? */
-    sd5id = duf_insert_sd5_uni( pdi, pmd, fname /* for dbg message only */ , 1 /*need_id */ , QPERRIND );
+      pmd[0] = pmd[1] = duf_levinfo_dirid( H_PDI ) + 74;             /* FIXME What is it? */
+    sd5id = CRP( insert_sd5_uni, H_PDI, sccbh, pmd, fname /* for dbg message only */ , 1 /*need_id */  );
     if ( sd5id )
     {
       int changes = 0;
@@ -337,23 +344,23 @@ SR( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh M
 #else
         const char *sql = "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id=:sd5Id WHERE " DUF_SQL_IDFIELD " =:dataId ";
 
-        DUF_SQL_SE_START_STMT( pdi, update_sd5id, sql, pstmt_local );
+        DUF_SQL_SE_START_STMT( H_PDI, update_sd5id, sql, pstmt_local );
         MAST_TRACE( mod, 3, "S:%s", sql );
         DUF_SQL_SE_BIND_LL( sd5Id, sd5id, pstmt_local );
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
-        DUF_SQL_SE_CHANGES( changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( pdi, update_sd5id, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
+        DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
+        DUF_SQL_SE_END_STMT( H_PDI, update_sd5id, pstmt_local );     /* clears SQL_ROW / SQL_DONE */
 #endif
 
       }
-      duf_pdi_reg_changes( pdi, changes );
+      duf_pdi_reg_changes( H_PDI, changes );
     }
     MAST_TRACE( sd5, 0, "%016llx%016llx : sd5id: %llu", pmd[1], pmd[0], sd5id );
-  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sd5id ); */
+  /* MAST_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( H_PDI ), pmd[1], pmd[0], sd5id ); */
   }
-  pdi->total_bytes += bytes;
-  pdi->total_files++;
+  H_PDI->total_bytes += bytes;
+  H_PDI->total_files++;
 
-  ER( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, sd5_dirent_content2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 }

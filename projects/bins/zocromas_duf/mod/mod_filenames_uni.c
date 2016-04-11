@@ -15,6 +15,8 @@
 
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_pdi_ref.h"
@@ -39,9 +41,14 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 
-static int duf_filenames_leaf2(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_leaf2_deleted(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_filenames_de_file_before2(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+/* static int duf_filenames_leaf2(  duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, filenames_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED );
+
+/* static int duf_filenames_leaf2_deleted(  duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, filenames_leaf2_deleted, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+
+/* static int duf_filenames_de_file_before2( duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, filenames_de_file_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {                              /* */
@@ -65,18 +72,18 @@ const duf_mod_handler_t duf_mod_handler_uni[] = {
 };
 
 /* ########################################################################################## */
-static duf_scanner_set_t scanners[]  = {
+static duf_scanner_set_t scanners[] = {
   {
    .flags = DUF_SCANNER_SET_FLAG_DIRENT,                             /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_FS_ITEMS,                              /* */
    .fun = F2ND( filenames_de_file_before2 ),                         /* */
    },
- {
+  {
    .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */
    .type = DUF_NODE_LEAF,                                            /* */
-   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                              /* */
-   .fun = F2ND( filenames_leaf2 ),                         /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .fun = F2ND( filenames_leaf2 ),                                   /* */
    },
 
   {.fun = NULL}
@@ -166,62 +173,62 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 static
-SR( MOD, filenames_leaf2,  duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  if ( 0 == strcmp( duf_levinfo_itemtruename( pdi ), "paths-with-jpg" ) )
+  if ( 0 == strcmp( duf_levinfo_itemtruename( H_PDI ), "paths-with-jpg" ) )
   {
-    QT( "@[%d] %s :: %s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+    QT( "@[%d] %s :: %s", duf_pdi_depth( H_PDI ), duf_levinfo_path( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
   }
 
-  ER( MOD, filenames_leaf2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, filenames_leaf2_deleted,  duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_leaf2_deleted, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  MAST_TRACE( todo, 0, "@@@@@@@[%d] %s%s", duf_pdi_depth( H_PDI ), duf_levinfo_path( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
 /* TODO remove or mark name from DB */
   assert( 0 );
-  ER( MOD, filenames_leaf2_deleted,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_leaf2_deleted, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, filenames_de_file_before2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, filenames_de_file_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  const char *fname = duf_levinfo_itemtruename( pdi );
+  const char *fname = duf_levinfo_itemtruename( H_PDI );
 
   unsigned long long dataid;
 
   if ( QNOERR )
 #if 0
-    dataid = duf_pdistat2file_dataid_existed( pdi, sccbh, QPERRIND );
+    dataid = duf_pdistat2file_dataid_existed( H_PDI, sccbh, QPERRIND );
 #else
-    dataid = CRP( pdistat2file_dataid_existed, pdi, sccbh );
+    dataid = CRP( pdistat2file_dataid_existed, H_PDI, sccbh );
 #endif
   assert( dataid > 0 );
-  if ( QNOERR && fname && duf_levinfo_dirid_up( pdi ) )
+  if ( QNOERR && fname && duf_levinfo_dirid_up( H_PDI ) )
   {
     int changes = 0;
 
     const char *sql =
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILENAMES_FULL " (pathID, " DUF_SQL_FILENAMEFIELD ", dataid) VALUES (:pathID, :Name, :dataID)";
 
-    DUF_SQL_SE_START_STMT( pdi, insert_filename, sql, pstmt_local );
+    DUF_SQL_SE_START_STMT( H_PDI, insert_filename, sql, pstmt_local );
     MAST_TRACE( mod, 3, "S:%s", sql );
-    DUF_SQL_SE_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), pstmt_local );
+    DUF_SQL_SE_BIND_LL( pathID, duf_levinfo_dirid_up( H_PDI ), pstmt_local );
     DUF_SQL_SE_BIND_S( Name, fname, pstmt_local );
     DUF_SQL_SE_BIND_LL( dataID, dataid, pstmt_local );
     DUF_SQL_SE_STEPC( pstmt_local );
-    DUF_SQL_SE_CHANGES( changes, pstmt_local );
-    DUF_SQL_SE_END_STMT( pdi, insert_filename, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
+    DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
+    DUF_SQL_SE_END_STMT( H_PDI, insert_filename, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
   }
   else
   {
-  /* DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) ); */
-    ERRMAKE_M( DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
+  /* DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( H_PDI ) ); */
+    ERRMAKE_M( DATA, "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( H_PDI ) );
 
   }
 /* MAST_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
 
-  ER( MOD, filenames_de_file_before2,  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, filenames_de_file_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

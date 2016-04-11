@@ -18,6 +18,8 @@
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_openclose.h"
@@ -76,167 +78,167 @@ DUF_MOD_DECLARE_ALL_FUNCS( duf_dummy )
 
 /* ########################################################################################## */
 
-SR( MOD, dummy_init, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_init, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( mod, 0, "dummy_init %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( mod, 0, "dummy_init %s", duf_levinfo_path( H_PDI ) );
 
-  ER( MOD, dummy_init, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_init, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_de_content2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_de_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( H_PDI ); */
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 
-/* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) > 0 );
-  assert( duf_levinfo_stat( pdi ) );
+/* filename from db same as duf_levinfo_itemname( H_PDI ) */
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( H_PDI ) ) );
+  assert( duf_levinfo_opened_dh( H_PDI ) > 0 );
+  assert( duf_levinfo_stat( H_PDI ) );
 
 #endif
 
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  MAST_TRACE( mod, 1, "dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), fname,
-              0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
-              duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
+  MAST_TRACE( mod, 1, "dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( H_PDI ), fname,
+              0 == strcmp( duf_levinfo_itemshowname( H_PDI ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( H_PDI ), duf_levinfo_dfd( H_PDI ),
+              duf_levinfo_source( H_PDI ), ( unsigned long long ) duf_levinfo_stat_dev( H_PDI ) );
 
-  ER( MOD, dummy_de_content2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_de_content2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_de_content2_del, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_de_content2_del, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( pdi ); */
+/* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( H_PDI ); */
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 
-/* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
+/* filename from db same as duf_levinfo_itemname( H_PDI ) */
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( H_PDI ) ) );
 #endif
 
 /*
 * 2: 0 [MOD    ]  47:dummy_de_content2                 :3.8916 :  dummy de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  MAST_TRACE( mod, 0, "@dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), fname,
-              0 == strcmp( duf_levinfo_itemshowname( pdi ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
-              duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
+  MAST_TRACE( mod, 0, "@dummy de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( H_PDI ), fname,
+              0 == strcmp( duf_levinfo_itemshowname( H_PDI ), fname ) ? "«SAME»" : duf_levinfo_itemshowname( H_PDI ), duf_levinfo_dfd( H_PDI ),
+              duf_levinfo_source( H_PDI ), ( unsigned long long ) duf_levinfo_stat_dev( H_PDI ) );
 
-  ER( MOD, dummy_de_content2_del, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_de_content2_del, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_leaf2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 
-  assert( !duf_levinfo_dfd( pdi ) );
-/* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_dbstat( pdi ) );
+  assert( !duf_levinfo_dfd( H_PDI ) );
+/* filename from db same as duf_levinfo_itemname( H_PDI ) */
+  assert( 0 == strcmp( fname, duf_levinfo_itemtruename( H_PDI ) ) );
+  assert( duf_levinfo_dbstat( H_PDI ) );
 #endif
 
-  MAST_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( pdi ), fname );
-  MAST_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( pdi ), fname,
-              duf_levinfo_dfd( pdi ), duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_dbstat_dev( pdi ),
-              ( unsigned long long ) duf_levinfo_dbstat_inode( pdi ) );
+  MAST_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( H_PDI ), fname );
+  MAST_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( H_PDI ), fname,
+              duf_levinfo_dfd( H_PDI ), duf_levinfo_source( H_PDI ), ( unsigned long long ) duf_levinfo_dbstat_dev( H_PDI ),
+              ( unsigned long long ) duf_levinfo_dbstat_inode( H_PDI ) );
 
-  ER( MOD, dummy_leaf2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_leaf2_del, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_leaf2_del, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 #endif
-  MAST_TRACE( mod, 0, "@@dummy %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 0, "@@dummy %s : %s", duf_levinfo_path( H_PDI ), fname );
 /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
-  ER( MOD, dummy_leaf2_del, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_leaf2_del, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 # endif
-  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( H_PDI ), fname );
 #endif
 
-  ER( MOD, dummy_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_before2_del, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_before2_del, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 #endif
-  MAST_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 0, "@dummy node before: %s : %s", duf_levinfo_path( H_PDI ), fname );
 
-  ER( MOD, dummy_node_before2_del, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_before2_del, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_middle2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_middle2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 # endif
-  MAST_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 1, "dummy node middle: %s : %s", duf_levinfo_path( H_PDI ), fname );
 #endif
 
-  ER( MOD, dummy_node_middle2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_middle2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_middle2_del, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_middle2_del, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 #endif
-  MAST_TRACE( mod, 0, "@dummy node middle %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 0, "@dummy node middle %s : %s", duf_levinfo_path( H_PDI ), fname );
 
-  ER( MOD, dummy_node_middle2_del, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_middle2_del, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_after2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_after2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "dummy %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 # endif
-  MAST_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 1, "dummy node after: %s : %s", duf_levinfo_path( H_PDI ), fname );
 #endif
 
-  ER( MOD, dummy_node_after2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_after2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_node_after2_del, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_node_after2_del, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #ifdef MAS_TRACING
   DUF_RSFIELD2( fname );
 #endif
-  MAST_TRACE( mod, 0, "@dummy node after %s : %s", duf_levinfo_path( pdi ), fname );
+  MAST_TRACE( mod, 0, "@dummy node after %s : %s", duf_levinfo_path( H_PDI ), fname );
 
-  ER( MOD, dummy_node_after2_del, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_node_after2_del, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_de_dir_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_de_dir_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #if 0
-  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( H_PDI ) ) );
 
-/* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+/* pstat_unused equal to duf_levinfo_stat( H_PDI ) ? */
   {
-    struct stat *st = duf_levinfo_stat( pdi );
+    struct stat *st = duf_levinfo_stat( H_PDI );
 
     assert( st->st_dev == pstat_unused->st_dev );
     assert( st->st_ino == pstat_unused->st_ino );
@@ -256,20 +258,20 @@ SR( MOD, dummy_de_dir_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle
   }
 #endif
 
-  MAST_TRACE( scan, 3, "scan de - sub-directory scanned here %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( scan, 3, "scan de - sub-directory scanned here %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
-  MAST_TRACE( mod, 1, "dummy de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "dummy de dir before: %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
-  ER( MOD, dummy_de_dir_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_de_dir_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
-SR( MOD, dummy_de_file_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, dummy_de_file_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #if 0
-  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
-/* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( H_PDI ) ) );
+/* pstat_unused equal to duf_levinfo_stat( H_PDI ) ? */
   {
-    struct stat *st = duf_levinfo_stat( pdi );
+    struct stat *st = duf_levinfo_stat( H_PDI );
 
     assert( st->st_dev == pstat_unused->st_dev );
     assert( st->st_ino == pstat_unused->st_ino );
@@ -289,7 +291,7 @@ SR( MOD, dummy_de_file_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handl
   }
 #endif
 
-  MAST_TRACE( mod, 1, "dummy de file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 1, "dummy de file before: %s : %s", duf_levinfo_path( H_PDI ), duf_levinfo_itemshowname( H_PDI ) );
 
-  ER( MOD, dummy_de_file_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, dummy_de_file_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

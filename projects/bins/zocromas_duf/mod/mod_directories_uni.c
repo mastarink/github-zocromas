@@ -24,6 +24,8 @@
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_path2db.h"                                             /* duf_real_path2db; etc. ✗ */
 
 #include "sql_beginning_selected.h"
@@ -31,8 +33,8 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-/* static int duf_register_pdidirectory(  duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
-static DR( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
+/* static int duf_register_pdidirectory(  duf_depthinfo_t * H_PDI, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, register_pdidirectory, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -134,12 +136,12 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* make sure dir name in db */
 
-SR( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, register_pdidirectory, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
 #if 0
-  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( H_PDI ) ) );
   {
-    struct stat *st = duf_levinfo_stat( pdi );
+    struct stat *st = duf_levinfo_stat( H_PDI );
 
     assert( st->st_dev == pst_dir_unused->st_dev );
     assert( st->st_ino == pst_dir_unused->st_ino );
@@ -160,10 +162,10 @@ SR( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh
 #endif
 
 /* fname === */
-  MAST_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
+  MAST_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( H_PDI ) );
 
-  CR( levinfo_stat2dirid, pdi, 1 /* caninsert */ ,
+  CR( levinfo_stat2dirid, H_PDI, 1 /* caninsert */ ,
       &duf_sccb_dispatch.node /*, 0 need_id - no error (1=error) if there is no record */  );
 
-  ER( MOD, register_pdidirectory, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, register_pdidirectory, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }

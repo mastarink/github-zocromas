@@ -737,7 +737,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
 }
 
 char *
-duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int fcolor, const char *format, duf_pdi_scb_t prefix_scb,
+duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED, duf_fileinfo_t * pfi, int fcolor, const char *format, duf_pdi_scb_t prefix_scb,
                        duf_pdi_scb_t suffix_scb, size_t max_width MAS_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
 {
   size_t slen = 0;
@@ -793,7 +793,7 @@ duf_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, int fc
 }
 
 size_t
-duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb,
+duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb,
                              duf_pdi_scb_t suffix_scb, size_t max_width, int force_color, int nocolor, size_t * pswidth, int *pover )
 {
   size_t slen = 0;
@@ -807,7 +807,7 @@ duf_print_sformat_file_info( const duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, 
   out = mas_output_file(  );
 #endif
 
-  buffer = duf_sformat_file_info( pdi, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb, suffix_scb, max_width,
+  buffer = duf_sformat_file_info( pdi, sccbh, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb, suffix_scb, max_width,
                                   &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );

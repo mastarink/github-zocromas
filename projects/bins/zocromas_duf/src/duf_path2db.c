@@ -109,7 +109,7 @@ SR( PDI, levinfo_stat_insert2db, duf_depthinfo_t * pdi, int *pchanges )
 /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
 
   DUF_SQL_SE_STEP( pstmt_local );
-  DUF_SQL_SE_CHANGES( changes, pstmt_local );
+  DUF_SQL_SE_CHANGES( pdi, changes, pstmt_local );
   DUF_SQL_SE_END_STMT( pdi, insert_path_table, pstmt_local );
   if ( pchanges )
     *pchanges = changes;

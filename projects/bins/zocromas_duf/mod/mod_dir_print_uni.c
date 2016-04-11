@@ -40,7 +40,8 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static int duf_print_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+/* static int duf_print_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
+static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -208,8 +209,8 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = duf_print_sformat_file_info( H_PDI, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
-                                            mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+        slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
+                    DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }
   }

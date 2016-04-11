@@ -17,6 +17,8 @@
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
@@ -38,11 +40,11 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( tagit ) */
-static int duf_tagit_init( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_before2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_middle2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
-static int duf_tagit_node_after2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR(MOD,tagit_init, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR(MOD,tagit_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR(MOD,tagit_node_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR(MOD,tagit_node_middle2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR(MOD,tagit_node_after2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
 
@@ -95,95 +97,95 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, tagit_init, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_init, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
-  MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( pdi ) );
+  MAST_TRACE( mod, 0, "tagit_init %s", duf_levinfo_path( H_PDI ) );
 
-  ER( MOD, tagit_init, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_init, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_leaf2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.file ) )
   {
 #ifdef MAS_TRACING
-    assert( !duf_levinfo_dfd( pdi ) );
-  /* filename from db same as duf_levinfo_itemname( pdi ) */
+    assert( !duf_levinfo_dfd( H_PDI ) );
+  /* filename from db same as duf_levinfo_itemname( H_PDI ) */
     {
       const char *fn1;
       const char *fn2;
 
       fn1 = DUF_GET_RSFIELD2( fname );
-      fn2 = duf_levinfo_itemtruename( pdi );
+      fn2 = duf_levinfo_itemtruename( H_PDI );
       assert( fn1 );
       assert( fn2 );
       assert( 0 == strcmp( fn1, fn2 ) );
     }
-    assert( duf_levinfo_dbstat( pdi ) );
+    assert( duf_levinfo_dbstat( H_PDI ) );
 #endif
 
-    duf_add_tag( pdi, "filename", duf_levinfo_nameid( pdi ), DUF_CONFIGG( vars.tag.file ) ? DUF_CONFIGG( vars.tag.file ) : "NONE", QPERRIND );
+    duf_add_tag( H_PDI, "filename", duf_levinfo_nameid( H_PDI ), DUF_CONFIGG( vars.tag.file ) ? DUF_CONFIGG( vars.tag.file ) : "NONE", QPERRIND );
 
-    MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
+    MAST_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( H_PDI ) );
   }
 
-  ER( MOD, tagit_leaf2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_before2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-                duf_levinfo_itemshowname( pdi ) );
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( H_PDI ),
+                duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_RSFIELD2( fname );
 # endif
-    MAST_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit %s : %s", duf_levinfo_path( H_PDI ), filename );
 #endif
   }
 
-  ER( MOD, tagit_node_before2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_middle2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_middle2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-                duf_levinfo_itemshowname( pdi ) );
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( H_PDI ),
+                duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_RSFIELD2( fname );
 # endif
-    MAST_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit node middle: %s : %s", duf_levinfo_path( H_PDI ), filename );
 #endif
   }
 
-  ER( MOD, tagit_node_middle2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_middle2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
 
 static
-SR( MOD, tagit_node_after2, duf_depthinfo_t * pdi MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
+SR( MOD, tagit_node_after2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED )
 {
   if ( DUF_CONFIGG( vars.tag.dir ) )
   {
-    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( pdi ),
-                duf_levinfo_itemshowname( pdi ) );
+    MAST_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( vars.tag.dir ), DUF_CONFIGG( vars.tag.file ), duf_levinfo_path( H_PDI ),
+                duf_levinfo_itemshowname( H_PDI ) );
 
 #if 0
 # ifdef MAS_TRACING
     DUF_RSFIELD2( fname );
 # endif
-    MAST_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( pdi ), filename );
+    MAST_TRACE( mod, 1, "tagit node after: %s : %s", duf_levinfo_path( H_PDI ), filename );
 #endif
   }
 
-  ER( MOD, tagit_node_after2, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, tagit_node_after2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 }
