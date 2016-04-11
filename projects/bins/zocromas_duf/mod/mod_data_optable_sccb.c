@@ -23,8 +23,15 @@ At duf_xtended_table.c:
 	NULL
       };
 */
+static muc_longval_extended_table_t optable;
 
-const muc_longval_extended_table_t optable_sccb = {
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable},
+  {NULL, NULL}
+};
+
+
+static muc_longval_extended_table_t optable = {
   .name = "sccb",
 /* DO_SET_STAGE( DUF_OPTION_STAGE_SETUP, DUF_OPTION_STAGE_INTERACTIVE ), */
   DO_STG_NOT( SETUP ),

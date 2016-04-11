@@ -3,13 +3,37 @@ SUBDIRS= inc
 
 moduledir=$(libdir)/dufmod
 module_LTLIBRARIES = \
-	ot_info.la ot_flag.la ot_flag_allow.la ot_str.la ot_db.la ot_filter.la ot_test.la \
+	ot_main.la ot_format.la ot_io.la ot_info.la ot_flag.la ot_flag_allow.la ot_str.la ot_sccb.la ot_trace.la ot_help.la ot_db.la ot_filter.la ot_test.la \
 	null.la set_dir_priority.la tree.la \
 	crc32.la dialog.la dirs.la dumplet.la exif.la filedata.la filenames.la listing.la md5.la mime.la save_to.la sd5.la sha1.la tagit.la
+
+ot_format_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_format_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_format_la_SOURCES          = mod_data_optable_format.c
+
+ot_io_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_io_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_io_la_SOURCES          = mod_data_optable_io.c
+
+ot_main_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_main_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_main_la_SOURCES          = mod_data_optable.c
 
 ot_flag_allow_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 ot_flag_allow_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
 ot_flag_allow_la_SOURCES          = mod_data_optable_flag_allow.c
+
+ot_trace_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_trace_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_trace_la_SOURCES          = mod_data_optable_trace.c
+
+ot_sccb_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_sccb_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_sccb_la_SOURCES          = mod_data_optable_sccb.c
+
+ot_help_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+ot_help_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+ot_help_la_SOURCES          = mod_data_optable_help.c
 
 ot_str_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 ot_str_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@

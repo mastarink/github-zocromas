@@ -28,7 +28,14 @@ At duf_xtended_table.c:
 #define DUF_TRACE_OPT(_uname,_lname) DUF_TRACE_OPTT(_uname ## _TRACE, _lname)
 
 #ifdef MAS_TRACING_OPTIONS
-const muc_longval_extended_table_t optable_trace = {
+static muc_longval_extended_table_t optable;
+
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable},
+  {NULL, NULL}
+};
+
+static muc_longval_extended_table_t optable = {
   .name = "trace_t",
   DO_STAGE_ALL,
   .xlist =                                                           /* */

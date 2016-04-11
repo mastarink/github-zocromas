@@ -25,8 +25,14 @@
  *   NULL
  *  };
 */
+static muc_longval_extended_table_t optable;
 
-const muc_longval_extended_table_t optable_help = {
+const duf_mod_handler_t duf_mod_handler_uni[] = {
+  {"optab", &optable},
+  {NULL, NULL}
+};
+
+static muc_longval_extended_table_t optable = {
   .name = "help",
   DO_AT_STAGE( SETUP ), DO_STG_NOT( FIRST ),
   .xlist =                                                           /* */
