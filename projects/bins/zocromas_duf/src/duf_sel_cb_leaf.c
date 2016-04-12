@@ -47,7 +47,7 @@
 /* 20151027.114003 */
 /* DUF_WRAPSTATIC */
 static
-SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg MAS_UNUSED, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
   if ( str_cb2 )
@@ -78,7 +78,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
     {
       assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
               || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
-      CRV( str_cb2, sccbh, pstmt_arg, scanstage );
+      CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
     }
 
     if ( QNOERR )
@@ -95,7 +95,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
       ( sccbh->progress_leaf_cb ) ( sccbh );
   }
 /* DUF_ENDR( r ); */
-  ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
 /* duf_sel_cb_leaves:
@@ -111,7 +111,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
  *   ...
  * */
 /* 20150820.085847 */
-SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
   assert( H_PDI );
@@ -128,19 +128,21 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
     CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt_arg, DUF_NODE_LEAF /* node_type */  );
     assert( QISERR_N( TOO_DEEP ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+    if ( QNOERR )
+    {
+      MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
+      assert( CRX( pdi_depth, H_PDI ) >= 0 );
+      CRX( sccbh_row_next, sccbh, pstmt_arg );
 
-    MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
-    assert( CRX( pdi_depth, H_PDI ) >= 0 );
-    CRX( sccbh_row_next, sccbh, pstmt_arg );
+      CR( sel_cb2_leaf_at, sccbh, pstmt_arg, str_cb2, scanstage );
+      assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
-    CR( sel_cb2_leaf_at, sccbh, pstmt_arg, str_cb2, scanstage );
-    assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
+      CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage );
 
-    CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage );
-
-    CR( levinfo_goup, H_PDI );
+      CR( levinfo_goup, H_PDI );
+    }
   }
   MAST_TRACE( scan, 9, "/LEAF %s", CRX( levinfo_path, H_PDI ) );
 /* DUF_ENDR( r ); */
-  ER( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }

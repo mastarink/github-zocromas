@@ -15,7 +15,7 @@
 
 typedef int ( *duf_anyhook_t ) ( void );
 
-typedef int ( *duf_str_cb2_t ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_x, duf_scanstage_t scanstage );
+/* typedef int ( *duf_str_cb2_t ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_x, duf_scanstage_t scanstage ); */
 typedef int ( *duf_str_cb2s_t ) ( duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
 
 /* KNOWN duf_sel_cb_t callbacks:

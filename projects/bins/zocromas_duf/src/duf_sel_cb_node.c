@@ -35,7 +35,7 @@
 
 /* 20151027.113952 */
 static
-SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
 /*@ 1. go down + dbopenat */
@@ -55,7 +55,7 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
   {
     MAST_TRACE( explain, 20, "=> str cb2" );
   /*@ 3. str_cb2 */
-    CRV( ( str_cb2 ), sccbh, pstmt_arg, scanstage );
+    CRV( ( str_cb2 ), sccbh, /* pstmt_arg, */ scanstage );
 
     ERRCLEAR( OPENAT_ENOENT );
     ERRCLEAR( STATAT_ENOENT );
@@ -63,7 +63,7 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, 
 
 /*@ 4. go up */
 /* DUF_ENDR( r ); */
-  ER( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
 #if 0
@@ -97,7 +97,7 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t 
  *   ...
  */
 /* 20150820.085950 */
-SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 /* DUF_STARTR( r ); */
   assert( H_PDI );
@@ -121,7 +121,7 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     MAST_TRACE( scan, 6, "(%s) NODE down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) >= 0 );
 
-    CR( sel_cb2_node_at, sccbh, pstmt_arg, str_cb2, scanstage );
+    CR( sel_cb2_node_at, sccbh, /* pstmt_arg, */ str_cb2, scanstage );
 
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
@@ -130,5 +130,5 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
   MAST_TRACE( scan, 6, "/NODE %s", CRX( levinfo_path, H_PDI ) );
 
 /* DUF_ENDR( r ); */
-  ER( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }

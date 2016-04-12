@@ -66,7 +66,7 @@ SR( SCCBH, sccbh_eval_all_and_summary_i, duf_sccb_handle_t * sccbh, bool f_summa
   assert( H_SCCB );
 
   MAST_TRACE( sccbh, 0, "eval sccbh ALL (%d) %s", sccbh ? 1 : 0, H_SCCB->name );
-  CR( sccbh_eval_all, sccbh, ( duf_stmnt_t * ) NULL, ( duf_scanstage_t ) NULL ); /* XXX XXX XXX XXX XXX XXX */
+  CR( sccbh_eval_all, sccbh, /* ( duf_stmnt_t * ) NULL, */ ( duf_scanstage_t ) NULL ); /* XXX XXX XXX XXX XXX XXX */
   MAST_TRACE( sccbh, 0, "(%s) eval sccbh ALL done (%d) %s", QERRNAME, sccbh ? 1 : 0, H_SCCB->name );
 
   if ( QNOERR && f_summary )
@@ -118,7 +118,7 @@ SR( SCCBH, sccbh_eval_all_and_summary, duf_sccb_handle_t * sccbh, bool f_summary
 
 /* 20160212.130816 */
 
-SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 
   duf_sql_set_pair_t sql_set_pair = {.orderid = 0, NULL, NULL };
@@ -161,7 +161,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
     MAST_TRACE( explain, 10, "= ? ============ NO selector2 ≪%s≫", set_type_title );
     ERRMAKE( PTR );
   }
-  ER( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
 /*20150820.085607
@@ -199,8 +199,7 @@ CRX( sccbh_eval_db_leaves, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused
   }
 }
 #endif
-/* duf_str_cb2_t, but really doesn't need pstmt_arg */
-SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
 {
 /* scan this files in this directory */
   MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
@@ -211,10 +210,10 @@ SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
   /* duf_sccbh_eval_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
     CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb ), scanstage );
   }
-  ER( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
 {
 /* scan this files in this directory */
   MAST_TRACE( sccbh, 2, "@@@@scan files fd (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
@@ -225,10 +224,10 @@ SR( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pst
   /* duf_sccbh_eval_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
     CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_fd_str_cb ), scanstage );
   }
-  ER( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaves_fd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage MAS_UNUSED )
+SR( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage MAS_UNUSED )
 {
 /* scan this files in this directory */
   MAST_TRACE( sccbh, 2, "@@@@scan files (%s) %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
@@ -237,5 +236,5 @@ SR( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * ps
   if ( CRX( sccb_has_new_scanner, sccbh, DUF_NODE_LEAF, scanstage, 1 /* db */ , 0 /* dirent */  ) )
     CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb_new ), scanstage );
 
-  ER( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage );
 }

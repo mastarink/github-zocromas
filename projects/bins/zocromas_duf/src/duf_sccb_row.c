@@ -265,17 +265,9 @@ SRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
 {
   if ( sccbh )
   {
-    if ( !duf_pdi_linear( H_PDI ) )
-    {
-      duf_stmnt_t *ps MAS_UNUSED;
-      duf_stmnt_t *psu MAS_UNUSED;
-
-      ps = duf_pdi_each_stmt( H_PDI, 0 );
-      psu = duf_pdi_each_stmt( H_PDI, 1 );
-      assert( pstmt_arg == ps || pstmt_arg == psu );
-    }
+    assert( pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
     assert( !sccbh->new_row );
-    sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) );
+    sccbh->new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ) );
   }
   ERN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
 }
@@ -295,15 +287,7 @@ SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
 
 SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
-  if ( !duf_pdi_linear( H_PDI ) )
-  {
-    duf_stmnt_t *ps MAS_UNUSED;
-    duf_stmnt_t *psu MAS_UNUSED;
-
-    ps = duf_pdi_each_stmt( H_PDI, 0 );
-    psu = duf_pdi_each_stmt( H_PDI, 1 );
-    assert( pstmt_arg == ps || pstmt_arg == psu );
-  }
+  assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
   CRX( sccbh_row_open, sccbh, pstmt_arg );
   CRX( sccbh_row_close, sccbh );
 

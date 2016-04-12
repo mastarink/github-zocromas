@@ -55,7 +55,7 @@
  * */
 
 static
-SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage )
+SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_selector MAS_UNUSED, */ duf_scanstage_t scanstage )
 {
   unsigned allow_fs = ! /* DUF_CONFIGG( opt.disable.flag.fs ) */ CRX( get_config_flag_disable_fs, );
   unsigned allow_dirs = /* DUF_ACTG_FLAG( allow_dirs ) */ CRX( get_config_flag_act_allow_dirs, );
@@ -64,7 +64,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   unsigned linear = CRX( pdi_linear, H_PDI );
 
 /* only sccbh_eval_db_subnodes needs pstmt_selector */
-  duf_str_cb2_t passes[] = {
+  duf_str_cb2s_t passes[] = {
     [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
     [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES] /*       */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_new ) : NULL,
@@ -87,7 +87,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   /* sccbh->current_scanstage = scanstage; */
     H_PDI->items.total = 0;
     H_PDI->items.dirs = 0;
-    CRV( ( passes[scanstage] ), sccbh, pstmt_selector, scanstage );
+    CRV( ( passes[scanstage] ), sccbh, /* pstmt_selector, */ scanstage );
   /* QT( "@%d. %llu", scanstage, H_PDI->items.total ); */
     MAST_TRACE( scan, 4, "[%llu]", CRX( levinfo_dirid, H_PDI ) );
   /* sccbh->current_scanstage = DUF_SCANSTAGE_NONE; */
@@ -95,11 +95,11 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   }
 /* QT( "@@@@%s - %s : %s", CRX(scanstage_name, scanstage ), CRX(levinfo_relpath, H_PDI ), CRX(levinfo_itemtruename, H_PDI ) ); */
 
-  ER( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage );
+  ER( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_selector, */ duf_scanstage_t scanstage );
 }
 
 static
-SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector )
+SR( SCCBH, sccbh_eval_all_i, duf_sccb_handle_t * sccbh /* , duf_stmnt_t * pstmt_selector MAS_UNUSED */  )
 {
   assert( H_SCCB );
 /* QT( "@@@%s", CRX(levinfo_path, H_PDI ) ); */
@@ -110,7 +110,7 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
  *                                     -- see duf_dir_scan2_passs.c
  * */
   MAST_TRACE( scan, 3, "scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );
-  MAST_TRACE( sccbh, 4, "(pstmt_x:%d) passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
+  MAST_TRACE( sccbh, 4, "passes (%s)", CRX( uni_scan_action_title, H_SCCB ) );
 /* QT( "Q: H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
   if ( !H_SCCB->disabled /* && ( !H_TOTCOUNTED || H_TOTITEMS ) TODO FIXME */  )
   {
@@ -119,7 +119,7 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
     for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage <= DUF_SCANSTAGE_MAX; scanstage = scanstage << 1 )
     {
       assert( scanstage );
-      CR( eval_sccbh_scanstage, sccbh, pstmt_selector, scanstage );
+      CR( eval_sccbh_scanstage, sccbh, /* pstmt_selector, */ scanstage );
     }
   }
   else
@@ -130,12 +130,12 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   /* assert( 0 );                                                                                               */
   }
 
-  MAST_TRACE( sccbh, 4, "(pstmt_x:%d) /passes (%s)", pstmt_selector ? 1 : 0, CRX( uni_scan_action_title, H_SCCB ) );
+  MAST_TRACE( sccbh, 4, "/passes (%s)", CRX( uni_scan_action_title, H_SCCB ) );
 /* FIXME */
   ERRCLEAR( TOO_DEEP );                                              /* reset error if it was `MAX_DEPTH` */
   MAST_TRACE( scan, 3, "/scan passes by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ),
               CRX( levinfo_path, H_PDI ) );
-  ER( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector );
+  ER( SCCBH, sccbh_eval_all_i, duf_sccb_handle_t * sccbh /* , duf_stmnt_t * pstmt_selector */  );
 }
 
 /* duf_scan_dirs_by_pdi_wrap          ( duf_scan_dirs_by_parentid )
@@ -148,13 +148,13 @@ SR( SCCBH, sccbh_pstmt_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )
  * */
-SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage_fake MAS_UNUSED )
+SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage_fake MAS_UNUSED )
 {
   assert( H_PDI );
   assert( CRX( pdi_depth, H_PDI ) /* H_PDI->pathinfo.depth */  >= 0 );
   assert( sccbh );
 /* assert( pstmt_selector ); */
-  assert( pstmt_selector == duf_pdi_each_stmt( H_PDI, 1 ) );
+  /* assert( pstmt_selector == duf_pdi_each_stmt( H_PDI, 1 ) ); */
 #ifdef MAS_TRACING
   unsigned long long diridpdi;
 
@@ -172,7 +172,7 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_select
 #endif
   if ( !H_SCCB->disabled )
   {                                                                  /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    CR( sccbh_pstmt_eval_all, sccbh, pstmt_selector );
+    CR( sccbh_eval_all_i, sccbh /* , pstmt_selector */  );
   }
   else
   {
@@ -182,5 +182,5 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_select
 #ifdef MAS_TRACING
   MAST_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpdi, CRX( pdi_depth, H_PDI ) );
 #endif
-  ER( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_selector, duf_scanstage_t scanstage_fake );
+  ER( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_selector, */ duf_scanstage_t scanstage_fake );
 }
