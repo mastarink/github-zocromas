@@ -7,6 +7,7 @@
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
 # include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
@@ -54,6 +55,14 @@ void duf_levinfo_set_dirid_up( duf_depthinfo_t * pdi, unsigned long long dirid )
 unsigned long long duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_dirid( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_dirid_up( const duf_depthinfo_t * pdi );
+
+void duf_levinfo_set_each_stmt_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_val, int d );
+void duf_levinfo_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_val );
+void duf_levinfo_set_each_stmt_up( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_val );
+
+duf_stmnt_t *duf_levinfo_each_stmt_d( const duf_depthinfo_t * pdi, int d );
+duf_stmnt_t *duf_levinfo_each_stmt( const duf_depthinfo_t * pdi );
+duf_stmnt_t *duf_levinfo_each_stmt_up( const duf_depthinfo_t * pdi );
 
 unsigned long long duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_nodedirid( const duf_depthinfo_t * pdi );

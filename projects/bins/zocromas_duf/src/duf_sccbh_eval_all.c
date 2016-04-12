@@ -63,6 +63,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   unsigned allow_sub = /* DUF_ACTG_FLAG( allow_sub ) */ CRX( get_config_flag_act_allow_sub, );
   unsigned linear = CRX( pdi_linear, H_PDI );
 
+/* only sccbh_eval_db_subnodes needs pstmt_selector */
   duf_str_cb2_t passes[] = {
     [DUF_SCANSTAGE_FS_ITEMS] /*        */  = /*      */ allow_fs /*           */ ? F2ND( sccbh_eval_fs ) : NULL,
     [DUF_SCANSTAGE_NODE_BEFORE] /*     */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
@@ -153,6 +154,7 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_select
   assert( CRX( pdi_depth, H_PDI ) /* H_PDI->pathinfo.depth */  >= 0 );
   assert( sccbh );
 /* assert( pstmt_selector ); */
+  assert( pstmt_selector == duf_pdi_each_stmt( H_PDI, 1 ) );
 #ifdef MAS_TRACING
   unsigned long long diridpdi;
 

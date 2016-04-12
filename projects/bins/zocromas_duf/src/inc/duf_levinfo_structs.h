@@ -52,6 +52,7 @@ struct duf_levinfo_s
 /* duf_levinfo_context_t context; */
   duf_dirhandle_t lev_dh;
   int d;
+  duf_stmnt_t *each_pstmt;
 };
 
 #endif

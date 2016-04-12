@@ -13,20 +13,19 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo.h"                                             /* duf_levinfo_calc_depth; duf_levinfo_clear_level_d; etc. ✗ */
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
 
-#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_depth */
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 #include "duf_pdi_ref.h"
 
 #include "duf_sccb_structs.h"
-#include "duf_sccbh_eval_all.h"
+#include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_pstmt.h"
 
 /* #include "duf_pdi_structs.h" */
@@ -115,7 +114,10 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
   MAST_TRACE( scan, 6, "NODE %s", CRX( levinfo_path, H_PDI ) );
   {
   /*@ 1. go down + dbopenat */
+    assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
     CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt_arg, DUF_NODE_NODE /* node_type */  );
+    assert( QISERR_N( TOO_DEEP ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+
     MAST_TRACE( scan, 6, "(%s) NODE down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) >= 0 );
 

@@ -71,6 +71,7 @@ struct duf_depthinfo_s
   struct duf_modcnts_s cnts;
   struct duf_depthinfo_s *root_pdi;
   struct duf_depthinfo_s *next;
+  duf_stmnt_t *each_pstmt_linear;
 };
 
 #endif

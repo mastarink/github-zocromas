@@ -34,7 +34,8 @@
 /* ###################################################################### */
 
 static
-SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open )
+SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused  MAS_UNUSED, */ duf_scanstage_t scanstage,
+    unsigned to_open )
 {
 #if 0
   H_PDI->items.total++;
@@ -76,18 +77,18 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
   /* assert( !CRX( levinfo_deleted, H_PDI ) ); */
     ERRLOWER( FS_DISABLED );
     {
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
+      CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner, DUF_NODE_LEAF );
 
       assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
     }
     ERRUPPER( FS_DISABLED );
   }
   H_SCCBI = 0;
-  ER( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open );
+  ER( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused , */ duf_scanstage_t scanstage, unsigned to_open );
 }
 
 static
-SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
 {
   for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
   {
@@ -121,7 +122,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * 
         }
 
         ERRLOWER( FS_DISABLED );
-        CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_LEAF );
+        CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner_set->fun, DUF_NODE_LEAF );
         ERRUPPER( FS_DISABLED );
       }
     /* QT( "@b %d", n ); */
@@ -129,7 +130,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * 
     }
   }
   H_SCCBI = 0;
-  ER( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, unsigned to_open );
+  ER( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
 
 /* 20151027.144543 */
@@ -138,11 +139,12 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * 
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
  *
- *  - pstmt_arg - for 1 leaf data, obtained from db
+ *  - pstmt_x - for 1 leaf data, obtained from db
  *  - pdi
  *  - sccb
  * */
-SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+
+SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
 #if 0
 # if 0
@@ -176,7 +178,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
     {
       ERRLOWER( FS_DISABLED );
 
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
+      CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner, DUF_NODE_LEAF );
 
       assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
       ERRUPPER( FS_DISABLED );
@@ -184,9 +186,9 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
   }
   H_SCCBI = 0;
 #else
-  CR( sccbh_eval_db_leaf_qfd, sccbh, pstmt_arg, scanstage, 1 );
+  CR( sccbh_eval_db_leaf_qfd, sccbh, /* pstmt_unused, */ scanstage, 1 );
 #endif
-  ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused, duf_scanstage_t scanstage );
 }
 
 /*20150820.085324
@@ -194,11 +196,11 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t 
  *
  * duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *
- *  - pstmt_arg - for 1 leaf data, obtained from db
+ *  - pstmt_x - for 1 leaf data, obtained from db
  *  - pdi
  *  - sccb
  * */
-SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
 #if 0
 # if 0
@@ -213,20 +215,20 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * p
     {
       ERRLOWER( FS_DISABLED );
 
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_LEAF );
+      CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner, DUF_NODE_LEAF );
 
       ERRUPPER( FS_DISABLED );
     }
   }
   H_SCCBI = 0;
 #else
-  CR( sccbh_eval_db_leaf_qfd, sccbh, pstmt_arg, scanstage, 0 );
+  CR( sccbh_eval_db_leaf_qfd, sccbh, /* pstmt_unused, */ scanstage, 0 );
 #endif
-  ER( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused, duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
-  CR( sccbh_eval_db_leaf_qfd_new, sccbh, pstmt_arg, scanstage );
-  ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused, duf_scanstage_t scanstage );
 }

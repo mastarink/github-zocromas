@@ -159,12 +159,12 @@ enum duf_scanner_set_flags_e
 
 struct duf_scanner_set_s
 {
-  /* unsigned disabled:1;     */
-  /* unsigned to_open:1;      */
-  /* unsigned dirent:1;       */
-  /* unsigned db:1;           */
-  /* unsigned deleted:1;      */
-  /* unsigned deleted_only:1; */
+/* unsigned disabled:1;     */
+/* unsigned to_open:1;      */
+/* unsigned dirent:1;       */
+/* unsigned db:1;           */
+/* unsigned deleted:1;      */
+/* unsigned deleted_only:1; */
   unsigned long long flags;
   duf_node_type_t type;
   duf_scanstage_t scanstage;

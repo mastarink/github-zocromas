@@ -207,12 +207,18 @@ duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
 #endif
 /************************************************************************/
 
-
 /* *INDENT-OFF*  */
 DUF_LEVINFO_3SET( unsigned long long, dirid, db.dirid )
 DUF_LEVINFO_3GET( unsigned long long, dirid, db.dirid )
 DUF_LEVINFO_3GET( unsigned long long, nameid, db.nameid )
 /* *INDENT-ON*  */
+/************************************************************************/
+
+/* *INDENT-OFF*  */
+DUF_LEVINFO_3SET( duf_stmnt_t *, each_stmt, each_pstmt )
+DUF_LEVINFO_3GET( duf_stmnt_t *, each_stmt, each_pstmt )
+/* *INDENT-ON*  */
+
 
 /************************************************************************/
 

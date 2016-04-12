@@ -96,7 +96,7 @@ SRX( LI, char *, path, NULL, li_path, const duf_levinfo_t * pli, int count )
 }
 
 static void
-li_dbinit( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
+li_dbinit_i( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
 {
   assert( pli );
   pli->db.dirid = DUF_GET_QUFIELD3( pstmt_arg, dirid );
@@ -135,7 +135,7 @@ SRN( LI, void, li_dbinit, duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node
 {
   pli->d = d;
   pli->node_type = node_type;
-  li_dbinit( pli, pstmt_arg );
+  li_dbinit_i( pli, pstmt_arg );
   ERN( LI, void, li_dbinit, duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
 }
 
@@ -153,7 +153,7 @@ SR( LI, dirid2li_sql_existed, duf_depthinfo_t * pditemp, const char *sqlv, unsig
     {
       MAST_TRACE( select, 0, "<selected> %s", sqlv );
 
-      duf_li_dbinit( pli, pstmt_local, DUF_NODE_NODE, -2 );
+      CRX( li_dbinit, pli, pstmt_local, DUF_NODE_NODE, -2 );
       if ( pparentid )
         *pparentid = DUF_GET_QUFIELD3( pstmt_local, parentid );
     }

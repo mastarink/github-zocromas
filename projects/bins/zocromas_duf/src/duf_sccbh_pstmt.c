@@ -22,6 +22,7 @@
 #include "duf_sccb_structs.h"
 
 #include "duf_pdi_structs.h"
+#include "duf_pdi_ref.h"
 #include "duf_pathinfo_structs.h"
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
@@ -48,7 +49,9 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
   MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_QUFIELD3( pstmt_arg, dirid ) );
   MAST_TRACE( explain, 20, "@ sel cb2 node" );
 
+  assert( duf_pdi_linear( H_PDI ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
   CR( levinfo_godown_dbopenat_dh, H_PDI, node_type, pstmt_arg );
+  assert( QISERR_N( TOO_DEEP ) || duf_pdi_linear( H_PDI ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
 
   assert( QISERR || DUF_GET_QUFIELD3( pstmt_arg, dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */
 /* QT( "@@%s", sqlite3_sql( pstmt_arg ) ); */

@@ -165,7 +165,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
 }
 
 /*20150820.085607
- *  - pstmt_arg - for 1 node data, obtained from db
+ *  - pstmt_x - for 1 node data, obtained from db
  *  - pdi
  *  - sccb
  *  */
@@ -199,6 +199,7 @@ CRX( sccbh_eval_db_leaves, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused
   }
 }
 #endif
+/* duf_str_cb2_t, but really doesn't need pstmt_arg */
 SR( SCCBH, sccbh_eval_db_leaves_nofd, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
 /* scan this files in this directory */

@@ -2,6 +2,7 @@
 # define MAS_DUF_PDI_REF_H
 
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
 duf_depthinfo_t *duf_pdi_root( duf_depthinfo_t * pdi );
 
@@ -20,5 +21,8 @@ unsigned long long duf_pdi_seq_leaf( const duf_depthinfo_t * pdi );
 void duf_pdi_seq_leaf_plus( duf_depthinfo_t * pdi );
 unsigned long long duf_pdi_seq_node( const duf_depthinfo_t * pdi );
 void duf_pdi_seq_node_plus( duf_depthinfo_t * pdi );
+
+void duf_pdi_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg );
+duf_stmnt_t *duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up );
 
 #endif

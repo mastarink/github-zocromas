@@ -24,11 +24,13 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
+#include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
 
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_structs.h"
 
 /* ###################################################################### */
@@ -210,11 +212,11 @@ SRX( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row
 /* duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ) */
 SRX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name )
 {
-  /* unsigned long long n = 0; */
+/* unsigned long long n = 0; */
 
   n = sccbh ? CRX( datarow_get_number, sccbh->rows, name ) : 0;
-  /* return n; */
-ERX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
+/* return n; */
+  ERX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
 }
 
 /* const char *                                                            */
@@ -247,8 +249,8 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
         path = CRX( pi_path, &trow->pathinfo );
         rpath = CRX( pi_relpath, &trow->pathinfo );
         iname = CRX( pi_itemname, &trow->pathinfo );
-        MAST_TRACE(temp,5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-        MAST_TRACE(temp,5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+        MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+        MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
         n++;
       }
     }
@@ -263,6 +265,15 @@ SRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
 {
   if ( sccbh )
   {
+    if ( !duf_pdi_linear( H_PDI ) )
+    {
+      duf_stmnt_t *ps MAS_UNUSED;
+      duf_stmnt_t *psu MAS_UNUSED;
+
+      ps = duf_pdi_each_stmt( H_PDI, 0 );
+      psu = duf_pdi_each_stmt( H_PDI, 1 );
+      assert( pstmt_arg == ps || pstmt_arg == psu );
+    }
     assert( !sccbh->new_row );
     sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) );
   }
@@ -284,6 +295,15 @@ SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
 
 SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
+  if ( !duf_pdi_linear( H_PDI ) )
+  {
+    duf_stmnt_t *ps MAS_UNUSED;
+    duf_stmnt_t *psu MAS_UNUSED;
+
+    ps = duf_pdi_each_stmt( H_PDI, 0 );
+    psu = duf_pdi_each_stmt( H_PDI, 1 );
+    assert( pstmt_arg == ps || pstmt_arg == psu );
+  }
   CRX( sccbh_row_open, sccbh, pstmt_arg );
   CRX( sccbh_row_close, sccbh );
 

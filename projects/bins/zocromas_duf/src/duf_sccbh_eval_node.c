@@ -51,9 +51,10 @@
 /* ###################################################################### */
 
 /* 20151027.144606 */
-SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused MAS_UNUSED, duf_scanstage_t scanstage )
 {
   MAST_TRACE( scan, 4, "? scan node [%s] by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
+  assert( pstmt_unused == duf_pdi_each_stmt( H_PDI, 1 ) );
 /* if ( DUF_ACTG_FLAG( allow_dirs ) ) */
   {
     duf_scanner_fun_t scanner = NULL;
@@ -68,7 +69,7 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_ar
     if ( scanner )
     {
       MAST_TRACE( scan, 4, "scan node %s by %5llu", CRX( scanstage_name, scanstage ), CRX( levinfo_dirid, H_PDI ) );
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner, DUF_NODE_NODE );
+      CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner, DUF_NODE_NODE );
     }
     else
     {
@@ -76,10 +77,11 @@ SR( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_ar
                   CRX( levinfo_dirid, H_PDI ), CRX( scanstage_name, scanstage ), CRX( uni_scan_action_title, H_SCCB ) );
     }
   }
-  ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_unused, duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
+static
+SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
 {
   int n = 0;
 
@@ -90,18 +92,20 @@ SR( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_
          && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
          && ( ( scanner_set->type & DUF_NODE_NODE ) || scanner_set->type == DUF_NODE_NONE ) )
     {
-      CR( sccbh_call_scanner, sccbh, pstmt_arg, scanstage, scanner_set->fun, DUF_NODE_NODE );
+      CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner_set->fun, DUF_NODE_NODE );
     }
     n++;
   }
 
-  ER( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_node_scanner_set, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
 
+/* duf_str_cb2_t, but really doesn't need pstmt_arg */
 SR( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage )
 {
-  CR( sccbh_eval_db_node, sccbh, pstmt_arg, scanstage );
-  CR( sccbh_eval_db_node_scanner_set, sccbh, pstmt_arg, scanstage );
+  assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+  CR( sccbh_eval_db_node, sccbh, pstmt_arg, scanstage );             /* really doesn't need pstmt_arg */
+  CR( sccbh_eval_db_node_scanner_set, sccbh, /* pstmt_arg, */ scanstage );
   ER( SCCBH, sccbh_eval_db_node_new, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage );
 }
 
@@ -112,6 +116,8 @@ SR( SCCBH, sccbh_eval_db_subnodes, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstm
 
   assert( sccbh );
   assert( H_SCCB );
+
+  assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
 
   MAST_TRACE( sql, 0, "@@@EACH SUB %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt_arg ) );
   MAST_TRACE( scan, 4, "scan dirent by %5llu:%s; %s", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), CRX( levinfo_path, H_PDI ) );

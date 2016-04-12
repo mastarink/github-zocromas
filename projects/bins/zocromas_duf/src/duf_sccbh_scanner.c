@@ -110,7 +110,7 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
 
   /* duf_sccb_data_row_t *new_row = NULL; */
 
-  /* sccbh->new_row = CRX( datarow_create, pstmt_arg, CRX( pdi_pathinfo, H_PDI ) ); */
+  /* sccbh->new_row = CRX( datarow_create, pstmt_x, CRX( pdi_pathinfo, H_PDI ) ); */
   /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
     if ( sccbh->rows && sccbh->rows->prev )
     {
@@ -139,26 +139,26 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
   /* }                                     */
   }
   assert( H_PDI == sccbh->pdi );
-/* CRV( ( scanner ), pstmt_arg, H_PDI, sccbh ); */
+/* CRV( ( scanner ), pstmt_x, H_PDI, sccbh ); */
 /* if ( sccbh->atom_cb )                                            (* atom is fs-direntry(dir or reg) or item(node or leaf) *) */
-/* sccbh->atom_cb( sccbh, pstmt_arg, scanstage, scanner, node_type, QERRIND ); */
+/* sccbh->atom_cb( sccbh, pstmt_x, scanstage, scanner, node_type, QERRIND ); */
 
   ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg MAS_UNUSED, duf_scanstage_t scanstage, duf_scanner_fun_t scanner,
-    duf_node_type_t node_type )
+SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage,
+    duf_scanner_fun_t scanner, duf_node_type_t node_type )
 {
   if ( scanner )
   {
     CRX( sccbh_preset_scanner, sccbh, node_type );
     assert( H_PDI == sccbh->pdi );
-    CRV( ( scanner ), /* pstmt_arg, */ H_PDI, sccbh );
+    CRV( ( scanner ), /* pstmt_unused, */ H_PDI, sccbh );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
-      sccbh->atom_cb( sccbh, /* pstmt_arg, */ scanstage, scanner, node_type, QERRIND );
+      sccbh->atom_cb( sccbh, /* pstmt_unused, */ scanstage, scanner, node_type, QERRIND );
     assert( sccbh->assert__current_node_type == node_type );
   }
 /* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, CRX(scanstage_name, scanstage ), CRX(uni_scan_action_title, H_SCCB ), QERRNAME ); */
-  ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_scanstage_t scanstage, duf_scanner_fun_t scanner,
+  ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage, duf_scanner_fun_t scanner,
       duf_node_type_t node_type );
 }

@@ -125,7 +125,10 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
   MAST_TRACE( scan, 9, "LEAF %s", CRX( levinfo_path, H_PDI ) );
   {
   /*@ 1. go down + dbopenat */
+    assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
     CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt_arg, DUF_NODE_LEAF /* node_type */  );
+    assert( QISERR_N( TOO_DEEP ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+
     MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) >= 0 );
     CRX( sccbh_row_next, sccbh, pstmt_arg );
