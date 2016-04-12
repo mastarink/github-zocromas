@@ -214,11 +214,32 @@ DUF_LEVINFO_3GET( unsigned long long, nameid, db.nameid )
 /* *INDENT-ON*  */
 /************************************************************************/
 
-/* *INDENT-OFF*  */
-DUF_LEVINFO_3SET( duf_stmnt_t *, each_stmt, each_pstmt )
-DUF_LEVINFO_3GET( duf_stmnt_t *, each_stmt, each_pstmt )
-/* *INDENT-ON*  */
+void
+duf_levinfo_set_each_stmt_d( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_val, int d )
+{
+  if ( d >= 0 )
+  {
+    duf_pi_set_each_stmt_d( duf_pdi_pathinfo_p( pdi ), pstmt_val, d );
+  }
+}
 
+duf_stmnt_t *
+duf_levinfo_each_stmt_d( const duf_depthinfo_t * pdi, int d )
+{
+  duf_stmnt_t *pstmt_val = NULL;
+
+  assert( pdi );
+  if ( d >= 0 )
+  {
+    pstmt_val = duf_pi_each_stmt_d( duf_pdi_pathinfo( pdi ), d );
+  }
+  return pstmt_val;
+}
+
+/* *INDENT-OFF*  */
+DUF_LEVINFO_2SET( duf_stmnt_t *, each_stmt )
+DUF_LEVINFO_2GET( duf_stmnt_t *, each_stmt )
+/* *INDENT-ON*  */
 
 /************************************************************************/
 
@@ -232,7 +253,7 @@ duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d )
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC( unsigned long long, nodedirid )
-DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
+DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )  
 /* *INDENT-ON*  */
 
 /************************************************************************/

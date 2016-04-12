@@ -9,6 +9,7 @@
 # include "duf_pathinfo_types.h"                                     /* duf_pathinfo_t ✗ */
 # include "duf_levinfo_dirhandle_types.h"                            /* duf_dirhandle_t ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
+# include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 
 duf_levinfo_t *duf_pi_ptr_d( const duf_pathinfo_t * pi, int d );
 duf_levinfo_t *duf_pi_ptr( const duf_pathinfo_t * pi );
@@ -26,6 +27,7 @@ const char *duf_pi_itemshowname_q( const duf_pathinfo_t * pi, const char *q );
 const char *duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d );
 const char *duf_pi_itemtruename( const duf_pathinfo_t * pi );
 const char *duf_pi_itemtruename_up( const duf_pathinfo_t * pi );
+
 /* const char *duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q ); */
 
 /*
@@ -181,6 +183,9 @@ duf_levinfo_t *duf_pi_li_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d );
 int duf_pi_deltadepth( const duf_pathinfo_t * pi );
 int duf_pi_deltadepth_up( const duf_pathinfo_t * pi );
+
+void duf_pi_set_each_stmt_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt_val, int d );
+duf_stmnt_t *duf_pi_each_stmt_d( const duf_pathinfo_t * pi, int d );
 
 const char *duf_pi_itemname( const duf_pathinfo_t * pi );
 

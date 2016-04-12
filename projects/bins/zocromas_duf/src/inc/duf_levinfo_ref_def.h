@@ -45,9 +45,21 @@
 	  return result; \
 	}
 
+#define DUF_LEVINFO_2GET_PLUS(_typ, _name, _ref1, _ref2 ) \
+  DUF_LEVINFO_FC_PLUS(    _typ, _name,              _ref1, _ref2 ) \
+  DUF_LEVINFO_FC_UP_PLUS( _typ, _name,              _ref1, _ref2 )
+
+#define DUF_LEVINFO_2SET_PLUS(_typ, _name, _ref1, _ref2 ) \
+  DUF_LEVINFO_FS_PLUS( _typ, _name, _ref1, _ref2 ) \
+  DUF_LEVINFO_FS_UP_PLUS( _typ, _name, _ref1, _ref2 )
+
+
 # define DUF_LEVINFO_FC(_typ, _name) DUF_LEVINFO_FC_PLUS(_typ, _name, , )
 # define DUF_LEVINFO_FC_UP(_typ, _name) DUF_LEVINFO_FC_UP_PLUS(_typ, _name, , )
 # define DUF_LEVINFO_FC_TOP(_typ, _name) DUF_LEVINFO_FC_TOP_PLUS(_typ, _name, , )
+
+#define DUF_LEVINFO_2GET(_typ, _name) DUF_LEVINFO_2GET_PLUS(_typ, _name, , )
+#define DUF_LEVINFO_2SET(_typ, _name) DUF_LEVINFO_2SET_PLUS(_typ, _name, , )
 
 # define DUF_LEVINFO_FC_REF(_typ, _name) DUF_LEVINFO_FC_PLUS(_typ, _name, &, *)
 # define DUF_LEVINFO_FC_UP_REF(_typ, _name) DUF_LEVINFO_FC_UP_PLUS(_typ, _name, &, *)
@@ -99,14 +111,15 @@
     __val=(pli && (_cond)?(_ref1 pli->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   } \
-   \
-  DUF_LEVINFO_FC_PLUS( _typ, _name, _ref1, _ref2 ) \
-  DUF_LEVINFO_FC_UP_PLUS( _typ, _name, _ref1, _ref2 )
+  DUF_LEVINFO_2GET_PLUS(_typ, _name,              _ref1, _ref2)
+  /* DUF_LEVINFO_FC_PLUS( _typ, _name, _ref1, _ref2 ) \  */
+  /* DUF_LEVINFO_FC_UP_PLUS( _typ, _name, _ref1, _ref2 ) */
 
 # define DUF_LEVINFO_3GET_PLUS(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   DUF_LEVINFO_FC_D_PLUS(  _typ, _name, _fld, _cond, _ref1, _ref2, _suffix ) \
-  DUF_LEVINFO_FC_PLUS(    _typ, _name,              _ref1, _ref2 ) \
-  DUF_LEVINFO_FC_UP_PLUS( _typ, _name,              _ref1, _ref2 )
+  DUF_LEVINFO_2GET_PLUS(_typ, _name,              _ref1, _ref2)
+ /* DUF_LEVINFO_FC_PLUS(    _typ, _name,              _ref1, _ref2 ) */
+ /* DUF_LEVINFO_FC_UP_PLUS( _typ, _name,              _ref1, _ref2 ) */
 
 # define DUF_LEVINFO_4GET_PLUS(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   DUF_LEVINFO_3GET_PLUS( _typ, _name, _fld, _cond, _ref1, _ref2, _suffix ) \

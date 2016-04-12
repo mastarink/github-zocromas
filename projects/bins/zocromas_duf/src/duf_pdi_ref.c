@@ -8,7 +8,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
-#include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -38,10 +38,11 @@ duf_pdi_linear( const duf_depthinfo_t * pdi )
 {
   return pdi ? ( pdi->linear ? 1 : 0 ) : 0;
 }
+
 void
 duf_pdi_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
 {
-    if ( duf_pdi_linear( pdi ) )
+  if ( duf_pdi_linear( pdi ) )
   {
     pdi->each_pstmt_linear = pstmt_arg;
   }
@@ -52,7 +53,7 @@ duf_pdi_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
 }
 
 duf_stmnt_t *
-duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up  )
+duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up )
 {
   duf_stmnt_t *pstmt_val = NULL;
 
@@ -70,7 +71,6 @@ duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up  )
   }
   return pstmt_val;
 }
-
 
 void
 duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )

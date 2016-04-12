@@ -17,6 +17,7 @@
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 
+#include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 /* ###################################################################### */
@@ -27,6 +28,7 @@
 SRN( PDI, void, levinfo_dbinit_level_d, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d )
 {
   assert( pdi );
+  assert(  /* duf_pdi_linear( pdi ) || */ pstmt_arg == duf_pdi_each_stmt( pdi, 1 ) );
   CRX( pi_dbinit_level_d, CRX( pdi_pathinfo_p, pdi ) /* &pdi->pathinfo */ , pstmt_arg, node_type, d );
   ERN( PDI, void, levinfo_dbinit_level_d, duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg, duf_node_type_t node_type, int d );
 }

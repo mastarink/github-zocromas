@@ -18,7 +18,7 @@
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 
-#include "duf_sccb_scanstage.h"                                      /* duf_nodetype_name; duf_scanstage_name; duf_scanstage_scanner; ✗ */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 
 #include "duf_li_credel.h"
 #include "duf_li.h"
@@ -295,6 +295,25 @@ duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC( int, deltadepth )
 DUF_PATHINFO_FC_UP( int, deltadepth )
+/* *INDENT-ON*  */
+
+#if 0
+void
+duf_pi_set_each_stmt_d( duf_pathinfo_t * pi, duf_stmnt_t * pstmt_val, int d )
+{
+  if ( pi && d >= 0 )
+    pi->levinfo[d].each_pstmt = pstmt_val;
+}
+
+duf_stmnt_t *
+duf_pi_each_stmt_d( const duf_pathinfo_t * pi, int d )
+{
+  return pi && d >= 0 ? pi->levinfo[d].each_pstmt : NULL;
+}
+#endif
+/* *INDENT-OFF*  */
+DUF_PATHINFO_3SET( duf_stmnt_t *, each_stmt, each_pstmt)
+DUF_PATHINFO_3GET( duf_stmnt_t *, each_stmt, each_pstmt)
 /* *INDENT-ON*  */
 
 const char *

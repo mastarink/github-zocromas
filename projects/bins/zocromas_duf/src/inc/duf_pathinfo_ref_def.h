@@ -83,18 +83,18 @@
 	}
 
 # define DUF_PATHINFO_FS_PLUS(_typ, _name, _ref1, _ref2) \
-  	void duf_pathinfo_set_ ## _name( duf_pathinfo_t * pi, _typ setarg ) \
+  	void duf_pi_set_ ## _name( duf_pathinfo_t * pi, _typ setarg ) \
 	{ \
 	  assert( pi ); \
-	  duf_pathinfo_set_ ## _name ## _d( pi, setarg, pi->depth ); \
+	  duf_pi_set_ ## _name ## _d( pi, setarg, pi->depth ); \
 	}
 
 # define DUF_PATHINFO_FS_UP_PLUS(_typ, _name, _ref1, _ref2) \
-  	void duf_pathinfo_set_ ## _name ## _up( duf_pathinfo_t * pi, _typ setarg ) \
+  	void duf_pi_set_ ## _name ## _up( duf_pathinfo_t * pi, _typ setarg ) \
 	{ \
 	  assert( pi ); \
 	  if ( pi->depth > 0 ) \
-	    duf_pathinfo_set_ ## _name ## _d( pi, setarg, pi->depth - 1 ); \
+	    duf_pi_set_ ## _name ## _d( pi, setarg, pi->depth - 1 ); \
 	}
 
 # define DUF_PATHINFO_FS(_typ, _name) DUF_PATHINFO_FS_PLUS(_typ, _name, , )
@@ -136,7 +136,7 @@
 
 # define DUF_PATHINFO_3SET_PLUS(_typ, _name, _fld, _ref1, _ref2, _suffix) \
   void \
-  duf_pathinfo_set_ ## _name ## _d( duf_pathinfo_t * pi, _typ __newval, int d ) \
+  duf_pi_set_ ## _name ## _d( duf_pathinfo_t * pi, _typ __newval, int d ) \
   { \
     duf_pi_ptr_d( pi, d )->_fld = __newval _suffix; \
   } \
@@ -149,7 +149,7 @@
 
 # define DUF_PATHINFO_ST_TYP_FLD_NAME(_typ, _fld, _name) \
   _typ ## _t \
-  duf_pathinfo_stat_ ## _name( const duf_pathinfo_t * pi ) \
+  duf_pi_stat_ ## _name( const duf_pathinfo_t * pi ) \
   { \
    struct stat *st; \
   \
@@ -164,7 +164,7 @@
 
 # define DUF_PATHINFO_DBST_TYP_FLD_NAME(_typ, _fld, _name) \
   _typ ## _t \
-  duf_pathinfo_dbstat_ ## _name( const duf_pathinfo_t * pi ) \
+  duf_pi_dbstat_ ## _name( const duf_pathinfo_t * pi ) \
   { \
    struct stat *st; \
   \
