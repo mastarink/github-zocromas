@@ -7,10 +7,6 @@
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-DRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
-DRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh );
-DRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
-
 /* duf_sccb_data_row_t *duf_datarow_create( duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi ); */
 DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED );
 

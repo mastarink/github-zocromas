@@ -143,6 +143,7 @@ noinst_HEADERS=motest_config.h \
 	duf_sccb_row.h \
 	duf_sccb_row_field_defs.h \
 	duf_sccbh_ref.h \
+	duf_sccbh_row.h \
 	duf_sccbh_pstmt.h \
 	duf_sccbh_eval_all.h  \
 	duf_sccbh_eval_fs.h \

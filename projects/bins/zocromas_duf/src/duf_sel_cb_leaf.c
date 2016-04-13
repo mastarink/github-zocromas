@@ -25,7 +25,7 @@
 
 #include "duf_sccb_def.h"                                            /* DUF_SCCB_PDI */
 #include "duf_sccb.h"                                                /* duf_uni_scan_action_title, contained at DUF_SCCB_PDI */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 #include "duf_sccbh_eval.h"                                          /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
@@ -33,6 +33,7 @@
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_pstmt.h"
 
 #include "duf_sccb_structs.h"
