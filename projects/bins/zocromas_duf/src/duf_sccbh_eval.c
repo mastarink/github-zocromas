@@ -90,7 +90,7 @@ SR( SCCBH, sccbh_eval_all_and_summary, duf_sccb_handle_t * sccbh, bool f_summary
     MAST_TRACE( sccbh, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan %s", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
 
     {
-      H_HCHANGES = 0;
+      H_HCHANGES_CLEAR;
       if ( CRX( levinfo_path, H_PDI ) )
       {
         CR( sccbh_eval_all_and_summary_i, sccbh, f_summary );

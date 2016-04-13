@@ -23,6 +23,7 @@
 #include "duf_pdi_ref.h"
 
 #include "duf_sccb_structs.h"
+#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 
 #include "duf_sccbh_ref.h"

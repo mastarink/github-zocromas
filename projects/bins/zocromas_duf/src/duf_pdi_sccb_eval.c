@@ -20,6 +20,8 @@
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
 
+#include "duf_sccbh_ref.h"
+
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccbh_shortcuts.h"

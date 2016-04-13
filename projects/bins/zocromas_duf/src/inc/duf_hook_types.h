@@ -4,7 +4,8 @@
 # include <mastar/tools/mas_argvc_types.h>                           /* mas_argvc_t; mas_cargvc_t; ▤ */
 
 /* # include "duf_record_types.h" */
-# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
+# include "duf_sccbh_types.h"                                        /* duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t ✗ */
 /* # include "duf_pdi_types.h"                                          (* duf_depthinfo_t ✗ *) */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t ✗ */
 # include "duf_scan_types.h"                                         /* duf_node_type_t; duf_scanstage_t ✗ */
@@ -17,7 +18,6 @@ typedef int ( *duf_anyhook_t ) ( void );
 
 /* typedef int ( *duf_str_cb2_t ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_x, duf_scanstage_t scanstage ); */
 typedef int ( *duf_str_cb2s_t ) ( duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
-
 
 /* KNOWN duf_sel_cb_t callbacks:
  * duf_sel_cb_field_by_sccb	: str_cb_unused	, str_cb_udata_unused, pdi_unused

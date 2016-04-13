@@ -71,6 +71,9 @@ tab sfind duf_mod_types.h
 tab sfind duf_sccb_types.h
 sfind duf_sccb_structs.h
 
+tab sfind duf_sccbh_types.h
+sfind duf_sccbh_structs.h
+
 " tab sfind duf_record_types.h
 
 " tab sfind duf_flags_types.h

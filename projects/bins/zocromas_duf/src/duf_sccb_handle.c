@@ -55,6 +55,7 @@
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_structs.h"
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_row.h" 
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
@@ -470,9 +471,9 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     {
       if ( !H_SCCB->no_count )
       {
-        H_TOTITEMS = CRX( count_total_items, sccbh, QPERRIND );      /* reference */
+        H_TOTITEMSv = CRX( count_total_items, sccbh, QPERRIND );      /* reference */
         if ( QNOERR )
-          H_TOTCOUNTED = 1;
+          H_TOTCOUNTED_SET;
       }
     /* T( "H_TOTCOUNTED:%d; H_TOTITEMS:%llu for %s", H_TOTCOUNTED, H_TOTITEMS, CRX(uni_scan_action_title, H_SCCB ) ); */
       MAST_TRACE( temporary, 0, "counted for %s... %lld", H_SCCB->title, H_TOTITEMS );
@@ -538,11 +539,11 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
 
     CRX( datarow_list_delete_f, sccbh->rows, 0 );
     sccbh->rows = NULL;
-    for ( H_SCCBI = 0; H_SCCB; H_SCCBI++ )
+    for ( H_SCCBIv = 0; H_SCCB; H_SCCBIv++ )
     {
       CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );
     }
-    H_SCCBI = 0;
+    H_SCCBIv = 0;
 
     if ( H_PDICLONED )
       CRX( pdi_delete, H_PDI );

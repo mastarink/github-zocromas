@@ -16,28 +16,21 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-#include "duf_config_output_util.h"
-
-#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
-#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
 #include "duf_sccb_structs.h"
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
-/*                                                                                                                                                            */
-/* #include "duf_pathinfo_credel.h"                                     (* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ *) */
+
 #include "duf_pathinfo_ref.h"
 
-/* #include "duf_levinfo_ref.h"                                         (* duf_levinfo_*; etc. ✗ *) */
-/* #include "duf_levinfo_structs.h" */
-
-#include "duf_sccb_row.h"
 /* ###################################################################### */
-#include "duf_sccbh_row.h"
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 /* ###################################################################### */
 
 #if 1
