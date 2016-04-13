@@ -32,6 +32,7 @@
 #include "duf_sccbh_eval_node.h"
 #include "duf_sccbh_eval_fs.h"
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_pdi_structs.h"                                         /* H_PDI->items */

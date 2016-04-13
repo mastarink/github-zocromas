@@ -41,6 +41,7 @@
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_sql_set.h"
 /* #include "duf_sccbh_eval_fs.h" */
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 #include "duf_sccbh_scanner.h"

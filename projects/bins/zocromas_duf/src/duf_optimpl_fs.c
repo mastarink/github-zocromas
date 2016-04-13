@@ -90,7 +90,7 @@ SR( SNIPPET_OPTION, optimpl_fs_each, const char *arg, muc_errc_psvv_func_t fun, 
   if ( c > 0 )
     for ( int i = 0; i < targ.argc; i++ )
     {
-      CRV( ( fun ), targ.argv[i], pv );
+      IF_CRV( ( fun ), targ.argv[i], pv );
     }
   mas_del_argvc( &targ, 0 );
 /* DUF_ENDR( r ); */
@@ -404,7 +404,7 @@ SR( SNIPPET_OPTION, optimpl_O_fs_ls, const char *arg )
   long v = 0;
 
 /* T( "ls %s", arg ); */
-  CR( optimpl_fs_each, arg, duf_optimpl_O_fs_ls_file, ( const void * ) v );
+  CR( optimpl_fs_each, arg, F2ND(optimpl_O_fs_ls_file), ( const void * ) v );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, optimpl_O_fs_ls, const char *arg );
 }
@@ -413,7 +413,7 @@ SR( SNIPPET_OPTION, optimpl_O_fs_rm, const char *arg, long v )
 {
 /* DUF_STARTR( r ); */
 /* T( "rm %s", arg ); */
-  CR( optimpl_fs_each, arg, duf_optimpl_O_fs_rmfile, ( const void * ) v );
+  CR( optimpl_fs_each, arg, F2ND(optimpl_O_fs_rmfile), ( const void * ) v );
 /* DUF_ENDR( r ); */
   ER( SNIPPET_OPTION, optimpl_O_fs_rm, const char *arg, long v );
 }

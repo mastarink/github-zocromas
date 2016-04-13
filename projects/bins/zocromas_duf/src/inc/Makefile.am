@@ -133,7 +133,6 @@ noinst_HEADERS=motest_config.h \
 	duf_print.h \
 	duf_output_defs.h \
 	duf_printn_defs.h \
-	duf_sccbh_pstmt.h \
 	duf_scan_types.h \
 	duf_sccb_begfin.h \
 	duf_sccb_def.h \
@@ -143,6 +142,8 @@ noinst_HEADERS=motest_config.h \
 	duf_sccb_handle.h \
 	duf_sccb_row.h \
 	duf_sccb_row_field_defs.h \
+	duf_sccbh_ref.h \
+	duf_sccbh_pstmt.h \
 	duf_sccbh_eval_all.h  \
 	duf_sccbh_eval_fs.h \
 	duf_sccbh_eval.h \
@@ -185,6 +186,7 @@ noinst_HEADERS=motest_config.h \
 	duf_ufilter.h \
 	duf_ufilter_ref.h \
 	duf_ufilter_types.h \
+	duf_ufilter_structs.h \
 	duf_utils.h \
 	duf_xtended_table.h \
 	sql_beginning_common.h \

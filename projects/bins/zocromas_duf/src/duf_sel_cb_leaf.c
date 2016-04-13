@@ -31,6 +31,7 @@
 #include "duf_sccbh_eval.h"                                          /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 #include "duf_sccbh_scanner.h"
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_pstmt.h"
 
@@ -40,6 +41,8 @@
 #include "duf_levinfo_credel.h"                                      /* duf_levinfo_create; duf_levinfo_delete ✗ */
 #include "duf_li_credel.h"
 
+#include "duf_fmt_defs.h"
+
 /* ###################################################################### */
 #include "duf_sel_cb_leaf.h"
 /* ###################################################################### */
@@ -47,9 +50,8 @@
 /* 20151027.114003 */
 /* DUF_WRAPSTATIC */
 static
-SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg MAS_UNUSED, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
+SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg MAS_UNUSED, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
-/* DUF_STARTR( r ); */
   if ( str_cb2 )
   {
     MAST_TRACE( explain, 20, "=> str cb2" );
@@ -94,8 +96,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg M
     if ( sccbh->progress_leaf_cb )
       ( sccbh->progress_leaf_cb ) ( sccbh );
   }
-/* DUF_ENDR( r ); */
-  ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
+  ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
 /* duf_sel_cb_leaves:
@@ -113,7 +114,6 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg M
 /* 20150820.085847 */
 SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
-/* DUF_STARTR( r ); */
   assert( H_PDI );
   assert( CRX( pdi_depth, H_PDI ) >= 0 );
   assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
@@ -132,9 +132,10 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     {
       MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
       assert( CRX( pdi_depth, H_PDI ) >= 0 );
-      CRX( sccbh_row_next, sccbh, pstmt_arg );
 
-      CR( sel_cb2_leaf_at, sccbh, pstmt_arg, str_cb2, scanstage );
+      CRX( sccbh_row_next, sccbh, pstmt_arg );
+      CR( sel_cb2_leaf_at, sccbh, /* pstmt_arg, */ str_cb2, scanstage );
+
       assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
       CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage );
@@ -143,6 +144,6 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     }
   }
   MAST_TRACE( scan, 9, "/LEAF %s", CRX( levinfo_path, H_PDI ) );
-/* DUF_ENDR( r ); */
+
   ER( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }

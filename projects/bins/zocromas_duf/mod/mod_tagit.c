@@ -17,6 +17,7 @@
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
 #include "duf_sccb_structs.h"
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */

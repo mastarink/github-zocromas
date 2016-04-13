@@ -1,5 +1,7 @@
 #include <stddef.h>
 
+#include "duf_ufilter_structs.h"
+
 #include "duf_optimpl_class.h"
 
 #include "duf_config_structs.h"
@@ -9,6 +11,9 @@
 #include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
 
 #include "duf_mod_types.h"
+
+
+#include "duf_ufilter_structs.h"
 
 /*
 At duf_xtended_table.c:

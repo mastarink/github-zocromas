@@ -25,6 +25,7 @@
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 /* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_scanner.h"
 

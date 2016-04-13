@@ -19,6 +19,7 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
+#include "duf_ufilter_structs.h"
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_ref.h"

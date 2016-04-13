@@ -56,7 +56,11 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_eval.h"
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
+/* #include "duf_ufilter_structs.h" */
+#include "duf_ufilter_ref.h"
 
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
@@ -187,17 +191,19 @@ SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_sql_set_f, duf_sccb_handle_t
   switch ( node_type )
   {
   case DUF_NODE_LEAF:
-    set_pair = CRX( sccbh_get_leaf_sql_set, sccbh, H_PU->std_leaf_set_num, H_PU->std_leaf_set_name );
+    set_pair = CRX( sccbh_get_leaf_sql_set, sccbh, CRX( ufilter_std_leaf_set_num, H_PU ) /* H_PU->std_leaf_set_num */ ,
+                    CRX( ufilter_std_leaf_set_name, H_PU ) /* H_PU->std_leaf_set_name */  );
     break;
   case DUF_NODE_NODE:
-    set_pair = CRX( sccbh_get_node_sql_set, sccbh, H_PU->std_node_set_num, H_PU->std_node_set_name );
+    set_pair = CRX( sccbh_get_node_sql_set, sccbh, CRX( ufilter_std_leaf_set_num, H_PU ) /* H_PU->std_leaf_set_num */ ,
+                    CRX( ufilter_std_leaf_set_name, H_PU ) /* H_PU->std_leaf_set_name */  );
     break;
   case DUF_NODE_NONE:
     break;
   default:
     break;
   }
-  set_pair.orderid = H_PU->orderid;
+  set_pair.orderid = CRX( ufilter_orderid, H_PU ) /* H_PU->orderid */ ;
   assert( !set_pair.active || set_pair.active->type == node_type );
   assert( !set_pair.second || set_pair.second->type == node_type );
 /* return set_pair; */
@@ -444,11 +450,11 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     H_PU = pu;
 #endif
 #if 1
-    H_PDI = CRX( pdi_clone, pdi, 0 /* no_li */  );
+    H_PDI_SET( CRX( pdi_clone, pdi, 0 /* no_li */  ) );
     assert( H_PDI->pathinfo.levinfo );
     H_PDICLONED = 1;
 #else
-    H_PDI = pdi;
+    H_PDI_SET( pdi);
 #endif
     H_PDI->total_bytes = 0;
     H_PDI->total_files = 0;

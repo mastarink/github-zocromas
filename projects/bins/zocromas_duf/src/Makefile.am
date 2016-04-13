@@ -113,13 +113,14 @@ zocromas_duf_SOURCES= \
 	duf_pdi_sccb_eval.c \
 	duf_pdi_stmt.c \
 	duf_print.c \
-	duf_sccbh_pstmt.c \
 	duf_sccb_begfin.c \
 	duf_sccb.c \
 	duf_sccb_eval.c \
 	duf_sccb_eval_std.c \
 	duf_sccb_handle.c \
 	duf_sccb_row.c \
+	duf_sccbh_ref.c \
+	duf_sccbh_pstmt.c \
 	duf_sccbh_eval_all.c \
 	duf_sccbh_eval.c \
 	duf_sccbh_scanner.c \

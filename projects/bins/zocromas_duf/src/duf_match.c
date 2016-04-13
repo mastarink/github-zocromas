@@ -2,13 +2,13 @@
 #include <assert.h>
 #include <fnmatch.h>
 
+#include "duf_ufilter_structs.h"
+
 /* #include <mastar/types/mas_common_types.h> */
 
 /* ###################################################################### */
 #include "duf_match.h"
 /* ###################################################################### */
-
-
 
 int
 duf_filename_match( duf_filter_globx_t * globx, const char *filename )
@@ -24,13 +24,13 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
       char *const *argv = globx->include_fs_files.argv;
 
       rx = 0;
-      /* DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename ); */
+    /* DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )
       {
         if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
         {
           rx = 1;
-          /* DUF_TRACE_C( cfg, match, 1, "INCLUDE %s : %s", argv[ia], filename ); */
+        /* DUF_TRACE_C( cfg, match, 1, "INCLUDE %s : %s", argv[ia], filename ); */
         }
       }
     }
@@ -39,18 +39,18 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
       int argc = globx->exclude_fs_files.argc;
       char *const *argv = globx->exclude_fs_files.argv;
 
-      /* DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename ); */
+    /* DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )
       {
         if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
         {
           rx = 0;
-          /* DUF_TRACE_C( cfg, match, 1, "EXCLUDE %s : %s", argv[ia], filename ); */
+        /* DUF_TRACE_C( cfg, match, 1, "EXCLUDE %s : %s", argv[ia], filename ); */
         }
       }
     }
   }
-  /* DUF_TRACE_C( cfg, match, 2, "MATCH %s %s", filename, rx ? "OK" : "FAIL" ); */
+/* DUF_TRACE_C( cfg, match, 2, "MATCH %s %s", filename, rx ? "OK" : "FAIL" ); */
   return rx;
 }
 

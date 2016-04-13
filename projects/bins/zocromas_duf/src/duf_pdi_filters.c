@@ -12,6 +12,7 @@
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
+#include "duf_ufilter_structs.h"
 #include "duf_ufilter_ref.h"
 
 #include "duf_pdi_structs.h"
@@ -31,6 +32,12 @@ const duf_yfilter_t *
 duf_pdi_py( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->pyp : NULL;
+}
+
+SRX( PDI, const char *, pack_field, NULL, pdi_pack_field, const duf_depthinfo_t * pdi )
+{
+  pack_field = duf_pdi_pu( pdi )->pack_field;
+  ERX( PDI, const char *, pack_field, NULL, pdi_pack_field, const duf_depthinfo_t * pdi );
 }
 
 /* 20151114.124337 */

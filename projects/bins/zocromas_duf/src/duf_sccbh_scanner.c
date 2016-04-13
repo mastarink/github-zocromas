@@ -14,21 +14,22 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-/* #include "duf_levinfo_openclose.h" */
-/* #include "duf_levinfo_stat.h" */
 
 #include "duf_pdi_structs.h"
+#include "duf_pdi_filters.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
 /* #include "duf_sccb_scanstage.h"                                      (* duf_scanstage_name; duf_scanstage_scanner; ✗ *) */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
+#include "duf_ufilter_structs.h"
 
 /* #include "duf_sccbh_eval.h" */
 /* ###################################################################### */
@@ -116,9 +117,11 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
     {
       unsigned long long sha1id0;
       unsigned long long sha1id1;
+      const char *pack_field;
 
-      sha1id0 = CRX( datarow_get_number, sccbh->rows, "sha1id" );
-      sha1id1 = CRX( datarow_get_number, sccbh->rows->prev, "sha1id" );
+      pack_field = CRX( pdi_pack_field, H_PDI );
+      sha1id0 = CRP( datarow_get_number, sccbh->rows, pack_field /* "sha1id" */  );
+      sha1id1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field /* "sha1id" */  );
     /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, sccbh->new_row->pathinfo.levinfo[17].node_type ); */
       eq = ( sha1id0 == sha1id1 );
       {
@@ -138,7 +141,6 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
   /*   sccbh->new_row = NULL;              */
   /* }                                     */
   }
-  assert( H_PDI == sccbh->pdi );
 /* CRV( ( scanner ), pstmt_x, H_PDI, sccbh ); */
 /* if ( sccbh->atom_cb )                                            (* atom is fs-direntry(dir or reg) or item(node or leaf) *) */
 /* sccbh->atom_cb( sccbh, pstmt_x, scanstage, scanner, node_type, QERRIND ); */

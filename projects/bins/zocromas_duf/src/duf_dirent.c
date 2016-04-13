@@ -15,6 +15,8 @@
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 
+#include "duf_ufilter_structs.h"
+
 #include "duf_match.h"
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -30,7 +32,7 @@ duf_direntry_filter( const struct dirent *de )
 {
   int rx = 0;
 
-  /* DUF_START(  ); */
+/* DUF_START(  ); */
   switch ( de->d_type )
   {
   case DT_UNKNOWN:
@@ -73,6 +75,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-  /* DUF_END(  ); */
+/* DUF_END(  ); */
   return rx;
 }

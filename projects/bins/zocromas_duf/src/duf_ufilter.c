@@ -12,6 +12,7 @@
 /* #include <mastar/error/mas_error_defs_make.h> */
 /* #include <mastar/error/mas_error_defs.h> */
 
+#include "duf_ufilter_structs.h"
 /* ###################################################################### */
 #include "duf_ufilter.h"
 /* ###################################################################### */
@@ -34,6 +35,9 @@ duf_ufilter_delete( duf_ufilter_t * pu )
 /* Don't forget to update duf_ufilter_copy too */
   if ( pu )
   {
+    mas_free( pu->pack_field );                                      /* 20160413.121801 */
+    pu->pack_field = NULL;                                           /* 20160413.121801 */
+
     mas_free( pu->std_node_set_name );                               /* 20160212.130932 */
     pu->std_node_set_name = NULL;                                    /* 20160212.130932 */
 

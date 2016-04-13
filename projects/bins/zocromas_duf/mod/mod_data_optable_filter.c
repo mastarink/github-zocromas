@@ -10,6 +10,8 @@
 
 #include "duf_mod_types.h"
 
+#include "duf_ufilter_structs.h"
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_filter[];
@@ -201,6 +203,8 @@ static muc_longval_extended_table_t optable = {
 # undef   ENUM_WRAPMM
 
 #endif
+   {.o = {DO_Q( "pack-field" ) /*      */ , DO_A_R /* */ } /*                              */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, pack_field ) /*                                                  */ , DO_H( pack field ) /*                       */ },
 
    {.o = {DO_Q( "filename-db" ) /*      */ , DO_A_R /* */ , DO_VUF( FILENAME )} /*         */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, filename ) /*                                                    */ , DO_H( glob db ) /*                          */ },

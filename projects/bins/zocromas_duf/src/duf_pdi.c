@@ -28,6 +28,7 @@
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo.h"                                            /* duf_pi_clear*; duf_pi_levinfo_set; duf_pi_set_max_rel_depth; etc. ✗ */
 
+#include "duf_ufilter_structs.h"
 #include "duf_ufilter_ref.h"
 
 #include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
@@ -103,7 +104,7 @@ SR( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *
     }
     MAST_TRACE( pdi, 5, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
-  /* QT( "@%p closed:%d", pdi, duf_levinfo_closed( pdi ) ); */
+/* QT( "@%p closed:%d", pdi, duf_levinfo_closed( pdi ) ); */
   MAST_TRACE( pdi, 7, "@@[%p] sql_beginning_done:%d", pdi, duf_pdi_root( pdi )->sql_beginning_done );
   ER( PDI, pdi_init, duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_path, const duf_sql_set_t * sql_set,
       int caninsert, unsigned frecursive, int fallow_dirs, unsigned flinear, int opendir );

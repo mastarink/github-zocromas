@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <link.h>
+#include <time.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */

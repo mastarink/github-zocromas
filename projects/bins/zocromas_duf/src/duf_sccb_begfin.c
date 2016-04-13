@@ -17,6 +17,8 @@
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
 
+#include "duf_ufilter_structs.h"
+
 #include "duf_evsql_begfin.h"                                        /* duf_eval_sqlsq() ✗ */
 
 #include "duf_sccbh_shortcuts.h"

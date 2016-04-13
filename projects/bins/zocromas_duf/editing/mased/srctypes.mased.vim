@@ -54,7 +54,10 @@ sfind duf_se_only.h
 tab sfind duf_fun_types.h
 
 tab sfind duf_item_types.h
+
 tab sfind duf_ufilter_types.h
+sfind duf_ufilter_structs.h
+
 tab sfind duf_fileinfo_types.h
 
 tab sfind duf_pdi_types.h

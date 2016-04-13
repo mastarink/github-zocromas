@@ -18,6 +18,7 @@
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_structs.h"
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccb_structs.h"
 

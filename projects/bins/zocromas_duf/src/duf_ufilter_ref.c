@@ -15,6 +15,7 @@
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
+#include "duf_ufilter_structs.h"
 /* ###################################################################### */
 #include "duf_ufilter_ref.h"
 /* ###################################################################### */
@@ -25,9 +26,32 @@ duf_ufilter_max_rel_depth( const duf_ufilter_t * pu )
   return pu ? pu->max_rel_depth : 0;
 }
 
+int
+duf_ufilter_use_format( const duf_ufilter_t * pu )
+{
+  return pu ? pu->use_format : 0;
+}
+
+int
+duf_ufilter_orderid( const duf_ufilter_t * pu )
+{
+  return pu ? pu->orderid : 0;
+}
+
+int
+duf_ufilter_std_leaf_set_num( const duf_ufilter_t * pu )
+{
+  return pu ? pu->std_leaf_set_num : 0;
+}
+
+const char *
+duf_ufilter_std_leaf_set_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->std_leaf_set_name : 0;
+}
+
 SR( OTHER, ufilter_max_filter, const duf_ufilter_t * pu, unsigned seq, const duf_items_t * pitems )
 {
-/* DUF_STARTR( r ); */
   if ( pu->max_seq && seq >= pu->max_seq )
     ERRMAKE( MAX_SEQ_REACHED );
   else if ( pu->maxitems.files && pitems->files >= pu->maxitems.files )
@@ -36,6 +60,5 @@ SR( OTHER, ufilter_max_filter, const duf_ufilter_t * pu, unsigned seq, const duf
     ERRMAKE( MAX_REACHED );
   else if ( pu->maxitems.total && pitems->total >= pu->maxitems.total )
     ERRMAKE( MAX_REACHED );
-/* DUF_ENDR( r ); */
   ER( OTHER, ufilter_max_filter, const duf_ufilter_t * pu, unsigned seq, const duf_items_t * pitems );
 }

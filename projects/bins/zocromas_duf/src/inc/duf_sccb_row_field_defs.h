@@ -89,8 +89,8 @@
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 /* O000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000O */
 
-# define DUF_GET_RSFIELD2Q(_name, _opt)			duf_sccbh_row_get_string(sccbh, #_name)
-# define DUF_GET_RUFIELD2Q(_name, _opt)			duf_sccbh_row_get_number(sccbh, #_name)
+# define DUF_GET_RSFIELD2Q(_name, _opt)			CRP( sccbh_row_get_string, sccbh, #_name )
+# define DUF_GET_RUFIELD2Q(_name, _opt)			CRP( sccbh_row_get_number, sccbh, #_name )
 
 # define DUF_GET_RSFIELD2(_name)			DUF_GET_RSFIELD2Q(_name, 0)
 # define DUF_GET_RUFIELD2(_name)			DUF_GET_RUFIELD2Q(_name, 0)

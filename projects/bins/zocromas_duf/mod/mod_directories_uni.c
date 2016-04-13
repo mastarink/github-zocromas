@@ -24,6 +24,7 @@
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_path2db.h"                                             /* duf_real_path2db; etc. ✗ */

@@ -22,5 +22,8 @@ sfind duf_sccbh_scanner.h
 tab sfind duf_sccbh_pstmt.c
 sfind duf_sccbh_pstmt.h
 
+tab sfind duf_sccbh_ref.c
+sfind duf_sccbh_ref.h
+
 sfind duf_sccbh_shortcuts.h
 

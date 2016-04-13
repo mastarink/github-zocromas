@@ -25,8 +25,11 @@
 #include "duf_sccb_structs.h"
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_pstmt.h"
+
+#include "duf_fmt_defs.h"
 
 /* #include "duf_pdi_structs.h" */
 /* ###################################################################### */
@@ -37,7 +40,6 @@
 static
 SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
-/* DUF_STARTR( r ); */
 /*@ 1. go down + dbopenat */
 #if 0
   H_PDI->seq++;
@@ -62,35 +64,9 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
   }
 
 /*@ 4. go up */
-/* DUF_ENDR( r ); */
   ER( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
-#if 0
-/* 20151027.114000 */
-int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2_t str_cb2, duf_scanstage_t scanstage )
-{
-  DUF_STARTR( r );
-  assert( H_PDI );
-  assert( CRX( pdi_depth, H_PDI ) >= 0 );
-
-/* data from db at pstmt_arg */
-
-  MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", CRX( pdi_depth, H_PDI ) );
-  MAST_TRACE( explain, 40, "@ sel cb2 node" );
-  assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
-
-  MAST_TRACE( scan, 6, "NODE %s", CRX( levinfo_path, H_PDI ) );
-  MAST_TRACE( scan, 6, "(%s) NODE down %s", mas_error_name_i( r ), CRX( levinfo_path, H_PDI ) );
-  assert( CRX( pdi_depth, H_PDI ) >= 0 );
-  {
-    DOR( r, duf_sel_cb2_node_at( sccbh, pstmt_arg, str_cb2, scanstage ) );
-  }
-  MAST_TRACE( scan, 6, "/NODE %s", CRX( levinfo_path, H_PDI ) );
-
-  DUF_ENDR( r );
-}
-#endif
 /*
  * str_cb2 can be
  *   -- CRX(sccbh_eval_all,_wrap)
@@ -99,15 +75,11 @@ int DUF_WRAPPED( duf_sel_cb2_node_at ) ( duf_sccb_handle_t * sccbh, duf_stmnt_t 
 /* 20150820.085950 */
 SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
-/* DUF_STARTR( r ); */
   assert( H_PDI );
   assert( CRX( pdi_depth, H_PDI ) >= 0 );
-
   assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-
 /* data from db at pstmt_arg */
-
-  MAST_TRACE( scan, 10, "   %d: =====> scan node2", CRX( pdi_depth, H_PDI ) );
+  MAST_TRACE( scan, 10, "   " DUF_DEPTH_PFMT ": =====> scan node2", CRX( pdi_depth, H_PDI ) );
   MAST_TRACE( explain, 40, "@ sel cb2 node" );
   assert( str_cb2 == duf_sccbh_eval_all || str_cb2 == NULL );
 
@@ -117,18 +89,19 @@ SR( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
     assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
     CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt_arg, DUF_NODE_NODE /* node_type */  );
     assert( QISERR_N( TOO_DEEP ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+    if ( QNOERR )
+    {
+      MAST_TRACE( scan, 6, "(%s) NODE down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
+      assert( CRX( pdi_depth, H_PDI ) >= 0 );
 
-    MAST_TRACE( scan, 6, "(%s) NODE down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
-    assert( CRX( pdi_depth, H_PDI ) >= 0 );
+      CR( sel_cb2_node_at, sccbh, /* pstmt_arg, */ str_cb2, scanstage );
 
-    CR( sel_cb2_node_at, sccbh, /* pstmt_arg, */ str_cb2, scanstage );
+      assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
-    assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-
-    CR( levinfo_goup, H_PDI );
+      CR( levinfo_goup, H_PDI );
+    }
   }
   MAST_TRACE( scan, 6, "/NODE %s", CRX( levinfo_path, H_PDI ) );
 
-/* DUF_ENDR( r ); */
   ER( SCCBH, sel_cb2_node, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }

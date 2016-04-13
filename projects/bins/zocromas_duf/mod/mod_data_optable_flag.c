@@ -10,6 +10,9 @@
 
 #include "duf_mod_types.h"
 
+#include "duf_ufilter_structs.h"
+
+
 /*
 At duf_xtended_table.c:
   1. extern const muc_longval_extended_table_t optable_flag[];

@@ -28,13 +28,15 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_print.h"
 
 #include "duf_fileinfo.h"
 
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_ufilter_ref.h"
+/* #include "duf_ufilter_structs.h" */
 
 #include "sql_beginning_selected.h"
 
@@ -121,7 +123,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
   DUF_RUFIELD2( sha1sum2 );
   DUF_RUFIELD2( sha1sum3 );
   DUF_RUFIELD2( mtime );
-  assert( mtime == duf_sccbh_row_get_number( sccbh, "mtime" ) );
+  assert( mtime == CRP( sccbh_row_get_number, sccbh, "mtime" ) );
   DUF_RUFIELD2( dev );
   DUF_RUFIELD2( uid );
   DUF_RUFIELD2( gid );
@@ -195,8 +197,11 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_pdi_pu( H_PDI )->use_format - 1;
-
+#if 0
+	use = duf_pdi_pu( H_PDI )->use_format - 1;
+#else
+	use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+#endif
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];

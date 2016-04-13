@@ -30,7 +30,11 @@
 #include "duf_sccb_structs.h"
 /* #include "duf_sccb_row_field_defs.h"                                 (* DUF_*FIELD2* ✗ *)                                    */
 /* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
+#include "duf_ufilter_ref.h"
+/* #include "duf_ufilter_structs.h" */
 
 #include "duf_print.h"
 
@@ -136,19 +140,23 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
         int use;
         duf_filedirformat_t *fmt;
 
+#if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
+#else
+        use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+#endif
 
         fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-        MAST_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
+        MAST_TRACE( temp, 15, "use:%d; files.argc:%d", use, fmt->files.argc );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
-        MAST_TRACE( temp, 5, "sformat A: %s", sformat );
+        MAST_TRACE( temp, 15, "sformat A: %s", sformat );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
-        MAST_TRACE( temp, 5, "sformat B: %s", sformat );
+        MAST_TRACE( temp, 15, "sformat B: %s", sformat );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
-        MAST_TRACE( temp, 5, "sformat C: %s", sformat );
+        MAST_TRACE( temp, 15, "sformat C: %s", sformat );
       }
       if ( !sformat )
         sformat = "%f\n";
@@ -218,19 +226,23 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
           int use;
           duf_filedirformat_t *fmt;
 
+#if 0
           use = duf_pdi_pu( H_PDI )->use_format - 1;
+#else
+          use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+#endif
 
           fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-          MAST_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
+          MAST_TRACE( temp, 15, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
           if ( use >= 0 && use < fmt->dirs.argc && !sformat )
             sformat = fmt->dirs.argv[use];
-          MAST_TRACE( temp, 5, "sformat A: %s", sformat );
+          MAST_TRACE( temp, 15, "sformat A: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.dirs_gen );
-          MAST_TRACE( temp, 5, "sformat B: %s", sformat );
+          MAST_TRACE( temp, 15, "sformat B: %s", sformat );
           if ( !sformat )
             sformat = DUF_CONFIGG( opt.output.sformat.dirs_tree );
-          MAST_TRACE( temp, 5, "sformat C: %s", sformat );
+          MAST_TRACE( temp, 15, "sformat C: %s", sformat );
         }
 
         if ( !sformat )
@@ -295,7 +307,7 @@ SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_dep
 # define DUF_TREE_FLAG_TOO_DEEP 0x8
 #endif
 
-  ndu = duf_levinfo_count_childs_d( pdi4pref, du );                     /* beginning_sql_seq->set_selected_db */
+  ndu = duf_levinfo_count_childs_d( pdi4pref, du );                  /* beginning_sql_seq->set_selected_db */
   nchild = duf_levinfo_numchild_d( pdi4pref, du );
   ndu -= nchild;
 #if 0

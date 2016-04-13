@@ -26,6 +26,7 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 
+#include "duf_ufilter_structs.h"
 /* ###################################################################### */
 #include "duf_ufilter_bind.h"
 /* ###################################################################### */

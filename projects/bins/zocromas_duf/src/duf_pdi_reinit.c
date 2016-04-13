@@ -26,6 +26,8 @@
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_ref.h"
 
+#include "duf_ufilter_structs.h"
+
 #include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_pdi_reinit.h"

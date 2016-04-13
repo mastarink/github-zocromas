@@ -27,8 +27,6 @@
 #include "duf_pdi_structs.h"
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-/* #include "duf_levinfo_openclose.h" */
-/* #include "duf_levinfo_stat.h" */
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
@@ -40,16 +38,11 @@
 
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_sql_set.h"
-/* #include "duf_sccbh_eval_fs.h" */
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_scanner.h"
 
-/* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
-
-/* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
-/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
-/* #include "duf_sql_positional.h"                                      (* duf_sql_column_long_long etc. ✗ *) */
-/* #include "duf_sql_prepared.h"                                        (* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ *) */
+#include "duf_ufilter_structs.h"
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 

@@ -22,6 +22,8 @@
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
 #include "duf_sccb_structs.h"
+
+#include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_pdi_ref.h"
@@ -107,16 +109,16 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 
 /* int                                                        */
 /* duf_datarow_list_count( const duf_sccb_data_row_t * rows ) */
-SRX( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows )
+SRP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows )
 {
 /* int cnt = 0; */
 
   for ( cnt = 0; rows; rows = rows->prev, cnt++ )
   {
-    QT( "@=== cnt: %d - %p : %llu", cnt, rows, CRX( datarow_get_number, rows, "dataid" ) );
+    QT( "@=== cnt: %d - %p : %llu", cnt, rows, CRP( datarow_get_number, rows, "dataid" ) );
   }
 /* return cnt; */
-  ERX( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows );
+  ERP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows );
 }
 
 /* void                                                    */
@@ -171,63 +173,63 @@ SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
 
 /* duf_sccb_data_value_t *                                                     */
 /* duf_datarow_field_find( const duf_sccb_data_row_t * row, const char *name ) */
-SRX( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name )
+SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name )
 {
   for ( size_t i = 0; !val && row && i < row->cnt; i++ )
     if ( 0 == strcmp( row->fields[i].name, name ) )
       val = &row->fields[i];
 /* return NULL; */
-  ERX( SCCBH, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name );
+  ERP( SCCBH, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name );
 }
 
 /* unsigned long long                                                          */
 /* duf_datarow_get_number( const duf_sccb_data_row_t * row, const char *name ) */
-SRX( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name )
+SRP( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name )
 {
   duf_sccb_data_value_t *field;
 
-  field = CRX( datarow_field_find, row, name );
+  field = CRP( datarow_field_find, row, name );
   n = field ? field->value.n : 0;
 /* QT( "@found %s for %s at %p (%lld)", field ? field->name : NULL, name, row, field ? field->value.n : 0 ); */
   assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL || field->typ == DUF_SQLTYPE_TEXT );
 /* return field ? field->value.n : 0; */
-  ERX( SCCBH, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );
+  ERP( SCCBH, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );
 }
 
 /* const char *                                                          */
 /* duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name ) */
-SRX( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name )
+SRP( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name )
 {
   duf_sccb_data_value_t *field;
 
-  field = CRX( datarow_field_find, row, name );
+  field = CRP( datarow_field_find, row, name );
   assert( !field || field->typ == DUF_SQLTYPE_TEXT || field->typ == DUF_SQLTYPE_NULL );
   s = field ? field->svalue : NULL;
 /* return field ? field->svalue : NULL; */
-  ERX( SCCBH, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
+  ERP( SCCBH, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
 }
 
 #if 1
 /* unsigned long long                                                      */
 /* duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ) */
-SRX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name )
+SRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name )
 {
 /* unsigned long long n = 0; */
 
-  n = sccbh ? CRX( datarow_get_number, sccbh->rows, name ) : 0;
+  n = sccbh ? CRP( datarow_get_number, sccbh->rows, name ) : 0;
 /* return n; */
-  ERX( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
+  ERP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
 }
 
 /* const char *                                                            */
 /* duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name ) */
-SRX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name )
+SRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name )
 {
 /* const char *s = NULL; */
 
-  s = sccbh ? CRX( datarow_get_string, sccbh->rows, name ) : NULL;
+  s = sccbh ? CRP( datarow_get_string, sccbh->rows, name ) : NULL;
 /* return s; */
-  ERX( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
+  ERP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 }
 #endif
 /* void                                             */
