@@ -43,7 +43,7 @@
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 #include "duf_sccb_begfin.h"
 
 #include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
@@ -55,9 +55,9 @@
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_structs.h"
 
-#include "duf_sccbh_structs.h"
+#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 #include "duf_sccbh_ref.h"
-#include "duf_sccbh_row.h" 
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_eval.h"
 
@@ -345,8 +345,8 @@ duf_sccb_handle_create( const duf_scan_callbacks_t * const *psccb, const mas_car
   return sccbh;
 }
 
-void
-duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
+static
+SR( SCCBH, sccbh_node_progress, duf_sccb_handle_t * sccbh )
 {
   if ( H_SCCB->count_nodes && !H_SCCB->no_count && !H_SCCB->no_progress && H_TOTITEMS > 0 )
   {
@@ -363,10 +363,11 @@ duf_sccbh_node_progress( duf_sccb_handle_t * sccbh )
     if ( m > 0 )
       CRX( percent, H_PDI->seq_node, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
   }
+  ER( SCCBH, sccbh_node_progress, duf_sccb_handle_t * sccbh );
 }
 
-void
-duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
+static
+SR( SCCBH, sccbh_leaf_progress, duf_sccb_handle_t * sccbh )
 {
   if ( !H_SCCB->count_nodes && !H_SCCB->no_count && !H_SCCB->no_progress && H_TOTITEMS > 0 )
   {
@@ -381,15 +382,15 @@ duf_sccbh_leaf_progress( duf_sccb_handle_t * sccbh )
       MAST_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", H_PDI->seq, H_PDI->seq_leaf, m );
     }
   }
+  ER( SCCBH, sccbh_leaf_progress, duf_sccb_handle_t * sccbh );
 }
 
 /* 20151027.144501 */
 /* void ( *duf_rsccbh_fun_t )
  *                ( const struct duf_sccb_handle_s *, duf_stmnt_t *, duf_scanstage_t, duf_scanner_fun_t, duf_node_type_t, int ) */
-static void
-duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
-                   duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_fun_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED,
-                   int r MAS_UNUSED )
+static
+SR( SCCBH, sccbh_atom_cb, const struct duf_sccb_handle_s *sccbh MAS_UNUSED, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+    duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_fun_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED )
 {
   static unsigned n = 0;
   char c = '-';
@@ -412,6 +413,8 @@ duf_sccbh_atom_cb( const struct duf_sccb_handle_s *sccbh MAS_UNUSED, /* duf_stmn
     break;
   }
   fprintf( stderr, "\r%c%1s\r", c, CRX( scanstage_shortname, scanstage ) );
+  ER( SCCBH, sccbh_atom_cb, const struct duf_sccb_handle_s *sccbh MAS_UNUSED, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+      duf_scanstage_t scanstage MAS_UNUSED, duf_scanner_fun_t scanner MAS_UNUSED, duf_node_type_t node_type MAS_UNUSED, int r MAS_UNUSED );
 }
 
 /* 20151027.144450 */
@@ -456,7 +459,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     assert( H_PDI->pathinfo.levinfo );
     H_PDICLONED = 1;
 #else
-    H_PDI_SET( pdi);
+    H_PDI_SET( pdi );
 #endif
     H_PDI->total_bytes = 0;
     H_PDI->total_files = 0;
@@ -471,7 +474,7 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
     {
       if ( !H_SCCB->no_count )
       {
-        H_TOTITEMSv = CRX( count_total_items, sccbh, QPERRIND );      /* reference */
+        H_TOTITEMSv = CRX( count_total_items, sccbh, QPERRIND );     /* reference */
         if ( QNOERR )
           H_TOTCOUNTED_SET;
       }
@@ -485,8 +488,8 @@ SRP( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_open, duf_depthinfo_t 
       MAST_TRACE( explain, 10, "%llu items registered in db", H_TOTITEMS );
       if ( CRX( output_progress, ) )
       {
-        sccbh->progress_node_cb = duf_sccbh_node_progress;
-        sccbh->progress_leaf_cb = duf_sccbh_leaf_progress;
+        sccbh->progress_node_cb = F2ND( sccbh_node_progress );
+        sccbh->progress_leaf_cb = F2ND( sccbh_leaf_progress );
       }
       sccbh->atom_cb = duf_sccbh_atom_cb;
     }

@@ -23,7 +23,7 @@
 #include "duf_pdi_ref.h"
 
 #include "duf_sccb_structs.h"
-#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
+/* #include "duf_sccbh_structs.h"                                       (* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ *) */
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 
 #include "duf_sccbh_ref.h"
@@ -50,8 +50,19 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
 #endif
   MAST_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", CRX( pdi_seq_node, H_PDI ) /* H_PDI->seq_node */ , CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ ,
               H_TOTITEMS, H_SCCB->title );
+#if 0
   if ( sccbh->progress_node_cb )
     ( sccbh->progress_node_cb ) ( sccbh );
+#else
+  {
+    duf_sccbh_fun_t cb;
+
+    cb = duf_sccbh_progress_node_cb( sccbh );
+    if ( cb )
+      cb( sccbh );
+  }
+#endif
+
   MAST_TRACE( seq, 0, "seq:%llu; seq_node:%llu", CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_node, H_PDI ) /* H_PDI->seq_node */  );
 
   if ( str_cb2 )

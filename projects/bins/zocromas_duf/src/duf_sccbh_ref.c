@@ -97,3 +97,9 @@ duf_sccbh_changes( const duf_sccb_handle_t * sccbh )
 {
   return sccbh ? sccbh->changes : 0;
 }
+
+duf_sccbh_fun_t
+duf_sccbh_progress_node_cb( const duf_sccb_handle_t * sccbh )
+{
+  return sccbh ? sccbh->progress_node_cb : NULL;
+}

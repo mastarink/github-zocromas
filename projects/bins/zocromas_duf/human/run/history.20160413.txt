@@ -199,3 +199,118 @@
 # run  '--db-name=temp20160413' '-dufR' '--with-tag-file=test-gz1' '--max-depth=17' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
 # retcode:0
 # 20160413.133120 : 1460543480.366967056 ------------[r]--
+# 20160413.134030 : 1460544030.692103692 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160413' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160413.134052 : 1460544052.470799487 ------------[r]--
+# 20160413.134053 : 1460544053.735073501 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134053 : 1460544053.769981101 ------------[r]--
+# 20160413.134111 : 1460544071.464319138 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz1' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134111 : 1460544071.495222097 ------------[r]--
+# 20160413.134117 : 1460544077.825262801 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160413' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160413.134138 : 1460544098.405674496 ------------[r]--
+# 20160413.134151 : 1460544111.774492476 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134151 : 1460544111.808361395 ------------[r]--
+# 20160413.134338 : 1460544218.760864298 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134338 : 1460544218.794662935 ------------[r]--
+# 20160413.134502 : 1460544302.421296541 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134502 : 1460544302.457180566 ------------[r]--
+# 20160413.134536 : 1460544336.058622269 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134536 : 1460544336.091638360 ------------[r]--
+# 20160413.134659 : 1460544419.332039298 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134659 : 1460544419.362482150 ------------[r]--
+# 20160413.134818 : 1460544498.415245070 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134818 : 1460544498.447249231 ------------[r]--
+# 20160413.134900 : 1460544540.344604309 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.134900 : 1460544540.377328511 ------------[r]--
+# 20160413.135244 : 1460544764.930125218 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.135244 : 1460544764.965765555 ------------[r]--
+# 20160413.135353 : 1460544833.510685109 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.135353 : 1460544833.541675581 ------------[r]--
+# 20160413.135457 : 1460544897.406133255 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:134
+# 20160413.135457 : 1460544897.435227067 ------------[r]--
+# 20160413.135644 : 1460545004.257213441 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:0
+# 20160413.135644 : 1460545004.437869508 ------------[r]--
+# 20160413.135734 : 1460545054.113614550 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:0
+# 20160413.135734 : 1460545054.245438727 ------------[r]--
+# 20160413.135828 : 1460545108.565328515 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:0
+# 20160413.135828 : 1460545108.641742491 ------------[r]--
+# 20160413.135846 : 1460545126.398461969 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160413' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/tree' '--progress'
+# retcode:0
+# 20160413.135906 : 1460545146.924929206 ------------[r]--
+# 20160413.135908 : 1460545148.182978061 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:0
+# 20160413.135908 : 1460545148.260825861 ------------[r]--
+# 20160413.135909 : 1460545149.531082653 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz1' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:0
+# 20160413.135909 : 1460545149.608757484 ------------[r]--
+# 20160413.135914 : 1460545154.437779859 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--with-tag-file=test-gz1' '--max-depth=17' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160413.135914 : 1460545154.476944299 ------------[r]--
+# 20160413.135916 : 1460545156.910215639 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160413' '-dufR' '--with-tag-file=test-gz' '--evaluate-sccb=tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test'
+# retcode:0
+# 20160413.135916 : 1460545156.951749083 ------------[r]--
+# 20160413.135920 : 1460545160.771924505 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--orderid=5' '--std-leaf-set-name=std-all-under' '-df' '--sha1id=1351' '--tag-file=test-one' '--evaluate-sccb=listing,tagit' '/home/' '--use-format=4'
+# retcode:0
+# 20160413.135921 : 1460545161.237043321 ------------[r]--

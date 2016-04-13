@@ -238,7 +238,6 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
     assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
   /* have_rows=1; */
 
-  /* QT( "@%s", H_SCCB->name ); */
     assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == duf_sccbh_eval_db_leaf_str_cb
             || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_all );
   /* mas_force_count_ereport( 1 ); */
