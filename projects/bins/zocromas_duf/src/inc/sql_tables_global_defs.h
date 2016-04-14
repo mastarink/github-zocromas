@@ -5,7 +5,8 @@
 /* #  define DUF_USE_CTE yes */
 
 /* # define DUF_SQL_DATETIME_TYPE             "REAL" */
-# define DUF_SQL_DATETIME_TYPE             "DATETIME"
+/* # define DUF_SQL_DATETIME_TYPE             "DATETIME" */
+# define DUF_SQL_DATETIME_TYPE             "INTEGER"
 
 /* #  define DUF_USE_TMP_PATHTOT yes */
 # ifdef DUF_USE_TMP_PATHTOT

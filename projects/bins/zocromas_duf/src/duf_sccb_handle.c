@@ -538,10 +538,14 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
 
     CRX( sccbh_row_next, sccbh, NULL /* pstmt_arg */  );             /* XXX FIXME XXX */
   /* CR( sccbh_call_leaf_pack_scanner, sccbh, 0 (* scanstage *)  );     XXX FIXME XXX */
+    MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL );
+
     CRX( sccbh_rows_eval, sccbh );                                   /* XXX FIXME XXX */
 
     CRX( datarow_list_delete_f, sccbh->rows, 0 );
+    /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
     sccbh->rows = NULL;
+    /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
     for ( H_SCCBIv = 0; H_SCCB; H_SCCBIv++ )
     {
       CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );

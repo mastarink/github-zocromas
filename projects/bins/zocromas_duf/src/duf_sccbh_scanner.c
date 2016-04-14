@@ -108,81 +108,73 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
 {
 /* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
   CRX( sccbh_preset_leaf_scanner, sccbh );
+
+  if ( sccbh->rows && sccbh->rows->prev )
   {
     int eq = 0;
+    const char *pack_field;
 
-  /* duf_sccb_data_row_t *new_row = NULL; */
-
-  /* sccbh->new_row = CRX( datarow_create, pstmt_x, CRX( pdi_pathinfo, H_PDI ) ); */
-  /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
-    if ( sccbh->rows && sccbh->rows->prev )
+    pack_field = CRX( pdi_pack_field, H_PDI );
+    if ( QNOERR )
     {
-      const char *pack_field;
+      duf_sqltype_t t;
 
-      pack_field = CRX( pdi_pack_field, H_PDI );
+      t = CRP( datarow_get_type, sccbh->rows, pack_field );
+      switch ( t )
       {
-        duf_sqltype_t t;
-
-        t = CRP( datarow_get_type, sccbh->rows, pack_field );
-        switch ( t )
+      case DUF_SQLTYPE_NONE:
+        eq = 0;
+        break;
+      case DUF_SQLTYPE_INTEGER:
         {
-        case DUF_SQLTYPE_NONE:
-          assert( 0 );
-          break;
-        case DUF_SQLTYPE_INTEGER:
-          {
-            unsigned long long number0;
-            unsigned long long number1;
+          unsigned long long number0;
+          unsigned long long number1;
 
-            number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
-            number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
-            eq = ( number0 == number1 );
-            if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
-          }
-          break;
-        case DUF_SQLTYPE_FLOAT:
-          assert( 0 );
-          break;
-        case DUF_SQLTYPE_TEXT:
-          {
-            const char *str0;
-            const char *str1;
-
-            str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-            str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
-            eq = ( 0 == strcmp( str0, str1 ) );
-            if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
-          }
-          break;
-        case DUF_SQLTYPE_BLOB:
-          assert( 0 );
-          break;
-        case DUF_SQLTYPE_NULL:
-          assert( 0 );
-          break;
+          number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
+          number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
+          eq = ( number0 == number1 );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
         }
-      }
-      {
-        if ( !eq )
+        break;
+      case DUF_SQLTYPE_FLOAT:
+        assert( 0 );
+        break;
+      case DUF_SQLTYPE_TEXT:
         {
-          CRX( sccbh_rows_eval, sccbh );
+          const char *str0;
+          const char *str1;
+
+          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+          eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
         }
+        break;
+      case DUF_SQLTYPE_BLOB:
+        assert( 0 );
+        break;
+      case DUF_SQLTYPE_NULL:
+        {
+          const char *str0;
+          const char *str1;
+
+          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+          eq = ( !str0 && !str1 );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+        }
+        break;
       }
     }
-
-  /* if ( sccbh->new_row )                 */
-  /* {                                     */
-  /*   sccbh->new_row->prev = sccbh->rows; */
-  /*   sccbh->rows = sccbh->new_row;       */
-  /*   sccbh->new_row = NULL;              */
-  /* }                                     */
+    ERRCLEAR( NO_FIELD );
+    if ( !eq )
+    {
+      CRX( sccbh_rows_eval, sccbh );
+    }
   }
-/* CRV( ( scanner ), pstmt_x, H_PDI, sccbh ); */
-/* if ( sccbh->atom_cb )                                            (* atom is fs-direntry(dir or reg) or item(node or leaf) *) */
-/* sccbh->atom_cb( sccbh, pstmt_x, scanstage, scanner, node_type, QERRIND ); */
-
   ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
 }
 

@@ -64,6 +64,7 @@
 # define QPERRIND &(QERRIND)
 # define QERRNAME                       mas_error_name_i( QERRIND )
 # define QDOCR( _x )			( (QNOERR) ? ( (SET_ERRIND(_x))  ) : 0 )
+# define QDOCR_( _x )			(            ( (SET_ERRIND(_x))  )     )
 
 # define ERRUPPER(_err)			MASE_E_UPPER( ERRCODE( _err ) )
 # define ERRUPPER1(_err)		MASE_E_UPPER( ERRCODE1( _err ) )

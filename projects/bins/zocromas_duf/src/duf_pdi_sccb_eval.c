@@ -24,7 +24,7 @@
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_eval.h"
 #include "duf_sccb_structs.h"
 
@@ -67,6 +67,7 @@ SR( PDI, ev_pdi_sccb, duf_depthinfo_t * pdi, const duf_scan_callbacks_t * const 
       QERRIND = 0;
     /* QT( "@@sccb:%d; dirid:%llu", sccb ? 1 : 0, CRX(levinfo_dirid, pdi ) ); */
       CR( sccb_handle_close, sccbh );
+      sccbh = NULL;
       if ( QNOERR )
         QERRIND = r1;
     }
