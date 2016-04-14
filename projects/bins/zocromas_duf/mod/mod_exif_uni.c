@@ -23,6 +23,7 @@
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
@@ -35,7 +36,7 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
@@ -167,8 +168,8 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model,
-     int need_id )
+SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED,
+     const char *model, int need_id )
 {
   if ( model && *model && !duf_get_config_flag_disable_insert(  ) )
   {
@@ -194,7 +195,7 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
       }
     /* if ( QISERR1_N(SQL_DONE ) ) */
     /*   lr = 0;                                 */
-      DUF_SQL_SE_END_STMT( H_PDI, select_model, pstmt_local );         /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, select_model, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !modelid )
@@ -206,14 +207,14 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
       DUF_SQL_SE_BIND_S( Model, model, pstmt_insert );
 
       DUF_SQL_SE_STEP( pstmt_insert );
-      DUF_SQL_SE_CHANGES(H_PDI,  changes, pstmt_insert );
+      DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_insert );
     /* DUF_SHOW_ERRORO( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         modelid = duf_sql_last_insert_rowid(  );
         MAST_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
-      DUF_SQL_SE_END_STMT( H_PDI, insert_model, pstmt_insert );        /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, insert_model, pstmt_insert );      /* clears SQL_ROW / SQL_DONE */
     }
   }
   else
@@ -223,7 +224,8 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
   /* ERRMAKE(DATA);          */
   }
 /* assert( modelid ); */
-  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, const char *model, int need_id );
+  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, const char *model,
+       int need_id );
 }
 
 static
@@ -262,7 +264,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t
       /* lr = 0; */
       }
     /* DUF_CLEAR_ERROR( lr, DUF_SQL_DONE ); */
-      DUF_SQL_SE_END_STMT( H_PDI, select_exif, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, select_exif, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
     /* if ( !exifid )                        */
     /*   DUF_SHOW_ERRORO( "exifid NOT SELECTED" ); */
     }
@@ -319,7 +321,7 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t
                     ( long ) timeepoch, changes, duf_levinfo_path( H_PDI ), fname );
       }
 
-      DUF_SQL_SE_END_STMT( H_PDI, insert_exif, pstmt_insert );         /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, insert_exif, pstmt_insert );       /* clears SQL_ROW / SQL_DONE */
     }
   }
   else

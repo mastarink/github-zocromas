@@ -4,6 +4,7 @@ function! MasIncludeComment1( hfil, cmt )
   let suff=" ▤"
 " exec "%s/^\\s*\\(#\\s*include\\s\\+<\[^>\]\\+\\/"  . a:hfil .  "\.h>\\)\\s*\\(\\/\\*.*\\*\\/\\|\\)$/\\1  \\/\\* [" . a:cmt  .  "]		(" . strftime(mas_timefmt) . ") " . "\\*\\/" . "/"
   exec "%s/^\\s*\\(#\\s*include\\s\\+<mastar\\/\\([^>]\\+\\/\\|\\)"  . a:hfil .  "\.h>\\).*$/\\1  \\/\\* " . a:cmt  .  suff . "\\*\\/" . "/e"
+  call histdel("search", -1)
 endfunction
 function! MasIncludeComment2( hfil, cmt )
   let mas_timefmt="%Y%m%d.%H%M%S"  
@@ -11,6 +12,7 @@ function! MasIncludeComment2( hfil, cmt )
   let suff=" ✗"
 " exec "%s/^\\s*\\(#\\s*include\\s*\"" . a:hfil . "\.h\"\\)\\s*\\(\\/\\*.*\\*\\/\\|\\)$/\\1  \\/\\* (" . strftime(mas_timefmt) . "): " . a:cmt . " \\*\\//"
   exec "%s/^\\s*\\(#\\s*include\\s*\"" . a:hfil .  "\.h\"\\).*$/\\1  \\/\\* " . a:cmt  .  suff . "\\*\\/" . "/e"
+  call histdel("search", -1)
 endfunction
 function! MasIncludeComments()
 " call MasIncludeComment0("assert", "assert")
@@ -79,6 +81,7 @@ call MasIncludeComment2("duf_action_table", "duf_actions_table_std")
   call MasIncludeComment2("duf_pathinfo_structs", "duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t )")
   call MasIncludeComment2("duf_pathinfo_types", "duf_pathinfo_t")
   call MasIncludeComment2("duf_pathinfo_types", "duf_pathinfo_t")
+  call MasIncludeComment2("duf_sccbh_row", "sccbh_row_* (open|close|next|eval|get_(number|string)) ")
   call MasIncludeComment2("duf_pdi_credel", "duf_pdi_create; duf_pdi_kill")
   call MasIncludeComment2("duf_pdi", "duf_pdi_init; duf_pdi_shut; duf_pdi_close")
   call MasIncludeComment2("duf_pdi_filters", "duf_pdi_pu; etc.")

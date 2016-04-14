@@ -118,11 +118,11 @@ SR( PDI, levinfo_godown_db, duf_depthinfo_t * pdi, duf_node_type_t node_type, du
       assert( pdi->pathinfo.depth == calcdepth );
     }
 
-    assert(  /* duf_pdi_linear( pdi ) || */ pstmt_arg == duf_pdi_each_stmt( pdi, 0 ) );
+    assert( pstmt_arg == duf_pdi_each_stmt( pdi, 0 ) );
 
     d = ++pdi->pathinfo.depth;
 
-    assert(  /* duf_pdi_linear( pdi ) || */ pstmt_arg == duf_pdi_each_stmt( pdi, 1 ) );
+    assert( pstmt_arg == duf_pdi_each_stmt( pdi, 1 ) );
     assert( d >= 0 );
     assert( pdi->pathinfo.depth >= 0 );
     assert( d == pdi->pathinfo.depth );
@@ -185,9 +185,16 @@ SR( PDI, levinfo_godown_dbopenat_dh, duf_depthinfo_t * pdi, duf_node_type_t node
 
   ERRLOWER( TOO_DEEP );
 
-  assert(  /* duf_pdi_linear( pdi ) || */ pstmt_arg == duf_pdi_each_stmt( pdi, 0 ) );
-  CR( levinfo_godown_db, pdi, node_type, pstmt_arg );
-  assert( QISERR_N( TOO_DEEP ) || duf_pdi_linear( pdi ) || pstmt_arg == duf_pdi_each_stmt( pdi, 1 ) );
+  {
+    int depth0;
+
+    depth0 = duf_pdi_depth( pdi );
+    assert(  /* duf_pdi_linear( pdi ) || */ pstmt_arg == duf_pdi_each_stmt( pdi, 0 ) );
+    CR( levinfo_godown_db, pdi, node_type, pstmt_arg );
+
+    assert( depth0 + ( QNOERR ? 1 : 0 ) == duf_pdi_depth( pdi ) );
+    assert( QISERR_N( TOO_DEEP ) || duf_pdi_linear( pdi ) || pstmt_arg == duf_pdi_each_stmt( pdi, 1 ) );
+  }
 
 /* DOR_LOWERE( r, duf_levinfo_godown_db( pdi, node_type, pstmt_arg ), DUF_ERROR_TOO_DEEP ); */
   ERRUPPER( TOO_DEEP );

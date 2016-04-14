@@ -36,7 +36,7 @@
 #include "duf_levinfo_structs.h"
 
 /* ###################################################################### */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 /* ###################################################################### */
 
 SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED )
@@ -171,6 +171,18 @@ SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
   ERN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row );
 }
 
+SRX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * row )
+{
+  for ( size_t i = 0; row && i < row->cnt; i++ )
+  {
+    if ( lst )
+      lst = mas_strcat_x( lst, "," );
+    lst = mas_strcat_x( lst, row->fields[i].name );
+  }
+
+  ERX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * row );
+}
+
 /* duf_sccb_data_value_t *                                                     */
 /* duf_datarow_field_find( const duf_sccb_data_row_t * row, const char *name ) */
 SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name )
@@ -179,7 +191,25 @@ SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sc
     if ( 0 == strcmp( row->fields[i].name, name ) )
       val = &row->fields[i];
 /* return NULL; */
+  if ( !val )
+  {
+    char *lst = NULL;
+
+    lst = CRX( datarow_field_list, row );
+    ERRMAKE_M( NO_FIELD, "Bad field name '%s' (%s)", name, lst );
+    mas_free( lst );
+  }
   ERP( SCCBH, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name );
+}
+
+SRP( OTHER, duf_sqltype_t, typ, DUF_SQLTYPE_NONE, datarow_get_type, const duf_sccb_data_row_t * row, const char *name )
+{
+  duf_sccb_data_value_t *field;
+
+  field = CRP( datarow_field_find, row, name );
+  if ( field )
+    typ = field->typ;
+  ERP( SCCBH, duf_sqltype_t, typ, DUF_SQLTYPE_NONE, datarow_get_type, const duf_sccb_data_row_t * row, const char *name );
 }
 
 /* unsigned long long                                                          */

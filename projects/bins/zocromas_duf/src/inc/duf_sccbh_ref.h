@@ -25,6 +25,7 @@ unsigned long long duf_sccbh_changes( const duf_sccb_handle_t * sccbh );
 
 const duf_scan_callbacks_t *duf_sccbh_sccb( const duf_sccb_handle_t * sccbh );
 
+duf_sccbh_fun_t duf_sccbh_progress_leaf_cb( const duf_sccb_handle_t * sccbh );
 duf_sccbh_fun_t duf_sccbh_progress_node_cb( const duf_sccb_handle_t * sccbh );
 
 #endif

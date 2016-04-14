@@ -30,10 +30,11 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
@@ -159,8 +160,8 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 static
-SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh, unsigned long digestsum1,
-     unsigned long digestsum2, unsigned long digestsum3 )
+SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh,
+     unsigned long digestsum1, unsigned long digestsum2, unsigned long digestsum3 )
 {
   const char *sql = "SELECT " DUF_SQL_IDFIELD " AS digestid FROM " MOD_DIGEST_TABLE " WHERE " MOD_DIGEST_DATA_S "sum1=:digestSum1 " /* */
           " AND " MOD_DIGEST_DATA_S "sum2=:digestSum2"               /* */
@@ -188,8 +189,8 @@ SRP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_de
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
   DUF_SQL_SE_END_STMT( H_PDI, select_sha1, pstmt_local );            /* clears SQL_ROW / SQL_DONE */
-  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, unsigned long digestsum1,
-       unsigned long digestsum2, unsigned long digestsum3 );
+  ERP( MOD, unsigned long long, digestid, 0, pdistat2file_digestid_existed, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh,
+       unsigned long digestsum1, unsigned long digestsum2, unsigned long digestsum3 );
 }
 
 static

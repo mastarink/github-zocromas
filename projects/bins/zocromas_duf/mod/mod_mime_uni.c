@@ -32,10 +32,11 @@
 
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
@@ -182,7 +183,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi_
         MAST_TRACE( mod, 0, "<selected>" );
         mimeid = DUF_GET_QUFIELD3( pstmt_local, mimeId );
       }
-      DUF_SQL_SE_END_STMT( H_PDI, select_mime, pstmt_local );          /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, select_mime, pstmt_local );        /* clears SQL_ROW / SQL_DONE */
     }
 
     if ( !mimeid && !duf_get_config_flag_disable_insert(  ) )
@@ -205,7 +206,7 @@ SRP( MOD, unsigned long long, mimeid, 0, insert_mime_uni, duf_depthinfo_t * pdi_
         MAST_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_SE_END_STMT( H_PDI, insert_mime, pstmt_insert );         /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, insert_mime, pstmt_insert );       /* clears SQL_ROW / SQL_DONE */
     }
   }
   else
@@ -311,7 +312,7 @@ SR( MOD, dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_hand
           DUF_SQL_SE_STEPC( pstmt_update );
 
           DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_update );
-          DUF_SQL_SE_END_STMT( H_PDI, update_mime, pstmt_update );     /* clears SQL_ROW / SQL_DONE */
+          DUF_SQL_SE_END_STMT( H_PDI, update_mime, pstmt_update );   /* clears SQL_ROW / SQL_DONE */
 
           duf_pdi_reg_changes( H_PDI, changes );
 

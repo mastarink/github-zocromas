@@ -53,6 +53,9 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
 #if 0
   if ( sccbh->progress_node_cb )
     ( sccbh->progress_node_cb ) ( sccbh );
+#elif 0
+  IF_CRV( CRX( sccbh_progress_node_cb, sccbh ), sccbh );
+  ERRCLEAR( NO_FUNC );
 #else
   {
     duf_sccbh_fun_t cb;

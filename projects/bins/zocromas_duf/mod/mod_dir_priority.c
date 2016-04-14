@@ -18,32 +18,33 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
+#include "duf_pdi_ref.h"
+#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
+
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
-#include "duf_mod_defs.h"
-
-#include "sql_beginning_selected.h"
-#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
-
-#include "duf_pdi_ref.h"
-#include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
+/* #include "duf_sql_field.h"                                           (* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ *) */
 
+#include "sql_beginning_selected.h"
+#include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
+
+#include "duf_mod_defs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 /* DUF_MOD_DECLARE_ALL_FUNCS( set_dir_priority ) */
@@ -118,5 +119,5 @@ SR( MOD, set_dir_priority_node_after2, duf_depthinfo_t * pdi_unused MAS_UNUSED, 
   MAST_TRACE( mod, 1, "after  %d dirid:%llu %s : %s: %s", DUF_CONFIGG( vars.dir_priority ), duf_levinfo_dirid( H_PDI ), duf_levinfo_relpath( H_PDI ),
               duf_levinfo_itemshowname( H_PDI ), DUF_GET_RSFIELD2( dname ) /* pstmt_unused ? DUF_GET_QSFIELD2( dname ) : "-" */  );
 
-  ER( MOD, set_dir_priority_node_after2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh  );
+  ER( MOD, set_dir_priority_node_after2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 }

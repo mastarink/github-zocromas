@@ -27,6 +27,7 @@
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 
@@ -116,20 +117,56 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
   /* QT( "@A %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, new_row->pathinfo.levinfo[17].node_type ); */
     if ( sccbh->rows && sccbh->rows->prev )
     {
-      unsigned long long sha1id0;
-      unsigned long long sha1id1;
       const char *pack_field;
 
       pack_field = CRX( pdi_pack_field, H_PDI );
-      sha1id0 = CRP( datarow_get_number, sccbh->rows, pack_field /* "sha1id" */  );
-      sha1id1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field /* "sha1id" */  );
-    /* QT( "@B %d : %d", sccbh->pdi->pathinfo.levinfo[17].node_type, sccbh->new_row->pathinfo.levinfo[17].node_type ); */
-      eq = ( sha1id0 == sha1id1 );
+      {
+        duf_sqltype_t t;
+
+        t = CRP( datarow_get_type, sccbh->rows, pack_field );
+        switch ( t )
+        {
+        case DUF_SQLTYPE_NONE:
+          assert( 0 );
+          break;
+        case DUF_SQLTYPE_INTEGER:
+          {
+            unsigned long long number0;
+            unsigned long long number1;
+
+            number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
+            number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
+            eq = ( number0 == number1 );
+            if ( !eq )
+              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
+          }
+          break;
+        case DUF_SQLTYPE_FLOAT:
+          assert( 0 );
+          break;
+        case DUF_SQLTYPE_TEXT:
+          {
+            const char *str0;
+            const char *str1;
+
+            str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+            str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+            eq = ( 0 == strcmp( str0, str1 ) );
+            if ( !eq )
+              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+          }
+          break;
+        case DUF_SQLTYPE_BLOB:
+          assert( 0 );
+          break;
+        case DUF_SQLTYPE_NULL:
+          assert( 0 );
+          break;
+        }
+      }
       {
         if ( !eq )
         {
-          MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", sha1id0, sha1id1, sccbh->rows, sccbh->rows->prev );
-        /* assert(0); */
           CRX( sccbh_rows_eval, sccbh );
         }
       }

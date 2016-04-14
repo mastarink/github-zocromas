@@ -95,8 +95,21 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
 #endif
       MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_leaf, H_PDI ) /* H_PDI->seq_leaf */  );
     }
+#if 0
     if ( sccbh->progress_leaf_cb )
       ( sccbh->progress_leaf_cb ) ( sccbh );
+#elif 0
+    IF_CRV( CRX( sccbh_progress_leaf_cb, sccbh ), sccbh );
+    ERRCLEAR( NO_FUNC );
+#else
+    {
+      duf_sccbh_fun_t cb;
+
+      cb = duf_sccbh_progress_leaf_cb( sccbh );
+      if ( cb )
+        cb( sccbh );
+    }
+#endif
   }
   ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }

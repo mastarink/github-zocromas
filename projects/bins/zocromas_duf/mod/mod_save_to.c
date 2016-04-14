@@ -23,12 +23,6 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t ✗ */
-#include "duf_sccb_structs.h"
-
-#include "duf_sccbh_ref.h"
-#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
-
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
@@ -37,10 +31,15 @@
 #include "duf_levinfo_stat.h"
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
+#include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
+#include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
-#include "duf_mod_defs.h"
+#include "duf_sccbh_ref.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
@@ -48,8 +47,8 @@
 #include "duf_print.h"
 #include "duf_fileinfo.h"
 
-#include "duf_tags.h"
 
+#include "duf_mod_defs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_save_to )
@@ -212,7 +211,7 @@ SR( MOD, copy_to, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * s
 }
 
 static
-SR( MOD, save_to_de_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh  )
+SR( MOD, save_to_de_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
 {
 /* const struct stat *pst_file MAS_UNUSED = duf_levinfo_stat( H_PDI ); */
 #ifdef MAS_TRACING

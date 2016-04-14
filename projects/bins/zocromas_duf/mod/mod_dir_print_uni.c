@@ -26,10 +26,11 @@
 
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_print.h"
 
@@ -198,9 +199,9 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         duf_filedirformat_t *fmt;
 
 #if 0
-	use = duf_pdi_pu( H_PDI )->use_format - 1;
+        use = duf_pdi_pu( H_PDI )->use_format - 1;
 #else
-	use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+        use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
 #endif
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )

@@ -30,10 +30,11 @@
 #include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
 #include "duf_sql_defs.h"                                            /* DUF_SQL_IDFIELD etc. ✗ */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
@@ -181,7 +182,7 @@ SRP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_dept
   {
     MAST_TRACE( select, 10, "<NOT selected> (%d)", QERRIND );
   }
-  DUF_SQL_SE_END_STMT( H_PDI, select_crc32, pstmt_local );             /* clears SQL_ROW / SQL_DONE */
+  DUF_SQL_SE_END_STMT( H_PDI, select_crc32, pstmt_local );           /* clears SQL_ROW / SQL_DONE */
   ERP( MOD, unsigned long long, crc32id, 0, pdistat2file_crc32id_existed, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh,
        unsigned long crc32sum );
 }
@@ -210,7 +211,7 @@ SRP( MOD, unsigned long long, crc32id, -1, insert_crc32_uni, duf_depthinfo_t * p
       DUF_SQL_SE_BIND_LL( crc32sum, crc32sum, pstmt_local );
       DUF_SQL_SE_STEPC( pstmt_local );
       DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
-      DUF_SQL_SE_END_STMT( H_PDI, insert_crc32, pstmt_local );         /* clears SQL_ROW / SQL_DONE */
+      DUF_SQL_SE_END_STMT( H_PDI, insert_crc32, pstmt_local );       /* clears SQL_ROW / SQL_DONE */
       insert_cnt++;
     }
     duf_pdi_reg_changes( H_PDI, changes );
@@ -352,7 +353,7 @@ SR( MOD, crc32_dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_scc
         DUF_SQL_SE_BIND_LL( dataId, filedataid, pstmt_local );
         DUF_SQL_SE_STEPC( pstmt_local );
         DUF_SQL_SE_CHANGES( H_PDI, changes, pstmt_local );
-        DUF_SQL_SE_END_STMT( H_PDI, update_crc32id, pstmt_local );     /* clears SQL_ROW / SQL_DONE */
+        DUF_SQL_SE_END_STMT( H_PDI, update_crc32id, pstmt_local );   /* clears SQL_ROW / SQL_DONE */
 #endif
       }
       duf_pdi_reg_changes( H_PDI, changes );

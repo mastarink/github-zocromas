@@ -15,13 +15,9 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_structs.h"
-#include "duf_sccb_eval_std.h"
-
-#include "duf_sccbh_ref.h"
-#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
-
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
+
+#include "duf_pdi_ref.h"
 
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
@@ -29,20 +25,22 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
+#include "duf_sccb_structs.h"
+/* #include "duf_sccb_eval_std.h" */
 
-#include "duf_pdi_ref.h"
+#include "duf_sccbh_ref.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
-#include "duf_mod_defs.h"
-
-#include "duf_path2dirid.h"                                          /* duf_dirid2path; etc. ✗ */
-
-#include "duf_maindb.h"                                              /* duf_main_db; duf_main_db_open; duf_main_db_close ✗ */
+/* #include "duf_path2dirid.h"                                          (* duf_dirid2path; etc. ✗ *) */
+/* #include "duf_maindb.h"                                              (* duf_main_db; duf_main_db_open; duf_main_db_close ✗ *) */
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 #define DUF_MOD_NAME dumplet
+#include "duf_mod_defs.h"
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 DUF_MOD_DECLARE_ALL_FUNCS( duf_dumplet )
