@@ -98,11 +98,18 @@ duf_sccbh_changes( const duf_sccb_handle_t * sccbh )
   return sccbh ? sccbh->changes : 0;
 }
 
+const duf_sccb_data_row_t *
+duf_sccbh_rows( const duf_sccb_handle_t * sccbh )
+{
+  return sccbh ? sccbh->rows : 0;
+}
+
 duf_sccbh_fun_t
 duf_sccbh_progress_leaf_cb( const duf_sccb_handle_t * sccbh )
 {
   return sccbh ? sccbh->progress_leaf_cb : NULL;
 }
+
 duf_sccbh_fun_t
 duf_sccbh_progress_node_cb( const duf_sccb_handle_t * sccbh )
 {

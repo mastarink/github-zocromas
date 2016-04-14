@@ -156,10 +156,11 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     libname = mas_strndup( name, namelen );
     if ( libname && first )
     {
-      sccb = duf_load_mod_handler_symbol_find( libname, "sccb" );
+      sccb = CRX( load_mod_handler_symbol_find, libname, "sccb" );
       if ( !sccb )
         sccb = duf_load_sccb_symbol( libname, "duf_mod_sccb_handler" );
     /* QT( "@A sccb:%p (%s)", sccb, "duf_mod_sccb_handler" ); */
+      assert( 0 == strcmp( libname, sccb->name ) );
       if ( !sccb )
       {
         char *symbol = NULL;

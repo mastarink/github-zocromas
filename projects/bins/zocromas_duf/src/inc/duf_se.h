@@ -55,6 +55,7 @@ typedef enum
 
 # define F2N(_pref, _funname) _pref ## _funname
 # define F2ND(_funname) F2N(duf_,_funname)
+# define F2NP(_funname) &F2ND(_funname)
 /* # define F2NW(_pref, _funname) DUF_WRAPPED( _pref ## _funname ) */
 
 # define STT {

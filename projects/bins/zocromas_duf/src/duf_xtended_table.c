@@ -34,8 +34,10 @@
 extern const muc_longval_extended_table_t optable_experimental;
 extern const muc_longval_extended_table_t optable_fs;
 extern const muc_longval_extended_table_t optable_interactive;
+
 /* extern const muc_longval_extended_table_t optable_str; */
 extern const muc_longval_extended_table_t optable_options;
+
 /* extern const muc_longval_extended_table_t optable_db; */
 /* extern const muc_longval_extended_table_t optable_sccb; */
 
@@ -44,6 +46,7 @@ extern const muc_longval_extended_table_t optable_options;
 /* extern const muc_longval_extended_table_t optable_flag_allow; */
 extern const muc_longval_extended_table_t optable_sflag;
 extern const muc_longval_extended_table_t optable_uplus;
+
 /* extern const muc_longval_extended_table_t optable_help; */
 
 #ifdef MAS_TRACING_OPTIONS
@@ -57,26 +60,26 @@ extern const muc_longval_extended_table_t optable_debug;
 extern const muc_longval_extended_table_t optable_redo_and_obsolete;
 
 static const muc_longval_extended_table_t *const __lo_extended_table_multi[] = {
-  /* &optable_main, */
+/* &optable_main, */
   &optable_experimental,
   &optable_fs,
-  /* &optable_io, */
+/* &optable_io, */
   &optable_interactive,
-  /* &optable_str, */
+/* &optable_str, */
   &optable_options,
-  /* &optable_db, */
-  /* &optable_sccb, */
+/* &optable_db, */
+/* &optable_sccb, */
 /* &optable_info, */
   &optable_sflag,
-  /* &optable_flag, */
-  /* &optable_flag_allow, */
+/* &optable_flag, */
+/* &optable_flag_allow, */
   &optable_uplus,
 #ifdef MAS_TRACING_OPTIONS
-  /* &optable_trace, */
+/* &optable_trace, */
 #endif
 /* &optable_filter, */
-  /* &optable_help, */
-  /* &optable_format, */
+/* &optable_help, */
+/* &optable_format, */
   &optable_redo_and_obsolete,
 
   NULL
@@ -91,7 +94,7 @@ duf_optable_xtable_list( void )
 #if 1
 static const muc_longval_extended_table_t *const __lo_extended_table_multi2[] = {
   &optable_debug,
-  /* &optable_test, */
+/* &optable_test, */
   NULL
 };
 
@@ -114,18 +117,20 @@ duf_optable_xtable_list_mod( void )
     liblist = duf_liblist( "ot_*.so", &num );
     list_mod = mas_malloc( sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
     memset( list_mod, 0, sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
-    muc_longval_extended_table_t **lm = list_mod;
-
-    for ( char **ll = liblist; ll && *ll; ll++ )
     {
-      muc_longval_extended_table_t *mod;
+      muc_longval_extended_table_t **lm = list_mod;
 
-      mod = duf_load_mod_handler_symbol_find( *ll, "optab" );
-    /* QT( "@lib: %s : %p", *ll, mod ); */
-      if ( mod )
-        *lm++ = mod;
-    /* QT( "@%d of %d : %s", i, num, *ll ); */
-      i++;
+      for ( char **ll = liblist; ll && *ll; ll++ )
+      {
+        muc_longval_extended_table_t *mod;
+
+        mod = CRX( load_mod_handler_symbol_find, *ll, "optab" );
+      /* QT( "@lib: %s : %p", *ll, mod ); */
+        if ( mod )
+          *lm++ = mod;
+      /* QT( "@%d of %d : %s", i, num, *ll ); */
+        i++;
+      }
     }
   /* TODO realloc list_mod ? */
     if ( liblist )

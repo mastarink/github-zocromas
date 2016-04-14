@@ -29,6 +29,7 @@
 
 #include "duf_pathinfo_ref.h"
 
+#include "duf_mod_handle.h"
 /* ###################################################################### */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 /* ###################################################################### */
@@ -62,26 +63,15 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
 {
   if ( sccbh && sccbh->rows )
   {
-    int n = 0;
+    duf_scanner_fun_t pack_cb;
 
-    for ( duf_sccb_data_row_t * trow = sccbh->rows->prev; trow; trow = trow->prev )
-    {
-      if ( trow && trow->cnt )
-      {
-        const char *path;
-        const char *rpath;
-        const char *iname;
+    pack_cb = CRX( load_mod_handler_symbol_find, H_SCCB->name, "pack" );
+    QT( "@@@%s : %p", H_SCCB->name, pack_cb );
+    if ( pack_cb )
+      CRV( pack_cb, H_PDI, sccbh );
 
-        path = CRX( pi_path, &trow->pathinfo );
-        rpath = CRX( pi_relpath, &trow->pathinfo );
-        iname = CRX( pi_itemname, &trow->pathinfo );
-        MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-        MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
-        n++;
-      }
-    }
     CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
-    MAST_TRACE( temp, 5, "@@@@ ===========================================" );
+    MAST_TRACE( temp, 5, "@@@@  ===========================================  " );
     sccbh->rows->prev = NULL;
   }
   ERN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );

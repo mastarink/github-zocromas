@@ -159,7 +159,7 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
 
       assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
-    /* assert( QNOERR ); */
+      assert( QNOERR );
       {
         mas_error_index_t ei;
 

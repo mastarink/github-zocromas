@@ -169,7 +169,7 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
         break;
       }
     }
-    ERRCLEAR( NO_FIELD );
+    ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
     if ( !eq )
     {
       CRX( sccbh_rows_eval, sccbh );

@@ -32,6 +32,8 @@
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
+#include "duf_pathinfo_ref.h"
+
 #include "duf_print.h"
 
 #include "duf_fileinfo.h"
@@ -61,9 +63,11 @@ static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * s
 
 /* ########################################################################################## */
 static duf_scan_callbacks_t duf_sccb_dispatch;
+static DR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED );
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
+  {"pack", F2ND( pack_leaf )},
   {NULL, NULL}
 };
 
@@ -107,6 +111,34 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 };
 
 /* ########################################################################################## */
+
+static
+SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED )
+{
+  const duf_sccb_data_row_t *rows;
+  int n = 0;
+
+  rows = duf_sccbh_rows( sccbh );
+  for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev )
+  {
+    const char *path MAS_UNUSED;
+    const char *rpath MAS_UNUSED;
+    const char *iname MAS_UNUSED;
+
+    if ( trow && trow->cnt )
+    {
+      n++;
+    }
+    path = CRX( pi_path, &trow->pathinfo );
+    rpath = CRX( pi_relpath, &trow->pathinfo );
+    iname = CRX( pi_itemname, &trow->pathinfo );
+
+    MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+    MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+  }
+
+  ER( MOD, pack_leaf, duf_depthinfo_t * pdi, struct duf_sccb_handle_s *sccbh );
+}
 
 static
 SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
