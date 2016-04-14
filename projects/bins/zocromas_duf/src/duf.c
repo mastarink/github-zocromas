@@ -70,7 +70,8 @@
 static int
 lcb( struct dl_phdr_info *info MAS_UNUSED, size_t size MAS_UNUSED, void *data MAS_UNUSED )
 {
-  fprintf( stderr, "-=- %s\n", info->dlpi_name );
+  /* fprintf( stderr, "-=- %s\n", info->dlpi_name ); */
+  QT("@@@@@-=- %s", info->dlpi_name);
   return 0;
 }
 

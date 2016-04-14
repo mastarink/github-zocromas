@@ -66,10 +66,11 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
     duf_scanner_fun_t pack_cb;
 
     pack_cb = CRX( load_mod_handler_symbol_find, H_SCCB->name, "pack" );
-    QT( "@@@%s : %p", H_SCCB->name, pack_cb );
     if ( pack_cb )
+    {
+      QT( "@@@%s : %p", H_SCCB->name, pack_cb );
       CRV( pack_cb, H_PDI, sccbh );
-
+    }
     CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
     MAST_TRACE( temp, 5, "@@@@  ===========================================  " );
     sccbh->rows->prev = NULL;

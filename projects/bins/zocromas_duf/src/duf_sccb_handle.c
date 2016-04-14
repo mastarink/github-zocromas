@@ -113,7 +113,7 @@ SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_leaf_sql_set, duf_sccb_handl
       set = CRX( set_index2set, force_set_leaf_index, std_leaf_sets, std_leaf_nsets );
 #endif
     if ( !set )
-      set = H_SCCB->leaf.type == DUF_NODE_NONE ? NULL : &H_SCCB->leaf;
+      set = ( H_SCCB->leaf.type == DUF_NODE_NONE ) ? NULL : &H_SCCB->leaf;
   }
 /* sccbh->active_leaf_set = setr; */
 /* sccbh->second_leaf_set = &H_SCCB->leaf; */
@@ -147,22 +147,36 @@ SRS( OTHER, duf_sql_set_pair_t, set_pair, sccbh_get_node_sql_set, duf_sccb_handl
   assert( H_SCCB );
   {
     if ( !set && force_node_set_name )
+#if 0
       for ( unsigned i = 0; i < ( unsigned ) std_node_nsets; i++ )
         if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, force_node_set_name ) )
           set = &std_node_sets[i];
+#else
+      set = CRX( set_name2set, force_node_set_name, std_node_sets, std_node_nsets );
+#endif
 
     if ( !set && force_set_node_index > 0 )
+#if 0
       set = ( force_set_node_index <= ( unsigned ) std_node_nsets ) ? &std_node_sets[force_set_node_index - 1] : NULL;
-
+#else
+      set = CRX( set_index2set, force_set_node_index, std_node_sets, std_node_nsets );
+#endif
     if ( !set && H_SCCB->std_node_set_name )
+#if 0
       for ( unsigned i = 0; i < ( unsigned ) std_node_nsets; i++ )
         if ( std_node_sets[i].name && 0 == strcmp( std_node_sets[i].name, H_SCCB->std_node_set_name ) )
           set = &std_node_sets[i];
-
+#else
+      set = CRX( set_name2set, H_SCCB->std_node_set_name, std_node_sets, std_node_nsets );
+#endif
     if ( !set && H_SCCB->use_std_node_set_num > 0 )
+#if 0
       set = ( H_SCCB->use_std_node_set_num <= std_node_nsets ) ? &std_node_sets[H_SCCB->use_std_node_set_num - 1] : NULL;
+#else
+      set = CRX( set_index2set, force_set_node_index, std_node_sets, std_node_nsets );
+#endif
     if ( !set )
-      set = H_SCCB->node.type == DUF_NODE_NONE ? NULL : &H_SCCB->node;
+      set = ( H_SCCB->node.type == DUF_NODE_NONE ) ? NULL : &H_SCCB->node;
   }
 /* sccbh->active_node_set = setr; */
 /* sccbh->second_node_set = &H_SCCB->node; */
@@ -543,9 +557,9 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
     CRX( sccbh_rows_eval, sccbh );                                   /* XXX FIXME XXX */
 
     CRX( datarow_list_delete_f, sccbh->rows, 0 );
-    /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
+  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
     sccbh->rows = NULL;
-    /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
+  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
     for ( H_SCCBIv = 0; H_SCCB; H_SCCBIv++ )
     {
       CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );
