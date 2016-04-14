@@ -228,7 +228,7 @@ SRP( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_ro
 
 /* const char *                                                          */
 /* duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name ) */
-SRP( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name )
+SRP( OTHER, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name )
 {
   duf_sccb_data_value_t *field;
 
@@ -236,5 +236,5 @@ SRP( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row
   assert( !field || field->typ == DUF_SQLTYPE_TEXT || field->typ == DUF_SQLTYPE_NULL );
   s = field ? field->svalue : NULL;
 /* return field ? field->svalue : NULL; */
-  ERP( SCCBH, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
+  ERP( SCCBH, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name );
 }

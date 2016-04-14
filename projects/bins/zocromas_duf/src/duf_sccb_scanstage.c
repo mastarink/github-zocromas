@@ -45,6 +45,8 @@ duf_sccb_scanstage_scanner( const duf_scan_callbacks_t * sccb, duf_scanstage_t s
     break;
   case DUF_SCANSTAGE_DB_LEAVES:
     break;
+  case DUF_SCANSTAGE_DB_LEAVES_PACK:
+    break;
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     assert( nt == DUF_NODE_LEAF );
     if ( nt == DUF_NODE_LEAF )
@@ -99,6 +101,9 @@ duf_scanstage_name( duf_scanstage_t scanstage )
   case DUF_SCANSTAGE_DB_LEAVES:
     rs = "db_leaves_any";                                            /* M */
     break;
+  case DUF_SCANSTAGE_DB_LEAVES_PACK:
+    rs = "db_leaves_pack";                                           /* P */
+    break;
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     rs = "db_leaves_nofd";                                           /* L */
     break;
@@ -142,6 +147,9 @@ duf_scanstage_shortname( duf_scanstage_t scanstage )
     break;
   case DUF_SCANSTAGE_DB_LEAVES:
     rs = "M";                                                        /* M */
+    break;
+  case DUF_SCANSTAGE_DB_LEAVES_PACK:
+    rs = "P";                                                        /* P */
     break;
   case DUF_SCANSTAGE_DB_LEAVES_NOFD:
     rs = "L";                                                        /* L */

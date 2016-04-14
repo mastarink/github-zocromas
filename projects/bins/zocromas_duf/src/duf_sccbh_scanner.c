@@ -23,7 +23,7 @@
 
 #include "duf_sccb.h"
 #include "duf_sccb_structs.h"
-/* #include "duf_sccb_scanstage.h"                                      (* duf_scanstage_name; duf_scanstage_scanner; ✗ *) */
+#include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
@@ -104,79 +104,7 @@ SR( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node
   ER( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node_type );
 }
 
-SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
-{
-/* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
-  CRX( sccbh_preset_leaf_scanner, sccbh );
 
-  if ( sccbh->rows && sccbh->rows->prev )
-  {
-    int eq = 0;
-    const char *pack_field;
-
-    pack_field = CRX( pdi_pack_field, H_PDI );
-    if ( QNOERR )
-    {
-      duf_sqltype_t t;
-
-      t = CRP( datarow_get_type, sccbh->rows, pack_field );
-      switch ( t )
-      {
-      case DUF_SQLTYPE_NONE:
-        eq = 0;
-        break;
-      case DUF_SQLTYPE_INTEGER:
-        {
-          unsigned long long number0;
-          unsigned long long number1;
-
-          number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
-          number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
-          eq = ( number0 == number1 );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
-        }
-        break;
-      case DUF_SQLTYPE_FLOAT:
-        assert( 0 );
-        break;
-      case DUF_SQLTYPE_TEXT:
-        {
-          const char *str0;
-          const char *str1;
-
-          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
-          eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
-        }
-        break;
-      case DUF_SQLTYPE_BLOB:
-        assert( 0 );
-        break;
-      case DUF_SQLTYPE_NULL:
-        {
-          const char *str0;
-          const char *str1;
-
-          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
-          eq = ( !str0 && !str1 );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
-        }
-        break;
-      }
-    }
-    ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
-    if ( !eq )
-    {
-      CRX( sccbh_rows_eval, sccbh );
-    }
-  }
-  ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
-}
 
 SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage,
     duf_scanner_fun_t scanner, duf_node_type_t node_type )

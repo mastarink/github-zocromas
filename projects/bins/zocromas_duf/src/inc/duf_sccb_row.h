@@ -33,7 +33,7 @@ DRP( SCCBH, duf_sqltype_t, typ, DUF_SQLTYPE_NONE, datarow_get_type, const duf_sc
 DRP( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );
 
 /* const char *duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name ); */
-DRP( OTHER, const char *, s, NULL, datarow_get_string, duf_sccb_data_row_t * row, const char *name );
+DRP( OTHER, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name );
 
 /* unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ); */
 /* DRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name ); */

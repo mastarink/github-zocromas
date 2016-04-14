@@ -48,6 +48,8 @@
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
+#include "duf_sccbh_scanner.h"
+
 /* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
@@ -251,7 +253,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 #endif
     duf_pdi_set_each_stmt( H_PDI, NULL );
 
-/* CRX( sccbh_row_next, sccbh, NULL );                     */
+/* CRX( sccbh_row_add, sccbh, NULL );                     */
 /* if ( have_rows && node_type == DUF_NODE_LEAF )          */
 /*   CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
   }
@@ -282,8 +284,9 @@ SR( SCCBH, eval_sccbh_sql_set_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
     MAST_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, CRX( levinfo_dirid, H_PDI ), CRX( levinfo_itemshowname, H_PDI ) );
   }
 
-  assert( str_cb2 == F2ND( sccbh_eval_all ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) )
-          || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) ) );
+  assert( str_cb2 == F2ND( sccbh_eval_all ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
+          || str_cb2 == F2ND( sccbh_call_leaf_pack_scanner ) );
   CR( eval_sccbh_sql_str_cb, sccbh, node_type, sql_selector, str_cb2, scanstage );
   mas_free( sql_selector );
   sql_selector = NULL;

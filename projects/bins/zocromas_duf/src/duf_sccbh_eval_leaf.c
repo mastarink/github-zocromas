@@ -16,6 +16,8 @@
 /* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
+#include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
+
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
@@ -23,7 +25,7 @@
 /* #include "duf_sccb.h" */
 #include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
-/* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
@@ -98,7 +100,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
 
     for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
     {
-    /* QT( "@a %d", n ); */
+    /* QT( "@a %s : %d", H_SCCB->name, n ); */
       if ( ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DB )
            && !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DISABLED )
            && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
@@ -122,12 +124,25 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
           }
 #endif
         }
-
+      /* if ( scanner_set->flags & DUF_SCANNER_SET_FLAG_PACK ) */
+      /* {                                                     */
+      /*   assert( 0 );                                        */
+      /* }                                                     */
         ERRLOWER( FS_DISABLED );
         CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner_set->fun, DUF_NODE_LEAF );
         ERRUPPER( FS_DISABLED );
       }
-    /* QT( "@b %d", n ); */
+      else
+      {
+#if 0
+        QT( "@b %d :  %d %d %d(%s:%s) %d", n, ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DB ) ? 1 : 0, /* */
+            ( !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DISABLED ) ) ? 1 : 0, /* */
+            ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE ) ? 1 : 0, /* */
+            duf_scanstage_name( scanner_set->scanstage ),            /* */
+            duf_scanstage_name( scanstage ),                         /* */
+            ( ( scanner_set->type & DUF_NODE_LEAF ) || scanner_set->type == DUF_NODE_NONE ) ? 1 : 0 );
+#endif
+      }
       n++;
     }
   }
@@ -233,4 +248,84 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmn
 {
   CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
   ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
+}
+
+SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
+{
+/* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
+/* CRX( sccbh_preset_leaf_scanner, sccbh ); */
+  if ( sccbh->rows && sccbh->rows->prev )
+  {
+    int eq = 0;
+    const char *pack_field;
+
+    pack_field = CRX( pdi_pack_field, H_PDI );
+    if ( QNOERR )
+    {
+      duf_sqltype_t t;
+
+      t = CRP( datarow_get_type, sccbh->rows, pack_field );
+      switch ( t )
+      {
+      case DUF_SQLTYPE_NONE:
+        eq = 0;
+        break;
+      case DUF_SQLTYPE_INTEGER:
+        {
+          unsigned long long number0;
+          unsigned long long number1;
+
+          number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
+          number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
+          eq = ( number0 == number1 );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
+        }
+        break;
+      case DUF_SQLTYPE_FLOAT:
+        assert( 0 );
+        break;
+      case DUF_SQLTYPE_TEXT:
+        {
+          const char *str0;
+          const char *str1;
+
+          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+          eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+        }
+        break;
+      case DUF_SQLTYPE_BLOB:
+        assert( 0 );
+        break;
+      case DUF_SQLTYPE_NULL:
+        {
+          const char *str0;
+          const char *str1;
+
+          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+          eq = ( !str0 && !str1 );
+          if ( !eq )
+            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+        }
+        break;
+      }
+    }
+    ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
+    if ( !eq )
+    {
+      CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
+      assert( duf_sccbh_current_row( sccbh ) == NULL );
+      CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
+      sccbh->rows->prev = NULL;
+
+    /* assert(0); */
+
+    /* CRX( sccbh_rows_eval, sccbh ); */
+    }
+  }
+  ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
 }

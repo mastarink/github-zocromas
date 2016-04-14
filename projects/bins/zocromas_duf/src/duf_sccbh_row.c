@@ -57,6 +57,8 @@ SRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * scc
   ERP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 }
 #endif
+
+#if 0
 /* void                                             */
 /* duf_sccbh_rows_eval( duf_sccb_handle_t * sccbh ) */
 SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
@@ -72,11 +74,12 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
       CRV( pack_cb, H_PDI, sccbh );
     }
     CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
-    MAST_TRACE( temp, 5, "@@@@  ===========================================  " );
+    MAST_TRACE( temp, 5, "@@@@  =========================================== %s:%p ", H_SCCB->name, pack_cb );
     sccbh->rows->prev = NULL;
   }
   ERN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );
 }
+#endif
 
 #if 0
 SRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
@@ -104,7 +107,7 @@ SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
 }
 #endif
 
-SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
+SRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
   assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
 #if 0
@@ -118,8 +121,7 @@ SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
     assert( pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
     assert( ! /*sccbh-> */ new_row );
     /*sccbh-> */ new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ) );
-
-    if ( /*sccbh->*/new_row )
+    if (  /*sccbh-> */ new_row )
     {
     /* assert( sccbh->new_row ); */
     /*sccbh-> */ new_row->prev = sccbh->rows;
@@ -128,5 +130,30 @@ SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt
     }
   }
 #endif
-  ERN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
+  ERN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
+}
+
+SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh )
+{
+  assert( sccbh );
+  CRX( sccbh_set_current_row, sccbh, sccbh->rows );
+  row = CRX( sccbh_current_row, sccbh );
+  ERX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh );
+}
+
+SRN( SCCBH, void, sccbh_end_row, duf_sccb_handle_t * sccbh )
+{
+  assert( sccbh );
+  CRX( sccbh_set_current_row, sccbh, NULL );
+  ERN( SCCBH, void, sccbh_end_row, duf_sccb_handle_t * sccbh );
+}
+
+SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_prev_row, duf_sccb_handle_t * sccbh )
+{
+  assert( sccbh );
+  if ( sccbh->current_row )
+    CRX( sccbh_set_current_row, sccbh, sccbh->current_row->prev );
+
+  row = sccbh->current_row;
+  ERX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_prev_row, duf_sccb_handle_t * sccbh );
 }

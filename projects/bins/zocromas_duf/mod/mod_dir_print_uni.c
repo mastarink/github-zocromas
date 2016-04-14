@@ -67,7 +67,7 @@ static DR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_han
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
-  {"pack", F2ND( pack_leaf )},
+/* {"pack", F2ND( pack_leaf )}, */
   {NULL, NULL}
 };
 
@@ -78,6 +78,13 @@ static duf_scanner_set_t scanners[] = {
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
    .fun = F2ND( print_leaf2 ),                                       /* */
+   },
+  {
+   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK,     /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        /* */
+   /* .scanstage = DUF_SCANSTAGE_DB_LEAVES,                        (* *) */
+   .fun = F2ND( pack_leaf ),                                         /* */
    },
 
   {.fun = NULL}
@@ -115,11 +122,12 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 static
 SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED )
 {
-  const duf_sccb_data_row_t *rows;
   int n = 0;
+  const duf_sccb_data_row_t *trow = NULL;
 
-  rows = duf_sccbh_rows( sccbh );
-  for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev )
+  ( void ) duf_sccbh_start_row( sccbh );
+/* for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev ) */
+  while ( ( trow = duf_sccbh_prev_row( sccbh ) ) )
   {
     const char *path MAS_UNUSED;
     const char *rpath MAS_UNUSED;
@@ -134,8 +142,12 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *
 
       MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
       MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+    /* sccbh->current_row=trow; */
+      CR( print_leaf2, pdi, sccbh );
     }
+  /* CRX( sccbh_set_current_row, sccbh, NULL ); */
   }
+  duf_sccbh_end_row( sccbh );
 
   ER( MOD, pack_leaf, duf_depthinfo_t * pdi, struct duf_sccb_handle_s *sccbh );
 }

@@ -34,6 +34,7 @@
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccbh_scanner.h"
 
 #include "duf_pdi_structs.h"                                         /* H_PDI->items */
 /* ###################################################################### */
@@ -71,6 +72,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pst
     [DUF_SCANSTAGE_DB_LEAVES] /*       */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_new ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_NOFD] /*  */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_nofd ) : NULL,
     [DUF_SCANSTAGE_DB_LEAVES_FD] /*    */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_fd ) : NULL,
+    [DUF_SCANSTAGE_DB_LEAVES_PACK] /*  */  = /*      */ allow_files /*        */ ? F2ND( sccbh_eval_db_leaves_pack ) : NULL,
     [DUF_SCANSTAGE_NODE_MIDDLE] /*     */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
     [DUF_SCANSTAGE_DB_SUBNODES] /*     */  = !linear && allow_sub /*          */ ? F2ND( sccbh_eval_db_subnodes ) : NULL,
     [DUF_SCANSTAGE_NODE_AFTER] /*      */  = !linear && allow_dirs /*         */ ? F2ND(  /* sccbh_eval_db_node */ sccbh_eval_db_node_new ) : NULL,
@@ -88,6 +90,7 @@ SR( SCCBH, eval_sccbh_scanstage, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pst
   /* sccbh->current_scanstage = scanstage; */
     H_PDI->items.total = 0;
     H_PDI->items.dirs = 0;
+    QT( "@@scanstage:%s", CRX( scanstage_name, scanstage ) );
     CRV( ( passes[scanstage] ), sccbh, /* pstmt_selector, */ scanstage );
   /* QT( "@%d. %llu", scanstage, H_PDI->items.total ); */
     MAST_TRACE( scan, 4, "[%llu]", CRX( levinfo_dirid, H_PDI ) );
@@ -119,6 +122,7 @@ SR( SCCBH, sccbh_eval_all_i, duf_sccb_handle_t * sccbh /* , duf_stmnt_t * pstmt_
 
     for ( duf_scanstage_t scanstage = DUF_SCANSTAGE_MIN; scanstage <= DUF_SCANSTAGE_MAX; scanstage = scanstage << 1 )
     {
+      QT( "@@@scanstage:%s", CRX( scanstage_name, scanstage ) );
       assert( scanstage );
       CR( eval_sccbh_scanstage, sccbh, /* pstmt_selector, */ scanstage );
     }
@@ -155,7 +159,7 @@ SR( SCCBH, sccbh_eval_all, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unu
   assert( CRX( pdi_depth, H_PDI ) /* H_PDI->pathinfo.depth */  >= 0 );
   assert( sccbh );
 /* assert( pstmt_selector ); */
-  /* assert( pstmt_selector == duf_pdi_each_stmt( H_PDI, 1 ) ); */
+/* assert( pstmt_selector == duf_pdi_each_stmt( H_PDI, 1 ) ); */
 #ifdef MAS_TRACING
   unsigned long long diridpdi;
 

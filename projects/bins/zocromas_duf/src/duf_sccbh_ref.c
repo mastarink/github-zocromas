@@ -11,6 +11,8 @@
 
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
+#include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
+
 #include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 /* ###################################################################### */
 #include "duf_sccbh_ref.h"
@@ -101,7 +103,20 @@ duf_sccbh_changes( const duf_sccb_handle_t * sccbh )
 const duf_sccb_data_row_t *
 duf_sccbh_rows( const duf_sccb_handle_t * sccbh )
 {
-  return sccbh ? sccbh->rows : 0;
+  return sccbh ? sccbh->rows : NULL;
+}
+
+SRN( SCCBH, void, sccbh_set_current_row, duf_sccb_handle_t * sccbh, const duf_sccb_data_row_t * row )
+{
+  assert( sccbh );
+  sccbh->current_row = row;
+  ERN( SCCBH, void, sccbh_set_current_row, duf_sccb_handle_t * sccbh, const duf_sccb_data_row_t * row );
+}
+
+const duf_sccb_data_row_t *
+duf_sccbh_current_row( const duf_sccb_handle_t * sccbh )
+{
+  return sccbh ? sccbh->current_row : NULL;
 }
 
 duf_sccbh_fun_t
