@@ -41,7 +41,7 @@ SRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * 
 {
 /* unsigned long long n = 0; */
 
-  n = sccbh ? CRP( datarow_get_number, sccbh->rows, name ) : 0;
+  n = sccbh ? CRP( datarow_get_number, sccbh->current_row ? sccbh->current_row : sccbh->rows, name ) : 0;
 /* return n; */
   ERP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
 }
@@ -52,7 +52,7 @@ SRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * scc
 {
 /* const char *s = NULL; */
 
-  s = sccbh ? CRP( datarow_get_string, sccbh->rows, name ) : NULL;
+  s = sccbh ? CRP( datarow_get_string, sccbh->current_row ? sccbh->current_row : sccbh->rows, name ) : NULL;
 /* return s; */
   ERP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 }
@@ -78,6 +78,7 @@ SRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh )
   ERN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh );
 }
 
+#if 0
 SRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
   if ( sccbh )
@@ -101,12 +102,31 @@ SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
 
   ERN( SCCBH, void, sccbh_close_row, duf_sccb_handle_t * sccbh );
 }
+#endif
 
 SRN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
   assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+#if 0
   CRX( sccbh_row_open, sccbh, pstmt_arg );
   CRX( sccbh_row_close, sccbh );
+#else
+  if ( sccbh )
+  {
+    duf_sccb_data_row_t *new_row = NULL;
 
+    assert( pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
+    assert( ! /*sccbh-> */ new_row );
+    /*sccbh-> */ new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ) );
+
+    if ( /*sccbh->*/new_row )
+    {
+    /* assert( sccbh->new_row ); */
+    /*sccbh-> */ new_row->prev = sccbh->rows;
+      sccbh->rows = /*sccbh-> */ new_row;
+    /*sccbh-> */ new_row = NULL;
+    }
+  }
+#endif
   ERN( SCCBH, void, sccbh_row_next, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
 }

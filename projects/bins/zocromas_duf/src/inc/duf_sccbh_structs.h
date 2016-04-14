@@ -36,7 +36,8 @@ struct duf_sccb_handle_s
   duf_rsccbh_fun_t atom_cb;
 /* duf_sccb_data_row_t previous_row; */
   duf_sccb_data_row_t *rows;
-  duf_sccb_data_row_t *new_row;
+  duf_sccb_data_row_t *current_row;
+  /* duf_sccb_data_row_t *new_row; */
 };
 
 #endif

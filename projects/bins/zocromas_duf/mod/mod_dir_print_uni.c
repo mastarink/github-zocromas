@@ -128,13 +128,13 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *
     if ( trow && trow->cnt )
     {
       n++;
-    }
-    path = CRX( pi_path, &trow->pathinfo );
-    rpath = CRX( pi_relpath, &trow->pathinfo );
-    iname = CRX( pi_itemname, &trow->pathinfo );
+      path = CRX( pi_path, &trow->pathinfo );
+      rpath = CRX( pi_relpath, &trow->pathinfo );
+      iname = CRX( pi_itemname, &trow->pathinfo );
 
-    MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-    MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+      MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+      MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+    }
   }
 
   ER( MOD, pack_leaf, duf_depthinfo_t * pdi, struct duf_sccb_handle_s *sccbh );
