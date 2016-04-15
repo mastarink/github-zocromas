@@ -60,7 +60,7 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
     DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 5. leaf str cb2" );
 
     assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
-            || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) || str_cb2 == F2ND( sccbh_call_leaf_pack_scanner ) );
+            || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack ) );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
 
     if ( !( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) && CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) ) )
@@ -79,11 +79,11 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
     assert( CRX( pdi_levinfo, H_PDI ) );
     assert( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) );
     assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-  /* CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
+  /* CR( sccbh_eval_db_leaf_str_cb_pack, sccbh, scanstage ); */
     if ( str_cb2 )
     {
       assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
-              || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) || str_cb2 == F2ND( sccbh_call_leaf_pack_scanner ) );
+              || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack ) );
       CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
     }
 
@@ -142,7 +142,7 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
   MAST_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", CRX( pdi_depth, H_PDI ) );
   MAST_TRACE( explain, 40, "@ sel cb2 leaf" );
   assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
-          || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_call_leaf_pack_scanner ) || str_cb2 == NULL );
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack ) || str_cb2 == NULL );
   MAST_TRACE( scan, 9, "LEAF %s", CRX( levinfo_path, H_PDI ) );
   {
   /*@ 1. go down + dbopenat */

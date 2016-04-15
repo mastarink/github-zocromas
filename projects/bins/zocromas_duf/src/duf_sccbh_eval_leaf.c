@@ -250,13 +250,12 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmn
   ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
+SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
 {
-/* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
-/* CRX( sccbh_preset_leaf_scanner, sccbh ); */
+  int eq = 0;
+
   if ( sccbh->rows && sccbh->rows->prev )
   {
-    int eq = 0;
     const char *pack_field;
 
     pack_field = CRX( pdi_pack_field, H_PDI );
@@ -315,17 +314,28 @@ SR( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstag
       }
     }
     ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
-    if ( !eq )
+  }
+  np = !eq;
+  ERX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh );
+}
+
+SR( SCCBH, sccbh_eval_db_leaf_str_cb_pack, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
+{
+/* assert(  !sccbh->rows->cnt ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
+/* CRX( sccbh_preset_leaf_scanner, sccbh ); */
+  if ( sccbh && CRX( sccbh_eval_new_pack, sccbh ) )
+  {
+    CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
+    assert( duf_sccbh_current_row( sccbh ) == NULL );
+    if ( sccbh->rows && sccbh->rows->prev )
     {
-      CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
-      assert( duf_sccbh_current_row( sccbh ) == NULL );
       CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
       sccbh->rows->prev = NULL;
-
-    /* assert(0); */
-
-    /* CRX( sccbh_rows_eval, sccbh ); */
     }
+
+  /* assert(0); */
+
+  /* CRX( sccbh_rows_eval, sccbh ); */
   }
-  ER( SCCBH, sccbh_call_leaf_pack_scanner, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb_pack, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage );
 }

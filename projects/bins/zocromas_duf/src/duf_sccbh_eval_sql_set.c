@@ -240,8 +240,9 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
     assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
   /* have_rows=1; */
 
-    assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == duf_sccbh_eval_db_leaf_str_cb
-            || str_cb2 == duf_sccbh_eval_db_leaf_fd_str_cb || str_cb2 == duf_sccbh_eval_all );
+    assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
+            || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack )
+            || str_cb2 == F2ND( sccbh_eval_all ) );
   /* mas_force_count_ereport( 1 ); */
   /* DUF_TEST_R( r ); */
 
@@ -255,7 +256,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 
 /* CRX( sccbh_row_add, sccbh, NULL );                     */
 /* if ( have_rows && node_type == DUF_NODE_LEAF )          */
-/*   CR( sccbh_call_leaf_pack_scanner, sccbh, scanstage ); */
+/*   CR( sccbh_eval_db_leaf_str_cb_pack, sccbh, scanstage ); */
   }
   else
   {
@@ -286,7 +287,7 @@ SR( SCCBH, eval_sccbh_sql_set_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
 
   assert( str_cb2 == F2ND( sccbh_eval_all ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
           || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
-          || str_cb2 == F2ND( sccbh_call_leaf_pack_scanner ) );
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack ) );
   CR( eval_sccbh_sql_str_cb, sccbh, node_type, sql_selector, str_cb2, scanstage );
   mas_free( sql_selector );
   sql_selector = NULL;
