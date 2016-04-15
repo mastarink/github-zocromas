@@ -104,7 +104,7 @@ muc_coption_cnames_tmp( muc_config_cli_t * cli, int index, muc_option_gen_code_t
   return x;
 }
 
-static void constructor_tmp( void ) __attribute__ ( ( constructor( 101 ) ) );
+static void constructor_tmp( void ) __attribute__ ( ( constructor( 5001 ) ) );
 static void
 constructor_tmp( void )
 {
@@ -112,7 +112,7 @@ constructor_tmp( void )
   memset( cnames_tmp, 0, sizeof( muc_tmp_t ) );
 }
 
-static void destructor_tmp( void ) __attribute__ ( ( destructor( 101 ) ) );
+static void destructor_tmp( void ) __attribute__ ( ( destructor( 5001 ) ) );
 static void
 destructor_tmp( void )
 {

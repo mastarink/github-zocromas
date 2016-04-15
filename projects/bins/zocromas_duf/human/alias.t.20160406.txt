@@ -9,6 +9,9 @@ alias t__1a0='run   --db-name=owncloud_mega_zip_copy --linear --min-same-sha1=5 
 
 # list "today" db as tree
 alias t__5l='run  --db-name=temp$(/bin/date "+%Y%m%d") -dufR --evaluate-sccb=tree $PWD/test'
+# list "today" db as listing
+alias t__5ll='run  --db-name=temp$(/bin/date "+%Y%m%d") -dufR --evaluate-sccb=listing $PWD/test'
+alias t__5ll1='run  --db-name=temp$(/bin/date "+%Y%m%d")  --linear --orderid=5  --std-leaf-set-name=std-all-under -df   --use-format=4 --evaluate-sccb=listing $PWD/test'
 # create "today" db, scan all main + all digests + mime, exif
 alias t__5c='run   --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp`datem`                   -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif  `pwd`/test/tree  `pwd`/test/tree    --progress'
 alias t__5ca='run    --allow-drop-table --allow-create-tables  --allow-create-database  --db-name=temp$(/bin/date "+%Y%m%d")    -dufR   --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif   $PWD/test/tree   $PWD/test/tree    --progress'

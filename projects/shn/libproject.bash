@@ -4,7 +4,7 @@ function shn_project_load ()
   for lib in tools setup build run ; do
     libt="${MSH_SHN_DIR:-shn}/lib${lib}.bash"
     if ! [[ -f "$libt" ]] || ! . "$libt" ; then    
-      shn_errmsg "loading environment $libt"
+      shn_errmsg "Error loading environment $libt"
       return 1
     else
 #     shn_msg "Loaded $libt"
@@ -14,16 +14,16 @@ function shn_project_load ()
 	    shn_errmsg "loading environment $libx"
 	    return 1
 #         else
-#           shn_msg "Loaded $libx"
+#           shn_msg "loaded sub: $libx"
 	  fi
 	fi
       done
     fi
-    shn_dbgmsg "loaded lib${lib}" >&2
+#   shn_msg "loaded lib${lib}" >&2
 #   shn_msg "Loaded all of $lib"
   done
 }
-shn_project_load $@
+shn_project_load $@ || return 1
 function shn_project_match ()
 {
   local project=$1

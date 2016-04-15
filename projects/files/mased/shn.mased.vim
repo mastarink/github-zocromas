@@ -17,7 +17,9 @@ sfind libfindedit.bash
 
 
 tab sfind librun.bash
-sfind libshn.bash
+sfind librun_unidebug.bash
+
+tab sfind libshn.bash
 sfind libtools.bash
 
 tab sfind libzocgrep.bash

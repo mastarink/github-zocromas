@@ -41,6 +41,7 @@
 #include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace.h>
 #include <mastar/error/mas_error_defs_ctrl.h>
 #include <mastar/error/mas_error_defs_make.h>
@@ -67,11 +68,19 @@
 #include "duf.h"
 /* ###################################################################### */
 
+const mas_memfun_block_t *
+mas_memory_allocation( void )
+{
+/* fprintf( stderr, "allocation: %p\n", MAS_MEMORY_ALLOCATION_STD ); */
+/* return MAS_MEMORY_ALLOCATION_STD; */
+  return MAS_MEMORY_ALLOCATION_MASTAR;
+}
+
 static int
 lcb( struct dl_phdr_info *info MAS_UNUSED, size_t size MAS_UNUSED, void *data MAS_UNUSED )
 {
-  /* fprintf( stderr, "-=- %s\n", info->dlpi_name ); */
-  QT("@@@@@-=- %s", info->dlpi_name);
+/* fprintf( stderr, "-=- %s\n", info->dlpi_name ); */
+  QT( "@@@@@-=- %s", info->dlpi_name );
   return 0;
 }
 
@@ -79,11 +88,18 @@ lcb( struct dl_phdr_info *info MAS_UNUSED, size_t size MAS_UNUSED, void *data MA
 TODO Ideas: count for each dir pair number of matching files => path_pairs
 
 */
-static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void constructor_main_z( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void
+constructor_main_z( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
+{
+  fprintf( stderr, "%s.%d : %d\n", __FILE__, __LINE__, argc );
+}
+
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 2001 ) ) );
 static void
 constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
 {
-  fprintf( stderr, "%s : %d\n", __FILE__, argc );
+  fprintf( stderr, "%s.%d : %d\n", __FILE__, __LINE__, argc );
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
   {
@@ -200,8 +216,6 @@ SR( TOP, main_with_config )
   ER( TOP, main_with_config );
 }
 
-
-
 static
 SRP( TOP, int, rval, 0, main, int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
 {
@@ -219,6 +233,13 @@ SRP( TOP, int, rval, 0, main, int argc MAS_UNUSED, char **argv MAS_UNUSED, char 
   MAST_TRACE( explain, 1, "@main with config" );
   CR( main_with_config );
 
+#if 0
+  {
+    char *p = NULL;
+
+    fprintf( stderr, "%c\n", *p ); /* make segfault */
+  }
+#endif
   QTR;
 
   global_status_reset(  );
@@ -240,6 +261,7 @@ main( int argc, char **argv, char **envp )
 {
   int errc = 0;
 
+/* mas_strdup( "abrakadabra" ); */
 /* setenv( "TZ", "Europe/Kiev", 0 ); */
   tzset(  );
   return duf_main( argc, argv, envp, &errc );

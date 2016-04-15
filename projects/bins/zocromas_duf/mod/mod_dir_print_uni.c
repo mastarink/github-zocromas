@@ -45,7 +45,6 @@
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-/* static int duf_print_leaf2( duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED ); */
 static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
 
 /* ########################################################################################## */
@@ -63,7 +62,7 @@ static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * s
 
 /* ########################################################################################## */
 static duf_scan_callbacks_t duf_sccb_dispatch;
-static DR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED );
+static DR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED );
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
@@ -74,16 +73,18 @@ const duf_mod_handler_t duf_mod_handler_uni[] = {
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] = {
   {
-   .flags = DUF_SCANNER_SET_FLAG_DB,                                 /* */
+   .name = "traditional",
+   .flags = DUF_SCANNER_SET_FLAG_DB /* | DUF_SCANNER_SET_FLAG_DISABLED */, /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
    .fun = F2ND( print_leaf2 ),                                       /* */
    },
   {
+   .name = "packed",
    .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK,     /* */
    .type = DUF_NODE_LEAF,                                            /* */
-   .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        /* */
-   /* .scanstage = DUF_SCANSTAGE_DB_LEAVES,                        (* *) */
+ /* .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        (* *) */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
    .fun = F2ND( pack_leaf ),                                         /* */
    },
 
@@ -120,7 +121,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED )
+SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED )
 {
   int n = 0;
   const duf_sccb_data_row_t *trow = NULL;
@@ -143,13 +144,13 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi MAS_UNUSED, struct duf_sccb_handle_s *
       MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
       MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
     /* sccbh->current_row=trow; */
-      CR( print_leaf2, pdi, sccbh );
+      CR( print_leaf2, pdi_unused, sccbh );
     }
   /* CRX( sccbh_set_current_row, sccbh, NULL ); */
   }
   duf_sccbh_end_row( sccbh );
 
-  ER( MOD, pack_leaf, duf_depthinfo_t * pdi, struct duf_sccb_handle_s *sccbh );
+  ER( MOD, pack_leaf, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
 
 static

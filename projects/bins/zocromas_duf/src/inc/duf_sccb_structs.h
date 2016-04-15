@@ -2,7 +2,7 @@
 # define MAS_DUF_SCCB_STRUCTS_H
 
 # include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
-# include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; duf_pathinfo_t (from duf_pathinfo_types) ✗ */
+# include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
 
 struct duf_sccb_data_value_s
 {
@@ -127,6 +127,7 @@ enum duf_scanner_set_flags_e
 
 struct duf_scanner_set_s
 {
+  const char *name;
 /* unsigned disabled:1;     */
 /* unsigned to_open:1;      */
 /* unsigned dirent:1;       */

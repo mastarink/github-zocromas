@@ -118,7 +118,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
 
   assert( str_cb2 == F2ND( sccbh_eval_all ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
           || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
-          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_pack ) );
+          /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */ );
 #ifdef MAS_TRACING
   const char *set_type_title = CRX( nodetype_name, node_type );
 #endif
@@ -232,7 +232,7 @@ SR( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t *
 
   ER( SCCBH, sccbh_eval_db_leaves_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage );
 }
-
+#if 0
 SR( SCCBH, sccbh_eval_db_leaves_pack, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage MAS_UNUSED )
 {
 /* scan this files in this directory */
@@ -240,7 +240,8 @@ SR( SCCBH, sccbh_eval_db_leaves_pack, duf_sccb_handle_t * sccbh, /* duf_stmnt_t 
   DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 2." );
   MAST_TRACE( sccbh, 2, "@@@@@%s: leaf scan:%d;", CRX( uni_scan_action_title, H_SCCB ), H_SCCB->leaf_scan2 ? 1 : 0 );
   if ( CRX( sccb_has_new_scanner, sccbh, DUF_NODE_LEAF, scanstage, 1 /* db */ , 0 /* dirent */  ) )
-    CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_str_cb_pack ), scanstage );
+    CR( sccbh_eval_db_items_str_cb, sccbh, DUF_NODE_LEAF, F2ND( sccbh_eval_db_leaf_qfd_pack_new ), scanstage );
 
   ER( SCCBH, sccbh_eval_db_leaves_pack, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage );
 }
+#endif

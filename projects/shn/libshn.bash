@@ -14,7 +14,9 @@ function shn_code ()
   local nocase=u
   if shopt  nocasematch &>/dev/null ; then nocase=s ; else nocase=u ; fi
   shopt -u nocasematch &>/dev/null
-
+  if [[ "$MSH_RUN_MODE_REPLACE" ]] && [[ "$code" == r ]] ; then
+    code=$MSH_RUN_MODE_REPLACE
+  fi
 # shn_msg "shn pwd:`pwd`"
   case $code in
     h)

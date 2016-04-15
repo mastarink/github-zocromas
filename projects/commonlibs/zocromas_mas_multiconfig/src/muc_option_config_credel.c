@@ -22,7 +22,7 @@
 #include "muc_option_config_credel.h"
 /* ###################################################################### */
 
-static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 101 ) ) );
+static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 5001 ) ) );
 static void
 constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_UNUSED )
 {
