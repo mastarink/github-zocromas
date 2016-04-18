@@ -6,7 +6,6 @@
 # include "duf_pdi_types.h"                                          /* duf_depthinfo_t ✗ */
 
 typedef unsigned long long duf_scanner_set_flags_set_t;
-struct duf_sccb_handle_s;
 
 typedef int ( *duf_scanner_fun_t ) (  /* duf_stmnt_t * pstmt_arg, */ duf_depthinfo_t * pdi, struct duf_sccb_handle_s * sccbh );
 typedef struct duf_sccb_data_value_s duf_sccb_data_value_t;

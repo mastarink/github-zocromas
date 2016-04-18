@@ -26,11 +26,12 @@
 
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 
 #include "duf_pathinfo_ref.h"
 
@@ -130,20 +131,22 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_han
 /* for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev ) */
   while ( ( trow = duf_sccbh_prev_row( sccbh ) ) )
   {
-    const char *path MAS_UNUSED;
-    const char *rpath MAS_UNUSED;
-    const char *iname MAS_UNUSED;
 
-    if ( trow && trow->cnt )
+    if ( trow && trow->nfields )
     {
       n++;
+      const char *path MAS_UNUSED;
+      const char *rpath MAS_UNUSED;
+      const char *iname MAS_UNUSED;
+
       path = CRX( pi_path, &trow->pathinfo );
       rpath = CRX( pi_relpath, &trow->pathinfo );
       iname = CRX( pi_itemname, &trow->pathinfo );
 
       MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
-      MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
-      if ( 0 )
+      if ( 1 )
+        MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+      if ( 1 )
         CR( print_leaf2, pdi_unused, sccbh );
     }
   /* CRX( sccbh_set_current_row, sccbh, NULL ); */
@@ -185,6 +188,10 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
   DUF_RUFIELD2( nsame_md5 );
   DUF_RUFIELD2( nsame_sha1 );
   DUF_RUFIELD2( nsame_exif );
+  DUF_RUFIELD2( seq_gen );
+  DUF_RUFIELD2( seq_node );
+  DUF_RUFIELD2( seq_leaf );
+  DUF_RUFIELD2( seq_row );
 /* DUF_SFIELD( mtimef ); */
 /* DUF_SFIELD( dowmtime ); */
 /* DUF_SFIELD( monthmtime ); */
@@ -232,6 +239,10 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
     fi.sha1sum1 = sha1sum1;
     fi.sha1sum2 = sha1sum2;
     fi.sha1sum3 = sha1sum3;
+    fi.seqq.gen = seq_gen;
+    fi.seqq.node = seq_node;
+    fi.seqq.leaf = seq_leaf;
+    fi.seqq.row = seq_row;
 
     {
       const char *sformat = NULL;
@@ -260,7 +271,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
+        slen = CRX( print_sformat_file_info,  H_PDI, 1 /* from row */ ,sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
                     DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }

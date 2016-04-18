@@ -35,6 +35,22 @@
 /* ###################################################################### */
 
 #if 1
+SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh )
+{
+  row = sccbh->current_row ? sccbh->current_row : sccbh->rows;
+  assert(row);
+  ERX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh );
+}
+
+SRX( SCCBH, const duf_pathinfo_t *, pi, NULL, sccbh_row_pathinfo, const duf_sccb_handle_t * sccbh )
+{
+  const duf_sccb_data_row_t *row;
+
+  row = CRX( sccbh_row_current, sccbh );
+  pi = row ? &row->pathinfo : NULL;
+  ERX( SCCBH, const duf_pathinfo_t *, pi, NULL, sccbh_row_pathinfo, const duf_sccb_handle_t * sccbh );
+}
+
 /* unsigned long long                                                      */
 /* duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ) */
 SRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name )

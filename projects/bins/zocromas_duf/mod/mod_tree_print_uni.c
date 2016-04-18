@@ -27,11 +27,14 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_count.h"
 
+#include "duf_pathinfo_ref.h"
+
 #include "duf_sccb_structs.h"
 /* #include "duf_sccb_row_field_defs.h"                                 (* DUF_*FIELD2* ✗ *)                                    */
 /* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_ref.h"
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_ufilter_ref.h"
@@ -46,7 +49,8 @@
 /* ########################################################################################## */
 #include "duf_mod_types.h"
 /* static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * H_PDI ); */
-static DR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi_unused, size_t * pwidth );
+static DR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi_unused, int use_row MAS_UNUSED,
+           const duf_sccb_handle_t * sccbh MAS_UNUSED, size_t * pwidth );
 
 /* ########################################################################################## */
 static DR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
@@ -132,8 +136,8 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
-                    DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ),
+                    ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     if ( !over )
     {
@@ -163,8 +167,8 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
         sformat = "%f\n";
 
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
-                    DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ),
+                    ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     DUF_PUTSL( 0 );
   }
@@ -199,6 +203,10 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
   /* fi.sha1id = sha1id; */
   /* fi.md5sum1 = md5sum1; */
   /* fi.md5sum2 = md5sum2; */
+  /* fi.seqq.gen = seq_gen;   */
+  /* fi.seqq.node = seq_node; */
+  /* fi.seqq.leaf = seq_leaf; */
+  /* fi.seqq.row = seq_row;   */
 
     {
       const char *sformat_pref = NULL;
@@ -218,8 +226,9 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
         if ( !sformat_pref )
           sformat_pref = " %6s  %4s%P";
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
-                      DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ),
+                      ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
+                      &over );
       }
       if ( !over )
       {
@@ -249,8 +258,9 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
         if ( !sformat )
           sformat = "%f\n";
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_pdi_scb_t ) NULL,
-                      DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ),
+                      ( duf_pdi_scb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
+                      &over );
       }
       DUF_PUTSL( 0 );
     }
@@ -475,11 +485,24 @@ SR( MOD, sql_print_tree_sprefix_uni_d, char *pbuffer, size_t bfsz, const duf_dep
 
 /* 20151113.132643 */
 static
-SR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi4pref, size_t * pwidth MAS_UNUSED )
+SR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi4pref, int use_row MAS_UNUSED,
+    const duf_sccb_handle_t * sccbh MAS_UNUSED, size_t * pwidth MAS_UNUSED )
 {
-  int d0 = duf_pdi_topdepth( pdi4pref );
-  int maxd = duf_pdi_depth( pdi4pref );
+  int d0;
+  int maxd;
+  const duf_pathinfo_t *pi;
 
+  if ( use_row )
+  {
+    pi = duf_sccbh_row_pathinfo( sccbh );
+    d0 = duf_pi_topdepth( pi );
+    maxd = duf_pi_depth( pi );
+  }
+  else
+  {
+    d0 = duf_pdi_topdepth( pdi4pref );
+    maxd = duf_pdi_depth( pdi4pref );
+  }
   if ( d0 == 0 )
     d0 = 1;
   for ( int d = d0; QNOERR && d <= maxd; d++ )
@@ -495,5 +518,6 @@ SR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depth
   *pbuffer = 0;
   DUF_PRINTF( 1, "@%03d", QERRIND );
 
-  ER( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi4pref, size_t * pwidth );
+  ER( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi4pref, int use_row MAS_UNUSED,
+      const duf_sccb_handle_t * sccbh MAS_UNUSED, size_t * pwidth );
 }

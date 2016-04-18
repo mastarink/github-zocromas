@@ -40,13 +40,11 @@
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 
-
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"                                    /* DUF_SQL_TABLES... etc. ✗ */
 
 #include "duf_print.h"
 #include "duf_fileinfo.h"
-
 
 #include "duf_mod_defs.h"
 /* ########################################################################################## */
@@ -230,10 +228,11 @@ SR( MOD, save_to_de_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_
     assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( H_PDI ) ) );
 #endif
     CR( fileinfo, /* pstmt_unused, H_PDI, */ sccbh, &fi );
-    save_path = duf_sformat_file_info( H_PDI, sccbh, &fi, 0 /* is_atty // color */ , DUF_CONFIGG( save.path ) /* duf_config->save.path */ ,
-                                       ( duf_pdi_scb_t ) NULL,
-                                       ( duf_pdi_scb_t ) NULL, 0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ ,
-                                       NULL /* pover */  );
+    save_path =
+            duf_sformat_file_info( H_PDI, 1 /* use_row */ , sccbh, &fi, 0 /* is_atty // color */ ,
+                                   DUF_CONFIGG( save.path ) /* duf_config->save.path */ ,
+                                   ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, 0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ ,
+                                   NULL /* pover */  );
     MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( H_PDI ) );
     MAST_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
     MAST_TRACE( mod, 2, "@to => %s", save_path );

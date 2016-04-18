@@ -24,6 +24,9 @@ DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_prev_row, duf_sccb_han
 DRN( SCCBH, void, sccbh_end_row, duf_sccb_handle_t * sccbh );
 DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh );
 
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current,const  duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_pathinfo_t *, pi, NULL, sccbh_row_pathinfo, const duf_sccb_handle_t * sccbh );
+
 #endif
 
 /*

@@ -23,6 +23,8 @@
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 #include "duf_pdi_ref.h"
 
+#include "duf_pathinfo_ref.h"
+
 #include "duf_sccb_def.h"                                            /* DUF_SCCB_PDI */
 #include "duf_sccb.h"                                                /* duf_uni_scan_action_title, contained at DUF_SCCB_PDI */
 /* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
@@ -54,64 +56,60 @@
 static
 SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg MAS_UNUSED, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
+  MAST_TRACE( explain, 20, "=> str cb2" );
+  DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 5. leaf str cb2" );
+
+  assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */  );
+  assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
+
+  if ( !( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) && CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) ) )
+  {
+    duf_levinfo_t *pli = NULL;
+
+  /* assert( duf_levinfo_closed( H_PDI ) ); */
+
+    pli = CRP( nameid2li, CRX( levinfo_nameid, H_PDI ), CRX( pdi_maxdepth, H_PDI ) );
+    if ( QNOERR )
+      CRX( levinfo_set_li, H_PDI, pli, CRX( pdi_maxdepth, H_PDI ) );
+    else
+      CRX( li_delete_array, pli, CRX( pdi_maxdepth, H_PDI ) );
+  }
+
+  assert( CRX( pdi_depth, H_PDI ) > 0 );
+  assert( CRX( pdi_levinfo, H_PDI ) );
+  assert( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) );
+  assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
+ 
+  CRX( sccbh_row_add, sccbh, duf_pdi_each_stmt( H_PDI, 0 ) );
   if ( str_cb2 )
   {
-    MAST_TRACE( explain, 20, "=> str cb2" );
-    DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 5. leaf str cb2" );
-
     assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
             || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */  );
-    assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-
-    if ( !( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) && CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) ) )
-    {
-      duf_levinfo_t *pli = NULL;
-
-    /* assert( duf_levinfo_closed( H_PDI ) ); */
-
-      pli = CRP( nameid2li, CRX( levinfo_nameid, H_PDI ), CRX( pdi_maxdepth, H_PDI ) );
-      if ( QNOERR )
-        CRX( levinfo_set_li, H_PDI, pli, CRX( pdi_maxdepth, H_PDI ) );
-      else
-        CRX( li_delete_array, pli, CRX( pdi_maxdepth, H_PDI ) );
-    }
-    assert( CRX( pdi_depth, H_PDI ) > 0 );
-    assert( CRX( pdi_levinfo, H_PDI ) );
-    assert( CRX( levinfo_dirid, H_PDI ) == CRX( levinfo_dirid_up, H_PDI ) );
-    assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-  /* CR( sccbh_eval_db_leaf_qfd_pack_new, sccbh, scanstage ); */
-    if ( str_cb2 )
-    {
-      assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
-              || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */  );
-      CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
-    }
-
-    if ( QNOERR )
-    {
-      CRX( pdi_seq_leaf_plus, H_PDI );
-      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", CRX( pdi_seq_gen, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_leaf, H_PDI ) /* H_PDI->seq_leaf */  );
-    }
-#if 0
-    if ( sccbh->progress_leaf_cb )
-      ( sccbh->progress_leaf_cb ) ( sccbh );
-#elif 0
-    IF_CRV( CRX( sccbh_progress_leaf_cb, sccbh ), sccbh );
-    ERRCLEAR( NO_FUNC );
-#else
-    {
-      duf_sccbh_fun_t cb;
-
-      cb = duf_sccbh_progress_leaf_cb( sccbh );
-      if ( cb )
-        cb( sccbh );
-    }
-#endif
+    CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
   }
-  else
+
+  if ( QNOERR )
   {
-    assert( 0 );
+    CRX( pdi_seq_leaf_plus, H_PDI );
+    MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", CRX( pdi_seq_gen, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_leaf, H_PDI ) /* H_PDI->seq_leaf */  );
   }
+#if 0
+  if ( sccbh->progress_leaf_cb )
+    ( sccbh->progress_leaf_cb ) ( sccbh );
+#elif 0
+  IF_CRV( CRX( sccbh_progress_leaf_cb, sccbh ), sccbh );
+  ERRCLEAR( NO_FUNC );
+#else
+  {
+    duf_sccbh_fun_t cb;
+
+    cb = duf_sccbh_progress_leaf_cb( sccbh );
+    if ( cb )
+      cb( sccbh );
+  }
+#endif
+
   ER( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage );
 }
 
@@ -151,11 +149,10 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
         MAST_TRACE( scan, 9, "(%s) LEAF down %s", QERRNAME, CRX( levinfo_path, H_PDI ) );
         assert( CRX( pdi_depth, H_PDI ) >= 0 );
 
-        CRX( sccbh_row_add, sccbh, pstmt_arg );
         CR( sel_cb2_leaf_at, sccbh, /* pstmt_arg, */ str_cb2, scanstage );
 
         assert( CRX( pdi_depth, H_PDI ) == CRX( levinfo_calc_depth, H_PDI ) );
-
+      /* QT( "@%s", QERRNAME ); */
         assert( QNOERR );
         {
           mas_error_index_t ei;

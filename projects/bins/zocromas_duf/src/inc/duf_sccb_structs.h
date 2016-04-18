@@ -26,7 +26,8 @@ struct duf_sccb_data_value_s
 
 struct duf_sccb_data_row_s
 {
-  size_t cnt;
+  size_t nfields;
+  size_t reserved;
   duf_sccb_data_value_t *fields;
   duf_sccb_data_row_t *prev;
   duf_pathinfo_t pathinfo;

@@ -41,35 +41,63 @@
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 /* ###################################################################### */
 
+static MAS_UNUSED
+SR( OTHER, datarow_init_field_i, duf_sccb_data_value_t * field, const char *name, duf_sqltype_t typ, const char *svalue, unsigned long long nvalue )
+{
+  field->typ = typ;
+  field->name = mas_strdup( name );
+  field->svalue = mas_strdup( svalue );
+  field->value.n = nvalue;
+  ER( OTHER, datarow_init_field_i, duf_sccb_data_value_t * field, const char *name, duf_sqltype_t typ, const char *value, unsigned long long nvalue );
+}
+
 static
 SR( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstmt_arg, int pos )
 {
+#if 0
   field->typ = CRX( sql_column_type, pstmt_arg, pos );
   field->name = mas_strdup( CRX( sql_column_name, pstmt_arg, pos ) );
   field->svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, pos ) );
-/*     if ( 0 == strcmp( field->name, "mtime" ) )                                                                                     */
-/*     {                                                                                                                                      */
-/* #include <mastar/sqlite/mas_sqlite.h>                                                                                                      */
-/*                                                                                                                                            */
-/*     (* assert( strcmp( field->name, "mtime" ) ); *)                                                                                */
-/*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt_arg, pos ), mas_sqlite_column_type( pstmt_arg, pos ), mas_sqlite_column_decltype( pstmt_arg, pos ) ); */
-/*     }                                                                                                                                      */
-  switch ( field->typ )
+#else
+  duf_sqltype_t typ;
+  const char *name;
+
+  typ = CRX( sql_column_type, pstmt_arg, pos );
+  name = CRX( sql_column_name, pstmt_arg, pos );
+#endif
+  switch ( typ )
   {
   case DUF_SQLTYPE_NONE:
+#if 0
+#else
+    CRX( datarow_init_field_i, field, name, typ, CRX( sql_column_string, pstmt_arg, pos ), 0 );
+#endif
     break;
   case DUF_SQLTYPE_INTEGER:
+#if 0
     field->value.n = CRX( sql_column_long_long, pstmt_arg, pos );
-  /* QT( "field %lu: '%s' = %lld", pos, field->name, field->value.n ); */
+#else
+    CRX( datarow_init_field_i, field, name, typ, CRX( sql_column_string, pstmt_arg, pos ), CRX( sql_column_long_long, pstmt_arg, pos ) );
+#endif
     break;
   case DUF_SQLTYPE_FLOAT:
+    assert( 0 );
     break;
   case DUF_SQLTYPE_TEXT:
+#if 0
     field->value.n = CRX( sql_column_long_long, pstmt_arg, pos );
+#else
+    CRX( datarow_init_field_i, field, name, typ, CRX( sql_column_string, pstmt_arg, pos ), CRX( sql_column_long_long, pstmt_arg, pos ) );
+#endif
     break;
   case DUF_SQLTYPE_BLOB:
+    assert( 0 );
     break;
   case DUF_SQLTYPE_NULL:
+#if 0
+#else
+    CRX( datarow_init_field_i, field, name, typ, NULL, 0 );
+#endif
     break;
   }
 
@@ -80,22 +108,29 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 {
 /* if ( pstmt_arg ) */
   {
-    int reserved = 0;
-
-    if ( seqq )
-      reserved = sizeof( *seqq ) / sizeof( seqq->gen );
     row = mas_malloc( sizeof( duf_sccb_data_row_t ) );
     memset( row, 0, sizeof( duf_sccb_data_row_t ) );
 /* prow=mas_malloc(sizeof(duf_sccb_data_row_t)); */
-    row->cnt = pstmt_arg ? CRX( sql_column_count, pstmt_arg ) : 0;
+    row->nfields = pstmt_arg ? CRX( sql_column_count, pstmt_arg ) : 0;
 
-    row->fields = mas_malloc( ( row->cnt + reserved ) * sizeof( duf_sccb_data_value_t ) );
-    memset( row->fields, 0, ( row->cnt + reserved ) * sizeof( duf_sccb_data_value_t ) );
+    if ( seqq )
+      row->reserved = sizeof( *seqq ) / sizeof( seqq->gen );
+    row->fields = mas_malloc( ( row->nfields + row->reserved ) * sizeof( duf_sccb_data_value_t ) );
+    memset( row->fields, 0, ( row->nfields + row->reserved ) * sizeof( duf_sccb_data_value_t ) );
 
     CRX( pi_copy, &row->pathinfo, pi, 0 /* no_li */ , 0 /* no_copy */  );
 
+    if ( row->reserved > 0 )
+      CRX( datarow_init_field_i, &row->fields[row->nfields + 0], "seq_gen", DUF_SQLTYPE_INTEGER, NULL, seqq->gen );
+    if ( row->reserved > 1 )
+      CRX( datarow_init_field_i, &row->fields[row->nfields + 1], "seq_leaf", DUF_SQLTYPE_INTEGER, NULL, seqq->leaf );
+    if ( row->reserved > 2 )
+      CRX( datarow_init_field_i, &row->fields[row->nfields + 2], "seq_node", DUF_SQLTYPE_INTEGER, NULL, seqq->node );
+    if ( row->reserved > 3 )
+      CRX( datarow_init_field_i, &row->fields[row->nfields + 3], "seq_row", DUF_SQLTYPE_INTEGER, NULL, seqq->row );
+
 /* QT( "@X %d : %d", pi->levinfo[17].node_type, row->pathinfo.levinfo[17].node_type ); */
-    for ( size_t i = 0; pstmt_arg && i < row->cnt; i++ )      /* sqlite3_column_count( pstmt_arg ) */
+    for ( size_t i = 0; pstmt_arg && i < row->nfields; i++ )         /* sqlite3_column_count( pstmt_arg ) */
     {
 #if 0
       row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
@@ -204,7 +239,7 @@ SRN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip )
 /* duf_datarow_delete( duf_sccb_data_row_t * row ) */
 SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
 {
-  for ( size_t i = 0; i < row->cnt; i++ )
+  for ( size_t i = 0; i < row->nfields + row->reserved; i++ )
   {
     mas_free( row->fields[i].svalue );
     mas_free( row->fields[i].name );
@@ -217,7 +252,7 @@ SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
 
 SRX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * row )
 {
-  for ( size_t i = 0; row && i < row->cnt; i++ )
+  for ( size_t i = 0; row && i < row->nfields; i++ )
   {
     if ( lst )
       lst = mas_strcat_x( lst, "," );
@@ -231,8 +266,8 @@ SRX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * r
 /* duf_datarow_field_find( const duf_sccb_data_row_t * row, const char *name ) */
 SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name )
 {
-  for ( size_t i = 0; !val && row && i < row->cnt; i++ )
-    if ( 0 == strcmp( row->fields[i].name, name ) )
+  for ( size_t i = 0; !val && row && i < row->nfields + row->reserved; i++ )
+    if ( row->fields[i].name && 0 == strcmp( row->fields[i].name, name ) )
       val = &row->fields[i];
 /* return NULL; */
   if ( !val )

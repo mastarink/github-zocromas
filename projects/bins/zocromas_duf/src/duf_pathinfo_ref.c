@@ -27,7 +27,7 @@
 
 #include "duf_levinfo_structs.h"
 
-#include "duf_pathinfo_structs.h"
+#include "duf_pathinfo_structs.h"                                    /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
 
 #include "duf_pathinfo_ref_def.h"
 /* ###################################################################### */
@@ -56,6 +56,7 @@ duf_pi_path_d( const duf_pathinfo_t * pi, int d )
   char *path = NULL;
   duf_node_type_t nt;
 
+  assert( pi );
   nt = duf_pi_node_type_d( pi, d );
   if ( d >= 0 /* && nt != DUF_NODE_NONE */  )
   {
@@ -93,6 +94,7 @@ duf_pi_relpath_d( const duf_pathinfo_t * pi, int d )
   const char *toppath;
   const char *path;
 
+  assert( pi );
   toppath = duf_pi_path_top( pi );
   path = duf_pi_path_d( pi, d );
   return path ? path + ( toppath ? strlen( toppath ) : 0 ) : NULL;
@@ -172,6 +174,49 @@ duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d )
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC_REF( const char, itemtruename )
 DUF_PATHINFO_FC_UP_REF( const char, itemtruename )
+/* *INDENT-ON*  */
+
+int
+duf_pi_is_leaf_d( const duf_pathinfo_t * pi, int d )
+{
+  assert( pi );
+  return d >= 0 ? duf_pi_ptr_d( pi, d )->node_type == DUF_NODE_LEAF : DUF_NODE_NONE;
+}
+/* *INDENT-OFF*  */
+DUF_PATHINFO_FC( int, is_leaf )
+DUF_PATHINFO_FC_UP( int, is_leaf )  
+/* *INDENT-ON*  */
+
+unsigned long long
+duf_pi_dirid_d( const duf_pathinfo_t * pi, int d )
+{
+  unsigned long long n = NULL;
+
+  duf_levinfo_t *pli;
+
+  pli = duf_pi_ptr_d( pi, d );
+
+  n = pli ? pli->db.dirid : 0;
+  return n;
+}
+
+/* *INDENT-OFF*  */
+DUF_PATHINFO_FC(  unsigned long long, dirid )
+DUF_PATHINFO_FC_UP(  unsigned long long, dirid )
+/* *INDENT-ON*  */
+
+unsigned long long
+duf_pi_nodedirid_d( const duf_pathinfo_t * pi, int d )
+{
+  unsigned long long nodedirid = 0;
+
+  assert( pi );
+  nodedirid = duf_pi_dirid_d( pi, d - ( duf_pi_is_leaf_d( pi, d ) ? 1 : 0 ) );
+  return nodedirid;
+}
+/* *INDENT-OFF*  */
+DUF_PATHINFO_FC( unsigned long long, nodedirid )
+DUF_PATHINFO_FC_UP( unsigned long long, nodedirid )  
 /* *INDENT-ON*  */
 
 #if 0

@@ -189,4 +189,11 @@ duf_stmnt_t *duf_pi_each_stmt_d( const duf_pathinfo_t * pi, int d );
 
 const char *duf_pi_itemname( const duf_pathinfo_t * pi );
 
+unsigned long long duf_pi_nodedirid_d( const duf_pathinfo_t * pi, int d );
+unsigned long long duf_pi_nodedirid( const duf_pathinfo_t * pi );
+unsigned long long duf_pi_dirid_d( const duf_pathinfo_t * pi, int d );
+unsigned long long duf_pi_dirid( const duf_pathinfo_t * pi );
+int duf_pi_is_leaf_d( const duf_pathinfo_t * pi, int d );
+int duf_pi_is_leaf( const duf_pathinfo_t * pi );
+
 #endif

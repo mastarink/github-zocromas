@@ -3,6 +3,8 @@
 
 # include <sys/stat.h>
 
+#include "duf_seq_structs.h"
+
 typedef struct duf_fileinfo_s duf_fileinfo_t;
 struct duf_fileinfo_s
 {
@@ -33,6 +35,7 @@ struct duf_fileinfo_s
   unsigned long long crc32sum;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
+  seq_t seqq;
 };
 
 #endif
