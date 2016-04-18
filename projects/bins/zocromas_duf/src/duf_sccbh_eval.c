@@ -66,10 +66,10 @@ SR( SCCBH, sccbh_eval_all_and_summary_i, duf_sccb_handle_t * sccbh, bool f_summa
   {
     DUF_PRINTF( 0, "%s", CRX( uni_scan_action_title, H_SCCB ) );
 
-    DUF_PRINTF( 0, " summary; seq:     %llu", H_PDI->seq );
-    DUF_PRINTF( 0, " summary; seq-leaf:%llu", H_PDI->seq_leaf );
-    DUF_PRINTF( 0, " summary; seq-node:%llu", H_PDI->seq_node );
-    DUF_PRINTF( 0, " summary;  seq-row:%llu", H_PDI->seq_row );
+    DUF_PRINTF( 0, " summary; seq:     %llu", H_PDI->seqq.gen );
+    DUF_PRINTF( 0, " summary; seq-leaf:%llu", H_PDI->seqq.leaf );
+    DUF_PRINTF( 0, " summary; seq-node:%llu", H_PDI->seqq.node );
+    DUF_PRINTF( 0, " summary;  seq-row:%llu", H_PDI->seqq.row );
     if ( H_PU->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", H_PU->max_seq );
     DUF_PRINTF( 0, " summary; changes:%llu", H_HCHANGES );
@@ -130,7 +130,7 @@ SR( SCCBH, sccbh_eval_db_items_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_
            )
   {
     DUF_SCCB_PDI( MAST_TRACE, scan, 10 + CRX( pdi_reldepth, H_PDI ), H_PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
-    MAST_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", H_PDI->seq_leaf, H_PDI->seq_node, H_PDI->seq_row, H_PDI->seq, H_SCCB->title );
+    MAST_TRACE( scan, 10, "ql%llu / qn%llu / w%llu / q%llu %s", H_PDI->seqq.leaf, H_PDI->seqq.node, H_PDI->seqq.row, H_PDI->seqq.gen, H_SCCB->title );
 
     MAST_TRACE( sccbh, 2, "@@@@has selector for %s(%d) dirid:%llu (%s) %s", set_type_title, node_type, CRX( levinfo_dirid, H_PDI ),
                 CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );

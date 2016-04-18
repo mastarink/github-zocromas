@@ -130,6 +130,8 @@ noinst_HEADERS=motest_config.h \
 	duf_pdi_stmt.h \
 	duf_pdi_types.h \
 	duf_pdi_structs.h \
+	duf_seq_types.h \
+	duf_seq_structs.h \
 	duf_print.h \
 	duf_output_defs.h \
 	duf_printn_defs.h \

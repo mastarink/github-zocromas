@@ -42,13 +42,9 @@ static
 SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_arg, */ duf_str_cb2s_t str_cb2, duf_scanstage_t scanstage )
 {
 /*@ 1. go down + dbopenat */
-#if 0
-  H_PDI->seq++;
-  H_PDI->seq_node++;
-#else
   CRX( pdi_seq_node_plus, H_PDI );
-#endif
-  MAST_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", CRX( pdi_seq_node, H_PDI ) /* H_PDI->seq_node */ , CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ ,
+  MAST_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", CRX( pdi_seq_node, H_PDI ) /* H_PDI->seqq.node */ ,
+              CRX( pdi_seq_gen, H_PDI ) /* H_PDI->seqq.gen */ ,
               H_TOTITEMS, H_SCCB->title );
 #if 0
   if ( sccbh->progress_node_cb )
@@ -66,7 +62,8 @@ SR( SCCBH, sel_cb2_node_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
   }
 #endif
 
-  MAST_TRACE( seq, 0, "seq:%llu; seq_node:%llu", CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_node, H_PDI ) /* H_PDI->seq_node */  );
+  MAST_TRACE( seq, 0, "seqq.gen:%llu; seqq.node:%llu", CRX( pdi_seq_gen, H_PDI ) /* H_PDI->seq1.gen */ ,
+              CRX( pdi_seq_node, H_PDI ) /* H_PDI->seqq.node */  );
 
   if ( str_cb2 )
   {

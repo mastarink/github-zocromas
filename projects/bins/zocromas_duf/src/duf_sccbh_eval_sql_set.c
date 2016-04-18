@@ -47,7 +47,7 @@
 #include "duf_sel_cb_node.h"
 
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
+/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
 #include "duf_sccbh_scanner.h"
 
@@ -78,7 +78,7 @@ SR( SCCBH, eval_sccbh_sql_row_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
 /* MAST_TRACE( sql, 3, "EACH %llu ... %s", CRX( levinfo_dirid, H_PDI ), sqlite3_sql( pstmt_arg ) ); */
   MAST_TRACE( sccbh, 0, "EACH %llu; %s(%d) @ %s @ %s @ %s", CRX( levinfo_dirid, H_PDI ), CRX( nodetype_name, node_type ), node_type,
               CRX( levinfo_path, H_PDI ), DUF_GET_STMT_SFIELD2( pstmt_arg, dfname ), CRX( levinfo_itemtruename, H_PDI ) );
-  H_PDI->seq_row++;
+  H_PDI->seqq.row++;
   sccbh->assert__current_node_type = node_type;
   MAST_TRACE( sccbh, 2, "@@@str_cb2(%d) :%llu n/t:%s (%s) %s", str_cb2 ? 1 : 0, CRX( levinfo_dirid, H_PDI ), CRX( nodetype_name, node_type ),
               CRX( uni_scan_action_title, H_SCCB ), H_SCCB->name );
@@ -177,10 +177,10 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 
     MAST_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), H_TOTCOUNTED,
                 H_TOTITEMS );
-    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seq, H_PDI->seq_node, H_PDI->seq_leaf,
+    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seqq.gen, H_PDI->seqq.node, H_PDI->seqq.leaf,
                 H_TOTITEMS, sqlite3_sql( pstmt_local ) );
 /* assert( !H_TOTCOUNTED || H_TOTITEMS ); */
-    H_PDI->seq_row = 0;
+    H_PDI->seqq.row = 0;
   /* H_PDI->total_bytes = 0; */
   /* T( "@pdi->total_bytes:%llu", H_PDI->total_bytes ); */
     assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
@@ -213,7 +213,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
         {
           ERRCLEAR1( SQL_ROW );
           {
-            H_PDI->seq_row++;
+            H_PDI->seqq.row++;
             sccbh->assert__current_node_type = node_type;
 # if 0
             switch ( node_type )

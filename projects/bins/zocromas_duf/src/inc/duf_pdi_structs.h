@@ -5,10 +5,11 @@
 # include "duf_fun_types.h"                                          /* duf_void_voidp_func_t etc. etc. ... ✗ */
 
 /* # include "duf_pathinfo_types.h"                                     (* duf_pathinfo_t ✗ *) */
-# include "duf_pathinfo_structs.h"
+# include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
 # include "duf_levinfo_stmt_types.h"                                 /* duf_stmt_ident_t; duf_idstmt_t; ✗ */
-# include "duf_item_types.h"
+# include "duf_item_types.h"                                         /* duf_items_t ✗ */
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
+# include "duf_seq_structs.h"
 
 /* # include "duf_levinfo_structs.h" */
 
@@ -23,7 +24,6 @@ struct duf_pdi_context_s
   void *ptr;
   duf_void_voidp_func_t destructor;
 };
-
 struct duf_depthinfo_s
 {
   unsigned created_name:1;
@@ -50,10 +50,18 @@ struct duf_depthinfo_s
   duf_pathinfo_t pathinfo;
 # endif
   unsigned long long changes;
+# if 0
   unsigned long long seq;
   unsigned long long seq_leaf;
   unsigned long long seq_node;
   unsigned long long seq_row;
+# else
+  union
+  {
+    unsigned long long aseq[4];
+    seq_t seqq;
+  };
+# endif
   unsigned long long total_bytes;
   unsigned long long total_files;
   duf_items_t items;

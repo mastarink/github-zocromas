@@ -9,7 +9,7 @@
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 /* duf_sccb_data_row_t *duf_datarow_create( duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi ); */
-DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED );
+DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi, const seq_t * seqq );
 
 /* void duf_datarow_delete( duf_sccb_data_row_t * row ); */
 DRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row );

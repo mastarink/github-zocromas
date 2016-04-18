@@ -5,9 +5,9 @@
 
 #  if defined(__GNUC__)
 #    define DUF_SCCB( _macr, _name, _min, _fmt, ... )			_macr( _name, _min, "%" DUF_ACTION_TITLE_FMT "; "  _fmt, \
-    			duf_uni_scan_action_title( H_SCCB ), ##__VA_ARGS__ )
+    			CRX( uni_scan_action_title, H_SCCB ), ##__VA_ARGS__ )
 #    define DUF_SCCB_PDI( _macr, _name, _min, _pdi, _fmt, ... )	        _macr( _name, _min, "%" DUF_ACTION_TITLE_FMT "; seq:%llu "  _fmt, \
-    			duf_uni_scan_action_title( H_SCCB ), duf_pdi_seq(_pdi), ##__VA_ARGS__ )
+    			CRX( uni_scan_action_title, H_SCCB ), CRX( pdi_seq_gen, _pdi ), ##__VA_ARGS__ )
 #  endif
 
 

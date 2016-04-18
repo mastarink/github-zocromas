@@ -18,22 +18,24 @@
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"
 
-#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
-#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
-
-#include "duf_sccb_structs.h"
-
-#include "duf_sccbh_ref.h"
-#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
-
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
+
+#include "duf_seq_structs.h"
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
 #include "duf_pathinfo_ref.h"
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_structs.h"
+
+#include "duf_sccb_structs.h"
+
+#include "duf_sccbh_ref.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+
+#include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
+#include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
 
 /* ###################################################################### */
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
@@ -74,23 +76,26 @@ SR( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstm
   ER( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstmt_arg, int pos );
 }
 
-SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED )
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi, const seq_t * seqq MAS_UNUSED )
 {
 /* if ( pstmt_arg ) */
   {
+    int reserved = 0;
+
+    if ( seqq )
+      reserved = sizeof( *seqq ) / sizeof( seqq->gen );
     row = mas_malloc( sizeof( duf_sccb_data_row_t ) );
     memset( row, 0, sizeof( duf_sccb_data_row_t ) );
 /* prow=mas_malloc(sizeof(duf_sccb_data_row_t)); */
     row->cnt = pstmt_arg ? CRX( sql_column_count, pstmt_arg ) : 0;
 
-    row->fields = mas_malloc( row->cnt * sizeof( duf_sccb_data_value_t ) );
-    memset( row->fields, 0, row->cnt * sizeof( duf_sccb_data_value_t ) );
+    row->fields = mas_malloc( ( row->cnt + reserved ) * sizeof( duf_sccb_data_value_t ) );
+    memset( row->fields, 0, ( row->cnt + reserved ) * sizeof( duf_sccb_data_value_t ) );
 
     CRX( pi_copy, &row->pathinfo, pi, 0 /* no_li */ , 0 /* no_copy */  );
 
 /* QT( "@X %d : %d", pi->levinfo[17].node_type, row->pathinfo.levinfo[17].node_type ); */
-
-    for ( size_t i = 0; pstmt_arg && i < row->cnt; i++ )             /* sqlite3_column_count( pstmt_arg ) */
+    for ( size_t i = 0; pstmt_arg && i < row->cnt; i++ )      /* sqlite3_column_count( pstmt_arg ) */
     {
 #if 0
       row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
@@ -143,7 +148,7 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
       }
     }
   }
-  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED );
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi, const seq_t * seqq );
 }
 
 /* int                                                        */

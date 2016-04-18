@@ -119,14 +119,13 @@ SRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
     duf_sccb_data_row_t *new_row = NULL;
 
     assert( !pstmt_arg || pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
-    assert( ! /*sccbh-> */ new_row );
-    /*sccbh-> */ new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ) );
-    if (  /*sccbh-> */ new_row )
+    assert( !new_row );
+    new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ), CRX( pdi_seqq, H_PDI ) );
+    if ( new_row )
     {
-    /* assert( sccbh->new_row ); */
-    /*sccbh-> */ new_row->prev = sccbh->rows;
-      sccbh->rows = /*sccbh-> */ new_row;
-    /*sccbh-> */ new_row = NULL;
+      new_row->prev = sccbh->rows;
+      sccbh->rows = new_row;
+      new_row = NULL;
     }
   }
 #endif

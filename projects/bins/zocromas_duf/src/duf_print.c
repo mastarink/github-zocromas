@@ -66,7 +66,7 @@ typedef enum
   DUF_SFMT_CHR_SHA1SUM = /*            */ '.',                       /* sha1sum */
   DUF_SFMT_CHR_MD5SUM = /*             */ '@',                       /* md5sum */
   DUF_SFMT_CHR_DATAID = /*             */ '&',                       /*  */
-  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',                       /* seq_leaf */
+  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',                       /* seqq.leaf */
   DUF_SFMT_CHR_CAMERAS = /*            */ 'a',                       /* camera */
   DUF_SFMT_CHR_CAMERA = /*             */ 'A',                       /* camera */
   DUF_SFMT_CHR_COLOR = /*              */ 'c',                       /*  */
@@ -84,9 +84,9 @@ typedef enum
   DUF_SFMT_CHR_INODE = /*              */ 'O',                       /* inode */
   DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p',                       /* move to position */
   DUF_SFMT_CHR_PREFIX = /*             */ 'P',                       /* prefix */
-  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q',                       /* seq_node */
-  DUF_SFMT_CHR_SEQ_ROW = /*            */ 'w',                       /* seq_row */
-  DUF_SFMT_CHR_SEQ = /*                */ 'Q',                       /* seq */
+  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q',                       /* seqq.node */
+  DUF_SFMT_CHR_SEQ_ROW = /*            */ 'w',                       /* seqq.row */
+  DUF_SFMT_CHR_SEQ = /*                */ 'Q',                       /* seqq.gen */
   DUF_SFMT_CHR_REALPATH = /*           */ 'r',                       /* realpath */
   DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R',                       /* relative realpath (relative to 'top level') */
   DUF_SFMT_CHR_SPACE = /*              */ 's',                       /* << space >> */
@@ -143,10 +143,10 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->seq );
+    snprintf( pbuffer, bfsz, format, pdi->seqq.gen );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_NODE:                                       /* seq_node */
+  case DUF_SFMT_CHR_SEQ_NODE:                                       /* seqq.node */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -156,10 +156,10 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->seq_node );
+    snprintf( pbuffer, bfsz, format, pdi->seqq.node );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_ROW:                                        /* seq_row */
+  case DUF_SFMT_CHR_SEQ_ROW:                                        /* seqq.row */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -169,10 +169,10 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->seq_row );
+    snprintf( pbuffer, bfsz, format, pdi->seqq.row );
     swidth += strlen( pbuffer );
     break;
-  case DUF_SFMT_CHR_SEQ_LEAF:                                       /* seq_leaf */
+  case DUF_SFMT_CHR_SEQ_LEAF:                                       /* seqq.leaf */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -182,7 +182,7 @@ duf_sformat_id( int fcolor, const char **pfmt, char **ppbuffer, size_t position,
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
+    snprintf( pbuffer, bfsz, format, pdi->seqq.leaf );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MD5ID:                                          /* md5id */

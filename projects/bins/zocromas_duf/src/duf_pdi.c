@@ -178,16 +178,16 @@ SR( PDI, pdi_shut, duf_depthinfo_t * pdi )
     pdi->total_bytes = 0;
     pdi->total_files = 0;
   /* QT( "@pdi->total_bytes:%llu", pdi->total_bytes ); */
-    pdi->seq = pdi->seq_row = pdi->seq_node = pdi->seq_leaf = 0;
+    pdi->seqq.gen = pdi->seqq.row = pdi->seqq.node = pdi->seqq.leaf = 0;
     assert( !pdi->inited );
     assert( !pdi->opendir );
     assert( !pdi->items.files );
     assert( !pdi->items.dirs );
     assert( !pdi->items.total );
     assert( !pdi->changes );
-    assert( !pdi->seq_node );
-    assert( !pdi->seq_leaf );
-    assert( !pdi->seq );
+    assert( !pdi->seqq.node );
+    assert( !pdi->seqq.leaf );
+    assert( !pdi->seqq.gen );
     assert( !pdi->context.ptr );
     assert( !pdi->context.destructor );
     assert( !pdi->num_idstatements );

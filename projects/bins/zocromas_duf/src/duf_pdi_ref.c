@@ -105,16 +105,22 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   return rd;
 }
 
-unsigned long long
-duf_pdi_seq( const duf_depthinfo_t * pdi )
+const seq_t *
+duf_pdi_seqq( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->seq : 0;
+  return pdi ? &pdi->seqq : NULL;
+}
+
+unsigned long long
+duf_pdi_seq_gen( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->seqq.gen : 0;
 }
 
 unsigned long long
 duf_pdi_seq_leaf( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->seq_leaf : 0;
+  return pdi ? pdi->seqq.leaf : 0;
 }
 
 void
@@ -122,15 +128,15 @@ duf_pdi_seq_leaf_plus( duf_depthinfo_t * pdi )
 {
   if ( pdi )
   {
-    pdi->seq++;
-    pdi->seq_leaf++;
+    pdi->seqq.gen++;
+    pdi->seqq.leaf++;
   }
 }
 
 unsigned long long
 duf_pdi_seq_node( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->seq_node : 0;
+  return pdi ? pdi->seqq.node : 0;
 }
 
 void
@@ -138,7 +144,7 @@ duf_pdi_seq_node_plus( duf_depthinfo_t * pdi )
 {
   if ( pdi )
   {
-    pdi->seq++;
-    pdi->seq_node++;
+    pdi->seqq.gen++;
+    pdi->seqq.node++;
   }
 }

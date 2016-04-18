@@ -89,13 +89,8 @@ SR( SCCBH, sel_cb2_leaf_at, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_ar
 
     if ( QNOERR )
     {
-#if 0
-      H_PDI->seq++;
-      H_PDI->seq_leaf++;
-#else
       CRX( pdi_seq_leaf_plus, H_PDI );
-#endif
-      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", CRX( pdi_seq, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_leaf, H_PDI ) /* H_PDI->seq_leaf */  );
+      MAST_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", CRX( pdi_seq_gen, H_PDI ) /* H_PDI->seq */ , CRX( pdi_seq_leaf, H_PDI ) /* H_PDI->seq_leaf */  );
     }
 #if 0
     if ( sccbh->progress_leaf_cb )
@@ -147,7 +142,7 @@ SR( SCCBH, sel_cb2_leaf, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg, duf
   {
   /*@ 1. go down + dbopenat */
     assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 0 ) );
-    /* QT( "@pstmt_arg:%p - %p", pstmt_arg, duf_pdi_each_stmt( H_PDI, 0 ) ); */
+  /* QT( "@pstmt_arg:%p - %p", pstmt_arg, duf_pdi_each_stmt( H_PDI, 0 ) ); */
     {
       CR( sccbh_pstmt_godown_dbopenat_dh, sccbh, pstmt_arg, DUF_NODE_LEAF /* node_type */  );
       assert( QISERR_N( TOO_DEEP ) || pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );

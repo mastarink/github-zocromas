@@ -16,9 +16,13 @@ void duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes );
 
 const char *duf_pdi_name( const duf_depthinfo_t * pdi );
 
-unsigned long long duf_pdi_seq( const duf_depthinfo_t * pdi );
+const seq_t *duf_pdi_seqq( const duf_depthinfo_t * pdi );
+
+unsigned long long duf_pdi_seq_gen( const duf_depthinfo_t * pdi );
+
 unsigned long long duf_pdi_seq_leaf( const duf_depthinfo_t * pdi );
 void duf_pdi_seq_leaf_plus( duf_depthinfo_t * pdi );
+
 unsigned long long duf_pdi_seq_node( const duf_depthinfo_t * pdi );
 void duf_pdi_seq_node_plus( duf_depthinfo_t * pdi );
 

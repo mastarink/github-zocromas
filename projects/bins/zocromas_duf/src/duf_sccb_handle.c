@@ -372,10 +372,10 @@ SR( SCCBH, sccbh_node_progress, duf_sccb_handle_t * sccbh )
     m = H_TOTITEMS;
 #endif
     DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX( pdi_reldepth, H_PDI ), CRX( pdi_depth, H_PDI ) );
-  /* assert( H_PDI->seq_node <= m ); FIXME counters! */
+  /* assert( H_PDI->seqq.node <= m ); FIXME counters! */
   /*@ 2. progress bar */
     if ( m > 0 )
-      CRX( percent, H_PDI->seq_node, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
+      CRX( percent, H_PDI->seqq.node, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
   }
   ER( SCCBH, sccbh_node_progress, duf_sccb_handle_t * sccbh );
 }
@@ -389,11 +389,11 @@ SR( SCCBH, sccbh_leaf_progress, duf_sccb_handle_t * sccbh )
 
     m = H_TOTITEMS;
     DUF_SCCB( MAST_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", H_TOTITEMS, m, CRX( pdi_reldepth, H_PDI ), CRX( pdi_depth, H_PDI ) );
-  /* assert( H_PDI->seq_node <= m ); FIXME counters! */
+  /* assert( H_PDI->seqq.node <= m ); FIXME counters! */
     if ( m > 0 )
     {
-      CRX( percent, H_PDI->seq_leaf, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
-      MAST_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", H_PDI->seq, H_PDI->seq_leaf, m );
+      CRX( percent, H_PDI->seqq.leaf, H_PDI->total_bytes, H_PDI->total_files, m, CRX( uni_scan_action_title, H_SCCB ) );
+      MAST_TRACE( seq, 0, "PROGRESS: seqq.gen:%llu; seqq.leaf:%llu OF %llu", H_PDI->seqq.gen, H_PDI->seqq.leaf, m );
     }
   }
   ER( SCCBH, sccbh_leaf_progress, duf_sccb_handle_t * sccbh );

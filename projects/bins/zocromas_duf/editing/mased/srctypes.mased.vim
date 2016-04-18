@@ -63,6 +63,9 @@ tab sfind duf_fileinfo_types.h
 tab sfind duf_pdi_types.h
 sfind duf_pdi_structs.h
 
+tab sfind duf_seq_types.h
+sfind duf_seq_structs.h
+
 tab sfind duf_hook_types.h
 tab sfind duf_sql_set_types.h
 
