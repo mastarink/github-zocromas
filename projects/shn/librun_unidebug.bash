@@ -4,9 +4,8 @@ function shn_uni_debug ()
   shift
   local debugdir="$MSH_SHN_PROJECT_DIR/debug"
   local retcode=0
-  local runretcode=0
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
-  local bin sedex lt rname
+  local bin  lt rname
   local bindir libsdir
 
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
@@ -63,29 +62,30 @@ function shn_uni_debug ()
 }
 function shn_debug_run ()
 {
-  local scmd0 scmd ltcmd cmd  gid tmpcmd
+  local scmd0 scmd cmd
+  local tmpdbgdir tmpdbgfile tmpdbgname tmpdbgopt
   local corename coredir="/tmp"
   local qargs
-  ulimit -c
+  shn_msg "$(ulimit -c)"
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
   done
   shn_msg "to run $rname $qargs"
   if ! [[ "$runretcode" ]] || [[ "$incore" == '-' ]] ; then unset incore ; fi
-  shn_unidebug_make_tmpcmdfile $@
-  shn_msg "tmpcmd:$tmpcmd"
-  scmd0="${MSH_SHN_GDB:-gdb} ${MSH_SHN_GDB_OPTS}  -q      $bin"
-  if [[ "$tmpcmd" ]] ; then
-    scmd="$scmd0 -x $tmpcmd"
-  else
-    scmd="$scmd0"
-  fi
-  ltcmd="libtool --mode=execute $scmd"
-  gid="`stat -c%g /proc/$$`"
-  shn_msg "incore: $incore"
+  shn_msg "incore: ${incore}"
+  shn_unidebug_make_tmpdbgfile $@
+  shn_msg "tmpdbgfile:$tmpdbgfile"
+  scmd0="${MSH_SHN_GDB:-gdb} ${MSH_SHN_GDB_OPTS} -q $bin"
+  shn_msg "scmd0: ${scmd0}"
+# if [[ "$tmpdbgfile" ]] ; then    tmpdbgopt=" -x $tmpdbgfile" ;  fi
+  scmd="${scmd0}${tmpdbgfile:+ -x $tmpdbgfile}"
+  shn_msg "scmd: ${scmd}"
   if [[ "$incore" ]] ; then
+    local gid
+    gid="`stat -c%g /proc/$$`"
     if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
       shn_msg "core : $corename"
+      local ltcmd="libtool --mode=execute $scmd"
       cmd="$ltcmd -c '$corename'"
     else
       shn_errmsg "not found: $corename"
@@ -93,25 +93,28 @@ function shn_debug_run ()
       return 1
     fi
   elif [[ "$lt" ]] ; then
-    if [[ "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
-  # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
+  # XXX Never here !!! XXX XXX
+    if [[ "$tmpdbgfile" ]] && [[ -s "$tmpdbgfile" ]] ; then
+  # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpdbgfile
       cmd="$ltscmd"
-#	libtool --mode=execute cgdb --  -q       $bin -x $tmpcmd
+#	libtool --mode=execute cgdb -- -q $bin -x $tmpdbgfile
     else
-      echo "no file : $tmpcmd" >&2
+      shn_errmsg "no file : $tmpdbgfile" >&2
       return 1
     fi
   else
-    if [[ "$tmpcmd" ]] ; then
+    if [[ "$tmpdbgfile" ]] && [[ -s "$tmpdbgfile" ]] ; then
       cmd="$scmd"
-#	cgdb --   -q      $bin -x $tmpcmd
+#	cgdb --   -q      $bin -x $tmpdbgfile
     else
       cmd="$scmd0"
+      shn_errmsg "no file : $tmpdbgfile" >&2
+      return 1
 #	cgdb --   -q      $bin
     fi
   fi
   if [[ "$cmd" ]] ; then
-    shn_msg "$cmd"
+    shn_msg "eval cmd: $cmd"
     eval "$cmd"
   fi
 }
@@ -125,31 +128,45 @@ function  shn_unidebug_make_suff ()
     suff="_${runretcode}"
   fi
 }
-function  shn_unidebug_make_cmdfile ()
+function  shn_unidebug_make_cmddbgfile ()
 {
   local suff
+  cmddbgfile=""
   shn_unidebug_make_suff
   shn_msg "[suff: $suff]"
-  cmdfile="$debugdir/debug${incore}_${rname}${suff}.cmd"
-  if ! [[ -f "$cmdfile" ]] ; then
-    shn_msg "not found: $cmdfile"
-    cmdfile="$debugdir/debug${incore}_${rname}.cmd"
+  cmddbgdir="$debugdir"
+  cmddbgname="debug${incore}_${rname}${suff}.cmd"
+  if [[ -d "${cmddbgdir}" ]] ; then
+    cmddbgfile="${cmddbgdir}/${cmddbgname}"
+    if ! [[ -f "$cmddbgfile" ]] ; then
+      shn_msg "not found: $cmddbgfile"
+      cmddbgname="debug${incore}_${rname}.cmd"
+      cmddbgfile="${cmddbgdir}/${cmddbgname}"
+    fi
+    shn_msg "Using cmddbgfile: $cmddbgfile"
   fi
-  echo "Using $cmdfile"
 }
-function  shn_unidebug_make_tmpcmdfile ()
+function  shn_unidebug_make_tmpdbgfile ()
 {
-  local cmdfile
-  shn_unidebug_make_cmdfile
+  local cmddbgdir cmddbgfile cmddbgname sedex
+  tmpdbgfile=""
+  shn_unidebug_make_cmddbgfile $@
   sedex="s!^\(run\)!\1 $@!"
-  shn_dbgmsg "3 cmdfile=$cmdfile"
-  if [[ -f "$cmdfile" ]] ; then
-    tmpcmd="${cmdfile}.tmp"
-    /bin/sed -e "$sedex" "$cmdfile" > $tmpcmd
-    shn_cat $tmpcmd
-    shn_dbgmsg "3 tmpcmd=$tmpcmd"
+  shn_dbgmsg "3 cmddbgfile=$cmddbgfile"
+  if [[ -f "$cmddbgfile" ]] && [[ -d "${cmddbgdir}" ]] ; then
+    tmpdbgdir="${cmddbgdir}/tmp"
+    tmpdbgname="${cmddbgname}.tmp"
+    if ! [[ -d "${tmpdbgdir}" ]] ; then
+      mkdir "${tmpdbgdir}"
+    fi
+    if [[ -d "${tmpdbgdir}" ]] ; then
+      tmpdbgfile="${tmpdbgdir}/${tmpdbgname}"
+      sed -e "$sedex" "$cmddbgfile" > $tmpdbgfile
+#     shn_cat $tmpdbgfile
+    fi
+    shn_msg "Using tmpdbgfile: $tmpdbgfile"
   else
-    shn_msg "not found: $cmdfile"
+    shn_errmsg "not found cmddbgfile: $cmddbgfile"
   fi
 }
 

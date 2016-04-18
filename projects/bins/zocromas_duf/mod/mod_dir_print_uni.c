@@ -74,7 +74,7 @@ const duf_mod_handler_t duf_mod_handler_uni[] = {
 static duf_scanner_set_t scanners[] = {
   {
    .name = "traditional",
-   .flags = DUF_SCANNER_SET_FLAG_DB /* | DUF_SCANNER_SET_FLAG_DISABLED */, /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB /* | DUF_SCANNER_SET_FLAG_DISABLED */ , /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
    .fun = F2ND( print_leaf2 ),                                       /* */
@@ -143,8 +143,8 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_han
 
       MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
       MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
-    /* sccbh->current_row=trow; */
-      CR( print_leaf2, pdi_unused, sccbh );
+      if ( 0 )
+        CR( print_leaf2, pdi_unused, sccbh );
     }
   /* CRX( sccbh_set_current_row, sccbh, NULL ); */
   }

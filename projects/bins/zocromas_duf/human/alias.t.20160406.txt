@@ -1,8 +1,8 @@
 #!/bin/sh
 alias  datem='/bin/date "+%Y%m%d"'
-
+alias t__lreset='lshn && tput reset'
 # list files from "owncloud_mega_zip_copy" db with sha1id=1351; tag them with 'test-one'
-alias t__1='run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4'
+alias t__1='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4'
 # list files from "owncloud_mega_zip_copy" db same as /home/mastar/.mas/lib/big/misc/media/photo/LG_G3/20150617_210134_Burst22.jpg
 alias t__1a='run   --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --same-as-sha1=/home/mastar/.mas/lib/big/misc/media/photo/LG_G3/20150617_210134_Burst22.jpg  --evaluate-sccb=listing  /home/  --use-format=4'
 alias t__1a0='run   --db-name=owncloud_mega_zip_copy --linear --min-same-sha1=5  --std-leaf-set-name=std-all-under  --glob="*.jpg"  -df   --evaluate-sccb=listing  /home/  --use-format=4  --trace-stdout --trace-force-color'
@@ -32,9 +32,9 @@ alias t__5gz='run  --db-name=temp$(/bin/date "+%Y%m%d") -dufR --open-db --glob="
 # create tag 'test-gz1' for "today" db
 alias t__5gz1='run --db-name=temp$(/bin/date "+%Y%m%d") -dufR --open-db --glob="*.gz" --tag-file=test-gz1                 --evaluate-sccb=tagit test/tree'
 # list files tagged with 'test-gz' "today" db as tree
-alias t__5lgz='run --db-name=temp$(/bin/date "+%Y%m%d") -dufR                    --with-tag-file=test-gz                  --evaluate-sccb=tree  $PWD/test'
+alias t__5lgz='t__lreset && run --db-name=temp$(/bin/date "+%Y%m%d") -dufR                    --with-tag-file=test-gz                  --evaluate-sccb=tree  $PWD/test'
 # list files tagged with 'test-gz1' "today" db as tree, limit depth to 17 (from root)
-alias t__5lgz1='run --db-name=temp$(/bin/date "+%Y%m%d") -dufR                    --with-tag-file=test-gz1 --max-depth=17  --evaluate-sccb=tree  $PWD/test'
+alias t__5lgz1='t__lreset && run --db-name=temp$(/bin/date "+%Y%m%d") -dufR                    --with-tag-file=test-gz1 --max-depth=17  --evaluate-sccb=tree  $PWD/test'
 # update? "today" dirs and filedata
 alias t__5r='run --db-name=temp`datem`    -dufR   --evaluate-sccb=dirs,filedata  `pwd`/test/tree  `pwd`/test/tree    --progress'
 # --help-set=% : test options from stdin

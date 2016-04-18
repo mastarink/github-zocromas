@@ -14,21 +14,22 @@
 /* #include "duf_config.h"                                              (* duf_get_config ✗ *) */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 
+#include "duf_pdi_structs.h"
+#include "duf_pdi_ref.h"
+
+#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
+#include "duf_pathinfo_structs.h"                                    /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
+
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_structs.h"
 
-#include "duf_sccbh_ref.h"
-#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 /* #include "duf_sccb_structs.h" */
 
-#include "duf_pdi_structs.h"
-#include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
-#include "duf_pathinfo_structs.h"                                    /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
-
-#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-/* #include "duf_sccb_row.h"                                            (* datarow_*; duf_sccbh_row_get_*; sccbh_rows_eval ✗ *) */
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_sccbh_ref.h"
+#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 
 #include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
 
@@ -48,8 +49,6 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
 /*   assert( 0 );                                        */
 /* }                                                     */
 /* Not here : assert( DUF_GET_QUFIELD3(pstmt_arg, dirid) == CRX( levinfo_dirid, pdi ) ); */
-  MAST_TRACE( scan, 10, "before godown : dirID:%llu", DUF_GET_QUFIELD3( pstmt_arg, dirid ) );
-  MAST_TRACE( explain, 20, "@ sel cb2 node" );
 
   {
     int depth0;
@@ -60,6 +59,11 @@ SR( SCCBH, sccbh_pstmt_godown_dbopenat_dh, duf_sccb_handle_t * sccbh, duf_stmnt_
 
     assert( depth0 + ( QNOERR ? 1 : 0 ) == duf_pdi_depth( H_PDI ) );
   }
+  /* QT( "godown R: dirID:%llu", DUF_GET_RUFIELD2( dirid ) ); */
+  ERRCLEAR( NO_FIELD );
+  /* QT( "@@godown Q: dirID:%llu", DUF_GET_QUFIELD3( pstmt_arg, dirid ) ); */
+  /* assert( DUF_GET_RUFIELD2( dirid ) == DUF_GET_QUFIELD3( pstmt_arg, dirid ) ); */
+  MAST_TRACE( explain, 20, "@ sel cb2 node" );
   assert( QISERR_N( TOO_DEEP ) || /* duf_pdi_linear( H_PDI ) || */ pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
 
   assert( QISERR || DUF_GET_QUFIELD3( pstmt_arg, dirid ) == CRX( levinfo_dirid, H_PDI ) ); /* was set by duf_levinfo_godown */

@@ -36,6 +36,7 @@
 #include "duf_sccb_structs.h"
 
 #include "duf_sccbh_ref.h"
+#include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
@@ -152,6 +153,8 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 {
   if ( !H_TOTCOUNTED || H_TOTITEMS )
   {
+    int rown = 0;
+
 /* int have_rows=0; */
 /* TODO Can't ‘DUF_SQL_START_STMT’ due to recursion : same id : &main_sql_selector_index (static in this case is bad!) TODO */
 #if 1
@@ -201,6 +204,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
     }
 #else
     {
+
     /* XXX for EACH ROW from db XXX */
       while ( QNOERR /* && !QISERR1_N( SQL_DONE ) */  )
       {
@@ -230,39 +234,58 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 # else
             IF_CRV( node_type2sel_cb( node_type ), sccbh, CRX( pdi_each_stmt, H_PDI, 0 ), str_cb2, scanstage );
 # endif
+            rown++;
             CR( pdi_max_filter, H_PDI );                             /* check if any of max's reached */
           }
         }
       }
+
     /* ERRCLEAR1( SQL_DONE ); */
     }
 #endif
     assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
-  /* have_rows=1; */
 
     assert( ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
-            || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */
-            || str_cb2 == F2ND( sccbh_eval_all ) );
-  /* mas_force_count_ereport( 1 ); */
-  /* DUF_TEST_R( r ); */
+            || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb ) || str_cb2 == F2ND( sccbh_eval_all ) );
 
 #if 1
-    assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
+    assert( pstmt_local == CRX( pdi_each_stmt, H_PDI, 0 ) );
     DUF_SQL_SE_END_STMT_NOPDI( pstmt_local );
 #else
     DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt_local );
 #endif
-    duf_pdi_set_each_stmt( H_PDI, NULL );
-
-/* CRX( sccbh_row_add, sccbh, NULL );                     */
-/* if ( have_rows && node_type == DUF_NODE_LEAF )          */
-/*   CR( sccbh_eval_db_leaf_qfd_pack_new, sccbh, scanstage ); */
+    CRX( pdi_set_each_stmt, H_PDI, NULL );
+    if ( 1 )
+    {
+      sccbh->scanner_set_flags_mask_on = /* sccbh->scanner_set_flags_mask_off =  sccbh->scanner_set_flags_special = */ 0;
+      /* sccbh->scanner_set_flags_mask_off = ~( DUF_SCANNER_SET_FLAG_PACK | DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_DISABLED ); */
+      sccbh->scanner_set_flags_mask_on = ( DUF_SCANNER_SET_FLAG_PACK );
+      /* sccbh->scanner_set_flags_special = ( DUF_SCANNER_SET_FLAG_PACK ); */
+      if ( rown )
+      {
+        if ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) )
+        {
+          CRX( sccbh_row_add, sccbh, NULL /* pstmt_arg */  );
+          if ( sccbh->rows && sccbh->rows->prev )
+          {
+          /* QT( "@@%llx >>>>>>>>>%s<<<<<<<<<<<", sccbh->scanner_set_flags_mask_off, duf_scanstage_name( scanstage ) ); */
+            CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
+          }
+          else
+          {
+            QT( "@@ >>>>>>>>>%s<<<<<<<<<<<", /* sccbh->scanner_set_flags_mask_off, */ duf_scanstage_name( scanstage ) );
+          /* assert(0); */
+          /* CRV( str_cb2, sccbh, (* pstmt_arg, *) scanstage ); */
+          }
+        }
+      }
+      sccbh->scanner_set_flags_mask_on = /* sccbh->scanner_set_flags_mask_off =   sccbh->scanner_set_flags_special = */ 0;
+    }
   }
   else
   {
     QT( "SKIP: H_TOTCOUNTED:%d; H_TOTITEMS:%llu [%s] for %s", H_TOTCOUNTED, H_TOTITEMS, CRX( scanstage_name, scanstage ),
         CRX( uni_scan_action_title, H_SCCB ) );
-  /* assert( 0 );                                                                                               */
   }
   ER( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t node_type, const char *sql_selector, duf_str_cb2s_t str_cb2,
       duf_scanstage_t scanstage );
@@ -286,8 +309,7 @@ SR( SCCBH, eval_sccbh_sql_set_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t
   }
 
   assert( str_cb2 == F2ND( sccbh_eval_all ) || str_cb2 == F2ND( sccbh_eval_db_leaf_fd_str_cb )
-          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb )
-          /* || str_cb2 == F2ND( sccbh_eval_db_leaf_qfd_pack_new ) */ );
+          || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) || str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb ) );
   CR( eval_sccbh_sql_str_cb, sccbh, node_type, sql_selector, str_cb2, scanstage );
   mas_free( sql_selector );
   sql_selector = NULL;

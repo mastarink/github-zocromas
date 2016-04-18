@@ -35,6 +35,9 @@ struct duf_sccb_handle_s
   duf_node_type_t assert__current_node_type;
   duf_rsccbh_fun_t atom_cb;
 /* duf_sccb_data_row_t previous_row; */
+  /* duf_scanner_set_flags_set_t scanner_set_flags_special; */
+  /* duf_scanner_set_flags_set_t scanner_set_flags_mask_off; */
+  duf_scanner_set_flags_set_t scanner_set_flags_mask_on;
   duf_sccb_data_row_t *rows;
   const duf_sccb_data_row_t *current_row;
 /* duf_sccb_data_row_t *new_row; */

@@ -48,7 +48,7 @@ duf_pdi_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg )
   }
   else
   {
-    duf_levinfo_set_each_stmt( pdi, pstmt_arg );
+    CRX( levinfo_set_each_stmt, pdi, pstmt_arg );
   }
 }
 
@@ -57,17 +57,17 @@ duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up )
 {
   duf_stmnt_t *pstmt_val = NULL;
 
-  if ( duf_pdi_linear( pdi ) )
+  if ( CRX( pdi_linear, pdi ) )
   {
     pstmt_val = pdi->each_pstmt_linear;
   }
   else if ( up )
   {
-    pstmt_val = duf_levinfo_each_stmt_up( pdi );
+    pstmt_val = CRX( levinfo_each_stmt_up, pdi );
   }
   else
   {
-    pstmt_val = duf_levinfo_each_stmt( pdi );
+    pstmt_val = CRX( levinfo_each_stmt, pdi );
   }
   return pstmt_val;
 }

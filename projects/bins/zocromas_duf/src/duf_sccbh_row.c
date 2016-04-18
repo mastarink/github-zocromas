@@ -109,7 +109,7 @@ SRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh )
 
 SRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg )
 {
-  assert( pstmt_arg == duf_pdi_each_stmt( H_PDI, 1 ) );
+  assert( !pstmt_arg || pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
 #if 0
   CRX( sccbh_row_open, sccbh, pstmt_arg );
   CRX( sccbh_row_close, sccbh );
@@ -118,7 +118,7 @@ SRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   {
     duf_sccb_data_row_t *new_row = NULL;
 
-    assert( pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
+    assert( !pstmt_arg || pstmt_arg == CRX( pdi_each_stmt, H_PDI, 1 ) );
     assert( ! /*sccbh-> */ new_row );
     /*sccbh-> */ new_row = CRX( datarow_create, CRX( pdi_each_stmt, H_PDI, 1 ) /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ) );
     if (  /*sccbh-> */ new_row )

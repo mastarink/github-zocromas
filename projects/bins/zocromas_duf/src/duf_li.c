@@ -100,6 +100,7 @@ li_dbinit_i( duf_levinfo_t * pli, duf_stmnt_t * pstmt_arg )
 {
   assert( pli );
   pli->db.dirid = DUF_GET_QUFIELD3( pstmt_arg, dirid );
+  /* assert( pli->db.dirid==); */
   if ( DUF_GET_QSFIELD3( pstmt_arg, dfname ) )
   {
     assert( !pli->itemname );

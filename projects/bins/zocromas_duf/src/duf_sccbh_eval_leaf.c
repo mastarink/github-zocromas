@@ -22,6 +22,8 @@
 #include "duf_levinfo_openclose.h"
 #include "duf_levinfo_stat.h"
 
+#include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
+
 /* #include "duf_sccb.h" */
 #include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
@@ -100,17 +102,39 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
     int ifpack = 0;
     int packdone = 0;
 
-    ifpack = CRX( sccbh_eval_new_pack, sccbh );
+    ifpack = /* sccbh->scanner_set_flags_special & DUF_SCANNER_SET_FLAG_PACK || */ CRX( sccbh_eval_new_pack, sccbh );
     for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
     {
+      duf_scanner_set_flags_set_t flags;
+
+      flags = scanner_set->flags /* & ~sccbh->scanner_set_flags_mask_off */ ;
+#if 0
+      QT( "@flags:%llx (%d:%d:%d:%d) %s-%s; %s", flags, ( !sccbh->scanner_set_flags_mask_on || sccbh->scanner_set_flags_mask_on & flags ) ? 1 : 0,
+          flags & DUF_SCANNER_SET_FLAG_DB ? 1 : 0, flags & DUF_SCANNER_SET_FLAG_PACK ? 1 : 0, ifpack, duf_scanstage_name( scanner_set->scanstage ),
+          duf_scanstage_name( scanstage ), duf_nodetype_name( scanner_set->type ) );
+#endif
     /* QT( "@a %s : %d : %s : %s", H_SCCB->name, n, scanner_set->name, duf_scanstage_name( scanstage ) ); */
-      if ( ( scanner_set->flags & DUF_SCANNER_SET_FLAG_DB )
-           && !( scanner_set->flags & DUF_SCANNER_SET_FLAG_DISABLED )
+#if 0
+      QT( "@%d:%d:%d:%d:%d:%d",
+          ( !sccbh->scanner_set_flags_mask_on || ( sccbh->scanner_set_flags_mask_on & flags ) ) ? 1 : 0,
+          ( flags & DUF_SCANNER_SET_FLAG_DB ) ? 1 : 0,
+          !( flags & DUF_SCANNER_SET_FLAG_DISABLED ) ? 1 : 0,
+          ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE ) ? 1 : 0,
+          ( ( scanner_set->type & DUF_NODE_LEAF ) || scanner_set->type == DUF_NODE_NONE ) ? 1 : 0,
+          ( !( flags & DUF_SCANNER_SET_FLAG_PACK ) || ifpack ) ? 1 : 0 );
+#endif
+      if ( ( flags & DUF_SCANNER_SET_FLAG_DB )
+           && !( flags & DUF_SCANNER_SET_FLAG_DISABLED )
            && ( ( scanner_set->scanstage & scanstage ) || scanner_set->scanstage == DUF_SCANSTAGE_NONE )
            && ( ( scanner_set->type & DUF_NODE_LEAF ) || scanner_set->type == DUF_NODE_NONE )
-           && ( !( scanner_set->flags & DUF_SCANNER_SET_FLAG_PACK ) || ifpack ) )
+           && ( ifpack /*                    */  || !( flags & DUF_SCANNER_SET_FLAG_PACK ) )
+           && ( !sccbh->scanner_set_flags_mask_on || ( flags & sccbh->scanner_set_flags_mask_on ) ) )
       {
-        if ( scanner_set->flags & DUF_SCANNER_SET_FLAG_TO_OPEN )
+#if 0
+        if ( sccbh->scanner_set_flags_special & DUF_SCANNER_SET_FLAG_PACK )
+          QT( "@flags:%llx", flags );
+#endif
+        if ( flags & DUF_SCANNER_SET_FLAG_TO_OPEN )
         {
           ERRLOWER( FS_DISABLED );
           CR( levinfo_if_openat_dh, H_PDI );
@@ -128,13 +152,13 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
           }
 #endif
         }
-      /* if ( scanner_set->flags & DUF_SCANNER_SET_FLAG_PACK ) */
+      /* if ( flags & DUF_SCANNER_SET_FLAG_PACK ) */
       /* {                                                     */
       /*   assert( 0 );                                        */
       /* }                                                     */
         ERRLOWER( FS_DISABLED );
         CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner_set->fun, DUF_NODE_LEAF );
-        if ( scanner_set->flags & DUF_SCANNER_SET_FLAG_PACK )
+        if ( flags & DUF_SCANNER_SET_FLAG_PACK )
           packdone++;
         ERRUPPER( FS_DISABLED );
       /* sleep( 1 ); */
@@ -151,6 +175,10 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
 #endif
       }
       n++;
+#if 0
+      if ( sccbh->scanner_set_flags_special & DUF_SCANNER_SET_FLAG_PACK )
+        QT( "@flags:%llx", flags );
+#endif
     }
     if ( ifpack && packdone && sccbh->rows && sccbh->rows->prev )
     {
@@ -158,8 +186,8 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
       sccbh->rows->prev = NULL;
     }
   }
-/* 20160415.171104 FIXME to make last pack evaluated need NULL-row !!! */ XXX XXX
-    H_SCCBIv = 0;
+/* (* 20160415.171104 FIXME to make last pack evaluated need NULL-row !!! *) XXX XXX */
+  H_SCCBIv = 0;
 
   ER( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
@@ -315,14 +343,14 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
         break;
       case DUF_SQLTYPE_NULL:
         {
-          const char *str0;
-          const char *str1;
+          int isnull0;
+          int isnull1;
 
-          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
-          eq = ( !str0 && !str1 );
+          isnull0 = CRP( datarow_get_null, sccbh->rows, pack_field );
+          isnull1 = CRP( datarow_get_null, sccbh->rows->prev, pack_field );
+          eq = ( isnull0 && isnull1 );
           if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+            MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1, sccbh->rows, sccbh->rows->prev );
         }
         break;
       }

@@ -73,7 +73,6 @@ __duf_sql_pos_by_name2( duf_stmnt_t * psqlstmt, const char *name )
     {
       QT( "@@@- %s", duf_sql_column_name( psqlstmt, icol ) );
     }
-    assert( 0 );
   }
   return pos;
 }

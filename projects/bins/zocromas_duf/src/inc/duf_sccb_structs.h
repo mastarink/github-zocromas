@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SCCB_STRUCTS_H
 # define MAS_DUF_SCCB_STRUCTS_H
 
-# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_handle_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
+# include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
 # include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
 
 struct duf_sccb_data_value_s
@@ -111,7 +111,9 @@ enum duf_scanner_set_flags_n_e
   DUF_SCANNER_SET_FLAG_N_TO_OPEN,
   DUF_SCANNER_SET_FLAG_N_DB,
   DUF_SCANNER_SET_FLAG_N_PACK,
-  DUF_SCANNER_SET_FLAG_N_MAX = DUF_SCANNER_SET_FLAG_N_DB,
+
+  DUF_SCANNER_SET_FLAG_N_LAST,
+  DUF_SCANNER_SET_FLAG_N_MAX = DUF_SCANNER_SET_FLAG_N_LAST - 1
 };
 
 enum duf_scanner_set_flags_e
@@ -124,7 +126,6 @@ enum duf_scanner_set_flags_e
   DUF_SCANNER_SET_FLAG_DB = 1 << DUF_SCANNER_SET_FLAG_N_DB,
   DUF_SCANNER_SET_FLAG_PACK = 1 << DUF_SCANNER_SET_FLAG_N_PACK,
 };
-
 struct duf_scanner_set_s
 {
   const char *name;
@@ -134,7 +135,7 @@ struct duf_scanner_set_s
 /* unsigned db:1;           */
 /* unsigned deleted:1;      */
 /* unsigned deleted_only:1; */
-  unsigned long long flags;
+  duf_scanner_set_flags_set_t flags;
   duf_node_type_t type;
   duf_scanstage_t scanstage;
   duf_scanner_fun_t fun;

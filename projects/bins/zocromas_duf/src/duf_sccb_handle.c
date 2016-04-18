@@ -550,7 +550,7 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
 
-    CRX( sccbh_row_add, sccbh, NULL /* pstmt_arg */  );             /* XXX FIXME XXX */
+    /* CRX( sccbh_row_add, sccbh, NULL (* pstmt_arg *)  );             (* XXX FIXME XXX *) */
   /* CR( sccbh_eval_db_leaf_qfd_pack_new, sccbh, 0 (* scanstage *)  );     XXX FIXME XXX */
     MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL );
 

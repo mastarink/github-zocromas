@@ -39,6 +39,41 @@
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 /* ###################################################################### */
 
+static
+SR( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstmt_arg, int pos )
+{
+  field->typ = CRX( sql_column_type, pstmt_arg, pos );
+  field->name = mas_strdup( CRX( sql_column_name, pstmt_arg, pos ) );
+  field->svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, pos ) );
+/*     if ( 0 == strcmp( field->name, "mtime" ) )                                                                                     */
+/*     {                                                                                                                                      */
+/* #include <mastar/sqlite/mas_sqlite.h>                                                                                                      */
+/*                                                                                                                                            */
+/*     (* assert( strcmp( field->name, "mtime" ) ); *)                                                                                */
+/*       QT( "@%s : %d : %s", CRX( sql_column_name, pstmt_arg, pos ), mas_sqlite_column_type( pstmt_arg, pos ), mas_sqlite_column_decltype( pstmt_arg, pos ) ); */
+/*     }                                                                                                                                      */
+  switch ( field->typ )
+  {
+  case DUF_SQLTYPE_NONE:
+    break;
+  case DUF_SQLTYPE_INTEGER:
+    field->value.n = CRX( sql_column_long_long, pstmt_arg, pos );
+  /* QT( "field %lu: '%s' = %lld", pos, field->name, field->value.n ); */
+    break;
+  case DUF_SQLTYPE_FLOAT:
+    break;
+  case DUF_SQLTYPE_TEXT:
+    field->value.n = CRX( sql_column_long_long, pstmt_arg, pos );
+    break;
+  case DUF_SQLTYPE_BLOB:
+    break;
+  case DUF_SQLTYPE_NULL:
+    break;
+  }
+
+  ER( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstmt_arg, int pos );
+}
+
 SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi MAS_UNUSED )
 {
 /* if ( pstmt_arg ) */
@@ -57,6 +92,7 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
 
     for ( size_t i = 0; pstmt_arg && i < row->cnt; i++ )             /* sqlite3_column_count( pstmt_arg ) */
     {
+#if 0
       row->fields[i].typ = CRX( sql_column_type, pstmt_arg, i );
       row->fields[i].name = mas_strdup( CRX( sql_column_name, pstmt_arg, i ) );
       row->fields[i].svalue = mas_strdup( CRX( sql_column_string, pstmt_arg, i ) );
@@ -85,6 +121,9 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
       case DUF_SQLTYPE_NULL:
         break;
       }
+#else
+      CR( datarow_init_field, &row->fields[i], pstmt_arg, i );
+#endif
       {
 #if 0
         const char *s;
@@ -237,4 +276,14 @@ SRP( OTHER, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t
   s = field ? field->svalue : NULL;
 /* return field ? field->svalue : NULL; */
   ERP( SCCBH, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name );
+}
+
+SRP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name )
+{
+  duf_sccb_data_value_t *field;
+
+  field = CRP( datarow_field_find, row, name );
+/* assert( !field || field->typ == DUF_SQLTYPE_NULL ); */
+  isnull = field ? !field->svalue : 1;
+  ERP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name );
 }
