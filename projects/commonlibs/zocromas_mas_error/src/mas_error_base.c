@@ -21,7 +21,7 @@ constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_U
 
 /* #define DUF_NOTIMING */
 
-/* get err number by error code */
+/* get err number by error code (make it zero-based) */
 int
 mas_errnumber_c( mas_error_code_t rc )
 {
@@ -255,25 +255,6 @@ mas_set_error_message_i( mas_error_index_t ri, const char *fmt, ... )
   va_start( args, fmt );
   mas_vset_error_message_i( ri, fmt, args );
   va_end( args );
-}
-
-/* get err reported counter by error list pointer */
-int
-mas_icount_reported_rev( const mas_error_event_t * rev )
-{
-  int cnt = 0;
-
-  if ( rev )
-    cnt = rev->count_reported;
-/* msg = global_error_list[-ri - 1].message; */
-  return cnt;
-}
-
-/* get err reported counter by error unique id ~ index */
-int
-mas_icount_reported_i( mas_error_index_t ri )
-{
-  return mas_icount_reported_rev( mas_find_error_event_i( ri ) );
 }
 
 __attribute__ ( ( destructor( 50000 ) ) )

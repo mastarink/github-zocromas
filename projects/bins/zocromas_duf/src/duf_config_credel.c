@@ -99,6 +99,7 @@ duf_config_delete( void )
 /* T( "@%p %p", duf_config->opt.ptracecfg, duf_config->opt.ptracecfg->class_levels ); */
   MAST_TRACE( config, 0, "deleting config %p:%p:%p:%p", mas_output_file(  ), duf_trace_file_c( duf_config->opt.ptracecfg ), stderr, stdout );
 /* T( "@%p/%p %p", duf_config->opt.ptracecfg, duf_get_trace_config(  ), duf_config->opt.ptracecfg->class_levels ); */
+ 
   mas_error_report_all( duf_get_trace_config(  ), DUF_TRACE_LEVEL_errors, 0, /*FIXME: error output is not trace output */
                         duf_trace_file_c( duf_config->opt.ptracecfg ), mas_verbose ? mas_verbose(  ) : 0 );
   mas_config_trace_delete( duf_config->opt.ptracecfg );

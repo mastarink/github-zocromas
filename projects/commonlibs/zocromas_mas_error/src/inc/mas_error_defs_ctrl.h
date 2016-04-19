@@ -2,19 +2,19 @@
 # define MAS_ERROR_DEFS_CTRL_H
 
 # include "mas_error_base.h"                                         /* mas_error_code_i */
-# include "mas_error_reporting.h"                                    /* mas_enable_mereport_c; mas_enabled_ereport_i; mas_set_memax_count_c */
+# include "mas_error_reporting.h"                                    /* mas_mset_ereport_level_c; mas_enabled_ereport_level_i; mas_set_memax_count_c */
 # include "mas_error_clear.h"                                        /* mas_clear_error_i */
 
-/* #  define MASE_E1_LOWER(...) mas_enable_mereport_c(1, -1, 0, __VA_ARGS__, 0) */
+/* #  define MASE_E1_LOWER(...) mas_mset_ereport_level_c(1, -1, 0, __VA_ARGS__, 0) */
 
-# define MASE_E_SET(_n, ...)       mas_enable_mereport_c(0, _n,  1, __VA_ARGS__, 0)
-# define MASE_E_SHIFT(_n, ...)     mas_enable_mereport_c(0, _n,  0, __VA_ARGS__, 0)
+# define MASE_E_SET(_n, ...)       mas_mset_ereport_level_c(0, _n,  1, __VA_ARGS__, 0)
+# define MASE_E_SHIFT(_n, ...)     mas_mset_ereport_level_c(0, _n,  0, __VA_ARGS__, 0)
 
 # if 1
-#  define MASE_E_LOWER(...)       { mas_enable_mereport_c(0, -1,  0, __VA_ARGS__, 0)
-#  define MASE_E_LOWER_N(_n, ...) { mas_enable_mereport_c(0, -_n, 0, __VA_ARGS__, 0)
-#  define MASE_E_UPPER(...)         mas_enable_mereport_c(0,  1,  0, __VA_ARGS__, 0); }
-#  define MASE_E_UPPER_N(_n, ...)   mas_enable_mereport_c(0, _n,  0, __VA_ARGS__, 0); }
+#  define MASE_E_LOWER(...)       { mas_mset_ereport_level_c(0, -1,  0, __VA_ARGS__, 0)
+#  define MASE_E_LOWER_N(_n, ...) { mas_mset_ereport_level_c(0, -_n, 0, __VA_ARGS__, 0)
+#  define MASE_E_UPPER(...)         mas_mset_ereport_level_c(0,  1,  0, __VA_ARGS__, 0); }
+#  define MASE_E_UPPER_N(_n, ...)   mas_mset_ereport_level_c(0, _n,  0, __VA_ARGS__, 0); }
 # else
 #  define MASE_E_LOWER_N(_n, ...) { MASE_E_SHIFT(-(_n), __VA_ARGS__)
 #  define MASE_E_LOWER(...)         MASE_E_LOWER_N(1, __VA_ARGS__)
@@ -24,7 +24,7 @@
 
 # define MASE_E_MAX(cnt, ...) mas_set_memax_count_c(cnt, __VA_ARGS__, 0)
 
-# define MASE_EREPORT(rc) (mas_enabled_ereport_i(rc)>0)
+# define MASE_EREPORT(rc) (mas_enabled_ereport_level_i(rc)>0)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -*/

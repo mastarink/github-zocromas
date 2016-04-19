@@ -32,6 +32,7 @@
 */
 
 #include <assert.h>                                                  /* assert */
+#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <link.h>
@@ -229,6 +230,14 @@ SRP( TOP, int, rval, 0, main, int argc MAS_UNUSED, char **argv MAS_UNUSED, char 
 /* *( ( int * ) NULL ) = 0; */
 /* mas_strdup( "abrakadabra" ); */
   MASE_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
+  MASE_E_MAX( 7, DUF_ERROR_NO_FIELD );
+/* assert( mas_emax_count_c( DUF_ERROR_NO_FIELD ) == 7 ); */
+/* raise( SIGABRT );                                                  (* To continue from here in GDB: "signal 0". *) */
+/* MASE_E_LOWER_N( -10, DUF_ERROR_NO_FIELD ); */
+/* mas_mset_ereport_level_c( 0, -10, 0, DUF_ERROR_NO_FIELD, 0 ); */
+/* mas_set_emax_count_c( 7, DUF_ERROR_NO_FIELD ); */
+/* mas_mset_ereport_level_c( 0, 10, 0, DUF_ERROR_NO_FIELD, 0 ); */
+/* mas_mset_ereport_level_c( 0, 10, 1, DUF_ERROR_NO_FIELD, 0 ); */
 
   MAST_TRACE( explain, 1, "@main with config" );
   CR( main_with_config );
@@ -237,7 +246,7 @@ SRP( TOP, int, rval, 0, main, int argc MAS_UNUSED, char **argv MAS_UNUSED, char 
   {
     char *p = NULL;
 
-    fprintf( stderr, "%c\n", *p ); /* make segfault */
+    fprintf( stderr, "%c\n", *p );                                   /* make segfault */
   }
 #endif
   QTR;

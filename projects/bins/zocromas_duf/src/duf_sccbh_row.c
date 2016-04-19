@@ -38,7 +38,7 @@
 SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh )
 {
   row = sccbh->current_row ? sccbh->current_row : sccbh->rows;
-  assert(row);
+  assert( row );
   ERX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh );
 }
 
@@ -146,6 +146,24 @@ SRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_
   }
 #endif
   ERN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
+}
+
+SRN( SCCBH, void, sccbh_row_add_dummy, duf_sccb_handle_t * sccbh )
+{
+  if ( sccbh )
+  {
+    duf_sccb_data_row_t *new_row = NULL;
+
+    assert( !new_row );
+    new_row = CRX( datarow_create, NULL /* pstmt_arg */ , CRX( pdi_pathinfo, H_PDI ), CRX( pdi_seqq, H_PDI ) );
+    if ( new_row )
+    {
+      new_row->prev = sccbh->rows;
+      sccbh->rows = new_row;
+      new_row = NULL;
+    }
+  }
+  ERN( SCCBH, void, sccbh_row_add_dummy, duf_sccb_handle_t * sccbh );
 }
 
 SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh )

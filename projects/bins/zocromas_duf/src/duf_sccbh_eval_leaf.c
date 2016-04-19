@@ -306,54 +306,55 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
       duf_sqltype_t t;
 
       t = CRP( datarow_get_type, sccbh->rows, pack_field );
-      switch ( t )
-      {
-      case DUF_SQLTYPE_NONE:
-        eq = 0;
-        break;
-      case DUF_SQLTYPE_INTEGER:
+      if ( QNOERR )
+        switch ( t )
         {
-          unsigned long long number0;
-          unsigned long long number1;
+        case DUF_SQLTYPE_NONE:
+          eq = 0;
+          break;
+        case DUF_SQLTYPE_INTEGER:
+          {
+            unsigned long long number0;
+            unsigned long long number1;
 
-          number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
-          number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
-          eq = ( number0 == number1 );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
-        }
-        break;
-      case DUF_SQLTYPE_FLOAT:
-        assert( 0 );
-        break;
-      case DUF_SQLTYPE_TEXT:
-        {
-          const char *str0;
-          const char *str1;
+            number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
+            number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
+            eq = ( number0 == number1 );
+            if ( !eq )
+              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
+          }
+          break;
+        case DUF_SQLTYPE_FLOAT:
+          assert( 0 );
+          break;
+        case DUF_SQLTYPE_TEXT:
+          {
+            const char *str0;
+            const char *str1;
 
-          str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-          str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
-          eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
-        }
-        break;
-      case DUF_SQLTYPE_BLOB:
-        assert( 0 );
-        break;
-      case DUF_SQLTYPE_NULL:
-        {
-          int isnull0;
-          int isnull1;
+            str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
+            str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+            eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
+            if ( !eq )
+              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+          }
+          break;
+        case DUF_SQLTYPE_BLOB:
+          assert( 0 );
+          break;
+        case DUF_SQLTYPE_NULL:
+          {
+            int isnull0;
+            int isnull1;
 
-          isnull0 = CRP( datarow_get_null, sccbh->rows, pack_field );
-          isnull1 = CRP( datarow_get_null, sccbh->rows->prev, pack_field );
-          eq = ( isnull0 && isnull1 );
-          if ( !eq )
-            MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1, sccbh->rows, sccbh->rows->prev );
+            isnull0 = CRP( datarow_get_null, sccbh->rows, pack_field );
+            isnull1 = CRP( datarow_get_null, sccbh->rows->prev, pack_field );
+            eq = ( isnull0 && isnull1 );
+            if ( !eq )
+              MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1, sccbh->rows, sccbh->rows->prev );
+          }
+          break;
         }
-        break;
-      }
     }
     ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
   }

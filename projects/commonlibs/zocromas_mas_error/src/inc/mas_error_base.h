@@ -38,7 +38,5 @@ void mas_set_error_message_rev( mas_error_event_t * rev, const char *fmt, ... );
 void mas_set_error_message_p( size_t rp, const char *fmt, ... );
 void mas_set_error_message_i( mas_error_index_t ri, const char *fmt, ... );
 
-int mas_icount_reported_i( mas_error_index_t ri );
-int mas_icount_reported_rev( const mas_error_event_t * rev );
 
 #endif

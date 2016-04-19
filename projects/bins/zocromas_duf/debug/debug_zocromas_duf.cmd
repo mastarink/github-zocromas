@@ -9,7 +9,8 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-b duf_sccb_row.c:200
+#b duf_sccb_row.c:200
+# b duf.c:232
 # b duf_sccbh_eval_sql_set.c:270
 # b duf_sccbh_eval_leaf.c:119
 

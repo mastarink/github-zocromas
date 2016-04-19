@@ -23,11 +23,11 @@
 # if 0
 #  define MASE_SHOW_ERRORO_TEST( _fmt, ... )             MASE_SHOW_ERRORO_WP( "@@ [TEst] ", "@@@@@@@@@"_fmt,  __VA_ARGS__ )
 #  define MASE_SHOW_ERRORO_TEST_WP_STD(_rval, _prefix) MASE_SHOW_ERRORO_WP( _prefix, "[%s] (ri:%d) {en:%d} lsz:%ld rep:%u:%u", \
-					  (_rval)<0?mas_error_name_i(_rval):"+", _rval, mas_enabled_ereport_n_i(_rval), \
+					  (_rval)<0?mas_error_name_i(_rval):"+", _rval,  mas_ereport_level_i(_rval), \
     						mas_error_list_size(), mas_ecount_reported_i(_rval), mas_icount_reported_i(_rval) )
 /* MASE_SHOW_ERRORO_TEST_STD : takes mas_error_index_t! */
 #  define MASE_SHOW_ERRORO_TEST_STD(_rval)           MASE_SHOW_ERRORO_TEST(          "[%s] (ri:%d) {en:%d} lsz:%ld rep:%u:%u", \
-					  (_rval)<0?mas_error_name_i(_rval):"+", _rval, mas_enabled_ereport_n_i(_rval), \
+					  (_rval)<0?mas_error_name_i(_rval):"+", _rval, mas_ereport_level_i(_rval), \
     						mas_error_list_size(), mas_ecount_reported_i(_rval), mas_icount_reported_i(_rval) )
 # else
 #  define MASE_SHOW_ERRORN_TEST_STD(_rval, _verb)  mas_error_report_i( MAST_TRACE_CONFIG, 0,_rval, 1, MAST_ERRORS_FILE, _verb)

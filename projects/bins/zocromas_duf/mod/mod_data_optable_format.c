@@ -36,8 +36,8 @@ static muc_longval_extended_table_t optable = {
 //DO_AT_STAGE( SETUP ),
   .xlist =                                                           /* */
   {
-   {.o = {DO_Q( "bformat" ) /*                  */ , DO_A_R /* */ , DO_V( BFORMAT )} /*                     */ , DO_CL( PRINT ) /*   */
-    /*                                                                                                       */ , DO_H( print w / bformat ) /* */ },
+   /* {.o = {DO_Q( "bformat" ) (*                  *) , DO_A_R (* *) , DO_V( BFORMAT )} (*                     *) , DO_CL( PRINT ) (*   *)              */
+   /*  (*                                                                                                       *) , DO_H( print w / bformat ) (* *) }, */
 
    {.o = {DO_Q( "format-dirs-tree" ) /*         */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_TREE )} /*           */ , DO_CL( PRINT ) /* */ ,
     /*      */ DO_OC( STR, opt.output.sformat.dirs_tree ) /*                                                 */ , DO_H( format ) /*          */ },

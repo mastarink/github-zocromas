@@ -18,6 +18,9 @@ sfind mas_error_regfind.h
 tab sfind mas_error_reporting.c
 sfind mas_error_reporting.h
 
+tab sfind mas_error_reporting_index.c
+sfind mas_error_reporting_index.h
+
 tab sfind mas_errors_maintenance.h
 sfind mas_error_types.h
 

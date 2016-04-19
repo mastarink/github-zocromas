@@ -25,8 +25,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "template",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'tmpl-leaf' AS fieldset_id, " (* *) */
+   .set = "'tmpl-leaf' AS fieldset_id, "                             /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -56,8 +55,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "basic",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'basic-leaf' AS fieldset_id, " (* *) */
+   .set = "'basic-leaf' AS fieldset_id, "                            /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    }
@@ -65,8 +63,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "plus",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'plus-leaf' AS fieldset_id, " (* *) */
+   .set = "'plus-leaf' AS fieldset_id, "                             /* */
    " fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
@@ -80,8 +77,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "md5x",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'md5x-leaf' AS fieldset_id, " (* *) */
+   .set = "'md5x-leaf' AS fieldset_id, "                             /* */
  /* */
    " md.dup5cnt " /*    */ " AS nsame "                              /* */
  /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
@@ -94,8 +90,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "md5",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'md5-leaf' AS fieldset_id, " (* *) */
+   .set = "'md5-leaf' AS fieldset_id, "                              /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -120,8 +115,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "sha1x",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'sha1x-leaf' AS fieldset_id, " (* *) */
+   .set = "'sha1x-leaf' AS fieldset_id, "                            /* */
  /* */
    " sh.dupsha1cnt " /*    */ " AS nsame "                           /* */
  /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
@@ -133,8 +127,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "sha1",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'sha1-leaf' AS fieldset_id, " (* *) */
+   .set = "'sha1-leaf' AS fieldset_id, "                             /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -157,8 +150,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "sd5",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'sd5-leaf' AS fieldset_id, " (* *) */
+   .set = "'sd5-leaf' AS fieldset_id, "                              /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -183,8 +175,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "crc32x",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'crc32x-leaf' AS fieldset_id, " (* *) */
+   .set = "'crc32x-leaf' AS fieldset_id, "                           /* */
    " crc.dup32cnt " /*    */ " AS nsame "                            /* */
  /* ", md.dup5cnt            AS nsame_md5 " (* *)  */
  /* ", sh.dupsha1cnt         AS nsame_sha1 " (* *) */
@@ -197,8 +188,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "crc32",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'crc32-leaf' AS fieldset_id, " (* *) */
+   .set = "'crc32-leaf' AS fieldset_id, "                            /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -225,8 +215,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "mime",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'mime-leaf' AS fieldset_id, " (* *) */
+   .set = "'mime-leaf' AS fieldset_id, "                             /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize  " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -251,8 +240,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "exif",
    .type = DUF_NODE_LEAF,
-   .set =
- /* "'exif-leaf' AS fieldset_id, " (* *) */
+   .set = "'exif-leaf' AS fieldset_id, "                             /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -282,8 +270,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "std-leaf",
    .type = DUF_NODE_LEAF,
-   .set =
- /* " 'std-nons-leaf' AS fieldset_id, " (* *) */
+   .set = " 'std-nons-leaf' AS fieldset_id, "                        /* */
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
@@ -316,8 +303,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "std-node",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'std-node' AS fieldset_id, " (* *) */
+   .set = "'std-node' AS fieldset_id, "                              /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -328,8 +314,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "std-ns-node",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'std-ns-node' AS fieldset_id, " (* *) */
+   .set = "'std-ns-node' AS fieldset_id, "                           /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -340,8 +325,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "template",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'tmpl-node' AS fieldset_id, " (* *) */
+   .set = "'tmpl-node' AS fieldset_id, "                             /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -352,8 +336,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "filenames",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'filenames-node' AS fieldset_id, " (* *) */
+   .set = "'filenames-node' AS fieldset_id, "                        /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -364,8 +347,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "filedata",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'filedata-node' AS fieldset_id, " (* *) */
+   .set = "'filedata-node' AS fieldset_id, "                         /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -376,8 +358,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "dirs",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'dirs-node' AS fieldset_id, " (* *) */
+   .set = "'dirs-node' AS fieldset_id, "                             /* */
    " pt." DUF_SQL_IDFIELD " AS dirid "                               /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -388,8 +369,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'md5-node' AS fieldset_id, " (* *) */
+   .set = "'md5-node' AS fieldset_id, "                              /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -400,8 +380,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'sd5-node' AS fieldset_id, " (* *) */
+   .set = "'sd5-node' AS fieldset_id, "                              /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -412,8 +391,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'crc32-node' AS fieldset_id, " (* *) */
+   .set = "'crc32-node' AS fieldset_id, "                            /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -424,8 +402,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'mime-node' AS fieldset_id, " (* *) */
+   .set = "'mime-node' AS fieldset_id, "                             /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
@@ -436,8 +413,7 @@ static duf_fieldset_t _all_fieldsets[] = {
   {
    .name = "",
    .type = DUF_NODE_NODE,
-   .set =
- /* "'exif-node' AS fieldset_id, " (* *) */
+   .set = "'exif-node' AS fieldset_id, "                             /* */
    " pt." DUF_SQL_IDFIELD " AS dirid"                                /* */
    ", pt." DUF_SQL_IDFIELD " AS nameid "                             /* */
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */

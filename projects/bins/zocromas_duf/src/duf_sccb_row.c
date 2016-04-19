@@ -64,6 +64,8 @@ SR( OTHER, datarow_init_field, duf_sccb_data_value_t * field, duf_stmnt_t * pstm
 
   typ = CRX( sql_column_type, pstmt_arg, pos );
   name = CRX( sql_column_name, pstmt_arg, pos );
+
+  assert( !CRX( sql_column_string, pstmt_arg, pos ) || 0 != strcmp( "std-node", CRX( sql_column_string, pstmt_arg, pos ) ) );
 #endif
   switch ( typ )
   {
@@ -186,8 +188,6 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
   ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi, const seq_t * seqq );
 }
 
-/* int                                                        */
-/* duf_datarow_list_count( const duf_sccb_data_row_t * rows ) */
 SRP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows )
 {
 /* int cnt = 0; */
@@ -200,8 +200,6 @@ SRP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows )
   ERP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows );
 }
 
-/* void                                                    */
-/* duf_datarow_list_delete_r( duf_sccb_data_row_t * rows ) */
 SRN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows )
 {
   if ( rows )
@@ -212,8 +210,6 @@ SRN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows )
   ERN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows );
 }
 
-/* void                                                              */
-/* duf_datarow_list_delete_f( duf_sccb_data_row_t * rows, int skip ) */
 SRN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip )
 {
   duf_sccb_data_row_t *row = NULL;
@@ -235,8 +231,6 @@ SRN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip )
   ERN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip );
 }
 
-/* void                                            */
-/* duf_datarow_delete( duf_sccb_data_row_t * row ) */
 SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
 {
   for ( size_t i = 0; i < row->nfields + row->reserved; i++ )
@@ -262,68 +256,79 @@ SRX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * r
   ERX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * row );
 }
 
-/* duf_sccb_data_value_t *                                                     */
-/* duf_datarow_field_find( const duf_sccb_data_row_t * row, const char *name ) */
 SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name )
 {
-  for ( size_t i = 0; !val && row && i < row->nfields + row->reserved; i++ )
-    if ( row->fields[i].name && 0 == strcmp( row->fields[i].name, name ) )
-      val = &row->fields[i];
-/* return NULL; */
-  if ( !val )
+  if ( row )
   {
-    char *lst = NULL;
+    for ( size_t i = 0; !val && row && i < row->nfields + row->reserved; i++ )
+      if ( row->fields[i].name && 0 == strcmp( row->fields[i].name, name ) )
+        val = &row->fields[i];
+    if ( QNOERR && !val )
+    {
+      char *lst = NULL;
 
-    lst = CRX( datarow_field_list, row );
-    ERRMAKE_M( NO_FIELD, "Bad field name '%s' (%s)", name, lst );
-    mas_free( lst );
+      lst = CRX( datarow_field_list, row );
+      ERRMAKE_M( NO_FIELD, "Bad field name '%s' (%s)", name, lst );
+      if ( 0 == strcmp( name, "fname" ) )
+        assert( 0 );
+      mas_free( lst );
+    }
   }
   ERP( SCCBH, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sccb_data_row_t * row, const char *name );
 }
 
 SRP( OTHER, duf_sqltype_t, typ, DUF_SQLTYPE_NONE, datarow_get_type, const duf_sccb_data_row_t * row, const char *name )
 {
-  duf_sccb_data_value_t *field;
+  if ( row )
+  {
+    duf_sccb_data_value_t *field;
 
-  field = CRP( datarow_field_find, row, name );
-  if ( field )
-    typ = field->typ;
+    field = CRP( datarow_field_find, row, name );
+    if ( QNOERR && field )
+      typ = field->typ;
+  }
   ERP( SCCBH, duf_sqltype_t, typ, DUF_SQLTYPE_NONE, datarow_get_type, const duf_sccb_data_row_t * row, const char *name );
 }
 
-/* unsigned long long                                                          */
-/* duf_datarow_get_number( const duf_sccb_data_row_t * row, const char *name ) */
 SRP( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name )
 {
-  duf_sccb_data_value_t *field;
+  if ( row )
+  {
+    duf_sccb_data_value_t *field;
 
-  field = CRP( datarow_field_find, row, name );
-  n = field ? field->value.n : 0;
+    field = CRP( datarow_field_find, row, name );
+    if ( QNOERR )
+      n = field ? field->value.n : 0;
 /* QT( "@found %s for %s at %p (%lld)", field ? field->name : NULL, name, row, field ? field->value.n : 0 ); */
-  assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL || field->typ == DUF_SQLTYPE_TEXT );
-/* return field ? field->value.n : 0; */
+    assert( !field || field->typ == DUF_SQLTYPE_INTEGER || field->typ == DUF_SQLTYPE_NULL || field->typ == DUF_SQLTYPE_TEXT );
+  }
   ERP( SCCBH, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_row_t * row, const char *name );
 }
 
-/* const char *                                                          */
-/* duf_datarow_get_string( duf_sccb_data_row_t * row, const char *name ) */
 SRP( OTHER, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name )
 {
-  duf_sccb_data_value_t *field;
+  if ( row )
+  {
+    duf_sccb_data_value_t *field;
 
-  field = CRP( datarow_field_find, row, name );
-  assert( !field || field->typ == DUF_SQLTYPE_TEXT || field->typ == DUF_SQLTYPE_NULL );
-  s = field ? field->svalue : NULL;
-/* return field ? field->svalue : NULL; */
+    field = CRP( datarow_field_find, row, name );
+    assert( !field || field->typ == DUF_SQLTYPE_TEXT || field->typ == DUF_SQLTYPE_NULL );
+    if ( QNOERR )
+      s = field ? field->svalue : NULL;
+  }
   ERP( SCCBH, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name );
 }
 
 SRP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name )
 {
-  duf_sccb_data_value_t *field;
+  if ( row )
+  {
+    duf_sccb_data_value_t *field;
 
-  field = CRP( datarow_field_find, row, name );
+    field = CRP( datarow_field_find, row, name );
 /* assert( !field || field->typ == DUF_SQLTYPE_NULL ); */
-  isnull = field ? !field->svalue : 1;
+    if ( QNOERR )
+      isnull = field ? !field->svalue : 1;
+  }
   ERP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name );
 }

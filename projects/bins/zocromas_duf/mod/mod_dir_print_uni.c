@@ -62,6 +62,7 @@ static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * s
 /* /NOTES */
 
 /* ########################################################################################## */
+static int use_format_once = 0;
 static duf_scan_callbacks_t duf_sccb_dispatch;
 static DR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED );
 
@@ -146,8 +147,12 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_han
       MAST_TRACE( temp, 5, "@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
       if ( 1 )
         MAST_TRACE( temp, 5, "@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+
       if ( 1 )
+      {
+        use_format_once = 1;
         CR( print_leaf2, pdi_unused, sccbh );
+      }
     }
   /* CRX( sccbh_set_current_row, sccbh, NULL ); */
   }
@@ -257,7 +262,13 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
 #if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
 #else
-        use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+        if ( use_format_once > 0 )
+        {
+          use = use_format_once - 1;
+          use_format_once = 0;
+        }
+        else
+          use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
 #endif
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
@@ -271,7 +282,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info,  H_PDI, 1 /* from row */ ,sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
+        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
                     DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       DUF_PUTSL( 0 );
     }

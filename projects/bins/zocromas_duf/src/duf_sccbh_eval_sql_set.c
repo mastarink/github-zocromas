@@ -177,8 +177,8 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 
     MAST_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), H_TOTCOUNTED,
                 H_TOTITEMS );
-    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seqq.gen, H_PDI->seqq.node, H_PDI->seqq.leaf,
-                H_TOTITEMS, sqlite3_sql( pstmt_local ) );
+    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seqq.gen, H_PDI->seqq.node,
+                H_PDI->seqq.leaf, H_TOTITEMS, sqlite3_sql( pstmt_local ) );
 /* assert( !H_TOTCOUNTED || H_TOTITEMS ); */
     H_PDI->seqq.row = 0;
   /* H_PDI->total_bytes = 0; */
@@ -258,14 +258,14 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
     if ( 1 )
     {
       sccbh->scanner_set_flags_mask_on = /* sccbh->scanner_set_flags_mask_off =  sccbh->scanner_set_flags_special = */ 0;
-      /* sccbh->scanner_set_flags_mask_off = ~( DUF_SCANNER_SET_FLAG_PACK | DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_DISABLED ); */
+    /* sccbh->scanner_set_flags_mask_off = ~( DUF_SCANNER_SET_FLAG_PACK | DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_DISABLED ); */
       sccbh->scanner_set_flags_mask_on = ( DUF_SCANNER_SET_FLAG_PACK );
-      /* sccbh->scanner_set_flags_special = ( DUF_SCANNER_SET_FLAG_PACK ); */
+    /* sccbh->scanner_set_flags_special = ( DUF_SCANNER_SET_FLAG_PACK ); */
       if ( rown )
       {
         if ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) )
         {
-          CRX( sccbh_row_add, sccbh, NULL /* pstmt_arg */  );
+          CRX( sccbh_row_add_dummy, sccbh  );
           if ( sccbh->rows && sccbh->rows->prev )
           {
           /* QT( "@@%llx >>>>>>>>>%s<<<<<<<<<<<", sccbh->scanner_set_flags_mask_off, duf_scanstage_name( scanstage ) ); */

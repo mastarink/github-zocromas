@@ -8,23 +8,19 @@
 
 # include "duf_se.h"                                                 /* DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
-/* DRN( SCCBH, void, sccbh_row_open, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg ); */
-/* DRN( SCCBH, void, sccbh_row_close, duf_sccb_handle_t * sccbh ); */
 DRN( SCCBH, void, sccbh_row_add, duf_sccb_handle_t * sccbh, duf_stmnt_t * pstmt_arg );
+DRN( SCCBH, void, sccbh_row_add_dummy, duf_sccb_handle_t * sccbh );
 
-/* unsigned long long duf_sccbh_row_get_number( duf_sccb_handle_t * sccbh, const char *name ); */
 DRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name );
 
-/* const char *duf_sccbh_row_get_string( duf_sccb_handle_t * sccbh, const char *name ); */
 DRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 
-/* DRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh ); */
 
 DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_prev_row, duf_sccb_handle_t * sccbh );
 DRN( SCCBH, void, sccbh_end_row, duf_sccb_handle_t * sccbh );
 DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh );
 
-DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current,const  duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh );
 DRX( SCCBH, const duf_pathinfo_t *, pi, NULL, sccbh_row_pathinfo, const duf_sccb_handle_t * sccbh );
 
 #endif
