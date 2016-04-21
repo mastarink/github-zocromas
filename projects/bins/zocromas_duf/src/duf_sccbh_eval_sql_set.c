@@ -21,19 +21,15 @@
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 #include "duf_pdi_ref.h"
 #include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
+#include "duf_pdi_structs.h"
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 #include "duf_levinfo_structs.h"
 
-#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
-#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
-#include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
-
-#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
-
 #include "duf_sccb.h"
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
-#include "duf_sccb_structs.h"
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
+#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
@@ -42,25 +38,20 @@
 #include "duf_sccbh_eval_all.h"                                      /* duf_sccbh_eval_all ✗ */
 #include "duf_sccbh_eval_leaf.h"                                     /* duf_sccbh_eval_db_leaf_str_cb; duf_sccbh_eval_db_leaf_fd_str_cb; ✗ */
 #include "duf_sccbh_eval.h"
+#include "duf_sccbh_scanner.h"
 
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
 
-#include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-/* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
-
-#include "duf_sccbh_scanner.h"
-
-/* #include "duf_sql_defs.h"                                            (* DUF_SQL_IDFIELD etc. ✗ *) */
-#include "duf_sql_field.h"                                           /* __duf_sql_str_by_name2 for DUF_GET_QUFIELD2 etc. ✗ */
+#include "duf_evsql_selector_new.h"                                  /* duf_selector2sql_new; duf_selector2sql_2new; duf_expand_sql; ✗ */
+#include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
-
-#include "duf_hook_types.h"                                          /* duf_str_cb2_t; duf_sel_cb2_t; duf_anyhook_t; duf_action_table_t; ✗ */
+#include "duf_sql_se_stmt_defs.h"                                    /* DUF_SQL_SE_BIND_S_OPT etc. ✗ */
+#include "duf_sql_bind.h"                                            /* duf_sql_... for DUF_SQL_BIND_... etc. ✗ */
 
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
-#include "duf_pdi_structs.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval_sql_set.h"
 /* ###################################################################### */
@@ -177,14 +168,18 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
 
     MAST_TRACE( sccbh, 2, "@@@@@scan rows dirid:%llu (%s) %d:%llu", CRX( levinfo_dirid, H_PDI ), CRX( uni_scan_action_title, H_SCCB ), H_TOTCOUNTED,
                 H_TOTITEMS );
-    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ), H_PDI->seqq.gen, H_PDI->seqq.node,
-                H_PDI->seqq.leaf, H_TOTITEMS, sqlite3_sql( pstmt_local ) );
+    MAST_TRACE( sql, 0, "EACH ... id=%llu (%llu:%llu:%llu) of %llu -- %s", CRX( levinfo_dirid, H_PDI ),
+                duf_pdi_seq_gen( H_PDI ) /* H_PDI->seqq.gen */ , duf_pdi_seq_node( H_PDI ) /* H_PDI->seqq.node */ ,
+                duf_pdi_seq_leaf( H_PDI ) /* H_PDI->seqq.leaf */ , H_TOTITEMS, sqlite3_sql( pstmt_local ) );
 /* assert( !H_TOTCOUNTED || H_TOTITEMS ); */
+#if 0
     H_PDI->seqq.row = 0;
+#else
+    duf_pdi_set_seq_row( H_PDI, 0 );
+#endif
   /* H_PDI->total_bytes = 0; */
   /* T( "@pdi->total_bytes:%llu", H_PDI->total_bytes ); */
     assert( pstmt_local == duf_pdi_each_stmt( H_PDI, 0 ) );
-
     assert( ( node_type == DUF_NODE_NODE ) || ( node_type == DUF_NODE_LEAF ) );
     assert( H_PDI->pathinfo.levinfo[H_PDI->pathinfo.maxdepth + 1].d == 0 );
 
@@ -213,8 +208,12 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
         {
           ERRCLEAR1( SQL_ROW );
           {
+# if 0
             H_PDI->seqq.row++;
-            sccbh->assert__current_node_type = node_type;
+# else
+            duf_pdi_seq_row_plus( H_PDI );
+# endif
+          /* sccbh->assert__current_node_type = node_type; */
 # if 0
             switch ( node_type )
             {
@@ -255,32 +254,24 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
     DUF_SQL_SE_END_STMT_LOCAL( H_PDI, pstmt_local );
 #endif
     CRX( pdi_set_each_stmt, H_PDI, NULL );
-    if ( 1 )
+    sccbh->scanner_set_flags_mask_on = ( DUF_SCANNER_SET_FLAG_PACK );
+    if ( rown /* XXX ??? XXX */  )
     {
-      sccbh->scanner_set_flags_mask_on = /* sccbh->scanner_set_flags_mask_off =  sccbh->scanner_set_flags_special = */ 0;
-    /* sccbh->scanner_set_flags_mask_off = ~( DUF_SCANNER_SET_FLAG_PACK | DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_DISABLED ); */
-      sccbh->scanner_set_flags_mask_on = ( DUF_SCANNER_SET_FLAG_PACK );
-    /* sccbh->scanner_set_flags_special = ( DUF_SCANNER_SET_FLAG_PACK ); */
-      if ( rown )
+      if ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) )
       {
-        if ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) )
+        CRX( sccbh_row_add_dummy, sccbh );
+        if ( CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) )
         {
-          CRX( sccbh_row_add_dummy, sccbh  );
-          if ( sccbh->rows && sccbh->rows->prev )
-          {
-          /* QT( "@@%llx >>>>>>>>>%s<<<<<<<<<<<", sccbh->scanner_set_flags_mask_off, duf_scanstage_name( scanstage ) ); */
-            CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
-          }
-          else
-          {
-            QT( "@@ >>>>>>>>>%s<<<<<<<<<<<", /* sccbh->scanner_set_flags_mask_off, */ duf_scanstage_name( scanstage ) );
-          /* assert(0); */
-          /* CRV( str_cb2, sccbh, (* pstmt_arg, *) scanstage ); */
-          }
+          CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
+        }
+        else
+        {
+        /* assert(0); */
+        /* CRV( str_cb2, sccbh, (* pstmt_arg, *) scanstage ); */
         }
       }
-      sccbh->scanner_set_flags_mask_on = /* sccbh->scanner_set_flags_mask_off =   sccbh->scanner_set_flags_special = */ 0;
     }
+    sccbh->scanner_set_flags_mask_on = 0;
   }
   else
   {

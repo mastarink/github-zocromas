@@ -3,7 +3,8 @@
 
 # include <mastar/multiconfig/muc_config_cli_types.h>                /* muc_config_cli_t */
 # include "duf_config_types.h"                                       /* duf_config_t; duf_config_save_t; duf_config_cfg_t; duf_config_vars_t ✗ */
-# include "duf_config_opt_types.h"                                   /* duf_config_opt_t */
+# include "duf_config_opt_types.h"
+# include "duf_config_output_types.h"                                /* duf_config_output_t ✗ */
 # include "duf_config_db_types.h"
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
 
@@ -13,7 +14,8 @@
 /* void *duf_get_config_puz_offset( unsigned long off ); */
 
 muc_config_cli_t *duf_get_config_cli( void );                        /* TODO inline */
-duf_config_opt_t *duf_get_config_opt( void );                        /* TODO inline */
+const duf_config_opt_t *duf_get_config_opt( void );
+const duf_config_output_t *duf_get_config_output( void );
 duf_ufilter_t *duf_get_config_ufilter( void );                       /* TODO inline */
 duf_config_db_t *duf_get_config_db( void );                          /* TODO inline */
 

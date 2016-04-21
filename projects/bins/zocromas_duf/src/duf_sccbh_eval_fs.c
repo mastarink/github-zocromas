@@ -81,7 +81,7 @@ SR( SCCBH, sccbh_eval_fs_w_scanner_here, duf_sccb_handle_t * sccbh, /* duf_stmnt
           }
         }
       }
-      assert( sccbh->assert__current_node_type == DUF_NODE_FS );
+      /* assert( sccbh->assert__current_node_type == DUF_NODE_FS ); */
       if ( sccbh->atom_cb )                                          /* atom is fs-direntry(dir or reg) or item(node or leaf) */
         sccbh->atom_cb( sccbh, /* ( duf_stmnt_t * ) NULL, */ scanstage, scanner, DUF_NODE_FS, QERRIND );
     }
@@ -281,7 +281,7 @@ SR( SCCBH, sccbh_eval_fs_in, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_u
       if ( S_ISDIR( CRX( levinfo_stat_mode, H_PDI ) ) )
       {
         CR( levinfo_if_openat_dh, H_PDI );
-        sccbh->assert__current_node_type = DUF_NODE_FS;
+        /* sccbh->assert__current_node_type = DUF_NODE_FS; */
 #if 0
         DOR( r, duf_sccbh_eval_fs_w2scanners_sd( scanstage, pstmt_unused, sccbh ) );
 #else

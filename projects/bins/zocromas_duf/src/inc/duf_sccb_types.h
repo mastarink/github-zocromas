@@ -10,6 +10,7 @@ typedef unsigned long long duf_scanner_set_flags_set_t;
 typedef int ( *duf_scanner_fun_t ) (  /* duf_stmnt_t * pstmt_arg, */ duf_depthinfo_t * pdi, struct duf_sccb_handle_s * sccbh );
 typedef struct duf_sccb_data_value_s duf_sccb_data_value_t;
 
+typedef struct duf_sccb_data_list_s duf_sccb_data_list_t;
 typedef struct duf_sccb_data_row_s duf_sccb_data_row_t;
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

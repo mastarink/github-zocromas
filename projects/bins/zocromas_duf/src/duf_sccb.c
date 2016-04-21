@@ -24,7 +24,7 @@
 
 #include "duf_mod_handle.h"
 
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 
 /* Working with sccb structure */
 /* ###################################################################### */
@@ -88,10 +88,10 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 }
 
 /* 20160324.113111 */
-static const duf_scan_callbacks_t *
-duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callbacks_t * first )
+static
+SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evnamen, const char *name, size_t namelen, const duf_scan_callbacks_t * first )
 {
-  const duf_scan_callbacks_t *sccb = NULL;
+/* const duf_scan_callbacks_t *sccb = NULL; */
 
 #if 1
   for ( sccb = first; sccb && strncmp( name, sccb->name, namelen ); sccb = sccb->next );
@@ -100,7 +100,8 @@ duf_find_sccb_by_evnamen( const char *name, size_t namelen, const duf_scan_callb
   while ( sccb && strncmp( name, sccb->name, namelen ) )
     sccb = sccb->next;
 #endif
-  return sccb;
+/* return sccb; */
+  ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evnamen, const char *name, size_t namelen, const duf_scan_callbacks_t * first );
 }
 
 static duf_scan_callbacks_t *
@@ -144,10 +145,10 @@ duf_register_sccb( duf_scan_callbacks_t * first, duf_scan_callbacks_t * sccb )
   }
 }
 
-static const duf_scan_callbacks_t *
-duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+static
+SRX( SCCB, duf_scan_callbacks_t *, sccb, NULL, load_sccb_by_evnamen, const char *name, size_t namelen, duf_scan_callbacks_t * first )
 {
-  duf_scan_callbacks_t *sccb = NULL;
+/* duf_scan_callbacks_t *sccb = NULL; */
 
   if ( name && namelen )
   {
@@ -179,24 +180,25 @@ duf_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t
     mas_free( libname );
   }
   MAST_TRACE( sccb, 0, "loaded %s", sccb ? sccb->name : NULL );
-  return sccb;
+/* return sccb; */
+  ERX( SCCB, duf_scan_callbacks_t *, sccb, NULL, load_sccb_by_evnamen, const char *name, size_t namelen, duf_scan_callbacks_t * first );
 }
 
-const duf_scan_callbacks_t *
-duf_find_or_load_sccb_by_evnamen( const char *name, size_t namelen, duf_scan_callbacks_t * first )
+SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_or_load_sccb_by_evnamen, const char *name, size_t namelen, duf_scan_callbacks_t * first )
 {
-  const duf_scan_callbacks_t *sccb = NULL;
+/* const duf_scan_callbacks_t *sccb = NULL; */
 
-  sccb = duf_find_sccb_by_evnamen( name, namelen, first );
+  sccb = CRX( find_sccb_by_evnamen, name, namelen, first );
   if ( !sccb )
-    sccb = duf_load_sccb_by_evnamen( name, namelen, first );
-  return sccb;
+    sccb = CRX( load_sccb_by_evnamen, name, namelen, first );
+/* return sccb; */
+  ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_or_load_sccb_by_evnamen, const char *name, size_t namelen, duf_scan_callbacks_t * first );
 }
 
-const duf_scan_callbacks_t **
-duf_find_or_load_sccb_by_evnamen_plus( const char *name0, size_t namelen, duf_scan_callbacks_t * first )
+SRX( SCCB, const duf_scan_callbacks_t **, psccb, NULL, find_or_load_sccb_by_evnamen_plus, const char *name0, size_t namelen,
+     duf_scan_callbacks_t * first )
 {
-  const duf_scan_callbacks_t **psccb = NULL;
+/* const duf_scan_callbacks_t **psccb = NULL; */
   size_t cnt = 0;
   char *name = NULL;
   const char *p;
@@ -223,17 +225,18 @@ duf_find_or_load_sccb_by_evnamen_plus( const char *name0, size_t namelen, duf_sc
       p = strchr( p, '+' );
       if ( !p )
         p = sname + strlen( sname );
-      psccb[cnt] = duf_find_or_load_sccb_by_evnamen( sname, p - sname, first );
+      psccb[cnt] = CRX( find_or_load_sccb_by_evnamen, sname, p - sname, first );
     /* QT( "@!! %lu: %s ~ %lu = %p", cnt, sname, p - sname, psccb[cnt] ); */
     }
   }
   mas_free( name );
 /* while ( p < name + namelen && p && *p ); */
-  return psccb;
+/* return psccb; */
+  ERX( SCCB, const duf_scan_callbacks_t **, psccb, NULL, find_or_load_sccb_by_evnamen_plus, const char *name0, size_t namelen,
+       duf_scan_callbacks_t * first );
 }
 
-void
-duf_sccb_dlclose( duf_scan_callbacks_t * first )
+SRN( SCCB, void, sccb_dlclose, duf_scan_callbacks_t * first )
 {
   for ( duf_scan_callbacks_t * sccb = first; sccb; sccb = sccb->next )
   {
@@ -241,24 +244,14 @@ duf_sccb_dlclose( duf_scan_callbacks_t * first )
       dlclose( sccb->dlhan );
     sccb->dlhan = NULL;
   }
+  ERN( SCCB, void, sccb_dlclose, duf_scan_callbacks_t * first );
 }
 
-const duf_scan_callbacks_t *
-duf_find_sccb_by_evname( const char *name, const duf_scan_callbacks_t * first )
+SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname, const char *name, const duf_scan_callbacks_t * first )
 {
-  const duf_scan_callbacks_t *sccb = NULL;
+/* const duf_scan_callbacks_t *sccb = NULL; */
 
   sccb = duf_find_sccb_by_evnamen( name, strlen( name ), first );
-  return sccb;
+/* return sccb; */
+  ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname, const char *name, const duf_scan_callbacks_t * first );
 }
-
-#if 0
-static const duf_scan_callbacks_t *
-duf_find_or_load_sccb_by_evname( const char *name, duf_scan_callbacks_t * first )
-{
-  const duf_scan_callbacks_t *sccb = NULL;
-
-  sccb = duf_find_or_load_sccb_by_evnamen( name, strlen( name ), first );
-  return sccb;
-}
-#endif

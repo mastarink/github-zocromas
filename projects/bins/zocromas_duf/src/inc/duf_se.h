@@ -3,6 +3,8 @@
 
 # include <mastar/wrap/mas_std_def.h>
 # include <mastar/error/mas_error_types.h>                           /* mas_error_code_t ▤ */
+# include <mastar/error/mas_error_defs_ctrl.h>
+
 /* # include "duf_start_end.h" */
 
 /* #include "duf_debug_defs.h" 

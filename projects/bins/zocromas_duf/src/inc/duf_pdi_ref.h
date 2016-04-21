@@ -26,6 +26,10 @@ void duf_pdi_seq_leaf_plus( duf_depthinfo_t * pdi );
 unsigned long long duf_pdi_seq_node( const duf_depthinfo_t * pdi );
 void duf_pdi_seq_node_plus( duf_depthinfo_t * pdi );
 
+void duf_pdi_set_seq_row( duf_depthinfo_t * pdi, int val );
+unsigned long long duf_pdi_seq_row( const duf_depthinfo_t * pdi );
+void duf_pdi_seq_row_plus( duf_depthinfo_t * pdi );
+
 void duf_pdi_set_each_stmt( duf_depthinfo_t * pdi, duf_stmnt_t * pstmt_arg );
 duf_stmnt_t *duf_pdi_each_stmt( const duf_depthinfo_t * pdi, int up );
 

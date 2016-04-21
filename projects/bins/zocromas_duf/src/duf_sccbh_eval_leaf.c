@@ -25,6 +25,7 @@
 #include "duf_nodetype.h"                                            /* duf_nodetype_name ✗ */
 
 /* #include "duf_sccb.h" */
+#include "duf_sccb_ref.h"
 #include "duf_sccb_structs.h"
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
 #include "duf_sccb_row.h"                                            /* datarow_* ✗ */
@@ -85,7 +86,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * p
     {
       CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner, DUF_NODE_LEAF );
 
-      assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
+      /* assert( sccbh->assert__current_node_type == DUF_NODE_LEAF ); */
     }
     ERRUPPER( FS_DISABLED );
   }
@@ -103,7 +104,8 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
     int packdone = 0;
 
     ifpack = /* sccbh->scanner_set_flags_special & DUF_SCANNER_SET_FLAG_PACK || */ CRX( sccbh_eval_new_pack, sccbh );
-    for ( const duf_scanner_set_t * scanner_set = H_SCCB->scanners; scanner_set && scanner_set->fun; scanner_set++ )
+    for ( const duf_scanner_set_t * scanner_set = duf_sccb_scanners( H_SCCB ) /* H_SCCB->scanners */ ; scanner_set && scanner_set->fun;
+          scanner_set++ )
     {
       duf_scanner_set_flags_set_t flags;
 
@@ -180,15 +182,20 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
         QT( "@flags:%llx", flags );
 #endif
     }
-    if ( ifpack && packdone && sccbh->rows && sccbh->rows->prev )
+    if ( ifpack && packdone && CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last && sccbh->rowlist.last->prev */  )
     {
-      CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
-      sccbh->rows->prev = NULL;
+#if 0
+      CRX( datarow_list_delete_f, sccbh->rowlist.last->prev, 0 );
+      sccbh->rowlist.last->prev = NULL;
+#else
+      CRX( datarow_list_delete_f, CRX( sccbh_rowlist_p, sccbh ) /* &sccbh->rowlist */ , 1, 0 );
+      assert( CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */  );
+      assert( !CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
+#endif
     }
   }
 /* (* 20160415.171104 FIXME to make last pack evaluated need NULL-row !!! *) XXX XXX */
   H_SCCBIv = 0;
-
   ER( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
 
@@ -203,7 +210,8 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
  *  - sccb
  * */
 
-SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh,  /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+    duf_scanstage_t scanstage )
 {
 #if 0
 # if 0
@@ -236,9 +244,7 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt
     scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, CRX( levinfo_deleted, H_PDI ), DUF_NODE_LEAF );
     {
       ERRLOWER( FS_DISABLED );
-
       CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner, DUF_NODE_LEAF );
-
       assert( sccbh->assert__current_node_type == DUF_NODE_LEAF );
       ERRUPPER( FS_DISABLED );
     }
@@ -247,7 +253,8 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt
 #else
   CR( sccbh_eval_db_leaf_qfd, sccbh, /* pstmt_unused, */ scanstage, 1 );
 #endif
-  ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */
+      duf_scanstage_t scanstage );
 }
 
 /*20150820.085324
@@ -259,7 +266,8 @@ SR( SCCBH, sccbh_eval_db_leaf_fd_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt
  *  - pdi
  *  - sccb
  * */
-SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh,     /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+    duf_scanstage_t scanstage )
 {
 #if 0
 # if 0
@@ -273,9 +281,7 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t 
     scanner = CRX( sccb_scanstage_scanner, H_SCCB, scanstage, CRX( levinfo_deleted, H_PDI ), DUF_NODE_LEAF );
     {
       ERRLOWER( FS_DISABLED );
-
       CR( sccbh_call_scanner, sccbh, /* pstmt_unused, */ scanstage, scanner, DUF_NODE_LEAF );
-
       ERRUPPER( FS_DISABLED );
     }
   }
@@ -286,17 +292,19 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t 
   ER( SCCBH, sccbh_eval_db_leaf_str_cb, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
 }
 
-SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */ duf_scanstage_t scanstage )
+SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused MAS_UNUSED, */
+    duf_scanstage_t scanstage )
 {
   CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
-  ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage );
+  ER( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */
+      duf_scanstage_t scanstage );
 }
 
 SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
 {
   int eq = 0;
 
-  if ( sccbh->rows && sccbh->rows->prev )
+  if ( CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last && sccbh->rowlist.last->prev */ )
   {
     const char *pack_field;
 
@@ -305,7 +313,7 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
     {
       duf_sqltype_t t;
 
-      t = CRP( datarow_get_type, sccbh->rows, pack_field );
+      t = CRP( datarow_get_type, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
       if ( QNOERR )
         switch ( t )
         {
@@ -317,11 +325,14 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             unsigned long long number0;
             unsigned long long number1;
 
-            number0 = CRP( datarow_get_number, sccbh->rows, pack_field );
-            number1 = CRP( datarow_get_number, sccbh->rows->prev, pack_field );
+            number0 = CRP( datarow_get_number, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
+            number1 = CRP( datarow_get_number, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ ,
+                           pack_field );
             eq = ( number0 == number1 );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, sccbh->rows, sccbh->rows->prev );
+              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1,
+                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
+                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
           }
           break;
         case DUF_SQLTYPE_FLOAT:
@@ -332,11 +343,14 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             const char *str0;
             const char *str1;
 
-            str0 = CRP( datarow_get_string, sccbh->rows, pack_field );
-            str1 = CRP( datarow_get_string, sccbh->rows->prev, pack_field );
+            str0 = CRP( datarow_get_string, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
+            str1 = CRP( datarow_get_string, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ ,
+                        pack_field );
             eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, sccbh->rows, sccbh->rows->prev );
+              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1,
+                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
+                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
           }
           break;
         case DUF_SQLTYPE_BLOB:
@@ -347,11 +361,13 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             int isnull0;
             int isnull1;
 
-            isnull0 = CRP( datarow_get_null, sccbh->rows, pack_field );
-            isnull1 = CRP( datarow_get_null, sccbh->rows->prev, pack_field );
+            isnull0 = CRP( datarow_get_null, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
+            isnull1 = CRP( datarow_get_null, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ , pack_field );
             eq = ( isnull0 && isnull1 );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1, sccbh->rows, sccbh->rows->prev );
+              MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1,
+                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
+                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
           }
           break;
         }
@@ -365,16 +381,16 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
 #if 0
 SR( SCCBH, sccbh_eval_db_leaf_qfd_pack_new, duf_sccb_handle_t * sccbh, duf_scanstage_t scanstage MAS_UNUSED )
 {
-/* assert(  !sccbh->rows->nfields ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
+/* assert(  !sccbh->rowlist.last->nfields ||  duf_levinfo_node_type( H_PDI ) == DUF_NODE_LEAF ); */
 /* CRX( sccbh_preset_leaf_scanner, sccbh ); */
   if ( sccbh && ( CRX( sccbh_eval_new_pack, sccbh ) ) )
   {
     CR( sccbh_eval_db_leaf_qfd_new, sccbh, /* pstmt_unused, */ scanstage );
     assert( duf_sccbh_current_row( sccbh ) == NULL );
-    if ( sccbh->rows && sccbh->rows->prev )
+    if ( sccbh->rowlist.last && sccbh->rowlist.last->prev )
     {
-      CRX( datarow_list_delete_f, sccbh->rows->prev, 0 );
-      sccbh->rows->prev = NULL;
+      CRX( datarow_list_delete_f, sccbh->rowlist.last->prev, 0 );
+      sccbh->rowlist.last->prev = NULL;
     }
 
   /* assert(0); */

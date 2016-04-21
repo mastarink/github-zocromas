@@ -65,10 +65,31 @@ duf_get_config_cli( void )
 #endif
 }
 
-duf_config_opt_t *
+const duf_config_opt_t *
+duf_get_cfg_opt( const duf_config_t * cfg )
+{
+  return cfg ? &cfg->opt : NULL;
+}
+
+const duf_config_opt_t *
 duf_get_config_opt( void )
 {
-  return duf_get_config(  )? &duf_get_config(  )->opt : NULL;
+  return duf_get_cfg_opt( duf_get_config(  ) );
+}
+
+const duf_config_output_t *
+duf_get_cfg_output( const duf_config_t * cfg )
+{
+  const duf_config_opt_t *cfgo;
+
+  cfgo = duf_get_cfg_opt( cfg );
+  return cfgo ? &cfgo->output : NULL;
+}
+
+const duf_config_output_t *
+duf_get_config_output( void )
+{
+  return duf_get_cfg_output( duf_get_config(  ) );
 }
 
 duf_ufilter_t *

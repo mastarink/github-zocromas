@@ -53,7 +53,7 @@
 #include "duf_ufilter_bind.h"                                        /* duf_bind_ufilter_uni ✗ */
 
 #include "duf_sccb_scanstage.h"                                      /* duf_scanstage_name; duf_scanstage_scanner; ✗ */
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 
 #include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 #include "duf_sccbh_ref.h"
@@ -345,10 +345,10 @@ SR( SCCBH, sccbh_eval_sqlsq, const duf_sccb_handle_t * sccbh )
   ER( SCCBH, sccbh_eval_sqlsq, const duf_sccb_handle_t * sccbh );
 }
 
-static duf_sccb_handle_t *
-duf_sccb_handle_create( const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg )
+static
+SRX( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_create, const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg )
 {
-  duf_sccb_handle_t *sccbh = NULL;
+/* duf_sccb_handle_t *sccbh = NULL; */
 
   sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
   memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
@@ -356,7 +356,8 @@ duf_sccb_handle_create( const duf_scan_callbacks_t * const *psccb, const mas_car
   sccbh->parg.argc = ptarg->argc;
   sccbh->parg.argv = ptarg->argv;
   assert( H_SCCB == ( *psccb ) );
-  return sccbh;
+/* return sccbh; */
+  ERX( SCCBH, duf_sccb_handle_t *, sccbh, NULL, sccb_handle_create, const duf_scan_callbacks_t * const *psccb, const mas_cargvc_t * ptarg );
 }
 
 static
@@ -550,16 +551,19 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   /* final */
     MAST_TRACE( scan, 6, "final sql %s", H_SCCB->title );
 
-    /* CRX( sccbh_row_add, sccbh, NULL (* pstmt_arg *)  );             (* XXX FIXME XXX *) */
+  /* CRX( sccbh_row_add, sccbh, NULL (* pstmt_arg *)  );             (* XXX FIXME XXX *) */
   /* CR( sccbh_eval_db_leaf_qfd_pack_new, sccbh, 0 (* scanstage *)  );     XXX FIXME XXX */
-    MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL );
+    MAST_TRACE( temp, 5, "@@@---Z %p:%p", CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
+                CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last ? sccbh->rowlist.last->prev : NULL */  );
 
-    /* CRX( sccbh_rows_eval, sccbh );                                   (* XXX FIXME XXX *) */
+  /* CRX( sccbh_rows_eval, sccbh );                                   (* XXX FIXME XXX *) */
 
-    CRX( datarow_list_delete_f, sccbh->rows, 0 );
-  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
-    sccbh->rows = NULL;
-  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rows, sccbh->rows ? sccbh->rows->prev : NULL ); */
+    CRX( datarow_list_delete_f, CRX( sccbh_rowlist_p, sccbh ) /* &sccbh->rowlist */ , 0, 0 );
+    assert( !CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */  );
+
+  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rowlist.last, sccbh->rowlist.last ? sccbh->rowlist.last->prev : NULL ); */
+    assert( CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ == NULL );
+  /* MAST_TRACE( temp, 5, "@@@---Z %p:%p", sccbh->rowlist.last, sccbh->rowlist.last ? sccbh->rowlist.last->prev : NULL ); */
     for ( H_SCCBIv = 0; H_SCCB; H_SCCBIv++ )
     {
       CR( sccb_eval_final_sqlsq, H_SCCB, ( duf_ufilter_t * ) NULL, ( duf_yfilter_t * ) NULL );

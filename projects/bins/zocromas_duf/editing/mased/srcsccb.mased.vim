@@ -23,6 +23,9 @@ tab sfind duf_sccb.c
 sfind duf_sccb.h
 sfind duf_sccb_def.h
 
+tab sfind duf_sccb_ref.c
+sfind duf_sccb_ref.h
+
 " tab sfind duf_atable_sccb.c
 " sfind duf_atable_sccb.h
 
@@ -31,6 +34,9 @@ sfind duf_sccb_handle.h
 
 tab sfind duf_sccb_row.c
 sfind duf_sccb_row.h
+
+tab sfind duf_sccb_row_field.c
+sfind duf_sccb_row_field.h
 
 tab sfind duf_sccb_row_field_defs.h 
 

@@ -15,10 +15,14 @@ DRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * 
 
 DRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name );
 
-
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_next_row, duf_sccb_handle_t * sccbh );
 DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_prev_row, duf_sccb_handle_t * sccbh );
+
 DRN( SCCBH, void, sccbh_end_row, duf_sccb_handle_t * sccbh );
-DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_row, duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_get_first_row, duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_get_last_row, duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_first_row, duf_sccb_handle_t * sccbh );
+DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_start_last_row, duf_sccb_handle_t * sccbh );
 
 DRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_row_current, const duf_sccb_handle_t * sccbh );
 DRX( SCCBH, const duf_pathinfo_t *, pi, NULL, sccbh_row_pathinfo, const duf_sccb_handle_t * sccbh );

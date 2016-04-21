@@ -1,0 +1,4 @@
+#ifndef MAS_DUF_SCCB_ROW_FIELD_H
+# define MAS_DUF_SCCB_ROW_FIELD_H
+
+#endif

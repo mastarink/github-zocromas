@@ -16,23 +16,12 @@
 #include "duf_se_only.h"                                             /* Only DR; SR; ER; CR; QSTR; QERRIND; QERRNAME etc. ✗ */
 
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
-#include "duf_config_output_util.h"
-
-#include "duf_pdi_ref.h"
-#include "duf_pdi_pi_ref.h"                                          /* duf_pdi_levinfo; duf_pdi_*depth; ✗ */
 
 #include "duf_seq_structs.h"
 
 #include "duf_pathinfo_credel.h"                                     /* duf_pi_shut; duf_pi_copy; duf_pi_levinfo_create; duf_pi_levinfo_delete etc. ✗ */
-#include "duf_pathinfo_ref.h"
 
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-#include "duf_levinfo_structs.h"
-
-#include "duf_sccb_structs.h"
-
-#include "duf_sccbh_ref.h"
-#include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 
 #include "duf_sql_prepared.h"                                        /* duf_sql_prepare; duf_sql_step; duf_sql_finalize; ✗ */
 #include "duf_sql_positional.h"                                      /* duf_sql_column_long_long etc. ✗ */
@@ -188,18 +177,131 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstm
   ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_create, duf_stmnt_t * pstmt_arg, const duf_pathinfo_t * pi, const seq_t * seqq );
 }
 
-SRP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows )
+SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
+{
+  if ( row )
+  {
+    for ( size_t i = 0; i < row->nfields + row->reserved; i++ )
+    {
+      mas_free( row->fields[i].svalue );
+      mas_free( row->fields[i].name );
+    }
+    CRX( pi_levinfo_delete, &row->pathinfo );
+    mas_free( row->fields );
+    mas_free( row );
+  }
+  ERN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row );
+}
+
+SRP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_list_t * rowlist )
 {
 /* int cnt = 0; */
+  duf_sccb_data_row_t *rows;
 
+  rows = rowlist->last_row;
   for ( cnt = 0; rows; rows = rows->prev, cnt++ )
   {
     QT( "@=== cnt: %d - %p : %llu", cnt, rows, CRP( datarow_get_number, rows, "dataid" ) );
   }
 /* return cnt; */
-  ERP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_row_t * rows );
+  ERP( OTHER, int, cnt, 0, datarow_list_count, const duf_sccb_data_list_t * rowlist );
 }
 
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_first, const duf_sccb_data_list_t * rowlist )
+{
+  row = rowlist ? rowlist->_first_row : NULL;
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_first, const duf_sccb_data_list_t * rowlist );
+}
+
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_last, const duf_sccb_data_list_t * rowlist )
+{
+  row = rowlist ? rowlist->last_row : NULL;
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_last, const duf_sccb_data_list_t * rowlist );
+}
+
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_prenult, const duf_sccb_data_list_t * rowlist )
+{
+  row = rowlist && rowlist->last_row ? rowlist->last_row->prev : NULL;
+  assert( !row || row->_next == rowlist->last_row );
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_prenult, const duf_sccb_data_list_t * rowlist );
+}
+
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_unlink, duf_sccb_data_list_t * rowlist, duf_sccb_data_row_t * previous,
+     duf_sccb_data_row_t * urow )
+{
+  duf_sccb_data_row_t *p MAS_UNUSED = urow ? urow->prev : NULL;
+  duf_sccb_data_row_t *n MAS_UNUSED = urow ? urow->_next : NULL;
+
+  assert( !previous || previous->prev == urow );
+  if ( urow == rowlist->last_row )
+    rowlist->last_row = p;
+  if ( urow == rowlist->_first_row )
+    rowlist->_first_row = n;
+  if ( p )
+    p->_next = n;
+  if ( n )
+    n->prev = p;
+  if ( previous )
+  {
+    assert( previous == urow->_next );
+    assert( previous->prev == urow->prev );
+    previous->prev = urow->prev;
+  }
+  urow->prev = NULL;
+  assert( !p || p->_next == n );
+  assert( !n || n->prev == p );
+  row = urow;
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_unlink, duf_sccb_data_list_t * rowlist, duf_sccb_data_row_t * previous,
+       duf_sccb_data_row_t * urow );
+}
+
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_link, duf_sccb_data_list_t * rowlist, duf_sccb_data_row_t * lrow )
+{
+  if ( rowlist && lrow )
+  {
+
+    lrow->prev = rowlist->last_row;
+    if ( lrow->prev )
+      lrow->prev->_next = lrow;
+    rowlist->last_row = lrow;
+    if ( !rowlist->_first_row )
+      rowlist->_first_row = rowlist->last_row;
+  /* lrow = NULL; */
+  }
+
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_link, duf_sccb_data_list_t * rowlist, duf_sccb_data_row_t * lrow );
+}
+
+SRN( OTHER, void, datarow_list_delete_f, duf_sccb_data_list_t * rowlist, int min, int max )
+{
+  int pos;
+  duf_sccb_data_row_t *previous = NULL;
+  duf_sccb_data_row_t *rows;
+
+  rows = rowlist->last_row;
+  pos = 0;
+  while ( rows )
+  {
+    duf_sccb_data_row_t *delrow;
+
+    delrow = rows;
+    rows = rows->prev;
+    assert( !rows || !rows->prev || rows->prev->_next == rows );
+    if ( pos >= min && ( !max || pos <= max ) )
+    {
+      delrow = CRX( datarow_list_unlink, rowlist, previous, delrow );
+      CRX( datarow_delete, delrow );
+    }
+    else
+    {
+      previous = delrow;
+    }
+    pos++;
+  }
+  ERN( OTHER, void, datarow_list_delete_f, duf_sccb_data_list_t * rowlist, int min, int max );
+}
+
+#if 0
 SRN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows )
 {
   if ( rows )
@@ -209,40 +311,7 @@ SRN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows )
   }
   ERN( OTHER, void, datarow_list_delete_r, duf_sccb_data_row_t * rows );
 }
-
-SRN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip )
-{
-  duf_sccb_data_row_t *row = NULL;
-  duf_sccb_data_row_t *prev = NULL;
-
-  while ( rows )
-  {
-    row = rows;
-    rows = row->prev;
-    if ( skip-- <= 0 )
-    {
-      CRX( datarow_delete, row );
-      if ( prev )
-        prev->prev = NULL;
-    }
-    else
-      prev = row;
-  }
-  ERN( OTHER, void, datarow_list_delete_f, duf_sccb_data_row_t * rows, int skip );
-}
-
-SRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row )
-{
-  for ( size_t i = 0; i < row->nfields + row->reserved; i++ )
-  {
-    mas_free( row->fields[i].svalue );
-    mas_free( row->fields[i].name );
-  }
-  CRX( pi_levinfo_delete, &row->pathinfo );
-  mas_free( row->fields );
-  mas_free( row );
-  ERN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row );
-}
+#endif
 
 SRX( OTHER, char *, lst, NULL, datarow_field_list, const duf_sccb_data_row_t * row )
 {

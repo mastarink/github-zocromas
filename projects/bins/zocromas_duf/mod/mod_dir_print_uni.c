@@ -13,40 +13,27 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_printn_defs.h"                                         /* DUF_PRINTF etc. ✗ */
-
-#include "duf_config.h"                                              /* duf_get_config ✗ */
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 #include "duf_config_output_util.h"                                  /* mas_output_force_color ; mas_output_nocolor */
-#include "duf_config_defs.h"                                         /* DUF_CONF... ✗ */
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 
-#include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
-
 #include "duf_sccb_structs.h"
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
-#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
-#include "duf_sccbh_structs.h"                                       /* duf_sccb_handle_s (from duf_sccbh_types: duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t) ✗ */
 
 #include "duf_pathinfo_ref.h"
 
 #include "duf_print.h"
 
-#include "duf_fileinfo.h"
-
 #include "duf_ufilter_ref.h"
-/* #include "duf_ufilter_structs.h" */
-
-#include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
-static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 
 /* ########################################################################################## */
 
@@ -64,11 +51,12 @@ static DR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * s
 /* ########################################################################################## */
 static int use_format_once = 0;
 static duf_scan_callbacks_t duf_sccb_dispatch;
-static DR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED );
+static DR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
+static DR( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
-/* {"pack", F2ND( pack_leaf )}, */
+/* {"pack", F2ND( pack_leaf1 )}, */
   {NULL, NULL}
 };
 
@@ -76,18 +64,26 @@ const duf_mod_handler_t duf_mod_handler_uni[] = {
 static duf_scanner_set_t scanners[] = {
   {
    .name = "traditional",
-   .flags = DUF_SCANNER_SET_FLAG_DB /* | DUF_SCANNER_SET_FLAG_DISABLED */ , /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_DISABLED, /* */
    .type = DUF_NODE_LEAF,                                            /* */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
    .fun = F2ND( print_leaf2 ),                                       /* */
    },
   {
-   .name = "packed",
-   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK,     /* */
+   .name = "packed1",
+   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK /* | DUF_SCANNER_SET_FLAG_DISABLED */, /* */
    .type = DUF_NODE_LEAF,                                            /* */
  /* .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        (* *) */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
-   .fun = F2ND( pack_leaf ),                                         /* */
+   .fun = F2ND( pack_leaf1 ),                                        /* */
+   },
+  {
+   .name = "packed2",
+   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK /* | DUF_SCANNER_SET_FLAG_DISABLED */ , /* */
+   .type = DUF_NODE_LEAF,                                            /* */
+ /* .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        (* *) */
+   .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
+   .fun = F2ND( pack_leaf2 ),                                        /* */
    },
 
   {.fun = NULL}
@@ -122,17 +118,58 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 
 /* ########################################################################################## */
 
-static
-SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh MAS_UNUSED )
+static MAS_UNUSED
+SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh )
 {
   int n = 0;
   const duf_sccb_data_row_t *trow = NULL;
 
-  ( void ) duf_sccbh_start_row( sccbh );
-/* for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev ) */
-  while ( ( trow = duf_sccbh_prev_row( sccbh ) ) )
+  trow = duf_sccbh_start_first_row( sccbh );
+  n = 0;
+  while ( trow && trow != duf_sccbh_get_last_row( sccbh ) /* last: don't! */)
   {
+    if ( trow && trow->nfields )
+    {
+      n++;
+      const char *path MAS_UNUSED;
+      const char *rpath MAS_UNUSED;
+      const char *iname MAS_UNUSED;
 
+      path = CRX( pi_path, &trow->pathinfo );
+      rpath = CRX( pi_relpath, &trow->pathinfo );
+      iname = CRX( pi_itemname, &trow->pathinfo );
+
+      MAST_TRACE( temp, 5, "@@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, path, iname );
+      if ( 1 )
+        MAST_TRACE( temp, 5, "@@@@@@@@%d. %-10s: %s : %s", n, H_SCCB->name, rpath, iname );
+
+      if ( 1 )
+      {
+        use_format_once = 4;
+        CR( print_leaf2, pdi_unused, sccbh );
+      }
+    }
+  /* CRX( sccbh_set_current_row, sccbh, NULL ); */
+    trow = duf_sccbh_next_row( sccbh );
+  }
+  duf_sccbh_end_row( sccbh );
+
+  fprintf( stderr, "\n** %d **\n\n", n );
+  /* assert( n > 1 ); */
+  ER( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
+}
+
+static MAS_UNUSED
+SR( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_handle_s *sccbh )
+{
+  int n = 0;
+  const duf_sccb_data_row_t *trow = NULL;
+
+  ( void ) duf_sccbh_start_last_row( sccbh );
+  n = 0;
+/* for ( duf_sccb_data_row_t * trow = rows->prev; trow; trow = trow->prev ) */
+  while ( ( trow = duf_sccbh_prev_row( sccbh ) ) /* && trow!= duf_sccbh_get_last_row( sccbh ) */  )
+  {
     if ( trow && trow->nfields )
     {
       n++;
@@ -158,7 +195,9 @@ SR( MOD, pack_leaf, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_han
   }
   duf_sccbh_end_row( sccbh );
 
-  ER( MOD, pack_leaf, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
+  fprintf( stderr, "\n** %d **\n\n", n );
+  /* assert( n > 1 ); */
+  ER( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
 
 static
@@ -204,7 +243,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
   assert( H_PDI == pdi_unused );
 
   {
-    duf_fileinfo_t fi = { 0 };
+    duf_fileinfo_t fi MAS_UNUSED = { 0 };
     fi.nsame = nsame;
     fi.nsame_md5 = nsame_md5;
     fi.nsame_sha1 = nsame_sha1;
@@ -257,7 +296,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
 
       {
         int use;
-        duf_filedirformat_t *fmt;
+        const duf_filedirformat_t *fmt;
 
 #if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
@@ -270,23 +309,40 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         else
           use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
 #endif
+#if 0
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
+#else
+        fmt = mas_get_config_output_asformat_list(  );
+#endif
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
+#if 0
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_list );
+#else
+        if ( !sformat )
+          sformat = mas_get_config_output_sformat_gen(  );
+        if ( !sformat )
+          sformat = mas_get_config_output_sformat_list(  );
+#endif
       }
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
-                    DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
-      DUF_PUTSL( 0 );
+      {
+#if 0
+        unsigned max_width = DUF_CONFIGG( opt.output.max_width );
+#else
+        unsigned max_width = mas_get_config_output_max_width(  );
+#endif
+        if ( max_width == 0 || max_width > slen )
+          slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
+                      max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+      }
     }
   }
 
-  ER( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS_UNUSED );
+  ER( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );
 }

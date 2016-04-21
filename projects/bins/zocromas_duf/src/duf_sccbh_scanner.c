@@ -90,7 +90,7 @@ SR( SCCBH, sccbh_preset_scanner, duf_sccb_handle_t * sccbh, duf_node_type_t node
 {
   H_PDI->items.total++;
 /* sccbh->current_scanner = scanner; */
-  sccbh->assert__current_node_type = node_type;
+  /* sccbh->assert__current_node_type = node_type; */
   if ( node_type == DUF_NODE_NODE )
   {
     H_PDI->items.dirs++;
@@ -116,7 +116,7 @@ SR( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt
     CRV( ( scanner ), /* pstmt_unused, */ H_PDI, sccbh );
     if ( sccbh->atom_cb )                                            /* atom is fs-direntry(dir or reg) or item(node or leaf) */
       sccbh->atom_cb( sccbh, /* pstmt_unused, */ scanstage, scanner, node_type, QERRIND );
-    assert( sccbh->assert__current_node_type == node_type );
+    /* assert( sccbh->assert__current_node_type == node_type ); */
   }
 /* QT( "@@@ %p scanstage: %s @ %s (%s)", scanner, CRX(scanstage_name, scanstage ), CRX(uni_scan_action_title, H_SCCB ), QERRNAME ); */
   ER( SCCBH, sccbh_call_scanner, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * pstmt_unused, */ duf_scanstage_t scanstage, duf_scanner_fun_t scanner,

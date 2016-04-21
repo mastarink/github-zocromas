@@ -28,5 +28,5 @@ sfind duf_sccbh_row.h
 tab sfind duf_sccbh_ref.c
 sfind duf_sccbh_ref.h
 
-sfind duf_sccbh_shortcuts.h
+tab sfind duf_sccbh_shortcuts.h
 

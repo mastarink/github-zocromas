@@ -148,3 +148,21 @@ duf_pdi_seq_node_plus( duf_depthinfo_t * pdi )
     pdi->seqq.node++;
   }
 }
+
+void
+duf_pdi_set_seq_row( duf_depthinfo_t * pdi, int val )
+{
+  if ( pdi )
+  {
+    pdi->seqq.row = val;
+  }
+}
+
+void
+duf_pdi_seq_row_plus( duf_depthinfo_t * pdi )
+{
+  if ( pdi )
+  {
+    pdi->seqq.row++;
+  }
+}

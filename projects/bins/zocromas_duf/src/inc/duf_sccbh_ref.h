@@ -23,6 +23,8 @@ unsigned long long *duf_sccbh_ptotal_items( duf_sccb_handle_t * sccbh );
 void duf_sccbh_set_changes( duf_sccb_handle_t * sccbh, unsigned long long changes );
 unsigned long long duf_sccbh_changes( const duf_sccb_handle_t * sccbh );
 
+const duf_sccb_data_list_t *duf_sccbh_rowlist( const duf_sccb_handle_t * sccbh );
+duf_sccb_data_list_t *duf_sccbh_rowlist_p( duf_sccb_handle_t * sccbh );
 const duf_sccb_data_row_t *duf_sccbh_rows( const duf_sccb_handle_t * sccbh );
 void duf_sccbh_set_current_row( duf_sccb_handle_t * sccbh, const duf_sccb_data_row_t * row );
 const duf_sccb_data_row_t *duf_sccbh_current_row( const duf_sccb_handle_t * sccbh );

@@ -48,14 +48,9 @@ duf_sccb_dlclose_std( void )
   CRX( sccb_dlclose, CRX( first_sccb ) );
 }
 
-/* const duf_scan_callbacks_t *                    */
-/* duf_find_sccb_by_evname_std( const char *name ) */
 SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname_std, const char *name )
 {
-/* const duf_scan_callbacks_t *sccb; */
-
   sccb = duf_find_sccb_by_evname( name, duf_first_sccb(  ) );
-/* return sccb; */
   ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evname_std, const char *name );
 }
 

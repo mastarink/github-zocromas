@@ -3,6 +3,7 @@
 
 # include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
 # include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
+# include "duf_sql_types.h"                                          /* duf_stmnt_t; duf_sqltype_t; duf_sqexe_cb_t ✗ */
 
 struct duf_sccb_data_value_s
 {
@@ -30,7 +31,14 @@ struct duf_sccb_data_row_s
   size_t reserved;
   duf_sccb_data_value_t *fields;
   duf_sccb_data_row_t *prev;
+  duf_sccb_data_row_t *_next;
   duf_pathinfo_t pathinfo;
+};
+
+struct duf_sccb_data_list_s
+{
+  duf_sccb_data_row_t *_first_row;
+  duf_sccb_data_row_t *last_row;
 };
 
 struct duf_scan_callbacks_s
