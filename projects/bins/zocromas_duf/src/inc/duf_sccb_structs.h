@@ -2,6 +2,7 @@
 # define MAS_DUF_SCCB_STRUCTS_H
 
 # include "duf_sccb_types.h"                                         /* duf_scan_callbacks_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
+# include "duf_sccbh_types.h"                                        /* duf_sccb_handle_t; duf_sccbh_fun_t; duf_rsccbh_fun_t ✗ */
 # include "duf_pathinfo_structs.h"                                   /* duf_pathinfo_s; (from duf_pathinfo_types: duf_pathinfo_t ) ✗ */
 # include "duf_sql_types.h"                                          /* duf_stmnt_t; duf_sqltype_t; duf_sqexe_cb_t ✗ */
 

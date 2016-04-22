@@ -554,7 +554,7 @@ SR( SCCBH, sccb_handle_close, duf_sccb_handle_t * sccbh )
   /* CRX( sccbh_row_add, sccbh, NULL (* pstmt_arg *)  );             (* XXX FIXME XXX *) */
   /* CR( sccbh_eval_db_leaf_qfd_pack_new, sccbh, 0 (* scanstage *)  );     XXX FIXME XXX */
     MAST_TRACE( temp, 5, "@@@---Z %p:%p", CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
-                CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last ? sccbh->rowlist.last->prev : NULL */  );
+                CRX( datarow_list_penult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last ? sccbh->rowlist.last->prev : NULL */  );
 
   /* CRX( sccbh_rows_eval, sccbh );                                   (* XXX FIXME XXX *) */
 

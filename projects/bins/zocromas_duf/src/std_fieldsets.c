@@ -30,6 +30,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -66,6 +68,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    .set = "'plus-leaf' AS fieldset_id, "                             /* */
    " fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -95,6 +99,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -132,6 +138,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -155,6 +163,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -193,6 +203,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -219,7 +231,9 @@ static duf_fieldset_t _all_fieldsets[] = {
    " fn.Pathid AS dirid "                                            /* */
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize  " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-   ", STRFTIME('%s',fd.mtim)   AS mtime "                            /* */
+   ", STRFTIME('%s',  fd.mtim)   AS mtime "                            /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -245,6 +259,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -275,6 +291,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fn." DUF_SQL_FILENAMEFIELD " AS fname, fn." DUF_SQL_FILENAMEFIELD " AS dfname, fd.size AS filesize " /* */
    ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
    ", STRFTIME( '%s', fd.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', fd.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', fd.ctim ) AS ctime "                           /* */
    ", fd.mode " /*    */ " AS filemode "                             /* */
    ", fn." DUF_SQL_IDFIELD " AS filenameid "                         /* */
    ", fn." DUF_SQL_IDFIELD " AS nameid "                             /* */
@@ -309,6 +327,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -320,6 +340,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -331,6 +353,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -342,6 +366,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -353,6 +379,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -364,6 +392,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -375,6 +405,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -386,6 +418,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -397,6 +431,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -408,6 +444,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {
@@ -419,6 +457,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", pt." DUF_SQL_DIRNAMEFIELD " AS dname, pt." DUF_SQL_DIRNAMEFIELD " AS dfname, pt.parentid " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime "                           /* */
+   ", STRFTIME( '%s', pt.atim ) AS atime "                           /* */
+   ", STRFTIME( '%s', pt.ctim ) AS ctime "                           /* */
    }
   ,
   {.name = NULL,.set = NULL}

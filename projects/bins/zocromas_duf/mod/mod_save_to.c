@@ -32,7 +32,7 @@
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
 #include "duf_sccb_types.h"                                          /* duf_scan_callbacks_t; duf_sccb_data_row_t; duf_scanner_fun_t; ✗ */
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 /* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
@@ -228,11 +228,9 @@ SR( MOD, save_to_de_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_
     assert( 0 == strcmp( DUF_GET_RSFIELD2( fname ), duf_levinfo_itemtruename( H_PDI ) ) );
 #endif
     CR( fileinfo, /* pstmt_unused, H_PDI, */ sccbh, &fi );
-    save_path =
-            duf_sformat_file_info( H_PDI, 1 /* use_row */ , sccbh, &fi, 0 /* is_atty // color */ ,
-                                   DUF_CONFIGG( save.path ) /* duf_config->save.path */ ,
-                                   ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL, 0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ ,
-                                   NULL /* pover */  );
+    save_path = CRX( sformat_file_info, H_PDI, 1 /* use_row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, 0 /* is_atty // color */ ,
+                     DUF_CONFIGG( save.path ) /* duf_config->save.path */ , ( duf_sccb_print_cb_t ) NULL, ( duf_sccb_print_cb_t ) NULL,
+                     0 /* max_width */ , NULL /* pslen pr / pok */ , NULL /* pwidth */ , NULL /* pover */  );
     MAST_TRACE( mod, 2, "@@@top  %s", duf_levinfo_path_top( H_PDI ) );
     MAST_TRACE( mod, 2, "@@save  %s%s", duf_levinfo_path( H_PDI ), duf_levinfo_itemtruename( H_PDI ) );
     MAST_TRACE( mod, 2, "@to => %s", save_path );

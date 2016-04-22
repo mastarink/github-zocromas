@@ -88,7 +88,7 @@ duf_sql_set_t std_leaf_sets[] = {                                    /* */
  /* " ORDER BY ...." */
  /* .order = "sha1id",           (* *) */
  /* .order = "nsame_sha1 DESC,sha1id",           (* *) */
-   .order = "sh.dupsha1cnt DESC,sha1id",                             /* */
+   .order = "sh.dupsha1cnt DESC,sha1id,dirid",                             /* */
    }
   ,
   {

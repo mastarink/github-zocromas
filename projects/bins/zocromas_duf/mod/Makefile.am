@@ -5,7 +5,7 @@ moduledir=$(libdir)/dufmod
 module_LTLIBRARIES = \
 	ot_main.la ot_format.la ot_io.la ot_info.la ot_flag.la ot_flag_allow.la ot_str.la ot_sccb.la ot_trace.la ot_help.la ot_db.la ot_filter.la ot_test.la \
 	null.la set_dir_priority.la tree.la \
-	crc32.la dialog.la dirs.la dumplet.la exif.la filedata.la filenames.la listing.la md5.la mime.la save_to.la sd5.la sha1.la tagit.la
+	crc32.la dialog.la dirs.la dumplet.la exif.la filedata.la filenames.la listing.la packlist.la md5.la mime.la save_to.la sd5.la sha1.la tagit.la
 
 ot_format_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 ot_format_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
@@ -78,6 +78,10 @@ tree_la_SOURCES	= mod_tree_print_uni.c
 listing_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 listing_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
 listing_la_SOURCES	= mod_dir_print_uni.c
+
+packlist_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+packlist_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@
+packlist_la_SOURCES	= mod_dir_print_pack.c
 
 filenames_la_LDFLAGS     =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 filenames_la_CFLAGS = @AM_CFLAGS@ -pthread @DEPS_CFLAGS@  @LIBCRYPTO_CFLAGS@  @SQLITE3_CFLAGS@

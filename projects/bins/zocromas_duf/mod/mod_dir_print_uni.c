@@ -18,7 +18,7 @@
 
 #include "duf_pdi_filters.h"                                         /* duf_pdi_pu; etc. ✗ */
 
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
 #include "duf_sccbh_ref.h"
@@ -71,7 +71,7 @@ static duf_scanner_set_t scanners[] = {
    },
   {
    .name = "packed1",
-   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK /* | DUF_SCANNER_SET_FLAG_DISABLED */, /* */
+   .flags = DUF_SCANNER_SET_FLAG_DB | DUF_SCANNER_SET_FLAG_PACK /* | DUF_SCANNER_SET_FLAG_DISABLED */ , /* */
    .type = DUF_NODE_LEAF,                                            /* */
  /* .scanstage = DUF_SCANSTAGE_DB_LEAVES_PACK,                        (* *) */
    .scanstage = DUF_SCANSTAGE_DB_LEAVES,                             /* */
@@ -126,7 +126,7 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
 
   trow = duf_sccbh_start_first_row( sccbh );
   n = 0;
-  while ( trow && trow != duf_sccbh_get_last_row( sccbh ) /* last: don't! */)
+  while ( trow && trow != duf_sccbh_get_last_row( sccbh ) /* last: don't! */  )
   {
     if ( trow && trow->nfields )
     {
@@ -155,7 +155,7 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
   duf_sccbh_end_row( sccbh );
 
   fprintf( stderr, "\n** %d **\n\n", n );
-  /* assert( n > 1 ); */
+/* assert( n > 1 ); */
   ER( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
 
@@ -196,7 +196,7 @@ SR( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
   duf_sccbh_end_row( sccbh );
 
   fprintf( stderr, "\n** %d **\n\n", n );
-  /* assert( n > 1 ); */
+/* assert( n > 1 ); */
   ER( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
 
@@ -217,6 +217,10 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
   DUF_RUFIELD2( sha1sum3 );
   DUF_RUFIELD2( mtime );
   assert( mtime == CRP( sccbh_row_get_number, sccbh, "mtime" ) );
+  DUF_RUFIELD2( atime );
+  assert( atime == CRP( sccbh_row_get_number, sccbh, "atime" ) );
+  DUF_RUFIELD2( ctime );
+  assert( ctime == CRP( sccbh_row_get_number, sccbh, "ctime" ) );
   DUF_RUFIELD2( dev );
   DUF_RUFIELD2( uid );
   DUF_RUFIELD2( gid );
@@ -253,6 +257,10 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
     fi.st.st_ino = ( ino_t ) inode;
     fi.st.st_mtim.tv_sec = mtime;
     fi.st.st_mtim.tv_nsec = 0;
+    fi.st.st_atim.tv_sec = atime;
+    fi.st.st_atim.tv_nsec = 0;
+    fi.st.st_ctim.tv_sec = ctime;
+    fi.st.st_ctim.tv_nsec = 0;
     fi.st.st_dev = ( dev_t ) dev;
     fi.st.st_uid = ( uid_t ) uid;
     fi.st.st_gid = ( gid_t ) gid;
@@ -338,8 +346,9 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         unsigned max_width = mas_get_config_output_max_width(  );
 #endif
         if ( max_width == 0 || max_width > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , sccbh, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL,
-                      max_width, mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, sformat,
+                      ( duf_sccb_print_cb_t ) NULL, ( duf_sccb_print_cb_t ) NULL, max_width, mas_output_force_color(  ), mas_output_nocolor(  ),
+                      &rwidth, &over );
       }
     }
   }

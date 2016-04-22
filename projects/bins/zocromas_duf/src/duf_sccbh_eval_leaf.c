@@ -86,7 +86,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd, duf_sccb_handle_t * sccbh, /* duf_stmnt_t * p
     {
       CR( sccbh_call_scanner, sccbh, /* pstmt_unused , */ scanstage, scanner, DUF_NODE_LEAF );
 
-      /* assert( sccbh->assert__current_node_type == DUF_NODE_LEAF ); */
+    /* assert( sccbh->assert__current_node_type == DUF_NODE_LEAF ); */
     }
     ERRUPPER( FS_DISABLED );
   }
@@ -182,7 +182,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
         QT( "@flags:%llx", flags );
 #endif
     }
-    if ( ifpack && packdone && CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last && sccbh->rowlist.last->prev */  )
+    if ( ifpack && packdone && CRX( datarow_list_penult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last && sccbh->rowlist.last->prev */  )
     {
 #if 0
       CRX( datarow_list_delete_f, sccbh->rowlist.last->prev, 0 );
@@ -190,7 +190,7 @@ SR( SCCBH, sccbh_eval_db_leaf_qfd_new, duf_sccb_handle_t * sccbh, /* duf_stmnt_t
 #else
       CRX( datarow_list_delete_f, CRX( sccbh_rowlist_p, sccbh ) /* &sccbh->rowlist */ , 1, 0 );
       assert( CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */  );
-      assert( !CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
+      assert( !CRX( datarow_list_penult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
 #endif
     }
   }
@@ -303,8 +303,12 @@ SR( SCCBH, sccbh_eval_db_leaf_str_cb_new, duf_sccb_handle_t * sccbh, /* duf_stmn
 SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
 {
   int eq = 0;
+  duf_sccb_data_row_t *last_row MAS_UNUSED = NULL;
+  duf_sccb_data_row_t *prenult_row MAS_UNUSED = NULL;
 
-  if ( CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last && sccbh->rowlist.last->prev */ )
+  last_row = CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) );
+  prenult_row = CRX( datarow_list_penult, CRX( sccbh_rowlist, sccbh ) );
+  if ( prenult_row )
   {
     const char *pack_field;
 
@@ -313,7 +317,7 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
     {
       duf_sqltype_t t;
 
-      t = CRP( datarow_get_type, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
+      t = CRP( datarow_get_type, last_row, pack_field );
       if ( QNOERR )
         switch ( t )
         {
@@ -325,14 +329,11 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             unsigned long long number0;
             unsigned long long number1;
 
-            number0 = CRP( datarow_get_number, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
-            number1 = CRP( datarow_get_number, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ ,
-                           pack_field );
+            number0 = CRP( datarow_get_number, last_row, pack_field );
+            number1 = CRP( datarow_get_number, prenult_row, pack_field );
             eq = ( number0 == number1 );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1,
-                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
-                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
+              MAST_TRACE( temp, 5, "@@---A %lld ? %lld : %p:%p", number0, number1, last_row, prenult_row );
           }
           break;
         case DUF_SQLTYPE_FLOAT:
@@ -343,14 +344,11 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             const char *str0;
             const char *str1;
 
-            str0 = CRP( datarow_get_string, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
-            str1 = CRP( datarow_get_string, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ ,
-                        pack_field );
+            str0 = CRP( datarow_get_string, last_row, pack_field );
+            str1 = CRP( datarow_get_string, prenult_row, pack_field );
             eq = ( ( !str0 && !str1 ) || ( str0 && str1 && 0 == strcmp( str0, str1 ) ) );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1,
-                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
-                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
+              MAST_TRACE( temp, 5, "@@---A %s ? %s : %p:%p", str0, str1, last_row, prenult_row );
           }
           break;
         case DUF_SQLTYPE_BLOB:
@@ -361,20 +359,22 @@ SRX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh )
             int isnull0;
             int isnull1;
 
-            isnull0 = CRP( datarow_get_null, CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ , pack_field );
-            isnull1 = CRP( datarow_get_null, CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */ , pack_field );
+            isnull0 = CRP( datarow_get_null, last_row, pack_field );
+            isnull1 = CRP( datarow_get_null, prenult_row, pack_field );
             eq = ( isnull0 && isnull1 );
             if ( !eq )
-              MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1,
-                          CRX( datarow_list_last, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last */ ,
-                          CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) /* sccbh->rowlist.last->prev */  );
+              MAST_TRACE( temp, 5, "@@---A %d ? %d : %p:%p", isnull0, isnull1, last_row, prenult_row );
           }
           break;
         }
     }
     ERRCLEAR( NO_FIELD );                                            /* possible absence is not error now */
   }
-  np = !eq;
+  else
+  {
+  /* assert( 0 ); */
+  }
+  np = !eq && prenult_row;
   ERX( SCCBH, int, np, 0, sccbh_eval_new_pack, duf_sccb_handle_t * sccbh );
 }
 

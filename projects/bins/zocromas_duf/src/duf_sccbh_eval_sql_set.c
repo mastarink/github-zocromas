@@ -260,7 +260,7 @@ SR( SCCBH, eval_sccbh_sql_str_cb, duf_sccb_handle_t * sccbh, duf_node_type_t nod
       if ( str_cb2 == F2ND( sccbh_eval_db_leaf_str_cb_new ) )
       {
         CRX( sccbh_row_add_dummy, sccbh );
-        if ( CRX( datarow_list_prenult, CRX( sccbh_rowlist, sccbh ) ) )
+        if ( CRX( datarow_list_penult, CRX( sccbh_rowlist, sccbh ) ) )
         {
           CRV( str_cb2, sccbh, /* pstmt_arg, */ scanstage );
         }

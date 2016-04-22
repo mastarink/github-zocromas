@@ -35,6 +35,7 @@ tab sfind mod_save_to.c
 " tab sfind mod_print_md5_uni.c
 
 tab sfind mod_dir_print_uni.c
+tab sfind mod_dir_print_pack.c
 
 tab sfind mod_tree_print_uni.c
 

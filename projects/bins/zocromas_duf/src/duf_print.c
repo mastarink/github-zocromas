@@ -30,6 +30,7 @@
 
 #include "duf_pathinfo_ref.h"
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
+#include "duf_sccb_row.h"                                            /* datarow_* ✗ */
 
 #include "duf_levinfo_ref.h"                                         /* duf_levinfo_*; etc. ✗ */
 
@@ -107,7 +108,8 @@ typedef enum
 
 static
 SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, const duf_depthinfo_t * pdi,
-     int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb MAS_UNUSED, size_t * pwidth )
+     int use_row, const duf_sccb_data_row_t * row MAS_UNUSED, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, duf_sccb_print_cb_t prefix_scb,
+     duf_sccb_print_cb_t suffix_scb MAS_UNUSED, size_t * pwidth )
 {
 /* size_t slen = 0; */
   size_t swidth = 0;
@@ -139,8 +141,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
   /* QT( "@%d  ?  %d  ?  %d", duf_pi_deltadepth( duf_sccbh_row_pathinfo( sccbh ) ), duf_pi_deltadepth( duf_pdi_pathinfo( pdi ) ),                */
   /*     duf_pdi_reldepth( pdi ) );                                                                                                              */
   /* QT( "@@%d  ?  %d  ?  %d", duf_pi_depth( duf_sccbh_row_pathinfo( sccbh ) ), duf_pi_depth( duf_pdi_pathinfo( pdi ) ), duf_pdi_depth( pdi ) ); */
-  /* snprintf( pbuffer, bfsz, format, use_row ? duf_pi_deltadepth( duf_sccbh_row_pathinfo( sccbh ) ) : duf_pdi_reldepth( pdi ) ); */
-    snprintf( pbuffer, bfsz, format, use_row ? duf_pi_depth( duf_sccbh_row_pathinfo( sccbh ) ) : duf_pdi_depth( pdi ) );
+  /* snprintf( pbuffer, bfsz, format, row? duf_pi_deltadepth( duf_sccbh_row_pathinfo( sccbh ) ) : duf_pdi_reldepth( pdi ) ); */
+    snprintf( pbuffer, bfsz, format, row ? duf_pi_depth( duf_sccbh_row_pathinfo( sccbh ) ) : duf_pdi_depth( pdi ) );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ:                                            /* seq */
@@ -152,8 +154,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->seqq.gen == CRP( sccbh_row_get_number, sccbh, "seq_gen" ) );
-    snprintf( pbuffer, bfsz, format, pfi->seqq.gen );
+    assert( !row || !pfi || pfi->seqq.gen == CRP( datarow_get_number, row, "seq_gen" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "seq_gen" ) : pfi->seqq.gen );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_NODE:                                       /* seqq.node */
@@ -165,8 +167,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->seqq.node == CRP( sccbh_row_get_number, sccbh, "seq_node" ) );
-    snprintf( pbuffer, bfsz, format, pfi->seqq.node );
+    assert( !row || !pfi || pfi->seqq.node == CRP( datarow_get_number, row, "seq_node" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "seq_node" ) : pfi->seqq.node );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_ROW:                                        /* seqq.row */
@@ -178,8 +180,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->seqq.row == CRP( sccbh_row_get_number, sccbh, "seq_row" ) );
-    snprintf( pbuffer, bfsz, format, pfi->seqq.row );
+    assert( !row || !pfi || pfi->seqq.row == CRP( datarow_get_number, row, "seq_row" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "seq_row" ) : pfi->seqq.row );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SEQ_LEAF:                                       /* seqq.leaf */
@@ -191,8 +193,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->seqq.leaf == CRP( sccbh_row_get_number, sccbh, "seq_leaf" ) );
-    snprintf( pbuffer, bfsz, format, pfi->seqq.leaf );
+    assert( !row || !pfi || pfi->seqq.leaf == CRP( datarow_get_number, row, "seq_leaf" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "seq_leaf" ) : pfi->seqq.leaf );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MD5ID:                                          /* md5id */
@@ -204,8 +206,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->md5id == CRP( sccbh_row_get_number, sccbh, "md5id" ) );
-    snprintf( pbuffer, bfsz, format, pfi->md5id );
+    assert( !row || !pfi || pfi->md5id == CRP( datarow_get_number, row, "md5id" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "md5id" ) : pfi->md5id );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_SHA1ID:                                         /* sha1id */
@@ -217,8 +219,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
-    assert( !use_row || pfi->sha1id == CRP( sccbh_row_get_number, sccbh, "sha1id" ) );
-    snprintf( pbuffer, bfsz, format, pfi->sha1id );
+    assert( !row || !pfi || pfi->sha1id == CRP( datarow_get_number, row, "sha1id" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "sha1id" ) : pfi->sha1id );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_NSAME:                                          /* nsame */
@@ -239,22 +241,22 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       {
       case 'm':
         fmt++;
-    assert( !use_row || pfi->nsame_md5 == CRP( sccbh_row_get_number, sccbh, "nsame_md5" ) );
-        ns = ( unsigned long long ) pfi->nsame_md5;
+        assert( !row || !pfi || pfi->nsame_md5 == CRP( datarow_get_number, row, "nsame_md5" ) );
+        ns = row ? CRP( datarow_get_number, row, "nsame_md5" ) : ( unsigned long long ) pfi->nsame_md5;
         break;
       case 'x':
         fmt++;
-    assert( !use_row || pfi->nsame_exif == CRP( sccbh_row_get_number, sccbh, "nsame_exif" ) );
-        ns = ( unsigned long long ) pfi->nsame_exif;
+        assert( !row || !pfi || pfi->nsame_exif == CRP( datarow_get_number, row, "nsame_exif" ) );
+        ns = row ? CRP( datarow_get_number, row, "nsame_exif" ) : ( unsigned long long ) pfi->nsame_exif;
         break;
       case 's':
         fmt++;
-    assert( !use_row || pfi->nsame_sha1 == CRP( sccbh_row_get_number, sccbh, "nsame_sha1" ) );
-        ns = ( unsigned long long ) pfi->nsame_sha1;
+        assert( !row || !pfi || pfi->nsame_sha1 == CRP( datarow_get_number, row, "nsame_sha1" ) );
+        ns = row ? CRP( datarow_get_number, row, "nsame_sha1" ) : ( unsigned long long ) pfi->nsame_sha1;
         break;
       default:
-    assert( !use_row || pfi->nsame == CRP( sccbh_row_get_number, sccbh, "nsame" ) );
-        ns = ( unsigned long long ) pfi->nsame;
+        assert( !row || !pfi || pfi->nsame == CRP( datarow_get_number, row, "nsame" ) );
+        ns = row ? CRP( datarow_get_number, row, "nsame" ) : ( unsigned long long ) pfi->nsame;
         break;
       }
       snprintf( pbuffer, bfsz, format, ns );
@@ -283,7 +285,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
   case DUF_SFMT_CHR_PREFIX:                                         /* prefix */
     if ( prefix_scb )
     {
-      ( prefix_scb ) ( pbuffer, bfsz, pdi, use_row, sccbh, &swidth );
+      ( prefix_scb ) ( pbuffer, bfsz, pdi, use_row, row, sccbh, &swidth );
     }
     swidth += strlen( pbuffer );
     break;
@@ -298,7 +300,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
 #endif
   /* QT( "@%llu - %llu", duf_levinfo_nodedirid( pdi ), duf_pi_nodedirid( duf_sccbh_row_pathinfo( sccbh ) ) ); */
   /* assert( duf_levinfo_nodedirid( pdi ) == duf_pi_nodedirid( duf_sccbh_row_pathinfo( sccbh ) ) ); */
-    snprintf( pbuffer, bfsz, format, use_row ? duf_pi_nodedirid( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_nodedirid( pdi ) );
+    snprintf( pbuffer, bfsz, format, row ? duf_pi_nodedirid( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_nodedirid( pdi ) );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_DATAID:                                         /* dataid */
@@ -311,8 +313,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    assert( !use_row || pfi->dataid == CRP( sccbh_row_get_number, sccbh, "dataid" ) );
-    snprintf( pbuffer, bfsz, format, pfi->dataid );
+    assert( !row || !pfi || pfi->dataid == CRP( datarow_get_number, row, "dataid" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "dataid" ) : pfi->dataid );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_COLOR:                                          /* color */
@@ -343,42 +345,44 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    assert( !use_row || pfi->st.st_ino == CRP( sccbh_row_get_number, sccbh, "inode" ) );
-    snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
+    assert( !row || !pfi || pfi->st.st_ino == CRP( datarow_get_number, row, "inode" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "inode" ) : ( unsigned long long ) pfi->st.st_ino );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MODE:                                           /* mode */
     {
       char modebuf[] = "----------";
       char *pmode = modebuf;
+      unsigned long long filemode;
 
-    assert( !use_row || pfi->st.st_mode == CRP( sccbh_row_get_number, sccbh, "filemode" ) );
+      filemode = row ? CRP( datarow_get_number, row, "filemode" ) : pfi->st.st_mode;
+      assert( !row || !pfi || pfi->st.st_mode == CRP( datarow_get_number, row, "filemode" ) );
       pmode++;
-      if ( S_IRUSR & pfi->st.st_mode )
+      if ( S_IRUSR & filemode )
         *pmode = 'r';
       pmode++;
-      if ( S_IWUSR & pfi->st.st_mode )
+      if ( S_IWUSR & filemode )
         *pmode = 'w';
       pmode++;
-      if ( S_IXUSR & pfi->st.st_mode )
+      if ( S_IXUSR & filemode )
         *pmode = 'x';
       pmode++;
-      if ( S_IRGRP & pfi->st.st_mode )
+      if ( S_IRGRP & filemode )
         *pmode = 'r';
       pmode++;
-      if ( S_IWGRP & pfi->st.st_mode )
+      if ( S_IWGRP & filemode )
         *pmode = 'w';
       pmode++;
-      if ( S_IXGRP & pfi->st.st_mode )
+      if ( S_IXGRP & filemode )
         *pmode = 'x';
       pmode++;
-      if ( S_IROTH & pfi->st.st_mode )
+      if ( S_IROTH & filemode )
         *pmode = 'r';
       pmode++;
-      if ( S_IWOTH & pfi->st.st_mode )
+      if ( S_IWOTH & filemode )
         *pmode = 'w';
       pmode++;
-      if ( S_IXOTH & pfi->st.st_mode )
+      if ( S_IXOTH & filemode )
         *pmode = 'x';
       snprintf( pbuffer, bfsz, "%s", modebuf );
     }
@@ -394,8 +398,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    assert( !use_row || pfi->st.st_nlink == CRP( sccbh_row_get_number, sccbh, "nlink" ) );
-    snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
+    assert( !row || !pfi || pfi->st.st_nlink == CRP( datarow_get_number, row, "nlink" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "nlink" ) : ( unsigned long long ) pfi->st.st_nlink );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_USER:                                           /* user */
@@ -408,8 +412,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    assert( !use_row || pfi->st.st_uid == CRP( sccbh_row_get_number, sccbh, "uid" ) );
-    snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
+    assert( !row || !pfi || pfi->st.st_uid == CRP( datarow_get_number, row, "uid" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "uid" ) : ( unsigned long long ) pfi->st.st_uid );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_GROUP:                                          /* group */
@@ -422,15 +426,15 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    assert( !use_row || pfi->st.st_gid == CRP( sccbh_row_get_number, sccbh, "gid" ) );
-    snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
+    assert( !row || !pfi || pfi->st.st_gid == CRP( datarow_get_number, row, "gid" ) );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "gid" ) : ( unsigned long long ) pfi->st.st_gid );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_FILESIZE:                                       /* filesize */
     {
-      unsigned long long sz = pfi->st.st_size;
+      unsigned long long sz = row ? CRP( datarow_get_number, row, "filesize" ) : ( unsigned long long ) pfi->st.st_size;
 
-    assert( !use_row ||(size_t) pfi->st.st_size ==(size_t) CRP( sccbh_row_get_number, sccbh, "filesize" ) );
+      assert( !row || !pfi || ( size_t ) pfi->st.st_size == ( size_t ) CRP( datarow_get_number, row, "filesize" ) );
 #if 1
       _convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -446,9 +450,9 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     break;
   case DUF_SFMT_CHR_FILESIZEH:                                      /* filesize */
     {
-      unsigned long long sz = pfi->st.st_size;
+      unsigned long long sz = row ? CRP( datarow_get_number, row, "filesize" ) : ( unsigned long long ) pfi->st.st_size;
 
-    assert( !use_row || (size_t)pfi->st.st_size == (size_t)CRP( sccbh_row_get_number, sccbh, "filesize" ) );
+      assert( !row || !pfi || ( size_t ) pfi->st.st_size == ( size_t ) CRP( datarow_get_number, row, "filesize" ) );
       if ( sz < 1024 )
       {
 #if 1
@@ -517,20 +521,20 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       switch ( c2 )
       {
       case 'm':
-        timet = ( time_t ) pfi->st.st_mtim.tv_sec;
+        timet = ( time_t ) ( row ? CRP( datarow_get_number, row, "mtime" ) : ( unsigned long long ) pfi->st.st_mtim.tv_sec );
         break;
       case 'a':
-        timet = ( time_t ) pfi->st.st_atim.tv_sec;
+        timet = ( time_t ) ( row ? CRP( datarow_get_number, row, "atime" ) : ( unsigned long long ) pfi->st.st_atim.tv_sec );
         break;
       case 'c':
-        timet = ( time_t ) pfi->st.st_atim.tv_sec;
+        timet = ( time_t ) ( row ? CRP( datarow_get_number, row, "ctime" ) : ( unsigned long long ) pfi->st.st_atim.tv_sec );
         break;
       case 'x':
-        if ( pfi->exifid )
-          timet = ( time_t ) pfi->exifdt;
+      /* if ( pfi->exifid ) */
+        timet = ( time_t ) ( row ? CRP( datarow_get_number, row, "exifdt" ) : ( unsigned long long ) pfi->exifdt );
         break;
       default:
-        timet = ( time_t ) pfi->st.st_mtim.tv_sec;
+        timet = ( time_t ) ( row ? CRP( datarow_get_number, row, "mtime" ) : ( unsigned long long ) pfi->st.st_mtim.tv_sec );
         fmt--;
       }
       if ( timet )
@@ -593,7 +597,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
         snprintf( format, fbsz, "%%s" );
 #endif
 
-      real_path = use_row ? duf_pi_path( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_path( pdi );
+      real_path = row ? duf_pi_path( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_path( pdi );
       snprintf( pbuffer, bfsz, format, real_path );
     }
     swidth += strlen( pbuffer );
@@ -612,7 +616,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
 #endif
 
     /* rel_real_path = duf_levinfo_relpath( pdi ); */
-      rel_real_path = use_row ? duf_pi_relpath( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_relpath( pdi );
+      rel_real_path = row ? duf_pi_relpath( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_relpath( pdi );
       snprintf( pbuffer, bfsz, format, rel_real_path );
     }
     swidth += strlen( pbuffer );
@@ -628,7 +632,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
         snprintf( format, fbsz, "%%s" );
 #endif
 
-      snprintf( pbuffer, bfsz, format, pfi->name );
+      snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_string, row, "fname" ) : pfi->name );
     }
     swidth += strlen( pbuffer );
     break;
@@ -640,24 +644,37 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       else
         snprintf( format, fbsz, "%%s" );
 
-      snprintf( pbuffer, bfsz, format, use_row ? duf_pi_itemname( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_itemname( pdi ) );
+      snprintf( pbuffer, bfsz, format, row ? duf_pi_itemname( duf_sccbh_row_pathinfo( sccbh ) ) : duf_levinfo_itemname( pdi ) );
     }
     swidth += strlen( pbuffer );
     break;
 #endif
   case DUF_SFMT_CHR_MD5SUM:                                         /* md5sum */
-    if ( pfi->md5sum1 || pfi->md5sum2 )
-      snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
-    else
-      snprintf( pbuffer, bfsz, "%-32s", "-" );
-    swidth += strlen( pbuffer );
+    {
+      unsigned long long md5sum1, md5sum2;
+
+      md5sum1 = row ? CRP( datarow_get_number, row, "md5sum1" ) : pfi->md5sum1;
+      md5sum2 = row ? CRP( datarow_get_number, row, "md5sum2" ) : pfi->md5sum2;
+      if ( md5sum1 || md5sum2 )
+        snprintf( pbuffer, bfsz, "%016llx%016llx", md5sum1, md5sum2 );
+      else
+        snprintf( pbuffer, bfsz, "%-32s", "-" );
+      swidth += strlen( pbuffer );
+    }
     break;
   case DUF_SFMT_CHR_SHA1SUM:                                        /* sha1sum */
-    if ( pfi->sha1sum1 || pfi->sha1sum2 || pfi->sha1sum3 )
-      snprintf( pbuffer, bfsz, "%08llx:%016llx:%016llx", pfi->sha1sum1, pfi->sha1sum2, pfi->sha1sum3 );
-    else
-      snprintf( pbuffer, bfsz, "%-40s", "-" );
-    swidth += strlen( pbuffer );
+    {
+      unsigned long long sha1sum1, sha1sum2, sha1sum3;
+
+      sha1sum1 = row ? CRP( datarow_get_number, row, "sha1sum1" ) : pfi->sha1sum1;
+      sha1sum2 = row ? CRP( datarow_get_number, row, "sha1sum2" ) : pfi->sha1sum2;
+      sha1sum3 = row ? CRP( datarow_get_number, row, "sha1sum3" ) : pfi->sha1sum3;
+      if ( sha1sum1 || sha1sum2 || sha1sum3 )
+        snprintf( pbuffer, bfsz, "%08llx:%016llx:%016llx", sha1sum1, sha1sum2, sha1sum3 );
+      else
+        snprintf( pbuffer, bfsz, "%-40s", "-" );
+      swidth += strlen( pbuffer );
+    }
     break;
   case DUF_SFMT_CHR_EXIFID:                                         /* exifid */
 #if 1
@@ -668,39 +685,48 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%llu" );
 #endif
+    {
+      unsigned long long exifid;
 
-    if ( pfi->exifid )
-      snprintf( pbuffer, bfsz, format, pfi->exifid );
-    else
-      *pbuffer = '?';
-    swidth += strlen( pbuffer );
+      exifid = row ? CRP( datarow_get_number, row, "exifid" ) : pfi->exifid;
+      if ( exifid )
+        snprintf( pbuffer, bfsz, format, exifid );
+      else
+        *pbuffer = '?';
+      swidth += strlen( pbuffer );
+    }
     break;
   case DUF_SFMT_CHR_CAMERAS:                                        /* camera */
   case DUF_SFMT_CHR_CAMERA:                                         /* camera */
-    if ( pfi->camera && *pfi->camera )
     {
+      const char *camera;
+
+      camera = row ? CRP( datarow_get_string, row, "camera" ) : pfi->camera;
+      if ( camera && *camera )
+      {
 #if 1
-      _convert_fmt( format, fbsz, fmt0, "s" );
+        _convert_fmt( format, fbsz, fmt0, "s" );
 #else
-      if ( v )
-        snprintf( format, fbsz, "%%%lds", v );
-      else
-        snprintf( format, fbsz, "%%s" );
+        if ( v )
+          snprintf( format, fbsz, "%%%lds", v );
+        else
+          snprintf( format, fbsz, "%%s" );
 #endif
 
-      snprintf( pbuffer, bfsz, format, pfi->camera );
-      if ( *pbuffer && c == DUF_SFMT_CHR_CAMERAS )
-      {
-        char *p;
+        snprintf( pbuffer, bfsz, format, camera );
+        if ( *pbuffer && c == DUF_SFMT_CHR_CAMERAS )
+        {
+          char *p;
 
-        p = strchr( pbuffer, ' ' );
-        while ( p && *p && p < pbuffer + bfsz )
-          *p++ = 0;
+          p = strchr( pbuffer, ' ' );
+          while ( p && *p && p < pbuffer + bfsz )
+            *p++ = 0;
+        }
       }
+      else
+        *pbuffer = '?';
+      swidth += strlen( pbuffer );
     }
-    else
-      *pbuffer = '?';
-    swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MIMEID:                                         /* mimeid */
 #if 1
@@ -712,7 +738,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pfi->mimeid );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "mimeid" ) : pfi->mimeid );
     swidth += strlen( pbuffer );
     break;
   case DUF_SFMT_CHR_MIME:                                           /* mime */
@@ -724,9 +750,13 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     else
       snprintf( format, fbsz, "%%s" );
 #endif
+    {
+      const char *mime;
 
-    snprintf( pbuffer, bfsz, format, pfi->mime ? pfi->mime : "?" );
-    swidth += strlen( pbuffer );
+      mime = row ? CRP( datarow_get_string, row, "mime" ) : pfi->mime;
+      snprintf( pbuffer, bfsz, format, mime ? mime : "?" );
+      swidth += strlen( pbuffer );
+    }
     break;
   case DUF_SFMT_CHR_NAMEID:                                         /* nameid */
 #if 1
@@ -738,7 +768,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pfi->nameid );
+    snprintf( pbuffer, bfsz, format, row ? CRP( datarow_get_number, row, "nameid" ) : pfi->nameid );
     swidth += strlen( pbuffer );
     break;
   default:
@@ -761,12 +791,13 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
     *pwidth += swidth;
 /* return slen; */
   ERX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **ppbuffer, size_t position, size_t bfsz, const duf_depthinfo_t * pdi,
-       int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb MAS_UNUSED, size_t * pwidth );
+       int use_row, const duf_sccb_data_row_t * row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, duf_sccb_print_cb_t prefix_scb,
+       duf_sccb_print_cb_t suffix_scb MAS_UNUSED, size_t * pwidth );
 }
 
-SRX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi, int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi,
-     int fcolor, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb, size_t max_width MAS_UNUSED, size_t * pslen, size_t * pwidth,
-     int *pover )
+SRX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi, int use_row, const duf_sccb_data_row_t * row,
+     duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, int fcolor, const char *format, duf_sccb_print_cb_t prefix_scb, duf_sccb_print_cb_t suffix_scb,
+     size_t max_width MAS_UNUSED, size_t * pslen, size_t * pwidth, int *pover )
 {
 /* char *buffer = NULL; */
   char *pbuffer = NULL;
@@ -775,16 +806,28 @@ SRX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi
   const char *fmt = format;
   size_t bfsz = 1024 * 16;
   int over = 0;
+  int inactive = 0;
 
   pbuffer = buffer = mas_malloc( bfsz + 8 );
   memset( buffer, 0, bfsz );
   while ( fmt && *fmt && buffer + bfsz - pbuffer > 0 /* && !( over = ( max_width > 0 && swidth > max_width ) ) */  )
   {
-    if ( *fmt == '%' )
+    if ( *fmt == '`' )
     {
       fmt++;
-      slen += CRX( sformat_id, fcolor, &fmt, &pbuffer, pbuffer - buffer, buffer + bfsz - pbuffer /* remaining bytes cnt */ , pdi, use_row, sccbh, pfi,
-                   prefix_scb, suffix_scb, &swidth );
+      inactive = !inactive;
+      continue;
+    }
+    else if ( inactive )
+    {
+      fmt++;
+      continue;
+    }
+    else if ( *fmt == '%' )
+    {
+      fmt++;
+      slen += CRX( sformat_id, fcolor, &fmt, &pbuffer, pbuffer - buffer, buffer + bfsz - pbuffer /* remaining bytes cnt */ , pdi, use_row, row, sccbh,
+                   pfi, prefix_scb, suffix_scb, &swidth );
     }
     else if ( *fmt == '\\' )
     {
@@ -818,14 +861,14 @@ SRX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi
     *pwidth = swidth;
 /* buffer[slen] = 0; */
 /* return buffer; */
-  ERX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi, int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi,
-       int fcolor, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb, size_t max_width MAS_UNUSED, size_t * pslen,
-       size_t * pwidth, int *pover );
+  ERX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi, int use_row, const duf_sccb_data_row_t * row,
+       duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, int fcolor, const char *format, duf_sccb_print_cb_t prefix_scb, duf_sccb_print_cb_t suffix_scb,
+       size_t max_width MAS_UNUSED, size_t * pslen, size_t * pwidth, int *pover );
 }
 
-SRX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pdi, int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi,
-     const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb, size_t max_width, int force_color, int nocolor, size_t * pswidth,
-     int *pover )
+SRX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pdi, int use_row, const duf_sccb_data_row_t * row,
+     duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, const char *format, duf_sccb_print_cb_t prefix_scb, duf_sccb_print_cb_t suffix_scb, size_t max_width,
+     int force_color, int nocolor, size_t * pswidth, int *pover )
 {
 /* size_t slen = 0; */
   size_t swidth = 0;
@@ -838,7 +881,7 @@ SRX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pd
   out = mas_output_file(  );
 #endif
 
-  buffer = CRX( sformat_file_info, pdi, use_row, sccbh, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb,
+  buffer = CRX( sformat_file_info, pdi, use_row, row, sccbh, pfi, ( force_color || ( !nocolor && isatty( fileno( out ) ) ) ), format, prefix_scb,
                 suffix_scb, max_width, &slen, &swidth, pover );
 
   DUF_WRITES( 0, buffer );
@@ -849,7 +892,7 @@ SRX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pd
   if ( pswidth )
     *pswidth = swidth;
 /* return slen; */
-  ERX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pdi, int use_row, duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi,
-       const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb, size_t max_width, int force_color, int nocolor, size_t * pswidth,
-       int *pover );
+  ERX( OTHER, size_t, slen, 0, print_sformat_file_info, const duf_depthinfo_t * pdi, int use_row, const duf_sccb_data_row_t * row,
+       duf_sccb_handle_t * sccbh, duf_fileinfo_t * pfi, const char *format, duf_sccb_print_cb_t prefix_scb, duf_sccb_print_cb_t suffix_scb, size_t max_width,
+       int force_color, int nocolor, size_t * pswidth, int *pover );
 }
