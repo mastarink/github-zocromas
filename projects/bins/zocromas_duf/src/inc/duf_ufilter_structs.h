@@ -58,6 +58,7 @@ struct duf_same_as_s
 struct duf_ufilter_s
 {
   int use_format;
+  char *use_format_name;
   duf_config_puz_flags_combo_t v;
   unsigned orderid;
   unsigned max_rel_depth;

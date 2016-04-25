@@ -315,7 +315,7 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
           use_format_once = 0;
         }
         else
-          use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+          use = CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
 #endif
 #if 0
         fmt = DUF_CONFIGA( opt.output.as_formats.list );

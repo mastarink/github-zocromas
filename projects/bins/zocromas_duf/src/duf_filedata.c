@@ -22,7 +22,7 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"                                            /* duf_pdi_find_statement_by_id; etc. ✗ */
 
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 /* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
@@ -75,6 +75,7 @@ SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid_existed, duf_depthi
   ERP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid_existed, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh );
 }
 
+static
 SRP( PDI, unsigned long long, dataid, 0, pdistat2file_dataid, duf_depthinfo_t * pdi, duf_sccb_handle_t * sccbh MAS_UNUSED, int need_id )
 {
   int changes = 0;

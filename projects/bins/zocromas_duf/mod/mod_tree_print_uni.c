@@ -144,24 +144,35 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
     {
       {
         int use;
-        duf_filedirformat_t *fmt;
+        const duf_filedirformat_t *fmt;
 
 #if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
 #else
-        use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
+        use = CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
 #endif
 
+#if 0
         fmt = DUF_CONFIGA( opt.output.as_formats.tree );
+#else
+        fmt = mas_get_config_output_asformat_tree(  );
+#endif
         MAST_TRACE( temp, 15, "use:%d; files.argc:%d", use, fmt->files.argc );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         MAST_TRACE( temp, 15, "sformat A: %s", sformat );
+#if 0
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
         MAST_TRACE( temp, 15, "sformat B: %s", sformat );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
+#else
+        if ( !sformat )
+          sformat = mas_get_config_output_sformat_gen(  );
+        if ( !sformat )
+          sformat = mas_get_config_output_sformat_tree(  );
+#endif
         MAST_TRACE( temp, 15, "sformat C: %s", sformat );
       }
       if ( !sformat )

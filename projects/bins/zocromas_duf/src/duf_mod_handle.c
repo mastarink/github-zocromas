@@ -23,25 +23,27 @@
 
 #include "duf_mod_handle.h"
 
+/* 20160422.160951 */
 /* ###################################################################### */
 #include "duf_mod_handle.h"
 /* ###################################################################### */
+
 static char *libpath = NULL;
-const char *
-duf_libpath( void )
+SRX( MOD, const char *, lp, NULL, libpath, void )
 {
   if ( !libpath )
     libpath = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL );
-  return libpath;
+/* return libpath; */
+  lp = libpath;
+  ERX( MOD, const char *, lp, NULL, libpath, void );
 }
 
-char **
-duf_liblist( const char *pat, int *psize )
+SRX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize )
 {
-  char **liblist = NULL;
+/* char **liblist = NULL; */
   DIR *dh = NULL;
 
-  dh = opendir( duf_libpath(  ) );
+  dh = opendir( CRX( libpath ) );
   if ( dh )
   {
     int cnt = 0;
@@ -68,7 +70,7 @@ duf_liblist( const char *pat, int *psize )
         if ( ( 0 == fnmatch( "*.so", de->d_name, 0 ) ) && ( !pat || 0 == fnmatch( pat, de->d_name, 0 ) ) )
         {
           *ll++ = mas_strndup( de->d_name, strlen( de->d_name ) - 3 );
-          /* QT( "@@%d matched %s", cnt, de->d_name ); */
+        /* QT( "@@%d matched %s", cnt, de->d_name ); */
           cnt++;
         }
       }
@@ -77,18 +79,19 @@ duf_liblist( const char *pat, int *psize )
     }
     closedir( dh );
   }
-  return liblist;
+/* return liblist; */
+  ERX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize );
 }
 
-void
-duf_delete_libpath( void )
+static
+SRN( MOD, void, delete_libpath, void )
 {
   mas_free( libpath );
   libpath = NULL;
+  ERN( MOD, void, delete_libpath, void );
 }
 
-void
-duf_delete_liblist( char **liblist )
+SRN( MOD, void, delete_liblist, char **liblist )
 {
   if ( liblist )
   {
@@ -98,6 +101,7 @@ duf_delete_liblist( char **liblist )
     }
     mas_free( liblist );
   }
+  ERN( MOD, void, delete_liblist, char **liblist );
 }
 
 static void mod_handle_destructor( void ) __attribute__ ( ( destructor( 101 ) ) );
@@ -118,10 +122,9 @@ duf_libname2sopath( const char *libname )
   return sopath;
 }
 
-void *
-duf_load_symbol( const char *libname, const char *symbol, void **plibhan )
+SRX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan )
 {
-  void *psym = NULL;
+/* void *psym = NULL; */
   void *han = NULL;
   char *sopath = NULL;
 
@@ -142,24 +145,28 @@ duf_load_symbol( const char *libname, const char *symbol, void **plibhan )
   mas_free( sopath );
   if ( plibhan )
     *plibhan = han;
-  return psym;
+/* return psym; */
+  ERX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan );
 }
 
-const duf_mod_handler_t *
-duf_load_mod_handler_symbol( const char *libname, void **plibhan )
+/* const duf_mod_handler_t *                                          */
+/* duf_load_mod_handler_symbol( const char *libname, void **plibhan ) */
+SRX( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan )
 {
-  const duf_mod_handler_t *mhan = NULL;
+/* const duf_mod_handler_t *mhan = NULL; */
 
   MAST_TRACE( mod, 0, "@@@@@@to load lib: %s", libname );
   mhan = ( const duf_mod_handler_t * ) duf_load_symbol( libname, "duf_mod_handler_uni", plibhan );
   MAST_TRACE( mod, 0, "%s", mhan ? mhan->name : NULL );
-  return mhan;
+/* return mhan; */
+  ERX( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan );
 }
 
-void *
-duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol )
+/* void *                                                                            */
+/* duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol ) */
+SRX( MOD, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol )
 {
-  void *ptr = NULL;
+/* void *ptr = NULL; */
   void *libhan = NULL;
 
   for ( const duf_mod_handler_t * mhan = duf_load_mod_handler_symbol( libname, &libhan ); !ptr && mhan && mhan->name; mhan++ )
@@ -175,5 +182,6 @@ duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol 
    }
  */
 /* QT( "@%s::%s ~ %p", libname, masmodsymbol, ptr ); */
-  return ptr;
+/* return ptr; */
+  ERX( OTHER, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol );
 }
