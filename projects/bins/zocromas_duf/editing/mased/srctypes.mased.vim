@@ -99,7 +99,10 @@ tab sfind duf_config_opt_types.h
 sfind duf_config_opt_structs.h
 
 tab sfind duf_config_output_types.h
-sfind duf_format_types.h
+sfind duf_config_output_structs.h
+
+tab sfind duf_format_types.h
+sfind duf_format_structs.h
 
 tab sfind duf_optimpl_enum.h
 

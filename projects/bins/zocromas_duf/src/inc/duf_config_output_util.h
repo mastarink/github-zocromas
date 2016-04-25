@@ -19,6 +19,8 @@ const char *mas_get_config_output_sformat_tree( void );
 const char *mas_get_config_output_sformat_gen( void );
 
 const duf_asformats_t *mas_get_config_output_asformats( void );
+const duf_filedirformat_t *mas_get_config_output_formats( void );
+const duf_filedirformat_t *mas_get_config_output_format( unsigned id );
 const duf_filedirformat_t *mas_get_config_output_asformat_list( void );
 const duf_filedirformat_t *mas_get_config_output_asformat_tree( void );
 const duf_filedirformat_t *mas_get_config_output_asformat_gen( void );

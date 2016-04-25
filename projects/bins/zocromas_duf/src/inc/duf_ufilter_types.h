@@ -10,6 +10,8 @@ typedef struct duf_ufilter_mime_s duf_ufilter_mime_t;
 typedef struct duf_ufilter_exif_s duf_ufilter_exif_t;
 typedef struct duf_same_limits_s duf_same_limits_t;
 
+typedef struct duf_format_name_s duf_format_name_t;
+
 #endif
 
 /*

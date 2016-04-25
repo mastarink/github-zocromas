@@ -32,6 +32,44 @@ duf_ufilter_use_format( const duf_ufilter_t * pu )
   return pu ? pu->use_format : 0;
 }
 
+const char *
+duf_ufilter_format_name( const duf_ufilter_t * pu MAS_UNUSED, unsigned id MAS_UNUSED )
+{
+  /* const char *ff[2]={NULL,NULL}; */
+  /* return ff[0]; */
+  return ( pu && ( id < ( sizeof( pu->format_anames ) / sizeof( char * ) ) ) )? pu->format_anames[id] : NULL;
+}
+
+const char *
+duf_ufilter_list_format_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->format_names.list : NULL;
+}
+
+const char *
+duf_ufilter_pack_format_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->format_names.pack : NULL;
+}
+
+const char *
+duf_ufilter_tree_format_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->format_names.tree : NULL;
+}
+
+const char *
+duf_ufilter_dirs_format_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->format_names.dirs : NULL;
+}
+
+const char *
+duf_ufilter_tree_prefix_format_name( const duf_ufilter_t * pu )
+{
+  return pu ? pu->format_names.tree_prefix : NULL;
+}
+
 int
 duf_ufilter_orderid( const duf_ufilter_t * pu )
 {

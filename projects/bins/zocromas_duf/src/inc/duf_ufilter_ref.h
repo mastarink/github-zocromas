@@ -14,4 +14,11 @@ int duf_ufilter_std_leaf_set_num( const duf_ufilter_t * pu );
 int duf_ufilter_orderid( const duf_ufilter_t * pu );
 const char *duf_ufilter_std_leaf_set_name( const duf_ufilter_t * pu );
 
+const char *duf_ufilter_format_name( const duf_ufilter_t * pu, unsigned id );
+const char *duf_ufilter_list_format_name( const duf_ufilter_t * pu );
+const char *duf_ufilter_tree_format_name( const duf_ufilter_t * pu );
+const char *duf_ufilter_pack_format_name( const duf_ufilter_t * pu );
+const char *duf_ufilter_dirs_format_name( const duf_ufilter_t * pu );
+const char *duf_ufilter_tree_prefix_format_name( const duf_ufilter_t * pu );
+
 #endif

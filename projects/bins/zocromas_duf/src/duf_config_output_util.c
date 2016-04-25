@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <string.h>
 #include <stdio.h>                                                   /* FILE */
 #include <errno.h>
@@ -8,7 +9,7 @@
 #include "duf_config.h"                                              /* duf_get_config ✗ */
 
 #include "duf_config_opt_types.h"
-#include "duf_config_output_types.h"                                 /* duf_config_output_t ✗ */
+#include "duf_config_output_structs.h"
 #include "duf_cfg_output_util.h"
 #include "duf_config_util.h"                                         /* duf_get_trace_config (for MAST_TRACE_CONFIG at duf_tracen_defs_preset) ✗ */
 /* ###################################################################### */
@@ -71,11 +72,41 @@ mas_get_config_output_asformats( void )
 }
 
 const duf_filedirformat_t *
+mas_get_config_output_formats( void )
+{
+  const duf_config_output_t *cfgout = NULL;
+  const duf_filedirformat_t *f = NULL;
+
+  cfgout = duf_get_config_output(  );
+  f = cfgout ? cfgout->formats : NULL;
+  return f;
+}
+
+const duf_filedirformat_t *
+mas_get_config_output_format( unsigned id )
+{
+  const duf_config_output_t *cfgout = NULL;
+  const duf_filedirformat_t *f = NULL;
+
+  cfgout = duf_get_config_output(  );
+
+  f = cfgout && id < ( sizeof( cfgout->formats ) / sizeof( cfgout->formats[0] ) ) ? &cfgout->formats[id] : NULL;
+
+  return f;
+}
+
+const duf_filedirformat_t *
 mas_get_config_output_asformat_list( void )
 {
   const duf_asformats_t *asf;
 
   asf = mas_get_config_output_asformats(  );
+  {
+    const duf_filedirformat_t *f;
+
+    f = mas_get_config_output_format( DUF_FORMAT_NAME_ID_LIST );
+    assert( f == &asf->list );
+  }
   return asf ? &asf->list : NULL;
 }
 
@@ -85,6 +116,12 @@ mas_get_config_output_asformat_tree( void )
   const duf_asformats_t *asf;
 
   asf = mas_get_config_output_asformats(  );
+  {
+    const duf_filedirformat_t *f;
+
+    f = mas_get_config_output_format( DUF_FORMAT_NAME_ID_TREE );
+    assert( f == &asf->tree );
+  }
   return asf ? &asf->tree : NULL;
 }
 
@@ -94,6 +131,12 @@ mas_get_config_output_asformat_gen( void )
   const duf_asformats_t *asf;
 
   asf = mas_get_config_output_asformats(  );
+  {
+    const duf_filedirformat_t *f;
+
+    f = mas_get_config_output_format( DUF_FORMAT_NAME_ID_GEN );
+    assert( f == &asf->gen );
+  }
   return asf ? &asf->gen : NULL;
 }
 

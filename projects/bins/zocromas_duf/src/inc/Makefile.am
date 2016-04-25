@@ -27,6 +27,7 @@ noinst_HEADERS=motest_config.h \
 	duf_config_opt_types.h \
 	duf_config_opt_structs.h \
 	duf_config_output_types.h \
+	duf_config_output_structs.h \
 	duf_config_output_util.h \
 	duf_config_output_weak.h  \
 	duf_config_pointers.h \
@@ -54,6 +55,7 @@ noinst_HEADERS=motest_config.h \
 	duf_fileinfo_types.h \
 	duf_fmt_defs.h \
 	duf_format_types.h \
+	duf_format_structs.h \
 	duf_fun_types.h \
 	duf.h \
 	duf_hook_types.h \

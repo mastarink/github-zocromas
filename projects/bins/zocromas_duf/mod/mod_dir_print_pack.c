@@ -30,6 +30,7 @@
 #include "duf_print.h"
 
 #include "duf_ufilter_ref.h"
+#include "duf_format_structs.h"
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"
@@ -123,27 +124,72 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
   ER( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
 
-static
-SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
+const char *
+duf_get_list_format( const duf_sccb_handle_t * sccbh, int *puse_format_once )
 {
   const char *sformat = NULL;
   int use;
+  const char *fmtname = NULL;
   const duf_filedirformat_t *fmt;
 
-  use = use_format_once ? use_format_once - 1 : CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
+  use = puse_format_once && *puse_format_once ? *puse_format_once - 1 : CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
+  fmt = mas_get_config_output_format( DUF_FORMAT_NAME_ID_LIST );
+#if 0
+  {
+    const duf_filedirformat_t *fmt1;
 
-  use_format_once = 0;
-  fmt = mas_get_config_output_asformat_list(  );
-  if ( !sformat && use >= 0 && use < fmt->files.argc )
-    sformat = fmt->files.argv[use];
+    fmt1 = mas_get_config_output_asformat_list(  );
+    assert( fmt == fmt1 );
+  }
+#endif
+  fmtname = CRX( ufilter_format_name, CRX( pdi_pu, H_PDI ), DUF_FORMAT_NAME_ID_LIST );
+#if 0
+  {
+    const char *fmtname1 = NULL;
+
+    fmtname1 = CRX( ufilter_list_format_name, CRX( pdi_pu, H_PDI ) );
+    assert( ( fmtname == NULL && fmtname1 == NULL ) || 0 == strcmp( fmtname, fmtname1 ) );
+  }
+#endif
+  for ( int nfmt = 0; !sformat && fmtname && nfmt < fmt->files.argc; nfmt++ )
+  {
+    const char *f;
+
+    f = fmt->files.argv[nfmt];
+    if ( f && *f == '`' )
+    {
+      const char *e;
+
+      f++;
+      e = strchr( f, '`' );
+      if ( e && 0 == strncmp( fmtname, f, e - f ) )
+        sformat = e + 1;
+    }
+  }
+  if ( !sformat )
+  {
+    if ( !sformat && use >= 0 && use < fmt->files.argc )
+      sformat = fmt->files.argv[use];
+  }
   if ( !sformat )
     sformat = mas_get_config_output_sformat_gen(  );
   if ( !sformat )
     sformat = mas_get_config_output_sformat_list(  );
   if ( !sformat )
     sformat = " _%M  =%S %8s%f\n";
+  if ( puse_format_once )
+    *puse_format_once = 0;
+  return sformat;
+}
 
-  ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, NULL, sformat, ( duf_sccb_print_cb_t ) NULL,
+static
+SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh )
+{
+  const char *sformat;
+
+  sformat = CRX( get_list_format, sccbh, &use_format_once );
+  ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, NULL, sformat,
+                ( duf_sccb_print_cb_t ) NULL,
                 ( duf_sccb_print_cb_t ) NULL, mas_get_config_output_max_width(  ), mas_output_force_color(  ), mas_output_nocolor(  ), NULL, NULL );
 
   ER( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh );

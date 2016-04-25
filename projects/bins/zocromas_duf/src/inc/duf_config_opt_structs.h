@@ -9,7 +9,7 @@
 # include "duf_config_act_types.h"                                   /* duf_config_act_flags(_combo|_enum|)_t; duf_config_opt_actions_t ✗ */
 # include "duf_config_disable_types.h"                               /* duf_config_opt_disable_flags*_t; ✗ */
 
-# include "duf_config_output_types.h"                                /* duf_config_output_t ✗ */
+# include "duf_config_output_structs.h"
 
 struct duf_config_opt_s
 {

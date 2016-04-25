@@ -16,5 +16,3 @@ duf_get_config( void )
   assert( duf_config );
   return duf_config;
 }
-
-

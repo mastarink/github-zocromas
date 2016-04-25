@@ -44,6 +44,24 @@ duf_ufilter_delete( duf_ufilter_t * pu )
     mas_free( pu->std_leaf_set_name );                               /* 20160212.130932 */
     pu->std_leaf_set_name = NULL;                                    /* 20160212.130932 */
 
+#if 0
+    mas_free( pu->format_names.list );
+    pu->format_names.list = NULL;
+    mas_free( pu->format_names.tree );
+    pu->format_names.tree = NULL;
+    mas_free( pu->format_names.pack );
+    pu->format_names.pack = NULL;
+    mas_free( pu->format_names.dirs );
+    pu->format_names.dirs = NULL;
+    mas_free( pu->format_names.tree_prefix );
+    pu->format_names.tree_prefix = NULL;
+#else
+    for ( unsigned i = 0; i < sizeof( pu->format_names ) / sizeof( char * ); i++ )
+    {
+      mas_free( pu->format_anames[i] );
+      pu->format_anames[i] = NULL;
+    }
+#endif
     mas_free( pu->filename );
     pu->filename = NULL;
 

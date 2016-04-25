@@ -30,6 +30,7 @@
 #include "duf_print.h"
 
 #include "duf_ufilter_ref.h"
+#include "duf_format_structs.h"
 
 /* ########################################################################################## */
 #include "duf_mod_types.h"

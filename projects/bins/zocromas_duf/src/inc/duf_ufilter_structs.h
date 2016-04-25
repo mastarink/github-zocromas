@@ -9,6 +9,7 @@
 # include "duf_config_puz_types.h"                                   /* duf_config_puz_flags_combo_t; duf_config_puz_flags_t; duf_config_puz_flags_enum_t; ✗ */
 
 # include "duf_ufilter_types.h"                                      /* duf_ufilter_t; duf_yfilter_t; etc. ✗ */
+# include "duf_format_structs.h"
 
 struct duf_filter_globx_s
 {
@@ -58,7 +59,11 @@ struct duf_same_as_s
 struct duf_ufilter_s
 {
   int use_format;
-  char *use_format_name;
+  union
+  {
+    duf_format_block_t format_names;
+    char *format_anames[sizeof( duf_format_block_t ) / sizeof( char * )];
+  };
   duf_config_puz_flags_combo_t v;
   unsigned orderid;
   unsigned max_rel_depth;
