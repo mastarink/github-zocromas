@@ -181,12 +181,22 @@ duf_cfg_delete( duf_config_t * cfg )
     cfg->opt.output.stream.file = NULL;
 
     {
+#if 0
       mas_del_argv( cfg->opt.output.as_formats.tree.files.argc, cfg->opt.output.as_formats.tree.files.argv, 0 );
       mas_del_argv( cfg->opt.output.as_formats.tree.dirs.argc, cfg->opt.output.as_formats.tree.dirs.argv, 0 );
       mas_del_argv( cfg->opt.output.as_formats.list.files.argc, cfg->opt.output.as_formats.list.files.argv, 0 );
       mas_del_argv( cfg->opt.output.as_formats.list.dirs.argc, cfg->opt.output.as_formats.list.dirs.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.pack.files.argc, cfg->opt.output.as_formats.list.files.argv, 0 );
+      mas_del_argv( cfg->opt.output.as_formats.pack.dirs.argc, cfg->opt.output.as_formats.list.dirs.argv, 0 );
       mas_del_argv( cfg->opt.output.as_formats.gen.files.argc, cfg->opt.output.as_formats.gen.files.argv, 0 );
       mas_del_argv( cfg->opt.output.as_formats.gen.dirs.argc, cfg->opt.output.as_formats.gen.dirs.argv, 0 );
+#else
+      for ( unsigned i = 0; i < sizeof( cfg->opt.output.formats ) / sizeof( cfg->opt.output.formats[0] ); i++ )
+      {
+        mas_del_argv( cfg->opt.output.formats[i].files.argc, cfg->opt.output.formats[i].files.argv, 0 );
+        mas_del_argv( cfg->opt.output.formats[i].dirs.argc, cfg->opt.output.formats[i].dirs.argv, 0 );
+      }
+#endif
     }
     {
       mas_free( cfg->opt.output.sformat.files_tree );

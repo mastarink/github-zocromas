@@ -14,6 +14,9 @@ DRN( OTHER, void, datarow_delete, duf_sccb_data_row_t * row );
 
 DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_first, const duf_sccb_data_list_t * rowlist );
 DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_last, const duf_sccb_data_list_t * rowlist );
+
+/* duf_sccb_data_row_t *duf_datarow_list_next(void); */
+DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_next, const duf_sccb_data_row_t * qrow );
 DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_penult, const duf_sccb_data_list_t * rowlist );
 
 DRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_unlink, duf_sccb_data_list_t * rowlist, duf_sccb_data_row_t * later,

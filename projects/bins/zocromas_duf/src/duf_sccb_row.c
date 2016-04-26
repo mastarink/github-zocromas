@@ -219,6 +219,12 @@ SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_last, const duf_sccb_
   ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_last, const duf_sccb_data_list_t * rowlist );
 }
 
+SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_next, const duf_sccb_data_row_t * qrow )
+{
+  row = qrow ? qrow->_next : NULL;
+  ERX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_next, const duf_sccb_data_row_t * qrow );
+}
+
 SRX( OTHER, duf_sccb_data_row_t *, row, NULL, datarow_list_penult, const duf_sccb_data_list_t * rowlist )
 {
   row = rowlist && rowlist->last_row ? rowlist->last_row->prev : NULL;
@@ -338,8 +344,8 @@ SRP( OTHER, duf_sccb_data_value_t *, val, NULL, datarow_field_find, const duf_sc
 
       lst = CRX( datarow_field_list, row );
       ERRMAKE_M( NO_FIELD, "Bad field name '%s' (%s)", name, lst );
-      /* if ( 0 == strcmp( name, "fname" ) ) */
-      /*   assert( 0 );                      */
+    /* if ( 0 == strcmp( name, "fname" ) ) */
+    /*   assert( 0 );                      */
       mas_free( lst );
     }
   }

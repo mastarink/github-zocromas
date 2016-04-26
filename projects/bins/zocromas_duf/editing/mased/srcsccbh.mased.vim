@@ -1,4 +1,7 @@
-find duf_sccbh_eval.c
+find duf_sccbh.c
+sfind duf_sccbh.h
+
+tab sfind duf_sccbh_eval.c
 sfind duf_sccbh_eval.h
 
 tab sfind duf_sccbh_eval_fs.c

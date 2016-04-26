@@ -219,8 +219,10 @@ SRX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_next_row, duf_sccb_han
 {
   assert( sccbh );
   if ( sccbh->current_row )
+  {
+    assert( sccbh->current_row->_next == duf_datarow_list_next( sccbh->current_row ) );
     CRX( sccbh_set_current_row, sccbh, sccbh->current_row->_next );
-
+  }
   row = sccbh->current_row;
   ERX( SCCBH, const duf_sccb_data_row_t *, row, NULL, sccbh_next_row, duf_sccb_handle_t * sccbh );
 }

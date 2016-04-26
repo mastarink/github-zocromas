@@ -36,6 +36,14 @@ static muc_longval_extended_table_t optable = {
   .xlist =                                                           /* */
   {
 #if 0
+   {.o = {DO_Q( "use-format" ) /*               */ , DO_A_R /* */ , DO_V( ASFORMAT_USE )} /*                */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OC( NUM, opt.output.as_formats.use ) /*                                                    */ , DO_H(  .... ) /*           */ },
+#else
+   {.o = {DO_Q( "use-format" ) /*               */ , DO_A_R /* */ , DO_V( ASFORMAT_USE )} /*                */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, use_format ) /*                                                    */ , DO_H(  .... ) /*           */ },
+#endif
+
+#if 0
    {.o = {DO_Q( "same-md5" ) /*          */ , DO_A_O /* */ , DO_VUF( SAME_MD5 )} /*          */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MINMAXLL, same.md5 ),.call = {.value = {.u = 2}} /*                    */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "min-same-md5" ) /*      */ , DO_A_R /* */ , DO_VUF( MINSAME_MD5 )} /*       */ , DO_CL( FILTER ) /*   */ ,

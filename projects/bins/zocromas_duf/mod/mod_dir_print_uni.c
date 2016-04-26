@@ -21,6 +21,7 @@
 #include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 #include "duf_sccb_row_field_defs.h"                                 /* DUF_*FIELD2* ✗ */
 
+#include "duf_sccbh.h"
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
@@ -303,13 +304,14 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
       size_t rwidth = 0;
       int over = 0;
 
+#if 0
       {
         int use;
         const duf_filedirformat_t *fmt;
 
-#if 0
+# if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
-#else
+# else
         if ( use_format_once > 0 )
         {
           use = use_format_once - 1;
@@ -317,29 +319,32 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         }
         else
           use = CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
-#endif
-#if 0
+# endif
+# if 0
         fmt = DUF_CONFIGA( opt.output.as_formats.list );
-#else
+# else
         fmt = mas_get_config_output_asformat_list(  );
-#endif
+# endif
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
-#if 0
+# if 0
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_list );
-#else
+# else
         if ( !sformat )
           sformat = mas_get_config_output_sformat_gen(  );
-        /* if ( !sformat )                                     */
-        /*   sformat = mas_get_config_output_sformat_list(  ); */
-#endif
+      /* if ( !sformat )                                     */
+      /*   sformat = mas_get_config_output_sformat_list(  ); */
+# endif
       }
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
+#else
+      sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_LIST, 0, &use_format_once );
+#endif
       {
 #if 0
         unsigned max_width = DUF_CONFIGG( opt.output.max_width );

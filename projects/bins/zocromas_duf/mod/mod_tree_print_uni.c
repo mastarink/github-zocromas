@@ -33,6 +33,7 @@
 /* #include "duf_sccb_row_field_defs.h"                                 (* DUF_*FIELD2* ✗ *)                                    */
 /* #include "duf_sccb_row.h"                                            (* datarow_* ✗ *) */
 
+#include "duf_sccbh.h"
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_row.h"                                           /* duf_sccbh_row_get_*; sccbh_rows_eval ✗ */
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
@@ -71,13 +72,14 @@ static DR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sc
 
 /* ########################################################################################## */
 static duf_scan_callbacks_t duf_sccb_dispatch;
+static muc_longval_extended_table_t optable;
 
 const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
+  {"optab", &optable},
   {NULL, NULL}
 };
 
-#if 0
 static MAS_UNUSED muc_longval_extended_table_t optable = {
   .name = "format-tree",
 //DO_AT_STAGE( SETUP ),
@@ -98,7 +100,6 @@ static MAS_UNUSED muc_longval_extended_table_t optable = {
    {.o = {.name = NULL}}
    }
 };
-#endif
 
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] = {
@@ -178,48 +179,53 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
     }
     if ( !over )
     {
+#if 0
       {
         int use;
         const duf_filedirformat_t *fmt;
 
-#if 0
+# if 0
         use = duf_pdi_pu( H_PDI )->use_format - 1;
-#else
+# else
         use = CRX( ufilter_use_format, CRX( pdi_pu, H_PDI ) ) - 1;
-#endif
+# endif
 
-#if 0
+# if 0
         fmt = DUF_CONFIGA( opt.output.as_formats.tree );
-#else
+# else
         fmt = mas_get_config_output_asformat_tree(  );
-#endif
+# endif
         MAST_TRACE( temp, 15, "use:%d; files.argc:%d", use, fmt->files.argc );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         MAST_TRACE( temp, 15, "sformat A: %s", sformat );
-#if 0
+# if 0
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_gen );
         MAST_TRACE( temp, 15, "sformat B: %s", sformat );
         if ( !sformat )
           sformat = DUF_CONFIGG( opt.output.sformat.files_tree );
-#else
+# else
         if ( !sformat )
           sformat = mas_get_config_output_sformat_gen(  );
       /* if ( !sformat )                                     */
       /*   sformat = mas_get_config_output_sformat_tree(  ); */
-#endif
+# endif
         MAST_TRACE( temp, 15, "sformat C: %s", sformat );
       }
       if ( !sformat )
         sformat = "%f\n";
+#else
+      sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_TREE, 0, NULL );
+      /* QT( "@%s", sformat ); */
+#endif
 
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
         slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, sformat,
                     F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ),
                     mas_output_nocolor(  ), &rwidth, &over );
     }
-    DUF_PUTSL( 0 );
+  /* DUF_PUTSL( 0 ); */
   }
 
 /* SQL at duf_scan_files_by_dirid */
@@ -281,15 +287,16 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
       }
       if ( !over )
       {
+#if 0
         {
           int use;
           duf_filedirformat_t *fmt;
 
-#if 0
+# if 0
           use = duf_pdi_pu( H_PDI )->use_format - 1;
-#else
+# else
           use = duf_ufilter_use_format( duf_pdi_pu( H_PDI ) ) - 1;
-#endif
+# endif
 
           fmt = DUF_CONFIGA( opt.output.as_formats.tree );
           MAST_TRACE( temp, 15, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
@@ -306,12 +313,15 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
 
         if ( !sformat )
           sformat = "%f\n";
+#else
+        sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_TREE, 1, NULL );
+#endif
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
           slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , NULL, sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ),
                       ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
                       &over );
       }
-      DUF_PUTSL( 0 );
+    /* DUF_PUTSL( 0 ); */
     }
   }
 

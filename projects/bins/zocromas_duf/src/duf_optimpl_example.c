@@ -615,6 +615,14 @@ SR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df "
               " --sha1id=1351  --tag-file=test-one  --evaluate-sccb=packlist  /home/  --use-format=4 --list-format-name=wow	 -= \"\" =-" );
   DUF_PRINTF( 0, "*** see human/alias.t.20160422.txt" );
+
+  DUF_PRINTF( 0, "========================= as for 20160426.174114 ============" );
+  DUF_PRINTF( 0, "  t__1p --list-format-name=4 --pack-format-name=wow	 -= \"\" =-" );
+  DUF_PRINTF( 0, "*** see human/alias.t.20160422.txt :" );
+  DUF_PRINTF( 0, "  alias t__1p='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear "
+              " --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one "
+              " --evaluate-sccb=packlist  /home/  --use-format=4'	 -= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
 /* DUF_ENDR( r ); */

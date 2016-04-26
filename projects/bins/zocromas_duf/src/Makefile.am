@@ -122,6 +122,7 @@ zocromas_duf_SOURCES= \
 	duf_sccb_row.c \
 	duf_sccb_row_field.c \
 	duf_sccbh_ref.c \
+	duf_sccbh.c \
 	duf_sccbh_row.c \
 	duf_sccbh_pstmt.c \
 	duf_sccbh_eval_all.c \

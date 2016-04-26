@@ -83,7 +83,7 @@ mas_get_config_output_formats( void )
 }
 
 const duf_filedirformat_t *
-mas_get_config_output_format( unsigned id )
+mas_get_config_output_format( duf_format_name_ids_t id )
 {
   const duf_config_output_t *cfgout = NULL;
   const duf_filedirformat_t *f = NULL;

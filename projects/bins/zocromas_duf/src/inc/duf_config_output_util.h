@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_CONFIG_OUTPUT_UTIL_H
 # define MAS_DUF_CONFIG_OUTPUT_UTIL_H
 
+# include "duf_format_types.h"
+
 /* int mas_verbose( void ); */
 /* int mas_dry_run( void ); */
 
@@ -20,7 +22,7 @@ const char *mas_get_config_output_sformat_gen( void );
 
 const duf_asformats_t *mas_get_config_output_asformats( void );
 const duf_filedirformat_t *mas_get_config_output_formats( void );
-const duf_filedirformat_t *mas_get_config_output_format( unsigned id );
+const duf_filedirformat_t *mas_get_config_output_format( duf_format_name_ids_t id );
 const duf_filedirformat_t *mas_get_config_output_asformat_list( void );
 const duf_filedirformat_t *mas_get_config_output_asformat_tree( void );
 const duf_filedirformat_t *mas_get_config_output_asformat_gen( void );
