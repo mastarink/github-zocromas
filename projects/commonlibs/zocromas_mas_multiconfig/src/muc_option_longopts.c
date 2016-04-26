@@ -1,12 +1,12 @@
 /* #undef MAS_TRACING */
 /* #define MAST_TRACE_CONFIG muc_get_cli_options_trace_config(cli) */
-/* #include "muc_tracen_defs_preset.h" */
+#include "muc_tracen_defs_preset.h"
 
 #include <assert.h>                                                  /* assert */
 #include <string.h>                                                  /* memset */
 
 #include <mastar/wrap/mas_std_def.h>
-/* #include <mastar/trace/mas_trace.h> */
+#include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
 
@@ -73,17 +73,23 @@ muc_options_create_longopts_table( muc_longval_extended_vtable_t ** xvtables )
 
   {
     muc_option_t *longopts_ptr;
+    size_t tbcount = 0;
     size_t tbsize = 0;
 
-    tbsize = muc_longindex_extended_count( xvtables ) * ( sizeof( muc_longval_extended_t ) + 1 );
+    tbcount = muc_longindex_extended_count( xvtables );
+    tbsize = tbcount * ( sizeof( muc_longval_extended_t ) + 1 );
 
     longopts = longopts_ptr = mas_malloc( tbsize );
     memset( longopts, 0, tbsize );
 
     for ( muc_longval_extended_vtable_t ** xvtable = xvtables; *xvtable; xvtable++ )
+    {
       muc_xtable2options( &longopts_ptr, ( *xvtable )->xlist, 0 /* noo */  );
+    }
     for ( muc_longval_extended_vtable_t ** xvtable = xvtables; *xvtable; xvtable++ )
+    {
       muc_xtable2options( &longopts_ptr, ( *xvtable )->xlist, 1 /* noo */  );
+    }
   }
   return longopts;
 }

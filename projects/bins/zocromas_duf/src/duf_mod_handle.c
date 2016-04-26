@@ -38,9 +38,9 @@ SRX( MOD, const char *, lp, NULL, libpath, void )
   ERX( MOD, const char *, lp, NULL, libpath, void );
 }
 
-SRX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize )
+SRX( MOD, char **, lib_list, NULL, liblist, const char *pat, int *psize )
 {
-/* char **liblist = NULL; */
+/* char **lib_list = NULL; */
   DIR *dh = NULL;
 
   dh = opendir( CRX( libpath ) );
@@ -61,9 +61,9 @@ SRX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize )
       char **ll;
 
       rewinddir( dh );
-      liblist = mas_malloc( sizeof( char * ) * ( cnt + 1 ) );
-      memset( liblist, 0, sizeof( char * ) * ( cnt + 1 ) );
-      ll = liblist;
+      lib_list = mas_malloc( sizeof( char * ) * ( cnt + 1 ) );
+      memset( lib_list, 0, sizeof( char * ) * ( cnt + 1 ) );
+      ll = lib_list;
       cnt = 0;
       while ( ( de = readdir( dh ) ) )
       {
@@ -79,8 +79,8 @@ SRX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize )
     }
     closedir( dh );
   }
-/* return liblist; */
-  ERX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize );
+/* return lib_list; */
+  ERX( MOD, char **, lib_list, NULL, liblist, const char *pat, int *psize );
 }
 
 static
@@ -91,17 +91,17 @@ SRN( MOD, void, delete_libpath, void )
   ERN( MOD, void, delete_libpath, void );
 }
 
-SRN( MOD, void, delete_liblist, char **liblist )
+SRN( MOD, void, delete_liblist, char **lib_list )
 {
-  if ( liblist )
+  if ( lib_list )
   {
-    for ( char **lp = liblist; lp && *lp; lp++ )
+    for ( char **lp = lib_list; lp && *lp; lp++ )
     {
       mas_free( *lp );
     }
-    mas_free( liblist );
+    mas_free( lib_list );
   }
-  ERN( MOD, void, delete_liblist, char **liblist );
+  ERN( MOD, void, delete_liblist, char **lib_list );
 }
 
 static void mod_handle_destructor( void ) __attribute__ ( ( destructor( 101 ) ) );
@@ -122,11 +122,12 @@ duf_libname2sopath( const char *libname )
   return sopath;
 }
 
-SRX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan )
+SRP( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan )
 {
 /* void *psym = NULL; */
   void *han = NULL;
   char *sopath = NULL;
+  char *es = NULL;
 
 #if 0
 /* sopath = mas_normalize_path_plus( MAS_LIBDIR, "dufmod", NULL ); */
@@ -137,39 +138,57 @@ SRX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symb
   sopath = duf_libname2sopath( libname );
 #endif
   han = dlopen( sopath, RTLD_NOLOAD | RTLD_LAZY );
-  if ( !han )
+
+  es = dlerror(  );
+  if ( es )
+    ERRMAKE_M( MOD, "load error 1 (%s)", es );
+  if ( QNOERR && !han )
+  {
     han = dlopen( sopath, RTLD_LOCAL | RTLD_LAZY );
-  if ( han )
+
+    es = dlerror(  );
+    if ( es )
+      ERRMAKE_M( MOD, "load error 2 (%s)", es );
+  }
+  if ( QNOERR && han )
+  {
     psym = ( void * ) dlsym( han, symbol );
+
+    es = dlerror(  );
+    if ( es )
+      ERRMAKE_M( MOD, "load error 3 (%s)", es );
+    /* QT( "@%s : %s", symbol, es ); */
+  }
+  /* QT( "@%s", QERRNAME ); */
   MAST_TRACE( sccb, 0, "[han:%p] %s : %p", han, symbol, psym );
   mas_free( sopath );
   if ( plibhan )
     *plibhan = han;
 /* return psym; */
-  ERX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan );
+  ERP( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan );
 }
 
 /* const duf_mod_handler_t *                                          */
 /* duf_load_mod_handler_symbol( const char *libname, void **plibhan ) */
-SRX( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan )
+SRP( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan )
 {
 /* const duf_mod_handler_t *mhan = NULL; */
 
   MAST_TRACE( mod, 0, "@@@@@@to load lib: %s", libname );
-  mhan = ( const duf_mod_handler_t * ) duf_load_symbol( libname, "duf_mod_handler_uni", plibhan );
+  mhan = ( const duf_mod_handler_t * ) CRP( load_symbol, libname, "duf_mod_handler_uni", plibhan );
   MAST_TRACE( mod, 0, "%s", mhan ? mhan->name : NULL );
 /* return mhan; */
-  ERX( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan );
+  ERP( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan );
 }
 
 /* void *                                                                            */
 /* duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol ) */
-SRX( MOD, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol )
+SRP( MOD, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol )
 {
 /* void *ptr = NULL; */
   void *libhan = NULL;
 
-  for ( const duf_mod_handler_t * mhan = duf_load_mod_handler_symbol( libname, &libhan ); !ptr && mhan && mhan->name; mhan++ )
+  for ( const duf_mod_handler_t * mhan = CRP( load_mod_handler_symbol, libname, &libhan ); QNOERR && !ptr && mhan && mhan->name; mhan++ )
   {
     if ( 0 == strcmp( mhan->name, masmodsymbol ) )
       ptr = mhan->handler;
@@ -183,5 +202,5 @@ SRX( MOD, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, 
  */
 /* QT( "@%s::%s ~ %p", libname, masmodsymbol, ptr ); */
 /* return ptr; */
-  ERX( OTHER, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol );
+  ERP( OTHER, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol );
 }

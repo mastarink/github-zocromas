@@ -13,12 +13,12 @@ DRX( MOD, char **, liblist, NULL, liblist, const char *pat, int *psize );
 DRN( MOD, void, delete_liblist, char **liblist );
 
 /* void *duf_load_symbol( const char *libname, const char *symbol, void **plibhan ); */
-DRX( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan );
+DRP( MOD, void *, psym, NULL, load_symbol, const char *libname, const char *symbol, void **plibhan );
 
 /* const duf_mod_handler_t *duf_load_mod_handler_symbol( const char *libname, void **plibhan ); */
-DRX( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan );
+DRP( MOD, const duf_mod_handler_t *, mhan, NULL, load_mod_handler_symbol, const char *libname, void **plibhan );
 
 /* void *duf_load_mod_handler_symbol_find( const char *libname, const char *masmodsymbol ); */
-DRX( OTHER, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol );
+DRP( OTHER, void *, ptr, NULL, load_mod_handler_symbol_find, const char *libname, const char *masmodsymbol );
 
 #endif

@@ -104,15 +104,16 @@ SRX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evnamen, const
   ERX( SCCB, const duf_scan_callbacks_t *, sccb, NULL, find_sccb_by_evnamen, const char *name, size_t namelen, const duf_scan_callbacks_t * first );
 }
 
-static duf_scan_callbacks_t *
-duf_load_sccb_symbol( const char *path, const char *symbol )
+static
+SRP( MOD, duf_scan_callbacks_t *, sccb, NULL, load_sccb_symbol, const char *path, const char *symbol )
 {
-  duf_scan_callbacks_t *sccb = NULL;
+/* duf_scan_callbacks_t *sccb = NULL; */
 
   MAST_TRACE( sccb, 0, "@@@@@@to load %s", path );
-  sccb = ( duf_scan_callbacks_t * ) duf_load_symbol( path, symbol, NULL );
+  sccb = ( duf_scan_callbacks_t * ) CRP( load_symbol, path, symbol, NULL );
   MAST_TRACE( sccb, 0, "%s : %s", symbol, sccb ? sccb->name : NULL );
-  return sccb;
+/* return sccb; */
+  ERP( MOD, duf_scan_callbacks_t *, sccb, NULL, load_sccb_symbol, const char *path, const char *symbol );
 }
 
 static void
@@ -157,9 +158,9 @@ SRX( SCCB, duf_scan_callbacks_t *, sccb, NULL, load_sccb_by_evnamen, const char 
     libname = mas_strndup( name, namelen );
     if ( libname && first )
     {
-      sccb = CRX( load_mod_handler_symbol_find, libname, "sccb" );
+      sccb = CRP( load_mod_handler_symbol_find, libname, "sccb" );
       if ( !sccb )
-        sccb = duf_load_sccb_symbol( libname, "duf_mod_sccb_handler" );
+        sccb = CRP( load_sccb_symbol, libname, "duf_mod_sccb_handler" );
     /* QT( "@A sccb:%p (%s)", sccb, "duf_mod_sccb_handler" ); */
       assert( 0 == strcmp( libname, sccb->name ) );
       if ( !sccb )
@@ -169,11 +170,11 @@ SRX( SCCB, duf_scan_callbacks_t *, sccb, NULL, load_sccb_by_evnamen, const char 
         symbol = mas_strdup( "duf_" );
         symbol = mas_strcat_x( symbol, libname );
         symbol = mas_strcat_x( symbol, "_callbacks" );
-        sccb = duf_load_sccb_symbol( libname, symbol );
+        sccb = CRP( load_sccb_symbol, libname, symbol );
         mas_free( symbol );
       /* QT( "@B sccb:%p (%s)", sccb, symbol ); */
       }
-      if ( sccb )
+      if ( QNOERR && sccb )
         duf_register_sccb( first, sccb );
 
     }

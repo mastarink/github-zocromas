@@ -333,8 +333,8 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
 #else
         if ( !sformat )
           sformat = mas_get_config_output_sformat_gen(  );
-        if ( !sformat )
-          sformat = mas_get_config_output_sformat_list(  );
+        /* if ( !sformat )                                     */
+        /*   sformat = mas_get_config_output_sformat_list(  ); */
 #endif
       }
 

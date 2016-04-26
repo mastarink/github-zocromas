@@ -14,7 +14,7 @@
 
 #include "muc_se_only.h"                                             /* Only muc_DR; muc_SR; muc_ER; muc_CR; muc_QSTR; QERRIND; QERRNAME etc. ♠ */
 
-#include "muc_option_longopts.h"                                     /* muc_options_create_longopts_table ♠ */
+/* #include "muc_option_longopts.h"                                     (* muc_options_create_longopts_table ♠ *) */
 
 #include "muc_option_defs.h"
 #include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */
@@ -314,7 +314,10 @@ void
 muc_cli_options_xtable_list_add( muc_config_cli_t * cli, const muc_longval_extended_table_t * const *xtable_multi, int numtabs )
 {
   if ( xtable_multi )
+  {
+  /* QT( "@xtable_multi:%p : %s", *xtable_multi, xtable_multi ? ( *xtable_multi )->name : NULL ); */
     cli->xvtable_multi = muc_cli_options_xtable_list2xvtable( cli, xtable_multi, numtabs, cli->xvtable_multi ); /* allocates */
+  }
   muc_cli_options_postinit_reset( cli );
 }
 
@@ -365,6 +368,8 @@ muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_e
       {
         const muc_longval_extended_t *xlist;
 
+        /* muc_QT( "xtable_multi:%s", xtable_multi[itab]->name ); */
+
         xlist = xtable_multi[itab]->xlist;
         for ( const muc_longval_extended_t * x = xlist; x->o.name; x++ )
         {
@@ -398,6 +403,7 @@ muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_e
         for ( const muc_longval_extended_t * x = xtable_multi[itab]->xlist; x->o.name; x++ )
           xcnt++;
         vtable->xlist = mas_malloc( sizeof( muc_longval_extended_t ) * ( xcnt + 1 ) );
+        memset( vtable->xlist, 0, sizeof( muc_longval_extended_t ) * ( xcnt + 1 ) );
         for ( size_t xn = 0; xn < xcnt; xn++ )
         {
           vtable->xlist[xn] = xtable_multi[itab]->xlist[xn];

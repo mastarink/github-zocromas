@@ -93,6 +93,11 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
 
   trow = duf_sccbh_start_first_row( sccbh );
   n = 0;
+/* TODO 20160425.120000
+ * only for first row : 
+ *   additional call with special format
+ *     used to print common things for group, for instance size, md5sum, sha1id etc.
+ * */
   while ( trow && trow != duf_sccbh_get_last_row( sccbh ) /* last: don't! */  )
   {
     if ( trow && trow->nfields )
@@ -166,15 +171,12 @@ duf_get_list_format( const duf_sccb_handle_t * sccbh, int *puse_format_once )
         sformat = e + 1;
     }
   }
-  if ( !sformat )
-  {
-    if ( !sformat && use >= 0 && use < fmt->files.argc )
-      sformat = fmt->files.argv[use];
-  }
+  if ( !sformat && use >= 0 && use < fmt->files.argc )
+    sformat = fmt->files.argv[use];
   if ( !sformat )
     sformat = mas_get_config_output_sformat_gen(  );
-  if ( !sformat )
-    sformat = mas_get_config_output_sformat_list(  );
+  /* if ( !sformat )                                     */
+  /*   sformat = mas_get_config_output_sformat_list(  ); */
   if ( !sformat )
     sformat = " _%M  =%S %8s%f\n";
   if ( puse_format_once )

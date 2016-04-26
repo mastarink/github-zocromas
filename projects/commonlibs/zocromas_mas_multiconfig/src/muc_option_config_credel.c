@@ -185,7 +185,9 @@ muc_cli_options_postinit( muc_config_cli_t * cli )
   if ( !cli->postinited )
   {
     cli->shorts = muc_cli_option_shorts_create( cli, cli->xvtable_multi );
+    QT( "@------- %s", ( *cli->xvtable_multi )->name );
     cli->longopts_table = muc_options_create_longopts_table( cli->xvtable_multi );
+    QT( "@+++++++ %s", ( *cli->xvtable_multi )->name );
 
     assert( cli->longopts_table );
     cli->postinited = 1;

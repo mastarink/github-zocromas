@@ -13,10 +13,10 @@
 #include "muc_option_extended.h"                                     /* muc_longindex_extended_count etc. ♠ */
 /* ###################################################################### */
 
-int
+size_t
 muc_longindex_extended_count( muc_longval_extended_vtable_t ** xvtables )
 {
-  int xcount = 0;
+  size_t xcount = 0;
 
 #if 0
   const muc_longval_extended_vtable_t *xtable;

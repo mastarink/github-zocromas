@@ -11,6 +11,7 @@
 const muc_longval_extended_table_t *const *duf_optable_xtable_list( void );
 const muc_longval_extended_table_t *const *duf_optable_xtable_list2( void );
 
-const muc_longval_extended_table_t *const*duf_optable_xtable_list_mod( void );
+/* const muc_longval_extended_table_t *const*duf_optable_xtable_list_mod( void ); */
+DRX( OTHER, const muc_longval_extended_table_t * const *, lm, NULL, optable_xtable_list_mod, void );
 
 #endif

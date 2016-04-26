@@ -2,14 +2,15 @@
 #include <string.h>
 
 #include "duf_tracen_defs_preset.h"                                  /* MAST_TRACE_CONFIG; etc. ✗ */
+#include "duf_errorn_defs_preset.h"                                  /* MAST_ERRORS_FILE; etc. ✗ */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ▤ */
 #include <mastar/trace/mas_trace_credel.h>
 #include <mastar/trace/mas_trace.h>
-/* #include <mastar/error/mas_error_defs_ctrl.h> */
-/* #include <mastar/error/mas_error_defs_make.h> */
-/* #include <mastar/error/mas_error_defs.h>      */
+#include <mastar/error/mas_error_defs_ctrl.h>
+#include <mastar/error/mas_error_defs_make.h>
+#include <mastar/error/mas_error_defs.h>
 
 #include <mastar/multiconfig/muc_option_config.h>                    /* duf_get_cli_options_trace_config ♠ */
 #include <mastar/multiconfig/muc_option_config_credel.h>
@@ -106,37 +107,42 @@ duf_optable_xtable_list2( void )
 #endif
 
 muc_longval_extended_table_t **list_mod = NULL;
-const muc_longval_extended_table_t *const *
-duf_optable_xtable_list_mod( void )
+
+SRX( OTHER, const muc_longval_extended_table_t * const *, lm, NULL, optable_xtable_list_mod, void )
 {
   if ( !list_mod )
   {
-    char **liblist;
-    int num = 0, i = 0;
+    char **lib_list;
+    int num = 0;
 
-    liblist = duf_liblist( "ot_*.so", &num );
+  /* lib_list = CRX( liblist, "ot_*.so", &num ); */
+    lib_list = CRX( liblist, NULL, &num );
     list_mod = mas_malloc( sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
     memset( list_mod, 0, sizeof( const muc_longval_extended_table_t * const * ) * ( num + 1 ) );
     {
       muc_longval_extended_table_t **lm = list_mod;
+      unsigned nl = 0;
 
-      for ( char **ll = liblist; ll && *ll; ll++ )
+      for ( char **ll = lib_list; QNOERR && ll && *ll; ll++ )
       {
         muc_longval_extended_table_t *mod;
 
-        mod = CRX( load_mod_handler_symbol_find, *ll, "optab" );
+        mod = CRP( load_mod_handler_symbol_find, *ll, "optab" );
+        QT( "@>>>>>>>>>>>>>>>>>>> %d (%d) : %s - %p", nl, num, *ll, mod );
       /* QT( "@lib: %s : %p", *ll, mod ); */
         if ( mod )
           *lm++ = mod;
-      /* QT( "@%d of %d : %s", i, num, *ll ); */
-        i++;
+      /* QT( "@%d of %d : %s", nl, num, *ll ); */
+        nl++;
       }
     }
   /* TODO realloc list_mod ? */
-    if ( liblist )
-      duf_delete_liblist( liblist );
+    if ( lib_list )
+      CRX( delete_liblist, lib_list );
   }
-  return ( const muc_longval_extended_table_t * const * ) list_mod;
+  lm = ( const muc_longval_extended_table_t * const * ) list_mod;
+/* return ( const muc_longval_extended_table_t * const * ) list_mod; */
+  ERX( OTHER, const muc_longval_extended_table_t * const *, lm, NULL, optable_xtable_list_mod, void );
 }
 
 static void xtable_destructor( void ) __attribute__ ( ( destructor( 101 ) ) );

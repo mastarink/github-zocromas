@@ -47,6 +47,19 @@
 #include "sql_beginning_selected.h"
 
 /* ########################################################################################## */
+#include "duf_optimpl_class.h"
+
+#include "duf_config_structs.h"
+#include "duf_config_pointers.h"                                     /* duf_get_( .* )_pointer */
+
+#include "duf_optable_def.h"
+#include "duf_optimpl_enum.h"                                        /* duf_option_code_t ✗ */
+
+#include "duf_mod_types.h"
+
+#include "duf_ufilter_structs.h"
+
+/* ########################################################################################## */
 #include "duf_mod_types.h"
 /* static int duf_sql_print_tree_prefix_uni( const duf_depthinfo_t * H_PDI ); */
 static DR( MOD, sql_print_tree_sprefix_uni, char *pbuffer, size_t bfsz, const duf_depthinfo_t * pdi_unused, int use_row,
@@ -63,6 +76,29 @@ const duf_mod_handler_t duf_mod_handler_uni[] = {
   {"sccb", &duf_sccb_dispatch},
   {NULL, NULL}
 };
+
+#if 0
+static MAS_UNUSED muc_longval_extended_table_t optable = {
+  .name = "format-tree",
+//DO_AT_STAGE( SETUP ),
+  .xlist =                                                           /* */
+  {
+   {.o = {DO_Q( "format-dirs-tree" ) /*         */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_TREE )} /*           */ , DO_CL( PRINT ) /* */ ,
+    /*      */ DO_OC( STR, opt.output.sformat.dirs_tree ) /*                                                 */ , DO_H( format ) /*          */ },
+   {.o = {DO_Q( "format-files-tree" ) /*        */ , DO_A_R /* */ , DO_V( SFORMAT_FILES_TREE )} /*          */ , DO_CL( PRINT ) /* */ ,
+    /*      */ DO_OC( STR, opt.output.sformat.files_tree ) /*                                                */ , DO_H( format ) /*          */ },
+
+   {.o = {DO_Q( "format-prefix-gen-tree" ) /*   */ , DO_A_R /* */ , DO_V( SFORMAT_PREFIX_GEN_TREE )} /*     */ , DO_CL( PRINT ) /* */ ,
+    /*      */ DO_OC( STR, opt.output.sformat.prefix_gen_tree ) /*                                           */ , DO_H( format ) /*          */ },
+   {.o = {DO_Q( "format-prefix-files-tree" ) /* */ , DO_A_R /* */ , DO_V( SFORMAT_PREFIX_FILES_TREE )} /*   */ , DO_CL( PRINT ) /* */ ,
+    /*      */ DO_OC( STR, opt.output.sformat.prefix_files_tree ) /*                                         */ , DO_H( format ) /*          */ },
+   {.o = {DO_Q( "format-prefix-dirs-tree" ) /*  */ , DO_A_R /* */ , DO_V( SFORMAT_PREFIX_DIRS_TREE )} /*    */ , DO_CL( PRINT ) /* */ ,
+    /*      */ DO_OC( STR, opt.output.sformat.prefix_dirs_tree ) /*                                          */ , DO_H( format ) /*          */ },
+
+   {.o = {.name = NULL}}
+   }
+};
+#endif
 
 /* ########################################################################################## */
 static duf_scanner_set_t scanners[] = {
@@ -170,8 +206,8 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
 #else
         if ( !sformat )
           sformat = mas_get_config_output_sformat_gen(  );
-        if ( !sformat )
-          sformat = mas_get_config_output_sformat_tree(  );
+      /* if ( !sformat )                                     */
+      /*   sformat = mas_get_config_output_sformat_tree(  ); */
 #endif
         MAST_TRACE( temp, 15, "sformat C: %s", sformat );
       }

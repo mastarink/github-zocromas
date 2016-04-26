@@ -62,7 +62,13 @@ if isdirectory(mas_localvimdirs)
     let viminfofile=infoprefix . v:servername . ".viminfo"
     execute 'set verbosefile=' . vrbfile
     execute 'redir >> ' . redirfile
+    execute "set viminfo"
     execute "set viminfo='50,<1000,s1000,n" . viminfofile
+    echo "-------------------------------------------------------------------------------"
+    echo "set vrb, redir, viminfo: ".strftime( "%c", localtime())
+    echo "verbosefile:" . &verbosefile
+    echo "redirfile:" . redirfile
+    echo "viminfofile:" . viminfofile
   endif
 endif
 
