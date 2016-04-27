@@ -173,9 +173,9 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, sformat_pref,
-                    F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ),
-                    mas_output_nocolor(  ), &rwidth, &over );
+        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), ( const duf_sccb_data_row_t * ) NULL, sccbh,
+                    &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
+                    mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
     if ( !over )
     {
@@ -217,13 +217,13 @@ SR( MOD, tree_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh MAS
         sformat = "%f\n";
 #else
       sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_TREE, 0, NULL );
-      /* QT( "@%s", sformat ); */
+    /* QT( "@%s", sformat ); */
 #endif
 
       if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, sformat,
-                    F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ),
-                    mas_output_nocolor(  ), &rwidth, &over );
+        slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), ( const duf_sccb_data_row_t * ) NULL, sccbh,
+                    &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
+                    mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
     }
   /* DUF_PUTSL( 0 ); */
   }
@@ -281,9 +281,9 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
         if ( !sformat_pref )
           sformat_pref = " %6s  %4s%P";
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , NULL, sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ),
-                      ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
-                      &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , ( const duf_sccb_data_row_t * ) NULL, ( const duf_sccb_data_row_t * ) NULL,
+                      sccbh, &fi, sformat_pref, F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
+                      mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
       if ( !over )
       {
@@ -317,9 +317,9 @@ SR( MOD, tree_node_before2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_ha
         sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_TREE, 1, NULL );
 #endif
         if ( DUF_CONFIGG( opt.output.max_width ) == 0 || DUF_CONFIGG( opt.output.max_width ) > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , NULL, sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ),
-                      ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ), mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth,
-                      &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 0 /* from row */ , ( const duf_sccb_data_row_t * ) NULL, ( const duf_sccb_data_row_t * ) NULL,
+                      sccbh, &fi, sformat, F2ND( sql_print_tree_sprefix_uni ), ( duf_sccb_print_cb_t ) NULL, DUF_CONFIGG( opt.output.max_width ),
+                      mas_output_force_color(  ), mas_output_nocolor(  ), &rwidth, &over );
       }
     /* DUF_PUTSL( 0 ); */
     }

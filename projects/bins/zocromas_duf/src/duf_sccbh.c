@@ -37,6 +37,8 @@ SRX( SCCBH, const char *, sformat, NULL, get_item_format, const duf_sccb_handle_
   const char *fmtname = NULL;
 
   fmtname = CRX( ufilter_format_name, CRX( pdi_pu, H_PDI ), id /* DUF_FORMAT_NAME_ID_LIST */  );
+  if ( !fmtname )
+    fmtname = CRX( ufilter_format_name, CRX( pdi_pu, H_PDI ), DUF_FORMAT_NAME_ID_GEN );
 #if 0
   {
     const char *fmtname1 = NULL;

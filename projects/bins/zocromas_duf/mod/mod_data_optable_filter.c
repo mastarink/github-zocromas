@@ -214,17 +214,6 @@ static muc_longval_extended_table_t optable = {
    {.o = {DO_Q( "pack-field" ) /*      */ , DO_A_R /* */ } /*                              */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, pack_field ) /*                                                  */ , DO_H( pack field ) /*                       */ },
 
-   {.o = {DO_Q( "list-format-name" ) /*      */ , DO_A_R /* */ } /*                        */ , DO_CL( FILTER ) /*  */ ,
-    /*      */ DO_OU( STR, format_names.list ) /*                                            */ , DO_H( format name ) /*                       */ },
-   {.o = {DO_Q( "tree-format-name" ) /*      */ , DO_A_R /* */ } /*                        */ , DO_CL( FILTER ) /*  */ ,
-    /*      */ DO_OU( STR, format_names.tree ) /*                                            */ , DO_H( format name ) /*                       */ },
-   {.o = {DO_Q( "pack-format-name" ) /*      */ , DO_A_R /* */ } /*                        */ , DO_CL( FILTER ) /*  */ ,
-    /*      */ DO_OU( STR, format_names.pack ) /*                                            */ , DO_H( format name ) /*                       */ },
-   {.o = {DO_Q( "dirs-format-name" ) /*      */ , DO_A_R /* */ } /*                        */ , DO_CL( FILTER ) /*  */ ,
-    /*      */ DO_OU( STR, format_names.dirs ) /*                                            */ , DO_H( format name ) /*                       */ },
-   {.o = {DO_Q( "tree-prefix-format-name" ) /*      */ , DO_A_R /* */ } /*                 */ , DO_CL( FILTER ) /*  */ ,
-    /*      */ DO_OU( STR, format_names.tree_prefix ) /*                                     */ , DO_H( format name ) /*                       */ },
-
    {.o = {DO_Q( "filename-db" ) /*      */ , DO_A_R /* */ , DO_VUF( FILENAME )} /*         */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, filename ) /*                                                    */ , DO_H( glob db ) /*                          */ },
    {.o = {DO_Q( "glob-db" ) /*          */ , DO_A_R /* */ , DO_VUF( GLOB_DB )} /*          */ , DO_CL( FILTER ) /*  */ ,

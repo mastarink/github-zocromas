@@ -35,6 +35,19 @@ static muc_longval_extended_table_t optable = {
 //DO_AT_STAGE( SETUP ),
   .xlist =                                                           /* */
   {
+   {.o = {DO_Q( "format-name" ) /*              */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.gen ) /*                                                             */ , DO_H( format name ) /*     */ },
+   {.o = {DO_Q( "list-format-name" ) /*         */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.list ) /*                                                            */ , DO_H( format name ) /*     */ },
+   {.o = {DO_Q( "tree-format-name" ) /*         */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.tree ) /*                                                            */ , DO_H( format name ) /*     */ },
+   {.o = {DO_Q( "pack-format-name" ) /*         */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.pack ) /*                                                            */ , DO_H( format name ) /*     */ },
+   {.o = {DO_Q( "dirs-format-name" ) /*         */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.dirs ) /*                                                            */ , DO_H( format name ) /*     */ },
+   {.o = {DO_Q( "tree-prefix-format-name" ) /*  */ , DO_A_R /* */ } /*                                      */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, format_names.tree_prefix ) /*                                                     */ , DO_H( format name ) /*     */ },
+
  /* {.o = {DO_Q( "bformat" ) (*                  *) , DO_A_R (* *) , DO_V( BFORMAT )} (*                     *) , DO_CL( PRINT ) (*   *)              */
  /*  (*                                                                                                       *) , DO_H( print w / bformat ) (* *) }, */
 #if 0

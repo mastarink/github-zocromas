@@ -84,6 +84,7 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
 {
   int n = 0;
   const duf_sccb_data_row_t *trow = NULL;
+  const duf_sccb_data_row_t *prevtrow = NULL;
   const char *sformat = NULL;
 
 #if 0
@@ -98,14 +99,14 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
  *     used to print common things for group, for instance size, md5sum, sha1id etc.
  * */
 
+  sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_PACK, 0, &use_format_once );
   while ( trow && trow != duf_sccbh_get_last_row( sccbh ) /* last: don't! */  )
   {
     if ( trow->nfields )
     {
       if ( n == 0 )
       {
-        sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_PACK, 0, &use_format_once );
-        ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , trow, sccbh, NULL, sformat,
+        ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , trow, prevtrow, sccbh, NULL, sformat,
                       ( duf_sccb_print_cb_t ) NULL,
                       ( duf_sccb_print_cb_t ) NULL, mas_get_config_output_max_width(  ), mas_output_force_color(  ), mas_output_nocolor(  ), NULL,
                       NULL );
@@ -130,13 +131,14 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
 
       /* use_format_once = 4; */
         sformat = CRX( get_item_format, sccbh, DUF_FORMAT_NAME_ID_LIST, 0, &use_format_once );
-        ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , trow, sccbh, NULL, sformat,
+        ( void ) CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , trow, prevtrow, sccbh, NULL, sformat,
                       ( duf_sccb_print_cb_t ) NULL,
                       ( duf_sccb_print_cb_t ) NULL, mas_get_config_output_max_width(  ), mas_output_force_color(  ), mas_output_nocolor(  ), NULL,
                       NULL );
 
       }
     }
+    prevtrow = trow;
 #if 0
     trow = CRX( sccbh_next_row, sccbh );
 #else

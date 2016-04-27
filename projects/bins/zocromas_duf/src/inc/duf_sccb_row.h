@@ -38,6 +38,7 @@ DRP( OTHER, unsigned long long, n, 0, datarow_get_number, const duf_sccb_data_ro
 
 DRP( OTHER, const char *, s, NULL, datarow_get_string, const duf_sccb_data_row_t * row, const char *name );
 
+
 DRP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name );
 
 /* DRP( SCCBH, unsigned long long, n, 0, sccbh_row_get_number, duf_sccb_handle_t * sccbh, const char *name ); */
@@ -45,6 +46,8 @@ DRP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, c
 /* DRP( SCCBH, const char *, s, NULL, sccbh_row_get_string, duf_sccb_handle_t * sccbh, const char *name ); */
 
 /* DRN( SCCBH, void, sccbh_rows_eval, duf_sccb_handle_t * sccbh ); */
+
+DRX( OTHER, const duf_pathinfo_t *, pi, NULL, datarow_get_pathinfo, const duf_sccb_data_row_t * row );
 
 #endif
 

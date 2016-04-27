@@ -407,3 +407,9 @@ SRP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, c
   }
   ERP( OTHER, int, isnull, 1, datarow_get_null, const duf_sccb_data_row_t * row, const char *name );
 }
+
+SRX( OTHER, const duf_pathinfo_t *, pi, NULL, datarow_get_pathinfo, const duf_sccb_data_row_t * row )
+{
+  pi = row ? &row->pathinfo : NULL;
+  ERX( OTHER, const duf_pathinfo_t *, pi, NULL, datarow_get_pathinfo, const duf_sccb_data_row_t * row );
+}

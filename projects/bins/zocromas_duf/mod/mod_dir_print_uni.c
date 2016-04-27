@@ -352,9 +352,9 @@ SR( MOD, print_leaf2, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh )
         unsigned max_width = mas_get_config_output_max_width(  );
 #endif
         if ( max_width == 0 || max_width > slen )
-          slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), sccbh, &fi, sformat,
-                      ( duf_sccb_print_cb_t ) NULL, ( duf_sccb_print_cb_t ) NULL, max_width, mas_output_force_color(  ), mas_output_nocolor(  ),
-                      &rwidth, &over );
+          slen = CRX( print_sformat_file_info, H_PDI, 1 /* from row */ , CRX( sccbh_row_current, sccbh ), ( const duf_sccb_data_row_t * ) NULL, sccbh,
+                      &fi, sformat, ( duf_sccb_print_cb_t ) NULL, ( duf_sccb_print_cb_t ) NULL, max_width, mas_output_force_color(  ),
+                      mas_output_nocolor(  ), &rwidth, &over );
       }
     }
   }
