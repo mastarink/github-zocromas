@@ -861,10 +861,22 @@ SRX( OTHER, char *, buffer, NULL, sformat_file_info, const duf_depthinfo_t * pdi
       fmt++;
       if ( *fmt == 'n' )
         *pbuffer++ = '\n';
+      else if ( *fmt == ':' )
+        *pbuffer++ = ':';
       else if ( *fmt == 'r' )
         *pbuffer++ = '\r';
       else if ( *fmt == 't' )
         *pbuffer++ = '\t';                                           /* FIXME swidth is wrong for \t */
+      else if ( *fmt == 'x' )
+      {
+        char c;
+        char *pe = NULL;
+
+        c = strtol( fmt + 1, &pe, 16 );
+        *pbuffer++ = c;
+        fmt = pe;
+        fmt--;
+      }
       else
       {
         *pbuffer++ = '\\';

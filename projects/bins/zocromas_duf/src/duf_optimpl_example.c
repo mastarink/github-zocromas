@@ -627,7 +627,7 @@ SR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  t__1p --format-name=sha	-= \"\" =-" );
   DUF_PRINTF( 0, "*** see human/alias.t.20160422.txt :" );
   DUF_PRINTF( 0, "  alias t__1pa0='run   --db-name=owncloud_mega_zip_copy --linear "
-              " --min-same-sha1=5  --std-leaf-set-name=std-all-under  --glob=" *.jpg "  -df "
+              " --min-same-sha1=5  --std-leaf-set-name=std-all-under  --glob=\"*.jpg\"  -df "
               "  --evaluate-sccb=packlist  /home/  --use-format=4  --trace-stdout --trace-force-color'	 -= \"\" =-" );
   DUF_PRINTF( 0, "  t__1pa0 --format-name=sha	-= \"\" =-" );
 
