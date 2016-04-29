@@ -1,6 +1,8 @@
 #!/bin/sh
 alias t__1='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=listing,tagit  /home/  --use-format=4'
 alias t__1p='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=1351  --tag-file=test-one  --evaluate-sccb=packlist  /home/  --use-format=4'
+alias t__1pn='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=251  --tag-file=test-one  --evaluate-sccb=packlist  /home/  --use-format=4'
+alias t__1px='t__lreset && run  --db-name=owncloud_mega_zip_copy --linear --orderid=5  --std-leaf-set-name=std-all-under   -df --sha1id=23120  --tag-file=test-one  --evaluate-sccb=packlist  /home/  --use-format=4'
 alias t__1a='run   --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --same-as-sha1=/home/mastar/.mas/lib/big/misc/media/photo/LG_G3/20150617_210134_Burst22.jpg  --evaluate-sccb=listing  /home/  --use-format=4'
 alias t__1pa='run   --db-name=owncloud_mega_zip_copy --linear  --std-leaf-set-name=std-all-under   -df --same-as-sha1=/home/mastar/.mas/lib/big/misc/media/photo/LG_G3/20150617_210134_Burst22.jpg  --evaluate-sccb=packlist  /home/  --use-format=4'
 alias t__1a0='run   --db-name=owncloud_mega_zip_copy --linear --min-same-sha1=5  --std-leaf-set-name=std-all-under  --glob="*.jpg"  -df   --evaluate-sccb=listing  /home/  --use-format=4  --trace-stdout --trace-force-color'

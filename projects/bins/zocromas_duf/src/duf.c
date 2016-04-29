@@ -81,7 +81,8 @@ static int
 lcb( struct dl_phdr_info *info MAS_UNUSED, size_t size MAS_UNUSED, void *data MAS_UNUSED )
 {
 /* fprintf( stderr, "-=- %s\n", info->dlpi_name ); */
-  QT( "@@@@@-=- %s", info->dlpi_name );
+  if ( info && info->dlpi_addr )
+    QT( "@@@@@-=- [%lx] %s", info->dlpi_addr, info->dlpi_name );
   return 0;
 }
 
@@ -115,7 +116,6 @@ constructor_main( int argc MAS_UNUSED, char **argv MAS_UNUSED, char **envp MAS_U
 #endif
   duf_config_allocate(  );
   duf_config_create( argc, argv, 1 /* mandatory_config */  );
-  dl_iterate_phdr( lcb, NULL );
 }
 
 static void destructor_main( void ) __attribute__ ( ( destructor( 101 ) ) );
@@ -163,6 +163,7 @@ SR( TOP, main_with_config )
   muc_CR( treat_option_stage_ne, CRX( get_config_cli ), MUC_OPTION_STAGE_DEBUG, F2ND( pdi_reinit_anypath_global ), duf_get_config_flag_act_interactive, cb_prompt_interactive ); /* here to be before following MAST_TRACE's */
   muc_CR( treat_option_stage_ne, CRX( get_config_cli ), MUC_OPTION_STAGE_BOOT, F2ND( pdi_reinit_anypath_global ), duf_get_config_flag_act_interactive,
           cb_prompt_interactive );
+  dl_iterate_phdr( lcb, NULL );
 
   MAST_TRACE( any, 1, "any test" );
   MAST_TRACE( explain, 0, "to run main_db" );

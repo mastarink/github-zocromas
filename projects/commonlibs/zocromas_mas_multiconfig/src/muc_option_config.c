@@ -167,6 +167,7 @@ muc_cli_options_config_env_var_name( const muc_config_cli_t * cli )
     }
     evn_inited = 1;
   }
+  muc_QT( "@envvarname:%s", envvarname );
   return *envvarname ? envvarname : "MSH_DUF_OPTIONS";
 }
 
@@ -368,7 +369,7 @@ muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_e
       {
         const muc_longval_extended_t *xlist;
 
-        /* muc_QT( "xtable_multi:%s", xtable_multi[itab]->name ); */
+      /* muc_QT( "xtable_multi:%s", xtable_multi[itab]->name ); */
 
         xlist = xtable_multi[itab]->xlist;
         for ( const muc_longval_extended_t * x = xlist; x->o.name; x++ )
@@ -412,7 +413,7 @@ muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_e
         {
           if ( !vtable->xlist[xn].o.val )
           {
-            muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval );
+            /* muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval ); */
             vtable->xlist[xn].o.val = ++cli->maxcodeval;
           }
           else

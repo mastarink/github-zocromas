@@ -128,7 +128,6 @@ SRX( OTHER, const muc_longval_extended_table_t * const *, lm, NULL, optable_xtab
         muc_longval_extended_table_t *mod;
 
         mod = CRP( load_mod_handler_symbol_find, *ll, "optab" );
-        QT( "@>>>>>>>>>>>>>>>>>>> %d (%d) : %s - %p", nl, num, *ll, mod );
       /* QT( "@lib: %s : %p", *ll, mod ); */
         if ( mod )
           *lm++ = mod;

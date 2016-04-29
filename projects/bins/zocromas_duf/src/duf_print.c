@@ -555,6 +555,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       case DUF_SFMT_CHR_MTIME1:
         if ( ptime_tm )
           strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
+        else
+          strcpy( stime, "-------------------" );
         break;
       case DUF_SFMT_CHR_MTIME2:
         {
@@ -578,6 +580,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
             subfmt = mas_strdup( "%Y.%m.%d %H:%M:%S" );
           if ( subfmt && ptime_tm )
             strftime( stime, sizeof( stime ), subfmt, ptime_tm );
+          else
+            strcpy( stime, "-------------------" );
           mas_free( subfmt );
         }
         break;
