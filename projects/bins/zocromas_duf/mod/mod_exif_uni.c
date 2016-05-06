@@ -19,7 +19,7 @@
 #include <mastar/error/mas_error_defs_make.h>
 #include <mastar/error/mas_error_defs.h>
 
-#include "duf_sccb_structs.h"
+#include "duf_sccb_structs.h"                                        /* duf_scan_callbacks_s; duf_sccb_data_row_s; duf_scanner_fun_s; ✗ */
 
 #include "duf_sccbh_ref.h"
 #include "duf_sccbh_shortcuts.h"                                     /* H_SCCB; H_PDI; H_* ... ✗ */
@@ -168,8 +168,7 @@ static duf_scan_callbacks_t duf_sccb_dispatch = {
 /* ########################################################################################## */
 
 static
-SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_handle_t * sccbh MAS_UNUSED,
-     const char *model, int need_id )
+SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model, int need_id )
 {
   if ( model && *model && !duf_get_config_flag_disable_insert(  ) )
   {
@@ -224,17 +223,16 @@ SRP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pd
   /* ERRMAKE(DATA);          */
   }
 /* assert( modelid ); */
-  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_depthinfo_t * pdi_unused, duf_sccb_handle_t * sccbh, const char *model,
-       int need_id );
+  ERP( MOD, unsigned long long, modelid, 0, insert_model_uni, duf_sccb_handle_t * sccbh, const char *model, int need_id );
 }
 
 static
-SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t * pdi_unused MAS_UNUSED,
-     duf_sccb_handle_t * sccbh MAS_UNUSED, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id )
+SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_sccb_handle_t * sccbh, const char *model, time_t timeepoch, int dtfixed,
+     const char *stime_original, int need_id )
 {
   unsigned long long modelid = 0;
 
-  modelid = duf_insert_model_uni( H_PDI, sccbh, model, 1 /*need_id */ , QPERRIND );
+  modelid = CRP( insert_model_uni, sccbh, model, 1 /*need_id */  );
   if ( QNOERR && ( timeepoch || modelid || dtfixed || stime_original ) && !duf_get_config_flag_disable_insert(  ) )
   {
     if ( need_id )
@@ -330,15 +328,16 @@ SRP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t
     ERRMAKE( DATA );
   }
 
-  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, /*  */ duf_depthinfo_t * pdi_unused,
-       duf_sccb_handle_t * sccbh, const char *model, time_t timeepoch, int dtfixed, const char *stime_original, int need_id );
+  ERP( MOD, unsigned long long, exifid, 0, insert_exif_uni, duf_sccb_handle_t * sccbh, const char *model, time_t timeepoch, int dtfixed,
+       const char *stime_original, int need_id );
 }
 
-static time_t
-duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, size_t stime_original_size, int *pr )
+static
+SRP( MOD, time_t, timeepoch, 0, exif_get_time, ExifData * edata, int *pdate_changed, char *stime_original, size_t stime_original_size )
 {
-  int lr = 0;
-  time_t timeepoch = 0;
+/* int lr = 0; */
+
+/* time_t timeepoch = 0; */
   ExifEntry *entry = NULL;
   int date_changed = 0;
   int date_is_broken = 0;
@@ -355,7 +354,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 
     memset( stime_original, stime_original_size, 0 );
   /* Get the contents of the tag in human-readable form */
-    if ( lr >= 0 )
+    if ( QNOERR )
       ptime_original = exif_entry_get_value( entry, stime_original, stime_original_size );
   /* ERRMAKE(EXIF ); */
     if ( ptime_original )
@@ -375,13 +374,13 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
           break;
         }
       }
-      if ( lr >= 0 )
+      if ( QNOERR )
         corrected_time = mas_strdup( stime_original );
     /* DUF_SHOW_ERRORO( "@@@@@@@@@@@@@@ %s", stime_original ); */
       MAST_TRACE( exif, 3, "stime_original:%s", stime_original );
     /* 2008:06:21 13:18:19 */
     /* 0123:56:89 12:45:78 */
-      if ( lr >= 0 )
+      if ( QNOERR )
       {
         char *pq;
 
@@ -414,13 +413,13 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       }
     /* if ( lr >= 0 && !*corrected_time )              */
     /*   ERRMAKE(EXIF_NO_DATE ); */
-      else if ( lr >= 0 && strchr( corrected_time, '?' ) )
+      else if ( QNOERR && strchr( corrected_time, '?' ) )
       {
       /* DUF_SHOW_ERRORO( "broken date %s", corrected_time ); */
       /* ERRMAKE_M(EXIF_BROKEN_DATE, "broken date %s", corrected_time ); */
         date_is_broken = 1;
       }
-      if ( lr >= 0 || date_is_broken /* lr == DUF_ERROR_EXIF_BROKEN_DATE */  )
+      if ( QNOERR || date_is_broken /* lr == DUF_ERROR_EXIF_BROKEN_DATE */  )
       {
         if ( corrected_time && *corrected_time )
         {
@@ -429,9 +428,8 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
           strptime( corrected_time, "%Y:%m:%d %H:%M:%S", &times );
 
         /* timeepoch = mktime( &times ); */
-
-        /* timeepoch = timelocal( &times ); */
-          timeepoch = timegm( &times );
+          timeepoch = timelocal( &times );
+        /* timeepoch = timegm( &times ); */
 
         /* strftime( buf1, sizeof( buf1 ), "%Y-%m-%d %H:%M:%S", &times ); */
         /* DUF_SHOW_ERRORO( "!!!!! %lu : %lu", timeepoch, time(NULL) ); */
@@ -513,9 +511,10 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 
   if ( pdate_changed )
     *pdate_changed = date_changed;
-  if ( pr )
-    *pr = lr;
-  return timeepoch;
+/* if ( pr )   */
+/*   *pr = lr; */
+/* return timeepoch; */
+  ERP( MOD, time_t, timeepoch, 0, exif_get_time, ExifData * edata, int *pdate_changed, char *stime_original, size_t stime_original_size );
 }
 
 static
@@ -769,11 +768,12 @@ SR( MOD, dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_hand
                     model = mas_strndup( tmodel, mas_chomplen( tmodel ) );
                   }
                 }
-                timeepoch = duf_exif_get_time( edata, &date_changed, stime_original, sizeof( stime_original ), QPERRIND );
+                timeepoch = CRP( exif_get_time, edata, &date_changed, stime_original, sizeof( stime_original ) );
               }
             }
           /* DUF_SHOW_ERRORO( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
-            if (  /* DUF_CLEARED_ERROR( r, DUF_ERROR_EXIF_BROKEN_DATE ) && */ QNOERR /* && ( timeepoch || *stime_original || model ) ::20151024.125417:: insert null's */
+            if (  /* DUF_CLEARED_ERROR( r, DUF_ERROR_EXIF_BROKEN_DATE ) && */ QNOERR
+               /* && ( timeepoch || *stime_original || model ) ::20151024.125417:: insert null's */
                  && !duf_get_config_flag_disable_update(  ) )
             {
               unsigned long long exifid = 0;
@@ -789,7 +789,7 @@ SR( MOD, dirent_content2, duf_depthinfo_t * pdi_unused MAS_UNUSED, duf_sccb_hand
               noexif = !( timeepoch || *stime_original || model );
 
               if ( !noexif )
-                exifid = CRP( insert_exif_uni, /* pstmt_unused, */ H_PDI, sccbh, model, timeepoch, date_changed, stime_original, 1 /* need_id */  );
+                exifid = CRP( insert_exif_uni, sccbh, model, timeepoch, date_changed, stime_original, 1 /* need_id */  );
               MAST_TRACE( exif, 1, "ID:%llu; (%d) read %lu m:%s t:%lu; %s%s", exifid, QERRIND, sum, model, timeepoch, real_path, fname );
 
               MAST_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );

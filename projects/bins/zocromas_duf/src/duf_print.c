@@ -98,7 +98,7 @@ typedef enum
   DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R',                       /* relative realpath (relative to 'top level') */
   DUF_SFMT_CHR_SPACE = /*              */ 's',                       /* << space >> */
   DUF_SFMT_CHR_NSAME = /*              */ 'S',                       /* nsame_md5 */
-  DUF_SFMT_CHR_MTIME1 = /*             */ 't',                       /* tm,tc,ta: mtime */
+  DUF_SFMT_CHR_MTIME1 = /*             */ 't',                       /* tm,tc,ta: mtime, ctime, atime; tx:exiftime */
   DUF_SFMT_CHR_MTIME2 = /*             */ 'T',                       /*  */
   DUF_SFMT_CHR_USER = /*               */ 'u',                       /* user */
   DUF_SFMT_CHR_EXIFID = /*             */ 'X',                       /* exifid */
@@ -121,6 +121,7 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
   char *pbuffer = *ppbuffer;
   char format[fbsz];
   const char *fmt0;
+  char *subfmt = NULL;
 
   fmt0 = fmt;
   v = strtol( fmt, &pe, 10 );
@@ -522,12 +523,12 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
   case DUF_SFMT_CHR_MTIME1:                                         /* time */
   case DUF_SFMT_CHR_MTIME2:                                         /* time */
     {
-      time_t timet;
+      time_t timet = ( time_t ) 0;
+      time_t timet2 = ( time_t ) 0;
       struct tm time_tm, *ptime_tm = NULL;
       char stime[128] = "-";
       char c2 = 0;
 
-      timet = ( time_t ) 0;
       c2 = *fmt++;
       switch ( c2 )
       {
@@ -543,25 +544,73 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
       case 'x':
       /* if ( pfi->exifid ) */
         timet = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "exifdt" ) : ( unsigned long long ) pfi->exifdt );
+            /* timet=gmtime(timet); */
         break;
       default:
         timet = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "mtime" ) : ( unsigned long long ) pfi->st.st_mtim.tv_sec );
         fmt--;
       }
-      if ( timet )
-        ptime_tm = localtime_r( &timet, &time_tm );
-      switch ( ( char ) c )
+      if ( timet && *fmt == '(' )
       {
-      case DUF_SFMT_CHR_MTIME1:
-        if ( ptime_tm )
-          strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
-        else
-          strcpy( stime, "-------------------" );
-        break;
-      case DUF_SFMT_CHR_MTIME2:
-        {
-          char *subfmt = NULL;
+        fmt++;
+        c2 = *fmt++;
+        if ( *fmt++ == ')' )
+          switch ( c2 )
+          {
+          case 'm':
+            timet2 = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "mtime" ) : ( unsigned long long ) pfi->st.st_mtim.tv_sec );
+            break;
+          case 'a':
+            timet2 = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "atime" ) : ( unsigned long long ) pfi->st.st_atim.tv_sec );
+            break;
+          case 'c':
+            timet2 = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "ctime" ) : ( unsigned long long ) pfi->st.st_atim.tv_sec );
+            break;
+          case 'x':
+          /* if ( pfi->exifid ) */
+            timet2 = ( time_t ) ( row && use_row ? CRP( datarow_get_number, row, "exifdt" ) : ( unsigned long long ) pfi->exifdt );
+            break;
+          }
+        if ( !timet2 )
+          fmt -= 3;
+      }
+      if ( timet2 )
+      {
+        time_t t;
+        int s;
+        int sec;
+        int min;
+        int hour;
+        int day;
 
+        t = timet - timet2;
+        s = ( t < 0 );
+        if ( s )
+          t = -t;
+        sec = t % 60;
+        t /= 60;
+        min = t % 60;
+        t /= 60;
+        hour = t % 24;
+        t /= 24;
+        day = t;
+        snprintf( pbuffer, bfsz, "%s%-4d, %02d:%02d:%02d", s ? "-" : " ", day, hour, min, sec );
+      }
+      else
+      {
+        if ( timet )
+        {
+          if ( c == DUF_SFMT_CHR_MTIME2 )
+            ptime_tm = gmtime_r( &timet, &time_tm );
+          else
+            ptime_tm = localtime_r( &timet, &time_tm );
+        }
+        switch ( ( char ) c )
+        {
+        case DUF_SFMT_CHR_MTIME1:
+        /* if ( !subfmt )                                */
+        /*   subfmt = mas_strdup( "%b %d %Y %H:%M:%S" ); */
+        case DUF_SFMT_CHR_MTIME2:
           if ( *fmt == '{' )
           {
             const char *efmt;
@@ -570,6 +619,8 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
             efmt = strchr( fmt, '}' );
             if ( efmt )
             {
+              if ( subfmt )
+                mas_free( subfmt );
               subfmt = mas_strndup( fmt, efmt - fmt );
             /* MAST_TRACE( temp, 0, "=== '%s'", subfmt ); */
               fmt = efmt;
@@ -583,19 +634,19 @@ SRX( OTHER, size_t, slen, 0, sformat_id, int fcolor, const char **pfmt, char **p
           else
             strcpy( stime, "-------------------" );
           mas_free( subfmt );
+          break;
         }
-        break;
-      }
 #if 1
-      _convert_fmt( format, fbsz, fmt0, "s" );
+        _convert_fmt( format, fbsz, fmt0, "s" );
 #else
-      if ( v )
-        snprintf( format, fbsz, "%%%lds", v );
-      else
-        snprintf( format, fbsz, "%%s" );
+        if ( v )
+          snprintf( format, fbsz, "%%%lds", v );
+        else
+          snprintf( format, fbsz, "%%s" );
 #endif
 
-      snprintf( pbuffer, bfsz, format, stime );
+        snprintf( pbuffer, bfsz, format, stime );
+      }
     }
     swidth += strlen( pbuffer );
     break;

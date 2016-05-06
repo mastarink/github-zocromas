@@ -156,7 +156,7 @@ SR( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
   }
   duf_sccbh_end_row( sccbh );
 
-  fprintf( stderr, "\n** %d **\n\n", n );
+  fprintf( stderr, "\n--- %d ---\n\n", n );
 /* assert( n > 1 ); */
   ER( MOD, pack_leaf1, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
@@ -197,7 +197,7 @@ SR( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused MAS_UNUSED, struct duf_sccb_ha
   }
   duf_sccbh_end_row( sccbh );
 
-  fprintf( stderr, "\n** %d **\n\n", n );
+  fprintf( stderr, "\n+++ %d +++\n\n", n );
 /* assert( n > 1 ); */
   ER( MOD, pack_leaf2, duf_depthinfo_t * pdi_unused, struct duf_sccb_handle_s *sccbh );
 }
