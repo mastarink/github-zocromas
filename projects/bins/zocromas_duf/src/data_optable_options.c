@@ -43,8 +43,8 @@ const muc_longval_extended_table_t optable_options = {
    {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
     /*      */ DO_OC( XCHR, pcli->option_delimiter ) /*                                     */ , DO_H( history filename ) /*                 */ },
 #else
-   {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OI( XCHR, option_delimiter ) /*                                           */ , DO_H( history filename ) /*                 */ },
+   {.o = {DO_Q( "option-env-delimiter" ) /* */ , DO_A_R /* */ } /*   */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OI( XCHR, option_delimiter.env ), DO_SET_STAGE( DEBUG, PRESETUP ) /*       */ , DO_H( history filename ) /*                 */ },
 #endif
 
    {.o = {.name = NULL}}

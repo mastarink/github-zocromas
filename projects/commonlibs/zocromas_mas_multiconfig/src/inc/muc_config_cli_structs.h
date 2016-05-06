@@ -32,7 +32,11 @@ struct muc_config_cli_s
   muc_longval_extended_vtable_t **xvtable_multi;
 /* long limit; */
   char *history_filename;
-  char option_delimiter;
+  union
+  {
+    char option_delimiters[MUC_OPTION_SOURCE_MAX + 1];
+    muc_option_delimiter_set_t option_delimiter;
+  };
   char *config_dir;
   char *cmds_dir;
   muc_option_adata_t aod;

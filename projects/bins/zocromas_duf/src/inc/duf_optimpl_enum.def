@@ -139,7 +139,7 @@
   ENUM_WRAP( FLAG_DISABLE_FS					)
   /* ENUM_WRAP( FLAG_DISABLE_MEMUSAGE                              ) */
 
-  ENUM_WRAP( OPTION_DELIMITER					)
+  /* ENUM_WRAP( OPTION_DELIMITER                                   ) */
   ENUM_WRAP( ECHO						)
   /* i/o */
   ENUM_WRAP( OUTPUT_LEVEL					)

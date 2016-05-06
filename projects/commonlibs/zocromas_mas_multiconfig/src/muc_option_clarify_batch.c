@@ -19,6 +19,7 @@
 
 #include "muc_option_config.h"                                       /* muc_get_cli_options_trace_config ♠ */
 #include "muc_option_clarify_new.h"
+#include "muc_option_stage.h"                                        /* muc_optstage_name ♠ */
 #include "muc_option_source.h"                                       /* muc_optsource_name ♠ */
 
 #include "muc_config_cli_structs.h"
@@ -73,14 +74,17 @@ muc_SR( OPTIONS, boption_xclarify_at_stdx, muc_config_cli_t * cli, char value_se
         const char *cmdstr, char delim, muc_option_adata_t * paod )
 {
   if ( !delim )
-    delim = muc_cli_options_delimiter( cli );
-  if ( !delim )
-    delim = ':';
+    delim = muc_cli_options_delimiter( cli, source );
+  /* fprintf(stderr, "A delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
   if ( cmdstr && *cmdstr == ':' )
   {
     cmdstr++;
     delim = *cmdstr++;
   }
+  /* fprintf(stderr, "B delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
+  if ( !delim )
+    delim = ':';
+  /* fprintf(stderr, "C delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
   while ( QNOERR && cmdstr && *cmdstr )
   {
     muc_CR( boption_frag_xclarify_at_stdx, cli, &cmdstr, value_separator, istage, source, delim, paod );

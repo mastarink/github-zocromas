@@ -200,8 +200,7 @@ muc_xoption_clarify_typed_byteptr( muc_config_cli_t * cli, const muc_longval_ext
   return byte_ptr;
 }
 
-muc_SR( OPTIONS,
-        xoption_clarify_typed_gen, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg, unsigned noo,
+muc_SR( OPTIONS, xoption_clarify_typed_gen, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg, unsigned noo,
         muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED )
 {
 
@@ -381,15 +380,36 @@ muc_SR( OPTIONS,
           char *pchr;
 
           pchr = ( char * ) byteptr;
+        /* fprintf( stderr, "A-(%s)--------------------(( %s )) ------------------------\n", QERRNAME, optargg ); */
           if ( optargg )
           {
             unsigned cc = 0;
 
-            sscanf( optargg, "%x", &cc );
+          /* fprintf( stderr, "B-(%s)--------------------(( %s )) ------------------------\n", QERRNAME, optargg ); */
+            if ( optargg[0] == '\\' )
+            {
+              if ( optargg[1] == 'x' )
+                sscanf( optargg + 2, "%x", &cc );
+            }
+            else if ( ( ( optargg[0] >= '0' && optargg[0] <= '9' ) || ( optargg[0] >= 'a' && optargg[0] <= 'f' )
+                        || ( optargg[0] >= 'A' && optargg[0] <= 'F' ) )
+                      && ( ( optargg[1] >= '0' && optargg[1] <= '9' ) || ( optargg[1] >= 'a' && optargg[1] <= 'f' )
+                           || ( optargg[1] >= 'A' && optargg[1] <= 'F' ) ) )
+            {
+              sscanf( optargg, "%x", &cc );
+            }
+            else if ( optargg[0] && !optargg[1] )
+            {
+              cc = optargg[0];
+            }
             *pchr = ( char ) cc;
+          /* fprintf( stderr, "--------------------- %c ------------------------\n", cc ); */
             MAST_TRACE( options, +150, "char set(%x):'%c' @%p", cc, cc, pchr );
           }
         }
+      /* fprintf( stderr, "C-(%s)--------------------(( %s )) -- %c%c ----------------------\n", QERRNAME, optargg,      */
+      /*          cli->option_delimiter.env ? cli->option_delimiter.env : ' ? ',                                           */
+      /*          cli->option_delimiters[MUC_OPTION_SOURCE_ENV] ? cli->option_delimiters[MUC_OPTION_SOURCE_ENV] : ' ? ' ); */
         break;
       case MUC_OPTION_VTYPE_STR:                                    /* stage SETUP */
       /* FIXME MUC_OPTION_VTYPE_PSTR vs. MUC_OPTION_VTYPE_STR */
@@ -536,14 +556,13 @@ muc_SR( OPTIONS,
 #if 0
     else
     {
-      MAST_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "", noo,
-                  muc_optstage_name( cli, istage ) );
+      MAST_TRACE( options, 60, "@--%s='%s'; `noo`:%d : NOT for this stage; istage:%s", extended ? extended->o.name : "?", optargg ? optargg : "",
+                  noo, muc_optstage_name( cli, istage ) );
     /* ERRMAKE( OPTION_NOT_FOUND ); */
     }
 #endif
   }
 
-  muc_ER( OPTIONS,
-          xoption_clarify_typed_gen, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg, unsigned noo,
+  muc_ER( OPTIONS, xoption_clarify_typed_gen, muc_config_cli_t * cli, const muc_longval_extended_t * extended, const char *optargg, unsigned noo,
           muc_option_stage_t istage MAS_UNUSED, muc_option_source_t source MAS_UNUSED );
 }

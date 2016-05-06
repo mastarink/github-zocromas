@@ -9,7 +9,7 @@
 /* ###################################################################### */
 
 const char *
-muc_optsourcecode_name( muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_code_t sourcecode )
+muc_optsourcecode_name( const muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_code_t sourcecode )
 {
   static const char *tail[] = {
     [MUC_OPTION_SOURCE_ENV] = "env",
@@ -28,19 +28,19 @@ muc_optsourcecode_name( muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc
 }
 
 const char *
-muc_optsource_name( muc_config_cli_t * cli, muc_option_source_t source )
+muc_optsource_name( const muc_config_cli_t * cli, muc_option_source_t source )
 {
   return muc_optsourcecode_name( cli, source.sourcecode );
 }
 
 const char *
-muc_optsource_label( muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_t source )
+muc_optsource_label( const muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_t source )
 {
   return source.label ? source.label : "-";
 }
 
 int
-muc_optsource_labelled( muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_t source )
+muc_optsource_labelled( const muc_config_cli_t * cli __attribute__ ( ( unused ) ), muc_option_source_t source )
 {
   return source.labelled;
 }

@@ -287,9 +287,13 @@ muc_cli_options_xvtable_multi( const muc_config_cli_t * cli )
 }
 
 char
-muc_cli_options_delimiter( const muc_config_cli_t * cli )
+muc_cli_options_delimiter( const muc_config_cli_t * cli, muc_option_source_t source )
 {
-  return cli ? cli->option_delimiter : ':';
+  /* fprintf(stderr,  "* delim(%c) %s\n", cli && source.sourcecode >= MUC_OPTION_SOURCE_ENV                                                       */
+  /*         && source.sourcecode <= MUC_OPTION_SOURCE_MAX                                                                                        */
+  /*         && cli->option_delimiters[source.sourcecode] ? cli->option_delimiters[source.sourcecode] : '?', muc_optsource_name( cli, source ) ); */
+  return cli && source.sourcecode >= MUC_OPTION_SOURCE_ENV
+          && source.sourcecode <= MUC_OPTION_SOURCE_MAX ? cli->option_delimiters[source.sourcecode] : '*';
 }
 
 muc_option_adata_t *
@@ -413,7 +417,7 @@ muc_cli_options_xtable_list2xvtable( muc_config_cli_t * cli, const muc_longval_e
         {
           if ( !vtable->xlist[xn].o.val )
           {
-            /* muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval ); */
+          /* muc_QT( "@\"%s\" no codeval; setting automatically to %d", vtable->xlist[xn].o.name, cli->maxcodeval ); */
             vtable->xlist[xn].o.val = ++cli->maxcodeval;
           }
           else

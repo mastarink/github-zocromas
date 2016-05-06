@@ -17,9 +17,9 @@
  * 4. result: name
  * */
 
-const char *muc_optsourcecode_name( muc_config_cli_t * cli, muc_option_source_code_t sourcecode );
-const char *muc_optsource_name( muc_config_cli_t * cli, muc_option_source_t source );
-const char *muc_optsource_label( muc_config_cli_t * cli, muc_option_source_t source );
-int muc_optsource_labelled( muc_config_cli_t * cli, muc_option_source_t source );
+const char *muc_optsourcecode_name( const muc_config_cli_t * cli, muc_option_source_code_t sourcecode );
+const char *muc_optsource_name( const muc_config_cli_t * cli, muc_option_source_t source );
+const char *muc_optsource_label( const muc_config_cli_t * cli, muc_option_source_t source );
+int muc_optsource_labelled( const muc_config_cli_t * cli, muc_option_source_t source );
 
 #endif

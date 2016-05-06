@@ -18,6 +18,22 @@ typedef enum
   MUC_OPTION_SOURCE_IA = MUC_OPTION_SOURCE_INTERACTIVE,
   MUC_OPTION_SOURCE_MAX = MUC_OPTION_SOURCE_INTERAC,
 } muc_option_source_code_t;
+
+struct muc_option_delimiter_set_s
+{
+  char none;
+  char env;
+  char stdin;
+  char stream;
+  char duffile;
+  char cfg;
+  char cfglast;
+  char cfgstg;
+  char cfgcli;
+  char interactive;
+};
+typedef struct muc_option_delimiter_set_s muc_option_delimiter_set_t;
+
 typedef struct
 {
   muc_option_source_code_t sourcecode;

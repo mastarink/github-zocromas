@@ -40,7 +40,7 @@ muc_option_t *muc_cli_options_get_longopts_table( const muc_config_cli_t * cli )
 
 muc_longval_extended_vtable_t **muc_cli_options_xvtable_multi( const muc_config_cli_t * cli );
 
-char muc_cli_options_delimiter( const muc_config_cli_t * cli );
+char muc_cli_options_delimiter( const muc_config_cli_t * cli, muc_option_source_t source );
 muc_option_adata_t *muc_cli_options_aod( muc_config_cli_t * cli );
 
 mas_arg_get_cb_arg_t muc_cli_options_varfunc( const muc_config_cli_t * cli );
