@@ -35,7 +35,7 @@ muc_SR( OPTIONS, boption_frag_xclarify_at_stdx, muc_config_cli_t * cli, const ch
   char *bstr;
 
   bstr = NULL;
-  estr = strchr( *ppeo, delim );
+  estr = delim ? strchr( *ppeo, delim ) : NULL;
   if ( estr )
   {
     bstr = mas_strndup( *ppeo, estr - *ppeo );
@@ -75,16 +75,18 @@ muc_SR( OPTIONS, boption_xclarify_at_stdx, muc_config_cli_t * cli, char value_se
 {
   if ( !delim )
     delim = muc_cli_options_delimiter( cli, source );
-  /* fprintf(stderr, "A delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
+/* fprintf(stderr, "A delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
   if ( cmdstr && *cmdstr == ':' )
   {
     cmdstr++;
     delim = *cmdstr++;
   }
-  /* fprintf(stderr, "B delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
-  if ( !delim )
-    delim = ':';
-  /* fprintf(stderr, "C delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
+/* fprintf(stderr, "B delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
+
+/* if ( !delim )  */
+/*   delim = ':'; */
+
+/* fprintf(stderr, "C delim(%c) %s : %s\n", delim ? delim : '?', muc_optsource_name( cli, source ), muc_optstage_name( cli, istage ) ); */
   while ( QNOERR && cmdstr && *cmdstr )
   {
     muc_CR( boption_frag_xclarify_at_stdx, cli, &cmdstr, value_separator, istage, source, delim, paod );
