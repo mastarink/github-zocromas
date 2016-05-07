@@ -133,6 +133,7 @@ SR( PDI, pdi_reinit_pu_anypath_global, const char *cpath, const duf_ufilter_t * 
 
 SR( PDI, pdi_reinit_anypath_global, const char *cpath )
 {
+  QT("@@@@  %s", cpath);
   CR( pdi_reinit_pu_anypath_global, cpath, /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter(  ) );
   ER( PDI, pdi_reinit_anypath_global, const char *cpath );
 }

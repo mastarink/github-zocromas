@@ -86,6 +86,7 @@ SR( PDI, pdi_reinit_anypath, duf_depthinfo_t * pdi, const char *cpath, const duf
 
   if ( cpath )
   {
+    QT( "@@@  %s", cpath );
     real_path = mas_realpath( cpath /*, &r */  );
     if ( !real_path )
       ERRMAKE( PATH );
@@ -97,6 +98,7 @@ SR( PDI, pdi_reinit_anypath, duf_depthinfo_t * pdi, const char *cpath, const duf
       assert( pdi->pdi_name );
       MAST_TRACE( pdi, 0, "@@[%p] sql_beginning_done:%d", pdi, pdi->sql_beginning_done );
 
+      QT( "@@  %s", real_path );
       CR( pdi_reinit, pdi, real_path, pu ? pu : /* DUF_CONFIGG( vars.puz ) */ duf_get_config_ufilter(  ), sql_set, caninsert, frecursive, fallow_dirs,
           flinear, duf_pdi_opendir( pdi ) );
       MAST_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", /* DUF_UG_FLAG( recursive ) */ duf_get_config_flag_puz_recursive(  ),

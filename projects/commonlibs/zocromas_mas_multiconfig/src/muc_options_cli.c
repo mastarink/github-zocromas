@@ -173,6 +173,7 @@ muc_SR( OPTIONS, cli_parse, muc_config_cli_t * cli, const char *shorts, muc_opti
   optopt = 0;
   opterr = 0;
   optind = 1;
+  optindd = optind;
   optindp = optind;
 
   carg = muc_cli_options_get_carg( cli );
@@ -215,6 +216,7 @@ muc_SR( OPTIONS, cli_parse, muc_config_cli_t * cli, const char *shorts, muc_opti
     }
     while ( QNOERR && codeval >= 0 );
   }
+  QT( "@optind:%d; optindd:%d;", optind, optindd );
   muc_CR( cli_parse_targ, cli, optindd, istage );
 /* MUC_ENDR_UPPER( r, DUF_ERROR_OPTION_NOT_FOUND ); */
   MASE_E_UPPER( DUF_ERROR_OPTION_NOT_FOUND );

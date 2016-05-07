@@ -10,6 +10,7 @@
 #include <mastar/trace/mas_trace.h>
 #include <mastar/wrap/mas_memory.h>                                  /* mas_(malloc|free|strdup); etc. ♣ */
 #include <mastar/tools/mas_arg_tools.h>                              /* mas_strcat_x; etc. ♣ */
+#include <mastar/tools/mas_argvc_tools.h>
 
 #include "muc_option_longopts.h"                                     /* muc_options_create_longopts_table ♠ */
 
@@ -139,6 +140,7 @@ muc_cli_options_init( muc_config_cli_t * cli, int argc, char **argv, const muc_l
   if ( !cli->inited )
   {
     cli->ptracecfg = ptracecfg;
+    QT( "@argc:%d; argv:%p", argc, argv );
     muc_cli_options_reg_argv( cli, argc, argv );
     cli->mandatory_config = mandatory_config;
   /* const muc_longval_extended_vtable_t * const *xvtables
@@ -214,9 +216,14 @@ cli_options_shut( muc_config_cli_t * cli )
   cli->mandatory_config = 0;
   muc_options_delete_longopts_table( cli->longopts_table );
   cli->longopts_table = NULL;
+#if 0
   mas_del_argv( cli->targ.argc, cli->targ.argv, 0 );
+
   cli->targ.argc = 0;
   cli->targ.argv = NULL;
+#else
+  mas_argvc_delete( &cli->targ );
+#endif
   mas_free( cli->shorts );
   cli->shorts = NULL;
   mas_free( cli->history_filename );

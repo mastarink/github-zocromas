@@ -31,6 +31,7 @@ muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t ista
         muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
   assert( cli );
+  muc_QT( "@stage:%s; targc:%d", muc_optstage_name( cli, istage ), muc_cli_options_get_targc( cli ) );
   MAST_TRACE( options, 0, "@@@@@before all options for %s stage;", muc_optstage_name( cli, istage ) );
 /* TODO all (except INTERACTIVE) : call from paod, not real source */
   if ( istage == MUC_OPTION_STAGE_LOOP )
@@ -42,7 +43,7 @@ muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t ista
       const char *targia;
 
       targia = muc_cli_options_get_targi( cli, ia );
-
+      muc_QT( "@targ ia:%d => %s", ia, targia );
       MAST_TRACE( path, 0, "@%d/%d. %s", ia, muc_cli_options_get_targc( cli ), targia );
 
       if ( cb_init_loop_optstage )

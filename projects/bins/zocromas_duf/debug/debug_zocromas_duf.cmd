@@ -9,12 +9,9 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-#b muc_option_longopts.c:92
-b muc_option_config.c:292
-#b duf_sccb_row.c:200
-# b duf.c:232
-# b duf_sccbh_eval_sql_set.c:270
-# b duf_sccbh_eval_leaf.c:119
+#b duf_main_db_open:260
+
+b muc_options_cli.c:140
 
 # watch lo_extended_vtable_multi
 
