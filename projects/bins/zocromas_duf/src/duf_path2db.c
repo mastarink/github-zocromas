@@ -454,8 +454,8 @@ SR( PDI, real_path2db, duf_depthinfo_t * pdi, int caninsert, const char *rpath, 
    *
    *   note: sets depth + n
    * */
-    QT( "@   %s =>", rpath );
-    QT( "@=> %s", real_path );
+    /* QT( "@   %s =>", rpath ); */
+    /* QT( "@=> %s", real_path ); */
     CR( real_path2db_i, pdi, real_path, caninsert, sql_set );        /* parse real_path to components and store/check each to db,
                                                                         setting each level info to levinfo;
                                                                         -XXX- sets depth + n -XXX- */

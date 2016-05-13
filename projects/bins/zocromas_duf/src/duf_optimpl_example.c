@@ -631,6 +631,14 @@ SR( SNIPPET_OPTION, optimpl_O_examples, /* int argc, char *const *argv */ void )
               "  --evaluate-sccb=packlist  /home/  --use-format=4  --trace-stdout --trace-force-color'	 -= \"\" =-" );
   DUF_PRINTF( 0, "  t__1pa0 --format-name=sha	-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20160510.111922 ============" );
+  DUF_PRINTF( 0, "  run  --allow-drop-table --allow-create-tables --allow-create-database  --db-name=owncloud_mega_zip_pic "
+              " -dufR  --evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32 --progress "
+              " /home/mastar/Desktop/20160108/Camera_Uploads "
+              " /home/mastar/.mas/lib/big/misc/media/photo/Pictures "
+              " /home/mastar/.mas/lib/big/misc/media/photo/Pictures.R.20120207.164339/ "
+              " /home/space/owncloud /data/mastarink/files/Camera "
+              " /home/space/sambaspace/2016/y " " /home/space/sambaspace/2016/sdcard 	 -= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
 /* DUF_ENDR( r ); */
