@@ -218,10 +218,18 @@ mas_expand_string( const char *str )
 const char *
 mas_skip_space_nz( const char *args )
 {
+  return mas_skip_space_nz_d( args, NULL );
+}
+
+const char *
+mas_skip_space_nz_d( const char *args, const char *delims )
+{
   const char *p = NULL;
 
   p = args;
-  while ( p && *p && *p <= ' ' )
+  if ( !delims )
+    delims = "\t\r\n ";
+  while ( p && *p && strchr( delims, *p ) /* *p <= ' ' */  )
     p++;
   return p;
 }
@@ -229,9 +237,15 @@ mas_skip_space_nz( const char *args )
 const char *
 mas_skip_space( const char *args )
 {
+  return mas_skip_space_d( args, NULL );
+}
+
+const char *
+mas_skip_space_d( const char *args, const char *delims )
+{
   const char *p;
 
-  p = mas_skip_space_nz( args );
+  p = mas_skip_space_nz_d( args, delims );
   if ( p && !*p )
     p = NULL;
   return p;
@@ -240,20 +254,30 @@ mas_skip_space( const char *args )
 const char *
 mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot __attribute__ ( ( unused ) ) )
 {
+  return mas_skip_arg_d( args, pthis, plen, quot, NULL );
+}
+
+const char *
+mas_skip_arg_d( const char *args, const char **pthis, size_t * plen, int *quot __attribute__ ( ( unused ) ), const char *delims )
+{
   char cend = 0;
   char quote = 0;
   const char *p;
   const char *this;
 
+  if ( !delims )
+    delims = "\t\r\n ";
+
   p = args;
   if ( p && ( *p == '"' || *p == '\'' ) )
     cend = *p++;
   else
-    cend = ' ';
+    cend = 0 /* ' ' */ ;
   this = p;
   if ( pthis )
     ( *pthis ) = this;
-  while ( p && *p && ( quote || *p != cend ) )
+/*while ( p && *p && ( quote || *p != cend ) ) */
+  while ( p && *p && ( quote || ( cend ? ( *p != cend ) : ( !strchr( delims, *p ) ) ) ) )
   {
     if ( *p == '\\' )
       p++;
@@ -263,11 +287,11 @@ mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot __a
       quote = *p;
     p++;
   }
-  if ( plen )
+  if ( p && plen )
     ( *plen ) = p - this;
-  if ( *p > ' ' )
+  if ( p && !strchr( delims, *p ) /* *p > ' ' */  )
     p++;
-  if ( !p || !*p )
+  if ( !*p )
     p = NULL;
 /* fprintf( stderr, "S[%lu]:%s\n", p - this, this ); */
   return p;
@@ -276,8 +300,17 @@ mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot __a
 const char *
 mas_skip_argo( const char *args, const char **pthis, size_t * plen, int *quot )
 {
+  return mas_skip_argo_d( args, pthis, plen, quot, NULL );
+}
+
+const char *
+mas_skip_argo_d( const char *args, const char **pthis, size_t * plen, int *quot, const char *delims )
+{
   const char *p = NULL;
   const char *s = NULL;
+
+  if ( !delims )
+    delims = "\t\r\n ";
 
   if ( quot )
     *quot = 0;
@@ -300,7 +333,8 @@ mas_skip_argo( const char *args, const char **pthis, size_t * plen, int *quot )
   else
   {
     s = p;
-    while ( p && *p > ' ' )
+/*  while ( p && *p > ' ' ) */
+    while ( p && !strchr( delims, *p ) /* *p > ' ' */  )
       p++;
     if ( pthis )
       ( *pthis ) = s;
@@ -319,11 +353,17 @@ mas_skip_argo( const char *args, const char **pthis, size_t * plen, int *quot )
 const char *
 mas_find_next_arg( const char *args, const char **pthis, size_t * plen, int *quot )
 {
+  return mas_find_next_arg_d( args, pthis, plen, quot, NULL );
+}
+
+const char *
+mas_find_next_arg_d( const char *args, const char **pthis, size_t * plen, int *quot, const char *delims )
+{
   const char *p = NULL;
 
   p = args;
-  p = mas_skip_arg( p, pthis, plen, quot );
-  p = mas_skip_space( p );
+  p = mas_skip_arg_d( p, pthis, plen, quot, delims );
+  p = mas_skip_space_d( p, delims );
 /* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
 /* {                                                                    */
 /* }                                                                    */
@@ -338,11 +378,17 @@ mas_find_next_arg( const char *args, const char **pthis, size_t * plen, int *quo
 const char *
 mas_find_next_argo( const char *args, const char **pthis, size_t * plen, int *quot )
 {
+  return mas_find_next_argo_d( args, pthis, plen, quot, NULL );
+}
+
+const char *
+mas_find_next_argo_d( const char *args, const char **pthis, size_t * plen, int *quot, const char *delims )
+{
   const char *p = NULL;
 
   p = args;
   p = mas_skip_argo( p, pthis, plen, quot );
-  p = mas_skip_space( p );
+  p = mas_skip_space_d( p, delims );
 /* while ( ( p = mas_skip_space( p ) ) && ( p = mas_skip_space( p ) ) ) */
 /* {                                                                    */
 /* }                                                                    */
@@ -398,7 +444,7 @@ remove_backslash( char *string )
 /*       nargs++;                                                           */
 /*     prevarg = nextarg;                                                   */
 /*     len = 0;                                                             */
-/*     nextarg = mas_find_next_arg( nextarg, &this, &len, NULL );           */
+/*     nextarg = mas_find_next_arg( nextarg, &this, &len, NULL, delims );           */
 /*   }                                                                      */
 /*                                                                          */
 /*   targv = mas_calloc( nargs + 2, sizeof( char * ) );                     */
@@ -430,7 +476,7 @@ remove_backslash( char *string )
 /*                                                                          */
 /*       prevarg = nextarg;                                                 */
 /*       len = 0;                                                           */
-/*       nextarg = mas_find_next_arg( nextarg, &this, &len, NULL );         */
+/*       nextarg = mas_find_next_arg( nextarg, &this, &len, NULL, delims );         */
 /*       if ( iarg >= from_a )                                              */
 /*         *cargv++ = mas_strndup( this, len );                             */
 /*       else                                                               */
@@ -453,6 +499,12 @@ remove_backslash( char *string )
 int
 mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
 {
+  return mas_add_argv_args_d( targc, ptargv, args, ia_offset, NULL );
+}
+
+int
+mas_add_argv_args_d( int targc, char ***ptargv, const char *args, int ia_offset, const char *delims )
+{
   const char *nextarg;
   char **targv = NULL;
   int nargs = 0, totargc = 0;
@@ -472,7 +524,7 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
       if ( nextarg )
         nargs++;
       len = 0;
-      nextarg = mas_find_next_arg( nextarg, &this, &len, NULL );
+      nextarg = mas_find_next_arg_d( nextarg, &this, &len, NULL, delims );
     }
     totargc = targc + nargs;
     if ( nargs )
@@ -491,7 +543,7 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
           nargs++;
         len = 0;
       /* a = nextarg; */
-        nextarg = mas_find_next_arg( nextarg, &this, &len, &q );
+        nextarg = mas_find_next_arg_d( nextarg, &this, &len, &q, delims );
         if ( nargs > ia_offset )
         {
           targv[targc + ita] = remove_backslash( mas_strndup( this, len ) );

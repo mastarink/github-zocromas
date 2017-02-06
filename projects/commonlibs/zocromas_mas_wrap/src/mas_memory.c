@@ -45,7 +45,7 @@ constructor_main( void )
 {
   if ( mas_memory_allocation )
     mas_pmemfun_block = mas_memory_allocation(  );
-  fprintf( stderr, "setting mas_pmemfun_block=%p\n", mas_pmemfun_block );
+//fprintf( stderr, "setting mas_pmemfun_block=%p\n", mas_pmemfun_block );
 }
 
 static void destructor_global_status( void ) __attribute__ ( ( destructor( 5001 ) ) );

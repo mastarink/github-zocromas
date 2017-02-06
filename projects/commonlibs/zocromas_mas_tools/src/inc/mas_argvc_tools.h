@@ -4,6 +4,7 @@
 # include <sys/types.h>
 # include "mas_argvc_types.h"
 
+int mas_add_argvc_args_d( mas_argvc_t * targ, const char *args, int ia_offset, const char *delims );
 int mas_add_argvc_args( mas_argvc_t * targ, const char *args, int ia_offset );
 int mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset );
 int mas_add_argvc_arg_nodup( mas_argvc_t * targ, char *arg );

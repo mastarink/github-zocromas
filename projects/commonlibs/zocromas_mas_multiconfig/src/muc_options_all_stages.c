@@ -26,7 +26,11 @@
 /* ###################################################################### */
 #include "muc_options_all_stages.h"
 /* ###################################################################### */
-
+/*
+ * treat option stage
+ * - special stage `loop' treated for each argv
+ *
+ * */
 muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
         muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
@@ -65,7 +69,9 @@ muc_SR( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t ista
   muc_ER( TOP, treat_option_stage, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
           muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
 }
-
+/*
+ * treat_option_stage_ne: treat option stage - no-error
+ * */
 muc_SR( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
         muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {
@@ -78,7 +84,16 @@ muc_SR( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t i
   muc_ER( TOP, treat_option_stage_ne, muc_config_cli_t * cli, muc_option_stage_t istage, muc_errc_cs_func_t cb_init_loop_optstage,
           muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive );
 }
-
+/*
+ * treat all options:
+ * 1. treat pre-setup stage:	treat_option_stage_ne(MUC_OPTION_STAGE_PRESETUP)
+ * 2. treat setup stage:	treat_option_stage_ne(MUC_OPTION_STAGE_SETUP)
+ * 3. init all opt-stages:	cb_init_all_optstages()
+ * 4. treat init stage:		treat_option_stage(MUC_OPTION_STAGE_INIT)
+ * 5.A. interactive:		treat_option_stage(MUC_OPTION_STAGE_INTERACTIVE)
+ * 5.B.1. treat `first' stage:	treat_option_stage(MUC_OPTION_STAGE_FIRST)
+ * 5.B.2. treat `loop' stage:	treat_option_stage(MUC_OPTION_STAGE_LOOP)
+ * */
 muc_SR( OPTIONS, treat_all_optstages, muc_config_cli_t * cli, muc_errc_cs_func_t cb_init_all_optstages, muc_errc_cs_func_t cb_init_loop_optstage,
         muc_int_void_func_t cb_do_interactive, muc_cpchar_void_func_t cb_prompt_interactive )
 {

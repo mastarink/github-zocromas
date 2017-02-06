@@ -18,6 +18,12 @@ mas_add_argvc_args( mas_argvc_t * targ, const char *args, int ia_offset )
 }
 
 int
+mas_add_argvc_args_d( mas_argvc_t * targ, const char *args, int ia_offset, const char *delims )
+{
+  return ( targ->argc = mas_add_argv_args_d( targ->argc, &targ->argv, args, ia_offset, delims ) );
+}
+
+int
 mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset )
 {
   return ( targ->argc = mas_add_argv_argv( targ->argc, &targ->argv, arg->argc, arg->argv, ia_offset ) );
