@@ -30,6 +30,12 @@ mas_add_argvc_argvc( mas_argvc_t * targ, mas_argvc_t * arg, int ia_offset )
 }
 
 int
+mas_add_argvc_argv( mas_argvc_t * targ, int argc, char *argv[], int ia_offset )
+{
+  return ( targ->argc = mas_add_argv_argv( targ->argc, &targ->argv, argc, argv, ia_offset ) );
+}
+
+int
 mas_add_argvc_arg_nodup( mas_argvc_t * targ, char *arg )
 {
   if ( arg )
