@@ -2,8 +2,7 @@ SUBDIRS= inc
 
 
 lib_LTLIBRARIES = libzocromas_mas_mulconfnt.la
-libzocromas_mas_mulconfnt_la_SOURCES = parse.c source_list.c source.c
-
+libzocromas_mas_mulconfnt_la_SOURCES = parse.c source_list.c source.c option.c
 
 libzocromas_mas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 

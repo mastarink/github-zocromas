@@ -73,20 +73,38 @@ enum config_restype_e
   MULCONF_RESTYPE_STRING,
   MULCONF_RESTYPE_INT,
   MULCONF_RESTYPE_LONG,
-  MULCONF_RESTYPE_MASK,
-  MULCONF_RESTYPE_FUNCTION,
-  MULCONF_RESTYPE_MAX = MULCONF_RESTYPE_FUNCTION,
+  MULCONF_RESTYPE_LONG_LONG,
+  MULCONF_RESTYPE_MAX = MULCONF_RESTYPE_LONG_LONG,
 };
-
+enum config_bitwise_e
+{
+  MULCONF_BITWISE_AND = 0x10000000L,
+  MULCONF_BITWISE_OR = MULCONF_BITWISE_AND >> 1L,
+  MULCONF_BITWISE_XOR = MULCONF_BITWISE_OR >> 1L,
+  MULCONF_BITWISE_NOT = MULCONF_BITWISE_XOR >> 1L,
+  MULCONF_BITWISE_ALL = MULCONF_BITWISE_AND | MULCONF_BITWISE_OR | MULCONF_BITWISE_XOR | MULCONF_BITWISE_NOT,
+};
+union nvalue_u
+{
+  unsigned char v_uchar;
+  char v_char;
+  int v_int;
+  long v_long;
+  long long v_long_long;
+  double v_double;
+};
 struct config_option_s
 {
   char *name;
   char shortname;
-  config_restype_t opttype;
+  config_restype_t restype;
   void *ptr;
   int val;
   char *desc;
   char *argdesc;
+  int has_value;
+  char *string_value;
+  nvalue_t nvalue;
 };
 
 struct config_option_table_list_s

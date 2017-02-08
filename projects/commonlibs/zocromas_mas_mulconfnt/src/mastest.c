@@ -49,22 +49,34 @@ main( int argc, const char *argv[] )
   {
     int speed = 0;                                                   /* used in argument parsing to set speed */
     int raw = 0;                                                     /* raw mode? */
+    long bitwise = 0xffff0000;
 
     config_option_t options[] = {
       {"bps", 'b', MULCONF_RESTYPE_INT, &speed, 0, "signaling rate in bits-per-second", "BPS"}, /* */
+      {"bwi-", 'z', MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise, 0, "bitwise", "value"}, /* */
+      {"bwi+", 'z', MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise, 0, "bitwise", "value"}, /* */
       {"crnl", 'c', 0, 0, 'c', "expand cr characters to cr/lf sequences", NULL}, /* */
       {"hwflow", 'h', 0, 0, 'h', "use hardware (RTS/CTS) flow control", NULL}, /* */
       {"noflow", 'n', 0, 0, 'n', "use no flow control", NULL},       /* */
       {"raw", 'r', 0, &raw, 0, "don't perform any character conversions", NULL}, /* */
       {"swflow", 's', 0, 0, 's', "use software (XON/XOF) flow control", NULL}, /* */
-      {.name = NULL,.shortname = 0,.opttype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+      {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
     };
     config_option_table_list_t test_tablist = {
       .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
     };
 
     mulconfnt_parse( argc, argv, &test_tablist );
+    fprintf( stderr, "**** Options  chosen: " );
+    if ( raw )
+      fprintf( stderr, "-r - %d", raw );
+    if ( bitwise )
+      fprintf( stderr, "-z - %lx", bitwise );
+    if ( speed )
+      fprintf( stderr, "-b %d ", speed );
   }
+  fprintf( stderr, "\n%0x - %0x - %0x - %0x\n", MULCONF_BITWISE_AND, MULCONF_BITWISE_OR, MULCONF_BITWISE_XOR, MULCONF_BITWISE_NOT );
+  fprintf( stderr, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" );
   if ( 1 )
   {
     char c __attribute__ ( ( unused ) );                             /* used for argument parsing */
@@ -72,6 +84,7 @@ main( int argc, const char *argv[] )
     const char *portname;
     int speed = 0;                                                   /* used in argument parsing to set speed */
     int raw = 0;                                                     /* raw mode? */
+    long bitwise = 0;
     int j __attribute__ ( ( unused ) );
     char buf[BUFSIZ + 1] __attribute__ ( ( unused ) );
     poptContext optCon __attribute__ ( ( unused ) );                 /* context for parsing command-line options */
@@ -79,6 +92,7 @@ main( int argc, const char *argv[] )
     struct poptOption optionsTable[] = {
       {"bps", 'b', POPT_ARG_INT, &speed, 0,
        "signaling rate in bits-per-second", "BPS"},
+      {"bwi", 'z', POPT_ARG_INT | POPT_ARGFLAG_OR, &bitwise, 0, "bitwise", "value"}, /* */
       {"crnl", 'c', 0, 0, 'c',
        "expand cr characters to cr/lf sequences", NULL},
       {"hwflow", 'h', 0, 0, 'h',
@@ -132,14 +146,16 @@ main( int argc, const char *argv[] )
     }
 
   /* Print out options, portname chosen */
-    printf( "Options  chosen: " );
+    fprintf( stderr, "Options  chosen: " );
     for ( j = 0; j < i; j++ )
-      printf( "-%c ", buf[j] );
+      fprintf( stderr, "-%c ", buf[j] );
     if ( raw )
-      printf( "-r " );
+      fprintf( stderr, "-r - %d", raw );
+    if ( bitwise )
+      fprintf( stderr, "-z - %lx", bitwise );
     if ( speed )
-      printf( "-b %d ", speed );
-    printf( "\nPortname chosen: %s\n", portname );
+      fprintf( stderr, "-b %d ", speed );
+    fprintf( stderr, "\nPortname chosen: %s\n", portname );
 
     poptFreeContext( optCon );
   }
