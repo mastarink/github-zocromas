@@ -3,9 +3,14 @@ libzocromas_mas_mulconfntinclude_HEADERS =  \
 	mulconfnt_defs.h \
 	mulconfnt_types.h \
 	mulconfnt_structs.h \
+	source_defaults.h \
+	source_list_base.h \
 	source_list.h \
+	source_base.h \
 	source.h \
-	option.h
+	option_base.h \
+	option.h \
+	mulconfnt_error.h
 
 
 noinst_HEADERS = \

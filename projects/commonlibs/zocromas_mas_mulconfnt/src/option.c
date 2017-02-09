@@ -1,51 +1,13 @@
-#include <stdarg.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
+#include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error.h"
 #include "option.h"
-
-config_option_t *
-mulconfnt_config_option_create( void )
-{
-  config_option_t *opt = mas_malloc( sizeof( config_option_t ) );
-
-  memset( opt, 0, sizeof( config_option_t ) );
-  return opt;
-}
-
-void
-mulconfnt_config_option_delete( config_option_t * opt )
-{
-  if ( opt->name )
-    mas_free( opt->name );
-  if ( opt->desc )
-    mas_free( opt->desc );
-  if ( opt->argdesc )
-    mas_free( opt->argdesc );
-  if ( opt->string_value )
-    mas_free( opt->string_value );
-  mas_free( opt );
-}
-
-config_option_t *
-mulconfnt_config_option_clone( const config_option_t * topt )
-{
-  config_option_t *opt = mulconfnt_config_option_create(  );
-
-  *opt = *topt;
-  opt->name = mas_strdup( opt->name );
-  opt->desc = mas_strdup( opt->desc );
-  opt->argdesc = mas_strdup( opt->argdesc );
-  opt->string_value = mas_strdup( opt->string_value );
-  return opt;
-}
 
 void
 mulconfnt_config_option_set_value( config_option_t * opt, const char *string_value )
@@ -64,7 +26,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
 
     if ( opt->ptr )
     {
-      fprintf( stderr, "PTR: %p %lx\n", opt->ptr, *( ( long * ) opt->ptr ) );
+      if ( do_fprintf )
+        fprintf( stderr, "PTR: %p %lx\n", opt->ptr, *( ( long * ) opt->ptr ) );
       switch ( opt->restype & ~MULCONF_BITWISE_ALL )
       {
       case MULCONF_RESTYPE_NONE:
@@ -107,15 +70,9 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
     case MULCONF_RESTYPE_INT:
     case MULCONF_RESTYPE_LONG:
     case MULCONF_RESTYPE_LONG_LONG:
-      if ( string && string[0] == '0' )
-      {
-        if ( string[1] == 'x' )
-          v_long_long = strtoll( string, &ep, 16 );
-        else
-          v_long_long = strtoll( string, &ep, 8 );
-      }
-      else
-        v_long_long = strtoll( string, &ep, 10 );
+      v_long_long = strtoll( string, &ep, 0 );
+      if ( ep != string + strlen( string ) )
+        mulconfnt_set_error( __LINE__, __func__ );                   /* non-numeric */
       break;
     }
 
@@ -127,6 +84,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
     case MULCONF_RESTYPE_STRING:
       break;
     case MULCONF_RESTYPE_INT:
+      if ( ( long long ) ( int ) v_long_long != v_long_long )
+        mulconfnt_set_error( __LINE__, __func__ );                   /*unable to place number into int */
       if ( opt->restype & MULCONF_BITWISE_AND )
         opt->nvalue.v_int &= ( int ) v_long_long;
       else if ( opt->restype & MULCONF_BITWISE_OR )
@@ -137,11 +96,13 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         opt->nvalue.v_int = ( int ) v_long_long;
       break;
     case MULCONF_RESTYPE_LONG:
-      if ( opt->restype & MULCONF_BITWISE_AND )
+      if ( ( long long ) ( long ) v_long_long != v_long_long )
       {
-        fprintf( stderr, "=============================== %lx %lx\n", opt->nvalue.v_long, ( long ) v_long_long );
-        opt->nvalue.v_long &= ( long ) v_long_long;
+      /*unable to place number into long */
+        mulconfnt_set_error( __LINE__, __func__ );
       }
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_long &= ( long ) v_long_long;
       else if ( opt->restype & MULCONF_BITWISE_OR )
         opt->nvalue.v_long |= ( long ) v_long_long;
       else if ( opt->restype & MULCONF_BITWISE_XOR )
@@ -163,7 +124,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
 
     if ( opt->ptr )
     {
-      fprintf( stderr, "PTR: %p\n", opt->ptr );
+      if ( do_fprintf )
+        fprintf( stderr, "PTR: %p\n", opt->ptr );
       switch ( opt->restype & ~MULCONF_BITWISE_ALL )
       {
       case MULCONF_RESTYPE_NONE:
