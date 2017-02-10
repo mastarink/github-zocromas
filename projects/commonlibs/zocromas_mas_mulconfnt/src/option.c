@@ -7,6 +7,7 @@
 #include "mulconfnt_structs.h"
 
 #include "mulconfnt_error.h"
+#include "option_base.h"
 #include "option.h"
 
 void
@@ -99,7 +100,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       v_ulong_long = strtoull( string, &ep, 0 );
       if ( ep != string + strlen( string ) )
       {
-	fprintf(stderr, ">>>>>> '%s'\n", string);
+        fprintf( stderr, ">>>>>> '%s'\n", string );
         mulconfnt_set_error( __LINE__, __func__ );                   /* non-numeric */
       }
       break;
@@ -222,4 +223,107 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       }
     }
   }
+}
+
+config_option_t *
+mulconfnt_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,
+                                             const char *nextarg, const char *eq, const char *force_value )
+{
+  config_option_t *opt = NULL;
+  const config_option_t *topt = option_table;
+
+  while ( !opt && topt && topt->name )
+  {
+    int found = 0;
+    int has_value = 0;
+    const char *string_value = NULL;
+
+    if ( do_fprintf > 10 )
+      fprintf( stderr, "variantid: %d\n", variantid );
+    if ( variantid == MULCONF_VARIANT_SHORT )
+    {
+      if ( do_fprintf > 10 )
+        fprintf( stderr, "variantid: SHORT\n" );
+      found = ( strlen( arg ) == 1 && *arg == topt->shortname ) ? 1 : 0;
+      if ( found )
+      {
+        string_value = nextarg;
+        has_value = 2;
+      }
+    }
+    else if ( variantid == MULCONF_VARIANT_LONG )
+    {
+      unsigned l = strlen( topt->name );
+
+      if ( do_fprintf > 10 )
+        fprintf( stderr, "variantid: LONG %s ? %s -- %08x : %08x\n", arg, topt->name, ( topt->restype ), ( topt->restype & ~MULCONF_BITWISE_ALL ) );
+
+      if ( strlen( arg ) >= l && 0 == strncmp( arg, topt->name, l ) )
+      {
+        if ( ( topt->restype & ~MULCONF_BITWISE_ALL ) != MULCONF_RESTYPE_NONE && arg[l] && ( eq && 0 == strncmp( arg + l, eq, strlen( eq ) ) ) )
+        {
+          string_value = &arg[l] + strlen( eq );
+          found = 2;
+          has_value = 1;
+          if ( do_fprintf )
+            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+        }
+        else if ( force_value )
+        {
+          string_value = force_value;
+          found = 2;
+          has_value = 1;
+          if ( do_fprintf )
+            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+        }
+        else if ( arg[l] )
+        {
+          found = 0;
+        }
+        else
+        {
+          found = 1;
+          string_value = nextarg;
+          has_value = 2;
+          if ( do_fprintf )
+            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+        }
+      }
+    }
+    if ( found )
+    {
+      opt = mulconfnt_config_option_clone( topt );
+      if ( do_fprintf )
+        fprintf( stderr, "NEW OPT %s; has_value=%d\n", opt->name, has_value );
+      if ( has_value )
+      {
+        if ( do_fprintf )
+          fprintf( stderr, "SET VALUE %s='%s'; has_value=%d\n", opt->name, string_value, has_value );
+        mulconfnt_config_option_set_value( opt, string_value );
+        opt->has_value = has_value;
+      }
+    }
+    if ( opt )
+      if ( do_fprintf )
+        fprintf( stderr, "%s :: %s ? %c -- %s ='%s'\n", arg, option_table->name, option_table->shortname, found ? "OK" : "-", opt->string_value );
+    option_table++;
+    topt++;
+  }
+  return opt;
+}
+
+config_option_t *
+mulconfnt_config_option_lookup_tablist( const config_option_table_list_t * tablist, config_variant_t variantid,
+                                        const char *arg, const char *nextarg, const char *eq, const char *force_value )
+{
+  config_option_t *opt = NULL;
+
+  while ( !opt && tablist )
+  {
+    if ( do_fprintf )
+      fprintf( stderr, "LOOKUP TABLIST %s\n", tablist->name );
+    opt = mulconfnt_config_option_lookup_option_table( tablist->options, variantid, arg, nextarg, eq, force_value );
+    tablist = tablist->next;
+  }
+  return opt;
 }

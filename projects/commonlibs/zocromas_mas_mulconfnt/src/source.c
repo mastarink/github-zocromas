@@ -46,101 +46,6 @@ mulconfnt_source_load_targ( config_source_desc_t * osrc )
   return osrc ? &osrc->targ : NULL;
 }
 
-config_option_t *
-mulconfnt_source_lookup_option_table( config_source_desc_t * osrc, const config_option_t * option_table, config_variant_t variantid, const char *arg,
-                                      const char *nextarg )
-{
-  config_option_t *opt = NULL;
-  const config_option_t *topt = option_table;
-
-  while ( !opt && topt && topt->name )
-  {
-    int found = 0;
-    int has_value = 0;
-    const char *string_value = NULL;
-
-    if ( do_fprintf > 10 )
-      fprintf( stderr, "variantid: %d\n", variantid );
-    if ( variantid == MULCONF_VARIANT_SHORT )
-    {
-      if ( do_fprintf > 10 )
-        fprintf( stderr, "variantid: SHORT\n" );
-      found = ( strlen( arg ) == 1 && *arg == topt->shortname ) ? 1 : 0;
-      if ( found )
-      {
-        string_value = nextarg;
-        has_value = 2;
-      }
-    }
-    else if ( variantid == MULCONF_VARIANT_LONG )
-    {
-      unsigned l = strlen( topt->name );
-
-      if ( do_fprintf > 10 )
-        fprintf( stderr, "variantid: LONG %s ? %s -- %08x : %08x\n", arg, topt->name, ( topt->restype ), ( topt->restype & ~MULCONF_BITWISE_ALL ) );
-
-      if ( strlen( arg ) >= l && 0 == strncmp( arg, topt->name, l ) )
-      {
-        if ( ( topt->restype & ~MULCONF_BITWISE_ALL ) != MULCONF_RESTYPE_NONE && arg[l] && ( osrc->eq && arg[l] == osrc->eq[0] ) )
-        {
-          string_value = &arg[l] + 1;
-          found = 2;
-          has_value = 1;
-          if ( do_fprintf )
-            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
-        }
-        else if ( arg[l] )
-        {
-          found = 0;
-        }
-        else
-        {
-          found = 1;
-          string_value = nextarg;
-          has_value = 2;
-          if ( do_fprintf )
-            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
-        }
-      }
-    }
-    if ( found )
-    {
-      opt = mulconfnt_config_option_clone( topt );
-      if ( do_fprintf )
-        fprintf( stderr, "NEW OPT %s; has_value=%d\n", opt->name, has_value );
-      if ( has_value )
-      {
-        if ( do_fprintf )
-          fprintf( stderr, "SET VALUE %s='%s'; has_value=%d\n", opt->name, string_value, has_value );
-        mulconfnt_config_option_set_value( opt, string_value );
-        opt->has_value = has_value;
-      }
-    }
-    if ( opt )
-      if ( do_fprintf )
-        fprintf( stderr, "%s :: %s ? %c -- %s ='%s'\n", arg, option_table->name, option_table->shortname, found ? "OK" : "-", opt->string_value );
-    option_table++;
-    topt++;
-  }
-  return opt;
-}
-
-config_option_t *
-mulconfnt_source_lookup_tablist( config_source_desc_t * osrc, const config_option_table_list_t * tablist, config_variant_t variantid,
-                                 const char *arg, const char *nextarg )
-{
-  config_option_t *opt = NULL;
-
-  while ( !opt && tablist )
-  {
-    if ( do_fprintf )
-      fprintf( stderr, "LOOKUP TABLIST %s\n", tablist->name );
-    opt = mulconfnt_source_lookup_option_table( osrc, tablist->options, variantid, arg, nextarg );
-    tablist = tablist->next;
-  }
-  return opt;
-}
-
 static int
 match_arg( const char *pref, const char *arg )
 {
@@ -233,7 +138,7 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
         fprintf( stderr, "VARIANT %s\n", labels[variantid] );
       config_option_t *opt = NULL;
 
-      opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, arg + preflen, next_arg );
+      opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
       while ( opt && opt->restype == MULCONF_RESTYPE_ALIAS && opt->ptr )
@@ -242,18 +147,11 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
 
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
-        {
-          char *s = mas_strdup( ( char * ) oldopt->ptr );
 
-          if ( oldopt->string_value )
-          {
-            s = mas_strcat_x( s, osrc->eq );
-            s = mas_strcat_x( s, oldopt->string_value );
-          }
-          opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, s, next_arg );
-          fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, s, opt ? opt->name : "?" );
-          mas_free( s );
-        }
+        opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value );
+        if ( do_fprintf )
+          fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );
+
         mulconfnt_config_option_delete( oldopt );
       }
       if ( opt )
