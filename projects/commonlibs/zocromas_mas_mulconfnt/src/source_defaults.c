@@ -14,23 +14,21 @@
 #include "source_defaults.h"
 
 static int
-source_check_env( int count __attribute__ ( ( unused ) ), void *data_ptr __attribute__ ( ( unused ) ), const char *delims
-                  __attribute__ ( ( unused ) ), const char *eq __attribute__ ( ( unused ) ), const config_prefix_encoder_t * pref_ids
-                  __attribute__ ( ( unused ) ) )
+source_check_env( int count _uUu_, const void *data_ptr _uUu_, const char *delims
+                  _uUu_, const char *eq _uUu_, const config_prefix_encoder_t * pref_ids _uUu_ )
 {
   return data_ptr && getenv( ( char * ) data_ptr ) ? 1 : 0;
 }
 
 static int
-source_check_direct( int count __attribute__ ( ( unused ) ), void *data_ptr __attribute__ ( ( unused ) ), const char *delims
-                     __attribute__ ( ( unused ) ), const char *eq __attribute__ ( ( unused ) ), const config_prefix_encoder_t * pref_ids
-                     __attribute__ ( ( unused ) ) )
+source_check_direct( int count _uUu_, const void *data_ptr _uUu_, const char *delims
+                     _uUu_, const char *eq _uUu_, const config_prefix_encoder_t * pref_ids _uUu_ )
 {
   return 1;
 }
 
 static char *
-source_load_string_direct( config_source_desc_t * desc __attribute__ ( ( unused ) ) )
+source_load_string_direct( config_source_desc_t * desc _uUu_ )
 {
   return desc->data_ptr ? mas_strdup( desc->data_ptr ) : NULL;
 }
@@ -76,8 +74,8 @@ source_load_targ_argv( config_source_desc_t * desc, mas_argvc_t targ )
 
 static config_source_desc_t default_sources[] =                      /* */
 {                                                                    /* */
-  [MULCONF_SOURCE_DIRECT] = {                                        /* */
-                             .type = MULCONF_SOURCE_DIRECT,          /* */
+  [MULCONF_SOURCE_STRING] = {                                        /* */
+                             .type = MULCONF_SOURCE_STRING,          /* */
                              .count = 0,                             /* */
                              .data_ptr = NULL,                       /* */
                              .delim = ':',                           /* */
@@ -88,6 +86,17 @@ static config_source_desc_t default_sources[] =                      /* */
                              .close_fun = NULL,                      /* */
                              .load_string_fun = source_load_string_direct, /* */
                              .load_targ_fun = source_load_targ_direct, /* */
+                             .pref_ids = {
+                                          {
+                                           .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                           },
+                                          {
+                                           .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                           },
+                                          {
+                                           .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                           },
+                                          },                         /* */
                              },                                      /* */
   [MULCONF_SOURCE_ENV] = {                                           /* */
                           .type = MULCONF_SOURCE_ENV,                /* */

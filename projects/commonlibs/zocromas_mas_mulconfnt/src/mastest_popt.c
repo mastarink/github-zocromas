@@ -11,26 +11,26 @@
 #include "mulconfnt_defs.h"
 
 void
-usage( poptContext optCon, int exitcode, char *error, char *addl )
+usage( poptContext optCon, int _uUu_ exitcode, char *error, char *addl )
 {
   poptPrintUsage( optCon, stderr, 0 );
   if ( error )
     fprintf( stderr, "%s: %s0", error, addl );
-  exit( exitcode );
+//exit( exitcode );
 }
 
 int
 test_popt( int argc, const char *argv[] )
 {
-  char c _uUu_;                               /* used for argument parsing */
-  int i _uUu_ = 0;                            /* used for tracking options */
+  char c _uUu_;                                                      /* used for argument parsing */
+  int i _uUu_ = 0;                                                   /* used for tracking options */
   const char *portname;
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
   long bitwise = 0;
   int j _uUu_;
   char buf[BUFSIZ + 1] _uUu_;
-  poptContext optCon _uUu_;                   /* context for parsing command-line options */
+  poptContext optCon _uUu_;                                          /* context for parsing command-line options */
 
   struct poptOption optionsTable[] = {
     {"bps", 'b', POPT_ARG_INT, &speed, 0,
@@ -55,51 +55,56 @@ test_popt( int argc, const char *argv[] )
   if ( argc < 2 )
   {
     poptPrintUsage( optCon, stderr, 0 );
-    exit( 1 );
+//  exit( 1 );
   }
-
+  else
+  {
 /* Now do options processing, get portname */
-  while ( ( c = poptGetNextOpt( optCon ) ) >= 0 )
-  {
-    switch ( c )
+    while ( ( c = poptGetNextOpt( optCon ) ) >= 0 )
     {
-    case 'c':
-      buf[i++] = 'c';
-      break;
-    case 'h':
-      buf[i++] = 'h';
-      break;
-    case 's':
-      buf[i++] = 's';
-      break;
-    case 'n':
-      buf[i++] = 'n';
-      break;
+      switch ( c )
+      {
+      case 'c':
+        buf[i++] = 'c';
+        break;
+      case 'h':
+        buf[i++] = 'h';
+        break;
+      case 's':
+        buf[i++] = 's';
+        break;
+      case 'n':
+        buf[i++] = 'n';
+        break;
+      }
     }
-  }
-  portname = poptGetArg( optCon );
-  if ( ( portname == NULL ) || !( poptPeekArg( optCon ) == NULL ) )
-    usage( optCon, 1, "Specify a single port", ".e.g., /dev/cua0" );
-
-  if ( c < -1 )
-  {
-  /* an error occurred during option processing */
-    fprintf( stderr, "%s: %s\n", poptBadOption( optCon, POPT_BADOPTION_NOALIAS ), poptStrerror( c ) );
-    return 1;
-  }
+    portname = poptGetArg( optCon );
+    if ( ( portname == NULL ) || !( poptPeekArg( optCon ) == NULL ) )
+    {
+      usage( optCon, 1, "Specify a single port", ".e.g., /dev/cua0" );
+    }
+    else
+    {
+      if ( c < -1 )
+      {
+      /* an error occurred during option processing */
+        fprintf( stderr, "%s: %s\n", poptBadOption( optCon, POPT_BADOPTION_NOALIAS ), poptStrerror( c ) );
+        return 1;
+      }
 
 /* Print out options, portname chosen */
-  fprintf( stderr, "Options  chosen: " );
-  for ( j = 0; j < i; j++ )
-    fprintf( stderr, "-%c ", buf[j] );
-  if ( raw )
-    fprintf( stderr, "-r - %d", raw );
-  if ( bitwise )
-    fprintf( stderr, "-z - %lx", bitwise );
-  if ( speed )
-    fprintf( stderr, "-b %d ", speed );
-  fprintf( stderr, "\nPortname chosen: %s\n", portname );
-
+      fprintf( stderr, "Options  chosen: " );
+      for ( j = 0; j < i; j++ )
+        fprintf( stderr, "-%c ", buf[j] );
+      if ( raw )
+        fprintf( stderr, "-r - %d", raw );
+      if ( bitwise )
+        fprintf( stderr, "-z - %lx", bitwise );
+      if ( speed )
+        fprintf( stderr, "-b %d ", speed );
+      fprintf( stderr, "\nPortname chosen: %s\n", portname );
+    }
+  }
   poptFreeContext( optCon );
   return 0;
 }

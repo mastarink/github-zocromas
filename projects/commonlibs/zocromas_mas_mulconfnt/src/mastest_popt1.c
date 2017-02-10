@@ -17,30 +17,32 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
 {
   int c = 0xffff;
 
-  int v_int0 = 0;
-  int v_int1 = 0;
-  int v_int2 = 0;
-  int v_int3 = 0;
-  int v_int4 = 0;
+  int v_int0 _uUu_ = 0;
+  int v_int1 _uUu_ = 0;
+  int v_int2 _uUu_ = 0;
+  int v_int3 _uUu_ = 0;
+  int v_int4 _uUu_ = 0;
 
-  long v_long0 = 0;
-  long v_long1 = 0;
-  long v_long2 = 0;
-  long v_long3 = 0;
-  long v_long4 = 0;
-  long v_long5 = 0;
+  long v_long0 _uUu_ = 0;
+  long v_long1 _uUu_ = 0;
+  long v_long2 _uUu_ = 0;
+  long v_long3 _uUu_ = 0;
+  long v_long4 _uUu_ = 0;
+  long v_long5 _uUu_ = 0;
 
-  long long v_llong0 = 0;
-  long long v_llong1 = 0;
-  long long v_llong2 = 0;
-  long long v_llong3 = 0;
-  long long v_llong4 = 0;
-  long long v_llong5 = 0;
-  long long v_llong6 = 0;
+  long long v_llong0 _uUu_ = 0;
+  long long v_llong1 _uUu_ = 0;
+  long long v_llong2 _uUu_ = 0;
+  long long v_llong3 _uUu_ = 0;
+  long long v_llong4 _uUu_ = 0;
+  long long v_llong5 _uUu_ = 0;
+  long long v_llong6 _uUu_ = 0;
 
-  long bitwise1 = 0x10204;
-  long bitwise2 = 0x10204;
-  long bitwise3 = 0x10204;
+  long bitwise1 _uUu_ = 0x10204;
+  long bitwise2 _uUu_ = 0x10204;
+  long bitwise3 _uUu_ = 0x10204;
+
+  char *thestring _uUu_ = NULL;
 
   const char *argument;
   poptContext optCon;                                                /* context for parsing command-line options */
@@ -72,6 +74,7 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
     "--llnum4=-9223372036854775807",
 //  "--llnum5=9223372036854775807",                                  /* for some reason popt makes LLONG_MAX and LLONG_MIN an error */
 //  "--llnum6=-9223372036854775808",                                 /* for some reason popt makes LLONG_MAX and LLONG_MIN an error */
+    "--thestring=asta manyana...",
     "abrakadabra",
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
@@ -98,12 +101,16 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
     , {"bwi", 0, POPT_ARG_LONG | POPT_ARGFLAG_NOT, &bitwise1, 0, "bitwise", "value"}
     , {"bwiset", 0, POPT_ARG_LONG | POPT_ARGFLAG_OR, &bitwise2, 0, "bitwise", "value"}
     , {"bwiunset", 0, POPT_ARG_LONG | POPT_ARGFLAG_NOT | POPT_ARGFLAG_AND, &bitwise3, 0, "bitwise", "value"}
+    , {"thestring", 0, POPT_ARG_STRING, &thestring, 0, "bitwise", "value"}
 
     , POPT_AUTOHELP {NULL, 0, 0, NULL, 0}
   };
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
 
   optCon = poptGetContext( NULL, xargc, xargv, optionsTable, 0 );
+  mastest_print_allocated( "Allocated after poptGetContext", __LINE__, __func__ );
   poptSetOtherOptionHelp( optCon, "[OPTIONS]* <port>" );
+  mastest_print_allocated( "Allocated after poptSetOtherOptionHelp", __LINE__, __func__ );
 
   if ( xargc < 2 )
   {
@@ -114,9 +121,11 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
 /* Now do options processing, get argument */
   while ( ( c = poptGetNextOpt( optCon ) ) >= 0 )
   {
+    mastest_print_allocated( "Allocated after poptGetNextOpt", __LINE__, __func__ );
     fprintf( stderr, "~~c: '%c' %d 0x%x\n", c, c, c );
   }
   fprintf( stderr, "c: '%c' %d 0x%x\n", c, c, c );
+  mastest_print_allocated( "Allocated after all poptGetNextOpt", __LINE__, __func__ );
 
   int err = 0;
 
@@ -143,6 +152,7 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
       break;
     }
 
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
   if ( err )
   {
     const char *badoption = poptBadOption( optCon, POPT_BADOPTION_NOALIAS );
@@ -188,7 +198,7 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
   mastest_exam( sizeof( v_llong6 ) == 8
                 && v_llong6 == LLONG_MIN, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong6, v_llong6, LLONG_MIN, sizeof( v_llong6 ) );
 #endif
-  /**
+  /*
   mastest_next_group(  );
 
   char **argsno = xargv;
@@ -197,6 +207,8 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
   mastest_exam( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
   mastest_exam( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
 **/
+  mastest_next_group(  );
+  mastest_exam( thestring && 0 == strcmp( thestring, "asta manyana..." ), "OK", "Error", "%s ? %s", thestring, "asta manyana..." );
   mastest_next_group(  );
   mastest_exam( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? bitwise1:%lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
   mastest_exam( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? bitwise2:%lx", ( long ) 0x10304L, bitwise2 );
@@ -210,10 +222,15 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
 
     while ( ( arg = poptPeekArg( optCon ) ) )
     {
+      arg = poptGetArg( optCon );
       fprintf( stderr, "@@@@@ %s\n", arg );
-      poptGetArg( optCon );
     }
   }
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
   poptFreeContext( optCon );
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
+  if ( thestring )
+    free( thestring );
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
   return 0;
 }

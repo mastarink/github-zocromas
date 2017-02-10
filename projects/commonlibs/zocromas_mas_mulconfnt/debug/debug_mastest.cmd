@@ -9,7 +9,8 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-b mastest.c:7
+# b mastest.c:7
+b mastest.c:61
 
 run
 

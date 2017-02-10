@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <malloc.h>
 
 #include <popt.h>
 
@@ -22,6 +23,8 @@ int test_popt1( int argc, const char *argv[] );
 int test_0( int argc, const char *argv[] );
 int test_1( int argc, const char *argv[] );
 int test_1u( int argc, const char *argv[] );
+int test_2( int argc, const char *argv[] );
+int test_2a( int argc, const char *argv[] );
 
 int do_fprintf = 0;
 int f_print_ok = 0;
@@ -30,10 +33,21 @@ static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
 
+void
+mastest_print_allocated( const char *msg, int line, const char *func )
+{
+  struct mallinfo mi;
+
+  mi = mallinfo(  );
+  fprintf( stderr, "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m\n", msg, mi.uordblks, line, func );
+}
+
 static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 2001 ) ) );
 static void
 constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 {
+  mastest_print_allocated( "Allocated", __LINE__, __func__ );
+  mallopt( M_CHECK_ACTION, 1 );
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
   {
@@ -55,6 +69,10 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 {
   if ( tests_count )
     fprintf( stderr, "TESTS DONE: %d (%d/%d)\n\n", tests_count, tests_count_good, tests_count_bad );
+
+  mastest_print_allocated( "Still allocated", __LINE__, __func__ );
+//malloc_info(0, stderr);
+  malloc_stats(  );
 }
 
 void
@@ -122,7 +140,7 @@ main( int argc, const char *argv[] )
   if ( 0 )
     test_popt( argc, argv );
   mastest_series( 1, "popt" );
-  if ( 1 )
+  if ( 0 )
     test_popt1( argc, argv );
 
   mastest_series( 0, "" );
@@ -135,6 +153,13 @@ main( int argc, const char *argv[] )
   mastest_series( 1, "u" );
   if ( 1 )
     test_1u( argc, argv );
+
+  mastest_series( 2, "" );
+  if ( 1 )
+    test_2( argc, argv );
+  mastest_series( 2, "a" );
+  if ( 1 )
+    test_2a( argc, argv );
 
   return 0;
 }

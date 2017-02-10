@@ -30,14 +30,12 @@ mulconfnt_source_list_add( config_source_list_t * source_list, config_source_des
 {
   if ( source_list )
   {
-    if ( source_list->first )
-    {
-      config_source_desc_t *os = source_list->first;
+    config_source_desc_t *os = source_list->first;
 
+    if ( os )
+    {
       while ( os && os->next )
-      {
         os = os->next;
-      }
       os->next = osrc;
     }
     else
@@ -46,12 +44,12 @@ mulconfnt_source_list_add( config_source_list_t * source_list, config_source_des
 }
 
 config_source_desc_t *
-mulconfnt_source_list_add_source( config_source_list_t * source_list, config_source_t source_type, int count, void *data_ptr, const char *delims,
+mulconfnt_source_list_add_source( config_source_list_t * source_list, config_source_t source_type, int count, const void *data_ptr, const char *delims,
                                   const char *eq, const config_prefix_encoder_t * pref_ids )
 {
   config_source_desc_t *osrc = NULL;
 
-  osrc = mulconfnt_source_create_set( source_type, count, data_ptr, delims, eq, pref_ids );
+  osrc = mulconfnt_source_create_setup( source_type, count, data_ptr, delims, eq, pref_ids );
   mulconfnt_source_list_add( source_list, osrc );
   return osrc;
 }

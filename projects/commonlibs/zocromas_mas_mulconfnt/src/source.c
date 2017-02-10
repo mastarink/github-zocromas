@@ -58,11 +58,11 @@ mulconfnt_source_lookup_option_table( config_source_desc_t * osrc, const config_
     int has_value = 0;
     const char *string_value = NULL;
 
-    if ( do_fprintf )
+    if ( do_fprintf > 10 )
       fprintf( stderr, "variantid: %d\n", variantid );
     if ( variantid == MULCONF_VARIANT_SHORT )
     {
-      if ( do_fprintf )
+      if ( do_fprintf > 10 )
         fprintf( stderr, "variantid: SHORT\n" );
       found = ( strlen( arg ) == 1 && *arg == topt->shortname ) ? 1 : 0;
       if ( found )
@@ -75,7 +75,7 @@ mulconfnt_source_lookup_option_table( config_source_desc_t * osrc, const config_
     {
       unsigned l = strlen( topt->name );
 
-      if ( do_fprintf )
+      if ( do_fprintf > 10 )
         fprintf( stderr, "variantid: LONG %s ? %s -- %08x : %08x\n", arg, topt->name, ( topt->restype ), ( topt->restype & ~MULCONF_BITWISE_ALL ) );
 
       if ( strlen( arg ) >= l && 0 == strncmp( arg, topt->name, l ) )
@@ -143,7 +143,7 @@ match_arg( const char *pref, const char *arg )
 {
   unsigned i = 0;
 
-  if ( !pref )
+  if ( !pref || !*pref )
     return 0;
   for ( i = 0; i < strlen( pref ); i++ )
     if ( !arg[i] || pref[i] != arg[i] )

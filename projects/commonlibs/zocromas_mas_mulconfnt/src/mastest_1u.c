@@ -98,6 +98,19 @@ test_1u( int argc _uUu_, const char *argv[]_uUu_ )
   config_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
+  {
+    FILE *f;
+
+    f = fopen( "mastest_1u.commands", "w" );
+    if ( f )
+    {
+      for ( int i = 0; i < xargc; i++ )
+      {
+        fprintf( f, "%s\n", xargv[i] );
+      }
+      fclose( f );
+    }
+  }
 
   {
     config_source_list_t *plist = mulconfnt_source_list_create(  );

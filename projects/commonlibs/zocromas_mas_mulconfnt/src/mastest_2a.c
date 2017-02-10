@@ -20,7 +20,7 @@
 #include "mastest.h"
 
 int
-test_1( int argc _uUu_, const char *argv[]_uUu_ )
+test_2a( int _uUu_ argc, const char _uUu_ * argv[] )
 {
   int v_int0 = 0;
   int v_int1 = 0;
@@ -44,31 +44,20 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
   long bitwise2 = 0x10204;
   long bitwise3 = 0x10204;
 
-  const char *xargv[] = {
-    argv[0],
-    "something",
-    "--num0=5437",
-    "--num1=0x12",
-    "--num2=012",
-    "--num3=2147483647",
-    "--num4=-2147483648",
-    "--lnum0=0xffffffffff",
-    "--lnum1=0xff",
-    "--lnum2=0x7fffffffffffffff",
-    "wow",
-    "--lnum3=-12",
-    "--lnum4=-0x8000000000000000",
-    "--llnum0=5437",
-    "--llnum1=0x12",
-    "--llnum2=012",
-    "--llnum3=9223372036854775807",
-    "--llnum4=-9223372036854775808",
-    "--bwi=0x700",
-    "--bwi+=0x100",
-    "--bwi-=0x200",
-    "abrakadabra",
+  const char *string_args = {
+    "num0=5437\n"
+            "num1=0x12\n"
+            "num2=012\n"
+            "num3=2147483647\n"
+            "num4=-2147483648\n"
+            "lnum0=0xffffffffff\n"
+            "lnum1=0xff\n"
+            "lnum2=0x7fffffffffffffff\n"
+            "lnum3=-12\n"
+            "lnum4=-0x8000000000000000\n"
+            "llnum0=5437\n"
+            "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
   };
-  int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
     {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
@@ -95,23 +84,20 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
   config_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
-
   {
     FILE *f;
 
-    f = fopen( "mastest_1.commands", "w" );
+    f = fopen( "mastest_2a.commands", "w" );
     if ( f )
     {
-      for ( int i = 0; i < xargc; i++ )
-      {
-        fprintf( f, "%s\n", xargv[i] );
-      }
+      fprintf( f, "%s\n", string_args );
       fclose( f );
     }
   }
+
   {
     config_source_list_t *plist = mulconfnt_source_list_create(  );
-    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, string_args, "\r\n", "=", NULL );
 
     mulconfnt_source_lookup( osrc, &test_tablist );
 
@@ -145,6 +131,7 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mastest_exam( sizeof( v_llong4 ) == 8 && !mulconfnt_error(  )
                   && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
 
+#if 0
     mastest_next_group(  );
     mastest_exam( mulconfnt_source_argno_count( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
     mastest_exam( 0 == strcmp( "something", mulconfnt_source_argno( osrc, 1 ) ), "OK", "Error", "'%s' ? '%s'", "something",
@@ -163,12 +150,6 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mastest_exam( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
     mastest_exam( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
     mastest_exam( bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
-
-#if 0
-    fprintf( stderr, "\nINT_MIN:%x;INT_MAX:%x\nLONG_MIN:%lx;LONG_MAX:%lx\nLLONG_MIN:%llx;LLONG_MAX:%llx\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
-             LLONG_MIN, LLONG_MAX );
-    fprintf( stderr, "\nINT_MIN:%d;INT_MAX:%d\nLONG_MIN:%ld;LONG_MAX:%ld\nLLONG_MIN:%lld;LLONG_MAX:%lld\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
-             LLONG_MIN, LLONG_MAX );
 #endif
     mulconfnt_source_list_delete( plist );
   }
