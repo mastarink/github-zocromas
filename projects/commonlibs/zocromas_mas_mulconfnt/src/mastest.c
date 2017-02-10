@@ -104,7 +104,7 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 
   mastest_print_allocated( "Still allocated", __LINE__, __func__ );
 //malloc_info(0, stderr);
-  malloc_stats(  );
+//malloc_stats(  );
 }
 
 void
