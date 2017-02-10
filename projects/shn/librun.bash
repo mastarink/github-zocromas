@@ -10,10 +10,10 @@ function shn_run ()
   local bindir libsdir
   
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-     echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
+     shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>"
   fi
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
-  if [[ "$runretcode" ]] ; then shn_msg "-------- runretcode: $runretcode" ; fi
+  if [[ "$runretcode" -ne 0 ]] ; then shn_msg "-------- runretcode: $runretcode" ; fi
   if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] 
   	then
     libsdir="${bsrc}/.libs"
@@ -29,7 +29,6 @@ function shn_run ()
     bin=${bindir}/${rname}
     
     MSH_SHN_MSG_PREFIX='shn: '
-    shn_msg ; shn_msg
     export MSH_SHN_BASHPID=$BASHPID
     export MSH_SHN_LAUNCHPID=$$
     export MSH_SHN_LAUNCHDATEM=$(datem)
@@ -125,10 +124,10 @@ function shn_runname ()
   if  [[ "$bsrc" ]] && [[ -d "$bsrc" ]] ; then
     if [[ "$MSH_SHN_RUN_NAME" ]] ; then
       bin="$bsrc/$MSH_SHN_RUN_NAME"
-      shn_msg "bin: $bin (MSH_SHN_RUN_NAME)"
+##    shn_msg "bin: $bin (MSH_SHN_RUN_NAME)"
     elif [[ "$MSH_SHN_PROJECT_NAME" ]] ; then
       bin="$bsrc/$MSH_SHN_PROJECT_NAME"
-      shn_msg "bin: $bin (MSH_SHN_PROJECT_NAME)"
+##    shn_msg "bin: $bin (MSH_SHN_PROJECT_NAME)"
     fi
   fi
   if [[ $bin ]] && [[ -f "$bin" ]] && [[ -x "$bin" ]] ; then

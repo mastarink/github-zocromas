@@ -9,7 +9,7 @@ function shn_uni_debug ()
   local bindir libsdir
 
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-     echo "=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>" >&2
+     shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>"
   fi
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
   if [[ "$runretcode" ]] ; then shn_msg "-------- runretcode: $runretcode" ; fi
