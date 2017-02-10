@@ -26,12 +26,44 @@ int test_1u( int argc, const char *argv[] );
 int test_2( int argc, const char *argv[] );
 int test_2a( int argc, const char *argv[] );
 
-int do_fprintf = 0;
+int do_fprintf = 1;
 int f_print_ok = 0;
 int f_print_error = 1;
 static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
+
+extern void *__libc_malloc( size_t size );
+
+int malloc_hook_active = 0;
+void *
+my_malloc_hook( size_t size, void *caller _uUu_ )
+{
+  void *result;
+
+// deactivate hooks for logging
+  malloc_hook_active = 0;
+
+  result = malloc( size );
+
+// do logging
+//  [ ...]
+  fprintf( stderr, "Wow\n" );
+// reactivate hooks
+  malloc_hook_active = 1;
+
+  return result;
+}
+
+void *
+malloc( size_t size )
+{
+  void *caller _uUu_ = __builtin_return_address( 0 );
+
+  if ( malloc_hook_active )
+    return my_malloc_hook( size, caller );
+  return __libc_malloc( size );
+}
 
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
@@ -134,7 +166,7 @@ mastest_exam( int cond, const char *goodmsg, const char *badmsg, const char *fmt
 int
 main( int argc, const char *argv[] )
 {
-//mas_strdup( "abrakadabra" );
+  mas_strdup( "abrakadabra" );
 
   mastest_series( 0, "popt" );
   if ( 0 )
@@ -148,17 +180,17 @@ main( int argc, const char *argv[] )
     test_0( argc, argv );
 
   mastest_series( 1, "" );
-  if ( 1 )
+  if ( 0 )
     test_1( argc, argv );
   mastest_series( 1, "u" );
   if ( 1 )
     test_1u( argc, argv );
 
   mastest_series( 2, "" );
-  if ( 1 )
+  if ( 0 )
     test_2( argc, argv );
   mastest_series( 2, "a" );
-  if ( 1 )
+  if ( 0 )
     test_2a( argc, argv );
 
   return 0;

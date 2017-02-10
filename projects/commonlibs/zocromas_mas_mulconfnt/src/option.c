@@ -98,7 +98,10 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
     case MULCONF_RESTYPE_ULONG_LONG:
       v_ulong_long = strtoull( string, &ep, 0 );
       if ( ep != string + strlen( string ) )
+      {
+	fprintf(stderr, ">>>>>> '%s'\n", string);
         mulconfnt_set_error( __LINE__, __func__ );                   /* non-numeric */
+      }
       break;
     }
 

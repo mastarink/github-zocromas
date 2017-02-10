@@ -50,7 +50,7 @@ test_1u( int argc _uUu_, const char *argv[]_uUu_ )
   const char *xargv[] = {
     argv[0],
     "something",
-    "--num0=5437",
+    "--aliasnum0=5437",
     "--num1=0x12",
     "--num2=012",
     "--num3=2147483647",
@@ -75,6 +75,7 @@ test_1u( int argc _uUu_, const char *argv[]_uUu_ )
 
   config_option_t options[] = {
     {"num0", 0, MULCONF_RESTYPE_UINT, &v_uint0}
+    , {"aliasnum0", 0, MULCONF_RESTYPE_ALIAS, "num0"}
     , {"num1", 0, MULCONF_RESTYPE_UINT, &v_uint1}
     , {"num2", 0, MULCONF_RESTYPE_UINT, &v_uint2}
     , {"num3", 0, MULCONF_RESTYPE_UINT, &v_uint3}
@@ -118,7 +119,7 @@ test_1u( int argc _uUu_, const char *argv[]_uUu_ )
 
     mulconfnt_source_lookup( osrc, &test_tablist );
     mastest_next_group(  );
-    mastest_exam( sizeof( v_uint0 ) == 4 && !mulconfnt_error(  ) && v_uint0 == 5437, "OK", "Error", "%u ? %u", v_uint0, 5437 );
+    mastest_exam( sizeof( v_uint0 ) == 4 && !mulconfnt_error(  ) && v_uint0 == 5437, "OK", "Error", "%u ? %u [%d]", v_uint0, 5437, mulconfnt_error(  ) );
     mastest_exam( sizeof( v_uint1 ) == 4 && !mulconfnt_error(  ) && v_uint1 == 0x12, "OK", "Error", "%u ? %u", v_uint1, 0x12 );
     mastest_exam( sizeof( v_uint2 ) == 4 && !mulconfnt_error(  ) && v_uint2 == 012, "OK", "Error", "%u ? %u", v_uint2, 012 );
     mastest_exam( sizeof( v_uint3 ) == 4 && !mulconfnt_error(  ) && v_uint3 == 2147483647, "OK", "Error", "%u ? %u", v_uint3, 2147483647 );

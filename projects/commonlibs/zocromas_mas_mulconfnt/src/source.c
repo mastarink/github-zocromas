@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
 #include "mulconfnt_defs.h"
@@ -109,6 +110,8 @@ mulconfnt_source_lookup_option_table( config_source_desc_t * osrc, const config_
         fprintf( stderr, "NEW OPT %s; has_value=%d\n", opt->name, has_value );
       if ( has_value )
       {
+        if ( do_fprintf )
+          fprintf( stderr, "SET VALUE %s='%s'; has_value=%d\n", opt->name, string_value, has_value );
         mulconfnt_config_option_set_value( opt, string_value );
         opt->has_value = has_value;
       }
@@ -232,7 +235,27 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
 
       opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, arg + preflen, next_arg );
       if ( do_fprintf )
-        fprintf( stderr, "OPT: %p\n", opt );
+        fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
+      while ( opt && opt->restype == MULCONF_RESTYPE_ALIAS && opt->ptr )
+      {
+        config_option_t *oldopt = opt;
+
+        if ( do_fprintf )
+          fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
+        {
+          char *s = mas_strdup( ( char * ) oldopt->ptr );
+
+          if ( oldopt->string_value )
+          {
+            s = mas_strcat_x( s, osrc->eq );
+            s = mas_strcat_x( s, oldopt->string_value );
+          }
+          opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, s, next_arg );
+          fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, s, opt ? opt->name : "?" );
+          mas_free( s );
+        }
+        mulconfnt_config_option_delete( oldopt );
+      }
       if ( opt )
       {
         if ( opt->has_value > 0 )
