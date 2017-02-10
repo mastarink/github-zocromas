@@ -20,7 +20,7 @@
 #include "mastest.h"
 
 int
-test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ ( ( unused ) ) )
+test_1( int argc _uUu_, const char *argv[] _uUu_ )
 {
   int v_int0 = 0;
   int v_int1 = 0;
@@ -40,6 +40,10 @@ test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ 
   long long v_llong3 = 0;
   long long v_llong4 = 0;
 
+  long bitwise1 = 0x10204;
+  long bitwise2 = 0x10204;
+  long bitwise3 = 0x10204;
+
   const char *xargv[] = {
     argv[0],
     "something",
@@ -51,6 +55,7 @@ test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ 
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
     "--lnum2=0x7fffffffffffffff",
+    "wow",
     "--lnum3=-12",
     "--lnum4=-0x8000000000000000",
     "--llnum0=5437",
@@ -58,6 +63,9 @@ test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ 
     "--llnum2=012",
     "--llnum3=9223372036854775807",
     "--llnum4=-9223372036854775808",
+    "--bwi=0x700",
+    "--bwi+=0x100",
+    "--bwi-=0x200",
     "abrakadabra",
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
@@ -78,6 +86,9 @@ test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ 
     , {"llnum2", 0, MULCONF_RESTYPE_LLONG, &v_llong2}
     , {"llnum3", 0, MULCONF_RESTYPE_LLONG, &v_llong3}
     , {"llnum4", 0, MULCONF_RESTYPE_LLONG, &v_llong4}
+    , {"bwi", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -91,35 +102,59 @@ test_1( int argc __attribute__ ( ( unused ) ), const char *argv[] __attribute__ 
 
     mulconfnt_source_lookup( osrc, &test_tablist );
 
-    mastest_exam( "test 1.1.1 ", sizeof( v_int0 ) == 4 && !mulconfnt_error(  ) && v_int0 == 5437, "OK", "Error", "%d ? %d", v_int0, 5437 );
-    mastest_exam( "test 1.1.2 ", sizeof( v_int1 ) == 4 && !mulconfnt_error(  ) && v_int1 == 0x12, "OK", "Error", "%d ? %d", v_int1, 0x12 );
-    mastest_exam( "test 1.1.3 ", sizeof( v_int2 ) == 4 && !mulconfnt_error(  ) && v_int2 == 012, "OK", "Error", "%d ? %d", v_int2, 012 );
-    mastest_exam( "test 1.1.4 ", sizeof( v_int3 ) == 4 && !mulconfnt_error(  ) && v_int3 == INT_MAX, "OK", "Error", "%d ? %d", v_int3, INT_MAX );
-    mastest_exam( "test 1.1.5 ", sizeof( v_int4 ) == 4 && !mulconfnt_error(  ) && v_int4 == INT_MIN, "OK", "Error", "%d ? %d", v_int4, INT_MIN );
+    mastest_next_group(  );
+    mastest_exam( sizeof( v_int0 ) == 4 && !mulconfnt_error(  ) && v_int0 == 5437, "OK", "Error", "%d ? %d", v_int0, 5437 );
+    mastest_exam( sizeof( v_int1 ) == 4 && !mulconfnt_error(  ) && v_int1 == 0x12, "OK", "Error", "%d ? %d", v_int1, 0x12 );
+    mastest_exam( sizeof( v_int2 ) == 4 && !mulconfnt_error(  ) && v_int2 == 012, "OK", "Error", "%d ? %d", v_int2, 012 );
+    mastest_exam( sizeof( v_int3 ) == 4 && !mulconfnt_error(  ) && v_int3 == INT_MAX, "OK", "Error", "%d ? %d", v_int3, INT_MAX );
+    mastest_exam( sizeof( v_int4 ) == 4 && !mulconfnt_error(  ) && v_int4 == INT_MIN, "OK", "Error", "%d ? %d", v_int4, INT_MIN );
 
-    mastest_exam( "test 1.2.1 ", sizeof( v_long0 ) == 8 && !mulconfnt_error(  )
+    mastest_next_group();
+    mastest_exam( sizeof( v_long0 ) == 8 && !mulconfnt_error(  )
                   && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
-    mastest_exam( "test 1.2.2 ", sizeof( v_long1 ) == 8 && !mulconfnt_error(  ) && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
-    mastest_exam( "test 1.2.3a", sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_long1 ) == 8 && !mulconfnt_error(  ) && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
+    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
                   && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
-    mastest_exam( "test 1.2.3b", sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
                   && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
-    mastest_exam( "test 1.2.3c", sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
                   && v_long2 == 9223372036854775807, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807 );
-    mastest_exam( "test 1.2.4 ", sizeof( v_long3 ) == 8 && !mulconfnt_error(  ) && v_long3 == -12, "OK", "Error", "%ld ? %ld", v_long3, -12 );
-    mastest_exam( "test 1.2.5 ", sizeof( v_long4 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_long3 ) == 8 && !mulconfnt_error(  ) && v_long3 == -12L, "OK", "Error", "%ld ? %ld", v_long3, -12L );
+    mastest_exam( sizeof( v_long4 ) == 8 && !mulconfnt_error(  )
                   && v_long4 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long4, LONG_MIN );
 
-    mastest_exam( "test 1.3.1 ", sizeof( v_llong0 ) == 8 && !mulconfnt_error(  )
+    mastest_next_group();
+    mastest_exam( sizeof( v_llong0 ) == 8 && !mulconfnt_error(  )
                   && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
-    mastest_exam( "test 1.3.2 ", sizeof( v_llong1 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_llong1 ) == 8 && !mulconfnt_error(  )
                   && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
-    mastest_exam( "test 1.3.3 ", sizeof( v_llong2 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_llong2 ) == 8 && !mulconfnt_error(  )
                   && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
-    mastest_exam( "test 1.3.4 ", sizeof( v_llong3 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_llong3 ) == 8 && !mulconfnt_error(  )
                   && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
-    mastest_exam( "test 1.3.5 ", sizeof( v_llong4 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_llong4 ) == 8 && !mulconfnt_error(  )
                   && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
+    
+    mastest_next_group();
+    mastest_exam( mulconfnt_source_argno_count( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
+    mastest_exam( 0 == strcmp( "something", mulconfnt_source_argno( osrc, 1 ) ), "OK", "Error", "'%s' ? '%s'", "something",
+                  mulconfnt_source_argno( osrc, 1 ) );
+    mastest_exam( 0 == strcmp( "wow", mulconfnt_source_argno( osrc, 2 ) ), "OK", "Error", "'%s' ? '%s'", "wow",
+                  mulconfnt_source_argno( osrc, 2 ) );
+    mastest_exam( 0 == strcmp( "abrakadabra", mulconfnt_source_argno( osrc, 3 ) ), "OK", "Error", "'%s' ? '%s'", "abrakadabra",
+                  mulconfnt_source_argno( osrc, 3 ) );
+
+    char **argsno = mulconfnt_source_argsno( osrc );
+
+    mastest_exam( 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
+    mastest_exam( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
+    mastest_exam( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+
+    mastest_next_group();
+    mastest_exam( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
+    mastest_exam( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
+    mastest_exam( bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
+
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;INT_MAX:%x\nLONG_MIN:%lx;LONG_MAX:%lx\nLLONG_MIN:%llx;LLONG_MAX:%llx\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
              LLONG_MIN, LLONG_MAX );

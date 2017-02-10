@@ -97,6 +97,7 @@ mulconfnt_source_close( config_source_desc_t * osrc )
       mas_free( osrc->string );
     osrc->string = NULL;
     mas_argvc_delete( &osrc->targ );
+    mas_argvc_delete( &osrc->targno );
   }
 }
 

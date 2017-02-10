@@ -22,15 +22,15 @@ usage( poptContext optCon, int exitcode, char *error, char *addl )
 int
 test_popt( int argc, const char *argv[] )
 {
-  char c __attribute__ ( ( unused ) );                               /* used for argument parsing */
-  int i __attribute__ ( ( unused ) ) = 0;                            /* used for tracking options */
+  char c _uUu_;                               /* used for argument parsing */
+  int i _uUu_ = 0;                            /* used for tracking options */
   const char *portname;
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
   long bitwise = 0;
-  int j __attribute__ ( ( unused ) );
-  char buf[BUFSIZ + 1] __attribute__ ( ( unused ) );
-  poptContext optCon __attribute__ ( ( unused ) );                   /* context for parsing command-line options */
+  int j _uUu_;
+  char buf[BUFSIZ + 1] _uUu_;
+  poptContext optCon _uUu_;                   /* context for parsing command-line options */
 
   struct poptOption optionsTable[] = {
     {"bps", 'b', POPT_ARG_INT, &speed, 0,

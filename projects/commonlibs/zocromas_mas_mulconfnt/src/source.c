@@ -138,28 +138,33 @@ mulconfnt_source_lookup_tablist( config_source_desc_t * osrc, const config_optio
   return opt;
 }
 
-static unsigned
+static int
 match_arg( const char *pref, const char *arg )
 {
   unsigned i = 0;
 
+  if ( !pref )
+    return 0;
   for ( i = 0; i < strlen( pref ); i++ )
     if ( !arg[i] || pref[i] != arg[i] )
       break;
-  return i;
+  return i > 0 ? ( int ) i : -1;
 }
 
 static config_variant_t
 max_match_id( config_source_desc_t * osrc, const char *arg )
 {
-  int maxmatch = 0;
-  config_variant_t maxmatchid = MULCONF_VARIANT_BAD;
+  int maxmatch = -1;
+  config_variant_t maxmatchid = MULCONF_VARIANT_MAX;
 
   for ( unsigned i = 0; i < sizeof( osrc->pref_ids ) / sizeof( osrc->pref_ids[0] ); i++ )
   {
-    if ( osrc->pref_ids[i].string )
+//  if ( osrc->pref_ids[i].string )
     {
       int len = match_arg( osrc->pref_ids[i].string, arg );
+
+      if ( do_fprintf > 0 )
+        fprintf( stderr, "PREF '%s' *** '%s' ===> %d\n", osrc->pref_ids[i].string, arg, len );
 
       if ( len > maxmatch )
       {
@@ -171,13 +176,31 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
   return maxmatchid;
 }
 
+int
+mulconfnt_source_argno_count( config_source_desc_t * osrc )
+{
+  return osrc->targno.argc;
+}
+
+char **
+mulconfnt_source_argsno( config_source_desc_t * osrc )
+{
+  return osrc->targno.argv;
+}
+
+const char *
+mulconfnt_source_argno( config_source_desc_t * osrc, int i )
+{
+  return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
+}
+
 void
 mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   mulconfnt_source_load_targ( osrc );
   for ( int iarg = 0; iarg < osrc->targ.argc; iarg++ )
   {
-    static const char *labels[MULCONF_VARIANT_BAD + 1] = { "SHORT", "LONG", "NONOPT", "NONOPT-A", "NONOPT-B" };
+    static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
     const char *next_arg = NULL;
 
@@ -188,14 +211,26 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       fprintf( stderr, "LOOKUP %s\n", arg );
 
     config_variant_t variantid = max_match_id( osrc, arg );
+    int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
 
-    if ( variantid != MULCONF_VARIANT_BAD )
+    if ( variantid == MULCONF_VARIANT_BAD )
+    {
+      if ( do_fprintf )
+        fprintf( stderr, "NO VARIANT [%s] arg='%s';\n", labels[variantid], arg );
+    }
+    else if ( variantid == MULCONF_VARIANT_NONOPT )
+    {
+      if ( do_fprintf )
+        fprintf( stderr, "ADD NONOPT %s\n", arg + preflen );
+      mas_add_argvc_arg( &osrc->targno, arg + preflen );
+    }
+    else
     {
       if ( do_fprintf )
         fprintf( stderr, "VARIANT %s\n", labels[variantid] );
       config_option_t *opt = NULL;
 
-      opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, arg + strlen( osrc->pref_ids[variantid].string ), next_arg );
+      opt = mulconfnt_source_lookup_tablist( osrc, tablist, variantid, arg + preflen, next_arg );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p\n", opt );
       if ( opt )
@@ -212,11 +247,6 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       if ( opt )
         mulconfnt_config_option_delete( opt );
       opt = NULL;
-    }
-    else
-    {
-      if ( do_fprintf )
-        fprintf( stderr, "NO VARIANT [%s] arg='%s';\n", labels[variantid], arg );
     }
   }
 }

@@ -5,7 +5,7 @@ static int _mulconfnt_error = 0;
 void
 mulconfnt_set_error( int line, const char *func )
 {
-  fprintf (stderr, "SETTING ERROR: %d:%s", line, func);
+  fprintf( stderr, "SETTING ERROR: %d:%s\n", line, func );
   _mulconfnt_error++;
 }
 

@@ -35,21 +35,24 @@ function shn_run ()
     export MSH_SHN_LAUNCHDATEM=$(datem)
     export MSH_SHN_LAUNCHDATEMT=$(datemt)
     shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
-      shn_msg ; shn_msg ; shn_msg
-      shn_msg ; shn_msg ; shn_msg
+      shn_msg
       shn_human_run $@  ### running $bin here
 
+
         if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-	  echo ; echo ; echo
+           shn_msg
 	fi
     if [[ -f mas_debug_memory.tmp ]] ; then
-      cat mas_debug_memory.tmp >&2
+##    cat mas_debug_memory.tmp >&2
+      shn_msg "--=@(     exit: $retcode     )@=--          $(cat mas_debug_memory.tmp)"
       mv -f mas_debug_memory_old2.tmp  mas_debug_memory_old3.tmp
       mv -f mas_debug_memory_old.tmp  mas_debug_memory_old2.tmp
       mv -f mas_debug_memory.tmp  mas_debug_memory_old.tmp
+    else
+      shn_msg "--=@(     exit: $retcode     )@=--"
     fi
-    shn_msg "exited with $retcode "
-    shn_msg "--=<>=--=<>=--=<>=--=<>=--=<$bin>=--=<>=--=<>=--=<>=--=<>=--"
+##  shn_msg "--=<>=--=<>=--=<$bin>=--=<>=--=<>=--"
+    shn_msg "$bin"
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
@@ -84,9 +87,9 @@ function shn_human_run ()
   {
     if pushd $MSH_SHN_CWD  &>/dev/null ; then
 #           echo -n '◁' >&2
-      shn_msg "eval $bin $qargs" >&2
+###   shn_msg "eval $bin $qargs"
       eval "$bin $qargs" ; retcode=$?
-      shn_msg "/eval $bin $qargs" >&2
+###   shn_msg "/eval $bin $qargs"
 #           echo -n '▷' >&2
       popd  &>/dev/null
     fi
@@ -112,7 +115,7 @@ function  shn_run_afterrun ()
   fi
 # shn_msg "Returned $retcode"
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-    echo "=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<=<" >&2
+    shn_msg "=<=<=<=<=<=<=<=<=<=<=<" >&2
   fi
 }
 function shn_runname ()

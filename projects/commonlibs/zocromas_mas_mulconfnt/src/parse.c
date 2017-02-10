@@ -35,16 +35,10 @@ mulconfnt_parse( int argc, const char *argv[], const config_option_table_list_t 
   osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_DIRECT, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
   osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
 
-  const config_prefix_encoder_t pref_ids[MULCONF_VARIANTS] __attribute__ ( ( unused ) ) =
-  {
-    {
-    .string = "-",.id = MULCONF_VARIANT_SHORT},
-    {
-      "--", MULCONF_VARIANT_LONG                                     /* */
-    },
-    {
-      NULL, MULCONF_VARIANT_NONOPT                                   /* */
-    }
+  const config_prefix_encoder_t _uUu_ pref_ids[MULCONF_VARIANTS] = {
+    {"-", MULCONF_VARIANT_SHORT}
+    , {"--", MULCONF_VARIANT_LONG}
+    , {NULL, MULCONF_VARIANT_NONOPT}
   };
   osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
   mulconfnt_source_lookup( osrc, tablist );

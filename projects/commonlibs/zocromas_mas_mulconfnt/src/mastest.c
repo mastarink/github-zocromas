@@ -18,15 +18,21 @@
 #include "parse.h"
 
 int test_popt( int argc, const char *argv[] );
+int test_popt1( int argc, const char *argv[] );
 int test_0( int argc, const char *argv[] );
 int test_1( int argc, const char *argv[] );
+int test_1u( int argc, const char *argv[] );
 
 int do_fprintf = 0;
+int f_print_ok = 0;
+int f_print_error = 1;
 static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
+static int test_series = 0, test_group = 0, test_seq = 0;
+static const char *test_series_suffix = NULL;
 
 static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 2001 ) ) );
 static void
-constructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ), char **envp __attribute__ ( ( unused ) ) )
+constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 {
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
@@ -40,19 +46,43 @@ constructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute
   }
 
 #endif
+  fprintf( stderr, "START\n" );
 }
 
 static void destructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
-destructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ), char **envp __attribute__ ( ( unused ) ) )
+destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 {
   if ( tests_count )
-    fprintf( stderr, "TESTS DONE: %d (%d/%d)\n\n\n\n\n\n\n", tests_count, tests_count_good, tests_count_bad );
+    fprintf( stderr, "TESTS DONE: %d (%d/%d)\n\n", tests_count, tests_count_good, tests_count_bad );
+}
+
+void
+mastest_series( int nseries, const char *suff )
+{
+  test_series = nseries;
+  test_series_suffix = suff;
+  test_group = 0;
+  test_seq = 0;
+}
+
+void
+mastest_next( void )
+{
+  test_seq++;
+}
+
+void
+mastest_next_group( void )
+{
+  test_group++;
+  test_seq = 0;
 }
 
 int
-mastest_vexam( const char *name, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
+mastest_vexam( int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
 {
+  mastest_next(  );
   if ( !tests_count )
     fprintf( stderr, "\n\nTESTS:\n" );
   if ( cond )
@@ -60,19 +90,23 @@ mastest_vexam( const char *name, int cond, const char *goodmsg, const char *badm
   else
     tests_count_bad++;
   tests_count++;
-  fprintf( stderr, "%4d\t**** %s : %-30s --\t", tests_count, name, cond ? goodmsg : badmsg );
-  vfprintf( stderr, fmt, args );
-  fprintf( stderr, "\n" );
+  if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
+  {
+    fprintf( stderr, "%4d\t**** [%d%s.%d.%d] %-30s --\t", tests_count, test_series, test_series_suffix ? test_series_suffix : "", test_group,
+             test_seq, cond ? goodmsg : badmsg );
+    vfprintf( stderr, fmt, args );
+    fprintf( stderr, "\n" );
+  }
   return cond;
 }
 
 int
-mastest_exam( const char *name, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
+mastest_exam( int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  cond = mastest_vexam( name, cond, goodmsg, badmsg, fmt, args );
+  cond = mastest_vexam( cond, goodmsg, badmsg, fmt, args );
   va_end( args );
 
   return cond;
@@ -84,16 +118,23 @@ main( int argc, const char *argv[] )
 {
 //mas_strdup( "abrakadabra" );
 
-  if ( do_fprintf )
-    fprintf( stderr, "START\n" );
+  mastest_series( 0, "popt" );
   if ( 0 )
     test_popt( argc, argv );
+  mastest_series( 1, "popt" );
+  if ( 1 )
+    test_popt1( argc, argv );
 
+  mastest_series( 0, "" );
   if ( 0 )
     test_0( argc, argv );
 
+  mastest_series( 1, "" );
   if ( 1 )
     test_1( argc, argv );
+  mastest_series( 1, "u" );
+  if ( 1 )
+    test_1u( argc, argv );
 
   return 0;
 }

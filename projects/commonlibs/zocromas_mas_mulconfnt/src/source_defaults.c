@@ -120,7 +120,10 @@ static config_source_desc_t default_sources[] =                      /* */
                                          },
                                         {
                                          .id = MULCONF_VARIANT_LONG,.string = "--" /* */
-                                         }
+                                         },
+                                        {
+                                         .id = MULCONF_VARIANT_NONOPT,.string = NULL /* */
+                                         },
                                         },                           /* */
                            },                                        /* */
   [MULCONF_SOURCE_STREAM] = {                                        /* */

@@ -1,8 +1,12 @@
 find mulconfnt_defs.h
 sfind mulconfnt_types.h
+sfind mulconfnt_structs.h
 
 tab sfind parse.h
 sfind parse.c
+
+tab sfind source_defaults.h
+sfind source_defaults.c
 
 " tab sfind mulconfnt.h
 " sfind mulconfnt.c
@@ -25,9 +29,11 @@ sfind source_list_base.c
 tab sfind source_list.h
 sfind source_list.c
 
+
 tab sfind mastest_popt.c
-tab sfind mastest_0.c
-tab sfind mastest_1.c
+sfind mastest_0.c
+sfind mastest_1.c
+sfind mastest_1u.c
 
 tab sfind mulconfnt_error.h
 sfind mulconfnt_error.c

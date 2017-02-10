@@ -53,9 +53,11 @@ static void destructor_global_status( void ) __attribute__ ( ( destructor( 5001 
 static void
 destructor_global_status( void )
 {
-  int r = 0;
+//  int r = 0;
 
-#define DUF_MEM_ROW " ШШШШШШШШШШШШШ "
+#define DUF_MEM_ROW " ◇◇◇◇◇◇◇◇◇ "
+#define DUF_MEM_ROWL " ▷▷▷▷▷▷ "
+#define DUF_MEM_ROWR " ◁◁◁◁◁◁ "
 
 #ifdef MAS_TRACEMEM
   if ( mas_pmemfun_block == MAS_MEMORY_ALLOCATION_MASTAR /* i.e.  !mas_pmemfun_block */  )
@@ -63,14 +65,15 @@ destructor_global_status( void )
     FILE *out = NULL;
 
     out = fopen( "mas_debug_memory.tmp", "w" );
-    r = print_memlist_msg( FL, out,                                  /* */
-                           "\n\x1b[0;1;7;44;35m" DUF_MEM_ROW "<  1.", /* */
-                           "\n\x1b[0;1;7;46;37m" DUF_MEM_ROW "<  2.", /* */
+//    r = 
+      print_memlist_msg( FL, out,                                  /* */
+                           "\x1b[0;1;7;44;35m" DUF_MEM_ROWL "<  1.", /* */
+                           "\n\x1b[0;1;7;46;37m" DUF_MEM_ROWL "<  2.", /* */
                            "\x1b[0;1;7;32m    MEMORY FREE    ",      /* */
-                           "\x1b[0;1;7;44;35m  >" DUF_MEM_ROW "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
+                           "\x1b[0;1;7;44;35m  >" DUF_MEM_ROWR "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
              );
-    if ( r >= 0 )
-      fprintf( out, "[%d]\n", r );
+/*  if ( r >= 0 )
+      fprintf( out, "[%d]\n", r ); */
     fclose( out );
   }
 #endif

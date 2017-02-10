@@ -31,9 +31,9 @@ enum config_variant_e
   MULCONF_VARIANT_SHORT,
   MULCONF_VARIANT_LONG,
   MULCONF_VARIANT_NONOPT,
-  MULCONF_VARIANT_MAX = MULCONF_VARIANT_NONOPT,
-  MULCONF_VARIANTS,
   MULCONF_VARIANT_BAD,
+  MULCONF_VARIANT_MAX = MULCONF_VARIANT_BAD,
+  MULCONF_VARIANTS,
 };
 struct config_prefix_encoder_s
 {
@@ -59,6 +59,7 @@ struct config_source_desc_s
 
   char *string;
   mas_argvc_t targ;
+  mas_argvc_t targno;
 };
 
 struct config_source_list_s
@@ -72,9 +73,13 @@ enum config_restype_e
   MULCONF_RESTYPE_NONE,
   MULCONF_RESTYPE_STRING,
   MULCONF_RESTYPE_INT,
+  MULCONF_RESTYPE_UINT,
   MULCONF_RESTYPE_LONG,
+  MULCONF_RESTYPE_ULONG,
   MULCONF_RESTYPE_LONG_LONG,
-  MULCONF_RESTYPE_LLONG=MULCONF_RESTYPE_LONG_LONG,
+  MULCONF_RESTYPE_LLONG = MULCONF_RESTYPE_LONG_LONG,
+  MULCONF_RESTYPE_ULONG_LONG,
+  MULCONF_RESTYPE_ULLONG = MULCONF_RESTYPE_ULONG_LONG,
   MULCONF_RESTYPE_MAX = MULCONF_RESTYPE_LLONG,
 };
 enum config_bitwise_e
@@ -88,11 +93,14 @@ enum config_bitwise_e
 };
 union nvalue_u
 {
-  unsigned char v_uchar;
   char v_char;
+  unsigned char v_uchar;
   int v_int;
+  unsigned int v_uint;
   long v_long;
+  unsigned long v_ulong;
   long long v_long_long;
+  unsigned long long v_ulong_long;
   double v_double;
 };
 struct config_option_s

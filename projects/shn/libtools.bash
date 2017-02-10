@@ -32,7 +32,7 @@ function shn_msg ()
       if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
         shn_echo "$(date '+%s.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
       else
-        shn_echo "$(date '+%s.%N') ${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBGREEN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
+        shn_echo "$(date '+%s.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
       fi
     else
       shn_echo >&2
