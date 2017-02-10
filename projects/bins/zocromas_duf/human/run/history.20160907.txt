@@ -1,0 +1,5 @@
+# 20160907.114031 : 1473237631.806134212 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--min-same-sha1=5' '--std-leaf-set-name=std-all-under' '--glob=*.jpg' '-df' '--with-camera=2110' '--evaluate-sccb=packlist' '/home/' '--use-format=4' '--format-name=sha' '--trace-stdout' '--trace-force-color'
+# retcode:0
+# 20160907.114036 : 1473237636.493397442 ------------[r]--

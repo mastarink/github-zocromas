@@ -1,0 +1,20 @@
+# 20160918.104137 : 1474184497.779853822 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=temp20160918' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,sha1,mime,exif' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/test/tree' '/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/test/tree' '--progress'
+# retcode:31
+# 20160918.104137 : 1474184497.906712547 ------------[r]--
+# 20160918.104139 : 1474184499.150961050 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160918' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:31
+# 20160918.104139 : 1474184499.194181661 ------------[r]--
+# 20160918.104140 : 1474184500.373177360 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=temp20160918' '-dufR' '--open-db' '--glob=*.gz' '--tag-file=test-gz1' '--evaluate-sccb=tagit' 'test/tree'
+# retcode:31
+# 20160918.104140 : 1474184500.396243014 ------------[r]--
+# 20160918.154607 : 1474202767.438011035 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=owncloud_mega_zip_pic' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32' '--progress' '/home/mastar/Desktop/20160108/Camera_Uploads' '/home/mastar/.mas/lib/big/misc/media/photo/Pictures' '/home/mastar/.mas/lib/big/misc/media/photo/Pictures.R.20120207.164339/' '/home/space/owncloud/data/mastarink/files/Camera' '/home/space/sambaspace/2016/y' '/home/space/sambaspace/2016/sdcard'
+# retcode:0
+# 20160918.171704 : 1474208224.866919386 ------------[r]--

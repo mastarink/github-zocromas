@@ -1,0 +1,5 @@
+# 20160621.121637 : 1466500597.460604855 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--allow-drop-table' '--allow-create-tables' '--allow-create-database' '--db-name=owncloud_mega_zip_pic' '-dufR' '--evaluate-sccb=dirs,filedata,filenames,sd5,sha1,md5,crc32' '--progress' '/home/mastar/Desktop/20160108/Camera_Uploads' '/home/mastar/.mas/lib/big/misc/media/photo/Pictures' '/home/mastar/.mas/lib/big/misc/media/photo/Pictures.R.20120207.164339/' '/home/space/owncloud/data/mastarink/files/Camera' '/home/space/sambaspace/2016/y' '/home/space/sambaspace/2016/sdcard'
+# retcode:0
+# 20160621.134746 : 1466506066.699012496 ------------[r]--

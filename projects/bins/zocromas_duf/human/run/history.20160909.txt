@@ -1,0 +1,10 @@
+# 20160909.092357 : 1473402237.319826144 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--min-same-sha1=5' '--std-leaf-set-name=std-all-under' '--glob=*.jpg' '-df' '--with-camera=2110' '--evaluate-sccb=packlist' '/home/' '--use-format=4' '--format-name=sha' '--trace-stdout' '--trace-force-color'
+# retcode:0
+# 20160909.092402 : 1473402242.277151155 ------------[r]--
+# 20160909.103536 : 1473406536.601334631 ++++++++++++++
+# /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--db-name=owncloud_mega_zip_copy' '--linear' '--min-same-sha1=5' '--std-leaf-set-name=std-all-under' '--glob=*.jpg' '-df' '--with-camera=2110' '--evaluate-sccb=packlist' '/home/' '--use-format=4' '--format-name=sha'
+# retcode:0
+# 20160909.103537 : 1473406537.809368373 ------------[r]--
