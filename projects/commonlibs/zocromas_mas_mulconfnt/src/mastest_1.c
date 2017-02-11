@@ -23,6 +23,7 @@ int
 test_1( int argc _uUu_, const char *argv[]_uUu_ )
 {
   char *v_string0 = NULL;
+  char *v_string1 = NULL;
   int v_int0 = 0;
   int v_int1 = 0;
   int v_int2 = 0;
@@ -45,10 +46,14 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
   long bitwise2 = 0x10204;
   long bitwise3 = 0x10204;
 
+  double v_double0 = 0;
+  long double v_ldouble0 = 0;
+
   const char *xargv[] = {
     argv[0],
     "something",
-    "--string0=lorem",
+    "--string0=lorem-ipsum",
+    "--string1=lorem ipsum",
     "--num0=5437",
     "--num1=0x12",
     "--num2=012",
@@ -68,12 +73,15 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     "--bwi=0x700",
     "--bwi+=0x100",
     "--bwi-=0x200",
+    "--pi=3.141592653589793",
+    "--longpi=3.1415926535897932384626433832795028841971693993751058209749445",
     "abrakadabra",
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
     {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0}
+    , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1}
     , {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
     , {"num1", 0, MULCONF_RESTYPE_INT, &v_int1}
     , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
@@ -89,6 +97,8 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     , {"llnum2", 0, MULCONF_RESTYPE_LLONG, &v_llong2}
     , {"llnum3", 0, MULCONF_RESTYPE_LLONG, &v_llong3}
     , {"llnum4", 0, MULCONF_RESTYPE_LLONG, &v_llong4}
+    , {"pi", 0, MULCONF_RESTYPE_DOUBLE, &v_double0}
+    , {"longpi", 0, MULCONF_RESTYPE_LDOUBLE, &v_ldouble0}
     , {"bwi", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
     , {"bwi+", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
     , {"bwi-", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
@@ -122,10 +132,15 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mastest_exam( !mulconfnt_error(  ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error(  ) );
     mastest_next_group(  );
     mastest_exam( v_string0
-                  && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %d", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
+                  && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
+    mastest_exam( v_string1
+                  && 0 == strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string0=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+    if ( v_string1 )
+      mas_free( v_string1 );
+    v_string1 = NULL;
     mastest_next_group(  );
     mastest_exam( sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
     mastest_exam( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
@@ -149,6 +164,12 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mastest_exam( sizeof( v_llong3 ) == 8 && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
     mastest_exam( sizeof( v_llong4 ) == 8 && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
 
+    mastest_next_group(  );
+    mastest_exam( sizeof( v_double0 ) == 8
+                  && v_double0 == 3.141592653589793, "OK", "Error", "%3.15f ? %3.15f (%d)", v_double0, 3.141592653589793, sizeof( v_double0 ) );
+    mastest_exam( sizeof( v_ldouble0 ) == 16
+                  && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
+                  ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
     mastest_next_group(  );
     mastest_exam( mulconfnt_source_argno_count( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
     mastest_exam( 0 == strcmp( "something", mulconfnt_source_argno( osrc, 1 ) ), "OK", "Error", "'%s' ? '%s'", "something",

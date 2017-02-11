@@ -100,7 +100,8 @@ static void
 destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 {
   if ( tests_count )
-    fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %d (OK:%d / Fail:%d) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good, tests_count_bad );
+    fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %d (OK:%d / Fail:%d) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
+             tests_count_bad );
 
   mastest_print_allocated( "Still allocated", __LINE__, __func__ );
 //malloc_info(0, stderr);
@@ -180,8 +181,10 @@ main( int argc, const char *argv[] )
     test_0( argc, argv );
 
   mastest_series( 1, "" );
+  f_print_ok++;
   if ( 1 )
     test_1( argc, argv );
+  f_print_ok--;
   mastest_series( 1, "u" );
   if ( 1 )
     test_1u( argc, argv );

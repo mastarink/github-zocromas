@@ -1,6 +1,7 @@
 /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_mulconfnt/.auxdir/.build/src/.libs/mastest
 something
---string0=lorem
+--string0=lorem-ipsum
+--string1=lorem ipsum
 --num0=5437
 --num1=0x12
 --num2=012
@@ -20,4 +21,6 @@ wow
 --bwi=0x700
 --bwi+=0x100
 --bwi-=0x200
+--pi=3.141592653589793
+--longpi=3.1415926535897932384626433832795028841971693993751058209749445
 abrakadabra

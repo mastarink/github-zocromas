@@ -80,6 +80,8 @@ enum config_restype_e
   MULCONF_RESTYPE_LLONG = MULCONF_RESTYPE_LONG_LONG,
   MULCONF_RESTYPE_ULONG_LONG,
   MULCONF_RESTYPE_ULLONG = MULCONF_RESTYPE_ULONG_LONG,
+  MULCONF_RESTYPE_DOUBLE,
+  MULCONF_RESTYPE_LDOUBLE,
   MULCONF_RESTYPE_ALIAS,
   MULCONF_RESTYPE_MAX = MULCONF_RESTYPE_ALIAS,
 };
@@ -103,6 +105,7 @@ union nvalue_u
   long long v_long_long;
   unsigned long long v_ulong_long;
   double v_double;
+  long double v_ldouble;
 };
 struct config_option_s
 {

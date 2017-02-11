@@ -1,4 +1,5 @@
 #include <string.h>
+#include <math.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
@@ -25,6 +26,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
     char *string = opt->string_value;
     long long v_long_long = 0;
     unsigned long long v_ulong_long = 0;
+    double v_double = 0.0;
+    long double v_ldouble = 0.0;
 
     if ( opt->ptr )
     {
@@ -59,6 +62,14 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         opt->nvalue.v_ulong_long = *( ( unsigned long long * ) opt->ptr );
         v_ulong_long = opt->nvalue.v_ulong_long;
         break;
+      case MULCONF_RESTYPE_DOUBLE:
+        opt->nvalue.v_double = *( ( unsigned long long * ) opt->ptr );
+        v_double = opt->nvalue.v_double;
+        break;
+      case MULCONF_RESTYPE_LDOUBLE:
+        opt->nvalue.v_ldouble = *( ( unsigned long long * ) opt->ptr );
+        v_ldouble = opt->nvalue.v_ldouble;
+        break;
       }
     }
 
@@ -78,6 +89,25 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
     case MULCONF_RESTYPE_ULONG:
     case MULCONF_RESTYPE_ULONG_LONG:
       v_ulong_long = strtoull( string, &ep, 0 );
+      if ( ep != string + strlen( string ) )
+      {
+        fprintf( stderr, ">>>>>> '%s'\n", string );
+        mulconfnt_set_error( __LINE__, __func__ );                   /* non-numeric */
+      }
+      break;
+    case MULCONF_RESTYPE_DOUBLE:
+      v_double = strtod( string, &ep );
+      if ( ep != string + strlen( string ) )
+      {
+        fprintf( stderr, ">>>>>> '%s'\n", string );
+        mulconfnt_set_error( __LINE__, __func__ );                   /* non-numeric */
+      }
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      v_ldouble = strtold( string, &ep );
+      if ( do_fprintf )
+        fprintf( stderr, "LONG DOUBLE:\t%s\n\t\t%s\n\t\t%2.45Lf\n\t\t%2.45Lf\n", "3.141592653589793238462643383279502884197169399375105820974944592",
+                 string, v_ldouble, atanl( 1 ) * 4.L );
       if ( ep != string + strlen( string ) )
       {
         fprintf( stderr, ">>>>>> '%s'\n", string );
@@ -170,6 +200,12 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       else
         opt->nvalue.v_ulong_long = v_ulong_long;
       break;
+    case MULCONF_RESTYPE_DOUBLE:
+      opt->nvalue.v_double = v_double;
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      opt->nvalue.v_ldouble = v_ldouble;
+      break;
     }
 
     if ( opt->ptr )
@@ -181,8 +217,9 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       case MULCONF_RESTYPE_NONE:
         break;
       case MULCONF_RESTYPE_STRING:
-        fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
-        *( ( char ** ) opt->ptr ) = strdup( opt->string_value );
+        if ( do_fprintf )
+          fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
+        *( ( char ** ) opt->ptr ) = mas_strdup( opt->string_value );
         break;
       case MULCONF_RESTYPE_INT:
         *( ( int * ) opt->ptr ) = opt->nvalue.v_int;
@@ -201,6 +238,12 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         break;
       case MULCONF_RESTYPE_ULONG_LONG:
         *( ( unsigned long long * ) opt->ptr ) = opt->nvalue.v_ulong_long;
+        break;
+      case MULCONF_RESTYPE_DOUBLE:
+        *( ( double * ) opt->ptr ) = opt->nvalue.v_double;
+        break;
+      case MULCONF_RESTYPE_LDOUBLE:
+        *( ( long double * ) opt->ptr ) = opt->nvalue.v_ldouble;
         break;
       }
     }
