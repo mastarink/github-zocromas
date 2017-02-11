@@ -35,6 +35,7 @@ enum config_variant_e
   MULCONF_VARIANT_MAX = MULCONF_VARIANT_BAD,
   MULCONF_VARIANTS,
 };
+
 struct config_prefix_encoder_s
 {
   char *string;
@@ -42,6 +43,7 @@ struct config_prefix_encoder_s
 };
 struct config_source_desc_s
 {
+  config_source_list_t *list;
   config_source_desc_t *next;
   config_source_t type;
   config_source_mode_t mode;
@@ -60,12 +62,16 @@ struct config_source_desc_s
   char *string;
   mas_argvc_t targ;
   mas_argvc_t targno;
+
+  int error;
 };
 
 struct config_source_list_s
 {
   config_source_desc_t *first;
   mas_argvc_t targ;
+
+  int error;
 };
 
 enum config_restype_e
@@ -94,6 +100,12 @@ enum config_bitwise_e
   MULCONF_BITWISE_CALL = MULCONF_BITWISE_NOT >> 1L,
   MULCONF_BITWISE_ALL = MULCONF_BITWISE_AND | MULCONF_BITWISE_OR | MULCONF_BITWISE_XOR | MULCONF_BITWISE_NOT | MULCONF_BITWISE_CALL,
 };
+
+enum config_option_flag
+{
+  MULCONF_OPTION_NEED_EQ = 1 << 0,
+};
+
 union nvalue_u
 {
   char v_char;
@@ -116,9 +128,14 @@ struct config_option_s
   int val;
   char *desc;
   char *argdesc;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   int has_value;
   char *string_value;
   nvalue_t nvalue;
+  unsigned long flags;
+
+  config_source_desc_t *source;
+  int error;
 };
 
 struct config_option_table_list_s

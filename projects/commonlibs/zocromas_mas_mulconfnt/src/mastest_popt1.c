@@ -198,15 +198,15 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[] )
   mastest_exam( sizeof( v_llong6 ) == 8
                 && v_llong6 == LLONG_MIN, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong6, v_llong6, LLONG_MIN, sizeof( v_llong6 ) );
 #endif
-  /*
-  mastest_next_group(  );
+/*
+   mastest_next_group(  );
 
-  char **argsno = xargv;
+   char **argsno = xargv;
 
-  mastest_exam( 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-  mastest_exam( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-  mastest_exam( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
-**/
+   mastest_exam( 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
+   mastest_exam( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
+   mastest_exam( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+   * */
   mastest_next_group(  );
   mastest_exam( thestring && 0 == strcmp( thestring, "asta manyana..." ), "OK", "Error", "%s ? %s", thestring, "asta manyana..." );
   mastest_next_group(  );

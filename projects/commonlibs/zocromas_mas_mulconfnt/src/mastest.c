@@ -18,14 +18,6 @@
 #include "source_list.h"
 #include "parse.h"
 
-int test_popt( int argc, const char *argv[] );
-int test_popt1( int argc, const char *argv[] );
-int test_0( int argc, const char *argv[] );
-int test_1( int argc, const char *argv[] );
-int test_1u( int argc, const char *argv[] );
-int test_2( int argc, const char *argv[] );
-int test_2a( int argc, const char *argv[] );
-
 int do_fprintf = 0;
 int f_print_ok = 0;
 int f_print_error = 1;
@@ -168,33 +160,44 @@ int
 main( int argc, const char *argv[] )
 {
 // mas_strdup( "abrakadabra" );
+  typedef int ( *test_fun_t ) ( int argc, const char *argv[] );
+  struct dotest_s
+  {
+    int doit;
+    test_fun_t func;
+    int nseries;
+    char *series_suffix;
+  };
+  typedef struct dotest_s dotest_t;
 
-  mastest_series( 0, "popt" );
-  if ( 0 )
-    test_popt( argc, argv );
-  mastest_series( 1, "popt" );
-  if ( 0 )
-    test_popt1( argc, argv );
+  int test_popt( int argc, const char *argv[] );
+  int test_popt1( int argc, const char *argv[] );
+  int test_0( int argc, const char *argv[] );
+  int test_1( int argc, const char *argv[] );
+  int test_1enf( int argc, const char *argv[] );
+  int test_1enov( int argc, const char *argv[] );
+  int test_1u( int argc, const char *argv[] );
+  int test_2( int argc, const char *argv[] );
+  int test_2a( int argc, const char *argv[] );
 
-  mastest_series( 0, "" );
-  if ( 0 )
-    test_0( argc, argv );
-
-  mastest_series( 1, "" );
-  f_print_ok++;
-  if ( 1 )
-    test_1( argc, argv );
-  f_print_ok--;
-  mastest_series( 1, "u" );
-  if ( 1 )
-    test_1u( argc, argv );
-
-  mastest_series( 2, "" );
-  if ( 1 )
-    test_2( argc, argv );
-  mastest_series( 2, "a" );
-  if ( 1 )
-    test_2a( argc, argv );
-
+  dotest_t funlist[] _uUu_ = {
+    {0, test_popt, 0, "popt"},
+    {0, test_popt1, 1, "popt"},
+    {0, test_0, 0, ""},
+    {1, test_1, 1, ""},
+    {1, test_1u, 1, "u"},
+    {1, test_1enf, 1, "enf"},
+    {0, test_1enov, 1, "enov"},
+    {1, test_2, 2, ""},
+    {1, test_2a, 2, "a"},
+  };
+  for ( unsigned ntest = 0; ntest < sizeof( funlist ) / sizeof( funlist[0] ); ntest++ )
+  {
+    mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
+    if ( funlist[ntest].doit )
+    {
+      funlist[ntest].func( argc, argv );
+    }
+  }
   return 0;
 }

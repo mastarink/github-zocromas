@@ -7,6 +7,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error.h"
+
 #include "option_base.h"
 #include "option.h"
 #include "source_defaults.h"
@@ -106,7 +108,7 @@ void
 mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   mulconfnt_source_load_targ( osrc );
-  for ( int iarg = 0; iarg < osrc->targ.argc; iarg++ )
+  for ( int iarg = 0; !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
     static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
@@ -156,11 +158,16 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       }
       if ( opt )
       {
+        opt->source = osrc; /* mostly for error setting */
         if ( opt->has_value > 0 )
         {
           iarg += opt->has_value - 1;
         }
 /* TODO actions here !! */
+      }
+      else
+      {
+        mulconfnt_set_error_source( osrc, __LINE__, __func__ );
       }
       if ( do_fprintf )
         fprintf( stderr, "*** LOOKUP [%s] arg='%s'; name='%s'; value='%s'\n", labels[variantid], arg, opt ? opt->name : "<NONE>",

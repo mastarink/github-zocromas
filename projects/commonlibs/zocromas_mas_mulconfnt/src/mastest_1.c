@@ -22,6 +22,7 @@
 int
 test_1( int argc _uUu_, const char *argv[]_uUu_ )
 {
+  const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
   int v_int0 = 0;
@@ -129,7 +130,7 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mulconfnt_source_lookup( osrc, &test_tablist );
 
     mastest_next_group(  );
-    mastest_exam( !mulconfnt_error(  ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error(  ) );
+    mastest_exam( !mulconfnt_error_list( plist ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_list( plist ) );
     mastest_next_group(  );
     mastest_exam( v_string0
                   && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
@@ -172,17 +173,18 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
                   ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
     mastest_next_group(  );
     mastest_exam( mulconfnt_source_argno_count( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
-    mastest_exam( 0 == strcmp( "something", mulconfnt_source_argno( osrc, 1 ) ), "OK", "Error", "'%s' ? '%s'", "something",
-                  mulconfnt_source_argno( osrc, 1 ) );
-    mastest_exam( 0 == strcmp( "wow", mulconfnt_source_argno( osrc, 2 ) ), "OK", "Error", "'%s' ? '%s'", "wow", mulconfnt_source_argno( osrc, 2 ) );
-    mastest_exam( 0 == strcmp( "abrakadabra", mulconfnt_source_argno( osrc, 3 ) ), "OK", "Error", "'%s' ? '%s'", "abrakadabra",
-                  mulconfnt_source_argno( osrc, 3 ) );
+    arg = mulconfnt_source_argno( osrc, 1 );
+    mastest_exam( arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    arg = mulconfnt_source_argno( osrc, 2 );
+    mastest_exam( arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    arg = mulconfnt_source_argno( osrc, 3 );
+    mastest_exam( arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
     char **argsno = mulconfnt_source_argsno( osrc );
 
-    mastest_exam( 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-    mastest_exam( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-    mastest_exam( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+    mastest_exam( argsno && argsno[1] && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
+    mastest_exam( argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
+    mastest_exam( argsno && argsno[3] && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
 
     mastest_next_group(  );
     mastest_exam( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );

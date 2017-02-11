@@ -26,6 +26,8 @@ mastest_SOURCES= \
 	mastest_0.c \
 	mastest_1.c \
 	mastest_1u.c \
+	mastest_1enf.c \
+	mastest_1enov.c \
 	mastest_2.c \
 	mastest_2a.c \
 	mastest_popt1.c \
