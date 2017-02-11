@@ -3,8 +3,7 @@ num1=0x12
 num2=012
 num3=2147483647
 num4=-2147483648
-lnum0=0xffffffffff
-lnum1=0xff
+lnum0=0xffffffffff:lnum1=0xff
 lnum2=0x7fffffffffffffff
 lnum3=-12
 lnum4=-0x8000000000000000

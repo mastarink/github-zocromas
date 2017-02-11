@@ -33,53 +33,33 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       switch ( opt->restype & ~MULCONF_BITWISE_ALL )
       {
       case MULCONF_RESTYPE_NONE:
-        break;
       case MULCONF_RESTYPE_STRING:
         break;
       case MULCONF_RESTYPE_INT:
         opt->nvalue.v_int = *( ( int * ) opt->ptr );
+        v_long_long = ( long long ) opt->nvalue.v_int;
         break;
       case MULCONF_RESTYPE_UINT:
         opt->nvalue.v_uint = *( ( unsigned int * ) opt->ptr );
+        v_ulong_long = ( unsigned long long ) opt->nvalue.v_uint;
         break;
       case MULCONF_RESTYPE_LONG:
         opt->nvalue.v_long = *( ( long * ) opt->ptr );
+        v_long_long = ( long long ) opt->nvalue.v_long;
         break;
       case MULCONF_RESTYPE_ULONG:
         opt->nvalue.v_ulong = *( ( unsigned long * ) opt->ptr );
+        v_ulong_long = ( unsigned long long ) opt->nvalue.v_ulong;
         break;
       case MULCONF_RESTYPE_LONG_LONG:
         opt->nvalue.v_long_long = *( ( long long * ) opt->ptr );
+        v_ulong_long = opt->nvalue.v_long_long;
         break;
       case MULCONF_RESTYPE_ULONG_LONG:
         opt->nvalue.v_ulong_long = *( ( unsigned long long * ) opt->ptr );
+        v_ulong_long = opt->nvalue.v_ulong_long;
         break;
       }
-    }
-
-    switch ( opt->restype & ~MULCONF_BITWISE_ALL )
-    {
-    case MULCONF_RESTYPE_NONE:
-    case MULCONF_RESTYPE_STRING:
-      break;
-    case MULCONF_RESTYPE_INT:
-      v_long_long = ( long long ) opt->nvalue.v_int;
-      break;
-    case MULCONF_RESTYPE_UINT:
-      v_ulong_long = ( unsigned long long ) opt->nvalue.v_uint;
-      break;
-    case MULCONF_RESTYPE_LONG:
-      v_long_long = ( long long ) opt->nvalue.v_long;
-      break;
-    case MULCONF_RESTYPE_ULONG:
-      v_ulong_long = ( unsigned long long ) opt->nvalue.v_ulong;
-      break;
-    case MULCONF_RESTYPE_LONG_LONG:
-      v_ulong_long = opt->nvalue.v_long_long;
-      break;
-    case MULCONF_RESTYPE_ULONG_LONG:
-      v_ulong_long = opt->nvalue.v_ulong_long;
-      break;
     }
 
     switch ( opt->restype & ~MULCONF_BITWISE_ALL )
@@ -201,6 +181,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       case MULCONF_RESTYPE_NONE:
         break;
       case MULCONF_RESTYPE_STRING:
+        fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
+        *( ( char ** ) opt->ptr ) = strdup( opt->string_value );
         break;
       case MULCONF_RESTYPE_INT:
         *( ( int * ) opt->ptr ) = opt->nvalue.v_int;

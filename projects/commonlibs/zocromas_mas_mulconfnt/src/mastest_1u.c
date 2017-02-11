@@ -118,36 +118,33 @@ test_1u( int argc _uUu_, const char *argv[]_uUu_ )
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mulconfnt_source_lookup( osrc, &test_tablist );
-    mastest_next_group(  );
-    mastest_exam( sizeof( v_uint0 ) == 4 && !mulconfnt_error(  ) && v_uint0 == 5437, "OK", "Error", "%u ? %u [%d]", v_uint0, 5437, mulconfnt_error(  ) );
-    mastest_exam( sizeof( v_uint1 ) == 4 && !mulconfnt_error(  ) && v_uint1 == 0x12, "OK", "Error", "%u ? %u", v_uint1, 0x12 );
-    mastest_exam( sizeof( v_uint2 ) == 4 && !mulconfnt_error(  ) && v_uint2 == 012, "OK", "Error", "%u ? %u", v_uint2, 012 );
-    mastest_exam( sizeof( v_uint3 ) == 4 && !mulconfnt_error(  ) && v_uint3 == 2147483647, "OK", "Error", "%u ? %u", v_uint3, 2147483647 );
-    mastest_exam( sizeof( v_uint4 ) == 4 && !mulconfnt_error(  ) && v_uint4 == UINT_MAX, "OK", "Error", "%u ? %u", v_uint4, UINT_MAX );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_ulong0 ) == 8 && !mulconfnt_error(  )
-                  && v_ulong0 == 1099511627775UL, "OK", "Error", "%lu ? %lu", v_ulong0, 0xffffffffffUL );
-    mastest_exam( sizeof( v_ulong1 ) == 8 && !mulconfnt_error(  ) && v_ulong1 == 0xff, "OK", "Error", "%lu ? %lu", v_ulong1, 0xffUL );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && !mulconfnt_error(  ) && v_ulong2 == ULONG_MAX, "OK", "Error", "%lu ? %lu", v_ulong2, ULONG_MAX );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && !mulconfnt_error(  )
-                  && v_ulong2 == 0xffffffffffffffffL, "OK", "Error", "%lx ? %lx", v_ulong2, 0xffffffffffffffffUL );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && !mulconfnt_error(  )
-                  && v_ulong2 == 18446744073709551615UL, "OK", "Error", "%lu ? %lu", v_ulong2, 18446744073709551615UL );
-    mastest_exam( sizeof( v_ulong3 ) == 8 && !mulconfnt_error(  ) && v_ulong3 == -12UL, "OK", "Error", "%lu ? %lu", v_ulong3, -12UL );
-    mastest_exam( sizeof( v_ulong4 ) == 8 && !mulconfnt_error(  )
-                  && v_ulong4 == ( ( unsigned long ) LONG_MAX ) + 1, "OK", "Error", "%lu ? %lu", v_ulong4, ( ( unsigned long ) LONG_MAX ) + 1 );
+    mastest_exam( !mulconfnt_error(  ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error(  ) );
+    mastest_next_group(  );
+    mastest_exam( sizeof( v_uint0 ) == 4 && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, mulconfnt_error(  ) );
+    mastest_exam( sizeof( v_uint1 ) == 4 && v_uint1 == 0x12, "OK", "Error", "num1=%u ? %u", v_uint1, 0x12 );
+    mastest_exam( sizeof( v_uint2 ) == 4 && v_uint2 == 012, "OK", "Error", "num2=%u ? %u", v_uint2, 012 );
+    mastest_exam( sizeof( v_uint3 ) == 4 && v_uint3 == 2147483647, "OK", "Error", "num3=%u ? %u", v_uint3, 2147483647 );
+    mastest_exam( sizeof( v_uint4 ) == 4 && v_uint4 == UINT_MAX, "OK", "Error", "num4=%u ? %u", v_uint4, UINT_MAX );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_ullong0 ) == 8 && !mulconfnt_error(  )
-                  && v_ullong0 == 5437ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 5437ULL, sizeof( v_ullong0 ) );
-    mastest_exam( sizeof( v_ullong1 ) == 8 && !mulconfnt_error(  )
-                  && v_ullong1 == 0x12ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0x12ULL, sizeof( v_ullong1 ) );
-    mastest_exam( sizeof( v_ullong2 ) == 8 && !mulconfnt_error(  )
-                  && v_ullong2 == 012ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 012ULL, sizeof( v_ullong2 ) );
-    mastest_exam( sizeof( v_ullong3 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_ulong0 ) == 8 && v_ulong0 == 1099511627775UL, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0xffffffffffUL );
+    mastest_exam( sizeof( v_ulong1 ) == 8 && v_ulong1 == 0xff, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0xffUL );
+    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == ULONG_MAX, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, ULONG_MAX );
+    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0xffffffffffffffffL, "OK", "Error", "lnum2=%lx ? %lx", v_ulong2, 0xffffffffffffffffUL );
+    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == 18446744073709551615UL, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 18446744073709551615UL );
+    mastest_exam( sizeof( v_ulong3 ) == 8 && v_ulong3 == -12UL, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, -12UL );
+    mastest_exam( sizeof( v_ulong4 ) == 8
+                  && v_ulong4 == ( ( unsigned long ) LONG_MAX ) + 1, "OK", "Error", "lnum4=%lu ? %lu", v_ulong4, ( ( unsigned long ) LONG_MAX ) + 1 );
+
+    mastest_next_group(  );
+    mastest_exam( sizeof( v_ullong0 ) == 8 && v_ullong0 == 5437ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 5437ULL, sizeof( v_ullong0 ) );
+    mastest_exam( sizeof( v_ullong1 ) == 8 && v_ullong1 == 0x12ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0x12ULL, sizeof( v_ullong1 ) );
+    mastest_exam( sizeof( v_ullong2 ) == 8 && v_ullong2 == 012ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 012ULL, sizeof( v_ullong2 ) );
+    mastest_exam( sizeof( v_ullong3 ) == 8
                   && v_ullong3 == ULLONG_MAX, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, ULLONG_MAX, sizeof( v_ullong2 ) );
-    mastest_exam( sizeof( v_ullong4 ) == 8 && !mulconfnt_error(  )
+    mastest_exam( sizeof( v_ullong4 ) == 8
                   && v_ullong4 == ( ( unsigned long long ) LONG_MAX ) + 1, "OK", "Error", "%llu ? %llu (%d)", v_ullong4,
                   ( ( unsigned long long ) LONG_MAX ) + 1, sizeof( v_ullong2 ) );
     mastest_next_group(  );

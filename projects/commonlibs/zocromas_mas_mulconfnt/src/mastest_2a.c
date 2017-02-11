@@ -50,8 +50,7 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[] )
             "num2=012\n"
             "num3=2147483647\n"
             "num4=-2147483648\n"
-            "lnum0=0xffffffffff\n"
-            "lnum1=0xff\n"
+            "lnum0=0xffffffffff:lnum1=0xff\n"
             "lnum2=0x7fffffffffffffff\n"
             "lnum3=-12\n"
             "lnum4=-0x8000000000000000\n"
@@ -97,39 +96,34 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[] )
 
   {
     config_source_list_t *plist = mulconfnt_source_list_create(  );
-    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, string_args, "\r\n", "=", NULL );
+    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, string_args, ":\r\n", "=", NULL );
 
     mulconfnt_source_lookup( osrc, &test_tablist );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_int0 ) == 4 && !mulconfnt_error(  ) && v_int0 == 5437, "OK", "Error", "%d ? %d", v_int0, 5437 );
-    mastest_exam( sizeof( v_int1 ) == 4 && !mulconfnt_error(  ) && v_int1 == 0x12, "OK", "Error", "%d ? %d", v_int1, 0x12 );
-    mastest_exam( sizeof( v_int2 ) == 4 && !mulconfnt_error(  ) && v_int2 == 012, "OK", "Error", "%d ? %d", v_int2, 012 );
-    mastest_exam( sizeof( v_int3 ) == 4 && !mulconfnt_error(  ) && v_int3 == INT_MAX, "OK", "Error", "%d ? %d", v_int3, INT_MAX );
-    mastest_exam( sizeof( v_int4 ) == 4 && !mulconfnt_error(  ) && v_int4 == INT_MIN, "OK", "Error", "%d ? %d", v_int4, INT_MIN );
+    mastest_exam( !mulconfnt_error(  ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error(  ) );
+    mastest_next_group(  );
+    mastest_exam( sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
+    mastest_exam( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
+    mastest_exam( sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "num2=%d ? %d", v_int2, 012 );
+    mastest_exam( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "num3=%d ? %d", v_int3, INT_MAX );
+    mastest_exam( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "num4=%d ? %d", v_int4, INT_MIN );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_long0 ) == 8 && !mulconfnt_error(  ) && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
-    mastest_exam( sizeof( v_long1 ) == 8 && !mulconfnt_error(  ) && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
-    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  ) && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
-    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
-                  && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
-    mastest_exam( sizeof( v_long2 ) == 8 && !mulconfnt_error(  )
-                  && v_long2 == 9223372036854775807, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807 );
-    mastest_exam( sizeof( v_long3 ) == 8 && !mulconfnt_error(  ) && v_long3 == -12L, "OK", "Error", "%ld ? %ld", v_long3, -12L );
-    mastest_exam( sizeof( v_long4 ) == 8 && !mulconfnt_error(  ) && v_long4 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long4, LONG_MIN );
+    mastest_exam( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "OK", "Error", "lnum0=%ld ? %ld", v_long0, 0xffffffffffL );
+    mastest_exam( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "OK", "Error", "lnum1=%ld ? %ld", v_long1, 0xffL );
+    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "OK", "Error", "lnum2=%ld ? %ld", v_long2, LONG_MAX );
+    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "lnum2=%lx ? %lx", v_long2, 0x7fffffffffffffffL );
+    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807, "OK", "Error", "lnum2=%ld ? %ld", v_long2, 9223372036854775807 );
+    mastest_exam( sizeof( v_long3 ) == 8 && v_long3 == -12L, "OK", "Error", "lnum3=%ld ? %ld", v_long3, -12L );
+    mastest_exam( sizeof( v_long4 ) == 8 && v_long4 == LONG_MIN, "OK", "Error", "lnum4=%ld ? %ld", v_long4, LONG_MIN );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_llong0 ) == 8 && !mulconfnt_error(  )
-                  && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
-    mastest_exam( sizeof( v_llong1 ) == 8 && !mulconfnt_error(  )
-                  && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
-    mastest_exam( sizeof( v_llong2 ) == 8 && !mulconfnt_error(  )
-                  && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
-    mastest_exam( sizeof( v_llong3 ) == 8 && !mulconfnt_error(  )
-                  && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
-    mastest_exam( sizeof( v_llong4 ) == 8 && !mulconfnt_error(  )
-                  && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
+    mastest_exam( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
+    mastest_exam( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
+    mastest_exam( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
+    mastest_exam( sizeof( v_llong3 ) == 8 && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
+    mastest_exam( sizeof( v_llong4 ) == 8 && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
 
 #if 0
     mastest_next_group(  );
