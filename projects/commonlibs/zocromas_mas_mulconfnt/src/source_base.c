@@ -6,6 +6,9 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error_base.h"
+#include "mulconfnt_error.h"
+
 #include "source_defaults.h"
 #include "source_base.h"
 
@@ -26,7 +29,7 @@ mulconfnt_source_create( void )
 
 config_source_desc_t *
 mulconfnt_source_create_setup( config_source_t source_type, int count, const void *data_ptr, const char *delims,
-                             const char *eq, const config_prefix_encoder_t * pref_ids )
+                               const char *eq, const config_prefix_encoder_t * pref_ids )
 {
   config_source_desc_t *osrc = NULL;
 
@@ -98,6 +101,7 @@ mulconfnt_source_close( config_source_desc_t * osrc )
     osrc->string = NULL;
     mas_argvc_delete( &osrc->targ );
     mas_argvc_delete( &osrc->targno );
+    mulconfnt_error_close( &osrc->error );
   }
 }
 

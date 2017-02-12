@@ -10,6 +10,9 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error_base.h"
+#include "mulconfnt_error.h"
+
 #include "option_base.h"
 
 void
@@ -38,6 +41,7 @@ mulconfnt_config_option_close( config_option_t * opt )
     mas_free( opt->argdesc );
   if ( opt->string_value )
     mas_free( opt->string_value );
+  mulconfnt_error_close( &opt->error );
 }
 
 void

@@ -1,90 +1,108 @@
 #include <stdio.h>
+#include <stdarg.h>
+#include <libgen.h>
+#include <string.h>
+
+#include <mastar/wrap/mas_memory.h>
+
+#include "mulconfnt_defs.h"
 
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error_base.h"
 #include "mulconfnt_error.h"
 
-static int _mulconfnt_error = 0;
-
 int
-mulconfnt_set_error_list( config_source_list_t * list, int line, const char *func )
-{
-  int r = 0;
-
-  if ( list )
-  {
-    list->error++;
-    fprintf( stderr, "SETTING ERROR (list): %d:%s\n", line, func );
-    r++;
-  }
-  _mulconfnt_error++;
-  return r;
-}
-
-int
-mulconfnt_set_error_source( config_source_desc_t * osrc, int line, const char *func )
+mulconfnt_error_vset_source( config_source_desc_t * osrc, int line, const char *func, const char *file, const char *fmt, va_list args )
 {
   int r = 0;
 
   if ( osrc )
-  {
-    osrc->error++;
-    r = mulconfnt_set_error_list( osrc->list, line, func );
-    if ( !r )
-    {
-      fprintf( stderr, "SETTING ERROR (source): %d:%s\n", line, func );
-      r++;
-    }
-  }
-  _mulconfnt_error++;
+    r = mulconfnt_error_vset( &osrc->error, line, func, file, fmt, args );
   return r;
 }
 
 int
-mulconfnt_set_error_option( config_option_t * opt, int line, const char *func )
+mulconfnt_error_set_at_source( config_source_desc_t * osrc, int line, const char *func, const char *file, const char *fmt, ... )
+{
+  int r = 0;
+  va_list args;
+
+  va_start( args, fmt );
+  r = mulconfnt_error_vset_source( osrc, line, func, file, fmt, args );
+  va_end( args );
+  return r;
+}
+
+int
+mulconfnt_error_vset_option( config_option_t * opt, int line, const char *func, const char *file, const char *fmt, va_list args )
 {
   int r = 0;
 
   if ( opt )
   {
-    opt->error++;
+    r = mulconfnt_error_vset( &opt->error, line, func, file, fmt, args );
     if ( opt->source )
-      r = mulconfnt_set_error_source( opt->source, line, func );
-    if ( !r )
-    {
-      fprintf( stderr, "SETTING ERROR (option): %d:%s\n", line, func );
-      r++;
-    }
+      mulconfnt_error_set_at_source_from_option( opt->source, opt );
   }
-  _mulconfnt_error++;
   return r;
 }
 
 int
-mulconfnt_error_list( config_source_list_t * list )
+mulconfnt_error_set_at_option( config_option_t * opt, int line, const char *func, const char *file, const char *fmt, ... )
 {
-  int error = 0;
+  int r = 0;
+  va_list args;
 
-  if ( list )
-    error = list->error;
-  else
-    error = _mulconfnt_error;
-  return error;
+  va_start( args, fmt );
+  r = mulconfnt_error_vset_option( opt, line, func, file, fmt, args );
+  va_end( args );
+  return r;
 }
 
 int
-mulconfnt_error_source( config_source_desc_t * osrc )
+mulconfnt_error_set_at_source_from_option( config_source_desc_t * osrc, config_option_t * opt )
 {
-  int error = 0;
+  int r = 0;
+
+  if ( osrc && opt )
+    r = mulconfnt_error_set_from_error( &osrc->error, &opt->error );
+  return r;
+}
+
+int
+mulconfnt_error_source( const config_source_desc_t * osrc )
+{
+  int nerror = 0;
 
   if ( osrc )
-  {
-    error = mulconfnt_error_list( osrc->list );
-    if ( !error )
-      error = osrc->error;
-  }
-  else
-    error = _mulconfnt_error;
+    nerror = osrc->error.nerror;
 
-  return error;
+  return nerror;
+}
+
+const char *
+mulconfnt_error_source_msg( const config_source_desc_t * osrc )
+{
+  return osrc->error.msg;
+}
+
+int
+mulconfnt_error_option( const config_option_t * opt )
+{
+  int nerror = 0;
+
+  if ( opt )
+  {
+    nerror = mulconfnt_error_source( opt->source );
+    if ( !nerror )
+      nerror = opt->error.nerror;
+  }
+  return nerror;
+}
+
+const char *
+mulconfnt_error_option_msg( const config_option_t * opt )
+{
+  return opt->error.msg;
 }

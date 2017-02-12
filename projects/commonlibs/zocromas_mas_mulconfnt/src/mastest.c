@@ -123,7 +123,7 @@ mastest_next_group( void )
 }
 
 int
-mastest_vexam( int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
+mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
 {
   mastest_next(  );
   if ( !tests_count )
@@ -135,8 +135,8 @@ mastest_vexam( int cond, const char *goodmsg, const char *badmsg, const char *fm
   tests_count++;
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
-    fprintf( stderr, "%4d\t**** [%d%s.%d.%d] %-30s --\t", tests_count, test_series, test_series_suffix ? test_series_suffix : "", test_group,
-             test_seq, cond ? goodmsg : badmsg );
+    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%d] %-30s --\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
+             test_group, test_seq, cond ? goodmsg : badmsg );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
   }
@@ -144,12 +144,12 @@ mastest_vexam( int cond, const char *goodmsg, const char *badmsg, const char *fm
 }
 
 int
-mastest_exam( int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
+mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  cond = mastest_vexam( cond, goodmsg, badmsg, fmt, args );
+  cond = mastest_vexam( line, cond, goodmsg, badmsg, fmt, args );
   va_end( args );
 
   return cond;
@@ -160,25 +160,28 @@ int
 main( int argc, const char *argv[] )
 {
 // mas_strdup( "abrakadabra" );
-  typedef int ( *test_fun_t ) ( int argc, const char *argv[] );
+  typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix );
   struct dotest_s
   {
     int doit;
     test_fun_t func;
     int nseries;
     char *series_suffix;
+    int f_print_ok;
+    int f_noprint_error;
   };
   typedef struct dotest_s dotest_t;
 
-  int test_popt( int argc, const char *argv[] );
-  int test_popt1( int argc, const char *argv[] );
-  int test_0( int argc, const char *argv[] );
-  int test_1( int argc, const char *argv[] );
-  int test_1enf( int argc, const char *argv[] );
-  int test_1enov( int argc, const char *argv[] );
-  int test_1u( int argc, const char *argv[] );
-  int test_2( int argc, const char *argv[] );
-  int test_2a( int argc, const char *argv[] );
+  int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_0( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_1( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_2( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_3( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
@@ -187,16 +190,21 @@ main( int argc, const char *argv[] )
     {1, test_1, 1, ""},
     {1, test_1u, 1, "u"},
     {1, test_1enf, 1, "enf"},
-    {0, test_1enov, 1, "enov"},
     {1, test_2, 2, ""},
     {1, test_2a, 2, "a"},
+    {1, test_3, 3, ""},
+    {1, test_3a, 3, "a", 0},
   };
   for ( unsigned ntest = 0; ntest < sizeof( funlist ) / sizeof( funlist[0] ); ntest++ )
   {
     mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
     if ( funlist[ntest].doit )
     {
-      funlist[ntest].func( argc, argv );
+      f_print_ok += funlist[ntest].f_print_ok;
+      f_print_ok -= funlist[ntest].f_noprint_error;
+      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix );
+      f_print_ok += funlist[ntest].f_noprint_error;
+      f_print_ok -= funlist[ntest].f_print_ok;
     }
   }
   return 0;

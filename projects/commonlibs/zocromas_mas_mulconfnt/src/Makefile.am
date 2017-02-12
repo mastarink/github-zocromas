@@ -11,6 +11,8 @@ libzocromas_mas_mulconfnt_la_SOURCES = \
 	source.c \
 	option_base.c \
 	option.c \
+	option_tablist.c \
+	mulconfnt_error_base.c \
 	mulconfnt_error.c
 
 libzocromas_mas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
@@ -27,9 +29,10 @@ mastest_SOURCES= \
 	mastest_1.c \
 	mastest_1u.c \
 	mastest_1enf.c \
-	mastest_1enov.c \
 	mastest_2.c \
 	mastest_2a.c \
+	mastest_3.c \
+	mastest_3a.c \
 	mastest_popt1.c \
 	mastest_popt.c
 else

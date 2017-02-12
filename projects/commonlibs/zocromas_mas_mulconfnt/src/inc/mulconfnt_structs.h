@@ -41,12 +41,23 @@ struct config_prefix_encoder_s
   char *string;
   config_variant_t id;
 };
+
+struct config_error_s
+{
+  int nerror;
+  int line;
+  const char *func;
+  const char *file;
+  char *msg;
+};
+
 struct config_source_desc_s
 {
   config_source_list_t *list;
   config_source_desc_t *next;
   config_source_t type;
   config_source_mode_t mode;
+  unsigned long flags;
   int count;
   const void *data_ptr;
   char delim;
@@ -63,7 +74,7 @@ struct config_source_desc_s
   mas_argvc_t targ;
   mas_argvc_t targno;
 
-  int error;
+  config_error_t error;
 };
 
 struct config_source_list_s
@@ -71,7 +82,7 @@ struct config_source_list_s
   config_source_desc_t *first;
   mas_argvc_t targ;
 
-  int error;
+  config_error_t error;
 };
 
 enum config_restype_e
@@ -119,6 +130,7 @@ union nvalue_u
   double v_double;
   long double v_ldouble;
 };
+
 struct config_option_s
 {
   char *name;
@@ -135,7 +147,7 @@ struct config_option_s
   unsigned long flags;
 
   config_source_desc_t *source;
-  int error;
+  config_error_t error;
 };
 
 struct config_option_table_list_s

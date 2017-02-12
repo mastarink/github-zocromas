@@ -23,7 +23,7 @@
 #define ULONG_MIN 0
 #define ULLONG_MIN 0
 int
-test_1enf( int argc _uUu_, const char *argv[]_uUu_ )
+test_1enf( int argc _uUu_, const char *argv[] , int nseries, const char *series_suffix )
 {
   int argcount;
   const char *arg _uUu_;
@@ -103,8 +103,11 @@ test_1enf( int argc _uUu_, const char *argv[]_uUu_ )
   };
   {
     FILE *f;
+    char fname[128];
 
-    f = fopen( "mastest_1u.commands", "w" );
+    snprintf( fname, sizeof(fname), "mastest_%d%s.commands", nseries, series_suffix );
+    f = fopen( fname, "w" );
+
     if ( f )
     {
       for ( int i = 0; i < xargc; i++ )
@@ -122,56 +125,56 @@ test_1enf( int argc _uUu_, const char *argv[]_uUu_ )
     mulconfnt_source_lookup( osrc, &test_tablist );
 
     mastest_next_group(  );
-    mastest_exam( mulconfnt_error_list( plist ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_list( plist ) );
+    mastest_exam( __LINE__, mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
     mastest_next_group(  );
-    mastest_exam( sizeof( v_uint0 ) == 4 && v_uint0 == 0, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 0, mulconfnt_error_list( plist ) );
-    mastest_exam( sizeof( v_uint1 ) == 4 && v_uint1 == 0, "OK", "Error", "num1=%u ? %u", v_uint1, 0 );
-    mastest_exam( sizeof( v_uint2 ) == 4 && v_uint2 == 0, "OK", "Error", "num2=%u ? %u", v_uint2, 0 );
-    mastest_exam( sizeof( v_uint3 ) == 4 && v_uint3 == 0, "OK", "Error", "num3=%u ? %u", v_uint3, 0 );
-    mastest_exam( sizeof( v_uint4 ) == 4 && v_uint4 == 0, "OK", "Error", "num4=%u ? %u", v_uint4, 0 );
+    mastest_exam( __LINE__, sizeof( v_uint0 ) == 4 && v_uint0 == 0, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 0, mulconfnt_error_source( osrc ) );
+    mastest_exam( __LINE__, sizeof( v_uint1 ) == 4 && v_uint1 == 0, "OK", "Error", "num1=%u ? %u", v_uint1, 0 );
+    mastest_exam( __LINE__, sizeof( v_uint2 ) == 4 && v_uint2 == 0, "OK", "Error", "num2=%u ? %u", v_uint2, 0 );
+    mastest_exam( __LINE__, sizeof( v_uint3 ) == 4 && v_uint3 == 0, "OK", "Error", "num3=%u ? %u", v_uint3, 0 );
+    mastest_exam( __LINE__, sizeof( v_uint4 ) == 4 && v_uint4 == 0, "OK", "Error", "num4=%u ? %u", v_uint4, 0 );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_ulong0 ) == 8 && v_ulong0 == 0, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0 );
-    mastest_exam( sizeof( v_ulong1 ) == 8 && v_ulong1 == 0, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0 );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lx ? %lx", v_ulong2, 0 );
-    mastest_exam( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
-    mastest_exam( sizeof( v_ulong3 ) == 8 && v_ulong3 == 0, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, 0 );
-    mastest_exam( sizeof( v_ulong4 ) == 8 && v_ulong4 == 0, "OK", "Error", "lnum4=%lu ? %lu", v_ulong4, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong0 ) == 8 && v_ulong0 == 0, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong1 ) == 8 && v_ulong1 == 0, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lx ? %lx", v_ulong2, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong3 ) == 8 && v_ulong3 == 0, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, 0 );
+    mastest_exam( __LINE__, sizeof( v_ulong4 ) == 8 && v_ulong4 == 0, "OK", "Error", "lnum4=%lu ? %lu", v_ulong4, 0 );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_ullong0 ) == 8 && v_ullong0 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 0, sizeof( v_ullong0 ) );
-    mastest_exam( sizeof( v_ullong1 ) == 8 && v_ullong1 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0, sizeof( v_ullong1 ) );
-    mastest_exam( sizeof( v_ullong2 ) == 8 && v_ullong2 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 0, sizeof( v_ullong2 ) );
-    mastest_exam( sizeof( v_ullong3 ) == 8 && v_ullong3 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, 0, sizeof( v_ullong2 ) );
-    mastest_exam( sizeof( v_ullong4 ) == 8 && v_ullong4 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong4, 0, sizeof( v_ullong2 ) );
+    mastest_exam( __LINE__, sizeof( v_ullong0 ) == 8 && v_ullong0 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 0, sizeof( v_ullong0 ) );
+    mastest_exam( __LINE__, sizeof( v_ullong1 ) == 8 && v_ullong1 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0, sizeof( v_ullong1 ) );
+    mastest_exam( __LINE__, sizeof( v_ullong2 ) == 8 && v_ullong2 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 0, sizeof( v_ullong2 ) );
+    mastest_exam( __LINE__, sizeof( v_ullong3 ) == 8 && v_ullong3 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, 0, sizeof( v_ullong2 ) );
+    mastest_exam( __LINE__, sizeof( v_ullong4 ) == 8 && v_ullong4 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong4, 0, sizeof( v_ullong2 ) );
     mastest_next_group(  );
-    argcount = mulconfnt_source_argno_count( osrc );
-    mastest_exam( argcount == 2, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
+    argcount = mulconfnt_source_argc_no( osrc );
+    mastest_exam( __LINE__, argcount == 2, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ) );
 
-    arg = mulconfnt_source_argno( osrc, 1 );
-    mastest_exam( argcount > 1 && arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    arg = mulconfnt_source_arg_no( osrc, 1 );
+    mastest_exam( __LINE__, argcount > 1 && arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
 #if 0
-    arg = mulconfnt_source_argno( osrc, 2 );
-    mastest_exam( argcount > 2 && arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_argno( osrc, 3 );
-    mastest_exam( argcount > 3 && arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    arg = mulconfnt_source_arg_no( osrc, 2 );
+    mastest_exam( __LINE__, argcount > 2 && arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    arg = mulconfnt_source_arg_no( osrc, 3 );
+    mastest_exam( __LINE__, argcount > 3 && arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-    char **argsno = mulconfnt_source_argsno( osrc );
+    char **argsno = mulconfnt_source_argv_no( osrc );
 
-    mastest_exam( argcount > 1 && argsno && argsno[1]
+    mastest_exam( __LINE__, argcount > 1 && argsno && argsno[1]
                   && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcount > 1 && argsno
                   && argsno[1] ? argsno[1] : "?" );
-    mastest_exam( argcount > 2 && argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2 && argsno
-                  && argsno[2] ? argsno[2] : "?" );
-    mastest_exam( argcount > 3 && argsno && argsno[3]
+    mastest_exam( __LINE__, argcount > 2 && argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2
+                  && argsno && argsno[2] ? argsno[2] : "?" );
+    mastest_exam( __LINE__, argcount > 3 && argsno && argsno[3]
                   && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcount > 3 && argsno
                   && argsno[3] ? argsno[3] : "?" );
 #endif
     mastest_next_group(  );
-    mastest_exam( bitwise1 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise1=%lx ? %lx", 0x10204, bitwise1 );
-    mastest_exam( bitwise2 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise2=%lx ? %lx", 0x10204, bitwise2 );
-    mastest_exam( bitwise3 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise3=%lx ? %lx", 0x10204, bitwise3 );
+    mastest_exam( __LINE__, bitwise1 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise1=%lx ? %lx", 0x10204, bitwise1 );
+    mastest_exam( __LINE__, bitwise2 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise2=%lx ? %lx", 0x10204, bitwise2 );
+    mastest_exam( __LINE__, bitwise3 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise3=%lx ? %lx", 0x10204, bitwise3 );
 
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;UINT_MAX:%x\nLONG_MIN:%lx;ULONG_MAX:%lx\nLLONG_MIN:%llx;ULLONG_MAX:%llx\n", UINT_MIN, UINT_MAX, ULONG_MIN,

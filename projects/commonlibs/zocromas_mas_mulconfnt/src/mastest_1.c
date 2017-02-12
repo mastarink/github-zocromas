@@ -20,7 +20,7 @@
 #include "mastest.h"
 
 int
-test_1( int argc _uUu_, const char *argv[]_uUu_ )
+test_1( int argc _uUu_, const char *argv[] , int nseries, const char *series_suffix )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -54,7 +54,7 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     argv[0],
     "something",
     "--string0=lorem-ipsum",
-    "--string1=lorem ipsum",
+    "--string1", "lorem ipsum",
     "--num0=5437",
     "--num1=0x12",
     "--num2=012",
@@ -112,8 +112,10 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
 
   {
     FILE *f;
+    char fname[128];
 
-    f = fopen( "mastest_1.commands", "w" );
+    snprintf( fname, sizeof(fname), "mastest_%d%s.commands", nseries, series_suffix );
+    f = fopen( fname, "w" );
     if ( f )
     {
       for ( int i = 0; i < xargc; i++ )
@@ -130,66 +132,68 @@ test_1( int argc _uUu_, const char *argv[]_uUu_ )
     mulconfnt_source_lookup( osrc, &test_tablist );
 
     mastest_next_group(  );
-    mastest_exam( !mulconfnt_error_list( plist ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_list( plist ) );
+    mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
     mastest_next_group(  );
-    mastest_exam( v_string0
+    mastest_exam( __LINE__, v_string0
                   && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
-    mastest_exam( v_string1
-                  && 0 == strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string0=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+    mastest_exam( __LINE__, v_string1
+                  && 0 == strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
     if ( v_string1 )
       mas_free( v_string1 );
     v_string1 = NULL;
     mastest_next_group(  );
-    mastest_exam( sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
-    mastest_exam( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
-    mastest_exam( sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "num2=%d ? %d", v_int2, 012 );
-    mastest_exam( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "num3=%d ? %d", v_int3, INT_MAX );
-    mastest_exam( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "num4=%d ? %d", v_int4, INT_MIN );
+    mastest_exam( __LINE__, sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
+    mastest_exam( __LINE__, sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
+    mastest_exam( __LINE__, sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "num2=%d ? %d", v_int2, 012 );
+    mastest_exam( __LINE__, sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "num3=%d ? %d", v_int3, INT_MAX );
+    mastest_exam( __LINE__, sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "num4=%d ? %d", v_int4, INT_MIN );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
-    mastest_exam( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
-    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
-    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
-    mastest_exam( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807 );
-    mastest_exam( sizeof( v_long3 ) == 8 && v_long3 == -12L, "OK", "Error", "%ld ? %ld", v_long3, -12L );
-    mastest_exam( sizeof( v_long4 ) == 8 && v_long4 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long4, LONG_MIN );
+    mastest_exam( __LINE__, sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
+    mastest_exam( __LINE__, sizeof( v_long1 ) == 8 && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
+    mastest_exam( __LINE__, sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
+    mastest_exam( __LINE__, sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
+    mastest_exam( __LINE__, sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807 );
+    mastest_exam( __LINE__, sizeof( v_long3 ) == 8 && v_long3 == -12L, "OK", "Error", "%ld ? %ld", v_long3, -12L );
+    mastest_exam( __LINE__, sizeof( v_long4 ) == 8 && v_long4 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long4, LONG_MIN );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
-    mastest_exam( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
-    mastest_exam( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
-    mastest_exam( sizeof( v_llong3 ) == 8 && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
-    mastest_exam( sizeof( v_llong4 ) == 8 && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
+    mastest_exam( __LINE__, sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
+    mastest_exam( __LINE__, sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
+    mastest_exam( __LINE__, sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
+    mastest_exam( __LINE__, sizeof( v_llong3 ) == 8
+                  && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
+    mastest_exam( __LINE__, sizeof( v_llong4 ) == 8
+                  && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
 
     mastest_next_group(  );
-    mastest_exam( sizeof( v_double0 ) == 8
+    mastest_exam( __LINE__, sizeof( v_double0 ) == 8
                   && v_double0 == 3.141592653589793, "OK", "Error", "%3.15f ? %3.15f (%d)", v_double0, 3.141592653589793, sizeof( v_double0 ) );
-    mastest_exam( sizeof( v_ldouble0 ) == 16
+    mastest_exam( __LINE__, sizeof( v_ldouble0 ) == 16
                   && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
                   ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
     mastest_next_group(  );
-    mastest_exam( mulconfnt_source_argno_count( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argno_count( osrc ) );
-    arg = mulconfnt_source_argno( osrc, 1 );
-    mastest_exam( arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
-    arg = mulconfnt_source_argno( osrc, 2 );
-    mastest_exam( arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_argno( osrc, 3 );
-    mastest_exam( arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ) );
+    arg = mulconfnt_source_arg_no( osrc, 1 );
+    mastest_exam( __LINE__, arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    arg = mulconfnt_source_arg_no( osrc, 2 );
+    mastest_exam( __LINE__, arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    arg = mulconfnt_source_arg_no( osrc, 3 );
+    mastest_exam( __LINE__, arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-    char **argsno = mulconfnt_source_argsno( osrc );
+    char **argsno = mulconfnt_source_argv_no( osrc );
 
-    mastest_exam( argsno && argsno[1] && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-    mastest_exam( argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-    mastest_exam( argsno && argsno[3] && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+    mastest_exam( __LINE__, argsno && argsno[1] && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
+    mastest_exam( __LINE__, argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
+    mastest_exam( __LINE__, argsno && argsno[3] && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
 
     mastest_next_group(  );
-    mastest_exam( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
-    mastest_exam( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
-    mastest_exam( bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
+    mastest_exam( __LINE__, bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
+    mastest_exam( __LINE__, bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
+    mastest_exam( __LINE__, bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
 
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;INT_MAX:%x\nLONG_MIN:%lx;LONG_MAX:%lx\nLLONG_MIN:%llx;LLONG_MAX:%llx\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,

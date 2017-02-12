@@ -11,8 +11,11 @@
 
 #include "option_base.h"
 #include "option.h"
+#include "option_tablist.h"
+
 #include "source_defaults.h"
 #include "source_base.h"
+
 #include "source.h"
 
 void
@@ -86,20 +89,20 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
   return maxmatchid;
 }
 
-int
-mulconfnt_source_argno_count( config_source_desc_t * osrc )
-{
-  return osrc->targno.argc;
-}
-
 char **
-mulconfnt_source_argsno( config_source_desc_t * osrc )
+mulconfnt_source_argv_no( config_source_desc_t * osrc )
 {
   return osrc->targno.argv;
 }
 
+int
+mulconfnt_source_argc_no( config_source_desc_t * osrc )
+{
+  return osrc->targno.argc;
+}
+
 const char *
-mulconfnt_source_argno( config_source_desc_t * osrc, int i )
+mulconfnt_source_arg_no( config_source_desc_t * osrc, int i )
 {
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
@@ -147,6 +150,8 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       {
         config_option_t *oldopt = opt;
 
+//        oldopt->source = osrc;
+        mulconfnt_option_set_source( oldopt, osrc );                 /* mostly for error setting */
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
@@ -158,7 +163,12 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       }
       if ( opt )
       {
-        opt->source = osrc; /* mostly for error setting */
+        if ( mulconfnt_error_option( opt ) )
+        {
+//          opt->source = osrc;
+          mulconfnt_option_set_source( opt, osrc );               /* mostly for error setting */
+          mulconfnt_error_set_at_source_from_option( opt->source, opt );
+        }
         if ( opt->has_value > 0 )
         {
           iarg += opt->has_value - 1;
@@ -167,14 +177,22 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       }
       else
       {
-        mulconfnt_set_error_source( osrc, __LINE__, __func__ );
+        mulconfnt_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "Unknown option" );
       }
       if ( do_fprintf )
         fprintf( stderr, "*** LOOKUP [%s] arg='%s'; name='%s'; value='%s'\n", labels[variantid], arg, opt ? opt->name : "<NONE>",
                  opt ? opt->string_value : "<NONE>" );
       if ( opt )
+      {
         mulconfnt_config_option_delete( opt );
+      }
       opt = NULL;
     }
   }
+}
+
+int
+mulconfnt_source_flag( config_source_desc_t * osrc, unsigned long mask )
+{
+  return osrc->flags & mask;
 }
