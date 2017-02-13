@@ -11,6 +11,7 @@ enum config_source_e
   MULCONF_SOURCE_STRING,
   MULCONF_SOURCE_ENV,
   MULCONF_SOURCE_ARGV,
+  MULCONF_SOURCE_MARGV,
   MULCONF_SOURCE_CONFIG,
   MULCONF_SOURCE_FILE,
   MULCONF_SOURCE_STREAM,
@@ -70,6 +71,7 @@ struct config_source_desc_s
   source_load_string_fun_t load_string_fun;
   source_load_targ_fun_t load_targ_fun;
 
+  int targ_loaded; /* sequential number of targ set */
   char *string;
   mas_argvc_t targ;
   mas_argvc_t targno;

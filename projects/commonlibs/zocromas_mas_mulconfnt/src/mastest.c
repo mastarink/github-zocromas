@@ -13,12 +13,16 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
 #include "parse.h"
 
 int do_fprintf = 0;
+int stop_on_error = 0;
+int sleep_on_error = 1;
 int f_print_ok = 0;
 int f_print_error = 1;
 static int series_seq = 0;
@@ -110,8 +114,8 @@ mastest_series( int nseries, const char *suff )
   test_seq = 0;
   if ( !series_seq && !tests_count )
     fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
-  fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count, tests_count_good,
-           tests_count_bad );
+  fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count,
+           tests_count_good, tests_count_bad );
   series_seq++;
 }
 
@@ -144,6 +148,10 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
   }
+  if ( !cond && sleep_on_error )
+    sleep( sleep_on_error );
+  if ( !cond && stop_on_error )
+    DIE( "Stop on error %d", cond );
   return cond;
 }
 
@@ -180,6 +188,7 @@ main( int argc, const char *argv[] )
   int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_0( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_2( int argc, const char *argv[], int nseries, const char *series_suffix );
@@ -187,12 +196,14 @@ main( int argc, const char *argv[] )
   int test_3( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_4( int argc, const char *argv[], int nseries, const char *series_suffix );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},
     {1, test_1, 1, ""},
+    {1, test_1mul, 1, "mul",.f_print_ok = 0},
     {1, test_1u, 1, "u"},
     {1, test_1enf, 1, "enf"},
     {1, test_2, 2, ""},
@@ -200,6 +211,7 @@ main( int argc, const char *argv[] )
     {1, test_3, 3, ""},
     {1, test_3a, 3, "a"},
     {1, test_3q, 3, "q"},
+    {1, test_4, 4, ""},
   };
   for ( int u = 0; u < argc; u++ )
   {

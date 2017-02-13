@@ -11,16 +11,18 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "mulconfnt_error.h"
+
 #include "source_base.h"
 #include "source.h"
 #include "source_list.h"
 
 void
-mulconfnt_source_list_integrate( config_source_list_t * source_list )
+mulconfnt_source_list_integrate( config_source_list_t * source_list, int pos )
 {
   for ( config_source_desc_t * osrc = source_list->first; osrc; osrc = osrc->next )
   {
-    mulconfnt_source_load_targ( osrc );
+    mulconfnt_source_load_targ( osrc, pos );
     mas_add_argvc_argvc( &source_list->targ, &osrc->targ, 0 );
   }
 }
@@ -51,6 +53,9 @@ mulconfnt_source_list_add_source( config_source_list_t * source_list, config_sou
   config_source_desc_t *osrc = NULL;
 
   osrc = mulconfnt_source_create_setup( source_type, count, data_ptr, delims, eq, pref_ids );
-  mulconfnt_source_list_add( source_list, osrc );
+/*if ( !osrc )
+    DIE( "FATAL ERROR: can't create \"source\" - %d; %d; %p; %s; %s; %p\n", source_type, count, data_ptr, delims, eq, pref_ids  ); */
+  if ( osrc )
+    mulconfnt_source_list_add( source_list, osrc );
   return osrc;
 }

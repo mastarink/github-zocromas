@@ -1,4 +1,5 @@
 #include <string.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -32,21 +33,31 @@ mulconfnt_source_set_string_ptr( config_source_desc_t * osrc, char *string )
 }
 
 char *
-mulconfnt_source_load_string( config_source_desc_t * osrc )
+mulconfnt_source_load_string( config_source_desc_t * osrc, int pos )
 {
   if ( osrc && osrc->load_string_fun )
-    mulconfnt_source_set_string_ptr( osrc, osrc->load_string_fun( osrc ) );
+    mulconfnt_source_set_string_ptr( osrc, osrc->load_string_fun( osrc, pos ) );
   return osrc ? osrc->string : NULL;
 }
 
 mas_argvc_t *
-mulconfnt_source_load_targ( config_source_desc_t * osrc )
+mulconfnt_source_load_targ( config_source_desc_t * osrc, int pos )
 {
   if ( osrc )
   {
-    mas_argvc_delete( &osrc->targ );
-    if ( osrc && osrc->load_targ_fun )
-      osrc->targ = osrc->load_targ_fun( osrc, osrc->targ );
+    if ( pos == osrc->targ_loaded )
+    {
+      mas_argvc_delete( &osrc->targ );
+      if ( osrc && osrc->load_targ_fun )
+      {
+        osrc->targ = osrc->load_targ_fun( osrc, osrc->targ, pos );
+      }
+      osrc->targ_loaded++;
+    }
+    else if ( pos != osrc->targ_loaded - 1 )
+    {
+      mas_argvc_delete( &osrc->targ );
+    }
   }
   return osrc ? &osrc->targ : NULL;
 }
@@ -104,16 +115,19 @@ mulconfnt_source_arg_no( config_source_desc_t * osrc, int i )
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
 
-void
-mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+int
+mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_list_t * tablist, int pos )
 {
-  mulconfnt_source_load_targ( osrc );
+  int nargs = 0;
+
+  mulconfnt_source_load_targ( osrc, pos );
   for ( int iarg = 0; osrc && !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
     static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
     const char *next_arg = NULL;
 
+    nargs++;
     if ( iarg < osrc->targ.argc - 1 )
       next_arg = osrc->targ.argv[iarg + 1];
 
@@ -140,7 +154,7 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
         fprintf( stderr, "VARIANT %s\n", labels[variantid] );
       config_option_t *opt = NULL;
 
-      opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL );
+      opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
       while ( opt && opt->restype == MULCONF_RESTYPE_ALIAS && opt->ptr )
@@ -152,7 +166,8 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
-        opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value );
+        opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
+                                                      osrc->flags );
         if ( do_fprintf )
           fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );
 
@@ -186,6 +201,21 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       opt = NULL;
     }
   }
+  return nargs;
+}
+
+void
+mulconfnt_source_lookup_all( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+{
+  int n = 0;
+
+  while ( mulconfnt_source_lookup_seq( osrc, tablist, n++ ) > 0 );
+}
+
+int
+mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+{
+  return mulconfnt_source_lookup_seq( osrc, tablist, 0 );
 }
 
 unsigned long

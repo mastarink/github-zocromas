@@ -26,8 +26,7 @@ mulconfnt_error_delete( config_error_t * error )
 }
 
 int
-mulconfnt_error_vset( config_error_t * error, int line, const char *func, const char *file, unsigned long flags _uUu_, const char *fmt _uUu_,
-                      va_list args _uUu_ )
+mulconfnt_error_vset( config_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, va_list args )
 {
   int r = 0;
 

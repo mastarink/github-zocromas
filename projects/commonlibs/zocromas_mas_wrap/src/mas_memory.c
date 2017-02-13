@@ -66,11 +66,11 @@ destructor_global_status( void )
 
     out = fopen( "mas_debug_memory.tmp", "w" );
 //    r = 
-      print_memlist_msg( FL, out,                                  /* */
-                           "\x1b[0;1;7;44;35m" DUF_MEM_ROWL "<  1.", /* */
-                           "\n\x1b[0;1;7;46;37m" DUF_MEM_ROWL "<  2.", /* */
-                           "\x1b[0;1;7;32m    MEMORY FREE    ",      /* */
-                           "\x1b[0;1;7;44;35m  >" DUF_MEM_ROWR "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
+    print_memlist_msg( FL, out,                                      /* */
+                       "\x1b[0;1;7;44;35m" DUF_MEM_ROWL "<  1.",     /* */
+                       "\n\x1b[0;1;7;46;37m" DUF_MEM_ROWL "<  2.",   /* */
+                       "\x1b[0;1;7;32m    MEMORY FREE    ",          /* */
+                       "\x1b[0;1;7;44;35m  >" DUF_MEM_ROWR "\x1b[0m", "\n\n\x1b[0;1;33;41m                              MEMORY TABLE                              \x1b[0m" /* */
              );
 /*  if ( r >= 0 )
       fprintf( out, "[%d]\n", r ); */
@@ -461,7 +461,7 @@ _mas_malloc( const char *func, int line, size_t size )
       }
       else
       {
-        fprintf( stderr, "\nMALLOC - CAN'T ALLOCATE\n" );
+        fprintf( stderr, "\nMALLOC - CAN'T ALLOCATE [%lu]\n", ( unsigned long ) real_size );
         exit( 11 );
       }
     }

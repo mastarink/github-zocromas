@@ -21,51 +21,67 @@ source_check_env( int count _uUu_, const void *data_ptr _uUu_, const char *delim
 }
 
 static int
-source_check_direct( int count _uUu_, const void *data_ptr _uUu_, const char *delims
+source_check_string( int count _uUu_, const void *data_ptr _uUu_, const char *delims
                      _uUu_, const char *eq _uUu_, const config_prefix_encoder_t * pref_ids _uUu_ )
 {
   return 1;
 }
 
 static char *
-source_load_string_direct( config_source_desc_t * desc _uUu_ )
+source_load_string_string( config_source_desc_t * desc _uUu_, int pos )
 {
-  return desc && desc->data_ptr ? mas_strdup( desc->data_ptr ) : NULL;
+  return desc && desc->data_ptr && !pos ? mas_strdup( desc->data_ptr ) : NULL;
 }
 
 static mas_argvc_t
-source_load_targ_direct( config_source_desc_t * desc, mas_argvc_t targ )
+source_load_targ_string( config_source_desc_t * desc, mas_argvc_t targ, int pos )
 {
-  if ( desc && desc->data_ptr )
+  if ( desc && desc->data_ptr && !pos )
     mas_add_argvc_args_d( &targ, ( char * ) desc->data_ptr, 0, desc->delims );
   return targ;
 }
 
 static char *
-source_load_string_env( config_source_desc_t * desc )
+source_load_string_env( config_source_desc_t * desc, int pos )
 {
-  return desc && desc->data_ptr ? mas_strdup( getenv( ( char * ) desc->data_ptr ) ) : NULL;
+  return desc && desc->data_ptr && !pos ? mas_strdup( getenv( ( char * ) desc->data_ptr ) ) : NULL;
 }
 
 static char *
-source_load_string_argv( config_source_desc_t * desc )
+source_load_string_argv( config_source_desc_t * desc, int pos )
 {
-  return desc ? mas_argv_join( desc->count, ( char ** ) desc->data_ptr, 0, desc->delim ) : NULL;
+  return desc && desc->data_ptr && !pos ? mas_argv_join( desc->count, ( char ** ) desc->data_ptr, 0, desc->delim ) : NULL;
+}
+
+static char *
+source_load_string_margv( config_source_desc_t * desc, int pos )
+{
+  return desc && desc->data_ptr && pos < desc->count ? mas_argv_join( 0, ( ( char *** ) desc->data_ptr )[pos], 0, desc->delim ) : NULL;
 }
 
 static mas_argvc_t
-source_load_targ_env( config_source_desc_t * desc, mas_argvc_t targ )
+source_load_targ_env( config_source_desc_t * desc, mas_argvc_t targ, int pos )
 {
-  if ( desc && desc->data_ptr )
+  if ( desc && desc->data_ptr && !pos )
     mas_add_argvc_args_d( &targ, getenv( ( char * ) desc->data_ptr ), 0, desc->delims );
+
   return targ;
 }
 
 static mas_argvc_t
-source_load_targ_argv( config_source_desc_t * desc, mas_argvc_t targ )
+source_load_targ_argv( config_source_desc_t * desc, mas_argvc_t targ, int pos )
 {
-  if ( desc && desc->data_ptr )
+  if ( desc && desc->data_ptr && !pos )
     mas_add_argvc_argv( &targ, desc->count, ( char ** ) desc->data_ptr, 0 );
+  return targ;
+}
+
+static mas_argvc_t
+source_load_targ_margv( config_source_desc_t * desc, mas_argvc_t targ, int pos )
+{
+  if ( desc && desc->data_ptr && pos < desc->count )
+    mas_add_argvc_argv( &targ, 0, ( ( char *** ) desc->data_ptr )[pos], pos > 0 ? 1 : 0 );
+
   return targ;
 }
 
@@ -78,11 +94,11 @@ static config_source_desc_t default_sources[] =                      /* */
                              .delim = ':',                           /* */
                              .delims = ":",                          /* */
                              .eq = "=",                              /* */
-                             .check_fun = source_check_direct,       /* */
+                             .check_fun = source_check_string,       /* */
                              .open_fun = NULL,                       /* */
                              .close_fun = NULL,                      /* */
-                             .load_string_fun = source_load_string_direct, /* */
-                             .load_targ_fun = source_load_targ_direct, /* */
+                             .load_string_fun = source_load_string_string, /* */
+                             .load_targ_fun = source_load_targ_string, /* */
                              .pref_ids = {
                                           {
                                            .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
@@ -107,6 +123,17 @@ static config_source_desc_t default_sources[] =                      /* */
                           .close_fun = NULL,                         /* */
                           .load_string_fun = source_load_string_env, /* */
                           .load_targ_fun = source_load_targ_env,     /* */
+                          .pref_ids = {
+                                       {
+                                        .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                        },
+                                       {
+                                        .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                        },
+                                       {
+                                        .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                        },
+                                       },                            /* */
                           },                                         /* */
   [MULCONF_SOURCE_ARGV] = {                                          /* */
                            .type = MULCONF_SOURCE_ARGV,              /* */
@@ -132,6 +159,30 @@ static config_source_desc_t default_sources[] =                      /* */
                                          },
                                         },                           /* */
                            },                                        /* */
+  [MULCONF_SOURCE_MARGV] = {                                         /* */
+                            .type = MULCONF_SOURCE_MARGV,            /* */
+                            .count = 0,                              /* */
+                            .data_ptr = NULL,                        /* */
+                            .delim = ':',                            /* */
+                            .delims = 0,                             /* */
+                            .eq = "=",                               /* */
+                            .check_fun = NULL,                       /* */
+                            .open_fun = NULL,                        /* */
+                            .close_fun = NULL,                       /* */
+                            .load_string_fun = source_load_string_margv, /* */
+                            .load_targ_fun = source_load_targ_margv, /* */
+                            .pref_ids = {
+                                         {
+                                          .id = MULCONF_VARIANT_SHORT,.string = "-" /* */
+                                          },
+                                         {
+                                          .id = MULCONF_VARIANT_LONG,.string = "--" /* */
+                                          },
+                                         {
+                                          .id = MULCONF_VARIANT_NONOPT,.string = NULL /* */
+                                          },
+                                         },                          /* */
+                            },                                       /* */
   [MULCONF_SOURCE_STREAM] = {                                        /* */
                              .type = MULCONF_SOURCE_STREAM,          /* */
                              .count = 0,                             /* */

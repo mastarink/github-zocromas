@@ -76,7 +76,11 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     config_source_list_t *plist = mulconfnt_source_list_create(  );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
-    mulconfnt_source_lookup( osrc, &test_tablist );
+    mastest_next_group(  );
+    mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+
+    mulconfnt_source_lookup_all( osrc, &test_tablist );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")",

@@ -44,8 +44,8 @@ mulconfnt_parse( int argc, const char *argv[], const config_option_table_list_t 
   mulconfnt_source_lookup( osrc, tablist );
 
   if ( do_fprintf )
-    fprintf( stderr, "STRING: '%s'\n", mulconfnt_source_load_string( osrc ) );
-  mulconfnt_source_list_integrate( plist );
+    fprintf( stderr, "STRING: '%s'\n", mulconfnt_source_load_string( osrc, 0 ) );
+  mulconfnt_source_list_integrate( plist, 0 );
   {
     if ( plist->targ.argc )
     {

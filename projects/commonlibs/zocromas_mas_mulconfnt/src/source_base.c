@@ -76,8 +76,14 @@ mulconfnt_source_create_setup( config_source_t source_type, int count, const voi
         osrc->load_targ_fun = defsrc->load_targ_fun;
         osrc->next = NULL;
       }
+/*    else
+        DIE( "FATAL ERROR: can't create \"source\" check:%d [%p] %d\n", check, defsrc ? defsrc->check_fun : NULL, defsrc ? defsrc->type : 0xffff ); */
     }
+    else
+      DIE( "FATAL ERROR: can't create \"source\" %p; %d ? %d\n", defsrc, source_type, defsrc ? defsrc->type : 0xffff );
   }
+  else
+    DIE( "FATAL ERROR: can't create \"source\" %d ? %lu\n", source_type, mulconfnt_source_defaults_count(  ) );
   return osrc;
 }
 

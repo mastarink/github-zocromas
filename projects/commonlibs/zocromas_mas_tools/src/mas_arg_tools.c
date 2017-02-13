@@ -568,7 +568,16 @@ mas_add_argv_argv( int targc, char ***ptargv, int argc, char *const *argv, int i
   char **targv = NULL;
   int totargc = 0;
 
-  if ( ptargv )
+  if ( !argc )
+  {
+    char *const *p = argv;
+
+    while ( p && *p )
+      p++;
+    argc = p - argv;
+//  fprintf( stderr, "argc calculated: %d\n", argc );
+  }
+  if ( ptargv && argc )
   {
     totargc = targc + argc - ia_offset;
     targv = *ptargv;
@@ -667,6 +676,15 @@ char *
 mas_argv_join( int targc, char *const *targv, int from_a, char delim )
 {
   char *value = NULL;
+
+  if ( !targc )
+  {
+    char *const *p = targv;
+
+    while ( p && *p )
+      p++;
+    targc = targv - p;
+  }
 
   for ( int ia = from_a; ia < targc; ia++ )
   {

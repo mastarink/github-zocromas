@@ -124,7 +124,11 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
     osrc->flags |= MULCONF_OPTION_SILENT;
 
-    mulconfnt_source_lookup( osrc, &test_tablist );
+    mastest_next_group(  );
+    mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+
+    mulconfnt_source_lookup_all( osrc, &test_tablist );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );

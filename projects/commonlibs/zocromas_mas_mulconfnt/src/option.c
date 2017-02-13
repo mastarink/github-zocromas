@@ -16,7 +16,7 @@
 #include "option.h"
 
 void
-mulconfnt_config_option_set_value( config_option_t * opt, const char *string_value )
+mulconfnt_config_option_set_value( config_option_t * opt, const char *string_value, unsigned long flags )
 {
   if ( opt )
   {
@@ -96,7 +96,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       case MULCONF_RESTYPE_LONG_LONG:
         v_long_long = strtoll( string, &ep, 0 );
         if ( ep != string + strlen( string ) )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /* non-numeric */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
         break;
       case MULCONF_RESTYPE_UINT:
       case MULCONF_RESTYPE_ULONG:
@@ -105,7 +105,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ep != string + strlen( string ) )
         {
           fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /* non-numeric */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
         }
         break;
       case MULCONF_RESTYPE_DOUBLE:
@@ -113,7 +113,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ep != string + strlen( string ) )
         {
           fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /* non-numeric */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
         }
         break;
       case MULCONF_RESTYPE_LDOUBLE:
@@ -124,7 +124,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ep != string + strlen( string ) )
         {
           fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /* non-numeric */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
         }
         break;
       }
@@ -141,7 +141,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         break;
       case MULCONF_RESTYPE_INT:
         if ( ( long long ) ( int ) v_long_long != v_long_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /*unable to place number into int */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into int */
         if ( opt->restype & MULCONF_BITWISE_AND )
           opt->nvalue.v_int &= ( int ) v_long_long;
         else if ( opt->restype & MULCONF_BITWISE_OR )
@@ -153,7 +153,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         break;
       case MULCONF_RESTYPE_UINT:
         if ( ( unsigned long long ) ( unsigned int ) v_ulong_long != v_ulong_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string ); /*unable to place number into int */
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into int */
         if ( opt->restype & MULCONF_BITWISE_AND )
           opt->nvalue.v_uint &= ( int ) v_ulong_long;
         else if ( opt->restype & MULCONF_BITWISE_OR )
@@ -167,7 +167,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ( long long ) ( long ) v_long_long != v_long_long )
         {
         /*unable to place number into long */
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string );
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string );
         }
         if ( opt->restype & MULCONF_BITWISE_AND )
           opt->nvalue.v_long &= ( long ) v_long_long;
@@ -182,7 +182,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ( unsigned long long ) ( unsigned long ) v_ulong_long != v_ulong_long )
         {
         /*unable to place number into long */
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "Wrong value '%s'", string );
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string );
         }
         if ( opt->restype & MULCONF_BITWISE_AND )
           opt->nvalue.v_ulong &= ( long ) v_ulong_long;
@@ -266,7 +266,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
 
 config_option_t *
 mulconfnt_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,
-                                             const char *nextarg, const char *eq, const char *force_value )
+                                             const char *nextarg, const char *eq, const char *force_value, unsigned long flags _uUu_ )
 {
   config_option_t *opt = NULL;
   const config_option_t *topt = option_table;
@@ -341,13 +341,13 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
         fprintf( stderr, "NEW OPT %s; has_value=%d\n", opt->name, has_value );
       if ( found > 2 )
       {
-        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "No value given for '%s' option", opt->name );
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "No value given for '%s' option", opt->name );
       }
       if ( has_value )
       {
         if ( do_fprintf )
           fprintf( stderr, "SET VALUE %s='%s'; has_value=%d\n", opt->name, string_value, has_value );
-        mulconfnt_config_option_set_value( opt, string_value );
+        mulconfnt_config_option_set_value( opt, string_value, flags );
         opt->has_value = has_value;
       }
     }

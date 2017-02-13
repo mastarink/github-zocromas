@@ -20,7 +20,7 @@
 #include "mastest.h"
 
 int
-test_2( int _uUu_ argc, const char _uUu_ * argv[] , int nseries, const char *series_suffix )
+test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix )
 {
   const char *arg _uUu_;
   int v_int0 = 0;
@@ -81,7 +81,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[] , int nseries, const char *ser
     FILE *f;
     char fname[128];
 
-    snprintf( fname, sizeof(fname), "mastest_%d%s.commands", nseries, series_suffix );
+    snprintf( fname, sizeof( fname ), "mastest_%d%s.commands", nseries, series_suffix );
     f = fopen( fname, "w" );
 
     if ( f )
@@ -95,7 +95,11 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[] , int nseries, const char *ser
     config_source_list_t *plist = mulconfnt_source_list_create(  );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, string_args, ":", "=", NULL );
 
-    mulconfnt_source_lookup( osrc, &test_tablist );
+    mastest_next_group(  );
+    mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+
+    mulconfnt_source_lookup_all( osrc, &test_tablist );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
