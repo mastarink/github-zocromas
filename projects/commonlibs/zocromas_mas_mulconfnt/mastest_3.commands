@@ -3,4 +3,6 @@ something
 --string0=lorem-ipsum
 wow
 --string1=lorem ipsum
+--string2='lorem ipsum'
+--string3="lorem ipsum"
 abrakadabra

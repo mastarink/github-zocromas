@@ -21,6 +21,7 @@
 int do_fprintf = 0;
 int f_print_ok = 0;
 int f_print_error = 1;
+static int series_seq = 0;
 static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
@@ -100,13 +101,18 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 //malloc_stats(  );
 }
 
-void
+static void
 mastest_series( int nseries, const char *suff )
 {
   test_series = nseries;
   test_series_suffix = suff;
   test_group = 0;
   test_seq = 0;
+  if ( !series_seq && !tests_count )
+    fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
+  fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count, tests_count_good,
+           tests_count_bad );
+  series_seq++;
 }
 
 void
@@ -126,8 +132,6 @@ int
 mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
 {
   mastest_next(  );
-  if ( !tests_count )
-    fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
   if ( cond )
     tests_count_good++;
   else
@@ -135,7 +139,7 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
   tests_count++;
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
-    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%d] %-30s --\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
+    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%-2d] %-10s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
              test_group, test_seq, cond ? goodmsg : badmsg );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
@@ -182,6 +186,7 @@ main( int argc, const char *argv[] )
   int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_3( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
@@ -193,7 +198,8 @@ main( int argc, const char *argv[] )
     {1, test_2, 2, ""},
     {1, test_2a, 2, "a"},
     {1, test_3, 3, ""},
-    {1, test_3a, 3, "a", 0},
+    {1, test_3a, 3, "a"},
+    {1, test_3q, 3, "q"},
   };
   for ( int u = 0; u < argc; u++ )
   {
@@ -201,9 +207,9 @@ main( int argc, const char *argv[] )
   }
   for ( unsigned ntest = 0; ntest < sizeof( funlist ) / sizeof( funlist[0] ); ntest++ )
   {
-    mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
     if ( funlist[ntest].doit )
     {
+      mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
       funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix );

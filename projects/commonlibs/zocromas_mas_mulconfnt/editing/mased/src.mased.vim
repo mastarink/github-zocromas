@@ -5,6 +5,9 @@ sfind mulconfnt_structs.h
 tab sfind parse.h
 sfind parse.c
 
+tab sfind tools.h
+sfind tools.c
+
 tab sfind source_defaults.h
 sfind source_defaults.c
 

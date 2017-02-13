@@ -70,20 +70,17 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
   int maxmatch = -1;
   config_variant_t maxmatchid = MULCONF_VARIANT_MAX;
 
-  for ( unsigned i = 0; i < sizeof( osrc->pref_ids ) / sizeof( osrc->pref_ids[0] ); i++ )
+  for ( unsigned i = 0; osrc && ( i < sizeof( osrc->pref_ids ) / sizeof( osrc->pref_ids[0] ) ); i++ )
   {
-//  if ( osrc->pref_ids[i].string )
+    int len = match_arg( osrc->pref_ids[i].string, arg );
+
+    if ( do_fprintf > 0 )
+      fprintf( stderr, "PREF '%s' *** '%s' ===> %d\n", osrc->pref_ids[i].string, arg, len );
+
+    if ( len > maxmatch )
     {
-      int len = match_arg( osrc->pref_ids[i].string, arg );
-
-      if ( do_fprintf > 0 )
-        fprintf( stderr, "PREF '%s' *** '%s' ===> %d\n", osrc->pref_ids[i].string, arg, len );
-
-      if ( len > maxmatch )
-      {
-        maxmatch = len;
-        maxmatchid = osrc->pref_ids[i].id;
-      }
+      maxmatch = len;
+      maxmatchid = osrc->pref_ids[i].id;
     }
   }
   return maxmatchid;
@@ -92,13 +89,13 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
 char **
 mulconfnt_source_argv_no( config_source_desc_t * osrc )
 {
-  return osrc->targno.argv;
+  return osrc ? osrc->targno.argv : NULL;
 }
 
 int
 mulconfnt_source_argc_no( config_source_desc_t * osrc )
 {
-  return osrc->targno.argc;
+  return osrc ? osrc->targno.argc : 0;
 }
 
 const char *
@@ -111,7 +108,7 @@ void
 mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   mulconfnt_source_load_targ( osrc );
-  for ( int iarg = 0; !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
+  for ( int iarg = 0; osrc && !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
     static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
@@ -166,7 +163,7 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
         if ( mulconfnt_error_option( opt ) )
         {
 //          opt->source = osrc;
-          mulconfnt_option_set_source( opt, osrc );               /* mostly for error setting */
+          mulconfnt_option_set_source( opt, osrc );                  /* mostly for error setting */
           mulconfnt_error_set_at_source_from_option( opt->source, opt );
         }
         if ( opt->has_value > 0 )
@@ -177,7 +174,7 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
       }
       else
       {
-        mulconfnt_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "Unknown option" );
+        mulconfnt_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg );
       }
       if ( do_fprintf )
         fprintf( stderr, "*** LOOKUP [%s] arg='%s'; name='%s'; value='%s'\n", labels[variantid], arg, opt ? opt->name : "<NONE>",
@@ -191,8 +188,14 @@ mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_
   }
 }
 
+unsigned long
+mulconfnt_source_flags( config_source_desc_t * osrc )
+{
+  return osrc ? osrc->flags : 0L;
+}
+
 int
 mulconfnt_source_flag( config_source_desc_t * osrc, unsigned long mask )
 {
-  return osrc->flags & mask;
+  return osrc && ( osrc->flags & mask ? 1 : 0 );
 }

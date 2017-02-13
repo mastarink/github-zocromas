@@ -30,13 +30,13 @@ source_check_direct( int count _uUu_, const void *data_ptr _uUu_, const char *de
 static char *
 source_load_string_direct( config_source_desc_t * desc _uUu_ )
 {
-  return desc->data_ptr ? mas_strdup( desc->data_ptr ) : NULL;
+  return desc && desc->data_ptr ? mas_strdup( desc->data_ptr ) : NULL;
 }
 
 static mas_argvc_t
 source_load_targ_direct( config_source_desc_t * desc, mas_argvc_t targ )
 {
-  if ( desc->data_ptr )
+  if ( desc && desc->data_ptr )
     mas_add_argvc_args_d( &targ, ( char * ) desc->data_ptr, 0, desc->delims );
   return targ;
 }
@@ -44,22 +44,19 @@ source_load_targ_direct( config_source_desc_t * desc, mas_argvc_t targ )
 static char *
 source_load_string_env( config_source_desc_t * desc )
 {
-  return desc->data_ptr ? mas_strdup( getenv( ( char * ) desc->data_ptr ) ) : NULL;
+  return desc && desc->data_ptr ? mas_strdup( getenv( ( char * ) desc->data_ptr ) ) : NULL;
 }
 
 static char *
 source_load_string_argv( config_source_desc_t * desc )
 {
-  char *s = NULL;
-
-  s = mas_argv_join( desc->count, ( char ** ) desc->data_ptr, 0, desc->delim );
-  return s;
+  return desc ? mas_argv_join( desc->count, ( char ** ) desc->data_ptr, 0, desc->delim ) : NULL;
 }
 
 static mas_argvc_t
 source_load_targ_env( config_source_desc_t * desc, mas_argvc_t targ )
 {
-  if ( desc->data_ptr )
+  if ( desc && desc->data_ptr )
     mas_add_argvc_args_d( &targ, getenv( ( char * ) desc->data_ptr ), 0, desc->delims );
   return targ;
 }
@@ -67,7 +64,7 @@ source_load_targ_env( config_source_desc_t * desc, mas_argvc_t targ )
 static mas_argvc_t
 source_load_targ_argv( config_source_desc_t * desc, mas_argvc_t targ )
 {
-  if ( desc->data_ptr )
+  if ( desc && desc->data_ptr )
     mas_add_argvc_argv( &targ, desc->count, ( char ** ) desc->data_ptr, 0 );
   return targ;
 }

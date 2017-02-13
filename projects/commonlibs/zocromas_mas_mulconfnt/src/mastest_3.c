@@ -11,6 +11,7 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "tools.h"
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -25,6 +26,8 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
+  char *v_string2 = NULL;
+  char *v_string3 = NULL;
 
   const char *xargv[] = {
     argv[0],
@@ -32,9 +35,11 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "--string0=lorem-ipsum",
     "wow",
     "--string1=lorem ipsum",
+    "--string2='lorem ipsum'",
+    "--string3=\"lorem ipsum\"",
     "abrakadabra",
   };
-#define NUM_OPTS 2
+#define NUM_OPTS 4
 #define NUM_NOPTS ( sizeof( xargv ) / sizeof( xargv[0] ) - NUM_OPTS )
 
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
@@ -42,6 +47,8 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   config_option_t options[] = {
     {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0,.flags = MULCONF_OPTION_NEED_EQ}
     , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1,.flags = MULCONF_OPTION_NEED_EQ}
+    , {"string2", 0, MULCONF_RESTYPE_STRING, &v_string2,.flags = MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
+    , {"string3", 0, MULCONF_RESTYPE_STRING, &v_string3,.flags = MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -75,16 +82,30 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")",
                   mulconfnt_error_source( osrc ), mulconfnt_error_source_msg( osrc ) );
     mastest_next_group(  );
+
     mastest_exam( __LINE__, v_string0
                   && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
+
     mastest_exam( __LINE__, v_string1
                   && 0 == strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
     if ( v_string1 )
       mas_free( v_string1 );
     v_string1 = NULL;
+
+    mastest_exam( __LINE__, v_string2
+                  && 0 == strcmp( v_string2, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string2 ? v_string2 : "<NULL>", "lorem ipsum" );
+    if ( v_string2 )
+      mas_free( v_string2 );
+    v_string2 = NULL;
+
+    mastest_exam( __LINE__, v_string3
+                  && 0 == strcmp( v_string3, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string3 ? v_string3 : "<NULL>", "lorem ipsum" );
+    if ( v_string3 )
+      mas_free( v_string3 );
+    v_string3 = NULL;
 
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mulconfnt_source_argc_no( osrc ), NUM_NOPTS );

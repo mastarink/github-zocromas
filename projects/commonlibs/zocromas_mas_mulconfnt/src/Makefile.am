@@ -4,6 +4,7 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_mas_mulconfnt.la
 libzocromas_mas_mulconfnt_la_SOURCES = \
 	parse.c \
+	tools.c \
 	source_defaults.c \
 	source_list_base.c \
 	source_list.c \
@@ -33,6 +34,7 @@ mastest_SOURCES= \
 	mastest_2a.c \
 	mastest_3.c \
 	mastest_3a.c \
+	mastest_3q.c \
 	mastest_popt1.c \
 	mastest_popt.c
 else

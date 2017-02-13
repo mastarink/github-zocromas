@@ -28,22 +28,26 @@ mulconfnt_source_list_create( void )
 void
 mulconfnt_source_list_close( config_source_list_t * source_list )
 {
-  config_source_desc_t *osrc = source_list->first;
-
-  while ( osrc )
+  if ( source_list )
   {
-    config_source_desc_t *next = osrc->next;
+    config_source_desc_t *osrc = source_list->first;
 
-    mulconfnt_source_delete( osrc );
-    osrc = next;
+    while ( osrc )
+    {
+      config_source_desc_t *next = osrc->next;
+
+      mulconfnt_source_delete( osrc );
+      osrc = next;
+    }
+    source_list->first = NULL;
+    mas_argvc_delete( &source_list->targ );
   }
-  source_list->first = NULL;
-  mas_argvc_delete( &source_list->targ );
 }
 
 void
 mulconfnt_source_list_delete( config_source_list_t * source_list )
 {
   mulconfnt_source_list_close( source_list );
-  mas_free( source_list );
+  if ( source_list )
+    mas_free( source_list );
 }

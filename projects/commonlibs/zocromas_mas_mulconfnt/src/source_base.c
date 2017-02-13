@@ -108,9 +108,7 @@ mulconfnt_source_close( config_source_desc_t * osrc )
 void
 mulconfnt_source_delete( config_source_desc_t * osrc )
 {
+  mulconfnt_source_close( osrc );
   if ( osrc )
-  {
-    mulconfnt_source_close( osrc );
     mas_free( osrc );
-  }
 }

@@ -4,6 +4,8 @@
 # include "mulconfnt_types.h"
 
 void mulconfnt_config_option_set_value( config_option_t * opt, const char *string_value );
+
+unsigned long mulconfnt_config_option_flags( const config_option_t * opt );
 int mulconfnt_config_option_flag( const config_option_t * opt, unsigned long mask );
 
 config_option_t *mulconfnt_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,

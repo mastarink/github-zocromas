@@ -9,6 +9,9 @@
 
 #include "mulconfnt_structs.h"
 
+#include "option.h"
+#include "source.h"
+
 #include "mulconfnt_error_base.h"
 #include "mulconfnt_error.h"
 
@@ -18,7 +21,7 @@ mulconfnt_error_vset_source( config_source_desc_t * osrc, int line, const char *
   int r = 0;
 
   if ( osrc )
-    r = mulconfnt_error_vset( &osrc->error, line, func, file, fmt, args );
+    r = mulconfnt_error_vset( &osrc->error, line, func, file, mulconfnt_source_flags( osrc ), fmt, args );
   return r;
 }
 
@@ -41,7 +44,7 @@ mulconfnt_error_vset_option( config_option_t * opt, int line, const char *func, 
 
   if ( opt )
   {
-    r = mulconfnt_error_vset( &opt->error, line, func, file, fmt, args );
+    r = mulconfnt_error_vset( &opt->error, line, func, file, mulconfnt_config_option_flags( opt ), fmt, args );
     if ( opt->source )
       mulconfnt_error_set_at_source_from_option( opt->source, opt );
   }

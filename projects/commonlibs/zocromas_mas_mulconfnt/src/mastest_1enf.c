@@ -23,7 +23,7 @@
 #define ULONG_MIN 0
 #define ULLONG_MIN 0
 int
-test_1enf( int argc _uUu_, const char *argv[] , int nseries, const char *series_suffix )
+test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
 {
   int argcount;
   const char *arg _uUu_;
@@ -76,7 +76,7 @@ test_1enf( int argc _uUu_, const char *argv[] , int nseries, const char *series_
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
-    {"num0xx", 0, MULCONF_RESTYPE_UINT, &v_uint0}
+    {"num0other", 0, MULCONF_RESTYPE_UINT, &v_uint0}
     , {"aliasnum0", 0, MULCONF_RESTYPE_ALIAS, "num0"}
     , {"num1", 0, MULCONF_RESTYPE_UINT, &v_uint1}
     , {"num2", 0, MULCONF_RESTYPE_UINT, &v_uint2}
@@ -105,7 +105,7 @@ test_1enf( int argc _uUu_, const char *argv[] , int nseries, const char *series_
     FILE *f;
     char fname[128];
 
-    snprintf( fname, sizeof(fname), "mastest_%d%s.commands", nseries, series_suffix );
+    snprintf( fname, sizeof( fname ), "mastest_%d%s.commands", nseries, series_suffix );
     f = fopen( fname, "w" );
 
     if ( f )
@@ -121,6 +121,8 @@ test_1enf( int argc _uUu_, const char *argv[] , int nseries, const char *series_
   {
     config_source_list_t *plist = mulconfnt_source_list_create(  );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+
+    osrc->flags |= MULCONF_OPTION_SILENT;
 
     mulconfnt_source_lookup( osrc, &test_tablist );
 

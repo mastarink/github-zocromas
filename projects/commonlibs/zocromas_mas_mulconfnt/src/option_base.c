@@ -33,22 +33,26 @@ mulconfnt_config_option_create( void )
 void
 mulconfnt_config_option_close( config_option_t * opt )
 {
-  if ( opt->name )
-    mas_free( opt->name );
-  if ( opt->desc )
-    mas_free( opt->desc );
-  if ( opt->argdesc )
-    mas_free( opt->argdesc );
-  if ( opt->string_value )
-    mas_free( opt->string_value );
-  mulconfnt_error_close( &opt->error );
+  if ( opt )
+  {
+    if ( opt->name )
+      mas_free( opt->name );
+    if ( opt->desc )
+      mas_free( opt->desc );
+    if ( opt->argdesc )
+      mas_free( opt->argdesc );
+    if ( opt->string_value )
+      mas_free( opt->string_value );
+    mulconfnt_error_close( &opt->error );
+  }
 }
 
 void
 mulconfnt_config_option_delete( config_option_t * opt )
 {
   mulconfnt_config_option_close( opt );
-  mas_free( opt );
+  if ( opt )
+    mas_free( opt );
 }
 
 config_option_t *
