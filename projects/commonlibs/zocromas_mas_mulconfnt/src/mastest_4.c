@@ -77,6 +77,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   config_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
+  setenv( "MASTEST_4", string_args, 0 );                             // allocated 6080 bytes ?!
   {
     FILE *f;
     char fname[128];
@@ -92,7 +93,6 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   }
 
   {
-    setenv( "MASTEST_4", string_args, 0 );
     config_source_list_t *plist = mulconfnt_source_list_create(  );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MASTEST_4", ":", "=", NULL );
 
@@ -102,10 +102,27 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
+    if ( osrc && osrc->oldtarg.argc )
+    {
+      FILE *f;
+      char fname[128];
+
+      snprintf( fname, sizeof( fname ), "mastest_%d%s.args", nseries, series_suffix );
+      f = fopen( fname, "w" );
+      if ( f )
+      {
+        for ( int i = 0; i < osrc->oldtarg.argc; i++ )
+        {
+          fprintf( f, "%s\n", osrc->oldtarg.argv[i] );
+        }
+        fclose( f );
+      }
+    }
 
     mastest_next_group(  );
-    mastest_exam( __LINE__, 0 == strcmp( getenv( "MASTEST_4" ), string_args ), "OK", "Error", "MASTEST_4: %s ? %s", getenv( "MASTEST_4" ),
-                  string_args );
+    const char *ge = getenv( "MASTEST_4" );
+
+    mastest_exam( __LINE__, ge && 0 == strcmp( ge, string_args ), "OK", "Error", "MASTEST_4: %s ? %s (%d)", ge, string_args, strlen(ge) );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
@@ -158,6 +175,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     mastest_exam( __LINE__, bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
     mastest_exam( __LINE__, bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
 #endif
+    unsetenv( "MASTEST_4" );
     mulconfnt_source_list_delete( plist );
   }
   return 0;

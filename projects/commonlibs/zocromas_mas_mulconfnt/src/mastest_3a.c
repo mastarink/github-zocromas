@@ -58,7 +58,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     if ( f )
     {
-      for ( int i = 0; i < xargc; i++ )
+      for ( int i = 1; i < xargc; i++ )
       {
         fprintf( f, "%s\n", xargv[i] );
       }
@@ -69,13 +69,30 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     config_source_list_t *plist = mulconfnt_source_list_create(  );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
-    osrc->flags |= MULCONF_OPTION_SILENT;
+    if ( osrc )
+      osrc->flags |= MULCONF_OPTION_SILENT;
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
+    if ( osrc && osrc->oldtarg.argc )
+    {
+      FILE *f;
+      char fname[128];
+
+      snprintf( fname, sizeof( fname ), "mastest_%d%s.args", nseries, series_suffix );
+      f = fopen( fname, "w" );
+      if ( f )
+      {
+        for ( int i = 1; i < osrc->oldtarg.argc; i++ )
+        {
+          fprintf( f, "%s\n", osrc->oldtarg.argv[i] );
+        }
+        fclose( f );
+      }
+    }
 
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")", mulconfnt_error_source( osrc ),

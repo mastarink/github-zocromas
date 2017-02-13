@@ -73,6 +73,7 @@ struct config_source_desc_s
 
   int targ_loaded; /* sequential number of targ set */
   char *string;
+  mas_argvc_t oldtarg;
   mas_argvc_t targ;
   mas_argvc_t targno;
 

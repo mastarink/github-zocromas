@@ -100,6 +100,22 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
+    if ( osrc && osrc->oldtarg.argc )
+    {
+      FILE *f;
+      char fname[128];
+
+      snprintf( fname, sizeof( fname ), "mastest_%d%s.args", nseries, series_suffix );
+      f = fopen( fname, "w" );
+      if ( f )
+      {
+        for ( int i = 0; i < osrc->oldtarg.argc; i++ )
+        {
+          fprintf( f, "%s\n", osrc->oldtarg.argv[i] );
+        }
+        fclose( f );
+      }
+    }
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );

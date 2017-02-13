@@ -47,7 +47,11 @@ mulconfnt_source_load_targ( config_source_desc_t * osrc, int pos )
   {
     if ( pos == osrc->targ_loaded )
     {
-      mas_argvc_delete( &osrc->targ );
+      mas_argvc_delete( &osrc->oldtarg );
+      osrc->oldtarg = osrc->targ;
+      osrc->targ.argc = 0;
+      osrc->targ.argv = NULL;
+//    mas_argvc_delete( &osrc->targ );
       if ( osrc && osrc->load_targ_fun )
       {
         osrc->targ = osrc->load_targ_fun( osrc, osrc->targ, pos );
@@ -56,7 +60,11 @@ mulconfnt_source_load_targ( config_source_desc_t * osrc, int pos )
     }
     else if ( pos != osrc->targ_loaded - 1 )
     {
-      mas_argvc_delete( &osrc->targ );
+      mas_argvc_delete( &osrc->oldtarg );
+      osrc->oldtarg = osrc->targ;
+      osrc->targ.argc = 0;
+      osrc->targ.argv = NULL;
+//    mas_argvc_delete( &osrc->targ );
     }
   }
   return osrc ? &osrc->targ : NULL;

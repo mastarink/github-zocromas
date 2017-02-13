@@ -21,6 +21,7 @@
 #include "parse.h"
 
 int do_fprintf = 0;
+int sound_on_error = 1;
 int stop_on_error = 0;
 int sleep_on_error = 1;
 int f_print_ok = 0;
@@ -30,6 +31,7 @@ static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
 
+#if 0
 extern void *__libc_malloc( size_t size );
 
 int malloc_hook_active = 0;
@@ -61,7 +63,7 @@ malloc( size_t size )
     return my_malloc_hook( size, caller );
   return __libc_malloc( size );
 }
-
+#endif
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
 {
@@ -143,8 +145,8 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
   tests_count++;
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
-    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%-2d] %-10s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
-             test_group, test_seq, cond ? goodmsg : badmsg );
+    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%-2d] %-10s%s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
+             test_group, test_seq, cond ? goodmsg : badmsg, !cond && sound_on_error ? "\x07" : "" );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
   }

@@ -20,7 +20,7 @@
 #include "mastest.h"
 
 int
-test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
+test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *series_suffix )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -51,7 +51,6 @@ test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   long double v_ldouble0 = 0;
 
   const char *xargv1[] = {
-    argv[0],
     "something",
     "--string0=lorem-ipsum",
     "--string1", "lorem ipsum",
@@ -67,7 +66,6 @@ test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     NULL
   };
   const char *xargv2[] = {
-    argv[0],
     "--lnum3=-12",
     "--lnum4=-0x8000000000000000",
     "--llnum0=5437",
@@ -85,8 +83,8 @@ test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   };
   const char **xxargv[2] = { &xargv1[0], &xargv2[0] };
   int xxargc = sizeof( xxargv ) / sizeof( xxargv[0] );
-  int argc1=sizeof( xxargv[0] ) / sizeof( xxargv[0][0] );
-  int argc2=sizeof( xxargv[1] ) / sizeof( xxargv[1][0] );
+  int argc1 = sizeof( xxargv[0] ) / sizeof( xxargv[0][0] );
+  int argc2 = sizeof( xxargv[1] ) / sizeof( xxargv[1][0] );
   int totargc _uUu_ = argc1 + argc2;
 
   config_option_t options[] = {
@@ -145,6 +143,22 @@ test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
     mulconfnt_source_lookup_all( osrc, &test_tablist );
+    if ( osrc && osrc->oldtarg.argc )
+    {
+      FILE *f;
+      char fname[128];
+
+      snprintf( fname, sizeof( fname ), "mastest_%d%s.args", nseries, series_suffix );
+      f = fopen( fname, "w" );
+      if ( f )
+      {
+        for ( int i = 0; i < osrc->oldtarg.argc; i++ )
+        {
+          fprintf( f, "%s\n", osrc->oldtarg.argv[i] );
+        }
+        fclose( f );
+      }
+    }
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
@@ -191,20 +205,20 @@ test_1mul( int argc _uUu_, const char *argv[], int nseries, const char *series_s
                   && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
                   ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
     mastest_next_group(  );
-    mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ), 4 );
+    mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == 3, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ), 4 );
 
-    arg = mulconfnt_source_arg_no( osrc, 1 );
+    arg = mulconfnt_source_arg_no( osrc, 0 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
-    arg = mulconfnt_source_arg_no( osrc, 2 );
+    arg = mulconfnt_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_arg_no( osrc, 3 );
+    arg = mulconfnt_source_arg_no( osrc, 2 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
     char **argsno = mulconfnt_source_argv_no( osrc );
 
-    mastest_exam( __LINE__, argsno && argsno[1] && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-    mastest_exam( __LINE__, argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-    mastest_exam( __LINE__, argsno && argsno[3] && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+    mastest_exam( __LINE__, argsno && argsno[0] && 0 == strcmp( "something", argsno[0] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[0] );
+    mastest_exam( __LINE__, argsno && argsno[1] && 0 == strcmp( "wow", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[1] );
+    mastest_exam( __LINE__, argsno && argsno[2] && 0 == strcmp( "abrakadabra", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[2] );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
