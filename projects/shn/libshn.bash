@@ -1,5 +1,6 @@
 function shn_code ()
 {
+# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
   local retcode=0
   local i
   declare -gx -A MSH_SHN_LAST_ACTION
@@ -61,10 +62,10 @@ function shn_code ()
       shn_uni_debug "-" "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
     ;;
     G)
-      shn_uni_debug core $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_uni_debug core "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
     ;;
     Y)
-      shn_core_debug_installed $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_core_debug_installed "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
     ;;
     c)
       while [[ $1 == -* ]] ; do
@@ -159,10 +160,10 @@ function shn_code ()
     ;;
     L)
       shn_msg List
-      shn_build_list $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_list "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
     ;;
     x)
-      shn_std_command build $@ || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_std_command build "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
     ;;
     q1)
       shn_msglist $@
@@ -199,6 +200,7 @@ function shn_i ()
   local in_shift=0
 # export MSH_SHN_DEBUG=yes  
   shift
+# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
 # for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
   shn_dbgmsg 1 shn
   shn_dbgmsg 2a shn
@@ -209,10 +211,10 @@ function shn_i ()
   shn_dbgmsg 3 shn
   if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
-    shn_project_each '' 0 shn $@ || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+    shn_project_each '' 0 shn "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
   elif [[ "$code" =~ ^\?(.*)$ ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
-    shn_project_each "${BASH_REMATCH[1]}" 0 shn $@ || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+    shn_project_each "${BASH_REMATCH[1]}" 0 shn "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
   elif [[ "$code" == cont ]] ; then
     if [[ "${MSH_SHN_DIRS[status]}" ]] && [[ -d "${MSH_SHN_DIRS[status]}" ]] ; then
       shn_msg ">>>>>>>>>>>> $MSH_SHN_STATUS @"
@@ -271,13 +273,14 @@ function shn ()
   local -i retcode=0
   declare -gx MSH_SHN_CWD 
   MSH_SHN_CWD=`pwd`
-# echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
+# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
+  echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
   if pushd . &>/dev/null ; then
     if [[ $MSH_SHN_DISABLE_TIMING ]] ; then 
-      shn_i $*
+      shn_i "$@"
       retcode=$?
     else
-      time shn_i $*
+      time shn_i "$@"
       retcode=$?
     fi
     popd &>/dev/null

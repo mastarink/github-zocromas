@@ -195,6 +195,10 @@ main( int argc, const char *argv[] )
     {1, test_3, 3, ""},
     {1, test_3a, 3, "a", 0},
   };
+  for ( int u = 0; u < argc; u++ )
+  {
+    fprintf( stderr, "argv[%d]=%s\n", u, argv[u] );
+  }
   for ( unsigned ntest = 0; ntest < sizeof( funlist ) / sizeof( funlist[0] ); ntest++ )
   {
     mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );

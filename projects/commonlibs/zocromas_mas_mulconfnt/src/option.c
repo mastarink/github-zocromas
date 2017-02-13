@@ -330,7 +330,7 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
         fprintf( stderr, "NEW OPT %s; has_value=%d\n", opt->name, has_value );
       if ( found > 2 )
       {
-        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "No '=<value>' given for %s", opt->name );
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, "No value given for '%s' option", opt->name );
       }
       if ( has_value )
       {

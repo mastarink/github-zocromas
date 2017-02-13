@@ -1,13 +1,12 @@
 function shn_run ()
 {
-
-
   local debugdir="$MSH_SHN_PROJECT_DIR/debug"
   local retcode=0
   local runretcode=0
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin sedex lt rname
   local bindir libsdir
+# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
   
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
      shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>"
@@ -35,7 +34,7 @@ function shn_run ()
     export MSH_SHN_LAUNCHDATEMT=$(datemt)
     shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
       shn_msg
-      shn_human_run $@  ### running $bin here
+      shn_human_run "$@"  ### running $bin here
 
 
         if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
@@ -65,8 +64,9 @@ function shn_run ()
 }
 function shn_human_run ()
 {
-  local qargs
+  local qargs a
   ulimit -c unlimited  #### for core dump:
+# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
   done

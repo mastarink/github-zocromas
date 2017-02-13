@@ -188,6 +188,7 @@ function shn_project_each_control_c ()
 }
 function shn_project_each ()
 {
+# echo -n "$# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
   local match=$1
   shift
   local index_from=$1
