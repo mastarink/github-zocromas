@@ -37,12 +37,19 @@ sfind source_list.c
 
 
 tab sfind mastest_popt.c
-sfind mastest_0.c
+sfind mastest_popt1.c
+tab sfind mastest_0.c
 sfind mastest_1.c
+sfind mastest_1mul.c
 sfind mastest_1u.c
-sfind mastest_2.c
+sfind mastest_1enf.c
+tab sfind mastest_2.c
 sfind mastest_2a.c
-sfind mastest_3.c
+tab sfind mastest_3.c
+sfind mastest_3a.c
+sfind mastest_3q.c
+tab sfind mastest_4.c
+tab sfind mastest_5.c
 
 tab sfind mulconfnt_error.h
 sfind mulconfnt_error.c

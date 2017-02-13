@@ -20,9 +20,8 @@
 #include "mastest.h"
 
 int
-test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix )
+test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix )
 {
-  const char *arg _uUu_;
   int v_int0 = 0;
   int v_int1 = 0;
   int v_int2 = 0;
@@ -46,10 +45,21 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   long bitwise3 = 0x10204;
 
   const char *string_args = {
-    "num0=5437:num1=0x12:num2=012:num3=2147483647:num4=-2147483648:" /* */
-            "lnum0=0xffffffffff:lnum1=0xff:lnum2=0x7fffffffffffffff:lnum3=-12:lnum4=-0x8000000000000000:" /* */
-            "llnum0=5437:llnum1=0x12:llnum2=012:llnum3=9223372036854775807:llnum4=-9223372036854775808:" /* */
-            "bwi=0x700:bwi+=0x100:bwi-=0x200",
+    "num0=5437\n"
+            "num1=0x12\n"
+            "num2=012\n"
+            "num3=2147483647\n"
+            "num4=-2147483648\n"
+	    "# may be comment\n"
+            "lnum0=0xffffffffff:lnum1=0xff\n"
+            "lnum2=0x7fffffffffffffff\n"
+	    "\n" /* empty line */
+            "lnum3=-12\n"
+            "lnum4=-0x8000000000000000\n"
+	    "\n" /* empty line */
+	    "\n" /* empty line */
+            "llnum0=5437\n"
+            "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
   };
 
   config_option_t options[] = {
@@ -77,31 +87,32 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   config_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
-  setenv( "MASTEST_4", string_args, 1 );                             // allocated 6080 bytes ?!
+  FILE *fcmds = NULL;
+
   {
     FILE *f;
     char fname[128];
 
     snprintf( fname, sizeof( fname ), "mastest_%d%s.commands", nseries, series_suffix );
     f = fopen( fname, "w" );
-
     if ( f )
     {
       fprintf( f, "%s\n", string_args );
       fclose( f );
     }
+    fcmds = fopen( fname, "r" );
   }
-
   {
     config_source_list_t *plist = mulconfnt_source_list_create(  );
-    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MASTEST_4", ":", "=", NULL );
+    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
 
     mastest_next_group(  );
+    mastest_exam( __LINE__, fcmds ? 1 : 0, "OK", "Error", "fcmds: %p", fcmds );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
+
     if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
@@ -118,11 +129,6 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
         fclose( f );
       }
     }
-
-    mastest_next_group(  );
-    const char *ge = getenv( "MASTEST_4" );
-
-    mastest_exam( __LINE__, ge && 0 == strcmp( ge, string_args ), "OK", "Error", "MASTEST_4: %s ? %s (%d)", ge, string_args, strlen(ge) );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
@@ -156,12 +162,11 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 #if 0
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ) );
-
     arg = mulconfnt_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
-    arg = mulconfnt_source_arg_no( osrc, 2 );
+    arg = mulconfnt_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_arg_no( osrc, 3 );
+    arg = mulconfnt_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
     char **argsno = mulconfnt_source_argv_no( osrc );
@@ -175,8 +180,8 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     mastest_exam( __LINE__, bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
     mastest_exam( __LINE__, bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
 #endif
-    unsetenv( "MASTEST_4" );
     mulconfnt_source_list_delete( plist );
   }
+  fclose( fcmds );
   return 0;
 }

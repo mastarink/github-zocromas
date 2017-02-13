@@ -199,6 +199,7 @@ main( int argc, const char *argv[] )
   int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_4( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_5( int argc, const char *argv[], int nseries, const char *series_suffix );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
@@ -214,6 +215,7 @@ main( int argc, const char *argv[] )
     {1, test_3a, 3, "a"},
     {1, test_3q, 3, "q"},
     {1, test_4, 4, ""},
+    {1, test_5, 5, "", 1},
   };
   for ( int u = 0; u < argc; u++ )
   {

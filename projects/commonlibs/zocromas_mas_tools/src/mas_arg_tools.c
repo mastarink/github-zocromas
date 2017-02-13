@@ -52,7 +52,7 @@ mas_chomp( char *str )
 }
 
 size_t
-mas_chomplen( char *str )
+mas_chomplen( const char *str )
 {
   size_t len = 0;
 

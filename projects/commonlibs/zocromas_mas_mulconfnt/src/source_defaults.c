@@ -85,6 +85,31 @@ source_load_targ_margv( config_source_desc_t * desc, mas_argvc_t targ, int pos )
   return targ;
 }
 
+static mas_argvc_t
+source_load_targ_stream( config_source_desc_t * desc, mas_argvc_t targ, int pos _uUu_ )
+{
+  if ( desc && desc->data_ptr )
+  {
+    FILE *fin = ( FILE * ) desc->data_ptr;
+    char buffer[1024 * 10];
+    char *string = NULL;
+    const char *ignpref = NULL;
+
+    do
+    {
+      string = fgets( buffer, sizeof( buffer ), fin );
+      string = mas_chomp( string );
+      ignpref = desc->pref_ids[MULCONF_VARIANT_IGNORE].string;
+    } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
+    if ( do_fprintf )
+      fprintf( stderr, "READ '%s'\n", string );
+    if ( string && *string )
+      mas_add_argvc_args_d( &targ, string, 0, desc->delims );
+  }
+
+  return targ;
+}
+
 static config_source_desc_t default_sources[] = {
   [MULCONF_SOURCE_STRING] = {
                              .type = MULCONF_SOURCE_STRING,
@@ -183,21 +208,40 @@ static config_source_desc_t default_sources[] = {
                                          },
                             },
   [MULCONF_SOURCE_FILE] = {
-                             .type = MULCONF_SOURCE_FILE,
-                             .count = 0,
-                             .data_ptr = NULL,
-                             .delim = ';',
-                             .delims = ";\n",
-                             .eq = "=",
-                             },
- [MULCONF_SOURCE_STREAM] = {
+                           .type = MULCONF_SOURCE_FILE,
+                           .count = 0,
+                           .data_ptr = NULL,
+                           .delim = ';',
+                           .delims = ";\n",
+                           .eq = "=",
+                           },
+  [MULCONF_SOURCE_STREAM] = {
                              .type = MULCONF_SOURCE_STREAM,
                              .count = 0,
                              .data_ptr = NULL,
-                             .delim = ';',
-                             .delims = ";\n",
+                             .delim = ':',
+                             .delims = ":\r\n",
                              .eq = "=",
-                             },  
+                             .check_fun = NULL,
+                             .open_fun = NULL,
+                             .close_fun = NULL,
+                             .load_string_fun = NULL /*source_load_string_stream */ ,
+                             .load_targ_fun = source_load_targ_stream,
+                             .pref_ids = {
+                                          {
+                                           .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                           },
+                                          {
+                                           .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                           },
+                                          {
+                                           .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                           },
+                                          {
+                                           .id = MULCONF_VARIANT_IGNORE,.string = "#" /* */
+                                           },
+                                          },
+                             },
 };
 
 size_t
