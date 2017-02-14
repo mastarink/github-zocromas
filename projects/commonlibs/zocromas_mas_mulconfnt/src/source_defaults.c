@@ -28,69 +28,70 @@ source_check_string( int count _uUu_, const void *data_ptr _uUu_, const char *de
 }
 
 static char *
-source_load_string_string( config_source_desc_t * desc _uUu_, int pos )
+source_load_string_string( config_source_desc_t * osrc )
 {
-  return desc && desc->data_ptr && !pos ? mas_strdup( desc->data_ptr ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( osrc->data_ptr ) : NULL;
 }
 
 static mas_argvc_t
-source_load_targ_string( config_source_desc_t * desc, mas_argvc_t targ, int pos )
+source_load_targ_string( config_source_desc_t * osrc, mas_argvc_t targ )
 {
-  if ( desc && desc->data_ptr && !pos )
-    mas_add_argvc_args_d( &targ, ( char * ) desc->data_ptr, 0, desc->delims );
+  if ( osrc && osrc->data_ptr && !osrc->npos )
+    mas_add_argvc_args_d( &targ, ( char * ) osrc->data_ptr, 0, osrc->delims );
   return targ;
 }
 
 static char *
-source_load_string_env( config_source_desc_t * desc, int pos )
+source_load_string_env( config_source_desc_t * osrc )
 {
-  return desc && desc->data_ptr && !pos ? mas_strdup( getenv( ( char * ) desc->data_ptr ) ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( getenv( ( char * ) osrc->data_ptr ) ) : NULL;
 }
 
 static char *
-source_load_string_argv( config_source_desc_t * desc, int pos )
+source_load_string_argv( config_source_desc_t * osrc )
 {
-  return desc && desc->data_ptr && !pos ? mas_argv_join( desc->count, ( char ** ) desc->data_ptr, 0, desc->delim ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->npos ? mas_argv_join( osrc->count, ( char ** ) osrc->data_ptr, 0, osrc->delim ) : NULL;
 }
 
 static char *
-source_load_string_margv( config_source_desc_t * desc, int pos )
+source_load_string_margv( config_source_desc_t * osrc )
 {
-  return desc && desc->data_ptr
-          && pos < desc->count ? mas_argv_join( 0, ( ( char *** ) desc->data_ptr )[pos], 0 /* pos > 0 ? 1 : 0 */ , desc->delim ) : NULL;
+  return osrc && osrc->data_ptr
+          && osrc->npos < osrc->count ? mas_argv_join( 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */ ,
+                                                       osrc->delim ) : NULL;
 }
 
 static mas_argvc_t
-source_load_targ_env( config_source_desc_t * desc, mas_argvc_t targ, int pos )
+source_load_targ_env( config_source_desc_t * osrc, mas_argvc_t targ )
 {
-  if ( desc && desc->data_ptr && !pos )
-    mas_add_argvc_args_d( &targ, getenv( ( char * ) desc->data_ptr ), 0, desc->delims );
+  if ( osrc && osrc->data_ptr && !osrc->npos )
+    mas_add_argvc_args_d( &targ, getenv( ( char * ) osrc->data_ptr ), 0, osrc->delims );
   return targ;
 }
 
 static mas_argvc_t
-source_load_targ_argv( config_source_desc_t * desc, mas_argvc_t targ, int pos )
+source_load_targ_argv( config_source_desc_t * osrc, mas_argvc_t targ )
 {
-  if ( desc && desc->data_ptr && !pos )
-    mas_add_argvc_argv( &targ, desc->count, ( char ** ) desc->data_ptr, 0 );
+  if ( osrc && osrc->data_ptr && !osrc->npos )
+    mas_add_argvc_argv( &targ, osrc->count, ( char ** ) osrc->data_ptr, 0 );
   return targ;
 }
 
 static mas_argvc_t
-source_load_targ_margv( config_source_desc_t * desc, mas_argvc_t targ, int pos )
+source_load_targ_margv( config_source_desc_t * osrc, mas_argvc_t targ )
 {
-  if ( desc && desc->data_ptr && pos < desc->count )
-    mas_add_argvc_argv( &targ, 0, ( ( char *** ) desc->data_ptr )[pos], 0 /* pos > 0 ? 1 : 0 */  );
+  if ( osrc && osrc->data_ptr && osrc->npos < osrc->count )
+    mas_add_argvc_argv( &targ, 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */  );
 
   return targ;
 }
 
 static mas_argvc_t
-source_load_targ_stream( config_source_desc_t * desc, mas_argvc_t targ, int pos _uUu_ )
+source_load_targ_stream( config_source_desc_t * osrc, mas_argvc_t targ )
 {
-  if ( desc && desc->data_ptr )
+  if ( osrc && osrc->data_ptr )
   {
-    FILE *fin = ( FILE * ) desc->data_ptr;
+    FILE *fin = ( FILE * ) osrc->data_ptr;
     char buffer[1024 * 10];
     char *string = NULL;
     const char *ignpref = NULL;
@@ -99,12 +100,12 @@ source_load_targ_stream( config_source_desc_t * desc, mas_argvc_t targ, int pos 
     {
       string = fgets( buffer, sizeof( buffer ), fin );
       string = mas_chomp( string );
-      ignpref = desc->pref_ids[MULCONF_VARIANT_IGNORE].string;
+      ignpref = osrc->pref_ids[MULCONF_VARIANT_IGNORE].string;
     } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
     if ( do_fprintf )
       fprintf( stderr, "READ '%s'\n", string );
     if ( string && *string )
-      mas_add_argvc_args_d( &targ, string, 0, desc->delims );
+      mas_add_argvc_args_d( &targ, string, 0, osrc->delims );
   }
 
   return targ;

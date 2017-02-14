@@ -40,6 +40,7 @@ tab sfind mastest_popt.c
 sfind mastest_popt1.c
 tab sfind mastest_0.c
 sfind mastest_1.c
+sfind mastest_1s.c
 sfind mastest_1mul.c
 sfind mastest_1u.c
 sfind mastest_1enf.c

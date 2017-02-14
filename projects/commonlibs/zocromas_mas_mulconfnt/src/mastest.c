@@ -9,6 +9,7 @@
 #include <popt.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
@@ -23,7 +24,7 @@
 int do_fprintf = 0;
 int sound_on_error = 1;
 int stop_on_error = 0;
-int sleep_on_error = 1;
+int sleep_on_error = 0;
 int f_print_ok = 0;
 int f_print_error = 1;
 static int series_seq = 0;
@@ -183,6 +184,7 @@ main( int argc, const char *argv[] )
     char *series_suffix;
     int f_print_ok;
     int f_noprint_error;
+    int do_fprintf;
   };
   typedef struct dotest_s dotest_t;
 
@@ -190,6 +192,7 @@ main( int argc, const char *argv[] )
   int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_0( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_1s( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix );
   int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix );
@@ -206,6 +209,7 @@ main( int argc, const char *argv[] )
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},
     {1, test_1, 1, ""},
+    {1, test_1s, 1, "s"},
     {1, test_1mul, 1, "mul",.f_print_ok = 0},
     {1, test_1u, 1, "u"},
     {1, test_1enf, 1, "enf"},
@@ -215,7 +219,7 @@ main( int argc, const char *argv[] )
     {1, test_3a, 3, "a"},
     {1, test_3q, 3, "q"},
     {1, test_4, 4, ""},
-    {1, test_5, 5, "", 1},
+    {1, test_5, 5, ""},
   };
   for ( int u = 0; u < argc; u++ )
   {
@@ -226,12 +230,17 @@ main( int argc, const char *argv[] )
     if ( funlist[ntest].doit )
     {
       mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
+      do_fprintf += funlist[ntest].do_fprintf;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
       funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix );
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;
+      do_fprintf -= funlist[ntest].do_fprintf;
     }
   }
+  mastest_next_group(  );
+#define TOTAL_TESTS 319
+  mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
   return 0;
 }

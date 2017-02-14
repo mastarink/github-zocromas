@@ -7,6 +7,7 @@
 #include <limits.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
@@ -22,10 +23,11 @@
 #define UINT_MIN 0
 #define ULONG_MIN 0
 #define ULLONG_MIN 0
+
+/* test for not found option */
 int
 test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
 {
-  int argcount;
   const char *arg _uUu_;
   unsigned int v_uint0 = 0;
   unsigned int v_uint1 = 0;
@@ -171,28 +173,30 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     mastest_exam( __LINE__, sizeof( v_ullong2 ) == 8 && v_ullong2 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 0, sizeof( v_ullong2 ) );
     mastest_exam( __LINE__, sizeof( v_ullong3 ) == 8 && v_ullong3 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, 0, sizeof( v_ullong2 ) );
     mastest_exam( __LINE__, sizeof( v_ullong4 ) == 8 && v_ullong4 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong4, 0, sizeof( v_ullong2 ) );
+
+    char **argvno _uUu_ = mulconfnt_source_argv_no( osrc );
+    int argcno = mulconfnt_source_argc_no( osrc );
+
     mastest_next_group(  );
-    argcount = mulconfnt_source_argc_no( osrc );
-    mastest_exam( __LINE__, argcount == 2, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ) );
+    mastest_exam( __LINE__, argcno == 2, "OK", "Error", "%d", argcno );
 
     arg = mulconfnt_source_arg_no( osrc, 1 );
-    mastest_exam( __LINE__, argcount > 1 && arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    mastest_exam( __LINE__, argcno > 1 && arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
 #if 0
     arg = mulconfnt_source_arg_no( osrc, 2 );
-    mastest_exam( __LINE__, argcount > 2 && arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    mastest_exam( __LINE__, argcno > 2 && arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
     arg = mulconfnt_source_arg_no( osrc, 3 );
-    mastest_exam( __LINE__, argcount > 3 && arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    mastest_exam( __LINE__, argcno > 3 && arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-    char **argsno = mulconfnt_source_argv_no( osrc );
 
-    mastest_exam( __LINE__, argcount > 1 && argsno && argsno[1]
-                  && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcount > 1 && argsno
-                  && argsno[1] ? argsno[1] : "?" );
-    mastest_exam( __LINE__, argcount > 2 && argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2
-                  && argsno && argsno[2] ? argsno[2] : "?" );
-    mastest_exam( __LINE__, argcount > 3 && argsno && argsno[3]
-                  && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcount > 3 && argsno
-                  && argsno[3] ? argsno[3] : "?" );
+    mastest_exam( __LINE__, argcno > 1 && argvno && argvno[1]
+                  && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 && argvno
+                  && argvno[1] ? argvno[1] : "?" );
+    mastest_exam( __LINE__, argcno > 2 && argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcno > 2
+                  && argvno && argvno[2] ? argvno[2] : "?" );
+    mastest_exam( __LINE__, argcno > 3 && argvno && argvno[3]
+                  && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcno > 3 && argvno
+                  && argvno[3] ? argvno[3] : "?" );
 #endif
     mastest_next_group(  );
     mastest_exam( __LINE__, bitwise1 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise1=%lx ? %lx", 0x10204, bitwise1 );

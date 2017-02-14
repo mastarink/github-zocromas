@@ -18,11 +18,11 @@
 #include "source_list.h"
 
 void
-mulconfnt_source_list_integrate( config_source_list_t * source_list, int pos )
+mulconfnt_source_list_integrate( config_source_list_t * source_list )
 {
   for ( config_source_desc_t * osrc = source_list->first; osrc; osrc = osrc->next )
   {
-    mulconfnt_source_load_targ( osrc, pos );
+    mulconfnt_source_load_targ( osrc );
     mas_add_argvc_argvc( &source_list->targ, &osrc->targ, 0 );
   }
 }

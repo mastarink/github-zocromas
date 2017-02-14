@@ -7,6 +7,7 @@
 #include <limits.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
@@ -104,25 +105,25 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_next_group(  );
 
     mastest_exam( __LINE__, v_string0
-                  && 0 == strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
+                  && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
 
     mastest_exam( __LINE__, v_string1
-                  && 0 == strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+                  && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
     if ( v_string1 )
       mas_free( v_string1 );
     v_string1 = NULL;
 
     mastest_exam( __LINE__, v_string2
-                  && 0 == strcmp( v_string2, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string2 ? v_string2 : "<NULL>", "lorem ipsum" );
+                  && 0 == mas_strcmp( v_string2, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string2 ? v_string2 : "<NULL>", "lorem ipsum" );
     if ( v_string2 )
       mas_free( v_string2 );
     v_string2 = NULL;
 
     mastest_exam( __LINE__, v_string3
-                  && 0 == strcmp( v_string3, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string3 ? v_string3 : "<NULL>", "lorem ipsum" );
+                  && 0 == mas_strcmp( v_string3, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string3 ? v_string3 : "<NULL>", "lorem ipsum" );
     if ( v_string3 )
       mas_free( v_string3 );
     v_string3 = NULL;
@@ -130,17 +131,17 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mulconfnt_source_argc_no( osrc ), NUM_NOPTS );
     arg = mulconfnt_source_arg_no( osrc, 1 );
-    mastest_exam( __LINE__, arg && 0 == strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    mastest_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
     arg = mulconfnt_source_arg_no( osrc, 2 );
-    mastest_exam( __LINE__, arg && 0 == strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    mastest_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
     arg = mulconfnt_source_arg_no( osrc, 3 );
-    mastest_exam( __LINE__, arg && 0 == strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    mastest_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-    char **argsno = mulconfnt_source_argv_no( osrc );
+    char **argvno = mulconfnt_source_argv_no( osrc );
 
-    mastest_exam( __LINE__, argsno && argsno[1] && 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-    mastest_exam( __LINE__, argsno && argsno[2] && 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-    mastest_exam( __LINE__, argsno && argsno[3] && 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+    mastest_exam( __LINE__, argvno && argvno[1] && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argvno[1] );
+    mastest_exam( __LINE__, argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argvno[2] );
+    mastest_exam( __LINE__, argvno && argvno[3] && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argvno[3] );
 
     mulconfnt_source_list_delete( plist );
   }

@@ -51,6 +51,22 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         case MULCONF_RESTYPE_NONE:
         case MULCONF_RESTYPE_STRING:
           break;
+        case MULCONF_RESTYPE_CHAR:
+          opt->nvalue.v_char = *( ( char * ) opt->ptr );
+          v_long_long = ( long long ) opt->nvalue.v_char;
+          break;
+        case MULCONF_RESTYPE_UCHAR:
+          opt->nvalue.v_uchar = *( ( unsigned char * ) opt->ptr );
+          v_ulong_long = ( unsigned long long ) opt->nvalue.v_uchar;
+          break;
+        case MULCONF_RESTYPE_SHORT:
+          opt->nvalue.v_short = *( ( short * ) opt->ptr );
+          v_long_long = ( long long ) opt->nvalue.v_short;
+          break;
+        case MULCONF_RESTYPE_USHORT:
+          opt->nvalue.v_ushort = *( ( unsigned short * ) opt->ptr );
+          v_ulong_long = ( unsigned long long ) opt->nvalue.v_ushort;
+          break;
         case MULCONF_RESTYPE_INT:
           opt->nvalue.v_int = *( ( int * ) opt->ptr );
           v_long_long = ( long long ) opt->nvalue.v_int;
@@ -91,6 +107,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       case MULCONF_RESTYPE_NONE:
       case MULCONF_RESTYPE_STRING:
         break;
+      case MULCONF_RESTYPE_CHAR:
+      case MULCONF_RESTYPE_SHORT:
       case MULCONF_RESTYPE_INT:
       case MULCONF_RESTYPE_LONG:
       case MULCONF_RESTYPE_LONG_LONG:
@@ -98,6 +116,8 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
         if ( ep != string + strlen( string ) )
           mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
         break;
+      case MULCONF_RESTYPE_UCHAR:
+      case MULCONF_RESTYPE_USHORT:
       case MULCONF_RESTYPE_UINT:
       case MULCONF_RESTYPE_ULONG:
       case MULCONF_RESTYPE_ULONG_LONG:
@@ -138,6 +158,54 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
       {
       case MULCONF_RESTYPE_NONE:
       case MULCONF_RESTYPE_STRING:
+        break;
+      case MULCONF_RESTYPE_CHAR:
+        if ( ( long long ) ( char ) v_long_long != v_long_long )
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into char */
+        if ( opt->restype & MULCONF_BITWISE_AND )
+          opt->nvalue.v_char &= ( char ) v_long_long;
+        else if ( opt->restype & MULCONF_BITWISE_OR )
+          opt->nvalue.v_char |= ( char ) v_long_long;
+        else if ( opt->restype & MULCONF_BITWISE_XOR )
+          opt->nvalue.v_char ^= ( char ) v_long_long;
+        else
+          opt->nvalue.v_char = ( char ) v_long_long;
+        break;
+      case MULCONF_RESTYPE_UCHAR:
+        if ( ( unsigned long long ) ( unsigned char ) v_ulong_long != v_ulong_long )
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into char */
+        if ( opt->restype & MULCONF_BITWISE_AND )
+          opt->nvalue.v_uchar &= ( char ) v_ulong_long;
+        else if ( opt->restype & MULCONF_BITWISE_OR )
+          opt->nvalue.v_uchar |= ( char ) v_ulong_long;
+        else if ( opt->restype & MULCONF_BITWISE_XOR )
+          opt->nvalue.v_uchar ^= ( char ) v_ulong_long;
+        else
+          opt->nvalue.v_uchar = ( char ) v_ulong_long;
+        break;
+      case MULCONF_RESTYPE_SHORT:
+        if ( ( long long ) ( short ) v_long_long != v_long_long )
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into short */
+        if ( opt->restype & MULCONF_BITWISE_AND )
+          opt->nvalue.v_short &= ( short ) v_long_long;
+        else if ( opt->restype & MULCONF_BITWISE_OR )
+          opt->nvalue.v_short |= ( short ) v_long_long;
+        else if ( opt->restype & MULCONF_BITWISE_XOR )
+          opt->nvalue.v_short ^= ( short ) v_long_long;
+        else
+          opt->nvalue.v_short = ( short ) v_long_long;
+        break;
+      case MULCONF_RESTYPE_USHORT:
+        if ( ( unsigned long long ) ( unsigned short ) v_ulong_long != v_ulong_long )
+          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into short */
+        if ( opt->restype & MULCONF_BITWISE_AND )
+          opt->nvalue.v_ushort &= ( short ) v_ulong_long;
+        else if ( opt->restype & MULCONF_BITWISE_OR )
+          opt->nvalue.v_ushort |= ( short ) v_ulong_long;
+        else if ( opt->restype & MULCONF_BITWISE_XOR )
+          opt->nvalue.v_ushort ^= ( short ) v_ulong_long;
+        else
+          opt->nvalue.v_ushort = ( short ) v_ulong_long;
         break;
       case MULCONF_RESTYPE_INT:
         if ( ( long long ) ( int ) v_long_long != v_long_long )
@@ -234,6 +302,18 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
             fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
           *( ( char ** ) opt->ptr ) = mas_strdup( opt->string_value );
           break;
+        case MULCONF_RESTYPE_CHAR:
+          *( ( char * ) opt->ptr ) = opt->nvalue.v_char;
+          break;
+        case MULCONF_RESTYPE_UCHAR:
+          *( ( unsigned char * ) opt->ptr ) = opt->nvalue.v_char;
+          break;
+        case MULCONF_RESTYPE_SHORT:
+          *( ( short * ) opt->ptr ) = opt->nvalue.v_short;
+          break;
+        case MULCONF_RESTYPE_USHORT:
+          *( ( unsigned short * ) opt->ptr ) = opt->nvalue.v_short;
+          break;
         case MULCONF_RESTYPE_INT:
           *( ( int * ) opt->ptr ) = opt->nvalue.v_int;
           break;
@@ -266,7 +346,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
 
 config_option_t *
 mulconfnt_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,
-                                             const char *nextarg, const char *eq, const char *force_value, unsigned long flags _uUu_ )
+                                             const char *nextarg, const char *eq, const char *force_value, unsigned long flags )
 {
   config_option_t *opt = NULL;
   const config_option_t *topt = option_table;
@@ -284,10 +364,32 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
       if ( do_fprintf > 10 )
         fprintf( stderr, "variantid: SHORT\n" );
       found = ( strlen( arg ) == 1 && *arg == topt->shortname ) ? 1 : 0;
-      if ( found )
+      if ( *arg == topt->shortname )
       {
-        string_value = nextarg;
-        has_value = 2;
+        const char *argp = arg + 1;
+
+        if ( *argp == 0 )
+        {
+          if ( do_fprintf )
+            fprintf( stderr, "a FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
+          string_value = nextarg;
+          found = 1;
+          has_value = 2;
+        }
+        else if ( strchr( " \t", *argp ) )
+        {
+          if ( do_fprintf )
+            fprintf( stderr, "b FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
+          found = 2;
+          has_value = 1;
+          string_value = argp;
+          while ( strchr( " \t", *string_value ) )
+            string_value++;
+        }
+        else
+        {
+          string_value = NULL;
+        }
       }
     }
     else if ( variantid == MULCONF_VARIANT_LONG )
@@ -302,35 +404,49 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
       /* found opt name */
         if ( ( topt->restype & ~MULCONF_BITWISE_ALL ) != MULCONF_RESTYPE_NONE && arg[l] && ( eq && 0 == strncmp( arg + l, eq, strlen( eq ) ) ) )
         {
+        /* A. --opt=val  */
           string_value = &arg[l] + strlen( eq );
           found = 2;
           has_value = 1;
           if ( do_fprintf )
-            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+            fprintf( stderr, "A FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
         }
         else if ( force_value )
         {
+        /* B. --opt ( + forced value )  */
           string_value = force_value;
           found = 2;
           has_value = 1;
           if ( do_fprintf )
-            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+            fprintf( stderr, "B FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
         }
         else if ( arg[l] )
         {
+        /* Not found */
           found = 0;
         }
         else if ( mulconfnt_config_option_flag( topt, MULCONF_OPTION_NEED_EQ ) )
         {
+        /* Found, but no needed "=value" */
           found = 3;
+        }
+        else if ( ( topt->restype & ~MULCONF_BITWISE_ALL ) == MULCONF_RESTYPE_NONE )
+        {
+        /* Found, no-value */
+          found = 1;
+          has_value = 0;
+          string_value = NULL;
+          if ( do_fprintf )
+            fprintf( stderr, "C FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
         }
         else
         {
+        /* Found, value at next arg */
           found = 1;
           string_value = nextarg;
           has_value = 2;
           if ( do_fprintf )
-            fprintf( stderr, "FOUND %d: string_value='%s'\n", found, string_value );
+            fprintf( stderr, "D FOUND %d: '%s' string_value='%s'\n", found, arg, string_value );
         }
       }
     }
@@ -356,6 +472,11 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
         fprintf( stderr, "%s :: %s ? %c -- %s ='%s'\n", arg, option_table->name, option_table->shortname, found ? "OK" : "-", opt->string_value );
     option_table++;
     topt++;
+  }
+  if ( opt && ( opt->restype & ~MULCONF_BITWISE_LASTOPT ) )
+  {
+    if ( do_fprintf > 0 )
+      fprintf( stderr, "IT'S LAST '%s'\n", arg );
   }
   return opt;
 }

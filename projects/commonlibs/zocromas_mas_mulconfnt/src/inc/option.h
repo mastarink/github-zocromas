@@ -10,7 +10,7 @@ int mulconfnt_config_option_flag( const config_option_t * opt, unsigned long mas
 
 config_option_t *mulconfnt_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,
                                                               const char *nextarg, const char *eq, const char *force_value,
-                                                              unsigned long flags _uUu_ );
+                                                              unsigned long flags  );
 
 void mulconfnt_option_set_source( config_option_t * opt, config_source_desc_t * osrc );
 

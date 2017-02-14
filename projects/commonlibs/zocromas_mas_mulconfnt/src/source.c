@@ -33,19 +33,19 @@ mulconfnt_source_set_string_ptr( config_source_desc_t * osrc, char *string )
 }
 
 char *
-mulconfnt_source_load_string( config_source_desc_t * osrc, int pos )
+mulconfnt_source_load_string( config_source_desc_t * osrc )
 {
   if ( osrc && osrc->load_string_fun )
-    mulconfnt_source_set_string_ptr( osrc, osrc->load_string_fun( osrc, pos ) );
+    mulconfnt_source_set_string_ptr( osrc, osrc->load_string_fun( osrc ) );
   return osrc ? osrc->string : NULL;
 }
 
 mas_argvc_t *
-mulconfnt_source_load_targ( config_source_desc_t * osrc, int pos )
+mulconfnt_source_load_targ( config_source_desc_t * osrc )
 {
   if ( osrc )
   {
-    if ( pos == osrc->targ_loaded )
+    if ( osrc->npos == osrc->targ_loaded )
     {
       mas_argvc_delete( &osrc->oldtarg );
       osrc->oldtarg = osrc->targ;
@@ -54,11 +54,11 @@ mulconfnt_source_load_targ( config_source_desc_t * osrc, int pos )
 //    mas_argvc_delete( &osrc->targ );
       if ( osrc && osrc->load_targ_fun )
       {
-        osrc->targ = osrc->load_targ_fun( osrc, osrc->targ, pos );
+        osrc->targ = osrc->load_targ_fun( osrc, osrc->targ );
       }
       osrc->targ_loaded++;
     }
-    else if ( pos != osrc->targ_loaded - 1 )
+    else if ( osrc->npos != osrc->targ_loaded - 1 )
     {
       mas_argvc_delete( &osrc->oldtarg );
       osrc->oldtarg = osrc->targ;
@@ -77,9 +77,11 @@ match_arg( const char *pref, const char *arg )
 
   if ( !pref || !*pref )
     return 0;
-  for ( i = 0; i < strlen( pref ); i++ )
+  for ( i = 0; pref[i] && arg[i]; i++ )
     if ( !arg[i] || pref[i] != arg[i] )
       break;
+/*if ( !arg[i] )
+    i = 0; */
   return i > 0 ? ( int ) i : -1;
 }
 
@@ -100,6 +102,8 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
     {
       maxmatch = len;
       maxmatchid = osrc->pref_ids[i].id;
+      if ( do_fprintf > 0 )
+        fprintf( stderr, "PREF maxmatch:%d; maxmatchid:%d\n", maxmatch, maxmatchid );
     }
   }
   return maxmatchid;
@@ -124,11 +128,12 @@ mulconfnt_source_arg_no( config_source_desc_t * osrc, int i )
 }
 
 int
-mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_list_t * tablist, int pos )
+mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   int nargs = 0;
 
-  mulconfnt_source_load_targ( osrc, pos );
+  mulconfnt_source_load_targ( osrc );
+  osrc->lastoptpos = 0;
   for ( int iarg = 0; osrc && !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
     static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
@@ -142,9 +147,11 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
     if ( do_fprintf )
       fprintf( stderr, "LOOKUP %s\n", arg );
 
-    config_variant_t variantid = max_match_id( osrc, arg );
+    config_variant_t variantid = ( !osrc->lastoptpos || iarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MULCONF_VARIANT_NONOPT;
     int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
 
+    if ( do_fprintf )
+      fprintf( stderr, "LAST:%d. '%s' --- %d\n", iarg, arg, osrc->lastoptpos );
     if ( variantid == MULCONF_VARIANT_BAD )
     {
       if ( do_fprintf )
@@ -183,11 +190,17 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
       }
       if ( opt )
       {
+        mulconfnt_option_set_source( opt, osrc );                    /* mostly for error setting */
         if ( mulconfnt_error_option( opt ) )
         {
 //          opt->source = osrc;
-          mulconfnt_option_set_source( opt, osrc );                  /* mostly for error setting */
           mulconfnt_error_set_at_source_from_option( opt->source, opt );
+        }
+        if ( opt->restype & MULCONF_BITWISE_LASTOPT )
+        {
+          if ( do_fprintf )
+            fprintf( stderr, "SET LAST: %d. '%s'; has_value:%d\n", iarg, arg, opt->has_value );
+          osrc->lastoptpos = iarg;
         }
         if ( opt->has_value > 0 )
         {
@@ -209,21 +222,27 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
       opt = NULL;
     }
   }
-  return nargs;
+  return -nargs;
 }
 
 void
 mulconfnt_source_lookup_all( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
-  int n = 0;
-
-  while ( mulconfnt_source_lookup_seq( osrc, tablist, n++ ) > 0 );
+  while ( osrc && mulconfnt_source_lookup_seq( osrc, tablist ) < 0 )
+    osrc->npos++;
 }
 
 int
 mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
-  return mulconfnt_source_lookup_seq( osrc, tablist, 0 );
+  int r = 0;
+
+  if ( osrc )
+  {
+    osrc->npos = 0;
+    r = mulconfnt_source_lookup_seq( osrc, tablist );
+  }
+  return r;
 }
 
 unsigned long

@@ -61,6 +61,8 @@ struct config_source_desc_s
   config_source_mode_t mode;
   unsigned long flags;
   int count;
+  int lastoptpos;
+  int npos;
   const void *data_ptr;
   char delim;
   char *delims;
@@ -72,7 +74,7 @@ struct config_source_desc_s
   source_load_string_fun_t load_string_fun;
   source_load_targ_fun_t load_targ_fun;
 
-  int targ_loaded; /* sequential number of targ set */
+  int targ_loaded;                                                   /* sequential number of targ set */
   char *string;
   mas_argvc_t oldtarg;
   mas_argvc_t targ;
@@ -93,6 +95,10 @@ enum config_restype_e
 {
   MULCONF_RESTYPE_NONE,
   MULCONF_RESTYPE_STRING,
+  MULCONF_RESTYPE_CHAR,
+  MULCONF_RESTYPE_UCHAR,
+  MULCONF_RESTYPE_SHORT,
+  MULCONF_RESTYPE_USHORT,
   MULCONF_RESTYPE_INT,
   MULCONF_RESTYPE_UINT,
   MULCONF_RESTYPE_LONG,
@@ -113,13 +119,18 @@ enum config_bitwise_e
   MULCONF_BITWISE_XOR = MULCONF_BITWISE_OR >> 1L,
   MULCONF_BITWISE_NOT = MULCONF_BITWISE_XOR >> 1L,
   MULCONF_BITWISE_CALL = MULCONF_BITWISE_NOT >> 1L,
-  MULCONF_BITWISE_ALL = MULCONF_BITWISE_AND | MULCONF_BITWISE_OR | MULCONF_BITWISE_XOR | MULCONF_BITWISE_NOT | MULCONF_BITWISE_CALL,
+  MULCONF_BITWISE_NEEDVAL = MULCONF_BITWISE_CALL >> 1L,
+  MULCONF_BITWISE_OPTVAL = MULCONF_BITWISE_NEEDVAL >> 1L,
+  MULCONF_BITWISE_LASTOPT = MULCONF_BITWISE_OPTVAL >> 1L,
+  MULCONF_BITWISE_ALL =
+          MULCONF_BITWISE_AND | MULCONF_BITWISE_OR | MULCONF_BITWISE_XOR | MULCONF_BITWISE_NOT | MULCONF_BITWISE_CALL | MULCONF_BITWISE_LASTOPT,
 };
 
-enum config_option_flagid{
-  MULCONF_OPTION_FLAGID_NEED_EQ ,
-  MULCONF_OPTION_FLAGID_UNQUOTE ,
-  MULCONF_OPTION_FLAGID_SILENT ,
+enum config_option_flagid
+{
+  MULCONF_OPTION_FLAGID_NEED_EQ,
+  MULCONF_OPTION_FLAGID_UNQUOTE,
+  MULCONF_OPTION_FLAGID_SILENT,
 };
 enum config_option_flag
 {
@@ -132,6 +143,8 @@ union nvalue_u
 {
   char v_char;
   unsigned char v_uchar;
+  short v_short;
+  unsigned short v_ushort;
   int v_int;
   unsigned int v_uint;
   long v_long;

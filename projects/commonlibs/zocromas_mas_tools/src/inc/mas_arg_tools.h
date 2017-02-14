@@ -9,6 +9,8 @@
 typedef const char *( *mas_arg_get_cb_arg_t ) ( const char *name, const char *arg );
 
 size_t mas_wordlen( const char *s );
+int mas_strcmp( const char *s1, const char *s2 );
+int mas_strncmp( const char *s1, const char *s2, size_t len );
 char *mas_chomp( char *s );
 size_t mas_chomplen( const char *s );
 const char *mas_strtolower( char *s );

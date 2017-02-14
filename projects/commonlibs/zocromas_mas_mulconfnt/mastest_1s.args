@@ -1,13 +1,12 @@
 something
 --string0=lorem-ipsum
---string1
+-s
 lorem ipsum
---cnum0=107
---snum0=5437
---num0=5437
---num1=0x12
+-n
+ 5437
+-x    0x12
 --num2=012
---num3=2147483647
+-u 2147483647
 --num4=-2147483648
 --lnum0=0xffffffffff
 --lnum1=0xff
@@ -25,8 +24,4 @@ wow
 --bwi-=0x200
 --pi=3.141592653589793
 --longpi=3.1415926535897932384626433832795028841971693993751058209749445
---
---this-is-not-an-option1=345
---this-is-not-an-option2
---
 abrakadabra
