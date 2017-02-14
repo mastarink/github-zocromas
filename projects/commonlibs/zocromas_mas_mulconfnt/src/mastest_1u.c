@@ -21,7 +21,7 @@
 #include "mastest.h"
 
 int
-test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
+test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
 {
   const char *arg;
 

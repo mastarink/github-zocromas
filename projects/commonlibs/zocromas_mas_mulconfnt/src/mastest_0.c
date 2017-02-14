@@ -19,7 +19,7 @@
 #include "parse.h"
 
 int
-test_0( int argc, const char *argv[] )
+test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */

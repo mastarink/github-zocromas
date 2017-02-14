@@ -95,14 +95,14 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
   {
     int len = match_arg( osrc->pref_ids[i].string, arg );
 
-    if ( do_fprintf > 0 )
+    if ( do_fprintf > 1 )
       fprintf( stderr, "PREF '%s' *** '%s' ===> %d\n", osrc->pref_ids[i].string, arg, len );
 
     if ( len > maxmatch )
     {
       maxmatch = len;
       maxmatchid = osrc->pref_ids[i].id;
-      if ( do_fprintf > 0 )
+      if ( do_fprintf > 2 )
         fprintf( stderr, "PREF maxmatch:%d; maxmatchid:%d\n", maxmatch, maxmatchid );
     }
   }
@@ -188,6 +188,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
 
         mulconfnt_config_option_delete( oldopt );
       }
+    /* do something for found option */
       if ( opt )
       {
         mulconfnt_option_set_source( opt, osrc );                    /* mostly for error setting */
@@ -206,7 +207,29 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
         {
           iarg += opt->has_value - 1;
         }
-/* TODO actions here !! */
+        if ( !opt->worked )
+        {
+          option_callback_t cb = NULL;
+          if ( osrc->callback )
+          {
+            cb = osrc->callback;
+            if ( cb )
+            {
+              cb( opt );
+              osrc->callback_called++;
+            }
+          }
+          if ( osrc->callbacks )
+          {
+            cb = osrc->callbacks[opt->restype & ~MULCONF_BITWISE_ALL];
+            if ( cb )
+            {
+              cb( opt );
+              osrc->callback_called++;
+            }
+          }
+        }
+/* TODO additional actions here !! */
       }
       else
       {
@@ -255,4 +278,18 @@ int
 mulconfnt_source_flag( config_source_desc_t * osrc, unsigned long mask )
 {
   return osrc && ( osrc->flags & mask ? 1 : 0 );
+}
+
+void
+mulconfnt_source_set_common_callback( config_source_desc_t * osrc, option_callback_t cb )
+{
+  if ( osrc )
+    osrc->callback = cb;
+}
+
+void
+mulconfnt_source_set_type_callback( config_source_desc_t * osrc, config_restype_t restype, option_callback_t cb )
+{
+  if ( osrc )
+    osrc->callbacks[restype] = cb;
 }

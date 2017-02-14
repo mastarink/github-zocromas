@@ -21,7 +21,7 @@
 #include "mastest.h"
 
 int
-test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix )
+test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg _uUu_;
   int v_int0 = 0;
@@ -162,7 +162,8 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
     mastest_exam( __LINE__, argvno && argvno[1] && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argvno[1] );
     mastest_exam( __LINE__, argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argvno[2] );
-    mastest_exam( __LINE__, argvno && argvno[3] && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argvno[3] );
+    mastest_exam( __LINE__, argvno && argvno[3]
+                  && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argvno[3] );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );

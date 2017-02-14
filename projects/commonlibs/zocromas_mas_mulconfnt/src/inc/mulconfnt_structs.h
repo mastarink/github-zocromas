@@ -38,63 +38,11 @@ enum config_variant_e
   MULCONF_VARIANTS,
 };
 
-struct config_prefix_encoder_s
-{
-  char *string;
-  config_variant_t id;
-};
-
-struct config_error_s
-{
-  int nerror;
-  int line;
-  const char *func;
-  const char *file;
-  char *msg;
-};
-
-struct config_source_desc_s
-{
-  config_source_list_t *list;
-  config_source_desc_t *next;
-  config_source_t type;
-  config_source_mode_t mode;
-  unsigned long flags;
-  int count;
-  int lastoptpos;
-  int npos;
-  const void *data_ptr;
-  char delim;
-  char *delims;
-  char *eq;
-  config_prefix_encoder_t pref_ids[MULCONF_VARIANTS];
-  source_check_fun_t check_fun;
-  source_open_fun_t open_fun;
-  source_close_fun_t close_fun;
-  source_load_string_fun_t load_string_fun;
-  source_load_targ_fun_t load_targ_fun;
-
-  int targ_loaded;                                                   /* sequential number of targ set */
-  char *string;
-  mas_argvc_t oldtarg;
-  mas_argvc_t targ;
-  mas_argvc_t targno;
-
-  config_error_t error;
-};
-
-struct config_source_list_s
-{
-  config_source_desc_t *first;
-  mas_argvc_t targ;
-
-  config_error_t error;
-};
-
 enum config_restype_e
 {
   MULCONF_RESTYPE_NONE,
   MULCONF_RESTYPE_STRING,
+  MULCONF_RESTYPE_TARG,
   MULCONF_RESTYPE_CHAR,
   MULCONF_RESTYPE_UCHAR,
   MULCONF_RESTYPE_SHORT,
@@ -139,6 +87,62 @@ enum config_option_flag
   MULCONF_OPTION_SILENT = 1L << MULCONF_OPTION_FLAGID_SILENT,
 };
 
+struct config_prefix_encoder_s
+{
+  char *string;
+  config_variant_t id;
+};
+
+struct config_error_s
+{
+  int nerror;
+  int line;
+  const char *func;
+  const char *file;
+  char *msg;
+};
+
+struct config_source_desc_s
+{
+  config_source_list_t *list;
+  config_source_desc_t *next;
+  config_source_t type;
+  config_source_mode_t mode;
+  unsigned long flags;
+  int count;
+  int lastoptpos;
+  int npos;
+  const void *data_ptr;
+  char delim;
+  char *delims;
+  char *eq;
+  config_prefix_encoder_t pref_ids[MULCONF_VARIANTS];
+  source_check_fun_t check_fun;
+  source_open_fun_t open_fun;
+  source_close_fun_t close_fun;
+  source_load_string_fun_t load_string_fun;
+  source_load_targ_fun_t load_targ_fun;
+
+  int targ_loaded;                                                   /* sequential number of targ set */
+  char *string;
+  mas_argvc_t oldtarg;
+  mas_argvc_t targ;
+  mas_argvc_t targno;
+
+  config_error_t error;
+  option_callback_t callback;
+  option_callback_t callbacks[MULCONF_RESTYPE_MAX + 1];
+  size_t callback_called;
+};
+
+struct config_source_list_s
+{
+  config_source_desc_t *first;
+  mas_argvc_t targ;
+
+  config_error_t error;
+};
+
 union nvalue_u
 {
   char v_char;
@@ -171,6 +175,9 @@ struct config_option_s
   unsigned long flags;
 
   config_source_desc_t *source;
+  option_callback_t callback;
+  size_t callback_called;
+  int worked;
   config_error_t error;
 };
 

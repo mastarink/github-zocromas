@@ -13,7 +13,7 @@
 #include "mastest.h"
 
 int
-test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const char *series_suffix _uUu_ )
+test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const char *series_suffix _uUu_ , int do_fprintf _uUu_)
 {
   int c = 0xffff;
 

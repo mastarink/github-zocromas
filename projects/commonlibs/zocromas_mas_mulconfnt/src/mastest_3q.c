@@ -22,7 +22,7 @@
 #include "mastest.h"
 
 int
-test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix )
+test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix , int do_fprintf _uUu_)
 {
   mastest_next_group(  );
   {

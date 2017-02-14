@@ -18,4 +18,7 @@ const char *mulconfnt_source_arg_no( config_source_desc_t * osrc, int i );
 unsigned long mulconfnt_source_flags( config_source_desc_t * osrc );
 int mulconfnt_source_flag( config_source_desc_t * osrc, unsigned long mask );
 
+void mulconfnt_source_set_common_callback( config_source_desc_t * osrc, option_callback_t cb );
+void mulconfnt_source_set_type_callback( config_source_desc_t * osrc, config_restype_t restype, option_callback_t cb );
+
 #endif

@@ -20,12 +20,60 @@
 
 #include "mastest.h"
 
+static int _do_fprintf = 0;
+static int v_int5 = 0;
+static char *sc_string = NULL;
+static char *cc_string = NULL;
+
 int
-test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
+ccallback_string( config_option_t * opt )
+{
+  if ( opt )
+  {
+    if ( _do_fprintf )
+    {
+      if ( opt->string_value )
+        fprintf( stderr, "CB STRING: %s='%s'\n", opt->name ? ( *opt->name ? opt->name : "<EMPTY NAME>" ) : "<NONAME>", opt->string_value );
+      else
+        fprintf( stderr, "CB STRING: %s\n", opt->name ? ( *opt->name ? opt->name : "<EMPTY NAME>" ) : "<NONAME>" );
+    }
+
+    if ( opt->restype == MULCONF_RESTYPE_STRING )
+    {
+      if ( cc_string )
+        mas_free( cc_string );
+      cc_string = mas_strdup( opt->string_value );
+    }
+  }
+  return 0;
+}
+
+int
+scallback_string( config_option_t * opt )
+{
+  if ( sc_string )
+    mas_free( sc_string );
+//fprintf( stderr, "CB STRING: %s\n", opt->string_value );
+  sc_string = mas_strdup( opt->string_value );
+  return 0;
+}
+
+int
+num5callback( config_option_t * opt )
+{
+//fprintf( stderr, "NUM5: %d\n", opt->nvalue.v_int );
+  v_int5 = opt->nvalue.v_int;
+  return 0;
+}
+
+int
+test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
+
+  mas_argvc_t v_targ0;
 
   char v_char0 = 0;
   short v_short0 = 0;
@@ -60,13 +108,18 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "something",
     "--string0=lorem-ipsum",
     "--string1", "lorem ipsum",
+    "--string2", "Phasellus congue bibendum magna",
+    "--targ0=asta",
     "--cnum0=107",
     "--snum0=5437",
+    "--targ0=manyana",
     "--num0=5437",
     "--num1=0x12",
     "--num2=012",
     "--num3=2147483647",
     "--num4=-2147483648",
+    "--num5=1111111111",
+    "--targ0=venenatis",
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
     "--lnum2=0x7fffffffffffffff",
@@ -91,11 +144,14 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
+  _do_fprintf = do_fprintf;
 #define NUM_NOPTS 4 + 2 + 1
 
   config_option_t options[] = {
     {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0}
     , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1}
+    , {"string2", 0, MULCONF_RESTYPE_STRING}
+    , {"targ0", 0, MULCONF_RESTYPE_TARG, &v_targ0}
     , {"cnum0", 0, MULCONF_RESTYPE_CHAR, &v_char0}
     , {"snum0", 0, MULCONF_RESTYPE_SHORT, &v_short0}
     , {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
@@ -103,6 +159,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
     , {"num3", 0, MULCONF_RESTYPE_INT, &v_int3}
     , {"num4", 0, MULCONF_RESTYPE_INT, &v_int4}
+    , {"num5", 0, MULCONF_RESTYPE_INT,.callback = num5callback}
     , {"lnum0", 0, MULCONF_RESTYPE_LONG, &v_long0}
     , {"lnum1", 0, MULCONF_RESTYPE_INT, &v_long1}
     , {"lnum2", 0, MULCONF_RESTYPE_LONG, &v_long2}
@@ -148,6 +205,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
+    mulconfnt_source_set_common_callback( osrc, ccallback_string );
+    mulconfnt_source_set_type_callback( osrc, MULCONF_RESTYPE_STRING, scallback_string );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
@@ -182,6 +241,30 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
       mas_free( v_string1 );
     v_string1 = NULL;
 
+    mastest_exam( __LINE__, sc_string
+                  && 0 == mas_strcmp( sc_string, "Phasellus congue bibendum magna" ), "OK", "Error", "string1=%s ? %s",
+                  sc_string ? sc_string : "<NULL>", "Phasellus congue bibendum magna" );
+    if ( sc_string )
+      mas_free( sc_string );
+    sc_string = NULL;
+
+    mastest_exam( __LINE__, cc_string
+                  && 0 == mas_strcmp( cc_string, "Phasellus congue bibendum magna" ), "OK", "Error", "string1=%s ? %s",
+                  cc_string ? cc_string : "<NULL>", "Phasellus congue bibendum magna" );
+    if ( cc_string )
+      mas_free( cc_string );
+    cc_string = NULL;
+
+    mastest_next_group(  );
+    mastest_exam( __LINE__, v_targ0.argc == 3, "OK", "Error", "targ0.argc=%d ? %d", v_targ0.argc, 3 );
+    mastest_exam( __LINE__, v_targ0.argc == 3
+                  && 0 == mas_strcmp( v_targ0.argv[0], "asta" ), "OK", "Error", "targ0.argv[0]=%s ? %s", v_targ0.argv[0], "asta" );
+    mastest_exam( __LINE__, v_targ0.argc == 3
+                  && 0 == mas_strcmp( v_targ0.argv[1], "manyana" ), "OK", "Error", "targ0.argv[1]=%s ? %s", v_targ0.argv[1], "manyana" );
+    mastest_exam( __LINE__, v_targ0.argc == 3
+                  && 0 == mas_strcmp( v_targ0.argv[2], "venenatis" ), "OK", "Error", "targ0.argv[2]=%s ? %s", v_targ0.argv[2], "venenatis" );
+    mas_argvc_delete( &v_targ0 );
+
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_char0 ) == 1, "OK", "Error", "num0=%d ? %d", sizeof( v_char0 ), 1 );
     mastest_exam( __LINE__, sizeof( v_char0 ) == 1 && v_char0 == 107, "OK", "Error", "num0=%d ? %d", v_char0, 107 );
@@ -195,6 +278,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_exam( __LINE__, sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "num2=%d ? %d", v_int2, 012 );
     mastest_exam( __LINE__, sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "num3=%d ? %d", v_int3, INT_MAX );
     mastest_exam( __LINE__, sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "num4=%d ? %d", v_int4, INT_MIN );
+    mastest_exam( __LINE__, sizeof( v_int5 ) == 4 && v_int5 == 1111111111, "OK", "Error", "num4=%d ? %d", v_int5, 1111111111 );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_long0 ) == 8, "OK", "Error", "%ld ? %ld", sizeof( v_long0 ), 8 );

@@ -20,7 +20,7 @@ usage( poptContext optCon, int _uUu_ exitcode, char *error, char *addl )
 }
 
 int
-test_popt( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_ )
+test_popt( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_ , int do_fprintf _uUu_)
 {
   char c _uUu_;                                                      /* used for argument parsing */
   int i _uUu_ = 0;                                                   /* used for tracking options */

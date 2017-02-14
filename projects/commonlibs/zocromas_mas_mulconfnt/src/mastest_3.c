@@ -22,7 +22,7 @@
 #include "mastest.h"
 
 int
-test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix )
+test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
 {
   const char *arg;
   char *v_string0 = NULL;

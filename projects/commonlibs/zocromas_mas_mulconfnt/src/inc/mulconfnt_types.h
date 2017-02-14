@@ -21,6 +21,7 @@ typedef enum config_variant_e config_variant_t;
 typedef enum config_restype_e config_restype_t;
 typedef enum config_bitwise_e config_bitwise_t;
 typedef struct config_option_s config_option_t;
+typedef int ( *option_callback_t ) ( config_option_t *opt );
 typedef struct config_option_table_list_s config_option_table_list_t;
 typedef struct config_error_s config_error_t;
 

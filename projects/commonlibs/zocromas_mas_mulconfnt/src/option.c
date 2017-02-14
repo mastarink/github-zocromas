@@ -15,6 +15,347 @@
 #include "option_base.h"
 #include "option.h"
 
+static void
+mulconfnt_config_option_nvalue_from_ptr( config_option_t * opt )
+{
+  if ( opt->ptr )
+  {
+    if ( do_fprintf )
+      fprintf( stderr, "PTR: %p %lx\n", opt->ptr, *( ( long * ) opt->ptr ) );
+    switch ( opt->restype & ~MULCONF_BITWISE_ALL )
+    {
+    case MULCONF_RESTYPE_NONE:
+    case MULCONF_RESTYPE_STRING:
+    case MULCONF_RESTYPE_TARG:
+      break;
+    case MULCONF_RESTYPE_CHAR:
+      opt->nvalue.v_char = *( ( char * ) opt->ptr );
+//        v_long_long = ( long long ) opt->nvalue.v_char;
+      break;
+    case MULCONF_RESTYPE_UCHAR:
+      opt->nvalue.v_uchar = *( ( unsigned char * ) opt->ptr );
+//        v_ulong_long = ( unsigned long long ) opt->nvalue.v_uchar;
+      break;
+    case MULCONF_RESTYPE_SHORT:
+      opt->nvalue.v_short = *( ( short * ) opt->ptr );
+//        v_long_long = ( long long ) opt->nvalue.v_short;
+      break;
+    case MULCONF_RESTYPE_USHORT:
+      opt->nvalue.v_ushort = *( ( unsigned short * ) opt->ptr );
+//        v_ulong_long = ( unsigned long long ) opt->nvalue.v_ushort;
+      break;
+    case MULCONF_RESTYPE_INT:
+      opt->nvalue.v_int = *( ( int * ) opt->ptr );
+//        v_long_long = ( long long ) opt->nvalue.v_int;
+      break;
+    case MULCONF_RESTYPE_UINT:
+      opt->nvalue.v_uint = *( ( unsigned int * ) opt->ptr );
+//        v_ulong_long = ( unsigned long long ) opt->nvalue.v_uint;
+      break;
+    case MULCONF_RESTYPE_LONG:
+      opt->nvalue.v_long = *( ( long * ) opt->ptr );
+//        v_long_long = ( long long ) opt->nvalue.v_long;
+      break;
+    case MULCONF_RESTYPE_ULONG:
+      opt->nvalue.v_ulong = *( ( unsigned long * ) opt->ptr );
+//        v_ulong_long = ( unsigned long long ) opt->nvalue.v_ulong;
+      break;
+    case MULCONF_RESTYPE_LONG_LONG:
+      opt->nvalue.v_long_long = *( ( long long * ) opt->ptr );
+//        v_long_long = opt->nvalue.v_long_long;
+      break;
+    case MULCONF_RESTYPE_ULONG_LONG:
+      opt->nvalue.v_ulong_long = *( ( unsigned long long * ) opt->ptr );
+//        v_ulong_long = opt->nvalue.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_DOUBLE:
+      opt->nvalue.v_double = *( ( unsigned long long * ) opt->ptr );
+//        v_double = opt->nvalue.v_double;
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      opt->nvalue.v_ldouble = *( ( unsigned long long * ) opt->ptr );
+//        v_ldouble = opt->nvalue.v_ldouble;
+      break;
+    }
+  }
+}
+
+static void
+mulconfnt_config_option_nvalue_to_ptr( config_option_t * opt )
+{
+  if ( opt->ptr )
+  {
+    if ( do_fprintf )
+      fprintf( stderr, "PTR: %p\n", opt->ptr );
+    switch ( opt->restype & ~MULCONF_BITWISE_ALL )
+    {
+    case MULCONF_RESTYPE_NONE:
+      break;
+    case MULCONF_RESTYPE_STRING:
+      if ( do_fprintf )
+        fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
+      *( ( char ** ) opt->ptr ) = mas_strdup( opt->string_value );
+      break;
+    case MULCONF_RESTYPE_TARG:
+      {
+        mas_argvc_t *targ = ( mas_argvc_t * ) opt->ptr;
+
+        mas_add_argvc_arg( targ, opt->string_value );
+      }
+      break;
+    case MULCONF_RESTYPE_CHAR:
+      *( ( char * ) opt->ptr ) = opt->nvalue.v_char;
+      break;
+    case MULCONF_RESTYPE_UCHAR:
+      *( ( unsigned char * ) opt->ptr ) = opt->nvalue.v_char;
+      break;
+    case MULCONF_RESTYPE_SHORT:
+      *( ( short * ) opt->ptr ) = opt->nvalue.v_short;
+      break;
+    case MULCONF_RESTYPE_USHORT:
+      *( ( unsigned short * ) opt->ptr ) = opt->nvalue.v_short;
+      break;
+    case MULCONF_RESTYPE_INT:
+      *( ( int * ) opt->ptr ) = opt->nvalue.v_int;
+      break;
+    case MULCONF_RESTYPE_UINT:
+      *( ( unsigned int * ) opt->ptr ) = opt->nvalue.v_uint;
+      break;
+    case MULCONF_RESTYPE_LONG:
+      *( ( long * ) opt->ptr ) = opt->nvalue.v_long;
+      break;
+    case MULCONF_RESTYPE_ULONG:
+      *( ( unsigned long * ) opt->ptr ) = opt->nvalue.v_ulong;
+      break;
+    case MULCONF_RESTYPE_LONG_LONG:
+      *( ( long long * ) opt->ptr ) = opt->nvalue.v_long_long;
+      break;
+    case MULCONF_RESTYPE_ULONG_LONG:
+      *( ( unsigned long long * ) opt->ptr ) = opt->nvalue.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_DOUBLE:
+      *( ( double * ) opt->ptr ) = opt->nvalue.v_double;
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      *( ( long double * ) opt->ptr ) = opt->nvalue.v_ldouble;
+      break;
+    }
+    opt->worked++;
+  }
+}
+
+static nvalue_t
+mulconfnt_config_option_string_to_nvalue( config_option_t * opt, int *perr )
+{
+  nvalue_t v_x = { 0 };
+  if ( opt )
+  {
+    char *string = opt->string_value;
+    char *ep = NULL;
+
+    v_x = opt->nvalue;
+
+    switch ( opt->restype & ~MULCONF_BITWISE_ALL )
+    {
+    case MULCONF_RESTYPE_NONE:
+    case MULCONF_RESTYPE_STRING:
+    case MULCONF_RESTYPE_TARG:
+      break;
+    case MULCONF_RESTYPE_CHAR:
+    case MULCONF_RESTYPE_SHORT:
+    case MULCONF_RESTYPE_INT:
+    case MULCONF_RESTYPE_LONG:
+    case MULCONF_RESTYPE_LONG_LONG:
+      v_x.v_long_long = strtoll( string, &ep, 0 );
+      *perr = ( ep != string + strlen( string ) );
+      break;
+    case MULCONF_RESTYPE_UCHAR:
+    case MULCONF_RESTYPE_USHORT:
+    case MULCONF_RESTYPE_UINT:
+    case MULCONF_RESTYPE_ULONG:
+    case MULCONF_RESTYPE_ULONG_LONG:
+      v_x.v_ulong_long = strtoull( string, &ep, 0 );
+      *perr = ( ep != string + strlen( string ) );
+      break;
+    case MULCONF_RESTYPE_DOUBLE:
+      v_x.v_double = strtod( string, &ep );
+      *perr = ( ep != string + strlen( string ) );
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      v_x.v_ldouble = strtold( string, &ep );
+      if ( do_fprintf )
+        fprintf( stderr, "LONG DOUBLE:\t%s\n\t\t%s\n\t\t%2.45Lf\n\t\t%2.45Lf\n",
+                 "3.141592653589793238462643383279502884197169399375105820974944592", string, v_x.v_ldouble, atanl( 1 ) * 4.L );
+      *perr = ( ep != string + strlen( string ) );
+      break;
+    }
+  }
+  return v_x;
+}
+
+static void
+mulconfnt_config_option_set_nvalue( config_option_t * opt, unsigned long flags )
+{
+  if ( opt && opt->string_value )
+  {
+    int err = 0;
+
+/**   long long v_long_long _uUu_ = 0;
+      unsigned long long v_ulong_long _uUu_ = 0;
+      double v_double _uUu_ = 0.0;
+      long double v_ldouble _uUu_ = 0.0; **/
+    nvalue_t v_x = { 0 };
+
+    mulconfnt_config_option_nvalue_from_ptr( opt );
+    v_x = mulconfnt_config_option_string_to_nvalue( opt, &err );
+    if ( err )
+    {
+      fprintf( stderr, ">>>>>> '%s'\n", opt->string_value );
+      mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /* non-numeric */
+    }
+
+    if ( opt->restype & MULCONF_BITWISE_NOT )
+      v_x.v_ulong_long = ~v_x.v_ulong_long;
+    switch ( opt->restype & ~MULCONF_BITWISE_ALL )
+    {
+    case MULCONF_RESTYPE_NONE:
+    case MULCONF_RESTYPE_STRING:
+    case MULCONF_RESTYPE_TARG:
+      break;
+    case MULCONF_RESTYPE_CHAR:
+      if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into char */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_char &= ( char ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_char |= ( char ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_char ^= ( char ) v_x.v_long_long;
+      else
+        opt->nvalue.v_char = ( char ) v_x.v_long_long;
+      break;
+    case MULCONF_RESTYPE_UCHAR:
+      if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into char */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_uchar &= ( char ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_uchar |= ( char ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_uchar ^= ( char ) v_x.v_ulong_long;
+      else
+        opt->nvalue.v_uchar = ( char ) v_x.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_SHORT:
+      if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into short */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_short &= ( short ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_short |= ( short ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_short ^= ( short ) v_x.v_long_long;
+      else
+        opt->nvalue.v_short = ( short ) v_x.v_long_long;
+      break;
+    case MULCONF_RESTYPE_USHORT:
+      if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into short */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_ushort &= ( short ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_ushort |= ( short ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_ushort ^= ( short ) v_x.v_ulong_long;
+      else
+        opt->nvalue.v_ushort = ( short ) v_x.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_INT:
+      if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into int */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_int &= ( int ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_int |= ( int ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_int ^= ( int ) v_x.v_long_long;
+      else
+        opt->nvalue.v_int = ( int ) v_x.v_long_long;
+      break;
+    case MULCONF_RESTYPE_UINT:
+      if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into int */
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_uint &= ( int ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_uint |= ( int ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_uint ^= ( int ) v_x.v_ulong_long;
+      else
+        opt->nvalue.v_uint = ( int ) v_x.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_LONG:
+      if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
+      {
+      /*unable to place number into long */
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value );
+      }
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_long &= ( long ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_long |= ( long ) v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_long ^= ( long ) v_x.v_long_long;
+      else
+        opt->nvalue.v_long = ( long ) v_x.v_long_long;
+      break;
+    case MULCONF_RESTYPE_ULONG:
+      if ( ( unsigned long long ) ( unsigned long ) v_x.v_ulong_long != v_x.v_ulong_long )
+      {
+      /*unable to place number into long */
+        mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value );
+      }
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_ulong &= ( long ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_ulong |= ( long ) v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_ulong ^= ( long ) v_x.v_ulong_long;
+      else
+        opt->nvalue.v_ulong = ( long ) v_x.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_LONG_LONG:
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_long_long &= v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_long_long |= v_x.v_long_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_long_long ^= v_x.v_long_long;
+      else
+        opt->nvalue.v_long_long = v_x.v_long_long;
+      break;
+    case MULCONF_RESTYPE_ULONG_LONG:
+      if ( opt->restype & MULCONF_BITWISE_AND )
+        opt->nvalue.v_ulong_long &= v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_OR )
+        opt->nvalue.v_ulong_long |= v_x.v_ulong_long;
+      else if ( opt->restype & MULCONF_BITWISE_XOR )
+        opt->nvalue.v_ulong_long ^= v_x.v_ulong_long;
+      else
+        opt->nvalue.v_ulong_long = v_x.v_ulong_long;
+      break;
+    case MULCONF_RESTYPE_DOUBLE:
+      opt->nvalue.v_double = v_x.v_double;
+      break;
+    case MULCONF_RESTYPE_LDOUBLE:
+      opt->nvalue.v_ldouble = v_x.v_ldouble;
+      break;
+    }
+
+    mulconfnt_config_option_nvalue_to_ptr( opt );
+  }
+}
+
 void
 mulconfnt_config_option_set_value( config_option_t * opt, const char *string_value, unsigned long flags )
 {
@@ -33,314 +374,7 @@ mulconfnt_config_option_set_value( config_option_t * opt, const char *string_val
               ? mulconfnt_config_option_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
     memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
-    if ( opt->string_value )
-    {
-      char *ep = NULL;
-      char *string = opt->string_value;
-      long long v_long_long = 0;
-      unsigned long long v_ulong_long = 0;
-      double v_double = 0.0;
-      long double v_ldouble = 0.0;
-
-      if ( opt->ptr )
-      {
-        if ( do_fprintf )
-          fprintf( stderr, "PTR: %p %lx\n", opt->ptr, *( ( long * ) opt->ptr ) );
-        switch ( opt->restype & ~MULCONF_BITWISE_ALL )
-        {
-        case MULCONF_RESTYPE_NONE:
-        case MULCONF_RESTYPE_STRING:
-          break;
-        case MULCONF_RESTYPE_CHAR:
-          opt->nvalue.v_char = *( ( char * ) opt->ptr );
-          v_long_long = ( long long ) opt->nvalue.v_char;
-          break;
-        case MULCONF_RESTYPE_UCHAR:
-          opt->nvalue.v_uchar = *( ( unsigned char * ) opt->ptr );
-          v_ulong_long = ( unsigned long long ) opt->nvalue.v_uchar;
-          break;
-        case MULCONF_RESTYPE_SHORT:
-          opt->nvalue.v_short = *( ( short * ) opt->ptr );
-          v_long_long = ( long long ) opt->nvalue.v_short;
-          break;
-        case MULCONF_RESTYPE_USHORT:
-          opt->nvalue.v_ushort = *( ( unsigned short * ) opt->ptr );
-          v_ulong_long = ( unsigned long long ) opt->nvalue.v_ushort;
-          break;
-        case MULCONF_RESTYPE_INT:
-          opt->nvalue.v_int = *( ( int * ) opt->ptr );
-          v_long_long = ( long long ) opt->nvalue.v_int;
-          break;
-        case MULCONF_RESTYPE_UINT:
-          opt->nvalue.v_uint = *( ( unsigned int * ) opt->ptr );
-          v_ulong_long = ( unsigned long long ) opt->nvalue.v_uint;
-          break;
-        case MULCONF_RESTYPE_LONG:
-          opt->nvalue.v_long = *( ( long * ) opt->ptr );
-          v_long_long = ( long long ) opt->nvalue.v_long;
-          break;
-        case MULCONF_RESTYPE_ULONG:
-          opt->nvalue.v_ulong = *( ( unsigned long * ) opt->ptr );
-          v_ulong_long = ( unsigned long long ) opt->nvalue.v_ulong;
-          break;
-        case MULCONF_RESTYPE_LONG_LONG:
-          opt->nvalue.v_long_long = *( ( long long * ) opt->ptr );
-          v_ulong_long = opt->nvalue.v_long_long;
-          break;
-        case MULCONF_RESTYPE_ULONG_LONG:
-          opt->nvalue.v_ulong_long = *( ( unsigned long long * ) opt->ptr );
-          v_ulong_long = opt->nvalue.v_ulong_long;
-          break;
-        case MULCONF_RESTYPE_DOUBLE:
-          opt->nvalue.v_double = *( ( unsigned long long * ) opt->ptr );
-          v_double = opt->nvalue.v_double;
-          break;
-        case MULCONF_RESTYPE_LDOUBLE:
-          opt->nvalue.v_ldouble = *( ( unsigned long long * ) opt->ptr );
-          v_ldouble = opt->nvalue.v_ldouble;
-          break;
-        }
-      }
-
-      switch ( opt->restype & ~MULCONF_BITWISE_ALL )
-      {
-      case MULCONF_RESTYPE_NONE:
-      case MULCONF_RESTYPE_STRING:
-        break;
-      case MULCONF_RESTYPE_CHAR:
-      case MULCONF_RESTYPE_SHORT:
-      case MULCONF_RESTYPE_INT:
-      case MULCONF_RESTYPE_LONG:
-      case MULCONF_RESTYPE_LONG_LONG:
-        v_long_long = strtoll( string, &ep, 0 );
-        if ( ep != string + strlen( string ) )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
-        break;
-      case MULCONF_RESTYPE_UCHAR:
-      case MULCONF_RESTYPE_USHORT:
-      case MULCONF_RESTYPE_UINT:
-      case MULCONF_RESTYPE_ULONG:
-      case MULCONF_RESTYPE_ULONG_LONG:
-        v_ulong_long = strtoull( string, &ep, 0 );
-        if ( ep != string + strlen( string ) )
-        {
-          fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
-        }
-        break;
-      case MULCONF_RESTYPE_DOUBLE:
-        v_double = strtod( string, &ep );
-        if ( ep != string + strlen( string ) )
-        {
-          fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
-        }
-        break;
-      case MULCONF_RESTYPE_LDOUBLE:
-        v_ldouble = strtold( string, &ep );
-        if ( do_fprintf )
-          fprintf( stderr, "LONG DOUBLE:\t%s\n\t\t%s\n\t\t%2.45Lf\n\t\t%2.45Lf\n",
-                   "3.141592653589793238462643383279502884197169399375105820974944592", string, v_ldouble, atanl( 1 ) * 4.L );
-        if ( ep != string + strlen( string ) )
-        {
-          fprintf( stderr, ">>>>>> '%s'\n", string );
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /* non-numeric */
-        }
-        break;
-      }
-
-      if ( opt->restype & MULCONF_BITWISE_NOT )
-      {
-        v_long_long = ~v_long_long;
-        v_ulong_long = ~v_ulong_long;
-      }
-      switch ( opt->restype & ~MULCONF_BITWISE_ALL )
-      {
-      case MULCONF_RESTYPE_NONE:
-      case MULCONF_RESTYPE_STRING:
-        break;
-      case MULCONF_RESTYPE_CHAR:
-        if ( ( long long ) ( char ) v_long_long != v_long_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into char */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_char &= ( char ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_char |= ( char ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_char ^= ( char ) v_long_long;
-        else
-          opt->nvalue.v_char = ( char ) v_long_long;
-        break;
-      case MULCONF_RESTYPE_UCHAR:
-        if ( ( unsigned long long ) ( unsigned char ) v_ulong_long != v_ulong_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into char */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_uchar &= ( char ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_uchar |= ( char ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_uchar ^= ( char ) v_ulong_long;
-        else
-          opt->nvalue.v_uchar = ( char ) v_ulong_long;
-        break;
-      case MULCONF_RESTYPE_SHORT:
-        if ( ( long long ) ( short ) v_long_long != v_long_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into short */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_short &= ( short ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_short |= ( short ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_short ^= ( short ) v_long_long;
-        else
-          opt->nvalue.v_short = ( short ) v_long_long;
-        break;
-      case MULCONF_RESTYPE_USHORT:
-        if ( ( unsigned long long ) ( unsigned short ) v_ulong_long != v_ulong_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into short */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_ushort &= ( short ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_ushort |= ( short ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_ushort ^= ( short ) v_ulong_long;
-        else
-          opt->nvalue.v_ushort = ( short ) v_ulong_long;
-        break;
-      case MULCONF_RESTYPE_INT:
-        if ( ( long long ) ( int ) v_long_long != v_long_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into int */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_int &= ( int ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_int |= ( int ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_int ^= ( int ) v_long_long;
-        else
-          opt->nvalue.v_int = ( int ) v_long_long;
-        break;
-      case MULCONF_RESTYPE_UINT:
-        if ( ( unsigned long long ) ( unsigned int ) v_ulong_long != v_ulong_long )
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string ); /*unable to place number into int */
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_uint &= ( int ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_uint |= ( int ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_uint ^= ( int ) v_ulong_long;
-        else
-          opt->nvalue.v_uint = ( int ) v_ulong_long;
-        break;
-      case MULCONF_RESTYPE_LONG:
-        if ( ( long long ) ( long ) v_long_long != v_long_long )
-        {
-        /*unable to place number into long */
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string );
-        }
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_long &= ( long ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_long |= ( long ) v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_long ^= ( long ) v_long_long;
-        else
-          opt->nvalue.v_long = ( long ) v_long_long;
-        break;
-      case MULCONF_RESTYPE_ULONG:
-        if ( ( unsigned long long ) ( unsigned long ) v_ulong_long != v_ulong_long )
-        {
-        /*unable to place number into long */
-          mulconfnt_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", string );
-        }
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_ulong &= ( long ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_ulong |= ( long ) v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_ulong ^= ( long ) v_ulong_long;
-        else
-          opt->nvalue.v_ulong = ( long ) v_ulong_long;
-        break;
-      case MULCONF_RESTYPE_LONG_LONG:
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_long_long &= v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_long_long |= v_long_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_long_long ^= v_long_long;
-        else
-          opt->nvalue.v_long_long = v_long_long;
-        break;
-      case MULCONF_RESTYPE_ULONG_LONG:
-        if ( opt->restype & MULCONF_BITWISE_AND )
-          opt->nvalue.v_ulong_long &= v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_OR )
-          opt->nvalue.v_ulong_long |= v_ulong_long;
-        else if ( opt->restype & MULCONF_BITWISE_XOR )
-          opt->nvalue.v_ulong_long ^= v_ulong_long;
-        else
-          opt->nvalue.v_ulong_long = v_ulong_long;
-        break;
-      case MULCONF_RESTYPE_DOUBLE:
-        opt->nvalue.v_double = v_double;
-        break;
-      case MULCONF_RESTYPE_LDOUBLE:
-        opt->nvalue.v_ldouble = v_ldouble;
-        break;
-      }
-
-      if ( opt->ptr )
-      {
-        if ( do_fprintf )
-          fprintf( stderr, "PTR: %p\n", opt->ptr );
-        switch ( opt->restype & ~MULCONF_BITWISE_ALL )
-        {
-        case MULCONF_RESTYPE_NONE:
-          break;
-        case MULCONF_RESTYPE_STRING:
-          if ( do_fprintf )
-            fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
-          *( ( char ** ) opt->ptr ) = mas_strdup( opt->string_value );
-          break;
-        case MULCONF_RESTYPE_CHAR:
-          *( ( char * ) opt->ptr ) = opt->nvalue.v_char;
-          break;
-        case MULCONF_RESTYPE_UCHAR:
-          *( ( unsigned char * ) opt->ptr ) = opt->nvalue.v_char;
-          break;
-        case MULCONF_RESTYPE_SHORT:
-          *( ( short * ) opt->ptr ) = opt->nvalue.v_short;
-          break;
-        case MULCONF_RESTYPE_USHORT:
-          *( ( unsigned short * ) opt->ptr ) = opt->nvalue.v_short;
-          break;
-        case MULCONF_RESTYPE_INT:
-          *( ( int * ) opt->ptr ) = opt->nvalue.v_int;
-          break;
-        case MULCONF_RESTYPE_UINT:
-          *( ( unsigned int * ) opt->ptr ) = opt->nvalue.v_uint;
-          break;
-        case MULCONF_RESTYPE_LONG:
-          *( ( long * ) opt->ptr ) = opt->nvalue.v_long;
-          break;
-        case MULCONF_RESTYPE_ULONG:
-          *( ( unsigned long * ) opt->ptr ) = opt->nvalue.v_ulong;
-          break;
-        case MULCONF_RESTYPE_LONG_LONG:
-          *( ( long long * ) opt->ptr ) = opt->nvalue.v_long_long;
-          break;
-        case MULCONF_RESTYPE_ULONG_LONG:
-          *( ( unsigned long long * ) opt->ptr ) = opt->nvalue.v_ulong_long;
-          break;
-        case MULCONF_RESTYPE_DOUBLE:
-          *( ( double * ) opt->ptr ) = opt->nvalue.v_double;
-          break;
-        case MULCONF_RESTYPE_LDOUBLE:
-          *( ( long double * ) opt->ptr ) = opt->nvalue.v_ldouble;
-          break;
-        }
-      }
-    }
+    mulconfnt_config_option_set_nvalue( opt, flags );
   }
 }
 
@@ -464,6 +498,11 @@ mulconfnt_config_option_lookup_option_table( const config_option_t * option_tabl
         if ( do_fprintf )
           fprintf( stderr, "SET VALUE %s='%s'; has_value=%d\n", opt->name, string_value, has_value );
         mulconfnt_config_option_set_value( opt, string_value, flags );
+        if ( opt->callback && !opt->ptr )
+        {
+          opt->callback( opt );
+          opt->callback_called++;
+        }
         opt->has_value = has_value;
       }
     }

@@ -109,16 +109,19 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 }
 
 static void
-mastest_series( int nseries, const char *suff )
+mastest_series( int nseries, const char *suff, int do_fprintf )
 {
   test_series = nseries;
   test_series_suffix = suff;
   test_group = 0;
   test_seq = 0;
-  if ( !series_seq && !tests_count )
-    fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
-  fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count,
-           tests_count_good, tests_count_bad );
+  if ( do_fprintf >= 0 )
+  {
+    if ( !series_seq && !tests_count )
+      fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
+    fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count,
+             tests_count_good, tests_count_bad );
+  }
   series_seq++;
 }
 
@@ -175,7 +178,7 @@ int
 main( int argc, const char *argv[] )
 {
 // mas_strdup( "abrakadabra" );
-  typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix );
+  typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   struct dotest_s
   {
     int doit;
@@ -188,27 +191,27 @@ main( int argc, const char *argv[] )
   };
   typedef struct dotest_s dotest_t;
 
-  int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_0( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_1( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_1s( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_2( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_3( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_4( int argc, const char *argv[], int nseries, const char *series_suffix );
-  int test_5( int argc, const char *argv[], int nseries, const char *series_suffix );
+  int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_1s( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_2( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_3( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},
-    {1, test_1, 1, ""},
+    {1, test_1, 1, "",.do_fprintf = 0},
     {1, test_1s, 1, "s"},
     {1, test_1mul, 1, "mul",.f_print_ok = 0},
     {1, test_1u, 1, "u"},
@@ -229,18 +232,18 @@ main( int argc, const char *argv[] )
   {
     if ( funlist[ntest].doit )
     {
-      mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix );
+      mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
       do_fprintf += funlist[ntest].do_fprintf;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
-      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix );
+      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;
       do_fprintf -= funlist[ntest].do_fprintf;
     }
   }
   mastest_next_group(  );
-#define TOTAL_TESTS 319
+#define TOTAL_TESTS 327 - 1
   mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
   return 0;
 }

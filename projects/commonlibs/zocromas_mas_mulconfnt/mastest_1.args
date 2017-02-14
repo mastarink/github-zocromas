@@ -2,13 +2,19 @@ something
 --string0=lorem-ipsum
 --string1
 lorem ipsum
+--string2
+Phasellus congue bibendum magna
+--targ0=asta
 --cnum0=107
 --snum0=5437
+--targ0=manyana
 --num0=5437
 --num1=0x12
 --num2=012
 --num3=2147483647
 --num4=-2147483648
+--num5=1111111111
+--targ0=venenatis
 --lnum0=0xffffffffff
 --lnum1=0xff
 --lnum2=0x7fffffffffffffff

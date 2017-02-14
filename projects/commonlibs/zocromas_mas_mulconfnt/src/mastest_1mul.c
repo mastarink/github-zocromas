@@ -21,7 +21,7 @@
 #include "mastest.h"
 
 int
-test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *series_suffix )
+test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
 {
   const char *arg;
   char *v_string0 = NULL;
