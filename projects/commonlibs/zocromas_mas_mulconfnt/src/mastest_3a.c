@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -21,7 +23,7 @@
 #include "mastest.h"
 
 int
-test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -41,8 +43,8 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0,.flags = 0 /* |MULCONF_OPTION_NEED_EQ */ }
-    , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1,.flags = 0 | MULCONF_OPTION_NEED_EQ}
+    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0,.flags = 0 /* |MULCONF_OPTION_NEED_EQ */ }
+    , {"string1", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1,.flags = 0 | MULCONF_OPTION_NEED_EQ}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -101,13 +103,13 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-    if ( v_string0 )
-      mas_free( v_string0 );
-    v_string0 = NULL;
+  /* if ( v_string0 )         */
+  /*   mas_free( v_string0 ); */
+  /* v_string0 = NULL;        */
     mastest_exam( __LINE__, !v_string1, "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-    if ( v_string1 )
-      mas_free( v_string1 );
-    v_string1 = NULL;
+  /* if ( v_string1 )         */
+  /*   mas_free( v_string1 ); */
+  /* v_string1 = NULL;        */
 
     mastest_next_group(  );
     mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mulconfnt_source_argc_no( osrc ), NUM_NOPTS );
@@ -126,5 +128,6 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

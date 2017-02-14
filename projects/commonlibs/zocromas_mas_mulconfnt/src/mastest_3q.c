@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "tools.h"
 #include "source.h"
 #include "source_list_base.h"

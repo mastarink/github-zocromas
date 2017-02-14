@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -21,7 +23,7 @@
 #include "mastest.h"
 
 int
-test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -91,8 +93,8 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   int totargc _uUu_ = argc1 + argc2;
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0}
-    , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1}
+    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0}
+    , {"string1", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1}
     , {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
     , {"num1", 0, MULCONF_RESTYPE_INT, &v_int1}
     , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
@@ -168,14 +170,14 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-    if ( v_string0 )
-      mas_free( v_string0 );
-    v_string0 = NULL;
+  /* if ( v_string0 )         */
+  /*   mas_free( v_string0 ); */
+  /* v_string0 = NULL; */
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-    if ( v_string1 )
-      mas_free( v_string1 );
-    v_string1 = NULL;
+  /* if ( v_string1 )         */
+  /*   mas_free( v_string1 ); */
+  /* v_string1 = NULL; */
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
     mastest_exam( __LINE__, sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
@@ -208,7 +210,6 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
                   && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
                   ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
 
-
     char **argvno = mulconfnt_source_argv_no( osrc );
     int argcno = mulconfnt_source_argc_no( osrc );
 
@@ -221,7 +222,6 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
     arg = mulconfnt_source_arg_no( osrc, 2 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
-
 
     mastest_exam( __LINE__, argcno > 0 && argvno && argvno[0]
                   && 0 == mas_strcmp( "something", argvno[0] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 0 ? argvno[0] : "?" );
@@ -243,5 +243,6 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

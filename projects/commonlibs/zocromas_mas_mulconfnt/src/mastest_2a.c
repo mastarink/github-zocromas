@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -177,5 +179,6 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

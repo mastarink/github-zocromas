@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -21,7 +23,7 @@
 #include "mastest.h"
 
 int
-test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -80,11 +82,12 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "abrakadabra",
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
+
 #define NUM_NOPTS 4
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0}
-    , {"string1", 's', MULCONF_RESTYPE_STRING, &v_string1}
+    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0}
+    , {"string1", 's', MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1}
     , {"num0", 'n', MULCONF_RESTYPE_INT, &v_int0}
     , {"num1", 'x', MULCONF_RESTYPE_INT, &v_int1}
     , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
@@ -159,14 +162,14 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-    if ( v_string0 )
-      mas_free( v_string0 );
-    v_string0 = NULL;
+  /* if ( v_string0 )         */
+  /*   mas_free( v_string0 ); */
+  /* v_string0 = NULL;        */
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-    if ( v_string1 )
-      mas_free( v_string1 );
-    v_string1 = NULL;
+  /* if ( v_string1 )         */
+  /*   mas_free( v_string1 ); */
+  /* v_string1 = NULL;        */
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
     mastest_exam( __LINE__, sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
@@ -211,7 +214,6 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     arg = mulconfnt_source_arg_no( osrc, 3 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-
     mastest_exam( __LINE__, argcno > 1 && argvno && argvno[1]
                   && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 ? argvno[1] : "?" );
     mastest_exam( __LINE__, argcno > 2 && argvno && argvno[2]
@@ -232,5 +234,6 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

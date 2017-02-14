@@ -13,6 +13,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -53,5 +55,6 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   if ( speed )
     if ( do_fprintf )
       fprintf( stderr, "-b %d ", speed );
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

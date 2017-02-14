@@ -12,6 +12,7 @@ libzocromas_mas_mulconfnt_la_SOURCES = \
 	source.c \
 	option_base.c \
 	option.c \
+	option_tablist_base.c \
 	option_tablist.c \
 	mulconfnt_error_base.c \
 	mulconfnt_error.c

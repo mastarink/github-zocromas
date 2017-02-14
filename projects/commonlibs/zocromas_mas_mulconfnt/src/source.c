@@ -169,7 +169,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
         fprintf( stderr, "VARIANT %s\n", labels[variantid] );
       config_option_t *opt = NULL;
 
-      opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
+      opt = mulconfnt_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
       while ( opt && opt->restype == MULCONF_RESTYPE_ALIAS && opt->ptr )
@@ -181,7 +181,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
-        opt = mulconfnt_config_option_lookup_tablist( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
+        opt = mulconfnt_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
                                                       osrc->flags );
         if ( do_fprintf )
           fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );

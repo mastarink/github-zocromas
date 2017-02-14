@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -26,7 +28,7 @@
 
 /* test for not found option */
 int
-test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg _uUu_;
   unsigned int v_uint0 = 0;
@@ -188,7 +190,6 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     arg = mulconfnt_source_arg_no( osrc, 3 );
     mastest_exam( __LINE__, argcno > 3 && arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-
     mastest_exam( __LINE__, argcno > 1 && argvno && argvno[1]
                   && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 && argvno
                   && argvno[1] ? argvno[1] : "?" );
@@ -211,5 +212,6 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -21,7 +23,7 @@
 #include "mastest.h"
 
 int
-test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg;
 
@@ -223,5 +225,6 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

@@ -10,6 +10,8 @@
 
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "option.h"
 #include "source.h"
 

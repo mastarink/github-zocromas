@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -148,10 +150,10 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS 4 + 2 + 1
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING, &v_string0}
+    {"string0", 0, MULCONF_RESTYPE_STRING | MULCONF_BITWISE_AUTOFREE, &v_string0}
     , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1}
     , {"string2", 0, MULCONF_RESTYPE_STRING}
-    , {"targ0", 0, MULCONF_RESTYPE_TARG, &v_targ0}
+    , {"targ0", 0, MULCONF_RESTYPE_TARG | MULCONF_BITWISE_AUTOFREE, &v_targ0}
     , {"cnum0", 0, MULCONF_RESTYPE_CHAR, &v_char0}
     , {"snum0", 0, MULCONF_RESTYPE_SHORT, &v_short0}
     , {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
@@ -179,10 +181,17 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
+#if 0
+  config_option_table_list_t *test_tablist =
+          mulconfnt_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );
+#elif 0
+  config_option_table_list_t *test_tablist =
+          mulconfnt_config_option_tablist_add( NULL, test_tablist, "test-table", options, sizeof( options ) / sizeof( options[0] ) );
+#else
   config_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options,
   };
-
+#endif
   {
     FILE *f;
     char fname[128];
@@ -232,12 +241,12 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-    if ( v_string0 )
-      mas_free( v_string0 );
-    v_string0 = NULL;
+  /* if ( v_string0 )         */
+  /*   mas_free( v_string0 ); */
+  /* v_string0 = NULL; */
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-    if ( v_string1 )
+    if ( v_string1 )                                                 // if !MULCONF_BITWISE_AUTOFREE or !ptr
       mas_free( v_string1 );
     v_string1 = NULL;
 
@@ -263,7 +272,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
                   && 0 == mas_strcmp( v_targ0.argv[1], "manyana" ), "OK", "Error", "targ0.argv[1]=%s ? %s", v_targ0.argv[1], "manyana" );
     mastest_exam( __LINE__, v_targ0.argc == 3
                   && 0 == mas_strcmp( v_targ0.argv[2], "venenatis" ), "OK", "Error", "targ0.argv[2]=%s ? %s", v_targ0.argv[2], "venenatis" );
-    mas_argvc_delete( &v_targ0 );
+  /* mas_argvc_delete( &v_targ0 ); */
 
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_char0 ) == 1, "OK", "Error", "num0=%d ? %d", sizeof( v_char0 ), 1 );
@@ -362,5 +371,6 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #endif
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }

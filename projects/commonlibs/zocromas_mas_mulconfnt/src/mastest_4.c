@@ -12,6 +12,8 @@
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
+#include "option_tablist_base.h"
+
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
@@ -21,7 +23,7 @@
 #include "mastest.h"
 
 int
-test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix , int do_fprintf _uUu_)
+test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
   const char *arg _uUu_;
   int v_int0 = 0;
@@ -123,7 +125,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     mastest_next_group(  );
     const char *ge = getenv( "MASTEST_4" );
 
-    mastest_exam( __LINE__, ge && 0 == mas_strcmp( ge, string_args ), "OK", "Error", "MASTEST_4: %s ? %s (%d)", ge, string_args, strlen(ge) );
+    mastest_exam( __LINE__, ge && 0 == mas_strcmp( ge, string_args ), "OK", "Error", "MASTEST_4: %s ? %s (%d)", ge, string_args, strlen( ge ) );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
@@ -169,7 +171,8 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
     mastest_exam( __LINE__, argvno && argvno[1] && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argvno[1] );
     mastest_exam( __LINE__, argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argvno[2] );
-    mastest_exam( __LINE__, argvno && argvno[3] && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argvno[3] );
+    mastest_exam( __LINE__, argvno && argvno[3]
+                  && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argvno[3] );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
@@ -179,5 +182,6 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     unsetenv( "MASTEST_4" );
     mulconfnt_source_list_delete( plist );
   }
+  mulconfnt_config_option_tablist_close( &test_tablist );
   return 0;
 }
