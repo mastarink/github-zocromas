@@ -27,7 +27,7 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   int raw = 0;                                                       /* raw mode? */
   long bitwise = 0xffff0000;
 
-  config_option_t options[] = {
+  mucs_option_han_t options[] = {
     {"bps", 'b', MULCONF_RTYP_INT, &speed, 0, "signaling rate in bits-per-second", "BPS"}, /* */
     {"bwi", 'z', MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise, 0, "bitwise", "value"}, /* */
     {"bwi-", 'z', MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise, 0, "bitwise", "value"}, /* */
@@ -39,7 +39,7 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     {"swflow", 's', 0, 0, 's', "use software (XON/XOF) flow control", NULL}, /* */
     {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  config_option_table_list_t test_tablist = {
+  mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
 

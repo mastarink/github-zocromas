@@ -4,7 +4,7 @@
 # include "mulconfnt_types.h"
 
 size_t mucs_source_defaults_count( void );
-const config_source_desc_t *mucs_source_defaults( void );
-const config_source_desc_t *mucs_source_default( size_t n );
+const mucs_source_han_t *mucs_source_defaults( void );
+const mucs_source_han_t *mucs_source_default( size_t n );
 
 #endif

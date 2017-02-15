@@ -55,7 +55,7 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
             "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
   };
 
-  config_option_t options[] = {
+  mucs_option_han_t options[] = {
     {"num0", 0, MULCONF_RTYP_INT, &v_int0}
     , {"num1", 0, MULCONF_RTYP_INT, &v_int1}
     , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
@@ -77,7 +77,7 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  config_option_table_list_t test_tablist = {
+  mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
   FILE *fcmds = NULL;
@@ -96,8 +96,8 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     fcmds = fopen( fname, "r" );
   }
   {
-    config_source_list_t *plist = mucs_source_list_create(  );
-    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
+    mucs_source_list_t *plist = mucs_source_list_create(  );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, fcmds ? 1 : 0, "OK", "Error", "fcmds: %p", fcmds );

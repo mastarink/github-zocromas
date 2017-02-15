@@ -4,8 +4,8 @@
 # include "mulconfnt_types.h"
 
 
-int mucs_parse( int argc, const char *argv[], const config_option_table_list_t * tablist );
-mas_argvc_t mucs_load_targ( config_source_desc_t * optr );
-char *mucs_load_string( config_source_desc_t * optr );
+int mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tablist );
+mas_argvc_t mucs_load_targ( mucs_source_han_t * optr );
+char *mucs_load_string( mucs_source_han_t * optr );
 
 #endif

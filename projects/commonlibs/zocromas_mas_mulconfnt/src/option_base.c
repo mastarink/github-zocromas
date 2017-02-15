@@ -22,22 +22,22 @@
  * */
 
 void
-mucs_config_option_init( config_option_t * opt )
+mucs_config_option_init( mucs_option_han_t * opt )
 {
-  memset( opt, 0, sizeof( config_option_t ) );
+  memset( opt, 0, sizeof( mucs_option_han_t ) );
 }
 
-config_option_t *
+mucs_option_han_t *
 mucs_config_option_create( void )
 {
-  config_option_t *opt = mas_malloc( sizeof( config_option_t ) );
+  mucs_option_han_t *opt = mas_malloc( sizeof( mucs_option_han_t ) );
 
   mucs_config_option_init( opt );
   return opt;
 }
 
 void
-mucs_config_option_close( config_option_t * opt )
+mucs_config_option_close( mucs_option_han_t * opt )
 {
   if ( opt )
   {
@@ -54,17 +54,17 @@ mucs_config_option_close( config_option_t * opt )
 }
 
 void
-mucs_config_option_delete( config_option_t * opt )
+mucs_config_option_delete( mucs_option_han_t * opt )
 {
   mucs_config_option_close( opt );
   if ( opt )
     mas_free( opt );
 }
 
-config_option_t *
-mucs_config_option_clone( const config_option_t * topt )
+mucs_option_han_t *
+mucs_config_option_clone( const mucs_option_han_t * topt )
 {
-  config_option_t *opt = mucs_config_option_create(  );
+  mucs_option_han_t *opt = mucs_config_option_create(  );
 
   *opt = *topt;
   opt->name = mas_strdup( opt->name );

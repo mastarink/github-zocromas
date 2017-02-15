@@ -3,9 +3,9 @@
 
 # include "mulconfnt_types.h"
 
-config_option_t *mucs_config_option_create( void );
-config_option_t *mucs_config_option_clone( const config_option_t * topt );
-void mucs_config_option_delete( config_option_t * opt );
+mucs_option_han_t *mucs_config_option_create( void );
+mucs_option_han_t *mucs_config_option_clone( const mucs_option_han_t * topt );
+void mucs_config_option_delete( mucs_option_han_t * opt );
 
 #endif
 

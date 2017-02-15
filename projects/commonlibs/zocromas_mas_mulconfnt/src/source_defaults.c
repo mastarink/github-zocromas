@@ -15,26 +15,26 @@
 
 static int
 source_check_env( int count _uUu_, const void *data_ptr _uUu_, const char *delims
-                  _uUu_, const char *eq _uUu_, const config_prefix_encoder_t * pref_ids _uUu_ )
+                  _uUu_, const char *eq _uUu_, const mucs_prefix_encoder_t * pref_ids _uUu_ )
 {
   return data_ptr && getenv( ( char * ) data_ptr ) ? 1 : 0;
 }
 
 static int
 source_check_string( int count _uUu_, const void *data_ptr _uUu_, const char *delims
-                     _uUu_, const char *eq _uUu_, const config_prefix_encoder_t * pref_ids _uUu_ )
+                     _uUu_, const char *eq _uUu_, const mucs_prefix_encoder_t * pref_ids _uUu_ )
 {
   return 1;
 }
 
 static char *
-source_load_string_string( config_source_desc_t * osrc )
+source_load_string_string( mucs_source_han_t * osrc )
 {
   return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( osrc->data_ptr ) : NULL;
 }
 
 static mas_argvc_t
-source_load_targ_string( config_source_desc_t * osrc, mas_argvc_t targ )
+source_load_targ_string( mucs_source_han_t * osrc, mas_argvc_t targ )
 {
   if ( osrc && osrc->data_ptr && !osrc->npos )
     mas_add_argvc_args_d( &targ, ( char * ) osrc->data_ptr, 0, osrc->delims );
@@ -42,19 +42,19 @@ source_load_targ_string( config_source_desc_t * osrc, mas_argvc_t targ )
 }
 
 static char *
-source_load_string_env( config_source_desc_t * osrc )
+source_load_string_env( mucs_source_han_t * osrc )
 {
   return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( getenv( ( char * ) osrc->data_ptr ) ) : NULL;
 }
 
 static char *
-source_load_string_argv( config_source_desc_t * osrc )
+source_load_string_argv( mucs_source_han_t * osrc )
 {
   return osrc && osrc->data_ptr && !osrc->npos ? mas_argv_join( osrc->count, ( char ** ) osrc->data_ptr, 0, osrc->delim ) : NULL;
 }
 
 static char *
-source_load_string_margv( config_source_desc_t * osrc )
+source_load_string_margv( mucs_source_han_t * osrc )
 {
   return osrc && osrc->data_ptr
           && osrc->npos < osrc->count ? mas_argv_join( 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */ ,
@@ -62,7 +62,7 @@ source_load_string_margv( config_source_desc_t * osrc )
 }
 
 static mas_argvc_t
-source_load_targ_env( config_source_desc_t * osrc, mas_argvc_t targ )
+source_load_targ_env( mucs_source_han_t * osrc, mas_argvc_t targ )
 {
   if ( osrc && osrc->data_ptr && !osrc->npos )
     mas_add_argvc_args_d( &targ, getenv( ( char * ) osrc->data_ptr ), 0, osrc->delims );
@@ -70,7 +70,7 @@ source_load_targ_env( config_source_desc_t * osrc, mas_argvc_t targ )
 }
 
 static mas_argvc_t
-source_load_targ_argv( config_source_desc_t * osrc, mas_argvc_t targ )
+source_load_targ_argv( mucs_source_han_t * osrc, mas_argvc_t targ )
 {
   if ( osrc && osrc->data_ptr && !osrc->npos )
     mas_add_argvc_argv( &targ, osrc->count, ( char ** ) osrc->data_ptr, 0 );
@@ -78,7 +78,7 @@ source_load_targ_argv( config_source_desc_t * osrc, mas_argvc_t targ )
 }
 
 static mas_argvc_t
-source_load_targ_margv( config_source_desc_t * osrc, mas_argvc_t targ )
+source_load_targ_margv( mucs_source_han_t * osrc, mas_argvc_t targ )
 {
   if ( osrc && osrc->data_ptr && osrc->npos < osrc->count )
     mas_add_argvc_argv( &targ, 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */  );
@@ -87,7 +87,7 @@ source_load_targ_margv( config_source_desc_t * osrc, mas_argvc_t targ )
 }
 
 static mas_argvc_t
-source_load_targ_stream( config_source_desc_t * osrc, mas_argvc_t targ )
+source_load_targ_stream( mucs_source_han_t * osrc, mas_argvc_t targ )
 {
   if ( osrc && osrc->data_ptr )
   {
@@ -111,7 +111,7 @@ source_load_targ_stream( config_source_desc_t * osrc, mas_argvc_t targ )
   return targ;
 }
 
-static config_source_desc_t default_sources[] = {
+static mucs_source_han_t default_sources[] = {
   [MULCONF_SOURCE_STRING] = {
                              .type = MULCONF_SOURCE_STRING,
                              .count = 0,
@@ -251,13 +251,13 @@ mucs_source_defaults_count( void )
   return sizeof( default_sources ) / sizeof( default_sources[0] );
 }
 
-const config_source_desc_t *
+const mucs_source_han_t *
 mucs_source_defaults( void )
 {
   return default_sources;
 }
 
-const config_source_desc_t *
+const mucs_source_han_t *
 mucs_source_default( size_t n )
 {
   return &default_sources[n];

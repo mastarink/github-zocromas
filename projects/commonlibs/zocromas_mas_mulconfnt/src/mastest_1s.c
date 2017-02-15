@@ -85,7 +85,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
 #define NUM_NOPTS 4
 
-  config_option_t options[] = {
+  mucs_option_han_t options[] = {
     {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0}
     , {"string1", 's', MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1}
     , {"num0", 'n', MULCONF_RTYP_INT, &v_int0}
@@ -111,7 +111,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  config_option_table_list_t test_tablist = {
+  mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
 
@@ -131,11 +131,11 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     }
   }
   {
-    config_source_list_t *plist = mucs_source_list_create(  );
+    mucs_source_list_t *plist = mucs_source_list_create(  );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 

@@ -28,7 +28,7 @@ static char *sc_string = NULL;
 static char *cc_string = NULL;
 
 int
-ccallback_string( config_option_t * opt )
+ccallback_string( mucs_option_han_t * opt )
 {
   if ( opt )
   {
@@ -51,7 +51,7 @@ ccallback_string( config_option_t * opt )
 }
 
 int
-scallback_string( config_option_t * opt )
+scallback_string( mucs_option_han_t * opt )
 {
   if ( sc_string )
     mas_free( sc_string );
@@ -61,7 +61,7 @@ scallback_string( config_option_t * opt )
 }
 
 int
-num5callback( config_option_t * opt )
+num5callback( mucs_option_han_t * opt )
 {
 //fprintf( stderr, "NUM5: %d\n", opt->nvalue.v_int );
   v_int5 = opt->nvalue.v_int;
@@ -149,7 +149,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   _do_fprintf = do_fprintf;
 #define NUM_NOPTS 4 + 2 + 1
 
-  config_option_t options[] = {
+  mucs_option_han_t options[] = {
     {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0}
     , {"string1", 0, MULCONF_RTYP_STRING, &v_string1}
     , {"string2", 0, MULCONF_RTYP_STRING}
@@ -182,13 +182,13 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 #if 0
-  config_option_table_list_t *test_tablist =
+  mucs_option_table_list_t *test_tablist =
           mucs_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );
 #elif 0
-  config_option_table_list_t *test_tablist =
+  mucs_option_table_list_t *test_tablist =
           mucs_config_option_tablist_add( NULL, test_tablist, "test-table", options, sizeof( options ) / sizeof( options[0] ) );
 #else
-  config_option_table_list_t test_tablist = {
+  mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options,
   };
 #endif
@@ -208,11 +208,11 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     }
   }
   {
-    config_source_list_t *plist = mucs_source_list_create(  );
+    mucs_source_list_t *plist = mucs_source_list_create(  );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mucs_source_set_common_callback( osrc, ccallback_string );
     mucs_source_set_type_callback( osrc, MULCONF_RTYP_STRING, scallback_string );

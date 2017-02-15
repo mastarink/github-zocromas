@@ -5,7 +5,7 @@
 
 # include "mulconfnt_types.h"
 
-enum config_source_e
+enum mucs_source_type_e
 {
   MULCONF_SOURCE_NONE,
   MULCONF_SOURCE_STRING,
@@ -18,7 +18,7 @@ enum config_source_e
   MULCONF_SOURCE_MAX = MULCONF_SOURCE_STREAM,
 };
 
-enum config_source_mode_e
+enum mucs_source_mode_e
 {
   MULCONF_MODE_NONE,
   MULCONF_MODE_LOAD,
@@ -27,7 +27,7 @@ enum config_source_mode_e
   MULCONF_MODE_MAX = MULCONF_MODE_INTERACTIVE,
 };
 
-enum config_variant_e
+enum mucs_variant_e
 {
   MULCONF_VARIANT_SHORT,
   MULCONF_VARIANT_LONG,
@@ -38,7 +38,7 @@ enum config_variant_e
   MULCONF_VARIANTS,
 };
 
-enum config_restype_e
+enum mucs_restype_e
 {
   MULCONF_RTYP_NONE,
   MULCONF_RTYP_STRING,
@@ -60,7 +60,7 @@ enum config_restype_e
   MULCONF_RTYP_ALIAS,
   MULCONF_RTYP_MAX = MULCONF_RTYP_ALIAS,
 };
-enum config_bitwise_e
+enum mucs_bitwise_e
 {
   MULCONF_RTYP_FLAG_BITWISE_AND = 0x10000000L,
   MULCONF_RTYP_FLAG_BITWISE_OR = MULCONF_RTYP_FLAG_BITWISE_AND >> 1L,
@@ -76,26 +76,26 @@ enum config_bitwise_e
           MULCONF_RTYP_FLAG_CALL | MULCONF_RTYP_FLAG_LASTOPT | MULCONF_RTYP_FLAG_AUTOFREE,
 };
 
-enum config_option_flagid_e
+enum mucs_option_flagid_e
 {
   MULCONF_OPTION_FLAGID_NEED_EQ,
   MULCONF_OPTION_FLAGID_UNQUOTE,
   MULCONF_OPTION_FLAGID_SILENT,
 };
-enum config_option_flag_e
+enum mucs_option_flag_e
 {
   MULCONF_OPTION_NEED_EQ = 1L << MULCONF_OPTION_FLAGID_NEED_EQ,
   MULCONF_OPTION_UNQUOTE = 1L << MULCONF_OPTION_FLAGID_UNQUOTE,
   MULCONF_OPTION_SILENT = 1L << MULCONF_OPTION_FLAGID_SILENT,
 };
 
-struct config_prefix_encoder_s
+struct mucs_prefix_encoder_s
 {
   char *string;
-  config_variant_t id;
+  mucs_variant_t id;
 };
 
-struct config_error_s
+struct mucs_error_s
 {
   int nerror;
   int line;
@@ -104,12 +104,12 @@ struct config_error_s
   char *msg;
 };
 
-struct config_source_desc_s
+struct mucs_source_han_s
 {
-  config_source_list_t *list;
-  config_source_desc_t *next;
-  config_source_t type;
-  config_source_mode_t mode;
+  mucs_source_list_t *list;
+  mucs_source_han_t *next;
+  mucs_source_type_t type;
+  mucs_source_mode_t mode;
   unsigned long flags;
   int count;
   int lastoptpos;
@@ -118,7 +118,7 @@ struct config_source_desc_s
   char delim;
   char *delims;
   char *eq;
-  config_prefix_encoder_t pref_ids[MULCONF_VARIANTS];
+  mucs_prefix_encoder_t pref_ids[MULCONF_VARIANTS];
   source_check_fun_t check_fun;
   source_open_fun_t open_fun;
   source_close_fun_t close_fun;
@@ -131,18 +131,18 @@ struct config_source_desc_s
   mas_argvc_t targ;
   mas_argvc_t targno;
 
-  config_error_t error;
+  mucs_error_t error;
   option_callback_t callback;
   option_callback_t callbacks[MULCONF_RTYP_MAX + 1];
   size_t callback_called;
 };
 
-struct config_source_list_s
+struct mucs_source_list_s
 {
-  config_source_desc_t *first;
+  mucs_source_han_t *first;
   mas_argvc_t targ;
 
-  config_error_t error;
+  mucs_error_t error;
 };
 
 union nvalue_u
@@ -161,11 +161,11 @@ union nvalue_u
   long double v_ldouble;
 };
 
-struct config_option_s
+struct mucs_option_han_s
 {
   char *name;
   char shortname;
-  config_restype_t restype;
+  mucs_restype_t restype;
   void *ptr;
   int val;
   char *desc;
@@ -176,19 +176,19 @@ struct config_option_s
   nvalue_t nvalue;
   unsigned long flags;
 
-  config_source_desc_t *source;
+  mucs_source_han_t *source;
   option_callback_t callback;
   size_t callback_called;
   int worked;
-  config_error_t error;
+  mucs_error_t error;
 };
 
-struct config_option_table_list_s
+struct mucs_option_table_list_s
 {
-  config_option_table_list_t *next;
+  mucs_option_table_list_t *next;
   unsigned count;
   char *name;
-  config_option_t *options;
+  mucs_option_han_t *options;
 };
 
 #endif

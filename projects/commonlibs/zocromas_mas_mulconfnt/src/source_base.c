@@ -19,30 +19,30 @@
  * */
 
 void
-mucs_source_init( config_source_desc_t * osrc )
+mucs_source_init( mucs_source_han_t * osrc )
 {
-  memset( osrc, 0, sizeof( config_source_desc_t ) );
+  memset( osrc, 0, sizeof( mucs_source_han_t ) );
 }
 
-config_source_desc_t *
+mucs_source_han_t *
 mucs_source_create( void )
 {
-  config_source_desc_t *osrc = mas_malloc( sizeof( config_source_desc_t ) );
+  mucs_source_han_t *osrc = mas_malloc( sizeof( mucs_source_han_t ) );
 
   mucs_source_init( osrc );
   return osrc;
 }
 
-config_source_desc_t *
-mucs_source_create_setup( config_source_t source_type, int count, const void *data_ptr, const char *delims,
-                          const char *eq, const config_prefix_encoder_t * pref_ids )
+mucs_source_han_t *
+mucs_source_create_setup( mucs_source_type_t source_type, int count, const void *data_ptr, const char *delims,
+                          const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
-  config_source_desc_t *osrc = NULL;
+  mucs_source_han_t *osrc = NULL;
 
   if ( source_type >= 0 && source_type < mucs_source_defaults_count(  ) )
   {
-/* const config_source_desc_t *defsrc = &default_sources[source_type]; */
-    const config_source_desc_t *defsrc = mucs_source_default( source_type );
+/* const mucs_source_han_t *defsrc = &default_sources[source_type]; */
+    const mucs_source_han_t *defsrc = mucs_source_default( source_type );
 
     if ( defsrc && source_type == defsrc->type )
     {
@@ -94,7 +94,7 @@ mucs_source_create_setup( config_source_t source_type, int count, const void *da
 }
 
 void
-mucs_source_close( config_source_desc_t * osrc )
+mucs_source_close( mucs_source_han_t * osrc )
 {
   if ( osrc )
   {
@@ -119,7 +119,7 @@ mucs_source_close( config_source_desc_t * osrc )
 }
 
 void
-mucs_source_delete( config_source_desc_t * osrc )
+mucs_source_delete( mucs_source_han_t * osrc )
 {
   mucs_source_close( osrc );
   if ( osrc )

@@ -55,7 +55,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
             "bwi=0x700:bwi+=0x100:bwi-=0x200",
   };
 
-  config_option_t options[] = {
+  mucs_option_han_t options[] = {
     {"num0", 0, MULCONF_RTYP_INT, &v_int0}
     , {"num1", 0, MULCONF_RTYP_INT, &v_int1}
     , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
@@ -77,7 +77,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  config_option_table_list_t test_tablist = {
+  mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
   setenv( "MASTEST_4", string_args, 1 );                             // allocated 6080 bytes ?!
@@ -96,8 +96,8 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   }
 
   {
-    config_source_list_t *plist = mucs_source_list_create(  );
-    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MASTEST_4", ":", "=", NULL );
+    mucs_source_list_t *plist = mucs_source_list_create(  );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MASTEST_4", ":", "=", NULL );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );

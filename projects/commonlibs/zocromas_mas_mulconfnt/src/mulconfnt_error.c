@@ -43,7 +43,7 @@ mucs_error_die( int line, const char *func, const char *file, const char *fmt, .
 }
 
 int
-mucs_error_vset_at_source( config_source_desc_t * osrc, int line, const char *func, const char *file, const char *fmt, va_list args )
+mucs_error_vset_at_source( mucs_source_han_t * osrc, int line, const char *func, const char *file, const char *fmt, va_list args )
 {
   int r = 0;
 
@@ -53,7 +53,7 @@ mucs_error_vset_at_source( config_source_desc_t * osrc, int line, const char *fu
 }
 
 int
-mucs_error_set_at_source( config_source_desc_t * osrc, int line, const char *func, const char *file, const char *fmt, ... )
+mucs_error_set_at_source( mucs_source_han_t * osrc, int line, const char *func, const char *file, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
@@ -65,7 +65,7 @@ mucs_error_set_at_source( config_source_desc_t * osrc, int line, const char *fun
 }
 
 int
-mucs_error_vset_at_option( config_option_t * opt, int line, const char *func, const char *file, unsigned long flags, const char *fmt,
+mucs_error_vset_at_option( mucs_option_han_t * opt, int line, const char *func, const char *file, unsigned long flags, const char *fmt,
                                 va_list args )
 {
   int r = 0;
@@ -80,7 +80,7 @@ mucs_error_vset_at_option( config_option_t * opt, int line, const char *func, co
 }
 
 int
-mucs_error_set_at_option( config_option_t * opt, int line, const char *func, const char *file, unsigned long flags, const char *fmt, ... )
+mucs_error_set_at_option( mucs_option_han_t * opt, int line, const char *func, const char *file, unsigned long flags, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
@@ -92,7 +92,7 @@ mucs_error_set_at_option( config_option_t * opt, int line, const char *func, con
 }
 
 int
-mucs_error_set_at_source_from_option( config_source_desc_t * osrc, config_option_t * opt )
+mucs_error_set_at_source_from_option( mucs_source_han_t * osrc, mucs_option_han_t * opt )
 {
   int r = 0;
 
@@ -102,7 +102,7 @@ mucs_error_set_at_source_from_option( config_source_desc_t * osrc, config_option
 }
 
 int
-mucs_error_source( const config_source_desc_t * osrc )
+mucs_error_source( const mucs_source_han_t * osrc )
 {
   int nerror = 0;
 
@@ -113,13 +113,13 @@ mucs_error_source( const config_source_desc_t * osrc )
 }
 
 const char *
-mucs_error_source_msg( const config_source_desc_t * osrc )
+mucs_error_source_msg( const mucs_source_han_t * osrc )
 {
   return osrc->error.msg;
 }
 
 int
-mucs_error_option( const config_option_t * opt )
+mucs_error_option( const mucs_option_han_t * opt )
 {
   int nerror = 0;
 
@@ -133,7 +133,7 @@ mucs_error_option( const config_option_t * opt )
 }
 
 const char *
-mucs_error_option_msg( const config_option_t * opt )
+mucs_error_option_msg( const mucs_option_han_t * opt )
 {
   return opt->error.msg;
 }

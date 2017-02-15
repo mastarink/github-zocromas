@@ -20,22 +20,22 @@
 #define MULCONFNT_ALLOCATE__SOURCE_LIST
 
 int
-mucs_parse( int argc, const char *argv[], const config_option_table_list_t * tablist )
+mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tablist )
 {
 #ifdef MULCONFNT_ALLOCATE__SOURCE_LIST
-  config_source_list_t *plist = mucs_source_list_create(  );
+  mucs_source_list_t *plist = mucs_source_list_create(  );
 #else
-  config_source_list_t list_ = { 0 };
-  config_source_list_t *plist = &list_;
+  mucs_source_list_t list_ = { 0 };
+  mucs_source_list_t *plist = &list_;
 #endif
 
-  config_source_desc_t *osrc = NULL;
+  mucs_source_han_t *osrc = NULL;
 
   mucs_source_list_init( plist );
   osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
   osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
 
-  const config_prefix_encoder_t _uUu_ pref_ids[MULCONF_VARIANTS] = {
+  const mucs_prefix_encoder_t _uUu_ pref_ids[MULCONF_VARIANTS] = {
     {"-", MULCONF_VARIANT_SHORT}
     , {"--", MULCONF_VARIANT_LONG}
     , {NULL, MULCONF_VARIANT_NONOPT}

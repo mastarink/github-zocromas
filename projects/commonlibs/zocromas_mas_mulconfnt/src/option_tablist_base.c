@@ -20,26 +20,26 @@
  * */
 
 void
-mucs_config_option_tablist_init( config_option_table_list_t * tablist )
+mucs_config_option_tablist_init( mucs_option_table_list_t * tablist )
 {
-  memset( tablist, 0, sizeof( config_option_table_list_t ) );
+  memset( tablist, 0, sizeof( mucs_option_table_list_t ) );
 }
 
-config_option_table_list_t *
+mucs_option_table_list_t *
 mucs_config_option_tablist_create( void )
 {
-  config_option_table_list_t *tablist = mas_malloc( sizeof( config_option_table_list_t ) );
+  mucs_option_table_list_t *tablist = mas_malloc( sizeof( mucs_option_table_list_t ) );
 
   mucs_config_option_tablist_init( tablist );
   return tablist;
 }
 
-config_option_table_list_t *
-mucs_config_option_tablist_add( config_option_table_list_t * tablist, const char *name, config_option_t * options, size_t count )
+mucs_option_table_list_t *
+mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *name, mucs_option_han_t * options, size_t count )
 {
   if ( tablist )
   {
-    config_option_table_list_t *tb = tablist;
+    mucs_option_table_list_t *tb = tablist;
 
     while ( tb->next )
       tb = tb->next;
@@ -59,11 +59,11 @@ mucs_config_option_tablist_add( config_option_table_list_t * tablist, const char
 }
 
 void
-mucs_config_option_tablist_close( config_option_table_list_t * tablist )
+mucs_config_option_tablist_close( mucs_option_table_list_t * tablist )
 {
   while ( tablist )
   {
-    for ( config_option_t * opt = tablist->options; opt->name; opt++ )
+    for ( mucs_option_han_t * opt = tablist->options; opt->name; opt++ )
     {
       if ( opt && opt->ptr && ( opt->restype & MULCONF_RTYP_FLAG_AUTOFREE ) )
       {
@@ -85,7 +85,7 @@ mucs_config_option_tablist_close( config_option_table_list_t * tablist )
 }
 
 void
-mucs_config_option_tablist_delete( config_option_table_list_t * tablist )
+mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist )
 {
   mucs_config_option_tablist_close( tablist );
   mas_free( tablist );
