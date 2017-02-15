@@ -1,5 +1,5 @@
-#ifndef MULCONF_ERROR_BASE_H
-# define MULCONF_ERROR_BASE_H
+#ifndef MUCS_ERROR_BASE_H
+# define MUCS_ERROR_BASE_H
 
 # include "mulconfnt_types.h"
 

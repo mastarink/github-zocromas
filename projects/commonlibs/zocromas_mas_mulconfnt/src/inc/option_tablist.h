@@ -1,5 +1,5 @@
-#ifndef MULCONF_OPTION_TABLIST_H
-# define MULCONF_OPTION_TABLIST_H
+#ifndef MUCS_OPTION_TABLIST_H
+# define MUCS_OPTION_TABLIST_H
 
 # include "mulconfnt_types.h"
 

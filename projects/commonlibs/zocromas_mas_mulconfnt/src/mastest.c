@@ -243,7 +243,7 @@ main( int argc, const char *argv[] )
     }
   }
   mastest_next_group(  );
-#define TOTAL_TESTS 327 - 1
+#define TOTAL_TESTS 329 - 1
   mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
   return 0;
 }

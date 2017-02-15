@@ -56,24 +56,24 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   };
 
   mucs_option_han_t options[] = {
-    {"num0", 0, MULCONF_RTYP_INT, &v_int0}
-    , {"num1", 0, MULCONF_RTYP_INT, &v_int1}
-    , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
-    , {"num3", 0, MULCONF_RTYP_INT, &v_int3}
-    , {"num4", 0, MULCONF_RTYP_INT, &v_int4}
-    , {"lnum0", 0, MULCONF_RTYP_LONG, &v_long0}
-    , {"lnum1", 0, MULCONF_RTYP_INT, &v_long1}
-    , {"lnum2", 0, MULCONF_RTYP_LONG, &v_long2}
-    , {"lnum3", 0, MULCONF_RTYP_LONG, &v_long3}
-    , {"lnum4", 0, MULCONF_RTYP_LONG, &v_long4}
-    , {"llnum0", 0, MULCONF_RTYP_LLONG, &v_llong0}
-    , {"llnum1", 0, MULCONF_RTYP_LLONG, &v_llong1}
-    , {"llnum2", 0, MULCONF_RTYP_LLONG, &v_llong2}
-    , {"llnum3", 0, MULCONF_RTYP_LLONG, &v_llong3}
-    , {"llnum4", 0, MULCONF_RTYP_LLONG, &v_llong4}
-    , {"bwi", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    {"num0", 0, MUCS_RTYP_INT, &v_int0}
+    , {"num1", 0, MUCS_RTYP_INT, &v_int1}
+    , {"num2", 0, MUCS_RTYP_INT, &v_int2}
+    , {"num3", 0, MUCS_RTYP_INT, &v_int3}
+    , {"num4", 0, MUCS_RTYP_INT, &v_int4}
+    , {"lnum0", 0, MUCS_RTYP_LONG, &v_long0}
+    , {"lnum1", 0, MUCS_RTYP_INT, &v_long1}
+    , {"lnum2", 0, MUCS_RTYP_LONG, &v_long2}
+    , {"lnum3", 0, MUCS_RTYP_LONG, &v_long3}
+    , {"lnum4", 0, MUCS_RTYP_LONG, &v_long4}
+    , {"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}
+    , {"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}
+    , {"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}
+    , {"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}
+    , {"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}
+    , {"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -96,7 +96,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, string_args, ":", "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, string_args, ":", "=", NULL );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );

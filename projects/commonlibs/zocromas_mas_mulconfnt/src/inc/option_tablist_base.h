@@ -1,5 +1,5 @@
-#ifndef MULCONF_OPTION_TABLIST_BASE_H
-# define MULCONF_OPTION_TABLIST_BASE_H
+#ifndef MUCS_OPTION_TABLIST_BASE_H
+# define MUCS_OPTION_TABLIST_BASE_H
 
 void mucs_config_option_tablist_init( mucs_option_table_list_t * tablist );
 mucs_option_table_list_t *mucs_config_option_tablist_create( void );

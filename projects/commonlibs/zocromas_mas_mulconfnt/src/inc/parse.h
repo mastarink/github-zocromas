@@ -1,5 +1,5 @@
-#ifndef MULCONF_H
-# define MULCONF_H
+#ifndef MUCS_H
+# define MUCS_H
 
 # include "mulconfnt_types.h"
 

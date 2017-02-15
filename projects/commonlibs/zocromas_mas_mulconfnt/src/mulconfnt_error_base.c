@@ -42,7 +42,7 @@ mucs_error_vset( mucs_error_t * error, int line, const char *func, const char *f
     {
       char *filename = mas_strdup( file );
 
-      if ( !( flags & MULCONF_OPTION_SILENT ) )
+      if ( !( flags & MUCS_FLAG_SILENT ) )
         fprintf( stderr, "%lx SETTING ERROR := %d:%s @ %s - %s\n", flags, line, func, basename( filename ), msg );
       mas_free( filename );
     }

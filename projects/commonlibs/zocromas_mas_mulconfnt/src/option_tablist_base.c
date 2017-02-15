@@ -65,14 +65,14 @@ mucs_config_option_tablist_close( mucs_option_table_list_t * tablist )
   {
     for ( mucs_option_han_t * opt = tablist->options; opt->name; opt++ )
     {
-      if ( opt && opt->ptr && ( opt->restype & MULCONF_RTYP_FLAG_AUTOFREE ) )
+      if ( opt && opt->ptr && ( /* ( opt->restype & MUCS_RTYP_FLAG_AUTOFREE ) || */ (opt->flags & MUCS_FLAG_AUTOFREE) ) )
       {
-        switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
+        switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
         {
-        case MULCONF_RTYP_STRING:
+        case MUCS_RTYP_STRING:
           mas_free( *( ( char ** ) opt->ptr ) );
           break;
-        case MULCONF_RTYP_TARG:
+        case MUCS_RTYP_TARG:
           mas_argvc_delete( ( mas_argvc_t * ) opt->ptr );
           break;
         default:

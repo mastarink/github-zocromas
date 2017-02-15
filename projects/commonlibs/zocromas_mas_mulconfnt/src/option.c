@@ -28,57 +28,57 @@ mucs_config_option_nvalue_from_ptr( mucs_option_han_t * opt )
   {
     if ( do_fprintf )
       fprintf( stderr, "PTR: %p %lx\n", opt->ptr, *( ( long * ) opt->ptr ) );
-    switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
+    switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
     {
-    case MULCONF_RTYP_NONE:
-    case MULCONF_RTYP_STRING:
-    case MULCONF_RTYP_TARG:
+    case MUCS_RTYP_NONE:
+    case MUCS_RTYP_STRING:
+    case MUCS_RTYP_TARG:
       break;
-    case MULCONF_RTYP_CHAR:
+    case MUCS_RTYP_CHAR:
       opt->nvalue.v_char = *( ( char * ) opt->ptr );
 //        v_long_long = ( long long ) opt->nvalue.v_char;
       break;
-    case MULCONF_RTYP_UCHAR:
+    case MUCS_RTYP_UCHAR:
       opt->nvalue.v_uchar = *( ( unsigned char * ) opt->ptr );
 //        v_ulong_long = ( unsigned long long ) opt->nvalue.v_uchar;
       break;
-    case MULCONF_RTYP_SHORT:
+    case MUCS_RTYP_SHORT:
       opt->nvalue.v_short = *( ( short * ) opt->ptr );
 //        v_long_long = ( long long ) opt->nvalue.v_short;
       break;
-    case MULCONF_RTYP_USHORT:
+    case MUCS_RTYP_USHORT:
       opt->nvalue.v_ushort = *( ( unsigned short * ) opt->ptr );
 //        v_ulong_long = ( unsigned long long ) opt->nvalue.v_ushort;
       break;
-    case MULCONF_RTYP_INT:
+    case MUCS_RTYP_INT:
       opt->nvalue.v_int = *( ( int * ) opt->ptr );
 //        v_long_long = ( long long ) opt->nvalue.v_int;
       break;
-    case MULCONF_RTYP_UINT:
+    case MUCS_RTYP_UINT:
       opt->nvalue.v_uint = *( ( unsigned int * ) opt->ptr );
 //        v_ulong_long = ( unsigned long long ) opt->nvalue.v_uint;
       break;
-    case MULCONF_RTYP_LONG:
+    case MUCS_RTYP_LONG:
       opt->nvalue.v_long = *( ( long * ) opt->ptr );
 //        v_long_long = ( long long ) opt->nvalue.v_long;
       break;
-    case MULCONF_RTYP_ULONG:
+    case MUCS_RTYP_ULONG:
       opt->nvalue.v_ulong = *( ( unsigned long * ) opt->ptr );
 //        v_ulong_long = ( unsigned long long ) opt->nvalue.v_ulong;
       break;
-    case MULCONF_RTYP_LONG_LONG:
+    case MUCS_RTYP_LONG_LONG:
       opt->nvalue.v_long_long = *( ( long long * ) opt->ptr );
 //        v_long_long = opt->nvalue.v_long_long;
       break;
-    case MULCONF_RTYP_ULONG_LONG:
+    case MUCS_RTYP_ULONG_LONG:
       opt->nvalue.v_ulong_long = *( ( unsigned long long * ) opt->ptr );
 //        v_ulong_long = opt->nvalue.v_ulong_long;
       break;
-    case MULCONF_RTYP_DOUBLE:
+    case MUCS_RTYP_DOUBLE:
       opt->nvalue.v_double = *( ( unsigned long long * ) opt->ptr );
 //        v_double = opt->nvalue.v_double;
       break;
-    case MULCONF_RTYP_LDOUBLE:
+    case MUCS_RTYP_LDOUBLE:
       opt->nvalue.v_ldouble = *( ( unsigned long long * ) opt->ptr );
 //        v_ldouble = opt->nvalue.v_ldouble;
       break;
@@ -93,56 +93,56 @@ mucs_config_option_nvalue_to_ptr( mucs_option_han_t * opt )
   {
     if ( do_fprintf )
       fprintf( stderr, "PTR: %p\n", opt->ptr );
-    switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
+    switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
     {
-    case MULCONF_RTYP_NONE:
+    case MUCS_RTYP_NONE:
       break;
-    case MULCONF_RTYP_STRING:
+    case MUCS_RTYP_STRING:
       if ( do_fprintf )
         fprintf( stderr, "STRING_VALUE: %s/%p => %p\n", opt->string_value, opt->string_value, ( ( char ** ) opt->ptr ) );
       *( ( char ** ) opt->ptr ) = mas_strdup( opt->string_value );
       break;
-    case MULCONF_RTYP_TARG:
+    case MUCS_RTYP_TARG:
       {
         mas_argvc_t *targ = ( mas_argvc_t * ) opt->ptr;
 
         mas_add_argvc_arg( targ, opt->string_value );
       }
       break;
-    case MULCONF_RTYP_CHAR:
+    case MUCS_RTYP_CHAR:
       *( ( char * ) opt->ptr ) = opt->nvalue.v_char;
       break;
-    case MULCONF_RTYP_UCHAR:
+    case MUCS_RTYP_UCHAR:
       *( ( unsigned char * ) opt->ptr ) = opt->nvalue.v_char;
       break;
-    case MULCONF_RTYP_SHORT:
+    case MUCS_RTYP_SHORT:
       *( ( short * ) opt->ptr ) = opt->nvalue.v_short;
       break;
-    case MULCONF_RTYP_USHORT:
+    case MUCS_RTYP_USHORT:
       *( ( unsigned short * ) opt->ptr ) = opt->nvalue.v_short;
       break;
-    case MULCONF_RTYP_INT:
+    case MUCS_RTYP_INT:
       *( ( int * ) opt->ptr ) = opt->nvalue.v_int;
       break;
-    case MULCONF_RTYP_UINT:
+    case MUCS_RTYP_UINT:
       *( ( unsigned int * ) opt->ptr ) = opt->nvalue.v_uint;
       break;
-    case MULCONF_RTYP_LONG:
+    case MUCS_RTYP_LONG:
       *( ( long * ) opt->ptr ) = opt->nvalue.v_long;
       break;
-    case MULCONF_RTYP_ULONG:
+    case MUCS_RTYP_ULONG:
       *( ( unsigned long * ) opt->ptr ) = opt->nvalue.v_ulong;
       break;
-    case MULCONF_RTYP_LONG_LONG:
+    case MUCS_RTYP_LONG_LONG:
       *( ( long long * ) opt->ptr ) = opt->nvalue.v_long_long;
       break;
-    case MULCONF_RTYP_ULONG_LONG:
+    case MUCS_RTYP_ULONG_LONG:
       *( ( unsigned long long * ) opt->ptr ) = opt->nvalue.v_ulong_long;
       break;
-    case MULCONF_RTYP_DOUBLE:
+    case MUCS_RTYP_DOUBLE:
       *( ( double * ) opt->ptr ) = opt->nvalue.v_double;
       break;
-    case MULCONF_RTYP_LDOUBLE:
+    case MUCS_RTYP_LDOUBLE:
       *( ( long double * ) opt->ptr ) = opt->nvalue.v_ldouble;
       break;
     }
@@ -161,33 +161,33 @@ mucs_config_option_string_to_nvalue( mucs_option_han_t * opt, int *perr )
 
     v_x = opt->nvalue;
 
-    switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
+    switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
     {
-    case MULCONF_RTYP_NONE:
-    case MULCONF_RTYP_STRING:
-    case MULCONF_RTYP_TARG:
+    case MUCS_RTYP_NONE:
+    case MUCS_RTYP_STRING:
+    case MUCS_RTYP_TARG:
       break;
-    case MULCONF_RTYP_CHAR:
-    case MULCONF_RTYP_SHORT:
-    case MULCONF_RTYP_INT:
-    case MULCONF_RTYP_LONG:
-    case MULCONF_RTYP_LONG_LONG:
+    case MUCS_RTYP_CHAR:
+    case MUCS_RTYP_SHORT:
+    case MUCS_RTYP_INT:
+    case MUCS_RTYP_LONG:
+    case MUCS_RTYP_LONG_LONG:
       v_x.v_long_long = strtoll( string, &ep, 0 );
       *perr = ( ep != string + strlen( string ) );
       break;
-    case MULCONF_RTYP_UCHAR:
-    case MULCONF_RTYP_USHORT:
-    case MULCONF_RTYP_UINT:
-    case MULCONF_RTYP_ULONG:
-    case MULCONF_RTYP_ULONG_LONG:
+    case MUCS_RTYP_UCHAR:
+    case MUCS_RTYP_USHORT:
+    case MUCS_RTYP_UINT:
+    case MUCS_RTYP_ULONG:
+    case MUCS_RTYP_ULONG_LONG:
       v_x.v_ulong_long = strtoull( string, &ep, 0 );
       *perr = ( ep != string + strlen( string ) );
       break;
-    case MULCONF_RTYP_DOUBLE:
+    case MUCS_RTYP_DOUBLE:
       v_x.v_double = strtod( string, &ep );
       *perr = ( ep != string + strlen( string ) );
       break;
-    case MULCONF_RTYP_LDOUBLE:
+    case MUCS_RTYP_LDOUBLE:
       v_x.v_ldouble = strtold( string, &ep );
       if ( do_fprintf )
         fprintf( stderr, "LONG DOUBLE:\t%s\n\t\t%s\n\t\t%2.45Lf\n\t\t%2.45Lf\n",
@@ -220,140 +220,140 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags )
       mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /* non-numeric */
     }
 
-    if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_NOT )
+    if ( opt->restype & MUCS_RTYP_BW_NOT )
       v_x.v_ulong_long = ~v_x.v_ulong_long;
-    switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
+    switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
     {
-    case MULCONF_RTYP_NONE:
-    case MULCONF_RTYP_STRING:
-    case MULCONF_RTYP_TARG:
+    case MUCS_RTYP_NONE:
+    case MUCS_RTYP_STRING:
+    case MUCS_RTYP_TARG:
       break;
-    case MULCONF_RTYP_CHAR:
+    case MUCS_RTYP_CHAR:
       if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into char */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_char &= ( char ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_char |= ( char ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_char ^= ( char ) v_x.v_long_long;
       else
         opt->nvalue.v_char = ( char ) v_x.v_long_long;
       break;
-    case MULCONF_RTYP_UCHAR:
+    case MUCS_RTYP_UCHAR:
       if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into char */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_uchar &= ( char ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_uchar |= ( char ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_uchar ^= ( char ) v_x.v_ulong_long;
       else
         opt->nvalue.v_uchar = ( char ) v_x.v_ulong_long;
       break;
-    case MULCONF_RTYP_SHORT:
+    case MUCS_RTYP_SHORT:
       if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into short */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_short &= ( short ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_short |= ( short ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_short ^= ( short ) v_x.v_long_long;
       else
         opt->nvalue.v_short = ( short ) v_x.v_long_long;
       break;
-    case MULCONF_RTYP_USHORT:
+    case MUCS_RTYP_USHORT:
       if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into short */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_ushort &= ( short ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_ushort |= ( short ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_ushort ^= ( short ) v_x.v_ulong_long;
       else
         opt->nvalue.v_ushort = ( short ) v_x.v_ulong_long;
       break;
-    case MULCONF_RTYP_INT:
+    case MUCS_RTYP_INT:
       if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into int */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_int &= ( int ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_int |= ( int ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_int ^= ( int ) v_x.v_long_long;
       else
         opt->nvalue.v_int = ( int ) v_x.v_long_long;
       break;
-    case MULCONF_RTYP_UINT:
+    case MUCS_RTYP_UINT:
       if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); /*unable to place number into int */
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_uint &= ( int ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_uint |= ( int ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_uint ^= ( int ) v_x.v_ulong_long;
       else
         opt->nvalue.v_uint = ( int ) v_x.v_ulong_long;
       break;
-    case MULCONF_RTYP_LONG:
+    case MUCS_RTYP_LONG:
       if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
       {
       /*unable to place number into long */
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value );
       }
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_long &= ( long ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_long |= ( long ) v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_long ^= ( long ) v_x.v_long_long;
       else
         opt->nvalue.v_long = ( long ) v_x.v_long_long;
       break;
-    case MULCONF_RTYP_ULONG:
+    case MUCS_RTYP_ULONG:
       if ( ( unsigned long long ) ( unsigned long ) v_x.v_ulong_long != v_x.v_ulong_long )
       {
       /*unable to place number into long */
         mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value );
       }
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_ulong &= ( long ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_ulong |= ( long ) v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_ulong ^= ( long ) v_x.v_ulong_long;
       else
         opt->nvalue.v_ulong = ( long ) v_x.v_ulong_long;
       break;
-    case MULCONF_RTYP_LONG_LONG:
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+    case MUCS_RTYP_LONG_LONG:
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_long_long &= v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_long_long |= v_x.v_long_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_long_long ^= v_x.v_long_long;
       else
         opt->nvalue.v_long_long = v_x.v_long_long;
       break;
-    case MULCONF_RTYP_ULONG_LONG:
-      if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_AND )
+    case MUCS_RTYP_ULONG_LONG:
+      if ( opt->restype & MUCS_RTYP_BW_AND )
         opt->nvalue.v_ulong_long &= v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_OR )
+      else if ( opt->restype & MUCS_RTYP_BW_OR )
         opt->nvalue.v_ulong_long |= v_x.v_ulong_long;
-      else if ( opt->restype & MULCONF_RTYP_FLAG_BITWISE_XOR )
+      else if ( opt->restype & MUCS_RTYP_BW_XOR )
         opt->nvalue.v_ulong_long ^= v_x.v_ulong_long;
       else
         opt->nvalue.v_ulong_long = v_x.v_ulong_long;
       break;
-    case MULCONF_RTYP_DOUBLE:
+    case MUCS_RTYP_DOUBLE:
       opt->nvalue.v_double = v_x.v_double;
       break;
-    case MULCONF_RTYP_LDOUBLE:
+    case MUCS_RTYP_LDOUBLE:
       opt->nvalue.v_ldouble = v_x.v_ldouble;
       break;
     }
@@ -375,7 +375,7 @@ mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value,
       opt->string_value = mas_strdup( string_value );
 #else
     if ( string_value )
-      opt->string_value = mucs_config_option_flag( opt, MULCONF_OPTION_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
+      opt->string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
     memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
     mucs_config_option_set_nvalue( opt, flags );
@@ -397,7 +397,7 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
 
     if ( do_fprintf > 10 )
       fprintf( stderr, "variantid: %d\n", variantid );
-    if ( variantid == MULCONF_VARIANT_SHORT )
+    if ( variantid == MUCS_VARIANT_SHORT )
     {
       if ( do_fprintf > 10 )
         fprintf( stderr, "variantid: SHORT\n" );
@@ -430,17 +430,17 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
         }
       }
     }
-    else if ( variantid == MULCONF_VARIANT_LONG )
+    else if ( variantid == MUCS_VARIANT_LONG )
     {
       unsigned l = strlen( topt->name );
 
       if ( do_fprintf > 10 )
-        fprintf( stderr, "variantid: LONG %s ? %s -- %08x : %08x\n", arg, topt->name, ( topt->restype ), ( topt->restype & ~MULCONF_RTYP_FLAG_ALL ) );
+        fprintf( stderr, "variantid: LONG %s ? %s -- %08x : %08x\n", arg, topt->name, ( topt->restype ), ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) );
 
       if ( strlen( arg ) >= l && 0 == strncmp( arg, topt->name, l ) )
       {
       /* found opt name */
-        if ( ( topt->restype & ~MULCONF_RTYP_FLAG_ALL ) != MULCONF_RTYP_NONE && arg[l] && ( eq && 0 == strncmp( arg + l, eq, strlen( eq ) ) ) )
+        if ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) != MUCS_RTYP_NONE && arg[l] && ( eq && 0 == strncmp( arg + l, eq, strlen( eq ) ) ) )
         {
         /* A. --opt=val  */
           string_value = &arg[l] + strlen( eq );
@@ -463,12 +463,12 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
         /* Not found */
           found = 0;
         }
-        else if ( mucs_config_option_flag( topt, MULCONF_OPTION_NEED_EQ ) )
+        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
         {
         /* Found, but no needed "=value" */
           found = 3;
         }
-        else if ( ( topt->restype & ~MULCONF_RTYP_FLAG_ALL ) == MULCONF_RTYP_NONE )
+        else if ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE )
         {
         /* Found, no-value */
           found = 1;

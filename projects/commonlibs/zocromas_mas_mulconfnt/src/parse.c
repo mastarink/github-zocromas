@@ -32,15 +32,15 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
   mucs_source_han_t *osrc = NULL;
 
   mucs_source_list_init( plist );
-  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
-  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
+  osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
+  osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
 
-  const mucs_prefix_encoder_t _uUu_ pref_ids[MULCONF_VARIANTS] = {
-    {"-", MULCONF_VARIANT_SHORT}
-    , {"--", MULCONF_VARIANT_LONG}
-    , {NULL, MULCONF_VARIANT_NONOPT}
+  const mucs_prefix_encoder_t _uUu_ pref_ids[MUCS_VARIANTS] = {
+    {"-", MUCS_VARIANT_SHORT}
+    , {"--", MUCS_VARIANT_LONG}
+    , {NULL, MUCS_VARIANT_NONOPT}
   };
-  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
+  osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
   mucs_source_lookup( osrc, tablist );
 
   if ( do_fprintf )
@@ -66,12 +66,12 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
   {
     char *envname = "ENVVAR";
 
-    osrc = mucs_open( MULCONF_SOURCE_DIRECT, 0, "first=45:next=49", ":", '=', 0, 0 );
-    mucs_open( MULCONF_SOURCE_ENV, 0, envname, ":" );
-    mucs_open( MULCONF_SOURCE_ARGV, argc, argv, 0 );
-    mucs_open( MULCONF_SOURCE_CONFIG, 0, NULL, ";\n" );
-    mucs_open( MULCONF_SOURCE_FILE, 0, "mas.cfg", ";\n" );
-    mucs_open( MULCONF_SOURCE_STREAM, 0, stdin, ";\n" );
+    osrc = mucs_open( MUCS_SOURCE_DIRECT, 0, "first=45:next=49", ":", '=', 0, 0 );
+    mucs_open( MUCS_SOURCE_ENV, 0, envname, ":" );
+    mucs_open( MUCS_SOURCE_ARGV, argc, argv, 0 );
+    mucs_open( MUCS_SOURCE_CONFIG, 0, NULL, ";\n" );
+    mucs_open( MUCS_SOURCE_FILE, 0, "mas.cfg", ";\n" );
+    mucs_open( MUCS_SOURCE_STREAM, 0, stdin, ";\n" );
   }
 #endif
 /*

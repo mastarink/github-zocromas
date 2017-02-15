@@ -80,25 +80,25 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   mucs_option_han_t options[] = {
-    {"num0other", 0, MULCONF_RTYP_UINT, &v_uint0}
-    , {"aliasnum0", 0, MULCONF_RTYP_ALIAS, "num0"}
-    , {"num1", 0, MULCONF_RTYP_UINT, &v_uint1}
-    , {"num2", 0, MULCONF_RTYP_UINT, &v_uint2}
-    , {"num3", 0, MULCONF_RTYP_UINT, &v_uint3}
-    , {"num4", 0, MULCONF_RTYP_UINT, &v_uint4}
-    , {"lnum0", 0, MULCONF_RTYP_ULONG, &v_ulong0}
-    , {"lnum1", 0, MULCONF_RTYP_UINT, &v_ulong1}
-    , {"lnum2", 0, MULCONF_RTYP_ULONG, &v_ulong2}
-    , {"lnum3", 0, MULCONF_RTYP_ULONG, &v_ulong3}
-    , {"lnum4", 0, MULCONF_RTYP_ULONG, &v_ulong4}
-    , {"llnum0", 0, MULCONF_RTYP_ULLONG, &v_ullong0}
-    , {"llnum1", 0, MULCONF_RTYP_ULLONG, &v_ullong1}
-    , {"llnum2", 0, MULCONF_RTYP_ULLONG, &v_ullong2}
-    , {"llnum3", 0, MULCONF_RTYP_ULLONG, &v_ullong3}
-    , {"llnum4", 0, MULCONF_RTYP_ULLONG, &v_ullong4}
-    , {"bwi", 0, MULCONF_RTYP_ULONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RTYP_ULONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RTYP_ULONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    {"num0other", 0, MUCS_RTYP_UINT, &v_uint0}
+    , {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}
+    , {"num1", 0, MUCS_RTYP_UINT, &v_uint1}
+    , {"num2", 0, MUCS_RTYP_UINT, &v_uint2}
+    , {"num3", 0, MUCS_RTYP_UINT, &v_uint3}
+    , {"num4", 0, MUCS_RTYP_UINT, &v_uint4}
+    , {"lnum0", 0, MUCS_RTYP_ULONG, &v_ulong0}
+    , {"lnum1", 0, MUCS_RTYP_UINT, &v_ulong1}
+    , {"lnum2", 0, MUCS_RTYP_ULONG, &v_ulong2}
+    , {"lnum3", 0, MUCS_RTYP_ULONG, &v_ulong3}
+    , {"lnum4", 0, MUCS_RTYP_ULONG, &v_ulong4}
+    , {"llnum0", 0, MUCS_RTYP_ULLONG, &v_ullong0}
+    , {"llnum1", 0, MUCS_RTYP_ULLONG, &v_ullong1}
+    , {"llnum2", 0, MUCS_RTYP_ULLONG, &v_ullong2}
+    , {"llnum3", 0, MUCS_RTYP_ULLONG, &v_ullong3}
+    , {"llnum4", 0, MUCS_RTYP_ULLONG, &v_ullong4}
+    , {"bwi", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -124,10 +124,10 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     if ( osrc )
-      osrc->flags |= MULCONF_OPTION_SILENT;
+      osrc->flags |= MUCS_FLAG_SILENT;
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );

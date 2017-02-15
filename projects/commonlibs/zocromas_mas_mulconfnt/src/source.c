@@ -95,7 +95,7 @@ static mucs_variant_t
 max_match_id( mucs_source_han_t * osrc, const char *arg )
 {
   int maxmatch = -1;
-  mucs_variant_t maxmatchid = MULCONF_VARIANT_MAX;
+  mucs_variant_t maxmatchid = MUCS_VARIANT_MAX;
 
   for ( unsigned i = 0; osrc && ( i < sizeof( osrc->pref_ids ) / sizeof( osrc->pref_ids[0] ) ); i++ )
   {
@@ -142,7 +142,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
   osrc->lastoptpos = 0;
   for ( int iarg = 0; osrc && !mucs_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
-    static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
+    static const char *labels[MUCS_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
     const char *next_arg = NULL;
 
@@ -153,17 +153,17 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
     if ( do_fprintf )
       fprintf( stderr, "LOOKUP %s\n", arg );
 
-    mucs_variant_t variantid = ( !osrc->lastoptpos || iarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MULCONF_VARIANT_NONOPT;
+    mucs_variant_t variantid = ( !osrc->lastoptpos || iarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MUCS_VARIANT_NONOPT;
     int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
 
     if ( do_fprintf )
       fprintf( stderr, "LAST:%d. '%s' --- %d\n", iarg, arg, osrc->lastoptpos );
-    if ( variantid == MULCONF_VARIANT_BAD )
+    if ( variantid == MUCS_VARIANT_BAD )
     {
       if ( do_fprintf )
         fprintf( stderr, "NO VARIANT [%s] arg='%s';\n", labels[variantid], arg );
     }
-    else if ( variantid == MULCONF_VARIANT_NONOPT )
+    else if ( variantid == MUCS_VARIANT_NONOPT )
     {
       if ( do_fprintf )
         fprintf( stderr, "ADD NONOPT %s\n", arg + preflen );
@@ -178,7 +178,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
       opt = mucs_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
-      while ( opt && opt->restype == MULCONF_RTYP_ALIAS && opt->ptr )
+      while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->ptr )
       {
         mucs_option_han_t *oldopt = opt;
 
@@ -202,7 +202,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
 //          opt->source = osrc;
           mucs_error_set_at_source_from_option( opt->source, opt );
         }
-        if ( opt->restype & MULCONF_RTYP_FLAG_LASTOPT )
+        if (  /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
         {
           if ( do_fprintf )
             fprintf( stderr, "SET LAST: %d. '%s'; has_value:%d\n", iarg, arg, opt->has_value );
@@ -214,7 +214,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
         }
         if ( !opt->worked )
         {
-          option_callback_t cb = NULL;
+          mucs_option_callback_t cb = NULL;
 
           if ( osrc->callback )
           {
@@ -227,7 +227,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
           }
           if ( osrc->callbacks )
           {
-            cb = osrc->callbacks[opt->restype & ~MULCONF_RTYP_FLAG_ALL];
+            cb = osrc->callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
             if ( cb )
             {
               cb( opt );
@@ -287,14 +287,14 @@ mucs_source_flag( mucs_source_han_t * osrc, unsigned long mask )
 }
 
 void
-mucs_source_set_common_callback( mucs_source_han_t * osrc, option_callback_t cb )
+mucs_source_set_common_callback( mucs_source_han_t * osrc, mucs_option_callback_t cb )
 {
   if ( osrc )
     osrc->callback = cb;
 }
 
 void
-mucs_source_set_type_callback( mucs_source_han_t * osrc, mucs_restype_t restype, option_callback_t cb )
+mucs_source_set_type_callback( mucs_source_han_t * osrc, mucs_restype_t restype, mucs_option_callback_t cb )
 {
   if ( osrc )
     osrc->callbacks[restype] = cb;

@@ -86,28 +86,28 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 #define NUM_NOPTS 4
 
   mucs_option_han_t options[] = {
-    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0}
-    , {"string1", 's', MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1}
-    , {"num0", 'n', MULCONF_RTYP_INT, &v_int0}
-    , {"num1", 'x', MULCONF_RTYP_INT, &v_int1}
-    , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
-    , {"num3", 'u', MULCONF_RTYP_INT, &v_int3}
-    , {"num4", 0, MULCONF_RTYP_INT, &v_int4}
-    , {"lnum0", 0, MULCONF_RTYP_LONG, &v_long0}
-    , {"lnum1", 0, MULCONF_RTYP_INT, &v_long1}
-    , {"lnum2", 0, MULCONF_RTYP_LONG, &v_long2}
-    , {"lnum3", 0, MULCONF_RTYP_LONG, &v_long3}
-    , {"lnum4", 0, MULCONF_RTYP_LONG, &v_long4}
-    , {"llnum0", 0, MULCONF_RTYP_LLONG, &v_llong0}
-    , {"llnum1", 0, MULCONF_RTYP_LLONG, &v_llong1}
-    , {"llnum2", 0, MULCONF_RTYP_LLONG, &v_llong2}
-    , {"llnum3", 0, MULCONF_RTYP_LLONG, &v_llong3}
-    , {"llnum4", 0, MULCONF_RTYP_LLONG, &v_llong4}
-    , {"pi", 0, MULCONF_RTYP_DOUBLE, &v_double0}
-    , {"longpi", 0, MULCONF_RTYP_LDOUBLE, &v_ldouble0}
-    , {"bwi", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = 0 | MUCS_FLAG_AUTOFREE}
+    , {"string1", 's', MUCS_RTYP_STRING, &v_string1,.flags = 0 | MUCS_FLAG_AUTOFREE}
+    , {"num0", 'n', MUCS_RTYP_INT, &v_int0}
+    , {"num1", 'x', MUCS_RTYP_INT, &v_int1}
+    , {"num2", 0, MUCS_RTYP_INT, &v_int2}
+    , {"num3", 'u', MUCS_RTYP_INT, &v_int3}
+    , {"num4", 0, MUCS_RTYP_INT, &v_int4}
+    , {"lnum0", 0, MUCS_RTYP_LONG, &v_long0}
+    , {"lnum1", 0, MUCS_RTYP_INT, &v_long1}
+    , {"lnum2", 0, MUCS_RTYP_LONG, &v_long2}
+    , {"lnum3", 0, MUCS_RTYP_LONG, &v_long3}
+    , {"lnum4", 0, MUCS_RTYP_LONG, &v_long4}
+    , {"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}
+    , {"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}
+    , {"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}
+    , {"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}
+    , {"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}
+    , {"pi", 0, MUCS_RTYP_DOUBLE, &v_double0}
+    , {"longpi", 0, MUCS_RTYP_LDOUBLE, &v_ldouble0}
+    , {"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -135,7 +135,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 

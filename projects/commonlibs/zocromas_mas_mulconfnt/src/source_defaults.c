@@ -100,7 +100,7 @@ source_load_targ_stream( mucs_source_han_t * osrc, mas_argvc_t targ )
     {
       string = fgets( buffer, sizeof( buffer ), fin );
       string = mas_chomp( string );
-      ignpref = osrc->pref_ids[MULCONF_VARIANT_IGNORE].string;
+      ignpref = osrc->pref_ids[MUCS_VARIANT_IGNORE].string;
     } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
     if ( do_fprintf )
       fprintf( stderr, "READ '%s'\n", string );
@@ -112,8 +112,8 @@ source_load_targ_stream( mucs_source_han_t * osrc, mas_argvc_t targ )
 }
 
 static mucs_source_han_t default_sources[] = {
-  [MULCONF_SOURCE_STRING] = {
-                             .type = MULCONF_SOURCE_STRING,
+  [MUCS_SOURCE_STRING] = {
+                             .type = MUCS_SOURCE_STRING,
                              .count = 0,
                              .data_ptr = NULL,
                              .delim = ':',
@@ -126,18 +126,18 @@ static mucs_source_han_t default_sources[] = {
                              .load_targ_fun = source_load_targ_string,
                              .pref_ids = {
                                           {
-                                           .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                           .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
                                            },
                                           {
-                                           .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                           .id = MUCS_VARIANT_LONG,.string = "" /* */
                                            },
                                           {
-                                           .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                           .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
                                            },
                                           },
                              },
-  [MULCONF_SOURCE_ENV] = {
-                          .type = MULCONF_SOURCE_ENV,
+  [MUCS_SOURCE_ENV] = {
+                          .type = MUCS_SOURCE_ENV,
                           .count = 0,
                           .data_ptr = "MAS_TEST_ENV",
                           .delim = ':',
@@ -150,18 +150,18 @@ static mucs_source_han_t default_sources[] = {
                           .load_targ_fun = source_load_targ_env,
                           .pref_ids = {
                                        {
-                                        .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                        .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
                                         },
                                        {
-                                        .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                        .id = MUCS_VARIANT_LONG,.string = "" /* */
                                         },
                                        {
-                                        .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                        .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
                                         },
                                        },
                           },
-  [MULCONF_SOURCE_ARGV] = {
-                           .type = MULCONF_SOURCE_ARGV,
+  [MUCS_SOURCE_ARGV] = {
+                           .type = MUCS_SOURCE_ARGV,
                            .count = 0,
                            .data_ptr = NULL,
                            .delim = ':',
@@ -174,18 +174,18 @@ static mucs_source_han_t default_sources[] = {
                            .load_targ_fun = source_load_targ_argv,
                            .pref_ids = {
                                         {
-                                         .id = MULCONF_VARIANT_SHORT,.string = "-" /* */
+                                         .id = MUCS_VARIANT_SHORT,.string = "-" /* */
                                          },
                                         {
-                                         .id = MULCONF_VARIANT_LONG,.string = "--" /* */
+                                         .id = MUCS_VARIANT_LONG,.string = "--" /* */
                                          },
                                         {
-                                         .id = MULCONF_VARIANT_NONOPT,.string = NULL /* */
+                                         .id = MUCS_VARIANT_NONOPT,.string = NULL /* */
                                          },
                                         },
                            },
-  [MULCONF_SOURCE_MARGV] = {
-                            .type = MULCONF_SOURCE_MARGV,
+  [MUCS_SOURCE_MARGV] = {
+                            .type = MUCS_SOURCE_MARGV,
                             .count = 0,
                             .data_ptr = NULL,
                             .delim = ':',
@@ -198,26 +198,26 @@ static mucs_source_han_t default_sources[] = {
                             .load_targ_fun = source_load_targ_margv,
                             .pref_ids = {
                                          {
-                                          .id = MULCONF_VARIANT_SHORT,.string = "-" /* */
+                                          .id = MUCS_VARIANT_SHORT,.string = "-" /* */
                                           },
                                          {
-                                          .id = MULCONF_VARIANT_LONG,.string = "--" /* */
+                                          .id = MUCS_VARIANT_LONG,.string = "--" /* */
                                           },
                                          {
-                                          .id = MULCONF_VARIANT_NONOPT,.string = NULL /* */
+                                          .id = MUCS_VARIANT_NONOPT,.string = NULL /* */
                                           },
                                          },
                             },
-  [MULCONF_SOURCE_FILE] = {
-                           .type = MULCONF_SOURCE_FILE,
+  [MUCS_SOURCE_FILE] = {
+                           .type = MUCS_SOURCE_FILE,
                            .count = 0,
                            .data_ptr = NULL,
                            .delim = ';',
                            .delims = ";\n",
                            .eq = "=",
                            },
-  [MULCONF_SOURCE_STREAM] = {
-                             .type = MULCONF_SOURCE_STREAM,
+  [MUCS_SOURCE_STREAM] = {
+                             .type = MUCS_SOURCE_STREAM,
                              .count = 0,
                              .data_ptr = NULL,
                              .delim = ':',
@@ -230,16 +230,16 @@ static mucs_source_han_t default_sources[] = {
                              .load_targ_fun = source_load_targ_stream,
                              .pref_ids = {
                                           {
-                                           .id = MULCONF_VARIANT_SHORT,.string = "@short@" /* */
+                                           .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
                                            },
                                           {
-                                           .id = MULCONF_VARIANT_LONG,.string = "" /* */
+                                           .id = MUCS_VARIANT_LONG,.string = "" /* */
                                            },
                                           {
-                                           .id = MULCONF_VARIANT_NONOPT,.string = "@@@@" /* */
+                                           .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
                                            },
                                           {
-                                           .id = MULCONF_VARIANT_IGNORE,.string = "#" /* */
+                                           .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
                                            },
                                           },
                              },

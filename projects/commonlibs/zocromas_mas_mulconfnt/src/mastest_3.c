@@ -48,12 +48,10 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   mucs_option_han_t options[] = {
-    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0,.flags = MULCONF_OPTION_NEED_EQ}
-    , {"string1", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1,.flags = MULCONF_OPTION_NEED_EQ}
-    , {"string2", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string2,.flags =
-       MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
-    , {"string3", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string3,.flags =
-       MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
+    {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
+    , {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
+    , {"string2", 0, MUCS_RTYP_STRING, &v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}
+    , {"string3", 0, MUCS_RTYP_STRING, &v_string3,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -79,7 +77,7 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
