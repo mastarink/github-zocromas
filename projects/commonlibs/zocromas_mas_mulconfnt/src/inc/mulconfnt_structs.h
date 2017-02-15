@@ -76,13 +76,13 @@ enum config_bitwise_e
           MULCONF_RTYP_FLAG_CALL | MULCONF_RTYP_FLAG_LASTOPT | MULCONF_RTYP_FLAG_AUTOFREE,
 };
 
-enum config_option_flagid
+enum config_option_flagid_e
 {
   MULCONF_OPTION_FLAGID_NEED_EQ,
   MULCONF_OPTION_FLAGID_UNQUOTE,
   MULCONF_OPTION_FLAGID_SILENT,
 };
-enum config_option_flag
+enum config_option_flag_e
 {
   MULCONF_OPTION_NEED_EQ = 1L << MULCONF_OPTION_FLAGID_NEED_EQ,
   MULCONF_OPTION_UNQUOTE = 1L << MULCONF_OPTION_FLAGID_UNQUOTE,

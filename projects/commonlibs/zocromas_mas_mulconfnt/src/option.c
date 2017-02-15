@@ -15,6 +15,12 @@
 #include "option_base.h"
 #include "option.h"
 
+/*
+ *
+ * mucs_config_option_...
+ *
+ * */
+
 static void
 mucs_config_option_nvalue_from_ptr( config_option_t * opt )
 {
@@ -369,9 +375,7 @@ mucs_config_option_set_value( config_option_t * opt, const char *string_value, u
       opt->string_value = mas_strdup( string_value );
 #else
     if ( string_value )
-      opt->string_value =
-              mucs_config_option_flag( opt, MULCONF_OPTION_UNQUOTE )
-              ? mucs_config_option_unquote( string_value, "'\"" ) : mas_strdup( string_value );
+      opt->string_value = mucs_config_option_flag( opt, MULCONF_OPTION_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
     memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
     mucs_config_option_set_nvalue( opt, flags );
@@ -380,7 +384,7 @@ mucs_config_option_set_value( config_option_t * opt, const char *string_value, u
 
 config_option_t *
 mucs_config_option_lookup_option_table( const config_option_t * option_table, config_variant_t variantid, const char *arg,
-                                             const char *nextarg, const char *eq, const char *force_value, unsigned long flags )
+                                        const char *nextarg, const char *eq, const char *force_value, unsigned long flags )
 {
   config_option_t *opt = NULL;
   const config_option_t *topt = option_table;

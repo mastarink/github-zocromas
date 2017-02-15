@@ -13,6 +13,12 @@
 
 #include "option_tablist.h"
 
+/*
+ *
+ * mucs_config_option_tablist_...
+ *
+ * */
+
 config_option_t *
 mucs_config_option_tablist_lookup( const config_option_table_list_t * tablist, config_variant_t variantid,
                                         const char *arg, const char *nextarg, const char *eq, const char *force_value, unsigned long flags )

@@ -12,6 +12,12 @@
 #include "source_defaults.h"
 #include "source_base.h"
 
+/*
+ *
+ * mucs_source_...
+ *
+ * */
+
 void
 mucs_source_init( config_source_desc_t * osrc )
 {
@@ -29,7 +35,7 @@ mucs_source_create( void )
 
 config_source_desc_t *
 mucs_source_create_setup( config_source_t source_type, int count, const void *data_ptr, const char *delims,
-                               const char *eq, const config_prefix_encoder_t * pref_ids )
+                          const char *eq, const config_prefix_encoder_t * pref_ids )
 {
   config_source_desc_t *osrc = NULL;
 

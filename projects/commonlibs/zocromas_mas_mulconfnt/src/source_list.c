@@ -17,6 +17,12 @@
 #include "source.h"
 #include "source_list.h"
 
+/*
+ *
+ * mucs_source_list_...
+ *
+ * */
+
 void
 mucs_source_list_integrate( config_source_list_t * source_list )
 {

@@ -10,6 +10,12 @@
 #include "source_base.h"
 #include "source_list_base.h"
 
+/*
+ *
+ * mucs_source_list_...
+ *
+ * */
+
 void
 mucs_source_list_init( config_source_list_t * source_list )
 {

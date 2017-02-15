@@ -15,6 +15,12 @@
 
 #include "option_base.h"
 
+/*
+ *
+ * mucs_config_option_...
+ *
+ * */
+
 void
 mucs_config_option_init( config_option_t * opt )
 {

@@ -13,6 +13,12 @@
 
 #include "option_tablist_base.h"
 
+/*
+ *
+ * mucs_config_option_tablist_...
+ *
+ * */
+
 void
 mucs_config_option_tablist_init( config_option_table_list_t * tablist )
 {

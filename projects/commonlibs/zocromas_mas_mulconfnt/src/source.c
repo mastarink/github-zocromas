@@ -19,6 +19,12 @@
 
 #include "source.h"
 
+/*
+ *
+ * mucs_source_...
+ *
+ * */
+
 void
 mucs_source_set_string_ptr( config_source_desc_t * osrc, char *string )
 {
@@ -177,12 +183,11 @@ mucs_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_l
         config_option_t *oldopt = opt;
 
 //        oldopt->source = osrc;
-        mucs_option_set_source( oldopt, osrc );                 /* mostly for error setting */
+        mucs_option_set_source( oldopt, osrc );                      /* mostly for error setting */
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
-        opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
-                                                      osrc->flags );
+        opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
         if ( do_fprintf )
           fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );
 
@@ -191,7 +196,7 @@ mucs_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_l
     /* do something for found option */
       if ( opt )
       {
-        mucs_option_set_source( opt, osrc );                    /* mostly for error setting */
+        mucs_option_set_source( opt, osrc );                         /* mostly for error setting */
         if ( mucs_error_option( opt ) )
         {
 //          opt->source = osrc;
@@ -210,6 +215,7 @@ mucs_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_l
         if ( !opt->worked )
         {
           option_callback_t cb = NULL;
+
           if ( osrc->callback )
           {
             cb = osrc->callback;
