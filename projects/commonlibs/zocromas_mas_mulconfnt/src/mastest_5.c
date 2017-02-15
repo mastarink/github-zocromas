@@ -56,24 +56,24 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   };
 
   config_option_t options[] = {
-    {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
-    , {"num1", 0, MULCONF_RESTYPE_INT, &v_int1}
-    , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
-    , {"num3", 0, MULCONF_RESTYPE_INT, &v_int3}
-    , {"num4", 0, MULCONF_RESTYPE_INT, &v_int4}
-    , {"lnum0", 0, MULCONF_RESTYPE_LONG, &v_long0}
-    , {"lnum1", 0, MULCONF_RESTYPE_INT, &v_long1}
-    , {"lnum2", 0, MULCONF_RESTYPE_LONG, &v_long2}
-    , {"lnum3", 0, MULCONF_RESTYPE_LONG, &v_long3}
-    , {"lnum4", 0, MULCONF_RESTYPE_LONG, &v_long4}
-    , {"llnum0", 0, MULCONF_RESTYPE_LLONG, &v_llong0}
-    , {"llnum1", 0, MULCONF_RESTYPE_LLONG, &v_llong1}
-    , {"llnum2", 0, MULCONF_RESTYPE_LLONG, &v_llong2}
-    , {"llnum3", 0, MULCONF_RESTYPE_LLONG, &v_llong3}
-    , {"llnum4", 0, MULCONF_RESTYPE_LLONG, &v_llong4}
-    , {"bwi", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    {"num0", 0, MULCONF_RTYP_INT, &v_int0}
+    , {"num1", 0, MULCONF_RTYP_INT, &v_int1}
+    , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
+    , {"num3", 0, MULCONF_RTYP_INT, &v_int3}
+    , {"num4", 0, MULCONF_RTYP_INT, &v_int4}
+    , {"lnum0", 0, MULCONF_RTYP_LONG, &v_long0}
+    , {"lnum1", 0, MULCONF_RTYP_INT, &v_long1}
+    , {"lnum2", 0, MULCONF_RTYP_LONG, &v_long2}
+    , {"lnum3", 0, MULCONF_RTYP_LONG, &v_long3}
+    , {"lnum4", 0, MULCONF_RTYP_LONG, &v_long4}
+    , {"llnum0", 0, MULCONF_RTYP_LLONG, &v_llong0}
+    , {"llnum1", 0, MULCONF_RTYP_LLONG, &v_llong1}
+    , {"llnum2", 0, MULCONF_RTYP_LLONG, &v_llong2}
+    , {"llnum3", 0, MULCONF_RTYP_LLONG, &v_llong3}
+    , {"llnum4", 0, MULCONF_RTYP_LLONG, &v_llong4}
+    , {"bwi", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };

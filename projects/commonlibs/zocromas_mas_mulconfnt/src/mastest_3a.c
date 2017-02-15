@@ -43,8 +43,8 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0,.flags = 0 /* |MULCONF_OPTION_NEED_EQ */ }
-    , {"string1", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1,.flags = 0 | MULCONF_OPTION_NEED_EQ}
+    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0,.flags = 0 /* |MULCONF_OPTION_NEED_EQ */ }
+    , {"string1", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1,.flags = 0 | MULCONF_OPTION_NEED_EQ}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };

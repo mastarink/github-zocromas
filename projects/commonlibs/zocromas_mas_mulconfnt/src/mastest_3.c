@@ -48,10 +48,12 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0,.flags = MULCONF_OPTION_NEED_EQ}
-    , {"string1", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1,.flags = MULCONF_OPTION_NEED_EQ}
-    , {"string2", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string2,.flags = MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
-    , {"string3", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string3,.flags = MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
+    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0,.flags = MULCONF_OPTION_NEED_EQ}
+    , {"string1", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1,.flags = MULCONF_OPTION_NEED_EQ}
+    , {"string2", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string2,.flags =
+       MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
+    , {"string3", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string3,.flags =
+       MULCONF_OPTION_NEED_EQ | MULCONF_OPTION_UNQUOTE}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };

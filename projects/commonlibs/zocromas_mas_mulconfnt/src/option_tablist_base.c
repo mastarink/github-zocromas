@@ -59,14 +59,14 @@ mulconfnt_config_option_tablist_close( config_option_table_list_t * tablist )
   {
     for ( config_option_t * opt = tablist->options; opt->name; opt++ )
     {
-      if ( opt && opt->ptr && ( opt->restype & MULCONF_BITWISE_AUTOFREE ) )
+      if ( opt && opt->ptr && ( opt->restype & MULCONF_RTYP_FLAG_AUTOFREE ) )
       {
-        switch ( opt->restype & ~MULCONF_BITWISE_ALL )
+        switch ( opt->restype & ~MULCONF_RTYP_FLAG_ALL )
         {
-        case MULCONF_RESTYPE_STRING:
+        case MULCONF_RTYP_STRING:
           mas_free( *( ( char ** ) opt->ptr ) );
           break;
-        case MULCONF_RESTYPE_TARG:
+        case MULCONF_RTYP_TARG:
           mas_argvc_delete( ( mas_argvc_t * ) opt->ptr );
           break;
         default:

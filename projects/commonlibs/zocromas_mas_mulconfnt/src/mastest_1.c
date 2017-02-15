@@ -40,7 +40,7 @@ ccallback_string( config_option_t * opt )
         fprintf( stderr, "CB STRING: %s\n", opt->name ? ( *opt->name ? opt->name : "<EMPTY NAME>" ) : "<NONAME>" );
     }
 
-    if ( opt->restype == MULCONF_RESTYPE_STRING )
+    if ( opt->restype == MULCONF_RTYP_STRING )
     {
       if ( cc_string )
         mas_free( cc_string );
@@ -150,34 +150,34 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS 4 + 2 + 1
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING | MULCONF_BITWISE_AUTOFREE, &v_string0}
-    , {"string1", 0, MULCONF_RESTYPE_STRING, &v_string1}
-    , {"string2", 0, MULCONF_RESTYPE_STRING}
-    , {"targ0", 0, MULCONF_RESTYPE_TARG | MULCONF_BITWISE_AUTOFREE, &v_targ0}
-    , {"cnum0", 0, MULCONF_RESTYPE_CHAR, &v_char0}
-    , {"snum0", 0, MULCONF_RESTYPE_SHORT, &v_short0}
-    , {"num0", 0, MULCONF_RESTYPE_INT, &v_int0}
-    , {"num1", 0, MULCONF_RESTYPE_INT, &v_int1}
-    , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
-    , {"num3", 0, MULCONF_RESTYPE_INT, &v_int3}
-    , {"num4", 0, MULCONF_RESTYPE_INT, &v_int4}
-    , {"num5", 0, MULCONF_RESTYPE_INT,.callback = num5callback}
-    , {"lnum0", 0, MULCONF_RESTYPE_LONG, &v_long0}
-    , {"lnum1", 0, MULCONF_RESTYPE_INT, &v_long1}
-    , {"lnum2", 0, MULCONF_RESTYPE_LONG, &v_long2}
-    , {"lnum3", 0, MULCONF_RESTYPE_LONG, &v_long3}
-    , {"lnum4", 0, MULCONF_RESTYPE_LONG, &v_long4}
-    , {"llnum0", 0, MULCONF_RESTYPE_LLONG, &v_llong0}
-    , {"llnum1", 0, MULCONF_RESTYPE_LLONG, &v_llong1}
-    , {"llnum2", 0, MULCONF_RESTYPE_LLONG, &v_llong2}
-    , {"llnum3", 0, MULCONF_RESTYPE_LLONG, &v_llong3}
-    , {"llnum4", 0, MULCONF_RESTYPE_LLONG, &v_llong4}
-    , {"pi", 0, MULCONF_RESTYPE_DOUBLE, &v_double0}
-    , {"longpi", 0, MULCONF_RESTYPE_LDOUBLE, &v_ldouble0}
-    , {"bwi", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
-    , {"", 0, MULCONF_BITWISE_LASTOPT}
+    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0}
+    , {"string1", 0, MULCONF_RTYP_STRING, &v_string1}
+    , {"string2", 0, MULCONF_RTYP_STRING}
+    , {"targ0", 0, MULCONF_RTYP_TARG | MULCONF_RTYP_FLAG_AUTOFREE, &v_targ0}
+    , {"cnum0", 0, MULCONF_RTYP_CHAR, &v_char0}
+    , {"snum0", 0, MULCONF_RTYP_SHORT, &v_short0}
+    , {"num0", 0, MULCONF_RTYP_INT, &v_int0}
+    , {"num1", 0, MULCONF_RTYP_INT, &v_int1}
+    , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
+    , {"num3", 0, MULCONF_RTYP_INT, &v_int3}
+    , {"num4", 0, MULCONF_RTYP_INT, &v_int4}
+    , {"num5", 0, MULCONF_RTYP_INT,.callback = num5callback}
+    , {"lnum0", 0, MULCONF_RTYP_LONG, &v_long0}
+    , {"lnum1", 0, MULCONF_RTYP_INT, &v_long1}
+    , {"lnum2", 0, MULCONF_RTYP_LONG, &v_long2}
+    , {"lnum3", 0, MULCONF_RTYP_LONG, &v_long3}
+    , {"lnum4", 0, MULCONF_RTYP_LONG, &v_long4}
+    , {"llnum0", 0, MULCONF_RTYP_LLONG, &v_llong0}
+    , {"llnum1", 0, MULCONF_RTYP_LLONG, &v_llong1}
+    , {"llnum2", 0, MULCONF_RTYP_LLONG, &v_llong2}
+    , {"llnum3", 0, MULCONF_RTYP_LLONG, &v_llong3}
+    , {"llnum4", 0, MULCONF_RTYP_LLONG, &v_llong4}
+    , {"pi", 0, MULCONF_RTYP_DOUBLE, &v_double0}
+    , {"longpi", 0, MULCONF_RTYP_LDOUBLE, &v_ldouble0}
+    , {"bwi", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    , {"", 0, MULCONF_RTYP_FLAG_LASTOPT}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -215,7 +215,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mulconfnt_source_set_common_callback( osrc, ccallback_string );
-    mulconfnt_source_set_type_callback( osrc, MULCONF_RESTYPE_STRING, scallback_string );
+    mulconfnt_source_set_type_callback( osrc, MULCONF_RTYP_STRING, scallback_string );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mulconfnt_source_lookup_all( osrc, &test_tablist );
@@ -246,7 +246,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   /* v_string0 = NULL; */
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-    if ( v_string1 )                                                 // if !MULCONF_BITWISE_AUTOFREE or !ptr
+    if ( v_string1 )                                                 // if !MULCONF_RTYP_FLAG_AUTOFREE or !ptr
       mas_free( v_string1 );
     v_string1 = NULL;
 

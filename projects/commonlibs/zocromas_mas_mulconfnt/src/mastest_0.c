@@ -28,10 +28,10 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   long bitwise = 0xffff0000;
 
   config_option_t options[] = {
-    {"bps", 'b', MULCONF_RESTYPE_INT, &speed, 0, "signaling rate in bits-per-second", "BPS"}, /* */
-    {"bwi", 'z', MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise, 0, "bitwise", "value"}, /* */
-    {"bwi-", 'z', MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise, 0, "bitwise", "value"}, /* */
-    {"bwi+", 'Z', MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise, 0, "bitwise", "value"}, /* */
+    {"bps", 'b', MULCONF_RTYP_INT, &speed, 0, "signaling rate in bits-per-second", "BPS"}, /* */
+    {"bwi", 'z', MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise, 0, "bitwise", "value"}, /* */
+    {"bwi-", 'z', MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise, 0, "bitwise", "value"}, /* */
+    {"bwi+", 'Z', MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise, 0, "bitwise", "value"}, /* */
     {"crnl", 'c', 0, 0, 'c', "expand cr characters to cr/lf sequences", NULL}, /* */
     {"hwflow", 'h', 0, 0, 'h', "use hardware (RTS/CTS) flow control", NULL}, /* */
     {"noflow", 'n', 0, 0, 'n', "use no flow control", NULL},         /* */

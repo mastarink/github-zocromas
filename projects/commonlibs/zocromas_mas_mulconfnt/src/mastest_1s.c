@@ -86,28 +86,28 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 #define NUM_NOPTS 4
 
   config_option_t options[] = {
-    {"string0", 0, MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string0}
-    , {"string1", 's', MULCONF_RESTYPE_STRING|MULCONF_BITWISE_AUTOFREE, &v_string1}
-    , {"num0", 'n', MULCONF_RESTYPE_INT, &v_int0}
-    , {"num1", 'x', MULCONF_RESTYPE_INT, &v_int1}
-    , {"num2", 0, MULCONF_RESTYPE_INT, &v_int2}
-    , {"num3", 'u', MULCONF_RESTYPE_INT, &v_int3}
-    , {"num4", 0, MULCONF_RESTYPE_INT, &v_int4}
-    , {"lnum0", 0, MULCONF_RESTYPE_LONG, &v_long0}
-    , {"lnum1", 0, MULCONF_RESTYPE_INT, &v_long1}
-    , {"lnum2", 0, MULCONF_RESTYPE_LONG, &v_long2}
-    , {"lnum3", 0, MULCONF_RESTYPE_LONG, &v_long3}
-    , {"lnum4", 0, MULCONF_RESTYPE_LONG, &v_long4}
-    , {"llnum0", 0, MULCONF_RESTYPE_LLONG, &v_llong0}
-    , {"llnum1", 0, MULCONF_RESTYPE_LLONG, &v_llong1}
-    , {"llnum2", 0, MULCONF_RESTYPE_LLONG, &v_llong2}
-    , {"llnum3", 0, MULCONF_RESTYPE_LLONG, &v_llong3}
-    , {"llnum4", 0, MULCONF_RESTYPE_LLONG, &v_llong4}
-    , {"pi", 0, MULCONF_RESTYPE_DOUBLE, &v_double0}
-    , {"longpi", 0, MULCONF_RESTYPE_LDOUBLE, &v_ldouble0}
-    , {"bwi", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MULCONF_RESTYPE_LONG | MULCONF_BITWISE_NOT | MULCONF_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
+    {"string0", 0, MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string0}
+    , {"string1", 's', MULCONF_RTYP_STRING | MULCONF_RTYP_FLAG_AUTOFREE, &v_string1}
+    , {"num0", 'n', MULCONF_RTYP_INT, &v_int0}
+    , {"num1", 'x', MULCONF_RTYP_INT, &v_int1}
+    , {"num2", 0, MULCONF_RTYP_INT, &v_int2}
+    , {"num3", 'u', MULCONF_RTYP_INT, &v_int3}
+    , {"num4", 0, MULCONF_RTYP_INT, &v_int4}
+    , {"lnum0", 0, MULCONF_RTYP_LONG, &v_long0}
+    , {"lnum1", 0, MULCONF_RTYP_INT, &v_long1}
+    , {"lnum2", 0, MULCONF_RTYP_LONG, &v_long2}
+    , {"lnum3", 0, MULCONF_RTYP_LONG, &v_long3}
+    , {"lnum4", 0, MULCONF_RTYP_LONG, &v_long4}
+    , {"llnum0", 0, MULCONF_RTYP_LLONG, &v_llong0}
+    , {"llnum1", 0, MULCONF_RTYP_LLONG, &v_llong1}
+    , {"llnum2", 0, MULCONF_RTYP_LLONG, &v_llong2}
+    , {"llnum3", 0, MULCONF_RTYP_LLONG, &v_llong3}
+    , {"llnum4", 0, MULCONF_RTYP_LLONG, &v_llong4}
+    , {"pi", 0, MULCONF_RTYP_DOUBLE, &v_double0}
+    , {"longpi", 0, MULCONF_RTYP_LDOUBLE, &v_ldouble0}
+    , {"bwi", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT, &bitwise1, 0, "bitwise", "value"}
+    , {"bwi+", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_OR, &bitwise2, 0, "bitwise", "value"}
+    , {"bwi-", 0, MULCONF_RTYP_LONG | MULCONF_RTYP_FLAG_BITWISE_NOT | MULCONF_RTYP_FLAG_BITWISE_AND, &bitwise3, 0, "bitwise", "value"}
 
     , {.name = NULL,.shortname = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };

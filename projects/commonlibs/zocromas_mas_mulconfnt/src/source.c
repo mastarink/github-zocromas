@@ -172,7 +172,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
       opt = mulconfnt_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
-      while ( opt && opt->restype == MULCONF_RESTYPE_ALIAS && opt->ptr )
+      while ( opt && opt->restype == MULCONF_RTYP_ALIAS && opt->ptr )
       {
         config_option_t *oldopt = opt;
 
@@ -197,7 +197,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
 //          opt->source = osrc;
           mulconfnt_error_set_at_source_from_option( opt->source, opt );
         }
-        if ( opt->restype & MULCONF_BITWISE_LASTOPT )
+        if ( opt->restype & MULCONF_RTYP_FLAG_LASTOPT )
         {
           if ( do_fprintf )
             fprintf( stderr, "SET LAST: %d. '%s'; has_value:%d\n", iarg, arg, opt->has_value );
@@ -221,7 +221,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
           }
           if ( osrc->callbacks )
           {
-            cb = osrc->callbacks[opt->restype & ~MULCONF_BITWISE_ALL];
+            cb = osrc->callbacks[opt->restype & ~MULCONF_RTYP_FLAG_ALL];
             if ( cb )
             {
               cb( opt );
