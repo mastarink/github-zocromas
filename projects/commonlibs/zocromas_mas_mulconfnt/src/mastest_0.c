@@ -43,7 +43,7 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
   };
 
-  mulconfnt_parse( argc, argv, &test_tablist );
+  mucs_parse( argc, argv, &test_tablist );
   if ( do_fprintf )
     fprintf( stderr, "**** Options  chosen: " );
   if ( raw )
@@ -55,6 +55,6 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   if ( speed )
     if ( do_fprintf )
       fprintf( stderr, "-b %d ", speed );
-  mulconfnt_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_close( &test_tablist );
   return 0;
 }

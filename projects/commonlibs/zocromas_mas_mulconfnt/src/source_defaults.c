@@ -246,19 +246,19 @@ static config_source_desc_t default_sources[] = {
 };
 
 size_t
-mulconfnt_source_defaults_count( void )
+mucs_source_defaults_count( void )
 {
   return sizeof( default_sources ) / sizeof( default_sources[0] );
 }
 
 const config_source_desc_t *
-mulconfnt_source_defaults( void )
+mucs_source_defaults( void )
 {
   return default_sources;
 }
 
 const config_source_desc_t *
-mulconfnt_source_default( size_t n )
+mucs_source_default( size_t n )
 {
   return &default_sources[n];
 }

@@ -5,7 +5,7 @@
 #include "tools.h"
 
 char *
-mulconfnt_config_option_unquote( const char *string, const char *quotes )
+mucs_config_option_unquote( const char *string, const char *quotes )
 {
   char *dststring = NULL, *dstp;
   const char *p;

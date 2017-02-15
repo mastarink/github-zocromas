@@ -77,7 +77,7 @@ test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const cha
     {
       char *s;
 
-      s = mulconfnt_config_option_unquote( strings[istr], "'\"" );
+      s = mucs_config_option_unquote( strings[istr], "'\"" );
       mastest_exam( __LINE__, 0 == mas_strcmp( s, strings[istr + 1] ), "OK", "Error", "%s ? %s\t\t(%d)", s, strings[istr + 1], istr / 2 );
       mas_free( s );
     }

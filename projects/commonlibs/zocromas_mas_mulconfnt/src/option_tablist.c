@@ -14,7 +14,7 @@
 #include "option_tablist.h"
 
 config_option_t *
-mulconfnt_config_option_tablist_lookup( const config_option_table_list_t * tablist, config_variant_t variantid,
+mucs_config_option_tablist_lookup( const config_option_table_list_t * tablist, config_variant_t variantid,
                                         const char *arg, const char *nextarg, const char *eq, const char *force_value, unsigned long flags )
 {
   config_option_t *opt = NULL;
@@ -23,7 +23,7 @@ mulconfnt_config_option_tablist_lookup( const config_option_table_list_t * tabli
   {
     if ( do_fprintf )
       fprintf( stderr, "LOOKUP TABLIST %s\n", tablist->name );
-    opt = mulconfnt_config_option_lookup_option_table( tablist->options, variantid, arg, nextarg, eq, force_value, flags  );
+    opt = mucs_config_option_lookup_option_table( tablist->options, variantid, arg, nextarg, eq, force_value, flags  );
     tablist = tablist->next;
   }
   return opt;

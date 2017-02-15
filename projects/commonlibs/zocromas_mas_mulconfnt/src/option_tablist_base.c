@@ -14,22 +14,22 @@
 #include "option_tablist_base.h"
 
 void
-mulconfnt_config_option_tablist_init( config_option_table_list_t * tablist )
+mucs_config_option_tablist_init( config_option_table_list_t * tablist )
 {
   memset( tablist, 0, sizeof( config_option_table_list_t ) );
 }
 
 config_option_table_list_t *
-mulconfnt_config_option_tablist_create( void )
+mucs_config_option_tablist_create( void )
 {
   config_option_table_list_t *tablist = mas_malloc( sizeof( config_option_table_list_t ) );
 
-  mulconfnt_config_option_tablist_init( tablist );
+  mucs_config_option_tablist_init( tablist );
   return tablist;
 }
 
 config_option_table_list_t *
-mulconfnt_config_option_tablist_add( config_option_table_list_t * tablist, const char *name, config_option_t * options, size_t count )
+mucs_config_option_tablist_add( config_option_table_list_t * tablist, const char *name, config_option_t * options, size_t count )
 {
   if ( tablist )
   {
@@ -37,14 +37,14 @@ mulconfnt_config_option_tablist_add( config_option_table_list_t * tablist, const
 
     while ( tb->next )
       tb = tb->next;
-    tb->next = mulconfnt_config_option_tablist_create(  );
+    tb->next = mucs_config_option_tablist_create(  );
     tb->name = mas_strdup( name );
     tb->options = options;
     tb->count = count;
   }
   else
   {
-    tablist = mulconfnt_config_option_tablist_create(  );
+    tablist = mucs_config_option_tablist_create(  );
     tablist->name = mas_strdup( name );
     tablist->options = options;
     tablist->count = count;
@@ -53,7 +53,7 @@ mulconfnt_config_option_tablist_add( config_option_table_list_t * tablist, const
 }
 
 void
-mulconfnt_config_option_tablist_close( config_option_table_list_t * tablist )
+mucs_config_option_tablist_close( config_option_table_list_t * tablist )
 {
   while ( tablist )
   {
@@ -79,8 +79,8 @@ mulconfnt_config_option_tablist_close( config_option_table_list_t * tablist )
 }
 
 void
-mulconfnt_config_option_tablist_delete( config_option_table_list_t * tablist )
+mucs_config_option_tablist_delete( config_option_table_list_t * tablist )
 {
-  mulconfnt_config_option_tablist_close( tablist );
+  mucs_config_option_tablist_close( tablist );
   mas_free( tablist );
 }

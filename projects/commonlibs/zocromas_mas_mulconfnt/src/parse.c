@@ -20,10 +20,10 @@
 #define MULCONFNT_ALLOCATE__SOURCE_LIST
 
 int
-mulconfnt_parse( int argc, const char *argv[], const config_option_table_list_t * tablist )
+mucs_parse( int argc, const char *argv[], const config_option_table_list_t * tablist )
 {
 #ifdef MULCONFNT_ALLOCATE__SOURCE_LIST
-  config_source_list_t *plist = mulconfnt_source_list_create(  );
+  config_source_list_t *plist = mucs_source_list_create(  );
 #else
   config_source_list_t list_ = { 0 };
   config_source_list_t *plist = &list_;
@@ -31,21 +31,21 @@ mulconfnt_parse( int argc, const char *argv[], const config_option_table_list_t 
 
   config_source_desc_t *osrc = NULL;
 
-  mulconfnt_source_list_init( plist );
-  osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
-  osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
+  mucs_source_list_init( plist );
+  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
+  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
 
   const config_prefix_encoder_t _uUu_ pref_ids[MULCONF_VARIANTS] = {
     {"-", MULCONF_VARIANT_SHORT}
     , {"--", MULCONF_VARIANT_LONG}
     , {NULL, MULCONF_VARIANT_NONOPT}
   };
-  osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
-  mulconfnt_source_lookup( osrc, tablist );
+  osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
+  mucs_source_lookup( osrc, tablist );
 
   if ( do_fprintf )
-    fprintf( stderr, "STRING: '%s'\n", mulconfnt_source_load_string( osrc ) );
-  mulconfnt_source_list_integrate( plist );
+    fprintf( stderr, "STRING: '%s'\n", mucs_source_load_string( osrc ) );
+  mucs_source_list_integrate( plist );
   {
     if ( plist->targ.argc )
     {
@@ -57,21 +57,21 @@ mulconfnt_parse( int argc, const char *argv[], const config_option_table_list_t 
     }
   }
 #ifdef MULCONFNT_ALLOCATE__SOURCE_LIST
-  mulconfnt_source_list_delete( plist );
+  mucs_source_list_delete( plist );
 #else
-  mulconfnt_source_list_close( plist );
+  mucs_source_list_close( plist );
 #endif
 
 #if 0
   {
     char *envname = "ENVVAR";
 
-    osrc = mulconfnt_open( MULCONF_SOURCE_DIRECT, 0, "first=45:next=49", ":", '=', 0, 0 );
-    mulconfnt_open( MULCONF_SOURCE_ENV, 0, envname, ":" );
-    mulconfnt_open( MULCONF_SOURCE_ARGV, argc, argv, 0 );
-    mulconfnt_open( MULCONF_SOURCE_CONFIG, 0, NULL, ";\n" );
-    mulconfnt_open( MULCONF_SOURCE_FILE, 0, "mas.cfg", ";\n" );
-    mulconfnt_open( MULCONF_SOURCE_STREAM, 0, stdin, ";\n" );
+    osrc = mucs_open( MULCONF_SOURCE_DIRECT, 0, "first=45:next=49", ":", '=', 0, 0 );
+    mucs_open( MULCONF_SOURCE_ENV, 0, envname, ":" );
+    mucs_open( MULCONF_SOURCE_ARGV, argc, argv, 0 );
+    mucs_open( MULCONF_SOURCE_CONFIG, 0, NULL, ";\n" );
+    mucs_open( MULCONF_SOURCE_FILE, 0, "mas.cfg", ";\n" );
+    mucs_open( MULCONF_SOURCE_STREAM, 0, stdin, ";\n" );
   }
 #endif
 /*

@@ -3,6 +3,6 @@
 
 # include "mulconfnt_types.h"
 
-char *mulconfnt_config_option_unquote( const char *string, const char *quotes );
+char *mucs_config_option_unquote( const char *string, const char *quotes );
 
 #endif

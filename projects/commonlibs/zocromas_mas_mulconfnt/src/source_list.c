@@ -18,17 +18,17 @@
 #include "source_list.h"
 
 void
-mulconfnt_source_list_integrate( config_source_list_t * source_list )
+mucs_source_list_integrate( config_source_list_t * source_list )
 {
   for ( config_source_desc_t * osrc = source_list->first; osrc; osrc = osrc->next )
   {
-    mulconfnt_source_load_targ( osrc );
+    mucs_source_load_targ( osrc );
     mas_add_argvc_argvc( &source_list->targ, &osrc->targ, 0 );
   }
 }
 
 static void
-mulconfnt_source_list_add( config_source_list_t * source_list, config_source_desc_t * osrc )
+mucs_source_list_add( config_source_list_t * source_list, config_source_desc_t * osrc )
 {
   if ( source_list && osrc )
   {
@@ -47,15 +47,15 @@ mulconfnt_source_list_add( config_source_list_t * source_list, config_source_des
 }
 
 config_source_desc_t *
-mulconfnt_source_list_add_source( config_source_list_t * source_list, config_source_t source_type, int count, const void *data_ptr,
+mucs_source_list_add_source( config_source_list_t * source_list, config_source_t source_type, int count, const void *data_ptr,
                                   const char *delims, const char *eq, const config_prefix_encoder_t * pref_ids )
 {
   config_source_desc_t *osrc = NULL;
 
-  osrc = mulconfnt_source_create_setup( source_type, count, data_ptr, delims, eq, pref_ids );
+  osrc = mucs_source_create_setup( source_type, count, data_ptr, delims, eq, pref_ids );
 /*if ( !osrc )
     DIE( "FATAL ERROR: can't create \"source\" - %d; %d; %p; %s; %s; %p\n", source_type, count, data_ptr, delims, eq, pref_ids  ); */
   if ( osrc )
-    mulconfnt_source_list_add( source_list, osrc );
+    mucs_source_list_add( source_list, osrc );
   return osrc;
 }

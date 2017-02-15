@@ -126,14 +126,14 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   }
 
   {
-    config_source_list_t *plist = mulconfnt_source_list_create(  );
-    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    config_source_list_t *plist = mucs_source_list_create(  );
+    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
-    mulconfnt_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
@@ -152,7 +152,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     }
 
     mastest_next_group(  );
-    mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
+    mastest_exam( __LINE__, !mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_uchar0 ) == 1, "OK", "Error", "num0=%d ? %d", sizeof( v_uchar0 ), 1 );
@@ -162,7 +162,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_uint0 ) == 4
-                  && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, mulconfnt_error_source( osrc ) );
+                  && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, mucs_error_source( osrc ) );
     mastest_exam( __LINE__, sizeof( v_uint1 ) == 4 && v_uint1 == 0x12, "OK", "Error", "num1=%u ? %u", v_uint1, 0x12 );
     mastest_exam( __LINE__, sizeof( v_uint2 ) == 4 && v_uint2 == 012, "OK", "Error", "num2=%u ? %u", v_uint2, 012 );
     mastest_exam( __LINE__, sizeof( v_uint3 ) == 4 && v_uint3 == 2147483647, "OK", "Error", "num3=%u ? %u", v_uint3, 2147483647 );
@@ -193,17 +193,17 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
                   && v_ullong4 == ( ( unsigned long long ) LONG_MAX ) + 1, "OK", "Error", "%llu ? %llu (%d)", v_ullong4,
                   ( ( unsigned long long ) LONG_MAX ) + 1, sizeof( v_ullong2 ) );
     mastest_next_group(  );
-    mastest_exam( __LINE__, mulconfnt_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mulconfnt_source_argc_no( osrc ) );
+    mastest_exam( __LINE__, mucs_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mucs_source_argc_no( osrc ) );
 
-    arg = mulconfnt_source_arg_no( osrc, 1 );
+    arg = mucs_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
-    arg = mulconfnt_source_arg_no( osrc, 2 );
+    arg = mucs_source_arg_no( osrc, 2 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_arg_no( osrc, 3 );
+    arg = mucs_source_arg_no( osrc, 3 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
-    char **argvno = mulconfnt_source_argv_no( osrc );
-    int argcno = mulconfnt_source_argc_no( osrc );
+    char **argvno = mucs_source_argv_no( osrc );
+    int argcno = mucs_source_argc_no( osrc );
 
     mastest_exam( __LINE__, argcno > 1 && argvno && argvno[1]
                   && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 ? argvno[1] : "?" );
@@ -223,8 +223,8 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     fprintf( stderr, "\nINT_MIN:%d;UINT_MAX:%d\nLONG_MIN:%ld;ULONG_MAX:%ld\nLLONG_MIN:%lld;ULLONG_MAX:%lld\n", UINT_MIN, UINT_MAX, ULONG_MIN,
              ULONG_MAX, ULLONG_MIN, ULLONG_MAX );
 #endif
-    mulconfnt_source_list_delete( plist );
+    mucs_source_list_delete( plist );
   }
-  mulconfnt_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_close( &test_tablist );
   return 0;
 }

@@ -183,10 +183,10 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   };
 #if 0
   config_option_table_list_t *test_tablist =
-          mulconfnt_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );
+          mucs_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );
 #elif 0
   config_option_table_list_t *test_tablist =
-          mulconfnt_config_option_tablist_add( NULL, test_tablist, "test-table", options, sizeof( options ) / sizeof( options[0] ) );
+          mucs_config_option_tablist_add( NULL, test_tablist, "test-table", options, sizeof( options ) / sizeof( options[0] ) );
 #else
   config_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options,
@@ -208,17 +208,17 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     }
   }
   {
-    config_source_list_t *plist = mulconfnt_source_list_create(  );
+    config_source_list_t *plist = mucs_source_list_create(  );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    config_source_desc_t *osrc = mulconfnt_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    config_source_desc_t *osrc = mucs_source_list_add_source( plist, MULCONF_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
-    mulconfnt_source_set_common_callback( osrc, ccallback_string );
-    mulconfnt_source_set_type_callback( osrc, MULCONF_RTYP_STRING, scallback_string );
+    mucs_source_set_common_callback( osrc, ccallback_string );
+    mucs_source_set_type_callback( osrc, MULCONF_RTYP_STRING, scallback_string );
     mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
-    mulconfnt_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
@@ -237,7 +237,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     }
 
     mastest_next_group(  );
-    mastest_exam( __LINE__, !mulconfnt_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mulconfnt_error_source( osrc ) );
+    mastest_exam( __LINE__, !mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) );
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
@@ -316,8 +316,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
                   && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
                   ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
 
-    char **argvno = mulconfnt_source_argv_no( osrc );
-    int argcno = mulconfnt_source_argc_no( osrc );
+    char **argvno = mucs_source_argv_no( osrc );
+    int argcno = mucs_source_argc_no( osrc );
 
     mastest_next_group(  );
     mastest_exam( __LINE__, argcno == NUM_NOPTS, "OK", "Error", "%d", argcno, NUM_NOPTS );
@@ -325,22 +325,22 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     {
       for ( int i = 0; i < argcno; i++ )
       {
-        fprintf( stderr, " @@ %d %s\n", i, mulconfnt_source_arg_no( osrc, i ) );
+        fprintf( stderr, " @@ %d %s\n", i, mucs_source_arg_no( osrc, i ) );
       }
     }
-    arg = mulconfnt_source_arg_no( osrc, 1 );
+    arg = mucs_source_arg_no( osrc, 1 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
-    arg = mulconfnt_source_arg_no( osrc, 2 );
+    arg = mucs_source_arg_no( osrc, 2 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
-    arg = mulconfnt_source_arg_no( osrc, 3 );
+    arg = mucs_source_arg_no( osrc, 3 );
     mastest_exam( __LINE__, arg
                   && 0 == mas_strcmp( "--this-is-not-an-option1=345", arg ), "OK", "Error", "'%s' ? '%s'", "--this-is-not-an-option1=345", arg );
-    arg = mulconfnt_source_arg_no( osrc, 4 );
+    arg = mucs_source_arg_no( osrc, 4 );
     mastest_exam( __LINE__, arg
                   && 0 == mas_strcmp( "--this-is-not-an-option2", arg ), "OK", "Error", "'%s' ? '%s'", "--this-is-not-an-option2", arg );
-    arg = mulconfnt_source_arg_no( osrc, 5 );
+    arg = mucs_source_arg_no( osrc, 5 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "--", arg ), "OK", "Error", "'%s' ? '%s'", "--", arg );
-    arg = mulconfnt_source_arg_no( osrc, 6 );
+    arg = mucs_source_arg_no( osrc, 6 );
     mastest_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
     mastest_exam( __LINE__, argcno > 1 && argvno && argvno[1]
@@ -369,8 +369,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     fprintf( stderr, "\nINT_MIN:%d;INT_MAX:%d\nLONG_MIN:%ld;LONG_MAX:%ld\nLLONG_MIN:%lld;LLONG_MAX:%lld\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
              LLONG_MIN, LLONG_MAX );
 #endif
-    mulconfnt_source_list_delete( plist );
+    mucs_source_list_delete( plist );
   }
-  mulconfnt_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_close( &test_tablist );
   return 0;
 }

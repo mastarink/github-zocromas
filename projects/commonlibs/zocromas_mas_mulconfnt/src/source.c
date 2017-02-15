@@ -20,7 +20,7 @@
 #include "source.h"
 
 void
-mulconfnt_source_set_string_ptr( config_source_desc_t * osrc, char *string )
+mucs_source_set_string_ptr( config_source_desc_t * osrc, char *string )
 {
   if ( osrc )
   {
@@ -33,15 +33,15 @@ mulconfnt_source_set_string_ptr( config_source_desc_t * osrc, char *string )
 }
 
 char *
-mulconfnt_source_load_string( config_source_desc_t * osrc )
+mucs_source_load_string( config_source_desc_t * osrc )
 {
   if ( osrc && osrc->load_string_fun )
-    mulconfnt_source_set_string_ptr( osrc, osrc->load_string_fun( osrc ) );
+    mucs_source_set_string_ptr( osrc, osrc->load_string_fun( osrc ) );
   return osrc ? osrc->string : NULL;
 }
 
 mas_argvc_t *
-mulconfnt_source_load_targ( config_source_desc_t * osrc )
+mucs_source_load_targ( config_source_desc_t * osrc )
 {
   if ( osrc )
   {
@@ -110,31 +110,31 @@ max_match_id( config_source_desc_t * osrc, const char *arg )
 }
 
 char **
-mulconfnt_source_argv_no( config_source_desc_t * osrc )
+mucs_source_argv_no( config_source_desc_t * osrc )
 {
   return osrc ? osrc->targno.argv : NULL;
 }
 
 int
-mulconfnt_source_argc_no( config_source_desc_t * osrc )
+mucs_source_argc_no( config_source_desc_t * osrc )
 {
   return osrc ? osrc->targno.argc : 0;
 }
 
 const char *
-mulconfnt_source_arg_no( config_source_desc_t * osrc, int i )
+mucs_source_arg_no( config_source_desc_t * osrc, int i )
 {
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
 
 int
-mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+mucs_source_lookup_seq( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   int nargs = 0;
 
-  mulconfnt_source_load_targ( osrc );
+  mucs_source_load_targ( osrc );
   osrc->lastoptpos = 0;
-  for ( int iarg = 0; osrc && !mulconfnt_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
+  for ( int iarg = 0; osrc && !mucs_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
   {
     static const char *labels[MULCONF_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
     const char *arg = osrc->targ.argv[iarg];
@@ -169,7 +169,7 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
         fprintf( stderr, "VARIANT %s\n", labels[variantid] );
       config_option_t *opt = NULL;
 
-      opt = mulconfnt_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
+      opt = mucs_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
       if ( do_fprintf )
         fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
       while ( opt && opt->restype == MULCONF_RTYP_ALIAS && opt->ptr )
@@ -177,25 +177,25 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
         config_option_t *oldopt = opt;
 
 //        oldopt->source = osrc;
-        mulconfnt_option_set_source( oldopt, osrc );                 /* mostly for error setting */
+        mucs_option_set_source( oldopt, osrc );                 /* mostly for error setting */
         if ( do_fprintf )
           fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
-        opt = mulconfnt_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
+        opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value,
                                                       osrc->flags );
         if ( do_fprintf )
           fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );
 
-        mulconfnt_config_option_delete( oldopt );
+        mucs_config_option_delete( oldopt );
       }
     /* do something for found option */
       if ( opt )
       {
-        mulconfnt_option_set_source( opt, osrc );                    /* mostly for error setting */
-        if ( mulconfnt_error_option( opt ) )
+        mucs_option_set_source( opt, osrc );                    /* mostly for error setting */
+        if ( mucs_error_option( opt ) )
         {
 //          opt->source = osrc;
-          mulconfnt_error_set_at_source_from_option( opt->source, opt );
+          mucs_error_set_at_source_from_option( opt->source, opt );
         }
         if ( opt->restype & MULCONF_RTYP_FLAG_LASTOPT )
         {
@@ -233,14 +233,14 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
       }
       else
       {
-        mulconfnt_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg );
+        mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg );
       }
       if ( do_fprintf )
         fprintf( stderr, "*** LOOKUP [%s] arg='%s'; name='%s'; value='%s'\n", labels[variantid], arg, opt ? opt->name : "<NONE>",
                  opt ? opt->string_value : "<NONE>" );
       if ( opt )
       {
-        mulconfnt_config_option_delete( opt );
+        mucs_config_option_delete( opt );
       }
       opt = NULL;
     }
@@ -249,46 +249,46 @@ mulconfnt_source_lookup_seq( config_source_desc_t * osrc, const config_option_ta
 }
 
 void
-mulconfnt_source_lookup_all( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+mucs_source_lookup_all( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
-  while ( osrc && mulconfnt_source_lookup_seq( osrc, tablist ) < 0 )
+  while ( osrc && mucs_source_lookup_seq( osrc, tablist ) < 0 )
     osrc->npos++;
 }
 
 int
-mulconfnt_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
+mucs_source_lookup( config_source_desc_t * osrc, const config_option_table_list_t * tablist )
 {
   int r = 0;
 
   if ( osrc )
   {
     osrc->npos = 0;
-    r = mulconfnt_source_lookup_seq( osrc, tablist );
+    r = mucs_source_lookup_seq( osrc, tablist );
   }
   return r;
 }
 
 unsigned long
-mulconfnt_source_flags( config_source_desc_t * osrc )
+mucs_source_flags( config_source_desc_t * osrc )
 {
   return osrc ? osrc->flags : 0L;
 }
 
 int
-mulconfnt_source_flag( config_source_desc_t * osrc, unsigned long mask )
+mucs_source_flag( config_source_desc_t * osrc, unsigned long mask )
 {
   return osrc && ( osrc->flags & mask ? 1 : 0 );
 }
 
 void
-mulconfnt_source_set_common_callback( config_source_desc_t * osrc, option_callback_t cb )
+mucs_source_set_common_callback( config_source_desc_t * osrc, option_callback_t cb )
 {
   if ( osrc )
     osrc->callback = cb;
 }
 
 void
-mulconfnt_source_set_type_callback( config_source_desc_t * osrc, config_restype_t restype, option_callback_t cb )
+mucs_source_set_type_callback( config_source_desc_t * osrc, config_restype_t restype, option_callback_t cb )
 {
   if ( osrc )
     osrc->callbacks[restype] = cb;

@@ -13,21 +13,21 @@
 #include "mulconfnt_error_base.h"
 
 void
-mulconfnt_error_close( config_error_t * error )
+mucs_error_close( config_error_t * error )
 {
   mas_free( error->msg );
   memset( error, 0, sizeof( config_error_t ) );
 }
 
 void
-mulconfnt_error_delete( config_error_t * error )
+mucs_error_delete( config_error_t * error )
 {
-  mulconfnt_error_close( error );
+  mucs_error_close( error );
   mas_free( error );
 }
 
 int
-mulconfnt_error_vset( config_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, va_list args )
+mucs_error_vset( config_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, va_list args )
 {
   int r = 0;
 
@@ -55,19 +55,19 @@ mulconfnt_error_vset( config_error_t * error, int line, const char *func, const 
 }
 
 int
-mulconfnt_error_set( config_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, ... )
+mucs_error_set( config_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = mulconfnt_error_vset( error, line, func, file, flags, fmt, args );
+  r = mucs_error_vset( error, line, func, file, flags, fmt, args );
   va_end( args );
   return r;
 }
 
 int
-mulconfnt_error_set_from_error( config_error_t * error, config_error_t * srcerror )
+mucs_error_set_from_error( config_error_t * error, config_error_t * srcerror )
 {
   if ( error && srcerror )
   {

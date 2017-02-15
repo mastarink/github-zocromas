@@ -13,30 +13,30 @@
 #include "source_base.h"
 
 void
-mulconfnt_source_init( config_source_desc_t * osrc )
+mucs_source_init( config_source_desc_t * osrc )
 {
   memset( osrc, 0, sizeof( config_source_desc_t ) );
 }
 
 config_source_desc_t *
-mulconfnt_source_create( void )
+mucs_source_create( void )
 {
   config_source_desc_t *osrc = mas_malloc( sizeof( config_source_desc_t ) );
 
-  mulconfnt_source_init( osrc );
+  mucs_source_init( osrc );
   return osrc;
 }
 
 config_source_desc_t *
-mulconfnt_source_create_setup( config_source_t source_type, int count, const void *data_ptr, const char *delims,
+mucs_source_create_setup( config_source_t source_type, int count, const void *data_ptr, const char *delims,
                                const char *eq, const config_prefix_encoder_t * pref_ids )
 {
   config_source_desc_t *osrc = NULL;
 
-  if ( source_type >= 0 && source_type < mulconfnt_source_defaults_count(  ) )
+  if ( source_type >= 0 && source_type < mucs_source_defaults_count(  ) )
   {
 /* const config_source_desc_t *defsrc = &default_sources[source_type]; */
-    const config_source_desc_t *defsrc = mulconfnt_source_default( source_type );
+    const config_source_desc_t *defsrc = mucs_source_default( source_type );
 
     if ( defsrc && source_type == defsrc->type )
     {
@@ -44,7 +44,7 @@ mulconfnt_source_create_setup( config_source_t source_type, int count, const voi
 
       if ( check )
       {
-        osrc = mulconfnt_source_create(  );
+        osrc = mucs_source_create(  );
 
         osrc->type = source_type;
         osrc->count = count;
@@ -83,12 +83,12 @@ mulconfnt_source_create_setup( config_source_t source_type, int count, const voi
       DIE( "FATAL ERROR: can't create \"source\" %p; %d ? %d\n", defsrc, source_type, defsrc ? defsrc->type : 0xffff );
   }
   else
-    DIE( "FATAL ERROR: can't create \"source\" %d ? %lu\n", source_type, mulconfnt_source_defaults_count(  ) );
+    DIE( "FATAL ERROR: can't create \"source\" %d ? %lu\n", source_type, mucs_source_defaults_count(  ) );
   return osrc;
 }
 
 void
-mulconfnt_source_close( config_source_desc_t * osrc )
+mucs_source_close( config_source_desc_t * osrc )
 {
   if ( osrc )
   {
@@ -108,14 +108,14 @@ mulconfnt_source_close( config_source_desc_t * osrc )
     mas_argvc_delete( &osrc->targ );
     mas_argvc_delete( &osrc->oldtarg );
     mas_argvc_delete( &osrc->targno );
-    mulconfnt_error_close( &osrc->error );
+    mucs_error_close( &osrc->error );
   }
 }
 
 void
-mulconfnt_source_delete( config_source_desc_t * osrc )
+mucs_source_delete( config_source_desc_t * osrc )
 {
-  mulconfnt_source_close( osrc );
+  mucs_source_close( osrc );
   if ( osrc )
     mas_free( osrc );
 }
