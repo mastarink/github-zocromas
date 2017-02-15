@@ -163,7 +163,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
 #if 0
-  /* Auto-free */
+  /* Don't: Auto-free */
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
@@ -171,7 +171,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
 #if 0
-  /* Auto-free */
+  /* Don't: Auto-free */
     if ( v_string1 )
       mas_free( v_string1 );
     v_string1 = NULL;

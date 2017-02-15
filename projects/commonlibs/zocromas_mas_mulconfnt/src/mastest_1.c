@@ -246,25 +246,25 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mastest_next_group(  );
     EXAMS( v_string0, "lorem-ipsum", "v_string0=%s ? %s" );
 #if 0
-  /* Auto-free */
+  /* Don't: Auto-free */
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
 #endif
     EXAMS( v_string1, "lorem ipsum", "v_string1=%s ? %s" );
-/* No Auto-free */
+/* No Don't: Auto-free */
     if ( v_string1 )                                                 // if !MUCS_RTYP_FLAG_AUTOFREE or !ptr
       mas_free( v_string1 );
     v_string1 = NULL;
 
     EXAMS( sc_string, "Phasellus congue bibendum magna", "sc_string=%s ? %s" );
-/* No Auto-free */
+/* No Don't: Auto-free */
     if ( sc_string )
       mas_free( sc_string );
     sc_string = NULL;
 
     EXAMS( cc_string, "Phasellus congue bibendum magna", "cc_string=%s ? %s" );
-/* No Auto-free */
+/* No Don't: Auto-free */
     if ( cc_string )
       mas_free( cc_string );
     cc_string = NULL;
@@ -276,7 +276,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMSN( v_targ0.argc, v_targ0.argv, 2, "venenatis", "'%s' ? '%s'" );
 
 #if 0
-  /* Auto-free */
+  /* Don't: Auto-free */
     mas_argvc_delete( &v_targ0 );
 #endif
     mastest_next_group(  );
