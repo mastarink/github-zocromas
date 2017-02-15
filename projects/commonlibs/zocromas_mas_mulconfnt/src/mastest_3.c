@@ -108,28 +108,39 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-  /* if ( v_string0 )         */
-  /*   mas_free( v_string0 ); */
-  /* v_string0 = NULL;        */
+#if 0
+  /* Auto-free */
+    if ( v_string0 )
+      mas_free( v_string0 );
+    v_string0 = NULL;
+#endif
 
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-  /* if ( v_string1 )         */
-  /*   mas_free( v_string1 ); */
-  /* v_string1 = NULL;        */
+#if 0
+  /* Auto-free */
+    if ( v_string1 )
+      mas_free( v_string1 );
+    v_string1 = NULL;
+#endif
 
     mastest_exam( __LINE__, v_string2
                   && 0 == mas_strcmp( v_string2, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string2 ? v_string2 : "<NULL>", "lorem ipsum" );
-  /* if ( v_string2 )         */
-  /*   mas_free( v_string2 ); */
-  /* v_string2 = NULL;        */
+#if 0
+  /* Auto-free */
+    if ( v_string2 )
+      mas_free( v_string2 );
+    v_string2 = NULL;
+#endif
 
     mastest_exam( __LINE__, v_string3
                   && 0 == mas_strcmp( v_string3, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string3 ? v_string3 : "<NULL>", "lorem ipsum" );
-  /* if ( v_string3 )         */
-  /*   mas_free( v_string3 ); */
-  /* v_string3 = NULL;        */
-
+#if 0
+  /* Auto-free */
+    if ( v_string3 )
+      mas_free( v_string3 );
+    v_string3 = NULL;
+#endif
     mastest_next_group(  );
     mastest_exam( __LINE__, mucs_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mucs_source_argc_no( osrc ), NUM_NOPTS );
     arg = mucs_source_arg_no( osrc, 1 );

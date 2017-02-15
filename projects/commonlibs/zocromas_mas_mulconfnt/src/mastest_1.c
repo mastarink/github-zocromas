@@ -242,35 +242,43 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     mastest_next_group(  );
     EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" );
+
     mastest_next_group(  );
     EXAMS( v_string0, "lorem-ipsum", "v_string0=%s ? %s" );
-  /* if ( v_string0 )         */
-  /*   mas_free( v_string0 ); */
-  /* v_string0 = NULL; */
+#if 0
+  /* Auto-free */
+    if ( v_string0 )
+      mas_free( v_string0 );
+    v_string0 = NULL;
+#endif
     EXAMS( v_string1, "lorem ipsum", "v_string1=%s ? %s" );
+/* No Auto-free */
     if ( v_string1 )                                                 // if !MUCS_RTYP_FLAG_AUTOFREE or !ptr
       mas_free( v_string1 );
     v_string1 = NULL;
 
     EXAMS( sc_string, "Phasellus congue bibendum magna", "sc_string=%s ? %s" );
+/* No Auto-free */
     if ( sc_string )
       mas_free( sc_string );
     sc_string = NULL;
 
     EXAMS( cc_string, "Phasellus congue bibendum magna", "cc_string=%s ? %s" );
+/* No Auto-free */
     if ( cc_string )
       mas_free( cc_string );
     cc_string = NULL;
 
     mastest_next_group(  );
     EXAM( v_targ0.argc, 3, "targ0.argc=%d ? %d" );
-
     EXAMSN( v_targ0.argc, v_targ0.argv, 0, "asta", "'%s' ? '%s'" );
     EXAMSN( v_targ0.argc, v_targ0.argv, 1, "manyana", "'%s' ? '%s'" );
     EXAMSN( v_targ0.argc, v_targ0.argv, 2, "venenatis", "'%s' ? '%s'" );
 
-  /* mas_argvc_delete( &v_targ0 ); */
-
+#if 0
+  /* Auto-free */
+    mas_argvc_delete( &v_targ0 );
+#endif
     mastest_next_group(  );
     EXAM( sizeof( v_char0 ), 1, "sizeof( v_char0 )=%d ? %d" );
     EXAMZ( 1, v_char0, 107, "char0=%d ? %d" );
@@ -342,12 +350,6 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAM( bitwise4, ( long ) 0xd04L, "%lx ? %lx" );
     EXAM( bitwise5, ( long ) 0x10204L, "%lx ? %lx" );
 
-#if 0
-    fprintf( stderr, "\nINT_MIN:%x;INT_MAX:%x\nLONG_MIN:%lx;LONG_MAX:%lx\nLLONG_MIN:%llx;LLONG_MAX:%llx\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
-             LLONG_MIN, LLONG_MAX );
-    fprintf( stderr, "\nINT_MIN:%d;INT_MAX:%d\nLONG_MIN:%ld;LONG_MAX:%ld\nLLONG_MIN:%lld;LLONG_MAX:%lld\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
-             LLONG_MIN, LLONG_MAX );
-#endif
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_close( &test_tablist );

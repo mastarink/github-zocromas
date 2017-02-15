@@ -162,14 +162,20 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mastest_next_group(  );
     mastest_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
-  /* if ( v_string0 )         */
-  /*   mas_free( v_string0 ); */
-  /* v_string0 = NULL;        */
+#if 0
+  /* Auto-free */
+    if ( v_string0 )
+      mas_free( v_string0 );
+    v_string0 = NULL;
+#endif
     mastest_exam( __LINE__, v_string1
                   && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
-  /* if ( v_string1 )         */
-  /*   mas_free( v_string1 ); */
-  /* v_string1 = NULL;        */
+#if 0
+  /* Auto-free */
+    if ( v_string1 )
+      mas_free( v_string1 );
+    v_string1 = NULL;
+#endif
     mastest_next_group(  );
     mastest_exam( __LINE__, sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
     mastest_exam( __LINE__, sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
