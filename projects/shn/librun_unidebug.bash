@@ -11,7 +11,7 @@ function shn_uni_debug ()
   if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
      shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>"
   fi
-  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname rc:$retcode ; return $retcode ; }
+  rname=`shn_runname` || { retcode=$? ; shn_errmsg "runname: Try set MSH_SHN_RUN_NAME;rc:$retcode" ; return $retcode ; }
   if [[ "$runretcode" ]] ; then shn_msg "-------- runretcode: $runretcode" ; fi
   if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]]
 	then

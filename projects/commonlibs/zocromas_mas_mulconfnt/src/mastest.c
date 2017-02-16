@@ -224,7 +224,7 @@ main( int argc, const char *argv[] )
     {1, test_3q, 3, "q"},
     {1, test_4, 4, ""},
     {1, test_5, 5, ""},
-    {1, test_6, 6, "",.f_print_ok = 1},
+    {1, test_6, 6, "",.f_print_ok = 0},
   };
   for ( int u = 0; u < argc; u++ )
   {
