@@ -128,6 +128,7 @@ struct mucs_source_han_s
   mucs_source_load_string_fun_t load_string_fun;
   mucs_source_load_targ_fun_t load_targ_fun;
 
+  void *ptr_internal;
   int targ_loaded;                                                   /* sequential number of targ set */
   char *string;
   mas_argvc_t oldtarg;

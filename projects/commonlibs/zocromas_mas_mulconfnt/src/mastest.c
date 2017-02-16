@@ -206,6 +206,7 @@ main( int argc, const char *argv[] )
   int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
   dotest_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
@@ -223,6 +224,7 @@ main( int argc, const char *argv[] )
     {1, test_3q, 3, "q"},
     {1, test_4, 4, ""},
     {1, test_5, 5, ""},
+    {1, test_6, 6, "",.f_print_ok = 1},
   };
   for ( int u = 0; u < argc; u++ )
   {
@@ -243,7 +245,7 @@ main( int argc, const char *argv[] )
     }
   }
   mastest_next_group(  );
-#define TOTAL_TESTS 329 - 1
+#define TOTAL_TESTS 349 - 1
   mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
   return 0;
 }

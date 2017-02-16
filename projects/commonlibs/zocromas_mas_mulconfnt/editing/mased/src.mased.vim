@@ -53,7 +53,8 @@ tab sfind mastest_3.c
 sfind mastest_3a.c
 sfind mastest_3q.c
 tab sfind mastest_4.c
-tab sfind mastest_5.c
+sfind mastest_5.c
+sfind mastest_6.c
 
 tab sfind mulconfnt_error.h
 sfind mulconfnt_error.c
