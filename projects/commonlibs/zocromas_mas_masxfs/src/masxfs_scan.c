@@ -33,7 +33,7 @@ struct dirent
 
 #endif
 static masxfs_entry_type_t
-de2masxfs_entry( int d_type )
+masxfs_de2entry( int d_type )
 {
   masxfs_entry_type_t r = 0;
 
@@ -174,10 +174,10 @@ masxfs_scanentry_cb( masxfs_dirent_t * de, const char *path, masxfs_entry_callba
     }
     if ( !r )
     {
-      masxfs_entry_type_bit_t entry_bit = 1 << de2masxfs_entry( d_type );
+      masxfs_entry_type_bit_t entry_bit = 1 << masxfs_de2entry( d_type );
 
       if ( ( cb->types & entry_bit ) && fun_simple )
-        fun_simple( path, name, &fpath );
+        fun_simple( path, name );
       if ( recursive && d_type == DT_DIR )
         r = masxfs_scanpath_cb( masxfs_get_normalized_path( path, name, &fpath ), cb, recursive );
     }
@@ -280,13 +280,20 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int
     path = ".";
   if ( path )
   {
-    char *real_path;
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    real_path = masxfs_pathinfo_realpath( pi );
-    r = masxfs_scanpath( real_path, callbacks, recursive );
+#if 1
+    r = masxfs_pathinfo_scan( pi, callbacks, recursive );
+#else
+    {
+      char *real_path;
+
+      real_path = masxfs_pathinfo_realpath( pi );
+      r = masxfs_scanpath( real_path, callbacks, recursive );
+      mas_free( real_path );
+    }
+#endif
     masxfs_pathinfo_delete( pi );
-    mas_free( real_path );
   }
   return r;
 }

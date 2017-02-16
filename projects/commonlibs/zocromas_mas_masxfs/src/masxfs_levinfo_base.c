@@ -30,6 +30,19 @@ masxfs_levinfo_create_array( size_t sz )
 }
 
 masxfs_levinfo_t *
+masxfs_levinfo_create_array_setup( size_t sz, masxfs_pathinfo_t * pi )
+{
+  masxfs_levinfo_t *lia = masxfs_levinfo_create_array( sz );
+
+  for ( size_t i = 0; i < sz; i++ )
+  {
+    lia[i].pi = pi;
+    lia[i].depth = i;
+  }
+  return lia;
+}
+
+masxfs_levinfo_t *
 masxfs_levinfo_create( void )
 {
   return masxfs_levinfo_create_array( 0 );
@@ -38,27 +51,35 @@ masxfs_levinfo_create( void )
 void
 masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, const char *path _uUu_ )
 {
-  li->name = mas_strdup( name );
+  if ( li )
+    li->name = mas_strdup( name );
 }
 
 void
 masxfs_levinfo_close( masxfs_levinfo_t * li )
 {
-  mas_free( li->name );
+  if ( li && li->name )
+    mas_free( li->name );
 }
 
 void
 masxfs_levinfo_close_array( masxfs_levinfo_t * lia, size_t sz )
 {
-  for ( size_t il = 0; il < sz && ( lia + il )->name; il++ )
+  if ( lia )
   {
-    masxfs_levinfo_close( lia + il );
+    for ( size_t il = 0; il < sz && ( lia + il )->name; il++ )
+    {
+      masxfs_levinfo_close( lia + il );
+    }
   }
 }
 
 void
 masxfs_levinfo_delete_array( masxfs_levinfo_t * li, size_t sz )
 {
-  masxfs_levinfo_close_array( li, sz );
-  mas_free( li );
+  if ( li )
+  {
+    masxfs_levinfo_close_array( li, sz );
+    mas_free( li );
+  }
 }

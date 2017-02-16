@@ -32,11 +32,10 @@ masxfs_pathinfo_create( void )
 }
 
 void
-masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *real_path, size_t max_depth )
+masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t max_depth )
 {
   masxfs_levinfo_t *li;
-
-  li = masxfs_levinfo_path2levnfo( real_path, max_depth, &pi->depth );
+  li = masxfs_levinfo_path2levnfo( path, max_depth, pi );
   pi->levinfo = li;
 }
 
@@ -51,16 +50,27 @@ masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
 }
 
 void
-masxfs_pathinfo_close( masxfs_pathinfo_t * pi _uUu_ )
+masxfs_pathinfo_close( masxfs_pathinfo_t * pi )
 {
-  masxfs_levinfo_delete_array( pi->levinfo, pi->depth );
-  pi->levinfo = 0;
-  pi->depth = 0;
+  if ( pi )
+  {
+    if ( pi->pathcache )
+      mas_free( pi->pathcache );
+    if ( pi->realpathcache )
+      mas_free( pi->realpathcache );
+    pi->pathcache = NULL;
+    masxfs_levinfo_delete_array( pi->levinfo, pi->depth );
+    pi->levinfo = 0;
+    pi->depth = 0;
+  }
 }
 
 void
 masxfs_pathinfo_delete( masxfs_pathinfo_t * pi )
 {
-  masxfs_pathinfo_close( pi );
-  mas_free( pi );
+  if ( pi )
+  {
+    masxfs_pathinfo_close( pi );
+    mas_free( pi );
+  }
 }

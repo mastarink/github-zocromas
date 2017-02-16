@@ -55,31 +55,25 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 }
 
 static int _uUu_
-fscallback_dir( const char *path, const char *name, char **pnpath )
+fscallback_dir( const char *npath, const char *name )
 {
-  char *npath = masxfs_get_normalized_path( path, name, pnpath );
-
-  fprintf( stderr, "entry directory: '%s'\t '%s'\n   -- %s\n", path, name, npath );
+  fprintf( stderr, "entry directory: '%s'\n   -- %s\n", name, npath );
   return 0;
 }
 
 static int
-fscallback_regular( const char *path _uUu_, const char *name _uUu_, char **pnpath _uUu_ )
+fscallback_regular( const char *npath, const char *name )
 {
-  char *npath _uUu_ = masxfs_get_normalized_path( path, name, pnpath );
-
   num++;
-  fprintf( stderr, "b. %-2d. -- '%s'\n", num, npath );
+  fprintf( stderr, "b. %-2d. -- '%s/%s'\n", num, npath, name );
   return 0;
 }
 
 static int _uUu_
-fscallback( const char *path _uUu_, const char *name _uUu_, char **pnpath _uUu_ )
+fscallback( const char *npath, const char *name )
 {
-  char *npath _uUu_ = masxfs_get_normalized_path( path, name, pnpath );
-
   num++;
-  fprintf( stderr, "a. %-2d. -- '%s'\n", num, npath );
+  fprintf( stderr, "a. %-2d. -- '%s/%s'\n", num, npath, name );
   return 0;
 }
 

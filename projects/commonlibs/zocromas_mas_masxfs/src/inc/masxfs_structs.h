@@ -40,12 +40,17 @@ struct masxfs_pathinfo_s
   size_t max_depth;
   size_t depth;
   masxfs_levinfo_t *levinfo;
+  char *pathcache;
+  char *realpathcache;
 };
 
 struct masxfs_levinfo_s
 {
   char *name;
-  masxfs_dirent_t de;
+  masxfs_dir_t *dir;
+  masxfs_dirent_t *de;
   masxfs_stat_t st;
+  masxfs_pathinfo_t *pi;
+  size_t depth;
 };
 #endif
