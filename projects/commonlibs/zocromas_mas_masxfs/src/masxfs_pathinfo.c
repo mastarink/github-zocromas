@@ -15,7 +15,6 @@
 #include "masxfs_error.h"
 
 #include "masxfs_structs.h"
-#include "masxfs_scan.h"
 
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo.h"
@@ -40,11 +39,27 @@ masxfs_pathinfo_opendir( masxfs_pathinfo_t * pi )
   return li->dir;
 }
 
+masxfs_dir_t *
+masxfs_levinfo_opendir( masxfs_levinfo_t * li )
+{
+  char *real_path = masxfs_levinfo_right_realpath( li );
+
+  li->dir = opendir( real_path );
+  mas_free( real_path );
+  return li->dir;
+}
+
 void
 masxfs_pathinfo_closedir( masxfs_pathinfo_t * pi )
 {
   masxfs_levinfo_t *li = pi->levinfo + pi->depth;
 
+  closedir( li->dir );
+}
+
+void
+masxfs_levinfo_closedir( masxfs_levinfo_t * li )
+{
   closedir( li->dir );
 }
 
@@ -151,7 +166,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 
       if ( ( cb->types & entry_bit ) && fun_simple )
       {
-        /* char *path = masxfs_pathinfo_realpath( li->pi ); */
+      /* char *path = masxfs_pathinfo_realpath( li->pi ); */
         char *path = masxfs_levinfo_right_realpath( li );
 
         fun_simple( path, name );
@@ -159,15 +174,48 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
       }
       if ( recursive && d_type == DT_DIR )
       {
-        char *path = masxfs_pathinfo_normal_path( li->pi, name );
+        masxfs_levinfo_init( li, li->de->d_name );
+        li++;
+        {
+          char *path = masxfs_levinfo_right_realpath( li );
 
-        r = masxfs_scanpath_cb( path, cb, recursive );
-        mas_free( path );
+          r = masxfs_levinfo_scanpath_cb( li, cb, recursive );
+          mas_free( path );
+        }
+        li--;
+	masxfs_levinfo_close(li);
       }
     }
     if ( fpath )
       mas_free( fpath );
   }
+  return r;
+}
+
+int
+masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
+{
+  int r = 0;
+  int n = 0;
+
+  rewinddir( li->dir );
+  while ( !r && ( li->de = readdir( li->dir ) ) )
+  {
+    r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
+    n++;
+  }
+  return r;
+}
+
+int
+masxfs_levinfo_scanpath_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
+{
+  int r = 0;
+
+  masxfs_levinfo_opendir( li );
+
+  r = masxfs_levinfo_scandir_cb( li, cb, recursive );
+  masxfs_levinfo_closedir( li );
   return r;
 }
 
@@ -188,9 +236,16 @@ masxfs_levinfo_scandir( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbac
 {
   int r = 0;
 
-  rewinddir( li->dir );
-  while ( !r && ( li->de = readdir( li->dir ) ) )
-    r = masxfs_levinfo_scanentry( li, callbacks, recursive );
+  if ( li )
+  {
+    rewinddir( li->dir );
+    while ( !r && ( li->de = readdir( li->dir ) ) )
+    {
+      r = masxfs_levinfo_scanentry( li, callbacks, recursive );
+    }
+  }
+  else
+    r = -1;
   return r;
 }
 

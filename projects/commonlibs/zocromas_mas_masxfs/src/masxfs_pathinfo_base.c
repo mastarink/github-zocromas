@@ -54,11 +54,12 @@ masxfs_pathinfo_close( masxfs_pathinfo_t * pi )
 {
   if ( pi )
   {
-    if ( pi->pathcache )
-      mas_free( pi->pathcache );
-    if ( pi->realpathcache )
-      mas_free( pi->realpathcache );
-    pi->pathcache = NULL;
+    /* if ( pi->pathcache )             */
+    /*   mas_free( pi->pathcache );     */
+    /* pi->pathcache = NULL;            */
+    /* if ( pi->realpathcache )         */
+    /*   mas_free( pi->realpathcache ); */
+    /* pi->realpathcache = NULL;        */
     masxfs_levinfo_delete_array( pi->levinfo, pi->depth );
     pi->levinfo = 0;
     pi->depth = 0;

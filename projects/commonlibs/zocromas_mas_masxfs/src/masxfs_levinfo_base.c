@@ -49,8 +49,10 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, const char *path _uUu_ )
+masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name )
 {
+  if ( li->name )
+    mas_free( li->name );
   if ( li )
     li->name = mas_strdup( name );
 }
@@ -60,6 +62,7 @@ masxfs_levinfo_close( masxfs_levinfo_t * li )
 {
   if ( li && li->name )
     mas_free( li->name );
+  li->name = NULL;
 }
 
 void

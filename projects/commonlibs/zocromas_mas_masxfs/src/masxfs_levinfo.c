@@ -81,7 +81,7 @@ masxfs_levinfo_path2levnfo( const char *path, size_t max_depth, masxfs_pathinfo_
 
     while ( ( stok = strtok_r( spatht, "/", &ep ) ) )
     {
-      masxfs_levinfo_init( levinfo + levinfo_depth, stok, path );
+      masxfs_levinfo_init( levinfo + levinfo_depth, stok );
       fprintf( stderr, "TOK:%s\n", stok );
       spatht = NULL;
       levinfo_depth++;

@@ -6,5 +6,6 @@
 masxfs_levinfo_t *masxfs_levinfo_path2levnfo( const char *path, size_t max_depth, masxfs_pathinfo_t * pi );
 char *masxfs_levinfo_realpath( masxfs_levinfo_t * lia, size_t depth );
 char *masxfs_levinfo_right_realpath( masxfs_levinfo_t * li );
+int masxfs_levinfo_scanpath_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive );
 
 #endif
