@@ -68,6 +68,8 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
   masxfs_pathinfo_opendir( pi );
   WARN( "@@@@ %p", pi );
   r = masxfs_levinfo_scandir( li, callbacks, recursive );
+  if ( r )
+    RDIE( "R:%d", r );
   masxfs_pathinfo_closedir( pi );
 
   return r;

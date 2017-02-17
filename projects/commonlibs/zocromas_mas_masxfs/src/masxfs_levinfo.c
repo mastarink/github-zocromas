@@ -34,46 +34,52 @@ masxfs_levinfo_li2lia( masxfs_levinfo_t * li )
 static masxfs_entry_type_t
 de2entry( int d_type )
 {
-  masxfs_entry_type_t r = 0;
+  masxfs_entry_type_t c = 0;
 
   switch ( d_type )
   {
   case DT_BLK:
-    r = MASXFS_ENTRY_BLK;
+    c = MASXFS_ENTRY_BLK;
     break;
   case DT_CHR:
-    r = MASXFS_ENTRY_CHR;
+    c = MASXFS_ENTRY_CHR;
     break;
   case DT_DIR:
-    r = MASXFS_ENTRY_DIR;
+    c = MASXFS_ENTRY_DIR;
     break;
   case DT_FIFO:
-    r = MASXFS_ENTRY_FIFO;
+    c = MASXFS_ENTRY_FIFO;
     break;
   case DT_LNK:
-    r = MASXFS_ENTRY_LNK;
+    c = MASXFS_ENTRY_LNK;
     break;
   case DT_REG:
-    r = MASXFS_ENTRY_REG;
+    c = MASXFS_ENTRY_REG;
     break;
   case DT_SOCK:
-    r = MASXFS_ENTRY_SOCK;
+    c = MASXFS_ENTRY_SOCK;
     break;
   case DT_UNKNOWN:
-    r = MASXFS_ENTRY_UNKNOWN;
+    c = MASXFS_ENTRY_UNKNOWN;
     break;
   }
-  return r;
+  return c;
 }
 
 static int
 masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
 {
-  int r = 0;
+  int r = 0, rc = 0;
 
   masxfs_levinfo_opendir( li );
   r = masxfs_levinfo_scandir_cb( li, cb, recursive );
-  masxfs_levinfo_closedir( li );
+  if ( r )
+    RDIE( "R:%d", r );
+  rc = masxfs_levinfo_closedir( li );
+  if ( !r )
+    r = rc;
+  if ( r )
+    RDIE( "R:%d", r );
   return r;
 }
 
@@ -87,7 +93,8 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
     const char *name = li->de->d_name;
     masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
     int d_type = li->de->d_type;
-    /* char *fpath = NULL; */
+
+  /* char *fpath = NULL; */
 
     if ( !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) ) )
     {
@@ -149,19 +156,19 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
           masxfs_levinfo_init( li, name );
           r = masxfs_levinfo_scanli_cb( li, cb, recursive );
           if ( r )
-            DIE( "R:%d", r );
+            RDIE( "R:%d", r );
           masxfs_levinfo_reset( li );
           li--;
         }
       }
-      /* if ( fpath )         */
-      /*   mas_free( fpath ); */
+    /* if ( fpath )         */
+    /*   mas_free( fpath ); */
     }
   }
   else
     r = -1;
   if ( r )
-    DIE( "R:%d (%d:%d:%d)", r, li ? 1 : 0, li && li->de ? 1 : 0, cb ? 1 : 0 );
+    RDIE( "R:%d (%d:%d:%d)", r, li ? 1 : 0, li && li->de ? 1 : 0, cb ? 1 : 0 );
   return r;
 }
 
@@ -176,13 +183,13 @@ masxfs_levinfo_scanentry( masxfs_levinfo_t * li, masxfs_entry_callback_t * callb
     {
       r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
       if ( r )
-        DIE( "R:%d", r );
+        RDIE( "R:%d", r );
     }
   }
   else
     r = -1;
   if ( r )
-    DIE( "R:%d", r );
+    RDIE( "R:%d", r );
   return r;
 }
 
@@ -197,13 +204,13 @@ masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, 
     {
       r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
       if ( r )
-        DIE( "R:%d", r );
+        RDIE( "R:%d", r );
     }
   }
   else
     r = -1;
   if ( r )
-    DIE( "R:%d", r );
+    RDIE( "R:%d", r );
   return r;
 }
 
@@ -217,9 +224,13 @@ masxfs_levinfo_scandir( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbac
     while ( !r && masxfs_levinfo_readdir( li ) )
     {
       r = masxfs_levinfo_scanentry( li, callbacks, recursive );
+      if ( r )
+        RDIE( "R:%d", r );
     }
   }
   else
     r = -1;
+  if ( r )
+    RDIE( "R:%d", r );
   return r;
 }

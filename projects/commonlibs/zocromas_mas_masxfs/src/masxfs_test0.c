@@ -144,12 +144,13 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/", 128, 1, 0, "", "" );
     masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/home", 128, 2, 0, "", "home" );
     masxfs_test_0_path( nseries, series_suffix, do_fprintf,
-                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs", 128, 13, 0, "",
-                        "zocromas_mas_masxfs" );
+                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest", 128, 14, 0, "",
+                        "mastest" );
     masxfs_test_0_path( nseries, series_suffix, do_fprintf,
-                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs", 128, 13, 0, "",
-                        "zocromas_mas_masxfs" );
+                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest", 128, 14, 0, "",
+                        "mastest" );
   }
+  if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
     /* {MASXFS_ENTRY_BIT_LINK | MASXFS_ENTRY_BIT_REG, fscallback}, */
@@ -157,7 +158,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       , {MASXFS_ENTRY_BIT_REG, fscallback_regular}
       , {0, NULL}
     };
-    masxfs_scanpath_real( NULL, callbacks, TRUE );
+    masxfs_scanpath_real( "mastest", callbacks, TRUE );
   }
   return 0;
 }

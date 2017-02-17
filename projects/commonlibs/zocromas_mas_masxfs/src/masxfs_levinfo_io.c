@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include <limits.h>
 #include <stdlib.h>
@@ -23,61 +24,15 @@
 
 #include "masxfs_levinfo_io.h"
 
-static masxfs_dir_t *
-masxfs_levinfo_openpath( masxfs_levinfo_t * li, const char *real_path )
-{
-  masxfs_dir_t *dir = NULL;
-
-  if ( li )
-  {
-    li->dir = dir = opendir( real_path );
-    if ( li->dir )
-    {
-      rewinddir( li->dir );
-    }
-  }else
-    DIE( "dir:%d", dir );
-  return dir;
-}
-
-masxfs_dir_t *
-masxfs_levinfo_openpath_free( masxfs_levinfo_t * li, char *real_path )
-{
-  masxfs_dir_t *dir = NULL;
-
-  if ( li )
-  {
-    dir = masxfs_levinfo_openpath( li, real_path );
-    mas_free( real_path );
-  }
-  return dir;
-}
-
-masxfs_dir_t *
-masxfs_levinfo_opendir_up( masxfs_levinfo_t * li )
-{
-  return masxfs_levinfo_openpath_free( li, masxfs_levinfo_li2path_up( li ) );
-}
-
-masxfs_dir_t *
-masxfs_levinfo_opendir_abs( masxfs_levinfo_t * li )
-{
-  return masxfs_levinfo_openpath_free( li, masxfs_levinfo_li2path( li ) );
-}
-
 int
 masxfs_levinfo_opendirfd( masxfs_levinfo_t * li )
 {
   if ( !li->dirfd )
   {
     if ( li->lidepth > 0 )
-    {
       li->dirfd = openat( masxfs_levinfo_opendirfd( li - 1 ), li->name, O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
-    }
     else if ( li->name && !*li->name )
-    {
       li->dirfd = open( "/", O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
-    }
   }
   return li->dirfd;
 }
@@ -111,11 +66,19 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
 int
 masxfs_levinfo_closedirfd( masxfs_levinfo_t * li )
 {
-  int r = close( li->dirfd );
+  int r = 0;
 
-  li->dirfd = 0;
+  if ( li && li->dirfd )
+  {
+    r = close( li->dirfd );
+    li->dirfd = 0;
+    if ( r )
+      RDIE( "R:%d => errno:%d:%s", r, errno, strerror( errno ) );
+  }
+  else
+    r = -1;
   if ( r )
-    DIE( "R:%d", r );
+    RDIE( "R:%d", r );
   return r;
 }
 
@@ -127,29 +90,42 @@ masxfs_levinfo_closedirfd_all_up( masxfs_levinfo_t * li )
   do
   {
     r = masxfs_levinfo_closedirfd( li );
-    if ( !li--->lidepth )
+    if ( r )
+      RDIE( "R:%d", r );
+    if ( !( li-- )->lidepth )
       break;
   } while ( !r );
   if ( r )
-    DIE( "R:%d", r );
+    RDIE( "R:%d", r );
   return r;
 }
 
 int
 masxfs_levinfo_closedir( masxfs_levinfo_t * li )
 {
-  int r = 0;
+  int r = 0, rc = 0;
 
   if ( li )
   {
-    closedir( li->dir );
-    li->dir = NULL;
-    r = masxfs_levinfo_closedirfd( li );
     if ( r )
-      DIE( "R:%d", r );
+      RDIE( "R:%d => errno:%d:%s", r, errno, strerror( errno ) );
+    if ( !r )
+      r = rc;
+    if ( r )
+      RDIE( "R:%d => errno:%d:%s", r, errno, strerror( errno ) );
+    rc = closedir( li->dir );
+    if ( !r )
+      r = rc;
+    if ( r )
+      RDIE( "R:%d : %p => errno:%d:%s", r, li->dir, errno, strerror( errno ) );
+    li->dir = NULL;
+    li->dirfd = 0;                                                   /*  closedir closes fd!  */
+  /* r = masxfs_levinfo_closedirfd( li ); */
   }
   else
     r = -1;
+  if ( r )
+    RDIE( "R:%d", r );
   return r;
 }
 
@@ -159,9 +135,14 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li )
   masxfs_dirent_t *de = NULL;
 
   if ( li && li->dir )
+  {
+    errno = 0;
     li->de = de = readdir( li->dir );
+    if ( !de && errno )
+      RDIE( "readdir error" );
+  }
   else
-    DIE( "DE:%p", de );
+    RDIE( "DE:%d %d", li ? 1 : 0, li && li->dir ? 1 : 0 );
   return de;
 }
 
@@ -175,6 +156,6 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
   else
     r = -1;
   if ( r )
-    DIE( "R:%d %d:%d", r, li ? 1 : 0, li && li->dir ? 1 : 0 );
+    RDIE( "R:%d %d:%d", r, li ? 1 : 0, li && li->dir ? 1 : 0 );
   return r;
 }

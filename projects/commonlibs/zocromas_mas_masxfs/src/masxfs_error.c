@@ -16,7 +16,7 @@ masxfs_error_vdie( int line, const char *func, const char *file, int fexit, cons
 
   if ( pf )
     pf++;
-  fprintf( stderr, "\n@@-=%s=-@@ at %d:%s @ %s -- ", fexit ? "DIE" : "WARN", line, func, pf );
+  fprintf( stderr, "@@-=%s=-@@ at %d:%s @ %s -- ", fexit ? "DIE" : "WARN", line, func, pf );
   vfprintf( stderr, fmt, args );
   fprintf( stderr, "\n" );
   if ( fexit )
