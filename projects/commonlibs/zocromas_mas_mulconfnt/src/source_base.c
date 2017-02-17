@@ -94,7 +94,7 @@ mucs_source_create_setup( mucs_source_type_t source_type, int count, const void 
 }
 
 void
-mucs_source_close( mucs_source_han_t * osrc )
+mucs_source_reset( mucs_source_han_t * osrc )
 {
   if ( osrc )
   {
@@ -114,14 +114,14 @@ mucs_source_close( mucs_source_han_t * osrc )
     mas_argvc_delete( &osrc->targ );
     mas_argvc_delete( &osrc->oldtarg );
     mas_argvc_delete( &osrc->targno );
-    mucs_error_close( &osrc->error );
+    mucs_error_reset( &osrc->error );
   }
 }
 
 void
 mucs_source_delete( mucs_source_han_t * osrc )
 {
-  mucs_source_close( osrc );
+  mucs_source_reset( osrc );
   if ( osrc )
     mas_free( osrc );
 }

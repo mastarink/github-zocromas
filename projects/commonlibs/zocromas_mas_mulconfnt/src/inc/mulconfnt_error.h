@@ -2,10 +2,10 @@
 # define MUCS_ERROR_H
 
 # include "mulconfnt_types.h"
-# define DIE( ...) mucs_error_die(__LINE__, __func__, __FILE__,  __VA_ARGS__)
+# define DIE( ...) mucs_error_die(__LINE__, __func__, __FILE__, 34, __VA_ARGS__)
 //# define VDIE( ...) mucs_error_vdie(__LINE__, __func__, __FILE__,  __VA_ARGS__)
-void mucs_error_die( int line, const char *func, const char *file, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 4, 5 ) ) );
-void mucs_error_vdie( int line, const char *func, const char *file, const char *fmt, va_list args );
+void mucs_error_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 5, 6 ) ) );
+void mucs_error_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args );
 
 int mucs_error_vset_at_source( mucs_source_han_t * osrc, int line, const char *func, const char *file, const char *fmt, va_list args );
 int mucs_error_set_at_source( mucs_source_han_t * osrc, int line, const char *func, const char *file, const char *fmt, ... )

@@ -13,7 +13,7 @@
 #include "mulconfnt_error_base.h"
 
 void
-mucs_error_close( mucs_error_t * error )
+mucs_error_reset( mucs_error_t * error )
 {
   mas_free( error->msg );
   memset( error, 0, sizeof( mucs_error_t ) );
@@ -22,7 +22,7 @@ mucs_error_close( mucs_error_t * error )
 void
 mucs_error_delete( mucs_error_t * error )
 {
-  mucs_error_close( error );
+  mucs_error_reset( error );
   mas_free( error );
 }
 

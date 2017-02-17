@@ -182,6 +182,6 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     unsetenv( "MASTEST_4" );
     mucs_source_list_delete( plist );
   }
-  mucs_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_reset( &test_tablist );
   return 0;
 }

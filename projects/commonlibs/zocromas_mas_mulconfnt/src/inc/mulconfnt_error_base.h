@@ -3,7 +3,7 @@
 
 # include "mulconfnt_types.h"
 
-void mucs_error_close( mucs_error_t * error );
+void mucs_error_reset( mucs_error_t * error );
 void mucs_error_delete( mucs_error_t * error );
 
 int mucs_error_vset( mucs_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, va_list args );

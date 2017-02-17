@@ -59,7 +59,7 @@ mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *
 }
 
 void
-mucs_config_option_tablist_close( mucs_option_table_list_t * tablist )
+mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist )
 {
   while ( tablist )
   {
@@ -87,6 +87,6 @@ mucs_config_option_tablist_close( mucs_option_table_list_t * tablist )
 void
 mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist )
 {
-  mucs_config_option_tablist_close( tablist );
+  mucs_config_option_tablist_reset( tablist );
   mas_free( tablist );
 }

@@ -19,7 +19,7 @@
 #include "mulconfnt_error.h"
 
 void
-mucs_error_vdie( int line, const char *func, const char *file, const char *fmt, va_list args )
+mucs_error_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args )
 {
   char *pf = strrchr( file, '/' );
 
@@ -28,17 +28,17 @@ mucs_error_vdie( int line, const char *func, const char *file, const char *fmt, 
   fprintf( stderr, "\n@@-=DIE=-@@ at %d:%s @ %s -- ", line, func, pf );
   vfprintf( stderr, fmt, args );
   fprintf( stderr, "\n" );
-  exit( 34 );
+  if (fexit)exit( 34 );
 }
 
 //_attribute__ ( ( format( __printf__, 13, 14 ) ) )
 void
-mucs_error_die( int line, const char *func, const char *file, const char *fmt, ... )
+mucs_error_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  mucs_error_vdie( line, func, file, fmt, args );
+  mucs_error_vdie( line, func, file, fexit, fmt, args );
   va_end( args );
 }
 

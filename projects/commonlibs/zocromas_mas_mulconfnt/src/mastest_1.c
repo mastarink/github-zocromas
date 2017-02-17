@@ -352,6 +352,6 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     mucs_source_list_delete( plist );
   }
-  mucs_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_reset( &test_tablist );
   return 0;
 }

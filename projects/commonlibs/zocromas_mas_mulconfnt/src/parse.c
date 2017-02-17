@@ -59,7 +59,7 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
 #ifdef MULCONFNT_ALLOCATE__SOURCE_LIST
   mucs_source_list_delete( plist );
 #else
-  mucs_source_list_close( plist );
+  mucs_source_list_reset( plist );
 #endif
 
 #if 0

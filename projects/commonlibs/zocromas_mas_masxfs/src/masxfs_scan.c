@@ -12,6 +12,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "masxfs_defs.h"
+#include "masxfs_error.h"
 
 #include "masxfs_structs.h"
 
@@ -281,7 +282,6 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int
   if ( path )
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
-
 #if 1
     r = masxfs_pathinfo_scan( pi, callbacks, recursive );
 #else

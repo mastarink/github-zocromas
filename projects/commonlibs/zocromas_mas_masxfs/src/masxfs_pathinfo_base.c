@@ -16,8 +16,8 @@
 
 #include "masxfs_structs.h"
 
-#include "masxfs_levinfo.h"
 #include "masxfs_levinfo_base.h"
+#include "masxfs_levinfo_path.h"
 
 #include "masxfs_pathinfo.h"
 #include "masxfs_pathinfo_base.h"
@@ -35,7 +35,7 @@ void
 masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t max_depth )
 {
   masxfs_levinfo_t *li;
-  li = masxfs_levinfo_path2levnfo( path, max_depth, pi );
+  li = masxfs_levinfo_path2lia( path, max_depth, pi );
   pi->levinfo = li;
 }
 
@@ -50,19 +50,13 @@ masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
 }
 
 void
-masxfs_pathinfo_close( masxfs_pathinfo_t * pi )
+masxfs_pathinfo_reset( masxfs_pathinfo_t * pi )
 {
   if ( pi )
   {
-    /* if ( pi->pathcache )             */
-    /*   mas_free( pi->pathcache );     */
-    /* pi->pathcache = NULL;            */
-    /* if ( pi->realpathcache )         */
-    /*   mas_free( pi->realpathcache ); */
-    /* pi->realpathcache = NULL;        */
-    masxfs_levinfo_delete_array( pi->levinfo, pi->depth );
+    masxfs_levinfo_delete_lia( pi->levinfo, pi->pidepth );
     pi->levinfo = 0;
-    pi->depth = 0;
+    pi->pidepth = 0;
   }
 }
 
@@ -71,7 +65,7 @@ masxfs_pathinfo_delete( masxfs_pathinfo_t * pi )
 {
   if ( pi )
   {
-    masxfs_pathinfo_close( pi );
+    masxfs_pathinfo_reset( pi );
     mas_free( pi );
   }
 }

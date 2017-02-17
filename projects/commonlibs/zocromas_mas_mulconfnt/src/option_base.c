@@ -37,7 +37,7 @@ mucs_config_option_create( void )
 }
 
 void
-mucs_config_option_close( mucs_option_han_t * opt )
+mucs_config_option_reset( mucs_option_han_t * opt )
 {
   if ( opt )
   {
@@ -49,14 +49,14 @@ mucs_config_option_close( mucs_option_han_t * opt )
       mas_free( opt->argdesc );
     if ( opt->string_value )
       mas_free( opt->string_value );
-    mucs_error_close( &opt->error );
+    mucs_error_reset( &opt->error );
   }
 }
 
 void
 mucs_config_option_delete( mucs_option_han_t * opt )
 {
-  mucs_config_option_close( opt );
+  mucs_config_option_reset( opt );
   if ( opt )
     mas_free( opt );
 }

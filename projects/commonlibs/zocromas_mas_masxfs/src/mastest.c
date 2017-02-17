@@ -10,10 +10,10 @@
 #include <unistd.h>
 
 #include "masxfs_structs.h"
+#include "masxfs_exam.h"
 
 #include "masxfs_defs.h"
 #include "masxfs_scan.h"
-static int num = 0;
 
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
@@ -54,39 +54,16 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 //malloc_stats(  );
 }
 
-static int _uUu_
-fscallback_dir( const char *npath, const char *name )
-{
-  fprintf( stderr, "entry directory: '%s'\n   -- %s\n", name, npath );
-  return 0;
-}
-
-static int
-fscallback_regular( const char *npath, const char *name )
-{
-  num++;
-  fprintf( stderr, "b. %-2d. -- '%s/%s'\n", num, npath, name );
-  return 0;
-}
-
-static int _uUu_
-fscallback( const char *npath, const char *name )
-{
-  num++;
-  fprintf( stderr, "a. %-2d. -- '%s/%s'\n", num, npath, name );
-  return 0;
-}
-
 int
 main( int argc _uUu_, char *argv[]_uUu_ )
 {
-  masxfs_entry_callback_t callbacks[] = {
-  /* {MASXFS_ENTRY_BIT_LINK | MASXFS_ENTRY_BIT_REG, fscallback}, */
-    {MASXFS_ENTRY_BIT_REG, fscallback},
-    {MASXFS_ENTRY_BIT_REG, fscallback_regular},
-    {0, NULL}
-  };
-  masxfs_scanpath_real( NULL, callbacks, TRUE );
+  int masxfs_test_0( int nseries, const char *series_suffix, int do_fprintf );
 
+  mastest_do_t funlist[] _uUu_ = {
+    {1, masxfs_test_0, 0, "",.f_print_ok = 1},
+    {0},
+  };
+
+  mastest_test( funlist );
   return 0;
 }

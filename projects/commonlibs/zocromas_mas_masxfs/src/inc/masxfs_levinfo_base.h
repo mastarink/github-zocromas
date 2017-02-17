@@ -5,11 +5,11 @@
 
 masxfs_levinfo_t *masxfs_levinfo_create( void );
 masxfs_levinfo_t *masxfs_levinfo_create_array( size_t sz );
-masxfs_levinfo_t *masxfs_levinfo_create_array_setup( size_t sz, masxfs_pathinfo_t * pi );
+masxfs_levinfo_t *masxfs_levinfo_create_array_setup( size_t sz );
 
 void masxfs_levinfo_init( masxfs_levinfo_t * pi, const char *name );
-void masxfs_levinfo_close_array( masxfs_levinfo_t * pi, size_t sz );
-void masxfs_levinfo_close( masxfs_levinfo_t * li );
-void masxfs_levinfo_delete_array( masxfs_levinfo_t * pi, size_t sz );
+void masxfs_levinfo_reset_lia( masxfs_levinfo_t * pi, size_t sz );
+void masxfs_levinfo_reset( masxfs_levinfo_t * li );
+void masxfs_levinfo_delete_lia( masxfs_levinfo_t * pi, size_t sz );
 
 #endif

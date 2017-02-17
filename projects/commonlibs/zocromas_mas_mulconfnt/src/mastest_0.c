@@ -55,6 +55,6 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   if ( speed )
     if ( do_fprintf )
       fprintf( stderr, "-b %d ", speed );
-  mucs_config_option_tablist_close( &test_tablist );
+  mucs_config_option_tablist_reset( &test_tablist );
   return 0;
 }

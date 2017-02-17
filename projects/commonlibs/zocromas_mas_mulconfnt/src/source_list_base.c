@@ -32,7 +32,7 @@ mucs_source_list_create( void )
 }
 
 void
-mucs_source_list_close( mucs_source_list_t * source_list )
+mucs_source_list_reset( mucs_source_list_t * source_list )
 {
   if ( source_list )
   {
@@ -53,7 +53,7 @@ mucs_source_list_close( mucs_source_list_t * source_list )
 void
 mucs_source_list_delete( mucs_source_list_t * source_list )
 {
-  mucs_source_list_close( source_list );
+  mucs_source_list_reset( source_list );
   if ( source_list )
     mas_free( source_list );
 }
