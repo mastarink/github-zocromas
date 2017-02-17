@@ -7,7 +7,7 @@
 #include "masxfs_scan.h"
 
 int
-masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int recursive )
+masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int recursive, int multicb )
 {
   int r = 0;
 
@@ -17,7 +17,7 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    r = masxfs_pathinfo_scan( pi, callbacks, recursive );
+    r = masxfs_pathinfo_scan( pi, callbacks, recursive, multicb );
     masxfs_pathinfo_delete( pi );
   }
   return r;

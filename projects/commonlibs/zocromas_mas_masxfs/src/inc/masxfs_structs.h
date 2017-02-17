@@ -1,7 +1,6 @@
 #ifndef MASXFS_STRUCTS_H
 # define MASXFS_STRUCTS_H
 
-# include <sys/stat.h>
 # include "masxfs_types.h"
 
 enum masxfs_entry_type_e
@@ -49,9 +48,10 @@ struct masxfs_levinfo_s
 {
   char *name;
   int dirfd;
-  masxfs_dir_t *dir;
-  masxfs_dirent_t *de;
-  masxfs_stat_t st;
+  masxfs_dir_t *pdir;
+  masxfs_dirent_t *pde;
+  /* masxfs_dirent_t de; */
+  masxfs_stat_t *st;
 /* masxfs_pathinfo_t *pi; */
   size_t lidepth;
 };

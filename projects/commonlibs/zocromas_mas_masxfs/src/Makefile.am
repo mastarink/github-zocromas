@@ -6,6 +6,7 @@ libzocromas_mas_masxfs_la_SOURCES = \
 	masxfs_scan.c \
 	masxfs_pathinfo_base.c \
 	masxfs_pathinfo.c \
+	masxfs_pathinfo_io.c \
 	masxfs_levinfo_base.c \
 	masxfs_levinfo_io.c \
 	masxfs_levinfo_path.c \

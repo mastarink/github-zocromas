@@ -3,6 +3,6 @@
 
 # include "masxfs_types.h"
 
-int masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int recursive );
+int masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int recursive , int multicb);
 
 #endif

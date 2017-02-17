@@ -15,4 +15,6 @@ typedef struct masxfs_pathinfo_s masxfs_pathinfo_t;
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
 typedef int ( *masxfs_scan_fun_simple_t ) ( const char *path, const char *name );
+typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive );
+
 #endif

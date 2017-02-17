@@ -1,11 +1,5 @@
 #include <string.h>
 
-#include <limits.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 #include <mastar/wrap/mas_memory.h>
 
 #include "masxfs_defs.h"
@@ -14,9 +8,7 @@
 #include "masxfs_structs.h"
 
 #include "masxfs_levinfo_base.h"
-#include "masxfs_levinfo_io.h"
 
-#include "masxfs_levinfo.h"
 #include "masxfs_levinfo_path.h"
 
 static char *

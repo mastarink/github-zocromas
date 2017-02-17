@@ -1,13 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <limits.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
@@ -21,10 +14,14 @@
 masxfs_levinfo_t *
 masxfs_levinfo_create_array( size_t sz )
 {
+#if 0
   size_t size = sz * sizeof( masxfs_levinfo_t );
   masxfs_levinfo_t *li = mas_malloc( size );
 
   memset( li, 0, size );
+#else
+  masxfs_levinfo_t *li = mas_calloc( sz, sizeof( masxfs_levinfo_t ) );
+#endif
   return li;
 }
 
@@ -35,7 +32,7 @@ masxfs_levinfo_create_array_setup( size_t sz )
 
   for ( size_t i = 0; i < sz; i++ )
   {
-    /* lia[i].pi = pi; */
+  /* lia[i].pi = pi; */
     lia[i].lidepth = i;
   }
   return lia;

@@ -1,15 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <limits.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "masxfs_defs.h"
 #include "masxfs_error.h"
@@ -19,15 +11,18 @@
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_path.h"
 
-#include "masxfs_pathinfo.h"
 #include "masxfs_pathinfo_base.h"
 
 masxfs_pathinfo_t *
 masxfs_pathinfo_create( void )
 {
+#if 0
   masxfs_pathinfo_t *pi = mas_malloc( sizeof( masxfs_pathinfo_t ) );
 
   memset( pi, 0, sizeof( masxfs_pathinfo_t ) );
+#else
+  masxfs_pathinfo_t *pi = mas_calloc( 1, sizeof( masxfs_pathinfo_t ) );
+#endif
   return pi;
 }
 
@@ -41,10 +36,15 @@ masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t max_depth
 masxfs_pathinfo_t *
 masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
 {
-  masxfs_pathinfo_t *pi = masxfs_pathinfo_create(  );
+#if 0
   char *real_path = realpath( path, NULL );
+#else
+  char *real_path = canonicalize_file_name( path );
+#endif
+  masxfs_pathinfo_t *pi = masxfs_pathinfo_create(  );
 
   masxfs_pathinfo_init( pi, real_path, max_depth );
+  free( real_path );
   return pi;
 }
 

@@ -38,7 +38,7 @@ fscallback_dir( const char *npath, const char *name )
   return 0;
 }
 
-static int
+static int _uUu_
 fscallback_regular( const char *npath, const char *name )
 {
   num++;
@@ -73,9 +73,9 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMS( pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
     EXAMS( pi->levinfo[pi->pidepth - 1].name, _lastname, "last '%s' ? '%s'" );
     EXAM( pi->levinfo[0].dirfd, 0, "dirfd:%d ? %d" );
-    EXAM( pi->levinfo[0].dir, NULL, "dirfd:%d ? %d" );
-    EXAM( pi->levinfo[0].dir, NULL, "dir:%p ? %p" );
-    EXAM( pi->levinfo[0].de, NULL, "de:%p ? %p" );
+    EXAM( pi->levinfo[0].pdir, NULL, "dirfd:%d ? %d" );
+    EXAM( pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
+    EXAM( pi->levinfo[0].pde, NULL, "de:%p ? %p" );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
       EXAM( masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
@@ -137,19 +137,6 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 int
 masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
-  mastest_next_group(  );
-  fprintf( stderr, "@@@@@@@@@@@@@@@@@@@@@@@@\n" );
-  EXAM( 1, 1, "%d ? %d" );
-  {
-    masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/", 128, 1, 0, "", "" );
-    masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/home", 128, 2, 0, "", "home" );
-    masxfs_test_0_path( nseries, series_suffix, do_fprintf,
-                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest", 128, 14, 0, "",
-                        "mastest" );
-    masxfs_test_0_path( nseries, series_suffix, do_fprintf,
-                        "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest", 128, 14, 0, "",
-                        "mastest" );
-  }
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
@@ -158,7 +145,33 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       , {MASXFS_ENTRY_BIT_REG, fscallback_regular}
       , {0, NULL}
     };
-    masxfs_scanpath_real( "mastest", callbacks, TRUE );
+  /* ftw */
+    masxfs_scanpath_real( "./mastest", callbacks, TRUE, TRUE );
+  }
+  if ( 1 )
+  {
+    mastest_next_group(  );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@@@@@@@@@\n" );
+    {
+      masxfs_pathinfo_t *pi =
+              masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest",
+                                            128 );
+
+      masxfs_pathinfo_delete( pi );
+    }
+    char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest";
+
+    EXAM( 1, 1, "%d ? %d" );
+    EXAM( PATH_MAX, 4096, "%d ? %d" );
+    EXAM( pathconf( tpath, _PC_PATH_MAX ), 4096, "%d ? %d" );
+    EXAM( pathconf( tpath, _PC_NAME_MAX ), 255, "%d ? %d" );
+    EXAM( _POSIX_PATH_MAX, 256, "%d ? %d" );
+    {
+      masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/", 128, 1, 0, "", "" );
+      masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/home", 128, 2, 0, "", "home" );
+      masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
+      masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
+    }
   }
   return 0;
 }
