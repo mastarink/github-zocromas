@@ -71,15 +71,17 @@ masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, i
 {
   int r = 0, rc = 0;
 
-  masxfs_levinfo_opendir( li );
-  r = masxfs_levinfo_scandir_cb( li, cb, recursive );
-  if ( r )
-    RDIE( "R:%d", r );
-  rc = masxfs_levinfo_closedir( li );
+  r = masxfs_levinfo_opendir( li );
   if ( !r )
-    r = rc;
-  if ( r )
-    RDIE( "R:%d", r );
+  {
+    r = masxfs_levinfo_scandir_cb( li, cb, recursive );
+    QRDIE( r );
+    rc = masxfs_levinfo_closedir( li );
+    if ( !r )
+      r = rc;
+    QRDIE( r );
+  }
+  QRDIE( r );
   return r;
 }
 
@@ -155,8 +157,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
           li++;
           masxfs_levinfo_init( li, name );
           r = masxfs_levinfo_scanli_cb( li, cb, recursive );
-          if ( r )
-            RDIE( "R:%d", r );
+          QRDIE( r );
           masxfs_levinfo_reset( li );
           li--;
         }
@@ -167,8 +168,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
   }
   else
     r = -1;
-  if ( r )
-    RDIE( "R:%d (%d:%d:%d)", r, li ? 1 : 0, li && li->de ? 1 : 0, cb ? 1 : 0 );
+  QRDIE( r );
   return r;
 }
 
@@ -182,14 +182,12 @@ masxfs_levinfo_scanentry( masxfs_levinfo_t * li, masxfs_entry_callback_t * callb
     for ( masxfs_entry_callback_t * cb = callbacks; !r && cb && cb->fun_simple; cb++ )
     {
       r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
-      if ( r )
-        RDIE( "R:%d", r );
+      QRDIE( r );
     }
   }
   else
     r = -1;
-  if ( r )
-    RDIE( "R:%d", r );
+  QRDIE( r );
   return r;
 }
 
@@ -203,14 +201,12 @@ masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, 
     while ( !r && masxfs_levinfo_readdir( li ) )
     {
       r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
-      if ( r )
-        RDIE( "R:%d", r );
+      QRDIE( r );
     }
   }
   else
     r = -1;
-  if ( r )
-    RDIE( "R:%d", r );
+  QRDIE( r );
   return r;
 }
 
@@ -219,18 +215,15 @@ masxfs_levinfo_scandir( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbac
 {
   int r = 0;
 
-  if ( !masxfs_levinfo_rewinddir( li ) )
+  r = masxfs_levinfo_rewinddir( li );
+  if ( !r )
   {
     while ( !r && masxfs_levinfo_readdir( li ) )
     {
       r = masxfs_levinfo_scanentry( li, callbacks, recursive );
-      if ( r )
-        RDIE( "R:%d", r );
+      QRDIE( r );
     }
   }
-  else
-    r = -1;
-  if ( r )
-    RDIE( "R:%d", r );
+  QRDIE( r );
   return r;
 }

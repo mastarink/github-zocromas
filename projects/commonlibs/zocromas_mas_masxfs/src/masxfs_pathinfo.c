@@ -28,16 +28,13 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
   return masxfs_levinfo_lia2path( pi->levinfo, pi->pidepth );
 }
 
-masxfs_dir_t *
+int
 masxfs_pathinfo_opendir( masxfs_pathinfo_t * pi )
 {
-  masxfs_dir_t *dir = NULL;
+  int r = masxfs_levinfo_opendir( masxfs_pathinfo_last_li( pi ) );
 
-  dir = masxfs_levinfo_opendir( masxfs_pathinfo_last_li( pi ) );
-/* dir = masxfs_levinfo_openpath_free( masxfs_pathinfo_last_li( pi ), masxfs_pathinfo_pi2path( pi ) ); */
-
-  WARN( "HAHA %p / %p", dir, masxfs_pathinfo_last_li( pi )->dir );
-  return dir;
+  QRDIE( r );
+  return r;
 }
 
 void
@@ -46,32 +43,20 @@ masxfs_pathinfo_closedir( masxfs_pathinfo_t * pi )
   masxfs_levinfo_closedir( masxfs_pathinfo_last_li( pi ) );
 }
 
-char *
-masxfs_pathinfo_normal_path( masxfs_pathinfo_t * pi, const char *name )
-{
-  char *path = masxfs_pathinfo_pi2path( pi );
-
-  if ( name )
-  {
-    path = mas_strcat_x( path, "/" );
-    path = mas_strcat_x( path, name );
-  }
-  return path;
-}
-
 int
 masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, int recursive )
 {
   int r = 0;
   masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-  masxfs_pathinfo_opendir( pi );
-  WARN( "@@@@ %p", pi );
-  r = masxfs_levinfo_scandir( li, callbacks, recursive );
-  if ( r )
-    RDIE( "R:%d", r );
-  masxfs_pathinfo_closedir( pi );
-
+  r = masxfs_pathinfo_opendir( pi );
+  QRDIE( r );
+  if ( !r )
+  {
+    r = masxfs_levinfo_scandir( li, callbacks, recursive );
+    QRDIE( r );
+    masxfs_pathinfo_closedir( pi );
+  }
   return r;
 }
 

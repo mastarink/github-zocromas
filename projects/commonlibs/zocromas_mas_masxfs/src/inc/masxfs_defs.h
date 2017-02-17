@@ -1,6 +1,7 @@
 #ifndef MASXFS_DEFS_H
 # define MASXFS_DEFS_H
 # include <stddef.h>
+# include <errno.h>
 
 # define _uUu_ __attribute__(( unused ))
 
