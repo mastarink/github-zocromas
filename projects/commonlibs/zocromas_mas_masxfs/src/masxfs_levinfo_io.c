@@ -23,22 +23,33 @@
 
 #include "masxfs_levinfo_io.h"
 
-masxfs_dir_t *
+static masxfs_dir_t *
 masxfs_levinfo_openpath( masxfs_levinfo_t * li, const char *real_path )
 {
-  li->dir = opendir( real_path );
-  return li->dir;
+  masxfs_dir_t *dir = NULL;
+
+  if ( li )
+  {
+    li->dir = dir = opendir( real_path );
+    if ( li->dir )
+    {
+      rewinddir( li->dir );
+    }
+  }else
+    DIE( "dir:%d", dir );
+  return dir;
 }
 
 masxfs_dir_t *
 masxfs_levinfo_openpath_free( masxfs_levinfo_t * li, char *real_path )
 {
-  masxfs_dir_t *dir = masxfs_levinfo_openpath( li, real_path );
+  masxfs_dir_t *dir = NULL;
 
-  if ( !li->name )
-    WARN( "No li->name; path:%s", real_path );
-
-  mas_free( real_path );
+  if ( li )
+  {
+    dir = masxfs_levinfo_openpath( li, real_path );
+    mas_free( real_path );
+  }
   return dir;
 }
 
@@ -71,12 +82,40 @@ masxfs_levinfo_opendirfd( masxfs_levinfo_t * li )
   return li->dirfd;
 }
 
+masxfs_dir_t *
+masxfs_levinfo_opendir( masxfs_levinfo_t * li )
+{
+  masxfs_dir_t *dir = NULL;
+
+  if ( li )
+  {
+    if ( li->dir )
+      dir = li->dir;
+    else
+    {
+      int fd = masxfs_levinfo_opendirfd( li );
+
+      if ( fd > 0 )
+      {
+        li->dir = fdopendir( fd );
+        if ( li->dir )
+        {
+          rewinddir( li->dir );
+        }
+      }
+    }
+  }
+  return dir;
+}
+
 int
 masxfs_levinfo_closedirfd( masxfs_levinfo_t * li )
 {
   int r = close( li->dirfd );
 
   li->dirfd = 0;
+  if ( r )
+    DIE( "R:%d", r );
   return r;
 }
 
@@ -90,40 +129,52 @@ masxfs_levinfo_closedirfd_all_up( masxfs_levinfo_t * li )
     r = masxfs_levinfo_closedirfd( li );
     if ( !li--->lidepth )
       break;
-  }
-  while ( !r );
-  return 0;
+  } while ( !r );
+  if ( r )
+    DIE( "R:%d", r );
+  return r;
 }
 
-masxfs_dir_t *
-masxfs_levinfo_opendir_rel( masxfs_levinfo_t * li )
-{
-  if ( !li->dir )
-  {
-/*TODO fdopendir / openat / dirfd  */
-    if ( li->lidepth > 0 )
-    {
-//    int fd = dirfd( li[-1].dir );
-      li->dirfd = openat( li[-1].dirfd, li->name, O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
-
-      li->dir = fdopendir( li->dirfd );
-      WARN( "li->dirfd:%d", li->dirfd );
-    }
-    else
-    {
-      li->dirfd = open( "/", O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
-      li->dir = fdopendir( li->dirfd );
-    }
-    if ( !li->dir )
-    {
-      DIE( "Can't open dir %s; fd:%d; lidepth:%ld", li->name, li->dirfd, li->lidepth );
-    }
-  }
-  return li->dir;
-}
-
-void
+int
 masxfs_levinfo_closedir( masxfs_levinfo_t * li )
 {
-  closedir( li->dir );
+  int r = 0;
+
+  if ( li )
+  {
+    closedir( li->dir );
+    li->dir = NULL;
+    r = masxfs_levinfo_closedirfd( li );
+    if ( r )
+      DIE( "R:%d", r );
+  }
+  else
+    r = -1;
+  return r;
+}
+
+masxfs_dirent_t *
+masxfs_levinfo_readdir( masxfs_levinfo_t * li )
+{
+  masxfs_dirent_t *de = NULL;
+
+  if ( li && li->dir )
+    li->de = de = readdir( li->dir );
+  else
+    DIE( "DE:%p", de );
+  return de;
+}
+
+int
+masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
+{
+  int r = 0;
+
+  if ( li && li->dir )
+    rewinddir( li->dir );
+  else
+    r = -1;
+  if ( r )
+    DIE( "R:%d %d:%d", r, li ? 1 : 0, li && li->dir ? 1 : 0 );
+  return r;
 }

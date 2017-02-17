@@ -62,7 +62,7 @@ normalize_path( const char *path, const char *name )
 }
 
 masxfs_levinfo_t *
-masxfs_levinfo_path2lia( const char *path, size_t max_depth, masxfs_pathinfo_t * pi )
+masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
 {
   masxfs_levinfo_t *levinfo = NULL;
 
@@ -83,7 +83,9 @@ masxfs_levinfo_path2lia( const char *path, size_t max_depth, masxfs_pathinfo_t *
       fprintf( stderr, "TOK:%s\n", stok );
       spatht = NULL;
     }
-    pi->pidepth = levinfo_depth;
+  /* pi->pidepth = levinfo_depth; */
+    if ( psz )
+      *psz = levinfo_depth;
   }
   mas_free( spath );
   return levinfo;

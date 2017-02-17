@@ -34,9 +34,8 @@ masxfs_pathinfo_create( void )
 void
 masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t max_depth )
 {
-  masxfs_levinfo_t *li;
-  li = masxfs_levinfo_path2lia( path, max_depth, pi );
-  pi->levinfo = li;
+  if ( pi )
+    pi->levinfo = masxfs_levinfo_path2lia( path, max_depth, &pi->pidepth );
 }
 
 masxfs_pathinfo_t *

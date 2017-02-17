@@ -66,111 +66,102 @@ de2entry( int d_type )
   return r;
 }
 
+static int
+masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
+{
+  int r = 0;
+
+  masxfs_levinfo_opendir( li );
+  r = masxfs_levinfo_scandir_cb( li, cb, recursive );
+  masxfs_levinfo_closedir( li );
+  return r;
+}
+
 int
 masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
 {
   int r = 0;
-  const char *name = li->de->d_name;
-  masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
-  int d_type = li->de->d_type;
-  char *fpath = NULL;
 
-  if ( !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) ) )
+  if ( li && li->de && cb )
   {
-  /* TODO - Don't remove next 20170217.123704 */
-#if 0
-    if ( d_type == DT_UNKNOWN )
-    {
-      struct stat st;
+    const char *name = li->de->d_name;
+    masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+    int d_type = li->de->d_type;
+    /* char *fpath = NULL; */
 
-      fpath = masxfs_normalize_path( path, name );
-      d_type = DT_UNKNOWN;
-      r = lstat( fpath, &st );
-      if ( !r )
+    if ( !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) ) )
+    {
+    /* TODO - Don't remove next 20170217.123704 */
+#if 0
+      if ( d_type == DT_UNKNOWN )
       {
-        switch ( st.st_mode & S_IFMT )
+        struct stat st;
+
+        fpath = masxfs_normalize_path( path, name );
+        d_type = DT_UNKNOWN;
+        r = lstat( fpath, &st );
+        if ( !r )
         {
-        case S_IFSOCK:
-          d_type = DT_SOCK;
-          break;
-        case S_IFLNK:
-          d_type = DT_LNK;
-          break;
-        case S_IFREG:
-          d_type = DT_REG;
-          break;
-        case S_IFBLK:
-          d_type = DT_BLK;
-          break;
-        case S_IFDIR:
-          d_type = DT_DIR;
-          break;
-        case S_IFCHR:
-          d_type = DT_CHR;
-          break;
-        case S_IFIFO:
-          d_type = DT_FIFO;
-          break;
-        default:
-          d_type = DT_UNKNOWN;
-          break;
+          switch ( st.st_mode & S_IFMT )
+          {
+          case S_IFSOCK:
+            d_type = DT_SOCK;
+            break;
+          case S_IFLNK:
+            d_type = DT_LNK;
+            break;
+          case S_IFREG:
+            d_type = DT_REG;
+            break;
+          case S_IFBLK:
+            d_type = DT_BLK;
+            break;
+          case S_IFDIR:
+            d_type = DT_DIR;
+            break;
+          case S_IFCHR:
+            d_type = DT_CHR;
+            break;
+          case S_IFIFO:
+            d_type = DT_FIFO;
+            break;
+          default:
+            d_type = DT_UNKNOWN;
+            break;
+          }
         }
       }
-    }
 #endif
-    if ( !r )
-    {
-      masxfs_entry_type_bit_t entry_bit = 1 << de2entry( d_type );
-
-      if ( ( cb->types & entry_bit ) && fun_simple )
+      if ( !r )
       {
-      /* char *path = masxfs_pathinfo_realpath( li->pi ); */
-        char *path = masxfs_levinfo_li2path_up( li );
+        masxfs_entry_type_bit_t entry_bit = 1 << de2entry( d_type );
 
-        fun_simple( path, name );
-        mas_free( path );
+        if ( ( cb->types & entry_bit ) && fun_simple )
+        {
+          char *path = masxfs_levinfo_li2path_up( li );
+
+          fun_simple( path, name );
+          mas_free( path );
+        }
+        if ( recursive && d_type == DT_DIR )
+        {
+          li++;
+          masxfs_levinfo_init( li, name );
+          r = masxfs_levinfo_scanli_cb( li, cb, recursive );
+          if ( r )
+            DIE( "R:%d", r );
+          masxfs_levinfo_reset( li );
+          li--;
+        }
       }
-      if ( recursive && d_type == DT_DIR )
-      {
-        li++;
-        masxfs_levinfo_init( li, name );
-        r = masxfs_levinfo_scanpath_cb( li, cb, recursive );
-        masxfs_levinfo_reset( li );
-        li--;
-      }
+      /* if ( fpath )         */
+      /*   mas_free( fpath ); */
     }
-    if ( fpath )
-      mas_free( fpath );
   }
-  return r;
-}
-
-int
-masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
-{
-  int r = 0;
-  int n = 0;
-
-  rewinddir( li->dir );
-  while ( !r && ( li->de = readdir( li->dir ) ) )
-  {
-    r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
-    n++;
-  }
-  return r;
-}
-
-int
-masxfs_levinfo_scanpath_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
-{
-  int r = 0;
-
-  if ( !li->name )
-    WARN( "No li->name" );
-  masxfs_levinfo_opendir_up( li );
-
-  r = masxfs_levinfo_scandir_cb( li, cb, recursive );
-  masxfs_levinfo_closedir( li );
+  else
+    r = -1;
+  if ( r )
+    DIE( "R:%d (%d:%d:%d)", r, li ? 1 : 0, li && li->de ? 1 : 0, cb ? 1 : 0 );
   return r;
 }
 
@@ -179,10 +170,40 @@ masxfs_levinfo_scanentry( masxfs_levinfo_t * li, masxfs_entry_callback_t * callb
 {
   int r = 0;
 
-  if ( !li->name )
-    DIE( "No li->name" );
-  for ( masxfs_entry_callback_t * cb = callbacks; !r && cb && cb->fun_simple; cb++ )
-    r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
+  if ( li )
+  {
+    for ( masxfs_entry_callback_t * cb = callbacks; !r && cb && cb->fun_simple; cb++ )
+    {
+      r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
+      if ( r )
+        DIE( "R:%d", r );
+    }
+  }
+  else
+    r = -1;
+  if ( r )
+    DIE( "R:%d", r );
+  return r;
+}
+
+int
+masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
+{
+  int r = 0;
+
+  if ( !masxfs_levinfo_rewinddir( li ) )
+  {
+    while ( !r && masxfs_levinfo_readdir( li ) )
+    {
+      r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
+      if ( r )
+        DIE( "R:%d", r );
+    }
+  }
+  else
+    r = -1;
+  if ( r )
+    DIE( "R:%d", r );
   return r;
 }
 
@@ -191,13 +212,12 @@ masxfs_levinfo_scandir( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbac
 {
   int r = 0;
 
-  if ( li )
+  if ( !masxfs_levinfo_rewinddir( li ) )
   {
-    if ( !li->name )
-      DIE( "No li->name" );
-    rewinddir( li->dir );
-    while ( !r && ( li->de = readdir( li->dir ) ) )
+    while ( !r && masxfs_levinfo_readdir( li ) )
+    {
       r = masxfs_levinfo_scanentry( li, callbacks, recursive );
+    }
   }
   else
     r = -1;
