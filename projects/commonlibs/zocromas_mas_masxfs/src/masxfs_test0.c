@@ -73,8 +73,8 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMTS( pi->levinfo, pi->levinfo[0].name, "", "root '%s' ? '%s'" );
     EXAMTS( pi->levinfo, pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
     EXAMTS( pi->levinfo, pi->levinfo[pi->pidepth - 1].name, _lastname, "last '%s' ? '%s'" );
-    EXAMT( pi->levinfo, pi->levinfo[0].dirfd, 0, "dirfd:%d ? %d" );
-    EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dirfd:%d ? %d" );
+    EXAMT( pi->levinfo, pi->levinfo[0].fd, 0, "fd:%d ? %d" );
+    EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "fd:%d ? %d" );
     EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
     EXAMT( pi->levinfo, pi->levinfo[0].pde, NULL, "de:%p ? %p" );
     for ( size_t i = 0; i < pi->pidepth; i++ )
@@ -127,12 +127,12 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAM( ( size_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
-      EXAM( pi->levinfo[i].dirfd, ( int ) i + 3, "%ld ? %ld" );
+      EXAM( pi->levinfo[i].fd, ( int ) i + 3, "%ld ? %ld" );
     }
     masxfs_levinfo_closedirfd_all_up( li );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
-      EXAM( pi->levinfo[i].dirfd, ( int ) 0, "%ld ? %ld" );
+      EXAM( pi->levinfo[i].fd, ( int ) 0, "%ld ? %ld" );
     }
   }
   masxfs_pathinfo_delete( pi );

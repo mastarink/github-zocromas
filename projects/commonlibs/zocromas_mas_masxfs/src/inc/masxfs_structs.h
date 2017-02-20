@@ -69,7 +69,7 @@ struct masxfs_levinfo_s
 {
   char *name;
   masxfs_entry_type_t type;
-  int dirfd;
+  int fd;
   masxfs_dir_t *pdir;
   masxfs_dirent_t *pde;
 /* masxfs_dirent_t de; */

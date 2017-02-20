@@ -22,21 +22,21 @@ masxfs_levinfo_opendir_at( masxfs_levinfo_t * li, int fd )
   int r = -1;
 
   if ( li && li->name )
-    r = li->dirfd = openat( fd, li->name, O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
+    r = li->fd = openat( fd, li->name, O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
   return r;
 }
 
 int
 masxfs_levinfo_opendirfd( masxfs_levinfo_t * li )
 {
-  if ( !li->dirfd )
+  if ( !li->fd )
   {
     if ( li->lidepth > 0 )
       masxfs_levinfo_opendir_at( li, masxfs_levinfo_opendirfd( li - 1 ) );
     else if ( li->name && !*li->name )
-      li->dirfd = open( "/", O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
+      li->fd = open( "/", O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
   }
-  return li->dirfd;
+  return li->fd;
 }
 
 int
@@ -76,10 +76,10 @@ masxfs_levinfo_closedirfd( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  if ( li && li->dirfd )
+  if ( li && li->fd )
   {
-    r = close( li->dirfd );
-    li->dirfd = 0;
+    r = close( li->fd );
+    li->fd = 0;
     QRLI( li,  r );
   }
 /* else      */
@@ -114,7 +114,7 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li )
     r = closedir( li->pdir );
     QRLI( li,  r );
     li->pdir = NULL;
-    li->dirfd = 0;                                                   /*  closedir closes fd!  */
+    li->fd = 0;                                                   /*  closedir closes fd!  */
   /* r = masxfs_levinfo_closedirfd( li ); */
   }
   else
