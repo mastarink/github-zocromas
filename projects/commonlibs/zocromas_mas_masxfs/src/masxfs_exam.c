@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <stdarg.h>
 #include <string.h>
 #include <sys/types.h>
@@ -20,6 +21,7 @@
 
 int do_fprintf = 0;
 int sound_on_error = 1;
+int assert_on_error = 1;
 int stop_on_error = 0;
 int sleep_on_error = 0;
 int f_print_ok = 0;
@@ -36,6 +38,12 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
   if ( tests_count )
     fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %d (OK:%d / Fail:%d) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
              tests_count_bad );
+}
+
+int
+mastest_tests_count( void )
+{
+  return tests_count;
 }
 
 static void
@@ -88,6 +96,8 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
     sleep( sleep_on_error );
   if ( !cond && stop_on_error )
     DIE( "Stop on error %d", cond );
+  if ( !cond && assert_on_error )
+    assert( 0 );
   return cond;
 }
 
@@ -104,9 +114,9 @@ mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const
 }
 
 int
-mastest_test( mastest_do_t *funlist )
+mastest_test( mastest_do_t * funlist )
 {
-  for ( unsigned ntest = 0; funlist[ntest].func ; ntest++ )
+  for ( unsigned ntest = 0; funlist[ntest].func; ntest++ )
   {
     if ( funlist[ntest].doit )
     {
@@ -114,15 +124,17 @@ mastest_test( mastest_do_t *funlist )
       do_fprintf += funlist[ntest].do_fprintf;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
-      sound_on_error+=funlist[ntest].sound_on_error;
-      sleep_on_error+=funlist[ntest].sleep_on_error;
-      stop_on_error+=funlist[ntest].stop_on_error;
-      
+      assert_on_error += funlist[ntest].assert_on_error;
+      sound_on_error += funlist[ntest].sound_on_error;
+      sleep_on_error += funlist[ntest].sleep_on_error;
+      stop_on_error += funlist[ntest].stop_on_error;
+
       funlist[ntest].func( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
 
-      stop_on_error-=funlist[ntest].stop_on_error;
-      sleep_on_error-=funlist[ntest].sleep_on_error;
-      sound_on_error-=funlist[ntest].sound_on_error;
+      stop_on_error -= funlist[ntest].stop_on_error;
+      sleep_on_error -= funlist[ntest].sleep_on_error;
+      sound_on_error -= funlist[ntest].sound_on_error;
+      assert_on_error -= funlist[ntest].assert_on_error;
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;
       do_fprintf -= funlist[ntest].do_fprintf;

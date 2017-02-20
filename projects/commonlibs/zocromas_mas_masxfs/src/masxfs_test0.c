@@ -32,22 +32,23 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( const char *ename _uUu_, const char *epath _uUu_, const struct stat *st _uUu_ )
+fscallback_dir( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
 {
 /* fprintf( stderr, "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback_regular( const char *ename _uUu_, const char *epath _uUu_, const struct stat *st _uUu_ )
+fscallback_regular( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
 {
   num++;
-/* fprintf( stderr, "b. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
+  if ( fd )
+    fprintf( stderr, "b. %-2d. -- fd:%d; [%ld] '%s%s'\n", num, fd, st ? st->st_size : 0, ename ? ename : "", epath ? epath : "" );
   return 0;
 }
 
 static int _uUu_
-fscallback( const char *ename _uUu_, const char *epath _uUu_, const struct stat *st _uUu_ )
+fscallback( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
 {
   num++;
 /* fprintf( stderr, "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
@@ -123,13 +124,13 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-    masxfs_levinfo_opendirfd( li );
+    masxfs_levinfo_open( li );
     EXAM( ( size_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
       EXAM( pi->levinfo[i].fd, ( int ) i + 3, "%ld ? %ld" );
     }
-    masxfs_levinfo_closedirfd_all_up( li );
+    masxfs_levinfo_close_all_up( li );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
       EXAM( pi->levinfo[i].fd, ( int ) 0, "%ld ? %ld" );
@@ -146,8 +147,9 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   {
     masxfs_entry_callback_t callbacks[] = {
     /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
-      {MASXFS_ENTRY_REG, fscallback,.flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH}
-      , {MASXFS_ENTRY_REG, fscallback_regular,.flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
+      {MASXFS_ENTRY_REG, fscallback,.flags = 0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH}
+      , {MASXFS_ENTRY_REG, fscallback_regular,.flags =
+         0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
       , {0, NULL}
     };
   /* ftw */
@@ -161,7 +163,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   if ( 1 )
   {
     mastest_next_group(  );
-    fprintf( stderr, "@@@@@@@@@@@@@@@@@@@@@@@@\n" );
+    fprintf( stderr, "@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@\n" );
     {
       masxfs_pathinfo_t *pi =
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest",

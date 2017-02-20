@@ -14,6 +14,7 @@ struct mastest_do_s
   int stop_on_error;
   int sleep_on_error;
   int sound_on_error;
+  int assert_on_error;
   int do_fprintf;
 };
 typedef struct mastest_do_s mastest_do_t;
@@ -24,6 +25,7 @@ int mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, 
 int mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );
 void mastest_next_group( void );
 void mastest_next( void );
+int mastest_tests_count( void );
 
 # define EXAM( var, val, fmt ) mastest_exam( __LINE__, (val) == (var), "OK", "Error", fmt, val, var );
 # define EXAMT( cond, var, val, fmt ) mastest_exam( __LINE__, (cond) && (val) == (var), "OK", "Error", fmt, val, (cond)?var:((typeof(var)) 0 ) );

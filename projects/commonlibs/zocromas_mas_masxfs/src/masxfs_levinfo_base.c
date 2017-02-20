@@ -9,6 +9,7 @@
 
 #include "masxfs_structs.h"
 
+#include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_base.h"
 
 masxfs_levinfo_t *
@@ -45,29 +46,38 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type _uUu_ )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type )
 {
-  if ( li->name )
-    mas_free( li->name );
   if ( li )
-    li->name = mas_strdup( name );
+  {
+    if ( li->name )
+      mas_free( li->name );
+    li->name = mas_strndup( name, len );
+    li->detype = d_type;
+  }
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type _uUu_ )
+masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type )
 {
-  if ( li->name )
-    mas_free( li->name );
-  if ( li )
-    li->name = mas_strndup( name, len );
+  masxfs_levinfo_n_init( li, name, name ? strlen( name ) : 0, d_type );
 }
 
 void
 masxfs_levinfo_reset( masxfs_levinfo_t * li )
 {
-  if ( li && li->name )
-    mas_free( li->name );
-  li->name = NULL;
+  if ( li )
+  {
+    masxfs_levinfo_closedir( li );
+    masxfs_levinfo_close( li );
+    li->fd = 0;
+    if ( li->name )
+      mas_free( li->name );
+    li->name = NULL;
+    if ( li->stat )
+      mas_free( li->stat );
+    li->stat = NULL;
+  }
 }
 
 void
