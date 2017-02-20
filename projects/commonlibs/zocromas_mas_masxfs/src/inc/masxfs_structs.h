@@ -34,14 +34,18 @@ enum masxfs_cb_flag_e
   MASXFS_CB_NAME_NUM,
   MASXFS_CB_PATH_NUM,
   MASXFS_CB_STAT_NUM,
-  MASXFS_CB_FD_NUM
+  MASXFS_CB_FD_NUM,
+  MASXFS_CB_RECURSIVE_NUM,
+  MASXFS_CB_TRAILINGSLASH_NUM,
 };
 enum masxfs_cb_flag_bit_e
 {
   MASXFS_CB_NAME = 1 << MASXFS_CB_NAME_NUM,
   MASXFS_CB_PATH = 1 << MASXFS_CB_PATH_NUM,
   MASXFS_CB_STAT = 1 << MASXFS_CB_STAT_NUM,
-  MASXFS_CB_FD = 1 << MASXFS_CB_FD_NUM
+  MASXFS_CB_FD = 1 << MASXFS_CB_FD_NUM,
+  MASXFS_CB_RECURSIVE = 1 << MASXFS_CB_RECURSIVE_NUM,
+  MASXFS_CB_TRAILINGSLASH = 1 << MASXFS_CB_TRAILINGSLASH_NUM
 };
 
 struct masxfs_entry_callback_s
@@ -64,11 +68,12 @@ struct masxfs_pathinfo_s
 struct masxfs_levinfo_s
 {
   char *name;
+  masxfs_entry_type_t type;
   int dirfd;
   masxfs_dir_t *pdir;
   masxfs_dirent_t *pde;
 /* masxfs_dirent_t de; */
-  masxfs_stat_t *st;
+  masxfs_stat_t *stat;
 /* masxfs_pathinfo_t *pi; */
   size_t lidepth;
   int error;

@@ -4,7 +4,9 @@ sfind masxfs_structs.h
 
 tab sfind mastest.h
 sfind mastest.c
-sfind mastest.c
+
+tab sfind masxfs_exam.h
+sfind masxfs_exam.c
 
 tab sfind tools.h
 sfind tools.c

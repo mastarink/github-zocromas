@@ -1,4 +1,5 @@
 #include <string.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 
@@ -11,8 +12,8 @@
 
 #include "masxfs_levinfo_path.h"
 
-static char *
-normalize_path( const char *path, const char *name )
+char *
+masxfs_levinfo_normalize_path( const char *path, const char *name )
 {
   char *npath = NULL;
 
@@ -58,32 +59,62 @@ masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
 {
   masxfs_levinfo_t *levinfo = NULL;
 
-  char *spath = normalize_path( path, NULL );
-
-  if ( spath && *spath )
+  if ( path && *path )
   {
-    char *stok, *ep;
-    char *spatht = spath;
-    int levinfo_depth = 0;
+    size_t levinfo_depth = 0;
 
     levinfo = masxfs_levinfo_create_array_setup( max_depth );
 
-    masxfs_levinfo_init( levinfo + levinfo_depth++, "" );
-    while ( ( stok = strtok_r( spatht, "/", &ep ) ) )
+#if 1
     {
-      masxfs_levinfo_init( levinfo + levinfo_depth++, stok );
-      spatht = NULL;
+      const char *ptok = path;
+
+      while ( ptok )
+      {
+        char *ep = strchrnul( ptok, '/' );
+        size_t len = ep - ptok;
+
+        masxfs_levinfo_n_init( levinfo + levinfo_depth++, ptok, len, ep && !*ep ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN );
+        while ( *ep == '/' )
+          ep++;
+        ptok = *ep ? ep : NULL;
+      }
     }
-  /* pi->pidepth = levinfo_depth; */
+#elif 0
+    {
+      char *spath = masxfs_levinfo_normalize_path( path, NULL );
+      char *stok = "", *ep;
+
+      for ( char *nstok = strtok_r( spath, "/", &ep ); stok; nstok = strtok_r( NULL, "/", &ep ) )
+      {
+        masxfs_levinfo_init( levinfo + levinfo_depth++, stok, nstok ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN );
+        stok = nstok;
+      }
+      mas_free( spath );
+    }
+#elif 0
+    {
+      char *spath = masxfs_levinfo_normalize_path( path, NULL );
+      char *spatht = spath;
+
+      for ( char *stok = strsep( &spatht, "/" ); stok && ( !levinfo_depth || *stok ); stok = strsep( &spatht, "/" ) )
+      {
+      /* fprintf( stderr, "%ld stok:%s (%ld)\n", levinfo_depth, stok, strlen( stok ) ); */
+        masxfs_levinfo_init( levinfo + levinfo_depth++, stok, MASXFS_ENTRY_UNKNOWN );
+      }
+      mas_free( spath );
+    }
+#endif
+  /* if ( !path[1] )                  */
+  /* DIE( "L:%ld", levinfo_depth ); */
     if ( psz )
       *psz = levinfo_depth;
   }
-  mas_free( spath );
   return levinfo;
 }
 
 char *
-masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth )
+masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth, char tail )
 {
   size_t len = 0;
   char *path = NULL;
@@ -97,7 +128,7 @@ masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth )
         len += strlen( lia[i].name );
         len++;                                                       /* '/' */
       }
-      len += 2;
+      len += 3;
       path = mas_malloc( len );
       {
         char *p = path;
@@ -110,6 +141,9 @@ masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth )
           while ( p && *p )
             p++;
         }
+        if ( tail && p[-1] != tail )
+          *p++ = tail;
+        *p++ = 0;
       }
     }
     else
@@ -120,9 +154,9 @@ masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth )
 }
 
 char *
-masxfs_levinfo_li2path_up( masxfs_levinfo_t * li )
+masxfs_levinfo_li2path_up( masxfs_levinfo_t * li, char tail )
 {
-  return masxfs_levinfo_lia2path( li - li->lidepth, li->lidepth + 1 );
+  return masxfs_levinfo_lia2path( li - li->lidepth, li->lidepth + 1, tail );
 }
 
 char *
@@ -131,5 +165,5 @@ masxfs_levinfo_li2path( masxfs_levinfo_t * li )
   li -= li->lidepth;
   while ( li->name )
     li++;
-  return masxfs_levinfo_li2path_up( li - 1 );
+  return masxfs_levinfo_li2path_up( li - 1, 0 );
 }

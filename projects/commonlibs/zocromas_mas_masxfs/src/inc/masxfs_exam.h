@@ -11,6 +11,9 @@ struct mastest_do_s
   char *series_suffix;
   int f_print_ok;
   int f_noprint_error;
+  int stop_on_error;
+  int sleep_on_error;
+  int sound_on_error;
   int do_fprintf;
 };
 typedef struct mastest_do_s mastest_do_t;

@@ -18,7 +18,7 @@
 char *
 masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 {
-  return masxfs_levinfo_lia2path( pi->levinfo, pi->pidepth );
+  return masxfs_levinfo_lia2path( pi->levinfo, pi->pidepth, 0 );
 }
 
 int

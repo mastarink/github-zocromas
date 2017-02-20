@@ -114,7 +114,15 @@ mastest_test( mastest_do_t *funlist )
       do_fprintf += funlist[ntest].do_fprintf;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
+      sound_on_error+=funlist[ntest].sound_on_error;
+      sleep_on_error+=funlist[ntest].sleep_on_error;
+      stop_on_error+=funlist[ntest].stop_on_error;
+      
       funlist[ntest].func( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
+
+      stop_on_error-=funlist[ntest].stop_on_error;
+      sleep_on_error-=funlist[ntest].sleep_on_error;
+      sound_on_error-=funlist[ntest].sound_on_error;
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;
       do_fprintf -= funlist[ntest].do_fprintf;

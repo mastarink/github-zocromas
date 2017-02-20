@@ -45,12 +45,21 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name )
+masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type _uUu_ )
 {
   if ( li->name )
     mas_free( li->name );
   if ( li )
     li->name = mas_strdup( name );
+}
+
+void
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type _uUu_ )
+{
+  if ( li->name )
+    mas_free( li->name );
+  if ( li )
+    li->name = mas_strndup( name, len );
 }
 
 void
