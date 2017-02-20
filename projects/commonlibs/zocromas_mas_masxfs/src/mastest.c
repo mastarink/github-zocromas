@@ -60,7 +60,7 @@ main( int argc _uUu_, char *argv[]_uUu_ )
   int masxfs_test_0( int nseries, const char *series_suffix, int do_fprintf );
 
   mastest_do_t funlist[] _uUu_ = {
-    {1, masxfs_test_0, 0, "",.f_print_ok = 1},
+    {1, masxfs_test_0, 0, "",.f_print_ok = 0},
     {0},
   };
 

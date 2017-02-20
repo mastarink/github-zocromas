@@ -34,28 +34,28 @@ de2entry( int d_type )
   switch ( d_type )
   {
   case DT_BLK:
-    c = MASXFS_ENTRY_BLK;
+    c = MASXFS_ENTRY_BLK_NUM;
     break;
   case DT_CHR:
-    c = MASXFS_ENTRY_CHR;
+    c = MASXFS_ENTRY_CHR_NUM;
     break;
   case DT_DIR:
-    c = MASXFS_ENTRY_DIR;
+    c = MASXFS_ENTRY_DIR_NUM;
     break;
   case DT_FIFO:
-    c = MASXFS_ENTRY_FIFO;
+    c = MASXFS_ENTRY_FIFO_NUM;
     break;
   case DT_LNK:
-    c = MASXFS_ENTRY_LNK;
+    c = MASXFS_ENTRY_LNK_NUM;
     break;
   case DT_REG:
-    c = MASXFS_ENTRY_REG;
+    c = MASXFS_ENTRY_REG_NUM;
     break;
   case DT_SOCK:
-    c = MASXFS_ENTRY_SOCK;
+    c = MASXFS_ENTRY_SOCK_NUM;
     break;
   case DT_UNKNOWN:
-    c = MASXFS_ENTRY_UNKNOWN;
+    c = MASXFS_ENTRY_UNKNOWN_NUM;
     break;
   }
   return c;
@@ -70,13 +70,13 @@ masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, i
   if ( !r )
   {
     r = masxfs_levinfo_scandir_cb( li, cb, recursive );
-    QR( r );
+    QRLI( li,  r );
     rc = masxfs_levinfo_closedir( li );
     if ( !r )
       r = rc;
-    QR( r );
+    QRLI( li,  r );
   }
-  QR( r );
+  QRLI( li,  r );
   return r;
 }
 
@@ -145,7 +145,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
           char *path = masxfs_levinfo_li2path_up( li );
 
           r = fun_simple( path, name );
-          QR( r );
+          QRLI( li,  r );
           mas_free( path );
         }
         if ( !r && recursive && d_type == DT_DIR )
@@ -153,7 +153,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
           li++;
           masxfs_levinfo_init( li, name );
           r = masxfs_levinfo_scanli_cb( li, cb, recursive );
-          QR( r );
+          QRLI( li,  r );
           masxfs_levinfo_reset( li );
           li--;
         }
@@ -165,7 +165,7 @@ masxfs_levinfo_scanentry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
   }
   else
     r = -1;
-  QR( r );
+  QRLI( li,  r );
   return r;
 }
 
@@ -179,12 +179,12 @@ masxfs_levinfo_scanentry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     for ( masxfs_entry_callback_t * cb = callbacks; !r && cb && cb->fun_simple; cb++ )
     {
       r = masxfs_levinfo_scanentry_cb( li, cb, recursive );
-      QR( r );
+      QRLI( li,  r );
     }
   }
   else
     r = -1;
-  QR( r );
+  QRLI( li,  r );
   return r;
 }
 
@@ -199,12 +199,12 @@ masxfs_levinfo_scandir_with( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
     while ( !r && masxfs_levinfo_readdir( li ) )
     {
       r = scanner( li, cb, recursive );
-      QR( r );
+      QRLI( li,  r );
     }
   }
   else
     r = -1;
-  QR( r );
+  QRLI( li,  r );
   return r;
 }
 

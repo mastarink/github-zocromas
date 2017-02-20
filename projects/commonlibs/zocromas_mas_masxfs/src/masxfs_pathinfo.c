@@ -36,10 +36,8 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
     else
       r = masxfs_levinfo_scandir_cb( li, callbacks, recursive );
     QR( r );
-    WARN("AAAAAAAAAAAAAAAAA");
   /* rc = masxfs_pathinfo_closedir( pi ); */
     rc = masxfs_pathinfo_closedir_all( pi );
-    WARN("BBBBBBBBBBBBBBBBB");
     if ( !r )
       r = rc;
     QR( r );

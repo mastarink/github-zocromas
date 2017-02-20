@@ -43,8 +43,16 @@ masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
 #endif
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create(  );
 
-  masxfs_pathinfo_init( pi, real_path, max_depth );
-  free( real_path );
+  QRPI( pi,  ( real_path ? 0 : -1 ) );
+  QRPI( pi,  pi ? 0 : -1 );
+  if ( real_path && pi )
+  {
+    masxfs_pathinfo_init( pi, real_path, max_depth );
+    if ( real_path )
+      free( real_path );
+  }
+  else
+    pi->error=-1;
   return pi;
 }
 

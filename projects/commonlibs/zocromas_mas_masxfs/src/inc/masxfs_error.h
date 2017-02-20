@@ -5,7 +5,12 @@
 # define DIE( ...) masxfs_error_die(__LINE__, __func__, __FILE__, 34, __VA_ARGS__)
 # define WARN( ...) masxfs_error_die(__LINE__, __func__, __FILE__, 0, __VA_ARGS__)
 # define RDIE( ...) masxfs_error_die(__LINE__, __func__, __FILE__, 24, __VA_ARGS__)
-# define QR(r) { if (r) RDIE("R: %d; errno:%d:%s", r, errno, strerror(errno)); }
+# define RWARN( ...) masxfs_error_die(__LINE__, __func__, __FILE__, 0, __VA_ARGS__)
+
+# define QR(r) { if (r) RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }
+# define QRLI(_li, r) { if (r) { if(_li)_li->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
+# define QRPI(_pi, r) { if (r) { if(_pi)_pi->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
+
 void masxfs_error_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
         __attribute__ ( ( format( __printf__, 5, 6 ) ) );
 void masxfs_error_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args );

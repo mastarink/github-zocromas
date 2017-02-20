@@ -5,34 +5,50 @@
 
 enum masxfs_entry_type_e
 {
-  MASXFS_ENTRY_UNKNOWN,
-  MASXFS_ENTRY_BLK,
-  MASXFS_ENTRY_CHR,
-  MASXFS_ENTRY_DIR,
-  MASXFS_ENTRY_FIFO,
-  MASXFS_ENTRY_LNK,
-  MASXFS_ENTRY_LINK = MASXFS_ENTRY_LNK,
-  MASXFS_ENTRY_REG,
-  MASXFS_ENTRY_SOCK,
+  MASXFS_ENTRY_UNKNOWN_NUM,
+  MASXFS_ENTRY_BLK_NUM,
+  MASXFS_ENTRY_CHR_NUM,
+  MASXFS_ENTRY_DIR_NUM,
+  MASXFS_ENTRY_FIFO_NUM,
+  MASXFS_ENTRY_LNK_NUM,
+  MASXFS_ENTRY_LINK_NUM = MASXFS_ENTRY_LNK_NUM,
+  MASXFS_ENTRY_REG_NUM,
+  MASXFS_ENTRY_SOCK_NUM,
 };
 
 enum masxfs_entry_type_bit_e
 {
-  MASXFS_ENTRY_BIT_UNKNOWN = 1 << MASXFS_ENTRY_UNKNOWN,
-  MASXFS_ENTRY_BIT_BLK = 1 << MASXFS_ENTRY_BLK,
-  MASXFS_ENTRY_BIT_CHR = 1 << MASXFS_ENTRY_CHR,
-  MASXFS_ENTRY_BIT_DIR = 1 << MASXFS_ENTRY_DIR,
-  MASXFS_ENTRY_BIT_FIFO = 1 << MASXFS_ENTRY_FIFO,
-  MASXFS_ENTRY_BIT_LNK = 1 << MASXFS_ENTRY_LNK,
-  MASXFS_ENTRY_BIT_LINK = 1 << MASXFS_ENTRY_LINK,
-  MASXFS_ENTRY_BIT_REG = 1 << MASXFS_ENTRY_REG,
-  MASXFS_ENTRY_BIT_SOCK = 1 << MASXFS_ENTRY_SOCK,
+  MASXFS_ENTRY_UNKNOWN = 1 << MASXFS_ENTRY_UNKNOWN_NUM,
+  MASXFS_ENTRY_BLK = 1 << MASXFS_ENTRY_BLK_NUM,
+  MASXFS_ENTRY_CHR = 1 << MASXFS_ENTRY_CHR_NUM,
+  MASXFS_ENTRY_DIR = 1 << MASXFS_ENTRY_DIR_NUM,
+  MASXFS_ENTRY_FIFO = 1 << MASXFS_ENTRY_FIFO_NUM,
+  MASXFS_ENTRY_LNK = 1 << MASXFS_ENTRY_LNK_NUM,
+  MASXFS_ENTRY_LINK = 1 << MASXFS_ENTRY_LINK_NUM,
+  MASXFS_ENTRY_REG = 1 << MASXFS_ENTRY_REG_NUM,
+  MASXFS_ENTRY_SOCK = 1 << MASXFS_ENTRY_SOCK_NUM,
+};
+
+enum masxfs_cb_flag_e
+{
+  MASXFS_CB_NAME_NUM,
+  MASXFS_CB_PATH_NUM,
+  MASXFS_CB_STAT_NUM,
+  MASXFS_CB_FD_NUM
+};
+enum masxfs_cb_flag_bit_e
+{
+  MASXFS_CB_NAME = 1 << MASXFS_CB_NAME_NUM,
+  MASXFS_CB_PATH = 1 << MASXFS_CB_PATH_NUM,
+  MASXFS_CB_STAT = 1 << MASXFS_CB_STAT_NUM,
+  MASXFS_CB_FD = 1 << MASXFS_CB_FD_NUM
 };
 
 struct masxfs_entry_callback_s
 {
   unsigned types;
   masxfs_scan_fun_simple_t fun_simple;
+  unsigned long flags;
 };
 
 struct masxfs_pathinfo_s
@@ -42,6 +58,7 @@ struct masxfs_pathinfo_s
   masxfs_levinfo_t *levinfo;
 /* char *pathcache; */
 /* char *realpathcache; */
+  int error;
 };
 
 struct masxfs_levinfo_s
@@ -50,9 +67,10 @@ struct masxfs_levinfo_s
   int dirfd;
   masxfs_dir_t *pdir;
   masxfs_dirent_t *pde;
-  /* masxfs_dirent_t de; */
+/* masxfs_dirent_t de; */
   masxfs_stat_t *st;
 /* masxfs_pathinfo_t *pi; */
   size_t lidepth;
+  int error;
 };
 #endif

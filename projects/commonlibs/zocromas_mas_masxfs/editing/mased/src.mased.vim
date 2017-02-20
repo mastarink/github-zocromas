@@ -27,6 +27,9 @@ sfind masxfs_levinfo_base.c
 tab sfind masxfs_levinfo_io.h
 sfind masxfs_levinfo_io.c
 
+tab sfind masxfs_levinfo_path.h
+sfind masxfs_levinfo_path.c
+
 tab sfind masxfs_levinfo.h
 sfind masxfs_levinfo.c
 

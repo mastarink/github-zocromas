@@ -72,7 +72,6 @@ masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
     while ( ( stok = strtok_r( spatht, "/", &ep ) ) )
     {
       masxfs_levinfo_init( levinfo + levinfo_depth++, stok );
-      fprintf( stderr, "TOK:%s\n", stok );
       spatht = NULL;
     }
   /* pi->pidepth = levinfo_depth; */

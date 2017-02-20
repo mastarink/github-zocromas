@@ -9,6 +9,9 @@ typedef DIR masxfs_dir_t;
 
 typedef enum masxfs_entry_type_e masxfs_entry_type_t;
 typedef enum masxfs_entry_type_bit_e masxfs_entry_type_bit_t;
+
+typedef enum masxfs_cb_flag_e masxfs_cb_flag_t;
+typedef enum masxfs_cb_flag_bit_e masxfs_cb_flag_bit_t;
 typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
 
 typedef struct masxfs_pathinfo_s masxfs_pathinfo_t;

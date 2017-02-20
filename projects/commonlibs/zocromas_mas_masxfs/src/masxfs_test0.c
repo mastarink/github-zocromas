@@ -32,25 +32,25 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( const char *npath, const char *name )
+fscallback_dir( const char *ename _uUu_, const char *epath _uUu_ )
 {
-  fprintf( stderr, "entry directory: '%s'\n   -- %s\n", name, npath );
+/* fprintf( stderr, "entry directory: '%s'\n   -- %s\n", epath, ename ); */
   return 0;
 }
 
 static int _uUu_
-fscallback_regular( const char *npath, const char *name )
+fscallback_regular( const char *ename _uUu_, const char *epath _uUu_ )
 {
   num++;
-  fprintf( stderr, "b. %-2d. -- '%s/%s'\n", num, npath, name );
+/* fprintf( stderr, "b. %-2d. -- '%s/%s'\n", num, ename, epath ); */
   return 0;
 }
 
 static int _uUu_
-fscallback( const char *npath, const char *name )
+fscallback( const char *ename _uUu_, const char *epath _uUu_ )
 {
   num++;
-  fprintf( stderr, "a. %-2d. -- '%s/%s'\n", num, npath, name );
+fprintf( stderr, "a. %-2d. -- '%s/%s'\n", num, ename, epath );
   return 0;
 }
 
@@ -61,7 +61,6 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
   {
-
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
     {
       char *real_path = masxfs_pathinfo_pi2path( pi );
@@ -69,17 +68,20 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       EXAMS( real_path, _path, "real_path=%s ?\n\t\t\t\t\t\t%s" );
       mas_free( real_path );
     }
-    EXAMS( pi->levinfo[0].name, "", "root '%s' ? '%s'" );
-    EXAMS( pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
-    EXAMS( pi->levinfo[pi->pidepth - 1].name, _lastname, "last '%s' ? '%s'" );
-    EXAM( pi->levinfo[0].dirfd, 0, "dirfd:%d ? %d" );
-    EXAM( pi->levinfo[0].pdir, NULL, "dirfd:%d ? %d" );
-    EXAM( pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
-    EXAM( pi->levinfo[0].pde, NULL, "de:%p ? %p" );
+    EXAM( pi->levinfo ? 1 : 0, 1, "%d ? %d" );
+    EXAMTS( pi->levinfo, pi->levinfo[0].name, "", "root '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, pi->levinfo[0].name, "", "root '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, pi->levinfo[pi->pidepth - 1].name, _lastname, "last '%s' ? '%s'" );
+    EXAMT( pi->levinfo, pi->levinfo[0].dirfd, 0, "dirfd:%d ? %d" );
+    EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dirfd:%d ? %d" );
+    EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
+    EXAMT( pi->levinfo, pi->levinfo[0].pde, NULL, "de:%p ? %p" );
     for ( size_t i = 0; i < pi->pidepth; i++ )
     {
-      EXAM( masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
-      EXAM( pi->levinfo[i].lidepth, i, "li->lidepth:%ld ? %ld" );
+      EXAMT( pi->levinfo, masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
+      EXAMT( pi->levinfo, pi->levinfo[i].lidepth, i, "li->lidepth:%ld ? %ld" );
+      if ( pi->levinfo )
       {
         char *path = masxfs_levinfo_li2path( pi->levinfo + i );
 
@@ -88,6 +90,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       }
     }
     {
+      if ( pi->levinfo )
       {
         char *path = masxfs_levinfo_li2path_up( pi->levinfo );
 
@@ -96,7 +99,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       }
       size_t fromdepth = 1;
 
-      if ( _depth > fromdepth )
+      if ( _depth > fromdepth && pi->levinfo )
       {
         char *path = masxfs_levinfo_li2path_up( pi->levinfo + fromdepth );
 
@@ -104,6 +107,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
         mas_free( path );
       }
     }
+    if ( pi->levinfo )
     {
       char *path = masxfs_levinfo_li2path( pi->levinfo );
 
@@ -115,6 +119,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       mas_free( path );
     }
   }
+  if ( pi->levinfo )
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
@@ -140,13 +145,17 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
-    /* {MASXFS_ENTRY_BIT_LINK | MASXFS_ENTRY_BIT_REG, fscallback}, */
-      {MASXFS_ENTRY_BIT_REG, fscallback}
-      , {MASXFS_ENTRY_BIT_REG, fscallback_regular}
+    /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
+      {MASXFS_ENTRY_REG, fscallback}
+      , {MASXFS_ENTRY_REG, fscallback_regular}
       , {0, NULL}
     };
   /* ftw */
+    masxfs_scanpath_real( NULL, callbacks, TRUE, TRUE );
+    masxfs_scanpath_real2( NULL, callbacks, TRUE, TRUE );
+    num=0;
     masxfs_scanpath_real( "./mastest", callbacks, TRUE, TRUE );
+    EXAM( num, 1241*2, "num:%d ? %d" );
   }
   if ( 1 )
   {
@@ -160,6 +169,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       masxfs_pathinfo_delete( pi );
     }
     char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest";
+    char *tpathe _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastes";
 
     EXAM( 1, 1, "%d ? %d" );
     EXAM( PATH_MAX, 4096, "%d ? %d" );
@@ -172,6 +182,10 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
     }
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128 );
+
+    EXAM( pi->error, -1, "should be error: %d ? %d" );
+    masxfs_pathinfo_delete( pi );
   }
   return 0;
 }
