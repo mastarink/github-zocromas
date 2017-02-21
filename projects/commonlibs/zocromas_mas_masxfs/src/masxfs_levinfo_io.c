@@ -26,7 +26,8 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
     fd = li->fd;
   else if ( li && li->name )
   {
-    int flags = ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ? O_DIRECTORY : 0 ) | O_NOFOLLOW | O_RDONLY;
+   /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
+    int flags = ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
 
     if ( li->fd )
     {
@@ -66,7 +67,7 @@ masxfs_levinfo_open( masxfs_levinfo_t * li )
   else if ( !li->fd && li->name && !*li->name )
   {
     errno = 0;
-    li->fd = open( "/", O_DIRECTORY | O_NOFOLLOW | O_RDONLY );
+    li->fd = open( "/", O_DIRECTORY | /* O_NOFOLLOW | */ O_RDONLY );
   }
   if ( li->fd < 0 )
     r = -1;

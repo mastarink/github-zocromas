@@ -11,6 +11,6 @@ masxfs_levinfo_t *masxfs_levinfo_li2lia( masxfs_levinfo_t * li );
 int masxfs_levinfo_scandir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbacks, unsigned long flags );
 int masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags );
 
-char *masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3 );
+char *masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4 );
 
 #endif

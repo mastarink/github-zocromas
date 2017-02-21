@@ -407,7 +407,78 @@ masxfs_levinfo_scandir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cal
 }
 
 char *
-masxfs_levinfo_prefix( masxfs_levinfo_t * li _uUu_, char *p1 _uUu_, char *p2 _uUu_, char *p3 _uUu_ )
+masxfs_levinfo_prefix( masxfs_levinfo_t * li _uUu_, char *p1 _uUu_, char *p2 _uUu_, char *p3 _uUu_, char *p4 _uUu_ )
 {
-  return NULL;
+  char *prefix = NULL;
+
+  if ( li )
+  {
+    size_t len1 = strlen( p1 );
+    size_t len2 = strlen( p2 );
+    size_t len3 = strlen( p3 );
+    size_t len = len1;
+
+    if ( len2 > len )
+      len = len2;
+    if ( len3 > len )
+      len = len3;
+    size_t pidepth = li->lidepth + 1;
+    char *pw = NULL;
+    masxfs_levinfo_t *lia = masxfs_levinfo_li2lia( li );
+
+    int test = 0;
+
+    if ( test > 1 )
+      len = 17;
+    else if ( test )
+      len = 9;
+    pw = prefix = mas_calloc( pidepth + 1, len );
+    for ( size_t d = 0; d < pidepth; d++ )
+    {
+      unsigned delta = ( lia[d].child_count_z - lia[d].child_count ) > 0;
+      unsigned deep = ( d == li->lidepth );
+      unsigned cas = ( delta << 1 ) + deep;
+
+      if ( lia[d].child_count_z )
+      {
+        if ( test )
+        {
+          if ( test > 1 )
+            sprintf( pw, "[%3ld %3ld %3ld %3ld]", lia[d].child_count_z, lia[d].child_count, li->lidepth, d );
+          else
+            sprintf( pw, "[%15d]", cas );
+          pw += len;
+        }
+        else
+        {
+          switch ( cas )
+          {
+          case 0:
+            pw = p1;
+            break;
+          case 1:
+            pw = p2;
+            break;
+          case 2:
+            pw = p3;
+            break;
+          case 3:
+            pw = p4;
+            break;
+          }
+          strncat( prefix, pw, len );
+        }
+      }
+/*
+ 1. lia[d].child_count < lia[d].child_count_z && d==li->lidepth
+ 2. lia[d].child_count < lia[d].child_count_z && d<li->lidepth
+ 3. lia[d].child_count == lia[d].child_count_z && d==li->lidepth
+ 4. lia[d].child_count == lia[d].child_count_z && d<li->lidepth
+ */
+// strcat( prefix, p1 );
+    }
+    /* WARN( "[%s]", prefix ); */
+
+  }
+  return prefix;
 }

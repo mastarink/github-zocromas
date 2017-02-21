@@ -66,7 +66,7 @@ main( int argc _uUu_, char *argv[]_uUu_ )
 
   mastest_test( funlist );
   mastest_next_group(  );
-#define TOTAL_TESTS 226 - 1
+#define TOTAL_TESTS 225 - 1
   mastest_exam( 0, mastest_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", mastest_tests_count(  ), TOTAL_TESTS );
   return 0;
 }
