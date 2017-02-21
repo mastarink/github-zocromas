@@ -46,7 +46,7 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
 {
   if ( li )
   {
@@ -54,13 +54,14 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masx
       mas_free( li->name );
     li->name = mas_strndup( name, len );
     li->detype = d_type;
+    li->deinode = d_inode;
   }
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type )
+masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
 {
-  masxfs_levinfo_n_init( li, name, name ? strlen( name ) : 0, d_type );
+  masxfs_levinfo_n_init( li, name, name ? strlen( name ) : 0, d_type, d_inode );
 }
 
 void

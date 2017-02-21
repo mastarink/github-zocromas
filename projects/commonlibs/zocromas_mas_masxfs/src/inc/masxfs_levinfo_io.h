@@ -15,6 +15,7 @@ int masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li );
 
 masxfs_dirent_t *masxfs_levinfo_readdir( masxfs_levinfo_t * li );
 int masxfs_levinfo_rewinddir( masxfs_levinfo_t * li );
+int masxfs_levinfo_have_more( masxfs_levinfo_t * li, masxfs_entry_type_t detype );
 
 int masxfs_levinfo_stat( masxfs_levinfo_t * li );
 

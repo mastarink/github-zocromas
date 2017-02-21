@@ -5,33 +5,43 @@
 
 #include <mastar/wrap/mas_memory.h>
 
+#include "masxfs_structs.h"
+#include "masxfs_error.h"
+
 #include "masxfs_pathinfo_base.h"
 #include "masxfs_pathinfo.h"
 
 #include "masxfs_scan.h"
 
 int
-masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, int recursive, int multicb )
+masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, unsigned long flags, int multicb )
 {
   int r = 0;
 
+  if ( !( flags & MASXFS_CB_RECURSIVE ) )
+    DIE( "%s", "NOREC" );
   if ( !path )
     path = ".";                                                      /* getcwd */
   if ( path )
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    r = masxfs_pathinfo_scan( pi, callbacks, recursive, multicb );
+    if ( !( flags & MASXFS_CB_RECURSIVE ) )
+      DIE( "%s", "NOREC" );
+    r = masxfs_pathinfo_scan( pi, callbacks, flags, multicb );
     masxfs_pathinfo_delete( pi );
   }
   return r;
 }
 
 int
-masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, int recursive, int multicb )
+masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, unsigned long flags, int multicb )
 {
   int r = 0;
   char *path = NULL;
+
+  if ( !( flags & MASXFS_CB_RECURSIVE ) )
+    DIE( "%s", "NOREC" );
 
   if ( cpath )
   {
@@ -50,7 +60,7 @@ masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, i
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    r = masxfs_pathinfo_scan( pi, callbacks, recursive, multicb );
+    r = masxfs_pathinfo_scan( pi, callbacks, flags, multicb );
     masxfs_pathinfo_delete( pi );
   }
   mas_free( path );

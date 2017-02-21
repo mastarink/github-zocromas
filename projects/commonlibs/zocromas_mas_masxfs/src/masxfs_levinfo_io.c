@@ -14,6 +14,7 @@
 
 #include "masxfs_structs.h"
 
+#include "masxfs_levinfo.h"
 #include "masxfs_levinfo_io.h"
 
 static int
@@ -89,7 +90,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
       if ( !li->pdir && errno )
         r = -1;
       QRLI( li, r );
-      if ( !r && li->pdir )
+      if ( r >= 0 && li->pdir )
         rewinddir( li->pdir );
       else
         r = -1;
@@ -132,9 +133,11 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li )
   {
     r = masxfs_levinfo_close( li );
     QRLI( li, r );
-    if ( !( li-- )->lidepth )
+    if ( !li->lidepth )
       break;
-  } while ( !r );
+    li--;
+  } while ( r >= 0 );
+
   QRLI( li, r );
   return r;
 }
@@ -182,7 +185,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
     if ( !li->lidepth )
       break;
     li--;
-  } while ( !r );
+  } while ( r >= 0 );
 
   QRLI( li, r );
   return r;
@@ -210,6 +213,25 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li )
   QRLI( li, r );
   return de;
 }
+
+#if 0
+int
+masxfs_levinfo_have_more( masxfs_levinfo_t * li, masxfs_entry_type_t detype )
+{
+  int f = 0;
+
+  if ( li )
+  {
+    long d = telldir( li->pdir );
+
+    while ( masxfs_levinfo_readdir( li ) && ( masxfs_levinfo_de2entry( li->pde->d_type ) != detype ) );
+    f = li && li->pde ? 1 : 0;
+    seekdir( li->pdir, d );
+    li->pde = NULL;
+  }
+  return f;
+}
+#endif
 
 int
 masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )

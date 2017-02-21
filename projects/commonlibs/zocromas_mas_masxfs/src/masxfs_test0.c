@@ -32,26 +32,36 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
+fscallback_dir( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
+                const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
 {
-/* fprintf( stderr, "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
+/* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback_regular( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
+fscallback2( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
+             const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
 {
   num++;
-  if ( fd > 0 || ( st && st->st_size ) )
-    fprintf( stderr, "b. %-2d. -- fd:%d; [%ld] '%s%s'\n", num, fd, st ? st->st_size : 0, ename ? ename : "", epath ? epath : "" );
+  char *prefix = masxfs_levinfo_prefix( li, "|A ", "|B ", "|C " );
+
+/* for ( size_t d = 0; d < depth; d++ ) */
+/*   printf( "|%-3d", );                */
+  if ( 1 && ( fd > 0 || ( st && st->st_size ) ) )
+    printf( "%ld [%3d:%3d] b. %3d. -- fd:%d; [%7ld] %s%s\n", ( long ) deinode, counta, countb, num, fd, st ? st->st_size : 0,
+            ename ? ename : "", epath ? epath : "" );
+  if ( prefix )
+    mas_free( prefix );
   return 0;
 }
 
 static int _uUu_
-fscallback( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
+fscallback( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
+            const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
 {
   num++;
-/* fprintf( stderr, "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
+/* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
   return 0;
 }
 
@@ -147,18 +157,18 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   {
     masxfs_entry_callback_t callbacks[] = {
     /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
-      {MASXFS_ENTRY_REG, fscallback,.flags = 0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD}
-      , {MASXFS_ENTRY_REG, fscallback_regular,.flags =
-         0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT}
+      {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback,.flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD}
+      , {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback2,.flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT}
       , {0, NULL}
     };
   /* ftw */
   /* masxfs_scanpath_real( "/", callbacks, TRUE, TRUE ); */
-    masxfs_scanpath_real( NULL, callbacks, TRUE, TRUE );
-    masxfs_scanpath_real2( NULL, callbacks, TRUE, TRUE );
+    masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE /* multicb */  );
+    masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE /* multicb */  );
     num = 0;
-    masxfs_scanpath_real( "./mastest", callbacks, TRUE, TRUE );
-    EXAM( num, 1241 * 2, "num:%d ? %d" );
+    masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE, TRUE );
+    EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR
+  /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
   if ( 1 )
   {
