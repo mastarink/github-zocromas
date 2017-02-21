@@ -86,9 +86,10 @@ masxfs_levinfo_scanentry_single_internal_cb( masxfs_levinfo_t * li, masxfs_levin
   if ( cb )
   {
     masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
-    masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
-    if ( ( cb->types & entry_bit ) && fun_simple )
+/*  masxfs_entry_type_bit_t entry_bit = 1 << detype; */
+
+    if (  /* ( cb->types & entry_bit ) && */ fun_simple )
     {
       char *name = NULL;
       char *path = NULL;
@@ -309,25 +310,32 @@ masxfs_levinfo_scanentry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 }
 
 static int
-masxfs_levinfo_scandir_rest_with( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive, masxfs_li_scanner_t scanner )
+masxfs_levinfo_scandir_rest_with( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive, masxfs_li_scanner_t scanner,
+                                  masxfs_li_filter_t filter, masxfs_li_stopper_t stopper )
 {
   int r = 0;
 
-  while ( !r && masxfs_levinfo_readdir( li ) )
-    r = scanner( li, cb, recursive );
+  while ( !r && masxfs_levinfo_readdir( li ) && ( !stopper || !stopper( li ) ) )
+  {
+    masxfs_entry_type_bit_t entry_bit = 1 << de2entry( li->pde->d_type );
+
+    if ( cb && ( cb->types & entry_bit ) && ( !filter || !filter( li ) ) )
+      r = scanner( li, cb, recursive );
+  }
   QRLI( li, r );
   return r;
 }
 
 static int
-masxfs_levinfo_scandir_all_with( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive, masxfs_li_scanner_t scanner )
+masxfs_levinfo_scandir_all_with( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive, masxfs_li_scanner_t scanner,
+                                 masxfs_li_filter_t filter, masxfs_li_stopper_t stopper )
 {
   int r = 0;
 
   r = masxfs_levinfo_rewinddir( li );
   QRLI( li, r );
   if ( !r )
-    r = masxfs_levinfo_scandir_rest_with( li, cb, recursive, scanner );
+    r = masxfs_levinfo_scandir_rest_with( li, cb, recursive, scanner, filter, stopper );
   QRLI( li, r );
   return r;
 }
@@ -335,11 +343,11 @@ masxfs_levinfo_scandir_all_with( masxfs_levinfo_t * li, masxfs_entry_callback_t 
 int
 masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, int recursive )
 {
-  return masxfs_levinfo_scandir_all_with( li, cb, recursive, masxfs_levinfo_scanentry_cb );
+  return masxfs_levinfo_scandir_all_with( li, cb, recursive, masxfs_levinfo_scanentry_cb, NULL, NULL );
 }
 
 int
 masxfs_levinfo_scandir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbacks, int recursive )
 {
-  return masxfs_levinfo_scandir_all_with( li, callbacks, recursive, masxfs_levinfo_scanentry_cbs );
+  return masxfs_levinfo_scandir_all_with( li, callbacks, recursive, masxfs_levinfo_scanentry_cbs, NULL, NULL );
 }
