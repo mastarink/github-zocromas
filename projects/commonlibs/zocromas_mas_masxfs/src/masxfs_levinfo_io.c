@@ -48,6 +48,14 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
 }
 
 int
+masxfs_levinfo_is_open( masxfs_levinfo_t * li )
+{
+  return li ? li->fd : 0;
+}
+
+int masxfs_levinfo_fd( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_is_open" ) ) );
+
+int
 masxfs_levinfo_open( masxfs_levinfo_t * li )
 {
   int r = 0;
@@ -171,8 +179,9 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
 #endif
     r = masxfs_levinfo_closedir( li );
     QRLI( li, r );
-    if ( !( li-- )->lidepth )
+    if ( !li->lidepth )
       break;
+    li--;
   } while ( !r );
 
   QRLI( li, r );
@@ -211,6 +220,8 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
   {
     errno = 0;
     rewinddir( li->pdir );
+    if ( errno )
+      r = -1;
   }
   else
     r = -1;
@@ -223,12 +234,19 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  if ( !li->stat )
+  if ( li )
   {
-    li->stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+    if ( !li->stat )
+      li->stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+
+    if ( !masxfs_levinfo_fd( li ) && li->lidepth > 0 )
+      r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->stat, AT_SYMLINK_NOFOLLOW );
+    else
+      r = fstat( masxfs_levinfo_open( li ), li->stat );
+    QRLI( li, r );
   }
-  r = fstat( masxfs_levinfo_open( li ), li->stat );
-  WARN( "STAT %s %p r:%d -- %ld", li->name, li->stat, r, li->stat->st_size );
+  else
+    r = -1;
   QRLI( li, r );
   return r;
 }

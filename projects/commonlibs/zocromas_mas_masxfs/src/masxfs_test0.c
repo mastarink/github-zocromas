@@ -42,7 +42,7 @@ static int _uUu_
 fscallback_regular( const char *ename _uUu_, const char *epath _uUu_, int fd _uUu_, const struct stat *st _uUu_ )
 {
   num++;
-  if ( fd )
+  if ( fd > 0 || ( st && st->st_size ) )
     fprintf( stderr, "b. %-2d. -- fd:%d; [%ld] '%s%s'\n", num, fd, st ? st->st_size : 0, ename ? ename : "", epath ? epath : "" );
   return 0;
 }
@@ -147,9 +147,9 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   {
     masxfs_entry_callback_t callbacks[] = {
     /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
-      {MASXFS_ENTRY_REG, fscallback,.flags = 0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH}
+      {MASXFS_ENTRY_REG, fscallback,.flags = 0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD}
       , {MASXFS_ENTRY_REG, fscallback_regular,.flags =
-         0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
+         0 | MASXFS_CB_AT_CHILD | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT}
       , {0, NULL}
     };
   /* ftw */
