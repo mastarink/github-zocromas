@@ -55,7 +55,7 @@ masxfs_levinfo_normalize_path( const char *path, const char *name )
 }
 
 masxfs_levinfo_t *
-masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
+masxfs_levinfo_path2lia( const char *path, size_t depth_limit, size_t * psz )
 {
   masxfs_levinfo_t *levinfo = NULL;
 
@@ -63,7 +63,7 @@ masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
   {
     size_t levinfo_depth = 0;
 
-    levinfo = masxfs_levinfo_create_array_setup( max_depth );
+    levinfo = masxfs_levinfo_create_array_setup( depth_limit );
 
 #if 1
     {
@@ -77,7 +77,8 @@ masxfs_levinfo_path2lia( const char *path, size_t max_depth, size_t * psz )
       /* masxfs_entry_type_t de_type = *ep == '/' ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN_NUM; */
         masxfs_entry_type_t de_type = *ep == MASXFS_ENTRY_UNKNOWN_NUM;
 
-        masxfs_levinfo_n_init( levinfo + levinfo_depth++, ptok, len, de_type, 0 );
+        masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type, 0 );
+	levinfo_depth++;
         while ( *ep == '/' )
           ep++;
         ptok = *ep ? ep : NULL;

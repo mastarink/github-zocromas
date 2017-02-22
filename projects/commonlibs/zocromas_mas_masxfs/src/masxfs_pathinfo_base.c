@@ -27,14 +27,14 @@ masxfs_pathinfo_create( void )
 }
 
 void
-masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t max_depth )
+masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t depth_limit )
 {
   if ( pi )
-    pi->levinfo = masxfs_levinfo_path2lia( path, max_depth, &pi->pidepth );
+    pi->levinfo = masxfs_levinfo_path2lia( path, depth_limit, &pi->pidepth );
 }
 
 masxfs_pathinfo_t *
-masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
+masxfs_pathinfo_create_setup( const char *path, size_t depth_limit )
 {
 #if 0
   char *real_path = realpath( path, NULL );
@@ -47,7 +47,7 @@ masxfs_pathinfo_create_setup( const char *path, size_t max_depth )
   QRPI( pi,  pi ? 0 : -1 );
   if ( real_path && pi )
   {
-    masxfs_pathinfo_init( pi, real_path, max_depth );
+    masxfs_pathinfo_init( pi, real_path, depth_limit );
     if ( real_path )
       free( real_path );
   }

@@ -20,7 +20,7 @@
 #include "masxfs_exam.h"
 
 int do_fprintf = 0;
-int sound_on_error = 1;
+int beep_on_error = 1;
 int assert_on_error = 1;
 int stop_on_error = 0;
 int sleep_on_error = 0;
@@ -88,12 +88,12 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
     fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%-2d] %-10s%s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
-             test_group, test_seq, cond ? goodmsg : badmsg, !cond && sound_on_error ? "\x07" : "" );
+             test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
   }
   if ( !cond && sleep_on_error )
-    sleep( sleep_on_error );
+    sleep( 2 );
   if ( !cond && stop_on_error )
     DIE( "Stop on error %d", cond );
   if ( !cond && assert_on_error )
@@ -125,7 +125,7 @@ mastest_test( mastest_do_t * funlist )
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
       assert_on_error += funlist[ntest].assert_on_error;
-      sound_on_error += funlist[ntest].sound_on_error;
+      beep_on_error += funlist[ntest].beep_on_error;
       sleep_on_error += funlist[ntest].sleep_on_error;
       stop_on_error += funlist[ntest].stop_on_error;
 
@@ -133,7 +133,7 @@ mastest_test( mastest_do_t * funlist )
 
       stop_on_error -= funlist[ntest].stop_on_error;
       sleep_on_error -= funlist[ntest].sleep_on_error;
-      sound_on_error -= funlist[ntest].sound_on_error;
+      beep_on_error -= funlist[ntest].beep_on_error;
       assert_on_error -= funlist[ntest].assert_on_error;
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;

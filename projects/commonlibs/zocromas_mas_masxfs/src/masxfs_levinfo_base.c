@@ -31,11 +31,8 @@ masxfs_levinfo_create_array_setup( size_t sz )
 {
   masxfs_levinfo_t *lia = masxfs_levinfo_create_array( sz );
 
-  for ( size_t i = 0; i < sz; i++ )
-  {
-  /* lia[i].pi = pi; */
-    lia[i].lidepth = i;
-  }
+  /* for ( size_t i = 0; i < sz; i++ ) */
+  /*   lia[i].lidepth = i;             */
   return lia;
 }
 
@@ -46,7 +43,7 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, size_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
 {
   if ( li )
   {
@@ -55,13 +52,14 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, const char *name, size_t len, masx
     li->name = mas_strndup( name, len );
     li->detype = d_type;
     li->deinode = d_inode;
+    li->lidepth = lidepth;
   }
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_init( masxfs_levinfo_t * li, size_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
 {
-  masxfs_levinfo_n_init( li, name, name ? strlen( name ) : 0, d_type, d_inode );
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode );
 }
 
 void
@@ -78,6 +76,7 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li )
     if ( li->stat )
       mas_free( li->stat );
     li->stat = NULL;
+    memset( li, 0, sizeof( masxfs_levinfo_t ) );
   }
 }
 

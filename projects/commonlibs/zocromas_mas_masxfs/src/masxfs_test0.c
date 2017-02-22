@@ -44,10 +44,16 @@ fscallback2( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uU
              const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
 {
   num++;
-  char *prefix = masxfs_levinfo_prefix( li, ".   ", "┕━━ ", "│   ", "┝━━ " );
+/* EXAM( !epath, TRUE, "%d ? %d" ); */
+  char *prefix = masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 0 );
+  char *prefixt = NULL;
+
+  /* masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 2 ); */
 
   if ( 1 && ( fd > 0 || ( st && st->st_size ) ) )
-    printf( "%s  %s%s\n", prefix ? prefix : "", ename ? ename : "", epath ? epath : "" );
+    printf( "%s%s%s%s\n", prefix ? prefix : "", prefixt ? prefixt : "", ename ? ename : "", epath ? epath : "" );
+  if ( prefixt )
+    mas_free( prefixt );
   if ( prefix )
     mas_free( prefix );
   return 0;
@@ -155,7 +161,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     masxfs_entry_callback_t callbacks[] = {
     /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
       {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback,
-       .flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD}
+       .flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
       , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, fscallback2,
          .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT}
       , {0, NULL}
@@ -165,7 +171,8 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   /* masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE (* multicb *)  ); */
   /* masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE (* multicb *)  ); */
     num = 0;
-    masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE, TRUE );
+    WARN( "callbacks: %p", callbacks );
+    masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }

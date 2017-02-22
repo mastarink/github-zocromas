@@ -13,7 +13,7 @@ struct mastest_do_s
   int f_noprint_error;
   int stop_on_error;
   int sleep_on_error;
-  int sound_on_error;
+  int beep_on_error;
   int assert_on_error;
   int do_fprintf;
 };

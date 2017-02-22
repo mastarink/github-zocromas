@@ -41,6 +41,7 @@ constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
     }
   }
 
+  fprintf( stderr, "START MEM\n" );
 #endif
   fprintf( stderr, "START\n" );
 }
@@ -60,7 +61,7 @@ main( int argc _uUu_, char *argv[]_uUu_ )
   int masxfs_test_0( int nseries, const char *series_suffix, int do_fprintf );
 
   mastest_do_t funlist[] _uUu_ = {
-    {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 1},
+    {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
     {0},
   };
 

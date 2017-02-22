@@ -17,7 +17,7 @@ typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
 typedef struct masxfs_pathinfo_s masxfs_pathinfo_t;
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
-typedef int ( *masxfs_scan_fun_simple_t ) ( const char *path, const char *name, ino_t deinode, size_t depth, masxfs_levinfo_t * li, int fd,
+typedef int ( *masxfs_scan_fun_simple_t ) ( const char *name, const char *path, ino_t deinode, size_t depth, masxfs_levinfo_t * li, int fd,
                                             const masxfs_stat_t * st, int counta, int countb );
 typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags );
 typedef int ( *masxfs_li_filter_t ) ( masxfs_levinfo_t * li );
