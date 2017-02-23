@@ -11,7 +11,6 @@ libzocromas_mas_masxfs_la_SOURCES = \
 	masxfs_levinfo_io.c \
 	masxfs_levinfo_path.c \
 	masxfs_levinfo.c \
-	masxfs_error.c \
 	tools.c
 
 libzocromas_mas_masxfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
@@ -24,8 +23,7 @@ mastest_CFLAGS=@AM_CFLAGS@  -pthread
 
 mastest_SOURCES= \
 	mastest.c \
-	masxfs_test0.c \
-	masxfs_exam.c
+	masxfs_test0.c
 
 mastest1_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la
 mastest1_CFLAGS=@AM_CFLAGS@  -pthread

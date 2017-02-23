@@ -7,10 +7,10 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "masxfs_error.h"
+#include "minierr.h"
 
 void
-masxfs_error_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args )
+minierr_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args )
 {
   char *pf = strrchr( file, '/' );
 
@@ -27,11 +27,11 @@ masxfs_error_vdie( int line, const char *func, const char *file, int fexit, cons
 }
 
 void
-masxfs_error_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
+minierr_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  masxfs_error_vdie( line, func, file, fexit, fmt, args );
+  minierr_vdie( line, func, file, fexit, fmt, args );
   va_end( args );
 }

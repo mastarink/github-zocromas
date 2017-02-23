@@ -8,9 +8,9 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/minierr/minierr.h>
 
 #include "masxfs_defs.h"
-#include "masxfs_error.h"
 
 #include "masxfs_structs.h"
 

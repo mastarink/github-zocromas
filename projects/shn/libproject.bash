@@ -459,10 +459,15 @@ function shn_create_inc_makefile_file ()
   local newprjdir=$1
   shift
   local fn="$newprjdir/src/inc/Makefile.am"
-  local prj=$(basename $newprjdir)
+  local prj=$(basename $newprjdir) prj_short
+  if [[ $prj =~ ^(zocromas_)(.*)$ ]] ; then
+    prj_short=${BASH_REMATCH[1]}
+  else
+    prj_short=$prj
+  fi
   if ! [[ -s $fn ]] ; then
     cat << AM > $fn
-lib${prj}includedir = \$(includedir)/mastar/...
+lib${prj}includedir = \$(includedir)/mastar/${prj_short}
 lib${prj}include_HEADERS =  \\
         ${prj}.h
 #

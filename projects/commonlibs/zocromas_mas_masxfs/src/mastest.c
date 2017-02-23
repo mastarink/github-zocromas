@@ -9,8 +9,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <mastar/exam/masexam.h>
+
 #include "masxfs_structs.h"
-#include "masxfs_exam.h"
 
 #include "masxfs_defs.h"
 #include "masxfs_scan.h"
@@ -56,16 +57,16 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 }
 
 int
-main( int argc _uUu_, char *argv[]_uUu_ )
+main( int argc _uUu_, const char *argv[]_uUu_ )
 {
-  int masxfs_test_0( int nseries, const char *series_suffix, int do_fprintf );
+  int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
   masexam_do_t funlist[] _uUu_ = {
     {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
     {0},
   };
 
-  masexam_test( funlist );
+  masexam_test( argc, argv, funlist );
   masexam_next_group(  );
 #define TOTAL_TESTS 225 - 1
   masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );

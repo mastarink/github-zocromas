@@ -36,7 +36,7 @@ PKG_CHECK_MODULES(LIBCRYPTO, [libcrypto >= 1.0.2])
 # PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools popt])
+PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools zocromas_exam zocromas_minierr  popt])
 
 # AC_CHECK_LIB([readline], [readline])
 

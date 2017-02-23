@@ -12,12 +12,12 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "masxfs_defs.h"
-#include "masxfs_structs.h"
+/* #include "masxfs_defs.h" */
+/* #include "masxfs_structs.h" */
 
-#include "masxfs_error.h"
+#include <mastar/minierr/minierr.h>
 
-#include "masxfs_exam.h"
+#include "masexam.h"
 
 int do_fprintf = 0;
 int beep_on_error = 1;
@@ -33,7 +33,7 @@ static const char *test_series_suffix = NULL;
 
 static void destructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
-destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
+destructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ), char **envp __attribute__ ( ( unused ) ) )
 {
   if ( tests_count )
     fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %d (OK:%d / Fail:%d) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
@@ -114,7 +114,7 @@ masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const
 }
 
 int
-masexam_test( masexam_do_t * funlist )
+masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
 {
   for ( unsigned ntest = 0; funlist[ntest].func; ntest++ )
   {
@@ -129,7 +129,7 @@ masexam_test( masexam_do_t * funlist )
       sleep_on_error += funlist[ntest].sleep_on_error;
       stop_on_error += funlist[ntest].stop_on_error;
 
-      funlist[ntest].func( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
+      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
 
       stop_on_error -= funlist[ntest].stop_on_error;
       sleep_on_error -= funlist[ntest].sleep_on_error;

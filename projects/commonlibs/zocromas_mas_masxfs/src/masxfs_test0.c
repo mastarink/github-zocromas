@@ -11,12 +11,12 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/minierr/minierr.h>
+#include <mastar/exam/masexam.h>
+
 #include "masxfs_defs.h"
 #include "masxfs_structs.h"
 
-#include "masxfs_error.h"
-
-#include "masxfs_exam.h"
 
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_io.h"
@@ -48,7 +48,7 @@ fscallback2( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uU
   char *prefix = masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 0 );
   char *prefixt = NULL;
 
-  /* masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 2 ); */
+/* masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 2 ); */
 
   if ( 1 && ( fd > 0 || ( st && st->st_size ) ) )
     printf( "%s%s%s%s\n", prefix ? prefix : "", prefixt ? prefixt : "", ename ? ename : "", epath ? epath : "" );

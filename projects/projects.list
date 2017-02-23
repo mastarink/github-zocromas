@@ -3,6 +3,7 @@ bins/zocromas_direct
 bins/zocromas_duf
 bins/zocromas_runonce
 bins/zocromas_server
+commonlibs/zocromas_exam
 commonlibs/zocromas_mas_autoobject
 commonlibs/zocromas_mas_autoset
 commonlibs/zocromas_mas_channel
@@ -30,6 +31,7 @@ commonlibs/zocromas_mas_unimodule
 commonlibs/zocromas_mas_varset
 commonlibs/zocromas_mas_varvec
 commonlibs/zocromas_mas_wrap
+commonlibs/zocromas_minierr
 modules/protos/http
 modules/protos/xcromas
 modules/zocmds/zocromas_zocmds1

@@ -10,6 +10,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
@@ -178,18 +179,18 @@ int
 main( int argc, const char *argv[] )
 {
 // mas_strdup( "abrakadabra" );
-  typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  struct dotest_s
-  {
-    int doit;
-    test_fun_t func;
-    int nseries;
-    char *series_suffix;
-    int f_print_ok;
-    int f_noprint_error;
-    int do_fprintf;
-  };
-  typedef struct dotest_s dotest_t;
+  /* typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf ); */
+  /* struct dotest_s                                                                                                       */
+  /* {                                                                                                                     */
+  /*   int doit;                                                                                                           */
+  /*   test_fun_t func;                                                                                                    */
+  /*   int nseries;                                                                                                        */
+  /*   char *series_suffix;                                                                                                */
+  /*   int f_print_ok;                                                                                                     */
+  /*   int f_noprint_error;                                                                                                */
+  /*   int do_fprintf;                                                                                                     */
+  /* };                                                                                                                    */
+  /* typedef struct dotest_s dotest_t;                                                                                     */
 
   int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
@@ -208,7 +209,7 @@ main( int argc, const char *argv[] )
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
-  dotest_t funlist[] _uUu_ = {
+  masexam_do_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},

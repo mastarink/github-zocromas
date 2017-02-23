@@ -1,7 +1,7 @@
-#ifndef MASXFS_EXAM_H
-# define MASXFS_EXAM_H
+#ifndef MAS_MASEXAM_H
+# define MAS_MASEXAM_H
 
-typedef int ( *masexam_fun_t ) ( int nseries, const char *series_suffix, int do_fprintf );
+typedef int ( *masexam_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
 struct masexam_do_s
 {
@@ -19,7 +19,7 @@ struct masexam_do_s
 };
 typedef struct masexam_do_s masexam_do_t;
 
-int masexam_test( masexam_do_t * funlist );
+int masexam_test( int argc, const char *argv[], masexam_do_t * funlist );
 
 int masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args );
 int masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );

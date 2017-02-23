@@ -5,8 +5,8 @@ sfind masxfs_structs.h
 tab sfind mastest.h
 sfind mastest.c
 
-tab sfind masxfs_exam.h
-sfind masxfs_exam.c
+"tab sfind masxfs_exam.h
+"sfind masxfs_exam.c
 
 tab sfind tools.h
 sfind tools.c
@@ -35,7 +35,7 @@ sfind masxfs_levinfo_path.c
 tab sfind masxfs_levinfo.h
 sfind masxfs_levinfo.c
 
-tab sfind masxfs_error.h
-sfind masxfs_error.c
+"tab sfind masxfs_error.h
+"sfind masxfs_error.c
 
 tab sfind masxfs_test0.c
