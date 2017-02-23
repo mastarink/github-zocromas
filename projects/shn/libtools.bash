@@ -1,3 +1,11 @@
+datem () 
+{ 
+    /bin/date '+%Y%m%d' "$@"
+}
+datemt () 
+{ 
+    /bin/date '+%Y%m%d.%H%M%S' "$@"
+}
 function wsleep ()
 {
   local i s=$(( ${1:-1} * 10 ))
@@ -95,11 +103,20 @@ function shn_errmsg ()
 }
 function shn_project_dir2realpath ()
 {
-  if [[ "$1" ]] && [[ "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR/$1" ]] ; then
-    shn_echo "$MSH_SHN_PROJECTS_DIR/$1"
+  local dirn=$1
+  shift
+  local force=$1
+  shift
+  if [[ "$dirn" ]] && [[ "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR/$dirn" ]] ; then
+    shn_echo "$MSH_SHN_PROJECTS_DIR/$dirn"
     return 0
-  elif ! [[ -d "$MSH_SHN_PROJECTS_DIR/$1" ]] ; then
-    shn_errmsg "No directory : $MSH_SHN_PROJECTS_DIR/$1"
+  elif ! [[ -d "$MSH_SHN_PROJECTS_DIR" ]] ; then
+    shn_errmsg "No directory : $MSH_SHN_PROJECTS_DIR"
+  elif [[ $force ]] ; then
+    shn_echo "$MSH_SHN_PROJECTS_DIR/$dirn"
+    return 0
+  elif ! [[ -d "$MSH_SHN_PROJECTS_DIR/$dirn" ]] ; then
+    shn_errmsg "No directory : $MSH_SHN_PROJECTS_DIR/$dirn"
   else
     shn_errmsg "Why"
   fi

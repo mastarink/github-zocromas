@@ -230,15 +230,18 @@ function shn_build_configure ()
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   if [[ "$global_opts_file" ]] && [[ -f "$global_opts_file" ]] ; then
-    readarray -t MSH_SHN_GLOBAL_CONFIGURE_OPTS < $global_opts_file
-    shn_dbgmsg "global opts from $global_opts_file"
+    if readarray -t MSH_SHN_GLOBAL_CONFIGURE_OPTS < $global_opts_file ; then
+      shn_msg "OK global opts: $global_opts_file"
+    fi
     shn_dbgmsg "global opts : ${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]}"
   fi
   if [[ "$project_opts_file" ]] && [[ -f "$project_opts_file" ]] ; then
-    readarray -t MSH_SHN_PROJECT_CONFIGURE_OPTS < $project_opts_file
-    shn_dbgmsg "project opts from $project_opts_file"
+    if readarray -t MSH_SHN_PROJECT_CONFIGURE_OPTS < $project_opts_file ; then    
+      shn_msg "OK project opts: $project_opts_file"
+    else
+      shn_errmsg "FAIL project opts: $project_opts_file"
+    fi
     shn_dbgmsg "project opts : ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]}"
-    local o
   fi
 # MSH_SHN_ADD_CONFIGURE_OPTS[${#MSH_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MSH_SHN_DIRS[flavour]}"
   MSH_SHN_ADD_CONFIGURE_OPTS=( '--prefix='${MSH_SHN_DIRS[flavour]} )
@@ -247,6 +250,7 @@ function shn_build_configure ()
   MSH_SHN_CONFIGURE_OPTS+=(${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]/\#*/})
   MSH_SHN_CONFIGURE_OPTS+=(${MSH_SHN_ADD_CONFIGURE_OPTS[*]/\#*/})
   shn_msg "-= configure with: =-"
+  local o
   for o in ${MSH_SHN_CONFIGURE_OPTS[*]} ; do
     shn_msg " $o"
   done
@@ -523,3 +527,4 @@ function shn_build_ebuild_check ()
   shn_mark_touch ${FUNCNAME}
   return 0
 }
+

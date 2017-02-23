@@ -39,22 +39,22 @@ shn_gvimer_plus_filtyp ()
   shift
   local typ ytyp
   for typ in ${!edfile_typs[*]} ; do
-    shn_msg "'$filid' testing typ: '$typ' @ ${!edfile_typs[*]}"
+#   shn_msg "'$filid' testing typ: '$typ' @ ${!edfile_typs[*]}"
     if [[ $filid == ${edfile_typs[$typ]} ]] ; then
       ytyp=$typ
 #     echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
       echo -n $ytyp
-      shn_msg "ytyp: $ytyp"
+#     shn_msg "ytyp: $ytyp"
       return 0
     fi
   done  
   for typ in ${!edfile_typs_re[*]} ; do
-    shn_msg "'$filid' testing typ (re): '$typ' @ ${!edfile_typs_re[*]}"
+#   shn_msg "'$filid' testing typ (re): '$typ' @ ${!edfile_typs_re[*]}"
     if [[ $filid =~ ${edfile_typs_re[$typ]} ]] ; then
       ytyp=$typ
 #     echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
       echo -n $ytyp
-      shn_msg "ytyp: $ytyp"
+#     shn_msg "ytyp: $ytyp"
       return 0
     fi
   done  
@@ -75,8 +75,9 @@ shn_gvimer_masedf_nt ()
     for masedf in $mased_dir/* ; do
       if [[ -f $masedf ]] && grep -q '\<\(tab\s\+sfind\|sfind\|find\|e\|sp\)\>\s\+\<'$filid'\s*$' $masedf ; then
 	echo -n $masedf
-	shn_msg "masedf:$masedf ($(pwd))"
-	shn_msg "masedf:$(realpath $masedf)"
+#	shn_msg "masedf:$masedf ($(pwd))"
+#	shn_msg "masedf:$(realpath $masedf)"
+	shn_msg "masedf:$(basename $masedf)"
 	return 0
       fi
     done
@@ -103,7 +104,7 @@ shn_gvimer_plus_mased_file_here_nt ()
     filid=${BASH_REMATCH[1]}
     fline=${BASH_REMATCH[2]}
   fi
-  shn_msg "fline:$fline; filid:$filid"
+# shn_msg "fline:$fline; filid:$filid"
 # shn_msg "1 $FUNCNAME:$LINENO: filid here: $filid; rfile:$rfile;"
   if ! typf=$( shn_gvimer_plus_filtyp "${filid}" )  \
   		&& afileq=`shn_find_c_mastar_function "$filid" ${edfile_dirs[src]}` ; then
@@ -117,18 +118,15 @@ shn_gvimer_plus_mased_file_here_nt ()
     rfile="$afileq"
 #   shn_msg "2 R : $rfile"
     filid=$(basename $afileq)
-  else
-    shn_msg "1. typf: ${typf}"
   fi
-  shn_msg "2. typf: $typf"
 # shn_msg "2 $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
   if [[ $typf ]] ; then
     eval "afpath=(${edfile_dirs[$typf]})"
 #   edpath="${afpath[@]}" ; edpath=${edpath// /,}
     fpath='' ; edpath=''
-    shn_msg "3. typf: ${typf[@]}"
+    shn_msg "typf: ${typf[@]}"
     shn_msg "edfile_dirs: ${edfile_dirs[$typf]}"
-    shn_msg "afpath: ${afpath[@]}"
+#   shn_msg "afpath: ${afpath[@]}"
     for p in ${afpath[@]} ; do
       if [[ -d $p ]] ; then
 #       shn_msg "- P : $p"
@@ -316,7 +314,7 @@ shn_gvimer_plus_nt ()
     fi
   fi
   local  fuuid0=$( shn_gvimer_plus_uuid "$@" )
-  shn_msg "fuuid0:fuuid0 by $@"
+# shn_msg "fuuid0:fuuid0 by $@"
 # declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [cdef]='src/inc' [shn]='shn' [dufcmds]='test/duf/tests20151006' [mased_vim]="$mased_dir" [acm]="." )
   declare -A edfile_dirs=(['src']='src mod src/inc mod/inc' [mased_vim]="$mased_dir" [vimstd]="$localvim_dir" )
 # declare -A edfile_typs=(['src']='*.[ch]' [cdef]='*.def'  [acm]="*.a[mc]" [mased_vim]="*.mased.vim"  )
@@ -332,7 +330,6 @@ shn_gvimer_plus_nt ()
   else
     shn_msg "Not found editing/eddirs.cfg"
   fi
-  shn_msg "dirslines: ${dirslines[@]}"
   for l in "${dirslines[@]}" ; do 
 #   echo -e "@\t\t\t\t\t\t\t\t\t\t$l" >&2
     if [[ $l =~ ^[[:blank:]]*([[:alnum:]]+)[[:blank:]]*:[[:blank:]]*([^[:blank:]\+=][^\+=]*|)([[:blank:]]*=[[:blank:]]*([^[:blank:]\+=]+)|)([[:blank:]]*\+[[:blank:]]*([^[:blank:]\+=]+)|)[[:blank:]]*$ ]] ; then
@@ -384,10 +381,10 @@ function shn_file_edit_simple ()
 }
 function shn_file_edit ()
 {
-  shn_msg "1 pwd:$(pwd)" 
+# shn_msg "1 pwd:$(pwd)" 
   if [[ "$@" ]] ; then
     shn_project_file_cd $@
-    shn_msg "2 pwd:$(pwd)" 
+#   shn_msg "2 pwd:$(pwd)" 
 #   for arg in "$@" ; do 
 #     shn_msg "$FUNCNAME: $arg" >&2
 #   done
