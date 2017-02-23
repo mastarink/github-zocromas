@@ -39,18 +39,22 @@ shn_gvimer_plus_filtyp ()
   shift
   local typ ytyp
   for typ in ${!edfile_typs[*]} ; do
+    shn_msg "'$filid' testing typ: '$typ' @ ${!edfile_typs[*]}"
     if [[ $filid == ${edfile_typs[$typ]} ]] ; then
       ytyp=$typ
 #     echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
       echo -n $ytyp
+      shn_msg "ytyp: $ytyp"
       return 0
     fi
   done  
   for typ in ${!edfile_typs_re[*]} ; do
+    shn_msg "'$filid' testing typ (re): '$typ' @ ${!edfile_typs_re[*]}"
     if [[ $filid =~ ${edfile_typs_re[$typ]} ]] ; then
       ytyp=$typ
 #     echo "$FUNCNAME: $typ : " ${edfile_typs[$typ]} "filid:$filid; ytyp:$ytyp" >&2
       echo -n $ytyp
+      shn_msg "ytyp: $ytyp"
       return 0
     fi
   done  
@@ -113,13 +117,16 @@ shn_gvimer_plus_mased_file_here_nt ()
     rfile="$afileq"
 #   shn_msg "2 R : $rfile"
     filid=$(basename $afileq)
+  else
+    shn_msg "1. typf: ${typf}"
   fi
+  shn_msg "2. typf: $typf"
 # shn_msg "2 $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
   if [[ $typf ]] ; then
     eval "afpath=(${edfile_dirs[$typf]})"
 #   edpath="${afpath[@]}" ; edpath=${edpath// /,}
     fpath='' ; edpath=''
-    shn_msg "typf: ${typf[@]}"
+    shn_msg "3. typf: ${typf[@]}"
     shn_msg "edfile_dirs: ${edfile_dirs[$typf]}"
     shn_msg "afpath: ${afpath[@]}"
     for p in ${afpath[@]} ; do
@@ -156,6 +163,7 @@ shn_gvimer_plus_mased_file_here_nt ()
     fi
     res=0
   else
+    shn_msg "no typf!"
     way='notyp'
 #    shn_msg "notyp 1: $FUNCNAME:$LINENO: filid here: $filid rfile:$rfile;"
     if [[ "$filid" ]] && [[ -f "$filid" ]] ; then
@@ -321,7 +329,10 @@ shn_gvimer_plus_nt ()
   local edcfg=${auto_edcfg:-${localvim_dir}/eddirs.cfg}
   if [[ $auto_edcfg ]] && [[ -f $auto_edcfg ]] ; then
     readarray -t dirslines < editing/eddirs.cfg
+  else
+    shn_msg "Not found editing/eddirs.cfg"
   fi
+  shn_msg "dirslines: ${dirslines[@]}"
   for l in "${dirslines[@]}" ; do 
 #   echo -e "@\t\t\t\t\t\t\t\t\t\t$l" >&2
     if [[ $l =~ ^[[:blank:]]*([[:alnum:]]+)[[:blank:]]*:[[:blank:]]*([^[:blank:]\+=][^\+=]*|)([[:blank:]]*=[[:blank:]]*([^[:blank:]\+=]+)|)([[:blank:]]*\+[[:blank:]]*([^[:blank:]\+=]+)|)[[:blank:]]*$ ]] ; then

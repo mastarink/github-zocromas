@@ -111,7 +111,9 @@ function shn_setup_project_dirs
 #  echo " C `declare -p MSH_SHN_DIRS`" >&2
     
     # $( find ${MSH_SHN_DIRS[files]}/*.vim -printf '%f' )
-    MSH_SHN_FILES[vimid]="vimrc-mastar.vim gvimrc-mastar.vim gvim-vimenter.vim gvim-funcs.vim"
+    MSH_SHN_FILES[vimid]="gvim-bufenter.vim gvim-bufreadpost.vim gvim-bufwinenter.vim gvim-filetype.vim gvim-funcs.vim gvim-guienter.vim gvimrc-mastar.vim gvim-tabenter.vim gvim-vimenter.vim gvim-winenter.vim vimrc-mastar.vim"
+    MSH_SHN_FILES[localrc]=".localrc"
+    MSH_SHN_FILES[sh]="sh"
     MSH_SHN_FILES[zocvid]="zocversion.txt zocvdate.txt"
     shn_dbgmsg "aux:${MSH_SHN_DIRS[aux]}"
     shn_dbgmsg "build:${MSH_SHN_DIRS[build]}"
