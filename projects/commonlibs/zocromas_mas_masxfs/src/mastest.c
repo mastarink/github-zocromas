@@ -60,14 +60,14 @@ main( int argc _uUu_, char *argv[]_uUu_ )
 {
   int masxfs_test_0( int nseries, const char *series_suffix, int do_fprintf );
 
-  mastest_do_t funlist[] _uUu_ = {
+  masexam_do_t funlist[] _uUu_ = {
     {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
     {0},
   };
 
-  mastest_test( funlist );
-  mastest_next_group(  );
+  masexam_test( funlist );
+  masexam_next_group(  );
 #define TOTAL_TESTS 225 - 1
-  mastest_exam( 0, mastest_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", mastest_tests_count(  ), TOTAL_TESTS );
+  masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
   return 0;
 }

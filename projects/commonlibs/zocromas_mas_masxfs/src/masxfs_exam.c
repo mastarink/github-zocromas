@@ -41,13 +41,13 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 }
 
 int
-mastest_tests_count( void )
+masexam_tests_count( void )
 {
   return tests_count;
 }
 
 static void
-mastest_series( int nseries, const char *suff, int do_fprintf )
+masexam_series( int nseries, const char *suff, int do_fprintf )
 {
   test_series = nseries;
   test_series_suffix = suff;
@@ -64,22 +64,22 @@ mastest_series( int nseries, const char *suff, int do_fprintf )
 }
 
 void
-mastest_next( void )
+masexam_next( void )
 {
   test_seq++;
 }
 
 void
-mastest_next_group( void )
+masexam_next_group( void )
 {
   test_group++;
   test_seq = 0;
 }
 
 int
-mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
+masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
 {
-  mastest_next(  );
+  masexam_next(  );
   if ( cond )
     tests_count_good++;
   else
@@ -102,25 +102,25 @@ mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
 }
 
 int
-mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
+masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  cond = mastest_vexam( line, cond, goodmsg, badmsg, fmt, args );
+  cond = masexam_vexam( line, cond, goodmsg, badmsg, fmt, args );
   va_end( args );
 
   return cond;
 }
 
 int
-mastest_test( mastest_do_t * funlist )
+masexam_test( masexam_do_t * funlist )
 {
   for ( unsigned ntest = 0; funlist[ntest].func; ntest++ )
   {
     if ( funlist[ntest].doit )
     {
-      mastest_series( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
+      masexam_series( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
       do_fprintf += funlist[ntest].do_fprintf;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
@@ -141,9 +141,9 @@ mastest_test( mastest_do_t * funlist )
     }
   }
 #if 0
-  mastest_next_group(  );
+  masexam_next_group(  );
 # define TOTAL_TESTS 2 - 1
-  mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
+  masexam_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
 #endif
   return tests_count;
 }

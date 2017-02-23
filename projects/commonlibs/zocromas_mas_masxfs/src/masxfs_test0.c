@@ -178,7 +178,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   }
   if ( 1 )
   {
-    mastest_next_group(  );
+    masexam_next_group(  );
     fprintf( stderr, "@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@\n" );
     {
       masxfs_pathinfo_t *pi =

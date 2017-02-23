@@ -13,7 +13,7 @@ function shn_setup_zero ()
   local this=${BASH_SOURCE[0]}
   local this_dir=$( shn_dirname $this )
   local project_ac
-  shn_msg "setup zero '$MSH_SHN_PROJECT_NAME' $MSH_SHN_PROJECT_DIR $(pwd)"
+# shn_msg "setup zero '$MSH_SHN_PROJECT_NAME' $MSH_SHN_PROJECT_DIR $(pwd)"
   shn_create_links || return 1
   if false ; then
     if ! [[ -f "configure.ac" ]] ; then
@@ -89,7 +89,7 @@ function shn_setup_global_dirs
 }
 function shn_setup_project_dirs
 {
-  shn_msg "setup project dirs"
+# shn_msg "setup project dirs"
   if [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] ; then
     MSH_SHN_DIRS[configure]=$MSH_SHN_PROJECT_DIR
     MSH_SHN_DIRS[aux]=$MSH_SHN_PROJECT_DIR/.auxdir
@@ -190,7 +190,7 @@ function shn_setup_projects ()
 {
   local retcode=0
   local i
-  shn_msg "setup projects"
+# shn_msg "setup projects"
 # unset MSH_SHN_DIRS
   declare -p MSH_SHN_DIRS &>/dev/null || declare -gx -A MSH_SHN_DIRS
   declare -p MSH_SHN_FILES &>/dev/null || declare -gx -A MSH_SHN_FILES
@@ -222,7 +222,7 @@ function shn_setup_projects ()
 	local projects_file=$MSH_SHN_PROJECTS_DIR/$projects_file_name
 	if [[ "$projects_file" ]] && [[ -f "$projects_file" ]] ; then
 	  readarray -t MSH_SHN_PROJECTS < $projects_file || return 1
-	  shn_msg "OK projects: $(basename $projects_file)"
+#	  shn_msg "OK projects: $(basename $projects_file)"
 	  for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
 	    shn_dbgmsg "-${i}. [${MSH_SHN_PROJECTS[$i]}]"
 	    MSH_SHN_HASH_PROJECTS[${MSH_SHN_PROJECTS[$i]}]=1
@@ -235,7 +235,7 @@ function shn_setup_projects ()
         local projects_disables_file=$projects_dir/$projects_disabled_file_name
         if [[ "$projects_disables_file" ]] && [[ -f "$projects_disables_file" ]] ; then
           readarray -t MSH_SHN_DISABLED_PROJECTS < $projects_disables_file || return 1
-          shn_msg "OK disabled projects: $(basename $projects_disables_file)"
+#         shn_msg "OK disabled projects: $(basename $projects_disables_file)"
           for (( i=0 ; $i < ${#MSH_SHN_DISABLED_PROJECTS[@]} ; i++ )) ; do
             shn_dbgmsg "-${i}. DISABLED [${MSH_SHN_DISABLED_PROJECTS[$i]}]"
             if [[ "${MSH_SHN_DISABLED_PROJECTS[$i]}" ]] ; then
@@ -269,7 +269,8 @@ function shn_setup_projects ()
   #	MSH_SHN_FLAVOUR=${MSH_SHN_FLAVOUR:-`cat $projects_dir/projects.flavour`}
 	  if [[ "$MSH_SHN_PROJECTS_DIR" ]] && [[ -f "$MSH_SHN_PROJECTS_DIR/projects.flavour" ]] ; then
 	    if read MSH_SHN_FLAVOUR < "$MSH_SHN_PROJECTS_DIR/projects.flavour" ; then
-              shn_msg "OK flavour: projects.flavour"
+              :
+#	      shn_msg "OK flavour: projects.flavour"
 	    else
 	      shn_errmsg "can't read MSH_SHN_FLAVOUR"
 	    fi
@@ -504,7 +505,6 @@ function shn_save_projects ()
   return 0
 }
 
-shn_msg "before setup"
 shn_dbgmsg before setup
 shn_setup_projects
 MSH_SHN_SETUP_FUNCTIONS="`shn_funlist shn_setup`"
