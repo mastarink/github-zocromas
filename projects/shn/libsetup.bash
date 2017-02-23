@@ -488,13 +488,17 @@ function shn_save_projects ()
       prj=${MSH_SHN_PROJECTS[$project_index]}
       echo $prj
     done | sort | uniq > $newprojects_file || return 1
-    if [[ -s $newprojects_file ]] && [[ -s $projects_file ]] && [[ "$renamedprojects_file" ]] && ! [[ -f "$renamedprojects_file" ]] \
-    	&& mv $projects_file $renamedprojects_file && mv $newprojects_file $projects_file ; then
-      shn_msg "projects_file: $projects_file"
-      shn_msg "newprojects_file: $newprojects_file"
-      shn_msg "renamedprojects_file: $renamedprojects_file"
+    if diff $projects_file $newprojects_file ; then
+      rm $newprojects_file
     else
-      return 1
+      if [[ -s $newprojects_file ]] && [[ -s $projects_file ]] && [[ "$renamedprojects_file" ]] && ! [[ -f "$renamedprojects_file" ]] \
+	  && mv $projects_file $renamedprojects_file && mv $newprojects_file $projects_file ; then
+	shn_msg "projects_file: $projects_file"
+	shn_msg "newprojects_file: $newprojects_file"
+	shn_msg "renamedprojects_file: $renamedprojects_file"
+      else
+	return 1
+      fi
     fi
   fi
   return 0

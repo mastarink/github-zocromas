@@ -51,7 +51,7 @@ function shn_project_path ()
 	match_cnt=$(( $match_cnt + 1 ))
       fi
     done
-    if [[ "$match_cnt" -gt 1 ]] && [[ "$match" ]] ; then
+    if [[ "$match_cnt" -gt 1 ]] && [[ "$match" ]] && ! [[ "$force" ]] ; then
       shn_warn "$match_cnt matches for '$match' (go first):"
       for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
 	if shn_project_match ${MSH_SHN_PROJECTS[$i]} $match ; then
@@ -298,7 +298,7 @@ function shn_project_enabled ()
   if [[ ${MSH_SHN_ENABLED_PROJECTS[@]} ]] ; then
     for (( project_index=0 ; $project_index < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
       prjdir=$(shn_project_path ${MSH_SHN_ENABLED_PROJECTS[$project_index]})
-      if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj) ; then
+      if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj 1) ; then
 	if [[ "$prjdir" == "$newprjdir" ]] ; then
 	  return 0
 	fi
@@ -314,7 +314,7 @@ function shn_project_exists ()
   if [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
     for (( project_index=0 ; $project_index < ${#MSH_SHN_PROJECTS[@]} ; project_index++ )) ; do
       prjdir=$(shn_project_path ${MSH_SHN_PROJECTS[$project_index]})
-      if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj) ; then
+      if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj 1) ; then
 	if [[ "$prjdir" == "$newprjdir" ]] ; then
 	  return 0
 	fi
@@ -330,20 +330,70 @@ function shn_create_ac_config_dir_file ()
   shift
   local ac_config_dstdir_file=$1
   shift
-  if ! [[ -f "$newprjdir/$ac_config_dstdir_file" ]] ; then 
-    cat <<ACC > "$newprjdir/$ac_config_dstdir_file"
+  local src=$1
+  shift
+  if ! [[ -f    "$newprjdir/$ac_config_dstdir_file" ]] ; then
+    cat << ACC > "$newprjdir/$ac_config_dstdir_file"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
 #include <limits.h>
 #include <stdlib.h>
+
+#include "$src.h"
+
 int
 main( int argc __attribute__(( unused )), char *argv[] __attribute__(( unused )) )
 {
+  $src();
   return 0;
 }
 ACC
+  fi
+}
+function shn_create_mainsrc_file ()
+{
+  local newprjdir=$1
+  shift
+  local src_name=$1
+  shift
+  local fn="$newprjdir/src/$src_name.c"
+  if ! [[ -f    $fn ]] ; then
+    cat << SRC > $fn
+#include <malloc.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <limits.h>
+#include <stdlib.h>
+
+#include "${src_name}.h"
+
+int
+$src_name( void )
+{
+  return 0;
+}
+SRC
+  fi
+}
+function shn_create_maininc_file ()
+{
+  local newprjdir=$1
+  shift
+  local inc_name=$1
+  shift
+  local fn="$newprjdir/src/inc/$inc_name.h"
+  if ! [[ -f    $fn ]] ; then
+    cat << INC > $fn
+#ifndef MAS_${inc_name^^}_H
+#define MAS_${inc_name^^}_H
+
+int $inc_name( void );
+
+#endif
+INC
   fi
 }
 
@@ -351,7 +401,7 @@ function shn_create_top_makefile_file ()
 {
   local newprjdir=$1
   shift
-  
+
   local fn="$newprjdir/Makefile.am"
   if ! [[ -s $fn ]] ; then
 cat << AM > $fn
@@ -381,11 +431,11 @@ function shn_create_src_makefile_file ()
 SUBDIRS= inc
 
 
-# lib_LTLIBRARIES = lib${prj}.la
-# lib${prj}_la_SOURCES = \\
-# 	dummy.c
+lib_LTLIBRARIES = lib${prj}.la
+lib${prj}_la_SOURCES = \\
+ 	${prj}.c
 
-# lib${prj}_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
+lib${prj}_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 
 if MAS_TEST
 noinst_PROGRAMS=${testname}
@@ -410,12 +460,11 @@ function shn_create_inc_makefile_file ()
   shift
   local fn="$newprjdir/src/inc/Makefile.am"
   local prj=$(basename $newprjdir)
-  shn_msg "@@@@@@@@@@@@@@@@@ $newprjdir"
   if ! [[ -s $fn ]] ; then
     cat << AM > $fn
-# lib${prj}includedir = \$(includedir)/mastar/...
-# lib${prj}include_HEADERS =  \\
-#         dummy.h
+lib${prj}includedir = \$(includedir)/mastar/...
+lib${prj}include_HEADERS =  \\
+        ${prj}.h
 #
 #
 # noinst_HEADERS = \\
@@ -428,7 +477,7 @@ AM
 function shn_clone_project ()
 {
   local newprj=$1 newprjdir project_index prjdir cprjdir cprjid prjidbase newprjid ifile k newprjname needed
-  local src dst ac_config_srcdir_file ac_config_dstdir_file
+  local src dst ac_config_srcdir_file ac_config_dstdir_file cprj
   if [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
     if false && shn_project_exists "$newprj" ; then
       shn_errmsg "project '$newprj' exists!"
@@ -442,13 +491,17 @@ function shn_clone_project ()
       prjidbase=${BASH_REMATCH[1]}
       cprjid=${BASH_REMATCH[2]}
       newprjid="${prjidbase}${newprj}"
+      shn_msg "A ------------------"
       if ! shn_project_exists "$newprj" ; then
         MSH_SHN_ENABLED_PROJECTS+=($newprjid)
       fi
+      shn_msg "B ------------------"
       if ! shn_project_enabled "$newprj" ; then
         MSH_SHN_PROJECTS+=($newprjid)
       fi
+      shn_msg "C ------------------"
       newprjdir=$(shn_project_path $newprj 1)
+      shn_msg "D ------------------"
       shn_msg "prjidbase: $prjidbase; cprjid: $cprjid; newprjid: $newprjid; newprjdir:$newprjdir;"
       if [[ -d "$newprjdir" ]] ; then
         if false ; then
@@ -457,9 +510,10 @@ function shn_clone_project ()
       else
         mkdir $newprjdir || return 1
       fi
+      shn_msg "E ------------------"
       if [[ $newprjdir ]] && [[ -d $newprjdir ]] ; then
         shn_save_projects || return 1
-	local -A need_dirs=(['src']='src' ['src/inc']='src/inc')
+	local -A need_dirs=(['src']='src' ['src/inc']='src/inc' ['debug']='debug')
 	for k in "${!need_dirs[@]}" ; do
 	  needed=${need_dirs[$k]}
 	  src="$cprjdir/$k"
@@ -468,7 +522,7 @@ function shn_clone_project ()
 	done
 	# AC_CONFIG_SRCDIR
 	newprjname=$( shn_basename $newprjdir )
-	local -A need_files=([configure.ac]='configure.ac' [${MSH_SHN_PROJECT_NAME}.pc.in]="${newprjname}.pc.in")
+	local -A need_files=([configure.ac]='configure.ac' [${MSH_SHN_PROJECT_NAME}.pc.in]="${newprjname}.pc.in" ['debug/debug_mastest.cmd']='debug/debug_mastest.cmd')
 	for k in "${!need_files[@]}" ; do
 	  needed=${need_files[$k]}
 	  src="$cprjdir/$k"
@@ -480,13 +534,56 @@ function shn_clone_project ()
 	ac_config_srcdir_file=$(sed -n 's@^[[:blank:]]*AC_CONFIG_SRCDIR(\[\(.*\)\])[[:blank:]]*$@\1@p'  configure.ac)
 	ac_config_dstdir_file="src/mastest.c"
 
-	shn_create_ac_config_dir_file "$newprjdir" "$ac_config_dstdir_file"
+	shn_create_ac_config_dir_file "$newprjdir" "$ac_config_dstdir_file" "${newprjname}"
+	shn_create_mainsrc_file "$newprjdir"  "${newprjname}"
+	shn_create_maininc_file "$newprjdir"  "${newprjname}"
 	shn_create_top_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
 	shn_create_src_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
 	shn_create_inc_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
 
-	sed --in-place='bak' 's@^\([[:blank:]]*AC_CONFIG_SRCDIR[[:blank:]]*([[:blank:]]*\[\)\('$ac_config_srcdir_file'\)\([[:blank:]]*\][[:blank:]]*)[[:blank:]]*\)$@\1'$ac_config_dstdir_file'\3@'  $newprjdir/configure.ac
+	sed --in-place='.bak' 's@^\([[:blank:]]*AC_CONFIG_SRCDIR[[:blank:]]*([[:blank:]]*\[\)\('$ac_config_srcdir_file'\)\([[:blank:]]*\][[:blank:]]*)[[:blank:]]*\)$@\1'$ac_config_dstdir_file'\3@'  $newprjdir/configure.ac
+	if [[ -f $newprjdir/configure.ac.bak ]] && [[ -f $newprjdir/configure.ac ]] && diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then
+	  rm $newprjdir/configure.ac
+	  mv $newprjdir/configure.ac.bak $newprjdir/configure.ac
+	  shn_msg "@@@@@@@ move"
+	else
+	  shn_msg "@@@@@@@ why?"
+	  if [[  -f $newprjdir/configure.ac.bak ]] ; then shn_msg "bak present" ; fi
+	  if [[  -f $newprjdir/configure.ac ]] ; then shn_msg "ac present" ; fi
+	  if diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then shn_msg "not diff" ; fi
+	fi
 	shn_msg "ac_config_srcdir_file: $ac_config_srcdir_file"
+	cprj=${MSH_SHN_PROJECT_NAME}
+        if ! [[ -f $newprjdir/configure ]] || ! [[ -f $newprjdir/Makefile.in ]] \
+			|| ! [[ -f $newprjdir/src/Makefile.in ]] || ! [[ -f $newprjdir/src/inc/Makefile.in ]] \
+			|| ! [[ -d $newprjdir/.auxdir ]]
+	then
+	  shn_project_cd "${newprjname}"
+	  shn_build_autoreconf
+	  shn_project_cd "$cprj"
+	  shn_msg "autoreconf'ing"
+	else
+	  shn_msg "not autoreconf'ing"
+	fi	
+	if true ; then
+	  if ! [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
+	    shn_project_cd "${newprjname}"
+	    shn_build_configure
+	    shn_project_cd "$cprj"
+	    shn_msg "configure'ing"
+	  else
+	    shn_msg "not configure'ing"
+	    ls -l $newprjdir/.auxdir
+	  fi
+	  if [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
+	    shn_project_cd "${newprjname}"
+	    shn_build_make
+	    shn_project_cd "$cprj"
+	    shn_msg "make'ing"
+	  else
+	    shn_msg "not make'ing"
+	  fi
+	fi
       fi
     fi
   fi
