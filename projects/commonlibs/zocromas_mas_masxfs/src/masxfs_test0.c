@@ -25,14 +25,14 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( const char *ename _uUu_, masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback_dir(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
 /* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( const char *ename _uUu_, masxfs_levinfo_t * li, unsigned long flags _uUu_ )
+fscallback2(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -41,6 +41,7 @@ fscallback2( const char *ename _uUu_, masxfs_levinfo_t * li, unsigned long flags
   int fd = masxfs_levinfo_fd_ref( li, flags );
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t deinode = masxfs_levinfo_deinode_ref( li, flags );
+  const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
   printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, depth, deinode, ename ? ename : "", epath ? epath : "" );
@@ -49,7 +50,7 @@ fscallback2( const char *ename _uUu_, masxfs_levinfo_t * li, unsigned long flags
 }
 
 static int _uUu_
-fscallback( const char *ename _uUu_, masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
   num++;
 /* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */

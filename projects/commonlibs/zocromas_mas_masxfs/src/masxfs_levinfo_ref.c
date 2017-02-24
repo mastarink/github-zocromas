@@ -103,6 +103,18 @@ masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 }
 
 const char *
+masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
+{
+  const char *name = NULL;
+
+  if ( li && ( tflags & MASXFS_CB_NAME ) )
+  {
+    name = li->name;
+  }
+  return name;
+}
+
+const char *
 masxfs_levinfo_path_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   const char *path = NULL;

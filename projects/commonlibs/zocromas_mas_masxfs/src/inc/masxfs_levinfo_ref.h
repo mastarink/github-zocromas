@@ -11,6 +11,7 @@ int masxfs_levinfo_fd_val( masxfs_levinfo_t * li );
 int masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags );
 masxfs_depth_t masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, unsigned long tflags );
 ino_t masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags );
+const char *masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags );
 const char *masxfs_levinfo_path_ref( masxfs_levinfo_t * li, unsigned long tflags );
 const char *masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, unsigned long tflags );
 

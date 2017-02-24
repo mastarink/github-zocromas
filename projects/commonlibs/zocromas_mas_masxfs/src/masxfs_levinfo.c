@@ -78,69 +78,95 @@ masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, u
 }
 
 static int
+masxfs_levinfo_scanentry_single_internal_1cb( masxfs_levinfo_t * li, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, unsigned long tflags,
+                                              masxfs_entry_type_t detype )
+{
+  int r = 0;
+  masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+  masxfs_entry_type_bit_t entry_bit = 1 << detype;
+
+  if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
+  {
+#if 0
+    char *name = NULL;
+
+    if ( dename && ( tflags & MASXFS_CB_NAME ) )
+      name = mas_strdup( dename );
+    char *path = NULL;
+
+    if ( tflags & MASXFS_CB_PATH )
+    {
+      path = masxfs_levinfo_li2path_up( li, (  /* detype == MASXFS_ENTRY_DIR_NUM && */ ( tflags & MASXFS_CB_TRAILINGSLASH ) ) ? '/' : 0 );
+    }
+  /* printf("%d %d --- %s\n", detype, MASXFS_ENTRY_DIR_NUM, path); */
+    if ( lithis && ( tflags & MASXFS_CB_FD ) )
+      fd = masxfs_levinfo_open( lithis );
+    if ( fd < 0 )
+      r = -1;
+    QRLI( li, r );
+    if ( r >= 0 && lithis && ( tflags & MASXFS_CB_STAT ) )
+    {
+      r = masxfs_levinfo_stat( lithis );
+      QRLI( lithis, r );
+      if ( r >= 0 )
+        st = lithis->stat;
+    }
+#endif
+    if ( r >= 0 )
+      r = fun_simple( lithis, tflags );
+    QRLI( li, r );
+#if 0
+    if ( path )
+      mas_free( path );
+    if ( name )
+      mas_free( name );
+#endif
+  }
+  return r;
+}
+
+static int
 masxfs_levinfo_scanentry_single_internal_cb( masxfs_levinfo_t * li, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, unsigned long flags,
-                                             masxfs_entry_type_t detype, const char *dename )
+                                             masxfs_entry_type_t detype )
 {
   int r = 0;
 
   if ( li )
   {
+#if 0
     if ( cb )
       li->child_count++;
     else
       li->child_count_z++;
+#else
+    li->child_count_pair[!cb]++;
+#endif
+
+#if 0
     int ncb = 0;
 
-    while ( cb && cb->fun_simple )
+    while ( r >= 0 && cb && cb->fun_simple )
     {
-      masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
-      masxfs_entry_type_bit_t entry_bit = 1 << detype;
       unsigned long tflags = 0;
 
       tflags = flags | cb->flags;
-
-      if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
-      {
-        char *name = NULL;
-
-        if ( dename && ( tflags & MASXFS_CB_NAME ) )
-          name = mas_strdup( dename );
-#if 0
-        char *path = NULL;
-
-        if ( tflags & MASXFS_CB_PATH )
-        {
-          path = masxfs_levinfo_li2path_up( li, (  /* detype == MASXFS_ENTRY_DIR_NUM && */ ( tflags & MASXFS_CB_TRAILINGSLASH ) ) ? '/' : 0 );
-        }
-      /* printf("%d %d --- %s\n", detype, MASXFS_ENTRY_DIR_NUM, path); */
-        if ( lithis && ( tflags & MASXFS_CB_FD ) )
-          fd = masxfs_levinfo_open( lithis );
-        if ( fd < 0 )
-          r = -1;
-        QRLI( li, r );
-        if ( r >= 0 && lithis && ( tflags & MASXFS_CB_STAT ) )
-        {
-          r = masxfs_levinfo_stat( lithis );
-          QRLI( lithis, r );
-          if ( r >= 0 )
-            st = lithis->stat;
-        }
-#endif
-        if ( r >= 0 )
-          r = fun_simple( name, lithis, tflags );
-        QRLI( li, r );
-#if 0
-        if ( path )
-          mas_free( path );
-#endif
-        if ( name )
-          mas_free( name );
-      }
+      r = masxfs_levinfo_scanentry_single_internal_1cb( li, lithis, cb, tflags, detype );
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
       cb++;
       ncb++;
     }
+#else
+    for ( int ncb = 0; r >= 0 && cb && cb->fun_simple; cb++, ncb++ )
+    {
+      unsigned long tflags = 0;
+
+      tflags = flags | cb->flags;
+      r = masxfs_levinfo_scanentry_single_internal_1cb( li, lithis, cb, tflags, detype );
+      if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
+        break;
+    }
+#endif
   }
   return r;
 }
@@ -148,7 +174,7 @@ masxfs_levinfo_scanentry_single_internal_cb( masxfs_levinfo_t * li, masxfs_levin
 static int
 masxfs_levinfo_scanentry_single_at_child_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags )
 {
-  return li ? masxfs_levinfo_scanentry_single_internal_cb( li->lidepth > 0 ? li - 1 : NULL, li, cb, flags, li->detype, li->name ) : -1;
+  return li ? masxfs_levinfo_scanentry_single_internal_cb( li->lidepth > 0 ? li - 1 : NULL, li, cb, flags, li->detype ) : -1;
 }
 
 int
@@ -407,8 +433,12 @@ masxfs_levinfo_scandirn_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb,
 
   if ( li )
   {
+#if 0
     li->child_count_z = 0;
     li->child_count = 0;
+#else
+    memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
+#endif
   }
   if ( r >= 0 )
     r = masxfs_levinfo_scandir_cb( li, NULL, flags, maxdepth );
@@ -430,44 +460,6 @@ masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, 
   return r;
 }
 
-#if 0
-int
-masxfs_levinfo_scandir_cb_old( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags )
-{
-  int r = 0;
-
-  if ( li )
-  {
-    li->child_count_z = 0;
-    li->child_count = 0;
-  }
-  r = masxfs_levinfo_scandir_all_with( li, NULL, flags, masxfs_levinfo_scanentry_cb );
-  QRLI( li, r );
-  if ( r >= 0 )
-    r = masxfs_levinfo_scandir_all_with( li, cb, flags, masxfs_levinfo_scanentry_cb );
-  QRLI( li, r );
-  return r;
-}
-
-int
-masxfs_levinfo_scandir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * callbacks, unsigned long flags )
-{
-  int r = 0;
-
-  if ( li )
-  {
-    li->child_count_z = 0;
-    li->child_count = 0;
-  }
-
-/* r = masxfs_levinfo_scandir_all_with( li, NULL, flags, masxfs_levinfo_scanentry_cb, NULL, NULL ); */
-/* QRLI( li, r );                                                                                   */
-  if ( r >= 0 )
-    r = masxfs_levinfo_scandir_all_with( li, callbacks, flags, masxfs_levinfo_scanentry_cbs, NULL, NULL );
-  QRLI( li, r );
-  return r;
-}
-#endif
 char *
 masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, int test )
 {
@@ -494,16 +486,23 @@ masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char
     pw = prefix = mas_calloc( li->lidepth + 2, len );
     for ( masxfs_depth_t d = 0; d < li->lidepth; d++ )
     {
-      unsigned delta = ( lia[d].child_count_z - lia[d].child_count ) > 0;
+#if 0
+      masxfs_depth_t child_count = lia[d].child_count;
+      masxfs_depth_t child_count_z = lia[d].child_count_z;
+#else
+      masxfs_depth_t child_count = lia[d].child_count_pair[1];
+      masxfs_depth_t child_count_z = lia[d].child_count_pair[0];
+#endif
+      unsigned delta = ( child_count_z - child_count ) > 0;
       unsigned deep = ( d == li->lidepth - 1 );
       unsigned cas = ( delta << 1 ) + deep;
 
-      if ( !test && lia[d].child_count_z )
+      if ( !test && child_count_z )
       {
         if ( test )
         {
           if ( test > 1 )
-            sprintf( pw, "[%3ld %3ld %3ld %3ld]", lia[d].child_count_z, lia[d].child_count, li->lidepth, d );
+            sprintf( pw, "[%3ld %3ld %3ld %3ld]", child_count_z, child_count, li->lidepth, d );
           else
             sprintf( pw, "[%15d]", cas );
           pw += len;
