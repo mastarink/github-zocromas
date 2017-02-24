@@ -36,8 +36,8 @@ enum masxfs_cb_flag_e
   MASXFS_CB_STAT_NUM,
   MASXFS_CB_FD_NUM,
   MASXFS_CB_RECURSIVE_NUM,
+  MASXFS_CB_PREFIX_NUM,
   MASXFS_CB_TRAILINGSLASH_NUM,
-  MASXFS_CB_AT_PARENT_NUM,
   MASXFS_CB_MULTIPLE_CBS_NUM,
   MASXFS_CB_SKIP_NUM,
 };
@@ -48,8 +48,8 @@ enum masxfs_cb_flag_bit_e
   MASXFS_CB_STAT = 1L << MASXFS_CB_STAT_NUM,
   MASXFS_CB_FD = 1L << MASXFS_CB_FD_NUM,
   MASXFS_CB_RECURSIVE = 1L << MASXFS_CB_RECURSIVE_NUM,
+  MASXFS_CB_PREFIX = 1L << MASXFS_CB_PREFIX_NUM,
   MASXFS_CB_TRAILINGSLASH = 1L << MASXFS_CB_TRAILINGSLASH_NUM,
-  MASXFS_CB_AT_PARENT = 1L << MASXFS_CB_AT_PARENT_NUM,
   MASXFS_CB_MULTIPLE_CBS = 1L << MASXFS_CB_MULTIPLE_CBS_NUM,
   MASXFS_CB_SKIP = 1L << MASXFS_CB_SKIP_NUM,
 };
@@ -63,8 +63,8 @@ struct masxfs_entry_callback_s
 
 struct masxfs_pathinfo_s
 {
-  size_t depth_limit;
-  size_t pidepth;
+  masxfs_depth_t depth_limit;
+  masxfs_depth_t pidepth;
   masxfs_levinfo_t *levinfo;
 /* char *pathcache; */
 /* char *realpathcache; */
@@ -82,9 +82,12 @@ struct masxfs_levinfo_s
 /* masxfs_dirent_t de; */
   masxfs_stat_t *stat;
 /* masxfs_pathinfo_t *pi; */
-  size_t lidepth;
+  masxfs_depth_t lidepth;
   int error;
   size_t child_count_z;
   size_t child_count;
+
+  char *path;
+  char *prefix;
 };
 #endif

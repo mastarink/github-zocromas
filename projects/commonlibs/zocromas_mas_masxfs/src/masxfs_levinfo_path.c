@@ -55,13 +55,13 @@ masxfs_levinfo_normalize_path( const char *path, const char *name )
 }
 
 masxfs_levinfo_t *
-masxfs_levinfo_path2lia( const char *path, size_t depth_limit, size_t * psz )
+masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_depth_t * psz )
 {
   masxfs_levinfo_t *levinfo = NULL;
 
   if ( path && *path )
   {
-    size_t levinfo_depth = 0;
+    masxfs_depth_t levinfo_depth = 0;
 
     levinfo = masxfs_levinfo_create_array_setup( depth_limit );
 
@@ -118,7 +118,7 @@ masxfs_levinfo_path2lia( const char *path, size_t depth_limit, size_t * psz )
 }
 
 char *
-masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth, char tail )
+masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, masxfs_depth_t pidepth, char tail )
 {
   size_t len = 0;
   char *path = NULL;
@@ -127,7 +127,7 @@ masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth, char tail )
   {
     if ( pidepth )
     {
-      for ( size_t i = 0; i < pidepth; i++ )
+      for ( masxfs_depth_t i = 0; i < pidepth; i++ )
       {
         len += strlen( lia[i].name );
         len++;                                                       /* '/' */
@@ -137,7 +137,7 @@ masxfs_levinfo_lia2path( masxfs_levinfo_t * lia, size_t pidepth, char tail )
       {
         char *p = path;
 
-        for ( size_t i = 0; i < pidepth; i++ )
+        for ( masxfs_depth_t i = 0; i < pidepth; i++ )
         {
           if ( i != 1 )
             *p++ = '/';

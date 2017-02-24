@@ -27,14 +27,14 @@ masxfs_pathinfo_create( void )
 }
 
 void
-masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, size_t depth_limit )
+masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, masxfs_depth_t depth_limit )
 {
   if ( pi )
     pi->levinfo = masxfs_levinfo_path2lia( path, depth_limit, &pi->pidepth );
 }
 
 masxfs_pathinfo_t *
-masxfs_pathinfo_create_setup( const char *path, size_t depth_limit )
+masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
 {
 #if 0
   char *real_path = realpath( path, NULL );

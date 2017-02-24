@@ -22,7 +22,7 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 }
 
 int
-masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, unsigned long flags, size_t maxdepth )
+masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, unsigned long flags, masxfs_depth_t maxdepth )
 {
   int r = 0, rc = 0;
 
@@ -49,7 +49,7 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 }
 
 masxfs_levinfo_t *
-masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, size_t offset )
+masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, masxfs_depth_t offset )
 {
   return pi->levinfo + pi->pidepth - 1 - offset;
 }

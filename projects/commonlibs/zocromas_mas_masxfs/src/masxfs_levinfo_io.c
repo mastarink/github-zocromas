@@ -15,6 +15,8 @@
 #include "masxfs_structs.h"
 
 #include "masxfs_levinfo.h"
+#include "masxfs_levinfo_ref.h"
+
 #include "masxfs_levinfo_io.h"
 
 static int
@@ -26,36 +28,28 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
     fd = li->fd;
   else if ( li && li->name )
   {
-   /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
-    int flags = ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
+  /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
+    int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
 
-    if ( li->fd )
-    {
-      DIE( "ALREADY OPEN" );
-    }
     errno = 0;
-    fd = li->fd = openat( fdparent, li->name, flags );
-    QRLI( li, fd );
-    if ( fd > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( flags & O_DIRECTORY ) )
+    fd = li->fd = openat( fdparent, li->name, openflags );
+    if ( fd < 0 && errno == ENOENT && li->detype == MASXFS_ENTRY_LNK_NUM )
     {
-      li->detype = MASXFS_ENTRY_DIR_NUM;
+      /* ignore dead symbolic link */
+      fd = li->fd = 0;
     }
-    if ( fd < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
+    else
     {
-      DIE( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
-           flags & O_DIRECTORY ? 1 : 0 );
+      QRLI( li, fd );
+      if ( fd > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( openflags & O_DIRECTORY ) )
+        li->detype = MASXFS_ENTRY_DIR_NUM;
+      if ( fd < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
+        DIE( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
+             openflags & O_DIRECTORY ? 1 : 0 );
     }
   }
   return fd;
 }
-
-int
-masxfs_levinfo_is_open( masxfs_levinfo_t * li )
-{
-  return li ? li->fd : 0;
-}
-
-int masxfs_levinfo_fd( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_is_open" ) ) );
 
 int
 masxfs_levinfo_open( masxfs_levinfo_t * li )
@@ -63,11 +57,16 @@ masxfs_levinfo_open( masxfs_levinfo_t * li )
   int r = 0;
 
   if ( li->lidepth > 0 )
-    masxfs_levinfo_open_at( li, masxfs_levinfo_open( li - 1 ) );
+    r = masxfs_levinfo_open_at( li, masxfs_levinfo_open( li - 1 ) );
   else if ( !li->fd && li->name && !*li->name )
   {
     errno = 0;
     li->fd = open( "/", O_DIRECTORY | /* O_NOFOLLOW | */ O_RDONLY );
+    if ( li->fd < 0 )
+    {
+      r = li->fd;
+      li->fd = 0;
+    }
   }
   if ( li->fd < 0 )
     r = -1;
@@ -260,13 +259,15 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
   if ( li )
   {
     if ( !li->stat )
+    {
       li->stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
-    if ( !masxfs_levinfo_fd( li ) && li->lidepth > 0 )
-      r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->stat, AT_SYMLINK_NOFOLLOW );
-    else
-      r = fstat( masxfs_levinfo_open( li ), li->stat );
-    QRLI( li, r );
+      if ( !masxfs_levinfo_fd_val( li ) && li->lidepth > 0 )
+        r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->stat, AT_SYMLINK_NOFOLLOW );
+      else
+        r = fstat( masxfs_levinfo_open( li ), li->stat );
+      QRLI( li, r );
+    }
   }
   else
     r = -1;

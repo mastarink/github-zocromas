@@ -13,10 +13,10 @@
 #include "masxfs_levinfo_base.h"
 
 masxfs_levinfo_t *
-masxfs_levinfo_create_array( size_t sz )
+masxfs_levinfo_create_array( masxfs_depth_t sz )
 {
 #if 0
-  size_t size = sz * sizeof( masxfs_levinfo_t );
+  masxfs_depth_t size = sz * sizeof( masxfs_levinfo_t );
   masxfs_levinfo_t *li = mas_malloc( size );
 
   memset( li, 0, size );
@@ -27,12 +27,12 @@ masxfs_levinfo_create_array( size_t sz )
 }
 
 masxfs_levinfo_t *
-masxfs_levinfo_create_array_setup( size_t sz )
+masxfs_levinfo_create_array_setup( masxfs_depth_t sz )
 {
   masxfs_levinfo_t *lia = masxfs_levinfo_create_array( sz );
 
-  /* for ( size_t i = 0; i < sz; i++ ) */
-  /*   lia[i].lidepth = i;             */
+/* for ( masxfs_depth_t i = 0; i < sz; i++ ) */
+/*   lia[i].lidepth = i;             */
   return lia;
 }
 
@@ -43,7 +43,7 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, size_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
 {
   if ( li )
   {
@@ -57,7 +57,7 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, size_t lidepth, const char *name, 
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, size_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
 {
   masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode );
 }
@@ -76,16 +76,22 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li )
     if ( li->stat )
       mas_free( li->stat );
     li->stat = NULL;
+    if ( li->path )
+      mas_free( li->path );
+    li->path = NULL;
+    if ( li->prefix )
+      mas_free( li->prefix );
+    li->prefix = NULL;
     memset( li, 0, sizeof( masxfs_levinfo_t ) );
   }
 }
 
 void
-masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, size_t sz )
+masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz )
 {
   if ( lia )
   {
-    for ( size_t il = 0; il < sz && ( lia + il )->name; il++ )
+    for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
     {
       masxfs_levinfo_reset( lia + il );
     }
@@ -93,7 +99,7 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, size_t sz )
 }
 
 void
-masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, size_t sz )
+masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz )
 {
   if ( li )
   {

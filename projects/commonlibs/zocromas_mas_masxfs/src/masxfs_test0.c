@@ -13,6 +13,7 @@
 /* #include "masxfs_levinfo_base.h" */
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_path.h"
+#include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo.h"
 
 #include "masxfs_pathinfo_base.h"
@@ -24,36 +25,31 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
-                const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
+fscallback_dir( const char *ename _uUu_, masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
 /* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
-             const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
+fscallback2( const char *ename _uUu_, masxfs_levinfo_t * li, unsigned long flags _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
-  char *prefix = masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 0 );
-  char *prefixt = NULL;
+  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
+  size_t size = masxfs_levinfo_size_ref( li, flags );
+  int fd = masxfs_levinfo_fd_ref( li, flags );
+  masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
+  ino_t deinode = masxfs_levinfo_deinode_ref( li, flags );
+  const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-/* masxfs_levinfo_prefix( li, "    ", "└── ", "│   ", "├── ", 2 ); */
+  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, depth, deinode, ename ? ename : "", epath ? epath : "" );
 
-  if ( 1 && ( fd > 0 || ( st && st->st_size ) ) )
-    printf( "%s%s%s%s\n", prefix ? prefix : "", prefixt ? prefixt : "", ename ? ename : "", epath ? epath : "" );
-  if ( prefixt )
-    mas_free( prefixt );
-  if ( prefix )
-    mas_free( prefix );
   return 0;
 }
 
 static int _uUu_
-fscallback( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, int fd _uUu_,
-            const struct stat *st _uUu_, int counta _uUu_, int countb _uUu_ )
+fscallback( const char *ename _uUu_, masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
   num++;
 /* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
@@ -61,8 +57,8 @@ fscallback( const char *ename _uUu_, const char *epath _uUu_, ino_t deinode _uUu
 }
 
 int
-masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_, const char *_path, size_t _maxpath, size_t _depth,
-                    size_t _tdepth, char *_tname, char *_lastname )
+masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_, const char *_path, size_t _maxpath,
+                    masxfs_depth_t _depth, masxfs_depth_t _tdepth, char *_tname, char *_lastname )
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
@@ -83,7 +79,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "fd:%d ? %d" );
     EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
     EXAMT( pi->levinfo, pi->levinfo[0].pde, NULL, "de:%p ? %p" );
-    for ( size_t i = 0; i < pi->pidepth; i++ )
+    for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
     {
       EXAMT( pi->levinfo, masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
       EXAMT( pi->levinfo, pi->levinfo[i].lidepth, i, "li->lidepth:%ld ? %ld" );
@@ -103,7 +99,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
         EXAMS( path, "/", "%s ?\n\t\t\t\t\t\t%s" );
         mas_free( path );
       }
-      size_t fromdepth = 1;
+      masxfs_depth_t fromdepth = 1;
 
       if ( _depth > fromdepth && pi->levinfo )
       {
@@ -130,13 +126,13 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
     masxfs_levinfo_open( li );
-    EXAM( ( size_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
-    for ( size_t i = 0; i < pi->pidepth; i++ )
+    EXAM( ( masxfs_depth_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
+    for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
     {
       EXAM( pi->levinfo[i].fd, ( int ) i + 3, "%ld ? %ld" );
     }
     masxfs_levinfo_close_all_up( li );
-    for ( size_t i = 0; i < pi->pidepth; i++ )
+    for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
     {
       EXAM( pi->levinfo[i].fd, ( int ) 0, "%ld ? %ld" );
     }
@@ -155,7 +151,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback,
        .flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
       , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, fscallback2,
-         .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT}
+         .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX |MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
       , {0, NULL}
     };
   /* ftw */

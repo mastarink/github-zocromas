@@ -14,7 +14,7 @@
 #include "masxfs_scan.h"
 
 int
-masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, unsigned long flags, size_t maxdepth )
+masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, unsigned long flags, masxfs_depth_t maxdepth )
 {
   int r = 0;
 
@@ -35,7 +35,7 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, uns
 }
 
 int
-masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, unsigned long flags, size_t maxdepth )
+masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, unsigned long flags, masxfs_depth_t maxdepth )
 {
   int r = 0;
   char *path = NULL;
