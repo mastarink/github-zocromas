@@ -41,6 +41,9 @@ sfind masxfs_levinfo_ref.c
 tab sfind masxfs_levinfo.h
 sfind masxfs_levinfo.c
 
+tab sfind masxfs_levinfo_format.h
+sfind masxfs_levinfo_format.c
+
 "tab sfind masxfs_error.h
 "sfind masxfs_error.c
 
