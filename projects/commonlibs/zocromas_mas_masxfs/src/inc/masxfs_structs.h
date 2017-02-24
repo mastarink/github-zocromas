@@ -79,17 +79,10 @@ struct masxfs_levinfo_s
   int fd;
   masxfs_dir_t *pdir;
   masxfs_dirent_t *pde;
-/* masxfs_dirent_t de; */
   masxfs_stat_t *stat;
-/* masxfs_pathinfo_t *pi; */
   masxfs_depth_t lidepth;
   int error;
-# if 0
-  size_t child_count_z;
-  size_t child_count;
-# else
   size_t child_count_pair[2];
-# endif
 
   char *path;
   char *prefix;
