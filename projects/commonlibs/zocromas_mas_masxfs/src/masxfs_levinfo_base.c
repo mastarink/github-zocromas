@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_defs.h"
@@ -10,19 +8,15 @@
 #include "masxfs_structs.h"
 
 #include "masxfs_levinfo_io.h"
+#include "masxfs_levinfo_io_dir.h"
+
 #include "masxfs_levinfo_base.h"
 
 masxfs_levinfo_t *
 masxfs_levinfo_create_array( masxfs_depth_t sz )
 {
-#if 0
-  masxfs_depth_t size = sz * sizeof( masxfs_levinfo_t );
-  masxfs_levinfo_t *li = mas_malloc( size );
-
-  memset( li, 0, size );
-#else
   masxfs_levinfo_t *li = mas_calloc( sz, sizeof( masxfs_levinfo_t ) );
-#endif
+
   return li;
 }
 
@@ -31,8 +25,6 @@ masxfs_levinfo_create_array_setup( masxfs_depth_t sz )
 {
   masxfs_levinfo_t *lia = masxfs_levinfo_create_array( sz );
 
-/* for ( masxfs_depth_t i = 0; i < sz; i++ ) */
-/*   lia[i].lidepth = i;             */
   return lia;
 }
 
@@ -90,12 +82,8 @@ void
 masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz )
 {
   if ( lia )
-  {
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
-    {
       masxfs_levinfo_reset( lia + il );
-    }
-  }
 }
 
 void

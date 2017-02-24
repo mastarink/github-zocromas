@@ -2,8 +2,9 @@
 #include <string.h>
 #include <errno.h>
 
-#include <sys/stat.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -35,7 +36,7 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
     fd = li->fd = openat( fdparent, li->name, openflags );
     if ( fd < 0 && errno == ENOENT && li->detype == MASXFS_ENTRY_LNK_NUM )
     {
-      /* ignore dead symbolic link */
+    /* ignore dead symbolic link */
       fd = li->fd = 0;
     }
     else
@@ -75,38 +76,6 @@ masxfs_levinfo_open( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_opendir( masxfs_levinfo_t * li )
-{
-  int r = 0;
-
-  if ( li && !li->pdir )
-  {
-    int fd = masxfs_levinfo_open( li );
-
-    if ( fd > 0 )
-    {
-      errno = 0;
-      li->pdir = fdopendir( fd );
-      if ( !li->pdir && errno )
-        r = -1;
-      QRLI( li, r );
-      if ( r >= 0 && li->pdir )
-        rewinddir( li->pdir );
-      else
-        r = -1;
-      QRLI( li, r );
-    }
-    else
-      r = -1;
-    QRLI( li, r );
-  }
-  else
-    r = -1;
-  QRLI( li, r );
-  return r;
-}
-
-int
 masxfs_levinfo_close( masxfs_levinfo_t * li )
 {
   int r = 0;
@@ -138,115 +107,6 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li )
     li--;
   } while ( r >= 0 );
 
-  QRLI( li, r );
-  return r;
-}
-
-int
-masxfs_levinfo_closedir( masxfs_levinfo_t * li )
-{
-  int r = 0;
-
-  if ( li && li->pdir )
-  {
-    errno = 0;
-    r = closedir( li->pdir );
-    QRLI( li, r );
-    li->pdir = NULL;
-    li->fd = 0;                                                      /*  closedir closes fd!  */
-  /* r = masxfs_levinfo_close( li ); */
-  }
-  else
-    r = masxfs_levinfo_close( li );
-#if 0
-/* No */
-  else
-  r = -1;
-#endif
-  QRLI( li, r );
-  return r;
-}
-
-int
-masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
-{
-  int r = 0;
-
-  do
-  {
-#if 0
-  /* No */
-    if ( li && !li->pdir )
-      r = -1;
-    QRLI( li, r );
-#endif
-    r = masxfs_levinfo_closedir( li );
-    QRLI( li, r );
-    if ( !li->lidepth )
-      break;
-    li--;
-  } while ( r >= 0 );
-
-  QRLI( li, r );
-  return r;
-}
-
-masxfs_dirent_t *
-masxfs_levinfo_readdir( masxfs_levinfo_t * li )
-{
-  int r = 0;
-  masxfs_dirent_t *de = NULL;
-
-  if ( li && li->pdir )
-  {
-    errno = 0;
-
-  /* r=readdir_r(li->pdir, &li->de,...  ); No! */
-    li->pde = de = readdir( li->pdir );
-  /* li->de = *de; */
-    if ( !de && errno )
-      r = -1;
-    QRLI( li, r );
-  }
-  else
-    r = -1;
-  QRLI( li, r );
-  return de;
-}
-
-#if 0
-int
-masxfs_levinfo_have_more( masxfs_levinfo_t * li, masxfs_entry_type_t detype )
-{
-  int f = 0;
-
-  if ( li )
-  {
-    long d = telldir( li->pdir );
-
-    while ( masxfs_levinfo_readdir( li ) && ( masxfs_levinfo_de2entry( li->pde->d_type ) != detype ) );
-    f = li && li->pde ? 1 : 0;
-    seekdir( li->pdir, d );
-    li->pde = NULL;
-  }
-  return f;
-}
-#endif
-
-int
-masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
-{
-  int r = 0;
-
-  if ( li && li->pdir )
-  {
-    errno = 0;
-    rewinddir( li->pdir );
-    if ( errno )
-      r = -1;
-  }
-  else
-    r = -1;
   QRLI( li, r );
   return r;
 }

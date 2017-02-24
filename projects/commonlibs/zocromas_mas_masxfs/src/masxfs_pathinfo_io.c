@@ -6,8 +6,7 @@
 
 #include "masxfs_defs.h"
 
-#include "masxfs_levinfo_io.h"
-
+#include "masxfs_levinfo_io_dir.h"
 #include "masxfs_pathinfo.h"
 
 #include "masxfs_pathinfo_io.h"
