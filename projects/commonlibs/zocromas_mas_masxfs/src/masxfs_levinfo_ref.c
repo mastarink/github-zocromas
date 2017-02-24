@@ -11,6 +11,7 @@
 #include "masxfs_structs.h"
 
 #include "masxfs_levinfo_base.h"
+#include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_format.h"
 #include "masxfs_levinfo_path.h"
@@ -18,7 +19,7 @@
 
 #include "masxfs_levinfo_ref.h"
 
-struct stat *
+const struct stat *
 masxfs_levinfo_stat_val( masxfs_levinfo_t * li )
 {
   return li ? li->stat : NULL;
@@ -28,7 +29,7 @@ const struct stat *
 masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   int r = 0;
-  struct stat *st = NULL;
+  const struct stat *st = NULL;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
@@ -54,7 +55,7 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   size_t size = 0;
 
-  if ( li && ( tflags & MASXFS_CB_STAT ) )
+  if ( li && ( tflags & MASXFS_CB_STAT ) /* XXX ??? XXX */  )
   {
     int r = 0;
 
@@ -102,13 +103,19 @@ masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 }
 
 const char *
+masxfs_levinfo_name_val( masxfs_levinfo_t * li )
+{
+  return li ? li->name : NULL;
+}
+
+const char *
 masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   const char *name = NULL;
 
   if ( li && ( tflags & MASXFS_CB_NAME ) )
   {
-    name = li->name;
+    name = masxfs_levinfo_name_val( li );
   }
   return name;
 }
@@ -139,4 +146,26 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
     prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, 0 );
   }
   return prefix;
+}
+
+masxfs_entry_type_t
+masxfs_levinfo_detype( masxfs_levinfo_t * li )
+{
+  masxfs_entry_type_t detype = MASXFS_ENTRY_UNKNOWN_NUM;
+
+  if ( li )
+  {
+    if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
+    {
+      int r = masxfs_levinfo_stat( li );
+
+      if ( r >= 0 )
+        detype = li->detype;
+    }
+    else
+    {
+      detype = li->detype;
+    }
+  }
+  return detype;
 }

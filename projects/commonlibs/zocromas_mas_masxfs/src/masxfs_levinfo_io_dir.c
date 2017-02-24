@@ -19,6 +19,7 @@
 /* #include "masxfs_levinfo_ref.h" */
 
 #include "masxfs_levinfo_io.h"
+#include "masxfs_levinfo_tools.h"
 
 #include "masxfs_levinfo_io_dir.h"
 
@@ -27,29 +28,37 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  if ( li && !li->pdir )
+  if ( li )
   {
-    int fd = masxfs_levinfo_open( li );
-
-    if ( fd > 0 )
+    if ( !li->pdir )
     {
-      errno = 0;
-      li->pdir = fdopendir( fd );
-      if ( !li->pdir && errno )
-        r = -1;
-      QRLI( li, r );
-      if ( r >= 0 && li->pdir )
-        rewinddir( li->pdir );
+      int fd = masxfs_levinfo_open( li );
+
+      if ( fd > 0 )
+      {
+        errno = 0;
+        li->pdir = fdopendir( fd );
+        if ( !li->pdir && errno )
+          r = -1;
+        QRLI( li, r );
+        if ( r >= 0 && li->pdir )
+        {
+          li->detype = MASXFS_ENTRY_DIR_NUM;
+          r = masxfs_levinfo_rewinddir( li );
+          QRLI( li, r );
+        }
+        else
+          r = -1;
+        QRLI( li, r );
+      }
       else
         r = -1;
       QRLI( li, r );
     }
-    else
-      r = -1;
-    QRLI( li, r );
   }
   else
     r = -1;
+
   QRLI( li, r );
   return r;
 }
@@ -109,19 +118,21 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li )
   int r = 0;
   masxfs_dirent_t *de = NULL;
 
-  if ( li && li->pdir )
+  if ( li )
   {
-    errno = 0;
+    li->pde = NULL;
+    if ( li->pdir )
+    {
+      errno = 0;
 
-  /* r=readdir_r(li->pdir, &li->de,...  ); No! */
-    li->pde = de = readdir( li->pdir );
-  /* li->de = *de; */
-    if ( !de && errno )
-      r = -1;
-    QRLI( li, r );
+    /* r=readdir_r(li->pdir, &li->de,...  ); No! */
+      li->pde = de = readdir( li->pdir );
+    /* li->de = *de; */
+      if ( !de && errno )
+        r = -1;
+      QRLI( li, r );
+    }
   }
-  else
-    r = -1;
   QRLI( li, r );
   return de;
 }
@@ -131,15 +142,15 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  if ( li && li->pdir )
+  r = masxfs_levinfo_opendir( li );
+  QRLI( li, r );
+  if ( r >= 0 && li && li->pdir )
   {
     errno = 0;
     rewinddir( li->pdir );
     if ( errno )
       r = -1;
   }
-  else
-    r = -1;
   QRLI( li, r );
   return r;
 }

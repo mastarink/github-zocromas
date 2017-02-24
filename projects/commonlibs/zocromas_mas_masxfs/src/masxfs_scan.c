@@ -8,6 +8,8 @@
 
 #include "masxfs_structs.h"
 
+#include "masxfs_levinfo_tools.h"
+
 #include "masxfs_pathinfo_base.h"
 #include "masxfs_pathinfo.h"
 
@@ -26,8 +28,6 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, uns
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    if ( !( flags & MASXFS_CB_RECURSIVE ) )
-      DIE( "%s", "NOREC" );
     r = masxfs_pathinfo_scan( pi, callbacks, flags, maxdepth );
     masxfs_pathinfo_delete( pi );
   }
@@ -51,6 +51,7 @@ masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, u
   {
     char *freepath = NULL;
 
+/* memory control trick */
     freepath = get_current_dir_name(  );
     path = mas_strdup( freepath );
     if ( freepath )

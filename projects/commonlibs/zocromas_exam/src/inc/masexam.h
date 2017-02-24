@@ -25,11 +25,11 @@ int masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, 
 int masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );
 void masexam_next_group( void );
 void masexam_next( void );
-int masexam_tests_count( void );
+long masexam_tests_count( void );
 
-# define EXAM( var, val, fmt ) masexam_exam( __LINE__, (val) == (var), "OK", "Error", fmt, val, var );
-# define EXAMT( cond, var, val, fmt ) masexam_exam( __LINE__, (cond) && (val) == (var), "OK", "Error", fmt, val, (cond)?var:((typeof(var)) 0 ) );
-# define EXAMZ(sz, var, val, fmt ) masexam_exam( __LINE__, sizeof(var)==sz && val == var, "OK", "Error", fmt, val, var /* , val-var, sz */ );
+# define EXAM( var, val, fmt ) masexam_exam( __LINE__, (val) == (var), "OK", "Error", fmt, val, var )
+# define EXAMT( cond, var, val, fmt ) masexam_exam( __LINE__, (cond) && (val) == (var), "OK", "Error", fmt, val, (cond)?var:((typeof(var)) 0 ) )
+# define EXAMZ(sz, var, val, fmt ) masexam_exam( __LINE__, sizeof(var)==sz && val == var, "OK", "Error", fmt, val, var /* , val-var, sz */ )
 # define EXAMS(vars, vals, fmt) \
 	{ const char *s=vars;masexam_exam( __LINE__, s && 0 == mas_strcmp( vals, s ), "OK", "Error", fmt, vals, s ); }
 # define EXAMTS(cond, vars, vals, fmt) \
@@ -37,6 +37,6 @@ int masexam_tests_count( void );
 # define EXAMSN(varn, arrs, valn, vals, fmt) \
   	masexam_exam( __LINE__, \
 	    varn > valn && arrs && arrs[valn] && 0 == mas_strcmp( vals, arrs[valn] ), \
-	    "OK", "Error", fmt, vals, varn > valn ? (arrs[valn]) : "?" );
+	    "OK", "Error", fmt, vals, varn > valn ? (arrs[valn]) : "?" )
 
 #endif

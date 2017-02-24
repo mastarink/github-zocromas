@@ -8,6 +8,7 @@
 
 #include "masxfs_structs.h"
 
+#include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_path.h"
 #include "masxfs_levinfo.h"
 
@@ -26,21 +27,18 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 {
   int r = 0, rc = 0;
 
-  masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
+/* r = masxfs_pathinfo_opendir( pi ); */
+/* QRPI( pi, r );                     */
 
-  r = masxfs_pathinfo_opendir( pi );
-  QRPI( pi, r );
-  if ( r >= 0 )
+/* if ( r >= 0 ) */
   {
+    masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
+
     if ( !( flags & MASXFS_CB_RECURSIVE ) )
       DIE( "%s", "NOREC" );
-  /* if ( multicb )                                            */
-  /*   r = masxfs_levinfo_scandir_cbs( li, callbacks, flags ); */
-  /* else                                                      */
     r = masxfs_levinfo_scandirn_cb( li, callbacks, flags, pi->pidepth + maxdepth );
     QRPI( pi, r );
-  /* rc = masxfs_pathinfo_closedir( pi ); */
-    rc = masxfs_pathinfo_closedir_all( pi );
+  /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( r >= 0 )
       r = rc;
     QRPI( pi, r );

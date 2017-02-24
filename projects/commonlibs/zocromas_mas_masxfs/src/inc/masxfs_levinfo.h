@@ -3,7 +3,6 @@
 
 # include "masxfs_types.h"
 
-masxfs_entry_type_t masxfs_levinfo_de2entry( int d_type );
 
 masxfs_levinfo_t *masxfs_levinfo_root( masxfs_levinfo_t * li );
 masxfs_levinfo_t *masxfs_levinfo_li2lia( masxfs_levinfo_t * li );
@@ -12,6 +11,5 @@ masxfs_levinfo_t *masxfs_levinfo_li2lia( masxfs_levinfo_t * li );
 int masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags, size_t maxdepth );
 int masxfs_levinfo_scandirn_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags, size_t maxdepth );
 int masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags, size_t maxdepth );
-
 
 #endif

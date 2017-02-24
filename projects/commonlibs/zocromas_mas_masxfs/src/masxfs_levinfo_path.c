@@ -8,6 +8,7 @@
 
 #include "masxfs_structs.h"
 
+#include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_base.h"
 
 #include "masxfs_levinfo_path.h"
@@ -75,10 +76,10 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
         size_t len = ep - ptok;
 
       /* masxfs_entry_type_t de_type = *ep == '/' ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN_NUM; */
-        masxfs_entry_type_t de_type = *ep == MASXFS_ENTRY_UNKNOWN_NUM;
+        masxfs_entry_type_t de_type = MASXFS_ENTRY_UNKNOWN_NUM;
 
         masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type, 0 );
-	levinfo_depth++;
+        levinfo_depth++;
         while ( *ep == '/' )
           ep++;
         ptok = *ep ? ep : NULL;

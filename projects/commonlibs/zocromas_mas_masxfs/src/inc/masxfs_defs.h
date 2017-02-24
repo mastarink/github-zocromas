@@ -12,4 +12,7 @@
 #  define FALSE (0)
 # endif
 
+# define QRLI(_li, r)	{ if (r<0) { if(_li)_li->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
+# define QRPI(_pi, r)	{ if (r<0) { if(_pi)_pi->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
+
 #endif

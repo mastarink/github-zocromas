@@ -9,8 +9,6 @@
 # define RWARN( ...) minierr_die(__LINE__, __func__, __FILE__, 0, __VA_ARGS__)
 
 # define QR(r)		{ if (r<0) RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }
-# define QRLI(_li, r)	{ if (r<0) { if(_li)_li->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); assert(0); }}
-# define QRPI(_pi, r)	{ if (r<0) { if(_pi)_pi->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
 
 void minierr_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
         __attribute__ ( ( format( __printf__, 5, 6 ) ) );

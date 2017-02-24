@@ -16,6 +16,7 @@
 #include "masxfs_structs.h"
 
 #include "masxfs_levinfo.h"
+#include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"
 
 #include "masxfs_levinfo_io.h"
@@ -30,7 +31,7 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
   else if ( li && li->name )
   {
   /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
-    int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
+    int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
 
     errno = 0;
     fd = li->fd = openat( fdparent, li->name, openflags );
@@ -127,6 +128,8 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
       else
         r = fstat( masxfs_levinfo_open( li ), li->stat );
       QRLI( li, r );
+      if ( r >= 0 && li->stat )
+        li->detype = masxfs_levinfo_stat2entry( li->stat );
     }
   }
   else

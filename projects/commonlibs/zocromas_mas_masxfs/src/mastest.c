@@ -1,6 +1,8 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include <limits.h>
 #include <stdlib.h>
@@ -9,6 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
 #include "masxfs_structs.h"
@@ -59,16 +62,30 @@ destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 int
 main( int argc _uUu_, const char *argv[]_uUu_ )
 {
-  int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int r = 0;
+  struct rlimit lim = { 0 };
 
-  masexam_do_t funlist[] _uUu_ = {
-    {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
-    {0},
-  };
+  r = getrlimit( RLIMIT_NOFILE, &lim );
+  if ( r >= 0 )
+  {
+    lim.rlim_cur = lim.rlim_max;
+    r = setrlimit( RLIMIT_NOFILE, &lim );
+    if ( r >= 0 )
+    {
+      int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
-  masexam_test( argc, argv, funlist );
-  masexam_next_group(  );
-#define TOTAL_TESTS 225 - 1
-  masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+      masexam_do_t funlist[] _uUu_ = {
+        {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
+        {0},
+      };
+
+      masexam_test( argc, argv, funlist );
+#if 1
+      masexam_next_group(  );
+# define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*4 + 3L + 1L))*3 + 225L - 1L
+      masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+#endif
+    }
+  }
   return 0;
 }

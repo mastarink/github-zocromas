@@ -27,7 +27,7 @@ int sleep_on_error = 0;
 int f_print_ok = 0;
 int f_print_error = 1;
 static int series_seq = 0;
-static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
+static long tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
 
@@ -36,11 +36,11 @@ static void
 destructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute__ ( ( unused ) ), char **envp __attribute__ ( ( unused ) ) )
 {
   if ( tests_count )
-    fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %d (OK:%d / Fail:%d) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
+    fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %ld (OK:%ld / Fail:%ld) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
              tests_count_bad );
 }
 
-int
+long
 masexam_tests_count( void )
 {
   return tests_count;
@@ -57,7 +57,7 @@ masexam_series( int nseries, const char *suff, int do_fprintf )
   {
     if ( !series_seq && !tests_count )
       fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
-    fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%d;\ttotal good:%d;\ttotal bad: %d;}\n", test_series, test_series_suffix, tests_count,
+    fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%ld;\ttotal good:%ld;\ttotal bad: %ld;}\n", test_series, test_series_suffix, tests_count,
              tests_count_good, tests_count_bad );
   }
   series_seq++;
@@ -87,7 +87,7 @@ masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
   tests_count++;
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
-    fprintf( stderr, "%d. %4d\t**** [%d%s.%d.%-2d] %-10s%s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
+    fprintf( stderr, "%d. %4ld\t**** [%d%s.%d.%-2d] %-10s%s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
              test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );

@@ -1,5 +1,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -25,14 +30,14 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
 /* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -50,7 +55,7 @@ fscallback2(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 }
 
 static int _uUu_
-fscallback(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 {
   num++;
 /* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
@@ -142,6 +147,49 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   return 0;
 }
 
+void
+masxfs_test_fd( void )
+{
+  int r;
+  int *fds;
+  struct rlimit lim = { 103, 100 };
+
+  r = getrlimit( RLIMIT_NOFILE, &lim );
+  EXAM( r, 0, "%d ? %d" );
+  fds = mas_malloc( lim.rlim_cur * sizeof( int ) );
+  /* WARN( "RLIMIT_NOFILE: %ld - %ld", lim.rlim_cur, lim.rlim_max ); */
+  for ( size_t i = 3; i < lim.rlim_cur; i++ )
+    fds[i] = 0;
+  for ( size_t i = 3; i < lim.rlim_cur; i++ )
+    fds[i] = open( "Makefile.in", O_RDONLY );
+  for ( size_t i = 0; i < lim.rlim_cur; i++ )
+  {
+    int x = fcntl( ( int ) i, F_GETFD );
+
+    EXAM( x, 0, "fdx:%d ? %d" );
+  }
+  {
+    for ( size_t i = 3; i < lim.rlim_cur; i++ )
+    {
+      EXAM( fds[i], ( int ) i, "fds:%d ? %d" );
+    }
+    for ( size_t i = 3; i < lim.rlim_cur; i++ )
+      if ( fds[i] && 0 == close( fds[i] ) )
+        fds[i] = 0;
+    for ( size_t i = 3; i < lim.rlim_cur; i++ )
+    {
+      EXAM( fds[i], 0, "fds:%d ? %d" );
+    }
+    for ( size_t i = 3; i < lim.rlim_cur; i++ )
+    {
+      int x _uUu_ = fcntl( ( int ) i, F_GETFD );
+
+      EXAM( x, -1, "fdx:%d ? %d" );
+    }
+  }
+  mas_free( fds );
+}
+
 int
 masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
@@ -152,7 +200,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback,
        .flags = 0 | MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
       , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, fscallback2,
-         .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX |MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
+         .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
       , {0, NULL}
     };
   /* ftw */
@@ -161,14 +209,21 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   /* masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE (* multicb *)  ); */
     num = 0;
     WARN( "callbacks: %p", callbacks );
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
     masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
+  masxfs_test_fd(  );
+  masxfs_test_fd(  );
+
   if ( 1 )
   {
     masexam_next_group(  );
-    fprintf( stderr, "@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@\n" );
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:\n" );
     {
       masxfs_pathinfo_t *pi =
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest",
@@ -197,5 +252,6 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       masxfs_pathinfo_delete( pi );
     }
   }
+  masxfs_test_fd(  );
   return 0;
 }
