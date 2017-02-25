@@ -36,23 +36,33 @@ masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, masxfs_depth_t d
 masxfs_pathinfo_t *
 masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
 {
+  masxfs_pathinfo_t *pi = NULL;
+
+  errno = 0;
 #if 0
   char *real_path = realpath( path, NULL );
 #else
   char *real_path = canonicalize_file_name( path );
 #endif
-  masxfs_pathinfo_t *pi = masxfs_pathinfo_create(  );
-
-  QRPI( pi,  ( real_path ? 0 : -1 ) );
-  QRPI( pi,  pi ? 0 : -1 );
-  if ( real_path && pi )
+  if ( !real_path && errno )
   {
-    masxfs_pathinfo_init( pi, real_path, depth_limit );
-    if ( real_path )
-      free( real_path );
+    RGES;
   }
-  else
-    pi->error=-1;
+  {
+    fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno );
+    pi = masxfs_pathinfo_create(  );
+
+    QRPI( pi, ( real_path ? 0 : -1 ) );
+    QRPI( pi, pi ? 0 : -1 );
+    if ( real_path && pi )
+    {
+      masxfs_pathinfo_init( pi, real_path, depth_limit );
+      if ( real_path )
+        free( real_path );
+    }
+    else
+      pi->error = -1;
+  }
   return pi;
 }
 

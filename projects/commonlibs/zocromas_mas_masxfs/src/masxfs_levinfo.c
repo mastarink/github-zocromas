@@ -46,7 +46,7 @@ masxfs_levinfo_scanli_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, u
 }
 
 static int
-masxfs_levinfo_scanentry_single_internal_1cb( masxfs_levinfo_t * li, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, unsigned long tflags,
+masxfs_levinfo_scanentry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, unsigned long tflags,
                                               masxfs_entry_type_t detype )
 {
   int r = 0;
@@ -57,27 +57,27 @@ masxfs_levinfo_scanentry_single_internal_1cb( masxfs_levinfo_t * li, masxfs_levi
   {
     if ( r >= 0 )
       r = fun_simple( lithis, tflags );
-    QRLI( li, r );
+    QRLI( lithis, r );
   }
   return r;
 }
 
 static int
-masxfs_levinfo_scanentry_single_internal_cb( masxfs_levinfo_t * li, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, unsigned long flags,
-                                             masxfs_entry_type_t detype )
+masxfs_levinfo_scanentry_single_internal_cb( masxfs_levinfo_t * liparent, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb,
+                                             unsigned long flags, masxfs_entry_type_t detype )
 {
   int r = 0;
 
-  if ( li )
+  if ( liparent && lithis )
   {
-    li->child_count_pair[!cb]++;
+    liparent->child_count_pair[!cb]++;
 
     for ( int ncb = 0; r >= 0 && cb && cb->fun_simple; cb++, ncb++ )
     {
       unsigned long tflags = 0;
 
       tflags = flags | cb->flags;
-      r = masxfs_levinfo_scanentry_single_internal_1cb( li, lithis, cb, tflags, detype );
+      r = masxfs_levinfo_scanentry_single_internal_1cb( lithis, cb, tflags, detype );
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
     }

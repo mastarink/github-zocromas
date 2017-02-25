@@ -12,7 +12,12 @@
 #  define FALSE (0)
 # endif
 
-# define QRLI(_li, r)	{ if (r<0) { if(_li)_li->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
-# define QRPI(_pi, r)	{ if (r<0) { if(_pi)_pi->error=r;RWARN("R: %d; errno:%d:%s", r, errno, strerror(errno)); }}
+#include <mastar/regerr/masregerr.h>
+
+/* # define QRLI(_li, _r)   { int r=(_r);if (r<0) { if(_li)_li->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */
+# define QRLI(_li, _r) RGESR(_r)
+/* # define QRPI(_pi, _r)  { int r=(_r);if (r<0) { if(_pi)_pi->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */
+# define QRPI(_pi, _r) RGESR(_r)
+# define QRG(_r) RGESR(_r)
 
 #endif

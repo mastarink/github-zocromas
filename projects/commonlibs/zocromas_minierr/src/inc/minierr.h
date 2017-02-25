@@ -2,6 +2,7 @@
 # define MASXFS_ERROR_H
 
 # include <assert.h>
+# include <errno.h>
 
 # define DIE( ...) minierr_die(__LINE__, __func__, __FILE__, 34, __VA_ARGS__)
 # define WARN( ...) minierr_die(__LINE__, __func__, __FILE__, 0, __VA_ARGS__)

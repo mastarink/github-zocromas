@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
@@ -18,6 +19,9 @@
 
 #include "masxfs_defs.h"
 #include "masxfs_scan.h"
+
+char *gs0 __attribute__ ( ( section( "DABRA" ) ) ) = "abrakadabra_g0";
+char *gs1 __attribute__ ( ( section( "DABRA" ) ) ) = "abrakadabra_g1";
 
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
@@ -28,9 +32,9 @@ mastest_print_allocated( const char *msg, int line, const char *func )
   fprintf( stderr, "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m\n", msg, mi.uordblks, line, func );
 }
 
-static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 2001 ) ) );
+static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
 static void
-constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
+constructor_main( void )
 {
   mastest_print_allocated( "Allocated", __LINE__, __func__ );
   mallopt( M_CHECK_ACTION, 1 );
@@ -50,9 +54,9 @@ constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
   fprintf( stderr, "START\n" );
 }
 
-static void destructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( destructor( 2001 ) ) );
+static void destructor_main(  ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
-destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
+destructor_main( void )
 {
   mastest_print_allocated( "Still allocated", __LINE__, __func__ );
 //malloc_info(0, stderr);
@@ -64,6 +68,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
 {
   int r = 0;
   struct rlimit lim = { 0 };
+  errno = 0;
 
   r = getrlimit( RLIMIT_NOFILE, &lim );
   if ( r >= 0 )
@@ -87,5 +92,20 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
 #endif
     }
   }
+
+  {
+    char *s1 = "abrakadabra1";
+    const char *s2 = "abrakadabra2";
+    char *s3 = mas_strdup( s1 );
+    char *s4 = strdup( s1 );
+
+    fprintf( stderr, "%p %p %p %p - %p %p\n", s1, s2, s3, s4, gs0, gs1 );
+    mas_free( s3 );
+    free( s4 );
+  }
+
+  fprintf( stderr, "----------------forward:\n" );
+  masregerr_print_simple_all( NULL );
+
   return 0;
 }

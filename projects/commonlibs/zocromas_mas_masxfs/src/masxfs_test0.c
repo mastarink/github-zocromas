@@ -157,7 +157,7 @@ masxfs_test_fd( void )
   r = getrlimit( RLIMIT_NOFILE, &lim );
   EXAM( r, 0, "%d ? %d" );
   fds = mas_malloc( lim.rlim_cur * sizeof( int ) );
-  /* WARN( "RLIMIT_NOFILE: %ld - %ld", lim.rlim_cur, lim.rlim_max ); */
+/* WARN( "RLIMIT_NOFILE: %ld - %ld", lim.rlim_cur, lim.rlim_max ); */
   for ( size_t i = 3; i < lim.rlim_cur; i++ )
     fds[i] = 0;
   for ( size_t i = 3; i < lim.rlim_cur; i++ )
@@ -187,6 +187,7 @@ masxfs_test_fd( void )
       EXAM( x, -1, "fdx:%d ? %d" );
     }
   }
+  errno = 0;
   mas_free( fds );
 }
 
@@ -203,16 +204,34 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
          .flags = 0 | MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
       , {0, NULL}
     };
-  /* ftw */
-  /* masxfs_scanpath_real( "/", callbacks, TRUE, TRUE ); */
-  /* masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE (* multicb *)  ); */
-  /* masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, TRUE (* multicb *)  ); */
-    num = 0;
     WARN( "callbacks: %p", callbacks );
+#if 0
+  /* ftw */
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    num = 0;
+    masxfs_scanpath_real( "/", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10 );
+    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    num = 0;
+    masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, 10000 );
+    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+#endif
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    num = 0;
+    masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, 10000 );
+    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+
+    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    num = 0;
     masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    num = 0;
     masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
@@ -248,7 +267,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     {
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128 );
 
-      EXAM( pi->error, -1, "should be error: %d ? %d" );
+      EXAM( pi ? pi->error : -1, -1, "should be error: %d ? %d" );
       masxfs_pathinfo_delete( pi );
     }
   }
