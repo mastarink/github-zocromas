@@ -8,7 +8,7 @@
 #include <mysql.h>
 #include <my_net.h>
 
-#include "zocromas_mysqlpfs.h"
+#include "mysqlpfs.h"
 #define SL(_s) _s,strlen(_s)
 
 static int

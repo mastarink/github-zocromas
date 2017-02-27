@@ -5,10 +5,10 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#include "zocromas_mysqlpfs.h"
+#include "mysqlpfs.h"
 
 int
-zocromas_mysqlpfs( void )
+mas_mysqlpfs( void )
 {
   return 0;
 }

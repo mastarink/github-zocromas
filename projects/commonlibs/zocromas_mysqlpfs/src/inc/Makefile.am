@@ -1,6 +1,6 @@
 libzocromas_mysqlpfsincludedir = $(includedir)/mastar/mysqlpfs
 libzocromas_mysqlpfsinclude_HEADERS =  \
-        zocromas_mysqlpfs.h
+        mysqlpfs.h
 #
 #
 # noinst_HEADERS = \
