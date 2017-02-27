@@ -7,8 +7,18 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
   MYSQL mysql;
 
   mysql_init( &mysql );
+/* MYSQL *mysql_real_connect(MYSQL *mysql, 
+ 	const char *host,
+	const char *user,
+	const char *passwd,
+	const char *db,
+	unsigned int port,
+	const char *unix_socket,
+	unsigned long client_flag)
+ */
+  /* mysql_create_db( &mysql, "masdufntdb" ); XXX DEPRECATED XXX */
 
-  if ( mysql_real_connect( &mysql, "localhost", "masdufnt", "i2xV9KrTA54HRpj4e", NULL, 0, NULL, 0 ) == NULL )
+  if ( mysql_real_connect( &mysql, "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, NULL, 0 ) == NULL )
   {
     fprintf( stderr, "%s\n", mysql_error( &mysql ) );
     mysql_close( &mysql );
@@ -24,6 +34,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
   {
     MYSQL_RES *result = NULL;
+
 /* XXX ?
     store_result() will fetch the whole resultset from the MySQL server
     use_result() will fetch the rows one by one.

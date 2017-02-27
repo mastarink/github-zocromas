@@ -125,7 +125,7 @@ int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
 /* zocromas_mysqlpfs(); */
-  run_query( "localhost", "masdufnt", "i2xV9KrTA54HRpj4e" );
+  run_query( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e" );
   fprintf( stderr, "-----------%s---------\n", argv[0] );
   return 0;
 }

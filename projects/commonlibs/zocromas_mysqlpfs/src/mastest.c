@@ -14,6 +14,10 @@
 static int
 fatal( MYSQL * mysql __attribute__ ( ( unused ) ), const char *msg )
 {
+/* 
+   printf("Error(%d) [%s] \"%s\"", mysql_errno(mysql), mysql_sqlstate(mysql), mysql_error(mysql));
+   printf("Error(%d) [%s] \"%s\"", mysql_stmt_errno(stmt), mysql_stmt_sqlstate(stmt), mysql_stmt_error(stmt));
+ */
   fprintf( stderr, "msg: %s\n", msg );
   return 0;
 }
@@ -28,14 +32,26 @@ static int __attribute__ ( ( unused ) ) wait_for_mysql( MYSQL * mysql, int statu
   pfd.fd = mysql_get_socket( mysql );
   pfd.events = ( status & MYSQL_WAIT_READ ? POLLIN : 0 ) | ( status & MYSQL_WAIT_WRITE ? POLLOUT : 0 ) | ( status & MYSQL_WAIT_EXCEPT ? POLLPRI : 0 );
   if ( status & MYSQL_WAIT_TIMEOUT )
+#if 0
     timeout = 1000 * mysql_get_timeout_value( mysql );
+#else
+    timeout = mysql_get_timeout_value_ms( mysql );
+#endif
   else
     timeout = -1;
+  if ( timeout >= 0 )
+  {
+    /* never in my case */
+    fprintf( stderr, "timeout:%d\n", timeout );
+  }
   res = poll( &pfd, 1, timeout );
   if ( res == 0 )
     r = MYSQL_WAIT_TIMEOUT;
   else if ( res < 0 )
+  {
+  /* In a real event framework, we should handle EINTR and re-try the poll. */
     r = MYSQL_WAIT_TIMEOUT;
+  }
   else
   {
     int status = 0;
@@ -62,7 +78,14 @@ run_query( const char *host, const char *user, const char *password )
   mysql_init( &mysql );
   mysql_options( &mysql, MYSQL_OPT_NONBLOCK, 0 );
 
-  status = mysql_real_connect_start( &ret, &mysql, host, user, password, NULL, 0, NULL, 0 );
+#if 0
+  {
+    int type;
+
+    mariadb_get_info( &mysql, MARIADB_CONNECTION_PVIO_TYPE, &type );
+  }
+#endif
+  status = mysql_real_connect_start( &ret, &mysql, host, user, password, "masdufntdb", 3306, NULL, 0 );
   fprintf( stderr, "%d status: %x\n", __LINE__, status );
 #if 0
   while ( status )
@@ -125,7 +148,7 @@ int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
 /* zocromas_mysqlpfs(); */
-  run_query( "localhost", "masdufnt", "i2xV9KrTA54HRpj4e" );
+  run_query( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e" );
   fprintf( stderr, "-----------%s---------\n", argv[0] );
   return 0;
 }
