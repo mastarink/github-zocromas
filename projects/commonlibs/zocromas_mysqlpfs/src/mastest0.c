@@ -66,7 +66,7 @@ run_query( const char *host, const char *user, const char *password )
   mysql_options( &mysql, MYSQL_OPT_NONBLOCK, 0 );
 
   status = mysql_real_connect_start( &ret, &mysql, host, user, password, NULL, 0, NULL, 0 );
-    fprintf( stderr, "%d status: %x\n", __LINE__, status );
+  fprintf( stderr, "%d status: %x\n", __LINE__, status );
   while ( status )
   {
     status = wait_for_mysql( &mysql, status );
@@ -78,7 +78,7 @@ run_query( const char *host, const char *user, const char *password )
     fatal( &mysql, "Failed to mysql_real_connect()" );
 
   status = mysql_real_query_start( &err, &mysql, SL( "SHOW STATUS" ) );
-    fprintf( stderr, "%d status: %x\n", __LINE__, status );
+  fprintf( stderr, "%d status: %x\n", __LINE__, status );
   while ( status )
   {
     status = wait_for_mysql( &mysql, status );
@@ -89,10 +89,15 @@ run_query( const char *host, const char *user, const char *password )
     fatal( &mysql, "mysql_real_query() returns error" );
 
 /* This method cannot block. */
+#if 1
   res = mysql_use_result( &mysql );
   if ( !res )
     fatal( &mysql, "mysql_use_result() returns error" );
-
+#else
+  res = mysql_store_result( &mysql );
+  if ( !res )
+    fatal( &mysql, "mysql_store_result() returns error" );
+#endif
   int num = 0;
 
   for ( ;; )
@@ -105,7 +110,7 @@ run_query( const char *host, const char *user, const char *password )
     }
     if ( !row )
       break;
-    /* printf( "%d # %s: %s\n", num, row[0], row[1] ); */
+    printf( "%d # %s: %s\n", num, row[0], row[1] );
     num++;
   }
   if ( mysql_errno( &mysql ) )

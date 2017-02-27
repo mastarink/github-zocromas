@@ -4,34 +4,38 @@
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
-  MYSQL *con = mysql_init( NULL );
+  MYSQL mysql;
 
-  if ( con == NULL )
+  mysql_init( &mysql );
+
+  if ( mysql_real_connect( &mysql, "localhost", "masdufnt", "i2xV9KrTA54HRpj4e", NULL, 0, NULL, 0 ) == NULL )
   {
-    fprintf( stderr, "%s\n", mysql_error( con ) );
+    fprintf( stderr, "%s\n", mysql_error( &mysql ) );
+    mysql_close( &mysql );
     exit( 1 );
   }
 
-  if ( mysql_real_connect( con, "localhost", "masdufnt", "i2xV9KrTA54HRpj4e", NULL, 0, NULL, 0 ) == NULL )
+  if ( mysql_query( &mysql, "SHOW STATUS" ) )
   {
-    fprintf( stderr, "%s\n", mysql_error( con ) );
-    mysql_close( con );
-    exit( 1 );
-  }
-
-  if ( mysql_query( con, "SHOW STATUS" ) )
-  {
-    fprintf( stderr, "%s\n", mysql_error( con ) );
-    mysql_close( con );
+    fprintf( stderr, "%s\n", mysql_error( &mysql ) );
+    mysql_close( &mysql );
     exit( 1 );
   }
 
   {
-    MYSQL_RES *result = mysql_store_result( con );
-
+    MYSQL_RES *result = NULL;
+/* XXX ?
+    store_result() will fetch the whole resultset from the MySQL server
+    use_result() will fetch the rows one by one.
+*/
+#if 0
+    result = mysql_store_result( &mysql );
+#else
+    result = mysql_use_result( &mysql );
+#endif
     if ( !result )
     {
-      fprintf( stderr, "%s\n", mysql_error( con ) );
+      fprintf( stderr, "%s\n", mysql_error( &mysql ) );
     }
     else
     {
@@ -60,6 +64,6 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
       mysql_free_result( result );
     }
   }
-  mysql_close( con );
+  mysql_close( &mysql );
   exit( 0 );
 }
