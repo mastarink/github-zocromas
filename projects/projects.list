@@ -32,6 +32,7 @@ commonlibs/zocromas_mas_varset
 commonlibs/zocromas_mas_varvec
 commonlibs/zocromas_mas_wrap
 commonlibs/zocromas_minierr
+commonlibs/zocromas_mysqlpfs
 commonlibs/zocromas_regerr
 modules/protos/http
 modules/protos/xcromas

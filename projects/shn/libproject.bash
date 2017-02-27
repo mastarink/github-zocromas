@@ -38,20 +38,43 @@ function shn_project_path ()
   shift
   local force=$1
   shift
-  local i match_cnt
+  local -i i match_cnt exact_match_cnt exact_matched first_matched
   if [[ "${MSH_SHN_PROJECTS[@]}" ]]  ; then
     local projects_realdir
-    shn_dbgmsg "Have MSH_SHN_PROJECTS (${#MSH_SHN_PROJECTS[@]})"
+    shn_dbgmsg "A. Have MSH_SHN_PROJECTS (${#MSH_SHN_PROJECTS[@]})"
     if [[ "$match" == '/' ]] ; then
+      shn_dbgmsg "Matched ($match) /"
       shn_echo "$MSH_SHN_PROJECTS_DIR"
       return 0
     fi
+    shn_dbgmsg "B."
     for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
       if shn_project_match ${MSH_SHN_PROJECTS[$i]} $match ; then
 	match_cnt=$(( $match_cnt + 1 ))
+	[[ "$first_matched" ]] && shn_msg "A first_matched: [$first_matched]"
+
+	if ! [[ "$first_matched" ]]  ; then
+          shn_dbgmsg "Matched ($match) first $i:${MSH_SHN_PROJECTS[$i]}"
+	  first_matched=$i
+	fi
+	if [[ "${MSH_SHN_PROJECTS[$i]}" == "$match" ]] ; then
+          shn_dbgmsg "Matched ($match) exact $i:${MSH_SHN_PROJECTS[$i]}"
+	  exact_match_cnt=$(( $exact_match_cnt + 1 ))
+	  exact_matched=$i
+	fi
       fi
     done
-    if [[ "$match_cnt" -gt 1 ]] && [[ "$match" ]] && ! [[ "$force" ]] ; then
+    shn_dbgmsg "C."
+    if [[ $exact_match_cnt -eq 1 ]] && [[ $exact_matched -gt 0 ]] ; then
+	shn_dbgmsg "Exact match for ${MSH_SHN_PROJECTS[$exact_matched]}"
+	projects_realdir=`shn_project_dir2realpath ${MSH_SHN_PROJECTS[$exact_matched]} $force` || return 1
+	shn_dbgmsg "dir is '$projects_realdir'"
+	shn_echo "$projects_realdir"
+	return 0
+    fi
+    shn_dbgmsg "D."
+    shn_dbgmsg "match_cnt:$match_cnt; first_matched: $first_matched; exact_match_cnt:$exact_match_cnt; exact_matched: $exact_matched; force: $force"
+    if ! [[ $exact_match_cnt -eq 1 ]] && [[ "$match_cnt" -gt 1 ]] && [[ "$match" ]] && ! [[ "$force" ]] ; then
       shn_warn "$match_cnt matches for '$match' (go first):"
       for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
 	if shn_project_match ${MSH_SHN_PROJECTS[$i]} $match ; then
@@ -59,22 +82,30 @@ function shn_project_path ()
 	fi
       done
     fi
-    for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
-      if ! [[ "$match" ]] ; then
-	shn_msgn "${i}. ${MSH_SHN_PROJECTS[$i]}"
-	if [[ "${MSH_SHN_PROJECTS_DIR}/${MSH_SHN_PROJECTS[$i]}" == "${MSH_SHN_PROJECT_DIR}" ]] ; then
-	  shn_msg "		* ${MSH_SHN_PROJECTS_DIR}/${MSH_SHN_PROJECTS[$i]} ? ${MSH_SHN_PROJECT_DIR}"
-	else
-	  shn_msg
-	fi
-      elif shn_project_match ${MSH_SHN_PROJECTS[$i]} $match ; then
-	shn_dbgmsg "Match for ${MSH_SHN_PROJECTS[$i]}"
-	projects_realdir=`shn_project_dir2realpath ${MSH_SHN_PROJECTS[$i]} $force` || return 1
-	shn_dbgmsg "dir is '$projects_realdir'"
-	shn_echo "$projects_realdir"
-	return 0
-      fi
-    done
+    shn_dbgmsg "E."
+    if [[ "$first_matched" ]] && [[ "$first_matched" -ge 0 ]] ; then
+      shn_dbgmsg "Match for ${MSH_SHN_PROJECTS[$first_matched]}"
+      projects_realdir=`shn_project_dir2realpath ${MSH_SHN_PROJECTS[$first_matched]} $force` || return 1
+      shn_dbgmsg "dir is '$projects_realdir'"
+      shn_echo "$projects_realdir"
+      return 0
+    fi
+##  for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
+##    if ! [[ "$match" ]] ; then
+##      shn_msgn "${i}. ${MSH_SHN_PROJECTS[$i]}"
+##      if [[ "${MSH_SHN_PROJECTS_DIR}/${MSH_SHN_PROJECTS[$i]}" == "${MSH_SHN_PROJECT_DIR}" ]] ; then
+##        shn_msg "		* ${MSH_SHN_PROJECTS_DIR}/${MSH_SHN_PROJECTS[$i]} ? ${MSH_SHN_PROJECT_DIR}"
+##      else
+##        shn_msg
+##      fi
+##    elif shn_project_match ${MSH_SHN_PROJECTS[$i]} $match ; then
+##      shn_dbgmsg "Match for ${MSH_SHN_PROJECTS[$i]}"
+##      projects_realdir=`shn_project_dir2realpath ${MSH_SHN_PROJECTS[$i]} $force` || return 1
+##      shn_dbgmsg "dir is '$projects_realdir'"
+##      shn_echo "$projects_realdir"
+##      return 0
+##    fi
+##  done
     if [[ "$match" ]] ; then
       shn_errmsg "FAIL $FUNCNAME - not found $match"
     fi
@@ -169,8 +200,9 @@ function shn_project_file_cd ()
 function shn_project_cd ()
 {
   local p pp prj
-  shn_msg "\$1:$1; MSH_SHN_PROJECT_NAME:$MSH_SHN_PROJECT_NAME;"
+# shn_msg "\$1:$1; MSH_SHN_PROJECT_NAME:$MSH_SHN_PROJECT_NAME;"
   prj=${1:-${MSH_SHN_PROJECT_NAME:-zoctypes}}
+  shn_dbgmsg "project cd to [$prj]"
   if [[ "$prj" == '-' ]] ; then
     prj=$MSH_SHN_PREV_PROJECT_NAME
   fi
@@ -179,12 +211,15 @@ function shn_project_cd ()
   shn_dbgmsg "cd to '$p'"
   MSH_SHN_PREV_PROJECT_NAME=$MSH_SHN_PROJECT_NAME
   pp=$PWD
-  cd $p >&2 || return $?
-  shn_setup_projects
+  cd $p >&2 || return $?  
+  if ! [[ -f mas.project ]] ; then
+    echo $prj > mas.project
+  fi
   shn_dbgmsg "after setup $LINENO $FUNCNAME" >&2
 # if ! [[ $p == $pp ]] ; then
 #   git status .
 # fi
+  shn_setup_projects
   return 0
 }
 function shn_project_each_control_c ()
@@ -297,7 +332,7 @@ function shn_project_enabled ()
   local project_index
   if [[ ${MSH_SHN_ENABLED_PROJECTS[@]} ]] ; then
     for (( project_index=0 ; $project_index < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
-      prjdir=$(shn_project_path ${MSH_SHN_ENABLED_PROJECTS[$project_index]})
+      prjdir=$(shn_project_path ${MSH_SHN_ENABLED_PROJECTS[$project_index]} 1)
       if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj 1) ; then
 	if [[ "$prjdir" == "$newprjdir" ]] ; then
 	  return 0
@@ -307,17 +342,13 @@ function shn_project_enabled ()
   fi
   return 1
 }
-function shn_project_exists ()
+function shn_project_dir_exists ()
 {
-  local newprj=$1 newprjdir prjdir
-  local project_index
-  if [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
-    for (( project_index=0 ; $project_index < ${#MSH_SHN_PROJECTS[@]} ; project_index++ )) ; do
-      prjdir=$(shn_project_path ${MSH_SHN_PROJECTS[$project_index]})
-      if newprjdir=$(MSH_SHN_DISABLE_MSG=yes shn_project_path $newprj 1) ; then
-	if [[ "$prjdir" == "$newprjdir" ]] ; then
-	  return 0
-	fi
+  local prj=$1
+  if  [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
+    for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
+      if [[ $prj ]] && [[ $prj == ${#MSH_SHN_PROJECTS[@]} ]] && $(MSH_SHN_DISABLE_MSG=yes shn_project_path "$prj") ; then
+	return 0
       fi
     done
   fi
@@ -460,11 +491,15 @@ function shn_create_inc_makefile_file ()
   shift
   local fn="$newprjdir/src/inc/Makefile.am"
   local prj=$(basename $newprjdir) prj_short
-  if [[ $prj =~ ^(zocromas_)(.*)$ ]] ; then
-    prj_short=${BASH_REMATCH[1]}
-  else
-    prj_short=$prj
+  prj_short=$prj
+  if [[ $prj_short =~ ^(zocromas_)(.*)$ ]] ; then
+    prj_short=${BASH_REMATCH[2]}
   fi
+  if [[ $prj_short =~ ^(mas_)(.*)$ ]] ; then
+    prj_short=${BASH_REMATCH[2]}
+  fi
+  
+  shn_dbgmsg "prj_short:$prj_short"
   if ! [[ -s $fn ]] ; then
     cat << AM > $fn
 lib${prj}includedir = \$(includedir)/mastar/${prj_short}
@@ -479,121 +514,6 @@ AM
 }
 
 
-function shn_clone_project ()
-{
-  local newprj=$1 newprjdir project_index prjdir cprjdir cprjid prjidbase newprjid ifile k newprjname needed
-  local src dst ac_config_srcdir_file ac_config_dstdir_file cprj
-  if [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
-    if false && shn_project_exists "$newprj" ; then
-      shn_errmsg "project '$newprj' exists!"
-      return 1
-    fi
-
-    shn_msg "OK $newprj not exists"
-    cprjdir=$MSH_SHN_PROJECT_DIR
-    shn_msg "cprjdir: $cprjdir"
-    if [[ "$cprjdir" ]] && [[ -d "$cprjdir" ]] && [[ "$cprjdir" =~ ^$MSH_SHN_PROJECTS_DIR/(.*/)([^/]+)$ ]] ; then
-      prjidbase=${BASH_REMATCH[1]}
-      cprjid=${BASH_REMATCH[2]}
-      newprjid="${prjidbase}${newprj}"
-      shn_msg "A ------------------"
-      if ! shn_project_exists "$newprj" ; then
-        MSH_SHN_ENABLED_PROJECTS+=($newprjid)
-      fi
-      shn_msg "B ------------------"
-      if ! shn_project_enabled "$newprj" ; then
-        MSH_SHN_PROJECTS+=($newprjid)
-      fi
-      shn_msg "C ------------------"
-      newprjdir=$(shn_project_path $newprj 1)
-      shn_msg "D ------------------"
-      shn_msg "prjidbase: $prjidbase; cprjid: $cprjid; newprjid: $newprjid; newprjdir:$newprjdir;"
-      if [[ -d "$newprjdir" ]] ; then
-        if false ; then
-	  return 1
-	fi
-      else
-        mkdir $newprjdir || return 1
-      fi
-      shn_msg "E ------------------"
-      if [[ $newprjdir ]] && [[ -d $newprjdir ]] ; then
-        shn_save_projects || return 1
-	local -A need_dirs=(['src']='src' ['src/inc']='src/inc' ['debug']='debug')
-	for k in "${!need_dirs[@]}" ; do
-	  needed=${need_dirs[$k]}
-	  src="$cprjdir/$k"
-	  dst="$newprjdir/$needed"
-	  if ! [[ -d $dst ]] && ! [[ -f $dst ]] ; then mkdir $dst ; fi
-	done
-	# AC_CONFIG_SRCDIR
-	newprjname=$( shn_basename $newprjdir )
-	local -A need_files=([configure.ac]='configure.ac' [${MSH_SHN_PROJECT_NAME}.pc.in]="${newprjname}.pc.in" ['debug/debug_mastest.cmd']='debug/debug_mastest.cmd')
-	for k in "${!need_files[@]}" ; do
-	  needed=${need_files[$k]}
-	  src="$cprjdir/$k"
-	  dst="$newprjdir/$needed"
-	  if [[ "$src" ]] && [[ -f "$src" ]] && [[ "$dst" ]] && ! [[ -f "$dst" ]] ; then
-	    cp -a $src $dst
-	  fi
-	done
-	ac_config_srcdir_file=$(sed -n 's@^[[:blank:]]*AC_CONFIG_SRCDIR(\[\(.*\)\])[[:blank:]]*$@\1@p'  configure.ac)
-	ac_config_dstdir_file="src/mastest.c"
-
-	shn_create_ac_config_dir_file "$newprjdir" "$ac_config_dstdir_file" "${newprjname}"
-	shn_create_mainsrc_file "$newprjdir"  "${newprjname}"
-	shn_create_maininc_file "$newprjdir"  "${newprjname}"
-	shn_create_top_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
-	shn_create_src_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
-	shn_create_inc_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
-
-	sed --in-place='.bak' 's@^\([[:blank:]]*AC_CONFIG_SRCDIR[[:blank:]]*([[:blank:]]*\[\)\('$ac_config_srcdir_file'\)\([[:blank:]]*\][[:blank:]]*)[[:blank:]]*\)$@\1'$ac_config_dstdir_file'\3@'  $newprjdir/configure.ac
-	if [[ -f $newprjdir/configure.ac.bak ]] && [[ -f $newprjdir/configure.ac ]] && diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then
-	  rm $newprjdir/configure.ac
-	  mv $newprjdir/configure.ac.bak $newprjdir/configure.ac
-	  shn_msg "@@@@@@@ move"
-	else
-	  shn_msg "@@@@@@@ why?"
-	  if [[  -f $newprjdir/configure.ac.bak ]] ; then shn_msg "bak present" ; fi
-	  if [[  -f $newprjdir/configure.ac ]] ; then shn_msg "ac present" ; fi
-	  if diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then shn_msg "not diff" ; fi
-	fi
-	shn_msg "ac_config_srcdir_file: $ac_config_srcdir_file"
-	cprj=${MSH_SHN_PROJECT_NAME}
-        if ! [[ -f $newprjdir/configure ]] || ! [[ -f $newprjdir/Makefile.in ]] \
-			|| ! [[ -f $newprjdir/src/Makefile.in ]] || ! [[ -f $newprjdir/src/inc/Makefile.in ]] \
-			|| ! [[ -d $newprjdir/.auxdir ]]
-	then
-	  shn_project_cd "${newprjname}"
-	  shn_build_autoreconf
-	  shn_project_cd "$cprj"
-	  shn_msg "autoreconf'ing"
-	else
-	  shn_msg "not autoreconf'ing"
-	fi	
-	if true ; then
-	  if ! [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
-	    shn_project_cd "${newprjname}"
-	    shn_build_configure
-	    shn_project_cd "$cprj"
-	    shn_msg "configure'ing"
-	  else
-	    shn_msg "not configure'ing"
-	    ls -l $newprjdir/.auxdir
-	  fi
-	  if [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
-	    shn_project_cd "${newprjname}"
-	    shn_build_make
-	    shn_project_cd "$cprj"
-	    shn_msg "make'ing"
-	  else
-	    shn_msg "not make'ing"
-	  fi
-	fi
-      fi
-    fi
-  fi
-  return 0
-}
 MSH_SHN_PROJECT_FUNCTIONS="`shn_funlist shn_project`"
 [[ "$MSH_SHN_PROJECT_FUNCTIONS" ]] && export -f $MSH_SHN_PROJECT_FUNCTIONS
 # shn_msg "$(datemt) v.`shn_project_version`"

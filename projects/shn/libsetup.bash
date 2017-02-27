@@ -72,7 +72,7 @@ function shn_setup_global_dirs
     for id in admin 'status' save savedist savegentoo ebuilds ebuild install flavour error files ; do
       if [[ "${MSH_SHN_DIRS[$id]}" ]] && ! [[ -d "${MSH_SHN_DIRS[$id]}" ]] ; then
 	shn_mkdir "${MSH_SHN_DIRS[$id]}" || return 1
-	shn_msg created ${MSH_SHN_DIRS[$id]}
+	shn_dbgmsg "created dir ${MSH_SHN_DIRS[$id]} (global)"
       fi
     done
 
@@ -139,7 +139,7 @@ function shn_setup_project_dirs
 	shn_msg moved ${MSH_SHN_DIRS[old__$id]}  ${MSH_SHN_DIRS[$id]}
       elif [[ "${MSH_SHN_DIRS[$id]}" ]] && ! [[ -d "${MSH_SHN_DIRS[$id]}" ]] ; then
 	shn_mkdir "${MSH_SHN_DIRS[$id]}" || return 1
-	shn_msg created ${MSH_SHN_DIRS[$id]}
+	shn_dbgmsg "created dir ${MSH_SHN_DIRS[$id]}"
       fi
     done
   else
@@ -186,6 +186,87 @@ function shn_project_version ()
   return 0
 }
 export shn_project_version
+function shn_get_projects_list_nt ()
+{
+  declare -p MSH_SHN_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_PROJECTS
+  local i prj plf prjl
+  local -a work
+  work=( $( find $MSH_SHN_PROJECTS_DIR -name mas.project -exec dirname "{}"  \; | sort ) )
+
+  plf="$MSH_SHN_PROJECTS_DIR/new_projects.list"
+  if [[ $plf ]] ; then rm -f $plf ; fi
+  MSH_SHN_PROJECTS=()
+  for (( i=0; $i<${#work[@]}; i++ )) ; do
+    local w=${work[$i]}
+    if [[ $w =~ ^$MSH_SHN_PROJECTS_DIR/(.*)$  ]] ; then
+      prjl=${BASH_REMATCH[1]}
+      echo $prjl >> $plf
+      MSH_SHN_PROJECTS+=( $prjl )
+    fi
+  done  
+}
+function shn_get_projects_list ()
+{
+  local i prj
+  declare -p MSH_SHN_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_PROJECTS
+  local projects_file_name=projects.list
+  local projects_file=$MSH_SHN_PROJECTS_DIR/$projects_file_name
+  MSH_SHN_PROJECTS=()
+  if [[ "$projects_file" ]] && [[ -f "$projects_file" ]] ; then
+    readarray -t MSH_SHN_PROJECTS < $projects_file || return 1
+#   shn_msg "OK projects: $(basename $projects_file)"
+  else
+    shn_errmsg "FAIL projects_file: $projects_file"
+    return 1
+  fi
+  return 0
+}
+function shn_prepare_projects_list ()
+{
+  local i prj
+  declare -p MSH_SHN_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_PROJECTS
+  for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
+    prj=${MSH_SHN_PROJECTS[$i]}
+    prjdir=${MSH_SHN_PROJECTS_DIR}/${prj}
+    prjname=$( shn_basename $prjdir )
+    prjmark="${prjdir}/mas.project"
+#   shn_msg "$prj" 
+    if [[ $prjdir ]] && [[ -d $prjdir ]] && [[ $prjmark ]] && ! [[ -f $prjmark ]] ; then
+      echo "$prjname" >  $prjmark
+    fi
+#   shn_msg "project $prjdir"
+    shn_dbgmsg "-${i}. [$prj]"
+    MSH_SHN_HASH_PROJECTS[$prj]=1
+  done
+  shn_get_disabled_projects_list
+  unset MSH_SHN_ENABLED_PROJECTS
+  for k in ${MSH_SHN_PROJECTS[@]} ; do
+    if [[ "$k" ]] && [[ "${MSH_SHN_HASH_PROJECTS[$k]}" ]] ; then
+####        shn_dbgmsg "-${i}. ENABLE [$k]"
+      MSH_SHN_ENABLED_PROJECTS[${#MSH_SHN_ENABLED_PROJECTS[@]}]=$k
+    fi
+  done
+}
+function shn_get_disabled_projects_list ()
+{
+  declare -p MSH_SHN_DISABLED_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_DISABLED_PROJECTS
+  local i
+  local projects_disabled_file_name=projects_disabled.list
+  local projects_disables_file=$projects_dir/$projects_disabled_file_name
+  if [[ "$projects_disables_file" ]] && [[ -f "$projects_disables_file" ]] ; then
+    readarray -t MSH_SHN_DISABLED_PROJECTS < $projects_disables_file || return 1
+#   shn_msg "OK disabled projects: $(basename $projects_disables_file)"
+    for (( i=0 ; $i < ${#MSH_SHN_DISABLED_PROJECTS[@]} ; i++ )) ; do
+      shn_dbgmsg "-${i}. DISABLED [${MSH_SHN_DISABLED_PROJECTS[$i]}]"
+      if [[ "${MSH_SHN_DISABLED_PROJECTS[$i]}" ]] ; then
+	unset MSH_SHN_HASH_PROJECTS[${MSH_SHN_DISABLED_PROJECTS[$i]}]
+      fi
+    done
+  else
+    shn_errmsg "FAIL projects_disables_file:$projects_disables_file"
+    return 1
+  fi
+}
 function shn_setup_projects ()
 {
   local retcode=0
@@ -195,9 +276,7 @@ function shn_setup_projects ()
   declare -p MSH_SHN_DIRS &>/dev/null || declare -gx -A MSH_SHN_DIRS
   declare -p MSH_SHN_FILES &>/dev/null || declare -gx -A MSH_SHN_FILES
   declare -p MSH_SHN_ENABLED_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_ENABLED_PROJECTS
-  declare -p MSH_SHN_DISABLED_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_DISABLED_PROJECTS
   declare -p MSH_SHN_HASH_PROJECTS &>/dev/null || declare -gx -A MSH_SHN_HASH_PROJECTS
-  declare -p MSH_SHN_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_PROJECTS
   if [[ "$shn_dont_setup" ]]  ; then return 0 ; fi
   shn_dbgmsg "$FUNCNAME"
   shn_dbgmsg "S1 `pwd`" >&2
@@ -218,41 +297,10 @@ function shn_setup_projects ()
 	MSH_SHN_PROJECTS_DIR=$projects_dir
 	MSH_SHN_PRJTOP_DIR=`shn_realpath "$MSH_SHN_PROJECTS_DIR/.."`
 	shn_setup_global_dirs || return 1
-	local projects_file_name=projects.list
-	local projects_file=$MSH_SHN_PROJECTS_DIR/$projects_file_name
-	if [[ "$projects_file" ]] && [[ -f "$projects_file" ]] ; then
-	  readarray -t MSH_SHN_PROJECTS < $projects_file || return 1
-#	  shn_msg "OK projects: $(basename $projects_file)"
-	  for (( i=0 ; $i < ${#MSH_SHN_PROJECTS[@]} ; i++ )) ; do
-	    shn_dbgmsg "-${i}. [${MSH_SHN_PROJECTS[$i]}]"
-	    MSH_SHN_HASH_PROJECTS[${MSH_SHN_PROJECTS[$i]}]=1
-	  done
-	else
-	  shn_errmsg "FAIL projects_file: $projects_file"
-	  return 1
-	fi
-        local projects_disabled_file_name=projects_disabled.list
-        local projects_disables_file=$projects_dir/$projects_disabled_file_name
-        if [[ "$projects_disables_file" ]] && [[ -f "$projects_disables_file" ]] ; then
-          readarray -t MSH_SHN_DISABLED_PROJECTS < $projects_disables_file || return 1
-#         shn_msg "OK disabled projects: $(basename $projects_disables_file)"
-          for (( i=0 ; $i < ${#MSH_SHN_DISABLED_PROJECTS[@]} ; i++ )) ; do
-            shn_dbgmsg "-${i}. DISABLED [${MSH_SHN_DISABLED_PROJECTS[$i]}]"
-            if [[ "${MSH_SHN_DISABLED_PROJECTS[$i]}" ]] ; then
-	      unset MSH_SHN_HASH_PROJECTS[${MSH_SHN_DISABLED_PROJECTS[$i]}]
-	    fi
-          done
-        else
-          shn_errmsg "FAIL projects_disables_file:$projects_disables_file"
-          return 1
-        fi
-        unset MSH_SHN_ENABLED_PROJECTS
-        for k in ${MSH_SHN_PROJECTS[@]} ; do
-          if [[ "$k" ]] && [[ "${MSH_SHN_HASH_PROJECTS[$k]}" ]] ; then
-####        shn_dbgmsg "-${i}. ENABLE [$k]"
-            MSH_SHN_ENABLED_PROJECTS[${#MSH_SHN_ENABLED_PROJECTS[@]}]=$k
-          fi
-        done
+	MSH_SHN_HASH_PROJECTS=()
+ 	shn_get_projects_list_nt
+# 	shn_get_projects_list
+	shn_prepare_projects_list
 
 ####    for (( i=0 ; $i < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; i++ )) ; do
 ####      shn_dbgmsg "-${i}. ENABLED [${MSH_SHN_ENABLED_PROJECTS[$i]}]"
@@ -334,14 +382,14 @@ function shn_initial_mased_vim
 	file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/mased/$fn` || { retval=$? ; break ; }
 	link=$( shn_basename $file ) || { retval=$? ; break ; }
 	if [[ -f $file ]] && ! [[ -f $link ]] ; then
-          shn_msg "updating mased for typf='$typf'"
+          shn_dbgmsg "updating mased for typf='$typf'"
 	  if [[ -L  $link ]] && ! [[ -r  $link ]] ; then
 	    shn_rm $link || return 1
 	  fi
 	  if ! [[ -e $link ]] ; then
 	    shn_dbgmsg "$file -> $link"
 	    shn_ln -s $file $link || { retval=$? ; break ; }
-	    shn_msg created link $link
+	    shn_dbgmsg "created link $link (mased)"
 	  fi
 	fi
       else
@@ -363,7 +411,7 @@ function shn_initial_gitignore ()
 {
   if ! [[ -f ".gitignore" ]] ; then
     echo '*.tmp' >> .gitignore
-    shn_msg "created .gitignore"
+    shn_dbgmsg "created .gitignore"
   fi
   return 0
 }
@@ -388,7 +436,7 @@ function shn_create_links_01 ()
       if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
 	shn_dbgmsg "$file -> $link"
 	shn_ln -s $file $link || return 1
-	shn_msg created link $link
+	shn_dbgmsg "created link $link (01)"
       fi
     else
       shn_errmsg ${MSH_SHN_PROJECTS_DIR}/$fn
@@ -406,7 +454,7 @@ function shn_create_links_02 ()
       if ! [[ -e $link ]] ; then
 	shn_dbgmsg "$file -> $link"
 	shn_ln -s $file $link || return 1
-	shn_msg created link $link
+	shn_dbgmsg "created link $link (02)"
       fi
     else
       shn_errmsg ${MSH_SHN_PROJECTS_DIR}/$fn
@@ -456,11 +504,11 @@ function shn_setup_additional ()
 	      shn_rm $link
 	    fi
 	    if ! [[ -e $link ]] ; then
-	      shn_msg "making $fn from $srcf at $PWD"
+#	      shn_msg "making $fn from $srcf at $PWD"
 #	      shn_msg "making $fn from $srcf"
 	      shn_dbgmsg "$file -> $link"
 	      shn_ln -s $file $link || return 1
-	      shn_msg created link $link
+	      shn_dbgmsg "created link $link (additional)"
 	    fi
 	  else
 	    shn_errmsg "no file '$srcf'"
@@ -479,6 +527,133 @@ function shn_setup_additional ()
   shn_initial_debug
   return 0
 }
+function shn_clone_project ()
+{
+  local newprj=$1 newprjdir project_index prjdir cprjdir cprjid prjidbase newprjid ifile k newprjname needed
+  local src dst ac_config_srcdir_file ac_config_dstdir_file cprj
+  if [[ ${MSH_SHN_PROJECTS[@]} ]] ; then
+    if false && shn_project_dir_exists "$newprj" ; then
+      shn_errmsg "project '$newprj' exists!"
+      return 0 # 1???
+    fi
+
+    cprjdir=$MSH_SHN_PROJECT_DIR
+#   shn_msg "cprjdir: $cprjdir; MSH_SHN_PROJECT_DIR:$MSH_SHN_PROJECT_DIR"
+    if [[ "$cprjdir" ]] && [[ -d "$cprjdir" ]] && [[ "$cprjdir" =~ ^$MSH_SHN_PROJECTS_DIR/(.*/)?([^/]+)$ ]] ; then
+      prjidbase=${BASH_REMATCH[1]}
+      cprjid=${BASH_REMATCH[2]}
+      newprjid="${prjidbase}${newprj}"
+      if ! shn_project_dir_exists "$newprj" ; then
+        MSH_SHN_ENABLED_PROJECTS+=($newprjid)
+      fi
+      if ! shn_project_enabled "$newprj" ; then
+        MSH_SHN_PROJECTS+=($newprjid)
+      fi
+      newprjdir=$(shn_project_path $newprj 1)
+#     shn_msg "prjidbase: $prjidbase; cprjid: $cprjid; newprjid: $newprjid; newprjdir:$newprjdir;"
+      if [[ -d "$newprjdir" ]] ; then
+        if false ; then
+	  return 1
+	fi
+      else
+        mkdir $newprjdir || return 1
+      fi
+      if [[ $newprjdir ]] && [[ -d $newprjdir ]] ; then
+        shn_save_projects || return 1
+	local -A need_dirs=(['src']='src' ['src/inc']='src/inc' ['debug']='debug')
+	for k in "${!need_dirs[@]}" ; do
+	  needed=${need_dirs[$k]}
+	  src="$cprjdir/$k"
+	  dst="$newprjdir/$needed"
+	  if ! [[ -d $dst ]] && ! [[ -f $dst ]] ; then mkdir $dst ; fi
+	done
+	# AC_CONFIG_SRCDIR
+	newprjname=$( shn_basename $newprjdir )
+	local -A need_files=([configure.ac]='configure.ac' [${MSH_SHN_PROJECT_NAME}.pc.in]="${newprjname}.pc.in" ['debug/debug_mastest.cmd']='debug/debug_mastest.cmd')
+	for k in "${!need_files[@]}" ; do
+	  needed=${need_files[$k]}
+	  src="$cprjdir/$k"
+	  dst="$newprjdir/$needed"
+	  if [[ "$src" ]] && [[ -f "$src" ]] && [[ "$dst" ]] && ! [[ -f "$dst" ]] ; then
+	    cp -a $src $dst
+	  fi
+	done
+	ac_config_srcdir_file=$(sed -n 's@^[[:blank:]]*AC_CONFIG_SRCDIR(\[\(.*\)\])[[:blank:]]*$@\1@p'  configure.ac)
+	ac_config_dstdir_file="src/mastest.c"
+	
+
+	shn_create_ac_config_dir_file "$newprjdir" "$ac_config_dstdir_file" "${newprjname}"
+	shn_create_mainsrc_file "$newprjdir"  "${newprjname}"
+	shn_create_maininc_file "$newprjdir"  "${newprjname}"
+	shn_create_top_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
+	shn_create_src_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
+	shn_create_inc_makefile_file "$newprjdir"  "$ac_config_dstdir_file"
+
+	sed --in-place='.bak' 's@^\([[:blank:]]*AC_CONFIG_SRCDIR[[:blank:]]*([[:blank:]]*\[\)\('$ac_config_srcdir_file'\)\([[:blank:]]*\][[:blank:]]*)[[:blank:]]*\)$@\1'$ac_config_dstdir_file'\3@'  $newprjdir/configure.ac || return 1
+	shn_dbgmsg "ac_config_srcdir_file: $ac_config_srcdir_file"
+	if [[ -f $newprjdir/configure.ac.bak ]] && [[ -f $newprjdir/configure.ac ]] && diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then
+	  rm $newprjdir/configure.ac
+	  mv $newprjdir/configure.ac.bak $newprjdir/configure.ac
+	else
+	  shn_errmsg "@@@@@@@ why?"
+	  if [[  -f $newprjdir/configure.ac.bak ]] ; then shn_errmsg "bak present" ; fi
+	  if [[  -f $newprjdir/configure.ac ]] ; then shn_errmsg "ac present" ; fi
+	  if diff $newprjdir/configure.ac $newprjdir/configure.ac.bak ; then shn_errmsg "not diff" ; fi
+	fi
+	cprj=${MSH_SHN_PROJECT_NAME}
+        if ! [[ -f $newprjdir/configure ]] || ! [[ -f $newprjdir/Makefile.in ]] \
+			|| ! [[ -f $newprjdir/src/Makefile.in ]] || ! [[ -f $newprjdir/src/inc/Makefile.in ]] \
+			|| ! [[ -d $newprjdir/.auxdir ]]
+	then
+	  shn_project_cd "${newprjname}" || return 1
+	  shn_msg "autoreconf"
+	  if ! shn_build_autoreconf ; then
+	    shn_msg "autoreconf error" 
+	    return 1
+	  fi
+	  shn_msg "autoreconf'ing done; back to $cprj"
+	  shn_project_cd "$cprj"
+	else
+	  shn_msg "no need autoreconf'ing"
+	fi	
+	if true ; then
+	  if ! [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
+	    shn_project_cd "${newprjname}" || return 1
+	    shn_msg "configure"
+	    if ! shn_build_configure ; then
+	      shn_msg "configure error"
+	      return 1
+	    fi
+	    shn_msg "configure'ing done; back to $cprj"
+	    shn_project_cd "$cprj"
+	  else
+	    shn_msg "no need configure'ing"
+#	    ls -l $newprjdir/.auxdir
+	  fi
+	  if [[ -f $newprjdir/.auxdir/.build/config.status ]] ; then
+	    shn_project_cd "${newprjname}" || return 1
+	    shn_msg "make"
+	    if ! shn_build_make ; then
+	      shn_msg "make error"
+	      return 1
+	    fi
+	    shn_msg "make'ing done; back to $cprj"
+	    shn_project_cd "$cprj"
+	  else
+	    shn_msg "not make'ing"
+	  fi
+	fi
+      fi
+    else
+      shn_errmsg "MSH_SHN_PROJECT_DIR is wrong: '$MSH_SHN_PROJECT_DIR'; MSH_SHN_PROJECTS_DIR: '$MSH_SHN_PROJECTS_DIR'"
+    fi
+  else
+    shn_errmsg "MSH_SHN_PROJECTS not set"
+  fi
+  shn_msg "clone done to ${newprjname}"
+  shn_project_cd "${newprjname}" || return 1
+  return 0
+}
 function shn_save_projects ()
 {
   local projects_file_name=projects.list prj project_index prj
@@ -489,8 +664,8 @@ function shn_save_projects ()
       prj=${MSH_SHN_PROJECTS[$project_index]}
       echo $prj
     done | sort | uniq > $newprojects_file || return 1
-    if diff $projects_file $newprojects_file ; then
-      rm $newprojects_file
+    if diff $projects_file $newprojects_file >/dev/null ; then
+      [[ "$newprojects_file" ]] && [[ -f $newprojects_file ]] && rm $newprojects_file
     else
       if [[ -s $newprojects_file ]] && [[ -s $projects_file ]] && [[ "$renamedprojects_file" ]] && ! [[ -f "$renamedprojects_file" ]] \
 	  && mv $projects_file $renamedprojects_file && mv $newprojects_file $projects_file ; then
