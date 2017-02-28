@@ -3,7 +3,8 @@ SUBDIRS= inc
 
 lib_LTLIBRARIES = libzocromas_regerr.la
 libzocromas_regerr_la_SOURCES = \
- 	masregerr.c
+ 	masregerr.c \
+ 	masregerr_base.c
 
 libzocromas_regerr_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 

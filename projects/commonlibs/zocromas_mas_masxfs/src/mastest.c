@@ -105,7 +105,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
   }
 
   fprintf( stderr, "----------------forward:\n" );
-  masregerr_print_simple_all( NULL );
+  masregerr_print_simple_all( NULL, NULL );
 
   return 0;
 }

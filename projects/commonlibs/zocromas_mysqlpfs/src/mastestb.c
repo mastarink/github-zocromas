@@ -7,6 +7,10 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
   MYSQL mysql;
 
   mysql_init( &mysql );
+  unsigned long version = mysql_get_client_version(  );
+  const char *info = mysql_get_client_info(  );
+
+  fprintf( stderr, "version:%ld\n%s\n", version, info );
 /* MYSQL *mysql_real_connect(MYSQL *mysql, 
  	const char *host,
 	const char *user,
@@ -16,8 +20,11 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 	const char *unix_socket,
 	unsigned long client_flag)
  */
-  /* mysql_create_db( &mysql, "masdufntdb" ); XXX DEPRECATED XXX */
+/* mysql_create_db( &mysql, "masdufntdb" ); XXX DEPRECATED XXX */
 
+  /*
+      MYSQL *mysql_real_connect(MYSQL *mysql, const char *host, const char *user, const char *passwd, const char *db, unsigned int port, const char *unix_socket, unsigned long client_flag)
+  */
   if ( mysql_real_connect( &mysql, "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, NULL, 0 ) == NULL )
   {
     fprintf( stderr, "%s\n", mysql_error( &mysql ) );

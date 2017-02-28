@@ -12,6 +12,7 @@
 #  define FALSE (0)
 # endif
 
+#include <mastar/regerr/masregerr_defs.h>
 #include <mastar/regerr/masregerr.h>
 
 /* # define QRLI(_li, _r)   { int r=(_r);if (r<0) { if(_li)_li->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */

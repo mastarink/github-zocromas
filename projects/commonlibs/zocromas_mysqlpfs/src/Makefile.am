@@ -3,7 +3,8 @@ SUBDIRS= inc
 
 lib_LTLIBRARIES = libzocromas_mysqlpfs.la
 libzocromas_mysqlpfs_la_SOURCES = \
- 	mysqlpfs.c
+ 	mysqlpfs.c \
+	mysqlpfs_base.c
 
 libzocromas_mysqlpfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
 libzocromas_mysqlpfs_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@

@@ -10,3 +10,10 @@ sfind mastest.h
 tab sfind mysqlpfs.c
 sfind mysqlpfs.h
 
+tab sfind mysqlpfs_base.c
+sfind mysqlpfs_base.h
+
+tab sfind mysqlpfs_defs.h
+sfind mysqlpfs_types.h
+sfind mysqlpfs_structs.h
+

@@ -61,6 +61,7 @@ run_query( const char *host, const char *user, const char *password )
 
   mysql_init( &mysql );
   mysql_options( &mysql, MYSQL_OPT_NONBLOCK, 0 );
+  /* mysql_optionsv(mysql, MYSQL_OPT_NONBLOCK, 0); */
 
   status = mysql_real_connect_start( &ret, &mysql, host, user, password, NULL, 0, NULL, 0 );
   fprintf( stderr, "%d status: %x\n", __LINE__, status );
