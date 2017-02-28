@@ -17,7 +17,7 @@ m4_include([m4zoc/varscheck.m4])
 
 # AX_LIB_CRYPTO([yes])
 # AX_CHECK_CRYPTO_LIB([MD5],[MD5])
-PKG_CHECK_MODULES(LIBCRYPTO, [libcrypto >= 1.0.2])
+#20170228.131728 PKG_CHECK_MODULES(LIBCRYPTO, [libcrypto >= 1.0.2])
 
 # AX_CHECK_CRYPTO_LIB([BSD],[BSD])
 

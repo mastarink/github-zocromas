@@ -1,3 +1,4 @@
+#include "mulconfnt_defs.h"
 #include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -9,7 +10,6 @@
 
 #include <popt.h>
 
-#include "mulconfnt_defs.h"
 #include "mastest.h"
 
 int

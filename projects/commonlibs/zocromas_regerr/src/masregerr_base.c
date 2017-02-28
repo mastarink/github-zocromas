@@ -1,9 +1,9 @@
+#include "masregerr_defs.h"
 #include <stdlib.h>
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 
-#include "masregerr_defs.h"
 #include "masregerr_structs.h"
 
 #include "masregerr_base.h"

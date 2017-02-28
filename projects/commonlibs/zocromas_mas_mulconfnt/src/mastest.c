@@ -1,3 +1,4 @@
+#include "mulconfnt_defs.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -12,7 +13,6 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/exam/masexam.h>
 
-#include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
 #include "mulconfnt_error.h"

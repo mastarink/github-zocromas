@@ -1,3 +1,4 @@
+#include "masxfs_defs.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -5,8 +6,6 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
-
-#include "masxfs_defs.h"
 
 #include "masxfs_structs.h"
 

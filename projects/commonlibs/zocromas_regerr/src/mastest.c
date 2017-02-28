@@ -1,3 +1,4 @@
+#include "masregerr_defs.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +12,6 @@
 
 #include <mastar/exam/masexam.h>
 
-#include "masregerr_defs.h"
 #include "masregerr.h"
 
 int

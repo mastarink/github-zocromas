@@ -13,8 +13,12 @@
 #  define FALSE (0)
 # endif
 
-#include <mastar/regerr/masregerr.h>
+# define QRGS(_r) RGESR(_r)
+# define QRG(_r) RGER(_r)
 
-# define QRG(_r) RGESR(_r)
+# define QRGSP(_ptr)   QRGS( _ptr ? 0 : -1 );
+# define QRGP(_ptr)    QRG( _ptr ? 0 : -1 );
+
+# include <mastar/regerr/masregerr_defs.h>
 
 #endif

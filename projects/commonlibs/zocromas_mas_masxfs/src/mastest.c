@@ -1,3 +1,4 @@
+#include "masxfs_defs.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,7 +18,6 @@
 
 #include "masxfs_structs.h"
 
-#include "masxfs_defs.h"
 #include "masxfs_scan.h"
 
 char *gs0 __attribute__ ( ( section( "DABRA" ) ) ) = "abrakadabra_g0";

@@ -1,5 +1,6 @@
 #ifndef MASXFS_DEFS_H
 # define MASXFS_DEFS_H
+
 # include <stddef.h>
 # include <errno.h>
 
@@ -12,8 +13,8 @@
 #  define FALSE (0)
 # endif
 
-#include <mastar/regerr/masregerr_defs.h>
-#include <mastar/regerr/masregerr.h>
+# include <mastar/regerr/masregerr_defs.h>
+# include <mastar/regerr/masregerr.h>
 
 /* # define QRLI(_li, _r)   { int r=(_r);if (r<0) { if(_li)_li->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */
 # define QRLI(_li, _r) RGESR(_r)

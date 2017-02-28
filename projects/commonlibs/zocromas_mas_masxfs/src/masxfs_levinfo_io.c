@@ -1,3 +1,4 @@
+#include "masxfs_defs.h"
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -10,8 +11,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/minierr/minierr.h>
-
-#include "masxfs_defs.h"
 
 #include "masxfs_structs.h"
 
@@ -47,7 +46,7 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
         li->detype = MASXFS_ENTRY_DIR_NUM;
       if ( fd < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
         WARN( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
-             openflags & O_DIRECTORY ? 1 : 0 );
+              openflags & O_DIRECTORY ? 1 : 0 );
     }
   }
   return fd;

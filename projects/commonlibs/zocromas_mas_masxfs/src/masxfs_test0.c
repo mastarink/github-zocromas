@@ -1,3 +1,4 @@
+#include "masxfs_defs.h"
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -12,7 +13,6 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
-#include "masxfs_defs.h"
 #include "masxfs_structs.h"
 
 /* #include "masxfs_levinfo_base.h" */

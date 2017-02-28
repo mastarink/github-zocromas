@@ -1,3 +1,4 @@
+#include "mulconfnt_defs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -8,7 +9,6 @@
 
 #include <popt.h>
 
-#include "mulconfnt_defs.h"
 
 void
 usage( poptContext optCon, int _uUu_ exitcode, char *error, char *addl )

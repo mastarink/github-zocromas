@@ -1,3 +1,4 @@
+#include "mulconfnt_defs.h"
 #include <string.h>
 #include <unistd.h>
 
@@ -5,7 +6,6 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
-#include "mulconfnt_defs.h"
 #include "mulconfnt_structs.h"
 
 #include "mulconfnt_error.h"

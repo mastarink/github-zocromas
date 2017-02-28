@@ -14,6 +14,8 @@ struct masregerr_s
 {
   int mark;
   const char *func;
+  const char *func1;
+  const char *func2;
   int line;
   const char *file;
   const char *package;

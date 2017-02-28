@@ -1,3 +1,4 @@
+#include "masregerr_defs.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +9,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "masregerr_defs.h"
 #include "masregerr_structs.h"
 #include "masregerr_base.h"
 
@@ -20,6 +20,7 @@ static void destructor_main(  ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
 destructor_main(  )
 {
+  masregerr_print_simple_all( reg_errors, NULL );
   masregerrs_delete( reg_errors );
 }
 
@@ -69,21 +70,25 @@ masregerr_before( masregerrs_t * regerrs, masregerr_t * rge )
 static masregerr_t *
 masregerr_valid_before( masregerrs_t * regerrs, masregerr_t * rge )
 {
+  masregerr_t *rge0 = rge;
+
   do
   {
     rge = masregerr_before( regerrs, rge );
-  } while ( rge && !rge->mark );
-  return rge;
+  } while ( rge && !rge->mark && rge != rge0 );
+  return rge->mark ? rge : NULL;
 }
 
 static masregerr_t *
 masregerr_valid_after( masregerrs_t * regerrs, masregerr_t * rge )
 {
+  masregerr_t *rge0 = rge;
+
   do
   {
     rge = masregerr_after( regerrs, rge );
-  } while ( rge && !rge->mark );
-  return rge;
+  } while ( rge && !rge->mark && rge != rge0 );
+  return rge->mark ? rge : NULL;
 }
 
 static masregerr_t *
@@ -101,7 +106,8 @@ masregerr_prev( masregerrs_t * regerrs )
 }
 
 int
-masregerr_reg( masregerrs_t * regerrs, const char *func, int line, const char *file, const char *package, int *perrno, int sys, const char *msg )
+masregerr_reg( masregerrs_t * regerrs, const char *func, int line, const char *file, const char *func1, const char *func2, const char *package,
+               int *perrno, int sys, const char *msg )
 {
   masregerr_t *rge = masregerr_next( regerrs );
   int err_no = 0;
@@ -114,13 +120,17 @@ masregerr_reg( masregerrs_t * regerrs, const char *func, int line, const char *f
     masregerr_reset( rge );
     rge->mark = 1;
     rge->func = func;
+    rge->func1 = func1;
+    rge->func2 = func2;
     rge->line = line;
     rge->file = file;
     rge->package = package;
     rge->err_no = err_no;
     rge->sys = sys;
     if ( msg )
+    {
       rge->msg = mas_strdup( msg );
+    }
     rge->serial = ++( masregerrs_default( regerrs )->serial );
     if ( perrno )
       *perrno = 0;
@@ -144,9 +154,9 @@ masregerr_print_simple( const masregerr_t * rge, const char *msg )
     fprintf( stderr, "%s - ", msg );
     if ( rge->sys )
       fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s E%02d:%-40s \n", rge->serial, rge->line, rge->func, rge->package, sfile, rge->err_no,
-               strerror( rge->err_no ) );
+               rge->msg ? rge->msg : ( rge->err_no ? strerror( rge->err_no ) : "" ) );
     else
-      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s  %-44s\n", rge->serial, rge->line, rge->func, rge->package, sfile, "-" );
+      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s  %-44s\n", rge->serial, rge->line, rge->func, rge->package, sfile, rge->msg ? rge->msg : "-" );
   }
   return 0;
 }
@@ -178,8 +188,11 @@ masregerr_print_simple_all( masregerrs_t * regerrs, const char *msg )
   {
     num++;
     rge = masregerr_valid_after( regerrs, rge );
-  /* fprintf( stderr, "%2d. ", num ); */
-    masregerr_print_simple( rge, msg );
+    if ( rge )
+    {
+      /* fprintf( stderr, "%2d. %p %p\n", num, rge, masregerrs_default( regerrs )->current ); */
+      masregerr_print_simple( rge, msg );
+    }
   } while ( rge && rge != masregerrs_default( regerrs )->current );
   return 0;
 }
