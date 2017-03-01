@@ -48,7 +48,7 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
     RGES;
   }
   {
-    fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno );
+    /* fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno ); */
     pi = masxfs_pathinfo_create(  );
 
     QRPI( pi, ( real_path ? 0 : -1 ) );

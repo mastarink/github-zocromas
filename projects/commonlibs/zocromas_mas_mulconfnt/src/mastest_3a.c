@@ -9,6 +9,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
@@ -75,9 +76,9 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     if ( osrc )
       osrc->flags |= MUCS_FLAG_SILENT;
 
-    mastest_next_group(  );
-    mastest_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    mastest_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+    masexam_next_group(  );
+    masexam_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    masexam_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
@@ -97,11 +98,11 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       }
     }
 
-    mastest_next_group(  );
-    mastest_exam( __LINE__, mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")", mucs_error_source( osrc ),
+    masexam_next_group(  );
+    masexam_exam( __LINE__, mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")", mucs_error_source( osrc ),
                   mucs_error_source_msg( osrc ) );
-    mastest_next_group(  );
-    mastest_exam( __LINE__, v_string0
+    masexam_next_group(  );
+    masexam_exam( __LINE__, v_string0
                   && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
 #if 0
   /* Don't: Auto-free */
@@ -109,26 +110,26 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       mas_free( v_string0 );
     v_string0 = NULL;
 #endif
-    mastest_exam( __LINE__, !v_string1, "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+    masexam_exam( __LINE__, !v_string1, "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
 #if 0
   /* Don't: Auto-free */
     if ( v_string1 )
       mas_free( v_string1 );
     v_string1 = NULL;
 #endif
-    mastest_next_group(  );
-    mastest_exam( __LINE__, mucs_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mucs_source_argc_no( osrc ), NUM_NOPTS );
+    masexam_next_group(  );
+    masexam_exam( __LINE__, mucs_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mucs_source_argc_no( osrc ), NUM_NOPTS );
     arg = mucs_source_arg_no( osrc, 1 );
-    mastest_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
     arg = mucs_source_arg_no( osrc, 2 );
-    mastest_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
 
     char **argvno = mucs_source_argv_no( osrc );
     int argcount = mucs_source_argc_no( osrc );
 
-    mastest_exam( __LINE__, argcount > 1 && argvno && argvno[1]
+    masexam_exam( __LINE__, argcount > 1 && argvno && argvno[1]
                   && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcount > 1 ? argvno[1] : "?" );
-    mastest_exam( __LINE__, argcount > 2 && argvno && argvno[2]
+    masexam_exam( __LINE__, argcount > 2 && argvno && argvno[2]
                   && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2 ? argvno[2] : "?" );
 
     mucs_source_list_delete( plist );

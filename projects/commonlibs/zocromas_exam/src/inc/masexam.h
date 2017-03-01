@@ -27,6 +27,10 @@ void masexam_next_group( void );
 void masexam_next( void );
 long masexam_tests_count( void );
 
+/* for special mas_strcmp -- includes NULL's  */
+#include <mastar/tools/mas_arg_tools.h>
+
+
 # define EXAM( var, val, fmt ) masexam_exam( __LINE__, (val) == (var), "OK", "Error", fmt, val, var )
 # define EXAMT( cond, var, val, fmt ) masexam_exam( __LINE__, (cond) && (val) == (var), "OK", "Error", fmt, val, (cond)?var:((typeof(var)) 0 ) )
 # define EXAMZ(sz, var, val, fmt ) masexam_exam( __LINE__, sizeof(var)==sz && val == var, "OK", "Error", fmt, val, var /* , val-var, sz */ )

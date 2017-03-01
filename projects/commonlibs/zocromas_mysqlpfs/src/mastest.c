@@ -6,7 +6,11 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include <mastar/wrap/mas_memory.h>
 #include <mastar/regerr/masregerr.h>
+#include <mastar/exam/masexam.h>
+#include <mastar/masxfs/masxfs_pathinfo_base.h>
+#include <mastar/masxfs/masxfs_pathinfo.h>
 
 #include "mysqlpfs_base.h"
 #include "mysqlpfs.h"
@@ -114,7 +118,7 @@ test3b( void )
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
             ", rdev INTEGER"                                         /* */
             ", INDEX size (size)"                                    /* */
-            ", INDEX detype (detype)"                                    /* */
+            ", INDEX detype (detype)"                                /* */
             ", FOREIGN KEY (size) REFERENCES filesizes (size)"       /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filedatas (" "id INTEGER PRIMARY KEY AUTO_INCREMENT" /* */
@@ -153,6 +157,32 @@ test3b( void )
   return 0;
 }
 
+static _uUu_ int
+test4( void )
+{
+  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+
+  if ( pfs )
+  {
+    const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0,
+                                                          128 );
+
+    if ( pi )
+    {
+      char *path = masxfs_pathinfo_pi2path( pi );
+
+      EXAMS( path, path0, "%s : %s" );
+      fprintf( stderr, "restored path:%s\n", path );
+      mas_free( path );
+      masxfs_pathinfo_delete( pi );
+    }
+    mysqlpfs_delete( pfs );
+  }
+
+  return 0;
+}
+
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
@@ -160,5 +190,6 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 /* test2(  ); */
   test3a(  );
   test3b(  );
+  test4(  );
   return 0;
 }

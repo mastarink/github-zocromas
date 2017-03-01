@@ -9,6 +9,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
@@ -26,7 +27,7 @@
 int
 test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix , int do_fprintf _uUu_)
 {
-  mastest_next_group(  );
+  masexam_next_group(  );
   {
     const char *strings[] = {
       "'quoted1'", "quoted1",
@@ -78,7 +79,7 @@ test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const cha
       char *s;
 
       s = mucs_unquote( strings[istr], "'\"" );
-      mastest_exam( __LINE__, 0 == mas_strcmp( s, strings[istr + 1] ), "OK", "Error", "%s ? %s\t\t(%d)", s, strings[istr + 1], istr / 2 );
+      masexam_exam( __LINE__, 0 == mas_strcmp( s, strings[istr + 1] ), "OK", "Error", "%s ? %s\t\t(%d)", s, strings[istr + 1], istr / 2 );
       mas_free( s );
     }
   }

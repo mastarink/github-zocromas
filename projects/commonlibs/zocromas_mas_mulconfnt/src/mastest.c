@@ -22,6 +22,7 @@
 #include "source_list.h"
 #include "parse.h"
 
+#if 0
 int do_fprintf = 0;
 int sound_on_error = 1;
 int stop_on_error = 0;
@@ -32,6 +33,7 @@ static int series_seq = 0;
 static int tests_count = 0, tests_count_good = 0, tests_count_bad = 0;
 static int test_series = 0, test_group = 0, test_seq = 0;
 static const char *test_series_suffix = NULL;
+#endif
 
 #if 0
 extern void *__libc_malloc( size_t size );
@@ -96,6 +98,7 @@ constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
   fprintf( stderr, "START\n" );
 }
 
+#if 0
 static void destructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
 destructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
@@ -173,24 +176,25 @@ mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const
 
   return cond;
 }
+#endif
 
 /* getopt_long */
 int
 main( int argc, const char *argv[] )
 {
 // mas_strdup( "abrakadabra" );
-  /* typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf ); */
-  /* struct dotest_s                                                                                                       */
-  /* {                                                                                                                     */
-  /*   int doit;                                                                                                           */
-  /*   test_fun_t func;                                                                                                    */
-  /*   int nseries;                                                                                                        */
-  /*   char *series_suffix;                                                                                                */
-  /*   int f_print_ok;                                                                                                     */
-  /*   int f_noprint_error;                                                                                                */
-  /*   int do_fprintf;                                                                                                     */
-  /* };                                                                                                                    */
-  /* typedef struct dotest_s dotest_t;                                                                                     */
+/* typedef int ( *test_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf ); */
+/* struct dotest_s                                                                                                       */
+/* {                                                                                                                     */
+/*   int doit;                                                                                                           */
+/*   test_fun_t func;                                                                                                    */
+/*   int nseries;                                                                                                        */
+/*   char *series_suffix;                                                                                                */
+/*   int f_print_ok;                                                                                                     */
+/*   int f_noprint_error;                                                                                                */
+/*   int do_fprintf;                                                                                                     */
+/* };                                                                                                                    */
+/* typedef struct dotest_s dotest_t;                                                                                     */
 
   int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
   int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
@@ -226,7 +230,10 @@ main( int argc, const char *argv[] )
     {1, test_4, 4, ""},
     {1, test_5, 5, ""},
     {1, test_6, 6, "",.f_print_ok = 0},
+    {0}
   };
+  masexam_test( argc, argv, funlist );
+#if 0
   for ( int u = 0; u < argc; u++ )
   {
     fprintf( stderr, "argv[%d]=%s\n", u, argv[u] );
@@ -246,7 +253,9 @@ main( int argc, const char *argv[] )
     }
   }
   mastest_next_group(  );
+#endif
 #define TOTAL_TESTS 349 - 1
-  mastest_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
+  masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+
   return 0;
 }

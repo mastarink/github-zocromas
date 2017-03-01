@@ -9,6 +9,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
@@ -214,7 +215,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( ( plist ? 1 : 0 ), 1, "plist: %d ? %d" );
     mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
@@ -240,10 +241,10 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
       }
     }
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAMS( v_string0, "lorem-ipsum", "v_string0=%s ? %s" );
 #if 0
   /* Don't: Auto-free */
@@ -269,7 +270,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
       mas_free( cc_string );
     cc_string = NULL;
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( v_targ0.argc, 3, "targ0.argc=%d ? %d" );
     EXAMSN( v_targ0.argc, v_targ0.argv, 0, "asta", "'%s' ? '%s'" );
     EXAMSN( v_targ0.argc, v_targ0.argv, 1, "manyana", "'%s' ? '%s'" );
@@ -279,13 +280,13 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   /* Don't: Auto-free */
     mas_argvc_delete( &v_targ0 );
 #endif
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( sizeof( v_char0 ), 1, "sizeof( v_char0 )=%d ? %d" );
     EXAMZ( 1, v_char0, 107, "char0=%d ? %d" );
     EXAM( sizeof( v_short0 ), 2, "sizeof( v_short0 )=%d ? %d" );
     EXAMZ( 2, v_short0, 5437, "short0=%d ? %d" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( sizeof( v_int0 ), 4, "sizeof( v_int0 )=%d ? %d" );
     EXAMZ( 4, v_int0, 5437, "num0=%d ? %d" );
     EXAMZ( 4, v_int1, 0x12, "num1=%d ? %d" );
@@ -294,7 +295,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 4, v_int4, INT_MIN, "num4=%d ? %d" );
     EXAMZ( 4, v_int5, 1111111111, "num5=%d ? %d" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( sizeof( v_long0 ), 8, "sizeof( v_long0 )=%d ? %d" );
     EXAMZ( 8, v_long0, 1099511627775L, "long0=%ld ? %ld" );
     EXAMZ( 8, v_long1, 0xffL, "long0=%ld ? %ld" );
@@ -304,7 +305,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 8, v_long3, -12L, "long3=%ld ? %ld" );
     EXAMZ( 8, v_long4, LONG_MIN, "long4=%ld ? %ld" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( sizeof( v_llong0 ), 8, "sizeof( v_llong0 )=%d ? %d" );
     EXAMZ( 8, v_llong0, 5437LL, "llong0=%lld ? %lld" );
     EXAMZ( 8, v_llong1, 0x12LL, "llong1=%lld ? %lld" );
@@ -312,14 +313,14 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 8, v_llong3, LLONG_MAX, "llong3=%lld ? %lld" );
     EXAMZ( 8, v_llong4, LLONG_MIN, "llong4=%lld ? %lld" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAMZ( 8, v_double0, 3.141592653589793, "double0=%3.15f ? %3.15f" );
     EXAMZ( 16, v_ldouble0, ( long double ) 3.14159265358979323846L, "ldouble0=%3.25Lf ? %3.25Lf" );
 
     char **argvno = mucs_source_argv_no( osrc );
     int argcno = mucs_source_argc_no( osrc );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAMZ( 4, argcno, NUM_NOPTS, "NUM_NOPTS=%d ? %d" );
     if ( !( argcno == NUM_NOPTS ) )
     {
@@ -343,7 +344,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMSN( argcno, argvno, 5, "--", "'%s' ? '%s'" );
     EXAMSN( argcno, argvno, 6, "abrakadabra", "'%s' ? '%s'" );
 
-    mastest_next_group(  );
+    masexam_next_group(  );
     EXAM( bitwise1, ( long ) 0xfffffffffffff8ffL, "%lx ? %lx" );
     EXAM( bitwise2, ( long ) 0x10304L, "%lx ? %lx" );
     EXAM( bitwise3, ( long ) 0x10004L, "%lx ? %lx" );

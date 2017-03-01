@@ -10,6 +10,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 

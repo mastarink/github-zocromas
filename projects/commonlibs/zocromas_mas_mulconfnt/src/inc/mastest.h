@@ -2,6 +2,7 @@
 # define MASTEST_H
 
 void mastest_print_allocated( const char *msg, int line, const char *func );
+#if 0
 int mastest_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args );
 int mastest_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );
 void mastest_next_group( void );
@@ -14,5 +15,6 @@ void mastest_next( void );
   	mastest_exam( __LINE__, \
 	    varn > valn && arrs && arrs[valn] && 0 == mas_strcmp( vals, arrs[valn] ), \
 	    "OK", "Error", fmt, vals, varn > valn ? (arrs[valn]?arrs[valn]:"<NULL>") : "?" );
+#endif
 
 #endif
