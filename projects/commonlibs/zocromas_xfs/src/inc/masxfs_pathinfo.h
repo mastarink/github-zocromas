@@ -9,4 +9,6 @@ int masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * call
 masxfs_levinfo_t *masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, masxfs_depth_t offset );
 masxfs_levinfo_t *masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi );
 
+void masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *udata _uUu_ );
+
 #endif

@@ -16,6 +16,12 @@
 #include "mysqlpfs_structs.h"
 #include "mysqlpfs.h"
 
+mysqlpfs_mysql_t *
+mas_mysqlpfs_mysql( mysqlpfs_t * pfs )
+{
+  return pfs ? &pfs->mysql : NULL;
+}
+
 int
 mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sql )
 {
@@ -26,7 +32,7 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sql )
   if ( pfs && sql && *sql )
   {
     r = mysql_query( &pfs->mysql, sql );
-    /* fprintf( stderr, "(%d) --- %s\n", r, sql ); */
+  /* fprintf( stderr, "(%d) --- %s\n", r, sql ); */
     QRGS( r );
   }
   return r;

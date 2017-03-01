@@ -3,6 +3,8 @@
 
 # include "mysqlpfs_types.h"
 
+mysqlpfs_mysql_t *mas_mysqlpfs_mysql(mysqlpfs_t * pfs);
+
 int mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sql );
 mysqlpfs_result_t *mas_mysqlpfs_result( mysqlpfs_t * pfs );
 

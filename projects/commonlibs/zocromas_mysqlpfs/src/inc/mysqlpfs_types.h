@@ -3,6 +3,7 @@
 # include <mysql.h>
 
 typedef struct mysqlpfs_s mysqlpfs_t;
+typedef MYSQL mysqlpfs_mysql_t;
 typedef MYSQL_RES mysqlpfs_result_t;
 typedef MYSQL_ROW mysqlpfs_row_t;
 

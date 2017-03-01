@@ -62,12 +62,29 @@ fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
   return 0;
 }
 
+static int
+testcb( const char *name _uUu_, size_t depth _uUu_, void *li _uUu_, void *udata _uUu_ )
+{
+  {
+    char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
+
+    fprintf( stderr, "%ld. %s - %s\n", depth, name, real_path );
+
+    mas_free( real_path );
+  }
+
+  return 0;
+}
+
 int
 masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_, const char *_path, size_t _maxpath,
                     masxfs_depth_t _depth, masxfs_depth_t _tdepth, char *_tname, char *_lastname )
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
+  fprintf( stderr, "A====================================================\n" );
+  masxfs_pathinfo_each_depth_cb( pi, testcb, pi );
+  fprintf( stderr, "B====================================================\n" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
     {

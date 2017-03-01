@@ -21,6 +21,7 @@ typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, unsigned long
 typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, unsigned long flags );
 typedef int ( *masxfs_li_filter_t ) ( masxfs_levinfo_t * li );
 typedef int ( *masxfs_li_stopper_t ) ( masxfs_levinfo_t * li );
+typedef int ( *masxfs_li_cb_t ) ( const char *name, size_t depth, void *li _uUu_, void *udata _uUu_ );
 
 typedef size_t masxfs_depth_t;
 

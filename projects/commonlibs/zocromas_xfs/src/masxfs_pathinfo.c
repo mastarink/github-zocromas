@@ -46,11 +46,32 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 masxfs_levinfo_t *
 masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, masxfs_depth_t offset )
 {
-  return pi->levinfo + pi->pidepth - 1 - offset;
+  return pi && pi->levinfo ? pi->levinfo + pi->pidepth - 1 - offset : NULL;
 }
 
 masxfs_levinfo_t *
 masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi )
 {
   return masxfs_pathinfo_tail( pi, 0 );
+}
+
+void
+masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *udata _uUu_ )
+{
+  if ( pi && pi->levinfo )
+  {
+    for ( masxfs_levinfo_t * li = pi->levinfo; li < pi->levinfo + pi->pidepth; li++ )
+    {
+      if ( li->lidepth == ( size_t ) ( li - pi->levinfo ) )
+      {
+        int r _uUu_ = 0;
+
+        r = cb( li->name, li->lidepth, li, udata );
+      }
+      else
+      {
+        DIE( "FATAL ERROR" );
+      }
+    }
+  }
 }

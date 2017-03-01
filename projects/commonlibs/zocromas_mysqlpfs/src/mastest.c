@@ -156,6 +156,86 @@ test3b( void )
 
   return 0;
 }
+/*
+MYSQL_TYPE_TINY
+MYSQL_TYPE_SHORT
+MYSQL_TYPE_LONGLONG
+MYSQL_TYPE_FLOAT
+MYSQL_TYPE_DOUBLE
+MYSQL_TYPE_TIME
+MYSQL_TYPE_DATE
+MYSQL_TYPE_DATETIME
+MYSQL_TYPE_TIMESTAMP
+MYSQL_TYPE_STRING
+MYSQL_TYPE_BLOB
+MYSQL_TYPE_NULL
+*/
+static int
+testcb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
+{
+  mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
+
+  fprintf( stderr, "%ld. %s\n", depth, name );
+#if 0
+  char *insops[] _uUu_ = {
+    "PREPARE insname_stmt FROM 'INSERT INTO filenames SET name=?'"
+          /* INSERT INTO filesizes */
+          /* INSERT INTO fileprops */
+          /* INSERT INTO filedatas */
+            "EXECUTE insname_stmt USING @file_name",
+    "DEALLOCATE PREPARE insname_stmt",
+  };
+#endif
+  {
+    int r = 0;
+    char *insop = "INSERT INTO filenames(name) VALUES (?)";
+    MYSQL_STMT *stmt = mysql_stmt_init( mas_mysqlpfs_mysql( pfs ) );
+
+    unsigned long length = strlen( name );
+    MYSQL_BIND param[1], result[1];
+
+    r = mysql_stmt_prepare( stmt, insop, strlen( insop ) );
+    fprintf( stderr, "PREPARE: %d\n", r );
+    memset( param, 0, sizeof( param ) );
+    memset( result, 0, sizeof( result ) );
+
+    param[0].buffer_type = MYSQL_TYPE_STRING;
+    param[0].buffer = ( char * ) name;
+    param[0].buffer_length = 255;
+  /* param[0].is_unsigned = 0; */
+    param[0].is_null = 0;
+    param[0].length = &length;
+
+    r = mysql_stmt_bind_param( stmt, param );
+    fprintf( stderr, "BIND: %d\n", r );
+
+    r = mysql_stmt_execute( stmt );
+    fprintf( stderr, "EXECUTE: %d\n", r );
+/* mariadb_stmt_execute_direct(); */
+#if 0
+    mysql_stmt_reset(  );
+#else
+    r = mysql_stmt_close( stmt );
+    fprintf( stderr, "CLOSE: %d\n", r );
+#endif
+    /* mysql_stmt_bind_result
+     * mysql_stmt_fetch
+     * */
+  }
+#if 0
+  if ( pfs )
+  {
+    int r = 0;
+
+    for ( size_t i = 0; i < sizeof( insops ) / sizeof( insops[0] ) && !r; i++ )
+    {
+    /* r = mas_mysqlpfs_query( pfs, insops[i] ); */
+      fprintf( stderr, "(%d) %s\n", r, insops[i] );
+    }
+  }
+#endif
+  return 0;
+}
 
 static _uUu_ int
 test4( void )
@@ -165,12 +245,13 @@ test4( void )
   if ( pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0,
-                                                          128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
 
     if ( pi )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
+
+      masxfs_pathinfo_each_depth_cb( pi, testcb, pfs );
 
       EXAMS( path, path0, "%s : %s" );
       fprintf( stderr, "restored path:%s\n", path );
