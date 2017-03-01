@@ -1,5 +1,5 @@
-libzocromas_mas_masxfsincludedir = $(includedir)/mastar/masxfs
-libzocromas_mas_masxfsinclude_HEADERS =  \
+libzocromas_xfsincludedir = $(includedir)/mastar/masxfs
+libzocromas_xfsinclude_HEADERS =  \
 	masxfs_defs.h \
 	masxfs_types.h \
 	masxfs_structs.h \

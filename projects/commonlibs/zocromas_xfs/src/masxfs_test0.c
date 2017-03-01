@@ -148,7 +148,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 }
 
 void
-masxfs_test_fd( void )
+masxfs_test_fd( int variant _uUu_ )
 {
   int r;
   int *fds;
@@ -194,6 +194,7 @@ masxfs_test_fd( void )
 int
 masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
+  masxfs_test_fd( __LINE__ );
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
@@ -236,8 +237,8 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
-  masxfs_test_fd(  );
-  masxfs_test_fd(  );
+  masxfs_test_fd( __LINE__ );
+  masxfs_test_fd( __LINE__ );
 
   if ( 1 )
   {
@@ -245,13 +246,13 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:\n" );
     {
       masxfs_pathinfo_t *pi =
-              masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest",
+              masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest",
                                             128 );
 
       masxfs_pathinfo_delete( pi );
     }
-    char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastest";
-    char *tpathe _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_masxfs/mastes";
+    char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
+    char *tpathe _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastes";
 
     EXAM( 1, 1, "%d ? %d" );
     EXAM( PATH_MAX, 4096, "%d ? %d" );
@@ -271,6 +272,6 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       masxfs_pathinfo_delete( pi );
     }
   }
-  masxfs_test_fd(  );
+  masxfs_test_fd( __LINE__ );
   return 0;
 }

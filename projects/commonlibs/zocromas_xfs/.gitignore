@@ -5,3 +5,4 @@ tags
 .*.sw*
 .sw*
 mastest
+config.h.in*

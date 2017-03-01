@@ -1,12 +1,11 @@
 SUBDIRS= inc
 
 
-lib_LTLIBRARIES = libzocromas_mas_masxfs.la
-libzocromas_mas_masxfs_la_SOURCES = \
+lib_LTLIBRARIES = libzocromas_xfs.la
+libzocromas_xfs_la_SOURCES = \
 	masxfs_scan.c \
 	masxfs_pathinfo_base.c \
 	masxfs_pathinfo.c \
-	masxfs_pathinfo_io.c \
 	masxfs_levinfo_base.c \
 	masxfs_levinfo_io.c \
 	masxfs_levinfo_io_dir.c \
@@ -17,7 +16,7 @@ libzocromas_mas_masxfs_la_SOURCES = \
 	masxfs_levinfo_tools.c \
 	tools.c
 
-libzocromas_mas_masxfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
+libzocromas_xfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 
 if MAS_TEST
 noinst_PROGRAMS=mastest mastest1

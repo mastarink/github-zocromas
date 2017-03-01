@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -69,7 +70,12 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
   int r = 0;
   struct rlimit lim = { 0 };
   errno = 0;
+  {
+    int fd = open( "Makefile.in", O_RDONLY );
 
+    fprintf( stderr, "FD:%d\n", fd );
+    close( fd );
+  }
   r = getrlimit( RLIMIT_NOFILE, &lim );
   if ( r >= 0 )
   {
@@ -87,7 +93,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
       masexam_test( argc, argv, funlist );
 #if 1
       masexam_next_group(  );
-# define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*4 + 3L + 1L))*3 + 225L - 1L
+# define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*4 + 3L + 1L))*4 + 225L - 1L
       masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
 #endif
     }
