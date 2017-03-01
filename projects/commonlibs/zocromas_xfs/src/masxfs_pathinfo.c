@@ -11,8 +11,6 @@
 #include "masxfs_levinfo_path.h"
 #include "masxfs_levinfo.h"
 
-/* #include "masxfs_pathinfo_io.h" */
-
 #include "masxfs_pathinfo.h"
 
 char *
