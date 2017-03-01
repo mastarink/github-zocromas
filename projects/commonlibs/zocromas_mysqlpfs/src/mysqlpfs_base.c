@@ -2,7 +2,6 @@
 #include "mysqlpfs_defs.h"
 #include <string.h>
 
-/* #include <my_global.h> */
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -34,7 +33,7 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
     mysqlpfs_reset( pfs );
     r = -1;
   }
-  /* fprintf( stderr, "MYSQL: %p : %d\n", mysql, r ); */
+/* fprintf( stderr, "MYSQL: %p : %d\n", mysql, r ); */
   return r;
 }
 

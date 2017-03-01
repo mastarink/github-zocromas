@@ -13,7 +13,7 @@
 #  define FALSE (0)
 # endif
 
-# define QRGS(_r) RGESR(_r)
+# define QRGS(_r) RGESR(_r?-1:0)
 # define QRG(_r) RGER(_r)
 
 # define QRGSP(_ptr)   QRGS( _ptr ? 0 : -1 );

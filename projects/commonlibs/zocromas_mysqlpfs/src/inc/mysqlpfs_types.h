@@ -1,5 +1,6 @@
 #ifndef MAS_MYSQLPFS_TYPES_H
 # define MAS_MYSQLPFS_TYPES_H
+# include <mysql.h>
 
 typedef struct mysqlpfs_s mysqlpfs_t;
 typedef MYSQL_RES mysqlpfs_result_t;

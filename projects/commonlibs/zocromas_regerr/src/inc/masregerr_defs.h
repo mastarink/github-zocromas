@@ -23,8 +23,8 @@
 #  define RGEMSG strerror(errno)
 # endif
 /* # define MAS_FLF __func__,__LINE__,__FILE__ */
-# define MAS_FLF __FUNCTION__,__LINE__,__FILE__
-# define MAS_FLFFF __FUNCTION__,__LINE__,__FILE__,__func__,__PRETTY_FUNCTION__
+# define MAS_FLF __func__,__LINE__,__FILE__
+# define MAS_FLFFF __func__,__LINE__,__FILE__,__FUNCTION__,__PRETTY_FUNCTION__
 # define RGEX(_sys, _msg) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, _msg)
 # define RGE RGEX(0, NULL)
 # define RGES RGEX(1, RGEMSG)

@@ -26,6 +26,7 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sql )
   if ( pfs && sql && *sql )
   {
     r = mysql_query( &pfs->mysql, sql );
+    /* fprintf( stderr, "(%d) --- %s\n", r, sql ); */
     QRGS( r );
   }
   return r;

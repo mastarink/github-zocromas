@@ -161,4 +161,5 @@ main( int argc __attribute__((unused)), char *argv[] __attribute__((unused)) )
   mysql_stmt_close( stmt );
 
   mysql_close( mysql );
+  return 0;
 }
