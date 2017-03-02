@@ -22,14 +22,22 @@
 #include "mysqlpfs_mstmt_base.h"
 
 void
-mas_mysqlpfs_mstmt_init( mysqlpfs_t * pfs, mysqlpfs_mstmt_t * mstmt, int nbind )
+mas_mysqlpfs_mstmt_init_bind( mysqlpfs_mbind_t * mbind, int nbind )
+{
+  mbind->nbind = nbind;
+  mbind->bind = mas_calloc( nbind, sizeof( mysqlpfs_s_bind_t ) );
+  mbind->length = mas_calloc( nbind, sizeof( mysqlpfs_s_length_t ) );
+  mbind->is_null = mas_calloc( nbind, sizeof( mysqlpfs_s_bool_t ) );
+  mbind->allocated_buffers = mas_calloc( nbind, sizeof( void * ) );
+}
+
+void
+mas_mysqlpfs_mstmt_init( mysqlpfs_t * pfs, mysqlpfs_mstmt_t * mstmt, int nparams, int nresults )
 {
   mstmt->stmt = mysql_stmt_init( &pfs->mysql );
-  mstmt->nbind = nbind;
-  mstmt->bind = mas_calloc( nbind, sizeof( mysqlpfs_s_bind_t ) );
-  mstmt->length = mas_calloc( nbind, sizeof( mysqlpfs_s_length_t ) );
-  mstmt->is_null = mas_calloc( nbind, sizeof( mysqlpfs_s_bool_t ) );
-  mstmt->allocated_buffers = mas_calloc( nbind, sizeof( void * ) );
+  /* fprintf( stderr, "nparams: %d; nresults: %d\n", nparams, nresults ); */
+  mas_mysqlpfs_mstmt_init_bind( &mstmt->binds.param, nparams );
+  mas_mysqlpfs_mstmt_init_bind( &mstmt->binds.result, nresults );
 }
 
 mysqlpfs_mstmt_t *
@@ -41,17 +49,36 @@ mas_mysqlpfs_mstmt_create( void )
 }
 
 mysqlpfs_mstmt_t *
-mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, const char *sqlop _uUu_ )
+mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, const char *sqlop _uUu_ )
 {
   mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create(  );
 
   QRGP( mstmt );
   if ( mstmt )
   {
-    mas_mysqlpfs_mstmt_init( pfs, mstmt, nparams );
+    mas_mysqlpfs_mstmt_init( pfs, mstmt, nparams, nresults );
     mas_mysqlpfs_mstmt_prepare( mstmt, sqlop );
   }
   return mstmt;
+}
+
+static int
+mas_mysqlpfs_mstmt_reset_bind( mysqlpfs_mbind_t * mbind )
+{
+  for ( int i = 0; i < mbind->nbind; i++ )
+  {
+    if ( mbind->allocated_buffers[i] )
+      mas_free( mbind->allocated_buffers[i] );
+  }
+  if ( mbind->allocated_buffers )
+    mas_free( mbind->allocated_buffers );
+  if ( mbind->is_null )
+    mas_free( mbind->is_null );
+  if ( mbind->length )
+    mas_free( mbind->length );
+  if ( mbind->bind )
+    mas_free( mbind->bind );
+  return 0;
 }
 
 int
@@ -65,22 +92,12 @@ mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
     {
+      r = mas_mysqlpfs_mstmt_free_result( mstmt );
       r = mysql_stmt_close( mstmt->stmt );
       QRGS( r );
     }
-    for ( int i = 0; i < mstmt->nbind; i++ )
-    {
-      if ( mstmt->allocated_buffers[i] )
-        mas_free( mstmt->allocated_buffers[i] );
-    }
-    if ( mstmt->allocated_buffers )
-      mas_free( mstmt->allocated_buffers );
-    if ( mstmt->is_null )
-      mas_free( mstmt->is_null );
-    if ( mstmt->length )
-      mas_free( mstmt->length );
-    if ( mstmt->bind )
-      mas_free( mstmt->bind );
+    mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.param );
+    mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.result );
   }
   return r;
 }

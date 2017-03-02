@@ -7,7 +7,8 @@ libzocromas_mysqlpfs_la_SOURCES = \
  	mysqlpfs_query.c \
 	mysqlpfs_base.c \
 	mysqlpfs_mstmt_base.c \
-	mysqlpfs_mstmt.c
+	mysqlpfs_mstmt.c \
+	mysqlpfs_mstmt_d.c
 
 libzocromas_mysqlpfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
 libzocromas_mysqlpfs_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@

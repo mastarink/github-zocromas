@@ -7,7 +7,8 @@ libzocromas_mysqlpfsinclude_HEADERS =  \
 	mysqlpfs_structs.h \
 	mysqlpfs_base.h \
 	mysqlpfs_mstmt_base.h \
-	mysqlpfs_mstmt.h
+	mysqlpfs_mstmt.h \
+	mysqlpfs_mstmt_d.h
 #
 #
 # noinst_HEADERS = \

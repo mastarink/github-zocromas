@@ -27,6 +27,7 @@ test3drop( void )
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
     "DROP TABLE IF EXISTS filenames",
+    "DROP TABLE IF EXISTS parents",
     "DROP TABLE IF EXISTS filedatas",
     "DROP TABLE IF EXISTS fileprops",
     "DROP TABLE IF EXISTS filesizes",

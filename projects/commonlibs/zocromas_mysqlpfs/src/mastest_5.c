@@ -18,6 +18,7 @@
 #include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"
 #include "mysqlpfs_mstmt.h"
+#include "mysqlpfs_mstmt_d.h"
 
 #include "mysqlpfs_structs.h"
 
@@ -33,7 +34,7 @@ test5cb( const char *name, size_t depth, void *li _uUu_, void *mstmtv )
     if ( !r )
       r = mas_mysqlpfs_mstmt_set_direct_param_string( mstmt, 0, name );
     if ( !r )
-      r = mas_mysqlpfs_mstmt_bind( mstmt );
+      r = mas_mysqlpfs_mstmt_bind_param( mstmt );
     if ( !r )
       r = mas_mysqlpfs_mstmt_execute( mstmt );
   }
@@ -55,7 +56,7 @@ test5( void )
       int r = 0;
       char *path = masxfs_pathinfo_pi2path( pi );
       char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";
-      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, insop );
+      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1,0, insop );
 
       if ( !r )
       {
