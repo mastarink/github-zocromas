@@ -21,25 +21,27 @@
 
 #include "mysqlpfs_structs.h"
 
-int test1status( void );
-int test2status( void );
-int test3drop( void );
-int test3create( void );
-int test4( void );
-int test4o( void );
-int test5( void );
-int test6( void );
-
 int
-main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
+test1status( void )
 {
-/* test1status(  ); */
-/* test2status(  ); */
-  test3drop(  );
-  test3create(  );
-/* test4o(  ); */
-/* test4(  ); */
-  /* test5(  ); */
-  test6(  );
+  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+
+  {
+    mysqlpfs_s_row_t row;
+    int num = 0;
+
+    mas_mysqlpfs_query_result( pfs, "SHOW STATUS" );
+    while ( ( row = mas_mysqlpfs_fetch_row( pfs ) ) )
+    {
+      printf( "%d #X# %s: %s\n", num, row[0], row[1] );
+      num++;
+    }
+
+    mas_mysqlpfs_free_result( pfs );
+  }
+  mysqlpfs_delete( pfs );
+
+/* masregerr_print_simple_all( NULL, NULL ); */
+
   return 0;
 }

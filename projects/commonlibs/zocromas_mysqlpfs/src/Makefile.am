@@ -4,7 +4,10 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_mysqlpfs.la
 libzocromas_mysqlpfs_la_SOURCES = \
  	mysqlpfs.c \
-	mysqlpfs_base.c
+ 	mysqlpfs_query.c \
+	mysqlpfs_base.c \
+	mysqlpfs_mstmt_base.c \
+	mysqlpfs_mstmt.c
 
 libzocromas_mysqlpfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
 libzocromas_mysqlpfs_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
@@ -30,7 +33,17 @@ mastest_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la @MYSQL_CLIENT_LIBS@
 mastest_CFLAGS=@AM_CFLAGS@  @MYSQL_CLIENT_CFLAGS@  -pthread
 
 mastest_SOURCES= \
-	mastest.c
+	mastest.c \
+	mastest_1.c \
+	mastest_2.c \
+	mastest_3a.c \
+	mastest_3b.c \
+	mastest_4.c \
+	mastest_4o.c \
+	mastest_5.c \
+	mastest_6.c
+
+
 
 mastestb_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la @MYSQL_CLIENT_LIBS@
 mastestb_CFLAGS=@AM_CFLAGS@  @MYSQL_CLIENT_CFLAGS@  -pthread

@@ -1,11 +1,27 @@
 find mastest.c
-"sfind mastest.h
+sfind mastest1.c
+sfind mastest2.c
+sfind mastest3a.c
+sfind mastest3b.c
+sfind mastest4.c
+sfind mastest4o.c
+sfind mastest5.c
+sfind mastest6.c
 
 tab sfind mysqlpfs.c
 sfind mysqlpfs.h
 
+tab sfind mysqlpfs_query.c
+sfind mysqlpfs_query.h
+
 tab sfind mysqlpfs_base.c
 sfind mysqlpfs_base.h
+
+tab sfind mysqlpfs_mstmt_base.c
+sfind mysqlpfs_mstmt_base.h
+
+tab sfind mysqlpfs_mstmt.c
+sfind mysqlpfs_mstmt.h
 
 tab sfind mysqlpfs_defs.h
 sfind mysqlpfs_types.h

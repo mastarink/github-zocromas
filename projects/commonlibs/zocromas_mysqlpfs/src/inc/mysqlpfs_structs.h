@@ -7,7 +7,15 @@
 struct mysqlpfs_s
 {
   MYSQL mysql;
-  mysqlpfs_result_t *result;
+  mysqlpfs_s_result_t *result;
+};
+struct mysqlpfs_mstmt_s
+{
+  mysqlpfs_s_stmt_t *stmt;
+  int nbind;
+  mysqlpfs_s_length_t *length;
+  void **allocated_buffers;
+  mysqlpfs_s_bind_t *bind;
 };
 
 #endif
