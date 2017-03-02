@@ -74,6 +74,7 @@ struct masxfs_pathinfo_s
 struct masxfs_levinfo_s
 {
   char *name;
+  unsigned long id;
   masxfs_entry_type_t detype;
   ino_t deinode;
   int fd;

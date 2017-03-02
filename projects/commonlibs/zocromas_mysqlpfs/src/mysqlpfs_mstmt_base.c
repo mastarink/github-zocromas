@@ -28,6 +28,7 @@ mas_mysqlpfs_mstmt_init( mysqlpfs_t * pfs, mysqlpfs_mstmt_t * mstmt, int nbind )
   mstmt->nbind = nbind;
   mstmt->bind = mas_calloc( nbind, sizeof( mysqlpfs_s_bind_t ) );
   mstmt->length = mas_calloc( nbind, sizeof( mysqlpfs_s_length_t ) );
+  mstmt->is_null = mas_calloc( nbind, sizeof( mysqlpfs_s_bool_t ) );
   mstmt->allocated_buffers = mas_calloc( nbind, sizeof( void * ) );
 }
 
@@ -74,6 +75,8 @@ mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
     }
     if ( mstmt->allocated_buffers )
       mas_free( mstmt->allocated_buffers );
+    if ( mstmt->is_null )
+      mas_free( mstmt->is_null );
     if ( mstmt->length )
       mas_free( mstmt->length );
     if ( mstmt->bind )

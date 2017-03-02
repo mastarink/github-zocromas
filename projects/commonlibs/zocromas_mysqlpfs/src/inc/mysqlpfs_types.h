@@ -5,6 +5,7 @@
 typedef struct mysqlpfs_s mysqlpfs_t;
 typedef struct mysqlpfs_mstmt_s mysqlpfs_mstmt_t;
 typedef unsigned long mysqlpfs_s_length_t;
+typedef my_bool mysqlpfs_s_bool_t;
 
 typedef MYSQL mysqlpfs_s_mysql_t;
 typedef MYSQL_RES mysqlpfs_s_result_t;

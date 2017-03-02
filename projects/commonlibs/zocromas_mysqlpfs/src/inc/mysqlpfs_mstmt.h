@@ -14,5 +14,9 @@ int mas_mysqlpfs_mstmt_bind( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt );
 
 my_ulonglong mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt );
+my_ulonglong mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt );
+
+int mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos );
+int mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, my_ulonglong num, mysqlpfs_s_bool_t is_null );
 
 #endif

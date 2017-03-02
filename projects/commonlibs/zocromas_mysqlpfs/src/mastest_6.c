@@ -11,6 +11,7 @@
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
+#include <mastar/masxfs/masxfs_levinfo_ref.h>
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"
@@ -22,20 +23,41 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test6cb( const char *name, size_t depth, void *li _uUu_, void *mstmtv )
+test6cb( const char *name, size_t depth, void *liv _uUu_, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
+  masxfs_levinfo_t *li = ( masxfs_levinfo_t * ) liv;
 
-  fprintf( stderr, "(T6) %ld. %s\n", depth, name );
   {
+    my_ulonglong id = 0;
     int r = 0;
 
+    id = masxfs_levinfo_parent_id( li );
     if ( !r )
       r = mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name );
     if ( !r )
+      r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, id, id ? 0 : 1 );
+    if ( !r )
     {
+      my_ulonglong insert_id = 0;
+      my_ulonglong affected = 0;
+
       r = mas_mysqlpfs_mstmt_execute( mstmt );
-      fprintf( stderr, "%d AFFECTED: %llu\n", r, ( unsigned long long ) mas_mysqlpfs_mstmt_affected_rows( mstmt ) );
+      {
+        affected = mas_mysqlpfs_mstmt_affected_rows( mstmt );
+
+        if ( affected == 1 )
+        {
+          insert_id = mas_mysqlpfs_mstmt_insert_id( mstmt );
+          if ( liv )
+          {
+
+            masxfs_levinfo_set_id( li, insert_id );
+          }
+        }
+        fprintf( stderr, "(T6) %ld. %s r:%d AFFECTED: %llu :: %llu\n", depth, name, r,
+                 ( unsigned long long ) affected, ( unsigned long long ) insert_id );
+      }
     }
   }
   return 0;
@@ -55,11 +77,13 @@ test6( void )
     {
       int r = 0;
       char *path = masxfs_pathinfo_pi2path( pi );
-      char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";
-      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, insop );
+      char *insop _uUu_ = "INSERT INTO filenames(name,parent_id) VALUES (?,?)";
+      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, insop );
 
       if ( !r )
         mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 );
+      if ( !r )
+        mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 );
       if ( !r )
         r = mas_mysqlpfs_mstmt_bind( mstmt );
 

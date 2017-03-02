@@ -14,6 +14,7 @@ struct mysqlpfs_mstmt_s
   mysqlpfs_s_stmt_t *stmt;
   int nbind;
   mysqlpfs_s_length_t *length;
+  mysqlpfs_s_bool_t *is_null;
   void **allocated_buffers;
   mysqlpfs_s_bind_t *bind;
 };

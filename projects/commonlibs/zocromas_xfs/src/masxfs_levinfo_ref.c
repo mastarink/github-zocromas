@@ -168,3 +168,28 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li )
   }
   return detype;
 }
+
+void
+masxfs_levinfo_set_id( masxfs_levinfo_t * li, unsigned long id )
+{
+  if ( li )
+    li->id = id;
+}
+
+unsigned long
+masxfs_levinfo_id( masxfs_levinfo_t * li, masxfs_depth_t offset )
+{
+  unsigned long id = 0;
+
+  if ( li->lidepth >= offset )
+  {
+    id = li[-offset].id;
+  }
+  return id;
+}
+
+int
+masxfs_levinfo_parent_id( masxfs_levinfo_t * li )
+{
+  return masxfs_levinfo_id( li, 1 );
+}
