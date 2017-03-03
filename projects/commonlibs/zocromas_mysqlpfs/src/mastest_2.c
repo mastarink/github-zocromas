@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -33,7 +34,7 @@ test2status( void )
 {
   mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-/* fprintf( stderr, "PFS:%p\n", pfs ); */
+/* INFO("PFS:%p", pfs ); */
   if ( pfs )
   {
     mas_mysqlpfs_query_result_cb( pfs, "SHOW STATUS", row_cb );

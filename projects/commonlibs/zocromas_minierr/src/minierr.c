@@ -10,13 +10,16 @@
 #include "minierr.h"
 
 void
-minierr_vdie( int line, const char *func, const char *file, int fexit, const char *fmt, va_list args )
+minierr_vdie( int line, const char *func, const char *file, int fexit, const char *sid, const char *fmt, va_list args )
 {
   char *pf = strrchr( file, '/' );
+  char buffer[1024];
 
   if ( pf )
     pf++;
-  fprintf( stderr, "@@-=%s=-@@ at %d:%s @ %s -- ", fexit ? "DIE" : "WARN", line, func, pf );
+
+  snprintf( buffer, sizeof( buffer ), "-=%s=- %d:%s( ) @ %s -- ", sid ? sid : ( fexit ? "DIE" : "WARN" ), line, func, pf );
+  fprintf( stderr, "%-50s", buffer );
   vfprintf( stderr, fmt, args );
   fprintf( stderr, "\n" );
   if ( fexit )
@@ -27,11 +30,11 @@ minierr_vdie( int line, const char *func, const char *file, int fexit, const cha
 }
 
 void
-minierr_die( int line, const char *func, const char *file, int fexit, const char *fmt, ... )
+minierr_die( int line, const char *func, const char *file, int fexit, const char *sid, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  minierr_vdie( line, func, file, fexit, fmt, args );
+  minierr_vdie( line, func, file, fexit, sid, fmt, args );
   va_end( args );
 }

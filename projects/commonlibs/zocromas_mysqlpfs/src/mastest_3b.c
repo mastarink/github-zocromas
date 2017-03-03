@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -57,8 +58,7 @@ test3create( void )
           /* */ " )",
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */
             "id INTEGER PRIMARY KEY"                                 /* */
-	    ", filename_id INTEGER"
-            ")",
+            ", filename_id INTEGER" ")",
     "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES filenames (id)" /* */
@@ -80,7 +80,7 @@ test3create( void )
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !r; i++ )
     {
       r = mas_mysqlpfs_query( pfs, creops[i] );
-      fprintf( stderr, "(%d) %s\n", r, creops[i] );
+      INFO( "(%d) %s", r, creops[i] );
     }
     mysqlpfs_delete( pfs );
   }

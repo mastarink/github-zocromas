@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -27,7 +28,7 @@ mastest_print_allocated( const char *msg, int line, const char *func )
   struct mallinfo mi;
 
   mi = mallinfo(  );
-  fprintf( stderr, "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m\n", msg, mi.uordblks, line, func );
+  INFO( "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m", msg, mi.uordblks, line, func );
 }
 
 static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
@@ -47,9 +48,9 @@ constructor_main( void )
     }
   }
 
-  fprintf( stderr, "START MEM\n" );
+  INFO( "START MEM" );
 #endif
-  fprintf( stderr, "START\n" );
+  INFO( "START" );
 }
 
 static void destructor_main(  ) __attribute__ ( ( destructor( 2001 ) ) );

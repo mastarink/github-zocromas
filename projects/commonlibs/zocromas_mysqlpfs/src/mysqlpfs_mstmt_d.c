@@ -11,7 +11,7 @@
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/minierr/minierr.h> */
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
@@ -33,7 +33,7 @@ mas_mysqlpfs_mstmt_set_direct_param_string( mysqlpfs_mstmt_t * mstmt, int pos, c
     {
       void **albs = mstmt->binds.param.allocated_buffers;
 
-      fprintf( stderr, "(%d) BIND '%s'\n", pos, str );
+      INFO("(%d) BIND '%s'", pos, str );
       mstmt->binds.param.bind[pos].buffer_type = MYSQL_TYPE_STRING;
       QRGP( albs );
       if ( albs )

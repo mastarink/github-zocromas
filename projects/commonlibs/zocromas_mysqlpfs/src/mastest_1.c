@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>

@@ -45,7 +45,7 @@ mysqlpfs_mstmt_std_delete_array( mysqlpfs_mstmt_t ** mstmts )
 mysqlpfs_mstmt_t *
 mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 {
-  int r = 0;
+  rSET( 0 );
   mysqlpfs_mstmt_t *mstmt = NULL;
 
   if ( pfs && stdid >= 0 && stdid < STD_MSTMT_MAX )
@@ -66,12 +66,9 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 0, insop );
 
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_param( mstmt );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
       }
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
@@ -80,17 +77,11 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
 
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_param( mstmt );
-
-        if ( !r )
-          mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_result( mstmt );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
       }
     case STD_MSTMT_MAX:
       break;

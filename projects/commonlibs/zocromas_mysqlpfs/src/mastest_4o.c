@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -26,7 +27,7 @@ test4ocb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
 
-  fprintf( stderr, "%ld. %s\n", depth, name );
+  INFO( "%ld. %s", depth, name );
 #if 0
   char *insops[] _uUu_ = {
     "PREPARE insname_stmt FROM 'INSERT INTO filenames SET name=?'"
@@ -46,7 +47,7 @@ test4ocb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
     MYSQL_BIND param[1], result[1];
 
     r = mysql_stmt_prepare( stmt, insop, strlen( insop ) );
-    fprintf( stderr, "PREPARE: %d\n", r );
+    INFO( "PREPARE: %d", r );
     memset( param, 0, sizeof( param ) );
     memset( result, 0, sizeof( result ) );
 
@@ -58,16 +59,16 @@ test4ocb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
     param[0].length = &length;
 
     r = mysql_stmt_bind_param( stmt, param );
-    fprintf( stderr, "BIND: %d\n", r );
+    INFO( "BIND: %d", r );
 
     r = mysql_stmt_execute( stmt );
-    fprintf( stderr, "EXECUTE: %d\n", r );
+    INFO( "EXECUTE: %d", r );
 /* mariadb_stmt_execute_direct(); */
 #if 0
     mysql_stmt_reset(  );
 #else
     r = mysql_stmt_close( stmt );
-    fprintf( stderr, "CLOSE: %d\n", r );
+    INFO( "CLOSE: %d", r );
 #endif
   /* mysql_stmt_bind_result
    * mysql_stmt_fetch
@@ -81,7 +82,7 @@ test4ocb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
     for ( size_t i = 0; i < sizeof( insops ) / sizeof( insops[0] ) && !r; i++ )
     {
     /* r = mas_mysqlpfs_query( pfs, insops[i] ); */
-      fprintf( stderr, "(%d) %s\n", r, insops[i] );
+      INFO( "(%d) %s", r, insops[i] );
     }
   }
 #endif
@@ -105,7 +106,7 @@ test4o( void )
       masxfs_pathinfo_each_depth_cb( pi, test4ocb, pfs );
 
       EXAMS( path, path0, "%s : %s" );
-      fprintf( stderr, "restored path:%s\n", path );
+      INFO( "restored path:%s", path );
       mas_free( path );
       masxfs_pathinfo_delete( pi );
     }

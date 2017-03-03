@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -27,7 +28,7 @@ test4cb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
 
-  fprintf( stderr, "(T4) %ld. %s\n", depth, name );
+  MARK( "(T4)", " %ld. %s", depth, name );
   {
     int r = 0;
     char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";
@@ -66,7 +67,7 @@ test4( void )
       masxfs_pathinfo_each_depth_cb( pi, test4cb, pfs );
 
       EXAMS( path, path0, "%s : %s" );
-      fprintf( stderr, "restored path:%s\n", path );
+      INFO( "restored path:%s", path );
       mas_free( path );
       masxfs_pathinfo_delete( pi );
     }

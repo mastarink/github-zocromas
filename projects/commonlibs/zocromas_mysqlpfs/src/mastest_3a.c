@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -42,7 +43,7 @@ test3drop( void )
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !r; i++ )
     {
       r = mas_mysqlpfs_query( pfs, creops[i] );
-      fprintf( stderr, "(%d) %s\n", r, creops[i] );
+      INFO( "(%d) %s", r, creops[i] );
     }
     mysqlpfs_delete( pfs );
   }

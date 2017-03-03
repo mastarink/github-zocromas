@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -27,7 +28,7 @@ test5cb( const char *name, size_t depth, void *li _uUu_, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
 
-  fprintf( stderr, "(T5) %ld. %s\n", depth, name );
+  MARK( "(T5)", " %ld. %s", depth, name );
   {
     int r = 0;
 
@@ -56,7 +57,7 @@ test5( void )
       int r = 0;
       char *path = masxfs_pathinfo_pi2path( pi );
       char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";
-      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1,0, insop );
+      mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
 
       if ( !r )
       {
@@ -65,7 +66,7 @@ test5( void )
       mas_mysqlpfs_mstmt_delete( mstmt );
 
       EXAMS( path, path0, "%s : %s" );
-      fprintf( stderr, "restored path:%s\n", path );
+      INFO( "restored path:%s", path );
       mas_free( path );
       masxfs_pathinfo_delete( pi );
     }

@@ -86,8 +86,7 @@ test6icb( const char *name, size_t depth, void *liv, void *mstmtv )
           if ( liv )
             masxfs_levinfo_set_id( li, insert_id );
         }
-        fprintf( stderr, "(T6) %ld. %s r:%d AFFECTED: %llu :: %llu\n", depth, name, r,
-                 ( unsigned long long ) affected, ( unsigned long long ) insert_id );
+        MARK( "(T6)", " %ld. %s r:%d AFFECTED: %llu :: %llu", depth, name, r, ( unsigned long long ) affected, ( unsigned long long ) insert_id );
       }
     }
   }
@@ -106,79 +105,36 @@ test6( void )
 
     if ( pi )
     {
-      int r = 0;
-      char *path = masxfs_pathinfo_pi2path( pi );
+      rSET( 0 );
 
-#if 1
       mysqlpfs_mstmt_t *mstmt_i = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
 
-      QRGP( mstmt_i );
-      r = masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i );
-#else
+      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i ) );
+
       {
-        char *insop = "INSERT INTO filenames(name,parent_id) VALUES (?,?)";
-        mysqlpfs_mstmt_t *mstmt_i = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 0, insop );
-
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt_i, 0, 255 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_i, 1 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_param( mstmt_i );
-
-        if ( !r )
-          r = masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i );
-
-        mas_mysqlpfs_mstmt_delete( mstmt_i );
-      }
-#endif
-      {
-#if 1
         mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
 
-        QRGP( mstmt_s );
-#else
-        char *selop = "SELECT id FROM filenames WHERE name=? AND parent_id<=>?";
-
-        mysqlpfs_mstmt_t *mstmt_s = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
-
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt_s, 0, 255 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_s, 1 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_param( mstmt_s );
-
-        if ( !r )
-          mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt_s, 0 );
-        if ( !r )
-          r = mas_mysqlpfs_mstmt_bind_result( mstmt_s );
-#endif
-        if ( !r )
         {
           QRGP( mstmt_s );
-          if ( !r )
-            r = mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "zocromas_xfs" );
-        /* r = mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "" ); */
-          if ( !r )
-            r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 12 /* parent_id */ , FALSE );
-        /* r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 0 (* parent_id *) , TRUE ); */
-          if ( !r )
-            r = mas_mysqlpfs_mstmt_execute_store( mstmt_s );
-          fprintf( stderr, "ROWS: %lld\n", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) );
-          if ( !r )
-            mas_mysqlpfs_mstmt_fetch( mstmt_s );
-          if ( !r )
+
+          rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "zocromas_xfs" ) ); /* rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "" )); */
+          rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 12 /* parent_id */ , FALSE ) ); /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 0 (* parent_id *) , TRUE )); */
+          rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
+
+          INFO( "ROWS: %lld", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) );
+          rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
+
+          if ( r == MYSQL_NO_DATA )
+            WARN( "no more data" );
+          else
           {
             mysqlpfs_s_ulonglong_t num = 0;
             mysqlpfs_s_bool_t is_null = 0;
 
-            r = mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &num, &is_null );
-            fprintf( stderr, "RESULT: num:%lld -- is_null:%d\n", num, is_null );
-          }
-          else if ( r == MYSQL_NO_DATA )
-          {
-            fprintf( stderr, "no more data\n" );
+            rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &num, &is_null ) );
+
+            if ( !r )
+              WARN( "RESULT: num:%lld -- is_null:%d", num, is_null );
           }
         }
 #if 0
@@ -189,9 +145,13 @@ test6( void )
       /* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
       }
 
-      EXAMS( path, path0, "%s : %s" );
-      fprintf( stderr, "restored path:%s\n", path );
-      mas_free( path );
+      {
+        char *path = masxfs_pathinfo_pi2path( pi );
+
+        EXAMS( path, path0, "%s : %s" );
+        WARN( "restored path:%s", path );
+        mas_free( path );
+      }
       masxfs_pathinfo_delete( pi );
     }
     mysqlpfs_delete( pfs );

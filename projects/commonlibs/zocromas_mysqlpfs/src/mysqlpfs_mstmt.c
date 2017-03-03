@@ -11,7 +11,7 @@
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/minierr/minierr.h> */
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
@@ -124,7 +124,7 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
         }
         else
         {
-          fprintf( stderr, "ERROR: pos:%d;mbind->nbind:%d\n", pos, mbind->nbind );
+          WARN( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
           QRG( -1 );
         }
       }
@@ -207,8 +207,6 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, mysqlpf
       mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
       mysqlpfs_s_ulonglong_t *p = mbind->allocated_buffers[pos];
 
-    /* fprintf( stderr, "\t\t\t%d ### IS NULL %p - %p [%d]\n", is_null, mbind->bind[pos].is_null, p_is_null, mbind->bind[pos].is_null == p_is_null ); */
-
       *p = num;
       *p_is_null = is_null;
       *p_length = 0;
@@ -216,7 +214,7 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, mysqlpf
     }
     else
     {
-      fprintf( stderr, "%d / %d %p %p\n", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
+      WARN( "%d / %d %p %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
       QRG( -1 );
     }
   }
@@ -499,9 +497,6 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
     {
-    /* fprintf( stderr, "STRING: '%s'(%lu),%lld - IS NULL:%p:%d\n", ( char * ) mstmt->binds.param.bind[0].buffer, *mstmt->binds.param.bind[0].length, */
-    /*          *( ( mysqlpfs_s_ulonglong_t * ) mstmt->binds.param.bind[1].buffer ), mstmt->binds.param.bind[1].is_null,                              */
-    /*          *mstmt->binds.param.bind[1].is_null );                                                                                                */
       r = mysql_stmt_execute( mstmt->stmt );
       QRGS( r );
     }

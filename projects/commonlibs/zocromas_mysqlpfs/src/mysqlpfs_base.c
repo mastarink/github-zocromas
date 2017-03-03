@@ -30,27 +30,27 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
   MYSQL *mysql = NULL;
 
   mysql = mysql_real_connect( &pfs->mysql, host, user, passwd, db, port, NULL, 0 );
-/* fprintf( stderr, "%p -- %p (%ld)\n", &pfs->mysql, mysql, &pfs->mysql - mysql ); */
   QRGSP( mysql );
   if ( !mysql )
   {
     mysqlpfs_reset( pfs );
     r = -1;
   }
+  else
+    pfs->std_mstmts = mysqlpfs_mstmt_std_create_array(  );
 
-  pfs->std_mstmts = mysqlpfs_mstmt_std_create_array(  );
-
-/* fprintf( stderr, "MYSQL: %p : %d\n", mysql, r ); */
+/* WARN( "MYSQL: %p : %d", mysql, r ); */
   return r;
 }
 
 mysqlpfs_t *
 mysqlpfs_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
 {
-  int r = 0;
+  rSET( 0 );
   mysqlpfs_t *pfs = mysqlpfs_create(  );
 
-  r = mysqlpfs_init( pfs, host, user, passwd, db, port );
+  rC( mysqlpfs_init( pfs, host, user, passwd, db, port ) );
+
   if ( r < 0 )
   {
     mas_free( pfs );
@@ -68,7 +68,7 @@ mysqlpfs_reset( mysqlpfs_t * pfs )
     if ( pfs->std_mstmts )
       mysqlpfs_mstmt_std_delete_array( pfs->std_mstmts );
     pfs->std_mstmts = NULL;
-    
+
     memset( pfs, 0, sizeof( mysqlpfs_t ) );
   }
 }
