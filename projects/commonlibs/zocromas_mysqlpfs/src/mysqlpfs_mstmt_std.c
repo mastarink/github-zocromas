@@ -116,3 +116,38 @@ mysqlpfs_mstmt_std_get( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 
   return mstmt;
 }
+
+mysqlpfs_s_ulonglong_t
+mysqlpfs_mstmt_std_get_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+{
+  rSET( 0 );
+  mysqlpfs_s_ulonglong_t num = 0;
+  mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
+
+  {
+    QRGP( mstmt_s );
+
+    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, name ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, parent_id, parent_id ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
+
+    INFO( "ROWS: %lld", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) );
+    rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
+
+    if ( r == MYSQL_NO_DATA )
+      WARN( "no more data" );
+    else
+    {
+      mysqlpfs_s_bool_t is_null = 0;
+
+      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &num, &is_null ) );
+
+    /* if ( !r )                                                 */
+    /*   WARN( "RESULT: num:%lld -- is_null:%d", num, is_null ); */
+    }
+  }
+
+  mas_mysqlpfs_mstmt_free_result( mstmt_s );
+/* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
+  return num;
+}

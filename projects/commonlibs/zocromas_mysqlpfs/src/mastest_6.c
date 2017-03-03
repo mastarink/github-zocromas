@@ -56,9 +56,11 @@ test6scb( const char *name, size_t depth _uUu_, void *liv, void *mstmtv )
 #endif
 
 static int _uUu_
-test6icb( const char *name, size_t depth, void *liv, void *mstmtv )
+test6icb( const char *name, size_t depth, void *liv, void *pfsv )
 {
-  mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
+/* mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv; */
+  mysqlpfs_t *pfs = ( mysqlpfs_t * ) pfsv;
+  mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
   masxfs_levinfo_t *li = ( masxfs_levinfo_t * ) liv;
 
   {
@@ -106,11 +108,14 @@ test6( void )
     if ( pi )
     {
       rSET( 0 );
+      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, pfs ) );
 
-      mysqlpfs_mstmt_t *mstmt_i = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
+#if 1
+      mysqlpfs_s_ulonglong_t num = 0;
 
-      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i ) );
-
+      num = mysqlpfs_mstmt_std_get_names_id( pfs, "zocromas_xfs", 12 );
+      MARK( "RESULT", ": num:%lld", num );
+#else
       {
         mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
 
@@ -137,14 +142,14 @@ test6( void )
               WARN( "RESULT: num:%lld -- is_null:%d", num, is_null );
           }
         }
-#if 0
+# if 0
         if ( !r )
           masxfs_pathinfo_each_depth_cb( pi, test6scb, mstmt_s );
-#endif
+# endif
         mas_mysqlpfs_mstmt_free_result( mstmt_s );
       /* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
       }
-
+#endif
       {
         char *path = masxfs_pathinfo_pi2path( pi );
 
