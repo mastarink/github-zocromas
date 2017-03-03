@@ -30,14 +30,14 @@
 /*
 MYSQL_TYPE_TINY
 MYSQL_TYPE_SHORT
-MYSQL_TYPE_LONGLONG
+PFS_LONGLONG
 MYSQL_TYPE_FLOAT
 MYSQL_TYPE_DOUBLE
 MYSQL_TYPE_TIME
 MYSQL_TYPE_DATE
 MYSQL_TYPE_DATETIME
 MYSQL_TYPE_TIMESTAMP
-MYSQL_TYPE_STRING
+PFS_STRING
 MYSQL_TYPE_BLOB
 MYSQL_TYPE_NULL
 */
@@ -149,7 +149,7 @@ mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
   int r = -1;
 
-  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, MYSQL_TYPE_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
+  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
   return r;
 }
 
@@ -158,7 +158,7 @@ mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysq
 {
   int r = -1;
 
-  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, MYSQL_TYPE_STRING, buffer_length );
+  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_STRING, buffer_length );
   return r;
 }
 
@@ -178,7 +178,7 @@ mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
   int r = -1;
 
-  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, MYSQL_TYPE_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
+  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
   return r;
 }
 
@@ -187,7 +187,7 @@ mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mys
 {
   int r = -1;
 
-  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, MYSQL_TYPE_STRING, buffer_length );
+  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_STRING, buffer_length );
   return r;
 }
 
@@ -207,7 +207,7 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, mysqlpf
       mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
       mysqlpfs_s_ulonglong_t *p = mbind->allocated_buffers[pos];
 
-      /* fprintf( stderr, "\t\t\t%d ### IS NULL %p - %p [%d]\n", is_null, mbind->bind[pos].is_null, p_is_null, mbind->bind[pos].is_null == p_is_null ); */
+    /* fprintf( stderr, "\t\t\t%d ### IS NULL %p - %p [%d]\n", is_null, mbind->bind[pos].is_null, p_is_null, mbind->bind[pos].is_null == p_is_null ); */
 
       *p = num;
       *p_is_null = is_null;
@@ -499,9 +499,9 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
     {
-      /* fprintf( stderr, "STRING: '%s'(%lu),%lld - IS NULL:%p:%d\n", ( char * ) mstmt->binds.param.bind[0].buffer, *mstmt->binds.param.bind[0].length, */
-      /*          *( ( mysqlpfs_s_ulonglong_t * ) mstmt->binds.param.bind[1].buffer ), mstmt->binds.param.bind[1].is_null,                              */
-      /*          *mstmt->binds.param.bind[1].is_null );                                                                                                */
+    /* fprintf( stderr, "STRING: '%s'(%lu),%lld - IS NULL:%p:%d\n", ( char * ) mstmt->binds.param.bind[0].buffer, *mstmt->binds.param.bind[0].length, */
+    /*          *( ( mysqlpfs_s_ulonglong_t * ) mstmt->binds.param.bind[1].buffer ), mstmt->binds.param.bind[1].is_null,                              */
+    /*          *mstmt->binds.param.bind[1].is_null );                                                                                                */
       r = mysql_stmt_execute( mstmt->stmt );
       QRGS( r );
     }
@@ -520,15 +520,19 @@ mas_mysqlpfs_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt )
   return r;
 }
 
-int
-mas_mysqlpfs_mstmt_execute_store_fetch( mysqlpfs_mstmt_t * mstmt )
+mysqlpfs_s_ulonglong_t
+mas_mysqlpfs_mstmt_num_rows( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  mysqlpfs_s_ulonglong_t nr = 0;
 
-  r = mas_mysqlpfs_mstmt_execute_store( mstmt );
-  if ( !r )
-    r = mas_mysqlpfs_mstmt_fetch( mstmt );
-  return r;
+  QRGP( mstmt );
+  if ( mstmt )
+  {
+    QRGP( mstmt->stmt );
+    if ( mstmt->stmt )
+      nr = mysql_stmt_num_rows( mstmt->stmt );
+  }
+  return nr;
 }
 
 mysqlpfs_s_ulonglong_t
@@ -537,7 +541,7 @@ mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt )
   mysqlpfs_s_ulonglong_t nr = 0;
 
   QRGP( mstmt );
-  if ( mstmt && mstmt->stmt )
+  if ( mstmt )
   {
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )

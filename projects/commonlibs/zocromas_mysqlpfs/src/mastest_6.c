@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
@@ -18,6 +19,7 @@
 
 #include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"
+#include "mysqlpfs_mstmt_std.h"
 #include "mysqlpfs_mstmt.h"
 
 #include "mysqlpfs_structs.h"
@@ -53,8 +55,8 @@ test6scb( const char *name, size_t depth _uUu_, void *liv, void *mstmtv )
 }
 #endif
 
-static int
-test6icb( const char *name, size_t depth, void *liv _uUu_, void *mstmtv )
+static int _uUu_
+test6icb( const char *name, size_t depth, void *liv, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
   masxfs_levinfo_t *li = ( masxfs_levinfo_t * ) liv;
@@ -64,6 +66,7 @@ test6icb( const char *name, size_t depth, void *liv _uUu_, void *mstmtv )
     int r = 0;
 
     parent_id = masxfs_levinfo_parent_id( li );
+    QRGP( mstmt );
     if ( !r )
       r = mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name );
     if ( !r )
@@ -106,31 +109,43 @@ test6( void )
       int r = 0;
       char *path = masxfs_pathinfo_pi2path( pi );
 
+#if 1
+      mysqlpfs_mstmt_t *mstmt_i = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
+
+      QRGP( mstmt_i );
+      r = masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i );
+#else
       {
-        char *insop _uUu_ = "INSERT INTO filenames(name,parent_id) VALUES (?,?)";
+        char *insop = "INSERT INTO filenames(name,parent_id) VALUES (?,?)";
         mysqlpfs_mstmt_t *mstmt_i = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 0, insop );
 
         if ( !r )
-          mas_mysqlpfs_mstmt_prepare_param_string( mstmt_i, 0, 255 );
+          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt_i, 0, 255 );
         if ( !r )
-          mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_i, 1 );
+          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_i, 1 );
         if ( !r )
           r = mas_mysqlpfs_mstmt_bind_param( mstmt_i );
 
         if ( !r )
-          masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i );
+          r = masxfs_pathinfo_each_depth_cb( pi, test6icb, mstmt_i );
 
         mas_mysqlpfs_mstmt_delete( mstmt_i );
       }
-
+#endif
       {
-        char *selop _uUu_ = "SELECT id FROM filenames WHERE name=? AND parent_id<=>?";
+#if 1
+        mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
+
+        QRGP( mstmt_s );
+#else
+        char *selop = "SELECT id FROM filenames WHERE name=? AND parent_id<=>?";
+
         mysqlpfs_mstmt_t *mstmt_s = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
 
         if ( !r )
-          mas_mysqlpfs_mstmt_prepare_param_string( mstmt_s, 0, 255 );
+          r = mas_mysqlpfs_mstmt_prepare_param_string( mstmt_s, 0, 255 );
         if ( !r )
-          mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_s, 1 );
+          r = mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt_s, 1 );
         if ( !r )
           r = mas_mysqlpfs_mstmt_bind_param( mstmt_s );
 
@@ -138,15 +153,21 @@ test6( void )
           mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt_s, 0 );
         if ( !r )
           r = mas_mysqlpfs_mstmt_bind_result( mstmt_s );
-
+#endif
         if ( !r )
         {
-        /* mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "zocromas_xfs" );               */
-        /* mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 12 (* parent_id *) , FALSE ); */
-          mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "" );
-          mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 0 /* parent_id */ , TRUE );
+          QRGP( mstmt_s );
           if ( !r )
-            r = mas_mysqlpfs_mstmt_execute_store_fetch( mstmt_s );
+            r = mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "zocromas_xfs" );
+        /* r = mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, "" ); */
+          if ( !r )
+            r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 12 /* parent_id */ , FALSE );
+        /* r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, 0 (* parent_id *) , TRUE ); */
+          if ( !r )
+            r = mas_mysqlpfs_mstmt_execute_store( mstmt_s );
+          fprintf( stderr, "ROWS: %lld\n", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) );
+          if ( !r )
+            mas_mysqlpfs_mstmt_fetch( mstmt_s );
           if ( !r )
           {
             mysqlpfs_s_ulonglong_t num = 0;
@@ -165,7 +186,7 @@ test6( void )
           masxfs_pathinfo_each_depth_cb( pi, test6scb, mstmt_s );
 #endif
         mas_mysqlpfs_mstmt_free_result( mstmt_s );
-        mas_mysqlpfs_mstmt_delete( mstmt_s );
+      /* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
       }
 
       EXAMS( path, path0, "%s : %s" );

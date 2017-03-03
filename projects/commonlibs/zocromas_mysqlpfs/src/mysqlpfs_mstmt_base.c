@@ -11,7 +11,7 @@
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/minierr/minierr.h> */
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
@@ -35,7 +35,7 @@ void
 mas_mysqlpfs_mstmt_init( mysqlpfs_t * pfs, mysqlpfs_mstmt_t * mstmt, int nparams, int nresults )
 {
   mstmt->stmt = mysql_stmt_init( &pfs->mysql );
-  /* fprintf( stderr, "nparams: %d; nresults: %d\n", nparams, nresults ); */
+/* fprintf( stderr, "nparams: %d; nresults: %d\n", nparams, nresults ); */
   mas_mysqlpfs_mstmt_init_bind( &mstmt->binds.param, nparams );
   mas_mysqlpfs_mstmt_init_bind( &mstmt->binds.result, nresults );
 }
@@ -49,7 +49,7 @@ mas_mysqlpfs_mstmt_create( void )
 }
 
 mysqlpfs_mstmt_t *
-mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, const char *sqlop _uUu_ )
+mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, const char *sqlop )
 {
   mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create(  );
 
@@ -93,7 +93,9 @@ mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
     if ( mstmt->stmt )
     {
       r = mas_mysqlpfs_mstmt_free_result( mstmt );
-      r = mysql_stmt_close( mstmt->stmt );
+      if ( !r )
+        r = mysql_stmt_close( mstmt->stmt );
+      mstmt->stmt=NULL;
       QRGS( r );
     }
     mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.param );

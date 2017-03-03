@@ -22,23 +22,12 @@
 #include "mysqlpfs_structs.h"
 
 int
-test1status( void )
+test_connect( void )
 {
   mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
   if ( pfs )
   {
-    mysqlpfs_s_row_t row;
-    int num = 0;
-
-    mas_mysqlpfs_query_result( pfs, "SHOW STATUS" );
-    while ( ( row = mas_mysqlpfs_fetch_row( pfs ) ) )
-    {
-      printf( "%d #X# %s: %s\n", num, row[0], row[1] );
-      num++;
-    }
-
-    mas_mysqlpfs_free_result( pfs );
     mysqlpfs_delete( pfs );
   }
 

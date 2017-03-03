@@ -27,8 +27,8 @@ int mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt );
 
 int mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt );
-int mas_mysqlpfs_mstmt_execute_store_fetch( mysqlpfs_mstmt_t * mstmt );
 
+mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_num_rows( mysqlpfs_mstmt_t * mstmt );
 mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt );
 mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt );

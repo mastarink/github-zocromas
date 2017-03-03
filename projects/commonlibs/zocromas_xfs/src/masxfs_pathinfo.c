@@ -55,9 +55,11 @@ masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi )
   return masxfs_pathinfo_tail( pi, 0 );
 }
 
-void
+int
 masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *udata _uUu_ )
 {
+  int r = 0;
+
   if ( pi && pi->levinfo )
   {
     for ( masxfs_levinfo_t * li = pi->levinfo; li < pi->levinfo + pi->pidepth; li++ )
@@ -67,6 +69,8 @@ masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *
         int r _uUu_ = 0;
 
         r = cb( li->name, li->lidepth, li, udata );
+        if ( r )
+          break;
       }
       else
       {
@@ -74,4 +78,5 @@ masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *
       }
     }
   }
+  return r;
 }

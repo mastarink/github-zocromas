@@ -23,6 +23,9 @@ sfind mysqlpfs_mstmt_base.h
 tab sfind mysqlpfs_mstmt.c
 sfind mysqlpfs_mstmt.h
 
+tab sfind mysqlpfs_mstmt_std.c
+sfind mysqlpfs_mstmt_std.h
+
 tab sfind mysqlpfs_mstmt_d.c
 sfind mysqlpfs_mstmt_d.h
 

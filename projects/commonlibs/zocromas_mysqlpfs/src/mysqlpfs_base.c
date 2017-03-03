@@ -5,9 +5,13 @@
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
+
+#include "mysqlpfs_mstmt_std.h"
+
 #include "mysqlpfs_base.h"
 
 mysqlpfs_t *
@@ -33,6 +37,9 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
     mysqlpfs_reset( pfs );
     r = -1;
   }
+
+  pfs->std_mstmts = mysqlpfs_mstmt_std_create_array(  );
+
 /* fprintf( stderr, "MYSQL: %p : %d\n", mysql, r ); */
   return r;
 }
@@ -58,6 +65,10 @@ mysqlpfs_reset( mysqlpfs_t * pfs )
   if ( pfs )
   {
     mysql_close( &pfs->mysql );
+    if ( pfs->std_mstmts )
+      mysqlpfs_mstmt_std_delete_array( pfs->std_mstmts );
+    pfs->std_mstmts = NULL;
+    
     memset( pfs, 0, sizeof( mysqlpfs_t ) );
   }
 }
