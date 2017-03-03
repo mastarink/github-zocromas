@@ -30,14 +30,14 @@
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
 {
 /* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -55,7 +55,7 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 }
 
 static int _uUu_
-fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
+fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
 {
   num++;
 /* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
@@ -63,15 +63,16 @@ fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 }
 
 static int
-testcb( const char *name _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, void *udata _uUu_ )
+testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu_ )
 {
-  {
-    char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
+  masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
+  const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-    fprintf( stderr, "%ld. %s - %s\n", depth, name, real_path );
+  char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
 
-    mas_free( real_path );
-  }
+  fprintf( stderr, "%ld. %s - %s\n", depth, ename, real_path );
+
+  mas_free( real_path );
 
   return 0;
 }
@@ -83,7 +84,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
   fprintf( stderr, "A====================================================\n" );
-  masxfs_pathinfo_each_depth_cb( pi, testcb, pi );
+  masxfs_pathinfo_each_depth_cb( pi, testcb, pi, MASXFS_CB_NAME );
   fprintf( stderr, "B====================================================\n" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
@@ -237,17 +238,17 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
 #endif
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
     num = 0;
-    masxfs_scanpath_real2( NULL, callbacks, MASXFS_CB_RECURSIVE, 10000 );
+    masxfs_scanpath_real2( NULL, callbacks, NULL, MASXFS_CB_RECURSIVE, 10000 );
     fprintf( stderr, "NNNNNNNNNN %d\n", num );
 
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
     num = 0;
-    masxfs_scanpath_real( "./mastest", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    masxfs_scanpath_real( "./mastest", callbacks, NULL, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
     fprintf( stderr, "NNNNNNNNNN %d\n", num );
 
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
     num = 0;
-    masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
+    masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, NULL, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10000 );
     fprintf( stderr, "NNNNNNNNNN %d\n", num );
 
     fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );

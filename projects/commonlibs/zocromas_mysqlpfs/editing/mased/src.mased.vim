@@ -7,6 +7,7 @@ sfind mastest4.c
 sfind mastest4o.c
 sfind mastest5.c
 sfind mastest6.c
+sfind mastest7.c
 
 tab sfind mysqlpfs.c
 sfind mysqlpfs.h

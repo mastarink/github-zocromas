@@ -12,6 +12,7 @@
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
+#include <mastar/masxfs/masxfs_levinfo_ref.h>
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"
@@ -24,16 +25,18 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test5cb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *mstmtv )
+test5cb(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
+  masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
+  const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  MARK( "(T5)", " %ld. %s", depth, name );
+  MARK( "(T5)", " %ld. %s", depth, ename );
   {
     int r = 0;
 
     if ( !r )
-      r = mas_mysqlpfs_mstmt_set_direct_param_string( mstmt, 0, name );
+      r = mas_mysqlpfs_mstmt_set_direct_param_string( mstmt, 0, ename );
     if ( !r )
       r = mas_mysqlpfs_mstmt_bind_param( mstmt );
     if ( !r )
@@ -61,7 +64,7 @@ test5( void )
 
       if ( !r )
       {
-        masxfs_pathinfo_each_depth_cb( pi, test5cb, mstmt );
+        masxfs_pathinfo_each_depth_cb( pi, test5cb, mstmt, 0L /* flags */  );
       }
       mas_mysqlpfs_mstmt_delete( mstmt );
 

@@ -2,8 +2,6 @@
 #include "mysqlpfs_defs.h"
 #include <string.h>
 
-#include <mysql.h>
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
@@ -12,8 +10,6 @@
 
 #include "mysqlpfs_mstmt_base.h"
 #include "mysqlpfs_mstmt.h"
-
-#include "mysqlpfs_base.h"
 
 #include "mysqlpfs_mstmt_std.h"
 
@@ -62,12 +58,13 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
     {
     case STD_MSTMT_INSERT_NAMES:
       {
-        char *insop = "INSERT INTO filenames(name,parent_id) VALUES (?,?)";
+        char *insop = "INSERT INTO filenames(name,parent_id,detype) VALUES (?,?,?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 2, 255 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
       }
       break;
@@ -118,65 +115,87 @@ mysqlpfs_mstmt_std_get( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_get_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+mysqlpfs_mstmt_std_selget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
 {
   rSET( 0 );
   mysqlpfs_s_ulonglong_t num = 0;
-  mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
 
+  QRGP( name );
   {
+    mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
+
     QRGP( mstmt_s );
 
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, parent_id, parent_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
 
-  /* INFO( "ROWS: %lld", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) ); */
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
 
-    if ( r == MYSQL_NO_DATA )
-    {
-    /* WARN( "no more data" ); */
-    }
-    else
+    if ( r != MYSQL_NO_DATA )
     {
       mysqlpfs_s_bool_t is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &num, &is_null ) );
-
-    /* if ( !r )                                                 */
-    /*   WARN( "RESULT: num:%lld -- is_null:%d", num, is_null ); */
     }
-  }
 
-  mas_mysqlpfs_mstmt_free_result( mstmt_s );
-/* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
+    mas_mysqlpfs_mstmt_free_result( mstmt_s );
+  }
   return num;
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
 {
   rSET( 0 );
+  QRGP( pfs );
+  QRGP( name );
   mysqlpfs_s_ulonglong_t theid = 0;
-  mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
 
-  QRGP( mstmt );
-  theid = mysqlpfs_mstmt_std_get_names_id( pfs, name, parent_id );
-  if ( !theid )
   {
+    mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
+
+    QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, parent_id, parent_id ? FALSE : TRUE ) );
-    mysqlpfs_s_ulonglong_t affected = 0;
+    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 2, sdetype ) );
 
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
-    if ( !r )
-    {
-      affected = mas_mysqlpfs_mstmt_affected_rows( mstmt );
-
-      if ( affected == 1 )
-        theid = mas_mysqlpfs_mstmt_insert_id( mstmt );
-    }
+    if ( !r && mas_mysqlpfs_mstmt_affected_rows( mstmt ) == 1 )
+      theid = mas_mysqlpfs_mstmt_insert_id( mstmt );
   }
+  QRG( theid > 0 ? 0 : -1 );
+  return theid;
+}
+
+mysqlpfs_s_ulonglong_t
+mysqlpfs_mstmt_std_selinsget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+{
+/* rSET( 0 ); */
+  QRGP( pfs );
+  QRGP( name );
+
+  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_selget_names_id( pfs, name, parent_id );
+
+  WARN( "SELINS %lld", theid );
+  if ( !theid )
+    theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id, sdetype );
+
+  QRG( theid > 0 ? 0 : -1 );
+  return theid;
+}
+
+mysqlpfs_s_ulonglong_t
+mysqlpfs_mstmt_std_insselget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+{
+/* rSET( 0 ); */
+  QRGP( pfs );
+  QRGP( name );
+  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id, sdetype );
+
+  if ( !theid )
+    theid = mysqlpfs_mstmt_std_selget_names_id( pfs, name, parent_id );
+
+  QRG( theid > 0 ? 0 : -1 );
   return theid;
 }

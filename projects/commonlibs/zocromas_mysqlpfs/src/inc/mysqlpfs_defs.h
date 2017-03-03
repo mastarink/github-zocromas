@@ -19,8 +19,8 @@
 # define QRGSP(_ptr)   QRGS( _ptr ? 0 : -1 );
 # define QRGP(_ptr)    QRG( _ptr ? 0 : -1 );
 
-#define rSET(_v) int r_cnt=0,r=(_v)
-#define rC(_x) if (!r_cnt || !r) { r=(_x); r_cnt++; }
+# define rSET(_v) int r_cnt _uUu_=0,r=(_v)
+# define rC(_x) if (!r_cnt || !r) { r=(_x); r_cnt++; }
 /* #define rCALL if (!r) r= */
 
 # include <mastar/regerr/masregerr_defs.h>

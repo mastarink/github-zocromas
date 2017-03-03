@@ -8,7 +8,6 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>

@@ -47,7 +47,7 @@ MYSQL_TYPE_NULL
 int
 mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
 {
-  int r = -1;
+  rSET( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -58,7 +58,7 @@ mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
       QRGP( sqlop );
       if ( sqlop )
       {
-        r = mysql_stmt_prepare( mstmt->stmt, sqlop, strlen( sqlop ) );
+        rC( mysql_stmt_prepare( mstmt->stmt, sqlop, strlen( sqlop ) ) );
         QRGS( r );
       }
     }
@@ -78,12 +78,12 @@ from https://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-reset.html
 int
 mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rSET( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
   {
-    r = mysql_stmt_reset( mstmt->stmt );
+    rC( mysql_stmt_reset( mstmt->stmt ) );
     QRGS( r );
   }
   return r;
@@ -92,7 +92,7 @@ mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt )
 static int
 mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  int r = -1;
+  rSET( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )

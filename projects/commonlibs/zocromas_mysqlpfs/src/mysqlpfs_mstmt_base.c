@@ -8,8 +8,6 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#include <mysql.h>
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
@@ -95,7 +93,7 @@ mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
       r = mas_mysqlpfs_mstmt_free_result( mstmt );
       if ( !r )
         r = mysql_stmt_close( mstmt->stmt );
-      mstmt->stmt=NULL;
+      mstmt->stmt = NULL;
       QRGS( r );
     }
     mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.param );

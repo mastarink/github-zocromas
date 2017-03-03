@@ -71,6 +71,7 @@ int test4( void );
 int test4o( void );
 int test5( void );
 int test6( void );
+int test7( void );
 
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
@@ -83,7 +84,9 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 /* test4o(  ); */
 /* test4(  ); */
 /* test5(  ); */
-  test6(  );
-  test6(  );
+  /* test6(  ); */
+  /* test6(  ); */
+  test7(  );
+  test7(  );
   return 0;
 }

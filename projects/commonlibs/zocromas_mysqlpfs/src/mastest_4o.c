@@ -12,6 +12,7 @@
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
+#include <mastar/masxfs/masxfs_levinfo_ref.h>
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"
@@ -23,11 +24,13 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test4ocb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *pfsv )
+test4ocb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
+  masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
+  const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  INFO( "%ld. %s", depth, name );
+  INFO( "%ld. %s", depth, ename );
 #if 0
   char *insops[] _uUu_ = {
     "PREPARE insname_stmt FROM 'INSERT INTO filenames SET name=?'"
@@ -43,7 +46,7 @@ test4ocb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *pfsv
     char *insop = "INSERT INTO filenames(name) VALUES (?)";
     MYSQL_STMT *stmt = mysql_stmt_init( mas_mysqlpfs_mysql( pfs ) );
 
-    unsigned long length = strlen( name );
+    unsigned long length = strlen( ename );
     MYSQL_BIND param[1], result[1];
 
     r = mysql_stmt_prepare( stmt, insop, strlen( insop ) );
@@ -52,7 +55,7 @@ test4ocb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *pfsv
     memset( result, 0, sizeof( result ) );
 
     param[0].buffer_type = MYSQL_TYPE_STRING;
-    param[0].buffer = ( char * ) name;
+    param[0].buffer = ( char * ) ename;
     param[0].buffer_length = 255;
   /* param[0].is_unsigned = 0; */
     param[0].is_null = 0;
@@ -103,7 +106,7 @@ test4o( void )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      masxfs_pathinfo_each_depth_cb( pi, test4ocb, pfs );
+      masxfs_pathinfo_each_depth_cb( pi, test4ocb, pfs, 0L /* flags */  );
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );

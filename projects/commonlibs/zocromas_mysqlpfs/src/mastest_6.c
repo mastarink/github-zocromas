@@ -10,9 +10,12 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
+
+#include <mastar/masxfs/masxfs_structs.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 #include <mastar/masxfs/masxfs_levinfo_ref.h>
+#include <mastar/masxfs/masxfs_enums.h>
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"
@@ -25,59 +28,36 @@
 #include "mysqlpfs_structs.h"
 
 static int _uUu_
-test6icb( const char *name, size_t depth, masxfs_levinfo_t * li, void *pfsv )
+test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *pfsv )
 {
   mysqlpfs_t *pfs = ( mysqlpfs_t * ) pfsv;
 
-#if 1
   mysqlpfs_s_ulonglong_t theid = 0;
   mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
+  masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
 
-  theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id );
-  masxfs_levinfo_set_id( li, theid );
-  MARK( "(T6)", " %ld. %s ID: %llu", depth, name, ( unsigned long long ) theid );
+  masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
+  const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
+
+  const char *sdetypes[] = {
+    [MASXFS_ENTRY_BLK_NUM] = "BLK",
+    [MASXFS_ENTRY_CHR_NUM] = "CHR",
+    [MASXFS_ENTRY_DIR_NUM] = "DIR",
+    [MASXFS_ENTRY_REG_NUM] = "REG",
+    [MASXFS_ENTRY_FIFO_NUM] = "FIFO",
+    [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
+    [MASXFS_ENTRY_LNK_NUM] = "LNK"
+  };
+  if ( !ename )
+    DIE( "NAME is NULL; %s - %ld", li->name, li->lidepth );
+#if 0
+  theid = mysqlpfs_mstmt_std_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
 #else
-  mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
-
-  {
-    mysqlpfs_s_ulonglong_t parent_id = 0, oldid = 0;
-    int r = 0;
-
-    parent_id = masxfs_levinfo_parent_id( li );
-    QRGP( mstmt );
-    oldid = mysqlpfs_mstmt_std_get_names_id( pfs, name, parent_id );
-    if ( oldid )
-    {
-      masxfs_levinfo_set_id( li, oldid );
-    }
-    else
-    {
-      if ( !r )
-        r = mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name );
-      if ( !r )
-        r = mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, parent_id, parent_id ? FALSE : TRUE );
-      if ( !r )
-      {
-        mysqlpfs_s_ulonglong_t insert_id = 0;
-        mysqlpfs_s_ulonglong_t affected = 0;
-
-        r = mas_mysqlpfs_mstmt_execute( mstmt );
-        {
-          affected = mas_mysqlpfs_mstmt_affected_rows( mstmt );
-
-          if ( affected == 1 )
-          {
-            insert_id = mas_mysqlpfs_mstmt_insert_id( mstmt );
-            if ( liv )
-              masxfs_levinfo_set_id( li, insert_id );
-          }
-          MARK( "(T6)", " %ld. %s r:%d AFFECTED: %llu :: (%llu) %llu", depth, name, r, ( unsigned long long ) affected, ( unsigned long long ) oldid,
-                ( unsigned long long ) insert_id );
-        }
-      }
-    }
-  }
+  theid = mysqlpfs_mstmt_std_insselget_names_id( pfs, ename, parent_id, sdetypes[detype] );
 #endif
+  masxfs_levinfo_set_id( li, theid );
+  MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
+
   return 0;
 }
 
@@ -94,12 +74,17 @@ test6( void )
     if ( pi )
     {
       rSET( 0 );
-      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, pfs ) );
+      WARN( "%p %ld", pi, pi->pidepth );
+      for ( size_t i = 0; i < pi->pidepth; i++ )
+      {
+        WARN( "%ld. %s", i, pi->levinfo[i].name );
+      }
+      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, pfs, MASXFS_CB_NAME /* flags */  ) );
 
       {
         mysqlpfs_s_ulonglong_t theid = 0;
 
-        theid = mysqlpfs_mstmt_std_get_names_id( pfs, "zocromas_xfs", 12 );
+        theid = mysqlpfs_mstmt_std_selget_names_id( pfs, "zocromas_xfs", 12 );
         MARK( "RESULT", ": theid:%lld", theid );
       }
 

@@ -9,6 +9,7 @@
 
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_path.h"
+#include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo.h"
 
 #include "masxfs_pathinfo.h"
@@ -20,7 +21,7 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 }
 
 int
-masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, unsigned long flags, masxfs_depth_t maxdepth )
+masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth )
 {
   int r = 0, rc = 0;
 
@@ -33,7 +34,7 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 
     if ( !( flags & MASXFS_CB_RECURSIVE ) )
       DIE( "%s", "NOREC" );
-    r = masxfs_levinfo_scandirn_cb( li, callbacks, flags, pi->pidepth + maxdepth );
+    r = masxfs_levinfo_scandirn_cb( li, callbacks, data, flags, pi->pidepth + maxdepth );
     QRPI( pi, r );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( r >= 0 )
@@ -56,7 +57,7 @@ masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi )
 }
 
 int
-masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *udata _uUu_ )
+masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_scan_fun_simple_t cb, void *udata _uUu_, unsigned long flags )
 {
   int r = 0;
 
@@ -68,7 +69,7 @@ masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_li_cb_t cb, void *
       {
         int r _uUu_ = 0;
 
-        r = cb( li->name, li->lidepth, li, udata );
+        r = cb( li, flags, udata );
         if ( r )
           break;
       }
