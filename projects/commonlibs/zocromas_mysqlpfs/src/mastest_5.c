@@ -24,7 +24,7 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test5cb( const char *name, size_t depth, void *li _uUu_, void *mstmtv )
+test5cb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
 

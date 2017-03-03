@@ -63,7 +63,7 @@ fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_ )
 }
 
 static int
-testcb( const char *name _uUu_, size_t depth _uUu_, void *li _uUu_, void *udata _uUu_ )
+testcb( const char *name _uUu_, size_t depth _uUu_, masxfs_levinfo_t * li _uUu_, void *udata _uUu_ )
 {
   {
     char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );

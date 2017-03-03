@@ -9,5 +9,6 @@ mysqlpfs_mstmt_t *mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t s
 mysqlpfs_mstmt_t *mysqlpfs_mstmt_std_get( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid );
 
 mysqlpfs_s_ulonglong_t mysqlpfs_mstmt_std_get_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id );
+mysqlpfs_s_ulonglong_t mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id );
 
 #endif

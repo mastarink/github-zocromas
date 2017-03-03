@@ -24,7 +24,7 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test4cb( const char *name, size_t depth, void *li _uUu_, void *pfsv )
+test4cb( const char *name, size_t depth, masxfs_levinfo_t *li _uUu_, void *pfsv )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
 

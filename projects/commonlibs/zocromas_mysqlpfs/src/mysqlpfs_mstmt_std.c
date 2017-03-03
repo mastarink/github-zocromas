@@ -131,11 +131,13 @@ mysqlpfs_mstmt_std_get_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, parent_id, parent_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
 
-    INFO( "ROWS: %lld", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) );
+  /* INFO( "ROWS: %lld", mas_mysqlpfs_mstmt_num_rows( mstmt_s ) ); */
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
 
     if ( r == MYSQL_NO_DATA )
-      WARN( "no more data" );
+    {
+    /* WARN( "no more data" ); */
+    }
     else
     {
       mysqlpfs_s_bool_t is_null = 0;
@@ -150,4 +152,31 @@ mysqlpfs_mstmt_std_get_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_
   mas_mysqlpfs_mstmt_free_result( mstmt_s );
 /* mas_mysqlpfs_mstmt_delete( mstmt_s ); => centralised deletion of std mstmt's */
   return num;
+}
+
+mysqlpfs_s_ulonglong_t
+mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+{
+  rSET( 0 );
+  mysqlpfs_s_ulonglong_t theid = 0;
+  mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
+
+  QRGP( mstmt );
+  theid = mysqlpfs_mstmt_std_get_names_id( pfs, name, parent_id );
+  if ( !theid )
+  {
+    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, parent_id, parent_id ? FALSE : TRUE ) );
+    mysqlpfs_s_ulonglong_t affected = 0;
+
+    rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
+    if ( !r )
+    {
+      affected = mas_mysqlpfs_mstmt_affected_rows( mstmt );
+
+      if ( affected == 1 )
+        theid = mas_mysqlpfs_mstmt_insert_id( mstmt );
+    }
+  }
+  return theid;
 }
