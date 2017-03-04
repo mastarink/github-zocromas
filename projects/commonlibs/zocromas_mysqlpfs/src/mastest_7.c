@@ -38,9 +38,9 @@
 #include "mysqlpfs_structs.h"
 
 static int _uUu_
-test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv )
+test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
 {
-  mysqlpfs_t *pfs _uUu_ = ( mysqlpfs_t * ) pfsv;
+  mas_qstd_t *qstd _uUu_ = ( mas_qstd_t * ) qstdv;
 
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
@@ -60,11 +60,11 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv )
       [MASXFS_ENTRY_LNK_NUM] = "LNK"
     };
 #if 0
-    theid = mysqlpfs_mstmt_std_insget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+    theid = mysqlpfs_mstmt_std_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #elif 1
-    theid = mysqlpfs_mstmt_std_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+    theid = mysqlpfs_mstmt_std_selinsget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #elif 1
-    theid = mysqlpfs_mstmt_std_insselget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+    theid = mysqlpfs_mstmt_std_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
     masxfs_levinfo_set_id( li, theid );
     MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
@@ -83,27 +83,29 @@ test7( void )
     , {0, NULL}
   };
 
-  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+/* mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 ); */
+  mas_qstd_t *qstd = mysqlpfs_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-  if ( pfs )
+  if ( qstd->pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
 
-    r = mas_mysqlpfs_query( pfs, "START TRANSACTION" );
+    r = mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" );
 
     if ( !r )
-      r = masxfs_pathinfo_scan_depth( pi, test7cb, pfs, MASXFS_CB_NAME /* flags */  );
+      r = masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME /* flags */  );
 #if 1
-    r = masxfs_pathinfo_scan( pi, callbacks, pfs, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  );
+    r = masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  );
 #else
     masxfs_scanpath_real( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest", callbacks,
                           MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 255 );
 #endif
-    r = mas_mysqlpfs_query( pfs, "COMMIT" );
+    r = mas_mysqlpfs_query( qstd->pfs, "COMMIT" );
 
     masxfs_pathinfo_delete( pi );
   }
-  mysqlpfs_delete( pfs );
+/* mysqlpfs_delete( pfs ); */
+  mysqlpfs_qstd_delete( qstd );
   return r;
 }

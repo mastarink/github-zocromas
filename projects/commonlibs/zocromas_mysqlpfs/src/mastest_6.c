@@ -28,9 +28,9 @@
 #include "mysqlpfs_structs.h"
 
 static int _uUu_
-test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *pfsv )
+test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *qstdv )
 {
-  mysqlpfs_t *pfs = ( mysqlpfs_t * ) pfsv;
+  mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
   mysqlpfs_s_ulonglong_t theid = 0;
   mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
@@ -53,7 +53,7 @@ test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *pfsv )
 #if 0
   theid = mysqlpfs_mstmt_std_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
 #else
-  theid = mysqlpfs_mstmt_std_insselget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+  theid = mysqlpfs_mstmt_std_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
   masxfs_levinfo_set_id( li, theid );
   MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
@@ -64,9 +64,10 @@ test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *pfsv )
 int
 test6( void )
 {
-  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+/* mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 ); */
+  mas_qstd_t *qstd = mysqlpfs_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-  if ( pfs )
+  if ( qstd->pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
@@ -79,12 +80,12 @@ test6( void )
       {
         WARN( "%ld. %s", i, pi->levinfo[i].name );
       }
-      rC( masxfs_pathinfo_scan_depth( pi, test6icb, pfs, MASXFS_CB_NAME /* flags */  ) );
+      rC( masxfs_pathinfo_scan_depth( pi, test6icb, qstd, MASXFS_CB_NAME /* flags */  ) );
 
       {
         mysqlpfs_s_ulonglong_t theid = 0;
 
-        theid = mysqlpfs_mstmt_std_selget_names_id( pfs, "zocromas_xfs", 12 );
+        theid = mysqlpfs_mstmt_std_selget_names_id( qstd, "zocromas_xfs", 12 );
         MARK( "RESULT", ": theid:%lld", theid );
       }
 
@@ -97,7 +98,8 @@ test6( void )
       }
       masxfs_pathinfo_delete( pi );
     }
-    mysqlpfs_delete( pfs );
+  /* mysqlpfs_delete( pfs ); */
+    mysqlpfs_qstd_delete( qstd );
   }
 
   return 0;

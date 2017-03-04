@@ -8,10 +8,56 @@
 
 #include "mysqlpfs_structs.h"
 
+#include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"
 #include "mysqlpfs_mstmt.h"
 
 #include "mysqlpfs_mstmt_std.h"
+
+void
+mysqlpfs_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port )
+{
+  if ( qstd )
+  {
+    qstd->pfs = mysqlpfs_create_setup( host, user, passwd, db, port );
+    qstd->std_mstmts = mysqlpfs_mstmt_std_create_array(  );
+  }
+}
+
+mas_qstd_t *
+mysqlpfs_qstd_create( void )
+{
+  return mas_calloc( 1, sizeof( mas_qstd_t ) );
+}
+
+mas_qstd_t *
+mysqlpfs_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+{
+  mas_qstd_t *qstd = mysqlpfs_qstd_create(  );
+
+  mysqlpfs_qstd_init( qstd, host, user, passwd, db, port );
+  return qstd;
+}
+
+void
+mysqlpfs_qstd_reset( mas_qstd_t * qstd )
+{
+  if ( qstd )
+  {
+    mysqlpfs_mstmt_std_delete_array( qstd->std_mstmts );
+    mysqlpfs_delete( qstd->pfs );
+  }
+}
+
+void
+mysqlpfs_qstd_delete( mas_qstd_t * qstd )
+{
+  mysqlpfs_qstd_reset( qstd );
+  if ( qstd )
+    mas_free( qstd );
+}
+
+/**********************************************************************************/
 
 mysqlpfs_mstmt_t **
 mysqlpfs_mstmt_std_create_array( void )
@@ -39,14 +85,14 @@ mysqlpfs_mstmt_std_delete_array( mysqlpfs_mstmt_t ** mstmts )
 }
 
 mysqlpfs_mstmt_t *
-mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
+mysqlpfs_mstmt_std_init( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid )
 {
   rSET( 0 );
   mysqlpfs_mstmt_t *mstmt = NULL;
 
-  if ( pfs && stdid >= 0 && stdid < STD_MSTMT_MAX )
+  if ( qstd && stdid >= 0 && stdid < STD_MSTMT_MAX )
   {
-    mysqlpfs_mstmt_t **mstmts = pfs->std_mstmts;
+    mysqlpfs_mstmt_t **mstmts = qstd->std_mstmts;
 
     mstmt = mstmts[stdid];
     if ( mstmt )
@@ -60,6 +106,8 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
       {
         char *insop = "INSERT INTO filenames(name,parent_id,detype) VALUES (?,?,?)";
 
+        mysqlpfs_t *pfs = qstd->pfs;
+
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
@@ -71,6 +119,8 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
     case STD_MSTMT_SELECT_NAMES_ID:
       {
         char *selop = "SELECT id FROM filenames WHERE name=? AND parent_id<=>?";
+
+        mysqlpfs_t *pfs = qstd->pfs;
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
 
@@ -89,25 +139,26 @@ mysqlpfs_mstmt_std_init( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 }
 
 mysqlpfs_mstmt_t *
-mysqlpfs_mstmt_std_get( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
+mysqlpfs_mstmt_std_get( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid )
 {
   mysqlpfs_mstmt_t *mstmt = NULL;
 
-  if ( pfs && stdid >= 0 && stdid < STD_MSTMT_MAX )
+  if ( qstd && stdid >= 0 && stdid < STD_MSTMT_MAX )
   {
-    mysqlpfs_mstmt_t **mstmts = pfs->std_mstmts;
+  /* mysqlpfs_mstmt_t **mstmts = pfs->std_mstmts; */
+    mysqlpfs_mstmt_t **mstmts = qstd->std_mstmts;
 
     mstmt = mstmts[stdid];
     if ( !mstmt )
     {
-      mstmt = mysqlpfs_mstmt_std_init( pfs, stdid );
+      mstmt = mysqlpfs_mstmt_std_init( qstd, stdid );
       QRGP( mstmt );
     }
     QRGP( mstmt );
   }
   else
   {
-    WARN( "pfs:%p; stdid:%d; STD_MSTMT_MAX:%d;", pfs, stdid, STD_MSTMT_MAX );
+    WARN( "qstd:%p; stdid:%d; STD_MSTMT_MAX:%d;", qstd, stdid, STD_MSTMT_MAX );
     QRG( -1 );
   }
 
@@ -115,14 +166,14 @@ mysqlpfs_mstmt_std_get( mysqlpfs_t * pfs, mysqlpfs_std_id_t stdid )
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_selget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+mysqlpfs_mstmt_std_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id )
 {
   rSET( 0 );
   mysqlpfs_s_ulonglong_t num = 0;
 
   QRGP( name );
   {
-    mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_SELECT_NAMES_ID );
+    mysqlpfs_mstmt_t *mstmt_s = mysqlpfs_mstmt_std_get( qstd, STD_MSTMT_SELECT_NAMES_ID );
 
     QRGP( mstmt_s );
 
@@ -145,15 +196,15 @@ mysqlpfs_mstmt_std_selget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mysqlpfs_mstmt_std_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
 {
   rSET( 0 );
-  QRGP( pfs );
+  QRGP( qstd );
   QRGP( name );
   mysqlpfs_s_ulonglong_t theid = 0;
 
   {
-    mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( pfs, STD_MSTMT_INSERT_NAMES );
+    mysqlpfs_mstmt_t *mstmt = mysqlpfs_mstmt_std_get( qstd, STD_MSTMT_INSERT_NAMES );
 
     QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
@@ -169,32 +220,32 @@ mysqlpfs_mstmt_std_insget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_selinsget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mysqlpfs_mstmt_std_selinsget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
 {
 /* rSET( 0 ); */
-  QRGP( pfs );
+  QRGP( qstd );
   QRGP( name );
 
-  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_selget_names_id( pfs, name, parent_id );
+  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_selget_names_id( qstd, name, parent_id );
 
-  /* WARN( "SELINS %lld", theid ); */
+/* WARN( "SELINS %lld", theid ); */
   if ( !theid )
-    theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id, sdetype );
+    theid = mysqlpfs_mstmt_std_insget_names_id( qstd, name, parent_id, sdetype );
 
   QRG( theid > 0 ? 0 : -1 );
   return theid;
 }
 
 mysqlpfs_s_ulonglong_t
-mysqlpfs_mstmt_std_insselget_names_id( mysqlpfs_t * pfs, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mysqlpfs_mstmt_std_insselget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
 {
 /* rSET( 0 ); */
-  QRGP( pfs );
+  QRGP( qstd );
   QRGP( name );
-  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id, sdetype );
+  mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_insget_names_id( qstd, name, parent_id, sdetype );
 
   if ( !theid )
-    theid = mysqlpfs_mstmt_std_selget_names_id( pfs, name, parent_id );
+    theid = mysqlpfs_mstmt_std_selget_names_id( qstd, name, parent_id );
 
   QRG( theid > 0 ? 0 : -1 );
   return theid;
