@@ -25,7 +25,7 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test5cb(  masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv )
+test5cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
@@ -64,7 +64,7 @@ test5( void )
 
       if ( !r )
       {
-        masxfs_pathinfo_each_depth_cb( pi, test5cb, mstmt, 0L /* flags */  );
+        masxfs_pathinfo_scan_depth( pi, test5cb, mstmt, 0L /* flags */  );
       }
       mas_mysqlpfs_mstmt_delete( mstmt );
 

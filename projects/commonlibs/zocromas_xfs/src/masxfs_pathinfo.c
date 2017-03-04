@@ -28,6 +28,13 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 /* r = masxfs_pathinfo_opendir( pi ); */
 /* QRPI( pi, r );                     */
 
+  
+  /* if ( flags & MASXFS_CB_SCAN_DEPTH ) */
+  /* {                                   */
+  /*   masxfs_pathinfo_scan_depth(  );   */
+  /* }                                   */
+
+
 /* if ( r >= 0 ) */
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
@@ -55,9 +62,9 @@ masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi )
 {
   return masxfs_pathinfo_tail( pi, 0 );
 }
-
+/* TODO : same cb format as masxfs_pathinfo_scan */
 int
-masxfs_pathinfo_each_depth_cb( masxfs_pathinfo_t * pi, masxfs_scan_fun_simple_t cb, void *udata _uUu_, unsigned long flags )
+masxfs_pathinfo_scan_depth( masxfs_pathinfo_t * pi, masxfs_scan_fun_simple_t cb, void *udata _uUu_, unsigned long flags )
 {
   int r = 0;
 

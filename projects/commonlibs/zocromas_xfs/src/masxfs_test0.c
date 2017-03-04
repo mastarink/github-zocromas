@@ -84,7 +84,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
   fprintf( stderr, "A====================================================\n" );
-  masxfs_pathinfo_each_depth_cb( pi, testcb, pi, MASXFS_CB_NAME );
+  masxfs_pathinfo_scan_depth( pi, testcb, pi, MASXFS_CB_NAME );
   fprintf( stderr, "B====================================================\n" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );

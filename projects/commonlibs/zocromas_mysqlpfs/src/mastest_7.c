@@ -93,7 +93,7 @@ test7( void )
     r = mas_mysqlpfs_query( pfs, "START TRANSACTION" );
 
     if ( !r )
-      r = masxfs_pathinfo_each_depth_cb( pi, test7cb, pfs, MASXFS_CB_NAME /* flags */  );
+      r = masxfs_pathinfo_scan_depth( pi, test7cb, pfs, MASXFS_CB_NAME /* flags */  );
 #if 1
     r = masxfs_pathinfo_scan( pi, callbacks, pfs, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  );
 #else

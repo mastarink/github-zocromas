@@ -79,7 +79,7 @@ test6( void )
       {
         WARN( "%ld. %s", i, pi->levinfo[i].name );
       }
-      rC( masxfs_pathinfo_each_depth_cb( pi, test6icb, pfs, MASXFS_CB_NAME /* flags */  ) );
+      rC( masxfs_pathinfo_scan_depth( pi, test6icb, pfs, MASXFS_CB_NAME /* flags */  ) );
 
       {
         mysqlpfs_s_ulonglong_t theid = 0;

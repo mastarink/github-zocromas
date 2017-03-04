@@ -177,7 +177,7 @@ mysqlpfs_mstmt_std_selinsget_names_id( mysqlpfs_t * pfs, const char *name, mysql
 
   mysqlpfs_s_ulonglong_t theid = mysqlpfs_mstmt_std_selget_names_id( pfs, name, parent_id );
 
-  WARN( "SELINS %lld", theid );
+  /* WARN( "SELINS %lld", theid ); */
   if ( !theid )
     theid = mysqlpfs_mstmt_std_insget_names_id( pfs, name, parent_id, sdetype );
 

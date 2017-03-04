@@ -106,7 +106,7 @@ test4o( void )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      masxfs_pathinfo_each_depth_cb( pi, test4ocb, pfs, 0L /* flags */  );
+      masxfs_pathinfo_scan_depth( pi, test4ocb, pfs, 0L /* flags */  );
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
