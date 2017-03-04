@@ -2,8 +2,6 @@
 # define MAS_MYSQLPFS_TYPES_H
 # include <mysql.h>
 
-typedef enum mysqlpfs_std_id_e mysqlpfs_std_id_t;
-typedef struct mas_qstd_s mas_qstd_t;
 
 typedef enum mysqlpfs_mfield_type_e mysqlpfs_mfield_type_t;
 typedef struct mysqlpfs_s mysqlpfs_t;

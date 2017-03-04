@@ -12,25 +12,12 @@ enum mysqlpfs_mfield_type_e
   PFS_TIMESTAMP = MYSQL_TYPE_TIMESTAMP,
 };
 
-/* TODO rename mpfs_std_id_e */
-enum mysqlpfs_std_id_e
-{
-  STD_MSTMT_INSERT_NAMES,
-  STD_MSTMT_SELECT_NAMES_ID,
-  STD_MSTMT_MAX
-};
-struct mas_qstd_s
-{
-  mysqlpfs_t *pfs;
-  mysqlpfs_mstmt_t **std_mstmts;
-};
-
 /* TODO rename myq_s */
 struct mysqlpfs_s
 {
   MYSQL mysql;
   mysqlpfs_s_result_t *result;
-  /* mysqlpfs_mstmt_t **std_mstmts; */
+/* mysqlpfs_mstmt_t **std_mstmts; */
 };
 
 /* TODO rename myq_bind_s */

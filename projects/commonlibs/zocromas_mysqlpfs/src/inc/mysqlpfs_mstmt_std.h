@@ -1,6 +1,8 @@
 #ifndef MAS_MYSQLPFS_MSTMT_STD_H
 # define MAS_MYSQLPFS_MSTMT_STD_H
 
+# include "qstd_types.h"
+
 void mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port );
 mas_qstd_t *mas_qstd_create( void );
 mas_qstd_t *mas_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port );
@@ -17,11 +19,10 @@ mysqlpfs_mstmt_t *mas_qstd_mstmt_init( mas_qstd_t * qstd, mysqlpfs_std_id_t stdi
 mysqlpfs_mstmt_t *mas_qstd_mstmt_get( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid );
 
 mysqlpfs_s_ulonglong_t mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id );
-mysqlpfs_s_ulonglong_t mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id,
-                                                           const char *sdetype );
+mysqlpfs_s_ulonglong_t mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype );
 mysqlpfs_s_ulonglong_t mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id,
-                                                              const char *sdetype );
+                                                          const char *sdetype );
 mysqlpfs_s_ulonglong_t mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id,
-                                                              const char *sdetype );
+                                                          const char *sdetype );
 
 #endif

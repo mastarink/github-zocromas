@@ -34,6 +34,9 @@ tab sfind mysqlpfs_defs.h
 sfind mysqlpfs_types.h
 sfind mysqlpfs_structs.h
 
+tab sfind qstd_types.h
+sfind qstd_structs.h
+
 tab sfind mastestbind.c
 sfind mastestb.c
 sfind mariadb-connector-c.c

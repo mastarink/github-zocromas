@@ -25,6 +25,7 @@
 #include "mysqlpfs_mstmt_std.h"
 #include "mysqlpfs_mstmt.h"
 
+#include "qstd_structs.h"
 #include "mysqlpfs_structs.h"
 
 static int _uUu_

@@ -6,7 +6,7 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
-#include "mysqlpfs_structs.h"
+#include "qstd_structs.h"
 
 #include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"
