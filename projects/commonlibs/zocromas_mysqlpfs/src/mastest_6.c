@@ -51,9 +51,9 @@ test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *qstdv )
   if ( !ename )
     DIE( "NAME is NULL; %s - %ld", li->name, li->lidepth );
 #if 0
-  theid = mysqlpfs_mstmt_std_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+  theid = mas_qstd_mstmt_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
 #else
-  theid = mysqlpfs_mstmt_std_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+  theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
   masxfs_levinfo_set_id( li, theid );
   MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
@@ -65,7 +65,7 @@ int
 test6( void )
 {
 /* mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 ); */
-  mas_qstd_t *qstd = mysqlpfs_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+  mas_qstd_t *qstd = mas_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
   if ( qstd->pfs )
   {
@@ -85,7 +85,7 @@ test6( void )
       {
         mysqlpfs_s_ulonglong_t theid = 0;
 
-        theid = mysqlpfs_mstmt_std_selget_names_id( qstd, "zocromas_xfs", 12 );
+        theid = mas_qstd_mstmt_selget_names_id( qstd, "zocromas_xfs", 12 );
         MARK( "RESULT", ": theid:%lld", theid );
       }
 
@@ -99,7 +99,7 @@ test6( void )
       masxfs_pathinfo_delete( pi );
     }
   /* mysqlpfs_delete( pfs ); */
-    mysqlpfs_qstd_delete( qstd );
+    mas_qstd_delete( qstd );
   }
 
   return 0;
