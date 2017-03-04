@@ -12,7 +12,7 @@
 #include "mysqlpfs_mstmt_base.h"
 #include "mysqlpfs_mstmt.h"
 
-#include "mysqlpfs_mstmt_std.h"
+#include "qstd_mstmt.h"
 
 void
 mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port )

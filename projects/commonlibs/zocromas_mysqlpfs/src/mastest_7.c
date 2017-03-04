@@ -32,11 +32,10 @@
 
 #include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"
-#include "mysqlpfs_mstmt_std.h"
 #include "mysqlpfs_mstmt.h"
 
 #include "qstd_structs.h"
-#include "mysqlpfs_structs.h"
+#include "qstd_mstmt.h"
 
 static int _uUu_
 test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )

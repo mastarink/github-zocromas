@@ -1,5 +1,5 @@
-#ifndef MAS_MYSQLPFS_MSTMT_STD_H
-# define MAS_MYSQLPFS_MSTMT_STD_H
+#ifndef MAS_QSTD_MSTMT_H
+# define MAS_QSTD_MSTMT_H
 
 # include "qstd_types.h"
 
