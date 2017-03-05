@@ -16,7 +16,7 @@
 #include "qstd_mstmt_names.h"
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id )
+mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t updir_id )
 {
   rDECL( 0 );
   mysqlpfs_s_ulonglong_t num = 0;
@@ -28,7 +28,7 @@ mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_
     QRGP( mstmt_s );
 
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, name ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, parent_id, parent_id ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, updir_id, updir_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
@@ -46,7 +46,7 @@ mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t updir_id, const char *sdetype )
 {
   rDECL( 0 );
   QRGP( qstd );
@@ -58,7 +58,7 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_
 
     QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, parent_id, parent_id ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, updir_id, updir_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 2, sdetype ) );
 
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
@@ -70,32 +70,32 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t updir_id, const char *sdetype )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
   QRGP( name );
 
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_names_id( qstd, name, parent_id );
+  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_names_id( qstd, name, updir_id );
 
 /* WARN( "SELINS %lld", theid ); */
   if ( !theid )
-    theid = mas_qstd_mstmt_insget_names_id( qstd, name, parent_id, sdetype );
+    theid = mas_qstd_mstmt_insget_names_id( qstd, name, updir_id, sdetype );
 
   QRG( theid > 0 ? 0 : -1 );
   return theid;
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t parent_id, const char *sdetype )
+mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t updir_id, const char *sdetype )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
   QRGP( name );
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_names_id( qstd, name, parent_id, sdetype );
+  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_names_id( qstd, name, updir_id, sdetype );
 
   if ( !theid )
-    theid = mas_qstd_mstmt_selget_names_id( qstd, name, parent_id );
+    theid = mas_qstd_mstmt_selget_names_id( qstd, name, updir_id );
 
   QRG( theid > 0 ? 0 : -1 );
   return theid;

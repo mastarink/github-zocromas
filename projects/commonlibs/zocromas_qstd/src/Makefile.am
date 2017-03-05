@@ -5,7 +5,8 @@ lib_LTLIBRARIES = libzocromas_qstd.la
 libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_base.c \
 	qstd_mstmt.c \
-	qstd_mstmt_names.c
+	qstd_mstmt_names.c \
+	qstd_mstmt_parents.c
 
 libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
 libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@

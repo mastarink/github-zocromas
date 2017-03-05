@@ -18,3 +18,6 @@ sfind qstd_mstmt_base.h
 
 tab sfind qstd_mstmt_names.c
 sfind qstd_mstmt_names.h
+
+tab sfind qstd_mstmt_parents.c
+sfind qstd_mstmt_parents.h

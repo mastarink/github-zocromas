@@ -1,6 +1,7 @@
 #define RGEMSG mysql_error(&pfs->mysql)
 #include "qstd_defs.h"
 #include <string.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -72,7 +73,9 @@ mas_qstd_mstmt_reset_array( mysqlpfs_mstmt_t ** mstmts )
     for ( int nst = 0; nst < STD_MSTMT_MAX; nst++ )
     {
       if ( mstmts[nst] )
+      {
         mas_mysqlpfs_mstmt_delete( mstmts[nst] );
+      }
       mstmts[nst] = NULL;
     }
 }
@@ -118,7 +121,7 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
       {
-        char *selop = "SELECT id FROM filenames WHERE name=? AND parent_id<=>?";
+        char *selop = "SELECT id FROM filenames AS fn " /* "LEFT JOIN parents as p ON (fn.parent_id=p.id)" */ " WHERE name=? AND fn.parent_id<=>?";
 
         mysqlpfs_t *pfs = qstd->pfs;
 
@@ -130,6 +133,32 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
       }
+      break;
+    case STD_MSTMT_INSERT_PARENTS:
+      {
+        char *insop = "INSERT INTO parents(dir_id) VALUES (?)";
+
+        mysqlpfs_t *pfs = qstd->pfs;
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+      }
+      break;
+    case STD_MSTMT_SELECT_PARENTS_ID:
+      {
+        char *selop = "SELECT id FROM parents WHERE dir_id<=>?";
+        mysqlpfs_t *pfs = qstd->pfs;
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+      }
+      break;
     case STD_MSTMT_MAX:
       break;
     }
@@ -164,4 +193,3 @@ mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
   return mstmt;
 }
-

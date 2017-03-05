@@ -44,17 +44,19 @@ test_create_tables( void )
             ", UNIQUE INDEX dev_inoce (dev,inode) COMMENT 'this pair is unique'" /* */
           /* */ " )",
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */
-            "id INTEGER PRIMARY KEY"                                 /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER" ")",
     "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES filenames (id)" /* */
+            /* ", updir_id INTEGER COMMENT 'NULL is root', INDEX updir (updir_id), FOREIGN KEY (updir_id) REFERENCES filenames (id)" (* *) */
+            ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES parents (id)" /* */
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
             ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
+            /* ", UNIQUE INDEX updir_name (updir_id, name) COMMENT 'this pair is unique'" (* *) */
+            /* ", INDEX updir_name_a (updir_id, name)"                  (* *) */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
-            ", INDEX parent_name_a (parent_id, name)"                /* */
             ")",
     "COMMIT",
   };

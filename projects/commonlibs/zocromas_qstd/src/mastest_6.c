@@ -34,7 +34,7 @@ test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *qstdv )
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
   mysqlpfs_s_ulonglong_t theid = 0;
-  mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
+  mysqlpfs_s_ulonglong_t updir_id = masxfs_levinfo_parent_id( li );
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
 
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
@@ -52,9 +52,9 @@ test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *qstdv )
   if ( !ename )
     DIE( "NAME is NULL; %s - %ld", li->name, li->lidepth );
 #if 0
-  theid = mas_qstd_mstmt_selinsget_names_id( pfs, ename, parent_id, sdetypes[detype] );
+  theid = mas_qstd_mstmt_selinsget_names_id( pfs, ename, updir_id, sdetypes[detype] );
 #else
-  theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+  theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, updir_id, sdetypes[detype] );
 #endif
   masxfs_levinfo_set_id( li, theid );
   MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );

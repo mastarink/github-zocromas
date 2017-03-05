@@ -14,6 +14,7 @@
 
 #include "qstd_structs.h"
 #include "qstd_mstmt_base.h"
+#include "qstd_mstmt_parents.h"
 #include "qstd_mstmt_names.h"
 
 static int _uUu_
@@ -38,14 +39,22 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
       [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
       [MASXFS_ENTRY_LNK_NUM] = "LNK"
     };
+    if ( masxfs_levinfo_depth_ref( li, flags ) != 0 )
+    {
 #if 0
-    theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+      theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #elif 1
-    theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #elif 0
-    theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+      theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
-    masxfs_levinfo_set_id( li, theid );
+    }
+    if ( detype == MASXFS_ENTRY_DIR_NUM )
+    {
+      mysqlpfs_s_ulonglong_t parent_id = mas_qstd_mstmt_insget_parents_id( qstd, theid );
+
+      masxfs_levinfo_set_id( li, parent_id );
+    }
     MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
   }
   return 0;
@@ -87,5 +96,5 @@ test7( void )
 /* mysqlpfs_delete( pfs ); */
   mas_qstd_delete( qstd );
   rRET;
-  /* return r; */
+/* return r; */
 }
