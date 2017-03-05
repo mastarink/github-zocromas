@@ -1,0 +1,32 @@
+SUBDIRS= inc
+
+
+lib_LTLIBRARIES = libzocromas_qstd.la
+libzocromas_qstd_la_SOURCES = \
+	qstd_mstmt.c
+
+libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
+libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
+
+if MAS_TEST
+noinst_PROGRAMS=mastest
+
+
+
+mastest_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la @MYSQL_CLIENT_LIBS@
+mastest_CFLAGS=@AM_CFLAGS@  @MYSQL_CLIENT_CFLAGS@  -pthread
+
+mastest_SOURCES= \
+	mastest.c \
+	mastest_connect.c \
+	mastest_drop_tables.c \
+	mastest_create_tables.c \
+	mastest_6.c \
+	mastest_7.c
+
+
+
+
+else
+
+endif

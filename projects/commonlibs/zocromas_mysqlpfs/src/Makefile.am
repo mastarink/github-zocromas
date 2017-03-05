@@ -8,9 +8,7 @@ libzocromas_mysqlpfs_la_SOURCES = \
 	mysqlpfs_base.c \
 	mysqlpfs_mstmt_base.c \
 	mysqlpfs_mstmt.c \
-	mysqlpfs_mstmt_d.c \
-	\
-	qstd_mstmt.c
+	mysqlpfs_mstmt_d.c
 
 libzocromas_mysqlpfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
 libzocromas_mysqlpfs_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
@@ -44,9 +42,7 @@ mastest_SOURCES= \
 	mastest_3b.c \
 	mastest_4.c \
 	mastest_4o.c \
-	mastest_5.c \
-	mastest_6.c \
-	mastest_7.c
+	mastest_5.c
 
 
 

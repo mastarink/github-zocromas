@@ -1,7 +1,6 @@
 #ifndef MAS_MYSQLPFS_STRUCTS_H
 # define MAS_MYSQLPFS_STRUCTS_H
 
-# include <mysql.h>
 # include "mysqlpfs_types.h"
 
 /* TODO rename myq_mfield_type_s */
@@ -17,7 +16,6 @@ struct mysqlpfs_s
 {
   MYSQL mysql;
   mysqlpfs_s_result_t *result;
-/* mysqlpfs_mstmt_t **std_mstmts; */
 };
 
 /* TODO rename myq_bind_s */

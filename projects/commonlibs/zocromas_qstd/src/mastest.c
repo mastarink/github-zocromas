@@ -1,4 +1,4 @@
-#include "mysqlpfs_defs.h"
+#include "qstd_defs.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,14 +13,14 @@
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-#include "mysqlpfs.h"
-#include "mysqlpfs_query.h"
+#include <mastar/mysqlpfs/mysqlpfs.h>
+#include <mastar/mysqlpfs/mysqlpfs_query.h>
 
-#include "mysqlpfs_base.h"
-#include "mysqlpfs_mstmt_base.h"
-#include "mysqlpfs_mstmt.h"
+#include <mastar/mysqlpfs/mysqlpfs_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
 
-#include "mysqlpfs_structs.h"
+#include <mastar/mysqlpfs/mysqlpfs_structs.h>
 
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
@@ -62,25 +62,20 @@ destructor_main( void )
 //malloc_stats(  );
 }
 
-int test1status( void );
-int test_connect( void );
-int test2status( void );
-int test3drop( void );
-int test3create( void );
-int test4( void );
-int test4o( void );
-int test5( void );
+int test_create_tables( void );
+int test_drop_tables( void );
+int test6( void );
+int test7( void );
 
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
-  test_connect(  );
-/* test1status(  ); */
-/* test2status(  ); */
-  test3drop(  );
-  test3create(  );
-/* test4o(  ); */
-/* test4(  ); */
-/* test5(  ); */
+  test_drop_tables();
+  test_create_tables();
+/* test6(  ); */
+/* test6(  ); */
+  INFO( "POINT" );
+  test7(  );
+  test7(  );
   return 0;
 }

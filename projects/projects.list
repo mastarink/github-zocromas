@@ -15,7 +15,6 @@ commonlibs/zocromas_mas_init
 commonlibs/zocromas_mas_io
 commonlibs/zocromas_mas_listener
 commonlibs/zocromas_mas_log
-commonlibs/zocromas_mas_masxfs
 commonlibs/zocromas_mas_messageio
 commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_msg
@@ -33,7 +32,9 @@ commonlibs/zocromas_mas_varvec
 commonlibs/zocromas_mas_wrap
 commonlibs/zocromas_minierr
 commonlibs/zocromas_mysqlpfs
+commonlibs/zocromas_qstd
 commonlibs/zocromas_regerr
+commonlibs/zocromas_xfs
 modules/protos/http
 modules/protos/xcromas
 modules/zocmds/zocromas_zocmds1

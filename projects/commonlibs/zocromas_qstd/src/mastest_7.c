@@ -1,4 +1,4 @@
-#include "mysqlpfs_defs.h"
+#include "qstd_defs.h"
 /* #include <mastar/masxfs/masxfs_defs.h> */
 #include <sys/stat.h>
 #include <unistd.h>
@@ -27,12 +27,12 @@
 
 #include <mastar/masxfs/masxfs_scan.h>
 
-#include "mysqlpfs.h"
-#include "mysqlpfs_query.h"
+#include <mastar/mysqlpfs/mysqlpfs.h>
+#include <mastar/mysqlpfs/mysqlpfs_query.h>
 
-#include "mysqlpfs_base.h"
-#include "mysqlpfs_mstmt_base.h"
-#include "mysqlpfs_mstmt.h"
+#include <mastar/mysqlpfs/mysqlpfs_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"

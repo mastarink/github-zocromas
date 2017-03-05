@@ -2,3 +2,5 @@ sh0/
 mtest
 .auxdir
 config.h.in~
+m4zoc
+.localrc 

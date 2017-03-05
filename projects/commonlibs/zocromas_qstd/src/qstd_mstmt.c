@@ -1,17 +1,16 @@
 #define RGEMSG mysql_error(&pfs->mysql)
-#include "mysqlpfs_defs.h"
+#include "qstd_defs.h"
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
+#include <mastar/mysqlpfs/mysqlpfs_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
+#include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
+
 #include "qstd_structs.h"
-
-#include "mysqlpfs_base.h"
-#include "mysqlpfs_mstmt_base.h"
-#include "mysqlpfs_mstmt.h"
-
 #include "qstd_mstmt.h"
 
 void
@@ -85,7 +84,7 @@ mas_qstd_mstmt_delete_array( mysqlpfs_mstmt_t ** mstmts )
 }
 
 mysqlpfs_mstmt_t *
-mas_qstd_mstmt_init( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid )
+mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
   rSET( 0 );
   mysqlpfs_mstmt_t *mstmt = NULL;
@@ -139,7 +138,7 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid )
 }
 
 mysqlpfs_mstmt_t *
-mas_qstd_mstmt_get( mas_qstd_t * qstd, mysqlpfs_std_id_t stdid )
+mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
   mysqlpfs_mstmt_t *mstmt = NULL;
 
