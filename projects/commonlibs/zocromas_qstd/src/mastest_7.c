@@ -13,7 +13,8 @@
 #include <mastar/mysqlpfs/mysqlpfs_query.h>
 
 #include "qstd_structs.h"
-#include "qstd_mstmt.h"
+#include "qstd_mstmt_base.h"
+#include "qstd_mstmt_names.h"
 
 static int _uUu_
 test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
@@ -41,7 +42,7 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
     theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #elif 1
     theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, sdetypes[detype] );
-#elif 1
+#elif 0
     theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
     masxfs_levinfo_set_id( li, theid );

@@ -45,7 +45,7 @@ test_create_tables( void )
           /* */ " )",
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */
             "id INTEGER PRIMARY KEY"                                 /* */
-            ", filename_id INTEGER" ")",
+            ", dir_id INTEGER" ")",
     "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES filenames (id)" /* */

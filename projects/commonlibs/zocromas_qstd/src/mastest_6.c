@@ -25,7 +25,8 @@
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
 
 #include "qstd_structs.h"
-#include "qstd_mstmt.h"
+#include "qstd_mstmt_base.h"
+#include "qstd_mstmt_names.h"
 
 static int _uUu_
 test6icb( masxfs_levinfo_t * li, unsigned long flags _uUu_, void *qstdv )

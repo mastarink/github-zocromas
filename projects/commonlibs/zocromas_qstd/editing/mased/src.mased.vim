@@ -13,4 +13,8 @@ sfind qstd_defs.h
 tab sfind qstd_mstmt.c
 sfind qstd_mstmt.h
 
+tab sfind qstd_mstmt_base.c
+sfind qstd_mstmt_base.h
 
+tab sfind qstd_mstmt_names.c
+sfind qstd_mstmt_names.h
