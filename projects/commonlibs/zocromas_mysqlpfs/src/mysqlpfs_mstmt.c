@@ -47,7 +47,7 @@ MYSQL_TYPE_NULL
 int
 mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
 {
-  rSET( -1 );
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -59,11 +59,11 @@ mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
       if ( sqlop )
       {
         rC( mysql_stmt_prepare( mstmt->stmt, sqlop, strlen( sqlop ) ) );
-        QRGS( r );
+        QRGS( rCODE );
       }
     }
   }
-  return r;
+  rRET;
 }
 
 /*
@@ -78,21 +78,21 @@ from https://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-reset.html
 int
 mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt )
 {
-  rSET( -1 );
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
   {
     rC( mysql_stmt_reset( mstmt->stmt ) );
-    QRGS( r );
+    QRGS( rCODE );
   }
-  return r;
+  return rCODE;
 }
 
 static int
 mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  rSET( -1 );
+  rDECL( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -119,7 +119,7 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
             mbind->allocated_buffers[pos] = mbind->bind[pos].buffer = mas_calloc( 1, buffer_length );
             mbind->bind[pos].buffer_length = buffer_length;
 /* mbind->bind[pos].is_unsigned = 0; */
-            r = 0;
+            rCODE = 0;
           }
         }
         else
@@ -130,7 +130,7 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
       }
     }
   }
-  return r;
+  return rCODE;
 }
 
 static int

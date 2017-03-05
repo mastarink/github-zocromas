@@ -40,12 +40,12 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
 mysqlpfs_t *
 mysqlpfs_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
 {
-  rSET( 0 );
+  rDECL( 0 );
   mysqlpfs_t *pfs = mysqlpfs_create(  );
 
   rC( mysqlpfs_init( pfs, host, user, passwd, db, port ) );
 
-  if ( r < 0 )
+  if ( rCODE < 0 )
   {
     mas_free( pfs );
     pfs = NULL;

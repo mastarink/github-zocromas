@@ -74,7 +74,7 @@ test6( void )
 
     if ( pi )
     {
-      rSET( 0 );
+      rDECL( 0 );
       WARN( "%p %ld", pi, pi->pidepth );
       for ( size_t i = 0; i < pi->pidepth; i++ )
       {

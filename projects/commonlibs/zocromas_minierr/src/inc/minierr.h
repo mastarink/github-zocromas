@@ -3,6 +3,7 @@
 
 # include <assert.h>
 # include <errno.h>
+# include <stdarg.h>
 
 # define DIE( ...) minierr_die(__LINE__, __func__, __FILE__, 34, "DIE", __VA_ARGS__)
 # define WARN( ...) minierr_die(__LINE__, __func__, __FILE__, 0, "WARN", __VA_ARGS__)

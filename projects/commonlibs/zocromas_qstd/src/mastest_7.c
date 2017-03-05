@@ -1,38 +1,16 @@
 #include "qstd_defs.h"
-/* #include <mastar/masxfs/masxfs_defs.h> */
-#include <sys/stat.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-
-#include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
 #include <mastar/masxfs/masxfs_structs.h>
 
-/* #include <mastar/masxfs/masxfs_levinfo_base.h> */
-#include <mastar/masxfs/masxfs_levinfo_io.h>
-#include <mastar/masxfs/masxfs_levinfo_path.h>
 #include <mastar/masxfs/masxfs_levinfo_ref.h>
-#include <mastar/masxfs/masxfs_levinfo.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-#include <mastar/masxfs/masxfs_scan.h>
-
-#include <mastar/mysqlpfs/mysqlpfs.h>
 #include <mastar/mysqlpfs/mysqlpfs_query.h>
-
-#include <mastar/mysqlpfs/mysqlpfs_base.h>
-#include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
-#include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"
@@ -75,7 +53,8 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
 int
 test7( void )
 {
-  int r = 0;
+  rDECL( 0 );
+/* int r = 0; */
 
   masxfs_entry_callback_t callbacks[] = {
     {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test7cb,
@@ -91,21 +70,21 @@ test7( void )
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
 
-    r = mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" );
+    rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
 
-    if ( !r )
-      r = masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME /* flags */  );
+    rC( masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME /* flags */  ) );
 #if 1
-    r = masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  );
+    rC( masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
 #else
     masxfs_scanpath_real( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest", callbacks,
                           MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 255 );
 #endif
-    r = mas_mysqlpfs_query( qstd->pfs, "COMMIT" );
+    rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
 
     masxfs_pathinfo_delete( pi );
   }
 /* mysqlpfs_delete( pfs ); */
   mas_qstd_delete( qstd );
-  return r;
+  rRET;
+  /* return r; */
 }
