@@ -1,4 +1,5 @@
 #include "qstd_defs.h"
+#include <string.h>
 
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
@@ -18,7 +19,7 @@
 #include "qstd_mstmt_names.h"
 
 static int _uUu_
-test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
+test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
 {
   mas_qstd_t *qstd _uUu_ = ( mas_qstd_t * ) qstdv;
 
@@ -29,6 +30,7 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
     mysqlpfs_s_ulonglong_t theid = 0;
     mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
+    mysqlpfs_s_ulonglong_t as_parent_id = 0;
 
     const char *sdetypes[] = {
       [MASXFS_ENTRY_BLK_NUM] = "BLK",
@@ -51,11 +53,11 @@ test7cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *qstdv )
     }
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
-      mysqlpfs_s_ulonglong_t parent_id = mas_qstd_mstmt_insget_parents_id( qstd, theid );
-
-      masxfs_levinfo_set_id( li, parent_id );
+      as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
+      masxfs_levinfo_set_id( li, as_parent_id );
     }
-    MARK( "(T6)", " %ld. %s ID: %llu", depth, ename, ( unsigned long long ) theid );
+    if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
+      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", depth, ename, ( unsigned long long ) theid, ( unsigned long long ) parent_id , ( unsigned long long ) as_parent_id );
   }
   return 0;
 }
@@ -89,6 +91,12 @@ test7( void )
     masxfs_scanpath_real( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest", callbacks,
                           MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 255 );
 #endif
+  /* rC( mas_mysqlpfs_query( qstd->pfs, "UPDATE parents AS upar SET nchilds=(SELECT COUNT(*) FROM filenames AS fn LEFT JOIN parents AS p ON (fn.parent_id=p.id) WHERE upar.id==fn.parent_id)" ) ); */
+    rC( mas_mysqlpfs_query( qstd->pfs, "UPDATE parents AS p "
+                            " LEFT JOIN (SELECT filenames.parent_id, COUNT(*) as nchilds "
+                            " FROM filenames "
+                            " LEFT JOIN parents ON (filenames.parent_id=parents.id) "
+                            " GROUP BY filenames.parent_id) AS fnx ON (p.id=fnx.parent_id) " " SET p.nchilds=fnx.nchilds" ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
 
     masxfs_pathinfo_delete( pi );
