@@ -129,12 +129,17 @@ test7( void )
                 " LEFT JOIN (SELECT filenames.parent_id, COUNT(*) AS nchilds "
                 " FROM filenames "
                 " LEFT JOIN parents ON (filenames.parent_id=parents.id) "
-                " GROUP BY filenames.parent_id) AS fnx ON (p.id=fnx.parent_id) SET p.nchilds=fnx.nchilds",
+                " GROUP BY filenames.parent_id) AS fx ON (p.id=fx.parent_id) SET p.nchilds=fx.nchilds",
         "UPDATE filedatas AS fd "
                 " LEFT JOIN (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb "
                 " FROM filedatas AS ifd "
                 " LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) "
-                " GROUP BY ifn.data_id) AS fnx ON (fd.id=fnx.data_id) SET fd.nlinkdb=fnx.nlinkdb",
+                " GROUP BY ifn.data_id) AS fx ON (fd.id=fx.data_id) SET fd.nlinkdb=fx.nlinkdb",
+	 "UPDATE filesizes AS fs "
+                " LEFT JOIN (SELECT ifs.size AS size, COUNT(*) AS nsame "
+                " FROM filesizes AS ifs "
+                " LEFT JOIN fileprops AS ifp ON (ifs.size=ifp.size) "
+                " GROUP BY ifp.size) AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
 /* "UPDATE filesizes" */
         "COMMIT"
       };

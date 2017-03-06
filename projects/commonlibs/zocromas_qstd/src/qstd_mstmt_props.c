@@ -90,7 +90,7 @@ mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_i
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 7, stat->st_ctim.tv_sec, stat->st_ctim.tv_sec ? FALSE : TRUE ) );
     QRGS( rCODE );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 8, stat->st_size, stat->st_size ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 8, stat->st_size, FALSE ) );
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 9, stat->st_rdev, stat->st_rdev ? FALSE : TRUE ) );
     QRGS( rCODE );

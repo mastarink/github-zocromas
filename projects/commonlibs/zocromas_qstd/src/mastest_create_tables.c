@@ -16,7 +16,7 @@ test_create_tables( void )
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
             "size INTEGER  PRIMARY KEY"                              /* */
-            ", nfiles INTEGER NOT NULL"                              /* */
+            ", nsame INTEGER NOT NULL"                              /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
@@ -38,7 +38,7 @@ test_create_tables( void )
             ", atim TIMESTAMP"                                       /* */
             ", mtim TIMESTAMP"                                       /* */
             ", ctim TIMESTAMP"                                       /* */
-            ", size INTEGER, FOREIGN KEY (size) REFERENCES filesizes (size), INDEX size (size)" /* */
+            ", size INTEGER NOT NULL, FOREIGN KEY (size) REFERENCES filesizes (size), INDEX size (size)" /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", rdev INTEGER"                                         /* */
             ", blksize INTEGER"                                      /* */
