@@ -19,6 +19,12 @@
 
 #include "masxfs_levinfo_ref.h"
 
+masxfs_levinfo_t *
+masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset )
+{
+  return li ? li + offset : NULL;
+}
+
 const struct stat *
 masxfs_levinfo_stat_val( masxfs_levinfo_t * li )
 {

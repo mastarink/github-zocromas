@@ -328,3 +328,29 @@ masxfs_levinfo_scandir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, 
   }
   return r;
 }
+
+int
+masxfs_levinfo_scan_depth( masxfs_levinfo_t * lia, masxfs_depth_t depth, masxfs_scan_fun_simple_t cb, void *udata _uUu_, unsigned long flags )
+{
+  int r = 0;
+
+  if ( lia )
+  {
+    for ( masxfs_levinfo_t * li = lia; li < lia + depth; li++ )
+    {
+      if ( li->lidepth == ( size_t ) ( li - lia ) )
+      {
+        int r _uUu_ = 0;
+
+        r = cb( li, flags, udata );
+        if ( r )
+          break;
+      }
+      else
+      {
+        DIE( "FATAL ERROR" );
+      }
+    }
+  }
+  return r;
+}

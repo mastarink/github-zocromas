@@ -3,6 +3,8 @@
 
 # include "masxfs_levinfo_types.h"
 
+masxfs_levinfo_t *masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset );
+
 const struct stat *masxfs_levinfo_stat_val( masxfs_levinfo_t * li );
 const struct stat *masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags );
 

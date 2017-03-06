@@ -5,13 +5,13 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
-#include <mastar/levinfo/masxfs_levinfo_structs.h>
-#include "masxfs_structs.h"
-
-/* #include <mastar/levinfo/masxfs_levinfo_tools.h> */
+#include <mastar/levinfo/masxfs_levinfo_enums.h>
+/* #include <mastar/levinfo/masxfs_levinfo_structs.h> */
 #include <mastar/levinfo/masxfs_levinfo_path.h>
-/* #include <mastar/levinfo/masxfs_levinfo_ref.h> */
+#include <mastar/levinfo/masxfs_levinfo_ref.h>
 #include <mastar/levinfo/masxfs_levinfo.h>
+
+#include "masxfs_structs.h"
 
 #include "masxfs_pathinfo.h"
 
@@ -29,12 +29,10 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 /* r = masxfs_pathinfo_opendir( pi ); */
 /* QRPI( pi, r );                     */
 
-  
-  /* if ( flags & MASXFS_CB_SCAN_DEPTH ) */
-  /* {                                   */
-  /*   masxfs_pathinfo_scan_depth(  );   */
-  /* }                                   */
-
+/* if ( flags & MASXFS_CB_SCAN_DEPTH ) */
+/* {                                   */
+/*   masxfs_pathinfo_scan_depth(  );   */
+/* }                                   */
 
 /* if ( r >= 0 ) */
   {
@@ -55,7 +53,8 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 masxfs_levinfo_t *
 masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, masxfs_depth_t offset )
 {
-  return pi && pi->levinfo ? pi->levinfo + pi->pidepth - 1 - offset : NULL;
+/* return pi && pi->levinfo ? pi->levinfo + pi->pidepth - 1 - offset : NULL; */
+  return pi && pi->levinfo ? masxfs_levinfo_offset( pi->levinfo, pi->pidepth - 1 - offset ) : NULL;
 }
 
 masxfs_levinfo_t *
@@ -63,29 +62,16 @@ masxfs_pathinfo_last_li( masxfs_pathinfo_t * pi )
 {
   return masxfs_pathinfo_tail( pi, 0 );
 }
+
 /* TODO : same cb format as masxfs_pathinfo_scan */
 int
-masxfs_pathinfo_scan_depth( masxfs_pathinfo_t * pi, masxfs_scan_fun_simple_t cb, void *udata _uUu_, unsigned long flags )
+masxfs_pathinfo_scan_depth( masxfs_pathinfo_t * pi, masxfs_scan_fun_simple_t cb, void *udata, unsigned long flags )
 {
   int r = 0;
 
   if ( pi && pi->levinfo )
   {
-    for ( masxfs_levinfo_t * li = pi->levinfo; li < pi->levinfo + pi->pidepth; li++ )
-    {
-      if ( li->lidepth == ( size_t ) ( li - pi->levinfo ) )
-      {
-        int r _uUu_ = 0;
-
-        r = cb( li, flags, udata );
-        if ( r )
-          break;
-      }
-      else
-      {
-        DIE( "FATAL ERROR" );
-      }
-    }
+    masxfs_levinfo_scan_depth( pi->levinfo, pi->pidepth, cb, udata, flags );
   }
   return r;
 }
