@@ -1,8 +1,8 @@
 SUBDIRS= inc
 
 
-lib_LTLIBRARIES = libzocromas_mas_mulconfnt.la
-libzocromas_mas_mulconfnt_la_SOURCES = \
+lib_LTLIBRARIES = libzocromas_mulconfnt.la
+libzocromas_mulconfnt_la_SOURCES = \
 	parse.c \
 	tools.c \
 	source_defaults.c \
@@ -17,7 +17,7 @@ libzocromas_mas_mulconfnt_la_SOURCES = \
 	mulconfnt_error_base.c \
 	mulconfnt_error.c
 
-libzocromas_mas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
+libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 
 if MAS_TEST
 noinst_PROGRAMS=mastest
