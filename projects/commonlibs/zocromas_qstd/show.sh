@@ -9,4 +9,4 @@ SELECT * FROM ${table} LIMIT 45;
 \\q
 SEL
 }
-select_table 'filenames'
+select_table 'filefull'

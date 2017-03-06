@@ -12,7 +12,7 @@
 #include <mastar/exam/masexam.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
-#include <mastar/masxfs/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo_ref.h>
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"

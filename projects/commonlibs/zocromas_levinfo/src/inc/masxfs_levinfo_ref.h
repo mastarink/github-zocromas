@@ -1,7 +1,7 @@
 #ifndef MASXFS_LEVINFO_REF_H
 # define MASXFS_LEVINFO_REF_H
 
-# include "masxfs_types.h"
+# include "masxfs_levinfo_types.h"
 
 const struct stat *masxfs_levinfo_stat_val( masxfs_levinfo_t * li );
 const struct stat *masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags );

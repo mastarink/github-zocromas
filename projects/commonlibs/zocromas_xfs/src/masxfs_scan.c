@@ -7,10 +7,10 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_levinfo_structs.h"
+#include <mastar/levinfo/masxfs_levinfo_structs.h>
 /* #include "masxfs_structs.h" */
 
-#include "masxfs_levinfo_tools.h"
+#include <mastar/levinfo/masxfs_levinfo_tools.h>
 
 #include "masxfs_pathinfo_base.h"
 #include "masxfs_pathinfo.h"

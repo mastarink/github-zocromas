@@ -37,7 +37,7 @@ m4_include([m4zoc/varscheck.m4])
 # PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools zocromas_levinfo zocromas_exam zocromas_minierr zocromas_regerr])
+PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools zocromas_exam zocromas_minierr zocromas_regerr])
 
 # AC_CHECK_LIB([readline], [readline])
 

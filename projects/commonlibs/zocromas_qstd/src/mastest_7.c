@@ -10,7 +10,8 @@
 #include <mastar/masxfs/masxfs_types.h>
 #include <mastar/masxfs/masxfs_structs.h>
 
-#include <mastar/masxfs/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo_structs.h>
+#include <mastar/levinfo/masxfs_levinfo_ref.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>

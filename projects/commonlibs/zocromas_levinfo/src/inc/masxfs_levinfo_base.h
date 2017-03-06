@@ -1,7 +1,7 @@
 #ifndef MASXFS_LEVINFO_BASE_H
 # define MASXFS_LEVINFO_BASE_H
 
-# include "masxfs_types.h"
+# include "masxfs_levinfo_types.h"
 
 masxfs_levinfo_t *masxfs_levinfo_create( void );
 masxfs_levinfo_t *masxfs_levinfo_create_array( size_t sz );

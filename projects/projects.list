@@ -4,6 +4,7 @@ bins/zocromas_duf
 bins/zocromas_runonce
 bins/zocromas_server
 commonlibs/zocromas_exam
+commonlibs/zocromas_levinfo
 commonlibs/zocromas_mas_autoobject
 commonlibs/zocromas_mas_autoset
 commonlibs/zocromas_mas_channel

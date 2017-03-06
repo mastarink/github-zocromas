@@ -6,14 +6,6 @@ libzocromas_xfs_la_SOURCES = \
 	masxfs_scan.c \
 	masxfs_pathinfo_base.c \
 	masxfs_pathinfo.c \
-	masxfs_levinfo_base.c \
-	masxfs_levinfo_io.c \
-	masxfs_levinfo_io_dir.c \
-	masxfs_levinfo_path.c \
-	masxfs_levinfo_ref.c \
-	masxfs_levinfo.c \
-	masxfs_levinfo_format.c \
-	masxfs_levinfo_tools.c \
 	tools.c
 
 libzocromas_xfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@

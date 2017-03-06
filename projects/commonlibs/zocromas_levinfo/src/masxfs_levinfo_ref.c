@@ -1,4 +1,4 @@
-#include "masxfs_defs.h"
+#include "masxfs_levinfo_defs.h"
 #include <string.h>
 /* #include <sys/types.h> */
 #include <sys/stat.h>

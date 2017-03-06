@@ -1,4 +1,4 @@
-#include "masxfs_defs.h"
+#include "masxfs_levinfo_defs.h"
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>

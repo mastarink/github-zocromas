@@ -13,14 +13,14 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
-#include "masxfs_levinfo_structs.h"
+#include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include "masxfs_structs.h"
 
-/* #include "masxfs_levinfo_base.h" */
-#include "masxfs_levinfo_io.h"
-#include "masxfs_levinfo_path.h"
-#include "masxfs_levinfo_ref.h"
-#include "masxfs_levinfo.h"
+/* #include <mastar/levinfo/masxfs_levinfo_base.h> */
+#include <mastar/levinfo/masxfs_levinfo_io.h>
+#include <mastar/levinfo/masxfs_levinfo_path.h>
+#include <mastar/levinfo/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo.h>
 
 #include "masxfs_pathinfo_base.h"
 #include "masxfs_pathinfo.h"
