@@ -16,34 +16,34 @@ test_create_tables( void )
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
             "size INTEGER  PRIMARY KEY"                              /* */
-            ", nfiles INTEGER NOT NULL"                             /* */
+            ", nfiles INTEGER NOT NULL"                              /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
-            ")",
-    "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
-            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK')" /* */
-            ", mode INTEGER"                                         /* */
-            ", nlink INTEGER"                                        /* */
-            ", uid INTEGER"                                          /* */
-            ", gid INTEGER"                                          /* */
-            ", atim DATETIME"                                        /* */
-            ", mtim DATETIME"                                        /* */
-            ", ctim DATETIME"                                        /* */
-            ", size INTEGER"                                         /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
-            ", rdev INTEGER"                                         /* */
-            ", INDEX size (size)"                                    /* */
-            ", INDEX detype (detype)"                                /* */
-            ", FOREIGN KEY (size) REFERENCES filesizes (size)"       /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dev INTEGER NOT NULL"                                 /* */
-            ", inode BIGINT NOT NULL"                               /* */
-            ", props_id INTEGER, INDEX props (props_id), FOREIGN KEY (props_id) REFERENCES fileprops (id)" /* */
+            ", inode BIGINT NOT NULL"                                /* */
+            ", nlink INTEGER, INDEX nlink (nlink)"                   /* */
+            ", nlinkdb INTEGER, INDEX nlinkdb (nlinkdb)"             /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", UNIQUE INDEX dev_inode (dev,inode) COMMENT 'this pair is unique'" /* */
             " )",
+    "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
+            ", data_id INTEGER, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
+            ", mode INTEGER"                                         /* */
+            ", uid INTEGER"                                          /* */
+            ", gid INTEGER"                                          /* */
+            ", atim TIMESTAMP"                                       /* */
+            ", mtim TIMESTAMP"                                       /* */
+            ", ctim TIMESTAMP"                                       /* */
+            ", size INTEGER, FOREIGN KEY (size) REFERENCES filesizes (size), INDEX size (size)" /* */
+            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", rdev INTEGER"                                         /* */
+            ", blksize INTEGER"                                      /* */
+            ", blocks INTEGER"                                       /* */
+            ")",
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */

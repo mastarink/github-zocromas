@@ -5,6 +5,7 @@ libzocromas_qstdinclude_HEADERS =  \
 	qstd_mstmt_names.h \
 	qstd_mstmt_sizes.h \
 	qstd_mstmt_datas.h \
+	qstd_mstmt_props.h \
 	qstd_mstmt_parents.h \
 	qstd_defs.h \
 	qstd_types.h \

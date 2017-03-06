@@ -16,14 +16,6 @@
 
 #include "qstd_mstmt_sizes.h"
 
-static int
-mas_qstd_mstmt_setparam_sizes_id( mysqlpfs_mstmt_t * mstmt, mysqlpfs_s_ulonglong_t size )
-{
-  rDECL( 0 );
-  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, size, FALSE ) );
-  rRET;
-}
-
 mysqlpfs_s_ulonglong_t
 mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size )
 {
@@ -35,8 +27,7 @@ mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size )
 
     QRGP( mstmt_s );
 
-  /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, size, FALSE ) ); */
-    rC( mas_qstd_mstmt_setparam_sizes_id( mstmt_s, size ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, size, FALSE ) );
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
     QRGS( rCODE );
@@ -67,8 +58,7 @@ mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size )
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_SIZES );
 
     QRGP( mstmt );
-  /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, size, FALSE ) ); */
-    rC( mas_qstd_mstmt_setparam_sizes_id( mstmt, size ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, size, FALSE ) );
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
     QRGS( rCODE );

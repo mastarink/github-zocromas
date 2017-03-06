@@ -22,8 +22,8 @@ test_drop_tables( void )
     "START TRANSACTION",
     "DROP TABLE IF EXISTS filenames",
     "DROP TABLE IF EXISTS parents",
-    "DROP TABLE IF EXISTS filedatas",
     "DROP TABLE IF EXISTS fileprops",
+    "DROP TABLE IF EXISTS filedatas",
     "DROP TABLE IF EXISTS filesizes",
     "COMMIT",
   };

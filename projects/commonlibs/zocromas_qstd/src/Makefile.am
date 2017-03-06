@@ -8,6 +8,7 @@ libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_names.c \
 	qstd_mstmt_sizes.c \
 	qstd_mstmt_datas.c \
+	qstd_mstmt_props.c \
 	qstd_mstmt_parents.c
 
 libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@

@@ -214,7 +214,7 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, mysqlpf
     }
     else
     {
-      WARN( "%d / %d %p %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
+      WARN( "Unmet: (pos:(%d) < nbind:(%d)) and %p and %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
       QRG( -1 );
     }
   }

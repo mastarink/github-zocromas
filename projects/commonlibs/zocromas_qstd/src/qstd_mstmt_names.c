@@ -16,6 +16,7 @@
 
 #include "qstd_mstmt_names.h"
 
+
 mysqlpfs_s_ulonglong_t
 mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, mysqlpfs_s_ulonglong_t updir_id )
 {

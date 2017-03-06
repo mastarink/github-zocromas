@@ -211,14 +211,16 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         break;
       case STD_MSTMT_INSERT_DATAS:
         {
-          char *insop = "INSERT IGNORE INTO filedatas(dev,inode) VALUES (?,?)";
+          char *insop = "INSERT IGNORE INTO filedatas(dev,inode,nlink) VALUES (?,?,?)";
 
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 0, insop );
+          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
           QRGP( mstmt );
 
           rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
           QRGS( rCODE );
           rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
           QRGS( rCODE );
           rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
           QRGS( rCODE );
@@ -234,6 +236,60 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
           rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
           QRGS( rCODE );
           rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+          QRGS( rCODE );
+        }
+        break;
+      case STD_MSTMT_INSERT_PROPS:
+        {
+        /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
+          char *insop = "INSERT  INTO fileprops(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
+                /*         0 1 2 3 4  5                6                7               8 9 a b  */
+                  "VALUES (?,?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?)";
+
+          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 12, 0, insop );
+          QRGP( mstmt );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 3 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 4 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 5 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 6 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 7 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 8 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 9 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 10 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 11 ) );
+          QRGS( rCODE );
+          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+          QRGS( rCODE );
+        }
+        break;
+      case STD_MSTMT_SELECT_PROPS_ID:
+        {
+          char *selop = "SELECT id FROM fileprops WHERE data_id=?";
+
+          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+          QRGP( mstmt );
+
+          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
           QRGS( rCODE );
           rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
           QRGS( rCODE );

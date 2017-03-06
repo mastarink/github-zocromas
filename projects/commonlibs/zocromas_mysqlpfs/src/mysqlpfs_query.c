@@ -11,7 +11,7 @@
 #include <mysql.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/minierr/minierr.h> */
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
@@ -29,7 +29,8 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sqlop )
   if ( pfs && sqlop && *sqlop )
   {
     r = mysql_query( &pfs->mysql, sqlop );
-  /* fprintf( stderr, "(%d) --- %s\n", r, sqlop ); */
+    if ( r )
+      WARN( "(%d) --- %s\n", r, sqlop );
     QRGS( r );
   }
   return r;

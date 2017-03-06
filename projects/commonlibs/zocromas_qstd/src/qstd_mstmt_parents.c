@@ -16,13 +16,6 @@
 
 #include "qstd_mstmt_parents.h"
 
-static int
-mas_qstd_mstmt_setparam_parents_id( mysqlpfs_mstmt_t * mstmt, mysqlpfs_s_ulonglong_t dir_id )
-{
-  rDECL( 0 );
-  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, dir_id, dir_id ? FALSE : TRUE ) );
-  rRET;
-}
 
 mysqlpfs_s_ulonglong_t
 mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
@@ -35,8 +28,7 @@ mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
 
     QRGP( mstmt_s );
 
-  /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, dir_id, dir_id ? FALSE : TRUE ) ); */
-    rC( mas_qstd_mstmt_setparam_parents_id( mstmt_s, dir_id ) );
+  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, dir_id, dir_id ? FALSE : TRUE ) );
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
     QRGS( rCODE );

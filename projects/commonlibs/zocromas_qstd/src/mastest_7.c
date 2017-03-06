@@ -23,6 +23,7 @@
 #include "qstd_mstmt_names.h"
 #include "qstd_mstmt_sizes.h"
 #include "qstd_mstmt_datas.h"
+#include "qstd_mstmt_props.h"
 
 static int _uUu_
 test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
@@ -37,7 +38,8 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
     mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
     mysqlpfs_s_ulonglong_t as_parent_id = 0;
-      mysqlpfs_s_ulonglong_t dataid _uUu_ = 0;
+    mysqlpfs_s_ulonglong_t dataid _uUu_ = 0;
+    mysqlpfs_s_ulonglong_t propid _uUu_ = 0;
 
     const char *sdetypes[] = {
       [MASXFS_ENTRY_BLK_NUM] = "BLK",
@@ -48,11 +50,22 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
       [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
       [MASXFS_ENTRY_LNK_NUM] = "LNK"
     };
+    /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
+    {
+      size_t size = masxfs_levinfo_size_ref( li, flags );
+      size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
+
+    /* WARN( "SIZE: %ld / %ld", size, thesize ); */
+    }
     {
       const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
 
       if ( stat )
+      {
         dataid = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
+        /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
+          propid = mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetypes[detype], stat );
+      }
     }
     if ( masxfs_levinfo_depth_ref( li, flags ) != 0 )
     {
@@ -70,13 +83,6 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
     {
       as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
       masxfs_levinfo_set_id( li, as_parent_id );
-    }
-    else if ( detype == MASXFS_ENTRY_REG_NUM )
-    {
-      size_t size = masxfs_levinfo_size_ref( li, flags );
-      size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
-
-    /* WARN( "SIZE: %ld / %ld", size, thesize ); */
     }
     if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
       MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", depth, ename, ( unsigned long long ) theid, ( unsigned long long ) parent_id,
@@ -114,18 +120,28 @@ test7( void )
     masxfs_scanpath_real( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest", callbacks,
                           MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 255 );
 #endif
+    rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
   /* rC( mas_mysqlpfs_query( qstd->pfs, "UPDATE parents AS upar SET nchilds=(SELECT COUNT(*) FROM filenames AS fn LEFT JOIN parents AS p ON (fn.parent_id=p.id) WHERE upar.id==fn.parent_id)" ) ); */
     {
-      const char *usql[] = {
+      const char *updop[] = {
+        "START TRANSACTION",
         "UPDATE parents AS p "
                 " LEFT JOIN (SELECT filenames.parent_id, COUNT(*) AS nchilds "
                 " FROM filenames "
                 " LEFT JOIN parents ON (filenames.parent_id=parents.id) "
                 " GROUP BY filenames.parent_id) AS fnx ON (p.id=fnx.parent_id) SET p.nchilds=fnx.nchilds",
+        "UPDATE filedatas AS fd "
+                " LEFT JOIN (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb "
+                " FROM filedatas AS ifd "
+                " LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) "
+                " GROUP BY ifn.data_id) AS fnx ON (fd.id=fnx.data_id) SET fd.nlinkdb=fnx.nlinkdb",
 /* "UPDATE filesizes" */
+        "COMMIT"
       };
-      for ( size_t i = 0; i < sizeof( usql ) / sizeof( usql[0] ); i++ )
-        rC( mas_mysqlpfs_query( qstd->pfs, usql[i] ) );
+      for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
+      {
+        rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
+      }
     }
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
 
