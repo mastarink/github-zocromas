@@ -64,7 +64,7 @@ destructor_main( void )
 
 int test_create_tables( void );
 int test_drop_tables( void );
-int test6( void );
+/* int test6( void ); */
 int test7( void );
 
 int

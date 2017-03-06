@@ -1,10 +1,15 @@
 #define RGEMSG mysql_error(mas_qstd_mysql(qstd))
 #include "qstd_defs.h"
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
+
+#include <mastar/masxfs/masxfs_types.h>
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
@@ -14,35 +19,35 @@
 #include "qstd_mstmt.h"
 #include "qstd_mstmt_base.h"
 
-#include "qstd_mstmt_parents.h"
+#include "qstd_mstmt_datas.h"
 
 static int
-mas_qstd_mstmt_setparam_parents_id( mysqlpfs_mstmt_t * mstmt, mysqlpfs_s_ulonglong_t dir_id )
+mas_qstd_mstmt_setparam_datas_id( mysqlpfs_mstmt_t * mstmt, const masxfs_stat_t * stat )
 {
   rDECL( 0 );
-  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, dir_id, dir_id ? FALSE : TRUE ) );
+  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, stat->st_dev, FALSE ) );
+  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, stat->st_ino, FALSE ) );
   rRET;
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+mas_qstd_mstmt_selget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
   rDECL( 0 );
   mysqlpfs_s_ulonglong_t theid = 0;
 
   {
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PARENTS_ID );
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_DATAS_ID );
 
     QRGP( mstmt_s );
 
-  /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, dir_id, dir_id ? FALSE : TRUE ) ); */
-    rC( mas_qstd_mstmt_setparam_parents_id( mstmt_s, dir_id ) );
+    rC( mas_qstd_mstmt_setparam_datas_id( mstmt_s, stat ) );
     QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
     QRGS( rCODE );
 
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
-    /* QRGS( rCODE ); */
+  /* QRGS( rCODE ); */
 
     if ( rCODE != MYSQL_NO_DATA )
     {
@@ -58,17 +63,17 @@ mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+mas_qstd_mstmt_insget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
   rDECL( 0 );
   QRGP( qstd );
   mysqlpfs_s_ulonglong_t theid = 0;
 
   {
-    mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_PARENTS );
+    mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_DATAS );
 
     QRGP( mstmt );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, dir_id, dir_id ? FALSE : TRUE ) );
+    rC( mas_qstd_mstmt_setparam_datas_id( mstmt, stat ) );
     QRGS( rCODE );
 
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
@@ -76,36 +81,35 @@ mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
     if ( !rCODE && mas_mysqlpfs_mstmt_affected_rows( mstmt ) == 1 )
       theid = mas_mysqlpfs_mstmt_insert_id( mstmt );
   }
-  QRG( theid > 0 ? 0 : -1 );
+/* QRG( theid >= 0 ? 0 : -1 ); */
   return theid;
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+mas_qstd_mstmt_selinsget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
 
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_parents_id( qstd, dir_id );
+  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_datas_id( qstd, stat );
 
-/* WARN( "SELINS %lld", theid ); */
   if ( !theid )
-    theid = mas_qstd_mstmt_insget_parents_id( qstd, dir_id );
+    theid = mas_qstd_mstmt_insget_datas_id( qstd, stat );
 
-  QRG( theid > 0 ? 0 : -1 );
+/* QRG( theid >= 0 ? 0 : -1 ); */
   return theid;
 }
 
 mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insselget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+mas_qstd_mstmt_insselget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_parents_id( qstd, dir_id );
+  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_datas_id( qstd, stat );
 
   if ( !theid )
-    theid = mas_qstd_mstmt_selget_parents_id( qstd, dir_id );
+    theid = mas_qstd_mstmt_selget_datas_id( qstd, stat );
 
-  QRG( theid > 0 ? 0 : -1 );
+/* QRG( theid >= 0 ? 0 : -1 ); */
   return theid;
 }

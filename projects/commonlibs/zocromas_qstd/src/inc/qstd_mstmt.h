@@ -3,4 +3,6 @@
 
 # include "qstd_types.h"
 
+mysqlpfs_s_mysql_t *mas_qstd_mysql( mas_qstd_t * qstd );
+
 #endif

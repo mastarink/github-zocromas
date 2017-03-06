@@ -16,6 +16,7 @@ test_create_tables( void )
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
             "size INTEGER  PRIMARY KEY"                              /* */
+            ", nfiles INTEGER NOT NULL"                             /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
@@ -38,10 +39,9 @@ test_create_tables( void )
     "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dev INTEGER NOT NULL"                                 /* */
-            ", inode INTEGER NOT NULL"                               /* */
+            ", inode BIGINT NOT NULL"                               /* */
             ", props_id INTEGER, INDEX props (props_id), FOREIGN KEY (props_id) REFERENCES fileprops (id)" /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
-            ", rdev INTEGER"                                         /* */
             ", UNIQUE INDEX dev_inode (dev,inode) COMMENT 'this pair is unique'" /* */
             " )",
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */

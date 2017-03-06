@@ -35,4 +35,7 @@ int mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt );
 
+unsigned int mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt );
+const char *mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt );
+
 #endif

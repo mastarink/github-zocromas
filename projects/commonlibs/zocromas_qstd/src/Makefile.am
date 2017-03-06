@@ -6,6 +6,8 @@ libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_base.c \
 	qstd_mstmt.c \
 	qstd_mstmt_names.c \
+	qstd_mstmt_sizes.c \
+	qstd_mstmt_datas.c \
 	qstd_mstmt_parents.c
 
 libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
@@ -24,7 +26,6 @@ mastest_SOURCES= \
 	mastest_connect.c \
 	mastest_drop_tables.c \
 	mastest_create_tables.c \
-	mastest_6.c \
 	mastest_7.c
 
 

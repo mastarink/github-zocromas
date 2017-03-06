@@ -1,4 +1,5 @@
-#define RGEMSG mysql_error(&pfs->mysql)
+#define RGEMSG mysql_error(mas_mysqlpfs_mysql(pfs))
+/* #define RGEMSG mysql_error(&pfs->mysql) */
 #include "mysqlpfs_defs.h"
 #include <malloc.h>
 #include <stdio.h>
@@ -14,6 +15,7 @@
 #include <mastar/regerr/masregerr.h>
 
 #include "mysqlpfs_structs.h"
+#include "mysqlpfs.h"
 
 #include "mysqlpfs_query.h"
 

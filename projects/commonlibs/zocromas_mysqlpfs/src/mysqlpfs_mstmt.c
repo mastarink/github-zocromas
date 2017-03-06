@@ -559,3 +559,25 @@ mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt )
   }
   return nr;
 }
+
+unsigned int
+mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt )
+{
+  unsigned int r = 0;
+
+  QRGP( mstmt );
+  if ( mstmt && mstmt->stmt )
+    r = mysql_stmt_errno( mstmt->stmt );
+  return r;
+}
+
+const char *
+mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt )
+{
+  const char *s = NULL;
+
+  QRGP( mstmt );
+  if ( mstmt && mstmt->stmt )
+    s = mysql_stmt_error( mstmt->stmt );
+  return s;
+}
