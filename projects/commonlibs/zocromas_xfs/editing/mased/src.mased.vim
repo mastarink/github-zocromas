@@ -1,7 +1,10 @@
 find masxfs_defs.h
 sfind masxfs_types.h
+sfind masxfs_levinfo_types.h
 sfind masxfs_structs.h
+sfind masxfs_levinfo_structs.h
 sfind masxfs_enums.h
+sfind masxfs_levinfo_enums.h
 
 tab sfind mastest.h
 sfind mastest.c

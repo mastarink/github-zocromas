@@ -1,13 +1,14 @@
 #include "masxfs_defs.h"
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <string.h>
-#include <stdlib.h>
+/* #include <stdlib.h> */
 #include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_structs.h"
+#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_structs.h" */
 
 #include "masxfs_levinfo_tools.h"
 
@@ -15,6 +16,13 @@
 #include "masxfs_pathinfo.h"
 
 #include "masxfs_scan.h"
+
+/*
+exiternal functions used:
+
+ get_current_dir_name
+
+*/
 
 int
 masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth )

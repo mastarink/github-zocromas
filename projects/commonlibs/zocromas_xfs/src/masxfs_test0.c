@@ -13,6 +13,7 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
+#include "masxfs_levinfo_structs.h"
 #include "masxfs_structs.h"
 
 /* #include "masxfs_levinfo_base.h" */

@@ -4,21 +4,33 @@
 #include <errno.h>
 
 #include <unistd.h>
-#include <sys/types.h>
+/* #include <sys/types.h> */
 #include <sys/stat.h>
 #include <fcntl.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_structs.h"
+#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_structs.h" */
 
-#include "masxfs_levinfo.h"
+/* #include "masxfs_levinfo.h" */
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"
 
 #include "masxfs_levinfo_io.h"
+
+/*
+exiternal functions used:
+
+ openat
+ open
+ close
+ fstatat
+ fstat
+ 
+ */
 
 static int
 masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )

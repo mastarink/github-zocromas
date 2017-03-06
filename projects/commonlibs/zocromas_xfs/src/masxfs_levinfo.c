@@ -1,15 +1,16 @@
 #include "masxfs_defs.h"
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_structs.h"
+#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_structs.h" */
 
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_tools.h"
-#include "masxfs_levinfo_io.h"
+/* #include "masxfs_levinfo_io.h" */
 #include "masxfs_levinfo_io_dir.h"
 #include "masxfs_levinfo_ref.h"
 

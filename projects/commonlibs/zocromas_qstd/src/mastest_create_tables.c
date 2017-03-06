@@ -15,8 +15,8 @@ test_create_tables( void )
   char *creops[] _uUu_ = {
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
-            "size INTEGER  PRIMARY KEY"                              /* */
-            ", nsame INTEGER NOT NULL"                              /* */
+            "size BIGINT NOT NULL PRIMARY KEY"                               /* */
+            ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
@@ -33,13 +33,13 @@ test_create_tables( void )
             ", data_id INTEGER, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", mode INTEGER"                                         /* */
-            ", uid INTEGER"                                          /* */
-            ", gid INTEGER"                                          /* */
-            ", atim TIMESTAMP"                                       /* */
-            ", mtim TIMESTAMP"                                       /* */
-            ", ctim TIMESTAMP"                                       /* */
-            ", size INTEGER NOT NULL, FOREIGN KEY (size) REFERENCES filesizes (size), INDEX size (size)" /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", uid INTEGER, INDEX uid (uid)"                         /* */
+            ", gid INTEGER, INDEX gid (gid)"                         /* */
+            ", atim DATETIME, INDEX atim (atim)"                    /* */
+            ", mtim DATETIME, INDEX mtim (mtim)"                    /* */
+            ", ctim DATETIME, INDEX ctim (ctim)"                    /* */
+            ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES filesizes (size)" /* */
+            ", last_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", rdev INTEGER"                                         /* */
             ", blksize INTEGER"                                      /* */
             ", blocks INTEGER"                                       /* */
@@ -47,7 +47,7 @@ test_create_tables( void )
     "CREATE TABLE IF NOT EXISTS parents ("                           /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */
-            ", nchilds INTEGER NOT NULL"                             /* */
+            ", nchilds INTEGER NOT NULL, INDEX nchilds (nchilds)"    /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
@@ -59,6 +59,13 @@ test_create_tables( void )
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
+    "CREATE  VIEW filefull AS "                            /* */
+            " SELECT fn.name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "   FROM filenames AS fn "                               /* */
+            "   LEFT JOIN filedatas AS fd ON(fn.data_id=fd.id) "     /* */
+            "   JOIN fileprops AS fp ON(fp.data_id=fd.id) "          /* */
+            "   LEFT JOIN filesizes AS fs ON(fp.size=fs.size) "      /* */
+            " WHERE fp.detype='REG'",
     "COMMIT",
   };
   mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );

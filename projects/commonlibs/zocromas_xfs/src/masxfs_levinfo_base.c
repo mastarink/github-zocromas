@@ -4,9 +4,10 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_structs.h"
+#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_structs.h" */
 
-#include "masxfs_levinfo_tools.h"
+/* #include "masxfs_levinfo_tools.h" */
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 

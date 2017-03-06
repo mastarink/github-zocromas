@@ -1,5 +1,5 @@
 #include "masxfs_defs.h"
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>

@@ -20,6 +20,7 @@ test_drop_tables( void )
 {
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
+    "DROP VIEW IF EXISTS filefull",
     "DROP TABLE IF EXISTS filenames",
     "DROP TABLE IF EXISTS parents",
     "DROP TABLE IF EXISTS fileprops",

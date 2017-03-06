@@ -1,26 +1,36 @@
 #include "masxfs_defs.h"
 #include <string.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <dirent.h>
+/* #include <sys/types.h> */
+/* #include <dirent.h> */
 
 /* #include <sys/stat.h> */
 /* #include <unistd.h> */
 /* #include <fcntl.h> */
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
 #include <mastar/minierr/minierr.h>
 
-#include "masxfs_structs.h"
+#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_structs.h" */
 
 /* #include "masxfs_levinfo.h" */
 /* #include "masxfs_levinfo_ref.h" */
 
 #include "masxfs_levinfo_io.h"
-#include "masxfs_levinfo_tools.h"
+/* #include "masxfs_levinfo_tools.h" */
 
 #include "masxfs_levinfo_io_dir.h"
+
+/*
+exiternal functions used:
+
+ fdopendir
+ closedir
+ readdir
+ rewinddir
+*/
 
 int
 masxfs_levinfo_opendir( masxfs_levinfo_t * li )

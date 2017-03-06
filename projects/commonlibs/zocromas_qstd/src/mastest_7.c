@@ -50,7 +50,7 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
       [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
       [MASXFS_ENTRY_LNK_NUM] = "LNK"
     };
-    /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
+  /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
     {
       size_t size = masxfs_levinfo_size_ref( li, flags );
       size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
@@ -63,8 +63,8 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
       if ( stat )
       {
         dataid = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
-        /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
-          propid = mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetypes[detype], stat );
+      /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
+        propid = mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetypes[detype], stat );
       }
     }
     if ( masxfs_levinfo_depth_ref( li, flags ) != 0 )
@@ -91,6 +91,15 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
   return 0;
 }
 
+/*
+
+ SELECT name, nsame, fp.size 
+ 	FROM filenames AS fn 
+	LEFT JOIN filedatas AS fd ON(fn.data_id=fd.id)
+	JOIN fileprops AS fp ON(fp.data_id=fd.id)
+	LEFT JOIN filesizes AS fs ON(fp.size=fs.size)
+
+ */
 int
 test7( void )
 {
@@ -125,26 +134,32 @@ test7( void )
     {
       const char *updop[] = {
         "START TRANSACTION",
-        "UPDATE parents AS p "
-                " LEFT JOIN (SELECT filenames.parent_id, COUNT(*) AS nchilds "
-                " FROM filenames "
-                " LEFT JOIN parents ON (filenames.parent_id=parents.id) "
-                " GROUP BY filenames.parent_id) AS fx ON (p.id=fx.parent_id) SET p.nchilds=fx.nchilds",
-        "UPDATE filedatas AS fd "
-                " LEFT JOIN (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb "
-                " FROM filedatas AS ifd "
-                " LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) "
-                " GROUP BY ifn.data_id) AS fx ON (fd.id=fx.data_id) SET fd.nlinkdb=fx.nlinkdb",
-	 "UPDATE filesizes AS fs "
-                " LEFT JOIN (SELECT ifs.size AS size, COUNT(*) AS nsame "
-                " FROM filesizes AS ifs "
-                " LEFT JOIN fileprops AS ifp ON (ifs.size=ifp.size) "
-                " GROUP BY ifp.size) AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
-/* "UPDATE filesizes" */
+        "UPDATE parents AS p "                                       /* */
+                " LEFT JOIN "                                        /* */
+                "   (SELECT filenames.parent_id, COUNT(*) AS nchilds " /* */
+                "     FROM filenames "                               /* */
+                "     LEFT JOIN parents ON (filenames.parent_id=parents.id) " /* */
+                "     GROUP BY filenames.parent_id) "                /* */
+                "    AS fx ON (p.id=fx.parent_id) SET p.nchilds=fx.nchilds",
+        "UPDATE filedatas AS fd "                                    /* */
+                " LEFT JOIN "                                        /* */
+                "   (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb " /* */
+                "     FROM filedatas AS ifd "                        /* */
+                "     LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) " /* */
+                "     GROUP BY ifn.data_id) "                        /* */
+                "    AS fx ON (fd.id=fx.data_id) SET fd.nlinkdb=fx.nlinkdb",
+        "UPDATE filesizes AS fs "                                    /* */
+                " LEFT JOIN "                                        /* */
+                "   (SELECT ifs.size AS size, COUNT(*) AS nsame "    /* */
+                "     FROM filesizes AS ifs "                        /* */
+                "     LEFT JOIN fileprops AS ifp ON (ifs.size=ifp.size) " /* */
+                "     GROUP BY ifp.size) "                           /* */
+                "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
         "COMMIT"
       };
       for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
       {
+        /* WARN( "%s", updop[i] ); */
         rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
       }
     }
