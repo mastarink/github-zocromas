@@ -37,10 +37,11 @@ m4_include([m4zoc/varscheck.m4])
 # AC_SUBST(ZLIB_CFLAGS)
 
 PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools])
+# PKG_CHECK_MODULES([DEPSTEST],  [])
 
 # AC_CHECK_LIB([readline], [readline])
 
-m4_include([m4zoc/readline.m4])
+# m4_include([m4zoc/readline.m4])
 # m4_include([m4zoc/exif.m4])
 #m4_include([m4zoc/magic.m4])
 #m4_include([m4zoc/jpeg.m4])

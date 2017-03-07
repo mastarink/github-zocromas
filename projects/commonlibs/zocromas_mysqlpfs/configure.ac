@@ -36,7 +36,8 @@ MYSQL_CLIENT([10.0.0], [client])
 # PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools zocromas_xfs zocromas_exam zocromas_minierr zocromas_regerr])
+PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools  zocromas_minierr zocromas_regerr])
+PKG_CHECK_MODULES([DEPSTEST],  [zocromas_xfs zocromas_exam])
 
 # AC_CHECK_LIB([readline], [readline])
 
