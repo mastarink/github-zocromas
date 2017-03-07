@@ -492,7 +492,7 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
   int r = -1;
 
   QRGP( mstmt );
-  if ( mstmt && mstmt->stmt )
+  if ( mstmt )
   {
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
@@ -551,7 +551,7 @@ mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt )
   mysqlpfs_s_ulonglong_t nr = 0;
 
   QRGP( mstmt );
-  if ( mstmt && mstmt->stmt )
+  if ( mstmt )
   {
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
@@ -560,14 +560,36 @@ mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt )
   return ( unsigned long long ) nr;
 }
 
+int
+mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )
+{
+  unsigned int r = -1;
+
+  QRGP( mstmt );
+  if ( mstmt )
+  {
+    QRGP( mstmt->stmt );
+    if ( mstmt->stmt )
+    {
+      mysql_stmt_data_seek( mstmt->stmt, ( my_ulonglong ) offset );
+      r = 0;
+    }
+  }
+  return r;
+}
+
 unsigned int
 mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt )
 {
-  unsigned int r = 0;
+  unsigned int r = -1;
 
   QRGP( mstmt );
-  if ( mstmt && mstmt->stmt )
-    r = mysql_stmt_errno( mstmt->stmt );
+  if ( mstmt )
+  {
+    QRGP( mstmt->stmt );
+    if ( mstmt->stmt )
+      r = mysql_stmt_errno( mstmt->stmt );
+  }
   return r;
 }
 
@@ -577,8 +599,12 @@ mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt )
   const char *s = NULL;
 
   QRGP( mstmt );
-  if ( mstmt && mstmt->stmt )
-    s = mysql_stmt_error( mstmt->stmt );
+  if ( mstmt )
+  {
+    QRGP( mstmt->stmt );
+    if ( mstmt->stmt )
+      s = mysql_stmt_error( mstmt->stmt );
+  }
   return s;
 }
 

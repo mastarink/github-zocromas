@@ -12,13 +12,7 @@ struct masxfs_entry_callback_s
   unsigned long flags;
 };
 
-struct masxfs_handler_s
-{
-  masxfs_li_handler_t opendir;
-  masxfs_li_handler_t readdir;
-  masxfs_li_handler_t rewinddir;
-  masxfs_li_handler_t closedir;
-};
+
 
 struct masxfs_levinfo_s
 {
@@ -41,6 +35,7 @@ struct masxfs_levinfo_s
   {
     unsigned long id;
     mysqlpfs_mstmt_t *mstmt;
+    masxfs_dirent_t *pde;
     masxfs_stat_t *stat;
   } db;
 

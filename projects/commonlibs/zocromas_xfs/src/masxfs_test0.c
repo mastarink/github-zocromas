@@ -14,13 +14,14 @@
 #include <mastar/exam/masexam.h>
 
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
-#include "masxfs_structs.h"
 
 /* #include <mastar/levinfo/masxfs_levinfo_base.h> */
 #include <mastar/levinfo/masxfs_levinfo_io.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 #include <mastar/levinfo/masxfs_levinfo.h>
+
+#include "masxfs_structs.h"
 
 #include "masxfs_pathinfo_base.h"
 #include "masxfs_pathinfo.h"
@@ -45,8 +46,8 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data 
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
-  size_t size = masxfs_levinfo_size_ref( li, flags );
-  int fd = masxfs_levinfo_fd_ref( li, flags );
+  size_t size = masxfs_levinfo_size_ref( li, flags, MASXFS_SCAN_MODE_FS );
+  int fd = masxfs_levinfo_fd_ref( li, flags, MASXFS_SCAN_MODE_FS );
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t deinode = masxfs_levinfo_deinode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
@@ -114,9 +115,9 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, _tdepth ), _tname, "tdepth '%s' ? '%s'" );
     EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, pi->pidepth - 1 ), _lastname, "last '%s' ? '%s'" );
     EXAMT( pi->levinfo, masxfs_levinfo_fd_val( pi->levinfo, 0 ), 0, "fd:%d ? %d" );
-    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0 ), NULL, "dir:%d ? %d" );
-    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0 ), NULL, "dir:%p ? %p" );
-    EXAMT( pi->levinfo, masxfs_levinfo_pde_val( pi->levinfo, 0 ), NULL, "de:%p ? %p" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0, MASXFS_SCAN_MODE_FS ), NULL, "dir:%d ? %d" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0, MASXFS_SCAN_MODE_FS ), NULL, "dir:%p ? %p" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pde_val( pi->levinfo, 0, MASXFS_SCAN_MODE_FS ), NULL, "de:%p ? %p" );
 /* 1+2+8+8 */
     {
       if ( pi->levinfo )
@@ -169,7 +170,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-    masxfs_levinfo_fs_open( li );
+    masxfs_levinfo_open( li, MASXFS_SCAN_MODE_FS );
     EXAM( ( masxfs_depth_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
 /* 1+2+8+8+1+1(for d>1)+2 + 3*depth + 1 */
     for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )

@@ -89,7 +89,7 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent, masxfs_scan_mode_t 
   return r;
 }
 
-int
+static int
 masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
 {
   int r = 0;
@@ -112,7 +112,7 @@ masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
   return li->fd;
 }
 
-int
+static int
 masxfs_levinfo_db_open( masxfs_levinfo_t * li _uUu_ )
 {
   int r = -1;
@@ -137,7 +137,7 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
   return r;
 }
 
-int
+static int
 masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 {
   int r = 0;
@@ -155,7 +155,7 @@ masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
   return r;
 }
 
-int
+static int
 masxfs_levinfo_db_close( masxfs_levinfo_t * li _uUu_ )
 {
   int r = -1;
@@ -205,7 +205,7 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
   return r;
 }
 
-int
+static int
 masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
 {
   int r = 0;
@@ -231,7 +231,7 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
   return r;
 }
 
-int
+static int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li _uUu_ )
 {
   int r = -1;

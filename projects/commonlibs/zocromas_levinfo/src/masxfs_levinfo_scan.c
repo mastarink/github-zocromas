@@ -90,76 +90,81 @@ masxfs_levinfo_scan_down_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 {
   int r = 0;
 
-  if ( li && li->fs.pde )
+  if ( li )
   {
-    const char *name = li->fs.pde->d_name;
-    int d_type = li->fs.pde->d_type;
-    ino_t d_inode = li->fs.pde->d_ino;
+    masxfs_dirent_t *pde = mode == MASXFS_SCAN_MODE_FS ? li->fs.pde : li->db.pde;
 
-    unsigned long tflags = flags;
-
-    if ( cb )
-      tflags |= cb->flags;
-
-    masxfs_depth_t lidepth = li->lidepth;
-
-    li++;
-    lidepth++;
+    if ( pde )
     {
-      masxfs_levinfo_init( li, lidepth, name, masxfs_levinfo_de2entry( d_type ), d_inode );
-      if ( li->lidepth == 0 )
-        r = -1;
-      QRLI( li, r );
-      if ( r >= 0 )
+      const char *name = pde->d_name;
+      int d_type = pde->d_type;
+      ino_t d_inode = pde->d_ino;
+
+      unsigned long tflags = flags;
+
+      if ( cb )
+        tflags |= cb->flags;
+
+      masxfs_depth_t lidepth = li->lidepth;
+
+      li++;
+      lidepth++;
       {
-        r = masxfs_levinfo_scan_entry_single_at_child_cb( li, cb, data, flags );
-      }
-      QRLI( li, r );
-      if ( d_type == DT_DIR )
-      {
+        masxfs_levinfo_init( li, lidepth, name, masxfs_levinfo_de2entry( d_type ), d_inode );
+        if ( li->lidepth == 0 )
+          r = -1;
+        QRLI( li, r );
         if ( r >= 0 )
-          r = masxfs_levinfo_scan_li_cb( li, cb, data, flags, maxdepth, mode );
-        QRLI( li, r );
         {
-          char *path = masxfs_levinfo_li2path_up( li, 0 );
-
-        /* WARN( "#DIR### [%s]", path ); */
-          mas_free( path );
+          r = masxfs_levinfo_scan_entry_single_at_child_cb( li, cb, data, flags );
         }
-      }
-      else if ( d_type == DT_REG )
-      {
         QRLI( li, r );
+        if ( d_type == DT_DIR )
         {
-          char *path = masxfs_levinfo_li2path_up( li, 0 );
+          if ( r >= 0 )
+            r = masxfs_levinfo_scan_li_cb( li, cb, data, flags, maxdepth, mode );
+          QRLI( li, r );
+          {
+            char *path = masxfs_levinfo_li2path_up( li, 0 );
 
-        /* WARN( "#REG### [%s]", path ); */
-          mas_free( path );
+          /* WARN( "#DIR### [%s]", path ); */
+            mas_free( path );
+          }
         }
-      }
-      else if ( d_type == DT_LNK )
-      {
-        QRLI( li, r );
+        else if ( d_type == DT_REG )
         {
-          char *path = masxfs_levinfo_li2path_up( li, 0 );
+          QRLI( li, r );
+          {
+            char *path = masxfs_levinfo_li2path_up( li, 0 );
 
-        /* WARN( "#LNK### [%s]", path ); */
-          mas_free( path );
+          /* WARN( "#REG### [%s]", path ); */
+            mas_free( path );
+          }
         }
-      }
-      else
-      {
-        QRLI( li, r );
+        else if ( d_type == DT_LNK )
         {
-          char *path = masxfs_levinfo_li2path_up( li, 0 );
+          QRLI( li, r );
+          {
+            char *path = masxfs_levinfo_li2path_up( li, 0 );
 
-          WARN( "#???### [%s]", path );
-          mas_free( path );
+          /* WARN( "#LNK### [%s]", path ); */
+            mas_free( path );
+          }
         }
+        else
+        {
+          QRLI( li, r );
+          {
+            char *path = masxfs_levinfo_li2path_up( li, 0 );
+
+            WARN( "#???### [%s]", path );
+            mas_free( path );
+          }
+        }
+        masxfs_levinfo_reset( li, mode );
       }
-      masxfs_levinfo_reset( li, mode );
+      li--;
     }
-    li--;
   }
   else
     r = -1;
@@ -218,11 +223,18 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
 #endif
 }
 
-static inline int
-masxfs_levinfo_de_valid( masxfs_levinfo_t * li )
+static int
+masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 {
-  return li && li->fs.pde && !( li->fs.pde->d_name[0] == '.'
-                                && ( ( li->fs.pde->d_name[1] == '.' && li->fs.pde->d_name[2] == 0 ) || li->fs.pde->d_name[1] == 0 ) );
+  int r = 0;
+
+  if ( li )
+  {
+    masxfs_dirent_t *pde = ( mode == MASXFS_SCAN_MODE_FS ? li->fs.pde : li->db.pde );
+
+    r = pde && !( pde->d_name[0] == '.' && ( ( pde->d_name[1] == '.' && pde->d_name[2] == 0 ) || pde->d_name[1] == 0 ) );
+  }
+  return r;
 }
 
 int
@@ -231,9 +243,9 @@ masxfs_levinfo_scan_entry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 {
   int r = 0;
 
-  if ( li && li->fs.pde )
+  if ( li )
   {
-    if ( masxfs_levinfo_de_valid( li ) )
+    if ( masxfs_levinfo_de_valid( li, mode ) )
     {
       unsigned long tflags = flags;
 
@@ -293,7 +305,7 @@ masxfs_levinfo_scan_dir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb,
 {
   int r = 0;
 
-  masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
+  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, mode );
 
   switch ( detype )
   {

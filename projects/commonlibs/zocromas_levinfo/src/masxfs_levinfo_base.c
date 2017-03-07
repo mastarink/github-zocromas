@@ -66,9 +66,20 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
     if ( li->name )
       mas_free( li->name );
     li->name = NULL;
-    if ( li->fs.stat )
-      mas_free( li->fs.stat );
-    li->fs.stat = NULL;
+    {
+      if ( mode == MASXFS_SCAN_MODE_FS )
+      {
+        if ( li->fs.stat )
+          mas_free( li->fs.stat );
+        li->fs.stat = NULL;
+      }
+      else
+      {
+        if ( li->db.stat )
+          mas_free( li->db.stat );
+        li->db.stat = NULL;
+      }
+    }
     if ( li->path )
       mas_free( li->path );
     li->path = NULL;
@@ -80,7 +91,7 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 }
 
 void
-masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz , masxfs_scan_mode_t mode )
+masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_scan_mode_t mode )
 {
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
@@ -88,7 +99,7 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz , masxfs_sca
 }
 
 void
-masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_scan_mode_t mode  )
+masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_scan_mode_t mode )
 {
   if ( li )
   {

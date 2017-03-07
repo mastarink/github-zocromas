@@ -24,39 +24,41 @@ masxfs_levinfo_t * __attribute__ ( ( pure ) ) masxfs_levinfo_offset( masxfs_levi
   return li ? li + offset : NULL;
 }
 
-const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_scan_mode_t mode )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->fs.stat : NULL;
+  return li ? ( mode == MASXFS_SCAN_MODE_FS ? li->fs.stat : li->db.stat ) : 0;
 }
 
 const struct stat *
-masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
+masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags, masxfs_scan_mode_t mode )
 {
   int r = 0;
   const struct stat *st = NULL;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
-    r = masxfs_levinfo_fs_stat( li );
+    r = masxfs_levinfo_stat( li, mode );
     if ( r >= 0 )
-      st = masxfs_levinfo_stat_val( li, 0 );
+      st = masxfs_levinfo_stat_val( li, 0, mode );
   }
   return st;
 }
 
-size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_scan_mode_t mode )
 {
   size_t size = 0;
 
   li = masxfs_levinfo_offset( li, offset );
-  if ( li->fs.stat )
-    size = li->fs.stat->st_size;
+  const struct stat *stat = masxfs_levinfo_stat_val( li, 0, mode );
+
+  if ( stat )
+    size = stat->st_size;
   return size;
 }
 
 size_t
-masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags )
+masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags, masxfs_scan_mode_t mode )
 {
   size_t size = 0;
 
@@ -64,9 +66,9 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags )
   {
     int r = 0;
 
-    r = masxfs_levinfo_fs_stat( li );
+    r = masxfs_levinfo_stat( li, mode );
     if ( r >= 0 )
-      size = masxfs_levinfo_size_val( li, 0 );
+      size = masxfs_levinfo_size_val( li, 0, mode );
   }
   return size;
 }
@@ -79,7 +81,7 @@ masxfs_levinfo_fd_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 }
 
 int
-masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
+masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags, masxfs_scan_mode_t mode )
 {
   int fd = 0;
 
@@ -87,23 +89,23 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
   {
     int r = 0;
 
-    r = masxfs_levinfo_fs_open( li );
+    r = masxfs_levinfo_open( li, mode );
     if ( r >= 0 )
       fd = masxfs_levinfo_fd_val( li, 0 );
   }
   return fd;
 }
 
-masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_scan_mode_t mode )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->fs.pdir : 0;
+  return li ? ( mode == MASXFS_SCAN_MODE_FS ? li->fs.pdir : NULL ) : 0;
 }
 
-masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_scan_mode_t mode )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->fs.pde : 0;
+  return li ? ( mode == MASXFS_SCAN_MODE_FS ? li->fs.pde : li->db.pde ) : 0;
 }
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
@@ -164,7 +166,7 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
 }
 
 masxfs_entry_type_t
-masxfs_levinfo_detype( masxfs_levinfo_t * li )
+masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 {
   masxfs_entry_type_t detype = MASXFS_ENTRY_UNKNOWN_NUM;
 
@@ -172,7 +174,7 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li )
   {
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
-      int r = masxfs_levinfo_fs_stat( li );
+      int r = masxfs_levinfo_stat( li, mode );
 
       if ( r >= 0 )
         detype = li->detype;
