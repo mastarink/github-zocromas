@@ -1,4 +1,5 @@
-#define RGEMSG mysql_error(mas_qstd_mysql(qstd))
+/* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
+#define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
 #include <string.h>
 #include <sys/types.h>
@@ -9,6 +10,7 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
+#include <mastar/levinfo/masxfs_levinfo_types.h>
 #include <mastar/masxfs/masxfs_types.h>
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
@@ -21,11 +23,11 @@
 
 #include "qstd_mstmt_props.h"
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_id )
+unsigned long long
+mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, unsigned long long data_id )
 {
   rDECL( 0 );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PROPS_ID );
@@ -40,9 +42,10 @@ mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_i
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
   /* QRGS( rCODE ); */
 
-    if ( rCODE != MYSQL_NO_DATA )
+    /* if ( rCODE != MYSQL_NO_DATA ) */
+    if ( !mas_mysqlpfs_mstmt_is_no_data( rCODE ) )
     {
-      mysqlpfs_s_bool_t is_null = 0;
+      unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
       QRGS( rCODE );
@@ -53,12 +56,12 @@ mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_i
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_id, const char *sdetype, const masxfs_stat_t * stat _uUu_ )
+unsigned long long
+mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat _uUu_ )
 {
   rDECL( 0 );
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_PROPS );
@@ -117,13 +120,13 @@ mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_i
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_id, const char *sdetype, const masxfs_stat_t * stat )
+unsigned long long
+mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
 
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_props_id( qstd, data_id );
+  unsigned long long theid = mas_qstd_mstmt_selget_props_id( qstd, data_id );
 
   if ( !theid )
     theid = mas_qstd_mstmt_insget_props_id( qstd, data_id, sdetype, stat );
@@ -132,12 +135,12 @@ mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dat
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insselget_props_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t data_id, const char *sdetype, const masxfs_stat_t * stat )
+unsigned long long
+mas_qstd_mstmt_insselget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_props_id( qstd, data_id, sdetype, stat );
+  unsigned long long theid = mas_qstd_mstmt_insget_props_id( qstd, data_id, sdetype, stat );
 
   if ( !theid )
     theid = mas_qstd_mstmt_selget_props_id( qstd, data_id );

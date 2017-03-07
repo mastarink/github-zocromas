@@ -1,4 +1,5 @@
-#define RGEMSG mysql_error(mas_qstd_mysql(qstd))
+/* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
+#define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
 #include <string.h>
 #include <unistd.h>

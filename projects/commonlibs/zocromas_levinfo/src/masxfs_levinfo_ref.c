@@ -19,17 +19,15 @@
 
 #include "masxfs_levinfo_ref.h"
 
-masxfs_levinfo_t * __attribute__ ((pure))
-masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_levinfo_t * __attribute__ ( ( pure ) ) masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   return li ? li + offset : NULL;
 }
 
-const struct stat * __attribute__ ((pure))
-masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->stat : NULL;
+  return li ? li->fs.stat : NULL;
 }
 
 const struct stat *
@@ -47,14 +45,13 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
   return st;
 }
 
-size_t __attribute__ ((pure))
-masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   size_t size = 0;
 
   li = masxfs_levinfo_offset( li, offset );
-  if ( li->stat )
-    size = li->stat->st_size;
+  if ( li->fs.stat )
+    size = li->fs.stat->st_size;
   return size;
 }
 
@@ -97,43 +94,37 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
   return fd;
 }
 
-masxfs_dir_t * __attribute__ ((pure))
-masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->pdir : 0;
+  return li ? li->fs.pdir : 0;
 }
 
-masxfs_dirent_t * __attribute__ ((pure))
-masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? li->pde : 0;
+  return li ? li->fs.pde : 0;
 }
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
 
-masxfs_depth_t __attribute__ ((pure))
-masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
+masxfs_depth_t __attribute__ ( ( pure ) ) masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 {
   return li ? li->lidepth : 0;
 }
 
-ino_t __attribute__ ((pure))
-masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
+ino_t __attribute__ ( ( pure ) ) masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 {
   return li ? li->deinode : 0;
 }
 
-const char * __attribute__ ((pure))
-masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+const char * __attribute__ ( ( pure ) ) masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? li->name : NULL;
 }
 
-const char * __attribute__ ((pure))
-masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
+const char * __attribute__ ( ( pure ) ) masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   const char *name = NULL;
 
@@ -198,7 +189,7 @@ void
 masxfs_levinfo_set_id( masxfs_levinfo_t * li, unsigned long id )
 {
   if ( li )
-    li->id = id;
+    li->db.id = id;
 }
 
 unsigned long
@@ -208,7 +199,7 @@ masxfs_levinfo_id( masxfs_levinfo_t * li, masxfs_depth_t offset )
 
   if ( li->lidepth >= offset )
   {
-    id = li[-offset].id;
+    id = li[-offset].db.id;
   }
   return id;
 }

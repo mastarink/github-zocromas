@@ -13,6 +13,9 @@ sfind mysqlpfs.h
 tab sfind mysqlpfs_query.c
 sfind mysqlpfs_query.h
 
+tab sfind mysqlpfs_query_result.c
+sfind mysqlpfs_query_result.h
+
 tab sfind mysqlpfs_base.c
 sfind mysqlpfs_base.h
 
@@ -27,6 +30,7 @@ sfind mysqlpfs_mstmt_d.h
 
 tab sfind mysqlpfs_defs.h
 sfind mysqlpfs_types.h
+sfind mysqlpfs_types_my.h
 sfind mysqlpfs_structs.h
 
 tab sfind mastestbind.c

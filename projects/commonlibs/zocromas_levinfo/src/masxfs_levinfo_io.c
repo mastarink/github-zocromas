@@ -130,17 +130,17 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
 
   if ( li )
   {
-    if ( !li->stat )
+    if ( !li->fs.stat )
     {
-      li->stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+      li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
       if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
-        r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->stat, AT_SYMLINK_NOFOLLOW );
+        r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW );
       else
-        r = fstat( masxfs_levinfo_open( li ), li->stat );
+        r = fstat( masxfs_levinfo_open( li ), li->fs.stat );
       QRLI( li, r );
-      if ( r >= 0 && li->stat )
-        li->detype = masxfs_levinfo_stat2entry( li->stat );
+      if ( r >= 0 && li->fs.stat )
+        li->detype = masxfs_levinfo_stat2entry( li->fs.stat );
     }
   }
   else

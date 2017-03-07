@@ -3,9 +3,9 @@
 
 # include "qstd_types.h"
 
-mysqlpfs_s_ulonglong_t mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size );
-mysqlpfs_s_ulonglong_t mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size );
-mysqlpfs_s_ulonglong_t mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size );
-mysqlpfs_s_ulonglong_t mas_qstd_mstmt_insselget_sizes_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t size );
+unsigned long long mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, unsigned long long size );
+unsigned long long mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, unsigned long long size );
+unsigned long long mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, unsigned long long size );
+unsigned long long mas_qstd_mstmt_insselget_sizes_id( mas_qstd_t * qstd, unsigned long long size );
 
 #endif

@@ -66,9 +66,9 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li )
     if ( li->name )
       mas_free( li->name );
     li->name = NULL;
-    if ( li->stat )
-      mas_free( li->stat );
-    li->stat = NULL;
+    if ( li->fs.stat )
+      mas_free( li->fs.stat );
+    li->fs.stat = NULL;
     if ( li->path )
       mas_free( li->path );
     li->path = NULL;

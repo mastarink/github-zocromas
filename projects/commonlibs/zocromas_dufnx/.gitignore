@@ -1,0 +1,11 @@
+*.tmp
+tags
+.comments/
+.marks/
+.*.sw*
+.sw*
+mastest
+config.h.in*
+.localrc
+m4zoc
+shn

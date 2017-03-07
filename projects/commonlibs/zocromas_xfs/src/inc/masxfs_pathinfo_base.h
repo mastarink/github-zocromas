@@ -1,6 +1,7 @@
 #ifndef MASXFS_PATHINFO_BASE_H
 # define MASXFS_PATHINFO_BASE_H
 
+# include <mastar/levinfo/masxfs_levinfo_types.h>
 # include "masxfs_types.h"
 
 masxfs_pathinfo_t *masxfs_pathinfo_create( void );

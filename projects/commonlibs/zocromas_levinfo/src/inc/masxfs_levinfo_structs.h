@@ -1,6 +1,7 @@
 #ifndef MASXFS_LEVINFO_STRUCTS_H
 # define MASXFS_LEVINFO_STRUCTS_H
 
+# include <mastar/mysqlpfs/mysqlpfs_types.h>
 # include "masxfs_levinfo_types.h"
 # include "masxfs_levinfo_enums.h"
 
@@ -11,23 +12,39 @@ struct masxfs_entry_callback_s
   unsigned long flags;
 };
 
+struct masxfs_handler_s
+{
+  masxfs_li_handler_t opendir;
+  masxfs_li_handler_t readdir;
+  masxfs_li_handler_t rewinddir;
+  masxfs_li_handler_t closedir;
+};
 
 struct masxfs_levinfo_s
 {
   char *name;
-  unsigned long id;
   masxfs_entry_type_t detype;
   ino_t deinode;
   int fd;
-  masxfs_dir_t *pdir;
-  masxfs_dirent_t *pde;
-  masxfs_stat_t *stat;
   masxfs_depth_t lidepth;
   int error;
   size_t child_count_pair[2];
+ 
+  struct
+  {
+    masxfs_dir_t *pdir;
+    masxfs_dirent_t *pde;
+    masxfs_stat_t *stat;
+  } fs;
+
+  struct
+  {
+    unsigned long id;
+    mysqlpfs_mstmt_t *mstmt;
+    masxfs_stat_t *stat;
+  } db;
 
   char *path;
   char *prefix;
 };
 #endif
-

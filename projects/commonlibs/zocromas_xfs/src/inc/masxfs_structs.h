@@ -1,6 +1,7 @@
 #ifndef MASXFS_STRUCTS_H
 # define MASXFS_STRUCTS_H
 
+# include <mastar/levinfo/masxfs_levinfo_types.h>
 # include "masxfs_types.h"
 # include "masxfs_enums.h"
 

@@ -33,24 +33,42 @@ exiternal functions used:
 */
 
 int
+masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
+{
+  int r = 0;
+
+  r = masxfs_levinfo_opendir( li );
+  QRLI( li, r );
+  if ( r >= 0 && li && li->fs.pdir )
+  {
+    errno = 0;
+    rewinddir( li->fs.pdir );                                           /* mysql_stmt_data_seek(li->stmt, 0) */
+    if ( errno )
+      r = -1;
+  }
+  QRLI( li, r );
+  return r;
+}
+
+int
 masxfs_levinfo_opendir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
   if ( li )
   {
-    if ( !li->pdir )
+    if ( !li->fs.pdir )
     {
       int fd = masxfs_levinfo_open( li );
 
       if ( fd > 0 )
       {
         errno = 0;
-        li->pdir = fdopendir( fd );
-        if ( !li->pdir && errno )
+        li->fs.pdir = fdopendir( fd );
+        if ( !li->fs.pdir && errno )
           r = -1;
         QRLI( li, r );
-        if ( r >= 0 && li->pdir )
+        if ( r >= 0 && li->fs.pdir )
         {
           li->detype = MASXFS_ENTRY_DIR_NUM;
           r = masxfs_levinfo_rewinddir( li );
@@ -77,12 +95,12 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  if ( li && li->pdir )
+  if ( li && li->fs.pdir )
   {
     errno = 0;
-    r = closedir( li->pdir );
+    r = closedir( li->fs.pdir );
     QRLI( li, r );
-    li->pdir = NULL;
+    li->fs.pdir = NULL;
     li->fd = 0;                                                      /*  closedir closes fd!  */
   /* r = masxfs_levinfo_close( li ); */
   }
@@ -106,7 +124,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
   {
 #if 0
   /* No */
-    if ( li && !li->pdir )
+    if ( li && !li->fs.pdir )
       r = -1;
     QRLI( li, r );
 #endif
@@ -129,13 +147,13 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li )
 
   if ( li )
   {
-    li->pde = NULL;
-    if ( li->pdir )
+    li->fs.pde = NULL;
+    if ( li->fs.pdir )
     {
       errno = 0;
 
-    /* r=readdir_r(li->pdir, &li->de,...  ); No! */
-      li->pde = de = readdir( li->pdir );
+    /* r=readdir_r(li->fs.pdir, &li->de,...  ); No! */
+      li->fs.pde = de = readdir( li->fs.pdir );
     /* li->de = *de; */
       if ( !de && errno )
         r = -1;
@@ -144,22 +162,4 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li )
   }
   QRLI( li, r );
   return de;
-}
-
-int
-masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
-{
-  int r = 0;
-
-  r = masxfs_levinfo_opendir( li );
-  QRLI( li, r );
-  if ( r >= 0 && li && li->pdir )
-  {
-    errno = 0;
-    rewinddir( li->pdir ); /* mysql_stmt_data_seek(li->stmt, 0) */
-    if ( errno )
-      r = -1;
-  }
-  QRLI( li, r );
-  return r;
 }

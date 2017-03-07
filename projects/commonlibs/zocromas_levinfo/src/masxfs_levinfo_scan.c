@@ -90,11 +90,11 @@ masxfs_levinfo_scan_down_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 {
   int r = 0;
 
-  if ( li && li->pde )
+  if ( li && li->fs.pde )
   {
-    const char *name = li->pde->d_name;
-    int d_type = li->pde->d_type;
-    ino_t d_inode = li->pde->d_ino;
+    const char *name = li->fs.pde->d_name;
+    int d_type = li->fs.pde->d_type;
+    ino_t d_inode = li->fs.pde->d_ino;
 
     unsigned long tflags = flags;
 
@@ -184,14 +184,14 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
 {
 /* TODO - Don't remove next 20170217.123704 */
 #if 0
-  if ( li->pde->d_type == DT_UNKNOWN )
+  if ( li->fs.pde->d_type == DT_UNKNOWN )
   {
     struct stat st;
 
 # if 1
     r = fstat(  .... );
 # else
-    fpath = masxfs_normalize_path( path, li->pde->d_name );
+    fpath = masxfs_normalize_path( path, li->fs.pde->d_name );
     r = lstat( fpath, &st );
     if ( fpath )
       mas_free( fpath );
@@ -201,28 +201,28 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
       switch ( st.st_mode & S_IFMT )
       {
       case S_IFSOCK:
-        li->pde->d_type = DT_SOCK;
+        li->fs.pde->d_type = DT_SOCK;
         break;
       case S_IFLNK:
-        li->pde->d_type = DT_LNK;
+        li->fs.pde->d_type = DT_LNK;
         break;
       case S_IFREG:
-        li->pde->d_type = DT_REG;
+        li->fs.pde->d_type = DT_REG;
         break;
       case S_IFBLK:
-        li->pde->d_type = DT_BLK;
+        li->fs.pde->d_type = DT_BLK;
         break;
       case S_IFDIR:
-        li->pde->d_type = DT_DIR;
+        li->fs.pde->d_type = DT_DIR;
         break;
       case S_IFCHR:
-        li->pde->d_type = DT_CHR;
+        li->fs.pde->d_type = DT_CHR;
         break;
       case S_IFIFO:
-        li->pde->d_type = DT_FIFO;
+        li->fs.pde->d_type = DT_FIFO;
         break;
       default:
-        li->pde->d_type = DT_UNKNOWN;
+        li->fs.pde->d_type = DT_UNKNOWN;
         break;
       }
     }
@@ -233,7 +233,7 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
 static inline int
 masxfs_levinfo_de_valid( masxfs_levinfo_t * li )
 {
-  return li && li->pde && !( li->pde->d_name[0] == '.' && ( ( li->pde->d_name[1] == '.' && li->pde->d_name[2] == 0 ) || li->pde->d_name[1] == 0 ) );
+  return li && li->fs.pde && !( li->fs.pde->d_name[0] == '.' && ( ( li->fs.pde->d_name[1] == '.' && li->fs.pde->d_name[2] == 0 ) || li->fs.pde->d_name[1] == 0 ) );
 }
 
 int
@@ -241,7 +241,7 @@ masxfs_levinfo_scan_entry_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 {
   int r = 0;
 
-  if ( li && li->pde )
+  if ( li && li->fs.pde )
   {
     if ( masxfs_levinfo_de_valid( li ) )
     {

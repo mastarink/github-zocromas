@@ -15,6 +15,7 @@
 
 #include "mysqlpfs.h"
 #include "mysqlpfs_query.h"
+#include "mysqlpfs_query_result.h"
 
 #include "mysqlpfs_base.h"
 #include "mysqlpfs_mstmt_base.h"

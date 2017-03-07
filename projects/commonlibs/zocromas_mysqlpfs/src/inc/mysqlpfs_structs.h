@@ -1,6 +1,7 @@
 #ifndef MAS_MYSQLPFS_STRUCTS_H
 # define MAS_MYSQLPFS_STRUCTS_H
 
+# include "mysqlpfs_types_my.h"
 # include "mysqlpfs_types.h"
 
 /* TODO rename myq_mfield_type_s */

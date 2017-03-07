@@ -1,4 +1,5 @@
-#define RGEMSG mysql_error(mas_qstd_mysql(qstd))
+/* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
+#define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
 #include <string.h>
 
@@ -17,11 +18,11 @@
 #include "qstd_mstmt_parents.h"
 
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+unsigned long long
+mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
 {
   rDECL( 0 );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PARENTS_ID );
@@ -36,9 +37,10 @@ mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
     /* QRGS( rCODE ); */
 
-    if ( rCODE != MYSQL_NO_DATA )
+    /* if ( rCODE != MYSQL_NO_DATA ) */
+    if ( !mas_mysqlpfs_mstmt_is_no_data( rCODE ) )
     {
-      mysqlpfs_s_bool_t is_null = 0;
+      unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
       QRGS( rCODE );
@@ -49,12 +51,12 @@ mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+unsigned long long
+mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
 {
   rDECL( 0 );
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_PARENTS );
@@ -72,13 +74,13 @@ mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+unsigned long long
+mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
 
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_parents_id( qstd, dir_id );
+  unsigned long long theid = mas_qstd_mstmt_selget_parents_id( qstd, dir_id );
 
 /* WARN( "SELINS %lld", theid ); */
   if ( !theid )
@@ -88,12 +90,12 @@ mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t d
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
-mas_qstd_mstmt_insselget_parents_id( mas_qstd_t * qstd, mysqlpfs_s_ulonglong_t dir_id )
+unsigned long long
+mas_qstd_mstmt_insselget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_parents_id( qstd, dir_id );
+  unsigned long long theid = mas_qstd_mstmt_insget_parents_id( qstd, dir_id );
 
   if ( !theid )
     theid = mas_qstd_mstmt_selget_parents_id( qstd, dir_id );

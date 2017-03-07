@@ -17,10 +17,10 @@ int mas_mysqlpfs_mstmt_get_result_string( mysqlpfs_mstmt_t * mstmt, int pos, con
 int mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos );
 int mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos );
 
-int mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_ulonglong_t num, mysqlpfs_s_bool_t is_null );
-int mas_mysqlpfs_mstmt_get_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_ulonglong_t * pnum, mysqlpfs_s_bool_t * pis_null );
-int mas_mysqlpfs_mstmt_set_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_ulonglong_t num, mysqlpfs_s_bool_t is_null );
-int mas_mysqlpfs_mstmt_get_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_ulonglong_t * pnum, mysqlpfs_s_bool_t * pis_null );
+int mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null );
+int mas_mysqlpfs_mstmt_get_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null );
+int mas_mysqlpfs_mstmt_set_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null );
+int mas_mysqlpfs_mstmt_get_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null );
 
 int mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt );
@@ -28,9 +28,9 @@ int mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt );
 
-mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_num_rows( mysqlpfs_mstmt_t * mstmt );
-mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt );
-mysqlpfs_s_ulonglong_t mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt );
+unsigned long long mas_mysqlpfs_mstmt_num_rows( mysqlpfs_mstmt_t * mstmt );
+unsigned long long mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt );
+unsigned long long mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt );
@@ -38,4 +38,5 @@ int mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt );
 unsigned int mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt );
 const char *mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt );
 
+int mas_mysqlpfs_mstmt_is_no_data( int code );
 #endif

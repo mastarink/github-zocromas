@@ -1,4 +1,5 @@
-#define RGEMSG mysql_error(mas_qstd_mysql(qstd))
+/* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
+#define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
 #include <string.h>
 #include <sys/types.h>
@@ -9,6 +10,7 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
+#include <mastar/levinfo/masxfs_levinfo_types.h>
 #include <mastar/masxfs/masxfs_types.h>
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
@@ -21,11 +23,11 @@
 
 #include "qstd_mstmt_datas.h"
 
-mysqlpfs_s_ulonglong_t
+unsigned long long
 mas_qstd_mstmt_selget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
   rDECL( 0 );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_DATAS_ID );
@@ -42,9 +44,10 @@ mas_qstd_mstmt_selget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
   /* QRGS( rCODE ); */
 
-    if ( rCODE != MYSQL_NO_DATA )
+  /* if ( rCODE != MYSQL_NO_DATA ) */
+    if ( !mas_mysqlpfs_mstmt_is_no_data( rCODE ) )
     {
-      mysqlpfs_s_bool_t is_null = 0;
+      unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
       QRGS( rCODE );
@@ -55,12 +58,12 @@ mas_qstd_mstmt_selget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
+unsigned long long
 mas_qstd_mstmt_insget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
   rDECL( 0 );
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = 0;
+  unsigned long long theid = 0;
 
   {
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_DATAS );
@@ -82,13 +85,13 @@ mas_qstd_mstmt_insget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
+unsigned long long
 mas_qstd_mstmt_selinsget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
 
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_selget_datas_id( qstd, stat );
+  unsigned long long theid = mas_qstd_mstmt_selget_datas_id( qstd, stat );
 
   if ( !theid )
     theid = mas_qstd_mstmt_insget_datas_id( qstd, stat );
@@ -97,12 +100,12 @@ mas_qstd_mstmt_selinsget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat
   return theid;
 }
 
-mysqlpfs_s_ulonglong_t
+unsigned long long
 mas_qstd_mstmt_insselget_datas_id( mas_qstd_t * qstd, const masxfs_stat_t * stat )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
-  mysqlpfs_s_ulonglong_t theid = mas_qstd_mstmt_insget_datas_id( qstd, stat );
+  unsigned long long theid = mas_qstd_mstmt_insget_datas_id( qstd, stat );
 
   if ( !theid )
     theid = mas_qstd_mstmt_selget_datas_id( qstd, stat );

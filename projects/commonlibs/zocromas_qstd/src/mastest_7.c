@@ -35,13 +35,13 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
   const char *ename = masxfs_levinfo_name_ref( li, flags );
 
   {
-    mysqlpfs_s_ulonglong_t theid = 0;
-    mysqlpfs_s_ulonglong_t parent_id = masxfs_levinfo_parent_id( li );
+    unsigned long long theid = 0;
+    unsigned long long parent_id = masxfs_levinfo_parent_id( li );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li );
-    mysqlpfs_s_ulonglong_t as_parent_id = 0;
-    mysqlpfs_s_ulonglong_t dataid = 0;
+    unsigned long long as_parent_id = 0;
+    unsigned long long dataid = 0;
 
-  /* mysqlpfs_s_ulonglong_t propid _uUu_ = 0; */
+  /* unsigned long long propid _uUu_ = 0; */
 
     const char *sdetypes[] = {
       [MASXFS_ENTRY_BLK_NUM] = "BLK",

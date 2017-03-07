@@ -5,6 +5,7 @@ lib_LTLIBRARIES = libzocromas_mysqlpfs.la
 libzocromas_mysqlpfs_la_SOURCES = \
  	mysqlpfs.c \
  	mysqlpfs_query.c \
+ 	mysqlpfs_query_result.c \
 	mysqlpfs_base.c \
 	mysqlpfs_mstmt_base.c \
 	mysqlpfs_mstmt.c \

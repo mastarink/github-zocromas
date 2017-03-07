@@ -22,3 +22,9 @@ mas_mysqlpfs_mysql( mysqlpfs_t * pfs )
 {
   return pfs ? &pfs->mysql : NULL;
 }
+
+const char *
+mas_mysqlpfs_mysql_error( mysqlpfs_t * pfs )
+{
+  return pfs ? mysql_error( &pfs->mysql ) : NULL;
+}
