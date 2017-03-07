@@ -19,13 +19,13 @@
 
 #include "masxfs_levinfo_ref.h"
 
-masxfs_levinfo_t *
+masxfs_levinfo_t * __attribute__ ((pure))
 masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   return li ? li + offset : NULL;
 }
 
-const struct stat *
+const struct stat * __attribute__ ((pure))
 masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
@@ -47,7 +47,7 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
   return st;
 }
 
-size_t
+size_t __attribute__ ((pure))
 masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   size_t size = 0;
@@ -97,14 +97,14 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
   return fd;
 }
 
-masxfs_dir_t *
+masxfs_dir_t * __attribute__ ((pure))
 masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? li->pdir : 0;
 }
 
-masxfs_dirent_t *
+masxfs_dirent_t * __attribute__ ((pure))
 masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
@@ -113,26 +113,26 @@ masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
 
-masxfs_depth_t
+masxfs_depth_t __attribute__ ((pure))
 masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 {
   return li ? li->lidepth : 0;
 }
 
-ino_t
+ino_t __attribute__ ((pure))
 masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 {
   return li ? li->deinode : 0;
 }
 
-const char *
+const char * __attribute__ ((pure))
 masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? li->name : NULL;
 }
 
-const char *
+const char * __attribute__ ((pure))
 masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
 {
   const char *name = NULL;

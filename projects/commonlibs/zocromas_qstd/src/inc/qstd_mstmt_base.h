@@ -10,6 +10,8 @@ void mas_qstd_reset( mas_qstd_t * qstd );
 void mas_qstd_delete( mas_qstd_t * qstd );
 
 /***/
+int mas_qstd_create_tables( mas_qstd_t * qstd );
+int mas_qstd_drop_tables( mas_qstd_t * qstd );
 
 mysqlpfs_mstmt_t **mas_qstd_mstmt_create_array( void );
 void mas_qstd_mstmt_reset_array( mysqlpfs_mstmt_t ** mstmts );
@@ -19,4 +21,3 @@ mysqlpfs_mstmt_t *mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid );
 mysqlpfs_mstmt_t *mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid );
 
 #endif
-

@@ -3,6 +3,7 @@ bins/zocromas_direct
 bins/zocromas_duf
 bins/zocromas_runonce
 bins/zocromas_server
+commonlibs/zocromas_dufnx
 commonlibs/zocromas_exam
 commonlibs/zocromas_levinfo
 commonlibs/zocromas_mas_autoobject
@@ -19,7 +20,6 @@ commonlibs/zocromas_mas_log
 commonlibs/zocromas_mas_messageio
 commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_msg
-commonlibs/zocromas_mas_mulconfnt
 commonlibs/zocromas_mas_multiconfig
 commonlibs/zocromas_mas_options
 commonlibs/zocromas_mas_sqlite
@@ -32,6 +32,7 @@ commonlibs/zocromas_mas_varset
 commonlibs/zocromas_mas_varvec
 commonlibs/zocromas_mas_wrap
 commonlibs/zocromas_minierr
+commonlibs/zocromas_mulconfnt
 commonlibs/zocromas_mysqlpfs
 commonlibs/zocromas_qstd
 commonlibs/zocromas_regerr

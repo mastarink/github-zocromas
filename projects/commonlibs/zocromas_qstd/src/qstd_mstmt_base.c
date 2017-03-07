@@ -10,6 +10,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
+#include <mastar/mysqlpfs/mysqlpfs_query.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"
@@ -60,6 +61,105 @@ mas_qstd_delete( mas_qstd_t * qstd )
 }
 
 /**********************************************************************************/
+int
+mas_qstd_create_tables( mas_qstd_t * qstd )
+{
+  rDECL( 0 );
+  char *creops[] _uUu_ = {
+    "START TRANSACTION",
+    "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
+            "size BIGINT NOT NULL PRIMARY KEY"                       /* */
+            ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
+            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ")",
+    "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
+            ", dev INTEGER NOT NULL"                                 /* */
+            ", inode BIGINT NOT NULL"                                /* */
+            ", nlink INTEGER, INDEX nlink (nlink)"                   /* */
+            ", nlinkdb INTEGER, INDEX nlinkdb (nlinkdb)"             /* */
+            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", UNIQUE INDEX dev_inode (dev,inode) COMMENT 'this pair is unique'" /* */
+            " )",
+    "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
+            ", data_id INTEGER, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
+            ", mode INTEGER"                                         /* */
+            ", uid INTEGER, INDEX uid (uid)"                         /* */
+            ", gid INTEGER, INDEX gid (gid)"                         /* */
+            ", atim DATETIME, INDEX atim (atim)"                     /* */
+            ", mtim DATETIME, INDEX mtim (mtim)"                     /* */
+            ", ctim DATETIME, INDEX ctim (ctim)"                     /* */
+            ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES filesizes (size)" /* */
+            ", last_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", rdev INTEGER"                                         /* */
+            ", blksize INTEGER"                                      /* */
+            ", blocks INTEGER"                                       /* */
+            ")",
+    "CREATE TABLE IF NOT EXISTS parents ("                           /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
+            ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */
+            ", nchilds INTEGER NOT NULL, INDEX nchilds (nchilds)"    /* */
+            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ")",
+    "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
+            ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES parents (id)" /* */
+            ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
+            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
+            ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
+            ")",
+    "CREATE  VIEW filefull AS "                                      /* */
+            " SELECT fn.name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "   FROM filenames AS fn "                               /* */
+            "   LEFT JOIN filedatas AS fd ON(fn.data_id=fd.id) "     /* */
+            "   JOIN fileprops AS fp ON(fp.data_id=fd.id) "          /* */
+            "   LEFT JOIN filesizes AS fs ON(fp.size=fs.size) "      /* */
+            " WHERE fp.detype='REG'",
+    "COMMIT",
+  };
+
+  if ( qstd && qstd->pfs )
+  {
+    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !rCODE; i++ )
+    {
+      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ));
+      INFO( "(%d) %s", rCODE, creops[i] );
+    }
+  }
+
+  rRET;
+}
+
+int
+mas_qstd_drop_tables( mas_qstd_t * qstd )
+{
+  rDECL( 0 );
+  const char *creops[] _uUu_ = {
+    "START TRANSACTION",
+    "DROP VIEW IF EXISTS filefull",
+    "DROP TABLE IF EXISTS filenames",
+    "DROP TABLE IF EXISTS parents",
+    "DROP TABLE IF EXISTS fileprops",
+    "DROP TABLE IF EXISTS filedatas",
+    "DROP TABLE IF EXISTS filesizes",
+    "COMMIT",
+  };
+
+  if ( qstd && qstd->pfs )
+  {
+    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !rCODE; i++ )
+    {
+      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
+      INFO( "(%d) %s", rCODE, creops[i] );
+    }
+  }
+
+  rRET;
+}
 
 mysqlpfs_mstmt_t **
 mas_qstd_mstmt_create_array( void )
@@ -89,9 +189,216 @@ mas_qstd_mstmt_delete_array( mysqlpfs_mstmt_t ** mstmts )
 }
 
 mysqlpfs_mstmt_t *
-mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
+mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
   rDECL( 0 );
+  mysqlpfs_mstmt_t *mstmt = NULL;
+
+  QRGP( qstd->pfs );
+  if ( qstd->pfs )
+  {
+    mysqlpfs_t *pfs = qstd->pfs;
+
+    switch ( stdid )
+    {
+    case STD_MSTMT_INSERT_NAMES:
+      {
+        char *insop = "INSERT INTO filenames(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 4, 0, insop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 3, 255 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_SELECT_NAMES_ID:
+      {
+        char *selop = "SELECT id FROM filenames AS fn " /* "LEFT JOIN parents as p ON (fn.parent_id=p.id)" */ " WHERE name=? AND fn.parent_id<=>?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_INSERT_PARENTS:
+      {
+        char *insop = "INSERT INTO parents(dir_id) VALUES (?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_SELECT_PARENTS_ID:
+      {
+        char *selop = "SELECT id FROM parents WHERE dir_id<=>?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_INSERT_SIZES:
+      {
+        char *insop = "INSERT IGNORE INTO filesizes(size) VALUES (?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_SELECT_SIZES_ID:
+      {
+        char *selop = "SELECT size FROM filesizes WHERE size=?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_INSERT_DATAS:
+      {
+        char *insop = "INSERT IGNORE INTO filedatas(dev,inode,nlink) VALUES (?,?,?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_SELECT_DATAS_ID:
+      {
+        char *selop = "SELECT id FROM filedatas WHERE dev=? AND inode=?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_INSERT_PROPS:
+      {
+      /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
+        char *insop = "INSERT  INTO fileprops(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
+              /*         0 1 2 3 4  5                6                7               8 9 a b  */
+                "VALUES (?,?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 12, 0, insop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 3 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 4 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 5 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 6 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 7 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 8 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 9 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 10 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 11 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_SELECT_PROPS_ID:
+      {
+        char *selop = "SELECT id FROM fileprops WHERE data_id=?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;
+    case STD_MSTMT_MAX:
+      break;
+    }
+  }
+  return mstmt;
+}
+
+mysqlpfs_mstmt_t *
+mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
+{
   mysqlpfs_mstmt_t *mstmt = NULL;
 
   if ( qstd && stdid >= 0 && stdid < STD_MSTMT_MAX )
@@ -104,206 +411,7 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       mas_mysqlpfs_mstmt_delete( mstmt );
       mstmt = mstmts[stdid] = NULL;
     }
-    QRGP( qstd->pfs );
-    if ( qstd->pfs )
-    {
-      mysqlpfs_t *pfs = qstd->pfs;
-
-      switch ( stdid )
-      {
-      case STD_MSTMT_INSERT_NAMES:
-        {
-          char *insop = "INSERT INTO filenames(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 4, 0, insop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 3, 255 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_SELECT_NAMES_ID:
-        {
-          char *selop = "SELECT id FROM filenames AS fn " /* "LEFT JOIN parents as p ON (fn.parent_id=p.id)" */ " WHERE name=? AND fn.parent_id<=>?";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_INSERT_PARENTS:
-        {
-          char *insop = "INSERT INTO parents(dir_id) VALUES (?)";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_SELECT_PARENTS_ID:
-        {
-          char *selop = "SELECT id FROM parents WHERE dir_id<=>?";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_INSERT_SIZES:
-        {
-          char *insop = "INSERT IGNORE INTO filesizes(size) VALUES (?)";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_SELECT_SIZES_ID:
-        {
-          char *selop = "SELECT size FROM filesizes WHERE size=?";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_INSERT_DATAS:
-        {
-          char *insop = "INSERT IGNORE INTO filedatas(dev,inode,nlink) VALUES (?,?,?)";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_SELECT_DATAS_ID:
-        {
-          char *selop = "SELECT id FROM filedatas WHERE dev=? AND inode=?";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_INSERT_PROPS:
-        {
-        /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
-          char *insop = "INSERT  INTO fileprops(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
-                /*         0 1 2 3 4  5                6                7               8 9 a b  */
-                  "VALUES (?,?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?)";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 12, 0, insop );
-          QRGP( mstmt );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 3 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 4 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 5 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 6 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 7 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 8 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 9 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 10 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 11 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_SELECT_PROPS_ID:
-        {
-          char *selop = "SELECT id FROM fileprops WHERE data_id=?";
-
-          mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
-          QRGP( mstmt );
-
-          rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-          QRGS( rCODE );
-          rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-          QRGS( rCODE );
-        }
-        break;
-      case STD_MSTMT_MAX:
-        break;
-      }
-    }
-    mstmts[stdid] = mstmt;
+    mstmt = mstmts[stdid] = mas_qstd_mstmt_init_prepare( qstd, stdid );
   }
   return mstmt;
 }

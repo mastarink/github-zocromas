@@ -9,7 +9,7 @@
 /* #include <mastar/levinfo/masxfs_levinfo_structs.h> */
 #include <mastar/levinfo/masxfs_levinfo_path.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
-#include <mastar/levinfo/masxfs_levinfo.h>
+#include <mastar/levinfo/masxfs_levinfo_scan.h>
 
 #include "masxfs_structs.h"
 
@@ -40,7 +40,7 @@ masxfs_pathinfo_scan( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callback
 
     if ( !( flags & MASXFS_CB_RECURSIVE ) )
       DIE( "%s", "NOREC" );
-    r = masxfs_levinfo_scandirn_cb( li, callbacks, data, flags, pi->pidepth + maxdepth );
+    r = masxfs_levinfo_scan_dirn_cb( li, callbacks, data, flags, pi->pidepth + maxdepth );
     QRPI( pi, r );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( r >= 0 )

@@ -156,7 +156,7 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
   if ( r >= 0 && li && li->pdir )
   {
     errno = 0;
-    rewinddir( li->pdir );
+    rewinddir( li->pdir ); /* mysql_stmt_data_seek(li->stmt, 0) */
     if ( errno )
       r = -1;
   }

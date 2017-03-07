@@ -64,14 +64,15 @@ destructor_main( void )
 
 int test_create_tables( void );
 int test_drop_tables( void );
+
 /* int test6( void ); */
 int test7( void );
 
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
-  test_drop_tables();
-  test_create_tables();
+/* test_drop_tables(); */
+/* test_create_tables(); */
 /* test6(  ); */
 /* test6(  ); */
   INFO( "POINT" );
