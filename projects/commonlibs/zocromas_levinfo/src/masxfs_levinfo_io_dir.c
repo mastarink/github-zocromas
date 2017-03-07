@@ -33,7 +33,7 @@ exiternal functions used:
 */
 
 int
-masxfs_levinfo_rewinddir( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
@@ -59,7 +59,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
   {
     if ( !li->fs.pdir )
     {
-      int fd = masxfs_levinfo_open( li );
+      int fd = masxfs_levinfo_fs_open( li );
 
       if ( fd > 0 )
       {
@@ -71,7 +71,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
         if ( r >= 0 && li->fs.pdir )
         {
           li->detype = MASXFS_ENTRY_DIR_NUM;
-          r = masxfs_levinfo_rewinddir( li );
+          r = masxfs_levinfo_fs_rewinddir( li );
           QRLI( li, r );
         }
         else
@@ -91,7 +91,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_closedir( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
@@ -102,10 +102,10 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li )
     QRLI( li, r );
     li->fs.pdir = NULL;
     li->fd = 0;                                                      /*  closedir closes fd!  */
-  /* r = masxfs_levinfo_close( li ); */
+  /* r = masxfs_levinfo_fs_close( li ); */
   }
   else
-    r = masxfs_levinfo_close( li );
+    r = masxfs_levinfo_fs_close( li );
 #if 0
 /* No */
   else
@@ -128,7 +128,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
       r = -1;
     QRLI( li, r );
 #endif
-    r = masxfs_levinfo_closedir( li );
+    r = masxfs_levinfo_fs_closedir( li );
     QRLI( li, r );
     if ( !li->lidepth )
       break;
@@ -140,7 +140,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
 }
 
 masxfs_dirent_t *
-masxfs_levinfo_readdir( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li )
 {
   int r = 0;
   masxfs_dirent_t *de = NULL;

@@ -169,7 +169,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-    masxfs_levinfo_open( li );
+    masxfs_levinfo_fs_open( li );
     EXAM( ( masxfs_depth_t ) ( li - pi->levinfo ), _depth - 1, "masxfs_pathinfo_last_li: %ld ? %ld" );
 /* 1+2+8+8+1+1(for d>1)+2 + 3*depth + 1 */
     for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )

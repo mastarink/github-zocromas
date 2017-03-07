@@ -31,7 +31,7 @@ masxfs_levinfo_scan_li_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, 
   {
     r = masxfs_levinfo_scan_dirn_cb( li, cb, data, flags, maxdepth );
     QRLI( li, r );
-    rc = masxfs_levinfo_closedir( li );
+    rc = masxfs_levinfo_fs_closedir( li );
     if ( r >= 0 )
       r = rc;
     QRLI( li, r );
@@ -267,7 +267,7 @@ masxfs_levinfo_scan_dir_rest( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
   int r = 0;
   int n = 0;
 
-  while ( r >= 0 && masxfs_levinfo_readdir( li ) )
+  while ( r >= 0 && masxfs_levinfo_fs_readdir( li ) )
   {
     r = masxfs_levinfo_scan_entry_cb( li, cb, data, flags, maxdepth );
     QRLI( li, r );
@@ -305,7 +305,7 @@ masxfs_levinfo_scan_dir_cb( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb,
   switch ( detype )
   {
   case MASXFS_ENTRY_DIR_NUM:
-    r = masxfs_levinfo_rewinddir( li );
+    r = masxfs_levinfo_fs_rewinddir( li );
     QRLI( li, r );
     if ( r >= 0 )
       r = masxfs_levinfo_scan_dir_rest( li, cb, data, flags, maxdepth );

@@ -33,7 +33,7 @@ exiternal functions used:
  */
 
 static int
-masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
+masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
 {
   int fd = -1;
 
@@ -65,12 +65,12 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent )
 }
 
 int
-masxfs_levinfo_open( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
 {
   int r = 0;
 
   if ( li->lidepth > 0 )
-    r = masxfs_levinfo_open_at( li, masxfs_levinfo_open( li - 1 ) );
+    r = masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1 ) );
   else if ( !li->fd && li->name && !*li->name )
   {
     errno = 0;
@@ -88,7 +88,7 @@ masxfs_levinfo_open( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_close( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 {
   int r = 0;
 
@@ -112,7 +112,7 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li )
 
   do
   {
-    r = masxfs_levinfo_close( li );
+    r = masxfs_levinfo_fs_close( li );
     QRLI( li, r );
     if ( !li->lidepth )
       break;
@@ -124,7 +124,7 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_stat( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
 {
   int r = 0;
 
@@ -135,9 +135,9 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
       li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
       if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
-        r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW );
+        r = fstatat( masxfs_levinfo_fs_open( li - 1 ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW );
       else
-        r = fstat( masxfs_levinfo_open( li ), li->fs.stat );
+        r = fstat( masxfs_levinfo_fs_open( li ), li->fs.stat );
       QRLI( li, r );
       if ( r >= 0 && li->fs.stat )
         li->detype = masxfs_levinfo_stat2entry( li->fs.stat );

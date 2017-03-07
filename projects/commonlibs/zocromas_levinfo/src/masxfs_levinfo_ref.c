@@ -38,7 +38,7 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
-    r = masxfs_levinfo_stat( li );
+    r = masxfs_levinfo_fs_stat( li );
     if ( r >= 0 )
       st = masxfs_levinfo_stat_val( li, 0 );
   }
@@ -64,7 +64,7 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags )
   {
     int r = 0;
 
-    r = masxfs_levinfo_stat( li );
+    r = masxfs_levinfo_fs_stat( li );
     if ( r >= 0 )
       size = masxfs_levinfo_size_val( li, 0 );
   }
@@ -87,7 +87,7 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
   {
     int r = 0;
 
-    r = masxfs_levinfo_open( li );
+    r = masxfs_levinfo_fs_open( li );
     if ( r >= 0 )
       fd = masxfs_levinfo_fd_val( li, 0 );
   }
@@ -172,7 +172,7 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li )
   {
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
-      int r = masxfs_levinfo_stat( li );
+      int r = masxfs_levinfo_fs_stat( li );
 
       if ( r >= 0 )
         detype = li->detype;

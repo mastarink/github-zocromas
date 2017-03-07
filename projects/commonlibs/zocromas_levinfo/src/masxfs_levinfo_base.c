@@ -60,8 +60,8 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li )
 {
   if ( li )
   {
-    masxfs_levinfo_closedir( li );
-    masxfs_levinfo_close( li );
+    masxfs_levinfo_fs_closedir( li );
+    masxfs_levinfo_fs_close( li );
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
