@@ -26,8 +26,9 @@ masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t offset )
 }
 
 const struct stat *
-masxfs_levinfo_stat_val( masxfs_levinfo_t * li )
+masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
+  li = masxfs_levinfo_offset( li, offset );
   return li ? li->stat : NULL;
 }
 
@@ -41,16 +42,17 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, unsigned long tflags )
   {
     r = masxfs_levinfo_stat( li );
     if ( r >= 0 )
-      st = masxfs_levinfo_stat_val( li );
+      st = masxfs_levinfo_stat_val( li, 0 );
   }
   return st;
 }
 
 size_t
-masxfs_levinfo_size_val( masxfs_levinfo_t * li )
+masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   size_t size = 0;
 
+  li = masxfs_levinfo_offset( li, offset );
   if ( li->stat )
     size = li->stat->st_size;
   return size;
@@ -67,14 +69,15 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, unsigned long tflags )
 
     r = masxfs_levinfo_stat( li );
     if ( r >= 0 )
-      size = masxfs_levinfo_size_val( li );
+      size = masxfs_levinfo_size_val( li, 0 );
   }
   return size;
 }
 
 int
-masxfs_levinfo_fd_val( masxfs_levinfo_t * li )
+masxfs_levinfo_fd_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
+  li = masxfs_levinfo_offset( li, offset );
   return li ? li->fd : 0;
 }
 
@@ -89,9 +92,23 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, unsigned long tflags )
 
     r = masxfs_levinfo_open( li );
     if ( r >= 0 )
-      fd = masxfs_levinfo_fd_val( li );
+      fd = masxfs_levinfo_fd_val( li, 0 );
   }
   return fd;
+}
+
+masxfs_dir_t *
+masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+{
+  li = masxfs_levinfo_offset( li, offset );
+  return li ? li->pdir : 0;
+}
+
+masxfs_dirent_t *
+masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
+{
+  li = masxfs_levinfo_offset( li, offset );
+  return li ? li->pde : 0;
 }
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
@@ -109,8 +126,9 @@ masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, unsigned long tflags _uUu_ )
 }
 
 const char *
-masxfs_levinfo_name_val( masxfs_levinfo_t * li )
+masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
+  li = masxfs_levinfo_offset( li, offset );
   return li ? li->name : NULL;
 }
 
@@ -121,7 +139,7 @@ masxfs_levinfo_name_ref( masxfs_levinfo_t * li, unsigned long tflags )
 
   if ( li && ( tflags & MASXFS_CB_NAME ) )
   {
-    name = masxfs_levinfo_name_val( li );
+    name = masxfs_levinfo_name_val( li, 0 );
   }
   return name;
 }

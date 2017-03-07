@@ -134,7 +134,7 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li )
     {
       li->stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
-      if ( !masxfs_levinfo_fd_val( li ) && li->lidepth > 0 )
+      if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
         r = fstatat( masxfs_levinfo_open( li - 1 ), li->name, li->stat, AT_SYMLINK_NOFOLLOW );
       else
         r = fstat( masxfs_levinfo_open( li ), li->stat );

@@ -26,6 +26,7 @@
 #include "masxfs_pathinfo.h"
 
 #include "masxfs_scan.h"
+#include "mastest.h"
 
 /*  */
 
@@ -84,11 +85,12 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
-  fprintf( stderr, "A====================================================\n" );
+  fprintf( stderr, "A============================================[%ld]======== #%ld\n", pi->pidepth, masexam_tests_count(  ) );
   masxfs_pathinfo_scan_depth( pi, testcb, pi, MASXFS_CB_NAME );
   fprintf( stderr, "B====================================================\n" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
+/* +1 */
     {
       char *real_path = masxfs_pathinfo_pi2path( pi );
 
@@ -96,6 +98,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       mas_free( real_path );
     }
     EXAM( pi->levinfo ? 1 : 0, 1, "%d ? %d" );
+/* 1+1 */
     EXAMTS( pi->levinfo, pi->levinfo[0].name, "", "root '%s' ? '%s'" );
     EXAMTS( pi->levinfo, pi->levinfo[0].name, "", "root '%s' ? '%s'" );
     EXAMTS( pi->levinfo, pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
@@ -104,18 +107,16 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "fd:%d ? %d" );
     EXAMT( pi->levinfo, pi->levinfo[0].pdir, NULL, "dir:%p ? %p" );
     EXAMT( pi->levinfo, pi->levinfo[0].pde, NULL, "de:%p ? %p" );
-    for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
-    {
-      EXAMT( pi->levinfo, masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
-      EXAMT( pi->levinfo, pi->levinfo[i].lidepth, i, "li->lidepth:%ld ? %ld" );
-      if ( pi->levinfo )
-      {
-        char *path = masxfs_levinfo_li2path( pi->levinfo + i );
-
-        EXAMS( path, _path, "%s ?\n\t\t\t\t\t\t%s" );
-        mas_free( path );
-      }
-    }
+/* 1+1+8 */
+    EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, 0 ), "", "root '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, 0 ), "", "root '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, _tdepth ), _tname, "tdepth '%s' ? '%s'" );
+    EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, pi->pidepth - 1 ), _lastname, "last '%s' ? '%s'" );
+    EXAMT( pi->levinfo, masxfs_levinfo_fd_val( pi->levinfo, 0 ), 0, "fd:%d ? %d" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0 ), NULL, "dir:%d ? %d" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pdir_val( pi->levinfo, 0 ), NULL, "dir:%p ? %p" );
+    EXAMT( pi->levinfo, masxfs_levinfo_pde_val( pi->levinfo, 0 ), NULL, "de:%p ? %p" );
+/* 1+1+8+8 */
     {
       if ( pi->levinfo )
       {
@@ -145,6 +146,20 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       EXAMS( path, _path, "%s ?\n\t\t\t\t\t\t%s" );
       mas_free( path );
     }
+/* 1+1+8+8+4 */
+
+    for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
+    {
+      EXAMT( pi->levinfo, masxfs_levinfo_root( pi->levinfo + i ), pi->levinfo, "%p ? %p" );
+      EXAMT( pi->levinfo, pi->levinfo[i].lidepth, i, "li->lidepth:%ld ? %ld" );
+      if ( pi->levinfo )
+      {
+        char *path = masxfs_levinfo_li2path( pi->levinfo + i );
+
+        EXAMS( path, _path, "%s ?\n\t\t\t\t\t\t%s" );
+        mas_free( path );
+      }
+    }
   }
   if ( pi->levinfo )
   {
@@ -162,7 +177,9 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
       EXAM( pi->levinfo[i].fd, ( int ) 0, "%ld ? %ld" );
     }
   }
+/* 1+1+8+8+4+1 + 5*depth */
   masxfs_pathinfo_delete( pi );
+  fprintf( stderr, "Z==================================================== #%ld\n", masexam_tests_count(  ) );
   return 0;
 }
 
@@ -175,6 +192,7 @@ masxfs_test_fd( int variant _uUu_ )
 
   r = getrlimit( RLIMIT_NOFILE, &lim );
   EXAM( r, 0, "%d ? %d" );
+/* +1 */
   fds = mas_malloc( lim.rlim_cur * sizeof( int ) );
 /* WARN( "RLIMIT_NOFILE: %ld - %ld", lim.rlim_cur, lim.rlim_max ); */
   for ( size_t i = 3; i < lim.rlim_cur; i++ )
@@ -187,11 +205,13 @@ masxfs_test_fd( int variant _uUu_ )
 
     EXAM( x, 0, "fdx:%d ? %d" );
   }
+/* 1 + rlim*1 */
   {
     for ( size_t i = 3; i < lim.rlim_cur; i++ )
     {
       EXAM( fds[i], ( int ) i, "fds:%d ? %d" );
     }
+  /* 1 + rlim + rlim-3 */
     for ( size_t i = 3; i < lim.rlim_cur; i++ )
       if ( fds[i] && 0 == close( fds[i] ) )
         fds[i] = 0;
@@ -199,13 +219,16 @@ masxfs_test_fd( int variant _uUu_ )
     {
       EXAM( fds[i], 0, "fds:%d ? %d" );
     }
+  /* 1 + rlim + rlim-3 + rlim-3 */
     for ( size_t i = 3; i < lim.rlim_cur; i++ )
     {
       int x _uUu_ = fcntl( ( int ) i, F_GETFD );
 
       EXAM( x, -1, "fdx:%d ? %d" );
     }
+  /* 1 + rlim + rlim-3 + rlim-3 + rlim-3 */
   }
+/* 1 + 4*rlim - 3*3 */
   errno = 0;
   mas_free( fds );
 }
@@ -214,6 +237,11 @@ int
 masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
   masxfs_test_fd( __LINE__ );
+  struct rlimit lim = { 0 };
+  getrlimit( RLIMIT_NOFILE, &lim );
+#define CUR_TESTS (long)(0 +  (1+4L*lim.rlim_cur-3L*3L)*1)
+  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
@@ -256,8 +284,17 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
+#define CUR_TESTS (long)(1 +  (long)(1+4L*lim.rlim_cur-3L*3L)*1)
+  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
   masxfs_test_fd( __LINE__ );
+#define CUR_TESTS (long)(2 +  (long)(1+4L*lim.rlim_cur-3L*3L)*2)
+  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
   masxfs_test_fd( __LINE__ );
+#define CUR_TESTS (long)(3 +  (1+4L*lim.rlim_cur-3L*3L)*3)
+  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
 
   if ( 1 )
   {
@@ -278,11 +315,26 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     EXAM( pathconf( tpath, _PC_PATH_MAX ), 4096, "%d ? %d" );
     EXAM( pathconf( tpath, _PC_NAME_MAX ), 255, "%d ? %d" );
     EXAM( _POSIX_PATH_MAX, 256, "%d ? %d" );
+#define CUR_TESTS (long)(4 +  (1+4L*lim.rlim_cur-3L*3L)*3L  +5)
+    masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
     {
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/", 128, 1, 0, "", "" );
+#define CUR_TESTS (long)(5 +  (1+4L*lim.rlim_cur-3L*3L)*3L  +5  + (1+1+8+8+4+1)*1 + (5*1) )
+      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/home", 128, 2, 0, "", "home" );
+#define CUR_TESTS (long)(6 +  (1+4L*lim.rlim_cur-3L*3L)*3L  +5  + (1+1+8+8+4+1)*2 + (5*(1+2))       +1 /*????*/ )
+      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
+#define CUR_TESTS (long)(7 +  (1+4L*lim.rlim_cur-3L*3L)*3L  +5  + (1+1+8+8+4+1)*3 + (5*(1+2+13))    +1+6 /*????*/ )
+      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
+#define CUR_TESTS (long)(8 +  (1+4L*lim.rlim_cur-3L*3L)*3L  +5  + (1+1+8+8+4+1)*4 + (5*(1+2+13+13)) +1+6+6 /*????*/ )
+      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+#undef CUR_TESTS
     }
     {
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128 );
@@ -290,6 +342,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
       EXAM( pi ? pi->error : -1, -1, "should be error: %d ? %d" );
       masxfs_pathinfo_delete( pi );
     }
+  /* +6 +4* */
   }
   masxfs_test_fd( __LINE__ );
   return 0;

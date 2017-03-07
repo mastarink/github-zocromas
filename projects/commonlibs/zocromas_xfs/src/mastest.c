@@ -93,8 +93,10 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
       masexam_test( argc, argv, funlist );
 #if 1
       masexam_next_group(  );
-# define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*4 + 3L + 1L))*4 + 225L - 1L
-      masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+/* # define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*NUM_TEST_FD + 3L + 1L))*NUM_TEST_0_PATH + 225L - 1L */
+# define TOTAL_TESTS ((long)((lim.rlim_cur-3L)*NUM_TEST_FD + 11L + 8L +4L +  1L))*NUM_TEST_0_PATH + 177L - 1L
+/* # define TOTAL_TESTS (long)(lim.rlim_cur-3L)*NUM_TEST_FD + 6L + ( 11L + 8L +4L + 1L)*NUM_TEST_0_PATH + 5*(1+2+14+14)  (*??*)  - 1L */
+      /* masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
 #endif
     }
   }
