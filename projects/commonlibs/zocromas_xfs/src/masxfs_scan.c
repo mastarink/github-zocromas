@@ -24,7 +24,8 @@ exiternal functions used:
 */
 
 int
-masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth )
+masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth,
+                      masxfs_scan_mode_t mode )
 {
   int r = 0;
 
@@ -36,14 +37,15 @@ masxfs_scanpath_real( const char *path, masxfs_entry_callback_t * callbacks, voi
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    r = masxfs_pathinfo_scan( pi, callbacks, data, flags, maxdepth );
-    masxfs_pathinfo_delete( pi );
+    r = masxfs_pathinfo_scan( pi, callbacks, data, flags, maxdepth, mode );
+    masxfs_pathinfo_delete( pi, mode );
   }
   return r;
 }
 
 int
-masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth )
+masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags, masxfs_depth_t maxdepth,
+                       masxfs_scan_mode_t mode )
 {
   int r = 0;
   char *path = NULL;
@@ -69,8 +71,8 @@ masxfs_scanpath_real2( const char *cpath, masxfs_entry_callback_t * callbacks, v
   {
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
 
-    r = masxfs_pathinfo_scan( pi, callbacks, data, flags, maxdepth );
-    masxfs_pathinfo_delete( pi );
+    r = masxfs_pathinfo_scan( pi, callbacks, data, flags, maxdepth, mode );
+    masxfs_pathinfo_delete( pi, mode );
   }
   mas_free( path );
   return r;

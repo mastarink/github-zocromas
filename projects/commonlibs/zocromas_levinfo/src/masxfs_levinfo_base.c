@@ -56,12 +56,12 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
 }
 
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 {
   if ( li )
   {
-    masxfs_levinfo_fs_closedir( li );
-    masxfs_levinfo_fs_close( li );
+    masxfs_levinfo_closedir( li, mode );
+    masxfs_levinfo_close( li, mode );
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
@@ -80,19 +80,19 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li )
 }
 
 void
-masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz )
+masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz , masxfs_scan_mode_t mode )
 {
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
-      masxfs_levinfo_reset( lia + il );
+      masxfs_levinfo_reset( lia + il, mode );
 }
 
 void
-masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz )
+masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_scan_mode_t mode  )
 {
   if ( li )
   {
-    masxfs_levinfo_reset_lia( li, sz );
+    masxfs_levinfo_reset_lia( li, sz, mode );
     mas_free( li );
   }
 }

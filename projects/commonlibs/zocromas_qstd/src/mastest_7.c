@@ -123,8 +123,8 @@ test7( void )
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-    rC( masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT /* flags */  ) );
-    rC( masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
+    rC( masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT /* flags */ , MASXFS_SCAN_MODE_FS ) );
+    rC( masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */ , MASXFS_SCAN_MODE_FS ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {
@@ -156,7 +156,7 @@ test7( void )
         rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
     }
 
-    masxfs_pathinfo_delete( pi );
+    masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
   }
   mas_qstd_delete( qstd );
   rRET;

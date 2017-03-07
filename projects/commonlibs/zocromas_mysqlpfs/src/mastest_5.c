@@ -10,6 +10,8 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
+
+#include <mastar/levinfo/masxfs_levinfo_enums.h>
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
@@ -64,14 +66,14 @@ test5( void )
 
       if ( !r )
       {
-        masxfs_pathinfo_scan_depth( pi, test5cb, mstmt, 0L /* flags */  );
+        masxfs_pathinfo_scan_depth( pi, test5cb, mstmt, 0L /* flags */ , MASXFS_SCAN_MODE_FS );
       }
       mas_mysqlpfs_mstmt_delete( mstmt );
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi );
+      masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
     }
     mysqlpfs_delete( pfs );
   }

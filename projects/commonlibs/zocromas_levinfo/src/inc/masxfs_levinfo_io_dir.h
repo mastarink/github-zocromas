@@ -2,14 +2,22 @@
 # define MASXFS_LEVINFO_IO_DIR_H
 
 # include "masxfs_levinfo_types.h"
-int masxfs_levinfo_opendir( masxfs_levinfo_t * li );
-masxfs_dir_t *masxfs_levinfo_opendir_up( masxfs_levinfo_t * li );
-int masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li );
-int masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li );
+int masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode );
+/* int masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li ); */
+/* int masxfs_levinfo_db_opendir( masxfs_levinfo_t * li ); */
 
-masxfs_dirent_t *masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li );
-int masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li );
+int masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode );
+/* int masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li ); */
+/* int masxfs_levinfo_db_closedir( masxfs_levinfo_t * li ); */
 
+int masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_scan_mode_t mode );
+
+masxfs_dirent_t *masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode );
+/* masxfs_dirent_t *masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li ); */
+/* masxfs_dirent_t *masxfs_levinfo_db_readdir( masxfs_levinfo_t * li ); */
+
+int masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode );
+/* int masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li ); */
+/* int masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li ); */
 
 #endif
-

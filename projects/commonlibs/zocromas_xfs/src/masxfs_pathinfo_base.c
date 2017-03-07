@@ -5,6 +5,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
+#include <mastar/levinfo/masxfs_levinfo_enums.h>
 #include <mastar/levinfo/masxfs_levinfo_base.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
 
@@ -48,7 +49,7 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
     RGES;
   }
   {
-    /* fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno ); */
+  /* fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno ); */
     pi = masxfs_pathinfo_create(  );
 
     QRPI( pi, ( real_path ? 0 : -1 ) );
@@ -66,22 +67,22 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
 }
 
 void
-masxfs_pathinfo_reset( masxfs_pathinfo_t * pi )
+masxfs_pathinfo_reset( masxfs_pathinfo_t * pi, masxfs_scan_mode_t mode )
 {
   if ( pi )
   {
-    masxfs_levinfo_delete_lia( pi->levinfo, pi->pidepth );
+    masxfs_levinfo_delete_lia( pi->levinfo, pi->pidepth, mode );
     pi->levinfo = 0;
     pi->pidepth = 0;
   }
 }
 
 void
-masxfs_pathinfo_delete( masxfs_pathinfo_t * pi )
+masxfs_pathinfo_delete( masxfs_pathinfo_t * pi, masxfs_scan_mode_t mode )
 {
   if ( pi )
   {
-    masxfs_pathinfo_reset( pi );
+    masxfs_pathinfo_reset( pi, mode );
     mas_free( pi );
   }
 }

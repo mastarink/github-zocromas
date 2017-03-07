@@ -32,17 +32,18 @@ exiternal functions used:
  rewinddir
 */
 
+int masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li );
 int
 masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
-  r = masxfs_levinfo_opendir( li );
+  r = masxfs_levinfo_fs_opendir( li );
   QRLI( li, r );
   if ( r >= 0 && li && li->fs.pdir )
   {
     errno = 0;
-    rewinddir( li->fs.pdir );                                           /* mysql_stmt_data_seek(li->stmt, 0) */
+    rewinddir( li->fs.pdir );                                        /* mysql_stmt_data_seek(li->stmt, 0) */
     if ( errno )
       r = -1;
   }
@@ -51,7 +52,32 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_opendir( masxfs_levinfo_t * li )
+masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li _uUu_ )
+{
+  int r = -1;
+
+  return r;
+}
+
+int
+masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+{
+  int r = -1;
+
+  switch ( mode )
+  {
+  case MASXFS_SCAN_MODE_FS:
+    r = masxfs_levinfo_fs_rewinddir( li );
+    break;
+  case MASXFS_SCAN_MODE_DB:
+    r = masxfs_levinfo_db_rewinddir( li );
+    break;
+  }
+  return r;
+}
+
+int
+masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
 {
   int r = 0;
 
@@ -91,9 +117,34 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li )
 }
 
 int
+masxfs_levinfo_db_opendir( masxfs_levinfo_t * li _uUu_ )
+{
+  int r = -1;
+
+  return r;
+}
+
+int
+masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+{
+  int r = -1;
+
+  switch ( mode )
+  {
+  case MASXFS_SCAN_MODE_FS:
+    r = masxfs_levinfo_fs_opendir( li );
+    break;
+  case MASXFS_SCAN_MODE_DB:
+    r = masxfs_levinfo_db_opendir( li );
+    break;
+  }
+  return r;
+}
+
+int
 masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
 {
-  int r = 0;
+  int r = -1;
 
   if ( li && li->fs.pdir )
   {
@@ -116,7 +167,32 @@ masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
+masxfs_levinfo_db_closedir( masxfs_levinfo_t * li _uUu_ )
+{
+  int r = -1;
+
+  return r;
+}
+
+int
+masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+{
+  int r = -1;
+
+  switch ( mode )
+  {
+  case MASXFS_SCAN_MODE_FS:
+    r = masxfs_levinfo_fs_closedir( li );
+    break;
+  case MASXFS_SCAN_MODE_DB:
+    r = masxfs_levinfo_db_closedir( li );
+    break;
+  }
+  return r;
+}
+
+int
+masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 {
   int r = 0;
 
@@ -128,7 +204,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li )
       r = -1;
     QRLI( li, r );
 #endif
-    r = masxfs_levinfo_fs_closedir( li );
+    r = masxfs_levinfo_closedir( li, mode );
     QRLI( li, r );
     if ( !li->lidepth )
       break;
@@ -161,5 +237,32 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li )
     }
   }
   QRLI( li, r );
+  return de;
+}
+
+masxfs_dirent_t *
+masxfs_levinfo_db_readdir( masxfs_levinfo_t * li _uUu_ )
+{
+  int r _uUu_ = -1;
+  masxfs_dirent_t *de = NULL;
+
+  return de;
+}
+
+masxfs_dirent_t *
+masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+{
+  int r _uUu_ = -1;
+  masxfs_dirent_t *de = NULL;
+
+  switch ( mode )
+  {
+  case MASXFS_SCAN_MODE_FS:
+    de = masxfs_levinfo_fs_readdir( li );
+    break;
+  case MASXFS_SCAN_MODE_DB:
+    de = masxfs_levinfo_db_readdir( li );
+    break;
+  }
   return de;
 }
