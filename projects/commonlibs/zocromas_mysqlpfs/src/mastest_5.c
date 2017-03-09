@@ -66,14 +66,14 @@ test5( void )
 
       if ( !r )
       {
-        masxfs_pathinfo_scan_depth( pi, test5cb, mstmt, 0L /* flags */ , MASXFS_SCAN_MODE_FS );
+        masxfs_pathinfo_scan_depth_cbf( pi, test5cb, mstmt, MASXFS_CB_MODE_FS /* flags */  );
       }
       mas_mysqlpfs_mstmt_delete( mstmt );
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mysqlpfs_delete( pfs );
   }

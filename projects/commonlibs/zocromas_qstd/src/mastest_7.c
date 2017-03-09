@@ -37,7 +37,7 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
   {
     unsigned long long theid = 0;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li );
-    masxfs_entry_type_t detype = masxfs_levinfo_detype( li, MASXFS_SCAN_MODE_FS );
+    masxfs_entry_type_t detype = masxfs_levinfo_detype( li, ( masxfs_levinfo_flags_t ) MASXFS_CB_MODE_FS );
     unsigned long long as_parent_id = 0;
     unsigned long long dataid = 0;
 
@@ -54,13 +54,13 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
     };
   /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
     {
-      size_t size = masxfs_levinfo_size_ref( li, flags, MASXFS_SCAN_MODE_FS );
+      size_t size = masxfs_levinfo_size_ref( li, flags );
       size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
 
     /* WARN( "SIZE: %ld / %ld", size, thesize ); */
     }
     {
-      const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags, MASXFS_SCAN_MODE_FS );
+      const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
 
       if ( stat )
       {
@@ -123,8 +123,8 @@ test7( void )
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-    rC( masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT /* flags */ , MASXFS_SCAN_MODE_FS ) );
-    rC( masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */ , MASXFS_SCAN_MODE_FS ) );
+    rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
+    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {
@@ -156,7 +156,7 @@ test7( void )
         rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
     }
 
-    masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
+    masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
   }
   mas_qstd_delete( qstd );
   rRET;

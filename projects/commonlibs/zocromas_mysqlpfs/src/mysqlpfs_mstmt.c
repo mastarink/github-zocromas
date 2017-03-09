@@ -324,7 +324,8 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
     }
     else
     {
-      fprintf( stderr, "%d / %d %p %p\n", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
+      WARN( "pos:%d / nbind:%d ab:%p abp:%p\n", pos, mbind->nbind, mbind->allocated_buffers,
+            mbind->allocated_buffers ? mbind->allocated_buffers[pos] : NULL );
       QRG( -1 );
     }
   }

@@ -108,12 +108,12 @@ test4o( void )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      masxfs_pathinfo_scan_depth( pi, test4ocb, pfs, 0L /* flags */ , MASXFS_SCAN_MODE_FS );
+      masxfs_pathinfo_scan_depth_cbf( pi, test4ocb, pfs, MASXFS_CB_MODE_FS /* flags */  );
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS|MASXFS_CB_MODE_DB );
     }
     mysqlpfs_delete( pfs );
   }

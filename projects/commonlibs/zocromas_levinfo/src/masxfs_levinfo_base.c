@@ -7,7 +7,7 @@
 #include "masxfs_levinfo_structs.h"
 /* #include "masxfs_structs.h" */
 
-/* #include "masxfs_levinfo_tools.h" */
+#include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 
@@ -56,24 +56,26 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
 }
 
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   if ( li )
   {
-    masxfs_levinfo_closedir( li, mode );
-    masxfs_levinfo_close( li, mode );
+    masxfs_levinfo_closedir( li, MASXFS_CB_MODE_FS );
+    masxfs_levinfo_close( li, MASXFS_CB_MODE_FS );
+    masxfs_levinfo_closedir( li, MASXFS_CB_MODE_DB );
+    masxfs_levinfo_close( li, MASXFS_CB_MODE_DB );
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
     li->name = NULL;
     {
-      if ( mode == MASXFS_SCAN_MODE_FS )
+      if ( flags & MASXFS_CB_MODE_FS )
       {
         if ( li->fs.stat )
           mas_free( li->fs.stat );
         li->fs.stat = NULL;
       }
-      else
+      if ( flags & MASXFS_CB_MODE_DB )
       {
         if ( li->db.stat )
           mas_free( li->db.stat );
@@ -91,19 +93,19 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 }
 
 void
-masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_scan_mode_t mode )
+masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levinfo_flags_t flags )
 {
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
-      masxfs_levinfo_reset( lia + il, mode );
+      masxfs_levinfo_reset( lia + il, flags);
 }
 
 void
-masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_scan_mode_t mode )
+masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_levinfo_flags_t flags )
 {
   if ( li )
   {
-    masxfs_levinfo_reset_lia( li, sz, mode );
+    masxfs_levinfo_reset_lia( li, sz, flags );
     mas_free( li );
   }
 }

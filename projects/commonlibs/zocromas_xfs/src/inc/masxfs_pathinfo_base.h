@@ -7,7 +7,7 @@
 masxfs_pathinfo_t *masxfs_pathinfo_create( void );
 masxfs_pathinfo_t *masxfs_pathinfo_create_setup( const char *real_path, masxfs_depth_t depth_limit );
 
-void masxfs_pathinfo_reset( masxfs_pathinfo_t * pi , masxfs_scan_mode_t mode);
-void masxfs_pathinfo_delete( masxfs_pathinfo_t * pi , masxfs_scan_mode_t mode);
+void masxfs_pathinfo_reset( masxfs_pathinfo_t * pi, unsigned long flags );
+void masxfs_pathinfo_delete( masxfs_pathinfo_t * pi, unsigned long flags );
 
 #endif

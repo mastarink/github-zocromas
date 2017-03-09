@@ -1,4 +1,5 @@
 #include <mastar/qstd/qstd_defs.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -27,17 +28,18 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
+test7cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv )
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
 
+/* INFO( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" ); */
   {
     unsigned long long theid = 0;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li );
-    masxfs_entry_type_t detype = masxfs_levinfo_detype( li, MASXFS_SCAN_MODE_FS );
+    masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
     unsigned long long as_parent_id = 0;
     unsigned long long dataid = 0;
 
@@ -54,13 +56,13 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
     };
   /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
     {
-      size_t size = masxfs_levinfo_size_ref( li, flags, MASXFS_SCAN_MODE_FS );
+      size_t size = masxfs_levinfo_size_ref( li, flags );
       size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
 
     /* WARN( "SIZE: %ld / %ld", size, thesize ); */
     }
     {
-      const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags, MASXFS_SCAN_MODE_FS );
+      const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
 
       if ( stat )
       {
@@ -93,6 +95,23 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
   return 0;
 }
 
+static int _uUu_
+treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_ )
+{
+/* EXAM( !epath, TRUE, "%d ? %d" ); */
+  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
+  size_t size = masxfs_levinfo_size_ref( li, flags );
+  int fd = masxfs_levinfo_fd_ref( li, flags );
+  masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
+  ino_t deinode = masxfs_levinfo_deinode_ref( li, flags );
+  const char *ename = masxfs_levinfo_name_ref( li, flags );
+  const char *epath = masxfs_levinfo_path_ref( li, flags );
+
+  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, depth, deinode, ename ? ename : "", epath ? epath : "" );
+
+  return 0;
+}
+
 /*
 
  SELECT name, nsame, fp.size 
@@ -109,7 +128,11 @@ test7( void )
 
   masxfs_entry_callback_t callbacks[] = {
     {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test7cb,
-     .flags = 0 | MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
+     .flags = ( masxfs_cb_flag_bit_t ) MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT
+   /* | MASXFS_CB_FD */ }
+    , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, treecb,
+       .flags = ( masxfs_cb_flag_bit_t ) MASXFS_CB_NAME |            /* MASXFS_CB_PATH | */
+       MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {0, NULL}
   };
 
@@ -123,8 +146,8 @@ test7( void )
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-    rC( masxfs_pathinfo_scan_depth( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT /* flags */ , MASXFS_SCAN_MODE_FS ) );
-    rC( masxfs_pathinfo_scan( pi, callbacks, qstd, MASXFS_CB_RECURSIVE /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */ , MASXFS_SCAN_MODE_FS ) );
+    rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
+    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 1000 /* maxdepth */  ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {
@@ -155,8 +178,9 @@ test7( void )
       for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
         rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
     }
+    rC( masxfs_pathinfo_scan_cbs( pi, callbacks + 1, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 1000 /* maxdepth */  ) );
 
-    masxfs_pathinfo_delete( pi, MASXFS_SCAN_MODE_FS );
+    masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
   }
   mas_qstd_delete( qstd );
   rRET;

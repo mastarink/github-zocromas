@@ -13,13 +13,15 @@ typedef enum masxfs_entry_type_bit_e masxfs_entry_type_bit_t;
 
 typedef enum masxfs_cb_flag_e masxfs_cb_flag_t;
 typedef enum masxfs_cb_flag_bit_e masxfs_cb_flag_bit_t;
+typedef unsigned long masxfs_levinfo_flags_t;
+
 typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
-typedef enum masxfs_scan_mode_e masxfs_scan_mode_t ;
 
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
-typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, unsigned long flags, void *data );
-typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *data, unsigned long flags );
+
+typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *data );
+typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t flags );
 
 typedef int ( *masxfs_li_handler_t ) ( masxfs_levinfo_t * li );
 

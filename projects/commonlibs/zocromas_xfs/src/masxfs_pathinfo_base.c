@@ -67,22 +67,22 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
 }
 
 void
-masxfs_pathinfo_reset( masxfs_pathinfo_t * pi, masxfs_scan_mode_t mode )
+masxfs_pathinfo_reset( masxfs_pathinfo_t * pi, unsigned long flags )
 {
   if ( pi )
   {
-    masxfs_levinfo_delete_lia( pi->levinfo, pi->pidepth, mode );
+    masxfs_levinfo_delete_lia( pi->levinfo, pi->pidepth, flags );
     pi->levinfo = 0;
     pi->pidepth = 0;
   }
 }
 
 void
-masxfs_pathinfo_delete( masxfs_pathinfo_t * pi, masxfs_scan_mode_t mode )
+masxfs_pathinfo_delete( masxfs_pathinfo_t * pi, unsigned long flags )
 {
   if ( pi )
   {
-    masxfs_pathinfo_reset( pi, mode );
+    masxfs_pathinfo_reset( pi, flags );
     mas_free( pi );
   }
 }

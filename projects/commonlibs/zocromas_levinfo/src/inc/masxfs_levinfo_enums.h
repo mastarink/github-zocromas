@@ -58,9 +58,5 @@ enum masxfs_cb_flag_bit_e
   MASXFS_CB_MODE_DB = 1L << MASXFS_CB_MODE_DB_NUM,
 };
 
-enum masxfs_scan_mode_e {
-  MASXFS_SCAN_MODE_FS,
-  MASXFS_SCAN_MODE_DB,
-};
 
 #endif

@@ -9,13 +9,11 @@
 #include <fcntl.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/tools/mas_arg_tools.h> */
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_structs.h" */
+#include "masxfs_levinfo_mode.h"
 
-/* #include "masxfs_levinfo.h" */
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"
 
@@ -31,6 +29,12 @@ exiternal functions used:
  fstat
  
  */
+
+static inline masxfs_scan_mode_t
+masxfs_levinfo_flags_mode( masxfs_levinfo_flags_t flags )
+{
+  return ( flags & MASXFS_CB_MODE_DB ) ? MASXFS_SCAN__MODE_DB : ( ( flags & MASXFS_CB_MODE_FS ) ? MASXFS_SCAN__MODE_FS : MASXFS_SCAN__MODE_NONE );
+}
 
 static int
 masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
@@ -73,16 +77,21 @@ masxfs_levinfo_db_open_at( masxfs_levinfo_t * li _uUu_, int fdparent _uUu_ )
 }
 
 static int _uUu_
-masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent, masxfs_scan_mode_t mode )
+masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent, masxfs_levinfo_flags_t flags )
 {
   int r = 0;
 
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
   switch ( mode )
   {
-  case MASXFS_SCAN_MODE_FS:
+  case MASXFS_SCAN__MODE_NONE:
+    r = -1;
+    break;
+  case MASXFS_SCAN__MODE_FS:
     r = masxfs_levinfo_fs_open_at( li, fdparent );
     break;
-  case MASXFS_SCAN_MODE_DB:
+  case MASXFS_SCAN__MODE_DB:
     r = masxfs_levinfo_db_open_at( li, fdparent );
     break;
   }
@@ -121,16 +130,21 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li _uUu_ )
 }
 
 int
-masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   int r = 0;
 
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
   switch ( mode )
   {
-  case MASXFS_SCAN_MODE_FS:
+  case MASXFS_SCAN__MODE_NONE:
+    r = -1;
+    break;
+  case MASXFS_SCAN__MODE_FS:
     r = masxfs_levinfo_fs_open( li );
     break;
-  case MASXFS_SCAN_MODE_DB:
+  case MASXFS_SCAN__MODE_DB:
     r = masxfs_levinfo_db_open( li );
     break;
   }
@@ -164,16 +178,21 @@ masxfs_levinfo_db_close( masxfs_levinfo_t * li _uUu_ )
 }
 
 int
-masxfs_levinfo_close( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+masxfs_levinfo_close( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   int r = 0;
 
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
   switch ( mode )
   {
-  case MASXFS_SCAN_MODE_FS:
+  case MASXFS_SCAN__MODE_NONE:
+    r = -1;
+    break;
+  case MASXFS_SCAN__MODE_FS:
     r = masxfs_levinfo_fs_close( li );
     break;
-  case MASXFS_SCAN_MODE_DB:
+  case MASXFS_SCAN__MODE_DB:
     r = masxfs_levinfo_db_close( li );
     break;
   }
@@ -181,18 +200,22 @@ masxfs_levinfo_close( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
 }
 
 int
-masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   int r = 0;
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   do
   {
     switch ( mode )
     {
-    case MASXFS_SCAN_MODE_FS:
+    case MASXFS_SCAN__MODE_NONE:
+      r = -1;
+      break;
+    case MASXFS_SCAN__MODE_FS:
       r = masxfs_levinfo_fs_close( li );
       break;
-    case MASXFS_SCAN_MODE_DB:
+    case MASXFS_SCAN__MODE_DB:
       break;
     }
     QRLI( li, r );
@@ -240,16 +263,20 @@ masxfs_levinfo_db_stat( masxfs_levinfo_t * li _uUu_ )
 }
 
 int
-masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_scan_mode_t mode )
+masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   int r = 0;
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   switch ( mode )
   {
-  case MASXFS_SCAN_MODE_FS:
+  case MASXFS_SCAN__MODE_NONE:
+    r = -1;
+    break;
+  case MASXFS_SCAN__MODE_FS:
     r = masxfs_levinfo_fs_stat( li );
     break;
-  case MASXFS_SCAN_MODE_DB:
+  case MASXFS_SCAN__MODE_DB:
     r = masxfs_levinfo_db_stat( li );
     break;
   }
