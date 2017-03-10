@@ -48,17 +48,18 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
   rRET;
 }
 
+static int masxfs_levinfo_db_opendir( masxfs_levinfo_t * li );
 static int
 masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li _uUu_ )
 {
-  rDECL( -1 );
+  rDECL( 0 );
 
   WARN( "POINT DB" );
 
-  if ( li )
+  rC( masxfs_levinfo_db_opendir( li ) );
+  if ( !rCODE && li && li->db.mstmt )
   {
-    DIE( "NOT IMPLEMENTED li->db.mstmt: %p", li->db.mstmt );
-    rCODE = -1;
+    WARN( "NOT IMPLEMENTED (\?\?) li->db.mstmt: %p", li->db.mstmt );
     mas_mysqlpfs_mstmt_data_seek( li->db.mstmt, 0 );
   }
   rRET;
@@ -280,7 +281,14 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li _uUu_ )
 {
   masxfs_dirent_t *de = NULL;
 
-  DIE( "NOT IMPLEMENTED" );
+  if ( li )
+  {
+    if ( li->db.mstmt )
+    {
+      DIE( "NOT IMPLEMENTED" );
+    /* li->db.pde=.... */
+    }
+  }
   return de;
 }
 
