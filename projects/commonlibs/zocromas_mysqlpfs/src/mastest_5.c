@@ -27,13 +27,13 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test5cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv )
+test5cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv , masxfs_depth_t reldepth _uUu_)
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  MARK( "(T5)", " %ld. %s", depth, ename );
+  MARK( "(T5)", " %ld. %s", (long)depth, ename );
   {
     int r = 0;
 

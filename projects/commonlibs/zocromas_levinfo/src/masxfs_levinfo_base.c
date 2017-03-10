@@ -38,7 +38,7 @@ masxfs_levinfo_create( void )
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
 {
-  if ( li )
+  if ( li && name )
   {
     if ( li->name )
       mas_free( li->name );
@@ -47,6 +47,8 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     li->deinode = d_inode;
     li->lidepth = lidepth;
   }
+  else
+    QRLI( li, -1 );
 }
 
 void
@@ -97,7 +99,7 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levi
 {
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
-      masxfs_levinfo_reset( lia + il, flags);
+      masxfs_levinfo_reset( lia + il, flags );
 }
 
 void

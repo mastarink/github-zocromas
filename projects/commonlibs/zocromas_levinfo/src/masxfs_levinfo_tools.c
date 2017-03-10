@@ -12,14 +12,6 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_structs.h" */
-
-/* #include "masxfs_levinfo_base.h" */
-/* #include "masxfs_levinfo_io_dir.h" */
-
-/* #include "masxfs_levinfo_path.h" */
-
-/* #include "masxfs_levinfo.h" */
 
 #include "masxfs_levinfo_tools.h"
 
@@ -34,6 +26,9 @@ masxfs_levinfo_detype_name( masxfs_levinfo_t * li )
 
     switch ( detype )
     {
+    case MASXFS_ENTRY_NONE_NUM:
+      s = "NONE";
+      break;
     case MASXFS_ENTRY_UNKNOWN_NUM:
       s = "UNKNOWN";
       break;

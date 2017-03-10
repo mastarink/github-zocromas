@@ -28,14 +28,13 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-test7cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv )
+test7cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
 
-/* INFO( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" ); */
   {
     unsigned long long theid = 0;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li );
@@ -89,14 +88,14 @@ test7cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv )
       masxfs_levinfo_set_id( li, as_parent_id );
     }
     if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
-      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", depth, ename, ( unsigned long long ) theid, ( unsigned long long ) parent_id,
-            ( unsigned long long ) as_parent_id );
+      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
+            ( unsigned long long ) parent_id, ( unsigned long long ) as_parent_id );
   }
   return 0;
 }
 
 static int _uUu_
-treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_ )
+treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
@@ -107,7 +106,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, depth, deinode, ename ? ename : "", epath ? epath : "" );
+  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
 
   return 0;
 }
@@ -146,8 +145,12 @@ test7( void )
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
+#if 0
     rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
     rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 1000 /* maxdepth */  ) );
+#else
+    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+#endif
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {
@@ -178,8 +181,9 @@ test7( void )
       for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
         rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
     }
-    rC( masxfs_pathinfo_scan_cbs( pi, callbacks + 1, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 1000 /* maxdepth */  ) );
-
+#if 1
+    rC( masxfs_pathinfo_scan_cbs( pi, callbacks + 1, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+#endif
     masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
   }
   mas_qstd_delete( qstd );

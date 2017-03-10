@@ -1,6 +1,7 @@
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
-/* #include <unistd.h> */
+#include <unistd.h>
+/* #include <stdlib.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -19,75 +20,95 @@
 #include "masxfs_levinfo_scan.h"
 
 int
-masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-/*    , masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth,
+                            masxfs_depth_t reldepth )
 {
-  int r = 0, rc = 0;
+  rDECL( 0 );
+  int rc = 0;
 
-  r = masxfs_levinfo_opendir( li, flags );
-  QRLI( li, r );
-  if ( r >= 0 )
+  rC( masxfs_levinfo_opendir( li, flags ) );
+  QRLI( li, rCODE );
+  if ( !rCODE )
   {
-    r = masxfs_levinfo_scan_dirn_cbs( li, cbs, data, flags, maxdepth /*, mode */  );
-    QRLI( li, r );
+    rC( masxfs_levinfo_scan_dirn_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
+    QRLI( li, rCODE );
     rc = masxfs_levinfo_closedir( li, flags );
-    if ( r >= 0 )
-      r = rc;
-    QRLI( li, r );
+    if ( !rCODE )
+      rCODE = rc;
+    QRLI( li, rCODE );
   }
-  return r;
+  rRET;
 }
 
 static int
 masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t tflags,
-                                               masxfs_entry_type_t detype )
+                                               masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
-  int r = 0;
+  rDECL( 0 );
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
   if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
   {
-    if ( r >= 0 )
-      r = fun_simple( lithis, tflags, data );
-    QRLI( lithis, r );
+    rC( fun_simple( lithis, tflags, data, reldepth ) );
+    QRLI( lithis, rCODE );
   }
-  return r;
+  rRET;
 }
 
 static int
 masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cbs, void *data,
-                                              masxfs_levinfo_flags_t flags, masxfs_entry_type_t detype )
+                                               masxfs_levinfo_flags_t flags, masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
-  int r = 0;
+  rDECL( 0 );
 
   if ( liparent && lithis )
   {
     masxfs_entry_callback_t *cb = cbs;
+
     liparent->child_count_pair[!cb]++;
 
-    for ( int ncb = 0; r >= 0 && cb && cb->fun_simple; cb++, ncb++ )
+    for ( int ncb = 0; !rCODE && cb && cb->fun_simple; cb++, ncb++ )
     {
       masxfs_levinfo_flags_t tflags = 0;
 
       tflags = flags | cb->flags;
-      r = masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags, detype );
+
+      if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth == 1 )
+      {
+        masxfs_levinfo_t *lia _uUu_ = lithis - lithis->lidepth;
+
+        for ( masxfs_levinfo_t * li = lia; !rCODE && li < lithis; li++ )
+        {
+          if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
+          {
+            rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
+          }
+          else
+          {
+            DIE( "WHY %ld != %ld", ( long ) li->lidepth, ( long ) ( li - lia ) );
+          }
+        }
+      }
+      rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, detype ? detype : lithis->detype,
+                                                         reldepth ) );
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
     }
   }
-  return r;
+  rRET;
 }
 
 static int
-masxfs_levinfo_scan_entry_single_at_child_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_scan_entry_single_at_child_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                                               masxfs_depth_t reldepth )
 {
-  return li ? masxfs_levinfo_scan_entry_single_internal_cbs( li->lidepth > 0 ? li - 1 : NULL, li, cbs, data, flags, li->detype ) : -1;
+  return li ? masxfs_levinfo_scan_entry_single_internal_cbs( li->lidepth > 0 ? li - 1 : NULL, li, cbs, data, flags, li->detype, reldepth ) : -1;
 }
 
 int
-masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-                           /*, masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                              masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   int r = 0;
 
@@ -106,6 +127,7 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 
       li++;
       lidepth++;
+      reldepth++;
       {
         masxfs_levinfo_init( li, lidepth, name, masxfs_levinfo_de2entry( d_type ), d_inode );
         if ( li->lidepth == 0 )
@@ -113,13 +135,13 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
         QRLI( li, r );
         if ( r >= 0 )
         {
-          r = masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags );
+          r = masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags, reldepth );
         }
         QRLI( li, r );
         if ( d_type == DT_DIR )
         {
           if ( r >= 0 )
-            r = masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth /*, mode */  );
+            r = masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth );
           QRLI( li, r );
           {
             char *path = masxfs_levinfo_li2path_up( li, 0 );
@@ -160,6 +182,8 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
         }
         masxfs_levinfo_reset( li, flags );
       }
+      reldepth--;
+      lidepth--;
       li--;
     }
   }
@@ -235,8 +259,8 @@ masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 }
 
 int
-masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-                            /*, masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                               masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   int r = 0;
 
@@ -248,7 +272,7 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
     {
       masxfs_levinfo_fix_type( li );
       if ( r >= 0 && ( tflags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth ) ) )
-        r = masxfs_levinfo_scan_down_cbs( li, cbs, data, tflags, maxdepth /*, mode */  );
+        r = masxfs_levinfo_scan_down_cbs( li, cbs, data, tflags, maxdepth, reldepth );
       QRLI( li, r );
     }
   }
@@ -259,15 +283,15 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
 }
 
 static int
-masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-/* , masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                                  masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   int r = 0;
   int n = 0;
 
   while ( r >= 0 && masxfs_levinfo_readdir( li, flags ) )
   {
-    r = masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth /*, mode */  );
+    r = masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth );
     QRLI( li, r );
     if ( r >= 0 )
       n++;
@@ -278,25 +302,25 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
 }
 
 int
-masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-                           /* , masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                              masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   int r = 0;
 
   if ( li )
     memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
   if ( r >= 0 )
-    r = masxfs_levinfo_scan_dir_cbs( li, NULL, data, flags, maxdepth /*, mode */  );
+    r = masxfs_levinfo_scan_dir_cbs( li, NULL, data, flags, maxdepth, reldepth );
   QRLI( li, r );
   if ( r >= 0 )
-    r = masxfs_levinfo_scan_dir_cbs( li, cbs, data, flags, maxdepth /*, mode */  );
+    r = masxfs_levinfo_scan_dir_cbs( li, cbs, data, flags, maxdepth, reldepth );
   QRLI( li, r );
   return r;
 }
 
 int
-masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth
-                          /* , masxfs_scan_mode_t mode */  )
+masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth,
+                             masxfs_depth_t reldepth )
 {
   int r = 0;
 
@@ -308,11 +332,11 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
     r = masxfs_levinfo_rewinddir( li, flags );
     QRLI( li, r );
     if ( r >= 0 )
-      r = masxfs_levinfo_scan_dir_rest_cbs( li, cbs, data, flags, maxdepth /*, mode */  );
+      r = masxfs_levinfo_scan_dir_rest_cbs( li, cbs, data, flags, maxdepth, reldepth );
     QRLI( li, r );
     break;
   case MASXFS_ENTRY_REG_NUM:
-    r = masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags );
+    r = masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags, reldepth );
     QRLI( li, r );
     break;
   default:
@@ -324,20 +348,38 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 }
 
 int
-masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, masxfs_scan_fun_simple_t cbf, void *udata _uUu_, masxfs_levinfo_flags_t flags
-                         /* , masxfs_scan_mode_t mode _uUu_ */  )
+masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, masxfs_scan_fun_simple_t cbf, void *udata _uUu_,
+                               masxfs_levinfo_flags_t flags )
 {
   int r = 0;
 
   if ( lia )
   {
-    for ( masxfs_levinfo_t * li = lia; li < lia + depth; li++ )
+#if 1
+    for ( masxfs_depth_t d = 0; !r && d < depth; d++ )
     {
-      if ( li->lidepth == ( size_t ) ( li - lia ) )
+      if ( lia[d].lidepth == d )
       {
         int r _uUu_ = 0;
 
-        r = cbf( li, flags, udata );
+        WARN( ">>o FROM ROOT '%s' (rel:%ld)", lia[d].name, ( long ) d - depth );
+        r = cbf( &lia[d], flags, udata, d - depth );
+      }
+      else
+      {
+        DIE( "FATAL ERROR" );
+        r = -1;
+      }
+    }
+#else
+    for ( masxfs_levinfo_t * li = lia; li < lia + depth; li++ )
+    {
+      if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
+      {
+        int r _uUu_ = 0;
+
+        WARN( "FROM ROOT '%s' (rel:%ld)  -  %ld ? %ld", li->name, -depth, -li->lidepth, ( li - lia + depth ) );
+        r = cbf( li, flags, udata, li - lia + depth );
         if ( r )
           break;
       }
@@ -346,6 +388,7 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
         DIE( "FATAL ERROR" );
       }
     }
+#endif
   }
   return r;
 }

@@ -34,14 +34,14 @@ struct rlimit lim = { 0 };
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
+fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
 /* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
+fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -53,13 +53,13 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data 
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, depth, deinode, ename ? ename : "", epath ? epath : "" );
+  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
 
   return 0;
 }
 
 static int _uUu_
-fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_ )
+fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
@@ -67,14 +67,14 @@ fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _
 }
 
 static int
-testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu_ )
+testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
   char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
 
-  fprintf( stderr, "%ld. %s - %s\n", depth, ename, real_path );
+  fprintf( stderr, "%ld. %s - %s\n", ( long ) depth, ename, real_path );
 
   mas_free( real_path );
 
@@ -87,7 +87,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
-  fprintf( stderr, "A============================================[%ld]======== #%ld\n", pi->pidepth, masexam_tests_count(  ) );
+  fprintf( stderr, "A============================================[%ld]======== #%ld\n", ( long ) pi->pidepth, masexam_tests_count(  ) );
   masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS );
   fprintf( stderr, "B====================================================\n" );
   {

@@ -55,7 +55,7 @@ masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char
         if ( test )
         {
           if ( test > 1 )
-            sprintf( pw, "[%3ld %3ld %3ld %3ld]", child_count_z, child_count, li->lidepth, d );
+            sprintf( pw, "[%3ld %3ld %3ld %3ld]", child_count_z, child_count, ( long ) li->lidepth, ( long ) d );
           else
             sprintf( pw, "[%15d]", cas );
           pw += len;

@@ -11,6 +11,8 @@ typedef struct masxfs_handler_s masxfs_handler_t;
 typedef enum masxfs_entry_type_e masxfs_entry_type_t;
 typedef enum masxfs_entry_type_bit_e masxfs_entry_type_bit_t;
 
+typedef signed int masxfs_depth_t;
+
 typedef enum masxfs_cb_flag_e masxfs_cb_flag_t;
 typedef enum masxfs_cb_flag_bit_e masxfs_cb_flag_bit_t;
 typedef unsigned long masxfs_levinfo_flags_t;
@@ -19,14 +21,11 @@ typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
 
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
-
-typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *data );
+typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *data, masxfs_depth_t reldepth );
 typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t flags );
 
 typedef int ( *masxfs_li_handler_t ) ( masxfs_levinfo_t * li );
 
-/* typedef int ( *masxfs_li_cb_t ) ( const char *name, size_t depth, masxfs_levinfo_t *li, void *udata ); */
-
-typedef size_t masxfs_depth_t;
+/* typedef int ( *masxfs_li_cb_t ) ( const char *name, masxfs_depth_t depth, masxfs_levinfo_t *li, void *udata ); */
 
 #endif

@@ -27,13 +27,13 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test4cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv )
+test4cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, masxfs_depth_t reldepth _uUu_ )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  MARK( "(T4)", " %ld. %s", depth, ename );
+  MARK( "(T4)", " %ld. %s", (long)depth, ename );
   {
     int r = 0;
     char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";

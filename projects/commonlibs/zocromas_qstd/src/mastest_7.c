@@ -27,7 +27,7 @@
 #include "qstd_mstmt_props.h"
 
 static int
-test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
+test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
@@ -87,8 +87,8 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv )
       masxfs_levinfo_set_id( li, as_parent_id );
     }
     if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
-      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", depth, ename, ( unsigned long long ) theid, ( unsigned long long ) parent_id,
-            ( unsigned long long ) as_parent_id );
+      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
+            ( unsigned long long ) parent_id, ( unsigned long long ) as_parent_id );
   }
   return 0;
 }
@@ -124,7 +124,8 @@ test7( void )
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
     rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
-    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
+    rC( masxfs_pathinfo_scan_cbs
+        ( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {

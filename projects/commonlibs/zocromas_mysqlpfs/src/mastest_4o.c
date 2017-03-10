@@ -26,13 +26,13 @@
 #include "mysqlpfs_structs.h"
 
 static int
-test4ocb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv )
+test4ocb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, masxfs_depth_t reldepth _uUu_ )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  INFO( "%ld. %s", depth, ename );
+  INFO( "%ld. %s", ( long ) depth, ename );
 #if 0
   char *insops[] _uUu_ = {
     "PREPARE insname_stmt FROM 'INSERT INTO filenames SET name=?'"
@@ -113,7 +113,7 @@ test4o( void )
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS|MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mysqlpfs_delete( pfs );
   }

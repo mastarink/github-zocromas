@@ -40,7 +40,7 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * call
 
     if ( !( flags & MASXFS_CB_RECURSIVE ) )
       DIE( "%s", "NOREC" );
-    r = masxfs_levinfo_scan_dirn_cbs( li, callbacks, data, flags, pi->pidepth + maxdepth );
+    r = masxfs_levinfo_scan_dirn_cbs( li, callbacks, data, flags, pi->pidepth + maxdepth, 0 );
     QRPI( pi, r );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( r >= 0 )

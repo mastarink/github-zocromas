@@ -5,6 +5,7 @@
 
 enum masxfs_entry_type_e
 {
+  MASXFS_ENTRY_NONE_NUM,
   MASXFS_ENTRY_UNKNOWN_NUM,
   MASXFS_ENTRY_BLK_NUM,
   MASXFS_ENTRY_CHR_NUM,
@@ -18,6 +19,7 @@ enum masxfs_entry_type_e
 
 enum masxfs_entry_type_bit_e
 {
+  MASXFS_ENTRY_NONE = 1L << MASXFS_ENTRY_NONE_NUM,
   MASXFS_ENTRY_UNKNOWN = 1L << MASXFS_ENTRY_UNKNOWN_NUM,
   MASXFS_ENTRY_BLK = 1L << MASXFS_ENTRY_BLK_NUM,
   MASXFS_ENTRY_CHR = 1L << MASXFS_ENTRY_CHR_NUM,
@@ -42,6 +44,7 @@ enum masxfs_cb_flag_e
   MASXFS_CB_SKIP_NUM,
   MASXFS_CB_MODE_FS_NUM,
   MASXFS_CB_MODE_DB_NUM,
+  MASXFS_CB_FROM_ROOT_NUM,
 };
 enum masxfs_cb_flag_bit_e
 {
@@ -56,7 +59,7 @@ enum masxfs_cb_flag_bit_e
   MASXFS_CB_SKIP = 1L << MASXFS_CB_SKIP_NUM,
   MASXFS_CB_MODE_FS = 1L << MASXFS_CB_MODE_FS_NUM,
   MASXFS_CB_MODE_DB = 1L << MASXFS_CB_MODE_DB_NUM,
+  MASXFS_CB_FROM_ROOT = 1L << MASXFS_CB_FROM_ROOT_NUM,
 };
-
 
 #endif
