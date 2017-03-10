@@ -51,11 +51,16 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 static int
 masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li _uUu_ )
 {
-  rDECL( 0 );
+  rDECL( -1 );
 
-  DIE( "NOT IMPLEMENTED" );
-  rCODE = -1;
-  mas_mysqlpfs_mstmt_data_seek( li->db.mstmt, 0 );
+  WARN( "POINT DB" );
+
+  if ( li )
+  {
+    DIE( "NOT IMPLEMENTED li->db.mstmt: %p", li->db.mstmt );
+    rCODE = -1;
+    mas_mysqlpfs_mstmt_data_seek( li->db.mstmt, 0 );
+  }
   rRET;
 }
 
@@ -65,6 +70,9 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   rDECL( -1 );
 
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
 
   switch ( mode )
   {
@@ -77,7 +85,8 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     QRLI( li, rCODE );
     break;
   case MASXFS_SCAN__MODE_DB:
-    DIE( "NOT IMPLEMENTED" );
+    if ( ( flags & MASXFS_CB_MODE_DB ) )
+      WARN( "POINT DB" );
     rC( masxfs_levinfo_db_rewinddir( li ) );
     QRLI( li, rCODE );
     break;
@@ -151,7 +160,6 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rC( masxfs_levinfo_fs_opendir( li ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    DIE( "NOT IMPLEMENTED" );
     rC( masxfs_levinfo_db_opendir( li ) );
     break;
   }

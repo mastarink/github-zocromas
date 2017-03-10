@@ -26,6 +26,9 @@ masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs
   rDECL( 0 );
   int rc = 0;
 
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "BEFORE OPEN DIR %d", ( flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
+
   rC( masxfs_levinfo_opendir( li, flags ) );
   QRLI( li, rCODE );
   if ( !rCODE )
@@ -45,6 +48,10 @@ masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs
                                                masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
   rDECL( 0 );
+
+  if ( ( tflags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
+
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
@@ -62,27 +69,44 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
 {
   rDECL( 0 );
 
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
+
   if ( liparent && lithis )
   {
     masxfs_entry_callback_t *cb = cbs;
 
     liparent->child_count_pair[!cb]++;
 
+    if ( ( flags & MASXFS_CB_MODE_DB ) )
+      WARN( "POINT DB" );
     for ( int ncb = 0; !rCODE && cb && cb->fun_simple; cb++, ncb++ )
     {
       masxfs_levinfo_flags_t tflags = 0;
 
       tflags = flags | cb->flags;
+      if ( ( tflags & MASXFS_CB_MODE_DB ) )
+        WARN( "POINT DB" );
 
       if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth == 1 )
       {
         masxfs_levinfo_t *lia _uUu_ = lithis - lithis->lidepth;
 
+        if ( ( tflags & MASXFS_CB_MODE_DB ) )
+          WARN( "POINT DB" );
+
         for ( masxfs_levinfo_t * li = lia; !rCODE && li < lithis; li++ )
         {
+          if ( ( tflags & MASXFS_CB_MODE_DB ) )
+            WARN( "POINT DB" );
+
           if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
           {
+            if ( ( flags & MASXFS_CB_MODE_DB ) )
+              WARN( "POINT DB" );
             rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
+            if ( ( flags & MASXFS_CB_MODE_DB ) )
+              WARN( "POINT DB" );
           }
           else
           {
@@ -90,12 +114,23 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
           }
         }
       }
+      if ( ( flags & MASXFS_CB_MODE_DB ) )
+        WARN( "POINT DB" );
       rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, detype ? detype : lithis->detype,
                                                          reldepth ) );
+      if ( ( flags & MASXFS_CB_MODE_DB ) )
+        WARN( "POINT DB" );
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
     }
   }
+  else
+  {
+    if ( ( flags & MASXFS_CB_MODE_DB ) )
+      WARN( "POINT DB" );
+  }
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
   rRET;
 }
 
@@ -103,6 +138,9 @@ static int
 masxfs_levinfo_scan_entry_single_at_child_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
                                                masxfs_depth_t reldepth )
 {
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
+
   return li ? masxfs_levinfo_scan_entry_single_internal_cbs( li->lidepth > 0 ? li - 1 : NULL, li, cbs, data, flags, li->detype, reldepth ) : -1;
 }
 
@@ -111,6 +149,9 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
                               masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   int r = 0;
+
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
 
   if ( li )
   {
@@ -264,6 +305,9 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
 {
   int r = 0;
 
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
+
   if ( li )
   {
     masxfs_levinfo_flags_t tflags = flags;
@@ -292,6 +336,9 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
   rDECL( 0 );
   int n = 0;
 
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
+
   while ( rCODE >= 0 && masxfs_levinfo_readdir( li, flags ) )
   {
     rC( masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
@@ -311,6 +358,9 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
   rDECL( -1 );
 
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
+
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
 
   switch ( detype )
   {
@@ -337,6 +387,9 @@ masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
                               masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
   rDECL( -1 );
+
+  if ( ( flags & MASXFS_CB_MODE_DB ) )
+    WARN( "POINT DB" );
 
   if ( li )
     memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
