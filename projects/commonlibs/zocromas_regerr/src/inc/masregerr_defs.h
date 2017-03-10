@@ -33,7 +33,6 @@
 
 # define MASREGERR_DEFAULT_SIZE 256
 
-
 # if 0
 #  define rDECL(_v) int r_cnt _uUu_=0,r=(_v)
 #  define rC(_x) if (!r_cnt || !r) { r=(_x); r_cnt++; }
@@ -45,9 +44,8 @@
 #  define rRET return rCODE
 #  define rDECL(_v) struct {int cnt;int r;} ret_code={0}; rCODE=(_v)
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
-#  define rC(_x)  (!rCNT || !rCODE) ?( rCNT++,rCODE=(_x)):rCNT
+#  define rC(_x)  (!rCNT || rCODE>=0) ? ( rCNT++,rCODE=(_x)) : rCODE
 # endif
 /* #define rCALL if (!r) r= */
-
 
 #endif

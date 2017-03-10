@@ -105,7 +105,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
+  INFO( "%s %ld fd:%d D:%ld i:%ld %s; %s", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
 
   return 0;
 }
@@ -126,11 +126,9 @@ test7( void )
 
   masxfs_entry_callback_t callbacks[] = {
     {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test7cb,
-     .flags = ( masxfs_cb_flag_bit_t ) MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT
-   /* | MASXFS_CB_FD */ }
+     .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, treecb,
-       .flags = ( masxfs_cb_flag_bit_t ) MASXFS_CB_NAME |            /* MASXFS_CB_PATH | */
-       MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
+       .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {0, NULL}
   };
 
@@ -143,27 +141,26 @@ test7( void )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
-    masxfs_levinfo_flags_t flags = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
+    masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
+    masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_DB;
 
     {
       {
-
         rC( mas_qstd_start_transaction( qstd ) );
-
 #if 0
-        rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
-        rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flags, 1000 /* maxdepth */  ) );
+        rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
 #else
-        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flags | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
 #endif
         rC( mas_qstd_end_transaction( qstd ) );
       }
 
       rC( mas_qstd_update_summary( qstd ) );
-
-      rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flags, 1000 /* maxdepth */  ) );
+      rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 /* maxdepth */  ) );
+    /* rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsdb, 1000 (* maxdepth *)  ) ); */
     }
-    masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+    masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS /* | MASXFS_CB_MODE_DB */  );
   }
   mas_qstd_delete( qstd );
   rRET;

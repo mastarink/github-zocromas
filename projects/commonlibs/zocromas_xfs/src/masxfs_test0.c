@@ -36,7 +36,7 @@ static int num = 0;
 static int _uUu_
 fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
-/* printf(  "entry directory: '%s'\n   -- %s\n",  ename ? ename : "", epath ? epath : ""); */
+/* INFO(  "entry directory: '%s'\n   -- %s",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
@@ -53,7 +53,7 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data 
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
+  INFO( "%s %ld fd:%d D:%ld i:%ld %s; %s", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
 
   return 0;
 }
@@ -62,7 +62,7 @@ static int _uUu_
 fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   num++;
-/* printf( "a. %-2d. -- '%s%s'\n", num, ename ? ename : "", epath ? epath : "" ); */
+/* INFO( "a. %-2d. -- '%s%s'", num, ename ? ename : "", epath ? epath : "" ); */
   return 0;
 }
 
@@ -74,7 +74,7 @@ testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu
 
   char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
 
-  fprintf( stderr, "%ld. %s - %s\n", ( long ) depth, ename, real_path );
+  INFO("%ld. %s - %s", ( long ) depth, ename, real_path );
 
   mas_free( real_path );
 
@@ -87,9 +87,9 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
-  fprintf( stderr, "A============================================[%ld]======== #%ld\n", ( long ) pi->pidepth, masexam_tests_count(  ) );
+  INFO("A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
   masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS );
-  fprintf( stderr, "B====================================================\n" );
+  INFO("B====================================================");
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
 /* +1 */
@@ -181,13 +181,13 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     masxfs_levinfo_close_all_up( li, MASXFS_CB_MODE_FS );
     for ( masxfs_depth_t i = 0; i < pi->pidepth; i++ )
     {
-      EXAM( pi->levinfo[i].fd, ( int ) 0, "%ld ? %ld" );
+      EXAM( pi->levinfo[i].fd, ( int ) 0, "closed fd: %ld ? %ld" );
     }
 /* 1+2+8+8+1+1(for d>1)+2 + 3*depth + 1 +1*depth +1*depth */
   }
 /* 1+2+8+8+1+1(for d>1)+2     +1 + 5*depth *//* 28,34,94,94 */
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS );
-  fprintf( stderr, "Z==================================================== #%ld\n", masexam_tests_count(  ) );
+  INFO( "Z==================================================== #%ld", masexam_tests_count(  ) );
   return 0;
 }
 
@@ -261,34 +261,34 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     WARN( "callbacks: %p", callbacks );
 #if 0
   /* ftw */
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
     num = 0;
     masxfs_scanpath_real( "/", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10 );
-    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+    INFO("NNNNNNNNNN %d", num );
 
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
     num = 0;
     masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, 10000 );
-    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+    INFO("NNNNNNNNNN %d", num );
 #endif
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
     num = 0;
     masxfs_scanpath_real2( NULL, callbacks, NULL, ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 10000 );
-    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+    INFO("NNNNNNNNNN %d", num );
 
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
     num = 0;
     masxfs_scanpath_real( "./mastest", callbacks, NULL, ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS | MASXFS_CB_MODE_FS,
                           10000 );
-    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+    INFO("NNNNNNNNNN %d", num );
 
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
     num = 0;
     masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, NULL,
                           ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS | MASXFS_CB_MODE_FS, 10000 );
-    fprintf( stderr, "NNNNNNNNNN %d\n", num );
+    INFO("NNNNNNNNNN %d", num );
 
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
@@ -307,7 +307,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   if ( 1 )
   {
     masexam_next_group(  );
-    fprintf( stderr, "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:\n" );
+    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:");
     {
       masxfs_pathinfo_t *pi =
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest",

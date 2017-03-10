@@ -52,7 +52,6 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit )
   /* fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno ); */
     pi = masxfs_pathinfo_create(  );
 
-    QRPI( pi, ( real_path ? 0 : -1 ) );
     QRPI( pi, pi ? 0 : -1 );
     if ( real_path && pi )
     {

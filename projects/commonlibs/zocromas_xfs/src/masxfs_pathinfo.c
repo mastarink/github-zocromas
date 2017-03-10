@@ -22,7 +22,8 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 }
 
 int
-masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * callbacks, void *data, masxfs_levinfo_flags_t flags,
+                          masxfs_depth_t maxdepth )
 {
   int r = 0, rc = 0;
 
@@ -38,8 +39,6 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_entry_callback_t * call
   {
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-    if ( !( flags & MASXFS_CB_RECURSIVE ) )
-      DIE( "%s", "NOREC" );
     r = masxfs_levinfo_scan_dirn_cbs( li, callbacks, data, flags, pi->pidepth + maxdepth, 0 );
     QRPI( pi, r );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */

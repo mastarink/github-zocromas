@@ -32,7 +32,7 @@ mastest_print_allocated( const char *msg, int line, const char *func )
   struct mallinfo mi;
 
   mi = mallinfo(  );
-  fprintf( stderr, "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m\n", msg, mi.uordblks, line, func );
+  INFO( "\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m", msg, mi.uordblks, line, func );
 }
 
 static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
@@ -52,9 +52,9 @@ constructor_main( void )
     }
   }
 
-  fprintf( stderr, "START MEM\n" );
+  INFO( "START MEM" );
 #endif
-  fprintf( stderr, "START\n" );
+  INFO( "START" );
 }
 
 static void destructor_main(  ) __attribute__ ( ( destructor( 2001 ) ) );
@@ -75,7 +75,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
   {
     int fd = open( "Makefile.in", O_RDONLY );
 
-    fprintf( stderr, "FD:%d\n", fd );
+    INFO( "FD:%d\n", fd );
     close( fd );
   }
   r = getrlimit( RLIMIT_NOFILE, &lim );
@@ -88,7 +88,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
       int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
 
       masexam_do_t funlist[] _uUu_ = {
-        {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 1},
+        {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 0},
         {0},
       };
 
@@ -105,12 +105,12 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
     char *s3 = mas_strdup( s1 );
     char *s4 = strdup( s1 );
 
-    fprintf( stderr, "%p %p %p %p - %p %p\n", s1, s2, s3, s4, gs0, gs1 );
+    INFO( "%p %p %p %p - %p %p", s1, s2, s3, s4, gs0, gs1 );
     mas_free( s3 );
     free( s4 );
   }
 
-  fprintf( stderr, "----------------forward:\n" );
+  INFO( "----------------forward:" );
   masregerr_print_simple_all( NULL, NULL );
 
   return 0;
