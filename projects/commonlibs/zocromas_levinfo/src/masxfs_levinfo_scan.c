@@ -106,7 +106,7 @@ masxfs_levinfo_scan_entry_single_at_child_cbs( masxfs_levinfo_t * li, masxfs_ent
   return li ? masxfs_levinfo_scan_entry_single_internal_cbs( li->lidepth > 0 ? li - 1 : NULL, li, cbs, data, flags, li->detype, reldepth ) : -1;
 }
 
-int
+static int
 masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
                               masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
@@ -258,7 +258,7 @@ masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   return r;
 }
 
-int
+static int
 masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
                                masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
@@ -302,23 +302,6 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
 }
 
 int
-masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
-                              masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
-{
-  int r = 0;
-
-  if ( li )
-    memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
-  if ( r >= 0 )
-    r = masxfs_levinfo_scan_dir_cbs( li, NULL, data, flags, maxdepth, reldepth );
-  QRLI( li, r );
-  if ( r >= 0 )
-    r = masxfs_levinfo_scan_dir_cbs( li, cbs, data, flags, maxdepth, reldepth );
-  QRLI( li, r );
-  return r;
-}
-
-int
 masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth,
                              masxfs_depth_t reldepth )
 {
@@ -344,6 +327,23 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
           MASXFS_ENTRY_DIR_NUM );
     break;
   }
+  return r;
+}
+
+int
+masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                              masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
+{
+  int r = 0;
+
+  if ( li )
+    memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
+  if ( r >= 0 )
+    r = masxfs_levinfo_scan_dir_cbs( li, NULL, data, flags, maxdepth, reldepth );
+  QRLI( li, r );
+  if ( r >= 0 )
+    r = masxfs_levinfo_scan_dir_cbs( li, cbs, data, flags, maxdepth, reldepth );
+  QRLI( li, r );
   return r;
 }
 

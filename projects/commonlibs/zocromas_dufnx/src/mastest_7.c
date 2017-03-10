@@ -17,10 +17,9 @@
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-#include <mastar/mysqlpfs/mysqlpfs_query.h>
-
 #include <mastar/qstd/qstd_structs.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
+#include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
 #include <mastar/qstd/qstd_mstmt_names.h>
 #include <mastar/qstd/qstd_mstmt_sizes.h>
@@ -139,51 +138,31 @@ test7( void )
 
   mas_qstd_drop_tables( qstd );
   mas_qstd_create_tables( qstd );
+
   if ( qstd->pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+    masxfs_levinfo_flags_t flags = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
 
-    rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-#if 0
-    rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
-    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 1000 /* maxdepth */  ) );
-#else
-    rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
-#endif
-    rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
-      const char *updop[] = {
-        "START TRANSACTION",
-        "UPDATE parents AS p "                                       /* */
-                " LEFT JOIN "                                        /* */
-                "   (SELECT filenames.parent_id, COUNT(*) AS nchilds " /* */
-                "     FROM filenames "                               /* */
-                "     LEFT JOIN parents ON (filenames.parent_id=parents.id) " /* */
-                "     GROUP BY filenames.parent_id) "                /* */
-                "    AS fx ON (p.id=fx.parent_id) SET p.nchilds=fx.nchilds",
-        "UPDATE filedatas AS fd "                                    /* */
-                " LEFT JOIN "                                        /* */
-                "   (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb " /* */
-                "     FROM filedatas AS ifd "                        /* */
-                "     LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) " /* */
-                "     GROUP BY ifn.data_id) "                        /* */
-                "    AS fx ON (fd.id=fx.data_id) SET fd.nlinkdb=fx.nlinkdb",
-        "UPDATE filesizes AS fs "                                    /* */
-                " LEFT JOIN "                                        /* */
-                "   (SELECT ifs.size AS size, COUNT(*) AS nsame "    /* */
-                "     FROM filesizes AS ifs "                        /* */
-                "     LEFT JOIN fileprops AS ifp ON (ifs.size=ifp.size) " /* */
-                "     GROUP BY ifp.size) "                           /* */
-                "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
-        "COMMIT"
-      };
-      for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
-        rC( mas_mysqlpfs_query( qstd->pfs, updop[i] ) );
-    }
-#if 1
-    rC( masxfs_pathinfo_scan_cbs( pi, callbacks + 1, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+      {
+
+        rC( mas_qstd_start_transaction( qstd ) );
+
+#if 0
+        rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flags, 1000 /* maxdepth */  ) );
+#else
+        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flags | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
 #endif
+        rC( mas_qstd_end_transaction( qstd ) );
+      }
+
+      rC( mas_qstd_update_summary( qstd ) );
+
+      rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flags, 1000 /* maxdepth */  ) );
+    }
     masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
   }
   mas_qstd_delete( qstd );
