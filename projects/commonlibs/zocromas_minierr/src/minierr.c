@@ -23,10 +23,10 @@ minierr_vdie( int line, const char *func, const char *file, int fexit, unsigned 
 
 /* MAS_MIER_PRN( "[%ld] ", prefwidth ); */
 /* MAS_MIER_PRN( "[%lx] %x %x", ( long ) flags, MAS_MIER_FLAG_EXIT, MAS_MIER_FLAG_SLEEP ); */
-  if ( flags & ( MAS_MIER_FLAG_EXIT | MAS_MIER_FLAG_LINE | MAS_MIER_FLAG_FUNC | MAS_MIER_FLAG_FILE | MAS_MIER_FLAG_COLPREF ) )
+  if ( flags & ( MAS_MIER_FLAG_EXIT | MAS_MIER_FLAG_ASSERT | MAS_MIER_FLAG_LINE | MAS_MIER_FLAG_FUNC | MAS_MIER_FLAG_FILE | MAS_MIER_FLAG_COLPREF ) )
   {
     a = 33;
-    if ( flags & MAS_MIER_FLAG_EXIT )
+    if ( flags & (MAS_MIER_FLAG_EXIT | MAS_MIER_FLAG_ASSERT) )
       b = 41;
     else if ( flags & MAS_MIER_FLAG_COLPREF )
       b = 46;
@@ -37,7 +37,7 @@ minierr_vdie( int line, const char *func, const char *file, int fexit, unsigned 
     MAS_MIER_PRN( "\x1b[0;1;7;%d;%dm", a, b );
   MAS_MIER_PRN( "-=%4s=-", sid ? sid : ( fexit ? "DIE" : "WARN" ) );
 #if 1
-  if ( flags & ( MAS_MIER_FLAG_EXIT | MAS_MIER_FLAG_LINE | MAS_MIER_FLAG_FUNC | MAS_MIER_FLAG_FILE ) )
+  if ( flags & ( MAS_MIER_FLAG_EXIT | MAS_MIER_FLAG_ASSERT | MAS_MIER_FLAG_LINE | MAS_MIER_FLAG_FUNC | MAS_MIER_FLAG_FILE ) )
   {
     if ( a || b )
     {
@@ -59,7 +59,7 @@ minierr_vdie( int line, const char *func, const char *file, int fexit, unsigned 
     MAS_MIER_PRN( "%s( )", func );
   }
   if ( flags & MAS_MIER_FLAG_FILE )
-  { 
+  {
     prefwidth += 43;
     MAS_MIER_PRN( " @ %s", pf );
   }
@@ -99,6 +99,8 @@ minierr_vdie( int line, const char *func, const char *file, int fexit, unsigned 
 
   if ( flags & MAS_MIER_FLAG_SLEEP )
     sleep( 5 );
+  if ( flags & MAS_MIER_FLAG_ASSERT )
+    assert( 0 );
   if ( flags & MAS_MIER_FLAG_EXIT )
     exit( fexit );
 }

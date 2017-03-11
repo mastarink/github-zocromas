@@ -59,7 +59,7 @@ masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li _uUu_ )
   rC( masxfs_levinfo_db_opendir( li ) );
   if ( !rCODE && li && li->db.mstmt )
   {
-    WARN( "NOT IMPLEMENTED (\?\?) li->db.mstmt: %p", li->db.mstmt );
+    WARN( "NOT IMPLEMENTED (\?\?) li->db.mstmt: %p '%s'", li->db.mstmt, li->name );
     mas_mysqlpfs_mstmt_data_seek( li->db.mstmt, 0 );
   }
   rRET;
@@ -140,7 +140,15 @@ static int
 masxfs_levinfo_db_opendir( masxfs_levinfo_t * li _uUu_ )
 {
   rDECL( 0 );
-  DIE( "NOT IMPLEMENTED" );
+  {
+    masxfs_levinfo_t *lit = li;
+
+    do
+    {
+      WARN( "NOT IMPLEMENTED (\?\?) id:%ld lidepth:%ld db.mstmt: %p '%s'", lit->db.node_id, ( long ) lit->lidepth, lit->db.mstmt, lit->name );
+    } while ( lit->lidepth && lit-- );
+  }
+  NIMP( "li:%p", li );
   rCODE = -1;
   rRET;
 }
@@ -193,14 +201,14 @@ masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
 }
 
 static int
-masxfs_levinfo_db_closedir( masxfs_levinfo_t * li _uUu_ )
+masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
 {
   rDECL( 0 );
   if ( li->db.mstmt )
   {
     WARN( "NOT IMPLEMENTED" );
     assert( 0 );
-    DIE( "NOT IMPLEMENTED" );
+    NIMP( "li:%p", li );
     rCODE = -1;
   }
   rRET;
@@ -285,7 +293,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li _uUu_ )
   {
     if ( li->db.mstmt )
     {
-      DIE( "NOT IMPLEMENTED" );
+      NIMP( "li:%p", li );
     /* li->db.pde=.... */
     }
   }

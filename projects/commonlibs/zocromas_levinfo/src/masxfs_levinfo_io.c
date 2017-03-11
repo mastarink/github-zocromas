@@ -72,7 +72,7 @@ static int
 masxfs_levinfo_db_open_at( masxfs_levinfo_t * li _uUu_, int fdparent _uUu_ )
 {
   rDECL( 0 );
-  DIE( "NOT IMPLEMENTED" );
+  NIMP( "li:%p", li );
   rCODE = -1;
   rRET;
 }
@@ -126,7 +126,7 @@ static int
 masxfs_levinfo_db_open( masxfs_levinfo_t * li _uUu_ )
 {
   rDECL( 0 );
-  DIE( "NOT IMPLEMENTED" );
+  NIMP( "li:%p", li );
   rCODE = -1;
   rRET;
 }
@@ -213,7 +213,7 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
   {
     rC( masxfs_levinfo_close( li, flags ) );
     QRLI( li, rCODE );
-    /* test li->lidepth BEFORE li-- */
+  /* test li->lidepth BEFORE li-- */
   } while ( !rCODE && li->lidepth && li-- );
 
   QRLI( li, rCODE );
@@ -250,7 +250,8 @@ static int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li _uUu_ )
 {
   rDECL( 0 );
-  DIE( "NOT IMPLEMENTED" );
+  NIMP( "li:%p name:'%s' lidepth:%ld; mstat:%p; node_id:%ld", li, li ? li->name : NULL, ( long ) ( li ? li->lidepth : 0 ), li ? li->db.mstmt : NULL,
+        li ? li->db.node_id : 0 );
   rCODE = -1;
   rRET;
 }

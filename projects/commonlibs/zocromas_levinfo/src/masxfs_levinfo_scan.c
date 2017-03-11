@@ -115,7 +115,7 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
         }
       }
       if ( ( flags & MASXFS_CB_MODE_DB ) )
-        WARN( "POINT DB" );
+        SWARN( "POINT DB" );
       rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, detype ? detype : lithis->detype,
                                                          reldepth ) );
       if ( ( flags & MASXFS_CB_MODE_DB ) )
@@ -357,10 +357,12 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 {
   rDECL( -1 );
 
-  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-
   if ( ( flags & MASXFS_CB_MODE_DB ) )
     WARN( "POINT DB" );
+
+  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
+
+  ADIE( "'%s' : detype:%d", li ? li->name : NULL, detype );
 
   switch ( detype )
   {

@@ -84,7 +84,7 @@ test7cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxf
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
       as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-      masxfs_levinfo_set_id( li, as_parent_id );
+      masxfs_levinfo_set_node_id( li, as_parent_id );
     }
     if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
       MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
@@ -131,37 +131,55 @@ test7( void )
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {0, NULL}
   };
-
-  mas_qstd_t *qstd = mas_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
-
-  mas_qstd_drop_tables( qstd );
-  mas_qstd_create_tables( qstd );
-
-  if ( qstd->pfs )
   {
-    const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
-    masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
-    masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_DB;
+    mas_qstd_t *qstd = mas_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
+    mas_qstd_drop_tables( qstd );
+    mas_qstd_create_tables( qstd );
+
+    if ( qstd->pfs )
     {
-      {
-        rC( mas_qstd_start_transaction( qstd ) );
-#if 0
-        rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
-        rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
-#else
-        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
-#endif
-        rC( mas_qstd_end_transaction( qstd ) );
-      }
+      const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
-      rC( mas_qstd_update_summary( qstd ) );
-    /* rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 (* maxdepth *)  ) ); */
-      rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsdb, 1000 /* maxdepth */  ) );
+      {
+        masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
+
+        {
+          rC( mas_qstd_start_transaction( qstd ) );
+#if 0
+          rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
+          rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
+#else
+          rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+#endif
+          rC( mas_qstd_end_transaction( qstd ) );
+        }
+
+        rC( mas_qstd_update_summary( qstd ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 /* maxdepth */  ) );
+      }
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
-    masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+    mas_qstd_delete( qstd );
   }
-  mas_qstd_delete( qstd );
+#if 0
+  {
+    mas_qstd_t *qstd = mas_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+
+    if ( qstd->pfs )
+    {
+      const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+
+      {
+        masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_DB;
+
+        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsdb, 1000 /* maxdepth */  ) );
+      } masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+    }
+    mas_qstd_delete( qstd );
+  }
+#endif
   rRET;
 }

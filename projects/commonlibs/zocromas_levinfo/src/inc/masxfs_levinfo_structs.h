@@ -33,7 +33,7 @@ struct masxfs_levinfo_s
 
   struct
   {
-    unsigned long id;
+    unsigned long node_id;
     mysqlpfs_mstmt_t *mstmt;
     masxfs_dirent_t *pde;
     masxfs_stat_t *stat;

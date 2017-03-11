@@ -6,13 +6,11 @@ function shn_run ()
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin sedex lt rname
   local bindir libsdir
-# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
+      shn_dbgmsg "-=<shn_run>=-"
   
-  if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-     shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>"
-  fi
+  if  [[ $MSH_SHN_ENABLE_MARKLINE ]] ; then shn_msg "=>=>=>=>=>=>=>=>=>=>=>=>=>=>" ; fi
   rname=`shn_runname` || { retcode=$? ; shn_errmsg "runname Try set MSH_SHN_RUN_NAME; rc:$retcode" ; return $retcode ; }
-  if [[ "$runretcode" -ne 0 ]] ; then shn_msg "-------- runretcode: $runretcode" ; fi
+  if [[ "$runretcode" -ne 0 ]] ; then shn_dbgmsg "-------- runretcode: $runretcode" ; fi
   if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] 
   	then
     libsdir="${bsrc}/.libs"
@@ -32,25 +30,19 @@ function shn_run ()
     export MSH_SHN_LAUNCHPID=$$
     export MSH_SHN_LAUNCHDATEM=$(datem)
     export MSH_SHN_LAUNCHDATEMT=$(datemt)
-    shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
-      shn_msg
-      shn_human_run "$@"  ### running $bin here
-
-
-        if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-           shn_msg
-	fi
+    if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- " ; fi
+    shn_human_run "$@"  ### running $bin here
+    if  [[ $MSH_SHN_ENABLE_MARKLINE ]] ; then shn_msg ; fi
     if [[ -f mas_debug_memory.tmp ]] ; then
 ##    cat mas_debug_memory.tmp >&2
-      shn_msg "--=@(     exit: $retcode     )@=--          $(cat mas_debug_memory.tmp)"
+      if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg "--=@(     exit: $retcode     )@=--          $(cat mas_debug_memory.tmp)" ; fi
       mv -f mas_debug_memory_old2.tmp  mas_debug_memory_old3.tmp
       mv -f mas_debug_memory_old.tmp  mas_debug_memory_old2.tmp
       mv -f mas_debug_memory.tmp  mas_debug_memory_old.tmp
     else
-      shn_msg "--=@(     exit: $retcode     )@=--"
+      if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg "--=@(     exit: $retcode     )@=--" ; fi
     fi
-##  shn_msg "--=<>=--=<>=--=<$bin>=--=<>=--=<>=--"
-    shn_msg "$bin"
+    if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg "bin:$bin" ; fi
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
@@ -60,17 +52,18 @@ function shn_run ()
   fi
   shn_run_afterrun
 
+      shn_dbgmsg "-=</shn_run>=-"
   return $retcode
 }
 function shn_human_run ()
 {
   local qargs a
+  shn_msg
   ulimit -c unlimited  #### for core dump:
-# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
   done
-  shn_msg "to run $rname $qargs"
+  if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then  shn_msg "to run '$rname' $qargs" ; fi
   if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
     {
       local conffile=$(find $MSH_SHN_PROJECT_DIR -name ${rname}.conf)
@@ -85,11 +78,9 @@ function shn_human_run ()
   fi
   {
     if pushd $MSH_SHN_CWD  &>/dev/null ; then
-#           echo -n '◁' >&2
-###   shn_msg "eval $bin $qargs"
-      eval "$bin $qargs" ; retcode=$?
-###   shn_msg "/eval $bin $qargs"
-#           echo -n '▷' >&2
+      shn_msg "-=<eval>=-"
+      eval "time $bin $qargs" ; retcode=$?
+      shn_msg "-=</eval $retcode>=-"
       popd  &>/dev/null
     fi
   }
@@ -102,20 +93,15 @@ function shn_human_run ()
 }
 function  shn_run_afterrun ()
 {
+  local runretcode=$retcode
+  if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg "gdb by exitcode= $retcode" ; fi
   if [[ "$retcode" -eq $(( 128 + 11 ))  ]] ; then
-    shn_msg "gdb by exitcode= $retcode"
-    
-    local runretcode=$retcode
     shn G
   elif [[ "$retcode" -eq $(( 128 + 6 ))  ]] ; then
-    shn_msg "gdb by exitcode= $retcode"
-    local runretcode=$retcode
     shn G
   fi
 # shn_msg "Returned $retcode"
-  if ! [[ $MSH_SHN_DISABLE_MARKLINE ]] ; then
-    shn_msg "=<=<=<=<=<=<=<=<=<=<=<" >&2
-  fi
+  if  [[ $MSH_SHN_ENABLE_MARKLINE ]] ; then shn_msg "=<=<=<=<=<=<=<=<=<=<=<" ; fi
 }
 function shn_runname ()
 {

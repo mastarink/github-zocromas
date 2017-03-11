@@ -84,7 +84,7 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv, masxfs_depth_t
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
       as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-      masxfs_levinfo_set_id( li, as_parent_id );
+      masxfs_levinfo_set_node_id( li, as_parent_id );
     }
     if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
       MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,

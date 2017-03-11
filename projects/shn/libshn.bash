@@ -1,6 +1,6 @@
 function shn_code ()
 {
-# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
+  shn_dbgmsg "-=<shn_code>=-"
   local retcode=0
   local i
   declare -gx -A MSH_SHN_LAST_ACTION
@@ -52,20 +52,20 @@ function shn_code ()
       shn_fmsg  "	[ %-30s ]" $MSH_SHN_PROJECT_NAME
     ;;
     j)
-      shn_project_cd $1 || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_project_cd $1 || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shift
     ;;
     r)
-      shn_run "$@" || { retcode=$? ; shn_errmsg 2.${code} shn  rc:$retcode ; }
+      shn_run "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ; }
     ;;
     g)
-      shn_uni_debug "-" "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_uni_debug "-" "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
     ;;
     G)
-      shn_uni_debug core "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_uni_debug core "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
     ;;
     Y)
-      shn_core_debug_installed "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_core_debug_installed "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
     ;;
     c)
       while [[ $1 == -* ]] ; do
@@ -75,62 +75,62 @@ function shn_code ()
       done
       shn_msg "opts: [$codeopts]"
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_configure $codeopts || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_build_configure $codeopts || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     C)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_clean || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_build_clean || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     D)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_distclean || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_build_distclean || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     U)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_superclean || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_build_superclean || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     UU)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_superclean wash || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;   }
+      shn_build_superclean wash || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;   }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     a)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_autoreconf || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_autoreconf || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;	  
     e)
       shn_dbgmsg "shn 2.${code}.1"
       shn_build_ebuild_check
-      shn_build_ebuild_update    || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_ebuild_update    || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     E)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_ebuild_check    || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_ebuild_check    || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;	  
     t)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_dist      || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_dist      || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     m)
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_make      || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_make      || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
@@ -143,7 +143,7 @@ function shn_code ()
       shn_dbgmsg "shn 2.${code}.1"
 #	  shn_build_make      || return $?
 #         shn_dbgmsg "shn 2.${code}.2"
-      shn_build_install || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_install || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.3"
     ;;
@@ -151,7 +151,7 @@ function shn_code ()
       shn_dbgmsg "shn 2.${code}.1"
 #	  shn_build_make      || return $?
 #         shn_dbgmsg "shn 2.${code}.2"
-      shn_build_uninstall || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_uninstall || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.3"
     ;;    
@@ -160,10 +160,10 @@ function shn_code ()
     ;;
     L)
       shn_msg List
-      shn_build_list "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_build_list "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
     ;;
     x)
-      shn_std_command build "$@" || { retcode=$? ; shn_errmsg 2.${code} shn rc:$retcode ;  }
+      shn_std_command build "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ;  }
     ;;
     q1)
       shn_msglist $@
@@ -191,6 +191,7 @@ function shn_code ()
   shn_dbgmsg "shn 3 -- $code"
   shn_dbgmsg "shn 4 -- $code ; next:$1"
   shopt -$nocase nocasematch &>/dev/null
+  shn_dbgmsg "-=</shn_code>=-"
   return $retcode
 }
 function shn_i ()
@@ -198,10 +199,8 @@ function shn_i ()
   local retcode=0
   local code=${1:-l} i
   local in_shift=0
-# export MSH_SHN_DEBUG=yes  
   shift
-# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
-# for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
+  shn_dbgmsg "-=<shn_i>=-"
   shn_dbgmsg 1 shn
   shn_dbgmsg 2a shn
 #?trap shn_exit EXIT
@@ -211,10 +210,10 @@ function shn_i ()
   shn_dbgmsg 3 shn
   if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
-    shn_project_each '' 0 shn "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+    shn_project_each '' 0 shn "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
   elif [[ "$code" =~ ^\?(.*)$ ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
-    shn_project_each "${BASH_REMATCH[1]}" 0 shn "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+    shn_project_each "${BASH_REMATCH[1]}" 0 shn "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
   elif [[ "$code" == cont ]] ; then
     if [[ "${MSH_SHN_DIRS[status]}" ]] && [[ -d "${MSH_SHN_DIRS[status]}" ]] ; then
       shn_msg ">>>>>>>>>>>> $MSH_SHN_STATUS @"
@@ -224,7 +223,7 @@ function shn_i ()
 #       shn_project_each $ifr '' $dshn $acts
 #     fi
       if [[ "$MSH_SHN_STATUS" ]] ; then
-        shn_project_each '' $MSH_SHN_STATUS || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+        shn_project_each '' $MSH_SHN_STATUS || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
       fi
     fi   
   elif [[ "$code" == one ]] ; then
@@ -232,7 +231,7 @@ function shn_i ()
     
 #   local shn_ignore_error=yes
     in_shift=0
-    shn_code "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+    shn_code "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
     shift $in_shift
     retcode=$?
   elif [[ "$code" ]] ; then
@@ -245,7 +244,7 @@ function shn_i ()
 #       shn_warn "use '$FUNCNAME one $code'"
 #     else
         in_shift=0
-        shn_code $code "$@" || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
+        shn_code $code "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
 	shift $in_shift
 #     fi
       if [[ "$code" =~ ^[LXxrgGj]$ ]] ; then
@@ -258,13 +257,14 @@ function shn_i ()
     local shn_dont_setup=yes
     
 #   local shn_ignore_error=yes
-    shn_code h || { retcode=$? ; shn_errmsg shn setup rc:$retcode ; return $retcode ; }
+    shn_code h || { retcode=$? ; shn_errmsg "shn setup r:$retcode" ; return $retcode ; }
   fi
   shn_dbgmsg "shn 5 -- $code"
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MSH_SHN_PROJECT_NAME}
 # shn_pwd
   shn_setup_projects || return $?
 # shn_msg END of shn
+  shn_dbgmsg "-=</shn_i>=-"
   return $retcode
 }
 function shn ()
@@ -272,9 +272,9 @@ function shn ()
   local TIMEFORMAT=${TIMEFORMAT:-real %lR; user %lU; system %lS; cpu %P}
   local -i retcode=0
   declare -gx MSH_SHN_CWD 
+  shn_dbgmsg "-=<shn>=-"
   MSH_SHN_CWD=`pwd`
-# echo -n "${FUNCNAME[0]} $# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
-  echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
+  shn_dbgmsg "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
   if pushd . &>/dev/null ; then
     if [[ $MSH_SHN_DISABLE_TIMING ]] ; then 
       shn_i "$@"
@@ -285,5 +285,6 @@ function shn ()
     fi
     popd &>/dev/null
   fi
+  shn_dbgmsg "-=</shn>=-"
   return $retcode
 }

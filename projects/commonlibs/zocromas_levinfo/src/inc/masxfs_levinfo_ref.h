@@ -30,8 +30,8 @@ const char *masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2
 
 masxfs_entry_type_t masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 
-void masxfs_levinfo_set_id( masxfs_levinfo_t * li, unsigned long id );
-unsigned long masxfs_levinfo_id( masxfs_levinfo_t * li, masxfs_depth_t offset );
+void masxfs_levinfo_set_node_id( masxfs_levinfo_t * li, unsigned long node_id );
+unsigned long masxfs_levinfo_node_id( masxfs_levinfo_t * li, masxfs_depth_t offset );
 int masxfs_levinfo_parent_id( masxfs_levinfo_t * li );
 
 #endif

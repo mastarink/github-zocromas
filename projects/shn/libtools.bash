@@ -45,18 +45,24 @@ function shn_msg ()
     else
       shn_echo >&2
     fi
-# shn_echo $@  >&2
-# shn_echo "$*"  >&2
-# shn_echo "$@"  >&2
   fi
 }
 function shn_msgn ()
 {
+  local nocolor
   if ! [[ $MSH_SHN_DISABLE_MSG ]] ; then
-    shn_echon "$*"  >&2
-# shn_echon $@  >&2
-# shn_echon "$*"  >&2
-# shn_echon "$@"  >&2
+    if [[ $# -gt 0 ]] ; then
+      if [[ $TERM == dumb ]] ; then
+	nocolor=yes
+      fi
+      if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
+        shn_echon "$(date '+%s.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
+      else
+        shn_echon "$(date '+%s.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
+      fi
+    else
+      shn_echon >&2
+    fi
   fi
 }
 function shn_msgns ()
