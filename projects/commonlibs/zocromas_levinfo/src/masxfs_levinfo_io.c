@@ -17,6 +17,7 @@
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"
 
+#include "masxfs_levinfo_db.h"
 #include "masxfs_levinfo_io.h"
 
 /*
@@ -250,6 +251,7 @@ static int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li _uUu_ )
 {
   rDECL( 0 );
+  masxfs_levinfo_db_nodeid( li );
   NIMP( "li:%p name:'%s' lidepth:%ld; mstat:%p; node_id:%ld", li, li ? li->name : NULL, ( long ) ( li ? li->lidepth : 0 ), li ? li->db.mstmt : NULL,
         li ? li->db.node_id : 0 );
   rCODE = -1;

@@ -18,6 +18,8 @@
 
 #include "qstd_mstmt_base.h"
 
+static mas_qstd_t *instance = NULL;
+
 void
 mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port )
 {
@@ -43,6 +45,22 @@ mas_qstd_create_setup( const char *host, const char *user, const char *passwd, c
   return qstd;
 }
 
+mas_qstd_t *
+mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+{
+  if ( !instance )
+  {
+    instance = mas_qstd_create_setup( host, user, passwd, db, port );
+  }
+  return instance;
+}
+
+mas_qstd_t *
+mas_qstd_instance( void )
+{
+  return instance;
+}
+
 void
 mas_qstd_reset( mas_qstd_t * qstd )
 {
@@ -59,6 +77,13 @@ mas_qstd_delete( mas_qstd_t * qstd )
   mas_qstd_reset( qstd );
   if ( qstd )
     mas_free( qstd );
+}
+
+void
+mas_qstd_instance_delete( void )
+{
+  mas_qstd_delete( instance );
+  instance = NULL;
 }
 
 /**********************************************************************************/
@@ -116,10 +141,17 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
     "CREATE  VIEW filefull AS "                                      /* */
             " SELECT fn.name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "   FROM filenames AS fn "                               /* */
-            "   LEFT JOIN filedatas AS fd ON(fn.data_id=fd.id) "     /* */
-            "   JOIN fileprops AS fp ON(fp.data_id=fd.id) "          /* */
-            "   LEFT JOIN filesizes AS fs ON(fp.size=fs.size) "      /* */
+            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
+            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
+            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) "    /* */
             " WHERE fp.detype='REG'",
+    "CREATE  VIEW dirfull AS "                                      /* */
+            " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim " /* */
+            "   FROM filenames AS fn "                               /* */
+            "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
+            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
+            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
+            " WHERE fp.detype='DIR'",    
     "COMMIT",
   };
 
@@ -127,7 +159,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
   {
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !rCODE; i++ )
     {
-      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ));
+      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
     }
   }
@@ -142,6 +174,7 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
     "DROP VIEW IF EXISTS filefull",
+    "DROP VIEW IF EXISTS dirfull",
     "DROP TABLE IF EXISTS filenames",
     "DROP TABLE IF EXISTS parents",
     "DROP TABLE IF EXISTS fileprops",
