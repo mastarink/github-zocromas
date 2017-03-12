@@ -13,6 +13,10 @@ void mas_qstd_reset( mas_qstd_t * qstd );
 void mas_qstd_delete( mas_qstd_t * qstd );
 void mas_qstd_instance_delete( void );
 
+mysqlpfs_mstmt_t *mas_qstd_mstmt_create_setup( mas_qstd_t * qstd, int nparams, int nresults, const char *sqlop );
+mysqlpfs_mstmt_t *mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sqlop );
+void mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt );
+
 /***/
 int mas_qstd_create_tables( mas_qstd_t * qstd );
 int mas_qstd_drop_tables( mas_qstd_t * qstd );

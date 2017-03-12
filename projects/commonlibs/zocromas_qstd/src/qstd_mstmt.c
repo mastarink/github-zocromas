@@ -1,5 +1,5 @@
 /* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
-#define RGEMSG mas_qstd_mysql_error(qstd)
+#define RGEMSG mas_mysqlpfs_mstmt_error(mstmt)
 #include "qstd_defs.h"
 #include <string.h>
 
@@ -80,4 +80,34 @@ int
 mas_qstd_end_transaction( mas_qstd_t * qstd )
 {
   return mas_qstd_query( qstd, "COMMIT" );
+}
+
+int
+mas_qstd_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
+{
+  rDECL( 0 );
+  rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, pos ) );
+  QRGS( rCODE );
+
+  rRET;
+}
+
+int
+mas_qstd_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, size_t buffer_length )
+{
+  rDECL( 0 );
+  rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, pos, ( mysqlpfs_s_length_t ) buffer_length ) );
+  QRGS( rCODE );
+
+  rRET;
+}
+
+int
+mas_qstd_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
+{
+  rDECL( 0 );
+  rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, pos, num, is_null ) );
+  QRGS( rCODE );
+
+  rRET;
 }

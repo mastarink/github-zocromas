@@ -157,7 +157,7 @@ test1( void )
         }
 
         rC( mas_qstd_update_summary( qstd ) );
-        rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 /* maxdepth */  ) );
+        /* rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 (* maxdepth *)  ) ); */
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }

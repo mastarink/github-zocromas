@@ -86,6 +86,31 @@ mas_qstd_instance_delete( void )
   instance = NULL;
 }
 
+mysqlpfs_mstmt_t *
+mas_qstd_mstmt_create_setup( mas_qstd_t * qstd, int nparams, int nresults, const char *sqlop )
+{
+  mysqlpfs_mstmt_t *mstmt = NULL;
+
+  mstmt = mas_mysqlpfs_mstmt_create_setup( qstd->pfs, nparams, nresults, sqlop );
+  return mstmt;
+}
+
+mysqlpfs_mstmt_t *
+mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sqlop )
+{
+  mysqlpfs_mstmt_t *mstmt = NULL;
+
+  if ( instance )
+    mstmt = mas_qstd_mstmt_create_setup( instance, nparams, nresults, sqlop );
+  return mstmt;
+}
+
+void
+mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt )
+{
+  mas_mysqlpfs_mstmt_delete( mstmt );
+}
+
 /**********************************************************************************/
 int
 mas_qstd_create_tables( mas_qstd_t * qstd )
@@ -96,7 +121,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
     "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
             "size BIGINT NOT NULL PRIMARY KEY"                       /* */
             ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
@@ -104,7 +129,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", inode BIGINT NOT NULL"                                /* */
             ", nlink INTEGER, INDEX nlink (nlink)"                   /* */
             ", nlinkdb INTEGER, INDEX nlinkdb (nlinkdb)"             /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", UNIQUE INDEX dev_inode (dev,inode) COMMENT 'this pair is unique'" /* */
             " )",
     "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
@@ -114,11 +139,11 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", mode INTEGER"                                         /* */
             ", uid INTEGER, INDEX uid (uid)"                         /* */
             ", gid INTEGER, INDEX gid (gid)"                         /* */
-            ", atim DATETIME, INDEX atim (atim)"                     /* */
-            ", mtim DATETIME, INDEX mtim (mtim)"                     /* */
-            ", ctim DATETIME, INDEX ctim (ctim)"                     /* */
+            ", atim DATETIME(6), INDEX atim (atim)"                  /* */
+            ", mtim DATETIME(6), INDEX mtim (mtim)"                  /* */
+            ", ctim DATETIME(6), INDEX ctim (ctim)"                  /* */
             ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES filesizes (size)" /* */
-            ", last_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", last_updated DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", rdev INTEGER"                                         /* */
             ", blksize INTEGER"                                      /* */
             ", blocks INTEGER"                                       /* */
@@ -127,31 +152,35 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */
             ", nchilds INTEGER NOT NULL, INDEX nchilds (nchilds)"    /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES parents (id)" /* */
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
-            ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE  VIEW filefull AS "                                      /* */
             " SELECT fn.name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM filenames AS fn "                               /* */
             "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
             "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
             "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) "    /* */
             " WHERE fp.detype='REG'",
-    "CREATE  VIEW dirfull AS "                                      /* */
-            " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim " /* */
+    "CREATE  VIEW dirfull AS "                                       /* */
+            " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
+            "        , GREATEST(fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS latest_updated " /* */
+            "        , LEAST(   fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS least_updated " /* */
             "   FROM filenames AS fn "                               /* */
             "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
             "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
             "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
-            " WHERE fp.detype='DIR'",    
+            " WHERE fp.detype='DIR'",
     "COMMIT",
   };
 

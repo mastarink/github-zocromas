@@ -11,6 +11,7 @@
 #include "masxfs_levinfo_mode.h"
 
 #include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_db.h"
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 
@@ -37,12 +38,12 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 
   rC( masxfs_levinfo_fs_opendir( li ) );
   QRLI( li, rCODE );
-  if ( !rCODE && li && li->fs.pdir )
+  if ( rGOOD && li && li->fs.pdir )
   {
     errno = 0;
     rewinddir( li->fs.pdir );
     if ( errno )
-      rCODE = -1;
+      rSETBAD;
   }
   QRLI( li, rCODE );
   rRET;
@@ -57,7 +58,7 @@ masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li _uUu_ )
   WARN( "POINT DB" );
 
   rC( masxfs_levinfo_db_opendir( li ) );
-  if ( !rCODE && li && li->db.mstmt )
+  if ( rGOOD && li && li->db.mstmt )
   {
     WARN( "NOT IMPLEMENTED (\?\?) li->db.mstmt: %p '%s'", li->db.mstmt, li->name );
     mas_mysqlpfs_mstmt_data_seek( li->db.mstmt, 0 );
@@ -78,7 +79,7 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   switch ( mode )
   {
   case MASXFS_SCAN__MODE_NONE:
-    rCODE = -1;
+    rSETBAD;
     QRLI( li, rCODE );
     break;
   case MASXFS_SCAN__MODE_FS:
@@ -114,24 +115,24 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
         li->fs.pdir = fdopendir( fd );
         rCODE = ( !li->fs.pdir && errno ) ? -1 : 0;
         QRLI( li, rCODE );
-        if ( !rCODE && li->fs.pdir )
+        if ( rGOOD && li->fs.pdir )
         {
           li->detype = MASXFS_ENTRY_DIR_NUM;
           rC( masxfs_levinfo_fs_rewinddir( li ) );
           QRLI( li, rCODE );
         }
         else
-          rCODE = -1;
+          rSETBAD;
         QRLI( li, rCODE );
       }
       else
-        rCODE = -1;
+        rSETBAD;
       QRLI( li, rCODE );
     }
     QRLI( li, rCODE );
   }
   else
-    rCODE = -1;
+    rSETBAD;
   QRLI( li, rCODE );
   rRET;
 }
@@ -149,7 +150,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li _uUu_ )
     } while ( lit->lidepth && lit-- );
   }
   NIMP( "li:%p", li );
-  rCODE = -1;
+  rSETBAD;
   rRET;
 }
 
@@ -163,7 +164,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   switch ( mode )
   {
   case MASXFS_SCAN__MODE_NONE:
-    rCODE = -1;
+    rSETBAD;
     break;
   case MASXFS_SCAN__MODE_FS:
     rC( masxfs_levinfo_fs_opendir( li ) );
@@ -194,25 +195,12 @@ masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
 #if 0
 /* No */
   else
-  rCODE = -1;
+  rSETBAD;
 #endif
   QRLI( li, rCODE );
   rRET;
 }
 
-static int
-masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
-{
-  rDECL( 0 );
-  if ( li->db.mstmt )
-  {
-    WARN( "NOT IMPLEMENTED" );
-    assert( 0 );
-    NIMP( "li:%p", li );
-    rCODE = -1;
-  }
-  rRET;
-}
 
 int
 masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
@@ -224,7 +212,7 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   switch ( mode )
   {
   case MASXFS_SCAN__MODE_NONE:
-    rCODE = -1;
+    rSETBAD;
     break;
   case MASXFS_SCAN__MODE_FS:
     rC( masxfs_levinfo_fs_closedir( li ) );
@@ -246,7 +234,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
 #if 0
   /* No */
     if ( li && !li->fs.pdir )
-      rCODE = -1;
+      rSETBAD;
     QRLI( li, rCODE );
 #endif
     rC( masxfs_levinfo_closedir( li, flags ) );
@@ -254,7 +242,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
     if ( !li->lidepth )
       break;
     li--;
-  } while ( !rCODE );
+  } while ( rGOOD );
 
   QRLI( li, rCODE );
   rRET;

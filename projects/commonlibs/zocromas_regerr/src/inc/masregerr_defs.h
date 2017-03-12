@@ -43,8 +43,11 @@
 #  define rCNT ret_code.cnt
 #  define rRET return rCODE
 #  define rDECL(_v) struct {int cnt;int r;} ret_code={0}; rCODE=(_v)
+#  define rGOOD (rCODE>=0)
+#  define rBAD (!rGOOD)
+#  define rSETBAD rCODE=-1
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
-#  define rC(_x)  (!rCNT || rCODE>=0) ? ( rCNT++,rCODE=(_x)) : rCODE
+#  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,rCODE=(_x)) : rCODE)
 # endif
 /* #define rCALL if (!r) r= */
 

@@ -12,4 +12,9 @@ int mas_qstd_update_summary( mas_qstd_t * qstd );
 int mas_qstd_start_transaction( mas_qstd_t * qstd );
 int mas_qstd_end_transaction( mas_qstd_t * qstd );
 
+int mas_qstd_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos );
+int mas_qstd_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, size_t buffer_length );
+
+int mas_qstd_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null );
+
 #endif

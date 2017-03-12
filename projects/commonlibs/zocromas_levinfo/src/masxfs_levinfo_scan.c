@@ -31,12 +31,12 @@ masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs
 
   rC( masxfs_levinfo_opendir( li, flags ) );
   QRLI( li, rCODE );
-  if ( !rCODE )
+  if ( rGOOD )
   {
     rC( masxfs_levinfo_scan_dirn_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
     QRLI( li, rCODE );
     rc = masxfs_levinfo_closedir( li, flags );
-    if ( !rCODE )
+    if ( rGOOD )
       rCODE = rc;
     QRLI( li, rCODE );
   }
@@ -80,7 +80,7 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
 
     if ( ( flags & MASXFS_CB_MODE_DB ) )
       WARN( "POINT DB" );
-    for ( int ncb = 0; !rCODE && cb && cb->fun_simple; cb++, ncb++ )
+    for ( int ncb = 0; rGOOD && cb && cb->fun_simple; cb++, ncb++ )
     {
       masxfs_levinfo_flags_t tflags = 0;
 
@@ -95,7 +95,7 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
         if ( ( tflags & MASXFS_CB_MODE_DB ) )
           WARN( "POINT DB" );
 
-        for ( masxfs_levinfo_t * li = lia; !rCODE && li < lithis; li++ )
+        for ( masxfs_levinfo_t * li = lia; rGOOD && li < lithis; li++ )
         {
           if ( ( tflags & MASXFS_CB_MODE_DB ) )
             WARN( "POINT DB" );
@@ -343,7 +343,7 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
   {
     rC( masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
     QRLI( li, rCODE );
-    if ( !rCODE )
+    if ( rGOOD )
       n++;
   }
   QRLI( li, rCODE );
@@ -351,6 +351,54 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
   return rCODE;
 }
 
+/*
+MariaDB [masdufntdb]> SELECT * FROM dirfull LIMIT 40;
++---------+-----------+----------------+---------+---------+---------------------+
+| node_id | parent_id | name           | name_id | data_id | mtim                |
++---------+-----------+----------------+---------+---------+---------------------+
+|       2 |         1 | home           |       1 |       2 | 2017-02-01 09:56:44 |
+|       3 |         2 | mastar         |       2 |       3 | 2017-03-11 13:49:51 |
+|       4 |         3 | .mas           |       3 |       4 | 2016-11-20 12:39:53 |
+|       5 |         4 | lib            |       4 |       5 | 2016-07-17 15:45:12 |
+|       6 |         5 | big            |       5 |       6 | 2017-02-01 10:32:38 |
+|       7 |         6 | misc           |       6 |       7 | 2016-03-22 19:33:28 |
+|       8 |         7 | develop        |       7 |       8 | 2016-12-28 11:33:32 |
+|       9 |         8 | autotools      |       8 |       9 | 2015-09-28 14:04:01 |
+|      10 |         9 | zoc            |       9 |      10 | 2015-09-13 13:13:54 |
+|      11 |        10 | projects       |      10 |      11 | 2017-03-11 14:08:36 |
+|      12 |        11 | commonlibs     |      11 |      12 | 2017-03-07 11:29:34 |
+|      13 |        12 | zocromas_xfs   |      12 |      13 | 2017-03-10 18:15:02 |
+|      14 |        13 | mastest        |      13 |      14 | 2017-02-17 15:44:10 |
+|      15 |        14 | tree           |      14 |      15 | 2017-02-17 15:46:56 |
+|      16 |        15 | sh0            |      16 |      17 | 2015-05-27 23:14:15 |
+|      17 |        15 | md5sha         |      31 |      32 | 2015-09-18 07:50:18 |
+|      18 |        15 | tree.r         |      35 |      36 | 2017-02-17 15:46:56 |
+|      19 |        18 | sh0            |      37 |      38 | 2015-05-27 23:14:15 |
+|      20 |        18 | .auxdir        |      51 |      52 | 2017-02-17 15:46:17 |
+|      21 |        20 | .build         |      52 |      53 | 2017-02-17 15:46:17 |
+|      22 |        21 | src            |      56 |      57 | 2017-02-17 15:46:56 |
+|      23 |        22 | inc            |      63 |      64 | 2015-09-14 11:26:20 |
+|      24 |        22 | .libs          |      79 |      80 | 2015-09-13 10:40:32 |
+|      25 |        22 | .deps          |     173 |     174 | 2015-09-15 14:17:50 |
+|      26 |        20 | m4             |     331 |     332 | 2017-02-17 15:46:34 |
+|      27 |        18 | md5sha         |     338 |     339 | 2015-09-18 07:50:18 |
+|      28 |        18 | editing        |     344 |     345 | 2015-06-08 11:43:27 |
+|      29 |        28 | .gvimvrb       |     345 |     346 | 2017-02-17 15:46:56 |
+|      30 |        28 | mased          |     437 |     437 | 2015-09-29 08:18:44 |
+|      31 |        18 | boxes          |     464 |     464 | 2015-05-27 21:58:22 |
+|      32 |        18 | human          |     469 |     469 | 2017-02-17 15:46:05 |
+|      33 |        32 | results        |     471 |     471 | 2017-02-17 15:45:30 |
+|      34 |        32 | doc            |     472 |     472 | 2017-02-17 15:46:56 |
+|      35 |        32 | run            |     482 |     482 | 2017-02-17 15:46:34 |
+|      36 |        32 | examples       |     483 |     483 | 2015-09-02 16:00:12 |
+|      37 |        18 | src            |     495 |     495 | 2017-02-17 15:46:17 |
+|      38 |        37 | inc            |     500 |     500 | 2015-09-29 08:18:44 |
+|      39 |        18 | debug          |     779 |     779 | 2015-10-19 16:57:45 |
+|      40 |        18 | autom4te.cache |     783 |     783 | 2017-02-17 15:46:56 |
+|      41 |        18 | test           |     787 |     787 | 2015-10-19 16:57:45 |
++---------+-----------+----------------+---------+---------+---------------------+
+40 rows in set (0.00 sec)
+ */
 int
 masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth,
                              masxfs_depth_t reldepth )
@@ -360,11 +408,20 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
   if ( ( flags & MASXFS_CB_MODE_DB ) )
     WARN( "POINT DB" );
 
-  WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 );
+  /* WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
+  if ( !( li && li->detype ) )
+  {
+    DIE( "WAW" );
+  }
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-  WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 );
 
-  /* ADIE( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
+  if ( !( li && li->detype ) )
+  {
+    DIE( "WAW" );
+  }
+  /* WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
+
+/* ADIE( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
 
   switch ( detype )
   {
@@ -413,7 +470,7 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
   if ( lia )
   {
 #if 1
-    for ( masxfs_depth_t d = 0; !rCODE && d < depth; d++ )
+    for ( masxfs_depth_t d = 0; rGOOD && d < depth; d++ )
     {
       if ( lia[d].lidepth == d )
       {
@@ -423,7 +480,7 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
       else
       {
         DIE( "FATAL ERROR" );
-        rCODE = -1;
+        rSETBAD;
       }
     }
 #else
