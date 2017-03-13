@@ -99,7 +99,11 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levi
 {
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
+    {
       masxfs_levinfo_reset( lia + il, flags );
+      /* if ( il < sz - 1 )                   */
+      /*   li->detype = MASXFS_ENTRY_DIR_NUM; */
+    }
 }
 
 void

@@ -405,23 +405,7 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
 {
   rDECL( -1 );
 
-  if ( ( flags & MASXFS_CB_MODE_DB ) )
-    WARN( "POINT DB" );
-
-  /* WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
-  if ( !( li && li->detype ) )
-  {
-    DIE( "WAW" );
-  }
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-
-  if ( !( li && li->detype ) )
-  {
-    DIE( "WAW" );
-  }
-  /* WARN( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
-
-/* ADIE( "'%s' : detype:%d", li ? li->name : NULL, li ? li->detype : 0 ); */
 
   switch ( detype )
   {

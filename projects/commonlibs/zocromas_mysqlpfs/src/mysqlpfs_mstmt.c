@@ -124,8 +124,8 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
         }
         else
         {
-          WARN( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
           QRG( -1 );
+          ADIE( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
         }
       }
     }

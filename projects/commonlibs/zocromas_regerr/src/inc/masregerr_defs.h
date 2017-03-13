@@ -46,6 +46,7 @@
 #  define rGOOD (rCODE>=0)
 #  define rBAD (!rGOOD)
 #  define rSETBAD rCODE=-1
+#  define rSETGOOD rCODE=0
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
 #  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,rCODE=(_x)) : rCODE)
 # endif

@@ -30,3 +30,6 @@ sfind qstd_mstmt_props.h
 
 tab sfind qstd_mstmt_parents.c
 sfind qstd_mstmt_parents.h
+
+tab sfind qstd_mstmt_nodes.c
+sfind qstd_mstmt_nodes.h

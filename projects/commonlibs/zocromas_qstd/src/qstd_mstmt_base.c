@@ -452,6 +452,25 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGS( rCODE );
       }
       break;
+   case STD_MSTMT_SELECT_NODES_ID:
+      {
+        char *selop = "SELECT node_id FROM dirfull WHERE parent_id=? AND name=?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        QRGS( rCODE );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        QRGS( rCODE );
+      }
+      break;      
     case STD_MSTMT_MAX:
       break;
     }

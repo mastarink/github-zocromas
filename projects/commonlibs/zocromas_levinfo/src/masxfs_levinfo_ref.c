@@ -33,13 +33,13 @@ const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_l
 const struct stat *
 masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  int r = 0;
+  rDECL( -1 );
   const struct stat *st = NULL;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
-    r = masxfs_levinfo_stat( li, tflags );
-    if ( r >= 0 )
+    rC( masxfs_levinfo_stat( li, tflags ) );
+    if ( rGOOD )
       st = masxfs_levinfo_stat_val( li, 0, tflags );
   }
   return st;
@@ -60,14 +60,13 @@ size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li
 size_t
 masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
+  rDECL( -1 );
   size_t size = 0;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) /* XXX ??? XXX */  )
   {
-    int r = 0;
-
-    r = masxfs_levinfo_stat( li, tflags );
-    if ( r >= 0 )
+    rC( masxfs_levinfo_stat( li, tflags ) );
+    if ( rGOOD )
       size = masxfs_levinfo_size_val( li, 0, tflags );
   }
   return size;
@@ -168,21 +167,24 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
 masxfs_entry_type_t
 masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
+  rDECL( -1 );
   masxfs_entry_type_t detype = MASXFS_ENTRY_UNKNOWN_NUM;
 
   if ( li )
   {
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
-      int r = masxfs_levinfo_stat( li, tflags );
+      rC( masxfs_levinfo_stat( li, tflags ) );
+      QRLI( li, rCODE );
 
-      if ( r >= 0 )
+      if ( rGOOD )
         detype = li->detype;
     }
     else
     {
       detype = li->detype;
     }
+  /* assert( detype == li->detype ); */
   }
   return detype;
 }
@@ -200,9 +202,7 @@ masxfs_levinfo_node_id( masxfs_levinfo_t * li, masxfs_depth_t offset )
   unsigned long node_id = 0;
 
   if ( li->lidepth >= offset )
-  {
     node_id = li[-offset].db.node_id;
-  }
   return node_id;
 }
 

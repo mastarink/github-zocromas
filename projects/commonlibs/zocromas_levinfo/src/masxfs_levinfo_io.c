@@ -100,13 +100,13 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent, masxfs_levinfo_flag
   rRET;
 }
 
-static int
-masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
+int
+masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECL( 0 );
 
   if ( li->lidepth > 0 )
-    rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1 ) ) );
+    rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
   else if ( !li->fd && li->name && !*li->name )
   {
     errno = 0;
@@ -123,15 +123,6 @@ masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
   return li->fd;
 }
 
-static int
-masxfs_levinfo_db_open( masxfs_levinfo_t * li _uUu_ )
-{
-  rDECL( 0 );
-  NIMP( "li:%p", li );
-  rSETBAD;
-  rRET;
-}
-
 int
 masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -145,16 +136,16 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rSETBAD;
     break;
   case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_open( li ) );
+    rC( masxfs_levinfo_fs_open( li, flags ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_open( li ) );
+    rC( masxfs_levinfo_db_open( li, flags ) );
     break;
   }
   rRET;
 }
 
-static int
+int
 masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 {
   rDECL( 0 );
@@ -169,14 +160,6 @@ masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 /* else      */
 /*   rSETBAD; */
   QRLI( li, rCODE );
-  rRET;
-}
-
-static int
-masxfs_levinfo_db_close( masxfs_levinfo_t * li )
-{
-  rDECL( 0 );
-  rC( masxfs_levinfo_fs_close( li ) );
   rRET;
 }
 
@@ -222,7 +205,7 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
 }
 
 static int
-masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECL( 0 );
 
@@ -233,9 +216,9 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
       li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
       if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
-        rC( fstatat( masxfs_levinfo_fs_open( li - 1 ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
+        rC( fstatat( masxfs_levinfo_fs_open( li - 1, flags ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
       else
-        rC( fstat( masxfs_levinfo_fs_open( li ), li->fs.stat ) );
+        rC( fstat( masxfs_levinfo_fs_open( li, flags ), li->fs.stat ) );
       QRLI( li, rCODE );
       if ( rGOOD && li->fs.stat )
         li->detype = masxfs_levinfo_stat2entry( li->fs.stat );
@@ -244,17 +227,6 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
   else
     rSETBAD;
   QRLI( li, rCODE );
-  rRET;
-}
-
-static int
-masxfs_levinfo_db_stat( masxfs_levinfo_t * li _uUu_ )
-{
-  rDECL( 0 );
-  masxfs_levinfo_db_nodeid( li );
-  NIMP( "li:%p name:'%s' lidepth:%ld; mstat:%p; node_id:%ld", li, li ? li->name : NULL, ( long ) ( li ? li->lidepth : 0 ), li ? li->db.mstmt : NULL,
-        li ? li->db.node_id : 0 );
-  rSETBAD;
   rRET;
 }
 
@@ -268,12 +240,13 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   {
   case MASXFS_SCAN__MODE_NONE:
     rSETBAD;
+      QRLI( li, rCODE );
     break;
   case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_stat( li ) );
+    rC( masxfs_levinfo_fs_stat( li, flags ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_stat( li ) );
+    rC( masxfs_levinfo_db_stat( li, flags ) );
     break;
   }
   rRET;
