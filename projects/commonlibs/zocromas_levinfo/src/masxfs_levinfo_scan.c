@@ -24,7 +24,7 @@ int
 masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth,
                             masxfs_depth_t reldepth )
 {
-  rDECLGOOD;
+  rDECLBAD;
   int rc = 0;
 
   rC( masxfs_levinfo_opendir( li, flags ) );
@@ -43,7 +43,7 @@ static int
 masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t tflags,
                                                masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
-  rDECLGOOD;
+  rDECLGOOD; /* sic! 20170314.185257 */
 
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
@@ -376,6 +376,7 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
   rRET;
 }
 
+/* starting point */
 int
 masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
                               masxfs_depth_t maxdepth, masxfs_depth_t reldepth )

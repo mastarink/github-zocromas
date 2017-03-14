@@ -45,10 +45,17 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     {
       li[-1].detype = MASXFS_ENTRY_DIR_NUM;
       rC( masxfs_levinfo_db_open( li - 1, flags ) );
+      /* TODO
+       * The only unknown type is for starting point, for instance, 'mastest' at:
+       *   /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest
+       *
+       * Why???
+       *
+       * */
     /* WARN( "1 APP TYPE: %d ('%s', %d)", li->detype == MASXFS_ENTRY_DIR_NUM, li->name, li->detype ); */
       if ( rGOOD && ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ) )
       {
-        if ( rGOOD && !li->db.node_id )
+        if ( !li->db.node_id )
           li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
         if ( !li->db.node_id )
           rSETBAD;
