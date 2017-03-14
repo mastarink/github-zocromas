@@ -37,7 +37,8 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode,
+                       unsigned long long node_id )
 {
   if ( li && name )
   {
@@ -47,15 +48,17 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     li->detype = d_type;
     li->deinode = d_inode;
     li->lidepth = lidepth;
+    li->db.node_id = node_id;
   }
   else
     QRLI( li, -1 );
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode )
+masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode,
+                     unsigned long long node_id )
 {
-  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode );
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode, node_id );
 }
 
 void
@@ -102,8 +105,8 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levi
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
     {
       masxfs_levinfo_reset( lia + il, flags );
-      /* if ( il < sz - 1 )                   */
-      /*   li->detype = MASXFS_ENTRY_DIR_NUM; */
+    /* if ( il < sz - 1 )                   */
+    /*   li->detype = MASXFS_ENTRY_DIR_NUM; */
     }
 }
 

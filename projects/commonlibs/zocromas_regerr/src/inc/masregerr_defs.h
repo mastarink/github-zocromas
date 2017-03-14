@@ -45,14 +45,21 @@
 #  define R_BAD(_r) (!R_GOOD(_r))
 #  define rCODE ret_code.r
 #  define rCNT ret_code.cnt
-#  define rRET return (R_GOOD(rCODE)?rCODE:-1)
 #  define rDECL(_v) struct {int cnt;int r;} ret_code={0}; rCODE=(_v)
+#  define rDECLGOOD rDECL(0)
+#  define rDECLBAD rDECL(-1)
 #  define rGOOD (R_GOOD(rCODE))
 #  define rBAD (R_BAD(rCODE))
-#  define rSETBAD rCODE=-1
+#  if 0
+#   define rSETBAD (rCODE=-1)
+#   define rRET if (rBAD) return (R_GOOD(rCODE)?rCODE:-1)
+#  else
+#   define rSETBAD (rCODE=-1,ADIE("SET ERROR:%d", rCODE))
+#   define rRET if (rBAD) ADIE("ERROR:%d", rCODE);return (R_GOOD(rCODE)?rCODE:-1)
+#  endif
 #  define rSETGOOD rCODE=0
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
-#  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,rCODE=(_x)) : rCODE)
+#  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
 # endif
 /* #define rCALL if (!r) r= */
 

@@ -164,15 +164,16 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
-    "CREATE  VIEW allfull AS "                                      /* */
-            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+    "CREATE  VIEW allfull AS "                                       /* */
+            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
+            "     , fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM filenames AS fn "                               /* */
             "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
             "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
             "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
-            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) ",    /* */
+            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) ",   /* */
     "CREATE  VIEW filefull AS "                                      /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
@@ -415,7 +416,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
       }
       break;
-   case STD_MSTMT_SELECT_NODES_ID:
+    case STD_MSTMT_SELECT_NODES_ID:
       {
         char *selop = "SELECT node_id FROM dirfull WHERE parent_id=? AND name=?";
 
@@ -428,7 +429,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
       }
-      break;      
+      break;
     case STD_MSTMT_MAX:
       break;
     }

@@ -12,8 +12,6 @@ struct masxfs_entry_callback_s
   unsigned long flags;
 };
 
-
-
 struct masxfs_levinfo_s
 {
   char *name;
@@ -23,7 +21,7 @@ struct masxfs_levinfo_s
   masxfs_depth_t lidepth;
   int error;
   size_t child_count_pair[2];
- 
+
   struct
   {
     masxfs_dir_t *pdir;
@@ -33,10 +31,13 @@ struct masxfs_levinfo_s
 
   struct
   {
-    unsigned long node_id;
+    unsigned long long node_id;
+    unsigned long long denode_id;
     mysqlpfs_mstmt_t *mstmt;
-    /* masxfs_dirent_t de; */
-    /* masxfs_dirent_t *pde; */
+    masxfs_entry_type_t detype;
+    ino_t deinode;
+  /* masxfs_dirent_t de; */
+  /* masxfs_dirent_t *pde; */
     masxfs_stat_t *stat;
   } db;
 

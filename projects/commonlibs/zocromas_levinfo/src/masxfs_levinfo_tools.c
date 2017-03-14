@@ -15,6 +15,16 @@
 
 #include "masxfs_levinfo_tools.h"
 
+static const char *std_sdetypes[] = {
+  [MASXFS_ENTRY_BLK_NUM] = "BLK",
+  [MASXFS_ENTRY_CHR_NUM] = "CHR",
+  [MASXFS_ENTRY_DIR_NUM] = "DIR",
+  [MASXFS_ENTRY_REG_NUM] = "REG",
+  [MASXFS_ENTRY_FIFO_NUM] = "FIFO",
+  [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
+  [MASXFS_ENTRY_LNK_NUM] = "LNK"
+};
+
 const char *
 masxfs_levinfo_detype_name( masxfs_levinfo_t * li )
 {
@@ -32,6 +42,11 @@ masxfs_levinfo_detype_name( masxfs_levinfo_t * li )
     case MASXFS_ENTRY_UNKNOWN_NUM:
       s = "UNKNOWN";
       break;
+#if 1
+    default:
+      s = masxfs_levinfo_detype2s( detype );
+      break;
+#else
     case MASXFS_ENTRY_BLK_NUM:
       s = "BLK";
       break;
@@ -53,13 +68,31 @@ masxfs_levinfo_detype_name( masxfs_levinfo_t * li )
     case MASXFS_ENTRY_SOCK_NUM:
       s = "SOCK";
       break;
+#endif
     }
   }
   return s;
 }
 
 masxfs_entry_type_t
-masxfs_levinfo_de2entry( int d_type )
+masxfs_levinfo_s2detype( const char *sdetype )
+{
+  for ( size_t i = 0; i < sizeof( std_sdetypes ) / sizeof( std_sdetypes[0] ); i++ )
+  {
+    if ( std_sdetypes[i] && 0 == strcmp( sdetype, std_sdetypes[i] ) )
+      return i;
+  }
+  return 0;
+}
+
+const char *
+masxfs_levinfo_detype2s( masxfs_entry_type_t detype )
+{
+  return std_sdetypes[detype];
+}
+
+masxfs_entry_type_t
+masxfs_levinfo_de2entry( unsigned char d_type )
 {
   masxfs_entry_type_t c = MASXFS_ENTRY_UNKNOWN_NUM;
 
@@ -88,6 +121,44 @@ masxfs_levinfo_de2entry( int d_type )
     break;
   case DT_UNKNOWN:
     c = MASXFS_ENTRY_UNKNOWN_NUM;
+    break;
+  }
+  return c;
+}
+
+unsigned char
+masxfs_levinfo_entry2de( masxfs_entry_type_t detype )
+{
+  unsigned char c = 0;
+
+  switch ( detype )
+  {
+  case MASXFS_ENTRY_BLK_NUM:
+    c = DT_BLK;
+    break;
+  case MASXFS_ENTRY_CHR_NUM:
+    c = DT_CHR;
+    break;
+  case MASXFS_ENTRY_DIR_NUM:
+    c = DT_DIR;
+    break;
+  case MASXFS_ENTRY_FIFO_NUM:
+    c = DT_FIFO;
+    break;
+  case MASXFS_ENTRY_LNK_NUM:
+    c = DT_LNK;
+    break;
+  case MASXFS_ENTRY_REG_NUM:
+    c = DT_REG;
+    break;
+  case MASXFS_ENTRY_SOCK_NUM:
+    c = DT_SOCK;
+    break;
+  case MASXFS_ENTRY_UNKNOWN_NUM:
+    c = DT_UNKNOWN;
+    break;
+  case MASXFS_ENTRY_NONE_NUM:
+    c = 0;
     break;
   }
   return c;
