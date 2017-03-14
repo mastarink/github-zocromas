@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 /* #include <unistd.h> */

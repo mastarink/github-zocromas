@@ -39,12 +39,16 @@
 #  define rCODE r
 #  define rRET return r
 # else
+/* #  ifndef R_GOOD            */
+/* #   define R_GOOD(_r) (!_r) */
+/* #  endif                    */
+#  define R_BAD(_r) (!R_GOOD(_r))
 #  define rCODE ret_code.r
 #  define rCNT ret_code.cnt
-#  define rRET return rCODE
+#  define rRET return (R_GOOD(rCODE)?rCODE:-1)
 #  define rDECL(_v) struct {int cnt;int r;} ret_code={0}; rCODE=(_v)
-#  define rGOOD (rCODE>=0)
-#  define rBAD (!rGOOD)
+#  define rGOOD (R_GOOD(rCODE))
+#  define rBAD (R_BAD(rCODE))
 #  define rSETBAD rCODE=-1
 #  define rSETGOOD rCODE=0
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */

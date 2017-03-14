@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 #include <unistd.h>
@@ -155,14 +156,13 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 
   if ( li )
   {
-  /* masxfs_dirent_t *pde = mode == MASXFS_SCAN__MODE_FS ? li->fs.pde : li->db.pde; */
-    masxfs_dirent_t *pde = flags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde;
+  /* masxfs_dirent_t *pde = flags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde; */
 
-    if ( pde )
+  /* if ( pde ) */
     {
-      const char *name = pde->d_name;
-      int d_type = pde->d_type;
-      ino_t d_inode = pde->d_ino;
+      const char *name = masxfs_levinfo_scanned_name( li, flags );
+      int d_type = masxfs_levinfo_scanned_type( li, flags );
+      ino_t d_inode = masxfs_levinfo_scanned_inode( li, flags );
 
       masxfs_depth_t lidepth = li->lidepth;
 
@@ -292,9 +292,9 @@ masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
   if ( li )
   {
-    masxfs_dirent_t *pde = ( flags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde );
+    const char *name = masxfs_levinfo_scanned_name( li, flags );
 
-    r = pde && !( pde->d_name[0] == '.' && ( ( pde->d_name[1] == '.' && pde->d_name[2] == 0 ) || pde->d_name[1] == 0 ) );
+    r = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
   }
   return r;
 }
@@ -335,9 +335,6 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
 {
   rDECL( 0 );
   int n = 0;
-
-  if ( ( flags & MASXFS_CB_MODE_DB ) )
-    WARN( "POINT DB" );
 
   while ( rCODE >= 0 && masxfs_levinfo_readdir( li, flags ) )
   {

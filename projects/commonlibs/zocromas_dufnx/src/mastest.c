@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "dufnx.h"
 
 int test0( void );

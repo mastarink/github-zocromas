@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (!_r)
 #define RGEMSG mysql_stmt_error(mstmt->stmt)
 /* #define RGEMSG mysql_error(&pfs->mysql) */
 #include "mysqlpfs_defs.h"
@@ -136,59 +137,59 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
 static int
 mas_mysqlpfs_mstmt_prepare_param_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_prepare_mbind_gen( &mstmt->binds.param, pos, ft, buffer_length );
-  return r;
+    rC( mas_mysqlpfs_mstmt_prepare_mbind_gen( &mstmt->binds.param, pos, ft, buffer_length ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  int r = -1;
+  rDECL( -1 );
 
-  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
-  return r;
+  rC( mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length )
 {
-  int r = -1;
+  rDECL( -1 );
 
-  r = mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_STRING, buffer_length );
-  return r;
+  rC( mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_STRING, buffer_length ) );
+  rRET;
 }
 
 static int
 mas_mysqlpfs_mstmt_prepare_result_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_prepare_mbind_gen( &mstmt->binds.result, pos, ft, buffer_length );
-  return r;
+    rC( mas_mysqlpfs_mstmt_prepare_mbind_gen( &mstmt->binds.result, pos, ft, buffer_length ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  int r = -1;
+  rDECL( -1 );
 
-  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) );
-  return r;
+  rC( mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length )
 {
-  int r = -1;
+  rDECL( -1 );
 
-  r = mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_STRING, buffer_length );
-  return r;
+  rC( mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_STRING, buffer_length ) );
+  rRET;
 }
 
 /* */
@@ -196,7 +197,7 @@ mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mys
 int
 mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigned long long num, unsigned is_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -210,21 +211,22 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
       *p = ( mysqlpfs_s_ulonglong_t ) num;
       *p_is_null = ( mysqlpfs_s_bool_t ) is_null;
       *p_length = 0;
-      r = 0;
+      rSETGOOD;
     }
     else
     {
       WARN( "Unmet: (pos:(%d) < nbind:(%d)) and %p and %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
-      QRG( -1 );
+      rSETBAD;
+      QRG( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 static int
 mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -238,64 +240,64 @@ mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
         *pnum = ( unsigned long long ) *p;
       if ( pis_null )
         *pis_null = ( unsigned ) *p_is_null;
-      r = 0;
+      rSETGOOD;
     }
     else
     {
       QRG( -1 );
     }
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_set_bind_longlong( &mstmt->binds.param, pos, num, is_null );
-  return r;
+    rC( mas_mysqlpfs_mstmt_set_bind_longlong( &mstmt->binds.param, pos, num, is_null ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_get_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_get_bind_longlong( &mstmt->binds.param, pos, pnum, pis_null );
-  return r;
+    rC( mas_mysqlpfs_mstmt_get_bind_longlong( &mstmt->binds.param, pos, pnum, pis_null ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_set_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_set_bind_longlong( &mstmt->binds.result, pos, num, is_null );
-  return r;
+    rC( mas_mysqlpfs_mstmt_set_bind_longlong( &mstmt->binds.result, pos, num, is_null ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_get_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_get_bind_longlong( &mstmt->binds.result, pos, pnum, pis_null );
-  return r;
+    rC( mas_mysqlpfs_mstmt_get_bind_longlong( &mstmt->binds.result, pos, pnum, pis_null ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const char *string )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -320,22 +322,23 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
         *p_length = 0;
         *p_is_null = ( mysqlpfs_s_bool_t ) 1;
       }
-      r = 0;
+      rSETGOOD;
     }
     else
     {
       WARN( "pos:%d / nbind:%d ab:%p abp:%p\n", pos, mbind->nbind, mbind->allocated_buffers,
             mbind->allocated_buffers ? mbind->allocated_buffers[pos] : NULL );
-      QRG( -1 );
+      rSETBAD;
+      QRG( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 static int
-mas_mysqlpfs_mstmt_get_bind_string( mysqlpfs_mbind_t * mbind, int pos, const char **pstring )
+mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const char **pstring )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -351,67 +354,70 @@ mas_mysqlpfs_mstmt_get_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
         *pstring = NULL;
         if ( !*p_is_null && s )
         {
-          *pstring = mas_strndup( s, *p_length );
+        /* *pstring = mas_strndup( s, *p_length ); */
+          s[*p_length] = 0;
+          *pstring = s;
         }
       }
-      r = 0;
+      rSETGOOD;
     }
     else
     {
-      QRG( -1 );
+      rSETBAD;
+      QRG( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_set_bind_string( &mstmt->binds.param, pos, string );
-  return r;
+    rC( mas_mysqlpfs_mstmt_set_bind_string( &mstmt->binds.param, pos, string ) );
+  rRET;
 }
 
 int
-mas_mysqlpfs_mstmt_get_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
+mas_mysqlpfs_mstmt_get_param_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_get_bind_string( &mstmt->binds.param, pos, pstring );
-  return r;
+    rC( mas_mysqlpfs_mstmt_get_bind_string_na( &mstmt->binds.param, pos, pstring ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_set_result_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_set_bind_string( &mstmt->binds.result, pos, string );
-  return r;
+    rC( mas_mysqlpfs_mstmt_set_bind_string( &mstmt->binds.result, pos, string ) );
+  rRET;
 }
 
 int
-mas_mysqlpfs_mstmt_get_result_string( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
+mas_mysqlpfs_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
-    r = mas_mysqlpfs_mstmt_get_bind_string( &mstmt->binds.result, pos, pstring );
-  return r;
+    rC( mas_mysqlpfs_mstmt_get_bind_string_na( &mstmt->binds.result, pos, pstring ) );
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -419,17 +425,17 @@ mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->binds.param.bind );
     if ( mstmt->binds.param.bind )
     {
-      r = mysql_stmt_bind_param( mstmt->stmt, mstmt->binds.param.bind );
-      QRGS( r );
+      rC( mysql_stmt_bind_param( mstmt->stmt, mstmt->binds.param.bind ) );
+      QRGS( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -437,60 +443,71 @@ mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->binds.result.bind );
     if ( mstmt->binds.result.bind )
     {
-      r = mysql_stmt_bind_result( mstmt->stmt, mstmt->binds.result.bind );
-      QRGS( r );
+      rC( mysql_stmt_bind_result( mstmt->stmt, mstmt->binds.result.bind ) );
+      QRGS( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
   {
-    r = mysql_stmt_store_result( mstmt->stmt );
-    QRGS( r );
+    rC( mysql_stmt_store_result( mstmt->stmt ) );
+    QRGS( rCODE );
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
   {
-    r = mysql_stmt_free_result( mstmt->stmt );
-    QRGS( r );
+    rC( mysql_stmt_free_result( mstmt->stmt ) );
+    QRGS( rCODE );
   }
-  return r;
+  rRET;
 }
 
 int
-mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt )
+mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt, int *phas_data )
 {
-  int r = -1;
+  rDECL( -1 );
+  int has_data = 0;
 
   QRGP( mstmt );
   if ( mstmt )
   {
-    r = mysql_stmt_fetch( mstmt->stmt );
-    if ( r != MYSQL_NO_DATA )
-      QRGS( r );
+
+    rC( mysql_stmt_fetch( mstmt->stmt ) );
+    if ( rCODE == MYSQL_NO_DATA )
+    {
+      rSETGOOD;
+    }
+    else
+    {
+      has_data = 1;
+      QRGS( rCODE );
+    }
   }
-  return r;
+  if ( phas_data )
+    *phas_data = has_data;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -498,22 +515,21 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
     {
-      r = mysql_stmt_execute( mstmt->stmt );
-      QRGS( r );
+      rC( mysql_stmt_execute( mstmt->stmt ) );
+      QRGS( rCODE );
     }
   }
-  return r;
+  rRET;
 }
 
 int
 mas_mysqlpfs_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECL( -1 );
 
-  r = mas_mysqlpfs_mstmt_execute( mstmt );
-  if ( !r )
-    r = mas_mysqlpfs_mstmt_store_result( mstmt );
-  return r;
+  rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
+  rC( mas_mysqlpfs_mstmt_store_result( mstmt ) );
+  rRET;
 }
 
 unsigned long long
@@ -564,7 +580,7 @@ mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )
 {
-  unsigned int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
@@ -573,25 +589,25 @@ mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offse
     if ( mstmt->stmt )
     {
       mysql_stmt_data_seek( mstmt->stmt, ( my_ulonglong ) offset );
-      r = 0;
+      rSETGOOD;
     }
   }
-  return r;
+  rRET;
 }
 
 unsigned int
 mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt )
 {
-  unsigned int r = -1;
+  rDECL( -1 );
 
   QRGP( mstmt );
   if ( mstmt )
   {
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
-      r = mysql_stmt_errno( mstmt->stmt );
+      rC( mysql_stmt_errno( mstmt->stmt ) );
   }
-  return r;
+  rRET;
 }
 
 const char *
@@ -607,10 +623,4 @@ mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt )
       s = mysql_stmt_error( mstmt->stmt );
   }
   return s;
-}
-
-int
-mas_mysqlpfs_mstmt_is_no_data( int code )
-{
-  return code == MYSQL_NO_DATA;
 }

@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 /* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
 #define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
@@ -26,26 +27,22 @@ mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   QRGP( name );
   {
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NAMES_ID );
+    int has_data = 0;
 
     QRGP( mstmt_s );
 
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, 0, name ) );
-    QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 1, updir_id, updir_id ? FALSE : TRUE ) );
-    QRGS( rCODE );
 
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
-    QRGS( rCODE );
-    rC( mas_mysqlpfs_mstmt_fetch( mstmt_s ) );
-  /* QRGS( rCODE ); */
+    rC( mas_mysqlpfs_mstmt_fetch( mstmt_s, &has_data ) );
 
   /* if ( rCODE != MYSQL_NO_DATA ) */
-    if ( !mas_mysqlpfs_mstmt_is_no_data( rCODE ) )
+    if ( rGOOD && has_data )
     {
       unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &num, &is_null ) );
-      QRGS( rCODE );
     }
 
     mas_mysqlpfs_mstmt_free_result( mstmt_s );
@@ -66,16 +63,11 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
 
     QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
-    QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, updir_id, updir_id ? FALSE : TRUE ) );
-    QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 2, data_id, data_id ? FALSE : TRUE ) );
-    QRGS( rCODE );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 3, sdetype ) );
-    QRGS( rCODE );
 
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
-    QRGS( rCODE );
     if ( rCODE )
       WARN( "ERR: %s", mas_mysqlpfs_mstmt_error( mstmt ) );
 

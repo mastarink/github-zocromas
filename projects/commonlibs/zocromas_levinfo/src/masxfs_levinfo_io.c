@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <stdio.h>
 #include <string.h>
@@ -106,7 +107,9 @@ masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   rDECL( 0 );
 
   if ( li->lidepth > 0 )
+  {
     rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
+  }
   else if ( !li->fd && li->name && !*li->name )
   {
     errno = 0;
@@ -118,7 +121,9 @@ masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     }
   }
   if ( li->fd < 0 )
+  {
     rSETBAD;
+  }
   QRLI( li, rCODE );
   return li->fd;
 }
@@ -240,7 +245,7 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   {
   case MASXFS_SCAN__MODE_NONE:
     rSETBAD;
-      QRLI( li, rCODE );
+    QRLI( li, rCODE );
     break;
   case MASXFS_SCAN__MODE_FS:
     rC( masxfs_levinfo_fs_stat( li, flags ) );

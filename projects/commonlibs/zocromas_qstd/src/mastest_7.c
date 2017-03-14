@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "qstd_defs.h"
 #include <string.h>
 #include <sys/types.h>

@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 #include <errno.h>
@@ -43,7 +44,9 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
     errno = 0;
     rewinddir( li->fs.pdir );
     if ( errno )
+    {
       rSETBAD;
+    }
   }
   QRLI( li, rCODE );
   rRET;
@@ -56,9 +59,6 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
-  if ( ( flags & MASXFS_CB_MODE_DB ) )
-    WARN( "POINT DB" );
-
   switch ( mode )
   {
   case MASXFS_SCAN__MODE_NONE:
@@ -70,8 +70,6 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     QRLI( li, rCODE );
     break;
   case MASXFS_SCAN__MODE_DB:
-    if ( ( flags & MASXFS_CB_MODE_DB ) )
-      WARN( "POINT DB" );
     rC( masxfs_levinfo_db_rewinddir( li ) );
     QRLI( li, rCODE );
     break;
@@ -105,17 +103,23 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
           QRLI( li, rCODE );
         }
         else
+        {
           rSETBAD;
+        }
         QRLI( li, rCODE );
       }
       else
+      {
         rSETBAD;
+      }
       QRLI( li, rCODE );
     }
     QRLI( li, rCODE );
   }
   else
+  {
     rSETBAD;
+  }
   QRLI( li, rCODE );
   rRET;
 }
@@ -213,6 +217,87 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
   rRET;
 }
 
+const char *
+masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  const char *name = NULL;
+
+  rDECL( 0 );
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
+  if ( li )
+  {
+    switch ( mode )
+    {
+    case MASXFS_SCAN__MODE_NONE:
+      rSETBAD;
+      QRLI( li, rCODE );
+      break;
+    case MASXFS_SCAN__MODE_FS:
+      if ( li->fs.pde )
+        name = li->fs.pde->d_name;
+      break;
+    case MASXFS_SCAN__MODE_DB:
+      break;
+    }
+  }
+  return name;
+}
+
+int
+masxfs_levinfo_scanned_type( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  int type = 0;
+
+  rDECL( 0 );
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
+  if ( li )
+  {
+    switch ( mode )
+    {
+    case MASXFS_SCAN__MODE_NONE:
+      rSETBAD;
+      QRLI( li, rCODE );
+      break;
+    case MASXFS_SCAN__MODE_FS:
+      if ( li->fs.pde )
+        type = li->fs.pde->d_type;
+      break;
+    case MASXFS_SCAN__MODE_DB:
+      break;
+    }
+  }
+  return type;
+}
+
+ino_t
+masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  ino_t inode = 0;
+
+  rDECL( 0 );
+  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
+
+  if ( li )
+  {
+    switch ( mode )
+    {
+    case MASXFS_SCAN__MODE_NONE:
+      rSETBAD;
+      QRLI( li, rCODE );
+      break;
+    case MASXFS_SCAN__MODE_FS:
+      if ( li->fs.pde )
+        inode = li->fs.pde->d_ino;
+      break;
+    case MASXFS_SCAN__MODE_DB:
+      break;
+    }
+  }
+  return inode;
+}
+
 static masxfs_dirent_t *
 masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li )
 {
@@ -234,22 +319,6 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li )
     }
   }
   QRLI( li, rCODE );
-  return de;
-}
-
-static masxfs_dirent_t *
-masxfs_levinfo_db_readdir( masxfs_levinfo_t * li _uUu_ )
-{
-  masxfs_dirent_t *de = NULL;
-
-  if ( li )
-  {
-    if ( li->db.mstmt )
-    {
-      NIMP( "li:%p", li );
-    /* li->db.pde=.... */
-    }
-  }
   return de;
 }
 

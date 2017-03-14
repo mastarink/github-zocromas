@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 /* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
 #define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
@@ -163,8 +164,17 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
+    "CREATE  VIEW allfull AS "                                      /* */
+            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
+            "   FROM filenames AS fn "                               /* */
+            "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
+            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
+            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
+            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) ",    /* */
     "CREATE  VIEW filefull AS "                                      /* */
-            " SELECT fn.name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM filenames AS fn "                               /* */
@@ -202,6 +212,7 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
   rDECL( 0 );
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
+    "DROP VIEW IF EXISTS allfull",
     "DROP VIEW IF EXISTS filefull",
     "DROP VIEW IF EXISTS dirfull",
     "DROP TABLE IF EXISTS filenames",
@@ -272,15 +283,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 3, 255 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
@@ -291,15 +297,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_INSERT_PARENTS:
@@ -310,9 +311,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_SELECT_PARENTS_ID:
@@ -323,13 +322,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_INSERT_SIZES:
@@ -340,9 +335,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_SELECT_SIZES_ID:
@@ -353,13 +346,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_INSERT_DATAS:
@@ -370,13 +359,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_SELECT_DATAS_ID:
@@ -387,15 +372,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_INSERT_PROPS:
@@ -408,31 +388,18 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 12, 0, insop );
         QRGP( mstmt );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 3 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 4 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 5 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 6 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 7 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 8 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 9 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 10 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 11 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
       }
       break;
     case STD_MSTMT_SELECT_PROPS_ID:
@@ -443,13 +410,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;
    case STD_MSTMT_SELECT_NODES_ID:
@@ -460,15 +423,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
-        QRGS( rCODE );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        QRGS( rCODE );
       }
       break;      
     case STD_MSTMT_MAX:

@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (!_r)
 #define RGEMSG mysql_error(mas_mysqlpfs_mysql(pfs))
 /* #define RGEMSG mysql_error(&pfs->mysql) */
 #include "mysqlpfs_defs.h"

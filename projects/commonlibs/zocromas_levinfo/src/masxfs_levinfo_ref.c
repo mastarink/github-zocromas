@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 /* #include <sys/types.h> */
@@ -101,11 +102,13 @@ masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinf
   return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.pdir : NULL ) : 0;
 }
 
+#if 0
 masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde ) : 0;
 }
+#endif
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
 

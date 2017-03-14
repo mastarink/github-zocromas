@@ -17,7 +17,7 @@ int masxfs_levinfo_fd_val( masxfs_levinfo_t * li, masxfs_depth_t offset ) __attr
 int masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 
 masxfs_dir_t *masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
-masxfs_dirent_t *masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
+/* masxfs_dirent_t *masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) ); */
 masxfs_depth_t masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
 
 ino_t masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
