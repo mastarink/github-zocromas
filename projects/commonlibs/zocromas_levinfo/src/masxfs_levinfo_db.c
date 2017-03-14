@@ -30,6 +30,7 @@
 
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_io_dir.h"
 #include "masxfs_levinfo_io.h"
 
 #include "masxfs_levinfo_db.h"
@@ -42,11 +43,24 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   {
     if ( li->lidepth )
     {
+      li[-1].detype = MASXFS_ENTRY_DIR_NUM;
       rC( masxfs_levinfo_db_open( li - 1, flags ) );
-      if ( rGOOD && !li->db.node_id )
-        li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
-      if ( !li->db.node_id )
-        rSETBAD;
+    /* WARN( "1 APP TYPE: %d ('%s', %d)", li->detype == MASXFS_ENTRY_DIR_NUM, li->name, li->detype ); */
+      if ( rGOOD )
+      {
+        if ( li->detype != MASXFS_ENTRY_DIR_NUM )
+        {
+          WARN( "######### '%s' %d:%s", li->name, li->detype, masxfs_levinfo_detype2s( li->detype ) );
+          sleep( 1 );
+        }
+        if ( rGOOD && !li->db.node_id )
+          li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
+        if ( !li->db.node_id && li->detype == MASXFS_ENTRY_DIR_NUM )
+          rSETBAD;
+      }
+    /* WARN( "2 APP TYPE: %d ('%s', %d)", li->detype == MASXFS_ENTRY_DIR_NUM, li->name, li->detype ); */
+    /* else        */
+    /*   rSETGOOD; */
     }
     else
     {
@@ -85,28 +99,18 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li )
       {
         li->db.mstmt = mas_qstd_instance_mstmt_create_setup( 1, 4, op );
         rC( mas_qstd_mstmt_prepare_param_longlong( li->db.mstmt, 0 ) ); /* parent_id */
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_bind_param( li->db.mstmt ) );
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_prepare_result_string( li->db.mstmt, 0 ) ); /* name */
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_prepare_result_string( li->db.mstmt, 1 ) ); /* detype */
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_prepare_result_longlong( li->db.mstmt, 2 ) ); /* inode */
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_prepare_result_longlong( li->db.mstmt, 3 ) ); /* node_id */
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_bind_result( li->db.mstmt ) );
-        WARN( "DB OPENDIR %d", rCODE );
 
         rC( mas_qstd_mstmt_set_param_longlong( li->db.mstmt, 0, ( long long ) li->db.node_id, FALSE ) );
-        WARN( "DB OPENDIR %d", rCODE );
         rC( mas_qstd_mstmt_execute_store( li->db.mstmt ) );
-        WARN( "DB OPENDIR %d", rCODE );
       }
-      WARN( "DB OPENDIR %d", rCODE );
     }
-    WARN( "DB OPENDIR %d  '%s' @ %d node_id:%lld", rCODE, li->name, li->lidepth , li->db.node_id);
+  /* WARN( "DB OPENDIR %d  '%s' @ %d node_id:%lld", rCODE, li->name, li->lidepth , li->db.node_id); */
   }
   else
     QRLI( li, rCODE );
@@ -131,7 +135,7 @@ masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li )
   rDECLBAD;
 
   rC( masxfs_levinfo_db_opendir( li ) );
-  WARN( "DB REWIND" );
+/* WARN( "DB REWIND" ); */
   if ( li )
     rC( mas_qstd_mstmt_data_seek( li->db.mstmt, 0 ) );
   rRET;
@@ -173,11 +177,11 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, int *phas_data )
       li->db.detype = masxfs_levinfo_s2detype( sdetype );
       li->db.deinode = inode;
       li->db.denode_id = node_id;
-      WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode );
+    /* WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode ); */
     }
     else
     {
-      WARN( "NO DATA" );
+    /* WARN( "NO DATA" ); */
     }
     if ( phas_data )
       *phas_data = has_data;

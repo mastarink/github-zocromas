@@ -50,9 +50,9 @@
 #  define rDECLBAD rDECL(-1)
 #  define rGOOD (R_GOOD(rCODE))
 #  define rBAD (R_BAD(rCODE))
-#  if 0
+#  if 1
 #   define rSETBAD (rCODE=-1)
-#   define rRET if (rBAD) return (R_GOOD(rCODE)?rCODE:-1)
+#   define rRET return (R_GOOD(rCODE)?rCODE:-1)
 #  else
 #   define rSETBAD (rCODE=-1,ADIE("SET ERROR:%d", rCODE))
 #   define rRET if (rBAD) ADIE("ERROR:%d", rCODE);return (R_GOOD(rCODE)?rCODE:-1)

@@ -109,7 +109,7 @@ mas_mysqlpfs_mstmt_delete( mysqlpfs_mstmt_t * mstmt )
   /* QRGP( mstmt ); */
   if ( mstmt )
   {
-    QRGP( mstmt->stmt );
+    /* QRGP( mstmt->stmt ); */
     if ( mstmt->stmt )
     {
       mas_mysqlpfs_mstmt_reset( mstmt );

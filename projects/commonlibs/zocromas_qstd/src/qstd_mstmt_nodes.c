@@ -41,11 +41,11 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
       unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
-      WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid );
+      /* WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid ); */
     }
     else
     {
-      DIE( "NO DATA for %lld, '%s'", parent_id, name );
+      WARN( "NO DATA for %lld, '%s'", parent_id, name );
     }
 
     mas_mysqlpfs_mstmt_free_result( mstmt_s );

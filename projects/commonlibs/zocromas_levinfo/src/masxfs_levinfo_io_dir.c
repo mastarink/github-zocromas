@@ -67,7 +67,7 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rC( masxfs_levinfo_fs_rewinddir( li ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    WARN( "TO DB REWIND" );
+    /* WARN( "TO DB REWIND" ); */
     rC( masxfs_levinfo_db_rewinddir( li ) );
     break;
   }
@@ -359,9 +359,9 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int
     rC( masxfs_levinfo_fs_readdir( li, phas_data ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    WARN( "TO READ DB DIR \"%s\"", li->name );
+    /* WARN( "TO READ DB DIR \"%s\"", li->name ); */
     rC( masxfs_levinfo_db_readdir( li, phas_data ) );
-    WARN( "READ DB DIR - done \"%s\" -> \"%s\"", li->name, masxfs_levinfo_scanned_name( li, flags ) );
+    /* WARN( "READ DB DIR - done \"%s\" -> \"%s\"", li->name, masxfs_levinfo_scanned_name( li, flags ) ); */
     break;
   }
   rRET;
