@@ -90,7 +90,7 @@ int
 masxfs_levinfo_db_opendir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
-  const char *op = "SELECT name, detype, inode, node_id FROM allfull WHERE parent_id=?";
+  const char *op = "SELECT name, detype, inode, node_id FROM allfull WHERE parent_id=? ORDER BY name_id";
 
   if ( li )
   {

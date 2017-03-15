@@ -13,7 +13,7 @@ main( int argc, char *argv[] )
  
   test0(  );
   test1(  );
-  /* test2(  ); */
+  test2(  );
   test3(  );
 
   return 0;

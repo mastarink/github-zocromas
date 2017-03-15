@@ -106,7 +106,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  INFO( "%s %ld fd:%d D:%ld i:%ld %s; %s", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
+  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, deinode, ename ? ename : "", epath ? epath : "" );
 
   return 0;
 }
