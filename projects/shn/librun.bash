@@ -35,7 +35,7 @@ function shn_run ()
     if  [[ $MSH_SHN_ENABLE_MARKLINE ]] ; then shn_msg ; fi
     if [[ -f mas_debug_memory.tmp ]] ; then
 ##    cat mas_debug_memory.tmp >&2
-      if [[ $MSH_SHN_ENABLE_DETAILS ]] ; then shn_msg "--=@(     exit: $retcode     )@=--          $(cat mas_debug_memory.tmp)" ; fi
+      shn_msg "--=@(     exit: $retcode     )@=--          $(cat mas_debug_memory.tmp)"
       mv -f mas_debug_memory_old2.tmp  mas_debug_memory_old3.tmp
       mv -f mas_debug_memory_old.tmp  mas_debug_memory_old2.tmp
       mv -f mas_debug_memory.tmp  mas_debug_memory_old.tmp

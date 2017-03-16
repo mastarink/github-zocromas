@@ -38,7 +38,7 @@ masxfs_levinfo_create( void )
 
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode,
-                       unsigned long long node_id )
+                       unsigned long long node_id, masxfs_stat_t * destat )
 {
   if ( li && name )
   {
@@ -49,6 +49,7 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     li->deinode = d_inode;
     li->lidepth = lidepth;
     li->db.node_id = node_id;
+    li->db.stat = destat;
   }
   else
     QRLI( li, -1 );
@@ -56,32 +57,30 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 
 void
 masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode,
-                     unsigned long long node_id )
+                     unsigned long long node_id, masxfs_stat_t * destat )
 {
-  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode, node_id );
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode, node_id, destat );
 }
 
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags  )
 {
   if ( li )
   {
-    masxfs_levinfo_closedir( li, MASXFS_CB_MODE_FS );
-    masxfs_levinfo_close( li, MASXFS_CB_MODE_FS );
-    masxfs_levinfo_closedir( li, MASXFS_CB_MODE_DB );
-    masxfs_levinfo_close( li, MASXFS_CB_MODE_DB );
+    masxfs_levinfo_closedir( li, flags | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+    masxfs_levinfo_close( li, flags | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
     li->name = NULL;
     {
-      if ( flags & MASXFS_CB_MODE_FS )
+    /* if ( flags & MASXFS_CB_MODE_FS ) */
       {
         if ( li->fs.stat )
           mas_free( li->fs.stat );
         li->fs.stat = NULL;
       }
-      if ( flags & MASXFS_CB_MODE_DB )
+    /* if ( flags & MASXFS_CB_MODE_DB ) */
       {
         if ( li->db.stat )
           mas_free( li->db.stat );

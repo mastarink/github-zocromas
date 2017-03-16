@@ -8,8 +8,8 @@ masxfs_levinfo_t *masxfs_levinfo_offset( masxfs_levinfo_t * li, masxfs_depth_t o
 const struct stat *masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
 const struct stat *masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 
-size_t masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
-size_t masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
+off_t masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
+off_t masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li );
 

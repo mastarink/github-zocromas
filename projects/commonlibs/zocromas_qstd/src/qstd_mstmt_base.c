@@ -166,7 +166,10 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ")",
     "CREATE  VIEW allfull AS "                                       /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
-            "     , fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "     , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
+	    "     , fs.nsame AS nsamesize"          /* */
+            "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
+          /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM filenames AS fn "                               /* */

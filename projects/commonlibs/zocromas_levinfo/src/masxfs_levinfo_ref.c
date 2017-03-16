@@ -28,7 +28,7 @@ masxfs_levinfo_t * __attribute__ ( ( pure ) ) masxfs_levinfo_offset( masxfs_levi
 const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : li->db.stat ) : 0;
+  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
 }
 
 const struct stat *
@@ -46,9 +46,9 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   return st;
 }
 
-size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+off_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
-  size_t size = 0;
+  off_t size = 0;
 
   li = masxfs_levinfo_offset( li, offset );
   const struct stat *stat = masxfs_levinfo_stat_val( li, 0, tflags );
@@ -58,11 +58,11 @@ size_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li
   return size;
 }
 
-size_t
+off_t
 masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECL( -1 );
-  size_t size = 0;
+  off_t size = 0;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) /* XXX ??? XXX */  )
   {
@@ -99,14 +99,14 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.pdir : NULL ) : 0;
+  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.scan.pdir : NULL ) : 0;
 }
 
 #if 0
 masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
-  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde ) : 0;
+  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.scan.pde : li->db.pde ) : 0;
 }
 #endif
 

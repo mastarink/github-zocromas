@@ -1,6 +1,6 @@
 #define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <string.h>
 #include <errno.h>
 
@@ -13,7 +13,7 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-#include "masxfs_levinfo_mode.h"
+/* #include "masxfs_levinfo_mode.h" */
 
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_ref.h"

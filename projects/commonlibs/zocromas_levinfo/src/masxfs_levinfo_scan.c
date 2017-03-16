@@ -2,7 +2,9 @@
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 #include <unistd.h>
-/* #include <stdlib.h> */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -17,6 +19,8 @@
 #include "masxfs_levinfo_ref.h"
 
 #include "masxfs_levinfo_path.h"
+
+#include "masxfs_levinfo_scanned.h"
 
 #include "masxfs_levinfo_scan.h"
 
@@ -43,7 +47,7 @@ static int
 masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t tflags,
                                                masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
-  rDECLGOOD; /* sic! 20170314.185257 */
+  rDECLGOOD;                                                         /* sic! 20170314.185257 */
 
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
@@ -70,6 +74,8 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
       masxfs_levinfo_flags_t tflags = 0;
 
       tflags = flags | cb->flags;
+      if ( !( tflags & MASXFS_CB_STAT ) )
+        ADIE( "WWHHHHYYYYYY" );
 
       if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth == 1 )
       {
@@ -123,6 +129,13 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       int detype = masxfs_levinfo_scanned_detype( li, flags );
       ino_t d_inode = masxfs_levinfo_scanned_inode( li, flags );
       unsigned long long node_id = masxfs_levinfo_scanned_nodeid( li, flags );
+      /* off_t size = masxfs_levinfo_scanned_size( li, flags ); */
+
+    /*last!: */
+      masxfs_stat_t *destat = masxfs_levinfo_scanned_stat( li, flags, TRUE );
+
+      /* if ( destat )                                                                                  */
+      /*   WARN( "1 %p SIZE SC:%ld / destat:%p: %ld", li, size, destat, destat ? destat->st_size : 0 ); */
 
       masxfs_depth_t lidepth = li->lidepth;
 
@@ -130,9 +143,10 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       lidepth++;
       reldepth++;
       {
-        masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id );
-      /* if ( flags & MASXFS_CB_MODE_DB )                                                                            */
-      /*   WARN( "!!!!!!!!! DOWN (db) \?\?!: \"%s\" ~~ %d : %d", li->name, detype, detype == MASXFS_ENTRY_DIR_NUM ); */
+        masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
+        /* if ( destat )                                                                                            */
+        /*   WARN( "2 %p SIZE SC:%ld %p %ld", li, masxfs_levinfo_size_ref( li, flags ), li ? li->db.stat : NULL, li */
+        /*         && li->db.stat ? li->db.stat->st_size : 0 );                                                     */
         rC( masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags, reldepth ) );
         if ( detype == MASXFS_ENTRY_DIR_NUM )
         {
@@ -235,21 +249,19 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
 
   if ( li )
   {
-    masxfs_levinfo_flags_t tflags = flags;
-
     rSETGOOD;
   /* if ( flags & MASXFS_CB_MODE_DB )     */
   /*   WARN( "######### -1- DOWN (db)" ); */
-    if ( masxfs_levinfo_de_valid( li, tflags ) )
+    if ( masxfs_levinfo_de_valid( li, flags ) )
     {
       masxfs_levinfo_fix_type( li );
     /* if ( flags & MASXFS_CB_MODE_DB )     */
     /*   WARN( "######### -2- DOWN (db)" ); */
-      if ( ( tflags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth ) ) )
+      if ( ( flags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth ) ) )
       {
       /* if ( flags & MASXFS_CB_MODE_DB )                                                                         */
       /*   WARN( "######### TO DOWN (db) \"%s\" -> \"%s\"", li->name, masxfs_levinfo_scanned_name( li, flags ) ); */
-        rC( masxfs_levinfo_scan_down_cbs( li, cbs, data, tflags, maxdepth, reldepth ) );
+        rC( masxfs_levinfo_scan_down_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
       }
       else
       {

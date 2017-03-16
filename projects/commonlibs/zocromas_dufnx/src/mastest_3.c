@@ -142,7 +142,7 @@ test3( void )
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
       {
-        masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_DB;
+        masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_MODE_DB;
 
         rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsdb, 1000 /* maxdepth */  ) );
       }
