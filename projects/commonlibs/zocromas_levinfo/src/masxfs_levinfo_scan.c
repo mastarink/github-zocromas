@@ -107,11 +107,41 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
 }
 
 static int
-masxfs_levinfo_scan_entry_single_at_child_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
-                                               masxfs_depth_t reldepth )
+masxfs_levinfo_scan_entry_single_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                                      masxfs_depth_t reldepth )
 {
   return li ? masxfs_levinfo_scan_entry_single_internal_cbs( li->lidepth > 0 ? li - 1 : NULL, li, cbs, data, flags, li->detype, reldepth ) : -1;
 }
+
+#if 0
+static int
+masxfs_levinfo_init_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
+                                    masxfs_depth_t maxdepth, masxfs_depth_t reldepth, masxfs_depth_t lidepth, const char *name,
+                                    masxfs_entry_type_t detype, ino_t d_inode, unsigned long long node_id, masxfs_stat_t * destat )
+{
+  rDECLBAD;
+  masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
+  rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
+  if ( detype == MASXFS_ENTRY_DIR_NUM )
+  {
+    rC( masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
+  }
+  else if ( detype == MASXFS_ENTRY_REG_NUM )
+  {
+  /* rSETBAD; */
+  }
+  else if ( detype == MASXFS_ENTRY_LNK_NUM )
+  {
+  /* rSETBAD; */
+  }
+  else
+  {
+  /* rSETBAD; */
+  }
+  masxfs_levinfo_reset( li, flags );
+  rRET;
+}
+#endif
 
 static int
 masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
@@ -121,55 +151,47 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 
   if ( li )
   {
-  /* masxfs_dirent_t *pde = flags & MASXFS_CB_MODE_FS ? li->fs.pde : li->db.pde; */
+    const char *name = masxfs_levinfo_scanned_name( li, flags );
+    masxfs_entry_type_t detype = masxfs_levinfo_scanned_detype( li, flags );
+    ino_t d_inode = masxfs_levinfo_scanned_inode( li, flags );
+    unsigned long long node_id = masxfs_levinfo_scanned_nodeid( li, flags );
 
-  /* if ( pde ) */
+  /*last (zeroes stat), at least
+   * after refer to stat,
+   * like size masxfs_levinfo_scanned_size!:
+   * */ masxfs_stat_t *destat = masxfs_levinfo_scanned_stat( li, flags, TRUE );
+
+    masxfs_depth_t lidepth = li->lidepth;
+
+    li++;
+    lidepth++;
+    reldepth++;
+
+  /* TODO function masxfs_levinfo_init_scan_entry_cbs  */
     {
-      const char *name = masxfs_levinfo_scanned_name( li, flags );
-      int detype = masxfs_levinfo_scanned_detype( li, flags );
-      ino_t d_inode = masxfs_levinfo_scanned_inode( li, flags );
-      unsigned long long node_id = masxfs_levinfo_scanned_nodeid( li, flags );
-      /* off_t size = masxfs_levinfo_scanned_size( li, flags ); */
-
-    /*last!: */
-      masxfs_stat_t *destat = masxfs_levinfo_scanned_stat( li, flags, TRUE );
-
-      /* if ( destat )                                                                                  */
-      /*   WARN( "1 %p SIZE SC:%ld / destat:%p: %ld", li, size, destat, destat ? destat->st_size : 0 ); */
-
-      masxfs_depth_t lidepth = li->lidepth;
-
-      li++;
-      lidepth++;
-      reldepth++;
+      masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
+      rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
+      if ( detype == MASXFS_ENTRY_DIR_NUM )
       {
-        masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
-        /* if ( destat )                                                                                            */
-        /*   WARN( "2 %p SIZE SC:%ld %p %ld", li, masxfs_levinfo_size_ref( li, flags ), li ? li->db.stat : NULL, li */
-        /*         && li->db.stat ? li->db.stat->st_size : 0 );                                                     */
-        rC( masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags, reldepth ) );
-        if ( detype == MASXFS_ENTRY_DIR_NUM )
-        {
-          rC( masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
-        }
-        else if ( detype == MASXFS_ENTRY_REG_NUM )
-        {
-        /* rSETBAD; */
-        }
-        else if ( detype == MASXFS_ENTRY_LNK_NUM )
-        {
-        /* rSETBAD; */
-        }
-        else
-        {
-        /* rSETBAD; */
-        }
-        masxfs_levinfo_reset( li, flags );
+        rC( masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
       }
-      reldepth--;
-      lidepth--;
-      li--;
+      else if ( detype == MASXFS_ENTRY_REG_NUM )
+      {
+      /* rSETBAD; */
+      }
+      else if ( detype == MASXFS_ENTRY_LNK_NUM )
+      {
+      /* rSETBAD; */
+      }
+      else
+      {
+      /* rSETBAD; */
+      }
+      masxfs_levinfo_reset( li, flags );
     }
+    reldepth--;
+    lidepth--;
+    li--;
   }
   else
     QRLI( li, rCODE );
@@ -374,7 +396,7 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb
       WARN( "############# r:%d", rCODE );
     break;
   case MASXFS_ENTRY_REG_NUM:
-    rC( masxfs_levinfo_scan_entry_single_at_child_cbs( li, cbs, data, flags, reldepth ) );
+    rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
     if ( flags & MASXFS_CB_MODE_DB && rBAD )
       WARN( "############# r:%d", rCODE );
     break;

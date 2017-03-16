@@ -69,7 +69,7 @@ masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
   return name;
 }
 
-int
+masxfs_entry_type_t
 masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
 /* rDECLBAD; */
@@ -83,7 +83,7 @@ masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
       if ( li->fs.scan.pde )
         type = masxfs_levinfo_de2entry( li->fs.scan.pde->d_type );
     }
-    else if ( flags & MASXFS_CB_MODE_DB )
+    if ( flags & MASXFS_CB_MODE_DB )
     {
       type = ( li->db.scan.type );
     }
@@ -128,7 +128,7 @@ masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
       if ( li->fs.scan.pde )
         inode = li->fs.scan.pde->d_ino;
     }
-    else if ( flags & MASXFS_CB_MODE_DB )
+     if ( flags & MASXFS_CB_MODE_DB )
     {
       inode = li->db.scan.inode;
     }
