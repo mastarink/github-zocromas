@@ -34,58 +34,68 @@ exiternal functions used:
 int
 masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
 {
-  int fd = -1;
+  rDECLBAD;
 
-  if ( li->fd )
-    fd = li->fd;
-  else if ( li && li->name )
+  if ( li )
   {
-  /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
-    int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
+    if ( li->fd )
+      rCODE = li->fd;
+    else if ( li && li->name )
+    {
+    /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
+      int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
 
-    errno = 0;
-    fd = li->fd = openat( fdparent, li->name, openflags );
-    if ( fd < 0 && errno == ENOENT && li->detype == MASXFS_ENTRY_LNK_NUM )
-    {
-    /* ignore dead symbolic link */
-      fd = li->fd = 0;
-    }
-    else
-    {
-      QRLI( li, fd );
-      if ( fd > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( openflags & O_DIRECTORY ) )
-        li->detype = MASXFS_ENTRY_DIR_NUM;
-      if ( fd < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
-        WARN( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
-              openflags & O_DIRECTORY ? 1 : 0 );
+      errno = 0;
+      rCODE = li->fd = openat( fdparent, li->name, openflags );
+      if ( rCODE < 0 && errno == ENOENT && li->detype == MASXFS_ENTRY_LNK_NUM )
+      {
+      /* ignore dead symbolic link */
+        rCODE = li->fd = 0;
+      }
+      else
+      {
+        QRLI( li, rCODE );
+        if ( rCODE > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( openflags & O_DIRECTORY ) )
+          li->detype = MASXFS_ENTRY_DIR_NUM;
+        if ( rCODE < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
+          WARN( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
+                openflags & O_DIRECTORY ? 1 : 0 );
+      }
     }
   }
-  return fd;
+  else
+    QRLI( li, rCODE );
+  rRET;
 }
 
 int
 masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
-
-  if ( li->lidepth > 0 )
-    rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
-  else if ( !li->fd && li->name && !*li->name )
+  if ( li )
   {
-    errno = 0;
-    li->fd = open( "/", O_DIRECTORY | /* O_NOFOLLOW | */ O_RDONLY );
+    if ( li->lidepth > 0 )
+      rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
+    else if ( !li->fd && li->name && !*li->name )
+    {
+      errno = 0;
+      li->fd = open( "/", O_DIRECTORY | /* O_NOFOLLOW | */ O_RDONLY );
+      if ( li->fd < 0 )
+      {
+        rCODE = li->fd;
+        li->fd = 0;
+      }
+    }
     if ( li->fd < 0 )
     {
-      rCODE = li->fd;
-      li->fd = 0;
+      rSETBAD;
+      QRLI( li, rCODE );
     }
+    rCODE = li->fd;
   }
-  if ( li->fd < 0 )
-  {
-    rSETBAD;
+  else
     QRLI( li, rCODE );
-  }
-  return li->fd;
+  rRET;
 }
 
 int
@@ -104,6 +114,8 @@ masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
       QRLI( li, rCODE );
     }
   }
+  else
+    QRLI( li, rCODE );
   rRET;
 }
 
@@ -119,7 +131,7 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     {
       li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
-      if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
+      if ( !li->fd /*masxfs_levinfo_fd_val( li, 0 ) */  && li->lidepth > 0 )
         rC( fstatat( masxfs_levinfo_fs_open( li - 1, flags ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
       else
         rC( fstat( masxfs_levinfo_fs_open( li, flags ), li->fs.stat ) );

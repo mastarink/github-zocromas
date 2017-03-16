@@ -106,8 +106,8 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
     EXAMTS( pi->levinfo, pi->levinfo[_tdepth].name, _tname, "tdepth '%s' ? '%s'" );
     EXAMTS( pi->levinfo, pi->levinfo[pi->pidepth - 1].name, _lastname, "last '%s' ? '%s'" );
     EXAMT( pi->levinfo, pi->levinfo[0].fd, 0, "fd:%d ? %d" );
-    EXAMT( pi->levinfo, pi->levinfo[0].fs.pdir, NULL, "fd:%d ? %d" );
-    EXAMT( pi->levinfo, pi->levinfo[0].fs.pdir, NULL, "dir:%p ? %p" );
+    EXAMT( pi->levinfo, pi->levinfo[0].fs.scan.pdir, NULL, "fd:%d ? %d" );
+    EXAMT( pi->levinfo, pi->levinfo[0].fs.scan.pdir, NULL, "dir:%p ? %p" );
 /* 1+2+7 */
     EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, 0 ), "", "root '%s' ? '%s'" );
     EXAMTS( pi->levinfo, masxfs_levinfo_name_val( pi->levinfo, 0 ), "", "root '%s' ? '%s'" );

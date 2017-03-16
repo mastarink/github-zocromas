@@ -116,13 +116,16 @@ int
 masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
-
-  do
+  if ( li )
   {
-    rC( masxfs_levinfo_close( li, flags ) );
-  /* test li->lidepth BEFORE li-- */
-  } while ( rGOOD && li->lidepth && li-- );
-
+    do
+    {
+      rC( masxfs_levinfo_close( li, flags ) );
+    /* test li->lidepth BEFORE li-- */
+    } while ( rGOOD && li->lidepth && li-- );
+  }
+  else
+    QRLI( li, rCODE );
   rRET;
 }
 

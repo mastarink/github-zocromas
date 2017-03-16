@@ -25,16 +25,18 @@ masxfs_levinfo_t * __attribute__ ( ( pure ) ) masxfs_levinfo_offset( masxfs_levi
   return li ? li + offset : NULL;
 }
 
-const struct stat * __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+static inline const struct stat *
+        __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
 }
 
+#if 1
 const struct stat *
 masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  rDECL( -1 );
+  rDECLBAD;
   const struct stat *st = NULL;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
@@ -45,6 +47,7 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   }
   return st;
 }
+#endif
 
 off_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
@@ -58,10 +61,11 @@ off_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li,
   return size;
 }
 
+#if 1
 off_t
 masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  rDECL( -1 );
+  rDECLBAD;
   off_t size = 0;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) /* XXX ??? XXX */  )
@@ -72,7 +76,9 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   }
   return size;
 }
+#endif
 
+#if 1
 int
 masxfs_levinfo_fd_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
@@ -80,6 +86,8 @@ masxfs_levinfo_fd_val( masxfs_levinfo_t * li, masxfs_depth_t offset )
   return li ? li->fd : 0;
 }
 
+#endif
+#if 1
 int
 masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
@@ -91,26 +99,28 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 
     r = masxfs_levinfo_open( li, tflags );
     if ( r >= 0 )
-      fd = masxfs_levinfo_fd_val( li, 0 );
+      fd = li->fd /*masxfs_levinfo_fd_val( li, 0 ) */ ;
   }
   return fd;
 }
-
+#endif
+#if 1
 masxfs_dir_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pdir_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.scan.pdir : NULL ) : 0;
 }
-
+#endif
 #if 0
 masxfs_dirent_t * __attribute__ ( ( pure ) ) masxfs_levinfo_pde_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   li = masxfs_levinfo_offset( li, offset );
   return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.scan.pde : li->db.pde ) : 0;
 }
-#endif
 
 int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "masxfs_levinfo_fd_val" ) ) );
+
+#endif
 
 masxfs_depth_t __attribute__ ( ( pure ) ) masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _uUu_ )
 {
@@ -132,9 +142,12 @@ const char * __attribute__ ( ( pure ) ) masxfs_levinfo_name_ref( masxfs_levinfo_
 {
   const char *name = NULL;
 
-  if ( li && ( tflags & MASXFS_CB_NAME ) )
+  if ( li )
   {
-    name = masxfs_levinfo_name_val( li, 0 );
+    if ( ( tflags & MASXFS_CB_NAME ) )
+    {
+      name = masxfs_levinfo_name_val( li, 0 );
+    }
   }
   return name;
 }
@@ -144,11 +157,14 @@ masxfs_levinfo_path_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   const char *path = NULL;
 
-  if ( li && ( tflags & MASXFS_CB_PATH ) )
+  if ( li )
   {
-    if ( li->path )
-      mas_free( li->path );
-    path = li->path = masxfs_levinfo_li2path_up( li, ( li->detype == MASXFS_ENTRY_DIR_NUM && ( tflags & MASXFS_CB_TRAILINGSLASH ) ) ? '/' : 0 );
+    if ( ( tflags & MASXFS_CB_PATH ) )
+    {
+      if ( li->path )
+        mas_free( li->path );
+      path = li->path = masxfs_levinfo_li2path_up( li, ( li->detype == MASXFS_ENTRY_DIR_NUM && ( tflags & MASXFS_CB_TRAILINGSLASH ) ) ? '/' : 0 );
+    }
   }
   return path;
 }
@@ -158,11 +174,14 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
 {
   const char *prefix = NULL;
 
-  if ( li && ( tflags & MASXFS_CB_PREFIX ) )
+  if ( li )
   {
-    if ( li->prefix )
-      mas_free( li->prefix );
-    prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, 0 );
+    if ( ( tflags & MASXFS_CB_PREFIX ) )
+    {
+      if ( li->prefix )
+        mas_free( li->prefix );
+      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, 0 );
+    }
   }
   return prefix;
 }
@@ -170,7 +189,7 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
 masxfs_entry_type_t
 masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  rDECL( -1 );
+  rDECLBAD;
   masxfs_entry_type_t detype = MASXFS_ENTRY_UNKNOWN_NUM;
 
   if ( li )
@@ -189,6 +208,8 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
     }
   /* assert( detype == li->detype ); */
   }
+  else
+    QRLI( li, rCODE );
   return detype;
 }
 
@@ -204,8 +225,11 @@ masxfs_levinfo_node_id( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   unsigned long node_id = 0;
 
-  if ( li->lidepth >= offset )
-    node_id = li[-offset].db.node_id;
+  if ( li )
+  {
+    if ( li->lidepth >= offset )
+      node_id = li[-offset].db.node_id;
+  }
   return node_id;
 }
 
