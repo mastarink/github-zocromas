@@ -19,6 +19,7 @@
 #include "masxfs_levinfo_ref.h"
 
 #include "masxfs_levinfo_db.h"
+#include "masxfs_levinfo_fs.h"
 #include "masxfs_levinfo_io.h"
 
 /*
@@ -36,38 +37,6 @@ static inline masxfs_scan_mode_t
 masxfs_levinfo_flags_mode( masxfs_levinfo_flags_t flags )
 {
   return ( flags & MASXFS_CB_MODE_DB ) ? MASXFS_SCAN__MODE_DB : ( ( flags & MASXFS_CB_MODE_FS ) ? MASXFS_SCAN__MODE_FS : MASXFS_SCAN__MODE_NONE );
-}
-
-static int
-masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
-{
-  int fd = -1;
-
-  if ( li->fd )
-    fd = li->fd;
-  else if ( li && li->name )
-  {
-  /* TODO: O_NOFOLLOW :: If  pathname  is a  symbolic  link, then the open fails */
-    int openflags = ( li->detype == MASXFS_ENTRY_DIR_NUM ? O_DIRECTORY : 0 ) /* | O_NOFOLLOW */  | O_RDONLY;
-
-    errno = 0;
-    fd = li->fd = openat( fdparent, li->name, openflags );
-    if ( fd < 0 && errno == ENOENT && li->detype == MASXFS_ENTRY_LNK_NUM )
-    {
-    /* ignore dead symbolic link */
-      fd = li->fd = 0;
-    }
-    else
-    {
-      QRLI( li, fd );
-      if ( fd > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( openflags & O_DIRECTORY ) )
-        li->detype = MASXFS_ENTRY_DIR_NUM;
-      if ( fd < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
-        WARN( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
-              openflags & O_DIRECTORY ? 1 : 0 );
-    }
-  }
-  return fd;
 }
 
 static int _uUu_
@@ -94,31 +63,6 @@ masxfs_levinfo_open_at( masxfs_levinfo_t * li, int fdparent, masxfs_levinfo_flag
 }
 
 int
-masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
-{
-  rDECLBAD;
-
-  if ( li->lidepth > 0 )
-    rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
-  else if ( !li->fd && li->name && !*li->name )
-  {
-    errno = 0;
-    li->fd = open( "/", O_DIRECTORY | /* O_NOFOLLOW | */ O_RDONLY );
-    if ( li->fd < 0 )
-    {
-      rCODE = li->fd;
-      li->fd = 0;
-    }
-  }
-  if ( li->fd < 0 )
-  {
-    rSETBAD;
-    QRLI( li, rCODE );
-  }
-  return li->fd;
-}
-
-int
 masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
@@ -137,25 +81,6 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   case MASXFS_SCAN__MODE_DB:
     rC( masxfs_levinfo_db_open( li, flags ) );
     break;
-  }
-  rRET;
-}
-
-int
-masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
-{
-  rDECLBAD;
-
-  if ( li )
-  {
-    rSETGOOD;                                                        /* ! */
-    if ( li->fd )
-    {
-      errno = 0;
-      rCODE = close( li->fd );
-      li->fd = 0;
-      QRLI( li, rCODE );
-    }
   }
   rRET;
 }
@@ -194,31 +119,6 @@ masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
   /* test li->lidepth BEFORE li-- */
   } while ( rGOOD && li->lidepth && li-- );
 
-  rRET;
-}
-
-static int
-masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
-{
-  rDECLBAD;
-
-  if ( li )
-  {
-    rSETGOOD;
-    if ( !li->fs.stat )
-    {
-      li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
-
-      if ( !masxfs_levinfo_fd_val( li, 0 ) && li->lidepth > 0 )
-        rC( fstatat( masxfs_levinfo_fs_open( li - 1, flags ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
-      else
-        rC( fstat( masxfs_levinfo_fs_open( li, flags ), li->fs.stat ) );
-      if ( rGOOD && li->fs.stat )
-        li->detype = masxfs_levinfo_stat2entry( li->fs.stat );
-    }
-  }
-  else
-    QRLI( li, rCODE );
   rRET;
 }
 

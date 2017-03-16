@@ -6,6 +6,7 @@ libzocromas_levinfo_la_SOURCES = \
 	masxfs_levinfo_base.c \
 	masxfs_levinfo_io.c \
 	masxfs_levinfo_io_dir.c \
+	masxfs_levinfo_fs.c \
 	masxfs_levinfo_db.c \
 	masxfs_levinfo_path.c \
 	masxfs_levinfo_ref.c \
