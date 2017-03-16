@@ -17,6 +17,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
+#include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"

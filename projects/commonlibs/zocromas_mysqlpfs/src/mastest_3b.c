@@ -27,11 +27,11 @@ test3create( void )
 {
   char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_filesizes ("                         /* */
             "size INTEGER  PRIMARY KEY"                              /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_fileprops ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK')" /* */
             ", mode INTEGER"                                         /* */
@@ -46,25 +46,25 @@ test3create( void )
             ", rdev INTEGER"                                         /* */
             ", INDEX size (size)"                                    /* */
             ", INDEX detype (detype)"                                /* */
-            ", FOREIGN KEY (size) REFERENCES filesizes (size)"       /* */
+            ", FOREIGN KEY (size) REFERENCES pfs_test_filesizes (size)"       /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS filedatas (" "id INTEGER PRIMARY KEY AUTO_INCREMENT" /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_filedatas (" "id INTEGER PRIMARY KEY AUTO_INCREMENT" /* */
             ", dev INTEGER NOT NULL"                                 /* */
             ", inode INTEGER NOT NULL"                               /* */
-            ", props_id INTEGER, INDEX props (props_id), FOREIGN KEY (props_id) REFERENCES fileprops (id)" /* */
+            ", props_id INTEGER, INDEX props (props_id), FOREIGN KEY (props_id) REFERENCES pfs_test_fileprops (id)" /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
             ", rdev INTEGER"                                         /* */
             ", UNIQUE INDEX dev_inoce (dev,inode) COMMENT 'this pair is unique'" /* */
           /* */ " )",
-    "CREATE TABLE IF NOT EXISTS parents ("                           /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_parents ("                           /* */
             "id INTEGER PRIMARY KEY"                                 /* */
             ", filename_id INTEGER" ")",
-    "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_filenames ("                         /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES filenames (id)" /* */
+            ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES pfs_test_filenames (id)" /* */
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
-            ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES pfs_test_filedatas (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ", INDEX parent_name_a (parent_id, name)"                /* */

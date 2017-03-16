@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include <mastar/minierr/minierr.h>
+#include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
 
 #include <mastar/masxfs/masxfs_types.h>

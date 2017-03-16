@@ -11,6 +11,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
+#include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"
@@ -41,7 +42,7 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
       unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
-      /* WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid ); */
+    /* WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid ); */
     }
     else
     {

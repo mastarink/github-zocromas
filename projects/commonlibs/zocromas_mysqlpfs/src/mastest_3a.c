@@ -27,11 +27,11 @@ test3drop( void )
 {
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "DROP TABLE IF EXISTS filenames",
-    "DROP TABLE IF EXISTS parents",
-    "DROP TABLE IF EXISTS filedatas",
-    "DROP TABLE IF EXISTS fileprops",
-    "DROP TABLE IF EXISTS filesizes",
+    "DROP TABLE IF EXISTS pfs_test_filenames",
+    "DROP TABLE IF EXISTS pfs_test_parents",
+    "DROP TABLE IF EXISTS pfs_test_filedatas",
+    "DROP TABLE IF EXISTS pfs_test_fileprops",
+    "DROP TABLE IF EXISTS pfs_test_filesizes",
     "COMMIT",
   };
   mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );

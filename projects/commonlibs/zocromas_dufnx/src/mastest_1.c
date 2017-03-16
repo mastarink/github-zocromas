@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include <mastar/minierr/minierr.h>
+#include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
 
 #include <mastar/masxfs/masxfs_types.h>
@@ -111,15 +112,6 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   return 0;
 }
 
-/*
-
- SELECT name, nsame, fp.size 
- 	FROM filenames AS fn 
-	LEFT JOIN filedatas AS fd ON(fn.data_id=fd.id)
-	JOIN fileprops AS fp ON(fp.data_id=fd.id)
-	LEFT JOIN filesizes AS fs ON(fp.size=fs.size)
-
- */
 int
 test1( void )
 {

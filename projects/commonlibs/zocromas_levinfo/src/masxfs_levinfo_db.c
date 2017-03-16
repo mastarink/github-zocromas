@@ -15,6 +15,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
+#include <mastar/qstd/qstd_defs.h>
 #include <mastar/qstd/qstd_types.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
@@ -111,7 +112,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 {
   rDECLBAD;
   const char *op = "SELECT name, detype, inode, node_id "            /* */
-          ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM allfull WHERE parent_id=? ORDER BY name_id";
+          ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
 
   if ( li )
   {
@@ -243,8 +244,8 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
         li->db.scan.stat->st_atim.tv_sec = atim_tv_sec;
         li->db.scan.stat->st_mtim.tv_sec = mtim_tv_sec;
         li->db.scan.stat->st_ctim.tv_sec = ctim_tv_sec;
-        /* WARN( "%p %p SIZE:%ld / %ld (%d:%d)", li, li->db.scan.stat, li->db.scan.stat->st_size, masxfs_levinfo_size_ref( li, MASXFS_CB_MODE_DB ), */
-        /*       flags & MASXFS_CB_MODE_DB ? 1 : 0, flags & MASXFS_CB_STAT ? 1 : 0 );                                                               */
+      /* WARN( "%p %p SIZE:%ld / %ld (%d:%d)", li, li->db.scan.stat, li->db.scan.stat->st_size, masxfs_levinfo_size_ref( li, MASXFS_CB_MODE_DB ), */
+      /*       flags & MASXFS_CB_MODE_DB ? 1 : 0, flags & MASXFS_CB_STAT ? 1 : 0 );                                                               */
       }
     /* WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode ); */
     }

@@ -7,6 +7,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
+#include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs.h>
@@ -42,25 +43,25 @@ mas_qstd_update_summary( mas_qstd_t * qstd )
   rDECL( 0 );
   const char *updop[] = {
     "START TRANSACTION",
-    "UPDATE parents AS p "                                           /* */
+    "UPDATE " QSTD_TABLE_PARENTS " AS p "                            /* */
             " LEFT JOIN "                                            /* */
-            "   (SELECT filenames.parent_id, COUNT(*) AS nchilds "   /* */
-            "     FROM filenames "                                   /* */
-            "     LEFT JOIN parents ON (filenames.parent_id=parents.id) " /* */
-            "     GROUP BY filenames.parent_id) "                    /* */
+            "   (SELECT " QSTD_TABLE_NAMES ".parent_id, COUNT(*) AS nchilds " /* */
+            "     FROM " QSTD_TABLE_NAMES " "                        /* */
+            "     LEFT JOIN " QSTD_TABLE_PARENTS " ON (" QSTD_TABLE_NAMES ".parent_id=" QSTD_TABLE_PARENTS ".id) " /* */
+            "     GROUP BY " QSTD_TABLE_NAMES ".parent_id) "         /* */
             "    AS fx ON (p.id=fx.parent_id) SET p.nchilds=fx.nchilds",
-    "UPDATE filedatas AS fd "                                        /* */
+    "UPDATE " QSTD_TABLE_DATAS " AS fd "                             /* */
             " LEFT JOIN "                                            /* */
             "   (SELECT ifd.id AS data_id, COUNT(*) AS nlinkdb "     /* */
-            "     FROM filedatas AS ifd "                            /* */
-            "     LEFT JOIN filenames AS ifn ON (ifn.data_id=ifd.id) " /* */
+            "     FROM " QSTD_TABLE_DATAS " AS ifd "                 /* */
+            "     LEFT JOIN " QSTD_TABLE_NAMES " AS ifn ON (ifn.data_id=ifd.id) " /* */
             "     GROUP BY ifn.data_id) "                            /* */
             "    AS fx ON (fd.id=fx.data_id) SET fd.nlinkdb=fx.nlinkdb",
-    "UPDATE filesizes AS fs "                                        /* */
+    "UPDATE " QSTD_TABLE_SIZES " AS fs "                             /* */
             " LEFT JOIN "                                            /* */
             "   (SELECT ifs.size AS size, COUNT(*) AS nsame "        /* */
-            "     FROM filesizes AS ifs "                            /* */
-            "     LEFT JOIN fileprops AS ifp ON (ifs.size=ifp.size) " /* */
+            "     FROM " QSTD_TABLE_SIZES " AS ifs "                 /* */
+            "     LEFT JOIN "QSTD_TABLE_PROPS" AS ifp ON (ifs.size=ifp.size) " /* */
             "     GROUP BY ifp.size) "                               /* */
             "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
     "COMMIT"

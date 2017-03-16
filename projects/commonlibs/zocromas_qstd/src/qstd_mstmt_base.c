@@ -8,6 +8,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
+#include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
@@ -119,12 +120,12 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
   rDECL( 0 );
   char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "CREATE TABLE IF NOT EXISTS filesizes ("                         /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SIZES " ("              /* */
             "size BIGINT NOT NULL PRIMARY KEY"                       /* */
             ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS filedatas ("                         /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_DATAS " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dev INTEGER NOT NULL"                                 /* */
             ", inode BIGINT NOT NULL"                                /* */
@@ -133,9 +134,9 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", UNIQUE INDEX dev_inode (dev,inode) COMMENT 'this pair is unique'" /* */
             " )",
-    "CREATE TABLE IF NOT EXISTS fileprops ("                         /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_PROPS " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", data_id INTEGER, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", data_id INTEGER, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", mode INTEGER"                                         /* */
             ", uid INTEGER, INDEX uid (uid)"                         /* */
@@ -143,57 +144,57 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", atim DATETIME(6), INDEX atim (atim)"                  /* */
             ", mtim DATETIME(6), INDEX mtim (mtim)"                  /* */
             ", ctim DATETIME(6), INDEX ctim (ctim)"                  /* */
-            ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES filesizes (size)" /* */
+            ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES " QSTD_TABLE_SIZES " (size)" /* */
             ", last_updated DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", rdev INTEGER"                                         /* */
             ", blksize INTEGER"                                      /* */
             ", blocks INTEGER"                                       /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS parents ("                           /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_PARENTS " ("            /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */
             ", nchilds INTEGER NOT NULL, INDEX nchilds (nchilds)"    /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS filenames ("                         /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_NAMES " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES parents (id)" /* */
+            ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES " QSTD_TABLE_PARENTS " (id)" /* */
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
-            ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES filedatas (id)" /* */
+            ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
-    "CREATE  VIEW allfull AS "                                       /* */
+    "CREATE  VIEW " QSTD_VIEW_ALL " AS "                             /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
             "     , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
-	    "     , fs.nsame AS nsamesize"          /* */
+            "     , fs.nsame AS nsamesize"                           /* */
             "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
           /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "   FROM filenames AS fn "                               /* */
-            "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
-            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
-            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
-            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) ",   /* */
-    "CREATE  VIEW filefull AS "                                      /* */
+            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
+            "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "  AS fs ON (fp.size=fs.size) ", /* */
+    "CREATE  VIEW " QSTD_VIEW_FILES " AS "                           /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "   FROM filenames AS fn "                               /* */
-            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
-            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
-            "   LEFT JOIN filesizes  AS fs ON (fp.size=fs.size) "    /* */
+            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
+            "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "  AS fs ON (fp.size=fs.size) " /* */
             " WHERE fp.detype='REG'",
-    "CREATE  VIEW dirfull AS "                                       /* */
+    "CREATE  VIEW " QSTD_VIEW_DIRS " AS "                            /* */
             " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
             "        , GREATEST(fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS least_updated " /* */
-            "   FROM filenames AS fn "                               /* */
-            "   LEFT JOIN parents    AS  p ON (fn.id=p.dir_id) "     /* */
-            "   LEFT JOIN filedatas  AS fd ON (fn.data_id=fd.id) "   /* */
-            "   JOIN fileprops       AS fp ON (fp.data_id=fd.id) "   /* */
+            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
+            "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
             " WHERE fp.detype='DIR'",
     "COMMIT",
   };
@@ -216,14 +217,14 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
   rDECL( 0 );
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "DROP VIEW IF EXISTS allfull",
-    "DROP VIEW IF EXISTS filefull",
-    "DROP VIEW IF EXISTS dirfull",
-    "DROP TABLE IF EXISTS filenames",
-    "DROP TABLE IF EXISTS parents",
-    "DROP TABLE IF EXISTS fileprops",
-    "DROP TABLE IF EXISTS filedatas",
-    "DROP TABLE IF EXISTS filesizes",
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL "",
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES "",
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_DIRS "",
+    "DROP TABLE IF EXISTS " QSTD_TABLE_NAMES "",
+    "DROP TABLE IF EXISTS " QSTD_TABLE_PARENTS "",
+    "DROP TABLE IF EXISTS " QSTD_TABLE_PROPS "",
+    "DROP TABLE IF EXISTS " QSTD_TABLE_DATAS "",
+    "DROP TABLE IF EXISTS " QSTD_TABLE_SIZES "",
     "COMMIT",
   };
 
@@ -281,7 +282,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     {
     case STD_MSTMT_INSERT_NAMES:
       {
-        char *insop = "INSERT INTO filenames(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
+        char *insop = "INSERT INTO " QSTD_TABLE_NAMES "(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 4, 0, insop );
         QRGP( mstmt );
@@ -295,7 +296,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
       {
-        char *selop = "SELECT id FROM filenames AS fn " /* "LEFT JOIN parents as p ON (fn.parent_id=p.id)" */ " WHERE name=? AND fn.parent_id<=>?";
+        char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" as p ON (fn.parent_id=p.id)" */
+                " WHERE name=? AND fn.parent_id<=>?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
         QRGP( mstmt );
@@ -309,7 +311,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_PARENTS:
       {
-        char *insop = "INSERT INTO parents(dir_id) VALUES (?)";
+        char *insop = "INSERT INTO " QSTD_TABLE_PARENTS "(dir_id) VALUES (?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
         QRGP( mstmt );
@@ -320,7 +322,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_PARENTS_ID:
       {
-        char *selop = "SELECT id FROM parents WHERE dir_id<=>?";
+        char *selop = "SELECT id FROM " QSTD_TABLE_PARENTS " WHERE dir_id<=>?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
@@ -333,7 +335,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_SIZES:
       {
-        char *insop = "INSERT IGNORE INTO filesizes(size) VALUES (?)";
+        char *insop = "INSERT IGNORE INTO " QSTD_TABLE_SIZES "(size) VALUES (?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
         QRGP( mstmt );
@@ -344,7 +346,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_SIZES_ID:
       {
-        char *selop = "SELECT size FROM filesizes WHERE size=?";
+        char *selop = "SELECT size FROM " QSTD_TABLE_SIZES " WHERE size=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
@@ -357,7 +359,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_DATAS:
       {
-        char *insop = "INSERT IGNORE INTO filedatas(dev,inode,nlink) VALUES (?,?,?)";
+        char *insop = "INSERT IGNORE INTO " QSTD_TABLE_DATAS "(dev,inode,nlink) VALUES (?,?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
         QRGP( mstmt );
@@ -370,7 +372,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_DATAS_ID:
       {
-        char *selop = "SELECT id FROM filedatas WHERE dev=? AND inode=?";
+        char *selop = "SELECT id FROM " QSTD_TABLE_DATAS " WHERE dev=? AND inode=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
         QRGP( mstmt );
@@ -385,7 +387,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     case STD_MSTMT_INSERT_PROPS:
       {
       /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
-        char *insop = "INSERT  INTO fileprops(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
+        char *insop = "INSERT  INTO " QSTD_TABLE_PROPS "(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
               /*         0 1 2 3 4  5                6                7               8 9 a b  */
                 "VALUES (?,?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?)";
 
@@ -408,7 +410,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_PROPS_ID:
       {
-        char *selop = "SELECT id FROM fileprops WHERE data_id=?";
+        char *selop = "SELECT id FROM " QSTD_TABLE_PROPS " WHERE data_id=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
@@ -421,7 +423,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_NODES_ID:
       {
-        char *selop = "SELECT node_id FROM dirfull WHERE parent_id=? AND name=?";
+        char *selop = "SELECT node_id FROM " QSTD_VIEW_DIRS " WHERE parent_id=? AND name=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
         QRGP( mstmt );

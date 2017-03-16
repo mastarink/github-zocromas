@@ -35,17 +35,17 @@ test4ocb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, ma
   INFO( "%ld. %s", ( long ) depth, ename );
 #if 0
   char *insops[] _uUu_ = {
-    "PREPARE insname_stmt FROM 'INSERT INTO filenames SET name=?'"
-          /* INSERT INTO filesizes */
-          /* INSERT INTO fileprops */
-          /* INSERT INTO filedatas */
+    "PREPARE insname_stmt FROM 'INSERT INTO pfs_test_filenames SET name=?'"
+          /* INSERT INTO pfs_test_filesizes */
+          /* INSERT INTO pfs_test_fileprops */
+          /* INSERT INTO pfs_test_filedatas */
             "EXECUTE insname_stmt USING @file_name",
     "DEALLOCATE PREPARE insname_stmt",
   };
 #endif
   {
     int r = 0;
-    char *insop = "INSERT INTO filenames(name) VALUES (?)";
+    char *insop = "INSERT INTO pfs_test_filenames(name) VALUES (?)";
     MYSQL_STMT *stmt = mysql_stmt_init( mas_mysqlpfs_mysql( pfs ) );
 
     unsigned long length = strlen( ename );

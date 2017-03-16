@@ -36,7 +36,7 @@ test4cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, mas
   MARK( "(T4)", " %ld. %s", (long)depth, ename );
   {
     int r = 0;
-    char *insop _uUu_ = "INSERT INTO filenames(name) VALUES (?)";
+    char *insop _uUu_ = "INSERT INTO pfs_test_filenames(name) VALUES (?)";
 
     {
       mysqlpfs_mstmt_t *mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );

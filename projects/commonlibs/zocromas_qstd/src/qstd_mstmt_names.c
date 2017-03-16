@@ -11,6 +11,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
+#include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"
@@ -61,6 +62,7 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   {
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_NAMES );
 
+  /* assert( updir_id ); */
     QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, updir_id, updir_id ? FALSE : TRUE ) );
