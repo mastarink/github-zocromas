@@ -331,17 +331,22 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   if ( li )
   {
     unsigned long long node_id = 0;
-    const char *name = NULL;
+    const char *dename = NULL;
 
   /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
-    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &name, &li->db.scan.stat, &node_id, flags, phas_data ) );
-    assert( 0 == strcmp( name, li->name ) );
+    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &li->db.scan.stat, &node_id, flags, phas_data ) );
 
   /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
     li->db.scan.type = masxfs_levinfo_stat2entry( li->db.scan.stat );
   /* assert( li->db.scan.type == masxfs_levinfo_s2detype( sdetype ) ); */
   /* li->db.scan.inode = inode; */
     li->db.scan.node_id = node_id;
+
+#if 0
+      masxfs_levinfo_init( li+1, li->lidepth+1, dename,  masxfs_levinfo_stat2entry( li->db.scan.stat ), d_inode, node_id, destat );
+      
+#endif
+
 
     if ( rGOOD && *phas_data )
       li->db.scan.inode = li->db.scan.stat->st_ino;

@@ -169,8 +169,8 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     lidepth++;
     reldepth++;
 
-  /* TODO function masxfs_levinfo_init_scan_entry_cbs  */
     {
+      /* TODO move init to parent's readdir!! */
       masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
       rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
       if ( detype == MASXFS_ENTRY_DIR_NUM )
