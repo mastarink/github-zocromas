@@ -61,7 +61,7 @@ mas_qstd_update_summary( mas_qstd_t * qstd )
             " LEFT JOIN "                                            /* */
             "   (SELECT ifs.size AS size, COUNT(*) AS nsame "        /* */
             "     FROM " QSTD_TABLE_SIZES " AS ifs "                 /* */
-            "     LEFT JOIN "QSTD_TABLE_PROPS" AS ifp ON (ifs.size=ifp.size) " /* */
+            "     LEFT JOIN " QSTD_TABLE_PROPS " AS ifp ON (ifs.size=ifp.size) " /* */
             "     GROUP BY ifp.size) "                               /* */
             "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
     "COMMIT"
@@ -125,6 +125,16 @@ mas_qstd_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned l
 
   rRET;
 }
+
+int
+mas_qstd_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
+{
+  rDECL( 0 );
+  rC( mas_mysqlpfs_mstmt_set_param_string(   mstmt,  pos, string ) );
+
+  rRET;
+}
+
 
 int
 mas_qstd_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )

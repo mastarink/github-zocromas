@@ -29,18 +29,17 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-test1cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
+testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
-  masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
 
   {
     unsigned long long theid = 0;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-    unsigned long long as_parent_id = 0;
+    unsigned long long node_id = 0;
     unsigned long long dataid = 0;
 
   /* unsigned long long propid _uUu_ = 0; */
@@ -61,6 +60,7 @@ test1cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxf
 
     /* WARN( "SIZE: %ld / %ld", size, thesize ); */
     }
+    /* WARN( "%lld:: '%s'", parent_id, li->name ); */
     {
       const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
 
@@ -78,6 +78,7 @@ test1cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxf
 #endif
 #if 1
       theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
+      /* WARN( "%lld ==> %lld", parent_id, theid ); */
 #endif
 #if 0
       theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
@@ -85,12 +86,15 @@ test1cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxf
     }
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
-      as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-      masxfs_levinfo_set_node_id( li, as_parent_id );
+      node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
+      /* WARN( "(%lld) set node_id=%lld (was:%lld) for '%s'", parent_id, node_id, li->db.node_id, li->name ); */
+      masxfs_levinfo_set_node_id( li, node_id );
     }
-    if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
-      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
-            ( unsigned long long ) parent_id, ( unsigned long long ) as_parent_id );
+  /* masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );                                                    */
+  /*                                                                                                                        */
+  /* if ( !theid || 0 == strcmp( ename, "home" ) || node_id == 66 || node_id == 1 )                               */
+  /*   MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; node_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid, */
+  /*         ( unsigned long long ) parent_id, ( unsigned long long ) node_id );                                       */
   }
   return 0;
 }
@@ -113,12 +117,12 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-test1( void )
+testfill( const char *path )
 {
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test1cb,
+    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, testfillcb,
      .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, treecb,
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
@@ -127,13 +131,14 @@ test1( void )
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-    mas_qstd_drop_tables( qstd );
-    mas_qstd_create_tables( qstd );
+  /* mas_qstd_drop_tables( qstd ); */
+  /* mas_qstd_create_tables( qstd ); */
 
     if ( qstd->pfs )
     {
-      const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+    /* const char *path0 = "mastest"; */
+    /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
 
       {
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
@@ -141,7 +146,7 @@ test1( void )
         {
           rC( mas_qstd_start_transaction( qstd ) );
 #if 0
-          rC( masxfs_pathinfo_scan_depth_cbf( pi, test1cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
+          rC( masxfs_pathinfo_scan_depth_cbf( pi, testfillcb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
           rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
 #else
           rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );

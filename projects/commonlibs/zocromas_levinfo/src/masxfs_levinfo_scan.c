@@ -52,6 +52,7 @@ masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
+  /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
   if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
     rC( fun_simple( lithis, tflags, data, reldepth ) );
   rRET;
@@ -75,15 +76,18 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
 
       tflags = flags | cb->flags;
 
-      if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth == 1 )
+      /* WARN( "[%s] RD:%ld", lithis ? lithis->name : NULL, ( long ) reldepth ); */
+      if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth <= 1 ) /* Once! ; ==1 for dir ; ==0 for file at initial path */
       {
         masxfs_levinfo_t *lia _uUu_ = lithis - lithis->lidepth;
 
+        /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
         for ( masxfs_levinfo_t * li = lia; rGOOD && li < lithis; li++ )
         {
-
+          /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
           if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
           {
+            /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
             rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
           }
           else
@@ -176,6 +180,7 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       else if ( detype == MASXFS_ENTRY_REG_NUM )
       {
       /* rSETBAD; */
+        /* DIE( "WOW" ); */
       }
       else if ( detype == MASXFS_ENTRY_LNK_NUM )
       {

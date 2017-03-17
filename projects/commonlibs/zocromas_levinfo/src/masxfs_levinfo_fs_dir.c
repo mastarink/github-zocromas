@@ -54,7 +54,15 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   if ( li )
   {
     rSETGOOD;
-    if ( !li->fs.scan.pdir )
+    
+    /* TODO */
+#if 0
+    if ( li->lidepth && !li[-1].fs.scan.pdir )
+      rC( masxfs_levinfo_fs_opendir( li - 1, flags ) );
+#endif
+
+    /* WARN( "A %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
+    if ( rGOOD && !li->fs.scan.pdir )
     {
       int fd = masxfs_levinfo_fs_open( li, flags );
 
@@ -82,6 +90,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         QRLI( li, rCODE );
       }
     }
+    /* WARN( "B %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
   }
   else
     QRLI( li, rCODE );

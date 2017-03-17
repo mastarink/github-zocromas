@@ -117,7 +117,7 @@ mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt )
 int
 mas_qstd_create_tables( mas_qstd_t * qstd )
 {
-  rDECL( 0 );
+  rDECLBAD;
   char *creops[] _uUu_ = {
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SIZES " ("              /* */
@@ -201,10 +201,12 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
 
   if ( qstd && qstd->pfs )
   {
-    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !rCODE; i++ )
+    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
       rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
+      if ( rBAD )
+        break;
     }
   }
 
@@ -214,7 +216,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
 int
 mas_qstd_drop_tables( mas_qstd_t * qstd )
 {
-  rDECL( 0 );
+  rDECLBAD;
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
     "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL "",
@@ -230,10 +232,12 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
 
   if ( qstd && qstd->pfs )
   {
-    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) && !rCODE; i++ )
+    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) ; i++ )
     {
       rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
+      if ( rBAD )
+        break;
     }
   }
 
@@ -253,9 +257,7 @@ mas_qstd_mstmt_reset_array( mysqlpfs_mstmt_t ** mstmts )
     for ( int nst = 0; nst < STD_MSTMT_MAX; nst++ )
     {
       if ( mstmts[nst] )
-      {
         mas_mysqlpfs_mstmt_delete( mstmts[nst] );
-      }
       mstmts[nst] = NULL;
     }
 }
@@ -270,7 +272,7 @@ mas_qstd_mstmt_delete_array( mysqlpfs_mstmt_t ** mstmts )
 mysqlpfs_mstmt_t *
 mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
-  rDECL( 0 );
+  rDECLBAD;
   mysqlpfs_mstmt_t *mstmt = NULL;
 
   QRGP( qstd->pfs );

@@ -62,7 +62,7 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   {
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_NAMES );
 
-  /* assert( updir_id ); */
+    assert( updir_id );
     QRGP( mstmt );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 0, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 1, updir_id, updir_id ? FALSE : TRUE ) );
@@ -71,7 +71,7 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
 
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
     if ( rCODE )
-      WARN( "ERR: %s", mas_mysqlpfs_mstmt_error( mstmt ) );
+      WARN( "ERR: %s; [%lld] '%s' (%s)", mas_mysqlpfs_mstmt_error( mstmt ), updir_id, name, sdetype );
 
     if ( !rCODE && mas_mysqlpfs_mstmt_affected_rows( mstmt ) == 1 )
       theid = mas_mysqlpfs_mstmt_insert_id( mstmt );

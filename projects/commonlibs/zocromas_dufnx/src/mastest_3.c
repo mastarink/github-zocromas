@@ -29,7 +29,7 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-test3cb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
+testtreefromdbcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
@@ -113,12 +113,12 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-test3( void )
+testtreefromdb( const char *path )
 {
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test3cb,
+    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, testtreefromdbcb,
      .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, treecb,
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
@@ -130,8 +130,8 @@ test3( void )
 
     if ( qstd->pfs )
     {
-      const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+      /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
 
       {
         masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_MODE_DB;

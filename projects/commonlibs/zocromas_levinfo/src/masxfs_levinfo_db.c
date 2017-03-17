@@ -101,21 +101,182 @@ int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
+#if 0
+  if ( !li->db.stat )
+  {
+    const char *op _uUu_ = "SELECT name, detype, inode, node_id "    /* */
+            ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
+
+    WARN( "li->name:'%s'; li->db.node_id:%lld", li ? li->name : NULL, li && li->lidepth ? li[-1].db.node_id : 0 );
+  }
+  else
+  {
+    ADIE( "DB STAT" );
+  }
+#endif
   rC( masxfs_levinfo_db_open( li, flags ) );
 /* WARN( "li:%p name:'%s' lidepth:%ld; mstat:%p; node_id:%lld", li, li ? li->name : NULL, ( long ) ( li ? li->lidepth : 0 ), li ? li->db.scan.mstmt : NULL, */
 /*       li ? li->db.node_id : 0 );                                                                                                                    */
+
   rRET;
 }
 
 int
-masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_ )
+masxfs_levinfo_db_prepare_execute_store( masxfs_levinfo_t * li, const char *name, masxfs_levinfo_flags_t flags _uUu_ )
 {
   rDECLBAD;
-  const char *op = "SELECT name, detype, inode, node_id "            /* */
-          ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
+  if ( li )
+  {
+    const char *op;
+
+    rSETGOOD;
+
+    if ( name )
+      op = "SELECT name, detype, inode, node_id "                    /* */
+              ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? AND name=? ORDER BY name_id";
+    else
+      op = "SELECT name, detype, inode, node_id "                    /* */
+              ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
+    if ( !li->db.scan.mstmt && li->db.node_id )
+    {
+      li->db.scan.mstmt = mas_qstd_instance_mstmt_create_setup( 1 + ( name ? 1 : 0 ), 16, op );
+      rC( mas_qstd_mstmt_prepare_param_longlong( li->db.scan.mstmt, 0 ) ); /* parent_id */
+      if ( name )
+        rC( mas_qstd_mstmt_prepare_param_string( li->db.scan.mstmt, 1 ) ); /* name */
+
+      rC( mas_qstd_mstmt_bind_param( li->db.scan.mstmt ) );
+      rC( mas_qstd_mstmt_prepare_result_string( li->db.scan.mstmt, 0 ) ); /* name */
+      rC( mas_qstd_mstmt_prepare_result_string( li->db.scan.mstmt, 1 ) ); /* detype */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 2 ) ); /* inode */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 3 ) ); /* node_id */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 4 ) ); /* dev */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 5 ) ); /* mode */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 6 ) ); /* nlink */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 7 ) ); /* uid */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 8 ) ); /* gid */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 9 ) ); /* size */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 10 ) ); /* blksize */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 11 ) ); /* blocks */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 12 ) ); /* rdev */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 13 ) ); /* atim */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 14 ) ); /* mtim */
+      rC( mas_qstd_mstmt_prepare_result_longlong( li->db.scan.mstmt, 15 ) ); /* ctim */
+      rC( mas_qstd_mstmt_bind_result( li->db.scan.mstmt ) );
+
+      rC( mas_qstd_mstmt_set_param_longlong( li->db.scan.mstmt, 0, ( long long ) li->db.node_id, FALSE ) );
+      if ( name )
+        rC( mas_qstd_mstmt_set_param_string( li->db.scan.mstmt, 0, name ) );
+      rC( mas_qstd_mstmt_execute_store( li->db.scan.mstmt ) );
+    }
+  }
+  rRET;
+}
+
+int
+masxfs_levinfo_db_fetch( masxfs_levinfo_t * li, masxfs_stat_t ** pstat, masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
+{
+  rDECLBAD;
+  if ( li )
+  {
+    int has_data = 0;
+    masxfs_stat_t *stat = NULL;
+    const char *name = NULL;
+    const char *sdetype = NULL;
+    unsigned long long inode = 0;
+    unsigned long long dev = 0;
+    unsigned long long rdev = 0;
+    unsigned long long node_id = 0;
+    unsigned long long mode = 0;
+    unsigned long long nlink = 0;
+    unsigned long long uid = 0;
+    unsigned long long gid = 0;
+    unsigned long long size = 0;
+    unsigned long long blksize = 0;
+    unsigned long long blocks = 0;
+    unsigned long long atim_tv_sec = 0;
+    unsigned long long mtim_tv_sec = 0;
+    unsigned long long ctim_tv_sec = 0;
+
+    if ( pstat )
+      stat = *pstat;
+    rC( mas_qstd_mstmt_fetch( li->db.scan.mstmt, &has_data ) );
+    if ( phas_data )
+      *phas_data = has_data;
+    if ( rGOOD && has_data )
+    {
+      unsigned is_null = 0;
+
+      rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ) );
+      rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 1, &sdetype ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 2, &inode, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 3, &node_id, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 4, &dev, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 5, &mode, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 6, &nlink, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 7, &uid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 8, &gid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 9, &size, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 10, &blksize, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 11, &blocks, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 12, &rdev, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 13, &atim_tv_sec, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 14, &mtim_tv_sec, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( li->db.scan.mstmt, 15, &ctim_tv_sec, &is_null ) );
+      li->db.scan.type = masxfs_levinfo_s2detype( sdetype );
+      li->db.scan.inode = inode;
+      li->db.scan.node_id = node_id;
+      if ( rGOOD )
+      {
+        if ( !stat )
+          stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+        else
+          memset( stat, 0, sizeof( masxfs_stat_t ) );
+        stat->st_dev = ( dev_t ) dev;
+        stat->st_ino = ( ino_t ) inode;
+        stat->st_mode = ( mode_t ) mode;
+        stat->st_nlink = ( nlink_t ) nlink;
+        stat->st_uid = ( uid_t ) uid;
+        stat->st_gid = ( gid_t ) gid;
+        stat->st_size = size;
+        stat->st_blksize = ( blksize_t ) blksize;
+        stat->st_blocks = ( blkcnt_t ) blocks;
+        stat->st_rdev = ( dev_t ) rdev;
+        stat->st_atim.tv_sec = atim_tv_sec;
+        stat->st_mtim.tv_sec = mtim_tv_sec;
+        stat->st_ctim.tv_sec = ctim_tv_sec;
+      /* WARN( "%p %p SIZE:%ld / %ld (%d:%d)", li, li->db.scan.stat, li->db.scan.stat->st_size, masxfs_levinfo_size_ref( li, MASXFS_CB_MODE_DB ), */
+      /*       flags & MASXFS_CB_MODE_DB ? 1 : 0, flags & MASXFS_CB_STAT ? 1 : 0 );                                                               */
+      }
+      if ( rGOOD && pstat )
+        *pstat = stat;
+    /* WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode ); */
+    }
+    else
+    {
+    /* WARN( "NO DATA" ); */
+    }
+  }
+  rRET;
+}
+
+int
+masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  rDECLBAD;
 
   if ( li )
   {
+#if 1
+  /* WARN( "'%s' ==> '%s'", li[0].name, li[1].name ); */
+
+     /*TODO*/
+# if 0
+            if ( li->lidepth && !li[-1].db.scan.mstmt )
+      rC( masxfs_levinfo_db_opendir( li - 1, flags ) );
+# endif
+
+    rC( masxfs_levinfo_db_prepare_execute_store( li, li[1].name, flags ) );
+#else
     if ( li->db.node_id )
     {
       rSETGOOD;
@@ -146,6 +307,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
         rC( mas_qstd_mstmt_execute_store( li->db.scan.mstmt ) );
       }
     }
+#endif
   /* WARN( "DB OPENDIR %d  '%s' @ %d node_id:%lld", rCODE, li->name, li->lidepth , li->db.node_id); */
   }
   else
@@ -184,6 +346,9 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
   if ( li )
   {
+#if 1
+    rC( masxfs_levinfo_db_fetch( li, &li->db.scan.stat, flags, phas_data ) );
+#else
     const char *name = NULL;
     const char *sdetype = NULL;
     int has_data = 0;
@@ -226,26 +391,29 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       li->db.scan.type = masxfs_levinfo_s2detype( sdetype );
       li->db.scan.inode = inode;
       li->db.scan.node_id = node_id;
-      if ( !li->db.scan.stat )
-        li->db.scan.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
-      else
-        memset( li->db.scan.stat, 0, sizeof( masxfs_stat_t ) );
+      if ( rGOOD )
       {
-        li->db.scan.stat->st_dev = ( dev_t ) dev;
-        li->db.scan.stat->st_ino = ( ino_t ) inode;
-        li->db.scan.stat->st_mode = ( mode_t ) mode;
-        li->db.scan.stat->st_nlink = ( nlink_t ) nlink;
-        li->db.scan.stat->st_uid = ( uid_t ) uid;
-        li->db.scan.stat->st_gid = ( gid_t ) gid;
-        li->db.scan.stat->st_size = size;
-        li->db.scan.stat->st_blksize = ( blksize_t ) blksize;
-        li->db.scan.stat->st_blocks = ( blkcnt_t ) blocks;
-        li->db.scan.stat->st_rdev = ( dev_t ) rdev;
-        li->db.scan.stat->st_atim.tv_sec = atim_tv_sec;
-        li->db.scan.stat->st_mtim.tv_sec = mtim_tv_sec;
-        li->db.scan.stat->st_ctim.tv_sec = ctim_tv_sec;
-      /* WARN( "%p %p SIZE:%ld / %ld (%d:%d)", li, li->db.scan.stat, li->db.scan.stat->st_size, masxfs_levinfo_size_ref( li, MASXFS_CB_MODE_DB ), */
-      /*       flags & MASXFS_CB_MODE_DB ? 1 : 0, flags & MASXFS_CB_STAT ? 1 : 0 );                                                               */
+        if ( !li->db.scan.stat )
+          li->db.scan.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+        else
+          memset( li->db.scan.stat, 0, sizeof( masxfs_stat_t ) );
+        {
+          li->db.scan.stat->st_dev = ( dev_t ) dev;
+          li->db.scan.stat->st_ino = ( ino_t ) inode;
+          li->db.scan.stat->st_mode = ( mode_t ) mode;
+          li->db.scan.stat->st_nlink = ( nlink_t ) nlink;
+          li->db.scan.stat->st_uid = ( uid_t ) uid;
+          li->db.scan.stat->st_gid = ( gid_t ) gid;
+          li->db.scan.stat->st_size = size;
+          li->db.scan.stat->st_blksize = ( blksize_t ) blksize;
+          li->db.scan.stat->st_blocks = ( blkcnt_t ) blocks;
+          li->db.scan.stat->st_rdev = ( dev_t ) rdev;
+          li->db.scan.stat->st_atim.tv_sec = atim_tv_sec;
+          li->db.scan.stat->st_mtim.tv_sec = mtim_tv_sec;
+          li->db.scan.stat->st_ctim.tv_sec = ctim_tv_sec;
+        /* WARN( "%p %p SIZE:%ld / %ld (%d:%d)", li, li->db.scan.stat, li->db.scan.stat->st_size, masxfs_levinfo_size_ref( li, MASXFS_CB_MODE_DB ), */
+        /*       flags & MASXFS_CB_MODE_DB ? 1 : 0, flags & MASXFS_CB_STAT ? 1 : 0 );                                                               */
+        }
       }
     /* WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode ); */
     }
@@ -255,7 +423,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
     }
     if ( phas_data )
       *phas_data = has_data;
-
+#endif
   /* li->db.pde = &li->db.de; (*???*) */
   /* de.d_name=...;                   */
   /* de.d_type=...;                   */

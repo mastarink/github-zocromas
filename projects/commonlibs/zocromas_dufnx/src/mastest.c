@@ -47,20 +47,26 @@ destructor_main( void )
 //malloc_stats(  );
 }
 
-int test0( void );
-int test1( void );
-int test2( void );
-int test3( void );
+int testdropcreate( const char *path );
+int testfill( const char *path );
+int testtreefromfs( const char *path );
+int testtreefromdb( const char *path );
 
 int
-main( int argc, char *argv[] )
+main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
-  dufnx( argc, argv );
+/* dufnx( argc, argv ); */
+/* const char *path __attribute__ ( ( unused ) ) = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest"; */
+  const char *path __attribute__ ( ( unused ) ) = "mastest";
 
-  test0(  );
-  test1(  );
-  test2(  );
-  test3(  );
+/* const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in"; */
+
+/* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
+
+  testdropcreate( path );
+  testfill( path );
+/* testtreefromfs( path ); */
+  testtreefromdb( path );
 
   return 0;
 }
