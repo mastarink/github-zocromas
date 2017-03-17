@@ -131,6 +131,7 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
     /* r=readdir_r(li->fs.scan.pdir, &li->de,...  ); No! */
       li->fs.scan.pde = de = readdir( li->fs.scan.pdir );
     /* li->de = *de; */
+      /* TODO : directly to li[1]; i.e. init child here, no need of li->fs.scan.pde, just local pde */
       if ( de || !errno )
         rSETGOOD;
       QRLI( li, rCODE );
