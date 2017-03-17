@@ -101,6 +101,7 @@ int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
+/* TODO */
 #if 0
   if ( !li->db.stat )
   {
@@ -181,8 +182,8 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 
 /* TODO move to qstd */
 int
-masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, masxfs_stat_t ** pstat, unsigned long long *pnode_id, masxfs_levinfo_flags_t flags _uUu_,
-                         int *phas_data )
+masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t ** pstat, unsigned long long *pnode_id,
+                         masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
 {
   rDECLBAD;
   if ( mstmt )
@@ -256,6 +257,8 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, masxfs_stat_t ** pstat, unsig
         stat->st_mtim.tv_sec = mtim_tv_sec;
         stat->st_ctim.tv_sec = ctim_tv_sec;
       }
+      if ( pname )
+        *pname = name;
       if ( pnode_id )
         *pnode_id = node_id;
       if ( rGOOD && pstat )
@@ -328,9 +331,11 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   if ( li )
   {
     unsigned long long node_id = 0;
+    const char *name = NULL;
 
   /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
-    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &li->db.scan.stat, &node_id, flags, phas_data ) );
+    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &name, &li->db.scan.stat, &node_id, flags, phas_data ) );
+    assert( 0 == strcmp( name, li->name ) );
 
   /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
     li->db.scan.type = masxfs_levinfo_stat2entry( li->db.scan.stat );
