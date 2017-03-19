@@ -53,14 +53,14 @@ masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
-  /* if ( tflags & MASXFS_CB_MODE_DB )                              */
-  /*   WARN( "DETYPE Z1 : %d '%s'", lithis->detype, lithis->name ); */
+/* if ( tflags & MASXFS_CB_MODE_DB )                              */
+/*   WARN( "DETYPE Z1 : %d '%s'", lithis->detype, lithis->name ); */
   if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
     rC( fun_simple( lithis, tflags, data, reldepth ) );
   else
     rSETGOOD;
-  /* if ( tflags & MASXFS_CB_MODE_DB )                              */
-  /*   WARN( "DETYPE Z2 : %d '%s'", lithis->detype, lithis->name ); */
+/* if ( tflags & MASXFS_CB_MODE_DB )                              */
+/*   WARN( "DETYPE Z2 : %d '%s'", lithis->detype, lithis->name ); */
   QRLI( li, rCODE );
   rRET;
 }
@@ -95,10 +95,10 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
           if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
           {
           /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
-            /* WARN( "DETYPE X1 : %d '%s'", lithis->detype, lithis->name ); */
+          /* WARN( "DETYPE X1 : %d '%s'", lithis->detype, lithis->name ); */
             rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
-            /* if ( flags & MASXFS_CB_MODE_DB )                               */
-            /*   WARN( "DETYPE X2 : %d '%s'", lithis->detype, lithis->name ); */
+          /* if ( flags & MASXFS_CB_MODE_DB )                               */
+          /*   WARN( "DETYPE X2 : %d '%s'", lithis->detype, lithis->name ); */
           }
           else
           {
@@ -106,12 +106,12 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
           }
         }
       }
-      /* if ( flags & MASXFS_CB_MODE_DB )                               */
-      /*   WARN( "DETYPE X3 : %d '%s'", lithis->detype, lithis->name ); */
+    /* if ( flags & MASXFS_CB_MODE_DB )                               */
+    /*   WARN( "DETYPE X3 : %d '%s'", lithis->detype, lithis->name ); */
       rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, detype ? detype : lithis->detype,
                                                          reldepth ) );
-      /* if ( flags & MASXFS_CB_MODE_DB )                               */
-      /*   WARN( "DETYPE X4 : %d '%s'", lithis->detype, lithis->name ); */
+    /* if ( flags & MASXFS_CB_MODE_DB )                               */
+    /*   WARN( "DETYPE X4 : %d '%s'", lithis->detype, lithis->name ); */
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
     }
@@ -167,10 +167,10 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 
   if ( li )
   {
-    const char *name _uUu_ = masxfs_levinfo_scanned_name( li, flags );
-    masxfs_entry_type_t detype _uUu_ = masxfs_levinfo_scanned_detype( li, flags );
-    ino_t d_inode _uUu_ = masxfs_levinfo_scanned_inode( li, flags );
-    unsigned long long node_id _uUu_ = masxfs_levinfo_scanned_nodeid( li, flags );
+    /* const char *name _uUu_ = masxfs_levinfo_scanned_name( li, flags ); */
+    /* masxfs_entry_type_t detype _uUu_ = masxfs_levinfo_scanned_detype( li, flags ); */
+    /* ino_t d_inode _uUu_ = masxfs_levinfo_scanned_inode( li, flags ); */
+    /* unsigned long long node_id _uUu_ = masxfs_levinfo_scanned_nodeid( li, flags ); */
 
   /* if ( li->db.scan.stat )                                                                        */
   /*   WARN( "DESTAT:%s : %d", flags & MASXFS_CB_MODE_DB ? "DB" : "FS", li->db.scan.stat ? 1 : 0 ); */
@@ -187,7 +187,7 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     lidepth++;
     reldepth++;
 
-    assert( li->detype == detype );
+    /* assert( li->detype == detype ); */
     {
 #if 0
       assert( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_REG_NUM || li->detype == MASXFS_ENTRY_LNK_NUM );
@@ -205,24 +205,24 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       assert( li->db.stat == destat );
       assert( li->detype == detype );
 #endif
-      assert( li->detype == detype );
-      /* if ( flags & MASXFS_CB_MODE_DB )                      */
-      /*   WARN( "DETYPE A : %d '%s'", li->detype, li->name ); */
+      /* assert( li->detype == detype ); */
+    /* if ( flags & MASXFS_CB_MODE_DB )                      */
+    /*   WARN( "DETYPE A : %d '%s'", li->detype, li->name ); */
       rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
-      /* if ( flags & MASXFS_CB_MODE_DB )                      */
-      /*   WARN( "DETYPE B : %d '%s'", li->detype, li->name ); */
+    /* if ( flags & MASXFS_CB_MODE_DB )                      */
+    /*   WARN( "DETYPE B : %d '%s'", li->detype, li->name ); */
     /* FIXME : detype is correct,  li->detype is NOT */
-      assert( li->detype == detype );
-      if ( detype == MASXFS_ENTRY_DIR_NUM )
+      /* assert( li->detype == detype ); */
+      if ( li->detype == MASXFS_ENTRY_DIR_NUM )
       {
         rC( masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
       }
-      else if ( detype == MASXFS_ENTRY_REG_NUM )
+      else if ( li->detype == MASXFS_ENTRY_REG_NUM )
       {
       /* rSETBAD; */
       /* DIE( "WOW" ); */
       }
-      else if ( detype == MASXFS_ENTRY_LNK_NUM )
+      else if ( li->detype == MASXFS_ENTRY_LNK_NUM )
       {
       /* rSETBAD; */
       }
@@ -241,23 +241,24 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
   rRET;
 }
 
+#if 0
 static void
 masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
 {
 /* TODO - Don't remove next 20170217.123704 */
-#if 0
+# if 0
   if ( li->fs.pde->d_type == DT_UNKNOWN )
   {
     struct stat st;
 
-# if 1
+#  if 1
     r = fstat(  .... );
-# else
+#  else
     fpath = masxfs_normalize_path( path, li->fs.pde->d_name );
     r = lstat( fpath, &st );
     if ( fpath )
       mas_free( fpath );
-# endif
+#  endif
     if ( r >= 0 )
     {
       switch ( st.st_mode & S_IFMT )
@@ -289,9 +290,11 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
       }
     }
   }
-#endif
+# endif
 }
+#endif
 
+#if 0
 static int
 masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -302,9 +305,11 @@ masxfs_levinfo_de_valid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     const char *name = masxfs_levinfo_scanned_name( li, flags );
 
     b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
+    assert( b );
   }
   return b;
 }
+#endif
 
 static int
 masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
@@ -316,29 +321,11 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
   {
     rSETGOOD;
     assert( li[1].detype == MASXFS_ENTRY_DIR_NUM || li[1].detype == MASXFS_ENTRY_REG_NUM || li[1].detype == MASXFS_ENTRY_LNK_NUM );
-  /* if ( flags & MASXFS_CB_MODE_DB )     */
-  /*   WARN( "######### -1- DOWN (db)" ); */
-    if ( masxfs_levinfo_de_valid( li, flags ) )
+  /* if ( masxfs_levinfo_de_valid( li, flags ) ) */
     {
-      masxfs_levinfo_fix_type( li );
-    /* if ( flags & MASXFS_CB_MODE_DB )     */
-    /*   WARN( "######### -2- DOWN (db)" ); */
+    /* masxfs_levinfo_fix_type( li ); */
       if ( ( flags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth ) ) )
-      {
-      /* if ( flags & MASXFS_CB_MODE_DB )                                                                         */
-      /*   WARN( "######### TO DOWN (db) \"%s\" -> \"%s\"", li->name, masxfs_levinfo_scanned_name( li, flags ) ); */
         rC( masxfs_levinfo_scan_down_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
-      }
-      else
-      {
-      /* if ( flags & MASXFS_CB_MODE_DB )    */
-      /*   WARN( "######### NO DOWN (db)" ); */
-      }
-    }
-    else
-    {
-    /* if ( flags & MASXFS_CB_MODE_DB )                                                                  */
-    /*   WARN( "######### -- DOWN (db) ---- not valid '%s'", masxfs_levinfo_scanned_name( li, flags ) ); */
     }
   }
   else

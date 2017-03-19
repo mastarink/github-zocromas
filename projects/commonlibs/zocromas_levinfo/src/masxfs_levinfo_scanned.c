@@ -22,6 +22,7 @@
 
 #include "masxfs_levinfo_scanned.h"
 
+#if 0
 const char *
 masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -68,7 +69,9 @@ masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
 #endif
   return name;
 }
+#endif
 
+#if 0
 masxfs_entry_type_t
 masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -113,7 +116,9 @@ masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
 #endif
   return type;
 }
+#endif
 
+#if 0
 ino_t
 masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -156,7 +161,9 @@ masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
 #endif
   return inode;
 }
+#endif
 
+#if 0
 unsigned long long
 masxfs_levinfo_scanned_nodeid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -194,6 +201,7 @@ masxfs_levinfo_scanned_nodeid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
 #endif
   return node_id;
 }
+#endif
 
 #if 0
 masxfs_stat_t *

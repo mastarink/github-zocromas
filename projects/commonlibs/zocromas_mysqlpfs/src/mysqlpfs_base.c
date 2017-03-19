@@ -43,7 +43,7 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
 mysqlpfs_t *
 mysqlpfs_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
 {
-  rDECL( 0 );
+  rDECLBAD;
   mysqlpfs_t *pfs = mysqlpfs_create(  );
 
   rC( mysqlpfs_init( pfs, host, user, passwd, db, port ) );

@@ -48,7 +48,7 @@ MYSQL_TYPE_NULL
 int
 mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -79,7 +79,7 @@ from https://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-reset.html
 int
 mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -93,7 +93,7 @@ mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt )
 static int
 mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -137,7 +137,7 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
 static int
 mas_mysqlpfs_mstmt_prepare_param_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -148,7 +148,7 @@ mas_mysqlpfs_mstmt_prepare_param_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum en
 int
 mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   rC( mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) ) );
   rRET;
@@ -157,7 +157,7 @@ mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 int
 mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   rC( mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_STRING, buffer_length ) );
   rRET;
@@ -166,7 +166,7 @@ mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysq
 static int
 mas_mysqlpfs_mstmt_prepare_result_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -177,7 +177,7 @@ mas_mysqlpfs_mstmt_prepare_result_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum e
 int
 mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   rC( mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_LONGLONG, sizeof( mysqlpfs_s_ulonglong_t ) ) );
   rRET;
@@ -186,7 +186,7 @@ mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 int
 mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   rC( mas_mysqlpfs_mstmt_prepare_result_gen( mstmt, pos, PFS_STRING, buffer_length ) );
   rRET;
@@ -197,7 +197,7 @@ mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mys
 int
 mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigned long long num, unsigned is_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -226,7 +226,7 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
 static int
 mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -239,7 +239,7 @@ mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
       if ( pis_null )
         *pis_null = ( unsigned ) *p_is_null;
       if ( pnum )
-        *pnum = ( *p_is_null ) ? 0 : ( unsigned long long ) *p;
+        *pnum = ( *p_is_null ) ? 0L : ( unsigned long long ) *p;
       rSETGOOD;
     }
     else
@@ -253,7 +253,7 @@ mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
 int
 mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -264,7 +264,7 @@ mas_mysqlpfs_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsign
 int
 mas_mysqlpfs_mstmt_get_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -275,7 +275,7 @@ mas_mysqlpfs_mstmt_get_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsign
 int
 mas_mysqlpfs_mstmt_set_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -286,7 +286,7 @@ mas_mysqlpfs_mstmt_set_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsig
 int
 mas_mysqlpfs_mstmt_get_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long *pnum, unsigned *pis_null )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -297,7 +297,7 @@ mas_mysqlpfs_mstmt_get_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsig
 int
 mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const char *string )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -310,7 +310,6 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
 
       if ( string )
       {
-
         strncpy( s, string, mbind->bind[pos].buffer_length - 1 );
         s[mbind->bind[pos].buffer_length - 1] = 0;
         *p_length = strlen( s );
@@ -338,7 +337,7 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
 static int
 mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const char **pstring )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mbind->bind );
   if ( mbind->bind )
@@ -354,7 +353,6 @@ mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const 
         *pstring = NULL;
         if ( !*p_is_null && s )
         {
-        /* *pstring = mas_strndup( s, *p_length ); */
           s[*p_length] = 0;
           *pstring = s;
         }
@@ -373,7 +371,7 @@ mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const 
 int
 mas_mysqlpfs_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -384,7 +382,7 @@ mas_mysqlpfs_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const ch
 int
 mas_mysqlpfs_mstmt_get_param_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -395,7 +393,7 @@ mas_mysqlpfs_mstmt_get_param_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const
 int
 mas_mysqlpfs_mstmt_set_result_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -406,7 +404,7 @@ mas_mysqlpfs_mstmt_set_result_string( mysqlpfs_mstmt_t * mstmt, int pos, const c
 int
 mas_mysqlpfs_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -417,7 +415,7 @@ mas_mysqlpfs_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, cons
 int
 mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -435,7 +433,7 @@ mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -453,7 +451,7 @@ mas_mysqlpfs_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -467,7 +465,7 @@ mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -481,7 +479,7 @@ mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt, int *phas_data )
 {
-  rDECL( -1 );
+  rDECLBAD;
   int has_data = 0;
 
   QRGP( mstmt );
@@ -507,7 +505,7 @@ mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt, int *phas_data )
 int
 mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -525,7 +523,7 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
   rC( mas_mysqlpfs_mstmt_store_result( mstmt ) );
@@ -580,7 +578,7 @@ mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt )
 int
 mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -598,7 +596,7 @@ mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offse
 unsigned int
 mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( -1 );
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
