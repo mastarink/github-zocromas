@@ -66,7 +66,7 @@ fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _
   return 0;
 }
 
-static int
+static int _uUu_
 testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
@@ -88,7 +88,7 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
   INFO("A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
-  masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS );
+  /* masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS ); */
   INFO("B====================================================");
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );

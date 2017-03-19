@@ -25,7 +25,7 @@
 
 #include "mysqlpfs_structs.h"
 
-static int
+static int _uUu_
 test4ocb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, masxfs_depth_t reldepth _uUu_ )
 {
   mysqlpfs_t *_uUu_ pfs = ( mysqlpfs_t * ) pfsv;
@@ -108,7 +108,7 @@ test4o( void )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      masxfs_pathinfo_scan_depth_cbf( pi, test4ocb, pfs, MASXFS_CB_MODE_FS /* flags */  );
+      /*20170319.112824 masxfs_pathinfo_scan_depth_cbf( pi, test4ocb, pfs, MASXFS_CB_MODE_FS (* flags *)  ); */
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );

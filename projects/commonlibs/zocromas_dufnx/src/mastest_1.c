@@ -60,7 +60,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
 
     /* WARN( "SIZE: %ld / %ld", size, thesize ); */
     }
-    /* WARN( "%lld:: '%s'", parent_id, li->name ); */
+  /* WARN( "%lld:: '%s'", parent_id, li->name ); */
     {
       const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
 
@@ -78,7 +78,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
 #endif
 #if 1
       theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
-      /* WARN( "%lld ==> %lld", parent_id, theid ); */
+    /* WARN( "%lld ==> %lld", parent_id, theid ); */
 #endif
 #if 0
       theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
@@ -87,7 +87,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
       node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-      /* WARN( "(%lld) set node_id=%lld (was:%lld) for '%s'", parent_id, node_id, li->db.node_id, li->name ); */
+    /* WARN( "(%lld) set node_id=%lld (was:%lld) for '%s'", parent_id, node_id, li->db.node_id, li->name ); */
       masxfs_levinfo_set_node_id( li, node_id );
     }
   /* masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );                                                    */
@@ -99,6 +99,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
   return 0;
 }
 
+static int numline_treecb = 0;
 static int _uUu_
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
@@ -111,7 +112,9 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "", epath ? epath : "" );
+  numline_treecb++;
+  printf( "%4d. %s %ld fd:%d D:%ld i:%ld %s; %s\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "",
+          epath ? epath : "" );
 
   return 0;
 }

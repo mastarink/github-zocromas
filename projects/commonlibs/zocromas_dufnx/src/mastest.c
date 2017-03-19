@@ -65,7 +65,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
   testdropcreate( path );
   testfill( path );
-/* testtreefromfs( path ); */
+  /* testtreefromfs( path ); */
   testtreefromdb( path );
 
   return 0;

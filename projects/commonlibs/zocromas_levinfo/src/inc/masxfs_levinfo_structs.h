@@ -18,6 +18,8 @@ struct masxfs_levinfo_s
   masxfs_entry_type_t detype;
   /* ino_t deinode; */
   int fd;
+  unsigned fixed:1;
+  unsigned no_more:1;
   masxfs_depth_t lidepth;
   int error;
   size_t child_count_pair[2];

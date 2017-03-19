@@ -26,14 +26,14 @@
 
 #include "mysqlpfs_structs.h"
 
-static int
-test5cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv , masxfs_depth_t reldepth _uUu_)
+static int _uUu_
+test5cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *mstmtv, masxfs_depth_t reldepth _uUu_ )
 {
   mysqlpfs_mstmt_t *mstmt = ( mysqlpfs_mstmt_t * ) mstmtv;
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  MARK( "(T5)", " %ld. %s", (long)depth, ename );
+  MARK( "(T5)", " %ld. %s", ( long ) depth, ename );
   {
     int r = 0;
 
@@ -66,7 +66,7 @@ test5( void )
 
       if ( !r )
       {
-        masxfs_pathinfo_scan_depth_cbf( pi, test5cb, mstmt, MASXFS_CB_MODE_FS /* flags */  );
+      /*20170319.112815 masxfs_pathinfo_scan_depth_cbf( pi, test5cb, mstmt, MASXFS_CB_MODE_FS (* flags *)  ); */
       }
       mas_mysqlpfs_mstmt_delete( mstmt );
 

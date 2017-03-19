@@ -156,10 +156,10 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
 
   if ( li )
   {
-    const char *name = masxfs_levinfo_scanned_name( li, flags );
-    masxfs_entry_type_t detype = masxfs_levinfo_scanned_detype( li, flags );
-    ino_t d_inode = masxfs_levinfo_scanned_inode( li, flags );
-    unsigned long long node_id = masxfs_levinfo_scanned_nodeid( li, flags );
+    const char *name _uUu_ = masxfs_levinfo_scanned_name( li, flags );
+    masxfs_entry_type_t detype _uUu_ = masxfs_levinfo_scanned_detype( li, flags );
+    ino_t d_inode _uUu_ = masxfs_levinfo_scanned_inode( li, flags );
+    unsigned long long node_id _uUu_ = masxfs_levinfo_scanned_nodeid( li, flags );
 
   /*last (zeroes stat), at least
    * after refer to stat,
@@ -173,8 +173,21 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     reldepth++;
 
     {
+      assert( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_REG_NUM || li->detype == MASXFS_ENTRY_LNK_NUM );
+      assert( li->name );
+      assert( li->lidepth == lidepth );
+      assert( li->db.node_id == node_id );
+      assert( li->db.stat == destat );
+      assert( li->detype == detype );
     /* TODO move init to parent's readdir!! */
-      masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
+      /* masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat ); */
+
+      assert( li->name );
+      assert( li->lidepth == lidepth );
+      assert( li->db.node_id == node_id );
+      assert( li->db.stat == destat );
+      assert( li->detype == detype );
+
       rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
       if ( detype == MASXFS_ENTRY_DIR_NUM )
       {
@@ -278,6 +291,7 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
   if ( li )
   {
     rSETGOOD;
+    assert( li[1].detype == MASXFS_ENTRY_DIR_NUM || li[1].detype == MASXFS_ENTRY_REG_NUM || li[1].detype == MASXFS_ENTRY_LNK_NUM );
   /* if ( flags & MASXFS_CB_MODE_DB )     */
   /*   WARN( "######### -1- DOWN (db)" ); */
     if ( masxfs_levinfo_de_valid( li, flags ) )
@@ -319,16 +333,22 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t
   int n = 0;
   int has_data = 0;
 
-  while ( rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
+  if ( li )
   {
-    rC( masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
+    while ( rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
+    {
+      assert( li[1].detype == MASXFS_ENTRY_DIR_NUM || li[1].detype == MASXFS_ENTRY_REG_NUM || li[1].detype == MASXFS_ENTRY_LNK_NUM );
+      rC( masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
+      if ( rGOOD )
+        n++;
+      else
+        break;
+    }
     if ( rGOOD )
-      n++;
-    else
-      break;
+      rCODE = n;
   }
-  if ( rGOOD )
-    rCODE = n;
+  else
+    QRLI( li, rCODE );
   rRET;
 }
 
@@ -383,6 +403,7 @@ masxfs_levinfo_scan_dirn_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
   rRET;
 }
 
+#if 0
 int
 masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, masxfs_scan_fun_simple_t cbf, void *udata _uUu_,
                                masxfs_levinfo_flags_t flags )
@@ -391,7 +412,7 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
 
   if ( lia )
   {
-#if 1
+# if 1
     for ( masxfs_depth_t d = 0; rGOOD && d < depth; d++ )
     {
       if ( lia[d].lidepth == d )
@@ -405,7 +426,7 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
         rSETBAD;
       }
     }
-#else
+# else
     for ( masxfs_levinfo_t * li = lia; li < lia + depth; li++ )
     {
       if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
@@ -420,9 +441,10 @@ masxfs_levinfo_scan_depth_cbf( masxfs_levinfo_t * lia, masxfs_depth_t depth, mas
         DIE( "FATAL ERROR" );
       }
     }
-#endif
+# endif
   }
   else
     QRLI( li, rCODE );
   rRET;
 }
+#endif

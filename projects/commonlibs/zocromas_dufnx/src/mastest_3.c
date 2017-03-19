@@ -95,6 +95,7 @@ testtreefromdbcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qst
   return 0;
 }
 
+static int numline_treecb = 0;
 static int _uUu_
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
@@ -107,8 +108,9 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
 
-  printf( "%s %ld fd:%d D:%ld i:%ld %s; %s\n", prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "", epath ? epath : "" );
-
+  numline_treecb++;
+  printf( "%4d. %s %ld fd:%d D:%ld i:%ld %s; %s\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "",
+          epath ? epath : "" );
   return 0;
 }
 
@@ -130,7 +132,7 @@ testtreefromdb( const char *path )
 
     if ( qstd->pfs )
     {
-      /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
+    /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
 
       {

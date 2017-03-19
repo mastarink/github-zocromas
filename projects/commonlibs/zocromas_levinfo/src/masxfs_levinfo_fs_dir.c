@@ -1,6 +1,7 @@
 #define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
+#include <unistd.h>
 #include <errno.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -12,6 +13,7 @@
 #include "masxfs_levinfo_mode.h"
 
 #include "masxfs_levinfo_tools.h"
+#include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_db.h"
 #include "masxfs_levinfo_io.h"
@@ -55,13 +57,13 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   {
     rSETGOOD;
 
-    /* TODO */
+  /* TODO */
 #if 0
     if ( li->lidepth && !li[-1].fs.scan.pdir )
       rC( masxfs_levinfo_fs_opendir( li - 1, flags ) );
 #endif
 
-    /* WARN( "A %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
+  /* WARN( "A %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
     if ( rGOOD && !li->fs.scan.pdir )
     {
       int fd = masxfs_levinfo_fs_open( li, flags );
@@ -90,7 +92,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         QRLI( li, rCODE );
       }
     }
-    /* WARN( "B %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
+  /* WARN( "B %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
   }
   else
     QRLI( li, rCODE );
@@ -116,6 +118,15 @@ masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
   rRET;
 }
 
+static inline int
+name_valid( const char *name )
+{
+  int b = 0;
+
+  b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
+  return b;
+}
+
 int
 masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
 {
@@ -127,18 +138,29 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
     li->fs.scan.pde = NULL;
     if ( li->fs.scan.pdir )
     {
-      errno = 0;
-    /* r=readdir_r(li->fs.scan.pdir, &li->de,...  ); No! */
-      li->fs.scan.pde = de = readdir( li->fs.scan.pdir );
-    /* li->de = *de; */
+      do
+      {
+        errno = 0;
+      /* r=readdir_r(li->fs.scan.pdir, &li->de,...  ); No! */
+        li->fs.scan.pde = de = readdir( li->fs.scan.pdir );
+      /* li->de = *de; */
       /* TODO : directly to li[1]; i.e. init child here, no need of li->fs.scan.pde, just local pde */
 
-
-
-      if ( de || !errno )
-        rSETGOOD;
+        if ( de || !errno )
+          rSETGOOD;
+      } while ( de && !name_valid( de->d_name ) );
+#if 1
+      if ( rGOOD && de )
+      {
+      /* 20170319.111336 */
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ), de->d_ino, 0, NULL );
+        assert( li[0].lidepth + 1 == li[1].lidepth );
+        /* WARN( "HAHA: '%s' [%d:%d:%d]", li[1].name, DT_DIR, DT_REG, de->d_type ); */
+      }
+#endif
       QRLI( li, rCODE );
     }
+    assert( !de || ( li[1].detype == MASXFS_ENTRY_DIR_NUM || li[1].detype == MASXFS_ENTRY_REG_NUM || li[1].detype == MASXFS_ENTRY_LNK_NUM ) );
     if ( phas_data )
     {
       *phas_data = ( de ? 1 : 0 );

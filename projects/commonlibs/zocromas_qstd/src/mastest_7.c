@@ -116,7 +116,7 @@ test7( void )
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-    rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flags */  ) );
+    /*20170319.113014 rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS (* flags *)  ) ); */
     rC( masxfs_pathinfo_scan_cbs
         ( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );

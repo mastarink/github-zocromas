@@ -42,11 +42,13 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 {
   if ( li && name )
   {
+    char *newname = mas_strndup( name, len );
+
     if ( li->name )
       mas_free( li->name );
-    li->name = mas_strndup( name, len );
+    li->name = newname;
     li->detype = d_type;
-    /* li->deinode = d_inode; (* TODO take from destat OR needless!!! *) */
+  /* li->deinode = d_inode; (* TODO take from destat OR needless!!! *) */
     li->lidepth = lidepth;
     li->db.node_id = node_id;
     li->db.stat = destat;
@@ -63,7 +65,7 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
 }
 
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags  )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   if ( li )
   {

@@ -30,6 +30,7 @@
 #include "masxfs_levinfo_mode.h"
 
 #include "masxfs_levinfo_tools.h"
+#include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_ref.h"
 /* #include "masxfs_levinfo_io_dir.h" */
 #include "masxfs_levinfo_fs.h"
@@ -342,13 +343,21 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   /* li->db.scan.inode = inode; */
     li->db.scan.node_id = node_id;
 
-#if 0
-      masxfs_levinfo_init( li+1, li->lidepth+1, dename,  masxfs_levinfo_stat2entry( li->db.scan.stat ), d_inode, node_id, destat );
-#endif
-
-
     if ( rGOOD && *phas_data )
+    {
+#if 1
+    /* 20170319.111336 */
+      const char *name = NULL;
+      masxfs_entry_type_t detype = masxfs_levinfo_stat2entry( li->db.scan.stat );
+
+      rC(mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ));      
+      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, li->db.scan.stat->st_ino, node_id, li->db.scan.stat );
+#endif
+/*
+*/
+
       li->db.scan.inode = li->db.scan.stat->st_ino;
+    }
   /* li->db.pde = &li->db.de; (*???*) */
   /* de.d_name=...;                   */
   /* de.d_type=...;                   */
