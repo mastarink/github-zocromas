@@ -344,7 +344,6 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
 #if 0
       masxfs_levinfo_init( li+1, li->lidepth+1, dename,  masxfs_levinfo_stat2entry( li->db.scan.stat ), d_inode, node_id, destat );
-      
 #endif
 
 

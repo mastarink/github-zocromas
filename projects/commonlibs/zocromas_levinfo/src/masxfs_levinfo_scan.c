@@ -29,11 +29,12 @@ masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs
                             masxfs_depth_t reldepth )
 {
   rDECLBAD;
-  int rc = 0;
 
   rC( masxfs_levinfo_opendir( li, flags ) );
   if ( rGOOD )
   {
+    int rc = 0;
+
     rC( masxfs_levinfo_scan_dirn_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
     rc = masxfs_levinfo_closedir( li, flags );
     if ( rGOOD )
@@ -47,14 +48,16 @@ static int
 masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t tflags,
                                                masxfs_entry_type_t detype, masxfs_depth_t reldepth )
 {
-  rDECLGOOD;                                                         /* sic! 20170314.185257 */
+  rDECLBAD;
 
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
-  /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
   if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
     rC( fun_simple( lithis, tflags, data, reldepth ) );
+  else
+    rSETGOOD;
+  QRLI( li, rCODE );
   rRET;
 }
 
@@ -76,18 +79,18 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
 
       tflags = flags | cb->flags;
 
-      /* WARN( "[%s] RD:%ld", lithis ? lithis->name : NULL, ( long ) reldepth ); */
-      if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth <= 1 ) /* Once! ; ==1 for dir ; ==0 for file at initial path */
+    /* WARN( "[%s] RD:%ld", lithis ? lithis->name : NULL, ( long ) reldepth ); */
+      if ( ( tflags & MASXFS_CB_FROM_ROOT ) && reldepth <= 1 )       /* Once! ; ==1 for dir ; ==0 for file at initial path */
       {
         masxfs_levinfo_t *lia _uUu_ = lithis - lithis->lidepth;
 
-        /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
+      /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
         for ( masxfs_levinfo_t * li = lia; rGOOD && li < lithis; li++ )
         {
-          /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
+        /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
           if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
           {
-            /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
+          /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
             rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
           }
           else
@@ -170,7 +173,7 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     reldepth++;
 
     {
-      /* TODO move init to parent's readdir!! */
+    /* TODO move init to parent's readdir!! */
       masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat );
       rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
       if ( detype == MASXFS_ENTRY_DIR_NUM )
@@ -180,7 +183,7 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       else if ( detype == MASXFS_ENTRY_REG_NUM )
       {
       /* rSETBAD; */
-        /* DIE( "WOW" ); */
+      /* DIE( "WOW" ); */
       }
       else if ( detype == MASXFS_ENTRY_LNK_NUM )
       {
@@ -305,31 +308,27 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * 
   rRET;
 }
 
-/* 
+/*
  * bad:  r< 0
  * good: r>=0 */
 static int
 masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * cbs, void *data, masxfs_levinfo_flags_t flags,
                                   masxfs_depth_t maxdepth, masxfs_depth_t reldepth )
 {
-  rDECLGOOD;
+  rDECLBAD;
   int n = 0;
   int has_data = 0;
 
-  while ( rGOOD && rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
+  while ( rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
   {
-  /* if ( flags & MASXFS_CB_MODE_DB )       */
-  /*   WARN( "********* SCAN entry (db)" ); */
     rC( masxfs_levinfo_scan_entry_cbs( li, cbs, data, flags, maxdepth, reldepth ) );
-  /* if ( ( flags & MASXFS_CB_MODE_DB ) && rBAD ) */
-  /*   WARN( "r:%d", rCODE );                     */
     if ( rGOOD )
       n++;
+    else
+      break;
   }
   if ( rGOOD )
     rCODE = n;
-/* if ( flags & MASXFS_CB_MODE_DB )                */
-/*   WARN( "END SCAN (db) rest cbs: %d;", rCODE ); */
   rRET;
 }
 

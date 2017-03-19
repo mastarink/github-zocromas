@@ -28,7 +28,7 @@ exiternal functions used:
  close
  fstatat
  fstat
- 
+
  */
 
 int

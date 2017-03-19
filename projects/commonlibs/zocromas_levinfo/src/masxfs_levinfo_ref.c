@@ -49,7 +49,9 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 }
 #endif
 
-off_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+#if 1
+off_t
+masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
   off_t size = 0;
 
@@ -61,20 +63,54 @@ off_t __attribute__ ( ( pure ) ) masxfs_levinfo_size_val( masxfs_levinfo_t * li,
   return size;
 }
 
-#if 1
 off_t
 masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECLBAD;
   off_t size = 0;
 
-  if ( li && ( tflags & MASXFS_CB_STAT ) /* XXX ??? XXX */  )
+  if ( li )
   {
     rC( masxfs_levinfo_stat( li, tflags ) );
     if ( rGOOD )
       size = masxfs_levinfo_size_val( li, 0, tflags );
   }
   return size;
+}
+#endif
+
+#if 1
+ino_t
+masxfs_levinfo_inode_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+{
+  ino_t inode = 0;
+
+  li = masxfs_levinfo_offset( li, offset );
+  const struct stat *stat = masxfs_levinfo_stat_val( li, 0, tflags );
+
+  if ( stat )
+    inode = stat->st_ino;
+  return inode;
+}
+
+ino_t
+masxfs_levinfo_inode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _uUu_ )
+{
+  rDECLBAD;
+  ino_t inode = 0;
+
+  if ( li )
+  {
+    rC( masxfs_levinfo_stat( li, tflags ) );
+    if ( rGOOD )
+      inode = masxfs_levinfo_inode_val( li, 0, tflags );
+  }
+  return inode;
+}
+#else
+ino_t __attribute__ ( ( pure ) ) masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _uUu_ )
+{
+  return li ? li->deinode : 0;
 }
 #endif
 
@@ -125,11 +161,6 @@ int masxfs_levinfo_is_open( masxfs_levinfo_t * li ) __attribute__ ( ( alias( "ma
 masxfs_depth_t __attribute__ ( ( pure ) ) masxfs_levinfo_depth_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _uUu_ )
 {
   return li ? li->lidepth : 0;
-}
-
-ino_t __attribute__ ( ( pure ) ) masxfs_levinfo_deinode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _uUu_ )
-{
-  return li ? li->deinode : 0;
 }
 
 const char * __attribute__ ( ( pure ) ) masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offset )

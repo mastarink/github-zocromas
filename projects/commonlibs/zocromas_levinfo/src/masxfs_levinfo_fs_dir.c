@@ -54,7 +54,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   if ( li )
   {
     rSETGOOD;
-    
+
     /* TODO */
 #if 0
     if ( li->lidepth && !li[-1].fs.scan.pdir )
@@ -132,6 +132,9 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       li->fs.scan.pde = de = readdir( li->fs.scan.pdir );
     /* li->de = *de; */
       /* TODO : directly to li[1]; i.e. init child here, no need of li->fs.scan.pde, just local pde */
+
+
+
       if ( de || !errno )
         rSETGOOD;
       QRLI( li, rCODE );

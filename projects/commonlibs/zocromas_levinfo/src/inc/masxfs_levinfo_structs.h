@@ -16,7 +16,7 @@ struct masxfs_levinfo_s
 {
   char *name;
   masxfs_entry_type_t detype;
-  ino_t deinode;
+  /* ino_t deinode; */
   int fd;
   masxfs_depth_t lidepth;
   int error;

@@ -142,7 +142,7 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_readdir( li, flags, phas_data ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_readdir( li, flags, phas_data ) );
+    rC( masxfs_levinfo_db_readdir( li, flags, phas_data ) );  
 #else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
