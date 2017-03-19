@@ -71,7 +71,11 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 
   if ( li )
   {
+    /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
+    /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
     rC( masxfs_levinfo_stat( li, tflags ) );
+    /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
+    /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
     if ( rGOOD )
       size = masxfs_levinfo_size_val( li, 0, tflags );
   }

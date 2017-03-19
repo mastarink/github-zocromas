@@ -53,10 +53,14 @@ masxfs_levinfo_scan_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs
   masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
   masxfs_entry_type_bit_t entry_bit = 1 << detype;
 
+  /* if ( tflags & MASXFS_CB_MODE_DB )                              */
+  /*   WARN( "DETYPE Z1 : %d '%s'", lithis->detype, lithis->name ); */
   if ( !( tflags & MASXFS_CB_SKIP ) && ( cb->types & entry_bit ) && fun_simple )
     rC( fun_simple( lithis, tflags, data, reldepth ) );
   else
     rSETGOOD;
+  /* if ( tflags & MASXFS_CB_MODE_DB )                              */
+  /*   WARN( "DETYPE Z2 : %d '%s'", lithis->detype, lithis->name ); */
   QRLI( li, rCODE );
   rRET;
 }
@@ -91,7 +95,10 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
           if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
           {
           /* WARN( "[%s]", lithis ? lithis->name : NULL ); */
+            /* WARN( "DETYPE X1 : %d '%s'", lithis->detype, lithis->name ); */
             rC( masxfs_levinfo_scan_entry_single_internal_1cb( li, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, MASXFS_ENTRY_DIR_NUM, li - lithis ) );
+            /* if ( flags & MASXFS_CB_MODE_DB )                               */
+            /*   WARN( "DETYPE X2 : %d '%s'", lithis->detype, lithis->name ); */
           }
           else
           {
@@ -99,8 +106,12 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
           }
         }
       }
+      /* if ( flags & MASXFS_CB_MODE_DB )                               */
+      /*   WARN( "DETYPE X3 : %d '%s'", lithis->detype, lithis->name ); */
       rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, cb, data, tflags & ~MASXFS_CB_FROM_ROOT, detype ? detype : lithis->detype,
                                                          reldepth ) );
+      /* if ( flags & MASXFS_CB_MODE_DB )                               */
+      /*   WARN( "DETYPE X4 : %d '%s'", lithis->detype, lithis->name ); */
       if ( !( tflags & MASXFS_CB_MULTIPLE_CBS ) )
         break;
     }
@@ -161,10 +172,14 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     ino_t d_inode _uUu_ = masxfs_levinfo_scanned_inode( li, flags );
     unsigned long long node_id _uUu_ = masxfs_levinfo_scanned_nodeid( li, flags );
 
+  /* if ( li->db.scan.stat )                                                                        */
+  /*   WARN( "DESTAT:%s : %d", flags & MASXFS_CB_MODE_DB ? "DB" : "FS", li->db.scan.stat ? 1 : 0 ); */
+
   /*last (zeroes stat), at least
    * after refer to stat,
    * like size masxfs_levinfo_scanned_size!:
-   * */ masxfs_stat_t *destat = masxfs_levinfo_scanned_stat( li, flags, TRUE );
+   * */
+  /* masxfs_stat_t *destat _uUu_ = masxfs_levinfo_scanned_stat( li, flags, TRUE ); */
 
     masxfs_depth_t lidepth = li->lidepth;
 
@@ -172,7 +187,9 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
     lidepth++;
     reldepth++;
 
+    assert( li->detype == detype );
     {
+#if 0
       assert( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_REG_NUM || li->detype == MASXFS_ENTRY_LNK_NUM );
       assert( li->name );
       assert( li->lidepth == lidepth );
@@ -180,15 +197,22 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_entry_callback_t * c
       assert( li->db.stat == destat );
       assert( li->detype == detype );
     /* TODO move init to parent's readdir!! */
-      /* masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat ); */
+    /* masxfs_levinfo_init( li, lidepth, name, detype, d_inode, node_id, destat ); */
 
       assert( li->name );
       assert( li->lidepth == lidepth );
       assert( li->db.node_id == node_id );
       assert( li->db.stat == destat );
       assert( li->detype == detype );
-
+#endif
+      assert( li->detype == detype );
+      /* if ( flags & MASXFS_CB_MODE_DB )                      */
+      /*   WARN( "DETYPE A : %d '%s'", li->detype, li->name ); */
       rC( masxfs_levinfo_scan_entry_single_cbs( li, cbs, data, flags, reldepth ) );
+      /* if ( flags & MASXFS_CB_MODE_DB )                      */
+      /*   WARN( "DETYPE B : %d '%s'", li->detype, li->name ); */
+    /* FIXME : detype is correct,  li->detype is NOT */
+      assert( li->detype == detype );
       if ( detype == MASXFS_ENTRY_DIR_NUM )
       {
         rC( masxfs_levinfo_scan_li_cbs( li, cbs, data, flags, maxdepth, reldepth ) );

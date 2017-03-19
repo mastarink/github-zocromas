@@ -165,31 +165,37 @@ masxfs_levinfo_entry2de( masxfs_entry_type_t detype )
 }
 
 masxfs_entry_type_t
+masxfs_levinfo_statmode2entry( mode_t m )
+{
+  masxfs_entry_type_t c = MASXFS_ENTRY_UNKNOWN_NUM;
+
+/* mode_t m; */
+/* m = stat->st_mode; */
+  if ( S_ISREG( m ) )                                                // is it a regular file?
+    c = MASXFS_ENTRY_REG_NUM;
+  else if ( S_ISDIR( m ) )                                           // directory?
+    c = MASXFS_ENTRY_DIR_NUM;
+  else if ( S_ISCHR( m ) )                                           // character device?
+    c = MASXFS_ENTRY_CHR_NUM;
+  else if ( S_ISBLK( m ) )                                           // block device?
+    c = MASXFS_ENTRY_BLK_NUM;
+  else if ( S_ISFIFO( m ) )                                          // FIFO (named pipe)?
+    c = MASXFS_ENTRY_FIFO_NUM;
+  else if ( S_ISLNK( m ) )                                           // symbolic link?  (Not in POSIX.1-1996.)
+    c = MASXFS_ENTRY_LNK_NUM;
+  else if ( S_ISSOCK( m ) )                                          // socket? (Not in POSIX.1-1996.)
+    c = MASXFS_ENTRY_SOCK_NUM;
+  else
+    c = MASXFS_ENTRY_UNKNOWN_NUM;
+  return c;
+}
+
+masxfs_entry_type_t
 masxfs_levinfo_stat2entry( masxfs_stat_t * stat )
 {
   masxfs_entry_type_t c = MASXFS_ENTRY_UNKNOWN_NUM;
 
   if ( stat )
-  {
-    mode_t m;
-
-    m = stat->st_mode;
-    if ( S_ISREG( m ) )                                              // is it a regular file?
-      c = MASXFS_ENTRY_REG_NUM;
-    else if ( S_ISDIR( m ) )                                         // directory?
-      c = MASXFS_ENTRY_DIR_NUM;
-    else if ( S_ISCHR( m ) )                                         // character device?
-      c = MASXFS_ENTRY_CHR_NUM;
-    else if ( S_ISBLK( m ) )                                         // block device?
-      c = MASXFS_ENTRY_BLK_NUM;
-    else if ( S_ISFIFO( m ) )                                        // FIFO (named pipe)?
-      c = MASXFS_ENTRY_FIFO_NUM;
-    else if ( S_ISLNK( m ) )                                         // symbolic link?  (Not in POSIX.1-1996.)
-      c = MASXFS_ENTRY_LNK_NUM;
-    else if ( S_ISSOCK( m ) )                                        // socket? (Not in POSIX.1-1996.)
-      c = MASXFS_ENTRY_SOCK_NUM;
-    else
-      c = MASXFS_ENTRY_UNKNOWN_NUM;
-  }
+    c = masxfs_levinfo_statmode2entry( stat->st_mode );
   return c;
 }

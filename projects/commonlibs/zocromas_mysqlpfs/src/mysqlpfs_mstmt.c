@@ -236,10 +236,10 @@ mas_mysqlpfs_mstmt_get_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
       mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
       mysqlpfs_s_ulonglong_t *p = mbind->allocated_buffers[pos];
 
-      if ( pnum )
-        *pnum = ( unsigned long long ) *p;
       if ( pis_null )
         *pis_null = ( unsigned ) *p_is_null;
+      if ( pnum )
+        *pnum = ( *p_is_null ) ? 0 : ( unsigned long long ) *p;
       rSETGOOD;
     }
     else

@@ -11,5 +11,6 @@ masxfs_entry_type_t masxfs_levinfo_de2entry( unsigned char d_type );
 unsigned char masxfs_levinfo_entry2de( masxfs_entry_type_t detype );
 
 masxfs_entry_type_t masxfs_levinfo_stat2entry( masxfs_stat_t * stat );
+masxfs_entry_type_t masxfs_levinfo_statmode2entry( mode_t m );
 
 #endif
