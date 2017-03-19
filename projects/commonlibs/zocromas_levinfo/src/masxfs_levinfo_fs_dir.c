@@ -135,14 +135,14 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
   if ( li )
   {
-    li->fs.scan.pde = NULL;
+    /* li->fs.scan.pde = NULL; */
     if ( li->fs.scan.pdir )
     {
       do
       {
         errno = 0;
       /* r=readdir_r(li->fs.scan.pdir, &li->de,...  ); No! */
-        li->fs.scan.pde = de = readdir( li->fs.scan.pdir );
+        /* li->fs.scan.pde = */ de = readdir( li->fs.scan.pdir );
       /* li->de = *de; */
       /* TODO : directly to li[1]; i.e. init child here, no need of li->fs.scan.pde, just local pde */
 

@@ -29,7 +29,7 @@ struct masxfs_levinfo_s
     struct
     {
       masxfs_dir_t *pdir;
-      masxfs_dirent_t *pde;
+      /* masxfs_dirent_t *pde; */
     } scan;
     masxfs_stat_t *stat;
   } fs;
