@@ -46,7 +46,7 @@ masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char
     {
       size_t child_count = lia[d].child_count_pair[1];
       size_t child_count_z = lia[d].child_count_pair[0];
-
+/* WARN("%d - %ld : %ld", d, child_count, child_count_z); */
       unsigned delta = ( child_count_z - child_count ) > 0;
       unsigned deep = ( d == li->lidepth - 1 );
       unsigned cas = ( delta << 1 ) + deep;

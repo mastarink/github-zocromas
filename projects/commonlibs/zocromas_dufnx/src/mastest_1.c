@@ -125,11 +125,11 @@ testfill( const char *path )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, testfillcb,
+    { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ testfillcb,
      .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-    , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, treecb,
+    , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ treecb,
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-    , {0, NULL}
+    , {NULL}
   };
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
@@ -144,7 +144,8 @@ testfill( const char *path )
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
 
       {
-        masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS;
+        masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
+        masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
         {
           rC( mas_qstd_start_transaction( qstd ) );
@@ -152,7 +153,7 @@ testfill( const char *path )
           rC( masxfs_pathinfo_scan_depth_cbf( pi, testfillcb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
           rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
 #else
-          rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
+          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, 1000 /* maxdepth */  ) );
 #endif
           rC( mas_qstd_end_transaction( qstd ) );
         }

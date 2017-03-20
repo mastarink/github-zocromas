@@ -101,9 +101,9 @@ test7( void )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, test7cb,
+    { /* MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ test7cb,
      .flags = 0 | MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-    , {0, NULL}
+    , {NULL}
   };
 
   mas_qstd_t *qstd = mas_qstd_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
@@ -114,11 +114,12 @@ test7( void )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+    masxfs_levinfo_flags_t flagsfs = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
+    masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
     rC( mas_mysqlpfs_query( qstd->pfs, "START TRANSACTION" ) );
-    /*20170319.113014 rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS (* flags *)  ) ); */
-    rC( masxfs_pathinfo_scan_cbs
-        ( pi, callbacks, qstd, MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS /* | MASXFS_CB_MULTIPLE_CBS */ , 1000 /* maxdepth */  ) );
+  /*20170319.113014 rC( masxfs_pathinfo_scan_depth_cbf( pi, test7cb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS (* flags *)  ) ); */
+    rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
     rC( mas_mysqlpfs_query( qstd->pfs, "COMMIT" ) );
     {
       const char *updop[] = {

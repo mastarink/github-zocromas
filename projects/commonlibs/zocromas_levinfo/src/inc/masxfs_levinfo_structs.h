@@ -7,7 +7,7 @@
 
 struct masxfs_entry_callback_s
 {
-  unsigned types;
+  /* unsigned types; */
   masxfs_scan_fun_simple_t fun_simple;
   unsigned long flags;
 };

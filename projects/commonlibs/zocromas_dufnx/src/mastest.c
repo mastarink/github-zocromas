@@ -63,7 +63,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
 /* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
 
-  if ( 1 )
+  if ( 0 )
   {
     testdropcreate( path );
     testfill( path );

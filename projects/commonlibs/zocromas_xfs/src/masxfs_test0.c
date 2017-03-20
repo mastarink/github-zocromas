@@ -74,7 +74,7 @@ testcb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *udata _uUu
 
   char *real_path = masxfs_pathinfo_pi2path( ( masxfs_pathinfo_t * ) udata );
 
-  INFO("%ld. %s - %s", ( long ) depth, ename, real_path );
+  INFO( "%ld. %s - %s", ( long ) depth, ename, real_path );
 
   mas_free( real_path );
 
@@ -87,9 +87,9 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_f
 {
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
 
-  INFO("A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
-  /* masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS ); */
-  INFO("B====================================================");
+  INFO( "A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
+/* masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS ); */
+  INFO( "B====================================================" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
 /* +1 */
@@ -249,44 +249,44 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
-    /* {MASXFS_ENTRY_LINK | MASXFS_ENTRY_REG, fscallback}, */
-      {MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, fscallback,.flags =
+      { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, */ fscallback,.flags =
        MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
-      , {MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, fscallback2,.flags =
+      , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ fscallback2,.flags =
          MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
-      , {0, NULL}
+      , {NULL}
     };
     WARN( "callbacks: %p", callbacks );
 #if 0
   /* ftw */
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( "/", callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS, 10 );
-    INFO("NNNNNNNNNN %d", num );
+    masxfs_scanpath_real( "/", callbacks, MASXFS_CB_RECURSIVE, 10 );
+    INFO( "NNNNNNNNNN %d", num );
 
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE, 10000 );
-    INFO("NNNNNNNNNN %d", num );
+    masxfs_scanpath_real( NULL, callbacks, MASXFS_CB_RECURSIVE | MASXFS_CB_SINGLE_CB, 10000 );
+    INFO( "NNNNNNNNNN %d", num );
 #endif
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real2( NULL, callbacks, NULL, ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 10000 );
-    INFO("NNNNNNNNNN %d", num );
+    masxfs_scanpath_real2( NULL, MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+                           ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_SINGLE_CB | MASXFS_CB_MODE_FS, 10000 );
+    INFO( "NNNNNNNNNN %d", num );
 
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( "./mastest", callbacks, NULL, ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS | MASXFS_CB_MODE_FS,
-                          10000 );
-    INFO("NNNNNNNNNN %d", num );
+    masxfs_scanpath_real( "./mastest", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+                          ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 10000 );
+    INFO( "NNNNNNNNNN %d", num );
 
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( "./mastest/tree/Makefile.in", callbacks, NULL,
-                          ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MULTIPLE_CBS | MASXFS_CB_MODE_FS, 10000 );
-    INFO("NNNNNNNNNN %d", num );
+    masxfs_scanpath_real( "./mastest/tree/Makefile.in", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+                          ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS, 10000 );
+    INFO( "NNNNNNNNNN %d", num );
 
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
   /* EXAM( num, 1292 * 2, "num:%d ? %d" );                            // MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR and MASXFS_ENTRY_REG|MASXFS_ENTRY_DIR */
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
@@ -305,7 +305,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   if ( 1 )
   {
     masexam_next_group(  );
-    INFO("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:");
+    INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#- TESTS:" );
     {
       masxfs_pathinfo_t *pi =
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest",
