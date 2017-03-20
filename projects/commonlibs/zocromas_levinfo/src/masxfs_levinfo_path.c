@@ -79,7 +79,7 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
       /* masxfs_entry_type_t de_type = *ep == '/' ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN_NUM; */
         masxfs_entry_type_t de_type = MASXFS_ENTRY_UNKNOWN_NUM;
 
-        masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type, 0, 0, NULL, 0 /*flags*/ );
+        masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type, 0, 0, NULL );
         levinfo[levinfo_depth].fixed = 1;
         levinfo_depth++;
         while ( *ep == '/' )

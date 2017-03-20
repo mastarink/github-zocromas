@@ -349,7 +349,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
       rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ) );
       assert( !li[1].db.stat );
-      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, stat.st_ino, node_id, &stat, MASXFS_CB_MODE_DB );
+      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, stat.st_ino, node_id, &stat );
       assert( li[1].db.stat );
     }
   }
