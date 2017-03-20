@@ -57,14 +57,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   {
     rSETGOOD;
 
-  /* TODO */
-#if 0
-    if ( li->lidepth && !li[-1].fs.scan.pdir )
-      rC( masxfs_levinfo_fs_opendir( li - 1, flags ) );
-#endif
-
-  /* WARN( "A %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
-    if ( rGOOD && !li->fs.scan.pdir )
+    if ( !li->fs.scan.pdir )
     {
       int fd = masxfs_levinfo_fs_open( li, flags );
 
@@ -92,7 +85,6 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         QRLI( li, rCODE );
       }
     }
-  /* WARN( "B %lld '%s' ==> '%s'", li[0].db.node_id, li[0].name, li[1].name ); */
   }
   else
     QRLI( li, rCODE );
@@ -132,10 +124,24 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 {
   rDECLBAD;
   masxfs_dirent_t *de = NULL;
+  int has_data = 0;
 
   if ( li )
   {
-    if ( li->fs.scan.pdir )
+    if ( li[1].fixed )
+    {
+      assert( li[1].name );
+      assert( li[1].lidepth == li->lidepth + 1 );
+      assert( !li[1].db.stat );
+      li[1].detype = MASXFS_ENTRY_DIR_NUM;
+      assert( li[1].detype == MASXFS_ENTRY_DIR_NUM );
+      has_data = li->no_more ? 0 : 1;
+      WARN( "%p (%d) A HAS DATA:%d '%s'", li, li->no_more, has_data, li->name );
+      li->no_more = 1;
+    /* WARN( "%p (%d) B HAS DATA:%d '%s'", li, li->no_more, has_data, li->name ); */
+      rSETGOOD;
+    }
+    else if ( li->fs.scan.pdir )
     {
       do
       {
@@ -144,16 +150,24 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
         if ( de || !errno )
           rSETGOOD;
+      /* TODO #include <fnmatch.h>                                             */
+      /* int fnmatch(const char *pattern, const char *string, int flags); */
       } while ( de && !name_valid( de->d_name ) );
+    /* WARN( "%s", de ? de->d_name : NULL ); */
+    /* WARN( "%p D%d (%d) X HAS DATA:%d '%s' :: '%s'", li, li->lidepth, li->no_more, has_data, li->name, de ? de->d_name : NULL ); */
       if ( rGOOD && de )
       {
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ), de->d_ino, 0, NULL );
+      /* have de->d_name, de->d_type and de->d_ino */
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ) /*, de->d_ino */ , 0, NULL );
         assert( li[0].lidepth + 1 == li[1].lidepth );
+        has_data = de ? 1 : 0;
       }
       QRLI( li, rCODE );
     }
+    /* if ( !has_data )     */
+    /*   WARN( "NO DATA" ); */
     if ( phas_data )
-      *phas_data = ( de ? 1 : 0 );
+      *phas_data = has_data;
   }
   else
     QRLI( li, rCODE );

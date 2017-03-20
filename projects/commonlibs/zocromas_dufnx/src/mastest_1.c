@@ -146,18 +146,12 @@ testfill( const char *path, masxfs_depth_t maxdepth )
 
         {
           rC( mas_qstd_start_transaction( qstd ) );
-#if 0
-          rC( masxfs_pathinfo_scan_depth_cbf( pi, testfillcb, qstd, MASXFS_CB_NAME | MASXFS_CB_STAT | MASXFS_CB_MODE_FS /* flagsfs */  ) );
-          rC( masxfs_pathinfo_scan_cbs( pi, callbacks, qstd, flagsfs, 1000 /* maxdepth */  ) );
-#else
         /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
-          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_FROM_ROOT, maxdepth ) );
-#endif
+          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_UP_ROOT | MASXFS_CB_FROM_LAST, maxdepth ) );
           rC( mas_qstd_end_transaction( qstd ) );
         }
 
         rC( mas_qstd_update_summary( qstd ) );
-      /* rC( masxfs_pathinfo_scan_cbs( pi, &callbacks[1], qstd, flagsfs, 1000 (* maxdepth *)  ) ); */
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }

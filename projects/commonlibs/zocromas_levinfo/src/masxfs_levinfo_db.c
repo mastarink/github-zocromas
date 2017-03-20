@@ -135,18 +135,18 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
   rDECLBAD;
   if ( pmstmt )
   {
-    const char *op;
-
     rSETGOOD;
 
-    if ( name )
-      op = "SELECT name, inode, node_id "                            /* */
-              ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? AND name=? ORDER BY name_id";
-    else
-      op = "SELECT name, inode, node_id "                            /* */
-              ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
     if ( !( *pmstmt ) )
     {
+      const char *op;
+
+      if ( name )
+        op = "SELECT name, inode, node_id "                          /* */
+                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? AND name=? ORDER BY name_id";
+      else
+        op = "SELECT name, inode, node_id "                          /* */
+                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
       int numpar = 1 + ( name ? 1 : 0 );
       int numres = 15;
       int nr = 0;
@@ -279,26 +279,15 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
   if ( li )
   {
-  /* WARN( "'%s' ==> '%s'", li[0].name, li[1].name ); */
-
-  /*
-     TODO
-   */
-#if 0
-    if ( li->lidepth && !li[-1].db.scan.mstmt )
-      rC( masxfs_levinfo_db_opendir( li - 1, flags ) );
-#endif
-
-    if ( li->db.node_id )
+    if ( li->db.scan.mstmt )
     {
-    /* WARN( "DB OPENDIR : %lld ; '%s'", ( long long ) li->db.node_id, li[1].name ); */
-      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
+      rSETGOOD;
     }
     else
     {
-    /* WARN( "DB NO OPENDIR" ); */
+      assert( li->db.node_id );
+      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
     }
-  /* WARN( "DB OPENDIR %d  '%s' @ %d node_id:%lld", rCODE, li->name, li->lidepth , li->db.node_id); */
   }
   else
     QRLI( li, rCODE );
@@ -349,9 +338,11 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
       rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ) );
       assert( !li[1].db.stat );
-      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, stat.st_ino, node_id, &stat );
+      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype /*, stat.st_ino */ , node_id, &stat );
       assert( li[1].db.stat );
     }
+  /* TODO #include <fnmatch.h>                                             */
+  /* int fnmatch(const char *pattern, const char *string, int flags); */
   }
   else
     QRLI( li, rCODE );

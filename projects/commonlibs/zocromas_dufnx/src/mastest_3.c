@@ -140,7 +140,7 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth )
         masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_MODE_DB | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsdb, maxdepth ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsdb | MASXFS_CB_FROM_LAST, maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }

@@ -39,7 +39,8 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode _uUu_,
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len,
+                       masxfs_entry_type_t d_type /*, ino_t d_inode _uUu_ */ ,
                        unsigned long long node_id, masxfs_stat_t * stat )
 {
   if ( li && name )
@@ -67,10 +68,10 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type, ino_t d_inode,
-                     unsigned long long node_id, masxfs_stat_t * destat)
+masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type /*, ino_t d_inode */ ,
+                     unsigned long long node_id, masxfs_stat_t * stat )
 {
-  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type, d_inode, node_id, destat);
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat );
 }
 
 void
