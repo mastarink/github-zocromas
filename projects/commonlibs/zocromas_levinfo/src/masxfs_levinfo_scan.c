@@ -159,7 +159,6 @@ masxfs_levinfo_scan_down_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typefla
       {
       /* rSETBAD; */
       }
-      masxfs_levinfo_reset( li, flags );
     }
     reldepth--;
     lidepth--;
@@ -236,8 +235,10 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typefl
   /*NOREMOVE XXX if ( masxfs_levinfo_de_valid( li, flags ) ) */
     {
     /*NOREMOVE XXX masxfs_levinfo_fix_type( li ); */
-      if ( ( flags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth ) ) )
+    /* WARN("maxdepth:%d", maxdepth); */
+      if ( ( flags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth - 1 ) ) )
         rC( masxfs_levinfo_scan_down_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+      masxfs_levinfo_reset( li + 1, flags );
     }
   }
   else

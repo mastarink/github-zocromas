@@ -40,7 +40,7 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
 #if 1
     masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-    r = masxfs_levinfo_scan_dirn_cbs( li, typeflags, callbacks, data, flags, pi->pidepth + maxdepth, 0 );
+    r = masxfs_levinfo_scan_dirn_cbs( li, typeflags, callbacks, data, flags, maxdepth ? pi->pidepth + maxdepth : 0, 0 );
 #else
     r = masxfs_levinfo_scan_dirn_cbs( pi->levinfo, callbacks, data, flags, pi->pidepth + maxdepth, 0 );
 #endif
