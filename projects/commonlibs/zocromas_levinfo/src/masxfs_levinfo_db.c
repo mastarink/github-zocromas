@@ -359,7 +359,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
 
   /* li->db.scan.type = masxfs_levinfo_stat2entry(  (*li->db.scan. *) &stat ); */
-    li->db.scan.type = masxfs_levinfo_statmode2entry( stat.st_mode );
+    /* li->db.scan.type = masxfs_levinfo_statmode2entry( stat.st_mode ); */
 
   /* assert( li->db.scan.type == masxfs_levinfo_s2detype( sdetype ) ); */
   /* li->db.scan.inode = inode; */
@@ -387,7 +387,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 /*
 */
 
-      li->db.scan.inode = /*li->db.scan. */ stat.st_ino;
+      /* li->db.scan.inode = (*li->db.scan. *) stat.st_ino; */
     }
   /* li->db.pde = &li->db.de; (*???*) */
   /* de.d_name=...;                   */

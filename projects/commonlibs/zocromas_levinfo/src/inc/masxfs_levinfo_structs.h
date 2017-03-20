@@ -40,8 +40,8 @@ struct masxfs_levinfo_s
     {
       mysqlpfs_mstmt_t *mstmt;
       unsigned long long node_id;
-      masxfs_entry_type_t type;
-      ino_t inode;
+      /* masxfs_entry_type_t type; */
+      /* ino_t inode; */
       /* masxfs_stat_t *stat; */
     } scan;
     unsigned long long node_id;
