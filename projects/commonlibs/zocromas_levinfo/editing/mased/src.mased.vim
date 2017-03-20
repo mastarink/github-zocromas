@@ -19,8 +19,8 @@ sfind masxfs_levinfo_fs_dir.c
 tab sfind masxfs_levinfo_io_dir.h
 sfind masxfs_levinfo_io_dir.c
 
-tab sfind masxfs_levinfo_scanned.h
-sfind masxfs_levinfo_scanned.c
+" tab sfind masxfs_levinfo_scanned.h
+" sfind masxfs_levinfo_scanned.c
 
 tab sfind masxfs_levinfo_fs.h
 sfind masxfs_levinfo_fs.c

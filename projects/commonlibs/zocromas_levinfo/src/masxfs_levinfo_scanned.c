@@ -29,7 +29,7 @@ masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
 /* rDECLBAD; */
   const char *name = NULL;
 
-#if 1
+# if 1
   if ( li )
   {
     if ( flags & MASXFS_CB_MODE_FS )
@@ -43,7 +43,7 @@ masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
         mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name );
     }
   }
-#else
+# else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   if ( li )
@@ -66,7 +66,7 @@ masxfs_levinfo_scanned_name( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
   }
   else
     QRLI( li, rCODE );
-#endif
+# endif
   return name;
 }
 #endif
@@ -78,7 +78,7 @@ masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
 /* rDECLBAD; */
   int type = 0;
 
-#if 1
+# if 1
   if ( li )
   {
     if ( flags & MASXFS_CB_MODE_FS )
@@ -91,7 +91,7 @@ masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
       type = ( li->db.scan.type );
     }
   }
-#else
+# else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   if ( li )
@@ -113,7 +113,7 @@ masxfs_levinfo_scanned_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
   }
   else
     QRLI( li, rCODE );
-#endif
+# endif
   return type;
 }
 #endif
@@ -125,7 +125,7 @@ masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
 /* rDECLBAD; */
   ino_t inode = 0;
 
-#if 1
+# if 1
   if ( li )
   {
     if ( flags & MASXFS_CB_MODE_FS )
@@ -138,7 +138,7 @@ masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
       inode = li->db.scan.inode;
     }
   }
-#else
+# else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   if ( li )
@@ -158,7 +158,7 @@ masxfs_levinfo_scanned_inode( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
       break;
     }
   }
-#endif
+# endif
   return inode;
 }
 #endif
@@ -170,7 +170,7 @@ masxfs_levinfo_scanned_nodeid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
 /* rDECLBAD; */
   unsigned long long node_id = 0;
 
-#if 1
+# if 1
   if ( flags & MASXFS_CB_MODE_FS )
   {
   }
@@ -179,7 +179,7 @@ masxfs_levinfo_scanned_nodeid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
     if ( li )
       node_id = li->db.scan.node_id;
   }
-#else
+# else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
   if ( li )
@@ -198,7 +198,7 @@ masxfs_levinfo_scanned_nodeid( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
       break;
     }
   }
-#endif
+# endif
   return node_id;
 }
 #endif

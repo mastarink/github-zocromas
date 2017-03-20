@@ -135,36 +135,25 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
   if ( li )
   {
-    /* li->fs.scan.pde = NULL; */
     if ( li->fs.scan.pdir )
     {
       do
       {
         errno = 0;
-      /* r=readdir_r(li->fs.scan.pdir, &li->de,...  ); No! */
-        /* li->fs.scan.pde = */ de = readdir( li->fs.scan.pdir );
-      /* li->de = *de; */
-      /* TODO : directly to li[1]; i.e. init child here, no need of li->fs.scan.pde, just local pde */
+         de = readdir( li->fs.scan.pdir );
 
         if ( de || !errno )
           rSETGOOD;
       } while ( de && !name_valid( de->d_name ) );
-#if 1
       if ( rGOOD && de )
       {
-      /* 20170319.111336 */
         masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ), de->d_ino, 0, NULL );
         assert( li[0].lidepth + 1 == li[1].lidepth );
-        /* WARN( "HAHA: '%s' [%d:%d:%d]", li[1].name, DT_DIR, DT_REG, de->d_type ); */
       }
-#endif
       QRLI( li, rCODE );
     }
-    assert( !de || ( li[1].detype == MASXFS_ENTRY_DIR_NUM || li[1].detype == MASXFS_ENTRY_REG_NUM || li[1].detype == MASXFS_ENTRY_LNK_NUM ) );
     if ( phas_data )
-    {
       *phas_data = ( de ? 1 : 0 );
-    }
   }
   else
     QRLI( li, rCODE );

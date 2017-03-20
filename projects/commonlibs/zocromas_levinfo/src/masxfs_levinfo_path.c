@@ -87,6 +87,7 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
         ptok = *ep ? ep : NULL;
       }
     }
+  /* XXX NOREMOVE XXX */
 #elif 0
     {
       char *spath = masxfs_levinfo_normalize_path( path, NULL );

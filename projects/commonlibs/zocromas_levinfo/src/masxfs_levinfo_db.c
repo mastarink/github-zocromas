@@ -198,10 +198,8 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
   {
     int has_data = 0;
 
-  /* masxfs_stat_t *stat = NULL; */
     const char *name = NULL;
 
-  /* const char *sdetype = NULL; */
     unsigned long long inode = 0;
     unsigned long long dev = 0;
     unsigned long long rdev = 0;
@@ -217,8 +215,6 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long mtim_tv_sec = 0;
     unsigned long long ctim_tv_sec = 0;
 
-  /* if ( pstat )     */
-  /*   stat = *pstat; */
     rC( mas_qstd_mstmt_fetch( mstmt, &has_data ) );
     if ( phas_data )
       *phas_data = has_data;
@@ -229,11 +225,8 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       int nr = 0;
 
       rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &name ) );
-    /* rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &sdetype ) ); (* TODO : needless *) */
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &inode, &is_null ) );
-      /* WARN( "A NODE ID: %lld, %d", node_id, is_null ? 1 : 0 ); */
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &node_id, &is_null ) );
-      /* WARN( "B NODE ID: %lld, %d", node_id, is_null ? 1 : 0 ); */
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &dev, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &mode, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nlink, &is_null ) );
@@ -248,11 +241,8 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &ctim_tv_sec, &is_null ) );
       assert( nr == numres );
 
-      if ( rGOOD )
+      if ( rGOOD && stat )
       {
-      /* if ( !stat )                                       */
-      /*   stat = mas_calloc( 1, sizeof( masxfs_stat_t ) ); */
-      /* else                                               */
         memset( stat, 0, sizeof( masxfs_stat_t ) );
 
         stat->st_dev = ( dev_t ) dev;
@@ -273,9 +263,6 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
         *pname = name;
       if ( pnode_id )
         *pnode_id = node_id;
-    /* if ( rGOOD && pstat ) */
-    /*   *pstat = stat;      */
-    /* WARN( "(%d) DATA name: '%s' sdetype:'%s'; inode:%lld", rCODE, name, sdetype, inode ); */
     }
     else
     {
@@ -304,12 +291,12 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
     if ( li->db.node_id )
     {
-      /* WARN( "DB OPENDIR : %lld ; '%s'", ( long long ) li->db.node_id, li[1].name ); */
+    /* WARN( "DB OPENDIR : %lld ; '%s'", ( long long ) li->db.node_id, li[1].name ); */
       rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
     }
     else
     {
-      /* WARN( "DB NO OPENDIR" ); */
+    /* WARN( "DB NO OPENDIR" ); */
     }
   /* WARN( "DB OPENDIR %d  '%s' @ %d node_id:%lld", rCODE, li->name, li->lidepth , li->db.node_id); */
   }
@@ -345,7 +332,6 @@ int
 masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
 {
   rDECLBAD;
-/* masxfs_dirent_t *de = NULL; */
 
   if ( li )
   {
@@ -353,46 +339,19 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
     const char *dename = NULL;
     masxfs_stat_t stat = { 0 };
 
-  /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
-    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, & /*li->db.scan. */ stat, &node_id, flags, phas_data ) );
-
-  /* TODO : directly to li[1]; i.e. init child here (partially??), no need of li->fs.scan.pde, just local pde */
-
-  /* li->db.scan.type = masxfs_levinfo_stat2entry(  (*li->db.scan. *) &stat ); */
-    /* li->db.scan.type = masxfs_levinfo_statmode2entry( stat.st_mode ); */
-
-  /* assert( li->db.scan.type == masxfs_levinfo_s2detype( sdetype ) ); */
-  /* li->db.scan.inode = inode; */
+    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &node_id, flags, phas_data ) );
     li->db.scan.node_id = node_id;
 
     if ( rGOOD && *phas_data )
     {
-#if 1
-    /* 20170319.111336 */
       const char *name = NULL;
-      masxfs_entry_type_t detype = masxfs_levinfo_stat2entry(  /*li->db.scan. */ &stat );
+      masxfs_entry_type_t detype = masxfs_levinfo_stat2entry( &stat );
 
       rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ) );
-      /* WARN( "A NID:%lld for '%s'; %lld for '%s' [%lld:'%s':'%s']", li[0].db.node_id, li[0].name, li[1].db.node_id, li[1].name, node_id, dename, name ); */
       assert( !li[1].db.stat );
-      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, /*li->db.scan. */ stat.st_ino, node_id, /*li->db.scan. */ NULL );
-      /* WARN( "B NID:%lld for '%s'; %lld for '%s' [%lld]", li[0].db.node_id, li[0].name, li[1].db.node_id, li[1].name, node_id ); */
-      if ( li[1].db.stat )
-        mas_free( li[1].db.stat );
-      li[1].db.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
-      *( li[1].db.stat ) = stat;
+      masxfs_levinfo_init( li + 1, li->lidepth + 1, name, detype, stat.st_ino, node_id, &stat );
       assert( li[1].db.stat );
-    /* li->db.scan.stat = NULL; */
-#endif
-/*
-*/
-
-      /* li->db.scan.inode = (*li->db.scan. *) stat.st_ino; */
     }
-  /* li->db.pde = &li->db.de; (*???*) */
-  /* de.d_name=...;                   */
-  /* de.d_type=...;                   */
-  /* stat=...;                        */
   }
   else
     QRLI( li, rCODE );

@@ -32,28 +32,10 @@ int
 masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
-#if 1
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_rewinddir( li, flags ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_rewinddir( li, flags ) );
-#else
-  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
-
-  switch ( mode )
-  {
-  case MASXFS_SCAN__MODE_NONE:
-  /* rSETBAD; */
-    QRLI( li, rCODE );
-    break;
-  case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_rewinddir( li, flags ) );
-    break;
-  case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_rewinddir( li, flags ) );
-    break;
-  }
-#endif
   rRET;
 }
 
@@ -62,28 +44,10 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
 
-#if 1
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_opendir( li, flags ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_opendir( li, flags ) );
-#else
-  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
-
-  switch ( mode )
-  {
-  case MASXFS_SCAN__MODE_NONE:
-  /* rSETBAD; */
-    QRLI( li, rCODE );
-    break;
-  case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_opendir( li, flags ) );
-    break;
-  case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_opendir( li, flags ) );
-    break;
-  }
-#endif
   rRET;
 }
 
@@ -92,28 +56,10 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
 
-#if 1
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_closedir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_closedir( li ) );
-#else
-  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
-
-  switch ( mode )
-  {
-  case MASXFS_SCAN__MODE_NONE:
-  /* rSETBAD; */
-    QRLI( li, rCODE );
-    break;
-  case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_closedir( li ) );
-    break;
-  case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_closedir( li ) );
-    break;
-  }
-#endif
   rRET;
 }
 
@@ -138,27 +84,9 @@ masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int
 {
   rDECLBAD;
 
-#if 1
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_readdir( li, flags, phas_data ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_readdir( li, flags, phas_data ) );
-#else
-  masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
-
-  switch ( mode )
-  {
-  case MASXFS_SCAN__MODE_NONE:
-  /* rSETBAD; */
-    QRLI( li, rCODE );
-    break;
-  case MASXFS_SCAN__MODE_FS:
-    rC( masxfs_levinfo_fs_readdir( li, flags, phas_data ) );
-    break;
-  case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_readdir( li, flags, phas_data ) );
-    break;
-  }
-#endif
   rRET;
 }

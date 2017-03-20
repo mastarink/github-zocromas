@@ -16,7 +16,6 @@ struct masxfs_levinfo_s
 {
   char *name;
   masxfs_entry_type_t detype;
-  /* ino_t deinode; */
   int fd;
   unsigned fixed:1;
   unsigned no_more:1;
@@ -29,7 +28,6 @@ struct masxfs_levinfo_s
     struct
     {
       masxfs_dir_t *pdir;
-      /* masxfs_dirent_t *pde; */
     } scan;
     masxfs_stat_t *stat;
   } fs;
@@ -40,13 +38,8 @@ struct masxfs_levinfo_s
     {
       mysqlpfs_mstmt_t *mstmt;
       unsigned long long node_id;
-      /* masxfs_entry_type_t type; */
-      /* ino_t inode; */
-      /* masxfs_stat_t *stat; */
     } scan;
     unsigned long long node_id;
-  /* masxfs_dirent_t de; */
-  /* masxfs_dirent_t *pde; */
     masxfs_stat_t *stat;
   } db;
 

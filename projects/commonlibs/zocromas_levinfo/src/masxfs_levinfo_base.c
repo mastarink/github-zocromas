@@ -1,6 +1,8 @@
 #define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -38,7 +40,7 @@ masxfs_levinfo_create( void )
 
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t d_type, ino_t d_inode _uUu_,
-                       unsigned long long node_id, masxfs_stat_t * destat _uUu_ )
+                       unsigned long long node_id, masxfs_stat_t * stat )
 {
   if ( li && name )
   {
@@ -51,7 +53,14 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
   /* li->deinode = d_inode; (* TODO take from destat OR needless!!! *) */
     li->lidepth = lidepth;
     li->db.node_id = node_id;
-    /* li->db.stat = destat; */
+    if ( li->db.stat )
+      mas_free( li->db.stat );
+    li->db.stat = NULL;
+    if ( stat )
+    {
+      li->db.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
+      *( li->db.stat ) = *stat;                                      /* memcpy */
+    }
   }
   else
     QRLI( li, -1 );
