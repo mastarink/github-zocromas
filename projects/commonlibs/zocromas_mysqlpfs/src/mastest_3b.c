@@ -27,11 +27,11 @@ test3create( void )
 {
   char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "CREATE TABLE IF NOT EXISTS pfs_test_filesizes ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_filesizes ("                /* */
             "size INTEGER  PRIMARY KEY"                              /* */
             ", last_updated  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS pfs_test_fileprops ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_fileprops ("                /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK')" /* */
             ", mode INTEGER"                                         /* */
@@ -46,7 +46,7 @@ test3create( void )
             ", rdev INTEGER"                                         /* */
             ", INDEX size (size)"                                    /* */
             ", INDEX detype (detype)"                                /* */
-            ", FOREIGN KEY (size) REFERENCES pfs_test_filesizes (size)"       /* */
+            ", FOREIGN KEY (size) REFERENCES pfs_test_filesizes (size)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS pfs_test_filedatas (" "id INTEGER PRIMARY KEY AUTO_INCREMENT" /* */
             ", dev INTEGER NOT NULL"                                 /* */
@@ -56,10 +56,10 @@ test3create( void )
             ", rdev INTEGER"                                         /* */
             ", UNIQUE INDEX dev_inoce (dev,inode) COMMENT 'this pair is unique'" /* */
           /* */ " )",
-    "CREATE TABLE IF NOT EXISTS pfs_test_parents ("                           /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_parents ("                  /* */
             "id INTEGER PRIMARY KEY"                                 /* */
             ", filename_id INTEGER" ")",
-    "CREATE TABLE IF NOT EXISTS pfs_test_filenames ("                         /* */
+    "CREATE TABLE IF NOT EXISTS pfs_test_filenames ("                /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", parent_id INTEGER COMMENT 'NULL is root', INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES pfs_test_filenames (id)" /* */
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */

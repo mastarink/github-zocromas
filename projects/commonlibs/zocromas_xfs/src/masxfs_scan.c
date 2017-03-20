@@ -24,7 +24,7 @@ exiternal functions used:
 */
 
 int
-masxfs_scanpath_real( const char *path, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags,
+masxfs_scanpath_real( const char *path, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *data, masxfs_levinfo_flags_t flags,
                       masxfs_depth_t maxdepth )
 {
   int r = 0;
@@ -35,7 +35,7 @@ masxfs_scanpath_real( const char *path, masxfs_type_flags_t typeflags, masxfs_en
     path = ".";                                                      /* getcwd */
   if ( path )
   {
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128, 0 );
 
     r = masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, data, flags, maxdepth );
     masxfs_pathinfo_delete( pi, flags );
@@ -44,14 +44,11 @@ masxfs_scanpath_real( const char *path, masxfs_type_flags_t typeflags, masxfs_en
 }
 
 int
-masxfs_scanpath_real2( const char *cpath, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *data, unsigned long flags,
+masxfs_scanpath_real2( const char *cpath, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *data, masxfs_levinfo_flags_t flags,
                        masxfs_depth_t maxdepth )
 {
   int r = 0;
   char *path = NULL;
-
-  if ( !( flags & MASXFS_CB_RECURSIVE ) )
-    DIE( "%s", "NOREC" );
 
   if ( cpath )
   {
@@ -69,7 +66,7 @@ masxfs_scanpath_real2( const char *cpath, masxfs_type_flags_t typeflags, masxfs_
   }
   if ( path )
   {
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128, flags );
 
     r = masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, data, flags, maxdepth );
     masxfs_pathinfo_delete( pi, flags );

@@ -33,6 +33,7 @@ testdropcreate( const char *path )
 {
   rDECL( 0 );
 
+  WARN( "******** testcreate *******" );
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
@@ -42,11 +43,12 @@ testdropcreate( const char *path )
     if ( qstd->pfs )
     {
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mas_qstd_instance_delete(  );
   }
+  WARN( "******** /testcreate *******" );
   rRET;
 }

@@ -10,6 +10,7 @@ struct masxfs_pathinfo_s
   masxfs_depth_t depth_limit;
   masxfs_depth_t pidepth;
   masxfs_levinfo_t *levinfo;
+  masxfs_levinfo_flags_t flags;
 /* char *pathcache; */
 /* char *realpathcache; */
   int error;

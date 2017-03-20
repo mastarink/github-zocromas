@@ -239,6 +239,7 @@ masxfs_levinfo_scan_entry_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typefl
       if ( ( flags & MASXFS_CB_RECURSIVE ) && ( maxdepth == 0 || ( maxdepth > 0 && li->lidepth < maxdepth - 1 ) ) )
         rC( masxfs_levinfo_scan_down_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
       masxfs_levinfo_reset( li + 1, flags );
+      assert( !li[1].name );
     }
   }
   else
@@ -262,6 +263,7 @@ masxfs_levinfo_scan_dir_rest_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typ
     while ( rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
     {
       rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+      assert( !li[1].name );
       if ( rGOOD )
         n++;
       else

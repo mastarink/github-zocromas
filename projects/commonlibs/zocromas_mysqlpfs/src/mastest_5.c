@@ -55,7 +55,7 @@ test5( void )
   if ( pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128, 0 );
 
     if ( pi )
     {

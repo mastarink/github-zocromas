@@ -33,7 +33,7 @@ test4cb( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *pfsv, mas
   masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );
   const char *ename _uUu_ = masxfs_levinfo_name_ref( li, flags );
 
-  MARK( "(T4)", " %ld. %s", (long)depth, ename );
+  MARK( "(T4)", " %ld. %s", ( long ) depth, ename );
   {
     int r = 0;
     char *insop _uUu_ = "INSERT INTO pfs_test_filenames(name) VALUES (?)";
@@ -63,18 +63,18 @@ test4( void )
   if ( pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128, 0 );
 
     if ( pi )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      /*20170319.112830 masxfs_pathinfo_scan_depth_cbf( pi, test4cb, pfs, MASXFS_CB_MODE_FS (* flags *) ); */
+    /*20170319.112830 masxfs_pathinfo_scan_depth_cbf( pi, test4cb, pfs, MASXFS_CB_MODE_FS (* flags *) ); */
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS|MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mysqlpfs_delete( pfs );
   }

@@ -113,7 +113,7 @@ test7( void )
   if ( qstd->pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */  );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 /* depth limit */ , 0);
     masxfs_levinfo_flags_t flagsfs = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
     masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 

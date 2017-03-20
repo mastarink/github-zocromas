@@ -115,35 +115,37 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-testtreefromdb( const char *path )
+testtreefromdb( const char *path, masxfs_depth_t maxdepth )
 {
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
     { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ testtreefromdbcb,
      .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-    , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */  treecb,
+    , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ treecb,
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {NULL}
   };
 
+  WARN( "******** testtreefromdb *******" );
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
     if ( qstd->pfs )
     {
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
       {
         masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_MODE_DB | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsdb, 1000 /* maxdepth */  ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsdb, maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mas_qstd_instance_delete(  );
   }
+  WARN( "******** /testtreefromdb *******" );
   rRET;
 }

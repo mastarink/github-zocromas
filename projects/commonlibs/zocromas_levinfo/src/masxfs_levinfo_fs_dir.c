@@ -140,14 +140,14 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       do
       {
         errno = 0;
-         de = readdir( li->fs.scan.pdir );
+        de = readdir( li->fs.scan.pdir );
 
         if ( de || !errno )
           rSETGOOD;
       } while ( de && !name_valid( de->d_name ) );
       if ( rGOOD && de )
       {
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ), de->d_ino, 0, NULL );
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ), de->d_ino, 0, NULL, MASXFS_CB_MODE_FS );
         assert( li[0].lidepth + 1 == li[1].lidepth );
       }
       QRLI( li, rCODE );

@@ -7,6 +7,8 @@
 #include <mastar/regerr/masregerr.h>
 #include <mastar/exam/masexam.h>
 
+#include <mastar/levinfo/masxfs_levinfo_types.h>
+
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
 {
@@ -48,9 +50,9 @@ destructor_main( void )
 }
 
 int testdropcreate( const char *path );
-int testfill( const char *path );
-int testtreefromfs( const char *path );
-int testtreefromdb( const char *path );
+int testfill( const char *path, masxfs_depth_t maxdepth );
+int testtreefromfs( const char *path, masxfs_depth_t maxdepth );
+int testtreefromdb( const char *path, masxfs_depth_t maxdepth );
 
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
@@ -63,19 +65,19 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
 /* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
 
-  if ( 0 )
+  if ( 1 )
   {
     testdropcreate( path );
-    testfill( path );
+    testfill( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
   /* testtreefromfs( path ); */
-    testtreefromdb( path );
+    testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
   }
   else
   {
-    /* testdropcreate( path ); */
-    /* testfill( path ); */
-    testtreefromfs( path );
-    /* testtreefromdb( path ); */
+  /* testdropcreate( path ); */
+  /* testfill( path ); */
+    testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
+  /* testtreefromdb( path ); */
   }
   return 0;
 }

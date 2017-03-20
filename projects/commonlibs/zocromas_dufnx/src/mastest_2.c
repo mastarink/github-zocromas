@@ -116,7 +116,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-testtreefromfs( const char *path )
+testtreefromfs( const char *path, masxfs_depth_t maxdepth )
 {
   rDECL( 0 );
 
@@ -128,23 +128,25 @@ testtreefromfs( const char *path )
     , {NULL}
   };
 
+  WARN( "******** testtreefromfs *******" );
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
     if ( qstd->pfs )
     {
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */  );
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
       {
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsfs, 0 /* maxdepth OR 0 for all */  ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsfs, maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mas_qstd_instance_delete(  );
   }
+  WARN( "******** /testtreefromfs *******" );
   rRET;
 }

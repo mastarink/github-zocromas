@@ -85,7 +85,7 @@ int
 masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_, const char *_path, size_t _maxpath,
                     masxfs_depth_t _depth, masxfs_depth_t _tdepth, char *_tname, char *_lastname )
 {
-  masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath );
+  masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath, 0 );
 
   INFO( "A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
 /* masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS ); */
@@ -309,9 +309,9 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     {
       masxfs_pathinfo_t *pi =
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest",
-                                            128 );
+                                            128, 0 );
 
-      masxfs_pathinfo_delete( pi, ( masxfs_cb_flag_bit_t ) MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     char *tpathe _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastes";
@@ -343,7 +343,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
 #undef CUR_TESTS
     }
     {
-      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128 );
+      masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128, 0 );
 
       EXAM( pi ? pi->error : -1, -1, "should be error: %d ? %d" );
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );

@@ -71,11 +71,11 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 
   if ( li )
   {
-    /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
-    /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
+  /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
+  /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
     rC( masxfs_levinfo_stat( li, tflags ) );
-    /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
-    /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
+  /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
+  /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
     if ( rGOOD )
       size = masxfs_levinfo_size_val( li, 0, tflags );
   }
@@ -232,6 +232,11 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
       rC( masxfs_levinfo_stat( li, tflags ) );
+      if ( rCODE )
+      {
+        WARN( "'%s'", li->name );
+        assert( 0 );
+      }
       QRLI( li, rCODE );
 
       if ( rGOOD )

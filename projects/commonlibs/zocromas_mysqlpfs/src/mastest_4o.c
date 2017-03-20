@@ -102,13 +102,13 @@ test4o( void )
   if ( pfs )
   {
     const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
-    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128 );
+    masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path0, 128, 0 );
 
     if ( pi )
     {
       char *path = masxfs_pathinfo_pi2path( pi );
 
-      /*20170319.112824 masxfs_pathinfo_scan_depth_cbf( pi, test4ocb, pfs, MASXFS_CB_MODE_FS (* flags *)  ); */
+    /*20170319.112824 masxfs_pathinfo_scan_depth_cbf( pi, test4ocb, pfs, MASXFS_CB_MODE_FS (* flags *)  ); */
 
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
