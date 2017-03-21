@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_defs.h"
 #include <sys/stat.h>
 #include <unistd.h>
@@ -45,7 +46,7 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data 
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
-  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
+  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags, 0 );
   size_t size = masxfs_levinfo_size_ref( li, flags );
   int fd = masxfs_levinfo_fd_ref( li, flags );
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );

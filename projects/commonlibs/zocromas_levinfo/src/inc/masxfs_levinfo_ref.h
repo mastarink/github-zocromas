@@ -30,7 +30,7 @@ const char *masxfs_levinfo_name_val( masxfs_levinfo_t * li, masxfs_depth_t offse
 const char *masxfs_levinfo_name_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags ) __attribute__ ( ( pure ) );
 
 const char *masxfs_levinfo_path_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
-const char *masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, masxfs_levinfo_flags_t tflags );
+const char *masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, masxfs_depth_t top_depth, masxfs_levinfo_flags_t tflags );
 
 masxfs_entry_type_t masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 

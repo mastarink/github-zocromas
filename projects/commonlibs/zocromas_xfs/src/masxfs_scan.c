@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_defs.h"
 /* #include <stdio.h> */
 #include <string.h>

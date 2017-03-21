@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 /* #include <sys/types.h> */
@@ -205,7 +205,7 @@ masxfs_levinfo_path_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 }
 
 const char *
-masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, masxfs_depth_t top_depth, masxfs_levinfo_flags_t tflags )
 {
   const char *prefix = NULL;
 
@@ -215,7 +215,7 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
     {
       if ( li->prefix )
         mas_free( li->prefix );
-      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, 0 );
+      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, top_depth, 0 /* test! - not flags */ );
     }
   }
   return prefix;

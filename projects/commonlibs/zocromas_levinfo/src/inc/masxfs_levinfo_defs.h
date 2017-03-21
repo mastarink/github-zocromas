@@ -18,6 +18,7 @@
 
 /* # define QRLI(_li, _r)   { int r=(_r);if (r<0) { if(_li)_li->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */
 # define QRLI(_li, _r) RGESR(_r)
+# define QRLIM(_li, _r, _msg) RGESRM(_r, _msg)
 /* # define QRPI(_pi, _r)  { int r=(_r);if (r<0) { if(_pi)_pi->error=(r);RWARN("R: %d; errno:%d:%s", (r), errno, strerror(errno)); }} */
 /* # define QRPI(_pi, _r) RGESR(_r) */
 # define QRG(_r) RGESR(_r)

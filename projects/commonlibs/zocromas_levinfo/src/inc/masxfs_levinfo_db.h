@@ -7,7 +7,7 @@ int masxfs_levinfo_db_closedir( masxfs_levinfo_t * li );
 
 int masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 
-int masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li ,masxfs_levinfo_flags_t flags);
+int masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 int masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 int masxfs_levinfo_db_close( masxfs_levinfo_t * li );
 

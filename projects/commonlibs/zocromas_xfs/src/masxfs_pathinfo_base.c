@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_defs.h"
 /* #include <stdio.h> */
 #include <string.h>
@@ -37,6 +38,7 @@ masxfs_pathinfo_create( void )
 #else
   masxfs_pathinfo_t *pi = mas_calloc( 1, sizeof( masxfs_pathinfo_t ) );
 #endif
+  QRPI( pi, pi ? 0 : -1 );
   return pi;
 }
 
@@ -68,8 +70,6 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit, masx
   {
   /* fprintf( stderr, "REAL_PATH: %s (%d)\n", real_path, errno ); */
     pi = masxfs_pathinfo_create(  );
-
-    QRPI( pi, pi ? 0 : -1 );
     if ( real_path && pi )
     {
       masxfs_pathinfo_init( pi, real_path, depth_limit, flags );

@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_defs.h"
 #include <malloc.h>
 #include <stdio.h>
@@ -111,7 +112,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
   }
 
   INFO( "----------------forward:" );
-  masregerr_print_simple_all( NULL, NULL );
+  masregerr_print_simple_all( NULL, NULL, 0 /* max.print */ );
 
   return 0;
 }

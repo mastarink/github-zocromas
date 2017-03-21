@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include <mastar/qstd/qstd_defs.h>
 #include <stdio.h>
 #include <string.h>
@@ -100,14 +100,19 @@ static int numline_treecb = 0;
 static int _uUu_
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
+  static masxfs_depth_t top_depth = 0;
+
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
-  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
   size_t size = masxfs_levinfo_size_ref( li, flags );
   int fd = masxfs_levinfo_fd_ref( li, flags );
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath = masxfs_levinfo_path_ref( li, flags );
+
+  if ( !top_depth && depth )
+    top_depth = depth - 1;
+  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth, flags );
 
   numline_treecb++;
   printf( "%4d. %s %ld fd:%d D:%ld i:%ld %s; %s\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "",
@@ -147,7 +152,9 @@ testfill( const char *path, masxfs_depth_t maxdepth )
         {
           rC( mas_qstd_start_transaction( qstd ) );
         /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
-          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_UP_ROOT | MASXFS_CB_FROM_LAST, maxdepth ) );
+          rC( masxfs_pathinfo_scan_cbs
+              ( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_UP_ROOT /* | MASXFS_CB_FROM_ROOT XXX not here! XXX  *//*| MASXFS_CB_SELF_AND_UP */ ,
+                maxdepth ) );
           rC( mas_qstd_end_transaction( qstd ) );
         }
 

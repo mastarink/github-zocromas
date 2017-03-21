@@ -14,14 +14,21 @@
 
 #include "masregerr.h"
 
+static int reg_errors_max_print = 0;
 static masregerrs_t *reg_errors = NULL;
 
 static void destructor_main(  ) __attribute__ ( ( destructor( 2001 ) ) );
 static void
 destructor_main(  )
 {
-  masregerr_print_simple_all( reg_errors, NULL );
+  masregerr_print_simple_all( reg_errors, NULL, reg_errors_max_print );
   masregerrs_delete( reg_errors );
+}
+
+void
+masregerrs_set_max_print( int num )
+{
+  reg_errors_max_print = num;
 }
 
 static masregerrs_t *
@@ -179,7 +186,7 @@ masregerr_print_simple_all_back( masregerrs_t * regerrs, const char *msg )
 }
 
 int
-masregerr_print_simple_all( masregerrs_t * regerrs, const char *msg )
+masregerr_print_simple_all( masregerrs_t * regerrs, const char *msg, int max_print )
 {
   masregerr_t *rge = masregerrs_default( regerrs )->current;
   int num = 0;
@@ -190,10 +197,14 @@ masregerr_print_simple_all( masregerrs_t * regerrs, const char *msg )
     rge = masregerr_valid_after( regerrs, rge );
     if ( rge )
     {
-      /* fprintf( stderr, "%2d. %p %p\n", num, rge, masregerrs_default( regerrs )->current ); */
+    /* fprintf( stderr, "%2d. %p %p\n", num, rge, masregerrs_default( regerrs )->current ); */
       masregerr_print_simple( rge, msg );
     }
-  } while ( rge && rge != masregerrs_default( regerrs )->current );
+  } while ( rge && rge != masregerrs_default( regerrs )->current && ( !max_print || num <= max_print ) );
+  if ( max_print && num > max_print )
+  {
+    fprintf( stderr, "... ...\n" );
+  }
   return 0;
 }
 

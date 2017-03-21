@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 #include <unistd.h>
@@ -128,20 +128,7 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
 
   if ( li )
   {
-    if ( li[1].fixed )
-    {
-      assert( li[1].name );
-      assert( li[1].lidepth == li->lidepth + 1 );
-      assert( !li[1].db.stat );
-      li[1].detype = MASXFS_ENTRY_DIR_NUM;
-      assert( li[1].detype == MASXFS_ENTRY_DIR_NUM );
-      has_data = li->no_more ? 0 : 1;
-      WARN( "%p (%d) A HAS DATA:%d '%s'", li, li->no_more, has_data, li->name );
-      li->no_more = 1;
-    /* WARN( "%p (%d) B HAS DATA:%d '%s'", li, li->no_more, has_data, li->name ); */
-      rSETGOOD;
-    }
-    else if ( li->fs.scan.pdir )
+    if ( li->fs.scan.pdir )
     {
       do
       {
@@ -164,8 +151,8 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       }
       QRLI( li, rCODE );
     }
-    /* if ( !has_data )     */
-    /*   WARN( "NO DATA" ); */
+  /* if ( !has_data )     */
+  /*   WARN( "NO DATA" ); */
     if ( phas_data )
       *phas_data = has_data;
   }

@@ -20,5 +20,4 @@ int masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flag
 
 /* int masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li ); */
 
-
 #endif

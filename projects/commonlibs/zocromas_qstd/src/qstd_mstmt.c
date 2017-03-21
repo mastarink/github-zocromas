@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 /* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
 #define RGEMSG mas_mysqlpfs_mstmt_error(mstmt)
 #include "qstd_defs.h"

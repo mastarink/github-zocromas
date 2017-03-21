@@ -25,11 +25,6 @@
 /* # define MAS_FLF __func__,__LINE__,__FILE__ */
 # define MAS_FLF __func__,__LINE__,__FILE__
 # define MAS_FLFFF __func__,__LINE__,__FILE__,__FUNCTION__,__PRETTY_FUNCTION__
-# define RGEX(_sys, _msg) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, _msg)
-# define RGE RGEX(0, NULL)
-# define RGES RGEX(1, RGEMSG)
-# define RGER(_r)	{ if ((_r)<0) RGE; }
-# define RGESR(_r)	{ if ((_r)<0) RGES; }
 
 # define MASREGERR_DEFAULT_SIZE 256
 
@@ -42,7 +37,7 @@
 /* #  ifndef R_GOOD            */
 /* #   define R_GOOD(_r) (!_r) */
 /* #  endif                    */
-#  define R_BAD(_r) (!R_GOOD(_r))
+#  define R_BAD(_r) (!R_GOOD((_r)))
 #  define rCODE ret_code.r
 #  define rCNT ret_code.cnt
 #  define rDECL(_v) struct {int cnt;int r;} ret_code={0}; rCODE=(_v)
@@ -60,6 +55,15 @@
 #  define rSETGOOD rCODE=0
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
 #  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
+
+#  define RGEX(_sys, _msg) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, _msg)
+#  define RGE RGEX(0, NULL)
+#  define RGESM(_msg) RGEX(1, _msg)
+#  define RGES RGESM(RGEMSG)
+#  define RGER(_r)		{ if ( R_BAD((_r)) ) RGE; }
+#  define RGESR(_r)		{ if ( R_BAD((_r)) ) RGES; }
+#  define RGESRM(_r, _msg)	{ if ( R_BAD((_r)) ) RGESM(_msg); }
+
 # endif
 /* #define rCALL if (!r) r= */
 

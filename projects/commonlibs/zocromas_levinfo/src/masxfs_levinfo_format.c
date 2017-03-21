@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 /* #include <unistd.h> */
@@ -19,7 +19,7 @@
 #include "masxfs_levinfo_format.h"
 
 char *
-masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, int test )
+masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char *p4, masxfs_depth_t top_depth, int test )
 {
   char *prefix = NULL;
 
@@ -42,7 +42,7 @@ masxfs_levinfo_prefix( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, char
     else if ( test )
       len = 9;
     pw = prefix = mas_calloc( li->lidepth + 2, len );
-    for ( masxfs_depth_t d = 0; d < li->lidepth; d++ )
+    for ( masxfs_depth_t d = top_depth; d < li->lidepth; d++ )
     {
       size_t child_count = lia[d].child_count_pair[1];
       size_t child_count_z = lia[d].child_count_pair[0];

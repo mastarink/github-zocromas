@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include <malloc.h>
 #include "dufnx.h"
 
@@ -34,7 +34,7 @@ constructor_main( void )
       mas_mem_disable_print_usage = 0;
     }
   }
-
+  masregerrs_set_max_print( 15 );
   INFO( "START MEM" );
 #endif
   INFO( "START" );
@@ -58,36 +58,98 @@ int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
 /* dufnx( argc, argv ); */
-/* const char *path __attribute__ ( ( unused ) ) = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest"; */
-  const char *path __attribute__ ( ( unused ) ) = "mastest";
-
-/* const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in"; */
-
-/* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
-
+  if ( 1 )
   {
+    const char *path __attribute__ ( ( unused ) ) = "mastest";
+
     testdropcreate( path );
     testfill( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
-  /* testtreefromfs( path ); */
-    FILE *fil = fopen( "testtreefromdb.tree", "w" );
-
-    if ( fil )
+  }
+  {
     {
-      testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
-      fclose( fil );
+      if ( 1 )
+      {
+/* const char *path __attribute__ ( ( unused ) ) = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest"; */
+/* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
+        const char *path __attribute__ ( ( unused ) ) = "mastest";
+
+        testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout );
+      }
+      if ( 1 )
+      {
+        const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
+
+        testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout );
+      }
+    }
+    {
+      if ( 1 )
+      {
+        const char *path __attribute__ ( ( unused ) ) = "mastest";
+
+        testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout );
+      }
+      if ( 1 )
+      {
+        const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
+
+        testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout );
+      }
     }
   }
   {
-  /* testdropcreate( path ); */
-  /* testfill( path ); */
-    FILE *fil = fopen( "testtreefromfs.tree", "w" );
-
-    if ( fil )
+    if ( 1 )
     {
-      testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
-      fclose( fil );
+      const char *path __attribute__ ( ( unused ) ) = "mastest";
+
+      FILE *fil = fopen( "testtreefromfsd.tree", "w" );
+
+      if ( fil )
+      {
+        testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+        fclose( fil );
+      }
     }
-  /* testtreefromdb( path ); */
+
+    if ( 1 )
+    {
+      const char *path __attribute__ ( ( unused ) ) = "mastest";
+
+      FILE *fil = fopen( "testtreefromdbd.tree", "w" );
+
+      if ( fil )
+      {
+        testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+        fclose( fil );
+      }
+    }
+  }
+  {
+    if ( 1 )
+    {
+      const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
+
+      FILE *fil = fopen( "testtreefromfsf.tree", "w" );
+
+      if ( fil )
+      {
+        testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+        fclose( fil );
+      }
+    }
+
+    if ( 1 )
+    {
+      const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
+
+      FILE *fil = fopen( "testtreefromdbf.tree", "w" );
+
+      if ( fil )
+      {
+        testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+        fclose( fil );
+      }
+    }
   }
   return 0;
 }

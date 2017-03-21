@@ -1,4 +1,4 @@
-#define R_GOOD(_r) (_r>=0)
+#define R_GOOD(_r) ((_r)>=0)
 #include <mastar/qstd/qstd_defs.h>
 #include <stdio.h>
 #include <string.h>
@@ -100,15 +100,19 @@ static int _uUu_
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) data;
+  static masxfs_depth_t top_depth = 0;
 
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
-  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
   size_t size = masxfs_levinfo_size_ref( li, flags );
   int fd = masxfs_levinfo_fd_ref( li, flags );
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
-  const char *epath _uUu_= masxfs_levinfo_path_ref( li, flags );
+  const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
+
+  if ( !top_depth && depth )
+    top_depth = depth - 1;
+  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth, flags );
 
   numline_treecb++;
   fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
@@ -123,16 +127,12 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ testtreefromfscb,
-     .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-
-    ,
     {                                                                /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */
-     treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
-
-    ,
-    {
-     NULL}
+     testtreefromfscb,.flags =
+     MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {                                                                /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */
+     treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {NULL}
   };
   WARN( "******** testtreefromfs *******" );
 
@@ -147,7 +147,9 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], fil /* data */ , flagsfs | MASXFS_CB_FROM_LAST, maxdepth ) );
+        rC( masxfs_pathinfo_scan_cbs
+            ( pi, typeflags, &callbacks[1], fil /* data */ , flagsfs /*| MASXFS_CB_UP_ROOT */ | MASXFS_CB_FROM_ROOT /*| MASXFS_CB_SELF_AND_UP */ ,
+              maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
