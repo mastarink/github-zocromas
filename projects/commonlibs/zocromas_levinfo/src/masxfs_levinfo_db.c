@@ -53,42 +53,42 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   rDECLBAD;
   if ( li )
   {
-    masxfs_entry_type_t detype_tmp = li->detype;
-
-    if ( li->lidepth )
+    rSETGOOD;
+    if ( !li->db.node_id )
     {
-      li[-1].detype = MASXFS_ENTRY_DIR_NUM;
+      masxfs_entry_type_t detype_tmp = li->detype;
 
-      rC( masxfs_levinfo_db_open( li - 1, flags ) );
-      assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
-    /* TODO
-     * The only unknown type is for starting point, for instance, 'mastest' at:
-     *   /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest
-     *
-     * Why???
-     *
-     * */
-    /* WARN( "1 APP TYPE: %d ('%s', %d)", li->detype == MASXFS_ENTRY_DIR_NUM, li->name, li->detype ); */
-      if ( rGOOD && ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ) )
+      if ( li->lidepth )
       {
-        if ( !li->db.node_id )
-          li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
-        if ( !li->db.node_id )
-          rSETBAD;
+        li[-1].detype = MASXFS_ENTRY_DIR_NUM;
+
+        rC( masxfs_levinfo_db_open( li - 1, flags ) );
+        assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
+      /* TODO
+       * The only unknown type is for starting point, for instance, 'mastest' at:
+       *   /home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest
+       *
+       * Why???
+       *
+       * */
+        if ( rGOOD && ( li->detype == MASXFS_ENTRY_DIR_NUM || li->detype == MASXFS_ENTRY_UNKNOWN_NUM ) )
+        {
+          if ( !li->db.node_id )
+            li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
+          if ( !li->db.node_id )
+            rSETBAD;
+        }
       }
-    /* WARN( "2 APP TYPE: %d ('%s', %d)", li->detype == MASXFS_ENTRY_DIR_NUM, li->name, li->detype ); */
-    /* else        */
-    /*   rSETGOOD; */
+      else
+      {
+        li->db.node_id = 1;
+        rSETGOOD;
+      }
+      assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
+      if ( rGOOD && li->db.node_id )
+        li->detype = MASXFS_ENTRY_DIR_NUM;
+      assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
     }
-    else
-    {
-      li->db.node_id = 1;
-      rSETGOOD;
-    }
-    assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
-    if ( rGOOD && li->db.node_id )
-      li->detype = MASXFS_ENTRY_DIR_NUM;
-    assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
   }
   else
     QRLI( li, rCODE );
@@ -285,6 +285,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     }
     else
     {
+      masxfs_levinfo_db_open( li, flags );
       assert( li->db.node_id );
       rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
     }

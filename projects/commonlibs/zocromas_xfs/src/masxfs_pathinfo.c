@@ -1,3 +1,4 @@
+#define R_GOOD(_r) (_r>=0)
 #include "masxfs_defs.h"
 /* #include <stdio.h> */
 #include <string.h>
@@ -22,10 +23,11 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 }
 
 int
-masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *data,
+masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *data,
                           masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
 {
-  int r = 0, rc = 0;
+  rDECLBAD;
+  int rc = 0;
 
 /* r = masxfs_pathinfo_opendir( pi ); */
 /* QRPI( pi, r );                     */
@@ -40,20 +42,34 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
     if ( ( pi->flags | flags ) & MASXFS_CB_FROM_LAST )
     {
       masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
+      masxfs_depth_t reldepth = 0;
 
-      r = masxfs_levinfo_scan_dirn_cbs( li, typeflags, callbacks, data, pi->flags | flags, maxdepth ? pi->pidepth + maxdepth : 0, 0 /* reldepth */  );
+      maxdepth = maxdepth ? pi->pidepth + maxdepth : 0;
+      flags |= pi->flags;
+#if 1
+    /* rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) ); */
+      rC( masxfs_levinfo_scan_tree_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+      QRPI( pi, rCODE );
+#else
+      WARN( "AHA" );
+      rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+    /* rC( masxfs_levinfo_scan_entry_single_cbs( li, typeflags, cbs, data, flags, reldepth ) ); */
+
+    /* rC( masxfs_levinfo_scan_li_cbs( li, typeflags, cbs, data, flags, maxdepth,  reldepth ) ); */
+#endif
     }
     else
     {
-      r = masxfs_levinfo_scan_dirn_cbs( pi->levinfo, typeflags, callbacks, data, flags, pi->pidepth + maxdepth, 0 /* reldepth */  );
+      rC( masxfs_levinfo_scan_dirn_cbs( pi->levinfo, typeflags, cbs, data, flags, pi->pidepth + maxdepth, 0 /* reldepth */  ) );
+      QRPI( pi, rCODE );
     }
-    QRPI( pi, r );
+    QRPI( pi, rCODE );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
-    if ( r >= 0 )
-      r = rc;
-    QRPI( pi, r );
+    if ( rGOOD )
+      rCODE = rc;
+    QRPI( pi, rCODE );
   }
-  return r;
+  rRET;
 }
 
 masxfs_levinfo_t *

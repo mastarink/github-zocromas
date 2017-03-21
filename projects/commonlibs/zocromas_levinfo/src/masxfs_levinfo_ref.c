@@ -231,6 +231,7 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   {
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
+      WARN( "%d: '%s'", li->detype, li->name );
       rC( masxfs_levinfo_stat( li, tflags ) );
       QRLI( li, rCODE );
 

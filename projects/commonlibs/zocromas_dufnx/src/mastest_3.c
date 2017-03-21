@@ -33,7 +33,6 @@ testtreefromdbcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qst
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
-  masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
 
   {
@@ -88,9 +87,13 @@ testtreefromdbcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qst
       as_parent_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
       masxfs_levinfo_set_node_id( li, as_parent_id );
     }
-    if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
-      MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
-            ( unsigned long long ) parent_id, ( unsigned long long ) as_parent_id );
+    {
+      masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
+
+      if ( !theid || 0 == strcmp( ename, "home" ) || as_parent_id == 66 || as_parent_id == 1 )
+        MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; as_parent_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid,
+              ( unsigned long long ) parent_id, ( unsigned long long ) as_parent_id );
+    }
   }
   return 0;
 }
@@ -99,6 +102,8 @@ static int numline_treecb = 0;
 static int _uUu_
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
+  FILE *fil = ( FILE * ) data;
+
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", flags );
   size_t size = masxfs_levinfo_size_ref( li, flags );
@@ -106,16 +111,16 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
-  const char *epath = masxfs_levinfo_path_ref( li, flags );
+  const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
 
   numline_treecb++;
-  printf( "%4d. %s %ld fd:%d D:%ld i:%ld %s; %s\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode, ename ? ename : "",
-          epath ? epath : "" );
+  fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
+           ename ? ename : "" /*, epath ? epath : "" */);
   return 0;
 }
 
 int
-testtreefromdb( const char *path, masxfs_depth_t maxdepth )
+testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
 {
   rDECL( 0 );
 
@@ -129,9 +134,9 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth )
 
   WARN( "******** testtreefromdb *******" );
   {
-    mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+  /* mas_qstd_t *qstd = */ mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-    if ( qstd->pfs )
+  /* if ( qstd->pfs ) */
     {
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
@@ -140,7 +145,7 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth )
         masxfs_levinfo_flags_t flagsdb _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_MODE_DB | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], qstd, flagsdb | MASXFS_CB_FROM_LAST, maxdepth ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[1], fil /* data */ , flagsdb | MASXFS_CB_FROM_LAST, maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }

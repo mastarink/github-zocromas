@@ -1,6 +1,10 @@
 #define R_GOOD(_r) (_r>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 /* #include <unistd.h> */
 
 #include <mastar/wrap/mas_memory.h>
@@ -11,6 +15,7 @@
 
 /* #include "masxfs_levinfo_tools.h" */
 #include "masxfs_levinfo_base.h"
+#include "masxfs_levinfo_tools.h"
 
 #include "masxfs_levinfo_path.h"
 
@@ -64,7 +69,12 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
   if ( path && *path )
   {
     masxfs_depth_t levinfo_depth = 0;
+    struct stat st;
+    int r = stat( path, &st );
+    masxfs_entry_type_t de_type_last _uUu_ = MASXFS_ENTRY_UNKNOWN_NUM;
 
+    if ( r >= 0 )
+      de_type_last = masxfs_levinfo_stat2entry( &st );
     levinfo = masxfs_levinfo_create_array_setup( depth_limit );
 
 #if 1
@@ -76,16 +86,20 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
         char *ep = strchrnul( ptok, '/' );
         size_t len = ep - ptok;
 
-      /* masxfs_entry_type_t de_type = *ep == '/' ? MASXFS_ENTRY_DIR_NUM : MASXFS_ENTRY_UNKNOWN_NUM; */
-        masxfs_entry_type_t de_type = MASXFS_ENTRY_UNKNOWN_NUM;
+        while ( *ep == '/' )
+          ep++;
+
+        const char *ntok = *ep ? ep : NULL;
+
+        masxfs_entry_type_t de_type = ntok ? MASXFS_ENTRY_DIR_NUM : de_type_last;
+
+      /* masxfs_entry_type_t de_type = MASXFS_ENTRY_UNKNOWN_NUM; */
 
         masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type /*, 0 */ , 0, NULL );
         levinfo[levinfo_depth].fixed = 1;
-        /* WARN( "FIXED '%s' %d", levinfo[levinfo_depth].name, levinfo[levinfo_depth].fixed ); */
+      /* WARN( "FIXED '%s' %d", levinfo[levinfo_depth].name, levinfo[levinfo_depth].fixed ); */
         levinfo_depth++;
-        while ( *ep == '/' )
-          ep++;
-        ptok = *ep ? ep : NULL;
+        ptok = ntok;
       }
     }
   /* XXX NOREMOVE XXX */

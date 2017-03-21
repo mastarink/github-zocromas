@@ -51,8 +51,8 @@ destructor_main( void )
 
 int testdropcreate( const char *path );
 int testfill( const char *path, masxfs_depth_t maxdepth );
-int testtreefromfs( const char *path, masxfs_depth_t maxdepth );
-int testtreefromdb( const char *path, masxfs_depth_t maxdepth );
+int testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * f );
+int testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * f );
 
 int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
@@ -65,18 +65,28 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
 /* const char *path __attribute__ ( ( unused ) ) = "mastest/tree"; */
 
-  if ( 1 )
   {
     testdropcreate( path );
     testfill( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
   /* testtreefromfs( path ); */
-    testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
+    FILE *fil = fopen( "testtreefromdb.tree", "w" );
+
+    if ( fil )
+    {
+      testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+      fclose( fil );
+    }
   }
-  else
   {
   /* testdropcreate( path ); */
   /* testfill( path ); */
-    testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  );
+    FILE *fil = fopen( "testtreefromfs.tree", "w" );
+
+    if ( fil )
+    {
+      testtreefromfs( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil );
+      fclose( fil );
+    }
   /* testtreefromdb( path ); */
   }
   return 0;
