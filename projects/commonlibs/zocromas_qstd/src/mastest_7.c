@@ -38,7 +38,7 @@ test7cb( masxfs_levinfo_t * li, unsigned long flags, void *qstdv, masxfs_depth_t
 
   {
     unsigned long long theid = 0;
-    unsigned long long parent_id = masxfs_levinfo_parent_id( li );
+    unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, ( masxfs_levinfo_flags_t ) MASXFS_CB_MODE_FS );
     unsigned long long as_parent_id = 0;
     unsigned long long dataid = 0;

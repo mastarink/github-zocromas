@@ -91,8 +91,10 @@ mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned
 
 /* WARN( "SELINS %lld", theid ); */
   if ( !theid )
+  {
+    assert( updir_id );
     theid = mas_qstd_mstmt_insget_names_id( qstd, name, updir_id, data_id, sdetype );
-
+  }
   QRG( theid > 0 ? 0 : -1 );
   return theid;
 }

@@ -38,7 +38,7 @@ testtreefromfscb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qst
 
   {
     unsigned long long theid = 0;
-    unsigned long long parent_id = masxfs_levinfo_parent_id( li );
+    unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
     unsigned long long as_parent_id = 0;
     unsigned long long dataid = 0;

@@ -57,7 +57,7 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
 
-  WARN( "%d: '%s'", li->detype, li->name );
+  /* WARN( "%d: '%s'", li->detype, li->name ); */
 #if 1
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_open( li, flags ) );

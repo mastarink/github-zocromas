@@ -102,8 +102,8 @@ hi ColorColumn ctermbg=grey guibg=#035656
 " echo '(send-window-to-workspace-from-first (get-window-by-name-re "\.jl") 2)' | sawfish-client --
 
 
-nnoremap <A-1> :tabfirst<CR>
-nnoremap <A-2> :tablast<CR>
+"nnoremap <A-1> :tabfirst<CR>
+"nnoremap <A-2> :tablast<CR>
 let shn_doprj="shn/doprj.sh"
 if filereadable(shn_doprj)
 " echo "has doprj:" . shn_doprj
@@ -112,9 +112,9 @@ if filereadable(shn_doprj)
   nnoremap <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
 endif
 
-nnoremap <A-F4> "=expand("%:t")<CR>p
-inoremap <A-F4> <C-R>=expand("%:t")<CR>
-noremap! <M-F4> <C-R>=expand("%:t")<CR>
+" nnoremap <A-F4> "=expand("%:t")<CR>p
+" inoremap <A-F4> <C-R>=expand("%:t")<CR>
+" noremap! <M-F4> <C-R>=expand("%:t")<CR>
 
 " let shn_doall="shn/doall.sh"
 " if filereadable(shn_doall)
@@ -131,8 +131,8 @@ nnoremap <C-]> :call MasGoTag2()<CR>
 " winpos 0 35
 " winsize 155 50
 
-nnoremap <C-e> i#include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
-inoremap <C-e> #include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
+" nnoremap <C-e> i#include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
+" inoremap <C-e> #include <mastar/error/mas_error_defs_ctrl.h><CR>#include <mastar/error/mas_error_defs_make.h><CR>#include <mastar/error/mas_error_defs.h><CR><Esc>
 
 " sb `=dfile`
 " bd `=dfile`

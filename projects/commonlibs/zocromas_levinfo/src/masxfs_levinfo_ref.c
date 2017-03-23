@@ -215,7 +215,7 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
     {
       if ( li->prefix )
         mas_free( li->prefix );
-      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, top_depth, 0 /* test! - not flags */ );
+      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, top_depth, 0 /* test! - not flags */  );
     }
   }
   return prefix;
@@ -257,20 +257,23 @@ masxfs_levinfo_set_node_id( masxfs_levinfo_t * li, unsigned long node_id )
 }
 
 unsigned long
-masxfs_levinfo_node_id( masxfs_levinfo_t * li, masxfs_depth_t offset )
+masxfs_levinfo_node_id( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags _uUu_ )
 {
   unsigned long node_id = 0;
 
   if ( li )
   {
     if ( li->lidepth >= offset )
+    {
+      /* masxfs_levinfo_open( li-offset, tflags ); */
       node_id = li[-offset].db.node_id;
+    }
   }
   return node_id;
 }
 
 int
-masxfs_levinfo_parent_id( masxfs_levinfo_t * li )
+masxfs_levinfo_parent_id( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  return masxfs_levinfo_node_id( li, 1 );
+  return masxfs_levinfo_node_id( li, 1,  tflags );
 }

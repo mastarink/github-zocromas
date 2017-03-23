@@ -34,10 +34,12 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
   const char *ename = masxfs_levinfo_name_ref( li, flags );
+  masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, flags );
 
+  /* WARN( "%d: '%s'", lidepth, ename ); */
   {
     unsigned long long theid = 0;
-    unsigned long long parent_id = masxfs_levinfo_parent_id( li );
+    unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
     unsigned long long node_id = 0;
     unsigned long long dataid = 0;
@@ -57,7 +59,6 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
     {
       size_t size = masxfs_levinfo_size_ref( li, flags );
       size_t thesize _uUu_ = mas_qstd_mstmt_insget_sizes_id( qstd, size );
-
     }
     {
       const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, flags );
@@ -69,12 +70,14 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
         mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetypes[detype], stat );
       }
     }
-    if ( masxfs_levinfo_depth_ref( li, flags ) != 0 )
+    if ( lidepth != 0 )
     {
 #if 0
       theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
 #if 1
+      /* WARN( "%lld: '%s'", parent_id, ename ); */
+      assert( parent_id );
       theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
 #endif
 #if 0
@@ -152,9 +155,12 @@ testfill( const char *path, masxfs_depth_t maxdepth )
         {
           rC( mas_qstd_start_transaction( qstd ) );
         /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
-          rC( masxfs_pathinfo_scan_cbs
-              ( pi, typeflags, &callbacks[0], qstd, flagsfs | MASXFS_CB_UP_ROOT /* | MASXFS_CB_FROM_ROOT XXX not here! XXX  *//*| MASXFS_CB_SELF_AND_UP */ ,
-                maxdepth ) );
+          WARN( "******** testfill scan *******" );
+          masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT | MASXFS_CB_SELF_AND_UP;
+          masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT;
+
+          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | xflags1, maxdepth ) );
+          WARN( "******** /testfill scan *******" );
           rC( mas_qstd_end_transaction( qstd ) );
         }
 
