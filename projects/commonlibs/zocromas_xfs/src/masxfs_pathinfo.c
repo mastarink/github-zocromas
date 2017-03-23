@@ -44,6 +44,7 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
     {
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
+      /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
       rC( masxfs_levinfo_scan_tree_cbs( pi->levinfo, typeflags, cbs, data, flags, maxdepth, reldepth ) );
       QRPI( pi, rCODE );
     }

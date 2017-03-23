@@ -83,13 +83,13 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
       }
     }
     {
-      if ( 1 )
+      if ( 0 )
       {
         const char *path __attribute__ ( ( unused ) ) = "mastest";
 
         testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout );
       }
-      if ( 1 )
+      if ( 0 )
       {
         const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
 

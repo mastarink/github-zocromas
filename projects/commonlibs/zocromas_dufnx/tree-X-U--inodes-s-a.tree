@@ -1,0 +1,1382 @@
+   1	<?xml version="1.0" encoding="UTF-8"?>
+   2	<tree>
+   3	  <directory name="mastest/">
+   4	    <directory name="tree" inode="109953123" size="4096">
+   5	      <file name="Makefile.in" inode="109847862" size="26955"></file>
+   6	      <directory name="sh0" inode="109953124" size="4096">
+   7	        <file name="tarme.sh" inode="109848237" size="596"></file>
+   8	        <file name="findgarbage.sh" inode="109848238" size="121"></file>
+   9	        <file name="debug_mas_duf.cmd" inode="109848239" size="65"></file>
+  10	        <file name="debug_duf.sh" inode="109848240" size="157"></file>
+  11	        <file name="build.sh" inode="109848241" size="39"></file>
+  12	        <file name="grepfunexclude.txt" inode="109848242" size="48"></file>
+  13	        <file name="testdist.sh" inode="109848243" size="1295"></file>
+  14	        <file name="gdbcore_any.sh" inode="109848244" size="808"></file>
+  15	        <file name="make.sh" inode="109848245" size="551"></file>
+  16	        <file name="run_any.sh" inode="109848246" size="706"></file>
+  17	        <file name="tmp.cmd" inode="109848247" size="98"></file>
+  18	        <file name="run_duf.sh" inode="109848248" size="94"></file>
+  19	        <file name="debug_any.sh" inode="109848249" size="1536"></file>
+  20	      </directory>
+  21	      <file name="config.h.in" inode="109848226" size="7223"></file>
+  22	      <directory name="md5sha" inode="109953125" size="4096">
+  23	        <file name="t2.html" inode="109848250" size="40737"></file>
+  24	        <file name="t1.html" inode="109848251" size="40737"></file>
+  25	      </directory>
+  26	      <link name=".localrc" target="../../.localrc" inode="108794933" size="14"></link>
+  27	      <directory name="tree.r" inode="109953126" size="4096">
+  28	        <file name="Makefile.in" inode="109848252" size="26955"></file>
+  29	        <directory name="sh0" inode="109953127" size="4096">
+  30	          <file name="tarme.sh" inode="109848264" size="596"></file>
+  31	          <file name="findgarbage.sh" inode="109848265" size="121"></file>
+  32	          <file name="debug_mas_duf.cmd" inode="109848266" size="65"></file>
+  33	          <file name="debug_duf.sh" inode="109848267" size="157"></file>
+  34	          <file name="build.sh" inode="109848268" size="39"></file>
+  35	          <file name="grepfunexclude.txt" inode="109848269" size="48"></file>
+  36	          <file name="testdist.sh" inode="109848270" size="1295"></file>
+  37	          <file name="gdbcore_any.sh" inode="109848271" size="808"></file>
+  38	          <file name="make.sh" inode="109848272" size="551"></file>
+  39	          <file name="run_any.sh" inode="109848273" size="706"></file>
+  40	          <file name="tmp.cmd" inode="109848274" size="98"></file>
+  41	          <file name="run_duf.sh" inode="109848275" size="94"></file>
+  42	          <file name="debug_any.sh" inode="109848276" size="1536"></file>
+  43	        </directory>
+  44	        <directory name=".auxdir" inode="109953128" size="4096">
+  45	          <directory name=".build" inode="109953129" size="4096">
+  46	            <file name="Makefile" inode="109848284" size="28573"></file>
+  47	            <file name="stamp-h1" inode="109848285" size="23"></file>
+  48	            <file name="config.status" inode="109848286" size="74068"></file>
+  49	            <directory name="src" inode="109953130" size="12288">
+  50	              <file name="zocromas_duf-mod_filenames_uni.o" inode="109848289" size="51232"></file>
+  51	              <file name="zocromas_duf-duf_utils_path.o" inode="109848290" size="31008"></file>
+  52	              <file name="zocromas_duf-duf.o" inode="109848291" size="58336"></file>
+  53	              <file name="zocromas_duf-data_optable_io.o" inode="109848292" size="38152"></file>
+  54	              <file name="zocromas_duf-mod_collect_mime_uni.o" inode="109848293" size="74936"></file>
+  55	              <file name="zocromas_duf-duf_ufilter_bind.o" inode="109848294" size="97208"></file>
+  56	              <directory name="inc" inode="109953131" size="4096">
+  57	                <file name="Makefile" inode="109848412" size="19996"></file>
+  58	              </directory>
+  59	              <file name="zocromas_duf-duf_option_tmpdb.o" inode="109848295" size="39864"></file>
+  60	              <file name="zocromas_duf-duf_leaf_scan2.o" inode="109848296" size="44256"></file>
+  61	              <file name="zocromas_duf-data_optable_interactive.o" inode="109848297" size="36976"></file>
+  62	              <file name="zocromas_duf-data_optable_debug.o" inode="109848298" size="36768"></file>
+  63	              <file name="zocromas_duf-duf_options_interactive.o" inode="109848299" size="51288"></file>
+  64	              <file name="zocromas_duf-data_optable_help.o" inode="109848300" size="40272"></file>
+  65	              <file name="zocromas_duf-data_optable_trace.o" inode="109848301" size="45800"></file>
+  66	              <file name="zocromas_duf-duf_path2dirid.o" inode="109848302" size="48872"></file>
+  67	              <file name="zocromas_duf-duf_option.o" inode="109848303" size="80640"></file>
+  68	              <file name="zocromas_duf-duf_sccb_begfin.o" inode="109848304" size="36304"></file>
+  69	              <file name="zocromas_duf-std_mod_sets.o" inode="109848305" size="9328"></file>
+  70	              <file name="zocromas_duf-duf_dbg.o" inode="109848306" size="34152"></file>
+  71	              <file name="zocromas_duf-data_optable.o" inode="109848307" size="37456"></file>
+  72	              <file name="zocromas_duf-mod_directories_uni.o" inode="109848308" size="35088"></file>
+  73	              <directory name=".libs" inode="109953132" size="4096">
+  74	              </directory>
+  75	              <file name="zocromas_duf-duf_sel_cb_node.o" inode="109848309" size="50256"></file>
+  76	              <file name="zocromas_duf-sql_beginning_tables.o" inode="109848310" size="5048"></file>
+  77	              <file name="zocromas_duf-duf_options_cli.o" inode="109848311" size="79752"></file>
+  78	              <file name="zocromas_duf-duf_sel_cb_leaf.o" inode="109848312" size="50472"></file>
+  79	              <file name="zocromas_duf-duf_sccb_eval_std.o" inode="109848313" size="28216"></file>
+  80	              <file name="zocromas_duf-duf_option_misc.o" inode="109848314" size="33000"></file>
+  81	              <file name="zocromas_duf-duf_levinfo_openclose.o" inode="109848315" size="63112"></file>
+  82	              <file name="zocromas_duf-duf_tags.o" inode="109848316" size="63728"></file>
+  83	              <file name="zocromas_duf-data_optable_str.o" inode="109848317" size="38392"></file>
+  84	              <file name="zocromas_duf-data_optable_uplus.o" inode="109848318" size="36384"></file>
+  85	              <file name="zocromas_duf-duf_config.o" inode="109848319" size="53352"></file>
+  86	              <file name="zocromas_duf-duf_dirent_scan2.o" inode="109848320" size="60704"></file>
+  87	              <file name="zocromas_duf-duf_option_extended.o" inode="109848321" size="37720"></file>
+  88	              <file name="zocromas_duf-duf_levinfo_credel.o" inode="109848322" size="31232"></file>
+  89	              <file name="zocromas_duf-mod_dir_print_uni.o" inode="109848323" size="54952"></file>
+  90	              <file name="zocromas_duf-duf_option_old.o" inode="109848324" size="77344"></file>
+  91	              <file name="zocromas_duf-duf_options_table.o" inode="109848325" size="25112"></file>
+  92	              <file name="zocromas_duf-duf_option_sccb.o" inode="109848326" size="45416"></file>
+  93	              <file name="zocromas_duf-duf_utils_print.o" inode="109848327" size="11160"></file>
+  94	              <file name="zocromas_duf-duf_pathinfo_credel.o" inode="109848328" size="35232"></file>
+  95	              <file name="zocromas_duf-duf_option_names.o" inode="109848329" size="42968"></file>
+  96	              <file name="zocromas_duf-data_optable_format.o" inode="109848330" size="39344"></file>
+  97	              <file name="zocromas_duf-data_optable_filter.o" inode="109848331" size="47208"></file>
+  98	              <file name="zocromas_duf-duf_levinfo.o" inode="109848332" size="36256"></file>
+  99	              <file name="zocromas_duf-duf_option_find.o" inode="109848333" size="77144"></file>
+ 100	              <file name="zocromas_duf-duf_dirent.o" inode="109848334" size="25048"></file>
+ 101	              <file name="zocromas_duf-duf_sccb.o" inode="109848335" size="18560"></file>
+ 102	              <file name="zocromas_duf-data_optable_sflag.o" inode="109848336" size="37336"></file>
+ 103	              <file name="zocromas_duf-duf_options_file.o" inode="109848337" size="85216"></file>
+ 104	              <file name="zocromas_duf-mod_sd5_uni.o" inode="109848338" size="78040"></file>
+ 105	              <file name="zocromas_duf-data_optable_flag_obsolete.o" inode="109848339" size="37640"></file>
+ 106	              <file name="zocromas_duf-mod_filedata_uni.o" inode="109848340" size="15904"></file>
+ 107	              <file name="zocromas_duf-duf_maindb_info.o" inode="109848341" size="2712"></file>
+ 108	              <file name="zocromas_duf-duf_utils.o" inode="109848342" size="15792"></file>
+ 109	              <file name="zocromas_duf-sql_beginning_selected.o" inode="109848343" size="10272"></file>
+ 110	              <file name="zocromas_duf-duf_options_env.o" inode="109848344" size="36512"></file>
+ 111	              <file name="zocromas_duf-duf_sql_field.o" inode="109848345" size="6328"></file>
+ 112	              <file name="zocromas_duf-duf_filedata.o" inode="109848346" size="72464"></file>
+ 113	              <file name="zocromas_duf-mod_integrity_uni.o" inode="109848347" size="15248"></file>
+ 114	              <file name="zocromas_duf-mod_crc32_uni.o" inode="109848348" size="71928"></file>
+ 115	              <file name="zocromas_duf-mod_save_to.o" inode="109848349" size="79192"></file>
+ 116	              <file name="zocromas_duf-duf_ufilter_ref.o" inode="109848350" size="32104"></file>
+ 117	              <file name="zocromas_duf-duf_sys_wrap.o" inode="109848351" size="33416"></file>
+ 118	              <file name="zocromas_duf-sql_beginning_common.o" inode="109848352" size="3784"></file>
+ 119	              <file name="zocromas_duf-duf_dir_scan2_stages.o" inode="109848353" size="80288"></file>
+ 120	              <file name="zocromas_duf-duf_eval_at_config.o" inode="109848354" size="2680"></file>
+ 121	              <file name="zocromas_duf-duf_sccbh_eval.o" inode="109848355" size="94536"></file>
+ 122	              <file name="zocromas_duf-mod_dumplet.o" inode="109848356" size="76960"></file>
+ 123	              <file name="zocromas_duf-duf_levinfo_stat.o" inode="109848357" size="45136"></file>
+ 124	              <file name="zocromas_duf-mod_md5_uni.o" inode="109848358" size="79168"></file>
+ 125	              <file name="zocromas_duf-duf_sql_field2.o" inode="109848359" size="39208"></file>
+ 126	              <file name="zocromas_duf-data_optable_info.o" inode="109848360" size="37072"></file>
+ 127	              <file name="zocromas_duf-sql_beginning_vacuum.o" inode="109848361" size="3656"></file>
+ 128	              <file name="zocromas_duf-mod_dummy_uni.o" inode="109848362" size="68064"></file>
+ 129	              <file name="zocromas_duf-duf_option_descr.o" inode="109848363" size="41696"></file>
+ 130	              <file name="zocromas_duf-duf_status.o" inode="109848364" size="32696"></file>
+ 131	              <file name="zocromas_duf-mod_tree_print_uni.o" inode="109848365" size="67040"></file>
+ 132	              <file name="zocromas_duf-std_selectors.o" inode="109848366" size="4968"></file>
+ 133	              <file name="zocromas_duf-duf_pdi_attach.o" inode="109848367" size="30224"></file>
+ 134	              <file name="mtest" inode="109848368" size="14246"></file>
+ 135	              <file name="zocromas_duf-duf_options.o" inode="109848369" size="62528"></file>
+ 136	              <file name="zocromas_duf-duf_sccb_handle.o" inode="109848370" size="63992"></file>
+ 137	              <file name="zocromas_duf-mod_tagit.o" inode="109848371" size="74320"></file>
+ 138	              <file name="zocromas_duf-duf_sccb_eval.o" inode="109848372" size="46312"></file>
+ 139	              <file name="zocromas_duf-data_optable_sccb.o" inode="109848373" size="37576"></file>
+ 140	              <file name="zocromas_duf-duf_pdi_credel.o" inode="109848374" size="35504"></file>
+ 141	              <file name="zocromas_duf-duf_li_credel.o" inode="109848375" size="10240"></file>
+ 142	              <file name="zocromas_duf-duf_pdi_ref.o" inode="109848376" size="38984"></file>
+ 143	              <file name="zocromas_duf-duf_trace.o" inode="109848377" size="38072"></file>
+ 144	              <file name="zocromas_duf-data_optable_redo_and_obsolete.o" inode="109848378" size="37328"></file>
+ 145	              <file name="zocromas_duf-duf_fileinfo.o" inode="109848379" size="31768"></file>
+ 146	              <file name="zocromas_duf-duf_context.o" inode="109848380" size="6192"></file>
+ 147	              <file name="zocromas_duf-duf_service.o" inode="109848381" size="30992"></file>
+ 148	              <file name="zocromas_duf-duf_pathinfo_ref.o" inode="109848382" size="53440"></file>
+ 149	              <file name="zocromas_duf-duf_item_scan2.o" inode="109848383" size="56328"></file>
+ 150	              <file name="zocromas_duf-duf_pdi_reinit.o" inode="109848384" size="52832"></file>
+ 151	              <file name="zocromas_duf-duf_prepare_actions.o" inode="109848385" size="60152"></file>
+ 152	              <file name="zocromas_duf-evsql_selector.o" inode="109848386" size="43800"></file>
+ 153	              <file name="zocromas_duf-duf_pdi_context.o" inode="109848387" size="13128"></file>
+ 154	              <file name="zocromas_duf-std_fieldsets.o" inode="109848388" size="8096"></file>
+ 155	              <file name="zocromas_duf-duf_levinfo_context.o" inode="109848389" size="12144"></file>
+ 156	              <file name="zocromas_duf-duf_sccb_eval_dirs.o" inode="109848390" size="52392"></file>
+ 157	              <file name="zocromas_duf-data_optable_experimental.o" inode="109848391" size="37640"></file>
+ 158	              <file name="zocromas_duf-duf_options_string.o" inode="109848392" size="36648"></file>
+ 159	              <file name="zocromas_duf-duf_pdi_stmt.o" inode="109848393" size="37848"></file>
+ 160	              <file name="zocromas_duf-duf_action_table.o" inode="109848394" size="18600"></file>
+ 161	              <file name="zocromas_duf-sql_beginning_create.o" inode="109848395" size="15784"></file>
+ 162	              <file name="zocromas_duf-duf_pstmt_levinfo.o" inode="109848396" size="32352"></file>
+ 163	              <file name="zocromas_duf-evsql_begfin.o" inode="109848397" size="53768"></file>
+ 164	              <file name="zocromas_duf-duf_selector.o" inode="109848398" size="38224"></file>
+ 165	              <file name="zocromas_duf-duf_pdi.o" inode="109848399" size="68960"></file>
+ 166	              <file name="zocromas_duf-duf_errors.o" inode="109848400" size="33688"></file>
+ 167	              <file name="zocromas_duf-duf_levinfo_ref.o" inode="109848401" size="62872"></file>
+ 168	              <directory name=".deps" inode="109953133" size="12288">
+ 169	                <file name="zocromas_duf-duf_options_cli.Po" inode="109848413" size="11188"></file>
+ 170	                <file name="zocromas_duf-evsql_selector.Po" inode="109848414" size="12037"></file>
+ 171	                <file name="zocromas_duf-data_optable.Po" inode="109848415" size="6637"></file>
+ 172	                <file name="zocromas_duf-duf_leaf_scan2.Po" inode="109848416" size="11043"></file>
+ 173	                <file name="zocromas_duf-data_optable_format.Po" inode="109848417" size="6452"></file>
+ 174	                <file name="zocromas_duf-duf_levinfo_updown.Po" inode="109848418" size="10829"></file>
+ 175	                <file name="zocromas_duf-duf_print.Po" inode="109848419" size="11237"></file>
+ 176	                <file name="zocromas_duf-data_optable_debug.Po" inode="109848420" size="6450"></file>
+ 177	                <file name="zocromas_duf-duf_maindb.Po" inode="109848421" size="15998"></file>
+ 178	                <file name="zocromas_duf-data_optable_flag_obsolete.Po" inode="109848422" size="6068"></file>
+ 179	                <file name="zocromas_duf-duf_trace.Po" inode="109848423" size="9758"></file>
+ 180	                <file name="zocromas_duf-duf_option_misc.Po" inode="109848424" size="13054"></file>
+ 181	                <file name="zocromas_duf-duf_sqlite.Po" inode="109848425" size="10792"></file>
+ 182	                <file name="zocromas_duf-duf_option_tmpdb.Po" inode="109848426" size="10930"></file>
+ 183	                <file name="zocromas_duf-duf_options_file.Po" inode="109848427" size="11834"></file>
+ 184	                <file name="zocromas_duf-duf_selector.Po" inode="109848428" size="11834"></file>
+ 185	                <file name="zocromas_duf-duf_sccb.Po" inode="109848429" size="10601"></file>
+ 186	                <file name="zocromas_duf-sql_update_selected.Po" inode="109848430" size="3274"></file>
+ 187	                <file name="zocromas_duf-duf_options_table.Po" inode="109848431" size="7073"></file>
+ 188	                <file name="zocromas_duf-duf_li_credel.Po" inode="109848432" size="10426"></file>
+ 189	                <file name="zocromas_duf-duf_options_env.Po" inode="109848433" size="11246"></file>
+ 190	                <file name="zocromas_duf-duf_levinfo_stat.Po" inode="109848434" size="11031"></file>
+ 191	                <file name="zocromas_duf-data_optable_uplus.Po" inode="109848435" size="6450"></file>
+ 192	                <file name="zocromas_duf-duf_errors.Po" inode="109848436" size="10907"></file>
+ 193	                <file name="zocromas_duf-duf_option_descr.Po" inode="109848437" size="11646"></file>
+ 194	                <file name="zocromas_duf-duf_item_scan2.Po" inode="109848438" size="12633"></file>
+ 195	                <file name="zocromas_duf-mod_directories_uni.Po" inode="109848439" size="11445"></file>
+ 196	                <file name="zocromas_duf-sql_beginning_create.Po" inode="109848440" size="3079"></file>
+ 197	                <file name="zocromas_duf-duf_option_names.Po" inode="109848441" size="11246"></file>
+ 198	                <file name="zocromas_duf-mod_dummy_uni.Po" inode="109848442" size="12277"></file>
+ 199	                <file name="zocromas_duf-duf_sccb_begfin.Po" inode="109848443" size="10957"></file>
+ 200	                <file name="zocromas_duf-duf_ufilter_bind.Po" inode="109848444" size="11660"></file>
+ 201	                <file name="zocromas_duf-duf_options_string.Po" inode="109848445" size="11313"></file>
+ 202	                <file name="zocromas_duf-sql_beginning_selected.Po" inode="109848446" size="3280"></file>
+ 203	                <file name="zocromas_duf-duf_sccbh_eval.Po" inode="109848447" size="13789"></file>
+ 204	                <file name="zocromas_duf-duf_dir_scan2_stages.Po" inode="109848448" size="11634"></file>
+ 205	                <file name="zocromas_duf-duf_service.Po" inode="109848449" size="11087"></file>
+ 206	                <file name="zocromas_duf-duf_option_env.Po" inode="109848450" size="10834"></file>
+ 207	                <file name="zocromas_duf-duf_tags.Po" inode="109848451" size="10690"></file>
+ 208	                <file name="zocromas_duf-std_fieldsets.Po" inode="109848452" size="11146"></file>
+ 209	                <file name="zocromas_duf-mod_filenames_uni.Po" inode="109848453" size="12350"></file>
+ 210	                <file name="zocromas_duf-duf_config.Po" inode="109848454" size="11452"></file>
+ 211	                <file name="zocromas_duf-duf_prepare_actions.Po" inode="109848455" size="11029"></file>
+ 212	                <file name="zocromas_duf-duf_pstmt_levinfo.Po" inode="109848456" size="10628"></file>
+ 213	                <file name="zocromas_duf-data_optable_experimental.Po" inode="109848457" size="6862"></file>
+ 214	                <file name="zocromas_duf-std_selectors.Po" inode="109848458" size="11349"></file>
+ 215	                <file name="zocromas_duf-duf_maindb_info.Po" inode="109848459" size="11542"></file>
+ 216	                <file name="zocromas_duf-duf_ufilter_ref.Po" inode="109848460" size="10637"></file>
+ 217	                <file name="zocromas_duf-duf_levinfo_openclose.Po" inode="109848461" size="10840"></file>
+ 218	                <file name="zocromas_duf-duf_path2dirid.Po" inode="109848462" size="12718"></file>
+ 219	                <file name="zocromas_duf-data_optable_redo_and_obsolete.Po" inode="109848463" size="6474"></file>
+ 220	                <file name="zocromas_duf-duf_options_interactive.Po" inode="109848464" size="12688"></file>
+ 221	                <file name="zocromas_duf-duf_sccb_handle.Po" inode="109848465" size="13355"></file>
+ 222	                <file name="zocromas_duf-sql_beginning_tables.Po" inode="109848466" size="2870"></file>
+ 223	                <file name="mtest-duftest.Po" inode="109848467" size="1872"></file>
+ 224	                <file name="zocromas_duf-duf_sql.Po" inode="109848468" size="10923"></file>
+ 225	                <file name="zocromas_duf-duf_sccb_eval_dirs.Po" inode="109848469" size="12047"></file>
+ 226	                <file name="zocromas_duf-duf_sccb_eval_std.Po" inode="109848470" size="10441"></file>
+ 227	                <file name="zocromas_duf-duf_status.Po" inode="109848471" size="6336"></file>
+ 228	                <file name="zocromas_duf-duf_pdi_stmt.Po" inode="109848472" size="10730"></file>
+ 229	                <file name="zocromas_duf-duf_pdi.Po" inode="109848473" size="13347"></file>
+ 230	                <file name="zocromas_duf-duf_context.Po" inode="109848474" size="10167"></file>
+ 231	                <file name="zocromas_duf-mod_save_to.Po" inode="109848475" size="14284"></file>
+ 232	                <file name="zocromas_duf-duf_cli_options.Po" inode="109848476" size="10991"></file>
+ 233	                <file name="zocromas_duf-duf_sql_field2.Po" inode="109848477" size="10997"></file>
+ 234	                <file name="zocromas_duf-duf_levinfo.Po" inode="109848478" size="11405"></file>
+ 235	                <file name="zocromas_duf-duf_pdi_attach.Po" inode="109848479" size="15758"></file>
+ 236	                <file name="zocromas_duf-data_optable_info.Po" inode="109848480" size="6647"></file>
+ 237	                <file name="zocromas_duf-duf_dbg.Po" inode="109848481" size="6813"></file>
+ 238	                <file name="zocromas_duf-duf_option_file.Po" inode="109848482" size="11237"></file>
+ 239	                <file name="zocromas_duf-duf_levinfo_credel.Po" inode="109848483" size="10854"></file>
+ 240	                <file name="zocromas_duf-duf_option_help.Po" inode="109848484" size="11821"></file>
+ 241	                <file name="zocromas_duf-duf_option_extended.Po" inode="109848485" size="10456"></file>
+ 242	                <file name="zocromas_duf-mod_tree_print_uni.Po" inode="109848486" size="12438"></file>
+ 243	                <file name="zocromas_duf-duf_option_typed.Po" inode="109848487" size="12091"></file>
+ 244	                <file name="zocromas_duf-data_optable_filter.Po" inode="109848488" size="6452"></file>
+ 245	                <file name="zocromas_duf-duf_sys_wrap.Po" inode="109848489" size="10596"></file>
+ 246	                <file name="zocromas_duf-duf_levinfo_context.Po" inode="109848490" size="9941"></file>
+ 247	                <file name="zocromas_duf-duf_option_find.Po" inode="109848491" size="10844"></file>
+ 248	                <file name="zocromas_duf-duf_sccb_eval.Po" inode="109848492" size="10413"></file>
+ 249	                <file name="zocromas_duf-duf_path2db.Po" inode="109848493" size="13194"></file>
+ 250	                <file name="zocromas_duf-duf_sel_cb_node.Po" inode="109848494" size="13104"></file>
+ 251	                <file name="zocromas_duf-duf_sel_cb_leaf.Po" inode="109848495" size="13287"></file>
+ 252	                <file name="zocromas_duf-duf_option_restore.Po" inode="109848496" size="10858"></file>
+ 253	                <file name="zocromas_duf-duf_eval_at_config.Po" inode="109848497" size="11789"></file>
+ 254	                <file name="zocromas_duf-duf_option_old.Po" inode="109848498" size="12081"></file>
+ 255	                <file name="zocromas_duf-std_mod_sets.Po" inode="109848499" size="10593"></file>
+ 256	                <file name="zocromas_duf-duf_option_sccb.Po" inode="109848500" size="12203"></file>
+ 257	                <file name="zocromas_duf-sql_beginning_vacuum.Po" inode="109848501" size="2671"></file>
+ 258	                <file name="zocromas_duf-duf_pathinfo_credel.Po" inode="109848502" size="11837"></file>
+ 259	                <file name="zocromas_duf-duf_fileinfo.Po" inode="109848503" size="11446"></file>
+ 260	                <file name="zocromas_duf-duf_options.Po" inode="109848504" size="12478"></file>
+ 261	                <file name="zocromas_duf-duf_printb.Po" inode="109848505" size="11241"></file>
+ 262	                <file name="zocromas_duf-mod_collect_mime_uni.Po" inode="109848506" size="13358"></file>
+ 263	                <file name="zocromas_duf-duf_dirent_scan2.Po" inode="109848507" size="12072"></file>
+ 264	                <file name="zocromas_duf-mod_sd5_uni.Po" inode="109848508" size="13635"></file>
+ 265	                <file name="zocromas_duf-duf_ufilter.Po" inode="109848509" size="10621"></file>
+ 266	                <file name="zocromas_duf-duf_begfin.Po" inode="109848510" size="11546"></file>
+ 267	                <file name="zocromas_duf-mod_filedata_uni.Po" inode="109848511" size="11607"></file>
+ 268	                <file name="zocromas_duf-data_optable_interactive.Po" inode="109848512" size="6661"></file>
+ 269	                <file name="zocromas_duf-duf_action.Po" inode="109848513" size="13998"></file>
+ 270	                <file name="zocromas_duf-duf_dh.Po" inode="109848514" size="11457"></file>
+ 271	                <file name="zocromas_duf-mod_crc32_uni.Po" inode="109848515" size="14048"></file>
+ 272	                <file name="zocromas_duf-duf_levinfo_ref.Po" inode="109848516" size="11035"></file>
+ 273	                <file name="zocromas_duf-duf_pdi_sccb_eval.Po" inode="109848517" size="10922"></file>
+ 274	                <file name="zocromas_duf-duf_filedata.Po" inode="109848518" size="12298"></file>
+ 275	                <file name="zocromas_duf-duf.Po" inode="109848519" size="11732"></file>
+ 276	                <file name="zocromas_duf-duf_pdi_ref.Po" inode="109848520" size="10021"></file>
+ 277	                <file name="zocromas_duf-duf_option.Po" inode="109848521" size="12012"></file>
+ 278	                <file name="zocromas_duf-mod_tagit.Po" inode="109848522" size="12850"></file>
+ 279	                <file name="zocromas_duf-duf_action_table.Po" inode="109848523" size="10816"></file>
+ 280	                <file name="zocromas_duf-mod_md5_uni.Po" inode="109848524" size="13635"></file>
+ 281	                <file name="zocromas_duf-duf_option_cmd.Po" inode="109848525" size="11222"></file>
+ 282	                <file name="zocromas_duf-data_optable_sccb.Po" inode="109848526" size="6647"></file>
+ 283	                <file name="zocromas_duf-duf_interactive.Po" inode="109848527" size="12822"></file>
+ 284	                <file name="zocromas_duf-data_optable_flag.Po" inode="109848528" size="6050"></file>
+ 285	                <file name="zocromas_duf-duf_pdi_reinit.Po" inode="109848529" size="11588"></file>
+ 286	                <file name="zocromas_duf-duf_pdi_credel.Po" inode="109848530" size="10806"></file>
+ 287	                <file name="zocromas_duf-mod_dir_print_uni.Po" inode="109848531" size="12436"></file>
+ 288	                <file name="zocromas_duf-duf_utils_print.Po" inode="109848532" size="2821"></file>
+ 289	                <file name="zocromas_duf-data_optable_str.Po" inode="109848533" size="6645"></file>
+ 290	                <file name="zocromas_duf-duf_pdi_context.Po" inode="109848534" size="9828"></file>
+ 291	                <file name="zocromas_duf-duf_dirent.Po" inode="109848535" size="10839"></file>
+ 292	                <file name="zocromas_duf-mod_template_uni.Po" inode="109848536" size="11795"></file>
+ 293	                <file name="zocromas_duf-duf_utils_path.Po" inode="109848537" size="10378"></file>
+ 294	                <file name="zocromas_duf-sql_beginning_common.Po" inode="109848538" size="2671"></file>
+ 295	                <file name="zocromas_duf-data_optable_io.Po" inode="109848539" size="6643"></file>
+ 296	                <file name="zocromas_duf-duf_utils.Po" inode="109848540" size="2976"></file>
+ 297	                <file name="zocromas_duf-duf_sql_field.Po" inode="109848541" size="10798"></file>
+ 298	                <file name="zocromas_duf-mod_exif_uni.Po" inode="109848542" size="15236"></file>
+ 299	                <file name="zocromas_duf-data_optable_help.Po" inode="109848543" size="6647"></file>
+ 300	                <file name="zocromas_duf-data_optable_sflag.Po" inode="109848544" size="6450"></file>
+ 301	                <file name="zocromas_duf-mod_integrity_uni.Po" inode="109848545" size="11078"></file>
+ 302	                <file name="zocromas_duf-duf_option_interactive.Po" inode="109848546" size="12290"></file>
+ 303	                <file name="zocromas_duf-duf_pathinfo_ref.Po" inode="109848547" size="11825"></file>
+ 304	                <file name="zocromas_duf-evsql_begfin.Po" inode="109848548" size="11558"></file>
+ 305	                <file name="zocromas_duf-duf_match.Po" inode="109848549" size="1232"></file>
+ 306	                <file name="zocromas_duf-data_optable_trace.Po" inode="109848550" size="6450"></file>
+ 307	                <file name="zocromas_duf-mod_dumplet.Po" inode="109848551" size="13441"></file>
+ 308	              </directory>
+ 309	              <file name="zocromas_duf-data_optable_flag.o" inode="109848402" size="40792"></file>
+ 310	              <file name="zocromas_duf-duf_print.o" inode="109848403" size="49328"></file>
+ 311	              <file name="zocromas_duf-duf_match.o" inode="109848404" size="5584"></file>
+ 312	              <file name="zocromas_duf-duf_levinfo_updown.o" inode="109848405" size="70448"></file>
+ 313	              <file name="zocromas_duf-duf_option_cmd.o" inode="109848406" size="60448"></file>
+ 314	              <file name="zocromas_duf-duf_ufilter.o" inode="109848407" size="12312"></file>
+ 315	              <file name="zocromas_duf-mod_template_uni.o" inode="109848408" size="52968"></file>
+ 316	              <file name="mtest-duftest.o" inode="109848409" size="6088"></file>
+ 317	              <file name="zocromas_duf-duf_pdi_sccb_eval.o" inode="109848410" size="49984"></file>
+ 318	              <file name="zocromas_duf-sql_update_selected.o" inode="109848411" size="10856"></file>
+ 319	            </directory>
+ 320	            <file name="config.h" inode="109848287" size="8970"></file>
+ 321	            <file name="config.log" inode="109848288" size="90036"></file>
+ 322	          </directory>
+ 323	          <file name="depcomp" inode="109848277" size="23566"></file>
+ 324	          <file name="ar-lib" inode="109848278" size="5826"></file>
+ 325	          <file name="missing" inode="109848279" size="6872"></file>
+ 326	          <file name="install-sh" inode="109848280" size="14675"></file>
+ 327	          <file name="compile" inode="109848281" size="7333"></file>
+ 328	          <file name="config.sub" inode="109848282" size="36325"></file>
+ 329	          <directory name="m4" inode="109953134" size="4096">
+ 330	            <file name="ltoptions.m4" inode="109848552" size="14514"></file>
+ 331	            <file name="ltsugar.m4" inode="109848553" size="4384"></file>
+ 332	            <file name="ltversion.m4" inode="109848554" size="699"></file>
+ 333	            <file name="lt~obsolete.m4" inode="109848555" size="6140"></file>
+ 334	          </directory>
+ 335	          <file name="config.guess" inode="109848283" size="43760"></file>
+ 336	        </directory>
+ 337	        <file name="config.h.in" inode="109848253" size="7223"></file>
+ 338	        <directory name="md5sha" inode="109953135" size="4096">
+ 339	          <file name="t2.html" inode="109848556" size="40737"></file>
+ 340	          <file name="t1.html" inode="109848557" size="40737"></file>
+ 341	        </directory>
+ 342	        <link name=".localrc" target="../../.localrc" inode="109953135" size="14"></link>
+ 343	        <file name="test-history.txt" inode="109848255" size="1256"></file>
+ 344	        <file name="out1.cmds" inode="109848256" size="23"></file>
+ 345	        <directory name="editing" inode="109953136" size="4096">
+ 346	          <directory name=".gvimvrb" inode="109953137" size="12288">
+ 347	            <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir" inode="109848563" size="86017"></file>
+ 348	            <file name="SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb" inode="109848564" size="8192"></file>
+ 349	            <file name="SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb" inode="109848565" size="57344"></file>
+ 350	            <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo" inode="109848566" size="9013"></file>
+ 351	            <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo" inode="109848567" size="22009"></file>
+ 352	            <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb" inode="109848568" size="3905"></file>
+ 353	            <file name="SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb" inode="109848569" size="77824"></file>
+ 354	            <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir" inode="109848570" size="1593"></file>
+ 355	            <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir" inode="109848571" size="63000"></file>
+ 356	            <file name="SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo" inode="109848572" size="23396"></file>
+ 357	            <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb" inode="109848573" size="1593"></file>
+ 358	            <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir" inode="109848574" size="47465"></file>
+ 359	            <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir" inode="109848575" size="3874"></file>
+ 360	            <file name="SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo" inode="109848576" size="31255"></file>
+ 361	            <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb" inode="109848577" size="86017"></file>
+ 362	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb" inode="109848578" size="512"></file>
+ 363	            <file name="SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir" inode="109848579" size="8192"></file>
+ 364	            <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb" inode="109848580" size="1"></file>
+ 365	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo" inode="109848581" size="11346"></file>
+ 366	            <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb" inode="109848582" size="47465"></file>
+ 367	            <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir" inode="109848583" size="3905"></file>
+ 368	            <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo" inode="109848584" size="10962"></file>
+ 369	            <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo" inode="109848585" size="16957"></file>
+ 370	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir" inode="109848586" size="512"></file>
+ 371	            <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb" inode="109848587" size="3623"></file>
+ 372	            <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb" inode="109848588" size="28672"></file>
+ 373	            <file name="SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir" inode="109848589" size="4096"></file>
+ 374	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb" inode="109848590" size="10351"></file>
+ 375	            <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb" inode="109848591" size="6900"></file>
+ 376	            <file name="SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo" inode="109848592" size="19149"></file>
+ 377	            <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo" inode="109848593" size="14402"></file>
+ 378	            <file name="SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir" inode="109848594" size="8192"></file>
+ 379	            <file name="SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir" inode="109848595" size="16384"></file>
+ 380	            <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb" inode="109848596" size="63000"></file>
+ 381	            <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo" inode="109848597" size="7289"></file>
+ 382	            <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb" inode="109848598" size="20108"></file>
+ 383	            <file name="SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo" inode="109848599" size="32644"></file>
+ 384	            <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo" inode="109848600" size="12866"></file>
+ 385	            <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo" inode="109848601" size="16632"></file>
+ 386	            <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo" inode="109848602" size="13595"></file>
+ 387	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir" inode="109848603" size="10351"></file>
+ 388	            <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb" inode="109848604" size="67809"></file>
+ 389	            <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir" inode="109848605" size="1"></file>
+ 390	            <file name="SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb" inode="109848606" size="4096"></file>
+ 391	            <file name="SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo" inode="109848607" size="19149"></file>
+ 392	            <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo" inode="109848608" size="18068"></file>
+ 393	            <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb" inode="109848609" size="12988"></file>
+ 394	            <file name="SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo" inode="109848610" size="19002"></file>
+ 395	            <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo" inode="109848611" size="28524"></file>
+ 396	            <file name="SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb" inode="109848612" size="36864"></file>
+ 397	            <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir" inode="109848613" size="4113"></file>
+ 398	            <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir" inode="109848614" size="28672"></file>
+ 399	            <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo" inode="109848615" size="13182"></file>
+ 400	            <file name="SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir" inode="109848616" size="77824"></file>
+ 401	            <file name="SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo" inode="109848617" size="8363"></file>
+ 402	            <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo" inode="109848618" size="8787"></file>
+ 403	            <file name="SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir" inode="109848619" size="57344"></file>
+ 404	            <file name="SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo" inode="109848620" size="17118"></file>
+ 405	            <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo" inode="109848621" size="9070"></file>
+ 406	            <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb" inode="109848622" size="4113"></file>
+ 407	            <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo" inode="109848623" size="14933"></file>
+ 408	            <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir" inode="109848614" size="28672"></file>
+ 409	            <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb" inode="109848624" size="52475"></file>
+ 410	            <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo" inode="109848625" size="10894"></file>
+ 411	            <file name="SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo" inode="109848626" size="21282"></file>
+ 412	            <file name="SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo" inode="109848627" size="14557"></file>
+ 413	            <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir" inode="109848628" size="20108"></file>
+ 414	            <file name="SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir" inode="109848629" size="57344"></file>
+ 415	            <file name="SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb" inode="109848630" size="8192"></file>
+ 416	            <file name="SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo" inode="109848631" size="19599"></file>
+ 417	            <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb" inode="109848632" size="6276"></file>
+ 418	            <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir" inode="109848633" size="52475"></file>
+ 419	            <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo" inode="109848634" size="11491"></file>
+ 420	            <file name="SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb" inode="109848635" size="57344"></file>
+ 421	            <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir" inode="109848636" size="12988"></file>
+ 422	            <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo" inode="109848637" size="25660"></file>
+ 423	            <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir" inode="109848638" size="6900"></file>
+ 424	            <file name="SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo" inode="109848639" size="9757"></file>
+ 425	            <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir" inode="109848640" size="1"></file>
+ 426	            <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir" inode="109848641" size="3623"></file>
+ 427	            <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo" inode="109848642" size="6445"></file>
+ 428	            <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo" inode="109848643" size="11404"></file>
+ 429	            <file name="SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb" inode="109848644" size="16384"></file>
+ 430	            <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo" inode="109848645" size="11809"></file>
+ 431	            <file name="SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir" inode="109848646" size="36864"></file>
+ 432	            <file name="SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo" inode="109848647" size="8384"></file>
+ 433	            <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb" inode="109848648" size="3874"></file>
+ 434	            <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir" inode="109848649" size="6276"></file>
+ 435	            <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir" inode="109848650" size="67809"></file>
+ 436	            <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb" inode="109848651" size="1"></file>
+ 437	          </directory>
+ 438	          <link name="vimrc-mastar.vim" target="../../../files/vimrc-mastar.vim" inode="109953137" size="31"></link>
+ 439	          <directory name="mased" inode="109953138" size="4096">
+ 440	            <link name="ac.mased.vim" target="../../../../files/mased/ac.mased.vim" inode="19337024" size="36"></link>
+ 441	            <file name="cdef.mased.vim" inode="109848653" size="573"></file>
+ 442	            <file name="srcmod.mased.vim" inode="109848654" size="861"></file>
+ 443	            <file name="srcpdi.mased.vim" inode="109848655" size="376"></file>
+ 444	            <file name="srcsql.mased.vim" inode="109848656" size="312"></file>
+ 445	            <link name="vimrc.mased.vim" target="../../../../files/mased/vimrc.mased.vim" inode="109848656" size="39"></link>
+ 446	            <file name="srcevsql.mased.vim" inode="109848658" size="92"></file>
+ 447	            <file name="srctoexpire.mased.vim" inode="109848659" size="370"></file>
+ 448	            <file name="src.mased.vim" inode="109848660" size="633"></file>
+ 449	            <file name="srclevinfo.mased.vim" inode="109848661" size="672"></file>
+ 450	            <file name="srcsccb.mased.vim" inode="109848662" size="463"></file>
+ 451	            <file name="srciface.mased.vim" inode="109848663" size="341"></file>
+ 452	            <file name="srcupath.mased.vim" inode="109848664" size="94"></file>
+ 453	            <file name="srcconfig.mased.vim" inode="109848665" size="1222"></file>
+ 454	            <link name="shn.mased.vim" target="../../../../files/mased/shn.mased.vim" inode="109848665" size="37"></link>
+ 455	            <file name="srcufilter.mased.vim" inode="109848667" size="149"></file>
+ 456	            <link name="sh.mased.vim" target="../../../../files/mased/sh.mased.vim" inode="109848667" size="36"></link>
+ 457	            <file name="srctypes.mased.vim" inode="109848669" size="873"></file>
+ 458	            <file name="m.mased.vim" inode="109848670" size="438"></file>
+ 459	            <file name="srclow.mased.vim" inode="109848671" size="644"></file>
+ 460	            <file name="srcbegfin.mased.vim" inode="109848672" size="393"></file>
+ 461	          </directory>
+ 462	          <link name="gvim-funcs.vim" target="../../../files/gvim-funcs.vim" inode="109953138" size="29"></link>
+ 463	          <file name="opened.20150531.txt" inode="109848560" size="6981"></file>
+ 464	          <link name="gvim-vimenter.vim" target="../../../files/gvim-vimenter.vim" inode="109848560" size="32"></link>
+ 465	          <link name="gvimrc-mastar.vim" target="../../../files/gvimrc-mastar.vim" inode="109848560" size="32"></link>
+ 466	        </directory>
+ 467	        <link name="m4zoc" target="../../m4zoc" inode="109953136" size="11"></link>
+ 468	        <directory name="boxes" inode="109953139" size="4096">
+ 469	          <link name="dropbox.com.duf" target="/home/mastar/a/Dropbox/mastarink/always/duf" inode="79038865" size="43"></link>
+ 470	          <link name="box.com.duf" target="/mnt/dav/box.com/mastarink/always/duf" inode="79038865" size="37"></link>
+ 471	        </directory>
+ 472	        <link name="zocvdate.txt" target="../../files/zocvdate.txt" inode="109953139" size="24"></link>
+ 473	        <link name="shn" target="../../shn" inode="109953139" size="9"></link>
+ 474	        <directory name="human" inode="109953140" size="4096">
+ 475	          <file name="__.gitignore" inode="109848675" size="6"></file>
+ 476	          <directory name="results" inode="109953141" size="4096">
+ 477	          </directory>
+ 478	          <directory name="doc" inode="109953142" size="4096">
+ 479	            <file name="x1.txt" inode="109848676" size="4185"></file>
+ 480	            <file name="duf1.dia" inode="109848677" size="5819"></file>
+ 481	            <file name="x3.txt" inode="109848678" size="4273"></file>
+ 482	            <file name="duf1.dia~" inode="109848679" size="5848"></file>
+ 483	            <file name="x3a.txt" inode="109848680" size="4986"></file>
+ 484	            <file name="x2.txt" inode="109848681" size="1916"></file>
+ 485	            <file name="duf.dia" inode="109848682" size="6346"></file>
+ 486	            <file name="duf.dia~" inode="109848683" size="5819"></file>
+ 487	            <file name="x3a1.txt" inode="109848684" size="4986"></file>
+ 488	          </directory>
+ 489	          <directory name="run" inode="109953143" size="4096">
+ 490	          </directory>
+ 491	          <directory name="examples" inode="109953144" size="4096">
+ 492	            <file name="exif-data.c" inode="109848685" size="26036"></file>
+ 493	            <file name="2.c" inode="109848686" size="1177"></file>
+ 494	            <file name="sqlite-func.c" inode="109848687" size="2384"></file>
+ 495	            <file name="exifthumb.c" inode="109848688" size="1770"></file>
+ 496	            <file name="configure.ac.20131026.110837" inode="109848689" size="1419"></file>
+ 497	            <file name="1.c" inode="109848690" size="1177"></file>
+ 498	            <file name="example3.c" inode="109848691" size="2235"></file>
+ 499	            <file name="3.c" inode="109848692" size="2981"></file>
+ 500	            <file name="foreign-example.c" inode="109848693" size="3940"></file>
+ 501	            <file name="0.c" inode="109848694" size="853"></file>
+ 502	            <file name="4.c" inode="109848695" size="1209"></file>
+ 503	          </directory>
+ 504	        </directory>
+ 505	        <directory name="src" inode="109953145" size="4096">
+ 506	          <file name="evsql_selector.c" inode="109848696" size="8527"></file>
+ 507	          <file name="duf_status.c" inode="109848697" size="3383"></file>
+ 508	          <file name="duf_filedata.c" inode="109848698" size="5157"></file>
+ 509	          <file name="duf_match.c" inode="109848699" size="2644"></file>
+ 510	          <directory name="inc" inode="109953146" size="4096">
+ 511	            <file name="duf_pdi_reinit.h" inode="109848829" size="709"></file>
+ 512	            <file name="Makefile.in" inode="109848830" size="18328"></file>
+ 513	            <file name="duf_pdi_credel.h" inode="109848831" size="372"></file>
+ 514	            <file name="duf_ufilter_ref.h" inode="109848832" size="224"></file>
+ 515	            <file name="duf_ufilter_types.h" inode="109848833" size="1987"></file>
+ 516	            <file name="duf_levinfo_context.h" inode="109848834" size="259"></file>
+ 517	            <file name="duf_ufilter_bind.h" inode="109848835" size="187"></file>
+ 518	            <file name="duf_option_defs.h" inode="109848836" size="2953"></file>
+ 519	            <file name="duf_levinfo_ref_def.h" inode="109848837" size="6623"></file>
+ 520	            <file name="duf_base_types.h" inode="109848838" size="463"></file>
+ 521	            <file name="duf_config_types.h" inode="109848839" size="899"></file>
+ 522	            <file name="duf_sql_field.h" inode="109848840" size="339"></file>
+ 523	            <file name="duf_dbg.h" inode="109848841" size="324"></file>
+ 524	            <file name="duf_fileinfo_types.h" inode="109848842" size="684"></file>
+ 525	            <file name="duf_option_typed.h" inode="109848843" size="272"></file>
+ 526	            <file name="duf_option_types.h" inode="109848844" size="5177"></file>
+ 527	            <file name="duf_options_string.h" inode="109848845" size="217"></file>
+ 528	            <file name="duf_option_misc.h" inode="109848846" size="362"></file>
+ 529	            <file name="sql_selected_defs.h" inode="109848847" size="2060"></file>
+ 530	            <file name="duf_options_env.h" inode="109848848" size="206"></file>
+ 531	            <file name="duf_sccb_eval_std.h" inode="109848849" size="1005"></file>
+ 532	            <file name="duf_sql_field2.h" inode="109848850" size="596"></file>
+ 533	            <file name="std_fieldsets.h" inode="109848851" size="97"></file>
+ 534	            <file name="sql_beginning_selected.h" inode="109848852" size="4718"></file>
+ 535	            <file name="duf_sccb_begfin.h" inode="109848853" size="364"></file>
+ 536	            <file name="duf_trace_defs_if.h" inode="109848854" size="2399"></file>
+ 537	            <file name="std_selectors.h" inode="109848855" size="97"></file>
+ 538	            <file name="duf_li_credel.h" inode="109848856" size="176"></file>
+ 539	            <file name="duf_maindb_info.h" inode="109848857" size="134"></file>
+ 540	            <file name="duf_eval_at_config.h" inode="109848858" size="189"></file>
+ 541	            <file name="duf_option.h" inode="109848859" size="547"></file>
+ 542	            <file name="duf_config4trace_ref.h" inode="109848860" size="159"></file>
+ 543	            <file name="duf_levinfo.h" inode="109848861" size="664"></file>
+ 544	            <file name="sql_tables_defs.h" inode="109848862" size="4386"></file>
+ 545	            <file name="duf_item_scan2.h" inode="109848863" size="324"></file>
+ 546	            <file name="duf_sql.h" inode="109848864" size="443"></file>
+ 547	            <file name="duf_sql1.h" inode="109848865" size="940"></file>
+ 548	            <file name="duf_mod_defs.h" inode="109848866" size="1453"></file>
+ 549	            <file name="duf_trace_defs_sys.h" inode="109848867" size="292"></file>
+ 550	            <file name="duf_print_defs.h" inode="109848868" size="2475"></file>
+ 551	            <file name="duf_action_table.h" inode="109848869" size="1056"></file>
+ 552	            <file name="duf_sql_const.h" inode="109848870" size="8609"></file>
+ 553	            <file name="duf_format_types.h" inode="109848871" size="1991"></file>
+ 554	            <file name="duf_option_names.h" inode="109848872" size="1478"></file>
+ 555	            <file name="duf_pdi.h" inode="109848873" size="706"></file>
+ 556	            <file name="duf_levinfo_updown.h" inode="109848874" size="433"></file>
+ 557	            <file name="duf_dirent.h" inode="109848875" size="113"></file>
+ 558	            <file name="duf_hook_types.h" inode="109848876" size="4596"></file>
+ 559	            <file name="duf_option_tmpdb.h" inode="109848877" size="177"></file>
+ 560	            <file name="duf_fun_types.h" inode="109848878" size="655"></file>
+ 561	            <file name="sql_beginning_types.h" inode="109848879" size="424"></file>
+ 562	            <file name="duf_pathinfo_credel.h" inode="109848880" size="337"></file>
+ 563	            <file name="duf_filedata.h" inode="109848881" size="360"></file>
+ 564	            <file name="duf_record_types.h" inode="109848882" size="899"></file>
+ 565	            <file name="duf_maindb.h" inode="109848883" size="326"></file>
+ 566	            <file name="duf_start_end.h" inode="109848884" size="1873"></file>
+ 567	            <file name="duf_error_defs.h" inode="109848885" size="6997"></file>
+ 568	            <file name="duf_flags_types.h" inode="109848886" size="1952"></file>
+ 569	            <file name="sql_beginning_common.h" inode="109848887" size="156"></file>
+ 570	            <file name="duf_optable_def.h" inode="109848888" size="4729"></file>
+ 571	            <file name="duf_options_cli.h" inode="109848889" size="202"></file>
+ 572	            <file name="duf_prepare_actions.h" inode="109848890" size="344"></file>
+ 573	            <file name="duf_sccb_handle.h" inode="109848891" size="486"></file>
+ 574	            <file name="duf_cli_types.h" inode="109848892" size="2704"></file>
+ 575	            <file name="duf_option_descr.h" inode="109848893" size="733"></file>
+ 576	            <file name="duf_status.h" inode="109848894" size="357"></file>
+ 577	            <file name="duf_item_types.h" inode="109848895" size="201"></file>
+ 578	            <file name="duf_error_types.h" inode="109848896" size="1740"></file>
+ 579	            <file name="std_mod_sets.h" inode="109848897" size="367"></file>
+ 580	            <file name="duf_match.h" inode="109848898" size="373"></file>
+ 581	            <file name="duf_levinfo_ref.h" inode="109848899" size="7017"></file>
+ 582	            <file name="duf_levinfo_openclose.h" inode="109848900" size="1060"></file>
+ 583	            <file name="duf_utils_print.h" inode="109848901" size="634"></file>
+ 584	            <file name="duf_sccb_eval.h" inode="109848902" size="680"></file>
+ 585	            <file name="duf_pdi_types.h" inode="109848903" size="226"></file>
+ 586	            <file name="duf_sql_defs.h" inode="109848904" size="2420"></file>
+ 587	            <file name="duf_dirent_scan2.h" inode="109848905" size="199"></file>
+ 588	            <file name="duf_sccb.h" inode="109848906" size="539"></file>
+ 589	            <file name="duf_options_file.h" inode="109848907" size="725"></file>
+ 590	            <file name="duf_ufilter.h" inode="109848908" size="295"></file>
+ 591	            <file name="duf_sys_wrap.h" inode="109848909" size="101"></file>
+ 592	            <file name="duf_status_ref.h" inode="109848910" size="136"></file>
+ 593	            <file name="duf_pathinfo_ref.h" inode="109848911" size="7835"></file>
+ 594	            <file name="duf_scan_types.h" inode="109848912" size="660"></file>
+ 595	            <file name="duf_option_typed_defs.h" inode="109848913" size="3975"></file>
+ 596	            <file name="duf_sel_cb_leaf.h" inode="109848914" size="164"></file>
+ 597	            <file name="duf_levinfo_credel.h" inode="109848915" size="245"></file>
+ 598	            <file name="duf_trace_defs.h" inode="109848916" size="796"></file>
+ 599	            <file name="duf_config.h" inode="109848917" size="375"></file>
+ 600	            <file name="duf_trace_defs_what.h" inode="109848918" size="878"></file>
+ 601	            <file name="duf_option_old.h" inode="109848919" size="290"></file>
+ 602	            <file name="duf_sccbh_eval.h" inode="109848920" size="780"></file>
+ 603	            <file name="duf_status_types.h" inode="109848921" size="803"></file>
+ 604	            <file name="duf_options_interactive.h" inode="109848922" size="187"></file>
+ 605	            <file name="duf_pdi_ref.h" inode="109848923" size="1505"></file>
+ 606	            <file name="sql_beginning_vacuum.h" inode="109848924" size="156"></file>
+ 607	            <file name="duf_levinfo_stat.h" inode="109848925" size="448"></file>
+ 608	            <file name="duf_pstmt_levinfo.h" inode="109848926" size="174"></file>
+ 609	            <file name="duf_option_cmd.h" inode="109848927" size="492"></file>
+ 610	            <file name="duf_config_ref.h" inode="109848928" size="868"></file>
+ 611	            <file name="duf_pdi_context.h" inode="109848929" size="301"></file>
+ 612	            <file name="duf_sccb_def.h" inode="109848930" size="479"></file>
+ 613	            <file name="duf_sqlite.h" inode="109848931" size="9130"></file>
+ 614	            <file name="duf_leaf_scan2.h" inode="109848932" size="247"></file>
+ 615	            <file name="duf_pdi_attach.h" inode="109848933" size="550"></file>
+ 616	            <file name="duf_printb.h" inode="109848934" size="415"></file>
+ 617	            <file name="duf_path2dirid.h" inode="109848935" size="192"></file>
+ 618	            <file name="duf_pathinfo_ref_def.h" inode="109848936" size="6236"></file>
+ 619	            <file name="duf_sql_types.h" inode="109848937" size="229"></file>
+ 620	            <file name="duf_pdi_stmt.h" inode="109848938" size="417"></file>
+ 621	            <file name="mod_exif.h" inode="109848939" size="436"></file>
+ 622	            <file name="duf_path2db.h" inode="109848940" size="389"></file>
+ 623	            <file name="duf.h" inode="109848941" size="2166"></file>
+ 624	            <file name="duf_dir_scan2_stages.h" inode="109848942" size="621"></file>
+ 625	            <file name="duf_option_find.h" inode="109848943" size="823"></file>
+ 626	            <file name="duf_tags.h" inode="109848944" size="186"></file>
+ 627	            <file name="duf_defs.h" inode="109848945" size="1848"></file>
+ 628	            <file name="evsql_selector.h" inode="109848946" size="308"></file>
+ 629	            <file name="duf_sel_cb_node.h" inode="109848947" size="164"></file>
+ 630	            <file name="duf_dh.h" inode="109848948" size="616"></file>
+ 631	            <file name="duf_levinfo_types.h" inode="109848949" size="2394"></file>
+ 632	            <file name="duf_pdi_sccb_eval.h" inode="109848950" size="1278"></file>
+ 633	            <file name="duf_context.h" inode="109848951" size="340"></file>
+ 634	            <file name="duf_print.h" inode="109848952" size="591"></file>
+ 635	            <file name="duf_debug_defs.h" inode="109848953" size="2888"></file>
+ 636	            <file name="duf_utils.h" inode="109848954" size="780"></file>
+ 637	            <file name="duf_sccbh_shortcuts.h" inode="109848955" size="388"></file>
+ 638	            <file name="duf_options.h" inode="109848956" size="246"></file>
+ 639	            <file name="duf_utils_path.h" inode="109848957" size="159"></file>
+ 640	            <file name="duf_trace_types.h" inode="109848958" size="1573"></file>
+ 641	            <file name="duf_dodefs.h" inode="109848959" size="2727"></file>
+ 642	            <file name="duf_errors.h" inode="109848960" size="1036"></file>
+ 643	            <file name="sql_beginning_create.h" inode="109848961" size="205"></file>
+ 644	            <file name="duf_fileinfo.h" inode="109848962" size="182"></file>
+ 645	            <file name="duf_option_extended.h" inode="109848963" size="550"></file>
+ 646	            <file name="duf_service.h" inode="109848964" size="258"></file>
+ 647	            <file name="sql_beginning_tables.h" inode="109848965" size="190"></file>
+ 648	            <file name="duf_options_enum.h" inode="109848966" size="9236"></file>
+ 649	            <file name="duf_trace.h" inode="109848967" size="1002"></file>
+ 650	            <file name="duf_sccb_eval_dirs.h" inode="109848968" size="231"></file>
+ 651	            <file name="duf_maintenance.h" inode="109848969" size="331"></file>
+ 652	            <file name="duf_option_sccb.h" inode="109848970" size="326"></file>
+ 653	            <file name="duf_trace_defs_base.h" inode="109848971" size="2733"></file>
+ 654	            <file name="evsql_begfin.h" inode="109848972" size="1371"></file>
+ 655	            <file name="duf_def.h" inode="109848973" size="1251"></file>
+ 656	            <file name="duf_sql2.h" inode="109848974" size="5645"></file>
+ 657	            <file name="duf_option_help.h" inode="109848975" size="596"></file>
+ 658	            <file name="Makefile.am" inode="109848976" size="2918"></file>
+ 659	          </directory>
+ 660	          <file name="duf_ufilter_bind.c" inode="109848700" size="3657"></file>
+ 661	          <file name="duf_sccb.c" inode="109848701" size="2630"></file>
+ 662	          <file name="duf_utils_path.c" inode="109848702" size="1130"></file>
+ 663	          <file name="duf_maindb_info.c" inode="109848703" size="9061"></file>
+ 664	          <file name="duf_option_old.c" inode="109848704" size="14485"></file>
+ 665	          <file name="duf_pdi_ref.c" inode="109848705" size="4756"></file>
+ 666	          <file name="data_optable_flag_obsolete.c" inode="109848706" size="2716"></file>
+ 667	          <file name="data_optable_trace.c" inode="109848707" size="14019"></file>
+ 668	          <file name="sql_beginning_common.c" inode="109848708" size="496"></file>
+ 669	          <file name="duf_pdi_attach.c" inode="109848709" size="2501"></file>
+ 670	          <file name="duf_sccb_handle.c" inode="109848710" size="6448"></file>
+ 671	          <file name="duf_option_cmd.c" inode="109848711" size="4844"></file>
+ 672	          <file name="data_optable_uplus.c" inode="109848712" size="1114"></file>
+ 673	          <file name="duf_service.c" inode="109848713" size="1577"></file>
+ 674	          <file name="duf_action_table.c" inode="109848714" size="2814"></file>
+ 675	          <file name="duf_sccb_begfin.c" inode="109848715" size="2298"></file>
+ 676	          <file name="duf_prepare_actions.c" inode="109848716" size="3480"></file>
+ 677	          <file name="data_optable_sccb.c" inode="109848717" size="2039"></file>
+ 678	          <file name="duf_levinfo_openclose.c" inode="109848718" size="5334"></file>
+ 679	          <file name="sql_beginning_vacuum.c" inode="109848719" size="385"></file>
+ 680	          <file name="duf_leaf_scan2.c" inode="109848720" size="2249"></file>
+ 681	          <file name="duf_levinfo.c" inode="109848721" size="4466"></file>
+ 682	          <file name="duf_options_cli.c" inode="109848722" size="5624"></file>
+ 683	          <file name="mod_integrity_uni.c" inode="109848723" size="4172"></file>
+ 684	          <file name="duf_option_descr.c" inode="109848724" size="3221"></file>
+ 685	          <file name="duf_printb.c" inode="109848725" size="19393"></file>
+ 686	          <file name="duf_sccb_eval.c" inode="109848726" size="3099"></file>
+ 687	          <file name="duf_pathinfo_ref.c" inode="109848727" size="6079"></file>
+ 688	          <file name="duf_pdi_context.c" inode="109848728" size="743"></file>
+ 689	          <file name="duf_option_find.c" inode="109848729" size="7713"></file>
+ 690	          <file name="duf_print.c" inode="109848730" size="18739"></file>
+ 691	          <file name="data_optable_format.c" inode="109848731" size="5414"></file>
+ 692	          <file name="duf_sccbh_eval.c" inode="109848732" size="8457"></file>
+ 693	          <file name="duf_pdi_reinit.c" inode="109848733" size="3581"></file>
+ 694	          <file name="duf_levinfo_credel.c" inode="109848734" size="2040"></file>
+ 695	          <file name="duf_pdi.c" inode="109848735" size="8524"></file>
+ 696	          <file name="duf_levinfo_context.c" inode="109848736" size="757"></file>
+ 697	          <file name="data_optable_sflag.c" inode="109848737" size="1974"></file>
+ 698	          <file name="duf_li_credel.c" inode="109848738" size="1562"></file>
+ 699	          <file name="data_optable_str.c" inode="109848739" size="3354"></file>
+ 700	          <file name="duf_pdi_stmt.c" inode="109848740" size="3029"></file>
+ 701	          <file name="duf_fileinfo.c" inode="109848741" size="1939"></file>
+ 702	          <file name="duf_pathinfo_credel.c" inode="109848742" size="1785"></file>
+ 703	          <file name="duf_sql.c" inode="109848743" size="12906"></file>
+ 704	          <file name="mod_dumplet.c" inode="109848744" size="7973"></file>
+ 705	          <file name="data_optable.c" inode="109848745" size="2849"></file>
+ 706	          <file name="duf_options_table.c" inode="109848746" size="10538"></file>
+ 707	          <file name="duf_option_names.c" inode="109848747" size="8204"></file>
+ 708	          <file name="mod_filedata_uni.c" inode="109848748" size="9070"></file>
+ 709	          <file name="mod_exif_uni.c" inode="109848749" size="32368"></file>
+ 710	          <file name="data_optable_flag.c" inode="109848750" size="9181"></file>
+ 711	          <file name="duf_pstmt_levinfo.c" inode="109848751" size="1155"></file>
+ 712	          <file name="duf_options_string.c" inode="109848752" size="2605"></file>
+ 713	          <file name="evsql_begfin.c" inode="109848753" size="4894"></file>
+ 714	          <file name="duf_sys_wrap.c" inode="109848754" size="901"></file>
+ 715	          <file name="data_optable_info.c" inode="109848755" size="1681"></file>
+ 716	          <file name="mod_md5_uni.c" inode="109848756" size="13209"></file>
+ 717	          <file name="duf_errors.c" inode="109848757" size="13868"></file>
+ 718	          <file name="duf_filedata.c.new" inode="109848758" size="4975"></file>
+ 719	          <file name="duf_maindb.c" inode="109848759" size="21497"></file>
+ 720	          <file name="data_optable_interactive.c" inode="109848760" size="2228"></file>
+ 721	          <file name="std_mod_sets.c" inode="109848761" size="7551"></file>
+ 722	          <file name="duf_option_help.c" inode="109848762" size="54818"></file>
+ 723	          <file name="duf_eval_at_config.c" inode="109848763" size="4488"></file>
+ 724	          <file name="duf_sel_cb_leaf.c" inode="109848764" size="4577"></file>
+ 725	          <file name="duf_dbg.c" inode="109848765" size="7897"></file>
+ 726	          <file name="duf_ufilter_ref.c" inode="109848766" size="1089"></file>
+ 727	          <file name="duf_ufilter.c" inode="109848767" size="3727"></file>
+ 728	          <file name="mod_tagit.c" inode="109848768" size="9320"></file>
+ 729	          <file name="duf_option_typed.c" inode="109848769" size="19699"></file>
+ 730	          <file name="duf_sql_field.c" inode="109848770" size="1267"></file>
+ 731	          <file name="data_optable_filter.c" inode="109848771" size="16589"></file>
+ 732	          <file name="duftest.c" inode="109848772" size="1244"></file>
+ 733	          <file name="duf_utils_print.c" inode="109848773" size="3773"></file>
+ 734	          <file name="data_optable_io.c" inode="109848774" size="3066"></file>
+ 735	          <file name="std_fieldsets.c" inode="109848775" size="14155"></file>
+ 736	          <file name="data_optable_help.c" inode="109848776" size="5285"></file>
+ 737	          <file name="duf_utils.c" inode="109848777" size="6045"></file>
+ 738	          <file name="duf_options.c" inode="109848778" size="8512"></file>
+ 739	          <file name="data_optable_redo_and_obsolete.c" inode="109848779" size="4649"></file>
+ 740	          <file name="duf_dirent.c" inode="109848780" size="1600"></file>
+ 741	          <file name="duf_option.c" inode="109848781" size="5086"></file>
+ 742	          <file name="duf_config.c" inode="109848782" size="10397"></file>
+ 743	          <file name="duf_path2dirid.c" inode="109848783" size="4141"></file>
+ 744	          <file name="sql_beginning_tables.c" inode="109848784" size="3520"></file>
+ 745	          <file name="mod_directories_uni.c" inode="109848785" size="9617"></file>
+ 746	          <file name="duf_option_extended.c" inode="109848786" size="2074"></file>
+ 747	          <file name="duf_sccb_eval_dirs.c" inode="109848787" size="5204"></file>
+ 748	          <file name="duf_tags.c" inode="109848788" size="3864"></file>
+ 749	          <file name="duf_option_sccb.c" inode="109848789" size="3132"></file>
+ 750	          <file name="duf_levinfo_stat.c" inode="109848790" size="2525"></file>
+ 751	          <file name="sql_update_selected.c" inode="109848791" size="6770"></file>
+ 752	          <file name="duf_dir_scan.c.20140411" inode="109848792" size="6630"></file>
+ 753	          <file name="duf_option_tmpdb.c" inode="109848793" size="2040"></file>
+ 754	          <file name="duf_options_interactive.c" inode="109848794" size="4236"></file>
+ 755	          <file name="duf_sel_cb_node.c" inode="109848795" size="3184"></file>
+ 756	          <file name="data_optable_experimental.c" inode="109848796" size="3748"></file>
+ 757	          <file name="duf_sql_field2.c" inode="109848797" size="3167"></file>
+ 758	          <file name="duf_path2db.c" inode="109848798" size="14777"></file>
+ 759	          <file name="data_optable_debug.c" inode="109848799" size="1639"></file>
+ 760	          <file name="sql_beginning_create.c" inode="109848800" size="24982"></file>
+ 761	          <file name="mod_template_uni.c" inode="109848801" size="6607"></file>
+ 762	          <file name="duf_dirent_scan2.c" inode="109848802" size="4299"></file>
+ 763	          <file name="duf_item_scan2.c" inode="109848803" size="4830"></file>
+ 764	          <file name="mod_sd5_uni.c" inode="109848804" size="10993"></file>
+ 765	          <file name="duf_option_misc.c" inode="109848805" size="2131"></file>
+ 766	          <file name="duf_levinfo_updown.c" inode="109848806" size="7039"></file>
+ 767	          <file name="mod_dir_print_uni.c" inode="109848807" size="9192"></file>
+ 768	          <file name="mod_dummy_uni.c" inode="109848808" size="9937"></file>
+ 769	          <file name="duf_options_file.c" inode="109848809" size="9911"></file>
+ 770	          <file name="sql_beginning_selected.c" inode="109848810" size="6173"></file>
+ 771	          <file name="duf_sqlite.c" inode="109848811" size="21314"></file>
+ 772	          <file name="duf_dh.c" inode="109848812" size="10058"></file>
+ 773	          <file name="duf_levinfo_ref.c" inode="109848813" size="17123"></file>
+ 774	          <file name="duf_sccb_eval_std.c" inode="109848814" size="1952"></file>
+ 775	          <file name="mod_tree_print_uni.c" inode="109848815" size="13563"></file>
+ 776	          <file name="duf.c" inode="109848816" size="4535"></file>
+ 777	          <file name="duf_options_env.c" inode="109848817" size="2282"></file>
+ 778	          <file name="duf_pdi_credel.c" inode="109848818" size="2677"></file>
+ 779	          <file name="duf_dir_scan2_stages.c" inode="109848819" size="3564"></file>
+ 780	          <file name="duf_pdi_sccb_eval.c" inode="109848820" size="4318"></file>
+ 781	          <file name="mod_save_to.c" inode="109848821" size="9854"></file>
+ 782	          <file name="mod_collect_mime_uni.c" inode="109848822" size="11404"></file>
+ 783	          <file name="mod_filenames_uni.c" inode="109848823" size="5599"></file>
+ 784	          <file name="Makefile.am" inode="109848824" size="3694"></file>
+ 785	          <file name="duf_context.c" inode="109848825" size="999"></file>
+ 786	          <file name="std_selectors.c" inode="109848826" size="2325"></file>
+ 787	          <file name="duf_trace.c" inode="109848827" size="5209"></file>
+ 788	          <file name="mod_crc32_uni.c" inode="109848828" size="10755"></file>
+ 789	        </directory>
+ 790	        <file name="out2.cmds" inode="109848260" size="23"></file>
+ 791	        <directory name="debug" inode="109953147" size="4096">
+ 792	          <file name="debug_zocromas_duf.cmd.tmp" inode="109848977" size="332"></file>
+ 793	          <file name="__.gitignore" inode="109848978" size="6"></file>
+ 794	          <file name="debug_zocromas_duf.cmd" inode="109848979" size="251"></file>
+ 795	        </directory>
+ 796	        <directory name="autom4te.cache" inode="109953148" size="4096">
+ 797	          <file name="requests" inode="109848980" size="27093"></file>
+ 798	          <file name="traces.1" inode="109848981" size="70044"></file>
+ 799	        </directory>
+ 800	        <file name="test02.cmds" inode="109848261" size="793"></file>
+ 801	        <directory name="test" inode="109953149" size="4096">
+ 802	          <file name="test.sh" inode="109848982" size="1774"></file>
+ 803	          <directory name="duf" inode="109953150" size="4096">
+ 804	            <file name="good.test.2" inode="109848986" size="1264"></file>
+ 805	            <file name="test_set1.txt" inode="109848987" size="694"></file>
+ 806	            <file name="__.gitignore" inode="109848988" size="28"></file>
+ 807	            <directory name="20150602" inode="109953151" size="4096">
+ 808	              <file name="out20150602.131822.test.5" inode="109849001" size="992"></file>
+ 809	              <file name="out20150602.131822.test.ca1" inode="109849002" size="123"></file>
+ 810	              <file name="out20150602.134103.test.sql1" inode="109849003" size="1"></file>
+ 811	              <file name="out20150602.134103.test.1" inode="109849004" size="123"></file>
+ 812	              <file name="out20150602.131822.test.6" inode="109849005" size="834"></file>
+ 813	              <file name="out20150602.134103.test.6" inode="109849006" size="123"></file>
+ 814	              <file name="out20150602.131822.test.creadd" inode="109849007" size="4"></file>
+ 815	              <file name="out20150602.134103.test.5" inode="109849008" size="123"></file>
+ 816	              <file name="out20150602.134103.test.creadd" inode="109849009" size="4"></file>
+ 817	              <file name="out20150602.134103.test.1.1" inode="109849010" size="123"></file>
+ 818	              <file name="out20150602.131822.test.2" inode="109849011" size="6376"></file>
+ 819	              <file name="out20150602.131822.test.log" inode="109849012" size="20485"></file>
+ 820	              <file name="out20150602.131822.test.4" inode="109849013" size="1505"></file>
+ 821	              <file name="out20150602.131822.test.1.1" inode="109849014" size="17086"></file>
+ 822	              <file name="out20150602.134103.test.7" inode="109849015" size="123"></file>
+ 823	              <file name="out20150602.134103.test.4" inode="109849016" size="123"></file>
+ 824	              <file name="out20150602.134103.test.3" inode="109849017" size="123"></file>
+ 825	              <file name="out20150602.131822.test.7" inode="109849018" size="792"></file>
+ 826	              <file name="out20150602.131822.test.sql1" inode="109849019" size="1"></file>
+ 827	              <file name="out20150602.131822.test.0" inode="109849020" size="5"></file>
+ 828	              <file name="out20150602.134103.test.2" inode="109849021" size="123"></file>
+ 829	              <file name="out20150602.134103.test.ca1" inode="109849022" size="123"></file>
+ 830	              <file name="out20150602.134103.test.0" inode="109849023" size="5"></file>
+ 831	            </directory>
+ 832	            <file name="good.test.1.1" inode="109848989" size="20074"></file>
+ 833	            <file name="temp.db" inode="109848990" size="0"></file>
+ 834	            <file name="good.test.creadd" inode="109848991" size="4"></file>
+ 835	            <file name="good.test.5" inode="109848992" size="1231"></file>
+ 836	            <file name="good.test.0" inode="109848993" size="5"></file>
+ 837	            <file name="good.test.sql1" inode="109848994" size="302"></file>
+ 838	            <file name="good.test.6" inode="109848995" size="1124"></file>
+ 839	            <file name="good.test.4" inode="109848996" size="1904"></file>
+ 840	            <file name="good.test.8" inode="109848997" size="3701"></file>
+ 841	            <file name="good.test.7" inode="109848998" size="974"></file>
+ 842	            <file name="good.test.ca1" inode="109848999" size="2236"></file>
+ 843	            <file name="zocromas_duf.conf" inode="109849000" size="522"></file>
+ 844	          </directory>
+ 845	          <file name="DCEMAIL.ABK.locate" inode="109848983" size="737"></file>
+ 846	          <file name="__.gitignore" inode="109848984" size="9"></file>
+ 847	          <file name="test.txt" inode="109848985" size="3206"></file>
+ 848	          <directory name="sh" inode="109953152" size="4096">
+ 849	            <file name="test20140907.113444.sh" inode="109849024" size="8892"></file>
+ 850	          </directory>
+ 851	        </directory>
+ 852	        <link name="zocversion.txt" target="../../files/zocversion.txt" inode="109953149" size="26"></link>
+ 853	        <directory name="shsq" inode="109953153" size="4096">
+ 854	          <file name="libsql.bash" inode="109849025" size="2548"></file>
+ 855	        </directory>
+ 856	        <directory name="tmp" inode="109953154" size="4096">
+ 857	        </directory>
+ 858	        <file name="aclocal.m4" inode="109848263" size="60322"></file>
+ 859	      </directory>
+ 860	      <file name="test-history.txt" inode="109848228" size="1256"></file>
+ 861	      <file name="out1.cmds" inode="109848229" size="23"></file>
+ 862	      <directory name="editing" inode="109953155" size="4096">
+ 863	        <directory name=".gvimvrb" inode="109953156" size="12288">
+ 864	          <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir" inode="109849031" size="86017"></file>
+ 865	          <file name="SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb" inode="109849032" size="8192"></file>
+ 866	          <file name="SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb" inode="109849033" size="57344"></file>
+ 867	          <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo" inode="109849034" size="9013"></file>
+ 868	          <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo" inode="109849035" size="22009"></file>
+ 869	          <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb" inode="109849036" size="3905"></file>
+ 870	          <file name="SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb" inode="109849037" size="77824"></file>
+ 871	          <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir" inode="109849038" size="1593"></file>
+ 872	          <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir" inode="109849039" size="63000"></file>
+ 873	          <file name="SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo" inode="109849040" size="23396"></file>
+ 874	          <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb" inode="109849041" size="1593"></file>
+ 875	          <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir" inode="109849042" size="47465"></file>
+ 876	          <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir" inode="109849043" size="3874"></file>
+ 877	          <file name="SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo" inode="109849044" size="31255"></file>
+ 878	          <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb" inode="109849045" size="86017"></file>
+ 879	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb" inode="109849046" size="512"></file>
+ 880	          <file name="SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir" inode="109849047" size="8192"></file>
+ 881	          <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb" inode="109849048" size="1"></file>
+ 882	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo" inode="109849049" size="11346"></file>
+ 883	          <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb" inode="109849050" size="47465"></file>
+ 884	          <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir" inode="109849051" size="3905"></file>
+ 885	          <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo" inode="109849052" size="10962"></file>
+ 886	          <file name="SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo" inode="109849053" size="16957"></file>
+ 887	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir" inode="109849054" size="512"></file>
+ 888	          <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb" inode="109849055" size="3623"></file>
+ 889	          <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb" inode="109849056" size="28672"></file>
+ 890	          <file name="SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir" inode="109849057" size="4096"></file>
+ 891	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb" inode="109849058" size="10351"></file>
+ 892	          <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb" inode="109849059" size="6900"></file>
+ 893	          <file name="SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo" inode="109849060" size="19149"></file>
+ 894	          <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo" inode="109849061" size="14402"></file>
+ 895	          <file name="SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir" inode="109849062" size="8192"></file>
+ 896	          <file name="SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir" inode="109849063" size="16384"></file>
+ 897	          <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb" inode="109849064" size="63000"></file>
+ 898	          <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo" inode="109849065" size="7289"></file>
+ 899	          <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb" inode="109849066" size="20108"></file>
+ 900	          <file name="SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo" inode="109849067" size="32644"></file>
+ 901	          <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo" inode="109849068" size="12866"></file>
+ 902	          <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo" inode="109849069" size="16632"></file>
+ 903	          <file name="SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo" inode="109849070" size="13595"></file>
+ 904	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir" inode="109849071" size="10351"></file>
+ 905	          <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb" inode="109849072" size="67809"></file>
+ 906	          <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir" inode="109849073" size="1"></file>
+ 907	          <file name="SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb" inode="109849074" size="4096"></file>
+ 908	          <file name="SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo" inode="109849075" size="19149"></file>
+ 909	          <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo" inode="109849076" size="18068"></file>
+ 910	          <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb" inode="109849077" size="12988"></file>
+ 911	          <file name="SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo" inode="109849078" size="19002"></file>
+ 912	          <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo" inode="109849079" size="28524"></file>
+ 913	          <file name="SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb" inode="109849080" size="36864"></file>
+ 914	          <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir" inode="109849081" size="4113"></file>
+ 915	          <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir" inode="109849082" size="28672"></file>
+ 916	          <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo" inode="109849083" size="13182"></file>
+ 917	          <file name="SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir" inode="109849084" size="77824"></file>
+ 918	          <file name="SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo" inode="109849085" size="8363"></file>
+ 919	          <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo" inode="109849086" size="8787"></file>
+ 920	          <file name="SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir" inode="109849087" size="57344"></file>
+ 921	          <file name="SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo" inode="109849088" size="17118"></file>
+ 922	          <file name="SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo" inode="109849089" size="9070"></file>
+ 923	          <file name="SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb" inode="109849090" size="4113"></file>
+ 924	          <file name="SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo" inode="109849091" size="14933"></file>
+ 925	          <file name="SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir" inode="109849082" size="28672"></file>
+ 926	          <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb" inode="109849092" size="52475"></file>
+ 927	          <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo" inode="109849093" size="10894"></file>
+ 928	          <file name="SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo" inode="109849094" size="21282"></file>
+ 929	          <file name="SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo" inode="109849095" size="14557"></file>
+ 930	          <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir" inode="109849096" size="20108"></file>
+ 931	          <file name="SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir" inode="109849097" size="57344"></file>
+ 932	          <file name="SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb" inode="109849098" size="8192"></file>
+ 933	          <file name="SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo" inode="109849099" size="19599"></file>
+ 934	          <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb" inode="109849100" size="6276"></file>
+ 935	          <file name="SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir" inode="109849101" size="52475"></file>
+ 936	          <file name="SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo" inode="109849102" size="11491"></file>
+ 937	          <file name="SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb" inode="109849103" size="57344"></file>
+ 938	          <file name="SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir" inode="109849104" size="12988"></file>
+ 939	          <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo" inode="109849105" size="25660"></file>
+ 940	          <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir" inode="109849106" size="6900"></file>
+ 941	          <file name="SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo" inode="109849107" size="9757"></file>
+ 942	          <file name="SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir" inode="109849108" size="1"></file>
+ 943	          <file name="SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir" inode="109849109" size="3623"></file>
+ 944	          <file name="SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo" inode="109849110" size="6445"></file>
+ 945	          <file name="SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo" inode="109849111" size="11404"></file>
+ 946	          <file name="SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb" inode="109849112" size="16384"></file>
+ 947	          <file name="SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo" inode="109849113" size="11809"></file>
+ 948	          <file name="SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir" inode="109849114" size="36864"></file>
+ 949	          <file name="SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo" inode="109849115" size="8384"></file>
+ 950	          <file name="SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb" inode="109849116" size="3874"></file>
+ 951	          <file name="SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir" inode="109849117" size="6276"></file>
+ 952	          <file name="SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir" inode="109849118" size="67809"></file>
+ 953	          <file name="SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb" inode="109849119" size="1"></file>
+ 954	        </directory>
+ 955	        <link name="vimrc-mastar.vim" target="../../../files/vimrc-mastar.vim" inode="109953156" size="31"></link>
+ 956	        <directory name="mased" inode="109953157" size="4096">
+ 957	          <link name="ac.mased.vim" target="../../../../files/mased/ac.mased.vim" inode="19325792" size="36"></link>
+ 958	          <file name="cdef.mased.vim" inode="109849121" size="573"></file>
+ 959	          <file name="srcmod.mased.vim" inode="109849122" size="861"></file>
+ 960	          <file name="srcpdi.mased.vim" inode="109849123" size="376"></file>
+ 961	          <file name="srcsql.mased.vim" inode="109849124" size="312"></file>
+ 962	          <link name="vimrc.mased.vim" target="../../../../files/mased/vimrc.mased.vim" inode="109849124" size="39"></link>
+ 963	          <file name="srcevsql.mased.vim" inode="109849126" size="92"></file>
+ 964	          <file name="srctoexpire.mased.vim" inode="109849127" size="370"></file>
+ 965	          <file name="src.mased.vim" inode="109849128" size="633"></file>
+ 966	          <file name="srclevinfo.mased.vim" inode="109849129" size="672"></file>
+ 967	          <file name="srcsccb.mased.vim" inode="109849130" size="463"></file>
+ 968	          <file name="srciface.mased.vim" inode="109849131" size="341"></file>
+ 969	          <file name="srcupath.mased.vim" inode="109849132" size="94"></file>
+ 970	          <file name="srcconfig.mased.vim" inode="109849133" size="1222"></file>
+ 971	          <link name="shn.mased.vim" target="../../../../files/mased/shn.mased.vim" inode="109849133" size="37"></link>
+ 972	          <file name="srcufilter.mased.vim" inode="109849135" size="149"></file>
+ 973	          <link name="sh.mased.vim" target="../../../../files/mased/sh.mased.vim" inode="109849135" size="36"></link>
+ 974	          <file name="srctypes.mased.vim" inode="109849137" size="873"></file>
+ 975	          <file name="m.mased.vim" inode="109849138" size="438"></file>
+ 976	          <file name="srclow.mased.vim" inode="109849139" size="644"></file>
+ 977	          <file name="srcbegfin.mased.vim" inode="109849140" size="393"></file>
+ 978	        </directory>
+ 979	        <link name="gvim-funcs.vim" target="../../../files/gvim-funcs.vim" inode="109953157" size="29"></link>
+ 980	        <file name="opened.20150531.txt" inode="109849028" size="6981"></file>
+ 981	        <link name="gvim-vimenter.vim" target="../../../files/gvim-vimenter.vim" inode="109849028" size="32"></link>
+ 982	        <link name="gvimrc-mastar.vim" target="../../../files/gvimrc-mastar.vim" inode="109849028" size="32"></link>
+ 983	      </directory>
+ 984	      <link name="m4zoc" target="../../m4zoc" inode="108792945" size="11"></link>
+ 985	      <directory name="boxes" inode="109953158" size="4096">
+ 986	        <link name="dropbox.com.duf" target="/home/mastar/a/Dropbox/mastarink/always/duf" inode="79038865" size="43"></link>
+ 987	        <link name="box.com.duf" target="/mnt/dav/box.com/mastarink/always/duf" inode="79038865" size="37"></link>
+ 988	      </directory>
+ 989	      <link name="zocvdate.txt" target="../../files/zocvdate.txt" inode="109953158" size="24"></link>
+ 990	      <link name="shn" target="../../shn" inode="108793164" size="9"></link>
+ 991	      <directory name="human" inode="109953159" size="4096">
+ 992	        <file name="__.gitignore" inode="109849143" size="6"></file>
+ 993	        <directory name="results" inode="109953160" size="4096">
+ 994	        </directory>
+ 995	        <directory name="doc" inode="109953161" size="4096">
+ 996	          <file name="x1.txt" inode="109849144" size="4185"></file>
+ 997	          <file name="duf1.dia" inode="109849145" size="5819"></file>
+ 998	          <file name="x3.txt" inode="109849146" size="4273"></file>
+ 999	          <file name="duf1.dia~" inode="109849147" size="5848"></file>
+1000	          <file name="x3a.txt" inode="109849148" size="4986"></file>
+1001	          <file name="x2.txt" inode="109849149" size="1916"></file>
+1002	          <file name="duf.dia" inode="109849150" size="6346"></file>
+1003	          <file name="duf.dia~" inode="109849151" size="5819"></file>
+1004	          <file name="x3a1.txt" inode="109849152" size="4986"></file>
+1005	        </directory>
+1006	        <directory name="run" inode="109953162" size="4096">
+1007	        </directory>
+1008	        <directory name="examples" inode="109953163" size="4096">
+1009	          <file name="exif-data.c" inode="109849153" size="26036"></file>
+1010	          <file name="2.c" inode="109849154" size="1177"></file>
+1011	          <file name="sqlite-func.c" inode="109849155" size="2384"></file>
+1012	          <file name="exifthumb.c" inode="109849156" size="1770"></file>
+1013	          <file name="configure.ac.20131026.110837" inode="109849157" size="1419"></file>
+1014	          <file name="1.c" inode="109849158" size="1177"></file>
+1015	          <file name="example3.c" inode="109849159" size="2235"></file>
+1016	          <file name="3.c" inode="109849160" size="2981"></file>
+1017	          <file name="foreign-example.c" inode="109849161" size="3940"></file>
+1018	          <file name="0.c" inode="109849162" size="853"></file>
+1019	          <file name="4.c" inode="109849163" size="1209"></file>
+1020	        </directory>
+1021	      </directory>
+1022	      <directory name="src" inode="109953164" size="4096">
+1023	        <file name="evsql_selector.c" inode="109849164" size="8527"></file>
+1024	        <file name="duf_status.c" inode="109849165" size="3383"></file>
+1025	        <file name="duf_filedata.c" inode="109849166" size="5157"></file>
+1026	        <file name="duf_match.c" inode="109849167" size="2644"></file>
+1027	        <directory name="inc" inode="109953165" size="4096">
+1028	          <file name="duf_pdi_reinit.h" inode="109849297" size="709"></file>
+1029	          <file name="Makefile.in" inode="109849298" size="18328"></file>
+1030	          <file name="duf_pdi_credel.h" inode="109849299" size="372"></file>
+1031	          <file name="duf_ufilter_ref.h" inode="109849300" size="224"></file>
+1032	          <file name="duf_ufilter_types.h" inode="109849301" size="1987"></file>
+1033	          <file name="duf_levinfo_context.h" inode="109849302" size="259"></file>
+1034	          <file name="duf_ufilter_bind.h" inode="109849303" size="187"></file>
+1035	          <file name="duf_option_defs.h" inode="109849304" size="2953"></file>
+1036	          <file name="duf_levinfo_ref_def.h" inode="109849305" size="6623"></file>
+1037	          <file name="duf_base_types.h" inode="109849306" size="463"></file>
+1038	          <file name="duf_config_types.h" inode="109849307" size="899"></file>
+1039	          <file name="duf_sql_field.h" inode="109849308" size="339"></file>
+1040	          <file name="duf_dbg.h" inode="109849309" size="324"></file>
+1041	          <file name="duf_fileinfo_types.h" inode="109849310" size="684"></file>
+1042	          <file name="duf_option_typed.h" inode="109849311" size="272"></file>
+1043	          <file name="duf_option_types.h" inode="109849312" size="5177"></file>
+1044	          <file name="duf_options_string.h" inode="109849313" size="217"></file>
+1045	          <file name="duf_option_misc.h" inode="109849314" size="362"></file>
+1046	          <file name="sql_selected_defs.h" inode="109849315" size="2060"></file>
+1047	          <file name="duf_options_env.h" inode="109849316" size="206"></file>
+1048	          <file name="duf_sccb_eval_std.h" inode="109849317" size="1005"></file>
+1049	          <file name="duf_sql_field2.h" inode="109849318" size="596"></file>
+1050	          <file name="std_fieldsets.h" inode="109849319" size="97"></file>
+1051	          <file name="sql_beginning_selected.h" inode="109849320" size="4718"></file>
+1052	          <file name="duf_sccb_begfin.h" inode="109849321" size="364"></file>
+1053	          <file name="duf_trace_defs_if.h" inode="109849322" size="2399"></file>
+1054	          <file name="std_selectors.h" inode="109849323" size="97"></file>
+1055	          <file name="duf_li_credel.h" inode="109849324" size="176"></file>
+1056	          <file name="duf_maindb_info.h" inode="109849325" size="134"></file>
+1057	          <file name="duf_eval_at_config.h" inode="109849326" size="189"></file>
+1058	          <file name="duf_option.h" inode="109849327" size="547"></file>
+1059	          <file name="duf_config4trace_ref.h" inode="109849328" size="159"></file>
+1060	          <file name="duf_levinfo.h" inode="109849329" size="664"></file>
+1061	          <file name="sql_tables_defs.h" inode="109849330" size="4386"></file>
+1062	          <file name="duf_item_scan2.h" inode="109849331" size="324"></file>
+1063	          <file name="duf_sql.h" inode="109849332" size="443"></file>
+1064	          <file name="duf_sql1.h" inode="109849333" size="940"></file>
+1065	          <file name="duf_mod_defs.h" inode="109849334" size="1453"></file>
+1066	          <file name="duf_trace_defs_sys.h" inode="109849335" size="292"></file>
+1067	          <file name="duf_print_defs.h" inode="109849336" size="2475"></file>
+1068	          <file name="duf_action_table.h" inode="109849337" size="1056"></file>
+1069	          <file name="duf_sql_const.h" inode="109849338" size="8609"></file>
+1070	          <file name="duf_format_types.h" inode="109849339" size="1991"></file>
+1071	          <file name="duf_option_names.h" inode="109849340" size="1478"></file>
+1072	          <file name="duf_pdi.h" inode="109849341" size="706"></file>
+1073	          <file name="duf_levinfo_updown.h" inode="109849342" size="433"></file>
+1074	          <file name="duf_dirent.h" inode="109849343" size="113"></file>
+1075	          <file name="duf_hook_types.h" inode="109849344" size="4596"></file>
+1076	          <file name="duf_option_tmpdb.h" inode="109849345" size="177"></file>
+1077	          <file name="duf_fun_types.h" inode="109849346" size="655"></file>
+1078	          <file name="sql_beginning_types.h" inode="109849347" size="424"></file>
+1079	          <file name="duf_pathinfo_credel.h" inode="109849348" size="337"></file>
+1080	          <file name="duf_filedata.h" inode="109849349" size="360"></file>
+1081	          <file name="duf_record_types.h" inode="109849350" size="899"></file>
+1082	          <file name="duf_maindb.h" inode="109849351" size="326"></file>
+1083	          <file name="duf_start_end.h" inode="109849352" size="1873"></file>
+1084	          <file name="duf_error_defs.h" inode="109849353" size="6997"></file>
+1085	          <file name="duf_flags_types.h" inode="109849354" size="1952"></file>
+1086	          <file name="sql_beginning_common.h" inode="109849355" size="156"></file>
+1087	          <file name="duf_optable_def.h" inode="109849356" size="4729"></file>
+1088	          <file name="duf_options_cli.h" inode="109849357" size="202"></file>
+1089	          <file name="duf_prepare_actions.h" inode="109849358" size="344"></file>
+1090	          <file name="duf_sccb_handle.h" inode="109849359" size="486"></file>
+1091	          <file name="duf_cli_types.h" inode="109849360" size="2704"></file>
+1092	          <file name="duf_option_descr.h" inode="109849361" size="733"></file>
+1093	          <file name="duf_status.h" inode="109849362" size="357"></file>
+1094	          <file name="duf_item_types.h" inode="109849363" size="201"></file>
+1095	          <file name="duf_error_types.h" inode="109849364" size="1740"></file>
+1096	          <file name="std_mod_sets.h" inode="109849365" size="367"></file>
+1097	          <file name="duf_match.h" inode="109849366" size="373"></file>
+1098	          <file name="duf_levinfo_ref.h" inode="109849367" size="7017"></file>
+1099	          <file name="duf_levinfo_openclose.h" inode="109849368" size="1060"></file>
+1100	          <file name="duf_utils_print.h" inode="109849369" size="634"></file>
+1101	          <file name="duf_sccb_eval.h" inode="109849370" size="680"></file>
+1102	          <file name="duf_pdi_types.h" inode="109849371" size="226"></file>
+1103	          <file name="duf_sql_defs.h" inode="109849372" size="2420"></file>
+1104	          <file name="duf_dirent_scan2.h" inode="109849373" size="199"></file>
+1105	          <file name="duf_sccb.h" inode="109849374" size="539"></file>
+1106	          <file name="duf_options_file.h" inode="109849375" size="725"></file>
+1107	          <file name="duf_ufilter.h" inode="109849376" size="295"></file>
+1108	          <file name="duf_sys_wrap.h" inode="109849377" size="101"></file>
+1109	          <file name="duf_status_ref.h" inode="109849378" size="136"></file>
+1110	          <file name="duf_pathinfo_ref.h" inode="109849379" size="7835"></file>
+1111	          <file name="duf_scan_types.h" inode="109849380" size="660"></file>
+1112	          <file name="duf_option_typed_defs.h" inode="109849381" size="3975"></file>
+1113	          <file name="duf_sel_cb_leaf.h" inode="109849382" size="164"></file>
+1114	          <file name="duf_levinfo_credel.h" inode="109849383" size="245"></file>
+1115	          <file name="duf_trace_defs.h" inode="109849384" size="796"></file>
+1116	          <file name="duf_config.h" inode="109849385" size="375"></file>
+1117	          <file name="duf_trace_defs_what.h" inode="109849386" size="878"></file>
+1118	          <file name="duf_option_old.h" inode="109849387" size="290"></file>
+1119	          <file name="duf_sccbh_eval.h" inode="109849388" size="780"></file>
+1120	          <file name="duf_status_types.h" inode="109849389" size="803"></file>
+1121	          <file name="duf_options_interactive.h" inode="109849390" size="187"></file>
+1122	          <file name="duf_pdi_ref.h" inode="109849391" size="1505"></file>
+1123	          <file name="sql_beginning_vacuum.h" inode="109849392" size="156"></file>
+1124	          <file name="duf_levinfo_stat.h" inode="109849393" size="448"></file>
+1125	          <file name="duf_pstmt_levinfo.h" inode="109849394" size="174"></file>
+1126	          <file name="duf_option_cmd.h" inode="109849395" size="492"></file>
+1127	          <file name="duf_config_ref.h" inode="109849396" size="868"></file>
+1128	          <file name="duf_pdi_context.h" inode="109849397" size="301"></file>
+1129	          <file name="duf_sccb_def.h" inode="109849398" size="479"></file>
+1130	          <file name="duf_sqlite.h" inode="109849399" size="9130"></file>
+1131	          <file name="duf_leaf_scan2.h" inode="109849400" size="247"></file>
+1132	          <file name="duf_pdi_attach.h" inode="109849401" size="550"></file>
+1133	          <file name="duf_printb.h" inode="109849402" size="415"></file>
+1134	          <file name="duf_path2dirid.h" inode="109849403" size="192"></file>
+1135	          <file name="duf_pathinfo_ref_def.h" inode="109849404" size="6236"></file>
+1136	          <file name="duf_sql_types.h" inode="109849405" size="229"></file>
+1137	          <file name="duf_pdi_stmt.h" inode="109849406" size="417"></file>
+1138	          <file name="mod_exif.h" inode="109849407" size="436"></file>
+1139	          <file name="duf_path2db.h" inode="109849408" size="389"></file>
+1140	          <file name="duf.h" inode="109849409" size="2166"></file>
+1141	          <file name="duf_dir_scan2_stages.h" inode="109849410" size="621"></file>
+1142	          <file name="duf_option_find.h" inode="109849411" size="823"></file>
+1143	          <file name="duf_tags.h" inode="109849412" size="186"></file>
+1144	          <file name="duf_defs.h" inode="109849413" size="1848"></file>
+1145	          <file name="evsql_selector.h" inode="109849414" size="308"></file>
+1146	          <file name="duf_sel_cb_node.h" inode="109849415" size="164"></file>
+1147	          <file name="duf_dh.h" inode="109849416" size="616"></file>
+1148	          <file name="duf_levinfo_types.h" inode="109849417" size="2394"></file>
+1149	          <file name="duf_pdi_sccb_eval.h" inode="109849418" size="1278"></file>
+1150	          <file name="duf_context.h" inode="109849419" size="340"></file>
+1151	          <file name="duf_print.h" inode="109849420" size="591"></file>
+1152	          <file name="duf_debug_defs.h" inode="109849421" size="2888"></file>
+1153	          <file name="duf_utils.h" inode="109849422" size="780"></file>
+1154	          <file name="duf_sccbh_shortcuts.h" inode="109849423" size="388"></file>
+1155	          <file name="duf_options.h" inode="109849424" size="246"></file>
+1156	          <file name="duf_utils_path.h" inode="109849425" size="159"></file>
+1157	          <file name="duf_trace_types.h" inode="109849426" size="1573"></file>
+1158	          <file name="duf_dodefs.h" inode="109849427" size="2727"></file>
+1159	          <file name="duf_errors.h" inode="109849428" size="1036"></file>
+1160	          <file name="sql_beginning_create.h" inode="109849429" size="205"></file>
+1161	          <file name="duf_fileinfo.h" inode="109849430" size="182"></file>
+1162	          <file name="duf_option_extended.h" inode="109849431" size="550"></file>
+1163	          <file name="duf_service.h" inode="109849432" size="258"></file>
+1164	          <file name="sql_beginning_tables.h" inode="109849433" size="190"></file>
+1165	          <file name="duf_options_enum.h" inode="109849434" size="9236"></file>
+1166	          <file name="duf_trace.h" inode="109849435" size="1002"></file>
+1167	          <file name="duf_sccb_eval_dirs.h" inode="109849436" size="231"></file>
+1168	          <file name="duf_maintenance.h" inode="109849437" size="331"></file>
+1169	          <file name="duf_option_sccb.h" inode="109849438" size="326"></file>
+1170	          <file name="duf_trace_defs_base.h" inode="109849439" size="2733"></file>
+1171	          <file name="evsql_begfin.h" inode="109849440" size="1371"></file>
+1172	          <file name="duf_def.h" inode="109849441" size="1251"></file>
+1173	          <file name="duf_sql2.h" inode="109849442" size="5645"></file>
+1174	          <file name="duf_option_help.h" inode="109849443" size="596"></file>
+1175	          <file name="Makefile.am" inode="109849444" size="2918"></file>
+1176	        </directory>
+1177	        <file name="duf_ufilter_bind.c" inode="109849168" size="3657"></file>
+1178	        <file name="duf_sccb.c" inode="109849169" size="2630"></file>
+1179	        <file name="duf_utils_path.c" inode="109849170" size="1130"></file>
+1180	        <file name="duf_maindb_info.c" inode="109849171" size="9061"></file>
+1181	        <file name="duf_option_old.c" inode="109849172" size="14485"></file>
+1182	        <file name="duf_pdi_ref.c" inode="109849173" size="4756"></file>
+1183	        <file name="data_optable_flag_obsolete.c" inode="109849174" size="2716"></file>
+1184	        <file name="data_optable_trace.c" inode="109849175" size="14019"></file>
+1185	        <file name="sql_beginning_common.c" inode="109849176" size="496"></file>
+1186	        <file name="duf_pdi_attach.c" inode="109849177" size="2501"></file>
+1187	        <file name="duf_sccb_handle.c" inode="109849178" size="6448"></file>
+1188	        <file name="duf_option_cmd.c" inode="109849179" size="4844"></file>
+1189	        <file name="data_optable_uplus.c" inode="109849180" size="1114"></file>
+1190	        <file name="duf_service.c" inode="109849181" size="1577"></file>
+1191	        <file name="duf_action_table.c" inode="109849182" size="2814"></file>
+1192	        <file name="duf_sccb_begfin.c" inode="109849183" size="2298"></file>
+1193	        <file name="duf_prepare_actions.c" inode="109849184" size="3480"></file>
+1194	        <file name="data_optable_sccb.c" inode="109849185" size="2039"></file>
+1195	        <file name="duf_levinfo_openclose.c" inode="109849186" size="5334"></file>
+1196	        <file name="sql_beginning_vacuum.c" inode="109849187" size="385"></file>
+1197	        <file name="duf_leaf_scan2.c" inode="109849188" size="2249"></file>
+1198	        <file name="duf_levinfo.c" inode="109849189" size="4466"></file>
+1199	        <file name="duf_options_cli.c" inode="109849190" size="5624"></file>
+1200	        <file name="mod_integrity_uni.c" inode="109849191" size="4172"></file>
+1201	        <file name="duf_option_descr.c" inode="109849192" size="3221"></file>
+1202	        <file name="duf_printb.c" inode="109849193" size="19393"></file>
+1203	        <file name="duf_sccb_eval.c" inode="109849194" size="3099"></file>
+1204	        <file name="duf_pathinfo_ref.c" inode="109849195" size="6079"></file>
+1205	        <file name="duf_pdi_context.c" inode="109849196" size="743"></file>
+1206	        <file name="duf_option_find.c" inode="109849197" size="7713"></file>
+1207	        <file name="duf_print.c" inode="109849198" size="18739"></file>
+1208	        <file name="data_optable_format.c" inode="109849199" size="5414"></file>
+1209	        <file name="duf_sccbh_eval.c" inode="109849200" size="8457"></file>
+1210	        <file name="duf_pdi_reinit.c" inode="109849201" size="3581"></file>
+1211	        <file name="duf_levinfo_credel.c" inode="109849202" size="2040"></file>
+1212	        <file name="duf_pdi.c" inode="109849203" size="8524"></file>
+1213	        <file name="duf_levinfo_context.c" inode="109849204" size="757"></file>
+1214	        <file name="data_optable_sflag.c" inode="109849205" size="1974"></file>
+1215	        <file name="duf_li_credel.c" inode="109849206" size="1562"></file>
+1216	        <file name="data_optable_str.c" inode="109849207" size="3354"></file>
+1217	        <file name="duf_pdi_stmt.c" inode="109849208" size="3029"></file>
+1218	        <file name="duf_fileinfo.c" inode="109849209" size="1939"></file>
+1219	        <file name="duf_pathinfo_credel.c" inode="109849210" size="1785"></file>
+1220	        <file name="duf_sql.c" inode="109849211" size="12906"></file>
+1221	        <file name="mod_dumplet.c" inode="109849212" size="7973"></file>
+1222	        <file name="data_optable.c" inode="109849213" size="2849"></file>
+1223	        <file name="duf_options_table.c" inode="109849214" size="10538"></file>
+1224	        <file name="duf_option_names.c" inode="109849215" size="8204"></file>
+1225	        <file name="mod_filedata_uni.c" inode="109849216" size="9070"></file>
+1226	        <file name="mod_exif_uni.c" inode="109849217" size="32368"></file>
+1227	        <file name="data_optable_flag.c" inode="109849218" size="9181"></file>
+1228	        <file name="duf_pstmt_levinfo.c" inode="109849219" size="1155"></file>
+1229	        <file name="duf_options_string.c" inode="109849220" size="2605"></file>
+1230	        <file name="evsql_begfin.c" inode="109849221" size="4894"></file>
+1231	        <file name="duf_sys_wrap.c" inode="109849222" size="901"></file>
+1232	        <file name="data_optable_info.c" inode="109849223" size="1681"></file>
+1233	        <file name="mod_md5_uni.c" inode="109849224" size="13209"></file>
+1234	        <file name="duf_errors.c" inode="109849225" size="13868"></file>
+1235	        <file name="duf_filedata.c.new" inode="109849226" size="4975"></file>
+1236	        <file name="duf_maindb.c" inode="109849227" size="21497"></file>
+1237	        <file name="data_optable_interactive.c" inode="109849228" size="2228"></file>
+1238	        <file name="std_mod_sets.c" inode="109849229" size="7551"></file>
+1239	        <file name="duf_option_help.c" inode="109849230" size="54818"></file>
+1240	        <file name="duf_eval_at_config.c" inode="109849231" size="4488"></file>
+1241	        <file name="duf_sel_cb_leaf.c" inode="109849232" size="4577"></file>
+1242	        <file name="duf_dbg.c" inode="109849233" size="7897"></file>
+1243	        <file name="duf_ufilter_ref.c" inode="109849234" size="1089"></file>
+1244	        <file name="duf_ufilter.c" inode="109849235" size="3727"></file>
+1245	        <file name="mod_tagit.c" inode="109849236" size="9320"></file>
+1246	        <file name="duf_option_typed.c" inode="109849237" size="19699"></file>
+1247	        <file name="duf_sql_field.c" inode="109849238" size="1267"></file>
+1248	        <file name="data_optable_filter.c" inode="109849239" size="16589"></file>
+1249	        <file name="duftest.c" inode="109849240" size="1244"></file>
+1250	        <file name="duf_utils_print.c" inode="109849241" size="3773"></file>
+1251	        <file name="data_optable_io.c" inode="109849242" size="3066"></file>
+1252	        <file name="std_fieldsets.c" inode="109849243" size="14155"></file>
+1253	        <file name="data_optable_help.c" inode="109849244" size="5285"></file>
+1254	        <file name="duf_utils.c" inode="109849245" size="6045"></file>
+1255	        <file name="duf_options.c" inode="109849246" size="8512"></file>
+1256	        <file name="data_optable_redo_and_obsolete.c" inode="109849247" size="4649"></file>
+1257	        <file name="duf_dirent.c" inode="109849248" size="1600"></file>
+1258	        <file name="duf_option.c" inode="109849249" size="5086"></file>
+1259	        <file name="duf_config.c" inode="109849250" size="10397"></file>
+1260	        <file name="duf_path2dirid.c" inode="109849251" size="4141"></file>
+1261	        <file name="sql_beginning_tables.c" inode="109849252" size="3520"></file>
+1262	        <file name="mod_directories_uni.c" inode="109849253" size="9617"></file>
+1263	        <file name="duf_option_extended.c" inode="109849254" size="2074"></file>
+1264	        <file name="duf_sccb_eval_dirs.c" inode="109849255" size="5204"></file>
+1265	        <file name="duf_tags.c" inode="109849256" size="3864"></file>
+1266	        <file name="duf_option_sccb.c" inode="109849257" size="3132"></file>
+1267	        <file name="duf_levinfo_stat.c" inode="109849258" size="2525"></file>
+1268	        <file name="sql_update_selected.c" inode="109849259" size="6770"></file>
+1269	        <file name="duf_dir_scan.c.20140411" inode="109849260" size="6630"></file>
+1270	        <file name="duf_option_tmpdb.c" inode="109849261" size="2040"></file>
+1271	        <file name="duf_options_interactive.c" inode="109849262" size="4236"></file>
+1272	        <file name="duf_sel_cb_node.c" inode="109849263" size="3184"></file>
+1273	        <file name="data_optable_experimental.c" inode="109849264" size="3748"></file>
+1274	        <file name="duf_sql_field2.c" inode="109849265" size="3167"></file>
+1275	        <file name="duf_path2db.c" inode="109849266" size="14777"></file>
+1276	        <file name="data_optable_debug.c" inode="109849267" size="1639"></file>
+1277	        <file name="sql_beginning_create.c" inode="109849268" size="24982"></file>
+1278	        <file name="mod_template_uni.c" inode="109849269" size="6607"></file>
+1279	        <file name="duf_dirent_scan2.c" inode="109849270" size="4299"></file>
+1280	        <file name="duf_item_scan2.c" inode="109849271" size="4830"></file>
+1281	        <file name="mod_sd5_uni.c" inode="109849272" size="10993"></file>
+1282	        <file name="duf_option_misc.c" inode="109849273" size="2131"></file>
+1283	        <file name="duf_levinfo_updown.c" inode="109849274" size="7039"></file>
+1284	        <file name="mod_dir_print_uni.c" inode="109849275" size="9192"></file>
+1285	        <file name="mod_dummy_uni.c" inode="109849276" size="9937"></file>
+1286	        <file name="duf_options_file.c" inode="109849277" size="9911"></file>
+1287	        <file name="sql_beginning_selected.c" inode="109849278" size="6173"></file>
+1288	        <file name="duf_sqlite.c" inode="109849279" size="21314"></file>
+1289	        <file name="duf_dh.c" inode="109849280" size="10058"></file>
+1290	        <file name="duf_levinfo_ref.c" inode="109849281" size="17123"></file>
+1291	        <file name="duf_sccb_eval_std.c" inode="109849282" size="1952"></file>
+1292	        <file name="mod_tree_print_uni.c" inode="109849283" size="13563"></file>
+1293	        <file name="duf.c" inode="109849284" size="4535"></file>
+1294	        <file name="duf_options_env.c" inode="109849285" size="2282"></file>
+1295	        <file name="duf_pdi_credel.c" inode="109849286" size="2677"></file>
+1296	        <file name="duf_dir_scan2_stages.c" inode="109849287" size="3564"></file>
+1297	        <file name="duf_pdi_sccb_eval.c" inode="109849288" size="4318"></file>
+1298	        <file name="mod_save_to.c" inode="109849289" size="9854"></file>
+1299	        <file name="mod_collect_mime_uni.c" inode="109849290" size="11404"></file>
+1300	        <file name="mod_filenames_uni.c" inode="109849291" size="5599"></file>
+1301	        <file name="Makefile.am" inode="109849292" size="3694"></file>
+1302	        <file name="duf_context.c" inode="109849293" size="999"></file>
+1303	        <file name="std_selectors.c" inode="109849294" size="2325"></file>
+1304	        <file name="duf_trace.c" inode="109849295" size="5209"></file>
+1305	        <file name="mod_crc32_uni.c" inode="109849296" size="10755"></file>
+1306	      </directory>
+1307	      <file name="out2.cmds" inode="109848233" size="23"></file>
+1308	      <directory name="debug" inode="109953166" size="4096">
+1309	        <file name="debug_zocromas_duf.cmd.tmp" inode="109849445" size="332"></file>
+1310	        <file name="__.gitignore" inode="109849446" size="6"></file>
+1311	        <file name="debug_zocromas_duf.cmd" inode="109849447" size="251"></file>
+1312	      </directory>
+1313	      <directory name="autom4te.cache" inode="109953167" size="4096">
+1314	        <file name="requests" inode="109849448" size="27093"></file>
+1315	        <file name="traces.1" inode="109849449" size="70044"></file>
+1316	      </directory>
+1317	      <file name="test02.cmds" inode="109848234" size="793"></file>
+1318	      <directory name="test" inode="109953168" size="4096">
+1319	        <file name="test.sh" inode="109849450" size="1774"></file>
+1320	        <directory name="duf" inode="109953169" size="4096">
+1321	          <file name="good.test.2" inode="109849454" size="1264"></file>
+1322	          <file name="test_set1.txt" inode="109849455" size="694"></file>
+1323	          <file name="__.gitignore" inode="109849456" size="28"></file>
+1324	          <directory name="20150602" inode="109953170" size="4096">
+1325	            <file name="out20150602.131822.test.5" inode="109849469" size="992"></file>
+1326	            <file name="out20150602.131822.test.ca1" inode="109849470" size="123"></file>
+1327	            <file name="out20150602.134103.test.sql1" inode="109849471" size="1"></file>
+1328	            <file name="out20150602.134103.test.1" inode="109849472" size="123"></file>
+1329	            <file name="out20150602.131822.test.6" inode="109849473" size="834"></file>
+1330	            <file name="out20150602.134103.test.6" inode="109849474" size="123"></file>
+1331	            <file name="out20150602.131822.test.creadd" inode="109849475" size="4"></file>
+1332	            <file name="out20150602.134103.test.5" inode="109849476" size="123"></file>
+1333	            <file name="out20150602.134103.test.creadd" inode="109849477" size="4"></file>
+1334	            <file name="out20150602.134103.test.1.1" inode="109849478" size="123"></file>
+1335	            <file name="out20150602.131822.test.2" inode="109849479" size="6376"></file>
+1336	            <file name="out20150602.131822.test.log" inode="109849480" size="20485"></file>
+1337	            <file name="out20150602.131822.test.4" inode="109849481" size="1505"></file>
+1338	            <file name="out20150602.131822.test.1.1" inode="109849482" size="17086"></file>
+1339	            <file name="out20150602.134103.test.7" inode="109849483" size="123"></file>
+1340	            <file name="out20150602.134103.test.4" inode="109849484" size="123"></file>
+1341	            <file name="out20150602.134103.test.3" inode="109849485" size="123"></file>
+1342	            <file name="out20150602.131822.test.7" inode="109849486" size="792"></file>
+1343	            <file name="out20150602.131822.test.sql1" inode="109849487" size="1"></file>
+1344	            <file name="out20150602.131822.test.0" inode="109849488" size="5"></file>
+1345	            <file name="out20150602.134103.test.2" inode="109849489" size="123"></file>
+1346	            <file name="out20150602.134103.test.ca1" inode="109849490" size="123"></file>
+1347	            <file name="out20150602.134103.test.0" inode="109849491" size="5"></file>
+1348	          </directory>
+1349	          <file name="good.test.1.1" inode="109849457" size="20074"></file>
+1350	          <file name="temp.db" inode="109849458" size="0"></file>
+1351	          <file name="good.test.creadd" inode="109849459" size="4"></file>
+1352	          <file name="good.test.5" inode="109849460" size="1231"></file>
+1353	          <file name="good.test.0" inode="109849461" size="5"></file>
+1354	          <file name="good.test.sql1" inode="109849462" size="302"></file>
+1355	          <file name="good.test.6" inode="109849463" size="1124"></file>
+1356	          <file name="good.test.4" inode="109849464" size="1904"></file>
+1357	          <file name="good.test.8" inode="109849465" size="3701"></file>
+1358	          <file name="good.test.7" inode="109849466" size="974"></file>
+1359	          <file name="good.test.ca1" inode="109849467" size="2236"></file>
+1360	          <file name="zocromas_duf.conf" inode="109849468" size="522"></file>
+1361	        </directory>
+1362	        <file name="DCEMAIL.ABK.locate" inode="109849451" size="737"></file>
+1363	        <file name="__.gitignore" inode="109849452" size="9"></file>
+1364	        <file name="test.txt" inode="109849453" size="3206"></file>
+1365	        <directory name="sh" inode="109953171" size="4096">
+1366	          <file name="test20140907.113444.sh" inode="109849492" size="8892"></file>
+1367	        </directory>
+1368	      </directory>
+1369	      <link name="zocversion.txt" target="../../files/zocversion.txt" inode="109953168" size="26"></link>
+1370	      <directory name="shsq" inode="109953172" size="4096">
+1371	        <file name="libsql.bash" inode="109849493" size="2548"></file>
+1372	      </directory>
+1373	      <directory name="tmp" inode="109953173" size="4096">
+1374	      </directory>
+1375	      <file name="aclocal.m4" inode="109848236" size="60322"></file>
+1376	    </directory>
+1377	  </directory>
+1378	  <report>
+1379	    <directories>55</directories>
+1380	    <files>1267</files>
+1381	  </report>
+1382	</tree>

@@ -11,15 +11,16 @@
 #include <mastar/exam/masexam.h>
 
 #include <mastar/masxfs/masxfs_types.h>
-#include <mastar/masxfs/masxfs_structs.h>
+/* #include <mastar/masxfs/masxfs_structs.h> */
 
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
+#include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-#include <mastar/qstd/qstd_structs.h>
+/* #include <mastar/qstd/qstd_structs.h> */
 #include <mastar/qstd/qstd_mstmt_base.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
@@ -33,28 +34,16 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
 {
   mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
-  const char *ename = masxfs_levinfo_name_ref( li, flags );
-  masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, flags );
-
-  /* WARN( "%d: '%s'", lidepth, ename ); */
   {
-    unsigned long long theid = 0;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
     unsigned long long node_id = 0;
     unsigned long long dataid = 0;
+    const char *sdetype = masxfs_levinfo_detype2s( detype );
+    const char *ename = masxfs_levinfo_name_ref( li, flags );
 
   /* unsigned long long propid _uUu_ = 0; */
 
-    const char *sdetypes[] = {
-      [MASXFS_ENTRY_BLK_NUM] = "BLK",
-      [MASXFS_ENTRY_CHR_NUM] = "CHR",
-      [MASXFS_ENTRY_DIR_NUM] = "DIR",
-      [MASXFS_ENTRY_REG_NUM] = "REG",
-      [MASXFS_ENTRY_FIFO_NUM] = "FIFO",
-      [MASXFS_ENTRY_SOCK_NUM] = "SOCK",
-      [MASXFS_ENTRY_LNK_NUM] = "LNK"
-    };
   /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
     {
       size_t size = masxfs_levinfo_size_ref( li, flags );
@@ -67,34 +56,39 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
       {
         dataid = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
       /* if ( detype == MASXFS_ENTRY_REG_NUM ) */
-        mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetypes[detype], stat );
+        mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetype, stat );
       }
     }
-    if ( lidepth != 0 )
+    /* WARN( "D%d; %lld: '%s'", li->lidepth, parent_id, ename ); */
     {
+      unsigned long long theid = 0;
+      masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, flags );
+
+      if ( lidepth != 0 )
+      {
 #if 0
-      theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
+        theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
 #endif
 #if 1
-      /* WARN( "%lld: '%s'", parent_id, ename ); */
-      assert( parent_id );
-      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
+        assert( parent_id );
+        theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetype );
 #endif
 #if 0
-      theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
+        theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
 #endif
+      }
+      if ( detype == MASXFS_ENTRY_DIR_NUM )
+      {
+        node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
+      /* WARN( "(%lld) set node_id=%lld (was:%lld) for '%s'", parent_id, node_id, li->db.node_id, li->name ); */
+        masxfs_levinfo_set_node_id( li, node_id );
+      }
+    /* masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );                                                    */
+    /*                                                                                                                        */
+    /* if ( !theid || 0 == strcmp( ename, "home" ) || node_id == 66 || node_id == 1 )                               */
+    /*   MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; node_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid, */
+    /*         ( unsigned long long ) parent_id, ( unsigned long long ) node_id );                                       */
     }
-    if ( detype == MASXFS_ENTRY_DIR_NUM )
-    {
-      node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-    /* WARN( "(%lld) set node_id=%lld (was:%lld) for '%s'", parent_id, node_id, li->db.node_id, li->name ); */
-      masxfs_levinfo_set_node_id( li, node_id );
-    }
-  /* masxfs_depth_t depth _uUu_ = masxfs_levinfo_depth_ref( li, flags );                                                    */
-  /*                                                                                                                        */
-  /* if ( !theid || 0 == strcmp( ename, "home" ) || node_id == 66 || node_id == 1 )                               */
-  /*   MARK( "(T6)", " %ld. '%s' ID: %llu => %llu; node_id:%llu", ( long ) depth, ename, ( unsigned long long ) theid, */
-  /*         ( unsigned long long ) parent_id, ( unsigned long long ) node_id );                                       */
   }
   return 0;
 }
@@ -142,7 +136,6 @@ testfill( const char *path, masxfs_depth_t maxdepth )
 
   /* mas_qstd_drop_tables( qstd ); */
   /* mas_qstd_create_tables( qstd ); */
-    if ( qstd->pfs )
     {
     /* const char *path0 = "mastest"; */
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
@@ -156,8 +149,8 @@ testfill( const char *path, masxfs_depth_t maxdepth )
           rC( mas_qstd_start_transaction( qstd ) );
         /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
           WARN( "******** testfill scan *******" );
-          masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT | MASXFS_CB_SELF_AND_UP;
-          masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT;
+          masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
+          masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
 
           rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | xflags1, maxdepth ) );
           WARN( "******** /testfill scan *******" );

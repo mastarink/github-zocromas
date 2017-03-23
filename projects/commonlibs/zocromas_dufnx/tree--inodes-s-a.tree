@@ -1,0 +1,1325 @@
+     1	mastest/
+     2	└── [109953123        4096]  tree
+     3	    ├── [109848236       60322]  aclocal.m4
+     4	    ├── [109953167        4096]  autom4te.cache
+     5	    │   ├── [109849448       27093]  requests
+     6	    │   └── [109849449       70044]  traces.1
+     7	    ├── [109953158        4096]  boxes
+     8	    │   ├── [79038865          37]  box.com.duf -> /mnt/dav/box.com/mastarink/always/duf
+     9	    │   └── [79038865          43]  dropbox.com.duf -> /home/mastar/a/Dropbox/mastarink/always/duf
+    10	    ├── [109848226        7223]  config.h.in
+    11	    ├── [109953166        4096]  debug
+    12	    │   ├── [109849447         251]  debug_zocromas_duf.cmd
+    13	    │   ├── [109849445         332]  debug_zocromas_duf.cmd.tmp
+    14	    │   └── [109849446           6]  __.gitignore
+    15	    ├── [109953155        4096]  editing
+    16	    │   ├── [109953157          29]  gvim-funcs.vim -> ../../../files/gvim-funcs.vim
+    17	    │   ├── [109849028          32]  gvimrc-mastar.vim -> ../../../files/gvimrc-mastar.vim
+    18	    │   ├── [109849028          32]  gvim-vimenter.vim -> ../../../files/gvim-vimenter.vim
+    19	    │   ├── [109953156       12288]  .gvimvrb
+    20	    │   │   ├── [109849085        8363]  SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo
+    21	    │   │   ├── [109849067       32644]  SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo
+    22	    │   │   ├── [109849106        6900]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir
+    23	    │   │   ├── [109849113       11809]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo
+    24	    │   │   ├── [109849059        6900]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb
+    25	    │   │   ├── [109849081        4113]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir
+    26	    │   │   ├── [109849076       18068]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo
+    27	    │   │   ├── [109849090        4113]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb
+    28	    │   │   ├── [109849118       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir
+    29	    │   │   ├── [109849052       10962]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo
+    30	    │   │   ├── [109849072       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb
+    31	    │   │   ├── [109849057        4096]  SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir
+    32	    │   │   ├── [109849074        4096]  SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb
+    33	    │   │   ├── [109849109        3623]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir
+    34	    │   │   ├── [109849083       13182]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo
+    35	    │   │   ├── [109849055        3623]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb
+    36	    │   │   ├── [109849035       22009]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo
+    37	    │   │   ├── [109849117        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir
+    38	    │   │   ├── [109849034        9013]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo
+    39	    │   │   ├── [109849100        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb
+    40	    │   │   ├── [109849043        3874]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir
+    41	    │   │   ├── [109849065        7289]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo
+    42	    │   │   ├── [109849116        3874]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb
+    43	    │   │   ├── [109849038        1593]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir
+    44	    │   │   ├── [109849053       16957]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo
+    45	    │   │   ├── [109849041        1593]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb
+    46	    │   │   ├── [109849096       20108]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir
+    47	    │   │   ├── [109849110        6445]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo
+    48	    │   │   ├── [109849066       20108]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb
+    49	    │   │   ├── [109849044       31255]  SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo
+    50	    │   │   ├── [109849042       47465]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir
+    51	    │   │   ├── [109849070       13595]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo
+    52	    │   │   ├── [109849050       47465]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb
+    53	    │   │   ├── [109849101       52475]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir
+    54	    │   │   ├── [109849068       12866]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo
+    55	    │   │   ├── [109849092       52475]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb
+    56	    │   │   ├── [109849097       57344]  SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir
+    57	    │   │   ├── [109849033       57344]  SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb
+    58	    │   │   ├── [109849115        8384]  SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo
+    59	    │   │   ├── [109849104       12988]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir
+    60	    │   │   ├── [109849086        8787]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo
+    61	    │   │   ├── [109849077       12988]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb
+    62	    │   │   ├── [109849069       16632]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo
+    63	    │   │   ├── [109849075       19149]  SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo
+    64	    │   │   ├── [109849099       19599]  SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo
+    65	    │   │   ├── [109849114       36864]  SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir
+    66	    │   │   ├── [109849080       36864]  SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb
+    67	    │   │   ├── [109849040       23396]  SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo
+    68	    │   │   ├── [109849078       19002]  SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo
+    69	    │   │   ├── [109849051        3905]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir
+    70	    │   │   ├── [109849089        9070]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo
+    71	    │   │   ├── [109849036        3905]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb
+    72	    │   │   ├── [109849054         512]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir
+    73	    │   │   ├── [109849049       11346]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo
+    74	    │   │   ├── [109849046         512]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb
+    75	    │   │   ├── [109849071       10351]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir
+    76	    │   │   ├── [109849102       11491]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo
+    77	    │   │   ├── [109849058       10351]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb
+    78	    │   │   ├── [109849108           1]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir
+    79	    │   │   ├── [109849061       14402]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo
+    80	    │   │   ├── [109849048           1]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb
+    81	    │   │   ├── [109849079       28524]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo
+    82	    │   │   ├── [109849084       77824]  SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir
+    83	    │   │   ├── [109849037       77824]  SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb
+    84	    │   │   ├── [109849031       86017]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir
+    85	    │   │   ├── [109849091       14933]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo
+    86	    │   │   ├── [109849045       86017]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb
+    87	    │   │   ├── [109849095       14557]  SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo
+    88	    │   │   ├── [109849107        9757]  SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo
+    89	    │   │   ├── [109849088       17118]  SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo
+    90	    │   │   ├── [109849062        8192]  SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir
+    91	    │   │   ├── [109849032        8192]  SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb
+    92	    │   │   ├── [109849039       63000]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir
+    93	    │   │   ├── [109849111       11404]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo
+    94	    │   │   ├── [109849064       63000]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb
+    95	    │   │   ├── [109849060       19149]  SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo
+    96	    │   │   ├── [109849094       21282]  SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo
+    97	    │   │   ├── [109849047        8192]  SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir
+    98	    │   │   ├── [109849098        8192]  SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb
+    99	    │   │   ├── [109849063       16384]  SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir
+   100	    │   │   ├── [109849112       16384]  SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb
+   101	    │   │   ├── [109849082       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir
+   102	    │   │   ├── [109849082       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir
+   103	    │   │   ├── [109849056       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb
+   104	    │   │   ├── [109849073           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir
+   105	    │   │   ├── [109849093       10894]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo
+   106	    │   │   ├── [109849119           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb
+   107	    │   │   ├── [109849105       25660]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo
+   108	    │   │   ├── [109849087       57344]  SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir
+   109	    │   │   └── [109849103       57344]  SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb
+   110	    │   ├── [109953157        4096]  mased
+   111	    │   │   ├── [24943264          36]  ac.mased.vim -> ../../../../files/mased/ac.mased.vim
+   112	    │   │   ├── [109849121         573]  cdef.mased.vim
+   113	    │   │   ├── [109849138         438]  m.mased.vim
+   114	    │   │   ├── [109849135          36]  sh.mased.vim -> ../../../../files/mased/sh.mased.vim
+   115	    │   │   ├── [109849133          37]  shn.mased.vim -> ../../../../files/mased/shn.mased.vim
+   116	    │   │   ├── [109849140         393]  srcbegfin.mased.vim
+   117	    │   │   ├── [109849133        1222]  srcconfig.mased.vim
+   118	    │   │   ├── [109849126          92]  srcevsql.mased.vim
+   119	    │   │   ├── [109849131         341]  srciface.mased.vim
+   120	    │   │   ├── [109849129         672]  srclevinfo.mased.vim
+   121	    │   │   ├── [109849139         644]  srclow.mased.vim
+   122	    │   │   ├── [109849128         633]  src.mased.vim
+   123	    │   │   ├── [109849122         861]  srcmod.mased.vim
+   124	    │   │   ├── [109849123         376]  srcpdi.mased.vim
+   125	    │   │   ├── [109849130         463]  srcsccb.mased.vim
+   126	    │   │   ├── [109849124         312]  srcsql.mased.vim
+   127	    │   │   ├── [109849127         370]  srctoexpire.mased.vim
+   128	    │   │   ├── [109849137         873]  srctypes.mased.vim
+   129	    │   │   ├── [109849135         149]  srcufilter.mased.vim
+   130	    │   │   ├── [109849132          94]  srcupath.mased.vim
+   131	    │   │   └── [109849124          39]  vimrc.mased.vim -> ../../../../files/mased/vimrc.mased.vim
+   132	    │   ├── [109849028        6981]  opened.20150531.txt
+   133	    │   └── [109953156          31]  vimrc-mastar.vim -> ../../../files/vimrc-mastar.vim
+   134	    ├── [109953159        4096]  human
+   135	    │   ├── [109953161        4096]  doc
+   136	    │   │   ├── [109849145        5819]  duf1.dia
+   137	    │   │   ├── [109849147        5848]  duf1.dia~
+   138	    │   │   ├── [109849150        6346]  duf.dia
+   139	    │   │   ├── [109849151        5819]  duf.dia~
+   140	    │   │   ├── [109849144        4185]  x1.txt
+   141	    │   │   ├── [109849149        1916]  x2.txt
+   142	    │   │   ├── [109849152        4986]  x3a1.txt
+   143	    │   │   ├── [109849148        4986]  x3a.txt
+   144	    │   │   └── [109849146        4273]  x3.txt
+   145	    │   ├── [109953163        4096]  examples
+   146	    │   │   ├── [109849162         853]  0.c
+   147	    │   │   ├── [109849158        1177]  1.c
+   148	    │   │   ├── [109849154        1177]  2.c
+   149	    │   │   ├── [109849160        2981]  3.c
+   150	    │   │   ├── [109849163        1209]  4.c
+   151	    │   │   ├── [109849157        1419]  configure.ac.20131026.110837
+   152	    │   │   ├── [109849159        2235]  example3.c
+   153	    │   │   ├── [109849153       26036]  exif-data.c
+   154	    │   │   ├── [109849156        1770]  exifthumb.c
+   155	    │   │   ├── [109849161        3940]  foreign-example.c
+   156	    │   │   └── [109849155        2384]  sqlite-func.c
+   157	    │   ├── [109849143           6]  __.gitignore
+   158	    │   ├── [109953160        4096]  results
+   159	    │   └── [109953162        4096]  run
+   160	    ├── [108794933          14]  .localrc -> ../../.localrc
+   161	    ├── [108792945          11]  m4zoc -> ../../m4zoc
+   162	    ├── [109847862       26955]  Makefile.in
+   163	    ├── [109953125        4096]  md5sha
+   164	    │   ├── [109848251       40737]  t1.html
+   165	    │   └── [109848250       40737]  t2.html
+   166	    ├── [109848229          23]  out1.cmds
+   167	    ├── [109848233          23]  out2.cmds
+   168	    ├── [109953124        4096]  sh0
+   169	    │   ├── [109848241          39]  build.sh
+   170	    │   ├── [109848249        1536]  debug_any.sh
+   171	    │   ├── [109848240         157]  debug_duf.sh
+   172	    │   ├── [109848239          65]  debug_mas_duf.cmd
+   173	    │   ├── [109848238         121]  findgarbage.sh
+   174	    │   ├── [109848244         808]  gdbcore_any.sh
+   175	    │   ├── [109848242          48]  grepfunexclude.txt
+   176	    │   ├── [109848245         551]  make.sh
+   177	    │   ├── [109848246         706]  run_any.sh
+   178	    │   ├── [109848248          94]  run_duf.sh
+   179	    │   ├── [109848237         596]  tarme.sh
+   180	    │   ├── [109848243        1295]  testdist.sh
+   181	    │   └── [109848247          98]  tmp.cmd
+   182	    ├── [108793164           9]  shn -> ../../shn
+   183	    ├── [109953172        4096]  shsq
+   184	    │   └── [109849493        2548]  libsql.bash
+   185	    ├── [109953164        4096]  src
+   186	    │   ├── [109849213        2849]  data_optable.c
+   187	    │   ├── [109849267        1639]  data_optable_debug.c
+   188	    │   ├── [109849264        3748]  data_optable_experimental.c
+   189	    │   ├── [109849239       16589]  data_optable_filter.c
+   190	    │   ├── [109849218        9181]  data_optable_flag.c
+   191	    │   ├── [109849174        2716]  data_optable_flag_obsolete.c
+   192	    │   ├── [109849199        5414]  data_optable_format.c
+   193	    │   ├── [109849244        5285]  data_optable_help.c
+   194	    │   ├── [109849223        1681]  data_optable_info.c
+   195	    │   ├── [109849228        2228]  data_optable_interactive.c
+   196	    │   ├── [109849242        3066]  data_optable_io.c
+   197	    │   ├── [109849247        4649]  data_optable_redo_and_obsolete.c
+   198	    │   ├── [109849185        2039]  data_optable_sccb.c
+   199	    │   ├── [109849205        1974]  data_optable_sflag.c
+   200	    │   ├── [109849207        3354]  data_optable_str.c
+   201	    │   ├── [109849175       14019]  data_optable_trace.c
+   202	    │   ├── [109849180        1114]  data_optable_uplus.c
+   203	    │   ├── [109849182        2814]  duf_action_table.c
+   204	    │   ├── [109849284        4535]  duf.c
+   205	    │   ├── [109849250       10397]  duf_config.c
+   206	    │   ├── [109849293         999]  duf_context.c
+   207	    │   ├── [109849233        7897]  duf_dbg.c
+   208	    │   ├── [109849280       10058]  duf_dh.c
+   209	    │   ├── [109849248        1600]  duf_dirent.c
+   210	    │   ├── [109849270        4299]  duf_dirent_scan2.c
+   211	    │   ├── [109849287        3564]  duf_dir_scan2_stages.c
+   212	    │   ├── [109849260        6630]  duf_dir_scan.c.20140411
+   213	    │   ├── [109849225       13868]  duf_errors.c
+   214	    │   ├── [109849231        4488]  duf_eval_at_config.c
+   215	    │   ├── [109849166        5157]  duf_filedata.c
+   216	    │   ├── [109849226        4975]  duf_filedata.c.new
+   217	    │   ├── [109849209        1939]  duf_fileinfo.c
+   218	    │   ├── [109849271        4830]  duf_item_scan2.c
+   219	    │   ├── [109849188        2249]  duf_leaf_scan2.c
+   220	    │   ├── [109849189        4466]  duf_levinfo.c
+   221	    │   ├── [109849204         757]  duf_levinfo_context.c
+   222	    │   ├── [109849202        2040]  duf_levinfo_credel.c
+   223	    │   ├── [109849186        5334]  duf_levinfo_openclose.c
+   224	    │   ├── [109849281       17123]  duf_levinfo_ref.c
+   225	    │   ├── [109849258        2525]  duf_levinfo_stat.c
+   226	    │   ├── [109849274        7039]  duf_levinfo_updown.c
+   227	    │   ├── [109849206        1562]  duf_li_credel.c
+   228	    │   ├── [109849227       21497]  duf_maindb.c
+   229	    │   ├── [109849171        9061]  duf_maindb_info.c
+   230	    │   ├── [109849167        2644]  duf_match.c
+   231	    │   ├── [109849249        5086]  duf_option.c
+   232	    │   ├── [109849179        4844]  duf_option_cmd.c
+   233	    │   ├── [109849192        3221]  duf_option_descr.c
+   234	    │   ├── [109849254        2074]  duf_option_extended.c
+   235	    │   ├── [109849197        7713]  duf_option_find.c
+   236	    │   ├── [109849230       54818]  duf_option_help.c
+   237	    │   ├── [109849273        2131]  duf_option_misc.c
+   238	    │   ├── [109849215        8204]  duf_option_names.c
+   239	    │   ├── [109849172       14485]  duf_option_old.c
+   240	    │   ├── [109849246        8512]  duf_options.c
+   241	    │   ├── [109849257        3132]  duf_option_sccb.c
+   242	    │   ├── [109849190        5624]  duf_options_cli.c
+   243	    │   ├── [109849285        2282]  duf_options_env.c
+   244	    │   ├── [109849277        9911]  duf_options_file.c
+   245	    │   ├── [109849262        4236]  duf_options_interactive.c
+   246	    │   ├── [109849220        2605]  duf_options_string.c
+   247	    │   ├── [109849214       10538]  duf_options_table.c
+   248	    │   ├── [109849261        2040]  duf_option_tmpdb.c
+   249	    │   ├── [109849237       19699]  duf_option_typed.c
+   250	    │   ├── [109849266       14777]  duf_path2db.c
+   251	    │   ├── [109849251        4141]  duf_path2dirid.c
+   252	    │   ├── [109849210        1785]  duf_pathinfo_credel.c
+   253	    │   ├── [109849195        6079]  duf_pathinfo_ref.c
+   254	    │   ├── [109849177        2501]  duf_pdi_attach.c
+   255	    │   ├── [109849203        8524]  duf_pdi.c
+   256	    │   ├── [109849196         743]  duf_pdi_context.c
+   257	    │   ├── [109849286        2677]  duf_pdi_credel.c
+   258	    │   ├── [109849173        4756]  duf_pdi_ref.c
+   259	    │   ├── [109849201        3581]  duf_pdi_reinit.c
+   260	    │   ├── [109849288        4318]  duf_pdi_sccb_eval.c
+   261	    │   ├── [109849208        3029]  duf_pdi_stmt.c
+   262	    │   ├── [109849184        3480]  duf_prepare_actions.c
+   263	    │   ├── [109849193       19393]  duf_printb.c
+   264	    │   ├── [109849198       18739]  duf_print.c
+   265	    │   ├── [109849219        1155]  duf_pstmt_levinfo.c
+   266	    │   ├── [109849183        2298]  duf_sccb_begfin.c
+   267	    │   ├── [109849169        2630]  duf_sccb.c
+   268	    │   ├── [109849194        3099]  duf_sccb_eval.c
+   269	    │   ├── [109849255        5204]  duf_sccb_eval_dirs.c
+   270	    │   ├── [109849282        1952]  duf_sccb_eval_std.c
+   271	    │   ├── [109849178        6448]  duf_sccb_handle.c
+   272	    │   ├── [109849200        8457]  duf_sccbh_eval.c
+   273	    │   ├── [109849232        4577]  duf_sel_cb_leaf.c
+   274	    │   ├── [109849263        3184]  duf_sel_cb_node.c
+   275	    │   ├── [109849181        1577]  duf_service.c
+   276	    │   ├── [109849211       12906]  duf_sql.c
+   277	    │   ├── [109849265        3167]  duf_sql_field2.c
+   278	    │   ├── [109849238        1267]  duf_sql_field.c
+   279	    │   ├── [109849279       21314]  duf_sqlite.c
+   280	    │   ├── [109849165        3383]  duf_status.c
+   281	    │   ├── [109849222         901]  duf_sys_wrap.c
+   282	    │   ├── [109849256        3864]  duf_tags.c
+   283	    │   ├── [109849240        1244]  duftest.c
+   284	    │   ├── [109849295        5209]  duf_trace.c
+   285	    │   ├── [109849168        3657]  duf_ufilter_bind.c
+   286	    │   ├── [109849235        3727]  duf_ufilter.c
+   287	    │   ├── [109849234        1089]  duf_ufilter_ref.c
+   288	    │   ├── [109849245        6045]  duf_utils.c
+   289	    │   ├── [109849170        1130]  duf_utils_path.c
+   290	    │   ├── [109849241        3773]  duf_utils_print.c
+   291	    │   ├── [109849221        4894]  evsql_begfin.c
+   292	    │   ├── [109849164        8527]  evsql_selector.c
+   293	    │   ├── [109953165        4096]  inc
+   294	    │   │   ├── [109849337        1056]  duf_action_table.h
+   295	    │   │   ├── [109849306         463]  duf_base_types.h
+   296	    │   │   ├── [109849360        2704]  duf_cli_types.h
+   297	    │   │   ├── [109849328         159]  duf_config4trace_ref.h
+   298	    │   │   ├── [109849385         375]  duf_config.h
+   299	    │   │   ├── [109849396         868]  duf_config_ref.h
+   300	    │   │   ├── [109849307         899]  duf_config_types.h
+   301	    │   │   ├── [109849419         340]  duf_context.h
+   302	    │   │   ├── [109849309         324]  duf_dbg.h
+   303	    │   │   ├── [109849421        2888]  duf_debug_defs.h
+   304	    │   │   ├── [109849441        1251]  duf_def.h
+   305	    │   │   ├── [109849413        1848]  duf_defs.h
+   306	    │   │   ├── [109849416         616]  duf_dh.h
+   307	    │   │   ├── [109849343         113]  duf_dirent.h
+   308	    │   │   ├── [109849373         199]  duf_dirent_scan2.h
+   309	    │   │   ├── [109849410         621]  duf_dir_scan2_stages.h
+   310	    │   │   ├── [109849427        2727]  duf_dodefs.h
+   311	    │   │   ├── [109849353        6997]  duf_error_defs.h
+   312	    │   │   ├── [109849428        1036]  duf_errors.h
+   313	    │   │   ├── [109849364        1740]  duf_error_types.h
+   314	    │   │   ├── [109849326         189]  duf_eval_at_config.h
+   315	    │   │   ├── [109849349         360]  duf_filedata.h
+   316	    │   │   ├── [109849430         182]  duf_fileinfo.h
+   317	    │   │   ├── [109849310         684]  duf_fileinfo_types.h
+   318	    │   │   ├── [109849354        1952]  duf_flags_types.h
+   319	    │   │   ├── [109849339        1991]  duf_format_types.h
+   320	    │   │   ├── [109849346         655]  duf_fun_types.h
+   321	    │   │   ├── [109849409        2166]  duf.h
+   322	    │   │   ├── [109849344        4596]  duf_hook_types.h
+   323	    │   │   ├── [109849331         324]  duf_item_scan2.h
+   324	    │   │   ├── [109849363         201]  duf_item_types.h
+   325	    │   │   ├── [109849400         247]  duf_leaf_scan2.h
+   326	    │   │   ├── [109849302         259]  duf_levinfo_context.h
+   327	    │   │   ├── [109849383         245]  duf_levinfo_credel.h
+   328	    │   │   ├── [109849329         664]  duf_levinfo.h
+   329	    │   │   ├── [109849368        1060]  duf_levinfo_openclose.h
+   330	    │   │   ├── [109849305        6623]  duf_levinfo_ref_def.h
+   331	    │   │   ├── [109849367        7017]  duf_levinfo_ref.h
+   332	    │   │   ├── [109849393         448]  duf_levinfo_stat.h
+   333	    │   │   ├── [109849417        2394]  duf_levinfo_types.h
+   334	    │   │   ├── [109849342         433]  duf_levinfo_updown.h
+   335	    │   │   ├── [109849324         176]  duf_li_credel.h
+   336	    │   │   ├── [109849351         326]  duf_maindb.h
+   337	    │   │   ├── [109849325         134]  duf_maindb_info.h
+   338	    │   │   ├── [109849437         331]  duf_maintenance.h
+   339	    │   │   ├── [109849366         373]  duf_match.h
+   340	    │   │   ├── [109849334        1453]  duf_mod_defs.h
+   341	    │   │   ├── [109849356        4729]  duf_optable_def.h
+   342	    │   │   ├── [109849395         492]  duf_option_cmd.h
+   343	    │   │   ├── [109849304        2953]  duf_option_defs.h
+   344	    │   │   ├── [109849361         733]  duf_option_descr.h
+   345	    │   │   ├── [109849431         550]  duf_option_extended.h
+   346	    │   │   ├── [109849411         823]  duf_option_find.h
+   347	    │   │   ├── [109849327         547]  duf_option.h
+   348	    │   │   ├── [109849443         596]  duf_option_help.h
+   349	    │   │   ├── [109849314         362]  duf_option_misc.h
+   350	    │   │   ├── [109849340        1478]  duf_option_names.h
+   351	    │   │   ├── [109849387         290]  duf_option_old.h
+   352	    │   │   ├── [109849438         326]  duf_option_sccb.h
+   353	    │   │   ├── [109849357         202]  duf_options_cli.h
+   354	    │   │   ├── [109849434        9236]  duf_options_enum.h
+   355	    │   │   ├── [109849316         206]  duf_options_env.h
+   356	    │   │   ├── [109849375         725]  duf_options_file.h
+   357	    │   │   ├── [109849424         246]  duf_options.h
+   358	    │   │   ├── [109849390         187]  duf_options_interactive.h
+   359	    │   │   ├── [109849313         217]  duf_options_string.h
+   360	    │   │   ├── [109849345         177]  duf_option_tmpdb.h
+   361	    │   │   ├── [109849381        3975]  duf_option_typed_defs.h
+   362	    │   │   ├── [109849311         272]  duf_option_typed.h
+   363	    │   │   ├── [109849312        5177]  duf_option_types.h
+   364	    │   │   ├── [109849408         389]  duf_path2db.h
+   365	    │   │   ├── [109849403         192]  duf_path2dirid.h
+   366	    │   │   ├── [109849348         337]  duf_pathinfo_credel.h
+   367	    │   │   ├── [109849404        6236]  duf_pathinfo_ref_def.h
+   368	    │   │   ├── [109849379        7835]  duf_pathinfo_ref.h
+   369	    │   │   ├── [109849401         550]  duf_pdi_attach.h
+   370	    │   │   ├── [109849397         301]  duf_pdi_context.h
+   371	    │   │   ├── [109849299         372]  duf_pdi_credel.h
+   372	    │   │   ├── [109849341         706]  duf_pdi.h
+   373	    │   │   ├── [109849391        1505]  duf_pdi_ref.h
+   374	    │   │   ├── [109849297         709]  duf_pdi_reinit.h
+   375	    │   │   ├── [109849418        1278]  duf_pdi_sccb_eval.h
+   376	    │   │   ├── [109849406         417]  duf_pdi_stmt.h
+   377	    │   │   ├── [109849371         226]  duf_pdi_types.h
+   378	    │   │   ├── [109849358         344]  duf_prepare_actions.h
+   379	    │   │   ├── [109849402         415]  duf_printb.h
+   380	    │   │   ├── [109849336        2475]  duf_print_defs.h
+   381	    │   │   ├── [109849420         591]  duf_print.h
+   382	    │   │   ├── [109849394         174]  duf_pstmt_levinfo.h
+   383	    │   │   ├── [109849350         899]  duf_record_types.h
+   384	    │   │   ├── [109849380         660]  duf_scan_types.h
+   385	    │   │   ├── [109849321         364]  duf_sccb_begfin.h
+   386	    │   │   ├── [109849398         479]  duf_sccb_def.h
+   387	    │   │   ├── [109849436         231]  duf_sccb_eval_dirs.h
+   388	    │   │   ├── [109849370         680]  duf_sccb_eval.h
+   389	    │   │   ├── [109849317        1005]  duf_sccb_eval_std.h
+   390	    │   │   ├── [109849374         539]  duf_sccb.h
+   391	    │   │   ├── [109849359         486]  duf_sccb_handle.h
+   392	    │   │   ├── [109849388         780]  duf_sccbh_eval.h
+   393	    │   │   ├── [109849423         388]  duf_sccbh_shortcuts.h
+   394	    │   │   ├── [109849382         164]  duf_sel_cb_leaf.h
+   395	    │   │   ├── [109849415         164]  duf_sel_cb_node.h
+   396	    │   │   ├── [109849432         258]  duf_service.h
+   397	    │   │   ├── [109849333         940]  duf_sql1.h
+   398	    │   │   ├── [109849442        5645]  duf_sql2.h
+   399	    │   │   ├── [109849338        8609]  duf_sql_const.h
+   400	    │   │   ├── [109849372        2420]  duf_sql_defs.h
+   401	    │   │   ├── [109849318         596]  duf_sql_field2.h
+   402	    │   │   ├── [109849308         339]  duf_sql_field.h
+   403	    │   │   ├── [109849332         443]  duf_sql.h
+   404	    │   │   ├── [109849399        9130]  duf_sqlite.h
+   405	    │   │   ├── [109849405         229]  duf_sql_types.h
+   406	    │   │   ├── [109849352        1873]  duf_start_end.h
+   407	    │   │   ├── [109849362         357]  duf_status.h
+   408	    │   │   ├── [109849378         136]  duf_status_ref.h
+   409	    │   │   ├── [109849389         803]  duf_status_types.h
+   410	    │   │   ├── [109849377         101]  duf_sys_wrap.h
+   411	    │   │   ├── [109849412         186]  duf_tags.h
+   412	    │   │   ├── [109849439        2733]  duf_trace_defs_base.h
+   413	    │   │   ├── [109849384         796]  duf_trace_defs.h
+   414	    │   │   ├── [109849322        2399]  duf_trace_defs_if.h
+   415	    │   │   ├── [109849335         292]  duf_trace_defs_sys.h
+   416	    │   │   ├── [109849386         878]  duf_trace_defs_what.h
+   417	    │   │   ├── [109849435        1002]  duf_trace.h
+   418	    │   │   ├── [109849426        1573]  duf_trace_types.h
+   419	    │   │   ├── [109849303         187]  duf_ufilter_bind.h
+   420	    │   │   ├── [109849376         295]  duf_ufilter.h
+   421	    │   │   ├── [109849300         224]  duf_ufilter_ref.h
+   422	    │   │   ├── [109849301        1987]  duf_ufilter_types.h
+   423	    │   │   ├── [109849422         780]  duf_utils.h
+   424	    │   │   ├── [109849425         159]  duf_utils_path.h
+   425	    │   │   ├── [109849369         634]  duf_utils_print.h
+   426	    │   │   ├── [109849440        1371]  evsql_begfin.h
+   427	    │   │   ├── [109849414         308]  evsql_selector.h
+   428	    │   │   ├── [109849444        2918]  Makefile.am
+   429	    │   │   ├── [109849298       18328]  Makefile.in
+   430	    │   │   ├── [109849407         436]  mod_exif.h
+   431	    │   │   ├── [109849355         156]  sql_beginning_common.h
+   432	    │   │   ├── [109849429         205]  sql_beginning_create.h
+   433	    │   │   ├── [109849320        4718]  sql_beginning_selected.h
+   434	    │   │   ├── [109849433         190]  sql_beginning_tables.h
+   435	    │   │   ├── [109849347         424]  sql_beginning_types.h
+   436	    │   │   ├── [109849392         156]  sql_beginning_vacuum.h
+   437	    │   │   ├── [109849315        2060]  sql_selected_defs.h
+   438	    │   │   ├── [109849330        4386]  sql_tables_defs.h
+   439	    │   │   ├── [109849319          97]  std_fieldsets.h
+   440	    │   │   ├── [109849365         367]  std_mod_sets.h
+   441	    │   │   └── [109849323          97]  std_selectors.h
+   442	    │   ├── [109849292        3694]  Makefile.am
+   443	    │   ├── [109849290       11404]  mod_collect_mime_uni.c
+   444	    │   ├── [109849296       10755]  mod_crc32_uni.c
+   445	    │   ├── [109849253        9617]  mod_directories_uni.c
+   446	    │   ├── [109849275        9192]  mod_dir_print_uni.c
+   447	    │   ├── [109849276        9937]  mod_dummy_uni.c
+   448	    │   ├── [109849212        7973]  mod_dumplet.c
+   449	    │   ├── [109849217       32368]  mod_exif_uni.c
+   450	    │   ├── [109849216        9070]  mod_filedata_uni.c
+   451	    │   ├── [109849291        5599]  mod_filenames_uni.c
+   452	    │   ├── [109849191        4172]  mod_integrity_uni.c
+   453	    │   ├── [109849224       13209]  mod_md5_uni.c
+   454	    │   ├── [109849289        9854]  mod_save_to.c
+   455	    │   ├── [109849272       10993]  mod_sd5_uni.c
+   456	    │   ├── [109849236        9320]  mod_tagit.c
+   457	    │   ├── [109849269        6607]  mod_template_uni.c
+   458	    │   ├── [109849283       13563]  mod_tree_print_uni.c
+   459	    │   ├── [109849176         496]  sql_beginning_common.c
+   460	    │   ├── [109849268       24982]  sql_beginning_create.c
+   461	    │   ├── [109849278        6173]  sql_beginning_selected.c
+   462	    │   ├── [109849252        3520]  sql_beginning_tables.c
+   463	    │   ├── [109849187         385]  sql_beginning_vacuum.c
+   464	    │   ├── [109849259        6770]  sql_update_selected.c
+   465	    │   ├── [109849243       14155]  std_fieldsets.c
+   466	    │   ├── [109849229        7551]  std_mod_sets.c
+   467	    │   └── [109849294        2325]  std_selectors.c
+   468	    ├── [109953168        4096]  test
+   469	    │   ├── [109849451         737]  DCEMAIL.ABK.locate
+   470	    │   ├── [109953169        4096]  duf
+   471	    │   │   ├── [109953170        4096]  20150602
+   472	    │   │   │   ├── [109849488           5]  out20150602.131822.test.0
+   473	    │   │   │   ├── [109849482       17086]  out20150602.131822.test.1.1
+   474	    │   │   │   ├── [109849479        6376]  out20150602.131822.test.2
+   475	    │   │   │   ├── [109849481        1505]  out20150602.131822.test.4
+   476	    │   │   │   ├── [109849469         992]  out20150602.131822.test.5
+   477	    │   │   │   ├── [109849473         834]  out20150602.131822.test.6
+   478	    │   │   │   ├── [109849486         792]  out20150602.131822.test.7
+   479	    │   │   │   ├── [109849470         123]  out20150602.131822.test.ca1
+   480	    │   │   │   ├── [109849475           4]  out20150602.131822.test.creadd
+   481	    │   │   │   ├── [109849480       20485]  out20150602.131822.test.log
+   482	    │   │   │   ├── [109849487           1]  out20150602.131822.test.sql1
+   483	    │   │   │   ├── [109849491           5]  out20150602.134103.test.0
+   484	    │   │   │   ├── [109849472         123]  out20150602.134103.test.1
+   485	    │   │   │   ├── [109849478         123]  out20150602.134103.test.1.1
+   486	    │   │   │   ├── [109849489         123]  out20150602.134103.test.2
+   487	    │   │   │   ├── [109849485         123]  out20150602.134103.test.3
+   488	    │   │   │   ├── [109849484         123]  out20150602.134103.test.4
+   489	    │   │   │   ├── [109849476         123]  out20150602.134103.test.5
+   490	    │   │   │   ├── [109849474         123]  out20150602.134103.test.6
+   491	    │   │   │   ├── [109849483         123]  out20150602.134103.test.7
+   492	    │   │   │   ├── [109849490         123]  out20150602.134103.test.ca1
+   493	    │   │   │   ├── [109849477           4]  out20150602.134103.test.creadd
+   494	    │   │   │   └── [109849471           1]  out20150602.134103.test.sql1
+   495	    │   │   ├── [109849456          28]  __.gitignore
+   496	    │   │   ├── [109849461           5]  good.test.0
+   497	    │   │   ├── [109849457       20074]  good.test.1.1
+   498	    │   │   ├── [109849454        1264]  good.test.2
+   499	    │   │   ├── [109849464        1904]  good.test.4
+   500	    │   │   ├── [109849460        1231]  good.test.5
+   501	    │   │   ├── [109849463        1124]  good.test.6
+   502	    │   │   ├── [109849466         974]  good.test.7
+   503	    │   │   ├── [109849465        3701]  good.test.8
+   504	    │   │   ├── [109849467        2236]  good.test.ca1
+   505	    │   │   ├── [109849459           4]  good.test.creadd
+   506	    │   │   ├── [109849462         302]  good.test.sql1
+   507	    │   │   ├── [109849458           0]  temp.db
+   508	    │   │   ├── [109849455         694]  test_set1.txt
+   509	    │   │   └── [109849468         522]  zocromas_duf.conf
+   510	    │   ├── [109849452           9]  __.gitignore
+   511	    │   ├── [109953171        4096]  sh
+   512	    │   │   └── [109849492        8892]  test20140907.113444.sh
+   513	    │   ├── [109849450        1774]  test.sh
+   514	    │   └── [109849453        3206]  test.txt
+   515	    ├── [109848234         793]  test02.cmds
+   516	    ├── [109848228        1256]  test-history.txt
+   517	    ├── [109953173        4096]  tmp
+   518	    ├── [109953126        4096]  tree.r
+   519	    │   ├── [109848263       60322]  aclocal.m4
+   520	    │   ├── [109953148        4096]  autom4te.cache
+   521	    │   │   ├── [109848980       27093]  requests
+   522	    │   │   └── [109848981       70044]  traces.1
+   523	    │   ├── [109953128        4096]  .auxdir
+   524	    │   │   ├── [109848278        5826]  ar-lib
+   525	    │   │   ├── [109953129        4096]  .build
+   526	    │   │   │   ├── [109848287        8970]  config.h
+   527	    │   │   │   ├── [109848288       90036]  config.log
+   528	    │   │   │   ├── [109848286       74068]  config.status
+   529	    │   │   │   ├── [109848284       28573]  Makefile
+   530	    │   │   │   ├── [109953130       12288]  src
+   531	    │   │   │   │   ├── [109953133       12288]  .deps
+   532	    │   │   │   │   │   ├── [109848467        1872]  mtest-duftest.Po
+   533	    │   │   │   │   │   ├── [109848420        6450]  zocromas_duf-data_optable_debug.Po
+   534	    │   │   │   │   │   ├── [109848457        6862]  zocromas_duf-data_optable_experimental.Po
+   535	    │   │   │   │   │   ├── [109848488        6452]  zocromas_duf-data_optable_filter.Po
+   536	    │   │   │   │   │   ├── [109848422        6068]  zocromas_duf-data_optable_flag_obsolete.Po
+   537	    │   │   │   │   │   ├── [109848528        6050]  zocromas_duf-data_optable_flag.Po
+   538	    │   │   │   │   │   ├── [109848417        6452]  zocromas_duf-data_optable_format.Po
+   539	    │   │   │   │   │   ├── [109848543        6647]  zocromas_duf-data_optable_help.Po
+   540	    │   │   │   │   │   ├── [109848480        6647]  zocromas_duf-data_optable_info.Po
+   541	    │   │   │   │   │   ├── [109848512        6661]  zocromas_duf-data_optable_interactive.Po
+   542	    │   │   │   │   │   ├── [109848539        6643]  zocromas_duf-data_optable_io.Po
+   543	    │   │   │   │   │   ├── [109848415        6637]  zocromas_duf-data_optable.Po
+   544	    │   │   │   │   │   ├── [109848463        6474]  zocromas_duf-data_optable_redo_and_obsolete.Po
+   545	    │   │   │   │   │   ├── [109848526        6647]  zocromas_duf-data_optable_sccb.Po
+   546	    │   │   │   │   │   ├── [109848544        6450]  zocromas_duf-data_optable_sflag.Po
+   547	    │   │   │   │   │   ├── [109848533        6645]  zocromas_duf-data_optable_str.Po
+   548	    │   │   │   │   │   ├── [109848550        6450]  zocromas_duf-data_optable_trace.Po
+   549	    │   │   │   │   │   ├── [109848435        6450]  zocromas_duf-data_optable_uplus.Po
+   550	    │   │   │   │   │   ├── [109848513       13998]  zocromas_duf-duf_action.Po
+   551	    │   │   │   │   │   ├── [109848523       10816]  zocromas_duf-duf_action_table.Po
+   552	    │   │   │   │   │   ├── [109848510       11546]  zocromas_duf-duf_begfin.Po
+   553	    │   │   │   │   │   ├── [109848476       10991]  zocromas_duf-duf_cli_options.Po
+   554	    │   │   │   │   │   ├── [109848454       11452]  zocromas_duf-duf_config.Po
+   555	    │   │   │   │   │   ├── [109848474       10167]  zocromas_duf-duf_context.Po
+   556	    │   │   │   │   │   ├── [109848481        6813]  zocromas_duf-duf_dbg.Po
+   557	    │   │   │   │   │   ├── [109848514       11457]  zocromas_duf-duf_dh.Po
+   558	    │   │   │   │   │   ├── [109848535       10839]  zocromas_duf-duf_dirent.Po
+   559	    │   │   │   │   │   ├── [109848507       12072]  zocromas_duf-duf_dirent_scan2.Po
+   560	    │   │   │   │   │   ├── [109848448       11634]  zocromas_duf-duf_dir_scan2_stages.Po
+   561	    │   │   │   │   │   ├── [109848436       10907]  zocromas_duf-duf_errors.Po
+   562	    │   │   │   │   │   ├── [109848497       11789]  zocromas_duf-duf_eval_at_config.Po
+   563	    │   │   │   │   │   ├── [109848518       12298]  zocromas_duf-duf_filedata.Po
+   564	    │   │   │   │   │   ├── [109848503       11446]  zocromas_duf-duf_fileinfo.Po
+   565	    │   │   │   │   │   ├── [109848527       12822]  zocromas_duf-duf_interactive.Po
+   566	    │   │   │   │   │   ├── [109848438       12633]  zocromas_duf-duf_item_scan2.Po
+   567	    │   │   │   │   │   ├── [109848416       11043]  zocromas_duf-duf_leaf_scan2.Po
+   568	    │   │   │   │   │   ├── [109848490        9941]  zocromas_duf-duf_levinfo_context.Po
+   569	    │   │   │   │   │   ├── [109848483       10854]  zocromas_duf-duf_levinfo_credel.Po
+   570	    │   │   │   │   │   ├── [109848461       10840]  zocromas_duf-duf_levinfo_openclose.Po
+   571	    │   │   │   │   │   ├── [109848478       11405]  zocromas_duf-duf_levinfo.Po
+   572	    │   │   │   │   │   ├── [109848516       11035]  zocromas_duf-duf_levinfo_ref.Po
+   573	    │   │   │   │   │   ├── [109848434       11031]  zocromas_duf-duf_levinfo_stat.Po
+   574	    │   │   │   │   │   ├── [109848418       10829]  zocromas_duf-duf_levinfo_updown.Po
+   575	    │   │   │   │   │   ├── [109848432       10426]  zocromas_duf-duf_li_credel.Po
+   576	    │   │   │   │   │   ├── [109848459       11542]  zocromas_duf-duf_maindb_info.Po
+   577	    │   │   │   │   │   ├── [109848421       15998]  zocromas_duf-duf_maindb.Po
+   578	    │   │   │   │   │   ├── [109848549        1232]  zocromas_duf-duf_match.Po
+   579	    │   │   │   │   │   ├── [109848525       11222]  zocromas_duf-duf_option_cmd.Po
+   580	    │   │   │   │   │   ├── [109848437       11646]  zocromas_duf-duf_option_descr.Po
+   581	    │   │   │   │   │   ├── [109848450       10834]  zocromas_duf-duf_option_env.Po
+   582	    │   │   │   │   │   ├── [109848485       10456]  zocromas_duf-duf_option_extended.Po
+   583	    │   │   │   │   │   ├── [109848482       11237]  zocromas_duf-duf_option_file.Po
+   584	    │   │   │   │   │   ├── [109848491       10844]  zocromas_duf-duf_option_find.Po
+   585	    │   │   │   │   │   ├── [109848484       11821]  zocromas_duf-duf_option_help.Po
+   586	    │   │   │   │   │   ├── [109848546       12290]  zocromas_duf-duf_option_interactive.Po
+   587	    │   │   │   │   │   ├── [109848424       13054]  zocromas_duf-duf_option_misc.Po
+   588	    │   │   │   │   │   ├── [109848441       11246]  zocromas_duf-duf_option_names.Po
+   589	    │   │   │   │   │   ├── [109848498       12081]  zocromas_duf-duf_option_old.Po
+   590	    │   │   │   │   │   ├── [109848521       12012]  zocromas_duf-duf_option.Po
+   591	    │   │   │   │   │   ├── [109848496       10858]  zocromas_duf-duf_option_restore.Po
+   592	    │   │   │   │   │   ├── [109848500       12203]  zocromas_duf-duf_option_sccb.Po
+   593	    │   │   │   │   │   ├── [109848413       11188]  zocromas_duf-duf_options_cli.Po
+   594	    │   │   │   │   │   ├── [109848433       11246]  zocromas_duf-duf_options_env.Po
+   595	    │   │   │   │   │   ├── [109848427       11834]  zocromas_duf-duf_options_file.Po
+   596	    │   │   │   │   │   ├── [109848464       12688]  zocromas_duf-duf_options_interactive.Po
+   597	    │   │   │   │   │   ├── [109848504       12478]  zocromas_duf-duf_options.Po
+   598	    │   │   │   │   │   ├── [109848445       11313]  zocromas_duf-duf_options_string.Po
+   599	    │   │   │   │   │   ├── [109848431        7073]  zocromas_duf-duf_options_table.Po
+   600	    │   │   │   │   │   ├── [109848426       10930]  zocromas_duf-duf_option_tmpdb.Po
+   601	    │   │   │   │   │   ├── [109848487       12091]  zocromas_duf-duf_option_typed.Po
+   602	    │   │   │   │   │   ├── [109848493       13194]  zocromas_duf-duf_path2db.Po
+   603	    │   │   │   │   │   ├── [109848462       12718]  zocromas_duf-duf_path2dirid.Po
+   604	    │   │   │   │   │   ├── [109848502       11837]  zocromas_duf-duf_pathinfo_credel.Po
+   605	    │   │   │   │   │   ├── [109848547       11825]  zocromas_duf-duf_pathinfo_ref.Po
+   606	    │   │   │   │   │   ├── [109848479       15758]  zocromas_duf-duf_pdi_attach.Po
+   607	    │   │   │   │   │   ├── [109848534        9828]  zocromas_duf-duf_pdi_context.Po
+   608	    │   │   │   │   │   ├── [109848530       10806]  zocromas_duf-duf_pdi_credel.Po
+   609	    │   │   │   │   │   ├── [109848473       13347]  zocromas_duf-duf_pdi.Po
+   610	    │   │   │   │   │   ├── [109848520       10021]  zocromas_duf-duf_pdi_ref.Po
+   611	    │   │   │   │   │   ├── [109848529       11588]  zocromas_duf-duf_pdi_reinit.Po
+   612	    │   │   │   │   │   ├── [109848517       10922]  zocromas_duf-duf_pdi_sccb_eval.Po
+   613	    │   │   │   │   │   ├── [109848472       10730]  zocromas_duf-duf_pdi_stmt.Po
+   614	    │   │   │   │   │   ├── [109848519       11732]  zocromas_duf-duf.Po
+   615	    │   │   │   │   │   ├── [109848455       11029]  zocromas_duf-duf_prepare_actions.Po
+   616	    │   │   │   │   │   ├── [109848505       11241]  zocromas_duf-duf_printb.Po
+   617	    │   │   │   │   │   ├── [109848419       11237]  zocromas_duf-duf_print.Po
+   618	    │   │   │   │   │   ├── [109848456       10628]  zocromas_duf-duf_pstmt_levinfo.Po
+   619	    │   │   │   │   │   ├── [109848443       10957]  zocromas_duf-duf_sccb_begfin.Po
+   620	    │   │   │   │   │   ├── [109848469       12047]  zocromas_duf-duf_sccb_eval_dirs.Po
+   621	    │   │   │   │   │   ├── [109848492       10413]  zocromas_duf-duf_sccb_eval.Po
+   622	    │   │   │   │   │   ├── [109848470       10441]  zocromas_duf-duf_sccb_eval_std.Po
+   623	    │   │   │   │   │   ├── [109848465       13355]  zocromas_duf-duf_sccb_handle.Po
+   624	    │   │   │   │   │   ├── [109848447       13789]  zocromas_duf-duf_sccbh_eval.Po
+   625	    │   │   │   │   │   ├── [109848429       10601]  zocromas_duf-duf_sccb.Po
+   626	    │   │   │   │   │   ├── [109848495       13287]  zocromas_duf-duf_sel_cb_leaf.Po
+   627	    │   │   │   │   │   ├── [109848494       13104]  zocromas_duf-duf_sel_cb_node.Po
+   628	    │   │   │   │   │   ├── [109848428       11834]  zocromas_duf-duf_selector.Po
+   629	    │   │   │   │   │   ├── [109848449       11087]  zocromas_duf-duf_service.Po
+   630	    │   │   │   │   │   ├── [109848477       10997]  zocromas_duf-duf_sql_field2.Po
+   631	    │   │   │   │   │   ├── [109848541       10798]  zocromas_duf-duf_sql_field.Po
+   632	    │   │   │   │   │   ├── [109848425       10792]  zocromas_duf-duf_sqlite.Po
+   633	    │   │   │   │   │   ├── [109848468       10923]  zocromas_duf-duf_sql.Po
+   634	    │   │   │   │   │   ├── [109848471        6336]  zocromas_duf-duf_status.Po
+   635	    │   │   │   │   │   ├── [109848489       10596]  zocromas_duf-duf_sys_wrap.Po
+   636	    │   │   │   │   │   ├── [109848451       10690]  zocromas_duf-duf_tags.Po
+   637	    │   │   │   │   │   ├── [109848423        9758]  zocromas_duf-duf_trace.Po
+   638	    │   │   │   │   │   ├── [109848444       11660]  zocromas_duf-duf_ufilter_bind.Po
+   639	    │   │   │   │   │   ├── [109848509       10621]  zocromas_duf-duf_ufilter.Po
+   640	    │   │   │   │   │   ├── [109848460       10637]  zocromas_duf-duf_ufilter_ref.Po
+   641	    │   │   │   │   │   ├── [109848537       10378]  zocromas_duf-duf_utils_path.Po
+   642	    │   │   │   │   │   ├── [109848540        2976]  zocromas_duf-duf_utils.Po
+   643	    │   │   │   │   │   ├── [109848532        2821]  zocromas_duf-duf_utils_print.Po
+   644	    │   │   │   │   │   ├── [109848548       11558]  zocromas_duf-evsql_begfin.Po
+   645	    │   │   │   │   │   ├── [109848414       12037]  zocromas_duf-evsql_selector.Po
+   646	    │   │   │   │   │   ├── [109848506       13358]  zocromas_duf-mod_collect_mime_uni.Po
+   647	    │   │   │   │   │   ├── [109848515       14048]  zocromas_duf-mod_crc32_uni.Po
+   648	    │   │   │   │   │   ├── [109848439       11445]  zocromas_duf-mod_directories_uni.Po
+   649	    │   │   │   │   │   ├── [109848531       12436]  zocromas_duf-mod_dir_print_uni.Po
+   650	    │   │   │   │   │   ├── [109848442       12277]  zocromas_duf-mod_dummy_uni.Po
+   651	    │   │   │   │   │   ├── [109848551       13441]  zocromas_duf-mod_dumplet.Po
+   652	    │   │   │   │   │   ├── [109848542       15236]  zocromas_duf-mod_exif_uni.Po
+   653	    │   │   │   │   │   ├── [109848511       11607]  zocromas_duf-mod_filedata_uni.Po
+   654	    │   │   │   │   │   ├── [109848453       12350]  zocromas_duf-mod_filenames_uni.Po
+   655	    │   │   │   │   │   ├── [109848545       11078]  zocromas_duf-mod_integrity_uni.Po
+   656	    │   │   │   │   │   ├── [109848524       13635]  zocromas_duf-mod_md5_uni.Po
+   657	    │   │   │   │   │   ├── [109848475       14284]  zocromas_duf-mod_save_to.Po
+   658	    │   │   │   │   │   ├── [109848508       13635]  zocromas_duf-mod_sd5_uni.Po
+   659	    │   │   │   │   │   ├── [109848522       12850]  zocromas_duf-mod_tagit.Po
+   660	    │   │   │   │   │   ├── [109848536       11795]  zocromas_duf-mod_template_uni.Po
+   661	    │   │   │   │   │   ├── [109848486       12438]  zocromas_duf-mod_tree_print_uni.Po
+   662	    │   │   │   │   │   ├── [109848538        2671]  zocromas_duf-sql_beginning_common.Po
+   663	    │   │   │   │   │   ├── [109848440        3079]  zocromas_duf-sql_beginning_create.Po
+   664	    │   │   │   │   │   ├── [109848446        3280]  zocromas_duf-sql_beginning_selected.Po
+   665	    │   │   │   │   │   ├── [109848466        2870]  zocromas_duf-sql_beginning_tables.Po
+   666	    │   │   │   │   │   ├── [109848501        2671]  zocromas_duf-sql_beginning_vacuum.Po
+   667	    │   │   │   │   │   ├── [109848430        3274]  zocromas_duf-sql_update_selected.Po
+   668	    │   │   │   │   │   ├── [109848452       11146]  zocromas_duf-std_fieldsets.Po
+   669	    │   │   │   │   │   ├── [109848499       10593]  zocromas_duf-std_mod_sets.Po
+   670	    │   │   │   │   │   └── [109848458       11349]  zocromas_duf-std_selectors.Po
+   671	    │   │   │   │   ├── [109953131        4096]  inc
+   672	    │   │   │   │   │   └── [109848412       19996]  Makefile
+   673	    │   │   │   │   ├── [109953132        4096]  .libs
+   674	    │   │   │   │   ├── [109848368       14246]  mtest
+   675	    │   │   │   │   ├── [109848409        6088]  mtest-duftest.o
+   676	    │   │   │   │   ├── [109848298       36768]  zocromas_duf-data_optable_debug.o
+   677	    │   │   │   │   ├── [109848391       37640]  zocromas_duf-data_optable_experimental.o
+   678	    │   │   │   │   ├── [109848331       47208]  zocromas_duf-data_optable_filter.o
+   679	    │   │   │   │   ├── [109848402       40792]  zocromas_duf-data_optable_flag.o
+   680	    │   │   │   │   ├── [109848339       37640]  zocromas_duf-data_optable_flag_obsolete.o
+   681	    │   │   │   │   ├── [109848330       39344]  zocromas_duf-data_optable_format.o
+   682	    │   │   │   │   ├── [109848300       40272]  zocromas_duf-data_optable_help.o
+   683	    │   │   │   │   ├── [109848360       37072]  zocromas_duf-data_optable_info.o
+   684	    │   │   │   │   ├── [109848297       36976]  zocromas_duf-data_optable_interactive.o
+   685	    │   │   │   │   ├── [109848292       38152]  zocromas_duf-data_optable_io.o
+   686	    │   │   │   │   ├── [109848307       37456]  zocromas_duf-data_optable.o
+   687	    │   │   │   │   ├── [109848378       37328]  zocromas_duf-data_optable_redo_and_obsolete.o
+   688	    │   │   │   │   ├── [109848373       37576]  zocromas_duf-data_optable_sccb.o
+   689	    │   │   │   │   ├── [109848336       37336]  zocromas_duf-data_optable_sflag.o
+   690	    │   │   │   │   ├── [109848317       38392]  zocromas_duf-data_optable_str.o
+   691	    │   │   │   │   ├── [109848301       45800]  zocromas_duf-data_optable_trace.o
+   692	    │   │   │   │   ├── [109848318       36384]  zocromas_duf-data_optable_uplus.o
+   693	    │   │   │   │   ├── [109848394       18600]  zocromas_duf-duf_action_table.o
+   694	    │   │   │   │   ├── [109848319       53352]  zocromas_duf-duf_config.o
+   695	    │   │   │   │   ├── [109848380        6192]  zocromas_duf-duf_context.o
+   696	    │   │   │   │   ├── [109848306       34152]  zocromas_duf-duf_dbg.o
+   697	    │   │   │   │   ├── [109848334       25048]  zocromas_duf-duf_dirent.o
+   698	    │   │   │   │   ├── [109848320       60704]  zocromas_duf-duf_dirent_scan2.o
+   699	    │   │   │   │   ├── [109848353       80288]  zocromas_duf-duf_dir_scan2_stages.o
+   700	    │   │   │   │   ├── [109848400       33688]  zocromas_duf-duf_errors.o
+   701	    │   │   │   │   ├── [109848354        2680]  zocromas_duf-duf_eval_at_config.o
+   702	    │   │   │   │   ├── [109848346       72464]  zocromas_duf-duf_filedata.o
+   703	    │   │   │   │   ├── [109848379       31768]  zocromas_duf-duf_fileinfo.o
+   704	    │   │   │   │   ├── [109848383       56328]  zocromas_duf-duf_item_scan2.o
+   705	    │   │   │   │   ├── [109848296       44256]  zocromas_duf-duf_leaf_scan2.o
+   706	    │   │   │   │   ├── [109848389       12144]  zocromas_duf-duf_levinfo_context.o
+   707	    │   │   │   │   ├── [109848322       31232]  zocromas_duf-duf_levinfo_credel.o
+   708	    │   │   │   │   ├── [109848332       36256]  zocromas_duf-duf_levinfo.o
+   709	    │   │   │   │   ├── [109848315       63112]  zocromas_duf-duf_levinfo_openclose.o
+   710	    │   │   │   │   ├── [109848401       62872]  zocromas_duf-duf_levinfo_ref.o
+   711	    │   │   │   │   ├── [109848357       45136]  zocromas_duf-duf_levinfo_stat.o
+   712	    │   │   │   │   ├── [109848405       70448]  zocromas_duf-duf_levinfo_updown.o
+   713	    │   │   │   │   ├── [109848375       10240]  zocromas_duf-duf_li_credel.o
+   714	    │   │   │   │   ├── [109848341        2712]  zocromas_duf-duf_maindb_info.o
+   715	    │   │   │   │   ├── [109848404        5584]  zocromas_duf-duf_match.o
+   716	    │   │   │   │   ├── [109848291       58336]  zocromas_duf-duf.o
+   717	    │   │   │   │   ├── [109848406       60448]  zocromas_duf-duf_option_cmd.o
+   718	    │   │   │   │   ├── [109848363       41696]  zocromas_duf-duf_option_descr.o
+   719	    │   │   │   │   ├── [109848321       37720]  zocromas_duf-duf_option_extended.o
+   720	    │   │   │   │   ├── [109848333       77144]  zocromas_duf-duf_option_find.o
+   721	    │   │   │   │   ├── [109848314       33000]  zocromas_duf-duf_option_misc.o
+   722	    │   │   │   │   ├── [109848329       42968]  zocromas_duf-duf_option_names.o
+   723	    │   │   │   │   ├── [109848303       80640]  zocromas_duf-duf_option.o
+   724	    │   │   │   │   ├── [109848324       77344]  zocromas_duf-duf_option_old.o
+   725	    │   │   │   │   ├── [109848326       45416]  zocromas_duf-duf_option_sccb.o
+   726	    │   │   │   │   ├── [109848311       79752]  zocromas_duf-duf_options_cli.o
+   727	    │   │   │   │   ├── [109848344       36512]  zocromas_duf-duf_options_env.o
+   728	    │   │   │   │   ├── [109848337       85216]  zocromas_duf-duf_options_file.o
+   729	    │   │   │   │   ├── [109848299       51288]  zocromas_duf-duf_options_interactive.o
+   730	    │   │   │   │   ├── [109848369       62528]  zocromas_duf-duf_options.o
+   731	    │   │   │   │   ├── [109848392       36648]  zocromas_duf-duf_options_string.o
+   732	    │   │   │   │   ├── [109848325       25112]  zocromas_duf-duf_options_table.o
+   733	    │   │   │   │   ├── [109848295       39864]  zocromas_duf-duf_option_tmpdb.o
+   734	    │   │   │   │   ├── [109848302       48872]  zocromas_duf-duf_path2dirid.o
+   735	    │   │   │   │   ├── [109848328       35232]  zocromas_duf-duf_pathinfo_credel.o
+   736	    │   │   │   │   ├── [109848382       53440]  zocromas_duf-duf_pathinfo_ref.o
+   737	    │   │   │   │   ├── [109848367       30224]  zocromas_duf-duf_pdi_attach.o
+   738	    │   │   │   │   ├── [109848387       13128]  zocromas_duf-duf_pdi_context.o
+   739	    │   │   │   │   ├── [109848374       35504]  zocromas_duf-duf_pdi_credel.o
+   740	    │   │   │   │   ├── [109848399       68960]  zocromas_duf-duf_pdi.o
+   741	    │   │   │   │   ├── [109848376       38984]  zocromas_duf-duf_pdi_ref.o
+   742	    │   │   │   │   ├── [109848384       52832]  zocromas_duf-duf_pdi_reinit.o
+   743	    │   │   │   │   ├── [109848410       49984]  zocromas_duf-duf_pdi_sccb_eval.o
+   744	    │   │   │   │   ├── [109848393       37848]  zocromas_duf-duf_pdi_stmt.o
+   745	    │   │   │   │   ├── [109848385       60152]  zocromas_duf-duf_prepare_actions.o
+   746	    │   │   │   │   ├── [109848403       49328]  zocromas_duf-duf_print.o
+   747	    │   │   │   │   ├── [109848396       32352]  zocromas_duf-duf_pstmt_levinfo.o
+   748	    │   │   │   │   ├── [109848304       36304]  zocromas_duf-duf_sccb_begfin.o
+   749	    │   │   │   │   ├── [109848390       52392]  zocromas_duf-duf_sccb_eval_dirs.o
+   750	    │   │   │   │   ├── [109848372       46312]  zocromas_duf-duf_sccb_eval.o
+   751	    │   │   │   │   ├── [109848313       28216]  zocromas_duf-duf_sccb_eval_std.o
+   752	    │   │   │   │   ├── [109848370       63992]  zocromas_duf-duf_sccb_handle.o
+   753	    │   │   │   │   ├── [109848355       94536]  zocromas_duf-duf_sccbh_eval.o
+   754	    │   │   │   │   ├── [109848335       18560]  zocromas_duf-duf_sccb.o
+   755	    │   │   │   │   ├── [109848312       50472]  zocromas_duf-duf_sel_cb_leaf.o
+   756	    │   │   │   │   ├── [109848309       50256]  zocromas_duf-duf_sel_cb_node.o
+   757	    │   │   │   │   ├── [109848398       38224]  zocromas_duf-duf_selector.o
+   758	    │   │   │   │   ├── [109848381       30992]  zocromas_duf-duf_service.o
+   759	    │   │   │   │   ├── [109848359       39208]  zocromas_duf-duf_sql_field2.o
+   760	    │   │   │   │   ├── [109848345        6328]  zocromas_duf-duf_sql_field.o
+   761	    │   │   │   │   ├── [109848364       32696]  zocromas_duf-duf_status.o
+   762	    │   │   │   │   ├── [109848351       33416]  zocromas_duf-duf_sys_wrap.o
+   763	    │   │   │   │   ├── [109848316       63728]  zocromas_duf-duf_tags.o
+   764	    │   │   │   │   ├── [109848377       38072]  zocromas_duf-duf_trace.o
+   765	    │   │   │   │   ├── [109848294       97208]  zocromas_duf-duf_ufilter_bind.o
+   766	    │   │   │   │   ├── [109848407       12312]  zocromas_duf-duf_ufilter.o
+   767	    │   │   │   │   ├── [109848350       32104]  zocromas_duf-duf_ufilter_ref.o
+   768	    │   │   │   │   ├── [109848342       15792]  zocromas_duf-duf_utils.o
+   769	    │   │   │   │   ├── [109848290       31008]  zocromas_duf-duf_utils_path.o
+   770	    │   │   │   │   ├── [109848327       11160]  zocromas_duf-duf_utils_print.o
+   771	    │   │   │   │   ├── [109848397       53768]  zocromas_duf-evsql_begfin.o
+   772	    │   │   │   │   ├── [109848386       43800]  zocromas_duf-evsql_selector.o
+   773	    │   │   │   │   ├── [109848293       74936]  zocromas_duf-mod_collect_mime_uni.o
+   774	    │   │   │   │   ├── [109848348       71928]  zocromas_duf-mod_crc32_uni.o
+   775	    │   │   │   │   ├── [109848308       35088]  zocromas_duf-mod_directories_uni.o
+   776	    │   │   │   │   ├── [109848323       54952]  zocromas_duf-mod_dir_print_uni.o
+   777	    │   │   │   │   ├── [109848362       68064]  zocromas_duf-mod_dummy_uni.o
+   778	    │   │   │   │   ├── [109848356       76960]  zocromas_duf-mod_dumplet.o
+   779	    │   │   │   │   ├── [109848340       15904]  zocromas_duf-mod_filedata_uni.o
+   780	    │   │   │   │   ├── [109848289       51232]  zocromas_duf-mod_filenames_uni.o
+   781	    │   │   │   │   ├── [109848347       15248]  zocromas_duf-mod_integrity_uni.o
+   782	    │   │   │   │   ├── [109848358       79168]  zocromas_duf-mod_md5_uni.o
+   783	    │   │   │   │   ├── [109848349       79192]  zocromas_duf-mod_save_to.o
+   784	    │   │   │   │   ├── [109848338       78040]  zocromas_duf-mod_sd5_uni.o
+   785	    │   │   │   │   ├── [109848371       74320]  zocromas_duf-mod_tagit.o
+   786	    │   │   │   │   ├── [109848408       52968]  zocromas_duf-mod_template_uni.o
+   787	    │   │   │   │   ├── [109848365       67040]  zocromas_duf-mod_tree_print_uni.o
+   788	    │   │   │   │   ├── [109848352        3784]  zocromas_duf-sql_beginning_common.o
+   789	    │   │   │   │   ├── [109848395       15784]  zocromas_duf-sql_beginning_create.o
+   790	    │   │   │   │   ├── [109848343       10272]  zocromas_duf-sql_beginning_selected.o
+   791	    │   │   │   │   ├── [109848310        5048]  zocromas_duf-sql_beginning_tables.o
+   792	    │   │   │   │   ├── [109848361        3656]  zocromas_duf-sql_beginning_vacuum.o
+   793	    │   │   │   │   ├── [109848411       10856]  zocromas_duf-sql_update_selected.o
+   794	    │   │   │   │   ├── [109848388        8096]  zocromas_duf-std_fieldsets.o
+   795	    │   │   │   │   ├── [109848305        9328]  zocromas_duf-std_mod_sets.o
+   796	    │   │   │   │   └── [109848366        4968]  zocromas_duf-std_selectors.o
+   797	    │   │   │   └── [109848285          23]  stamp-h1
+   798	    │   │   ├── [109848281        7333]  compile
+   799	    │   │   ├── [109848283       43760]  config.guess
+   800	    │   │   ├── [109848282       36325]  config.sub
+   801	    │   │   ├── [109848277       23566]  depcomp
+   802	    │   │   ├── [109848280       14675]  install-sh
+   803	    │   │   ├── [109953134        4096]  m4
+   804	    │   │   │   ├── [109848555        6140]  lt~obsolete.m4
+   805	    │   │   │   ├── [109848552       14514]  ltoptions.m4
+   806	    │   │   │   ├── [109848553        4384]  ltsugar.m4
+   807	    │   │   │   └── [109848554         699]  ltversion.m4
+   808	    │   │   └── [109848279        6872]  missing
+   809	    │   ├── [109953139        4096]  boxes
+   810	    │   │   ├── [79038865          37]  box.com.duf -> /mnt/dav/box.com/mastarink/always/duf
+   811	    │   │   └── [79038865          43]  dropbox.com.duf -> /home/mastar/a/Dropbox/mastarink/always/duf
+   812	    │   ├── [109848253        7223]  config.h.in
+   813	    │   ├── [109953147        4096]  debug
+   814	    │   │   ├── [109848979         251]  debug_zocromas_duf.cmd
+   815	    │   │   ├── [109848977         332]  debug_zocromas_duf.cmd.tmp
+   816	    │   │   └── [109848978           6]  __.gitignore
+   817	    │   ├── [109953136        4096]  editing
+   818	    │   │   ├── [109953138          29]  gvim-funcs.vim -> ../../../files/gvim-funcs.vim
+   819	    │   │   ├── [109848560          32]  gvimrc-mastar.vim -> ../../../files/gvimrc-mastar.vim
+   820	    │   │   ├── [109848560          32]  gvim-vimenter.vim -> ../../../files/gvim-vimenter.vim
+   821	    │   │   ├── [109953137       12288]  .gvimvrb
+   822	    │   │   │   ├── [109848617        8363]  SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo
+   823	    │   │   │   ├── [109848599       32644]  SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo
+   824	    │   │   │   ├── [109848638        6900]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir
+   825	    │   │   │   ├── [109848645       11809]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo
+   826	    │   │   │   ├── [109848591        6900]  SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb
+   827	    │   │   │   ├── [109848613        4113]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir
+   828	    │   │   │   ├── [109848608       18068]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo
+   829	    │   │   │   ├── [109848622        4113]  SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb
+   830	    │   │   │   ├── [109848650       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir
+   831	    │   │   │   ├── [109848584       10962]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo
+   832	    │   │   │   ├── [109848604       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb
+   833	    │   │   │   ├── [109848589        4096]  SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir
+   834	    │   │   │   ├── [109848606        4096]  SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb
+   835	    │   │   │   ├── [109848641        3623]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir
+   836	    │   │   │   ├── [109848615       13182]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo
+   837	    │   │   │   ├── [109848587        3623]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb
+   838	    │   │   │   ├── [109848567       22009]  SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo
+   839	    │   │   │   ├── [109848649        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir
+   840	    │   │   │   ├── [109848566        9013]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo
+   841	    │   │   │   ├── [109848632        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb
+   842	    │   │   │   ├── [109848575        3874]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir
+   843	    │   │   │   ├── [109848597        7289]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo
+   844	    │   │   │   ├── [109848648        3874]  SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb
+   845	    │   │   │   ├── [109848570        1593]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir
+   846	    │   │   │   ├── [109848585       16957]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo
+   847	    │   │   │   ├── [109848573        1593]  SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb
+   848	    │   │   │   ├── [109848628       20108]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir
+   849	    │   │   │   ├── [109848642        6445]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo
+   850	    │   │   │   ├── [109848598       20108]  SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb
+   851	    │   │   │   ├── [109848576       31255]  SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo
+   852	    │   │   │   ├── [109848574       47465]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir
+   853	    │   │   │   ├── [109848602       13595]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo
+   854	    │   │   │   ├── [109848582       47465]  SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb
+   855	    │   │   │   ├── [109848633       52475]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir
+   856	    │   │   │   ├── [109848600       12866]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo
+   857	    │   │   │   ├── [109848624       52475]  SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb
+   858	    │   │   │   ├── [109848629       57344]  SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir
+   859	    │   │   │   ├── [109848565       57344]  SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb
+   860	    │   │   │   ├── [109848647        8384]  SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo
+   861	    │   │   │   ├── [109848636       12988]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir
+   862	    │   │   │   ├── [109848618        8787]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo
+   863	    │   │   │   ├── [109848609       12988]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb
+   864	    │   │   │   ├── [109848601       16632]  SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo
+   865	    │   │   │   ├── [109848607       19149]  SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo
+   866	    │   │   │   ├── [109848631       19599]  SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo
+   867	    │   │   │   ├── [109848646       36864]  SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir
+   868	    │   │   │   ├── [109848612       36864]  SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb
+   869	    │   │   │   ├── [109848572       23396]  SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo
+   870	    │   │   │   ├── [109848610       19002]  SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo
+   871	    │   │   │   ├── [109848583        3905]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir
+   872	    │   │   │   ├── [109848621        9070]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo
+   873	    │   │   │   ├── [109848568        3905]  SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb
+   874	    │   │   │   ├── [109848586         512]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir
+   875	    │   │   │   ├── [109848581       11346]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo
+   876	    │   │   │   ├── [109848578         512]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb
+   877	    │   │   │   ├── [109848603       10351]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir
+   878	    │   │   │   ├── [109848634       11491]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo
+   879	    │   │   │   ├── [109848590       10351]  SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb
+   880	    │   │   │   ├── [109848640           1]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir
+   881	    │   │   │   ├── [109848593       14402]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo
+   882	    │   │   │   ├── [109848580           1]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb
+   883	    │   │   │   ├── [109848611       28524]  SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo
+   884	    │   │   │   ├── [109848616       77824]  SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir
+   885	    │   │   │   ├── [109848569       77824]  SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb
+   886	    │   │   │   ├── [109848563       86017]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir
+   887	    │   │   │   ├── [109848623       14933]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo
+   888	    │   │   │   ├── [109848577       86017]  SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb
+   889	    │   │   │   ├── [109848627       14557]  SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo
+   890	    │   │   │   ├── [109848639        9757]  SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo
+   891	    │   │   │   ├── [109848620       17118]  SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo
+   892	    │   │   │   ├── [109848594        8192]  SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir
+   893	    │   │   │   ├── [109848564        8192]  SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb
+   894	    │   │   │   ├── [109848571       63000]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir
+   895	    │   │   │   ├── [109848643       11404]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo
+   896	    │   │   │   ├── [109848596       63000]  SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb
+   897	    │   │   │   ├── [109848592       19149]  SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo
+   898	    │   │   │   ├── [109848626       21282]  SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo
+   899	    │   │   │   ├── [109848579        8192]  SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir
+   900	    │   │   │   ├── [109848630        8192]  SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb
+   901	    │   │   │   ├── [109848595       16384]  SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir
+   902	    │   │   │   ├── [109848644       16384]  SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb
+   903	    │   │   │   ├── [109848614       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir
+   904	    │   │   │   ├── [109848614       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir
+   905	    │   │   │   ├── [109848588       28672]  SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb
+   906	    │   │   │   ├── [109848605           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir
+   907	    │   │   │   ├── [109848625       10894]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo
+   908	    │   │   │   ├── [109848651           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb
+   909	    │   │   │   ├── [109848637       25660]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo
+   910	    │   │   │   ├── [109848619       57344]  SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir
+   911	    │   │   │   └── [109848635       57344]  SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb
+   912	    │   │   ├── [109953138        4096]  mased
+   913	    │   │   │   ├── [24953760          36]  ac.mased.vim -> ../../../../files/mased/ac.mased.vim
+   914	    │   │   │   ├── [109848653         573]  cdef.mased.vim
+   915	    │   │   │   ├── [109848670         438]  m.mased.vim
+   916	    │   │   │   ├── [109848667          36]  sh.mased.vim -> ../../../../files/mased/sh.mased.vim
+   917	    │   │   │   ├── [109848665          37]  shn.mased.vim -> ../../../../files/mased/shn.mased.vim
+   918	    │   │   │   ├── [109848672         393]  srcbegfin.mased.vim
+   919	    │   │   │   ├── [109848665        1222]  srcconfig.mased.vim
+   920	    │   │   │   ├── [109848658          92]  srcevsql.mased.vim
+   921	    │   │   │   ├── [109848663         341]  srciface.mased.vim
+   922	    │   │   │   ├── [109848661         672]  srclevinfo.mased.vim
+   923	    │   │   │   ├── [109848671         644]  srclow.mased.vim
+   924	    │   │   │   ├── [109848660         633]  src.mased.vim
+   925	    │   │   │   ├── [109848654         861]  srcmod.mased.vim
+   926	    │   │   │   ├── [109848655         376]  srcpdi.mased.vim
+   927	    │   │   │   ├── [109848662         463]  srcsccb.mased.vim
+   928	    │   │   │   ├── [109848656         312]  srcsql.mased.vim
+   929	    │   │   │   ├── [109848659         370]  srctoexpire.mased.vim
+   930	    │   │   │   ├── [109848669         873]  srctypes.mased.vim
+   931	    │   │   │   ├── [109848667         149]  srcufilter.mased.vim
+   932	    │   │   │   ├── [109848664          94]  srcupath.mased.vim
+   933	    │   │   │   └── [109848656          39]  vimrc.mased.vim -> ../../../../files/mased/vimrc.mased.vim
+   934	    │   │   ├── [109848560        6981]  opened.20150531.txt
+   935	    │   │   └── [109953137          31]  vimrc-mastar.vim -> ../../../files/vimrc-mastar.vim
+   936	    │   ├── [109953140        4096]  human
+   937	    │   │   ├── [109953142        4096]  doc
+   938	    │   │   │   ├── [109848677        5819]  duf1.dia
+   939	    │   │   │   ├── [109848679        5848]  duf1.dia~
+   940	    │   │   │   ├── [109848682        6346]  duf.dia
+   941	    │   │   │   ├── [109848683        5819]  duf.dia~
+   942	    │   │   │   ├── [109848676        4185]  x1.txt
+   943	    │   │   │   ├── [109848681        1916]  x2.txt
+   944	    │   │   │   ├── [109848684        4986]  x3a1.txt
+   945	    │   │   │   ├── [109848680        4986]  x3a.txt
+   946	    │   │   │   └── [109848678        4273]  x3.txt
+   947	    │   │   ├── [109953144        4096]  examples
+   948	    │   │   │   ├── [109848694         853]  0.c
+   949	    │   │   │   ├── [109848690        1177]  1.c
+   950	    │   │   │   ├── [109848686        1177]  2.c
+   951	    │   │   │   ├── [109848692        2981]  3.c
+   952	    │   │   │   ├── [109848695        1209]  4.c
+   953	    │   │   │   ├── [109848689        1419]  configure.ac.20131026.110837
+   954	    │   │   │   ├── [109848691        2235]  example3.c
+   955	    │   │   │   ├── [109848685       26036]  exif-data.c
+   956	    │   │   │   ├── [109848688        1770]  exifthumb.c
+   957	    │   │   │   ├── [109848693        3940]  foreign-example.c
+   958	    │   │   │   └── [109848687        2384]  sqlite-func.c
+   959	    │   │   ├── [109848675           6]  __.gitignore
+   960	    │   │   ├── [109953141        4096]  results
+   961	    │   │   └── [109953143        4096]  run
+   962	    │   ├── [109953135          14]  .localrc -> ../../.localrc
+   963	    │   ├── [109953136          11]  m4zoc -> ../../m4zoc
+   964	    │   ├── [109848252       26955]  Makefile.in
+   965	    │   ├── [109953135        4096]  md5sha
+   966	    │   │   ├── [109848557       40737]  t1.html
+   967	    │   │   └── [109848556       40737]  t2.html
+   968	    │   ├── [109848256          23]  out1.cmds
+   969	    │   ├── [109848260          23]  out2.cmds
+   970	    │   ├── [109953127        4096]  sh0
+   971	    │   │   ├── [109848268          39]  build.sh
+   972	    │   │   ├── [109848276        1536]  debug_any.sh
+   973	    │   │   ├── [109848267         157]  debug_duf.sh
+   974	    │   │   ├── [109848266          65]  debug_mas_duf.cmd
+   975	    │   │   ├── [109848265         121]  findgarbage.sh
+   976	    │   │   ├── [109848271         808]  gdbcore_any.sh
+   977	    │   │   ├── [109848269          48]  grepfunexclude.txt
+   978	    │   │   ├── [109848272         551]  make.sh
+   979	    │   │   ├── [109848273         706]  run_any.sh
+   980	    │   │   ├── [109848275          94]  run_duf.sh
+   981	    │   │   ├── [109848264         596]  tarme.sh
+   982	    │   │   ├── [109848270        1295]  testdist.sh
+   983	    │   │   └── [109848274          98]  tmp.cmd
+   984	    │   ├── [109953139           9]  shn -> ../../shn
+   985	    │   ├── [109953153        4096]  shsq
+   986	    │   │   └── [109849025        2548]  libsql.bash
+   987	    │   ├── [109953145        4096]  src
+   988	    │   │   ├── [109848745        2849]  data_optable.c
+   989	    │   │   ├── [109848799        1639]  data_optable_debug.c
+   990	    │   │   ├── [109848796        3748]  data_optable_experimental.c
+   991	    │   │   ├── [109848771       16589]  data_optable_filter.c
+   992	    │   │   ├── [109848750        9181]  data_optable_flag.c
+   993	    │   │   ├── [109848706        2716]  data_optable_flag_obsolete.c
+   994	    │   │   ├── [109848731        5414]  data_optable_format.c
+   995	    │   │   ├── [109848776        5285]  data_optable_help.c
+   996	    │   │   ├── [109848755        1681]  data_optable_info.c
+   997	    │   │   ├── [109848760        2228]  data_optable_interactive.c
+   998	    │   │   ├── [109848774        3066]  data_optable_io.c
+   999	    │   │   ├── [109848779        4649]  data_optable_redo_and_obsolete.c
+  1000	    │   │   ├── [109848717        2039]  data_optable_sccb.c
+  1001	    │   │   ├── [109848737        1974]  data_optable_sflag.c
+  1002	    │   │   ├── [109848739        3354]  data_optable_str.c
+  1003	    │   │   ├── [109848707       14019]  data_optable_trace.c
+  1004	    │   │   ├── [109848712        1114]  data_optable_uplus.c
+  1005	    │   │   ├── [109848714        2814]  duf_action_table.c
+  1006	    │   │   ├── [109848816        4535]  duf.c
+  1007	    │   │   ├── [109848782       10397]  duf_config.c
+  1008	    │   │   ├── [109848825         999]  duf_context.c
+  1009	    │   │   ├── [109848765        7897]  duf_dbg.c
+  1010	    │   │   ├── [109848812       10058]  duf_dh.c
+  1011	    │   │   ├── [109848780        1600]  duf_dirent.c
+  1012	    │   │   ├── [109848802        4299]  duf_dirent_scan2.c
+  1013	    │   │   ├── [109848819        3564]  duf_dir_scan2_stages.c
+  1014	    │   │   ├── [109848792        6630]  duf_dir_scan.c.20140411
+  1015	    │   │   ├── [109848757       13868]  duf_errors.c
+  1016	    │   │   ├── [109848763        4488]  duf_eval_at_config.c
+  1017	    │   │   ├── [109848698        5157]  duf_filedata.c
+  1018	    │   │   ├── [109848758        4975]  duf_filedata.c.new
+  1019	    │   │   ├── [109848741        1939]  duf_fileinfo.c
+  1020	    │   │   ├── [109848803        4830]  duf_item_scan2.c
+  1021	    │   │   ├── [109848720        2249]  duf_leaf_scan2.c
+  1022	    │   │   ├── [109848721        4466]  duf_levinfo.c
+  1023	    │   │   ├── [109848736         757]  duf_levinfo_context.c
+  1024	    │   │   ├── [109848734        2040]  duf_levinfo_credel.c
+  1025	    │   │   ├── [109848718        5334]  duf_levinfo_openclose.c
+  1026	    │   │   ├── [109848813       17123]  duf_levinfo_ref.c
+  1027	    │   │   ├── [109848790        2525]  duf_levinfo_stat.c
+  1028	    │   │   ├── [109848806        7039]  duf_levinfo_updown.c
+  1029	    │   │   ├── [109848738        1562]  duf_li_credel.c
+  1030	    │   │   ├── [109848759       21497]  duf_maindb.c
+  1031	    │   │   ├── [109848703        9061]  duf_maindb_info.c
+  1032	    │   │   ├── [109848699        2644]  duf_match.c
+  1033	    │   │   ├── [109848781        5086]  duf_option.c
+  1034	    │   │   ├── [109848711        4844]  duf_option_cmd.c
+  1035	    │   │   ├── [109848724        3221]  duf_option_descr.c
+  1036	    │   │   ├── [109848786        2074]  duf_option_extended.c
+  1037	    │   │   ├── [109848729        7713]  duf_option_find.c
+  1038	    │   │   ├── [109848762       54818]  duf_option_help.c
+  1039	    │   │   ├── [109848805        2131]  duf_option_misc.c
+  1040	    │   │   ├── [109848747        8204]  duf_option_names.c
+  1041	    │   │   ├── [109848704       14485]  duf_option_old.c
+  1042	    │   │   ├── [109848778        8512]  duf_options.c
+  1043	    │   │   ├── [109848789        3132]  duf_option_sccb.c
+  1044	    │   │   ├── [109848722        5624]  duf_options_cli.c
+  1045	    │   │   ├── [109848817        2282]  duf_options_env.c
+  1046	    │   │   ├── [109848809        9911]  duf_options_file.c
+  1047	    │   │   ├── [109848794        4236]  duf_options_interactive.c
+  1048	    │   │   ├── [109848752        2605]  duf_options_string.c
+  1049	    │   │   ├── [109848746       10538]  duf_options_table.c
+  1050	    │   │   ├── [109848793        2040]  duf_option_tmpdb.c
+  1051	    │   │   ├── [109848769       19699]  duf_option_typed.c
+  1052	    │   │   ├── [109848798       14777]  duf_path2db.c
+  1053	    │   │   ├── [109848783        4141]  duf_path2dirid.c
+  1054	    │   │   ├── [109848742        1785]  duf_pathinfo_credel.c
+  1055	    │   │   ├── [109848727        6079]  duf_pathinfo_ref.c
+  1056	    │   │   ├── [109848709        2501]  duf_pdi_attach.c
+  1057	    │   │   ├── [109848735        8524]  duf_pdi.c
+  1058	    │   │   ├── [109848728         743]  duf_pdi_context.c
+  1059	    │   │   ├── [109848818        2677]  duf_pdi_credel.c
+  1060	    │   │   ├── [109848705        4756]  duf_pdi_ref.c
+  1061	    │   │   ├── [109848733        3581]  duf_pdi_reinit.c
+  1062	    │   │   ├── [109848820        4318]  duf_pdi_sccb_eval.c
+  1063	    │   │   ├── [109848740        3029]  duf_pdi_stmt.c
+  1064	    │   │   ├── [109848716        3480]  duf_prepare_actions.c
+  1065	    │   │   ├── [109848725       19393]  duf_printb.c
+  1066	    │   │   ├── [109848730       18739]  duf_print.c
+  1067	    │   │   ├── [109848751        1155]  duf_pstmt_levinfo.c
+  1068	    │   │   ├── [109848715        2298]  duf_sccb_begfin.c
+  1069	    │   │   ├── [109848701        2630]  duf_sccb.c
+  1070	    │   │   ├── [109848726        3099]  duf_sccb_eval.c
+  1071	    │   │   ├── [109848787        5204]  duf_sccb_eval_dirs.c
+  1072	    │   │   ├── [109848814        1952]  duf_sccb_eval_std.c
+  1073	    │   │   ├── [109848710        6448]  duf_sccb_handle.c
+  1074	    │   │   ├── [109848732        8457]  duf_sccbh_eval.c
+  1075	    │   │   ├── [109848764        4577]  duf_sel_cb_leaf.c
+  1076	    │   │   ├── [109848795        3184]  duf_sel_cb_node.c
+  1077	    │   │   ├── [109848713        1577]  duf_service.c
+  1078	    │   │   ├── [109848743       12906]  duf_sql.c
+  1079	    │   │   ├── [109848797        3167]  duf_sql_field2.c
+  1080	    │   │   ├── [109848770        1267]  duf_sql_field.c
+  1081	    │   │   ├── [109848811       21314]  duf_sqlite.c
+  1082	    │   │   ├── [109848697        3383]  duf_status.c
+  1083	    │   │   ├── [109848754         901]  duf_sys_wrap.c
+  1084	    │   │   ├── [109848788        3864]  duf_tags.c
+  1085	    │   │   ├── [109848772        1244]  duftest.c
+  1086	    │   │   ├── [109848827        5209]  duf_trace.c
+  1087	    │   │   ├── [109848700        3657]  duf_ufilter_bind.c
+  1088	    │   │   ├── [109848767        3727]  duf_ufilter.c
+  1089	    │   │   ├── [109848766        1089]  duf_ufilter_ref.c
+  1090	    │   │   ├── [109848777        6045]  duf_utils.c
+  1091	    │   │   ├── [109848702        1130]  duf_utils_path.c
+  1092	    │   │   ├── [109848773        3773]  duf_utils_print.c
+  1093	    │   │   ├── [109848753        4894]  evsql_begfin.c
+  1094	    │   │   ├── [109848696        8527]  evsql_selector.c
+  1095	    │   │   ├── [109953146        4096]  inc
+  1096	    │   │   │   ├── [109848869        1056]  duf_action_table.h
+  1097	    │   │   │   ├── [109848838         463]  duf_base_types.h
+  1098	    │   │   │   ├── [109848892        2704]  duf_cli_types.h
+  1099	    │   │   │   ├── [109848860         159]  duf_config4trace_ref.h
+  1100	    │   │   │   ├── [109848917         375]  duf_config.h
+  1101	    │   │   │   ├── [109848928         868]  duf_config_ref.h
+  1102	    │   │   │   ├── [109848839         899]  duf_config_types.h
+  1103	    │   │   │   ├── [109848951         340]  duf_context.h
+  1104	    │   │   │   ├── [109848841         324]  duf_dbg.h
+  1105	    │   │   │   ├── [109848953        2888]  duf_debug_defs.h
+  1106	    │   │   │   ├── [109848973        1251]  duf_def.h
+  1107	    │   │   │   ├── [109848945        1848]  duf_defs.h
+  1108	    │   │   │   ├── [109848948         616]  duf_dh.h
+  1109	    │   │   │   ├── [109848875         113]  duf_dirent.h
+  1110	    │   │   │   ├── [109848905         199]  duf_dirent_scan2.h
+  1111	    │   │   │   ├── [109848942         621]  duf_dir_scan2_stages.h
+  1112	    │   │   │   ├── [109848959        2727]  duf_dodefs.h
+  1113	    │   │   │   ├── [109848885        6997]  duf_error_defs.h
+  1114	    │   │   │   ├── [109848960        1036]  duf_errors.h
+  1115	    │   │   │   ├── [109848896        1740]  duf_error_types.h
+  1116	    │   │   │   ├── [109848858         189]  duf_eval_at_config.h
+  1117	    │   │   │   ├── [109848881         360]  duf_filedata.h
+  1118	    │   │   │   ├── [109848962         182]  duf_fileinfo.h
+  1119	    │   │   │   ├── [109848842         684]  duf_fileinfo_types.h
+  1120	    │   │   │   ├── [109848886        1952]  duf_flags_types.h
+  1121	    │   │   │   ├── [109848871        1991]  duf_format_types.h
+  1122	    │   │   │   ├── [109848878         655]  duf_fun_types.h
+  1123	    │   │   │   ├── [109848941        2166]  duf.h
+  1124	    │   │   │   ├── [109848876        4596]  duf_hook_types.h
+  1125	    │   │   │   ├── [109848863         324]  duf_item_scan2.h
+  1126	    │   │   │   ├── [109848895         201]  duf_item_types.h
+  1127	    │   │   │   ├── [109848932         247]  duf_leaf_scan2.h
+  1128	    │   │   │   ├── [109848834         259]  duf_levinfo_context.h
+  1129	    │   │   │   ├── [109848915         245]  duf_levinfo_credel.h
+  1130	    │   │   │   ├── [109848861         664]  duf_levinfo.h
+  1131	    │   │   │   ├── [109848900        1060]  duf_levinfo_openclose.h
+  1132	    │   │   │   ├── [109848837        6623]  duf_levinfo_ref_def.h
+  1133	    │   │   │   ├── [109848899        7017]  duf_levinfo_ref.h
+  1134	    │   │   │   ├── [109848925         448]  duf_levinfo_stat.h
+  1135	    │   │   │   ├── [109848949        2394]  duf_levinfo_types.h
+  1136	    │   │   │   ├── [109848874         433]  duf_levinfo_updown.h
+  1137	    │   │   │   ├── [109848856         176]  duf_li_credel.h
+  1138	    │   │   │   ├── [109848883         326]  duf_maindb.h
+  1139	    │   │   │   ├── [109848857         134]  duf_maindb_info.h
+  1140	    │   │   │   ├── [109848969         331]  duf_maintenance.h
+  1141	    │   │   │   ├── [109848898         373]  duf_match.h
+  1142	    │   │   │   ├── [109848866        1453]  duf_mod_defs.h
+  1143	    │   │   │   ├── [109848888        4729]  duf_optable_def.h
+  1144	    │   │   │   ├── [109848927         492]  duf_option_cmd.h
+  1145	    │   │   │   ├── [109848836        2953]  duf_option_defs.h
+  1146	    │   │   │   ├── [109848893         733]  duf_option_descr.h
+  1147	    │   │   │   ├── [109848963         550]  duf_option_extended.h
+  1148	    │   │   │   ├── [109848943         823]  duf_option_find.h
+  1149	    │   │   │   ├── [109848859         547]  duf_option.h
+  1150	    │   │   │   ├── [109848975         596]  duf_option_help.h
+  1151	    │   │   │   ├── [109848846         362]  duf_option_misc.h
+  1152	    │   │   │   ├── [109848872        1478]  duf_option_names.h
+  1153	    │   │   │   ├── [109848919         290]  duf_option_old.h
+  1154	    │   │   │   ├── [109848970         326]  duf_option_sccb.h
+  1155	    │   │   │   ├── [109848889         202]  duf_options_cli.h
+  1156	    │   │   │   ├── [109848966        9236]  duf_options_enum.h
+  1157	    │   │   │   ├── [109848848         206]  duf_options_env.h
+  1158	    │   │   │   ├── [109848907         725]  duf_options_file.h
+  1159	    │   │   │   ├── [109848956         246]  duf_options.h
+  1160	    │   │   │   ├── [109848922         187]  duf_options_interactive.h
+  1161	    │   │   │   ├── [109848845         217]  duf_options_string.h
+  1162	    │   │   │   ├── [109848877         177]  duf_option_tmpdb.h
+  1163	    │   │   │   ├── [109848913        3975]  duf_option_typed_defs.h
+  1164	    │   │   │   ├── [109848843         272]  duf_option_typed.h
+  1165	    │   │   │   ├── [109848844        5177]  duf_option_types.h
+  1166	    │   │   │   ├── [109848940         389]  duf_path2db.h
+  1167	    │   │   │   ├── [109848935         192]  duf_path2dirid.h
+  1168	    │   │   │   ├── [109848880         337]  duf_pathinfo_credel.h
+  1169	    │   │   │   ├── [109848936        6236]  duf_pathinfo_ref_def.h
+  1170	    │   │   │   ├── [109848911        7835]  duf_pathinfo_ref.h
+  1171	    │   │   │   ├── [109848933         550]  duf_pdi_attach.h
+  1172	    │   │   │   ├── [109848929         301]  duf_pdi_context.h
+  1173	    │   │   │   ├── [109848831         372]  duf_pdi_credel.h
+  1174	    │   │   │   ├── [109848873         706]  duf_pdi.h
+  1175	    │   │   │   ├── [109848923        1505]  duf_pdi_ref.h
+  1176	    │   │   │   ├── [109848829         709]  duf_pdi_reinit.h
+  1177	    │   │   │   ├── [109848950        1278]  duf_pdi_sccb_eval.h
+  1178	    │   │   │   ├── [109848938         417]  duf_pdi_stmt.h
+  1179	    │   │   │   ├── [109848903         226]  duf_pdi_types.h
+  1180	    │   │   │   ├── [109848890         344]  duf_prepare_actions.h
+  1181	    │   │   │   ├── [109848934         415]  duf_printb.h
+  1182	    │   │   │   ├── [109848868        2475]  duf_print_defs.h
+  1183	    │   │   │   ├── [109848952         591]  duf_print.h
+  1184	    │   │   │   ├── [109848926         174]  duf_pstmt_levinfo.h
+  1185	    │   │   │   ├── [109848882         899]  duf_record_types.h
+  1186	    │   │   │   ├── [109848912         660]  duf_scan_types.h
+  1187	    │   │   │   ├── [109848853         364]  duf_sccb_begfin.h
+  1188	    │   │   │   ├── [109848930         479]  duf_sccb_def.h
+  1189	    │   │   │   ├── [109848968         231]  duf_sccb_eval_dirs.h
+  1190	    │   │   │   ├── [109848902         680]  duf_sccb_eval.h
+  1191	    │   │   │   ├── [109848849        1005]  duf_sccb_eval_std.h
+  1192	    │   │   │   ├── [109848906         539]  duf_sccb.h
+  1193	    │   │   │   ├── [109848891         486]  duf_sccb_handle.h
+  1194	    │   │   │   ├── [109848920         780]  duf_sccbh_eval.h
+  1195	    │   │   │   ├── [109848955         388]  duf_sccbh_shortcuts.h
+  1196	    │   │   │   ├── [109848914         164]  duf_sel_cb_leaf.h
+  1197	    │   │   │   ├── [109848947         164]  duf_sel_cb_node.h
+  1198	    │   │   │   ├── [109848964         258]  duf_service.h
+  1199	    │   │   │   ├── [109848865         940]  duf_sql1.h
+  1200	    │   │   │   ├── [109848974        5645]  duf_sql2.h
+  1201	    │   │   │   ├── [109848870        8609]  duf_sql_const.h
+  1202	    │   │   │   ├── [109848904        2420]  duf_sql_defs.h
+  1203	    │   │   │   ├── [109848850         596]  duf_sql_field2.h
+  1204	    │   │   │   ├── [109848840         339]  duf_sql_field.h
+  1205	    │   │   │   ├── [109848864         443]  duf_sql.h
+  1206	    │   │   │   ├── [109848931        9130]  duf_sqlite.h
+  1207	    │   │   │   ├── [109848937         229]  duf_sql_types.h
+  1208	    │   │   │   ├── [109848884        1873]  duf_start_end.h
+  1209	    │   │   │   ├── [109848894         357]  duf_status.h
+  1210	    │   │   │   ├── [109848910         136]  duf_status_ref.h
+  1211	    │   │   │   ├── [109848921         803]  duf_status_types.h
+  1212	    │   │   │   ├── [109848909         101]  duf_sys_wrap.h
+  1213	    │   │   │   ├── [109848944         186]  duf_tags.h
+  1214	    │   │   │   ├── [109848971        2733]  duf_trace_defs_base.h
+  1215	    │   │   │   ├── [109848916         796]  duf_trace_defs.h
+  1216	    │   │   │   ├── [109848854        2399]  duf_trace_defs_if.h
+  1217	    │   │   │   ├── [109848867         292]  duf_trace_defs_sys.h
+  1218	    │   │   │   ├── [109848918         878]  duf_trace_defs_what.h
+  1219	    │   │   │   ├── [109848967        1002]  duf_trace.h
+  1220	    │   │   │   ├── [109848958        1573]  duf_trace_types.h
+  1221	    │   │   │   ├── [109848835         187]  duf_ufilter_bind.h
+  1222	    │   │   │   ├── [109848908         295]  duf_ufilter.h
+  1223	    │   │   │   ├── [109848832         224]  duf_ufilter_ref.h
+  1224	    │   │   │   ├── [109848833        1987]  duf_ufilter_types.h
+  1225	    │   │   │   ├── [109848954         780]  duf_utils.h
+  1226	    │   │   │   ├── [109848957         159]  duf_utils_path.h
+  1227	    │   │   │   ├── [109848901         634]  duf_utils_print.h
+  1228	    │   │   │   ├── [109848972        1371]  evsql_begfin.h
+  1229	    │   │   │   ├── [109848946         308]  evsql_selector.h
+  1230	    │   │   │   ├── [109848976        2918]  Makefile.am
+  1231	    │   │   │   ├── [109848830       18328]  Makefile.in
+  1232	    │   │   │   ├── [109848939         436]  mod_exif.h
+  1233	    │   │   │   ├── [109848887         156]  sql_beginning_common.h
+  1234	    │   │   │   ├── [109848961         205]  sql_beginning_create.h
+  1235	    │   │   │   ├── [109848852        4718]  sql_beginning_selected.h
+  1236	    │   │   │   ├── [109848965         190]  sql_beginning_tables.h
+  1237	    │   │   │   ├── [109848879         424]  sql_beginning_types.h
+  1238	    │   │   │   ├── [109848924         156]  sql_beginning_vacuum.h
+  1239	    │   │   │   ├── [109848847        2060]  sql_selected_defs.h
+  1240	    │   │   │   ├── [109848862        4386]  sql_tables_defs.h
+  1241	    │   │   │   ├── [109848851          97]  std_fieldsets.h
+  1242	    │   │   │   ├── [109848897         367]  std_mod_sets.h
+  1243	    │   │   │   └── [109848855          97]  std_selectors.h
+  1244	    │   │   ├── [109848824        3694]  Makefile.am
+  1245	    │   │   ├── [109848822       11404]  mod_collect_mime_uni.c
+  1246	    │   │   ├── [109848828       10755]  mod_crc32_uni.c
+  1247	    │   │   ├── [109848785        9617]  mod_directories_uni.c
+  1248	    │   │   ├── [109848807        9192]  mod_dir_print_uni.c
+  1249	    │   │   ├── [109848808        9937]  mod_dummy_uni.c
+  1250	    │   │   ├── [109848744        7973]  mod_dumplet.c
+  1251	    │   │   ├── [109848749       32368]  mod_exif_uni.c
+  1252	    │   │   ├── [109848748        9070]  mod_filedata_uni.c
+  1253	    │   │   ├── [109848823        5599]  mod_filenames_uni.c
+  1254	    │   │   ├── [109848723        4172]  mod_integrity_uni.c
+  1255	    │   │   ├── [109848756       13209]  mod_md5_uni.c
+  1256	    │   │   ├── [109848821        9854]  mod_save_to.c
+  1257	    │   │   ├── [109848804       10993]  mod_sd5_uni.c
+  1258	    │   │   ├── [109848768        9320]  mod_tagit.c
+  1259	    │   │   ├── [109848801        6607]  mod_template_uni.c
+  1260	    │   │   ├── [109848815       13563]  mod_tree_print_uni.c
+  1261	    │   │   ├── [109848708         496]  sql_beginning_common.c
+  1262	    │   │   ├── [109848800       24982]  sql_beginning_create.c
+  1263	    │   │   ├── [109848810        6173]  sql_beginning_selected.c
+  1264	    │   │   ├── [109848784        3520]  sql_beginning_tables.c
+  1265	    │   │   ├── [109848719         385]  sql_beginning_vacuum.c
+  1266	    │   │   ├── [109848791        6770]  sql_update_selected.c
+  1267	    │   │   ├── [109848775       14155]  std_fieldsets.c
+  1268	    │   │   ├── [109848761        7551]  std_mod_sets.c
+  1269	    │   │   └── [109848826        2325]  std_selectors.c
+  1270	    │   ├── [109953149        4096]  test
+  1271	    │   │   ├── [109848983         737]  DCEMAIL.ABK.locate
+  1272	    │   │   ├── [109953150        4096]  duf
+  1273	    │   │   │   ├── [109953151        4096]  20150602
+  1274	    │   │   │   │   ├── [109849020           5]  out20150602.131822.test.0
+  1275	    │   │   │   │   ├── [109849014       17086]  out20150602.131822.test.1.1
+  1276	    │   │   │   │   ├── [109849011        6376]  out20150602.131822.test.2
+  1277	    │   │   │   │   ├── [109849013        1505]  out20150602.131822.test.4
+  1278	    │   │   │   │   ├── [109849001         992]  out20150602.131822.test.5
+  1279	    │   │   │   │   ├── [109849005         834]  out20150602.131822.test.6
+  1280	    │   │   │   │   ├── [109849018         792]  out20150602.131822.test.7
+  1281	    │   │   │   │   ├── [109849002         123]  out20150602.131822.test.ca1
+  1282	    │   │   │   │   ├── [109849007           4]  out20150602.131822.test.creadd
+  1283	    │   │   │   │   ├── [109849012       20485]  out20150602.131822.test.log
+  1284	    │   │   │   │   ├── [109849019           1]  out20150602.131822.test.sql1
+  1285	    │   │   │   │   ├── [109849023           5]  out20150602.134103.test.0
+  1286	    │   │   │   │   ├── [109849004         123]  out20150602.134103.test.1
+  1287	    │   │   │   │   ├── [109849010         123]  out20150602.134103.test.1.1
+  1288	    │   │   │   │   ├── [109849021         123]  out20150602.134103.test.2
+  1289	    │   │   │   │   ├── [109849017         123]  out20150602.134103.test.3
+  1290	    │   │   │   │   ├── [109849016         123]  out20150602.134103.test.4
+  1291	    │   │   │   │   ├── [109849008         123]  out20150602.134103.test.5
+  1292	    │   │   │   │   ├── [109849006         123]  out20150602.134103.test.6
+  1293	    │   │   │   │   ├── [109849015         123]  out20150602.134103.test.7
+  1294	    │   │   │   │   ├── [109849022         123]  out20150602.134103.test.ca1
+  1295	    │   │   │   │   ├── [109849009           4]  out20150602.134103.test.creadd
+  1296	    │   │   │   │   └── [109849003           1]  out20150602.134103.test.sql1
+  1297	    │   │   │   ├── [109848988          28]  __.gitignore
+  1298	    │   │   │   ├── [109848993           5]  good.test.0
+  1299	    │   │   │   ├── [109848989       20074]  good.test.1.1
+  1300	    │   │   │   ├── [109848986        1264]  good.test.2
+  1301	    │   │   │   ├── [109848996        1904]  good.test.4
+  1302	    │   │   │   ├── [109848992        1231]  good.test.5
+  1303	    │   │   │   ├── [109848995        1124]  good.test.6
+  1304	    │   │   │   ├── [109848998         974]  good.test.7
+  1305	    │   │   │   ├── [109848997        3701]  good.test.8
+  1306	    │   │   │   ├── [109848999        2236]  good.test.ca1
+  1307	    │   │   │   ├── [109848991           4]  good.test.creadd
+  1308	    │   │   │   ├── [109848994         302]  good.test.sql1
+  1309	    │   │   │   ├── [109848990           0]  temp.db
+  1310	    │   │   │   ├── [109848987         694]  test_set1.txt
+  1311	    │   │   │   └── [109849000         522]  zocromas_duf.conf
+  1312	    │   │   ├── [109848984           9]  __.gitignore
+  1313	    │   │   ├── [109953152        4096]  sh
+  1314	    │   │   │   └── [109849024        8892]  test20140907.113444.sh
+  1315	    │   │   ├── [109848982        1774]  test.sh
+  1316	    │   │   └── [109848985        3206]  test.txt
+  1317	    │   ├── [109848261         793]  test02.cmds
+  1318	    │   ├── [109848255        1256]  test-history.txt
+  1319	    │   ├── [109953154        4096]  tmp
+  1320	    │   ├── [109953139          24]  zocvdate.txt -> ../../files/zocvdate.txt
+  1321	    │   └── [109953149          26]  zocversion.txt -> ../../files/zocversion.txt
+  1322	    ├── [109953158          24]  zocvdate.txt -> ../../files/zocvdate.txt
+  1323	    └── [109953168          26]  zocversion.txt -> ../../files/zocversion.txt
+       
+  1324	55 directories, 1267 files

@@ -1,4 +1,4 @@
-   1	[109953122        4096]  mastest
+   1	mastest
    2	└── [109953123        4096]  tree
    3	    ├── [109847862       26955]  Makefile.in
    4	    ├── [109953124        4096]  sh0
@@ -19,7 +19,7 @@
   19	    ├── [109953125        4096]  md5sha
   20	    │   ├── [109848250       40737]  t2.html
   21	    │   └── [109848251       40737]  t1.html
-  22	    ├── [109848227          14]  .localrc
+  22	    ├── [108794933          14]  .localrc -> ../../.localrc
   23	    ├── [109953126        4096]  tree.r
   24	    │   ├── [109848252       26955]  Makefile.in
   25	    │   ├── [109953127        4096]  sh0
@@ -326,7 +326,7 @@
  326	    │   ├── [109953135        4096]  md5sha
  327	    │   │   ├── [109848556       40737]  t2.html
  328	    │   │   └── [109848557       40737]  t1.html
- 329	    │   ├── [109848254          14]  .localrc
+ 329	    │   ├── [109953135          14]  .localrc -> ../../.localrc
  330	    │   ├── [109848255        1256]  test-history.txt
  331	    │   ├── [109848256          23]  out1.cmds
  332	    │   ├── [109953136        4096]  editing
@@ -421,14 +421,14 @@
  421	    │   │   │   ├── [109848649        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir
  422	    │   │   │   ├── [109848650       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir
  423	    │   │   │   └── [109848651           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb
- 424	    │   │   ├── [109848558          31]  vimrc-mastar.vim
+ 424	    │   │   ├── [109953137          31]  vimrc-mastar.vim -> ../../../files/vimrc-mastar.vim
  425	    │   │   ├── [109953138        4096]  mased
- 426	    │   │   │   ├── [109848652          36]  ac.mased.vim
+ 426	    │   │   │   ├── [13263120          36]  ac.mased.vim -> ../../../../files/mased/ac.mased.vim
  427	    │   │   │   ├── [109848653         573]  cdef.mased.vim
  428	    │   │   │   ├── [109848654         861]  srcmod.mased.vim
  429	    │   │   │   ├── [109848655         376]  srcpdi.mased.vim
  430	    │   │   │   ├── [109848656         312]  srcsql.mased.vim
- 431	    │   │   │   ├── [109848657          39]  vimrc.mased.vim
+ 431	    │   │   │   ├── [109848656          39]  vimrc.mased.vim -> ../../../../files/mased/vimrc.mased.vim
  432	    │   │   │   ├── [109848658          92]  srcevsql.mased.vim
  433	    │   │   │   ├── [109848659         370]  srctoexpire.mased.vim
  434	    │   │   │   ├── [109848660         633]  src.mased.vim
@@ -437,23 +437,23 @@
  437	    │   │   │   ├── [109848663         341]  srciface.mased.vim
  438	    │   │   │   ├── [109848664          94]  srcupath.mased.vim
  439	    │   │   │   ├── [109848665        1222]  srcconfig.mased.vim
- 440	    │   │   │   ├── [109848666          37]  shn.mased.vim
+ 440	    │   │   │   ├── [109848665          37]  shn.mased.vim -> ../../../../files/mased/shn.mased.vim
  441	    │   │   │   ├── [109848667         149]  srcufilter.mased.vim
- 442	    │   │   │   ├── [109848668          36]  sh.mased.vim
+ 442	    │   │   │   ├── [109848667          36]  sh.mased.vim -> ../../../../files/mased/sh.mased.vim
  443	    │   │   │   ├── [109848669         873]  srctypes.mased.vim
  444	    │   │   │   ├── [109848670         438]  m.mased.vim
  445	    │   │   │   ├── [109848671         644]  srclow.mased.vim
  446	    │   │   │   └── [109848672         393]  srcbegfin.mased.vim
- 447	    │   │   ├── [109848559          29]  gvim-funcs.vim
+ 447	    │   │   ├── [109953138          29]  gvim-funcs.vim -> ../../../files/gvim-funcs.vim
  448	    │   │   ├── [109848560        6981]  opened.20150531.txt
- 449	    │   │   ├── [109848561          32]  gvim-vimenter.vim
- 450	    │   │   └── [109848562          32]  gvimrc-mastar.vim
- 451	    │   ├── [109848257          11]  m4zoc
+ 449	    │   │   ├── [109848560          32]  gvim-vimenter.vim -> ../../../files/gvim-vimenter.vim
+ 450	    │   │   └── [109848560          32]  gvimrc-mastar.vim -> ../../../files/gvimrc-mastar.vim
+ 451	    │   ├── [109953136          11]  m4zoc -> ../../m4zoc
  452	    │   ├── [109953139        4096]  boxes
- 453	    │   │   ├── [109848673          43]  dropbox.com.duf
- 454	    │   │   └── [109848674          37]  box.com.duf
- 455	    │   ├── [109848258          24]  zocvdate.txt
- 456	    │   ├── [109848259           9]  shn
+ 453	    │   │   ├── [79038865          43]  dropbox.com.duf -> /home/mastar/a/Dropbox/mastarink/always/duf
+ 454	    │   │   └── [79038865          37]  box.com.duf -> /mnt/dav/box.com/mastarink/always/duf
+ 455	    │   ├── [109953139          24]  zocvdate.txt -> ../../files/zocvdate.txt
+ 456	    │   ├── [109953139           9]  shn -> ../../shn
  457	    │   ├── [109953140        4096]  human
  458	    │   │   ├── [109848675           6]  __.gitignore
  459	    │   │   ├── [109953141        4096]  results
@@ -819,7 +819,7 @@
  819	    │   │   ├── [109848985        3206]  test.txt
  820	    │   │   └── [109953152        4096]  sh
  821	    │   │       └── [109849024        8892]  test20140907.113444.sh
- 822	    │   ├── [109848262          26]  zocversion.txt
+ 822	    │   ├── [109953149          26]  zocversion.txt -> ../../files/zocversion.txt
  823	    │   ├── [109953153        4096]  shsq
  824	    │   │   └── [109849025        2548]  libsql.bash
  825	    │   ├── [109953154        4096]  tmp
@@ -918,14 +918,14 @@
  918	    │   │   ├── [109849117        6276]  SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir
  919	    │   │   ├── [109849118       67809]  SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir
  920	    │   │   └── [109849119           1]  SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb
- 921	    │   ├── [109849026          31]  vimrc-mastar.vim
+ 921	    │   ├── [109953156          31]  vimrc-mastar.vim -> ../../../files/vimrc-mastar.vim
  922	    │   ├── [109953157        4096]  mased
- 923	    │   │   ├── [109849120          36]  ac.mased.vim
+ 923	    │   │   ├── [13251824          36]  ac.mased.vim -> ../../../../files/mased/ac.mased.vim
  924	    │   │   ├── [109849121         573]  cdef.mased.vim
  925	    │   │   ├── [109849122         861]  srcmod.mased.vim
  926	    │   │   ├── [109849123         376]  srcpdi.mased.vim
  927	    │   │   ├── [109849124         312]  srcsql.mased.vim
- 928	    │   │   ├── [109849125          39]  vimrc.mased.vim
+ 928	    │   │   ├── [109849124          39]  vimrc.mased.vim -> ../../../../files/mased/vimrc.mased.vim
  929	    │   │   ├── [109849126          92]  srcevsql.mased.vim
  930	    │   │   ├── [109849127         370]  srctoexpire.mased.vim
  931	    │   │   ├── [109849128         633]  src.mased.vim
@@ -934,23 +934,23 @@
  934	    │   │   ├── [109849131         341]  srciface.mased.vim
  935	    │   │   ├── [109849132          94]  srcupath.mased.vim
  936	    │   │   ├── [109849133        1222]  srcconfig.mased.vim
- 937	    │   │   ├── [109849134          37]  shn.mased.vim
+ 937	    │   │   ├── [109849133          37]  shn.mased.vim -> ../../../../files/mased/shn.mased.vim
  938	    │   │   ├── [109849135         149]  srcufilter.mased.vim
- 939	    │   │   ├── [109849136          36]  sh.mased.vim
+ 939	    │   │   ├── [109849135          36]  sh.mased.vim -> ../../../../files/mased/sh.mased.vim
  940	    │   │   ├── [109849137         873]  srctypes.mased.vim
  941	    │   │   ├── [109849138         438]  m.mased.vim
  942	    │   │   ├── [109849139         644]  srclow.mased.vim
  943	    │   │   └── [109849140         393]  srcbegfin.mased.vim
- 944	    │   ├── [109849027          29]  gvim-funcs.vim
+ 944	    │   ├── [109953157          29]  gvim-funcs.vim -> ../../../files/gvim-funcs.vim
  945	    │   ├── [109849028        6981]  opened.20150531.txt
- 946	    │   ├── [109849029          32]  gvim-vimenter.vim
- 947	    │   └── [109849030          32]  gvimrc-mastar.vim
- 948	    ├── [109848230          11]  m4zoc
+ 946	    │   ├── [109849028          32]  gvim-vimenter.vim -> ../../../files/gvim-vimenter.vim
+ 947	    │   └── [109849028          32]  gvimrc-mastar.vim -> ../../../files/gvimrc-mastar.vim
+ 948	    ├── [108792945          11]  m4zoc -> ../../m4zoc
  949	    ├── [109953158        4096]  boxes
- 950	    │   ├── [109849141          43]  dropbox.com.duf
- 951	    │   └── [109849142          37]  box.com.duf
- 952	    ├── [109848231          24]  zocvdate.txt
- 953	    ├── [109848232           9]  shn
+ 950	    │   ├── [79038865          43]  dropbox.com.duf -> /home/mastar/a/Dropbox/mastarink/always/duf
+ 951	    │   └── [79038865          37]  box.com.duf -> /mnt/dav/box.com/mastarink/always/duf
+ 952	    ├── [109953158          24]  zocvdate.txt -> ../../files/zocvdate.txt
+ 953	    ├── [108793164           9]  shn -> ../../shn
  954	    ├── [109953159        4096]  human
  955	    │   ├── [109849143           6]  __.gitignore
  956	    │   ├── [109953160        4096]  results
@@ -1316,8 +1316,10 @@
 1316	    │   ├── [109849453        3206]  test.txt
 1317	    │   └── [109953171        4096]  sh
 1318	    │       └── [109849492        8892]  test20140907.113444.sh
-1319	    ├── [109848235          26]  zocversion.txt
+1319	    ├── [109953168          26]  zocversion.txt -> ../../files/zocversion.txt
 1320	    ├── [109953172        4096]  shsq
 1321	    │   └── [109849493        2548]  libsql.bash
 1322	    ├── [109953173        4096]  tmp
 1323	    └── [109848236       60322]  aclocal.m4
+1324	
+1325	55 directories, 1267 files
