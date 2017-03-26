@@ -8,9 +8,7 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_structs.h" */
 
-#include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 

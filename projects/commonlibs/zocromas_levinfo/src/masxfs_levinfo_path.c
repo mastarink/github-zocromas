@@ -5,15 +5,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-/* #include <unistd.h> */
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_structs.h" */
 
-/* #include "masxfs_levinfo_tools.h" */
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_tools.h"
 
@@ -96,7 +92,7 @@ masxfs_levinfo_path2lia( const char *path, masxfs_depth_t depth_limit, masxfs_de
       /* masxfs_entry_type_t de_type = MASXFS_ENTRY_UNKNOWN_NUM; */
 
         masxfs_levinfo_n_init( levinfo + levinfo_depth, levinfo_depth, ptok, len, de_type /*, 0 */ , 0, NULL );
-        /* levinfo[levinfo_depth].fixed = 1; */
+      /* levinfo[levinfo_depth].fixed = 1; */
         levinfo_depth++;
         ptok = ntok;
       }

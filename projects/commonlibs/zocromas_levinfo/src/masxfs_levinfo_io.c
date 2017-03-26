@@ -2,24 +2,15 @@
 #include "masxfs_levinfo_defs.h"
 /* #include <stdio.h> */
 #include <string.h>
-/* #include <errno.h> */
-
-/* #include <unistd.h> */
-/* #include <sys/types.h> */
-/* #include <sys/stat.h> */
-/* #include <fcntl.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-#include "masxfs_levinfo_mode.h"
-
-/* #include "masxfs_levinfo_tools.h" */
-/* #include "masxfs_levinfo_ref.h" */
 
 #include "masxfs_levinfo_db.h"
 #include "masxfs_levinfo_fs.h"
+
 #include "masxfs_levinfo_io.h"
 
 static int _uUu_

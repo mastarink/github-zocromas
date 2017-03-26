@@ -1,5 +1,4 @@
 #define R_GOOD(_r) ((_r)>=0)
-#include <mastar/qstd/qstd_defs.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -10,23 +9,13 @@
 #include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
 
-#include <mastar/masxfs/masxfs_types.h>
-/* #include <mastar/masxfs/masxfs_structs.h> */
-
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-/* #include <mastar/qstd/qstd_structs.h> */
 #include <mastar/qstd/qstd_mstmt_base.h>
-/* #include <mastar/qstd/qstd_mstmt.h> */
-#include <mastar/qstd/qstd_mstmt_parents.h>
-#include <mastar/qstd/qstd_mstmt_names.h>
-#include <mastar/qstd/qstd_mstmt_sizes.h>
-#include <mastar/qstd/qstd_mstmt_datas.h>
-#include <mastar/qstd/qstd_mstmt_props.h>
 
 static int numline_treecb = 0;
 static int _uUu_
@@ -64,8 +53,7 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {                                                                /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */
-     treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
     {NULL}
   };
   WARN( "******** testtreefromfs *******" );

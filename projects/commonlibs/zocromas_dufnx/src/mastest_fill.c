@@ -1,5 +1,4 @@
 #define R_GOOD(_r) ((_r)>=0)
-#include <mastar/qstd/qstd_defs.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -10,9 +9,6 @@
 #include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
 
-#include <mastar/masxfs/masxfs_types.h>
-/* #include <mastar/masxfs/masxfs_structs.h> */
-
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
@@ -20,7 +16,6 @@
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-/* #include <mastar/qstd/qstd_structs.h> */
 #include <mastar/qstd/qstd_mstmt_base.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
@@ -59,7 +54,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
         mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetype, stat );
       }
     }
-    /* WARN( "D%d; %lld: '%s'", li->lidepth, parent_id, ename ); */
+  /* WARN( "D%d; %lld: '%s'", li->lidepth, parent_id, ename ); */
     {
       unsigned long long theid = 0;
       masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, flags );
@@ -121,11 +116,10 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 int
 testfill( const char *path, masxfs_depth_t maxdepth )
 {
-  rDECL( 0 );
+  rDECLBAD;
 
   masxfs_entry_callback_t callbacks[] = {
-    { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ testfillcb,
-     .flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
+    {testfillcb,.flags = MASXFS_CB_NAME /* | MASXFS_CB_PATH */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ treecb,
        .flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
     , {NULL}
@@ -134,8 +128,6 @@ testfill( const char *path, masxfs_depth_t maxdepth )
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
-  /* mas_qstd_drop_tables( qstd ); */
-  /* mas_qstd_create_tables( qstd ); */
     {
     /* const char *path0 = "mastest"; */
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */

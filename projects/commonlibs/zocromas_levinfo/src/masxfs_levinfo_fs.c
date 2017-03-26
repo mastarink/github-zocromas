@@ -13,10 +13,8 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_levinfo_mode.h" */
 
 #include "masxfs_levinfo_tools.h"
-#include "masxfs_levinfo_ref.h"
 
 #include "masxfs_levinfo_fs.h"
 

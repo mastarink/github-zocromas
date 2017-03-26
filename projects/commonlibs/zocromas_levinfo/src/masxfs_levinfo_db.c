@@ -1,14 +1,8 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
-/* #include <stdio.h> */
 #include <string.h>
-/* #include <errno.h> */
-/* #include <sys/types.h> */
-/* #include <sys/stat.h> */
-/* #include <unistd.h> */
 
 #include <unistd.h>
-/* #include <sys/types.h> */
 #include <sys/stat.h>
 #include <fcntl.h>
 
@@ -16,25 +10,15 @@
 #include <mastar/minierr/minierr.h>
 
 #include <mastar/qstd/qstd_defs.h>
-#include <mastar/qstd/qstd_types.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
-/* #include <mastar/qstd/qstd_mstmt_sizes.h>   */
-/* #include <mastar/qstd/qstd_mstmt_datas.h>   */
-/* #include <mastar/qstd/qstd_mstmt_props.h>   */
-/* #include <mastar/qstd/qstd_mstmt_names.h>   */
-/* #include <mastar/qstd/qstd_mstmt_parents.h> */
 #include <mastar/qstd/qstd_mstmt_nodes.h>
 
 #include "masxfs_levinfo_structs.h"
-#include "masxfs_levinfo_mode.h"
 
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_base.h"
-#include "masxfs_levinfo_ref.h"
-/* #include "masxfs_levinfo_io_dir.h" */
 #include "masxfs_levinfo_fs.h"
-/* #include "masxfs_levinfo_io.h" */
 
 #include "masxfs_levinfo_db.h"
 

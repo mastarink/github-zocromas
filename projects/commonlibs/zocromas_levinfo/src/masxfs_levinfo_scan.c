@@ -10,15 +10,10 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masxfs_levinfo_structs.h"
-/* #include "masxfs_structs.h" */
 
 #include "masxfs_levinfo_base.h"
-#include "masxfs_levinfo_tools.h"
-/* #include "masxfs_levinfo_io.h" */
 #include "masxfs_levinfo_io_dir.h"
 #include "masxfs_levinfo_ref.h"
-
-#include "masxfs_levinfo_path.h"
 
 #include "masxfs_levinfo_scan.h"
 
@@ -297,34 +292,10 @@ masxfs_levinfo_scan_dir_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typeflag
   rDECLBAD;
 
   assert( masxfs_levinfo_detype( li, flags ) == MASXFS_ENTRY_DIR_NUM );
-#if 1
   rC( masxfs_levinfo_rewinddir( li, flags ) );
   QRLI( li, rCODE );
   rC( masxfs_levinfo_scan_dir_rest_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
   QRLI( li, rCODE );
-#else
-  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-
-  switch ( detype )
-  {
-  case MASXFS_ENTRY_DIR_NUM:
-    rC( masxfs_levinfo_rewinddir( li, flags ) );
-    rC( masxfs_levinfo_scan_dir_rest_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
-    break;
-  case MASXFS_ENTRY_REG_NUM:
-
-    QRLI( li, rCODE );
-  /* rC( masxfs_levinfo_scan_entry_single_cbs( li, typeflags, cbs, data, flags, reldepth ) ); */
-  /* rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) ); */
-    break;
-  default:
-    WARN( "#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#-=-#  %s (%d:%d:%d)", masxfs_levinfo_detype_name( li ), li->detype, detype,
-          MASXFS_ENTRY_DIR_NUM );
-    break;
-  }
-  if ( flags & MASXFS_CB_MODE_DB && rBAD )
-    WARN( "############# r:%d", rCODE );
-#endif
   rRET;
 }
 

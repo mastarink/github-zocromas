@@ -29,14 +29,6 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
   rDECLBAD;
   int rc = 0;
 
-/* r = masxfs_pathinfo_opendir( pi ); */
-/* QRPI( pi, r );                     */
-
-/* if ( flags & MASXFS_CB_SCAN_DEPTH ) */
-/* {                                   */
-/*   masxfs_pathinfo_scan_depth_cbf(  );   */
-/* }                                   */
-
 /* if ( r >= 0 ) */
   {
     maxdepth = maxdepth ? pi->pidepth + maxdepth : 0;
