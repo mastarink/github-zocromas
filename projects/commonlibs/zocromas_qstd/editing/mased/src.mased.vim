@@ -3,7 +3,7 @@ sfind mastest_connect.c
 sfind mastest_create_tables.c
 sfind mastest_drop_tables.c
 " sfind mastest_6.c
-sfind mastest_7.c
+" sfind mastest_7.c
 
 
 tab sfind qstd_types.h

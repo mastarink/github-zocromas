@@ -76,7 +76,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 /* test6(  ); */
 /* test6(  ); */
   INFO( "POINT" );
-  test7(  );
-  test7(  );
+  /* test7(  ); */
+  /* test7(  ); */
   return 0;
 }

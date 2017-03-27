@@ -156,7 +156,6 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 
       rC( mas_qstd_mstmt_bind_param( ( *pmstmt ) ) );
       rC( mas_qstd_mstmt_prepare_result_string( ( *pmstmt ), nr++ ) ); /* name */
-    /* rC( mas_qstd_mstmt_prepare_result_string( (*pmstmt), nr++ ) ); (* detype *) */
       rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* inode */
       rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* node_id */
       rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* dev */

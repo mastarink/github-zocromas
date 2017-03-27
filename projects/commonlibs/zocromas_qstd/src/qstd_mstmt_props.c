@@ -62,29 +62,30 @@ mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, c
   unsigned long long theid = 0;
 
   {
+    int np = 0;
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_PROPS );
 
     QRGP( mstmt );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, data_id, FALSE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, 1, sdetype ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, data_id, FALSE ) );
 
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 2, ( unsigned long long ) stat->st_mode, stat->st_mode ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 3, ( unsigned long long ) stat->st_uid, stat->st_uid ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 4, ( unsigned long long ) stat->st_gid, stat->st_gid ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_mode, stat->st_mode ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_uid, stat->st_uid ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_gid, stat->st_gid ? FALSE : TRUE ) );
   /*
      struct timespec {
      time_t tv_sec;
      long tv_nsec;
      };
    */
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 5, ( unsigned long long ) stat->st_atim.tv_sec, stat->st_atim.tv_sec ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 6, ( unsigned long long ) stat->st_mtim.tv_sec, stat->st_mtim.tv_sec ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 7, ( unsigned long long ) stat->st_ctim.tv_sec, stat->st_ctim.tv_sec ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 8, ( unsigned long long ) stat->st_size, FALSE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 9, ( unsigned long long ) stat->st_rdev, stat->st_rdev ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 10, ( unsigned long long ) stat->st_blksize, stat->st_blksize ? FALSE : TRUE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 11, ( unsigned long long ) stat->st_blocks, stat->st_blocks ? FALSE : TRUE ) );
-
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_atim.tv_sec, stat->st_atim.tv_sec ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_mtim.tv_sec, stat->st_mtim.tv_sec ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_ctim.tv_sec, stat->st_ctim.tv_sec ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_size, FALSE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_rdev, stat->st_rdev ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_blksize, stat->st_blksize ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, ( unsigned long long ) stat->st_blocks, stat->st_blocks ? FALSE : TRUE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, np++, sdetype ) );
+    assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
 
     if ( !rCODE && mas_mysqlpfs_mstmt_affected_rows( mstmt ) == 1 )

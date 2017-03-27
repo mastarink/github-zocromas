@@ -27,8 +27,7 @@ mastest_SOURCES= \
 	mastest.c \
 	mastest_connect.c \
 	mastest_drop_tables.c \
-	mastest_create_tables.c \
-	mastest_7.c
+	mastest_create_tables.c
 
 
 

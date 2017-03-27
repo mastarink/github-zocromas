@@ -232,7 +232,7 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
 
   if ( qstd && qstd->pfs )
   {
-    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ) ; i++ )
+    for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
       rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
@@ -388,25 +388,28 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_PROPS:
       {
-      /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
-        char *insop = "INSERT  INTO " QSTD_TABLE_PROPS "(data_id,detype,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks) " /* */
-              /*         0 1 2 3 4  5                6                7               8 9 a b  */
-                "VALUES (?,?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?)";
+        int np = 0;
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 12, 0, insop );
+      /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
+        char *insop = "INSERT  INTO " QSTD_TABLE_PROPS "(data_id,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks,detype) " /* */
+              /*         0 1 2 3 4  5                6                7               8 9 a b  */
+                "VALUES (?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?,?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PROPS_NFIELDS, 0, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 3 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 4 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 5 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 6 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 7 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 8 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 9 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 10 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 11 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
+        assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
       }
       break;

@@ -20,7 +20,9 @@ enum mas_qstd_id_e
   STD_MSTMT_SELECT_NODES_ID,
   STD_MSTMT_MAX
 };
-
+enum mas_qstd_nfields_e {
+  STD_MSTMT_INSERT_PROPS_NFIELDS=12
+};
 struct mas_qstd_s
 {
   mysqlpfs_t *pfs;
