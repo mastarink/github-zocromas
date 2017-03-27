@@ -162,11 +162,11 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            /* ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" (* *) */
+          /* ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" (* *) */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE  VIEW " QSTD_VIEW_ALL " AS "                             /* */
-            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id"/*", fp.detype"*/", fd.inode " /* */
+            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id" /*", fp.detype" */ ", fd.inode " /* */
             "     , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "     , fs.nsame AS nsamesize"                           /* */
             "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
@@ -182,11 +182,13 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "        , p.id AS node_id" "   FROM " QSTD_TABLE_NAMES " AS fn " /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
             "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
             "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
             "   LEFT JOIN " QSTD_TABLE_SIZES "  AS fs ON (fp.size=fs.size) " /* */
-            " WHERE fp.detype='REG'",
+            " WHERE p.id IS NULL",
+  /* " WHERE fp.detype='REG'", */
     "CREATE  VIEW " QSTD_VIEW_DIRS " AS "                            /* */
             " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
             "        , GREATEST(fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS latest_updated " /* */
@@ -195,7 +197,8 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
             "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
             "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
-            " WHERE fp.detype='DIR'",
+            " WHERE p.id IS NOT NULL",
+  /* " WHERE fp.detype='DIR'", */
     "COMMIT",
   };
 
@@ -293,7 +296,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        /* rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) ); */
+      /* rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) ); */
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
       }
@@ -452,7 +455,6 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
-
 
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
