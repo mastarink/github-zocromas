@@ -162,11 +162,11 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
+            /* ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" (* *) */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE  VIEW " QSTD_VIEW_ALL " AS "                             /* */
-            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
+            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id"/*", fp.detype"*/", fd.inode " /* */
             "     , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "     , fs.nsame AS nsamesize"                           /* */
             "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
@@ -285,7 +285,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     case STD_MSTMT_INSERT_NAMES:
       {
         int np = 0;
-        char *insop = "INSERT INTO " QSTD_TABLE_NAMES "(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
+        char *insop = "INSERT INTO " QSTD_TABLE_NAMES "(name,parent_id,data_id) VALUES (?,?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_NAMES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
@@ -293,7 +293,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
+        /* rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) ); */
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
       }
