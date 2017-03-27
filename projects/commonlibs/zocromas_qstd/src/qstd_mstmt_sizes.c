@@ -26,12 +26,14 @@ mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
   unsigned long long thesize = 0;
 
   {
+    int np = 0;
+    int nr = 0;
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_SIZES_ID );
     int has_data = 0;
 
     QRGP( mstmt_s );
 
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, size, FALSE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, size, FALSE ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s, &has_data ) );
 
@@ -39,7 +41,8 @@ mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
     {
       unsigned is_null = 0;
 
-      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &thesize, &is_null ) );
+      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, nr++, &thesize, &is_null ) );
+      assert( nr == STD_MSTMT_SELECT_SIZES_NRESULTS );
     }
 
     mas_mysqlpfs_mstmt_free_result( mstmt_s );
@@ -55,10 +58,11 @@ mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
   unsigned long long thesize = 0;
 
   {
+    int np = 0;
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_SIZES );
 
     QRGP( mstmt );
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, 0, size, FALSE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, size, FALSE ) );
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
     if ( !rCODE && mas_mysqlpfs_mstmt_affected_rows( mstmt ) == 1 )
     {

@@ -28,16 +28,18 @@
 unsigned long long
 mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, unsigned long long data_id )
 {
-  rDECL( 0 );
+  rDECLBAD;
   unsigned long long theid = 0;
 
   {
+    int np = 0;
+    int nr = 0;
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PROPS_ID );
     int has_data = 0;
 
     QRGP( mstmt_s );
 
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, 0, data_id, FALSE ) );
+    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, data_id, FALSE ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s, &has_data ) );
@@ -46,7 +48,8 @@ mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, unsigned long long data_id )
     {
       unsigned is_null = 0;
 
-      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, 0, &theid, &is_null ) );
+      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, nr++, &theid, &is_null ) );
+      assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
     }
 
     mas_mysqlpfs_mstmt_free_result( mstmt_s );
@@ -57,7 +60,7 @@ mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, unsigned long long data_id )
 unsigned long long
 mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat _uUu_ )
 {
-  rDECL( 0 );
+  rDECLBAD;
   QRGP( qstd );
   unsigned long long theid = 0;
 
@@ -98,7 +101,7 @@ mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, c
 unsigned long long
 mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
 {
-/* rDECL( 0 ); */
+/* rDECLBAD; */
   QRGP( qstd );
 
   unsigned long long theid = mas_qstd_mstmt_selget_props_id( qstd, data_id );
@@ -113,7 +116,7 @@ mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, unsigned long long data_id
 unsigned long long
 mas_qstd_mstmt_insselget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
 {
-/* rDECL( 0 ); */
+/* rDECLBAD; */
   QRGP( qstd );
   unsigned long long theid = mas_qstd_mstmt_insget_props_id( qstd, data_id, sdetype, stat );
 

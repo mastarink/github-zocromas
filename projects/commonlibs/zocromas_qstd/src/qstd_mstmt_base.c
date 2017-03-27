@@ -284,106 +284,133 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     {
     case STD_MSTMT_INSERT_NAMES:
       {
+        int np = 0;
         char *insop = "INSERT INTO " QSTD_TABLE_NAMES "(name,parent_id,data_id,detype) VALUES (?,?,?,?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 4, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_NAMES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 3, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" as p ON (fn.parent_id=p.id)" */
                 " WHERE name=? AND fn.parent_id<=>?";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NAMES_NFIELDS, STD_MSTMT_SELECT_NAMES_NRESULTS, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 0, 255 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        assert( np == STD_MSTMT_SELECT_NAMES_NFIELDS );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_NAMES_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_PARENTS:
       {
+        int np = 0;
         char *insop = "INSERT INTO " QSTD_TABLE_PARENTS "(dir_id) VALUES (?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PARENTS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_PARENTS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_PARENTS_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_PARENTS " WHERE dir_id<=>?";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_PARENTS_NFIELDS, STD_MSTMT_SELECT_PARENTS_NRESULTS, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        assert( np == STD_MSTMT_SELECT_PARENTS_NFIELDS );
+
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_PARENTS_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_SIZES:
       {
+        int np = 0;
         char *insop = "INSERT IGNORE INTO " QSTD_TABLE_SIZES "(size) VALUES (?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SIZES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_SIZES_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_SIZES_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT size FROM " QSTD_TABLE_SIZES " WHERE size=?";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_SIZES_NFIELDS, STD_MSTMT_SELECT_SIZES_NRESULTS, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        assert( np == STD_MSTMT_SELECT_SIZES_NFIELDS );
+
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_SIZES_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_DATAS:
       {
+        int np = 0;
         char *insop = "INSERT IGNORE INTO " QSTD_TABLE_DATAS "(dev,inode,nlink) VALUES (?,?,?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 3, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_DATAS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 2 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_DATAS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_DATAS_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_DATAS " WHERE dev=? AND inode=?";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_DATAS_NFIELDS, STD_MSTMT_SELECT_DATAS_NRESULTS, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 1 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        assert( np == STD_MSTMT_SELECT_DATAS_NFIELDS );
+
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_DATAS_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_PROPS:
@@ -395,7 +422,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
               /*         0 1 2 3 4  5                6                7               8 9 a b  */
                 "VALUES (?,?,?,?,FROM_UNIXTIME(?),FROM_UNIXTIME(?),FROM_UNIXTIME(?),?,?,?,?,?)";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PROPS_NFIELDS, 0, insop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PROPS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -409,35 +436,46 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
-        assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_PROPS_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_PROPS " WHERE data_id=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
+
+
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
       }
       break;
     case STD_MSTMT_SELECT_NODES_ID:
       {
+        int np = 0;
+        int nr = 0;
         char *selop = "SELECT node_id FROM " QSTD_VIEW_DIRS " WHERE parent_id=? AND name=?";
 
-        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 2, 1, selop );
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NODES_NFIELDS, STD_MSTMT_SELECT_NODES_NRESULTS, selop );
         QRGP( mstmt );
 
-        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, 0 ) );
-        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, 1, 255 ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, 0 ) );
+        assert( np == STD_MSTMT_SELECT_NODES_NFIELDS );
+
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
       }
       break;
     case STD_MSTMT_MAX:
