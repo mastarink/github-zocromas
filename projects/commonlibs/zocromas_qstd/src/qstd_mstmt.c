@@ -34,13 +34,19 @@ mas_qstd_mysql_error( mas_qstd_t * qstd )
 int
 mas_qstd_query( mas_qstd_t * qstd, const char *op )
 {
-  return qstd ? mas_mysqlpfs_query( qstd->pfs, op ) : -1;
+  rDECLBAD;
+  if ( qstd )
+  {
+    if ( !mas_mysqlpfs_query( qstd->pfs, op ) )
+      rSETGOOD;
+  }
+  rRET;
 }
 
 int
 mas_qstd_update_summary( mas_qstd_t * qstd )
 {
-  rDECL( 0 );
+  rDECLGOOD;
   const char *updop[] = {
     "START TRANSACTION",
     "UPDATE " QSTD_TABLE_PARENTS " AS p "                            /* */
@@ -66,9 +72,15 @@ mas_qstd_update_summary( mas_qstd_t * qstd )
             "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
     "COMMIT"
   };
-  for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ); i++ )
+  for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ) && rGOOD; i++ )
+  {
     rC( mas_qstd_query( qstd, updop[i] ) );
-
+    if ( rBAD )
+    {
+      mas_qstd_query( qstd, "ROLLBACK" );
+      break;
+    }
+  }
   rRET;
 }
 
@@ -87,16 +99,15 @@ mas_qstd_end_transaction( mas_qstd_t * qstd )
 int
 mas_qstd_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, pos ) );
-
   rRET;
 }
 
 int
 mas_qstd_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, pos ) );
 
   rRET;
@@ -105,7 +116,7 @@ mas_qstd_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 int
 mas_qstd_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, pos, ( mysqlpfs_s_length_t ) 255 ) );
 
   rRET;
@@ -120,7 +131,7 @@ mas_qstd_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos )
 int
 mas_qstd_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned long long num, unsigned is_null )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, pos, num, is_null ) );
 
   rRET;
@@ -129,17 +140,16 @@ mas_qstd_mstmt_set_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos, unsigned l
 int
 mas_qstd_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string )
 {
-  rDECL( 0 );
-  rC( mas_mysqlpfs_mstmt_set_param_string(   mstmt,  pos, string ) );
+  rDECLBAD;
+  rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, pos, string ) );
 
   rRET;
 }
 
-
 int
 mas_qstd_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_data_seek( mstmt, offset ) );
 
   rRET;
@@ -148,7 +158,7 @@ mas_qstd_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long offset )
 int
 mas_qstd_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_execute_store( mstmt ) );
   rRET;
 }
@@ -156,7 +166,7 @@ mas_qstd_mstmt_execute_store( mysqlpfs_mstmt_t * mstmt )
 int
 mas_qstd_mstmt_fetch( mysqlpfs_mstmt_t * mstmt, int *phas_data )
 {
-  rDECL( 0 );
+  rDECLBAD;
   rC( mas_mysqlpfs_mstmt_fetch( mstmt, phas_data ) );
   rRET;
 }

@@ -51,9 +51,7 @@ mas_qstd_t *
 mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
 {
   if ( !instance )
-  {
     instance = mas_qstd_create_setup( host, user, passwd, db, port );
-  }
   return instance;
 }
 
@@ -206,7 +204,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
   {
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
-      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
+      rC( mas_qstd_query( qstd, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
       if ( rBAD )
         break;
@@ -222,14 +220,14 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
   rDECLBAD;
   const char *creops[] _uUu_ = {
     "START TRANSACTION",
-    "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL "",
-    "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES "",
-    "DROP VIEW  IF EXISTS " QSTD_VIEW_DIRS "",
-    "DROP TABLE IF EXISTS " QSTD_TABLE_NAMES "",
-    "DROP TABLE IF EXISTS " QSTD_TABLE_PARENTS "",
-    "DROP TABLE IF EXISTS " QSTD_TABLE_PROPS "",
-    "DROP TABLE IF EXISTS " QSTD_TABLE_DATAS "",
-    "DROP TABLE IF EXISTS " QSTD_TABLE_SIZES "",
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL,
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES,
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_DIRS,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_NAMES,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_PARENTS,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_PROPS,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_DATAS,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_SIZES,
     "COMMIT",
   };
 
@@ -237,10 +235,13 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
   {
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
-      rC( mas_mysqlpfs_query( qstd->pfs, creops[i] ) );
+      rC( mas_qstd_query( qstd, creops[i] ) );
       INFO( "(%d) %s", rCODE, creops[i] );
       if ( rBAD )
+      {
+        mas_qstd_query( qstd, "ROLLBACK" );
         break;
+      }
     }
   }
 

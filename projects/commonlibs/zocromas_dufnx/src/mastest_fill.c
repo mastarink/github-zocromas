@@ -128,6 +128,9 @@ testfill( const char *path, masxfs_depth_t maxdepth )
   {
     mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
 
+    rC( mas_qstd_drop_tables( qstd ) );
+    rC( mas_qstd_create_tables( qstd ) );
+    if ( rGOOD )
     {
     /* const char *path0 = "mastest"; */
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */

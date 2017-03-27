@@ -47,8 +47,8 @@ testdropcreate( const char *path _uUu_ )
 
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
-    mas_qstd_instance_delete(  );
 #endif
+    mas_qstd_instance_delete(  );
   }
 
   WARN( "******** /testcreate *******" );
