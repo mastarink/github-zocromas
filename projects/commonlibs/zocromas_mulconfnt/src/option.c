@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "mulconfnt_defs.h"
 #include <string.h>
 #include <math.h>
@@ -146,7 +147,7 @@ mucs_config_option_nvalue_to_ptr( mucs_option_han_t * opt )
       *( ( long double * ) opt->ptr ) = opt->nvalue.v_ldouble;
       break;
     }
-    opt->worked++;
+    opt->value_is_set++;
   }
 }
 

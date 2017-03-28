@@ -13,6 +13,7 @@ struct masregerrs_s
 struct masregerr_s
 {
   int mark;
+  int hidden;
   const char *func;
   const char *func1;
   const char *func2;

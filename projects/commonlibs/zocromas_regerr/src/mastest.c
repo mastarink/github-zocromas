@@ -59,26 +59,26 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
     function_one(  );
     nf++;
-    EXAM( masregerrs_count_all( NULL ), ( size_t ) ( 1 + i * nfunctions ), "%ld:%ld" );
+    EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( 1 + i * nfunctions ), "%ld:%ld" );
     function_two(  );
     nf++;
-    EXAM( masregerrs_count_all( NULL ), ( size_t ) ( 2 + i * nfunctions ), "%ld:%ld" );
+    EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( 2 + i * nfunctions ), "%ld:%ld" );
     function_three(  );
     nf++;
-    EXAM( masregerrs_count_all( NULL ), ( size_t ) ( 3 + i * nfunctions ), "%ld:%ld" );
+    EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( 3 + i * nfunctions ), "%ld:%ld" );
     function_four(  );
     nf++;
-    EXAM( masregerrs_count_all( NULL ), ( size_t ) ( 4 + i * nfunctions ), "%ld:%ld" );
+    EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( 4 + i * nfunctions ), "%ld:%ld" );
     EXAM( nf, nfunctions, "%d:%d" );
   }
-  EXAM( masregerrs_count_all( NULL ), ( size_t ) ( counter * nfunctions ), "%ld:%ld" );
+  EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( counter * nfunctions ), "%ld:%ld" );
   fprintf( stderr, "----------------last:\n" );
   masregerr_print_simple_last( NULL, NULL );
   fprintf( stderr, "----------------forward:\n" );
   masregerr_print_simple_all( NULL, NULL, 0 );
-  fprintf( stderr, "----------------back (%ld:%ld):\n", masregerrs_count_all( NULL ), ( size_t ) ( counter * 4 ) );
+  fprintf( stderr, "----------------back (%d:%d):\n", masregerrs_count_all( NULL, TRUE ), ( counter * 4 ) );
   masregerr_print_simple_all_back( NULL, NULL );
   fprintf( stderr, "----------------\n" );
-  EXAM( masregerrs_count_all( NULL ), ( size_t ) ( counter * nfunctions ), "%ld:%ld" );
+  EXAM( masregerrs_count_all( NULL, TRUE ), ( size_t ) ( counter * nfunctions ), "%ld:%ld" );
   return 0;
 }

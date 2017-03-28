@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <limits.h>
 #include <stdlib.h>
@@ -114,7 +115,7 @@ masregerr_prev( masregerrs_t * regerrs )
 
 int
 masregerr_reg( masregerrs_t * regerrs, const char *func, int line, const char *file, const char *func1, const char *func2, const char *package,
-               int *perrno, int sys, const char *msg )
+               int *perrno, int sys, const char *fmt, ... )
 {
   masregerr_t *rge = masregerr_next( regerrs );
   int err_no = 0;
@@ -134,8 +135,14 @@ masregerr_reg( masregerrs_t * regerrs, const char *func, int line, const char *f
     rge->package = package;
     rge->err_no = err_no;
     rge->sys = sys;
-    if ( msg )
+    if ( fmt )
     {
+      char msg[1024 * 10];
+      va_list args;
+
+      va_start( args, fmt );
+      vsnprintf( msg, sizeof( msg ), fmt, args );
+      va_end( args );
       rge->msg = mas_strdup( msg );
     }
     rge->serial = ++( masregerrs_default( regerrs )->serial );
@@ -208,8 +215,8 @@ masregerr_print_simple_all( masregerrs_t * regerrs, const char *msg, int max_pri
   return 0;
 }
 
-size_t
-masregerrs_count_all( masregerrs_t * regerrs )
+unsigned
+masregerrs_count_all( masregerrs_t * regerrs, int count_hidden )
 {
   masregerr_t *rge = masregerrs_default( regerrs )->current;
   size_t num = 0;
@@ -217,7 +224,7 @@ masregerrs_count_all( masregerrs_t * regerrs )
   do
   {
     rge = masregerr_valid_after( regerrs, rge );
-    if ( rge )
+    if ( rge && ( count_hidden || !rge->hidden ) )
       num++;
   } while ( rge && rge != masregerrs_default( regerrs )->current );
   return num;

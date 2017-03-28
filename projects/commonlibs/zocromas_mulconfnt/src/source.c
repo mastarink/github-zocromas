@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "mulconfnt_defs.h"
 #include <string.h>
 #include <unistd.h>
@@ -5,6 +6,8 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
+
+/* #include <mastar/minierr/minierr.h> */
 
 #include "mulconfnt_structs.h"
 
@@ -91,6 +94,7 @@ match_arg( const char *pref, const char *arg )
   return i > 0 ? ( int ) i : -1;
 }
 
+/* determine variant by prefix */
 static mucs_variant_t
 max_match_id( mucs_source_han_t * osrc, const char *arg )
 {
@@ -133,6 +137,116 @@ mucs_source_arg_no( mucs_source_han_t * osrc, int i )
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
 
+mucs_option_han_t *
+mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_option_han_t * opt, mucs_variant_t variantid,
+                         const char *next_arg )
+{
+  while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->ptr )
+  {
+    mucs_option_han_t *oldopt = opt;
+
+//        oldopt->source = osrc;
+    mucs_option_set_source( oldopt, osrc );                          /* mostly for error setting */
+    if ( do_fprintf )
+      fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
+
+    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
+  /* if ( do_fprintf )                                                                                        */
+  /*   fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" ); */
+
+    mucs_config_option_delete( oldopt );
+  }
+  return opt;
+}
+
+void
+mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
+{
+  mucs_option_set_source( opt, osrc );                               /* mostly for error setting */
+  if ( mucs_error_option( opt ) )
+  {
+//          opt->source = osrc;
+    mucs_error_set_at_source_from_option( opt->source, opt );
+  }
+  if (  /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
+  {
+    osrc->lastoptpos = osrc->curarg;
+  }
+  if ( !opt->value_is_set )
+  {
+    mucs_option_callback_t cb = NULL;
+
+    if ( osrc->callback )
+    {
+      cb = osrc->callback;
+      if ( cb )
+      {
+        cb( opt );
+        osrc->callback_called++;
+      }
+    }
+    if ( osrc->callbacks )
+    {
+      cb = osrc->callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
+      if ( cb )
+      {
+        cb( opt );
+        osrc->callback_called++;
+      }
+    }
+  }
+  if ( opt->has_value > 0 )
+    osrc->curarg += opt->has_value - 1;
+/* TODO additional actions here !! */
+}
+
+void
+mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_variant_t variantid, const char *arg_nopref )
+{
+  mucs_option_han_t *opt = NULL;
+  const char *next_arg = NULL;
+
+  if ( osrc->curarg < osrc->targ.argc - 1 )
+    next_arg = osrc->targ.argv[osrc->curarg + 1];
+
+  opt = mucs_config_option_tablist_lookup( tablist, variantid, arg_nopref, next_arg, osrc->eq, NULL, osrc->flags );
+  opt = mucs_source_dealias_opt( osrc, tablist, opt, variantid, next_arg );
+
+/* do something for found option */
+  if ( opt )
+    mucs_source_found_opt( osrc, opt );
+  else
+  {
+    mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref );
+    QRGSRC( osrc, -1 );
+  }
+  if ( opt )
+    mucs_config_option_delete( opt );
+  opt = NULL;
+}
+
+void
+mucs_source_lookup_arg( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
+{
+  const char *arg = osrc->targ.argv[osrc->curarg];
+
+/* max_match_id: determine variant by prefix */
+  mucs_variant_t variantid = ( !osrc->lastoptpos || osrc->curarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MUCS_VARIANT_NONOPT;
+  int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
+
+  if ( variantid == MUCS_VARIANT_BAD )
+  {
+#if 0
+    static const char *labels[MUCS_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
+    WARN( "NO VARIANT [%s] arg='%s';\n", labels[variantid], arg );
+#endif
+  }
+  else if ( variantid == MUCS_VARIANT_NONOPT )
+    mas_add_argvc_arg( &osrc->targno, arg + preflen );
+  else
+    mucs_source_lookup_opt( osrc, tablist, variantid, arg + preflen );
+}
+
 int
 mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
 {
@@ -140,116 +254,10 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
 
   mucs_source_load_targ( osrc );
   osrc->lastoptpos = 0;
-  for ( int iarg = 0; osrc && !mucs_error_source( osrc ) && iarg < osrc->targ.argc; iarg++ )
+  for ( osrc->curarg = 0; osrc && !mucs_error_source( osrc ) && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
   {
-    static const char *labels[MUCS_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
-    const char *arg = osrc->targ.argv[iarg];
-    const char *next_arg = NULL;
-
     nargs++;
-    if ( iarg < osrc->targ.argc - 1 )
-      next_arg = osrc->targ.argv[iarg + 1];
-
-    if ( do_fprintf )
-      fprintf( stderr, "LOOKUP %s\n", arg );
-
-    mucs_variant_t variantid = ( !osrc->lastoptpos || iarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MUCS_VARIANT_NONOPT;
-    int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
-
-    if ( do_fprintf )
-      fprintf( stderr, "LAST:%d. '%s' --- %d\n", iarg, arg, osrc->lastoptpos );
-    if ( variantid == MUCS_VARIANT_BAD )
-    {
-      if ( do_fprintf )
-        fprintf( stderr, "NO VARIANT [%s] arg='%s';\n", labels[variantid], arg );
-    }
-    else if ( variantid == MUCS_VARIANT_NONOPT )
-    {
-      if ( do_fprintf )
-        fprintf( stderr, "ADD NONOPT %s\n", arg + preflen );
-      mas_add_argvc_arg( &osrc->targno, arg + preflen );
-    }
-    else
-    {
-      if ( do_fprintf )
-        fprintf( stderr, "VARIANT %s\n", labels[variantid] );
-      mucs_option_han_t *opt = NULL;
-
-      opt = mucs_config_option_tablist_lookup( tablist, variantid, arg + preflen, next_arg, osrc->eq, NULL, osrc->flags );
-      if ( do_fprintf )
-        fprintf( stderr, "OPT: %p (%s)\n", opt, arg );
-      while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->ptr )
-      {
-        mucs_option_han_t *oldopt = opt;
-
-//        oldopt->source = osrc;
-        mucs_option_set_source( oldopt, osrc );                      /* mostly for error setting */
-        if ( do_fprintf )
-          fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
-
-        opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
-        if ( do_fprintf )
-          fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" );
-
-        mucs_config_option_delete( oldopt );
-      }
-    /* do something for found option */
-      if ( opt )
-      {
-        mucs_option_set_source( opt, osrc );                         /* mostly for error setting */
-        if ( mucs_error_option( opt ) )
-        {
-//          opt->source = osrc;
-          mucs_error_set_at_source_from_option( opt->source, opt );
-        }
-        if (  /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
-        {
-          if ( do_fprintf )
-            fprintf( stderr, "SET LAST: %d. '%s'; has_value:%d\n", iarg, arg, opt->has_value );
-          osrc->lastoptpos = iarg;
-        }
-        if ( opt->has_value > 0 )
-        {
-          iarg += opt->has_value - 1;
-        }
-        if ( !opt->worked )
-        {
-          mucs_option_callback_t cb = NULL;
-
-          if ( osrc->callback )
-          {
-            cb = osrc->callback;
-            if ( cb )
-            {
-              cb( opt );
-              osrc->callback_called++;
-            }
-          }
-          if ( osrc->callbacks )
-          {
-            cb = osrc->callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
-            if ( cb )
-            {
-              cb( opt );
-              osrc->callback_called++;
-            }
-          }
-        }
-/* TODO additional actions here !! */
-      }
-      else
-      {
-        mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg );
-      }
-      if ( do_fprintf )
-        fprintf( stderr, "*** LOOKUP [%s] arg='%s'; name='%s'; value='%s'\n", labels[variantid], arg, opt ? opt->name : "<NONE>",
-                 opt ? opt->string_value : "<NONE>" );
-      if ( opt )
-      {
-        mucs_config_option_delete( opt );
-      }
-      opt = NULL;
-    }
+    mucs_source_lookup_arg( osrc, tablist );
   }
   return -nargs;
 }

@@ -116,7 +116,7 @@ int
 mas_qstd_create_tables( mas_qstd_t * qstd )
 {
   rDECLBAD;
-  char *creops[] _uUu_ = {
+  char *creops[] = {
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SIZES " ("              /* */
             "size BIGINT NOT NULL PRIMARY KEY"                       /* */
@@ -205,9 +205,12 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
       rC( mas_qstd_query( qstd, creops[i] ) );
-      INFO( "(%d) %s", rCODE, creops[i] );
       if ( rBAD )
+      {
+        WARN( "(%d) %s", rCODE, creops[i] );
+        mas_qstd_query( qstd, "ROLLBACK" );
         break;
+      }
     }
   }
 
@@ -218,7 +221,7 @@ int
 mas_qstd_drop_tables( mas_qstd_t * qstd )
 {
   rDECLBAD;
-  const char *creops[] _uUu_ = {
+  const char *creops[] = {
     "START TRANSACTION",
     "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL,
     "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES,
@@ -236,9 +239,9 @@ mas_qstd_drop_tables( mas_qstd_t * qstd )
     for ( size_t i = 0; i < sizeof( creops ) / sizeof( creops[0] ); i++ )
     {
       rC( mas_qstd_query( qstd, creops[i] ) );
-      INFO( "(%d) %s", rCODE, creops[i] );
       if ( rBAD )
       {
+        WARN( "(%d) %s", rCODE, creops[i] );
         mas_qstd_query( qstd, "ROLLBACK" );
         break;
       }

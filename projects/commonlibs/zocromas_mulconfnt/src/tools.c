@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>

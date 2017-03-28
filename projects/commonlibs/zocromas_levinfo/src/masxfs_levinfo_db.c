@@ -142,16 +142,14 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
         op = "SELECT name, inode, node_id "                          /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
       int numpar = 1 + ( name ? 1 : 0 );
-      int numres = 15;
+      int numres = 15;                                               /* just fool-proof  */
       int nr = 0;
       int np = 0;
 
       ( *pmstmt ) = mas_qstd_instance_mstmt_create_setup( numpar, numres, op );
       rC( mas_qstd_mstmt_prepare_param_longlong( ( *pmstmt ), np++ ) ); /* parent_id */
       if ( name )
-      {
         rC( mas_qstd_mstmt_prepare_param_string( ( *pmstmt ), np++ ) ); /* name */
-      }
       assert( np == numpar );
 
       rC( mas_qstd_mstmt_bind_param( ( *pmstmt ) ) );
@@ -284,7 +282,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     }
     else
     {
-      masxfs_levinfo_db_open( li, flags );
+      rC( masxfs_levinfo_db_open( li, flags ) );
       assert( li->db.node_id );
       rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
     }
@@ -345,7 +343,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       }
       else
       {
-        /* WARN( "[%p] NO DATA", li->db.scan.mstmt ); */
+      /* WARN( "[%p] NO DATA", li->db.scan.mstmt ); */
       }
     }
   /* TODO #include <fnmatch.h>                                             */

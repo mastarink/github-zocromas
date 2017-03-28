@@ -115,7 +115,8 @@ struct mucs_source_han_s
   mucs_source_mode_t mode;
   unsigned long flags;
   int count;
-  int lastoptpos;
+  int lastoptpos;                                                    /*number of arg with last opt */
+  int curarg;                                                        /* number of arg withc current arg */
   int npos;
   const void *data_ptr;
   char delim;
@@ -183,7 +184,7 @@ struct mucs_option_han_s
   mucs_source_han_t *source;
   mucs_option_callback_t callback;
   size_t callback_called;
-  int worked;
+  int value_is_set;
   mucs_error_t error;
 };
 

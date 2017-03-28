@@ -56,7 +56,7 @@
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
 #  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
 
-#  define RGEX(_sys, _msg) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, _msg)
+#  define RGEX(_sys, _fmt) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, _fmt)
 #  define RGE RGEX(0, NULL)
 #  define RGESM(_msg) RGEX(1, _msg)
 #  define RGES RGESM(RGEMSG)

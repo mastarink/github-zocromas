@@ -107,7 +107,10 @@ function shn_runname ()
 {
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin
+  shn_msg "bsrc:$bsrc"
   if  [[ "$bsrc" ]] && [[ -d "$bsrc" ]] ; then
+    shn_msg "MSH_SHN_RUN_NAME    :$MSH_SHN_RUN_NAME"
+    shn_msg "MSH_SHN_PROJECT_NAME:$MSH_SHN_PROJECT_NAME"
     if [[ "$MSH_SHN_RUN_NAME" ]] ; then
       bin="$bsrc/$MSH_SHN_RUN_NAME"
 ##    shn_msg "bin: $bin (MSH_SHN_RUN_NAME)"

@@ -1,3 +1,4 @@
+#define R_GOOD(_r) ((_r)>=0)
 #include "mulconfnt_defs.h"
 #include <stdarg.h>
 #include <string.h>
