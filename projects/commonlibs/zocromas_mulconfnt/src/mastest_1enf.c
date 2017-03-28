@@ -133,8 +133,8 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
       osrc->flags |= MUCS_FLAG_SILENT;
 
     masexam_next_group(  );
-    EXAMX( plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    EXAMX( osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+    EXAMX( plist ? 1 : 0, "plist: %p", plist );
+    EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 
     mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
@@ -155,59 +155,58 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     }
 
     masexam_next_group(  );
-  /* EXAMX( mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
-    EXAMX( masregerrs_count_all_default( NULL, TRUE ), "OK", "Error", "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
+  /* EXAMX( mucs_error_source( osrc ),  "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
+    EXAMX( masregerrs_count_all_default( NULL, TRUE ), "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
     masexam_next_group(  );
-  /* EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 0, mucs_error_source( osrc ) ); */
-    EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 0, masregerrs_count_all_default( NULL, TRUE ) );
-    EXAMX( sizeof( v_uint1 ) == 4 && v_uint1 == 0, "OK", "Error", "num1=%u ? %u", v_uint1, 0 );
-    EXAMX( sizeof( v_uint2 ) == 4 && v_uint2 == 0, "OK", "Error", "num2=%u ? %u", v_uint2, 0 );
-    EXAMX( sizeof( v_uint3 ) == 4 && v_uint3 == 0, "OK", "Error", "num3=%u ? %u", v_uint3, 0 );
-    EXAMX( sizeof( v_uint4 ) == 4 && v_uint4 == 0, "OK", "Error", "num4=%u ? %u", v_uint4, 0 );
+  /* EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0,  "num0=%u ? %u [%d]", v_uint0, 0, mucs_error_source( osrc ) ); */
+    EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0, "num0=%u ? %u [%d]", v_uint0, 0, masregerrs_count_all_default( NULL, TRUE ) );
+    EXAMX( sizeof( v_uint1 ) == 4 && v_uint1 == 0, "num1=%u ? %u", v_uint1, 0 );
+    EXAMX( sizeof( v_uint2 ) == 4 && v_uint2 == 0, "num2=%u ? %u", v_uint2, 0 );
+    EXAMX( sizeof( v_uint3 ) == 4 && v_uint3 == 0, "num3=%u ? %u", v_uint3, 0 );
+    EXAMX( sizeof( v_uint4 ) == 4 && v_uint4 == 0, "num4=%u ? %u", v_uint4, 0 );
 
     masexam_next_group(  );
-    EXAMX( sizeof( v_ulong0 ) == 8 && v_ulong0 == 0, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0 );
-    EXAMX( sizeof( v_ulong1 ) == 8 && v_ulong1 == 0, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0 );
-    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
-    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lx ? %lx", v_ulong2, 0 );
-    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 0 );
-    EXAMX( sizeof( v_ulong3 ) == 8 && v_ulong3 == 0, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, 0 );
-    EXAMX( sizeof( v_ulong4 ) == 8 && v_ulong4 == 0, "OK", "Error", "lnum4=%lu ? %lu", v_ulong4, 0 );
+    EXAMX( sizeof( v_ulong0 ) == 8 && v_ulong0 == 0, "lnum0=%lu ? %lu", v_ulong0, 0 );
+    EXAMX( sizeof( v_ulong1 ) == 8 && v_ulong1 == 0, "lnum1=%lu ? %lu", v_ulong1, 0 );
+    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "lnum2=%lu ? %lu", v_ulong2, 0 );
+    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "lnum2=%lx ? %lx", v_ulong2, 0 );
+    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == 0, "lnum2=%lu ? %lu", v_ulong2, 0 );
+    EXAMX( sizeof( v_ulong3 ) == 8 && v_ulong3 == 0, "lnum3=%lu ? %lu", v_ulong3, 0 );
+    EXAMX( sizeof( v_ulong4 ) == 8 && v_ulong4 == 0, "lnum4=%lu ? %lu", v_ulong4, 0 );
 
     masexam_next_group(  );
-    EXAMX( sizeof( v_ullong0 ) == 8 && v_ullong0 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 0, sizeof( v_ullong0 ) );
-    EXAMX( sizeof( v_ullong1 ) == 8 && v_ullong1 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0, sizeof( v_ullong1 ) );
-    EXAMX( sizeof( v_ullong2 ) == 8 && v_ullong2 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 0, sizeof( v_ullong2 ) );
-    EXAMX( sizeof( v_ullong3 ) == 8 && v_ullong3 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, 0, sizeof( v_ullong2 ) );
-    EXAMX( sizeof( v_ullong4 ) == 8 && v_ullong4 == 0, "OK", "Error", "%llu ? %llu (%d)", v_ullong4, 0, sizeof( v_ullong2 ) );
+    EXAMX( sizeof( v_ullong0 ) == 8 && v_ullong0 == 0, "%llu ? %llu (%d)", v_ullong0, 0, sizeof( v_ullong0 ) );
+    EXAMX( sizeof( v_ullong1 ) == 8 && v_ullong1 == 0, "%llu ? %llu (%d)", v_ullong1, 0, sizeof( v_ullong1 ) );
+    EXAMX( sizeof( v_ullong2 ) == 8 && v_ullong2 == 0, "%llu ? %llu (%d)", v_ullong2, 0, sizeof( v_ullong2 ) );
+    EXAMX( sizeof( v_ullong3 ) == 8 && v_ullong3 == 0, "%llu ? %llu (%d)", v_ullong3, 0, sizeof( v_ullong2 ) );
+    EXAMX( sizeof( v_ullong4 ) == 8 && v_ullong4 == 0, "%llu ? %llu (%d)", v_ullong4, 0, sizeof( v_ullong2 ) );
 
     char **argvno _uUu_ = mucs_source_argv_no( osrc );
     int argcno = mucs_source_argc_no( osrc );
 
     masexam_next_group(  );
-    EXAMX( argcno == 2, "OK", "Error", "%d", argcno );
+    EXAMX( argcno == 2, "%d", argcno );
 
     arg = mucs_source_arg_no( osrc, 1 );
-    EXAMX( argcno > 1 && arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    EXAMX( argcno > 1 && arg && 0 == mas_strcmp( "something", arg ), "'%s' ? '%s'", "something", arg );
 #if 0
     arg = mucs_source_arg_no( osrc, 2 );
-    EXAMX( argcno > 2 && arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    EXAMX( argcno > 2 && arg && 0 == mas_strcmp( "wow", arg ), "'%s' ? '%s'", "wow", arg );
     arg = mucs_source_arg_no( osrc, 3 );
-    EXAMX( argcno > 3 && arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    EXAMX( argcno > 3 && arg && 0 == mas_strcmp( "abrakadabra", arg ), "'%s' ? '%s'", "abrakadabra", arg );
 
     EXAMX( argcno > 1 && argvno && argvno[1]
-                  && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 && argvno
-                  && argvno[1] ? argvno[1] : "?" );
-    EXAMX( argcno > 2 && argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcno > 2
-                  && argvno && argvno[2] ? argvno[2] : "?" );
+           && 0 == mas_strcmp( "something", argvno[1] ), "Error", "'%s' ? '%s'", "something", argcno > 1 && argvno && argvno[1] ? argvno[1] : "?" );
+    EXAMX( argcno > 2 && argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "'%s' ? '%s'", "wow", argcno > 2
+           && argvno && argvno[2] ? argvno[2] : "?" );
     EXAMX( argcno > 3 && argvno && argvno[3]
-                  && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcno > 3 && argvno
-                  && argvno[3] ? argvno[3] : "?" );
+           && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "Error", "'%s' ? '%s'", "abrakadabra", argcno > 3 && argvno
+           && argvno[3] ? argvno[3] : "?" );
 #endif
     masexam_next_group(  );
-    EXAMX( bitwise1 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise1=%lx ? %lx", 0x10204, bitwise1 );
-    EXAMX( bitwise2 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise2=%lx ? %lx", 0x10204, bitwise2 );
-    EXAMX( bitwise3 == ( unsigned long ) 0x10204, "OK", "Error", "bitwise3=%lx ? %lx", 0x10204, bitwise3 );
+    EXAMX( bitwise1 == ( unsigned long ) 0x10204, "bitwise1=%lx ? %lx", 0x10204, bitwise1 );
+    EXAMX( bitwise2 == ( unsigned long ) 0x10204, "bitwise2=%lx ? %lx", 0x10204, bitwise2 );
+    EXAMX( bitwise3 == ( unsigned long ) 0x10204, "bitwise3=%lx ? %lx", 0x10204, bitwise3 );
 
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;UINT_MAX:%x\nLONG_MIN:%lx;ULONG_MAX:%lx\nLLONG_MIN:%llx;ULLONG_MAX:%llx\n", UINT_MIN, UINT_MAX, ULONG_MIN,

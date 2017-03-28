@@ -6,9 +6,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
+#include <mastar/minierr/minierr.h>
+
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "option.h"
 

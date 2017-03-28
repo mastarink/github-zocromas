@@ -9,7 +9,6 @@
 
 #include <popt.h>
 
-
 void
 usage( poptContext optCon, int _uUu_ exitcode, char *error, char *addl )
 {
@@ -20,7 +19,7 @@ usage( poptContext optCon, int _uUu_ exitcode, char *error, char *addl )
 }
 
 int
-test_popt( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_ , int do_fprintf _uUu_)
+test_popt( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
   masregerrs_delete_default( NULL );
   char c _uUu_;                                                      /* used for argument parsing */

@@ -111,6 +111,7 @@ main( int argc, const char *argv[] )
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},
+
     {1, test_1, 1, "",.do_fprintf = 0},
     {1, test_1s, 1, "s"},
     {1, test_1mul, 1, "mul",.f_print_ok = 0},
@@ -129,7 +130,8 @@ main( int argc, const char *argv[] )
   masregerrs_delete_default( NULL );
   masexam_test( argc, argv, funlist );
 #define TOTAL_TESTS 349 - 1
-  EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+  /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
+  EXAM( masexam_tests_count(  ) , TOTAL_TESTS, "tests_count=%d ? %d" );
 
   return 0;
 }

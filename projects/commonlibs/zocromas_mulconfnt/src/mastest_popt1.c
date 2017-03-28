@@ -16,7 +16,7 @@
 #include "mastest.h"
 
 int
-test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const char *series_suffix _uUu_ , int do_fprintf _uUu_)
+test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
   masregerrs_delete_default( NULL );
   int c = 0xffff;
@@ -171,55 +171,51 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const 
   }
 
   masexam_next_group(  );
-  EXAMX( sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "%d ? %d", v_int0, 5437 );
-  EXAMX( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "%d ? %d", v_int1, 0x12 );
-  EXAMX( sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "%d ? %d", v_int2, 012 );
-  EXAMX( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "%d ? %d", v_int3, INT_MAX );
-  EXAMX( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "%d ? %d", v_int4, INT_MIN );
+  EXAMX( sizeof( v_int0 ) == 4 && v_int0 == 5437, "%d ? %d", v_int0, 5437 );
+  EXAMX( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "%d ? %d", v_int1, 0x12 );
+  EXAMX( sizeof( v_int2 ) == 4 && v_int2 == 012, "%d ? %d", v_int2, 012 );
+  EXAMX( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "%d ? %d", v_int3, INT_MAX );
+  EXAMX( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "%d ? %d", v_int4, INT_MIN );
 
   masexam_next_group(  );
-  EXAMX( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
-  EXAMX( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
-  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
-  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
-  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807L, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807L );
-  EXAMX( sizeof( v_long3 ) == 8 && v_long3 == 9223372036854775807L, "OK", "Error", "%ld ? %ld", v_long3, 9223372036854775807L );
-  EXAMX( sizeof( v_long4 ) == 8 && v_long4 == -12L, "OK", "Error", "%ld ? %ld", v_long4, -12L );
-  EXAMX( sizeof( v_long5 ) == 8 && v_long5 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long5, LONG_MIN );
+  EXAMX( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "%ld ? %ld", v_long0, 0xffffffffffL );
+  EXAMX( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "%ld ? %ld", v_long1, 0xffL );
+  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "%ld ? %ld", v_long2, LONG_MAX );
+  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
+  EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807L, "%ld ? %ld", v_long2, 9223372036854775807L );
+  EXAMX( sizeof( v_long3 ) == 8 && v_long3 == 9223372036854775807L, "%ld ? %ld", v_long3, 9223372036854775807L );
+  EXAMX( sizeof( v_long4 ) == 8 && v_long4 == -12L, "%ld ? %ld", v_long4, -12L );
+  EXAMX( sizeof( v_long5 ) == 8 && v_long5 == LONG_MIN, "%ld ? %ld", v_long5, LONG_MIN );
 
   masexam_next_group(  );
-  EXAMX( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
-  EXAMX( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
-  EXAMX( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
-  EXAMX( sizeof( v_llong3 ) == 8
-                && v_llong3 == LLONG_MAX - 1, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong3, v_llong3, LLONG_MAX - 1, sizeof( v_llong3 ) );
-  EXAMX( sizeof( v_llong4 ) == 8
-                && v_llong4 == LLONG_MIN + 1, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong4, v_llong4, LLONG_MIN + 1, sizeof( v_llong4 ) );
+  EXAMX( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
+  EXAMX( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
+  EXAMX( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
+  EXAMX( sizeof( v_llong3 ) == 8 && v_llong3 == LLONG_MAX - 1, "%llx/%lld ? %lld (%d)", v_llong3, v_llong3, LLONG_MAX - 1, sizeof( v_llong3 ) );
+  EXAMX( sizeof( v_llong4 ) == 8 && v_llong4 == LLONG_MIN + 1, "%llx/%lld ? %lld (%d)", v_llong4, v_llong4, LLONG_MIN + 1, sizeof( v_llong4 ) );
 #if 0
 /* for some reason popt doesn't allow LLONG_MAX and LLONG_MIN and marks it as overflow */
-  EXAMX( sizeof( v_llong5 ) == 8
-                && v_llong5 == LLONG_MIN, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong5, v_llong5, LLONG_MIN, sizeof( v_llong5 ) );
-  EXAMX( sizeof( v_llong6 ) == 8
-                && v_llong6 == LLONG_MIN, "OK", "Error", "%llx/%lld ? %lld (%d)", v_llong6, v_llong6, LLONG_MIN, sizeof( v_llong6 ) );
+  EXAMX( sizeof( v_llong5 ) == 8 && v_llong5 == LLONG_MIN, "%llx/%lld ? %lld (%d)", v_llong5, v_llong5, LLONG_MIN, sizeof( v_llong5 ) );
+  EXAMX( sizeof( v_llong6 ) == 8 && v_llong6 == LLONG_MIN, "%llx/%lld ? %lld (%d)", v_llong6, v_llong6, LLONG_MIN, sizeof( v_llong6 ) );
 #endif
 /*
    masexam_next_group(  );
 
    char **argsno = xargv;
 
-   EXAMX( 0 == strcmp( "something", argsno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argsno[1] );
-   EXAMX( 0 == strcmp( "wow", argsno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argsno[2] );
-   EXAMX( 0 == strcmp( "abrakadabra", argsno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argsno[3] );
+   EXAMX( 0 == strcmp( "something", argsno[1] ),  "'%s' ? '%s'", "something", argsno[1] );
+   EXAMX( 0 == strcmp( "wow", argsno[2] ),  "'%s' ? '%s'", "wow", argsno[2] );
+   EXAMX( 0 == strcmp( "abrakadabra", argsno[3] ),  "'%s' ? '%s'", "abrakadabra", argsno[3] );
    * */
   masexam_next_group(  );
-  EXAMX( thestring && 0 == strcmp( thestring, "asta manyana..." ), "OK", "Error", "%s ? %s", thestring, "asta manyana..." );
+  EXAMX( thestring && 0 == strcmp( thestring, "asta manyana..." ), "%s ? %s", thestring, "asta manyana..." );
   masexam_next_group(  );
-  EXAMX( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? bitwise1:%lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
-  EXAMX( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? bitwise2:%lx", ( long ) 0x10304L, bitwise2 );
-  EXAMX( bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? bitwise3:%lx", ( long ) 0x10004L, bitwise3 );
+  EXAMX( bitwise1 == ( long ) 0xfffffffffffff8ffL, "%lx ? bitwise1:%lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
+  EXAMX( bitwise2 == ( long ) 0x10304L, "%lx ? bitwise2:%lx", ( long ) 0x10304L, bitwise2 );
+  EXAMX( bitwise3 == ( long ) 0x10004L, "%lx ? bitwise3:%lx", ( long ) 0x10004L, bitwise3 );
   masexam_next_group(  );
-  EXAMX( c == -1, "OK", "Error", "err (c):%d", c );
-  EXAMX( err == 0, "OK", "Error", "err:%d", err );
+  EXAMX( c == -1, "err (c):%d", c );
+  EXAMX( err == 0, "err:%d", err );
 
   {
     const char *arg;

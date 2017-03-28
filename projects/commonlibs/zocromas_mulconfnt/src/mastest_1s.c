@@ -137,10 +137,10 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_t *plist = mucs_source_list_create(  );
 
     masexam_next_group(  );
-    EXAMX( plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    EXAMX( plist ? 1 : 0, "plist: %p", plist );
     mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
-    EXAMX( osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+    EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 
     mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
@@ -161,19 +161,17 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     }
 
     masexam_next_group(  );
-    /* EXAMX( !mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
-    EXAMX( !masregerrs_count_all_default( NULL, TRUE ), "OK", "Error", "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
+  /* EXAMX( !mucs_error_source( osrc ),  "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
+    EXAMX( !masregerrs_count_all_default( NULL, TRUE ), "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
     masexam_next_group(  );
-    EXAMX( v_string0
-                  && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
+    EXAMX( v_string0 && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
 #if 0
   /* Don't: Auto-free */
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
 #endif
-    EXAMX( v_string1
-                  && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+    EXAMX( v_string1 && 0 == mas_strcmp( v_string1, "lorem ipsum" ), "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
 #if 0
   /* Don't: Auto-free */
     if ( v_string1 )
@@ -181,60 +179,55 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     v_string1 = NULL;
 #endif
     masexam_next_group(  );
-    EXAMX( sizeof( v_int0 ) == 4 && v_int0 == 5437, "OK", "Error", "num0=%d ? %d", v_int0, 5437 );
-    EXAMX( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "OK", "Error", "num1=%d ? %d", v_int1, 0x12 );
-    EXAMX( sizeof( v_int2 ) == 4 && v_int2 == 012, "OK", "Error", "num2=%d ? %d", v_int2, 012 );
-    EXAMX( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "OK", "Error", "num3=%d ? %d", v_int3, INT_MAX );
-    EXAMX( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "OK", "Error", "num4=%d ? %d", v_int4, INT_MIN );
+    EXAMX( sizeof( v_int0 ) == 4 && v_int0 == 5437, "num0=%d ? %d", v_int0, 5437 );
+    EXAMX( sizeof( v_int1 ) == 4 && v_int1 == 0x12, "num1=%d ? %d", v_int1, 0x12 );
+    EXAMX( sizeof( v_int2 ) == 4 && v_int2 == 012, "num2=%d ? %d", v_int2, 012 );
+    EXAMX( sizeof( v_int3 ) == 4 && v_int3 == INT_MAX, "num3=%d ? %d", v_int3, INT_MAX );
+    EXAMX( sizeof( v_int4 ) == 4 && v_int4 == INT_MIN, "num4=%d ? %d", v_int4, INT_MIN );
 
     masexam_next_group(  );
-    EXAMX( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "OK", "Error", "%ld ? %ld", v_long0, 0xffffffffffL );
-    EXAMX( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "OK", "Error", "%ld ? %ld", v_long1, 0xffL );
-    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "OK", "Error", "%ld ? %ld", v_long2, LONG_MAX );
-    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "OK", "Error", "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
-    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807, "OK", "Error", "%ld ? %ld", v_long2, 9223372036854775807 );
-    EXAMX( sizeof( v_long3 ) == 8 && v_long3 == -12L, "OK", "Error", "%ld ? %ld", v_long3, -12L );
-    EXAMX( sizeof( v_long4 ) == 8 && v_long4 == LONG_MIN, "OK", "Error", "%ld ? %ld", v_long4, LONG_MIN );
+    EXAMX( sizeof( v_long0 ) == 8 && v_long0 == 1099511627775L, "%ld ? %ld", v_long0, 0xffffffffffL );
+    EXAMX( sizeof( v_long1 ) == 8 && v_long1 == 0xff, "%ld ? %ld", v_long1, 0xffL );
+    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == LONG_MAX, "%ld ? %ld", v_long2, LONG_MAX );
+    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 0x7fffffffffffffffL, "%lx ? %lx", v_long2, 0x7fffffffffffffffL );
+    EXAMX( sizeof( v_long2 ) == 8 && v_long2 == 9223372036854775807, "%ld ? %ld", v_long2, 9223372036854775807 );
+    EXAMX( sizeof( v_long3 ) == 8 && v_long3 == -12L, "%ld ? %ld", v_long3, -12L );
+    EXAMX( sizeof( v_long4 ) == 8 && v_long4 == LONG_MIN, "%ld ? %ld", v_long4, LONG_MIN );
 
     masexam_next_group(  );
-    EXAMX( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "OK", "Error", "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
-    EXAMX( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "OK", "Error", "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
-    EXAMX( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "OK", "Error", "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
-    EXAMX( sizeof( v_llong3 ) == 8
-                  && v_llong3 == LLONG_MAX, "OK", "Error", "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
-    EXAMX( sizeof( v_llong4 ) == 8
-                  && v_llong4 == LLONG_MIN, "OK", "Error", "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
+    EXAMX( sizeof( v_llong0 ) == 8 && v_llong0 == 5437LL, "%lld ? %lld (%d)", v_llong0, 5437LL, sizeof( v_llong0 ) );
+    EXAMX( sizeof( v_llong1 ) == 8 && v_llong1 == 0x12LL, "%lld ? %lld (%d)", v_llong1, 0x12LL, sizeof( v_llong1 ) );
+    EXAMX( sizeof( v_llong2 ) == 8 && v_llong2 == 012LL, "%lld ? %lld (%d)", v_llong2, 012LL, sizeof( v_llong2 ) );
+    EXAMX( sizeof( v_llong3 ) == 8 && v_llong3 == LLONG_MAX, "%lld ? %lld (%d)", v_llong3, LLONG_MAX, sizeof( v_llong2 ) );
+    EXAMX( sizeof( v_llong4 ) == 8 && v_llong4 == LLONG_MIN, "%lld ? %lld (%d)", v_llong4, LLONG_MIN, sizeof( v_llong2 ) );
 
     masexam_next_group(  );
-    EXAMX( sizeof( v_double0 ) == 8
-                  && v_double0 == 3.141592653589793, "OK", "Error", "%3.15f ? %3.15f (%d)", v_double0, 3.141592653589793, sizeof( v_double0 ) );
+    EXAMX( sizeof( v_double0 ) == 8 && v_double0 == 3.141592653589793, "%3.15f ? %3.15f (%d)", v_double0, 3.141592653589793, sizeof( v_double0 ) );
     EXAMX( sizeof( v_ldouble0 ) == 16
-                  && v_ldouble0 == ( long double ) 3.14159265358979323846L, "OK", "Error", "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
-                  ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
+           && v_ldouble0 == ( long double ) 3.14159265358979323846L, "%3.20Lf ? %3.20Lf (%d)", v_ldouble0,
+           ( long double ) 3.14159265358979323846L, sizeof( v_ldouble0 ) );
 
     char **argvno = mucs_source_argv_no( osrc );
     int argcno = mucs_source_argc_no( osrc );
 
     masexam_next_group(  );
-    EXAMX( argcno == NUM_NOPTS, "OK", "Error", "%d ? %d", argcno, NUM_NOPTS );
+    EXAMX( argcno == NUM_NOPTS, "%d ? %d", argcno, NUM_NOPTS );
     arg = mucs_source_arg_no( osrc, 1 );
-    EXAMX( arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    EXAMX( arg && 0 == mas_strcmp( "something", arg ), "'%s' ? '%s'", "something", arg );
     arg = mucs_source_arg_no( osrc, 2 );
-    EXAMX( arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    EXAMX( arg && 0 == mas_strcmp( "wow", arg ), "'%s' ? '%s'", "wow", arg );
     arg = mucs_source_arg_no( osrc, 3 );
-    EXAMX( arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    EXAMX( arg && 0 == mas_strcmp( "abrakadabra", arg ), "'%s' ? '%s'", "abrakadabra", arg );
 
-    EXAMX( argcno > 1 && argvno && argvno[1]
-                  && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 ? argvno[1] : "?" );
-    EXAMX( argcno > 2 && argvno && argvno[2]
-                  && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcno > 2 ? argvno[2] : "?" );
+    EXAMX( argcno > 1 && argvno && argvno[1] && 0 == mas_strcmp( "something", argvno[1] ), "'%s' ? '%s'", "something", argcno > 1 ? argvno[1] : "?" );
+    EXAMX( argcno > 2 && argvno && argvno[2] && 0 == mas_strcmp( "wow", argvno[2] ), "'%s' ? '%s'", "wow", argcno > 2 ? argvno[2] : "?" );
     EXAMX( argcno > 3 && argvno && argvno[3]
-                  && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcno > 3 ? argvno[3] : "?" );
+           && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "'%s' ? '%s'", "abrakadabra", argcno > 3 ? argvno[3] : "?" );
 
     masexam_next_group(  );
-    EXAMX( bitwise1 == ( long ) 0xfffffffffffff8ffL, "OK", "Error", "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
-    EXAMX( bitwise2 == ( long ) 0x10304L, "OK", "Error", "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
-    EXAMX( bitwise3 == ( long ) 0x10004L, "OK", "Error", "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
+    EXAMX( bitwise1 == ( long ) 0xfffffffffffff8ffL, "%lx ? %lx", ( long ) 0xfffffffffffff8ffL, bitwise1 );
+    EXAMX( bitwise2 == ( long ) 0x10304L, "%lx ? %lx", ( long ) 0x10304L, bitwise2 );
+    EXAMX( bitwise3 == ( long ) 0x10004L, "%lx ? %lx", ( long ) 0x10004L, bitwise3 );
 
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;INT_MAX:%x\nLONG_MIN:%lx;LONG_MAX:%lx\nLLONG_MIN:%llx;LLONG_MAX:%llx\n", INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,

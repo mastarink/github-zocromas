@@ -12,7 +12,7 @@
 
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "source_base.h"
 #include "source.h"

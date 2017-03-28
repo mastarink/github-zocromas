@@ -56,11 +56,11 @@ tab sfind mastest_4.c
 sfind mastest_5.c
 sfind mastest_6.c
 
-tab sfind mulconfnt_error.h
-sfind mulconfnt_error.c
+"tab sfind mulconfnt_error.h
+"sfind mulconfnt_error.c
 
-tab sfind mulconfnt_error_base.h
-sfind mulconfnt_error_base.c
+"tab sfind mulconfnt_error_base.h
+"sfind mulconfnt_error_base.c
 
 tab sfind mastest.h
 sfind mastest.c

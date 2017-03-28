@@ -8,7 +8,7 @@
 
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "option.h"
 

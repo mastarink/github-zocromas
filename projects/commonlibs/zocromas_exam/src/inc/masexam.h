@@ -30,7 +30,7 @@ long masexam_tests_count( void );
 /* for special mas_strcmp -- includes NULL's  */
 #include <mastar/tools/mas_arg_tools.h>
 
-# define EXAMX( q, var, val, fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
+# define EXAMX( q, fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
     		(q), "OK", "Error", fmt, __VA_ARGS__ )
 
 # define EXAM( var, val, fmt ) masexam_exam(__func__, __LINE__, __FILE__, \

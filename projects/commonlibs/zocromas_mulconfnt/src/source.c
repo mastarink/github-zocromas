@@ -12,7 +12,7 @@
 
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "option_base.h"
 #include "option.h"
@@ -201,7 +201,6 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
 
   if ( osrc->curarg < osrc->targ.argc - 1 )
     next_arg = osrc->targ.argv[osrc->curarg + 1];
-
   opt = mucs_config_option_tablist_lookup( tablist, variantid, arg_nopref, next_arg, osrc->eq, NULL, osrc->flags );
   opt = mucs_source_dealias_opt( osrc, tablist, opt, variantid, next_arg );
 
@@ -213,7 +212,7 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
   else
   {
   /* mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref ); */
-    /* WARN( "unrecognized option '%s'", arg_nopref ); */
+  /* WARN( "unrecognized option '%s'", arg_nopref ); */
     QRGSRC( osrc, -1 );
   }
   if ( opt )
@@ -222,9 +221,8 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
 }
 
 void
-mucs_source_lookup_arg( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
+mucs_source_lookup_arg( mucs_source_han_t * osrc, const char *arg, const mucs_option_table_list_t * tablist )
 {
-  const char *arg = osrc->targ.argv[osrc->curarg];
 
 /* max_match_id: determine variant by prefix */
   mucs_variant_t variantid = ( !osrc->lastoptpos || osrc->curarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MUCS_VARIANT_NONOPT;
@@ -254,11 +252,13 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
 
   mucs_source_load_targ( osrc );
   osrc->lastoptpos = 0;
+
   for ( osrc->curarg = 0; osrc && !masregerrs_count_all_default( NULL, TRUE ) /*mucs_error_source( osrc ) */  && osrc->curarg < osrc->targ.argc;
         osrc->curarg++ )
   {
     nargs++;
-    mucs_source_lookup_arg( osrc, tablist );
+    mucs_source_lookup_arg( osrc, osrc->targ.argv[osrc->curarg], tablist );
+    /* WARN( "* (%d) %d. %s ne:%d", nargs, osrc->curarg, osrc->targ.argv[osrc->curarg], masregerrs_count_all_default( NULL, TRUE ) ); */
   }
   return -nargs;
 }
