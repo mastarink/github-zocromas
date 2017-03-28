@@ -3,6 +3,7 @@
 
 # include "mulconfnt_types.h"
 
+#if 0
 void mucs_error_reset( mucs_error_t * error );
 void mucs_error_delete( mucs_error_t * error );
 
@@ -10,5 +11,6 @@ int mucs_error_vset( mucs_error_t * error, int line, const char *func, const cha
 int mucs_error_set( mucs_error_t * error, int line, const char *func, const char *file, unsigned long flags, const char *fmt, ... );
 
 int mucs_error_set_from_error( mucs_error_t * error, mucs_error_t * srcerror );
+#endif
 
 #endif

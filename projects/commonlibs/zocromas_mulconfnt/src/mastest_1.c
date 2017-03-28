@@ -20,7 +20,7 @@
 #include "source_list_base.h"
 #include "source_list.h"
 #include "parse.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "mastest.h"
 
@@ -73,6 +73,7 @@ num5callback( mucs_option_han_t * opt )
 int
 test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
+  masregerrs_delete_default( NULL );
   char *v_string0 = NULL;
   char *v_string1 = NULL;
 
@@ -243,7 +244,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     }
 
     masexam_next_group(  );
-    EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" );
+  /* EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" ); */
+    EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
 
     masexam_next_group(  );
     EXAMS( v_string0, "lorem-ipsum", "v_string0=%s ? %s" );

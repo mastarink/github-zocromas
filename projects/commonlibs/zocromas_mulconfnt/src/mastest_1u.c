@@ -20,13 +20,14 @@
 #include "source_list_base.h"
 #include "source_list.h"
 #include "parse.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "mastest.h"
 
 int
 test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
+  masregerrs_delete_default( NULL );
   const char *arg;
 
   unsigned char v_uchar0 = 0;
@@ -132,8 +133,8 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    masexam_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+    EXAMX( plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    EXAMX( osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
@@ -154,70 +155,73 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     }
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, !mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) );
+    /* EXAMX( !mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
+    EXAMX( !masregerrs_count_all_default( NULL, TRUE ), "OK", "Error", "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, sizeof( v_uchar0 ) == 1, "OK", "Error", "num0=%d ? %d", sizeof( v_uchar0 ), 1 );
-    masexam_exam( __LINE__, sizeof( v_uchar0 ) == 1 && v_uchar0 == 207, "OK", "Error", "num0=%d ? %d", v_uchar0, 207 );
-    masexam_exam( __LINE__, sizeof( v_ushort0 ) == 2, "OK", "Error", "num0=%d ? %d", sizeof( v_ushort0 ), 2 );
-    masexam_exam( __LINE__, sizeof( v_ushort0 ) == 2 && v_ushort0 == 5437, "OK", "Error", "num0=%d ? %d", v_ushort0, 5437 );
+    EXAMX( sizeof( v_uchar0 ) == 1, "OK", "Error", "num0=%d ? %d", sizeof( v_uchar0 ), 1 );
+    EXAMX( sizeof( v_uchar0 ) == 1 && v_uchar0 == 207, "OK", "Error", "num0=%d ? %d", v_uchar0, 207 );
+    EXAMX( sizeof( v_ushort0 ) == 2, "OK", "Error", "num0=%d ? %d", sizeof( v_ushort0 ), 2 );
+    EXAMX( sizeof( v_ushort0 ) == 2 && v_ushort0 == 5437, "OK", "Error", "num0=%d ? %d", v_ushort0, 5437 );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, sizeof( v_uint0 ) == 4
-                  && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, mucs_error_source( osrc ) );
-    masexam_exam( __LINE__, sizeof( v_uint1 ) == 4 && v_uint1 == 0x12, "OK", "Error", "num1=%u ? %u", v_uint1, 0x12 );
-    masexam_exam( __LINE__, sizeof( v_uint2 ) == 4 && v_uint2 == 012, "OK", "Error", "num2=%u ? %u", v_uint2, 012 );
-    masexam_exam( __LINE__, sizeof( v_uint3 ) == 4 && v_uint3 == 2147483647, "OK", "Error", "num3=%u ? %u", v_uint3, 2147483647 );
-    masexam_exam( __LINE__, sizeof( v_uint4 ) == 4 && v_uint4 == UINT_MAX, "OK", "Error", "num4=%u ? %u", v_uint4, UINT_MAX );
+    /* EXAMX( sizeof( v_uint0 ) == 4                                                                    */
+    /*               && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, mucs_error_source( osrc ) ); */
+    EXAMX( sizeof( v_uint0 ) == 4
+                  && v_uint0 == 5437, "OK", "Error", "num0=%u ? %u [%d]", v_uint0, 5437, masregerrs_count_all_default( NULL, TRUE ) );
+    EXAMX( sizeof( v_uint1 ) == 4 && v_uint1 == 0x12, "OK", "Error", "num1=%u ? %u", v_uint1, 0x12 );
+    EXAMX( sizeof( v_uint2 ) == 4 && v_uint2 == 012, "OK", "Error", "num2=%u ? %u", v_uint2, 012 );
+    EXAMX( sizeof( v_uint3 ) == 4 && v_uint3 == 2147483647, "OK", "Error", "num3=%u ? %u", v_uint3, 2147483647 );
+    EXAMX( sizeof( v_uint4 ) == 4 && v_uint4 == UINT_MAX, "OK", "Error", "num4=%u ? %u", v_uint4, UINT_MAX );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, sizeof( v_ulong0 ) == 8 && v_ulong0 == 1099511627775UL, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0xffffffffffUL );
-    masexam_exam( __LINE__, sizeof( v_ulong1 ) == 8 && v_ulong1 == 0xff, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0xffUL );
-    masexam_exam( __LINE__, sizeof( v_ulong2 ) == 8 && v_ulong2 == ULONG_MAX, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, ULONG_MAX );
-    masexam_exam( __LINE__, sizeof( v_ulong2 ) == 8
+    EXAMX( sizeof( v_ulong0 ) == 8 && v_ulong0 == 1099511627775UL, "OK", "Error", "lnum0=%lu ? %lu", v_ulong0, 0xffffffffffUL );
+    EXAMX( sizeof( v_ulong1 ) == 8 && v_ulong1 == 0xff, "OK", "Error", "lnum1=%lu ? %lu", v_ulong1, 0xffUL );
+    EXAMX( sizeof( v_ulong2 ) == 8 && v_ulong2 == ULONG_MAX, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, ULONG_MAX );
+    EXAMX( sizeof( v_ulong2 ) == 8
                   && v_ulong2 == 0xffffffffffffffffL, "OK", "Error", "lnum2=%lx ? %lx", v_ulong2, 0xffffffffffffffffUL );
-    masexam_exam( __LINE__, sizeof( v_ulong2 ) == 8
+    EXAMX( sizeof( v_ulong2 ) == 8
                   && v_ulong2 == 18446744073709551615UL, "OK", "Error", "lnum2=%lu ? %lu", v_ulong2, 18446744073709551615UL );
-    masexam_exam( __LINE__, sizeof( v_ulong3 ) == 8 && v_ulong3 == -12UL, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, -12UL );
-    masexam_exam( __LINE__, sizeof( v_ulong4 ) == 8
+    EXAMX( sizeof( v_ulong3 ) == 8 && v_ulong3 == -12UL, "OK", "Error", "lnum3=%lu ? %lu", v_ulong3, -12UL );
+    EXAMX( sizeof( v_ulong4 ) == 8
                   && v_ulong4 == ( ( unsigned long ) LONG_MAX ) + 1, "OK", "Error", "lnum4=%lu ? %lu", v_ulong4, ( ( unsigned long ) LONG_MAX ) + 1 );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, sizeof( v_ullong0 ) == 8
+    EXAMX( sizeof( v_ullong0 ) == 8
                   && v_ullong0 == 5437ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong0, 5437ULL, sizeof( v_ullong0 ) );
-    masexam_exam( __LINE__, sizeof( v_ullong1 ) == 8
+    EXAMX( sizeof( v_ullong1 ) == 8
                   && v_ullong1 == 0x12ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong1, 0x12ULL, sizeof( v_ullong1 ) );
-    masexam_exam( __LINE__, sizeof( v_ullong2 ) == 8
+    EXAMX( sizeof( v_ullong2 ) == 8
                   && v_ullong2 == 012ULL, "OK", "Error", "%llu ? %llu (%d)", v_ullong2, 012ULL, sizeof( v_ullong2 ) );
-    masexam_exam( __LINE__, sizeof( v_ullong3 ) == 8
+    EXAMX( sizeof( v_ullong3 ) == 8
                   && v_ullong3 == ULLONG_MAX, "OK", "Error", "%llu ? %llu (%d)", v_ullong3, ULLONG_MAX, sizeof( v_ullong2 ) );
-    masexam_exam( __LINE__, sizeof( v_ullong4 ) == 8
+    EXAMX( sizeof( v_ullong4 ) == 8
                   && v_ullong4 == ( ( unsigned long long ) LONG_MAX ) + 1, "OK", "Error", "%llu ? %llu (%d)", v_ullong4,
                   ( ( unsigned long long ) LONG_MAX ) + 1, sizeof( v_ullong2 ) );
     masexam_next_group(  );
-    masexam_exam( __LINE__, mucs_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mucs_source_argc_no( osrc ) );
+    EXAMX( mucs_source_argc_no( osrc ) == 4, "OK", "Error", "%d", mucs_source_argc_no( osrc ) );
 
     arg = mucs_source_arg_no( osrc, 1 );
-    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    EXAMX( arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
     arg = mucs_source_arg_no( osrc, 2 );
-    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    EXAMX( arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
     arg = mucs_source_arg_no( osrc, 3 );
-    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
+    EXAMX( arg && 0 == mas_strcmp( "abrakadabra", arg ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", arg );
 
     char **argvno = mucs_source_argv_no( osrc );
     int argcno = mucs_source_argc_no( osrc );
 
-    masexam_exam( __LINE__, argcno > 1 && argvno && argvno[1]
+    EXAMX( argcno > 1 && argvno && argvno[1]
                   && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcno > 1 ? argvno[1] : "?" );
-    masexam_exam( __LINE__, argcno > 2 && argvno && argvno[2]
+    EXAMX( argcno > 2 && argvno && argvno[2]
                   && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcno > 2 ? argvno[2] : "?" );
-    masexam_exam( __LINE__, argcno > 3 && argvno && argvno[3]
+    EXAMX( argcno > 3 && argvno && argvno[3]
                   && 0 == mas_strcmp( "abrakadabra", argvno[3] ), "OK", "Error", "'%s' ? '%s'", "abrakadabra", argcno > 3 ? argvno[3] : "?" );
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, bitwise1 == ( unsigned long ) 0xfffffffffffff8ffUL, "OK", "Error", "%lx ? %lx", 0xfffffffffffff8ffULL, bitwise1 );
-    masexam_exam( __LINE__, bitwise2 == ( unsigned long ) 0x10304UL, "OK", "Error", "%lx ? %lx", 0x10304ULL, bitwise2 );
-    masexam_exam( __LINE__, bitwise3 == ( unsigned long ) 0x10004UL, "OK", "Error", "%lx ? %lx", 0x10004ULL, bitwise3 );
+    EXAMX( bitwise1 == ( unsigned long ) 0xfffffffffffff8ffUL, "OK", "Error", "%lx ? %lx", 0xfffffffffffff8ffULL, bitwise1 );
+    EXAMX( bitwise2 == ( unsigned long ) 0x10304UL, "OK", "Error", "%lx ? %lx", 0x10304ULL, bitwise2 );
+    EXAMX( bitwise3 == ( unsigned long ) 0x10004UL, "OK", "Error", "%lx ? %lx", 0x10004ULL, bitwise3 );
 
 #if 0
     fprintf( stderr, "\nINT_MIN:%x;UINT_MAX:%x\nLONG_MIN:%lx;ULONG_MAX:%lx\nLLONG_MIN:%llx;ULLONG_MAX:%llx\n", UINT_MIN, UINT_MAX, ULONG_MIN,

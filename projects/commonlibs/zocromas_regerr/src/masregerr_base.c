@@ -54,8 +54,11 @@ masregerrs_reset( masregerrs_t * regerrs )
 void
 masregerrs_delete( masregerrs_t * regerrs )
 {
-  masregerrs_reset( regerrs );
-  mas_free( regerrs );
+  if ( regerrs )
+  {
+    masregerrs_reset( regerrs );
+    mas_free( regerrs );
+  }
 }
 
 void

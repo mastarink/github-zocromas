@@ -13,9 +13,9 @@ libzocromas_mulconfnt_la_SOURCES = \
 	option_base.c \
 	option.c \
 	option_tablist_base.c \
-	option_tablist.c \
-	mulconfnt_error_base.c \
-	mulconfnt_error.c
+	option_tablist.c
+#	mulconfnt_error_base.c
+#	mulconfnt_error.c
 
 libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 libzocromas_mulconfnt_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@

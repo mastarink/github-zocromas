@@ -21,8 +21,8 @@ typedef struct masexam_do_s masexam_do_t;
 
 int masexam_test( int argc, const char *argv[], masexam_do_t * funlist );
 
-int masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args );
-int masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );
+int masexam_vexam( const char *func, int line, const char *file, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args );
+int masexam_exam( const char *func, int line, const char *file, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... );
 void masexam_next_group( void );
 void masexam_next( void );
 long masexam_tests_count( void );
@@ -30,16 +30,21 @@ long masexam_tests_count( void );
 /* for special mas_strcmp -- includes NULL's  */
 #include <mastar/tools/mas_arg_tools.h>
 
+# define EXAMX( q, var, val, fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
+    		(q), "OK", "Error", fmt, __VA_ARGS__ )
 
-# define EXAM( var, val, fmt ) masexam_exam( __LINE__, (val) == (var), "OK", "Error", fmt, val, var )
-# define EXAMT( cond, var, val, fmt ) masexam_exam( __LINE__, (cond) && (val) == (var), "OK", "Error", fmt, val, (cond)?var:((typeof(var)) 0 ) )
-# define EXAMZ(sz, var, val, fmt ) masexam_exam( __LINE__, sizeof(var)==sz && val == var, "OK", "Error", fmt, val, var /* , val-var, sz */ )
+# define EXAM( var, val, fmt ) masexam_exam(__func__, __LINE__, __FILE__, \
+    		(val) == (var), "OK", "Error", fmt, var, val )
+# define EXAMT( cond, var, val, fmt ) masexam_exam( __func__, __LINE__, __FILE__, \
+    		(cond) && (var) == (val), "OK", "Error", fmt, ((cond)?var:((typeof(var)) 0 )), val )
+# define EXAMZ(sz, var, val, fmt ) masexam_exam( __func__, __LINE__, __FILE__, \
+    		sizeof(var)==sz && var == val, "OK", "Error", fmt, var, val )
 # define EXAMS(vars, vals, fmt) \
-	{ const char *s=vars;masexam_exam( __LINE__, s && 0 == mas_strcmp( vals, s ), "OK", "Error", fmt, vals, s ); }
+	{ const char *s=vars;masexam_exam( __func__, __LINE__, __FILE__, s && 0 == mas_strcmp( vals, s ), "OK", "Error", fmt, vals, s ); }
 # define EXAMTS(cond, vars, vals, fmt) \
-	{ const char *s=(cond)?vars:NULL;masexam_exam( __LINE__, ( s && 0 == mas_strcmp( vals, s )), "OK", "Error", fmt, vals, s ); }
+	{ const char *s=(cond)?vars:NULL;masexam_exam( __func__, __LINE__, __FILE__, ( s && 0 == mas_strcmp( vals, s )), "OK", "Error", fmt, vals, s ); }
 # define EXAMSN(varn, arrs, valn, vals, fmt) \
-  	masexam_exam( __LINE__, \
+  	masexam_exam( __func__, __LINE__, __FILE__, \
 	    varn > valn && arrs && arrs[valn] && 0 == mas_strcmp( vals, arrs[valn] ), \
 	    "OK", "Error", fmt, vals, varn > valn ? (arrs[valn]) : "?" )
 

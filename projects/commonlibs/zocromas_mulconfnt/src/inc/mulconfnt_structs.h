@@ -97,7 +97,7 @@ struct mucs_prefix_encoder_s
   char *string;
   mucs_variant_t id;
 };
-
+#if 0
 struct mucs_error_s
 {
   int nerror;
@@ -106,7 +106,7 @@ struct mucs_error_s
   const char *file;
   char *msg;
 };
-
+#endif
 struct mucs_source_han_s
 {
   mucs_source_list_t *list;
@@ -136,7 +136,7 @@ struct mucs_source_han_s
   mas_argvc_t targ;
   mas_argvc_t targno;
 
-  mucs_error_t error;
+  /* mucs_error_t error; */
   mucs_option_callback_t callback;
   mucs_option_callback_t callbacks[MUCS_RTYP_MAX + 1];
   size_t callback_called;
@@ -147,7 +147,7 @@ struct mucs_source_list_s
   mucs_source_han_t *first;
   mas_argvc_t targ;
 
-  mucs_error_t error;
+  /* mucs_error_t error; */
 };
 
 union nvalue_u
@@ -185,7 +185,7 @@ struct mucs_option_han_s
   mucs_option_callback_t callback;
   size_t callback_called;
   int value_is_set;
-  mucs_error_t error;
+  /* mucs_error_t error; */
 };
 
 struct mucs_option_table_list_s

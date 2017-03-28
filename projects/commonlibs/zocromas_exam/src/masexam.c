@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <malloc.h>
+#include <libgen.h>
 
 #include <popt.h>
 
@@ -21,7 +22,7 @@
 
 int do_fprintf = 0;
 int beep_on_error = 1;
-int assert_on_error = 1;
+int assert_on_error = 0;
 int stop_on_error = 0;
 int sleep_on_error = 0;
 int f_print_ok = 0;
@@ -77,7 +78,9 @@ masexam_next_group( void )
 }
 
 int
-masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args )
+masexam_vexam( const char *func
+               __attribute__ ( ( unused ) ), int line, const char *file, int cond, const char *goodmsg, const char *badmsg, const char *fmt,
+               va_list args )
 {
   masexam_next(  );
   if ( cond )
@@ -87,8 +90,12 @@ masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
   tests_count++;
   if ( ( cond && f_print_ok ) || ( !cond && f_print_error ) )
   {
-    fprintf( stderr, "%d. %4ld\t**** [%d%s.%d.%-2d] %-10s%s\t", line, tests_count, test_series, test_series_suffix ? test_series_suffix : "",
-             test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
+    char *filepath = mas_strdup( file );
+    char *fn = basename( filepath );
+
+    fprintf( stderr, "%s:%d. %4ld\t**** [%d%s.%d.%-2d] %-10s%s\t", fn, line, tests_count, test_series,
+             test_series_suffix ? test_series_suffix : "", test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
+    mas_free( filepath );
     vfprintf( stderr, fmt, args );
     fprintf( stderr, "\n" );
   }
@@ -102,12 +109,12 @@ masexam_vexam( int line, int cond, const char *goodmsg, const char *badmsg, cons
 }
 
 int
-masexam_exam( int line, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
+masexam_exam( const char *func, int line, const char *file, int cond, const char *goodmsg, const char *badmsg, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  cond = masexam_vexam( line, cond, goodmsg, badmsg, fmt, args );
+  cond = masexam_vexam( func, line, file, cond, goodmsg, badmsg, fmt, args );
   va_end( args );
 
   return cond;

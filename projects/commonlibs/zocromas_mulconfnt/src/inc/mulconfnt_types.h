@@ -26,6 +26,6 @@ typedef enum mucs_bitwise_e mucs_bitwise_t;
 typedef struct mucs_option_han_s mucs_option_han_t;
 typedef int ( *mucs_option_callback_t ) ( mucs_option_han_t * opt );
 typedef struct mucs_option_table_list_s mucs_option_table_list_t;
-typedef struct mucs_error_s mucs_error_t;
+/* typedef struct mucs_error_s mucs_error_t; */
 
 #endif

@@ -11,8 +11,8 @@
 
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error_base.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error_base.h" */
+/* #include "mulconfnt_error.h"      */
 
 #include "option_base.h"
 
@@ -50,7 +50,7 @@ mucs_config_option_reset( mucs_option_han_t * opt )
       mas_free( opt->argdesc );
     if ( opt->string_value )
       mas_free( opt->string_value );
-    mucs_error_reset( &opt->error );
+    /* mucs_error_reset( &opt->error ); */
   }
 }
 

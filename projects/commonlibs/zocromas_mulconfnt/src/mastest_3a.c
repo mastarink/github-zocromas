@@ -20,13 +20,14 @@
 #include "source_list_base.h"
 #include "source_list.h"
 #include "parse.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "mastest.h"
 
 int
 test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
+  masregerrs_delete_default( NULL );
   const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
@@ -78,8 +79,8 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       osrc->flags |= MUCS_FLAG_SILENT;
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
-    masexam_exam( __LINE__, osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
+    EXAMX( plist ? 1 : 0, "OK", "Error", "plist: %p", plist );
+    EXAMX( osrc ? 1 : 0, "OK", "Error", "osrc: %p", osrc );
 
     mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
@@ -100,18 +101,20 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     }
 
     masexam_next_group(  );
-    masexam_exam( __LINE__, mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")", mucs_error_source( osrc ),
-                  mucs_error_source_msg( osrc ) );
+  /* EXAMX( mucs_error_source( osrc ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")", mucs_error_source( osrc ), */
+  /*               mucs_error_source_msg( osrc ) );                                                                                           */
+    EXAMX( masregerrs_count_all_default( NULL, TRUE ), "OK", "Error", "mulconfnt_error: %d (last error: \"%s\")",
+           masregerrs_count_all_default( NULL, TRUE ), masregerr_last_msg_default( NULL ) );
     masexam_next_group(  );
-    masexam_exam( __LINE__, v_string0
-                  && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
+    EXAMX( v_string0
+           && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "OK", "Error", "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
 #if 0
   /* Don't: Auto-free */
     if ( v_string0 )
       mas_free( v_string0 );
     v_string0 = NULL;
 #endif
-    masexam_exam( __LINE__, !v_string1, "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
+    EXAMX( !v_string1, "OK", "Error", "string1=%s ? %s", v_string1 ? v_string1 : "<NULL>", "lorem ipsum" );
 #if 0
   /* Don't: Auto-free */
     if ( v_string1 )
@@ -119,19 +122,19 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     v_string1 = NULL;
 #endif
     masexam_next_group(  );
-    masexam_exam( __LINE__, mucs_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mucs_source_argc_no( osrc ), NUM_NOPTS );
+    EXAMX( mucs_source_argc_no( osrc ) == NUM_NOPTS, "OK", "Error", "%d ? %d", mucs_source_argc_no( osrc ), NUM_NOPTS );
     arg = mucs_source_arg_no( osrc, 1 );
-    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
+    EXAMX( arg && 0 == mas_strcmp( "something", arg ), "OK", "Error", "'%s' ? '%s'", "something", arg );
     arg = mucs_source_arg_no( osrc, 2 );
-    masexam_exam( __LINE__, arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
+    EXAMX( arg && 0 == mas_strcmp( "wow", arg ), "OK", "Error", "'%s' ? '%s'", "wow", arg );
 
     char **argvno = mucs_source_argv_no( osrc );
     int argcount = mucs_source_argc_no( osrc );
 
-    masexam_exam( __LINE__, argcount > 1 && argvno && argvno[1]
-                  && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcount > 1 ? argvno[1] : "?" );
-    masexam_exam( __LINE__, argcount > 2 && argvno && argvno[2]
-                  && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2 ? argvno[2] : "?" );
+    EXAMX( argcount > 1 && argvno && argvno[1]
+           && 0 == mas_strcmp( "something", argvno[1] ), "OK", "Error", "'%s' ? '%s'", "something", argcount > 1 ? argvno[1] : "?" );
+    EXAMX( argcount > 2 && argvno && argvno[2]
+           && 0 == mas_strcmp( "wow", argvno[2] ), "OK", "Error", "'%s' ? '%s'", "wow", argcount > 2 ? argvno[2] : "?" );
 
     mucs_source_list_delete( plist );
   }

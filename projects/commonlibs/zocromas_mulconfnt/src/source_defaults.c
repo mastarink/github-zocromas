@@ -111,8 +111,6 @@ source_load__targ_stream( FILE * fin, mucs_source_han_t * osrc, mas_argvc_t targ
         ignpref = osrc->pref_ids[MUCS_VARIANT_IGNORE].string;
       }
     } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
-    if ( do_fprintf )
-      fprintf( stderr, "READ '%s'\n", string );
     if ( string && *string )
       mas_add_argvc_args_d( &targ, string, 0, osrc->delims );
   }

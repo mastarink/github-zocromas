@@ -5,10 +5,13 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
+#include <mastar/minierr/minierr.h>
+
+
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error_base.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error_base.h" */
+/* #include "mulconfnt_error.h" */
 
 #include "source_defaults.h"
 #include "source_base.h"
@@ -115,7 +118,7 @@ mucs_source_reset( mucs_source_han_t * osrc )
     mas_argvc_delete( &osrc->targ );
     mas_argvc_delete( &osrc->oldtarg );
     mas_argvc_delete( &osrc->targno );
-    mucs_error_reset( &osrc->error );
+    /* mucs_error_reset( &osrc->error ); */
   }
 }
 

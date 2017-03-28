@@ -28,8 +28,6 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, muc
 
   while ( !opt && tablist )
   {
-    if ( do_fprintf )
-      fprintf( stderr, "LOOKUP TABLIST %s\n", tablist->name );
     opt = mucs_config_option_lookup_option_table( tablist->options, variantid, arg, nextarg, eq, force_value, flags );
     tablist = tablist->next;
   }

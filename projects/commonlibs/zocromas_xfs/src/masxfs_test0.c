@@ -245,7 +245,8 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   getrlimit( RLIMIT_NOFILE, &lim );
   masxfs_test_fd( __LINE__ );
 #define CUR_TESTS (0L +  TEST_FD_EXAMS*1L)
-  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+/* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+  EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
   if ( 1 )
   {
@@ -292,15 +293,18 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   /* EXAM( num, 1241 * 2, "num:%d ? %d" ); // MASXFS_ENTRY_REG and MASXFS_ENTRY_REG */
   }
 #define CUR_TESTS (1L +  TEST_FD_EXAMS*1L)
-  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+/* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+  EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
   masxfs_test_fd( __LINE__ );
 #define CUR_TESTS (2L +  TEST_FD_EXAMS*2L)
-  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+/* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+  EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
   masxfs_test_fd( __LINE__ );
 #define CUR_TESTS (3L +  TEST_FD_EXAMS*3L)
-  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+/* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+  EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
 
   if ( 1 )
@@ -323,24 +327,29 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
     EXAM( pathconf( tpath, _PC_NAME_MAX ), 255, "%d ? %d" );
     EXAM( _POSIX_PATH_MAX, 256, "%d ? %d" );
 #define CUR_TESTS (4L +  TEST_FD_EXAMS*3L  +5L)
-    masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+    /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+    EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
     {
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/", 128, 1, 0, "", "" );
 #define CUR_TESTS (5L +  TEST_FD_EXAMS*3L  +5L + TEST_0_PATH_EXAMS(1))
-      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+      /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+      EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, "/home", 128, 2, 0, "", "home" );
 #define CUR_TESTS (6L +  TEST_FD_EXAMS*3L  +5L + TEST_0_PATH_EXAMS(1) + TEST_0_PATH_EXAMS(2))
-      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+      /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+      EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
 #define CUR_TESTS (7L +  TEST_FD_EXAMS*3L  +5L + TEST_0_PATH_EXAMS(1) + TEST_0_PATH_EXAMS(2) + TEST_0_PATH_EXAMS(14))
-      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+      /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+      EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
       masxfs_test_0_path( nseries, series_suffix, do_fprintf, tpath, 128, 14, 0, "", "mastest" );
 #define CUR_TESTS (8L +  TEST_FD_EXAMS*3L  +5L + TEST_0_PATH_EXAMS(1) + TEST_0_PATH_EXAMS(2) + TEST_0_PATH_EXAMS(14)*2)
-      masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+      /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+      EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
     }
     {
@@ -353,7 +362,8 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int do_fprint
   }
   masxfs_test_fd( __LINE__ );
 #define CUR_TESTS (9L +  TEST_FD_EXAMS*4L  +5L + 1L + TEST_0_PATH_EXAMS(1L) + TEST_0_PATH_EXAMS(2L) + TEST_0_PATH_EXAMS(14)*2L)
-  masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
+  /* masexam_exam( 0, masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS ); */
+  EXAMX( masexam_tests_count(  ) == CUR_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), CUR_TESTS );
 #undef CUR_TESTS
 /* INFO( "%ld TESTS", ( 10L + TEST_FD_EXAMS * 4L + 5L + 1L + TEST_0_PATH_EXAMS( 1L ) + TEST_0_PATH_EXAMS( 2L ) + TEST_0_PATH_EXAMS( 14 ) * 2L ) ); */
   return 0;

@@ -25,6 +25,7 @@
 int
 test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
+  masregerrs_delete_default( NULL );
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
   long bitwise = 0xffff0000;

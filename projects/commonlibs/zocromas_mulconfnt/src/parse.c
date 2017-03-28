@@ -10,13 +10,13 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
+#include <mastar/minierr/minierr.h>
+
 #include "mulconfnt_structs.h"
 
 #include "source.h"
 #include "source_list_base.h"
 #include "source_list.h"
-
-#define MAST_TRACE(...) if (do_fprintf) fprintf(stderr, "%s\n", __VA_ARGS__)
 
 #define MULCONFNT_ALLOCATE__SOURCE_LIST
 
@@ -44,16 +44,14 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
   osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
   mucs_source_lookup( osrc, tablist );
 
-  if ( do_fprintf )
-    fprintf( stderr, "STRING: '%s'\n", mucs_source_load_string( osrc ) );
+  INFO( "STRING: '%s'\n", mucs_source_load_string( osrc ) );
   mucs_source_list_integrate( plist );
   {
     if ( plist->targ.argc )
     {
       for ( int i = 0; i < plist->targ.argc; i++ )
       {
-        if ( do_fprintf )
-          fprintf( stderr, "[%d] list.targ >>>> %d : %s;\n", __LINE__, i, plist->targ.argv[i] );
+        INFO( "[%d] list.targ >>>> %d : %s;\n", __LINE__, i, plist->targ.argv[i] );
       }
     }
   }
@@ -93,28 +91,28 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
       switch ( st_stdin.st_mode & S_IFMT )
       {
       case S_IFBLK:
-        MAST_TRACE( "block device" );
+        WARN( "block device" );
         break;
       case S_IFCHR:
-        MAST_TRACE( "character device" );                            /* Y */
+        WARN( "character device" );                                  /* Y */
         break;
       case S_IFDIR:
-        MAST_TRACE( "directory" );
+        WARN( "directory" );
         break;
       case S_IFIFO:
-        MAST_TRACE( "FIFO/pipe" );                                   /* cmd | this */
+        WARN( "FIFO/pipe" );                                         /* cmd | this */
         break;
       case S_IFLNK:
-        MAST_TRACE( "symlink" );
+        WARN( "symlink" );
         break;
       case S_IFREG:
-        MAST_TRACE( "regular file" );                                /* this < file */
+        WARN( "regular file" );                                      /* this < file */
         break;
       case S_IFSOCK:
-        MAST_TRACE( "socket" );
+        WARN( "socket" );
         break;
       default:
-        MAST_TRACE( "unknown?" );
+        WARN( "unknown?" );
         break;
       }
     }

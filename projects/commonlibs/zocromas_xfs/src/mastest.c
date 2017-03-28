@@ -95,8 +95,9 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
 
       masexam_test( argc, argv, funlist );
       masexam_next_group(  );
-# define TOTAL_TESTS TEST_0_EXAMS
-      masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+#define TOTAL_TESTS TEST_0_EXAMS
+    /* masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
+      EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
     }
   }
 
@@ -112,7 +113,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
   }
 
   INFO( "----------------forward:" );
-  masregerr_print_simple_all( NULL, NULL, 0 /* max.print */ );
+  masregerr_print_simple_all_default( NULL, NULL, 0 /* max.print */  );
 
   return 0;
 }

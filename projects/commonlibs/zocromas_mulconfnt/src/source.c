@@ -7,7 +7,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
-/* #include <mastar/minierr/minierr.h> */
+#include <mastar/minierr/minierr.h>
+#include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
@@ -105,15 +106,10 @@ max_match_id( mucs_source_han_t * osrc, const char *arg )
   {
     int len = match_arg( osrc->pref_ids[i].string, arg );
 
-    if ( do_fprintf > 1 )
-      fprintf( stderr, "PREF '%s' *** '%s' ===> %d\n", osrc->pref_ids[i].string, arg, len );
-
     if ( len > maxmatch )
     {
       maxmatch = len;
       maxmatchid = osrc->pref_ids[i].id;
-      if ( do_fprintf > 2 )
-        fprintf( stderr, "PREF maxmatch:%d; maxmatchid:%d\n", maxmatch, maxmatchid );
     }
   }
   return maxmatchid;
@@ -147,12 +143,8 @@ mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_
 
 //        oldopt->source = osrc;
     mucs_option_set_source( oldopt, osrc );                          /* mostly for error setting */
-    if ( do_fprintf )
-      fprintf( stderr, "ALIAS VAL: %s\n", oldopt->string_value );
 
     opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
-  /* if ( do_fprintf )                                                                                        */
-  /*   fprintf( stderr, "ALIAS (%s) => %s / %s\n", arg + preflen, opt->string_value, opt ? opt->name : "?" ); */
 
     mucs_config_option_delete( oldopt );
   }
@@ -163,11 +155,12 @@ void
 mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
 {
   mucs_option_set_source( opt, osrc );                               /* mostly for error setting */
+#if 0
   if ( mucs_error_option( opt ) )
   {
-//          opt->source = osrc;
     mucs_error_set_at_source_from_option( opt->source, opt );
   }
+#endif
   if (  /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
   {
     osrc->lastoptpos = osrc->curarg;
@@ -214,10 +207,13 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
 
 /* do something for found option */
   if ( opt )
+  {
     mucs_source_found_opt( osrc, opt );
+  }
   else
   {
-    mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref );
+  /* mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref ); */
+    /* WARN( "unrecognized option '%s'", arg_nopref ); */
     QRGSRC( osrc, -1 );
   }
   if ( opt )
@@ -242,9 +238,13 @@ mucs_source_lookup_arg( mucs_source_han_t * osrc, const mucs_option_table_list_t
 #endif
   }
   else if ( variantid == MUCS_VARIANT_NONOPT )
+  {
     mas_add_argvc_arg( &osrc->targno, arg + preflen );
+  }
   else
+  {
     mucs_source_lookup_opt( osrc, tablist, variantid, arg + preflen );
+  }
 }
 
 int
@@ -254,7 +254,8 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
 
   mucs_source_load_targ( osrc );
   osrc->lastoptpos = 0;
-  for ( osrc->curarg = 0; osrc && !mucs_error_source( osrc ) && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
+  for ( osrc->curarg = 0; osrc && !masregerrs_count_all_default( NULL, TRUE ) /*mucs_error_source( osrc ) */  && osrc->curarg < osrc->targ.argc;
+        osrc->curarg++ )
   {
     nargs++;
     mucs_source_lookup_arg( osrc, tablist );

@@ -16,7 +16,7 @@
 
 #include "mulconfnt_structs.h"
 
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "source.h"
 #include "source_list_base.h"
@@ -126,9 +126,10 @@ main( int argc, const char *argv[] )
     {1, test_6, 6, "",.f_print_ok = 0},
     {0}
   };
+  masregerrs_delete_default( NULL );
   masexam_test( argc, argv, funlist );
 #define TOTAL_TESTS 349 - 1
-  masexam_exam( 0, masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
+  EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS );
 
   return 0;
 }

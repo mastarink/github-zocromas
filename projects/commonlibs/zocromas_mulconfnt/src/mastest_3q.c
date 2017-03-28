@@ -21,13 +21,14 @@
 #include "source_list_base.h"
 #include "source_list.h"
 #include "parse.h"
-#include "mulconfnt_error.h"
+/* #include "mulconfnt_error.h" */
 
 #include "mastest.h"
 
 int
-test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix , int do_fprintf _uUu_)
+test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix, int do_fprintf _uUu_ )
 {
+  masregerrs_delete_default( NULL );
   masexam_next_group(  );
   {
     const char *strings[] = {
@@ -80,7 +81,7 @@ test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const cha
       char *s;
 
       s = mucs_unquote( strings[istr], "'\"" );
-      masexam_exam( __LINE__, 0 == mas_strcmp( s, strings[istr + 1] ), "OK", "Error", "%s ? %s\t\t(%d)", s, strings[istr + 1], istr / 2 );
+      EXAMX( 0 == mas_strcmp( s, strings[istr + 1] ), "OK", "Error", "%s ? %s\t\t(%d)", s, strings[istr + 1], istr / 2 );
       mas_free( s );
     }
   }
