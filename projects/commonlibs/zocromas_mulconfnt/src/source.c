@@ -165,22 +165,21 @@ mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
   {
     osrc->lastoptpos = osrc->curarg;
   }
-  if ( !opt->value_is_set )
   {
     mucs_option_callback_t cb = NULL;
 
-    if ( osrc->callback )
+    if ( !( ( opt->flags & MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->value_is_set ) && osrc->common_callback && !( opt->flags & MUCS_FLAG_NO_COMMON_CB ) )
     {
-      cb = osrc->callback;
+      cb = osrc->common_callback;
       if ( cb )
       {
         cb( opt );
         osrc->callback_called++;
       }
     }
-    if ( osrc->callbacks )
+    if ( !( ( opt->flags & MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->value_is_set ) &&  osrc->type_callbacks && !( opt->flags & MUCS_FLAG_NO_TYPE_CB ) )
     {
-      cb = osrc->callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
+      cb = osrc->type_callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
       if ( cb )
       {
         cb( opt );
@@ -258,7 +257,7 @@ mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t
   {
     nargs++;
     mucs_source_lookup_arg( osrc, osrc->targ.argv[osrc->curarg], tablist );
-    /* WARN( "* (%d) %d. %s ne:%d", nargs, osrc->curarg, osrc->targ.argv[osrc->curarg], masregerrs_count_all_default( NULL, TRUE ) ); */
+  /* WARN( "* (%d) %d. %s ne:%d", nargs, osrc->curarg, osrc->targ.argv[osrc->curarg], masregerrs_count_all_default( NULL, TRUE ) ); */
   }
   return -nargs;
 }
@@ -299,12 +298,12 @@ void
 mucs_source_set_common_callback( mucs_source_han_t * osrc, mucs_option_callback_t cb )
 {
   if ( osrc )
-    osrc->callback = cb;
+    osrc->common_callback = cb;
 }
 
 void
 mucs_source_set_type_callback( mucs_source_han_t * osrc, mucs_restype_t restype, mucs_option_callback_t cb )
 {
   if ( osrc )
-    osrc->callbacks[restype] = cb;
+    osrc->type_callbacks[restype] = cb;
 }

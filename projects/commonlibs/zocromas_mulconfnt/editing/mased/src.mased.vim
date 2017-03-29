@@ -1,6 +1,7 @@
 find mulconfnt_defs.h
 sfind mulconfnt_types.h
 sfind mulconfnt_structs.h
+sfind mulconfnt_enums.h
 
 tab sfind parse.h
 sfind parse.c

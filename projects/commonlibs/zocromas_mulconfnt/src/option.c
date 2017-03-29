@@ -409,22 +409,30 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
     int found = 0;
     int has_value = 0;
     const char *string_value = NULL;
+    int without_arg = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
+    unsigned arglen = strlen( arg );
 
     if ( variantid == MUCS_VARIANT_SHORT )
     {
-      found = ( strlen( arg ) == 1 && *arg == topt->shortname ) ? 1 : 0;
-      if ( *arg == topt->shortname )
+      found = ( arglen == 1 && *arg == topt->shortn ) ? 1 : 0;
+      if ( *arg == topt->shortn )
       {
         const char *argp = arg + 1;
 
         if ( *argp == 0 )
         {
-          string_value = nextarg;
+        /* "-o", "value" */
+          has_value = 1;
+          if ( !without_arg )
+          {
+            string_value = nextarg;
+            has_value++;                                             /* to skip next arg */
+          }
           found = 1;
-          has_value = 2;
         }
-        else if ( strchr( " \t", *argp ) )
+        else if ( !without_arg && strchr( " \t", *argp ) )
         {
+        /* "-o value" */
           found = 2;
           has_value = 1;
           string_value = argp;
@@ -441,19 +449,22 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
     {
       unsigned l = strlen( topt->name );
 
-      if ( strlen( arg ) >= l && 0 == strncmp( arg, topt->name, l ) )
+      if ( arglen >= l && 0 == strncmp( arg, topt->name, l ) )
       {
+        int leq = strlen( eq );
+        int have_eq = ( eq && 0 == strncmp( arg + l, eq, leq ) );
+
       /* found opt name */
-        if ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) != MUCS_RTYP_NONE && arg[l] && ( eq && 0 == strncmp( arg + l, eq, strlen( eq ) ) ) )
+        if ( !without_arg && arg[l] && have_eq )
         {
-        /* A. --opt=val  */
-          string_value = &arg[l] + strlen( eq );
+        /* A. "--opt=val"  */
+          string_value = &arg[l] + leq;
           found = 2;
           has_value = 1;
         }
-        else if ( force_value )
+        else if ( !without_arg && force_value )
         {
-        /* B. --opt ( + forced value )  */
+        /* B. "--opt" ( + forced value )  */
           string_value = force_value;
           found = 2;
           has_value = 1;
@@ -463,13 +474,14 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
         /* Not found */
           found = 0;
         }
-        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
+        else if ( !without_arg && mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
         {
         /* Found, but no needed "=value" */
           found = 3;
         }
-        else if ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE )
+        else if ( without_arg )
         {
+        /* "--opt" */
         /* Found, no-value */
           found = 1;
           has_value = 0;
@@ -477,6 +489,7 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
         }
         else
         {
+        /* "--opt", "value" */
         /* Found, value at next arg */
           found = 1;
           string_value = nextarg;
