@@ -120,6 +120,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "--string0=lorem-ipsum",
     "--string1", "lorem ipsum",
     "--string2", "Phasellus congue bibendum magna",
+    /* TODO  "--string3 Something right here" */
     "--targ0=asta",
     "--cnum0=107",
     "--snum0=5437",

@@ -194,7 +194,7 @@ mucs_config_option_string_to_nvalue( mucs_option_han_t * opt, int *perr )
 }
 
 static void
-mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu_ )
+mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long dbg_flags _uUu_ )
 {
   if ( opt && opt->string_value )
   {
@@ -210,8 +210,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     v_x = mucs_config_option_string_to_nvalue( opt, &err );
     if ( err )
     {
-      WARN( ">>>>>> '%s'\n", opt->string_value );
-    /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (* non-numeric *) */
+    /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (* non-numeric *) */
       QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
     }
 
@@ -226,7 +225,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_CHAR:
       if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into char *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into char *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -241,7 +240,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_UCHAR:
       if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into char *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into char *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -256,7 +255,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_SHORT:
       if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into short *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into short *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -271,7 +270,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_USHORT:
       if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into short *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into short *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -286,7 +285,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_INT:
       if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into int *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into int *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -301,7 +300,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
     case MUCS_RTYP_UINT:
       if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
       {
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into int *) */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); (*unable to place number into int *) */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -317,7 +316,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
       if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
       {
       /*unable to place number into long */
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -333,7 +332,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
       if ( ( unsigned long long ) ( unsigned long ) v_x.v_ulong_long != v_x.v_ulong_long )
       {
       /*unable to place number into long */
-      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "Wrong value '%s'", opt->string_value ); */
+      /* mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "Wrong value '%s'", opt->string_value ); */
         QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
       }
       if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -378,7 +377,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt, unsigned long flags _uUu
 }
 
 void
-mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value, unsigned long flags )
+mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value, unsigned long dbg_flags )
 {
   if ( opt )
   {
@@ -393,7 +392,7 @@ mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value,
       opt->string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
     memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
-    mucs_config_option_set_nvalue( opt, flags );
+    mucs_config_option_set_nvalue( opt, dbg_flags );
   }
 }
 
@@ -414,45 +413,51 @@ mucs_config_option_match_name( const mucs_option_han_t * topt, mucs_variant_t va
   {
     lname = 1;
     argp = arg + lname;
-    if ( !( ( larg == lname ) && *arg == topt->shortn && ( !*argp || strchr( " \t", *argp ) ) ) )
+  /* WARN( "{%s} => '%s' %d:%d:%d", arg, argp, ( larg == lname ), ( *arg == topt->shortn ), ( !*argp || strchr( " \t", *argp ) ) ); */
+    if ( !( ( *arg == topt->shortn ) && ( larg == lname || strchr( " \t", *argp ) ) ) )
     {
       argp = NULL;
     }
   }
   else if ( variantid == MUCS_VARIANT_LONG )
   {
-    int with_eq = 0;
-
     lname = strlen( topt->name );
     if ( 0 == strncmp( topt->name, arg, lname ) )
     {
       argp = arg + lname;
       if ( *argp )
       {
-        with_eq = ( eq && 0 == strcmp( argp, eq ) );
+        unsigned leq = strlen( eq );
+        int with_eq = 0;
+
+        with_eq = ( eq && 0 == strncmp( argp, eq, leq ) );
         if ( with_eq )
-          argp += strlen( eq );
-        else
+          argp += leq;
+        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
           argp = NULL;
       }
+      else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
+        argp = NULL;
     }
   }
   return argp;
 }
 
 mucs_option_han_t *
-mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_table, mucs_variant_t variantid, const char *arg,
-                                            const char *nextarg _uUu_, const char *eq, const char *force_value, unsigned long flags )
+mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, mucs_variant_t variantid, const char *arg,
+                                        const char *nextarg _uUu_, const char *eq, const char *force_value, unsigned long dbg_flags )
 {
   int found = 0;
   mucs_option_han_t *opt = NULL;
 
   int has_value _uUu_ = 0;
   const char *string_value _uUu_ = NULL;
-  const mucs_option_han_t *ropt = NULL;
+
+/* const mucs_option_han_t *ropt = NULL; */
+  const mucs_option_han_t *found_topt = NULL;
 
   if ( option_table )
-    for ( const mucs_option_han_t * topt = option_table; !found && topt->name; topt++ )
+    for ( const mucs_option_han_t * topt = option_table; /* !found && */ topt->name; topt++ )
     {
       int without_value = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
       const char *ep = mucs_config_option_match_name( topt, variantid, arg, eq );
@@ -460,6 +465,11 @@ mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_tab
       if ( ep )
       {
         found = 1;
+        if ( found_topt && strlen( topt->name ) <= strlen( found_topt->name ) )
+        {
+          continue;
+        }
+        found_topt = topt;
         if ( force_value )                                           /* use force_value for alias inheritance (only!?) */
         {
         /* B. "--opt" ( + forced value )  */
@@ -468,6 +478,7 @@ mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_tab
         }
         else
         {
+        /* WARN( "[%s] '%s'", arg, ep ); */
           while ( *ep && strchr( " \t", *ep ) )
             ep++;
           if ( without_value )
@@ -487,6 +498,7 @@ mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_tab
           }
           else                                                       /* need value */
           {
+          /* WARN( "[%s] '%s'", arg, ep ); */
             if ( *ep )
             {
             /* TODO good: possible value, here */
@@ -500,24 +512,30 @@ mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_tab
                 has_value = 2;
                 string_value = nextarg;
               }
-              else if ( !( flags & MUCS_FLAG_OPTIONAL_VALUE ) )
+              else if ( !mucs_config_option_flag( topt, MUCS_FLAG_OPTIONAL_VALUE ) )
               {
-                QRGOPTM( opt, -1, "no value given for \"-%c\" option (short)", topt->shortn );
-                QRGOPTM( opt, -1, "no value given for \"--%s\" option", topt->name ); /* !without_value && !has_value */
+                if ( variantid == MUCS_VARIANT_SHORT )
+                {
+                  QRGOPTM( opt, -1, "no value given for \"-%c\" option (short)", topt->shortn );
+                }
+                else if ( variantid == MUCS_VARIANT_LONG )
+                {
+                  QRGOPTM( opt, -1, "no value given for \"--%s\" option", topt->name ); /* !without_value && !has_value */
+                }
                 found = -found;
               }
             }
           }
         }
       }
-      ropt = topt;
+    /* ropt = topt; */
     }
   if ( found )
   {
-    opt = mucs_config_option_clone( ropt );
+    opt = mucs_config_option_clone( found_topt );
     if ( has_value )
     {
-      mucs_config_option_set_value( opt, string_value, flags );
+      mucs_config_option_set_value( opt, string_value, dbg_flags );
       if ( opt->callback && !opt->argptr )
       {
         opt->callback( opt );
@@ -530,8 +548,8 @@ mucs_config_option_lookup_option_table_new( const mucs_option_han_t * option_tab
 }
 
 mucs_option_han_t *
-mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, mucs_variant_t variantid, const char *arg,
-                                        const char *nextarg, const char *eq, const char *force_value _uUu_, unsigned long flags )
+mucs_config_option_lookup_option_table_old( const mucs_option_han_t * option_table, mucs_variant_t variantid, const char *arg,
+                                            const char *nextarg, const char *eq, const char *force_value _uUu_, unsigned long dbg_flags )
 {
 /* rDECLBAD; */
   mucs_option_han_t *opt = NULL;
@@ -650,11 +668,11 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
       opt = mucs_config_option_clone( topt );
     /* if ( found > 2 )                                               (* !without_value && !has_value *)                    */
     /* {                                                                                                                    */
-    /*   mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, flags, "No value given for '%s' option", opt->name ); */
+    /*   mucs_error_set_at_option( opt, __LINE__, __func__, __FILE__, dbg_flags, "No value given for '%s' option", opt->name ); */
     /* }                                                                                                                    */
       if ( has_value )
       {
-        mucs_config_option_set_value( opt, string_value, flags );
+        mucs_config_option_set_value( opt, string_value, dbg_flags );
         if ( opt->callback && !opt->argptr )
         {
           opt->callback( opt );

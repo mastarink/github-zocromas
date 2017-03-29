@@ -94,7 +94,7 @@ masexam_vexam( const char *func
     char *filepath = mas_strdup( file );
     char *fn = basename( filepath );
 
-    fprintf( stderr, "\x1b[0;1;44;33m%s:%d. %4ld**** [%d%s.%d.%-2d] %-10s%s : ", fn, line, tests_count, test_series,
+    fprintf( stderr, "\x1b[0;1;44;33m%s:%d. %4ld  *** [%d%s.%d.%-2d] %-10s%s : ", fn, line, tests_count, test_series,
              test_series_suffix ? test_series_suffix : "", test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
     mas_free( filepath );
     vfprintf( stderr, fmt, args );
