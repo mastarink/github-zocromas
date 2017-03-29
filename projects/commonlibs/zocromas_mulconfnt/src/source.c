@@ -136,23 +136,26 @@ mucs_source_arg_no( mucs_source_han_t * osrc, int i )
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
 
-static mucs_option_han_t *
-mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_option_han_t * opt, mucs_variant_t variantid,
-                         const char *next_arg _uUu_)
+const mucs_option_han_t *
+mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, const mucs_option_han_t * found_topt,
+                         mucs_variant_t variantid, const char *next_arg _uUu_, int *phas_value, const char **pstring_value )
 {
-  rDECLBAD;
-  while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->argptr )
+/* rDECLBAD; */
+  while ( found_topt && found_topt->restype == MUCS_RTYP_ALIAS && found_topt->argptr )
   {
-    mucs_option_han_t *oldopt = opt;
+    int has_value = phas_value ? *phas_value : 0;
+    const char *string_value = pstring_value ? *pstring_value : NULL;
+    const mucs_option_han_t *oldopt = found_topt;
 
 //        oldopt->source = osrc;
-    rC( mucs_option_set_source( oldopt, osrc ) );                    /* mostly for error setting */
+  /* rC( mucs_option_set_source( oldopt, osrc ) );                    (* mostly for error setting *) */
 
-    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, NULL /* next_arg */, osrc->eq, oldopt->string_value, osrc->flags );
+    found_topt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, NULL /* next_arg */ , osrc->eq, string_value,
+                                                    &has_value, &string_value );
 
-    mucs_config_option_delete( oldopt );
+  /* mucs_config_option_delete( oldopt ); */
   }
-  return opt;
+  return found_topt;
 /* rRET; */
 }
 
@@ -205,13 +208,31 @@ static int
 mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_variant_t variantid, const char *arg_nopref )
 {
   rDECLBAD;
+  const mucs_option_han_t *found_topt = NULL;
   mucs_option_han_t *opt = NULL;
   const char *next_arg = NULL;
+  int has_value = 0;
+  const char *string_value = NULL;
 
   if ( osrc->curarg < osrc->targ.argc - 1 )
     next_arg = osrc->targ.argv[osrc->curarg + 1];
-  opt = mucs_config_option_tablist_lookup( tablist, variantid, arg_nopref, next_arg, osrc->eq, NULL, osrc->flags );
-  opt = mucs_source_dealias_opt( osrc, tablist, opt, variantid, next_arg );
+  found_topt = mucs_config_option_tablist_lookup( tablist, variantid, arg_nopref, next_arg, osrc->eq, NULL, &has_value, &string_value );
+  found_topt = mucs_source_dealias_opt( osrc, tablist, found_topt, variantid, next_arg, &has_value, &string_value );
+
+  if ( found_topt )                                                  /* TODO : move to mucs_config_option_tablist_lookup */
+  {
+    opt = mucs_config_option_clone( found_topt );
+    if ( has_value )
+    {
+      mucs_config_option_set_value( opt, string_value );
+      if ( opt->callback && !opt->argptr )
+      {
+        opt->callback( opt );
+        opt->callback_called++;
+      }
+      opt->has_value = has_value;
+    }
+  }
 
 /* do something for found option */
   if ( opt )

@@ -13,6 +13,7 @@
 /* #include "mulconfnt_error.h" */
 
 #include "option.h"
+#include "option_base.h"
 
 #include "option_tablist.h"
 
@@ -22,16 +23,26 @@
  *
  * */
 
-mucs_option_han_t *
+const mucs_option_han_t *
 mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, mucs_variant_t variantid,
-                                   const char *arg, const char *nextarg, const char *eq, const char *force_value, unsigned long flags )
+                                   const char *arg, const char *nextarg, const char *eq, const char *force_value, int *phas_value,
+                                   const char **pstring_value )
 {
-  mucs_option_han_t *opt = NULL;
+  /* mucs_option_han_t *opt = NULL; */
+  const mucs_option_han_t *found_topt = NULL;
+  int has_value = 0;
+  const char *string_value = NULL;
 
-  while ( !opt && tablist )
+  while ( !found_topt && tablist )
   {
-    opt = mucs_config_option_lookup_option_table( tablist->options, variantid, arg, nextarg, eq, force_value, flags );
+    found_topt =
+            mucs_config_option_lookup_option_table( tablist->options, found_topt, variantid, arg, nextarg, eq, force_value, &has_value,
+                                                    &string_value );
     tablist = tablist->next;
   }
-  return opt;
+  if ( phas_value )
+    *phas_value = has_value;
+  if ( pstring_value )
+    *pstring_value = string_value;
+  return found_topt;
 }
