@@ -27,7 +27,6 @@
 int
 test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
@@ -83,6 +82,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--pi=3.141592653589793",
     "--longpi=3.1415926535897932384626433832795028841971693993751058209749445",
     "abrakadabra",
+    "-n",
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
@@ -112,7 +112,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     , {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
     , {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
 
-    , {.name = NULL,.shortn = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
@@ -162,7 +162,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     masexam_next_group(  );
   /* EXAMX( !mucs_error_source( osrc ),  "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
-    EXAMX( !masregerrs_count_all_default( NULL, TRUE ), "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
+    EXAMX( 1 == masregerrs_count_all_default( NULL, TRUE ), "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
     masexam_next_group(  );
     EXAMX( v_string0 && 0 == mas_strcmp( v_string0, "lorem-ipsum" ), "string0=%s ? %s", v_string0 ? v_string0 : "<NULL>", "lorem-ipsum" );
 #if 0
@@ -238,5 +238,8 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

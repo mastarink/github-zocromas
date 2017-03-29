@@ -190,12 +190,13 @@ masregerr_print_simple( const masregerr_t * rge, const char *msg )
       sfile = rge->file;
     if ( !msg )
       msg = "Error";
-    fprintf( stderr, "%s - ", msg );
+    fprintf( stderr, "\x1b[0;1;41;33m%s\x1b[0m - ", msg );
     if ( rge->sys )
-      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s E%02d:%-40s \n", rge->serial, rge->line, rge->func, rge->package, sfile, rge->err_no,
-               rge->msg ? rge->msg : ( rge->err_no ? strerror( rge->err_no ) : "" ) );
+      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s\x1b[7;1;41;33m  E%02d:%s\x1b[0m (sys)\n", rge->serial, rge->line, rge->func, rge->package,
+               sfile, rge->err_no, rge->msg ? rge->msg : ( rge->err_no ? strerror( rge->err_no ) : "" ) );
     else
-      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s  %-44s\n", rge->serial, rge->line, rge->func, rge->package, sfile, rge->msg ? rge->msg : "-" );
+      fprintf( stderr, "#%-3ld %3d:%-30s %-10s @ %-30s\x1b[7;1;41;33m  %s  \x1b[0m\n", rge->serial, rge->line, rge->func, rge->package, sfile,
+               rge->msg ? rge->msg : "-" );
   }
 }
 

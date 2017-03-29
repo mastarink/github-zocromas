@@ -58,8 +58,9 @@ masexam_series( int nseries, const char *suff, int do_fprintf )
   {
     if ( !series_seq && !tests_count )
       fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
-    fprintf( stderr, "*** series %d%-20s\tBEFORE it: {total:%ld;\ttotal good:%ld;\ttotal bad: %ld;}\n", test_series, test_series_suffix, tests_count,
-             tests_count_good, tests_count_bad );
+  /* fprintf( stderr, "\x1b[0;1;46;37m<*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*>\x1b[0m:\n" ); */
+    fprintf( stderr, "*** \x1b[0;1;46;37mseries %d%-20s\x1b[0;1;104;33m * {total:%ld; total good:%ld; total bad: %ld;} (BEFORE it) \x1b[0m\n", test_series,
+             test_series_suffix, tests_count, tests_count_good, tests_count_bad );
   }
   series_seq++;
 }
@@ -93,11 +94,11 @@ masexam_vexam( const char *func
     char *filepath = mas_strdup( file );
     char *fn = basename( filepath );
 
-    fprintf( stderr, "%s:%d. %4ld\t**** [%d%s.%d.%-2d] %-10s%s\t", fn, line, tests_count, test_series,
+    fprintf( stderr, "\x1b[0;1;44;33m%s:%d. %4ld**** [%d%s.%d.%-2d] %-10s%s : ", fn, line, tests_count, test_series,
              test_series_suffix ? test_series_suffix : "", test_group, test_seq, cond ? goodmsg : badmsg, !cond && beep_on_error ? "\x07" : "" );
     mas_free( filepath );
     vfprintf( stderr, fmt, args );
-    fprintf( stderr, "\n" );
+    fprintf( stderr, "\x1b[0m\n" );
   }
   if ( !cond && sleep_on_error )
     sleep( 2 );

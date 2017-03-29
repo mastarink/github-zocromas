@@ -8,7 +8,11 @@
 # include <mastar/regerr/masregerr.h>
 
 # define QRG(_r) RGESR(_r)
+# define QRGM(_r,  ...) RGESRM(_r, __VA_ARGS__)
 # define QRGSRC(_osrc, _r)  QRG(_r)
 # define QRGOPT(_opt, _r)  QRG(_r)
+
+# define QRGSRCM(_osrc, _r, ...)  QRGM(_r,  __VA_ARGS__)
+# define QRGOPTM(_opt, _r,  ...)  QRGM(_r, __VA_ARGS__)
 
 #endif

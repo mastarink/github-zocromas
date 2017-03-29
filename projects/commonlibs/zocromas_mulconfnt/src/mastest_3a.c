@@ -28,7 +28,6 @@
 int
 test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   const char *arg;
   char *v_string0 = NULL;
   char *v_string1 = NULL;
@@ -51,7 +50,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
     , {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
 
-    , {.name = NULL,.shortn = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
@@ -144,5 +143,8 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

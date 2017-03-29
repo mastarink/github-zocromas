@@ -18,7 +18,6 @@
 int
 test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   int c = 0xffff;
 
   int v_int0 _uUu_ = 0;
@@ -232,5 +231,8 @@ test_popt1( int argc _uUu_, const char _uUu_ * argv[], int nseries _uUu_, const 
   if ( thestring )
     free( thestring );
   mastest_print_allocated( "Allocated", __LINE__, __func__ );
+
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

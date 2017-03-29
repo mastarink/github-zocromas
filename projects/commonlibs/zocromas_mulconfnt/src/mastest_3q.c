@@ -28,7 +28,6 @@
 int
 test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   masexam_next_group(  );
   {
     const char *strings[] = {
@@ -85,5 +84,8 @@ test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const cha
       mas_free( s );
     }
   }
+  
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

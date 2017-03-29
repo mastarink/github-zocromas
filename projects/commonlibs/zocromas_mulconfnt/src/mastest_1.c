@@ -77,7 +77,6 @@ num5callback( mucs_option_han_t * opt )
 int
 test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   char *v_string0 = NULL;
   char *v_string1 = NULL;
   char *v_string2 _uUu_ = NULL;
@@ -164,40 +163,40 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS 4 + 2 + 1
 
   mucs_option_han_t options[] = {
-    {.name = "string0", '\0', MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "string1", '\0', MUCS_RTYP_STRING, &v_string1}
-    , {.name = "string2", '\0', MUCS_RTYP_STRING}
-    , {.name = "string3", 'p', MUCS_RTYP_STRING, &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
-    , {.name = "string4", 'x', MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_NO_COMMON_CB | MUCS_FLAG_NO_TYPE_CB}
-    , {.name = "targ0", '\0', MUCS_RTYP_TARG, &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "cnum0", '\0', MUCS_RTYP_CHAR, &v_char0}
-    , {.name = "snum0", '\0', MUCS_RTYP_SHORT, &v_short0}
-    , {.name = "num0", '\0', MUCS_RTYP_INT, &v_int0}
-    , {.name = "num1", '\0', MUCS_RTYP_INT, &v_int1}
-    , {.name = "num2", '\0', MUCS_RTYP_INT, &v_int2}
-    , {.name = "num3", '\0', MUCS_RTYP_INT, &v_int3}
-    , {.name = "num4", '\0', MUCS_RTYP_INT, &v_int4}
-    , {.name = "num5", '\0', MUCS_RTYP_INT,.callback = num5callback}
-    , {.name = "lnum0", '\0', MUCS_RTYP_LONG, &v_long0}
-    , {.name = "lnum1", '\0', MUCS_RTYP_INT, &v_long1}
-    , {.name = "lnum2", '\0', MUCS_RTYP_LONG, &v_long2}
-    , {.name = "lnum3", '\0', MUCS_RTYP_LONG, &v_long3}
-    , {.name = "lnum4", '\0', MUCS_RTYP_LONG, &v_long4}
-    , {.name = "llnum0", '\0', MUCS_RTYP_LLONG, &v_llong0}
-    , {.name = "llnum1", '\0', MUCS_RTYP_LLONG, &v_llong1}
-    , {.name = "llnum2", '\0', MUCS_RTYP_LLONG, &v_llong2}
-    , {.name = "llnum3", '\0', MUCS_RTYP_LLONG, &v_llong3}
-    , {.name = "llnum4", '\0', MUCS_RTYP_LLONG, &v_llong4}
-    , {.name = "pi", '\0', MUCS_RTYP_DOUBLE, &v_double0}
-    , {.name = "longpi", '\0', MUCS_RTYP_LDOUBLE, &v_ldouble0}
-    , {.name = "bwi", '\0', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {.name = "bwi+", '\0', MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
-    , {.name = "bwi-", '\0', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
-    , {.name = "bwix", '\0', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &bitwise4, 0, "bitwise", "value"}
-    , {.name = "bwix1", '\0', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &bitwise5, 0, "bitwise", "value"}
-    , {.name = "", '$'  ,.flags = MUCS_FLAG_LASTOPT}
+    {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string1}
+    , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING}
+    , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING, .argptr= &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
+    , {.name = "string4",.shortn = 'x',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_NO_COMMON_CB | MUCS_FLAG_NO_TYPE_CB}
+    , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG, .argptr= &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "cnum0",.shortn = '\0',.restype = MUCS_RTYP_CHAR, .argptr= &v_char0}
+    , {.name = "snum0",.shortn = '\0',.restype = MUCS_RTYP_SHORT, .argptr= &v_short0}
+    , {.name = "num0",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int0}
+    , {.name = "num1",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int1}
+    , {.name = "num2",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int2}
+    , {.name = "num3",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int3}
+    , {.name = "num4",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int4}
+    , {.name = "num5",.shortn = '\0',.restype = MUCS_RTYP_INT,.callback = num5callback}
+    , {.name = "lnum0",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long0}
+    , {.name = "lnum1",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_long1}
+    , {.name = "lnum2",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long2}
+    , {.name = "lnum3",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long3}
+    , {.name = "lnum4",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long4}
+    , {.name = "llnum0",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong0}
+    , {.name = "llnum1",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong1}
+    , {.name = "llnum2",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong2}
+    , {.name = "llnum3",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong3}
+    , {.name = "llnum4",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong4}
+    , {.name = "pi",.shortn = '\0',.restype = MUCS_RTYP_DOUBLE, .argptr= &v_double0}
+    , {.name = "longpi",.shortn = '\0',.restype = MUCS_RTYP_LDOUBLE, .argptr= &v_ldouble0}
+    , {.name = "bwi",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .argptr= &bitwise1, 0, "bitwise", "value"}
+    , {.name = "bwi+",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .argptr= &bitwise2, 0, "bitwise", "value"}
+    , {.name = "bwi-",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .argptr= &bitwise3, 0, "bitwise", "value"}
+    , {.name = "bwix",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .argptr= &bitwise4, 0, "bitwise", "value"}
+    , {.name = "bwix1",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .argptr= &bitwise5, 0, "bitwise", "value"}
+    , {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT}
 
-    , {.name = NULL,.shortn = '\0',.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = '\0',.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 #if 0
   mucs_option_table_list_t *test_tablist = mucs_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );
@@ -372,5 +371,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

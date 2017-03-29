@@ -137,14 +137,14 @@ mucs_option_han_t *
 mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_option_han_t * opt, mucs_variant_t variantid,
                          const char *next_arg )
 {
-  while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->ptr )
+  while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->argptr )
   {
     mucs_option_han_t *oldopt = opt;
 
 //        oldopt->source = osrc;
     mucs_option_set_source( oldopt, osrc );                          /* mostly for error setting */
 
-    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->ptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
+    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
 
     mucs_config_option_delete( oldopt );
   }
@@ -212,7 +212,7 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
   {
   /* mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref ); */
   /* WARN( "unrecognized option '%s'", arg_nopref ); */
-    QRGSRC( osrc, -1 );
+    QRGSRCM( osrc, -1, "unrecognized option \"--%s\"", arg_nopref );
   }
   if ( opt )
     mucs_config_option_delete( opt );

@@ -27,7 +27,6 @@
 int
 test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   int v_int0 = 0;
   int v_int1 = 0;
   int v_int2 = 0;
@@ -84,7 +83,7 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
     , {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
     , {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
 
-    , {.name = NULL,.shortn = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
@@ -179,5 +178,8 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

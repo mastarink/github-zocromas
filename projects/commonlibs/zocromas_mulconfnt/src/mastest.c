@@ -127,11 +127,12 @@ main( int argc, const char *argv[] )
     {1, test_6, 6, "",.f_print_ok = 0},
     {0}
   };
-  masregerrs_delete_default( NULL );
   masexam_test( argc, argv, funlist );
 #define TOTAL_TESTS 350 - 1
   /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
   EXAM( masexam_tests_count(  ) , TOTAL_TESTS, "tests_count=%d ? %d" );
 
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }

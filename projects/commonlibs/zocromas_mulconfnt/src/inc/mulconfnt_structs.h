@@ -86,7 +86,7 @@ struct mucs_option_han_s
   char *name;
   char shortn;
   mucs_restype_t restype;
-  void *ptr;
+  void *argptr;
   int val;
   char *desc;
   char *argdesc;

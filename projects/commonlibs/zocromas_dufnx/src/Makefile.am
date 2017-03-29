@@ -25,7 +25,8 @@ mastest_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la
 mastest_CFLAGS=@AM_CFLAGS@  -pthread
 
 mastest_SOURCES= \
-	mastest.c mastest_0.c mastest_fill.c mastest_fromfs.c mastest_fromdb.c
+	mastest.c mastest_0.c mastest_fill.c mastest_fromfs.c mastest_fromdb.c \
+	dufnx_debug.c
 else
 
 endif

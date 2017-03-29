@@ -25,7 +25,6 @@
 int
 test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
 {
-  masregerrs_delete_default( NULL );
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
   long bitwise = 0xffff0000;
@@ -40,7 +39,7 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     {"noflow", 'n', 0, 0, 'n', "use no flow control", NULL},         /* */
     {"raw", 'r', 0, &raw, 0, "don't perform any character conversions", NULL}, /* */
     {"swflow", 's', 0, 0, 's', "use software (XON/XOF) flow control", NULL}, /* */
-    {.name = NULL,.shortn = 0,.restype = 0,.ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
@@ -59,5 +58,8 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     if ( do_fprintf )
       fprintf( stderr, "-b %d ", speed );
   mucs_config_option_tablist_reset( &test_tablist );
+  
+  masregerr_print_simple_all_default( NULL, NULL, 0 );
+  masregerrs_delete_default( NULL );
   return 0;
 }
