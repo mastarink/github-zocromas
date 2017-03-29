@@ -50,11 +50,13 @@ mucs_source_load_string( mucs_source_han_t * osrc )
   return osrc ? osrc->string : NULL;
 }
 
-mas_argvc_t *
+int
 mucs_source_load_targ( mucs_source_han_t * osrc )
 {
+  rDECLBAD;
   if ( osrc )
   {
+    rSETGOOD;
     if ( osrc->npos == osrc->targ_loaded )
     {
       mas_argvc_delete( &osrc->oldtarg );
@@ -77,7 +79,8 @@ mucs_source_load_targ( mucs_source_han_t * osrc )
 //    mas_argvc_delete( &osrc->targ );
     }
   }
-  return osrc ? &osrc->targ : NULL;
+/* return osrc ? &osrc->targ : NULL; */
+  rRET;
 }
 
 static int
@@ -135,7 +138,7 @@ mucs_source_arg_no( mucs_source_han_t * osrc, int i )
 
 static mucs_option_han_t *
 mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_option_han_t * opt, mucs_variant_t variantid,
-                         const char *next_arg )
+                         const char *next_arg _uUu_)
 {
   rDECLBAD;
   while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->argptr )
@@ -145,7 +148,7 @@ mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_
 //        oldopt->source = osrc;
     rC( mucs_option_set_source( oldopt, osrc ) );                    /* mostly for error setting */
 
-    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
+    opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, NULL /* next_arg */, osrc->eq, oldopt->string_value, osrc->flags );
 
     mucs_config_option_delete( oldopt );
   }
@@ -257,39 +260,55 @@ mucs_source_lookup_arg( mucs_source_han_t * osrc, const char *arg, const mucs_op
 int
 mucs_source_lookup_seq( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
 {
+  rDECLGOOD;
   int nargs = 0;
 
-  mucs_source_load_targ( osrc );
+  rC( mucs_source_load_targ( osrc ) );
   osrc->lastoptpos = 0;
 
   for ( osrc->curarg = 0; osrc && !masregerrs_count_all_default( NULL, TRUE ) /*mucs_error_source( osrc ) */  && osrc->curarg < osrc->targ.argc;
         osrc->curarg++ )
   {
     nargs++;
-    mucs_source_lookup_arg( osrc, osrc->targ.argv[osrc->curarg], tablist );
+    rC( mucs_source_lookup_arg( osrc, osrc->targ.argv[osrc->curarg], tablist ) );
   /* WARN( "* (%d) %d. %s ne:%d", nargs, osrc->curarg, osrc->targ.argv[osrc->curarg], masregerrs_count_all_default( NULL, TRUE ) ); */
   }
-  return -nargs;
+  if ( rGOOD )
+    rCODE = nargs;
+/* return -nargs; */
+  rRET;
 }
 
-void
+int
 mucs_source_lookup_all( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
 {
-  while ( osrc && mucs_source_lookup_seq( osrc, tablist ) < 0 )
-    osrc->npos++;
+  rDECLBAD;
+  if ( osrc )
+  {
+    do
+    {
+      rC( mucs_source_lookup_seq( osrc, tablist ) );
+      if ( rGOOD )
+        osrc->npos++;
+    } while ( rCODE > 0 );
+  /* while ( mucs_source_lookup_seq( osrc, tablist ) > 0 ) */
+  /*   osrc->npos++;                                       */
+  }
+  rRET;
 }
 
 int
 mucs_source_lookup( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist )
 {
-  int r = 0;
+  rDECLBAD;
 
   if ( osrc )
   {
+  /* XXX ??? XXX */
     osrc->npos = 0;
-    r = mucs_source_lookup_seq( osrc, tablist );
+    rC( mucs_source_lookup_seq( osrc, tablist ) );
   }
-  return r;
+  rRET;
 }
 
 unsigned long
@@ -304,16 +323,26 @@ mucs_source_flag( mucs_source_han_t * osrc, unsigned long mask )
   return osrc && ( ( osrc->flags & mask ) ? 1 : 0 );
 }
 
-void
+int
 mucs_source_set_common_callback( mucs_source_han_t * osrc, mucs_option_callback_t cb )
 {
+  rDECLBAD;
   if ( osrc )
+  {
+    rSETGOOD;
     osrc->common_callback = cb;
+  }
+  rRET;
 }
 
-void
+int
 mucs_source_set_type_callback( mucs_source_han_t * osrc, mucs_restype_t restype, mucs_option_callback_t cb )
 {
-  if ( osrc )
+  rDECLBAD;
+  if ( osrc && restype >= 0 && restype <= MUCS_RTYP_MAX )
+  {
+    rSETGOOD;
     osrc->type_callbacks[restype] = cb;
+  }
+  rRET;
 }
