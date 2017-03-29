@@ -539,15 +539,19 @@ mucs_config_option_flag( const mucs_option_han_t * opt, unsigned long mask )
 {
   unsigned long osrcflag = opt->source ? mucs_source_flag( opt->source, mask ) : 0L;
 
-  return opt ? ( osrcflag | ( opt->flags & mask ) ? 1 : 0 ) : 0;
+  /* return opt ? ( osrcflag | ( opt->flags & mask ) ? 1 : 0 ) : 0; */
+  return opt ? ( osrcflag || ( opt->flags & mask )  ) : 0;
 }
 
-void
+int
 mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc )
 {
+  rDECLBAD;
   if ( opt && osrc )
   {
+    rSETGOOD;
     opt->source = osrc;
   /* mucs_error_set_at_source_from_option( osrc, opt ); */
   }
+  rRET;
 }

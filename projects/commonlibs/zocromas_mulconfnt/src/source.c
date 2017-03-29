@@ -133,42 +133,47 @@ mucs_source_arg_no( mucs_source_han_t * osrc, int i )
   return osrc && i >= 0 && i < osrc->targno.argc ? osrc->targno.argv[i] : NULL;
 }
 
-mucs_option_han_t *
+static mucs_option_han_t *
 mucs_source_dealias_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_option_han_t * opt, mucs_variant_t variantid,
                          const char *next_arg )
 {
+  rDECLBAD;
   while ( opt && opt->restype == MUCS_RTYP_ALIAS && opt->argptr )
   {
     mucs_option_han_t *oldopt = opt;
 
 //        oldopt->source = osrc;
-    mucs_option_set_source( oldopt, osrc );                          /* mostly for error setting */
+    rC( mucs_option_set_source( oldopt, osrc ) );                    /* mostly for error setting */
 
     opt = mucs_config_option_tablist_lookup( tablist, variantid, ( char * ) oldopt->argptr, next_arg, osrc->eq, oldopt->string_value, osrc->flags );
 
     mucs_config_option_delete( oldopt );
   }
   return opt;
+/* rRET; */
 }
 
-void
+static int
 mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
 {
-  mucs_option_set_source( opt, osrc );                               /* mostly for error setting */
+  rDECLBAD;
+  rC( mucs_option_set_source( opt, osrc ) );                         /* mostly for error setting */
 #if 0
   if ( mucs_error_option( opt ) )
   {
     mucs_error_set_at_source_from_option( opt->source, opt );
   }
 #endif
-  if (  /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
+  if ( rGOOD && /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
   {
     osrc->lastoptpos = osrc->curarg;
   }
+  if ( rGOOD )
   {
     mucs_option_callback_t cb = NULL;
 
-    if ( !( ( opt->flags & MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->value_is_set ) && osrc->common_callback && !( opt->flags & MUCS_FLAG_NO_COMMON_CB ) )
+    if ( !( ( opt->flags & MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->value_is_set ) && osrc->common_callback
+         && !( opt->flags & MUCS_FLAG_NO_COMMON_CB ) )
     {
       cb = osrc->common_callback;
       if ( cb )
@@ -177,7 +182,7 @@ mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
         osrc->callback_called++;
       }
     }
-    if ( !( ( opt->flags & MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->value_is_set ) &&  osrc->type_callbacks && !( opt->flags & MUCS_FLAG_NO_TYPE_CB ) )
+    if ( !( ( opt->flags & MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->value_is_set ) && osrc->type_callbacks && !( opt->flags & MUCS_FLAG_NO_TYPE_CB ) )
     {
       cb = osrc->type_callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
       if ( cb )
@@ -190,11 +195,13 @@ mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
   if ( opt->has_value > 0 )
     osrc->curarg += opt->has_value - 1;
 /* TODO additional actions here !! */
+  rRET;
 }
 
-void
+static int
 mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_variant_t variantid, const char *arg_nopref )
 {
+  rDECLBAD;
   mucs_option_han_t *opt = NULL;
   const char *next_arg = NULL;
 
@@ -206,7 +213,7 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
 /* do something for found option */
   if ( opt )
   {
-    mucs_source_found_opt( osrc, opt );
+    rC( mucs_source_found_opt( osrc, opt ) );
   }
   else
   {
@@ -217,12 +224,13 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
   if ( opt )
     mucs_config_option_delete( opt );
   opt = NULL;
+  rRET;
 }
 
-void
+int
 mucs_source_lookup_arg( mucs_source_han_t * osrc, const char *arg, const mucs_option_table_list_t * tablist )
 {
-
+  rDECLBAD;
 /* max_match_id: determine variant by prefix */
   mucs_variant_t variantid = ( !osrc->lastoptpos || osrc->curarg <= osrc->lastoptpos ) ? max_match_id( osrc, arg ) : MUCS_VARIANT_NONOPT;
   int preflen = osrc->pref_ids[variantid].string ? strlen( osrc->pref_ids[variantid].string ) : 0;
@@ -237,11 +245,13 @@ mucs_source_lookup_arg( mucs_source_han_t * osrc, const char *arg, const mucs_op
   else if ( variantid == MUCS_VARIANT_NONOPT )
   {
     mas_add_argvc_arg( &osrc->targno, arg + preflen );
+    rSETGOOD;
   }
   else
   {
-    mucs_source_lookup_opt( osrc, tablist, variantid, arg + preflen );
+    rC( mucs_source_lookup_opt( osrc, tablist, variantid, arg + preflen ) );
   }
+  rRET;
 }
 
 int
@@ -291,7 +301,7 @@ mucs_source_flags( mucs_source_han_t * osrc )
 int
 mucs_source_flag( mucs_source_han_t * osrc, unsigned long mask )
 {
-  return osrc && ( osrc->flags & mask ? 1 : 0 );
+  return osrc && ( ( osrc->flags & mask ) ? 1 : 0 );
 }
 
 void
