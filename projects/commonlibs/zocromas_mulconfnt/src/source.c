@@ -163,7 +163,7 @@ static int
 mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
 {
   rDECLBAD;
-  rC( mucs_option_set_source( opt, osrc ) );                         /* mostly for error setting */
+  /* rC( mucs_option_set_source( opt, osrc ) );                         (* mostly for error setting *) */
 #if 0
   if ( mucs_error_option( opt ) )
   {
@@ -208,8 +208,9 @@ static int
 mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t * tablist, mucs_variant_t variantid, const char *arg_nopref )
 {
   rDECLBAD;
-  const mucs_option_han_t *found_topt = NULL;
   mucs_option_han_t *opt = NULL;
+
+  const mucs_option_han_t *found_topt = NULL;
   const char *next_arg = NULL;
   int has_value = 0;
   const char *string_value = NULL;
