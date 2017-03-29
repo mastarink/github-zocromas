@@ -437,7 +437,7 @@ mucs_config_option_match_name( const mucs_option_han_t * topt, mucs_variant_t va
 const mucs_option_han_t *
 mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, const mucs_option_han_t * found_topt, mucs_variant_t variantid,
                                         const char *arg, const char *nextarg _uUu_, const char *eq, const char *force_value,
-                                        int *phas_value, const char **pstring_value )
+					int *phas_value, const char **pstring_value )
 {
   int found = 0;
 
@@ -685,7 +685,6 @@ mucs_config_option_flag( const mucs_option_han_t * opt, unsigned long mask )
   return opt ? ( osrcflag || ( opt->flags & mask ) ) : 0;
 }
 
-#if 0
 int
 mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc )
 {
@@ -694,8 +693,6 @@ mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc )
   {
     rSETGOOD;
     opt->source = osrc;
-  /* mucs_error_set_at_source_from_option( osrc, opt ); */
   }
   rRET;
 }
-#endif

@@ -12,6 +12,6 @@ const mucs_option_han_t *mucs_config_option_lookup_option_table( const mucs_opti
                                                                  mucs_variant_t variantid, const char *arg, const char *nextarg, const char *eq,
                                                                  const char *force_value, int *phas_value, const char **pstring_value );
 
-/* int mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc ); */
+int mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc );
 
 #endif

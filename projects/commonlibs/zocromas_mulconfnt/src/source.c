@@ -163,14 +163,9 @@ static int
 mucs_source_found_opt( mucs_source_han_t * osrc, mucs_option_han_t * opt )
 {
   rDECLBAD;
-  /* rC( mucs_option_set_source( opt, osrc ) );                         (* mostly for error setting *) */
-#if 0
-  if ( mucs_error_option( opt ) )
-  {
-    mucs_error_set_at_source_from_option( opt->source, opt );
-  }
-#endif
-  if ( rGOOD && /* ( opt->restype & MUCS_RTYP_FLAG_LASTOPT ) || */ ( opt->flags & MUCS_FLAG_LASTOPT ) )
+  
+  rC( mucs_option_set_source( opt, osrc ) );
+  if ( opt->flags & MUCS_FLAG_LASTOPT )
   {
     osrc->lastoptpos = osrc->curarg;
   }
@@ -242,7 +237,6 @@ mucs_source_lookup_opt( mucs_source_han_t * osrc, const mucs_option_table_list_t
   }
   else
   {
-  /* mucs_error_set_at_source( osrc, __LINE__, __func__, __FILE__, "unrecognized option '%s'", arg_nopref ); */
   /* WARN( "unrecognized option '%s'", arg_nopref ); */
     QRGSRCM( osrc, -1, "unrecognized option \"--%s\"", arg_nopref );
   }
