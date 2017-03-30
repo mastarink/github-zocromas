@@ -86,7 +86,7 @@ main( int argc _uUu_, const char *argv[]_uUu_ )
     r = setrlimit( RLIMIT_NOFILE, &lim );
     if ( r >= 0 )
     {
-      int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+      int masxfs_test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
       masexam_do_t funlist[] _uUu_ = {
         {1, masxfs_test_0, 0, "",.f_print_ok = 0,.assert_on_error = 0,.sleep_on_error = 0},

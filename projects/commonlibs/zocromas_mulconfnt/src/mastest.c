@@ -90,29 +90,29 @@ constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
 int
 main( int argc, const char *argv[] )
 {
-  int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_1( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_1s( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_2( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_3( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
-  int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+  int test_popt( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_popt1( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_1( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_1s( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_1mul( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_1enf( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_1u( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_2( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_2a( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_3( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_3a( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_3q( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
   masexam_do_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
     {0, test_0, 0, ""},
 
-    {1, test_1, 1, "",.do_fprintf = 0},
+    {1, test_1, 1, "",.variant = 0},
     {1, test_1s, 1, "s"},
     {1, test_1mul, 1, "mul",.f_print_ok = 0},
     {1, test_1u, 1, "u"},

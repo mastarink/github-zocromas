@@ -10,8 +10,6 @@
 
 #include "mulconfnt_structs.h"
 
-/* #include "mulconfnt_error.h" */
-
 #include "tools.h"
 #include "source.h"
 
@@ -148,7 +146,7 @@ mucs_config_option_nvalue_to_ptr( mucs_option_t * opt )
 }
 
 static nvalue_t
-mucs_config_option_string_to_nvalue( mucs_option_t * opt, int *perr )
+mucs_config_option_string_to_nvalue( mucs_option_t * opt )
 {
   nvalue_t v_x = { 0 };
   if ( opt )
@@ -156,6 +154,7 @@ mucs_config_option_string_to_nvalue( mucs_option_t * opt, int *perr )
     char *string = opt->string_value;
     char *ep = NULL;
 
+    errno = 0;
     v_x = opt->nvalue;
 
     switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
@@ -170,7 +169,6 @@ mucs_config_option_string_to_nvalue( mucs_option_t * opt, int *perr )
     case MUCS_RTYP_LONG:
     case MUCS_RTYP_LONG_LONG:
       v_x.v_long_long = strtoll( string, &ep, 0 );
-      *perr = ( ep != string + strlen( string ) );
       break;
     case MUCS_RTYP_UCHAR:
     case MUCS_RTYP_USHORT:
@@ -178,27 +176,24 @@ mucs_config_option_string_to_nvalue( mucs_option_t * opt, int *perr )
     case MUCS_RTYP_ULONG:
     case MUCS_RTYP_ULONG_LONG:
       v_x.v_ulong_long = strtoull( string, &ep, 0 );
-      *perr = ( ep != string + strlen( string ) );
       break;
     case MUCS_RTYP_DOUBLE:
       v_x.v_double = strtod( string, &ep );
-      *perr = ( ep != string + strlen( string ) );
       break;
     case MUCS_RTYP_LDOUBLE:
       v_x.v_ldouble = strtold( string, &ep );
-      *perr = ( ep != string + strlen( string ) );
       break;
     }
   }
   return v_x;
 }
 
-static void
+static int
 mucs_config_option_set_nvalue( mucs_option_t * opt )
 {
+  rDECLGOOD;
   if ( opt && opt->string_value )
   {
-    int err = 0;
 
 /**   long long v_long_long _uUu_ = 0;
       unsigned long long v_ulong_long _uUu_ = 0;
@@ -207,169 +202,194 @@ mucs_config_option_set_nvalue( mucs_option_t * opt )
     nvalue_t v_x = { 0 };
 
     mucs_config_option_nvalue_from_ptr( opt );
-    v_x = mucs_config_option_string_to_nvalue( opt, &err );
-    if ( err )
+    {
+      errno = 0;
+      v_x = mucs_config_option_string_to_nvalue( opt );
+    }
+    if ( errno /* || err */  )
     {
       QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+      rSETBAD;
     }
-
-    if ( opt->restype & MUCS_RTYP_BW_NOT )
-      v_x.v_ulong_long = ~v_x.v_ulong_long;
-    switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
+    else
     {
-    case MUCS_RTYP_NONE:
-    case MUCS_RTYP_STRING:
-    case MUCS_RTYP_TARG:
-      break;
-    case MUCS_RTYP_CHAR:
-      if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
+    /* WARN( "errno:%d", errno ); */
+      if ( opt->restype & MUCS_RTYP_BW_NOT )
+        v_x.v_ulong_long = ~v_x.v_ulong_long;
+      switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
       {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+      case MUCS_RTYP_NONE:
+      case MUCS_RTYP_STRING:
+      case MUCS_RTYP_TARG:
+        break;
+      case MUCS_RTYP_CHAR:
+        if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_long_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_char &= ( char ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_char |= ( char ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_char ^= ( char ) v_x.v_long_long;
+        else
+          opt->nvalue.v_char = ( char ) v_x.v_long_long;
+        break;
+      case MUCS_RTYP_UCHAR:
+        if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_ulong_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_uchar &= ( char ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_uchar |= ( char ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_uchar ^= ( char ) v_x.v_ulong_long;
+        else
+          opt->nvalue.v_uchar = ( char ) v_x.v_ulong_long;
+        break;
+      case MUCS_RTYP_SHORT:
+        if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_long_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_short &= ( short ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_short |= ( short ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_short ^= ( short ) v_x.v_long_long;
+        else
+          opt->nvalue.v_short = ( short ) v_x.v_long_long;
+        break;
+      case MUCS_RTYP_USHORT:
+        if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_ulong_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_ushort &= ( short ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_ushort |= ( short ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_ushort ^= ( short ) v_x.v_ulong_long;
+        else
+          opt->nvalue.v_ushort = ( short ) v_x.v_ulong_long;
+        break;
+      case MUCS_RTYP_INT:
+        if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_long_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_int &= ( int ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_int |= ( int ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_int ^= ( int ) v_x.v_long_long;
+        else
+          opt->nvalue.v_int = ( int ) v_x.v_long_long;
+        break;
+      case MUCS_RTYP_UINT:
+        if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
+        {
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_ulong_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_uint &= ( int ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_uint |= ( int ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_uint ^= ( int ) v_x.v_ulong_long;
+        else
+          opt->nvalue.v_uint = ( int ) v_x.v_ulong_long;
+        break;
+      case MUCS_RTYP_LONG:
+        if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
+        {
+        /*unable to place number into long */
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_long_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_long &= ( long ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_long |= ( long ) v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_long ^= ( long ) v_x.v_long_long;
+        else
+          opt->nvalue.v_long = ( long ) v_x.v_long_long;
+        break;
+      case MUCS_RTYP_ULONG:
+        if ( ( unsigned long long ) ( unsigned long ) v_x.v_ulong_long != v_x.v_ulong_long )
+        {
+        /*unable to place number into long */
+          QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
+          v_x.v_ulong_long = 0;
+          rSETBAD;
+        }
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_ulong &= ( long ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_ulong |= ( long ) v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_ulong ^= ( long ) v_x.v_ulong_long;
+        else
+          opt->nvalue.v_ulong = ( long ) v_x.v_ulong_long;
+        break;
+      case MUCS_RTYP_LONG_LONG:
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_long_long &= v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_long_long |= v_x.v_long_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_long_long ^= v_x.v_long_long;
+        else
+          opt->nvalue.v_long_long = v_x.v_long_long;
+        break;
+      case MUCS_RTYP_ULONG_LONG:
+        if ( opt->restype & MUCS_RTYP_BW_AND )
+          opt->nvalue.v_ulong_long &= v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_OR )
+          opt->nvalue.v_ulong_long |= v_x.v_ulong_long;
+        else if ( opt->restype & MUCS_RTYP_BW_XOR )
+          opt->nvalue.v_ulong_long ^= v_x.v_ulong_long;
+        else
+          opt->nvalue.v_ulong_long = v_x.v_ulong_long;
+        break;
+      case MUCS_RTYP_DOUBLE:
+        opt->nvalue.v_double = v_x.v_double;
+        break;
+      case MUCS_RTYP_LDOUBLE:
+        opt->nvalue.v_ldouble = v_x.v_ldouble;
+        break;
       }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_char &= ( char ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_char |= ( char ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_char ^= ( char ) v_x.v_long_long;
-      else
-        opt->nvalue.v_char = ( char ) v_x.v_long_long;
-      break;
-    case MUCS_RTYP_UCHAR:
-      if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
-      {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_uchar &= ( char ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_uchar |= ( char ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_uchar ^= ( char ) v_x.v_ulong_long;
-      else
-        opt->nvalue.v_uchar = ( char ) v_x.v_ulong_long;
-      break;
-    case MUCS_RTYP_SHORT:
-      if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
-      {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_short &= ( short ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_short |= ( short ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_short ^= ( short ) v_x.v_long_long;
-      else
-        opt->nvalue.v_short = ( short ) v_x.v_long_long;
-      break;
-    case MUCS_RTYP_USHORT:
-      if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
-      {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_ushort &= ( short ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_ushort |= ( short ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_ushort ^= ( short ) v_x.v_ulong_long;
-      else
-        opt->nvalue.v_ushort = ( short ) v_x.v_ulong_long;
-      break;
-    case MUCS_RTYP_INT:
-      if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
-      {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_int &= ( int ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_int |= ( int ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_int ^= ( int ) v_x.v_long_long;
-      else
-        opt->nvalue.v_int = ( int ) v_x.v_long_long;
-      break;
-    case MUCS_RTYP_UINT:
-      if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
-      {
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_uint &= ( int ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_uint |= ( int ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_uint ^= ( int ) v_x.v_ulong_long;
-      else
-        opt->nvalue.v_uint = ( int ) v_x.v_ulong_long;
-      break;
-    case MUCS_RTYP_LONG:
-      if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
-      {
-      /*unable to place number into long */
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_long &= ( long ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_long |= ( long ) v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_long ^= ( long ) v_x.v_long_long;
-      else
-        opt->nvalue.v_long = ( long ) v_x.v_long_long;
-      break;
-    case MUCS_RTYP_ULONG:
-      if ( ( unsigned long long ) ( unsigned long ) v_x.v_ulong_long != v_x.v_ulong_long )
-      {
-      /*unable to place number into long */
-        QRGOPTM( opt, -1, "wrong value '%s'", opt->string_value );
-      }
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_ulong &= ( long ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_ulong |= ( long ) v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_ulong ^= ( long ) v_x.v_ulong_long;
-      else
-        opt->nvalue.v_ulong = ( long ) v_x.v_ulong_long;
-      break;
-    case MUCS_RTYP_LONG_LONG:
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_long_long &= v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_long_long |= v_x.v_long_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_long_long ^= v_x.v_long_long;
-      else
-        opt->nvalue.v_long_long = v_x.v_long_long;
-      break;
-    case MUCS_RTYP_ULONG_LONG:
-      if ( opt->restype & MUCS_RTYP_BW_AND )
-        opt->nvalue.v_ulong_long &= v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_OR )
-        opt->nvalue.v_ulong_long |= v_x.v_ulong_long;
-      else if ( opt->restype & MUCS_RTYP_BW_XOR )
-        opt->nvalue.v_ulong_long ^= v_x.v_ulong_long;
-      else
-        opt->nvalue.v_ulong_long = v_x.v_ulong_long;
-      break;
-    case MUCS_RTYP_DOUBLE:
-      opt->nvalue.v_double = v_x.v_double;
-      break;
-    case MUCS_RTYP_LDOUBLE:
-      opt->nvalue.v_ldouble = v_x.v_ldouble;
-      break;
-    }
 
-    mucs_config_option_nvalue_to_ptr( opt );
+      mucs_config_option_nvalue_to_ptr( opt );
+    }
   }
+  rRET;
 }
 
-void
+int
 mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
 {
+  rDECLBAD;
   if ( opt )
   {
     if ( opt->string_value )
@@ -383,39 +403,37 @@ mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
       opt->string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
     memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
-    mucs_config_option_set_nvalue( opt );
+    rC( mucs_config_option_set_nvalue( opt ) );
   }
+  rRET;
 }
 
 /*
  * if match
- *   returns end-pointer of name at arg
+ *   returns end-pointer of name at arg_nopref
  * else
  *   returns NULL
  * */
 const char *
-mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * optscan, const char *arg, const char *eq )
+mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * optscan, const char *arg_nopref, const char *eq )
 {
-  unsigned larg = strlen( arg );
+  unsigned larg = strlen( arg_nopref );
   unsigned lname = 0;
   const char *argp = NULL;
 
   if ( optscan->variantid == MUCS_VARIANT_SHORT )
   {
     lname = 1;
-    argp = arg + lname;
-  /* WARN( "{%s} => '%s' %d:%d:%d", arg, argp, ( larg == lname ), ( *arg == topt->shortn ), ( !*argp || strchr( " \t", *argp ) ) ); */
-    if ( !( ( *arg == topt->shortn ) && ( larg == lname || strchr( " \t", *argp ) ) ) )
-    {
+    argp = arg_nopref + lname;
+    if ( !( ( *arg_nopref == topt->shortn ) && ( larg == lname || strchr( " \t", *argp ) ) ) )
       argp = NULL;
-    }
   }
   else if ( optscan->variantid == MUCS_VARIANT_LONG )
   {
     lname = strlen( topt->name );
-    if ( 0 == strncmp( topt->name, arg, lname ) )
+    if ( 0 == strncmp( topt->name, arg_nopref, lname ) )
     {
-      argp = arg + lname;
+      argp = arg_nopref + lname;
       if ( *argp )
       {
         unsigned leq = strlen( eq );
@@ -435,7 +453,7 @@ mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * o
 }
 
 int
-mucs_config_option_lookup_option_table( const mucs_option_t * option_table, const char *arg, const char *eq, mucs_optscanner_t * optscan )
+mucs_config_option_lookup_option_table( const mucs_option_t * option_table, const char *arg_nopref, const char *eq, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
   int found = 0;
@@ -446,7 +464,7 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
     for ( const mucs_option_t * topt = option_table; rGOOD && topt->name; topt++ )
     {
       int without_value = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
-      const char *ep = mucs_config_option_match_name( topt, optscan, arg, eq );
+      const char *ep = mucs_config_option_match_name( topt, optscan, arg_nopref, eq );
 
       if ( ep )
       {
@@ -462,7 +480,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
         }
         else
         {
-        /* WARN( "[%s] '%s'", arg, ep ); */
           while ( *ep && strchr( " \t", *ep ) )
             ep++;
           if ( without_value )
@@ -483,7 +500,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
           }
           else                                                       /* need value */
           {
-          /* WARN( "[%s] '%s'", arg, ep ); */
             if ( *ep )
             {
             /* TODO good: possible value, here */

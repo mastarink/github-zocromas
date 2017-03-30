@@ -113,6 +113,8 @@ struct mucs_option_table_list_s
 
 struct mucs_optscanner_s
 {
+  const char *arg;
+  int preflen;
   mucs_variant_t variantid;
   int has_value;
   const char *string_value;

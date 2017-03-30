@@ -26,7 +26,7 @@
 #include "mastest.h"
 
 int
-test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix, int do_fprintf _uUu_ )
+test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix, int variant _uUu_ )
 {
   masexam_next_group(  );
   {

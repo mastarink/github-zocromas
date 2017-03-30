@@ -25,7 +25,7 @@
 #include "mastest.h"
 
 int
-test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   masregerrs_delete_default( NULL );
   const char *arg _uUu_;

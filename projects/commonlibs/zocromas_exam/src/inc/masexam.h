@@ -1,7 +1,7 @@
 #ifndef MAS_MASEXAM_H
 # define MAS_MASEXAM_H
 
-typedef int ( *masexam_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int do_fprintf );
+typedef int ( *masexam_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
 struct masexam_do_s
 {
@@ -15,7 +15,7 @@ struct masexam_do_s
   int sleep_on_error;
   int beep_on_error;
   int assert_on_error;
-  int do_fprintf;
+  int variant;
 };
 typedef struct masexam_do_s masexam_do_t;
 

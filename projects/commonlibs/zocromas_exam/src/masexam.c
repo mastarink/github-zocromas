@@ -20,7 +20,7 @@
 
 #include "masexam.h"
 
-int do_fprintf = 0;
+int variant = 0;
 int beep_on_error = 1;
 int assert_on_error = 0;
 int stop_on_error = 0;
@@ -48,13 +48,13 @@ masexam_tests_count( void )
 }
 
 static void
-masexam_series( int nseries, const char *suff, int do_fprintf )
+masexam_series( int nseries, const char *suff, int variant )
 {
   test_series = nseries;
   test_series_suffix = suff;
   test_group = 0;
   test_seq = 0;
-  if ( do_fprintf >= 0 )
+  if ( variant >= 0 )
   {
     if ( !series_seq && !tests_count )
       fprintf( stderr, "\n\n\x1b[0;1;44;37mTESTS\x1b[0m:\n" );
@@ -128,8 +128,8 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
   {
     if ( funlist[ntest].doit )
     {
-      masexam_series( funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
-      do_fprintf += funlist[ntest].do_fprintf;
+      masexam_series( funlist[ntest].nseries, funlist[ntest].series_suffix, variant );
+      variant += funlist[ntest].variant;
       f_print_ok += funlist[ntest].f_print_ok;
       f_print_ok -= funlist[ntest].f_noprint_error;
       assert_on_error += funlist[ntest].assert_on_error;
@@ -137,7 +137,7 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
       sleep_on_error += funlist[ntest].sleep_on_error;
       stop_on_error += funlist[ntest].stop_on_error;
 
-      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix, do_fprintf );
+      funlist[ntest].func( argc, argv, funlist[ntest].nseries, funlist[ntest].series_suffix, variant );
 
       stop_on_error -= funlist[ntest].stop_on_error;
       sleep_on_error -= funlist[ntest].sleep_on_error;
@@ -145,7 +145,7 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
       assert_on_error -= funlist[ntest].assert_on_error;
       f_print_ok += funlist[ntest].f_noprint_error;
       f_print_ok -= funlist[ntest].f_print_ok;
-      do_fprintf -= funlist[ntest].do_fprintf;
+      variant -= funlist[ntest].variant;
     }
   }
 #if 0

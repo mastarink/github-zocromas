@@ -26,7 +26,7 @@
 
 #include "mastest.h"
 
-static int _do_fprintf = 0;
+static int _variant = 0;
 static int v_int5 = 0;
 static char *sc_string = NULL;
 static char *cc_string = NULL;
@@ -36,7 +36,7 @@ ccallback_string( mucs_option_t * opt )
 {
   if ( opt )
   {
-    if ( _do_fprintf )
+    if ( _variant )
     {
       if ( opt->string_value )
         WARN( "CB STRING: (%c:%x) %s=\"%s\"", opt->shortn > ' ' ? opt->shortn : '?', opt->shortn,
@@ -75,7 +75,7 @@ num5callback( mucs_option_t * opt )
 }
 
 int
-test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   char *v_string0 = NULL;
   char *v_string1 = NULL;
@@ -131,6 +131,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "--num3=2147483647",
     "--num4=-2147483648",
     "--num5=1111111111",
+    /* "--num6=235234534253245345345324532453245324532453425324532453245235234534253245", */
     "--targ0=venenatis",
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
@@ -160,7 +161,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
-  _do_fprintf = do_fprintf;
+  _variant = variant;
 #define NUM_NOPTS 4 + 2 + 1
 
   mucs_option_t options[] = {

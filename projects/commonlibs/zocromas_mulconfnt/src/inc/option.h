@@ -3,7 +3,7 @@
 
 # include "mulconfnt_types.h"
 
-void mucs_config_option_set_value( mucs_option_t * opt, const char *string_value );
+int  mucs_config_option_set_value( mucs_option_t * opt, const char *string_value );
 
 unsigned long mucs_config_option_flags( const mucs_option_t * opt );
 int mucs_config_option_flag( const mucs_option_t * opt, unsigned long mask );

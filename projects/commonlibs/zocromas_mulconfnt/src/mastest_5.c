@@ -25,7 +25,7 @@
 #include "mastest.h"
 
 int
-test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   int v_int0 = 0;
   int v_int1 = 0;

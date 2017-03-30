@@ -26,7 +26,7 @@
 #include "mastest.h"
 
 int
-test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   const char *arg;
   char *v_string0 = NULL;
@@ -83,7 +83,11 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--pi=3.141592653589793",
     "--longpi=3.1415926535897932384626433832795028841971693993751058209749445",
     "abrakadabra",
-    "-n",
+#if 1
+    "-n",                                                            /* no value given for "-n" option (short) */
+#else
+    "-y    0x12",                                                    /* unrecognized option "-y    0x12" */
+#endif
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 

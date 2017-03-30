@@ -30,7 +30,7 @@
 
 /* test for not found option */
 int
-test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   const char *arg _uUu_;
   unsigned int v_uint0 = 0;

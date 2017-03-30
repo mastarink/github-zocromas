@@ -23,7 +23,7 @@
 #include "parse.h"
 
 int
-test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int do_fprintf _uUu_ )
+test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
@@ -46,16 +46,16 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   };
 
   mucs_parse( argc, argv, &test_tablist );
-  if ( do_fprintf )
+  if ( variant )
     fprintf( stderr, "**** Options  chosen: " );
   if ( raw )
-    if ( do_fprintf )
+    if ( variant )
       fprintf( stderr, "-r - %d", raw );
   if ( bitwise )
-    if ( do_fprintf )
+    if ( variant )
       fprintf( stderr, "-z - %lx", bitwise );
   if ( speed )
-    if ( do_fprintf )
+    if ( variant )
       fprintf( stderr, "-b %d ", speed );
   mucs_config_option_tablist_reset( &test_tablist );
   

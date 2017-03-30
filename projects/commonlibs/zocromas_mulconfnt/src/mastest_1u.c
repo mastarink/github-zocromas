@@ -25,7 +25,7 @@
 #include "mastest.h"
 
 int
-test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int do_fprintf _uUu_ )
+test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
   const char *arg;
 
@@ -64,6 +64,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--num2=012",
     "--num3=2147483647",
     "--num4=4294967295",
+    "--num4=43465367546365636353463294967295",
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
     "--lnum2=0xffffffffffffffff",
