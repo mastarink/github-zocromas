@@ -18,14 +18,14 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
   INFO( "dufnx" );
   int v_int0 _uUu_ = 99992;
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"num0", 0, MUCS_RTYP_INT, &v_int0}
   };
   mucs_option_table_list_t gen_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "dufnx-gen-table",.options = options, /* */
   };
   mucs_source_list_t *plist = mucs_source_list_create(  );
-  mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL );
+  mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL );
 
   {
     mucs_source_lookup_all( osrc, &gen_tablist );
