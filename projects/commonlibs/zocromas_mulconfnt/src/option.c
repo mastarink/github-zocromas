@@ -457,8 +457,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
         if ( optscan->force_value )                                  /* use force_value for alias inheritance (only!?) */
         {
         /* B. "--opt" ( + forced value )  */
-        /* has_value = 1;              */
-        /* string_value = optscan->force_value; */
           optscan->has_value = 1;
           optscan->string_value = optscan->force_value;
         }
@@ -473,8 +471,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
             {
             /* TODO bad: value */
               QRGOPTM( opt, -1, "unexpected value given for \"-%c\" option (short)", topt->shortn );
-            /* has_value = 1;     */
-            /* string_value = ep; */
               optscan->has_value = 1;
               optscan->string_value = ep;
               found = -found;
@@ -491,8 +487,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
             if ( *ep )
             {
             /* TODO good: possible value, here */
-            /* has_value = 1;     */
-            /* string_value = ep; */
               optscan->has_value = 1;
               optscan->string_value = ep;
             }
@@ -500,8 +494,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
             {
               if ( optscan->nextarg )
               {
-              /* has_value = 2;          */
-              /* string_value = optscan->nextarg; */
                 optscan->has_value = 2;
                 optscan->string_value = optscan->nextarg;
               }

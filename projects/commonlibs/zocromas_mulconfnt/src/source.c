@@ -147,7 +147,6 @@ mucs_source_dealias_opt( mucs_source_t * osrc, const mucs_option_table_list_t * 
     rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->argptr, osrc->eq, optscan ) );
   }
   optscan->force_value = NULL;
-/* return optscan->found_topt; */
   rRET;
 }
 
@@ -198,8 +197,6 @@ static int
 mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, const char *arg_nopref, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
-
-/* const mucs_option_t *found_topt = NULL; */
 
   rC( mucs_config_option_tablist_lookup( tablist, arg_nopref, osrc->eq, optscan ) );
   rC( mucs_source_dealias_opt( osrc, tablist, optscan->found_topt, optscan ) );
