@@ -3,9 +3,7 @@
 
 # include "mulconfnt_types.h"
 
-const
-mucs_option_han_t *mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, mucs_variant_t variantid, const char *arg,
-                                                      const char *nextarg, const char *eq, const char *force_value, int *phas_value,
-                                                      const char **pstring_value );
+int mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, const char *arg, const char *eq,
+                                                        mucs_optscanner_t * optscan );
 
 #endif

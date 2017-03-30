@@ -82,7 +82,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"num0", 0, MUCS_RTYP_UINT, &v_uint0}
     , {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}
     , {"cnum0", 0, MUCS_RTYP_UCHAR, &v_uchar0}
@@ -129,7 +129,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

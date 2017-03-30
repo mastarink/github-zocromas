@@ -94,7 +94,7 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   int argc2 = sizeof( xxargv[1] ) / sizeof( xxargv[1][0] );
   int totargc _uUu_ = argc1 + argc2;
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = 0 | MUCS_FLAG_AUTOFREE}
     , {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = 0 | MUCS_FLAG_AUTOFREE}
     , {"num0", 0, MUCS_RTYP_INT, &v_int0}
@@ -144,7 +144,7 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_MARGV, xxargc, xxargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_MARGV, xxargc, xxargv, NULL, "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

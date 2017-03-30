@@ -81,7 +81,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"num0other", 0, MUCS_RTYP_UINT, &v_uint0}
     , {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}
     , {"num1", 0, MUCS_RTYP_UINT, &v_uint1}
@@ -126,7 +126,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     if ( osrc )
       osrc->flags |= MUCS_FLAG_SILENT;

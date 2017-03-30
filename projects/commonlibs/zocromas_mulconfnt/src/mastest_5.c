@@ -57,7 +57,7 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
             "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
   };
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"num0", 0, MUCS_RTYP_INT, &v_int0}
     , {"num1", 0, MUCS_RTYP_INT, &v_int1}
     , {"num2", 0, MUCS_RTYP_INT, &v_int2}
@@ -99,7 +99,7 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( fcmds ? 1 : 0, "fcmds: %p", fcmds );

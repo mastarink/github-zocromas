@@ -36,7 +36,7 @@ mucs_config_option_tablist_create( void )
 }
 
 mucs_option_table_list_t *
-mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *name, mucs_option_han_t * options, size_t count )
+mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *name, mucs_option_t * options, size_t count )
 {
   if ( tablist )
   {
@@ -64,9 +64,9 @@ mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist )
 {
   while ( tablist )
   {
-    for ( mucs_option_han_t * opt = tablist->options; opt->name; opt++ )
+    for ( mucs_option_t * opt = tablist->options; opt->name; opt++ )
     {
-      if ( opt && opt->argptr && ( /* ( opt->restype & MUCS_RTYP_FLAG_AUTOFREE ) || */ (opt->flags & MUCS_FLAG_AUTOFREE) ) )
+      if ( opt && opt->argptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
         switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
         {

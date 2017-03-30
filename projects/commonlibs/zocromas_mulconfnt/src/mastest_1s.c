@@ -89,7 +89,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
 #define NUM_NOPTS 4
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = 0 | MUCS_FLAG_AUTOFREE}
     , {"string1", 's', MUCS_RTYP_STRING, &v_string1,.flags = 0 | MUCS_FLAG_AUTOFREE}
     , {"num0", 'n', MUCS_RTYP_INT, &v_int0}
@@ -139,7 +139,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 

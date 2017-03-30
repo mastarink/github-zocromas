@@ -57,7 +57,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
             "bwi=0x700:bwi+=0x100:bwi-=0x200",
   };
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"num0", 0, MUCS_RTYP_INT, &v_int0}
     , {"num1", 0, MUCS_RTYP_INT, &v_int1}
     , {"num2", 0, MUCS_RTYP_INT, &v_int2}
@@ -98,7 +98,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, string_args, ":", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, string_args, ":", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

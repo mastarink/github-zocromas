@@ -37,11 +37,11 @@ mucs_source_list_reset( mucs_source_list_t * source_list )
 {
   if ( source_list )
   {
-    mucs_source_han_t *osrc = source_list->first;
+    mucs_source_t *osrc = source_list->first;
 
     while ( osrc )
     {
-      mucs_source_han_t *next = osrc->next;
+      mucs_source_t *next = osrc->next;
 
       mucs_source_delete( osrc );
       osrc = next;

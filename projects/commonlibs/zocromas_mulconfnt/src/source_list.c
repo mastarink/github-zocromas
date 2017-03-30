@@ -27,7 +27,7 @@
 void
 mucs_source_list_integrate( mucs_source_list_t * source_list )
 {
-  for ( mucs_source_han_t * osrc = source_list->first; osrc; osrc = osrc->next )
+  for ( mucs_source_t * osrc = source_list->first; osrc; osrc = osrc->next )
   {
     mucs_source_load_targ( osrc );
     mas_add_argvc_argvc( &source_list->targ, &osrc->targ, 0 );
@@ -35,11 +35,11 @@ mucs_source_list_integrate( mucs_source_list_t * source_list )
 }
 
 static void
-mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_han_t * osrc )
+mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_t * osrc )
 {
   if ( source_list && osrc )
   {
-    mucs_source_han_t *os = source_list->first;
+    mucs_source_t *os = source_list->first;
 
     if ( os )
     {
@@ -53,11 +53,11 @@ mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_han_t * osrc
   }
 }
 
-mucs_source_han_t *
+mucs_source_t *
 mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr,
                                   const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
-  mucs_source_han_t *osrc = NULL;
+  mucs_source_t *osrc = NULL;
 
   osrc = mucs_source_create_setup( source_type, count, data_ptr, delims, eq, pref_ids );
 /*if ( !osrc )

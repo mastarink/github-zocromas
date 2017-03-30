@@ -22,10 +22,10 @@ struct mucs_error_s
   char *msg;
 };
 # endif
-struct mucs_source_han_s
+struct mucs_source_s
 {
   mucs_source_list_t *list;
-  mucs_source_han_t *next;
+  mucs_source_t *next;
   mucs_source_type_t type;
   mucs_source_mode_t mode;
   unsigned long flags;
@@ -59,7 +59,7 @@ struct mucs_source_han_s
 
 struct mucs_source_list_s
 {
-  mucs_source_han_t *first;
+  mucs_source_t *first;
   mas_argvc_t targ;
 
 /* mucs_error_t error; */
@@ -81,7 +81,7 @@ union nvalue_u
   long double v_ldouble;
 };
 
-struct mucs_option_han_s
+struct mucs_option_s
 {
   char *name;
   char shortn;
@@ -96,7 +96,7 @@ struct mucs_option_han_s
   nvalue_t nvalue;
   unsigned long flags;
 
-  mucs_source_han_t *source;
+  mucs_source_t *source;
   mucs_option_callback_t callback;
   size_t callback_called;
   int value_is_set;
@@ -108,7 +108,17 @@ struct mucs_option_table_list_s
   mucs_option_table_list_t *next;
   unsigned count;
   char *name;
-  mucs_option_han_t *options;
+  mucs_option_t *options;
+};
+
+struct mucs_optscanner_s
+{
+  mucs_variant_t variantid;
+  int has_value;
+  const char *string_value;
+  const char *force_value;
+  const char *nextarg;
+  const mucs_option_t *found_topt;
 };
 
 #endif

@@ -25,7 +25,7 @@
  * */
 
 static void
-mucs_config_option_nvalue_from_ptr( mucs_option_han_t * opt )
+mucs_config_option_nvalue_from_ptr( mucs_option_t * opt )
 {
   if ( opt->argptr )
   {
@@ -88,7 +88,7 @@ mucs_config_option_nvalue_from_ptr( mucs_option_han_t * opt )
 }
 
 static void
-mucs_config_option_nvalue_to_ptr( mucs_option_han_t * opt )
+mucs_config_option_nvalue_to_ptr( mucs_option_t * opt )
 {
   if ( opt->argptr )
   {
@@ -148,7 +148,7 @@ mucs_config_option_nvalue_to_ptr( mucs_option_han_t * opt )
 }
 
 static nvalue_t
-mucs_config_option_string_to_nvalue( mucs_option_han_t * opt, int *perr )
+mucs_config_option_string_to_nvalue( mucs_option_t * opt, int *perr )
 {
   nvalue_t v_x = { 0 };
   if ( opt )
@@ -194,7 +194,7 @@ mucs_config_option_string_to_nvalue( mucs_option_han_t * opt, int *perr )
 }
 
 static void
-mucs_config_option_set_nvalue( mucs_option_han_t * opt )
+mucs_config_option_set_nvalue( mucs_option_t * opt )
 {
   if ( opt && opt->string_value )
   {
@@ -368,7 +368,7 @@ mucs_config_option_set_nvalue( mucs_option_han_t * opt )
 }
 
 void
-mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value )
+mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
 {
   if ( opt )
   {
@@ -394,13 +394,13 @@ mucs_config_option_set_value( mucs_option_han_t * opt, const char *string_value 
  *   returns NULL
  * */
 const char *
-mucs_config_option_match_name( const mucs_option_han_t * topt, mucs_variant_t variantid, const char *arg, const char *eq )
+mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * optscan, const char *arg, const char *eq )
 {
   unsigned larg = strlen( arg );
   unsigned lname = 0;
   const char *argp = NULL;
 
-  if ( variantid == MUCS_VARIANT_SHORT )
+  if ( optscan->variantid == MUCS_VARIANT_SHORT )
   {
     lname = 1;
     argp = arg + lname;
@@ -410,7 +410,7 @@ mucs_config_option_match_name( const mucs_option_han_t * topt, mucs_variant_t va
       argp = NULL;
     }
   }
-  else if ( variantid == MUCS_VARIANT_LONG )
+  else if ( optscan->variantid == MUCS_VARIANT_LONG )
   {
     lname = strlen( topt->name );
     if ( 0 == strncmp( topt->name, arg, lname ) )
@@ -434,39 +434,33 @@ mucs_config_option_match_name( const mucs_option_han_t * topt, mucs_variant_t va
   return argp;
 }
 
-const mucs_option_han_t *
-mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, const mucs_option_han_t * found_topt, mucs_variant_t variantid,
-                                        const char *arg, const char *nextarg _uUu_, const char *eq, const char *force_value,
-					int *phas_value, const char **pstring_value )
+int
+mucs_config_option_lookup_option_table( const mucs_option_t * option_table, const char *arg, const char *eq, mucs_optscanner_t * optscan )
 {
+  rDECLBAD;
   int found = 0;
 
-/* mucs_option_han_t *opt = NULL; */
-
-  int has_value _uUu_ = 0;
-  const char *string_value _uUu_ = NULL;
-
-/* const mucs_option_han_t *ropt = NULL; */
-
   if ( option_table )
-    for ( const mucs_option_han_t * topt = option_table; /* !found && */ topt->name; topt++ )
+  {
+    rSETGOOD;
+    for ( const mucs_option_t * topt = option_table; rGOOD && topt->name; topt++ )
     {
       int without_value = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
-      const char *ep = mucs_config_option_match_name( topt, variantid, arg, eq );
+      const char *ep = mucs_config_option_match_name( topt, optscan, arg, eq );
 
       if ( ep )
       {
         found = 1;
-        if ( found_topt && strlen( topt->name ) <= strlen( found_topt->name ) )
-        {
+        if ( optscan->found_topt && strlen( topt->name ) <= strlen( optscan->found_topt->name ) )
           continue;
-        }
-        found_topt = topt;
-        if ( force_value )                                           /* use force_value for alias inheritance (only!?) */
+        optscan->found_topt = topt;
+        if ( optscan->force_value )                                  /* use force_value for alias inheritance (only!?) */
         {
         /* B. "--opt" ( + forced value )  */
-          has_value = 1;
-          string_value = force_value;
+        /* has_value = 1;              */
+        /* string_value = optscan->force_value; */
+          optscan->has_value = 1;
+          optscan->string_value = optscan->force_value;
         }
         else
         {
@@ -479,9 +473,12 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
             {
             /* TODO bad: value */
               QRGOPTM( opt, -1, "unexpected value given for \"-%c\" option (short)", topt->shortn );
-              has_value = 1;
-              string_value = ep;
+            /* has_value = 1;     */
+            /* string_value = ep; */
+              optscan->has_value = 1;
+              optscan->string_value = ep;
               found = -found;
+              rSETBAD;
             }
             else
             {
@@ -494,25 +491,31 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
             if ( *ep )
             {
             /* TODO good: possible value, here */
-              has_value = 1;
-              string_value = ep;
+            /* has_value = 1;     */
+            /* string_value = ep; */
+              optscan->has_value = 1;
+              optscan->string_value = ep;
             }
             else
             {
-              if ( nextarg )
+              if ( optscan->nextarg )
               {
-                has_value = 2;
-                string_value = nextarg;
+              /* has_value = 2;          */
+              /* string_value = optscan->nextarg; */
+                optscan->has_value = 2;
+                optscan->string_value = optscan->nextarg;
               }
               else if ( !mucs_config_option_flag( topt, MUCS_FLAG_OPTIONAL_VALUE ) )
               {
-                if ( variantid == MUCS_VARIANT_SHORT )
+                if ( optscan->variantid == MUCS_VARIANT_SHORT )
                 {
                   QRGOPTM( opt, -1, "no value given for \"-%c\" option (short)", topt->shortn );
+                  rSETBAD;
                 }
-                else if ( variantid == MUCS_VARIANT_LONG )
+                else if ( optscan->variantid == MUCS_VARIANT_LONG )
                 {
                   QRGOPTM( opt, -1, "no value given for \"--%s\" option", topt->name ); /* !without_value && !has_value */
+                  rSETBAD;
                 }
                 found = -found;
               }
@@ -520,156 +523,14 @@ mucs_config_option_lookup_option_table( const mucs_option_han_t * option_table, 
           }
         }
       }
-    /* ropt = topt; */
     }
-  if ( !found )
-    found_topt = NULL;
-  if ( pstring_value )
-    *pstring_value = string_value;
-  if ( phas_value )
-    *phas_value = has_value;
-  return found_topt;
-}
-
-mucs_option_han_t *
-mucs_config_option_lookup_option_table_old( const mucs_option_han_t * option_table, mucs_variant_t variantid, const char *arg,
-                                            const char *nextarg, const char *eq, const char *force_value _uUu_ )
-{
-/* rDECLBAD; */
-  mucs_option_han_t *opt = NULL;
-  const mucs_option_han_t *topt = option_table;
-
-  while ( !opt && topt && topt->name )
-  {
-    int found = 0;
-    int has_value = 0;
-    const char *string_value = NULL;
-    int without_value = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
-    unsigned larg = strlen( arg );
-
-    {
-      if ( variantid == MUCS_VARIANT_SHORT )
-      {
-        found = ( larg == 1 && *arg == topt->shortn ) ? 1 : 0;
-        if ( *arg == topt->shortn )
-        {
-          const char *argp = arg + 1;
-
-          if ( *argp == 0 )
-          {
-          /* "-o", "value" */
-            if ( !without_value )
-            {
-              if ( nextarg )
-              {
-                has_value = 2;                                       /* to skip next arg */
-                string_value = nextarg;
-              }
-              else
-              {
-                QRGOPTM( opt, -1, "no value given for \"-%c\" option (short)", topt->shortn );
-              /* rSETBAD; */
-              }
-            }
-            found = 1;
-          }
-          else if ( !without_value && strchr( " \t", *argp ) )
-          {
-          /* "-o value" */
-            found = 2;
-
-            while ( strchr( " \t", *argp ) )
-              argp++;
-            if ( *argp )
-            {
-              has_value = 1;
-              string_value = argp;
-            }
-          }
-        }
-      }
-      else if ( variantid == MUCS_VARIANT_LONG )
-      {
-        unsigned lname = strlen( topt->name );
-
-        if ( larg >= lname && 0 == strncmp( arg, topt->name, lname ) )
-        {
-          int leq = strlen( eq );
-          const char *argp = arg + lname;                            /* after name */
-          int have_eq = ( eq && *argp && 0 == strncmp( argp, eq, leq ) );
-
-        /* found opt name */
-          if (  /* !without_value && */ force_value )                /* use force_value for alias inheritance (only!?) */
-          {
-          /* B. "--opt" ( + forced value )  */
-            found = 2;
-
-            has_value = 1;
-            string_value = force_value;
-          }
-          else if ( !without_value && have_eq )
-          {
-          /* A. "--opt=val"  */
-            found = 2;
-
-            has_value = 1;
-            string_value = argp + leq;                               /* TODO if (!*(argp + leq)) {....} */
-          }
-          else if ( !without_value && mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
-          {
-          /* Found, but no needed "=value" */
-            found = 3;
-            QRGOPTM( opt, -1, "no value given for \"--%s\" option", topt->name ); /* !without_value && !has_value */
-          }
-          else if ( *argp )                                          /* only start matches */
-          {
-          /* Not found */
-            found = 0;
-          }
-          else if ( without_value )
-          {
-          /* "--opt" */
-          /* Found, no-value */
-            found = 1;
-
-            has_value = 0;
-            string_value = NULL;
-          }
-          else
-          {
-          /* "--opt", "value" */
-          /* Found, value at next arg */
-            found = 1;
-
-            has_value = 2;
-            string_value = nextarg;
-          }
-        }
-      }
-    }
-    if ( found )
-    {
-      opt = mucs_config_option_clone( topt );
-      if ( has_value )
-      {
-        mucs_config_option_set_value( opt, string_value );
-        if ( opt->callback && !opt->argptr )
-        {
-          opt->callback( opt );
-          opt->callback_called++;
-        }
-        opt->has_value = has_value;
-      }
-    }
-    option_table++;
-    topt++;
   }
-  return opt;
-/* rRET; */
+/* return optscan->found_topt; */
+  rRET;
 }
 
 unsigned long
-mucs_config_option_flags( const mucs_option_han_t * opt )
+mucs_config_option_flags( const mucs_option_t * opt )
 {
   unsigned long osrcflag = opt && opt->source ? mucs_source_flags( opt->source ) : 0L;
 
@@ -677,7 +538,7 @@ mucs_config_option_flags( const mucs_option_han_t * opt )
 }
 
 int
-mucs_config_option_flag( const mucs_option_han_t * opt, unsigned long mask )
+mucs_config_option_flag( const mucs_option_t * opt, unsigned long mask )
 {
   unsigned long osrcflag = opt->source ? mucs_source_flag( opt->source, mask ) : 0L;
 
@@ -685,8 +546,9 @@ mucs_config_option_flag( const mucs_option_han_t * opt, unsigned long mask )
   return opt ? ( osrcflag || ( opt->flags & mask ) ) : 0;
 }
 
+#if 0
 int
-mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc )
+mucs_option_set_source( mucs_option_t * opt, mucs_source_t * osrc )
 {
   rDECLBAD;
   if ( opt && osrc )
@@ -696,3 +558,4 @@ mucs_option_set_source( mucs_option_han_t * opt, mucs_source_han_t * osrc )
   }
   rRET;
 }
+#endif

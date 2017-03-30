@@ -49,7 +49,7 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
     , {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}
     , {"string2", 0, MUCS_RTYP_STRING, &v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}
@@ -79,7 +79,7 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

@@ -30,7 +30,7 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
   mucs_source_list_t *plist = &list_;
 #endif
 
-  mucs_source_han_t *osrc = NULL;
+  mucs_source_t *osrc = NULL;
 
   mucs_source_list_init( plist );
   osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );

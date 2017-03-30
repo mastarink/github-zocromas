@@ -32,7 +32,7 @@ static char *sc_string = NULL;
 static char *cc_string = NULL;
 
 int
-ccallback_string( mucs_option_han_t * opt )
+ccallback_string( mucs_option_t * opt )
 {
   if ( opt )
   {
@@ -57,7 +57,7 @@ ccallback_string( mucs_option_han_t * opt )
 }
 
 int
-scallback_string( mucs_option_han_t * opt )
+scallback_string( mucs_option_t * opt )
 {
   if ( sc_string )
     mas_free( sc_string );
@@ -67,7 +67,7 @@ scallback_string( mucs_option_han_t * opt )
 }
 
 int
-num5callback( mucs_option_han_t * opt )
+num5callback( mucs_option_t * opt )
 {
 //fprintf( stderr, "NUM5: %d\n", opt->nvalue.v_int );
   v_int5 = opt->nvalue.v_int;
@@ -163,7 +163,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   _do_fprintf = do_fprintf;
 #define NUM_NOPTS 4 + 2 + 1
 
-  mucs_option_han_t options[] = {
+  mucs_option_t options[] = {
     {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string0,.flags = MUCS_FLAG_AUTOFREE}
     , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string1}
     , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING}
@@ -229,7 +229,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     masexam_next_group(  );
     EXAM( ( plist ? 1 : 0 ), 1, "plist: %d ? %d" );
-    mucs_source_han_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     mucs_source_set_common_callback( osrc, ccallback_string );
     mucs_source_set_type_callback( osrc, MUCS_RTYP_STRING, scallback_string );

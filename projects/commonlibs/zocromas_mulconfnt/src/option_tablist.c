@@ -23,26 +23,21 @@
  *
  * */
 
-const mucs_option_han_t *
-mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, mucs_variant_t variantid,
-                                   const char *arg, const char *nextarg, const char *eq, const char *force_value, int *phas_value,
-                                   const char **pstring_value )
+int
+mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, const char *arg, const char *eq, mucs_optscanner_t * optscan )
 {
-  /* mucs_option_han_t *opt = NULL; */
-  const mucs_option_han_t *found_topt = NULL;
-  int has_value = 0;
-  const char *string_value = NULL;
-
-  while ( !found_topt && tablist )
+  rDECLBAD;
+/* const mucs_option_t *found_topt = NULL; */
+  optscan->found_topt = NULL;
+  if ( tablist )
   {
-    found_topt =
-            mucs_config_option_lookup_option_table( tablist->options, found_topt, variantid, arg, nextarg, eq, force_value, &has_value,
-                                                    &string_value );
-    tablist = tablist->next;
+    rSETGOOD;
+    while ( rGOOD && !optscan->found_topt && tablist )
+    {
+      rC( mucs_config_option_lookup_option_table( tablist->options, arg, eq, optscan ) );
+      tablist = tablist->next;
+    }
   }
-  if ( phas_value )
-    *phas_value = has_value;
-  if ( pstring_value )
-    *pstring_value = string_value;
-  return found_topt;
+/* return optscan->found_topt; */
+  rRET;
 }
