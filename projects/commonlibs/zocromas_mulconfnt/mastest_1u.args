@@ -17,7 +17,7 @@ wow
 --llnum2=012
 --llnum3=18446744073709551615
 --llnum4=-9223372036854775808
---bwi=0x700
 --bwi+=0x100
+--bwi=0x700
 --bwi-=0x200
 abrakadabra

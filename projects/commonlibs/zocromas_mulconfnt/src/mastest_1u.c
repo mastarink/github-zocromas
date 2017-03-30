@@ -64,7 +64,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--num2=012",
     "--num3=2147483647",
     "--num4=4294967295",
-    "--num4=43465367546365636353463294967295",
+    /* "--num4=43465367546365636353463294967295", */
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
     "--lnum2=0xffffffffffffffff",
@@ -76,8 +76,8 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--llnum2=012",
     "--llnum3=18446744073709551615",
     "--llnum4=-9223372036854775808",
-    "--bwi=0x700",
     "--bwi+=0x100",
+    "--bwi=0x700",
     "--bwi-=0x200",
     "abrakadabra",
   };
