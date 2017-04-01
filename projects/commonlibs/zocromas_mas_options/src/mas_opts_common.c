@@ -18,7 +18,7 @@
 
 #include "mas_opts_common.h"
 
-
+#define _uUu_ __attribute__((unused))
 /*
 this:
   mas_opts_common.c
@@ -32,12 +32,12 @@ related:
 */
 
 int
-mas_opts_restore_nosection( mas_options_t * popts, void *ptopts, const char *section, const char *sectvalue, const char *s,
+mas_opts_restore_nosection( mas_options_t * popts _uUu_, void *ptopts, const char *section, const char *sectvalue, const char *s,
                             mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg )
 {
   int r = -1;
 
-  for ( int io = 0; io < opt_table_size; io++ )
+  for ( unsigned io = 0; io < opt_table_size; io++ )
   {
     char *ptr = NULL;
     char **pptr = NULL;
@@ -155,7 +155,7 @@ _mas_opts_restore_path( mas_options_t * popts, const char *fpath, void *ptopts, 
       while ( !feof( f ) )
       {
         char *s, *rbp, *spp;
-        size_t len;
+        ssize_t len;
 
         s = fgets( buf, sizeof( buf ), f );
         while ( s && *s && *s <= ' ' )

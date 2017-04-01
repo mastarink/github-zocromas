@@ -19,8 +19,11 @@
 #include <mastar/tools/mas_tools.h>
 
 #include "mas_opts.h"
+
+#define _uUu_ __attribute__((unused))
+
 int
-main( int argc, char *argv[], char *env[] )
+main( int argc _uUu_ , char *argv[] _uUu_ , char *env[] _uUu_  )
 {
   int r = 0;
 

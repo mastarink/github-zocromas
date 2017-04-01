@@ -11,6 +11,7 @@
 #include <mastar/wrap/mas_lib.h>
 
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_time.h>
 #include <mastar/tools/mas_arg_tools.h>
 
 
@@ -80,7 +81,7 @@ mas_opts_check_old_file( mas_options_t * popts, const char *fpath, int deep, int
           sprintf( ext, ".%03d", deep );
           fpath_bak = mas_strcat_x( fpath_bak, ext );
         }
-        if ( deep < popts->max_config_backup )
+        if ( deep < (int)popts->max_config_backup )
         {
           r = mas_opts_check_old_file( popts, fpath_bak, deep, 1, backup, overwrite );
         }

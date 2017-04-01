@@ -18,6 +18,7 @@
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_time.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -46,6 +47,7 @@
 #include "mas_sig.h"
 #include "mas_init.h"
 
+#define _uUu_ __attribute__(( unused ))
 
 #ifdef MAS_USE_CURSES
 int use_curses = 0;
@@ -110,7 +112,7 @@ mas_env_init( mas_options_t * popts )
 }
 
 static int
-error_handler_at_init( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
+error_handler_at_init( const char *func, int line, int issys _uUu_, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
                        const char *msg )
 {
   if ( !fmt )
@@ -168,7 +170,7 @@ mas_setup_runpath( char *runpath )
 
 
 int
-mas_init( mas_options_t * popts, int argc, char **argv, char **env )
+mas_init( mas_options_t * popts _uUu_, int argc, char **argv, char **env )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;

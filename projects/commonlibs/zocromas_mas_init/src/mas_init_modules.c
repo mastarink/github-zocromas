@@ -1,7 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,7 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #ifdef HAVE_LIBUUID
-#  include <uuid/uuid.h>
+# include <uuid/uuid.h>
 #endif
 
 #include <mastar/wrap/mas_memory.h>
@@ -29,7 +28,7 @@
 #include <mastar/log/mas_logger.h>
 
 #ifdef MAS_USE_CURSES
-#  include <mastar/msg/mas_curses.h>
+# include <mastar/msg/mas_curses.h>
 #endif
 
 #include <mastar/options/mas_opts.h>
@@ -41,9 +40,7 @@
 /* #include "mas_sig.h" */
 /* #include "mas_init.h" */
 
-
 #include "mas_init_modules.h"
-
 
 /*
 this:
@@ -111,7 +108,8 @@ more:
 /* mas_message_init( mas_options_t * popts, const char **message, unsigned flag ) */
 INIT_HANDLER( mas_message_init )
 {
-  CTRL_PREPARE;                 /* MFP... */
+  flags = flags;
+  CTRL_PREPARE;                                                      /* MFP... */
   if ( popts->init_message )
   {
 /* #pragma GCC diagnostic push                                */
@@ -128,20 +126,20 @@ INIT_HANDLER( mas_message_init )
     esc = mas_escape( popts->init_message );
     if ( esc )
     {
-      /* char *d; */
+    /* char *d; */
 
-      /* d = mas_dump2( esc, strlen( esc ), 64 ); */
+    /* d = mas_dump2( esc, strlen( esc ), 64 ); */
       MFPL( esc );
-      /* HMSG( "DUMP ESC:%s", d ); */
-      /* mas_free( d ); */
+    /* HMSG( "DUMP ESC:%s", d ); */
+    /* mas_free( d ); */
       mas_free( esc );
     }
-    /* HMSG( "INIT_MESSAGE [%s]", popts->init_message ); */
+  /* HMSG( "INIT_MESSAGE [%s]", popts->init_message ); */
   }
   else
   {
-    /* (* MFP( "\x1b[H\x1b[2J" ); *) */
-    /* (* MFP( "\x1b" "c" ); *)      */
+  /* (* MFP( "\x1b[H\x1b[2J" ); *) */
+  /* (* MFP( "\x1b" "c" ); *)      */
     MFPL( "\x1b" "c" );
   }
   WMSG( "INIT MESSAGE" );
@@ -168,7 +166,7 @@ INIT_HANDLER( mas_message_init )
     extern unsigned long __MAS_LINK_TIME__;
     extern unsigned long __MAS_LINK_TIMESTAMP__;
 
-    /* IMSG( "\x1b""c" ); */
+  /* IMSG( "\x1b""c" ); */
     IMSG( "-" );
     IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s) ", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),
@@ -176,11 +174,11 @@ INIT_HANDLER( mas_message_init )
     IMSG( " [%s] pid=[ %u ](%x) ; tid:%u [%lx] ", ctrl.progname, ctrl.threads.n.main.pid,
           ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
     IMSG( "-" );
-    /* IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,          */
-    /*       PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),               */
-    /*       ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );                                                              */
-    /* IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid, */
-    /*       ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );                 */
+  /* IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,          */
+  /*       PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),               */
+  /*       ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );                                                              */
+  /* IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid, */
+  /*       ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );                 */
   }
   if ( message )
     *message = __func__;
@@ -195,6 +193,7 @@ INIT_HANDLER( mas_opt_files_init )
   int r = 0;
   char sppid[64] = "";
 
+  flags = flags;
   HMSG( "INIT OPT FILES" );
   HMSG( "PPID: %u; BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   MAS_LOG( "PPID: %u BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
@@ -208,7 +207,7 @@ INIT_HANDLER( mas_opt_files_init )
     int rzero = 0;
     const char *name = ctrl.exename;
 
-    /* const char *name = ctrl.progname; */
+  /* const char *name = ctrl.progname; */
     HMSG( "REST.ZERO:%s", name );
     IEVAL_OPT( rzero, mas_opts_restore_zero( popts, name ) );
     {
@@ -218,7 +217,7 @@ INIT_HANDLER( mas_opt_files_init )
 
       if ( popts->read_user_opts )
       {
-        /* IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+      /* IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
         if ( popts->read_user_opts_plus )
         {
           IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
@@ -232,14 +231,14 @@ INIT_HANDLER( mas_opt_files_init )
 #else
       int rtwo = 0;
 
-      /* if ( popts->flag.name.read_user_opts ) */
+    /* if ( popts->flag.name.read_user_opts ) */
       if ( OPT_QFLAG( popts, read_user_opts ) )
       {
         IEVAL_OPT( rone, mas_opts_restore_user( popts, NULL, name ) );
-        /* if ( popts->flag.name.read_user_opts_plus ) */
+      /* if ( popts->flag.name.read_user_opts_plus ) */
         if ( OPT_QFLAG( popts, read_user_opts_plus ) )
         {
-          /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+        /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
           HMSG( "REST.USER +:%s", name );
           IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
         }
@@ -247,7 +246,7 @@ INIT_HANDLER( mas_opt_files_init )
 #endif
     }
   }
-  /* HMSG( "UUID %s", popts->uuid ); */
+/* HMSG( "UUID %s", popts->uuid ); */
   if ( r < 0 )
   {
     EVAL_PREPARE;
@@ -269,6 +268,7 @@ INIT_HANDLER( mas_msg_file_init )
   EVAL_PREPARE;
   int r = 0;
 
+  flags = flags;
   if ( !ctrl.is_parent )
   {
     HMSG( "MESSAGES (%d) to %s", ctrl.messages ? 1 : 0, popts ? popts->msgfilename : NULL );
@@ -278,9 +278,9 @@ INIT_HANDLER( mas_msg_file_init )
       IEVAL( r, mas_msg_set_file( popts->msgfilename, 0 ) );
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );
 
-      /* TODO if console: */
+    /* TODO if console: */
     }
-    /* IEVAL( r, mas_message_init(  ) ); */
+  /* IEVAL( r, mas_message_init(  ) ); */
   }
   if ( message )
     *message = __func__;
@@ -292,6 +292,7 @@ INIT_HANDLER( mas_msg_file_init )
 /* mas_uuid_init( mas_options_t * popts, const char **message, unsigned flag ) */
 INIT_HANDLER( mas_uuid_init )
 {
+  flags = flags;
 #ifdef HAVE_LIBUUID
   if ( !popts->uuid )
   {
@@ -317,6 +318,7 @@ INIT_HANDLER( mas_post_init )
 {
   int r = 0;
 
+  flags = flags;
   HMSG( "POST-INIT >" );
 #if 0
   if ( r >= 0 && !popts->hosts_num )
@@ -329,10 +331,10 @@ INIT_HANDLER( mas_post_init )
       defhost = "localhost";
     popts->hosts_num = mas_add_argv_arg( popts->hosts_num, &popts->hosts, defhost );
 
-    /* for ( int ih = 0; ih <= popts-> hosts_num; ih++ )                     */
-    /* {                                                                  */
-    /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, popts-> hosts[ih], defhost ); */
-    /* }                                                                  */
+  /* for ( int ih = 0; ih <= popts-> hosts_num; ih++ )                     */
+  /* {                                                                  */
+  /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, popts-> hosts[ih], defhost ); */
+  /* }                                                                  */
   }
 #endif
 /*
@@ -349,7 +351,7 @@ INIT_HANDLER( mas_post_init )
     ctrl.logpath = mas_strdup( popts->dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
-    /* ctrl.log = popts->flag.name.log.enable ? 1 : 0; */
+  /* ctrl.log = popts->flag.name.log.enable ? 1 : 0; */
     ctrl.log = OPT_QFLAG( popts, log_enable );
   }
   else
@@ -366,6 +368,6 @@ INIT_HANDLER( mas_post_init )
 __attribute__ ( ( constructor( 2001 ) ) )
      static void mas_constructor( void )
 {
-  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+/* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
   mas_common_constructor( IL, 1 );
 }

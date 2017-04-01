@@ -2,3 +2,4 @@ sh
 zocversion.txt
 .auxdir
 tmp
+.gvim

@@ -12,6 +12,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
@@ -129,9 +130,13 @@ main( int argc, const char *argv[] )
   };
   masexam_test( argc, argv, funlist );
 #define TOTAL_TESTS 350 - 1
-  /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
-  EXAM( masexam_tests_count(  ) , TOTAL_TESTS, "tests_count=%d ? %d" );
+/* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
+  EXAM( masexam_tests_count(  ), TOTAL_TESTS, "tests_count=%d ? %d" );
 
+  WARN( "MAS_CONFIG_PREFIX:%s;", MAS_CONFIG_PREFIX );
+  WARN( "MAS_CONFIG_SYSCONFDIR:%s;", MAS_CONFIG_SYSCONFDIR );
+  WARN( "MAS_SYSCONFDIR:%s;", MAS_SYSCONFDIR );
+  WARN( "MAS_DATADIR:%s;", MAS_DATADIR );
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

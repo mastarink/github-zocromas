@@ -485,7 +485,7 @@ main( int argc, char *argv[], char *env[] )
   HMSG( "testing_general:%d %s", r, tested( NULL, r == expected_result[0] ) ? "OK" : "FAIL" );
 /* <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> */
 /* <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> */
-  for ( int it = 0; it < sizeof( test_opts ) / sizeof( test_opts[0] ); it++ )
+  for ( unsigned it = 0; it < sizeof( test_opts ) / sizeof( test_opts[0] ); it++ )
   {
     r = testing_general( 3 + it, test_opts[it], expected_result[it], expected_flags[it], expected_init_msg[it], expected_jhosts[it],
                          expected_nhosts[it], expected_msg_flags[it], expected_port[it], expected_extsleep[it], 0, 0, 0 );

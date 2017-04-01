@@ -183,7 +183,7 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
 
     /* if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length ) */
     /*   mas_channel_read_remainder( pchannel );                            */
-    while ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
+    while ( sizeof( mas_header_t ) + msg->h.len < ((size_t)pchannel->buffer.length) )
     {
       WMSG( "> h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length,
             msg->h.len );

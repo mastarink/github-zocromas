@@ -219,7 +219,7 @@ mas_read_string( int fd, char **pbuf )
     r = 0;
     if ( pbuf )
       *pbuf = NULL;
-    for ( int i = 0; i < sizeof( buf ) - 5; i++ )
+    for ( unsigned i = 0; i < sizeof( buf ) - 5; i++ )
     {
       c = 0;
       buf[i + 1] = 0;
@@ -267,10 +267,10 @@ mas_read_string( int fd, char **pbuf )
 
 #ifndef MAS_CHANNEL_STREAM_READ
 int
-mas_read_all_new_bad( int fd, char **pbuf, size_t * psz, size_t maxsz )
+mas_read_all_new_bad( int fd, char **pbuf, size_t * psz, ssize_t maxsz )
 #else
 int
-mas_fread_all_new_bad( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
+mas_fread_all_new_bad( FILE * stream, char **pbuf, size_t * psz, ssize_t maxsz )
 #endif
 {
   ssize_t totread = 0;
@@ -392,10 +392,10 @@ mas_io_append2buffer( char **px_buffer, ssize_t * px_buffer_size, char *read_buf
 
 #ifndef MAS_CHANNEL_STREAM_READ
 int
-mas_io_read_some( int fd, char **px_buffer, size_t * pxbuffer_size, size_t maxsz )
+mas_io_read_some( int fd, char **px_buffer, size_t * pxbuffer_size, ssize_t maxsz )
 #else
 int
-mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size_t maxsz )
+mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, ssize_t maxsz )
 #endif
 {
   ssize_t totread = 0;
@@ -403,7 +403,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
   char *x_buffer = NULL;
   ssize_t readsz = 0;
   ssize_t rsz;
-  size_t bufsz;
+  ssize_t bufsz;
 
   bufsz = 2048 * 4 + 4;
 

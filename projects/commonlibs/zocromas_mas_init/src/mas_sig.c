@@ -9,9 +9,9 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-
 #include "mas_sig.h"
 
+#define _uUu_ __attribute__(( unused ))
 
 /*
 this:
@@ -21,33 +21,30 @@ related:
   mas_client_sig.c
 */
 
-
-
 void
-sigwinch_han( int s )
+sigwinch_han( int s _uUu_ )
 {
   GMSG( "WINCH" );
 }
 
 void
-sigusr1_han( int s )
+sigusr1_han( int s _uUu_ )
 {
   GDMSG( "USR1" );
 }
 
 void
-sigusr2_han( int s )
+sigusr2_han( int s _uUu_ )
 {
   GDMSG( "USR2" );
 }
 
-
 /* extern pthread_t *listening_threads; */
-
-
 
 INIT_HANDLER( mas_sig_init )
 {
+  popts = popts;
+  flags = flags;
 #if 0
   signal( SIGPIPE, sigpipe_han );
   signal( SIGHUP, sighup_han );
@@ -58,15 +55,14 @@ INIT_HANDLER( mas_sig_init )
   signal( SIGUSR1, sigusr1_han );
   signal( SIGPOLL, sigpoll_han );
 #else
-  /* struct sigaction                                       */
-  /* {                                                      */
-  /*   void ( *sa_handler ) ( int );                        */
-  /*   void ( *sa_sigaction ) ( int, siginfo_t *, void * ); */
-  /*   sigset_t sa_mask;                                    */
-  /*   int sa_flags;                                        */
-  /*   void ( *sa_restorer ) ( void );                      */
-  /* };                                                     */
-
+/* struct sigaction                                       */
+/* {                                                      */
+/*   void ( *sa_handler ) ( int );                        */
+/*   void ( *sa_sigaction ) ( int, siginfo_t *, void * ); */
+/*   sigset_t sa_mask;                                    */
+/*   int sa_flags;                                        */
+/*   void ( *sa_restorer ) ( void );                      */
+/* };                                                     */
 
   static struct sigaction sa_int = {
     .sa_handler = sigint_han
@@ -80,9 +76,9 @@ INIT_HANDLER( mas_sig_init )
   static struct sigaction sa_term = {
     .sa_handler = sigterm_han
   };
-  /* static struct sigaction sa_abrt = { */
-  /*   .sa_handler = sigabrt_han         */
-  /* };                                  */
+/* static struct sigaction sa_abrt = { */
+/*   .sa_handler = sigabrt_han         */
+/* };                                  */
   static struct sigaction sa_quit = {
     .sa_handler = sigquit_han
   };
@@ -92,31 +88,31 @@ INIT_HANDLER( mas_sig_init )
   static struct sigaction sa_usr2 = {
     .sa_handler = sigusr2_han
   };
-#  if 0
+# if 0
   static sigset_t sset;
 
   sigemptyset( &sset );
   sigaddset( &sset, SIGINT );
   sigaddset( &sset, SIGHUP );
-  /* sigaddset( &sset, SIGWINCH ); */
+/* sigaddset( &sset, SIGWINCH ); */
   sigaddset( &sset, SIGTERM );
   sigaddset( &sset, SIGPIPE );
   sigaddset( &sset, SIGUSR1 );
   sigaddset( &sset, SIGPOLL );
-#  endif
+# endif
 
-  /* sigemptyset( &oset ); */
-  /* sigprocmask( SIG_BLOCK, &sset, &oset ); */
+/* sigemptyset( &oset ); */
+/* sigprocmask( SIG_BLOCK, &sset, &oset ); */
   sigaction( SIGINT, &sa_int, NULL );
   sigaction( SIGHUP, &sa_hup, NULL );
   sigaction( SIGTERM, &sa_term, NULL );
-  /* sigaction( SIGABRT, &sa_abrt, NULL ); */
+/* sigaction( SIGABRT, &sa_abrt, NULL ); */
   sigaction( SIGPIPE, &sa_pipe, NULL );
   sigaction( SIGUSR1, &sa_usr1, NULL );
   sigaction( SIGUSR2, &sa_usr2, NULL );
   sigaction( SIGQUIT, &sa_quit, NULL );
-  /* sigaction( SIGHUP, SIG_DFL, NULL ); */
-  /* sigaction( SIGTERM, SIG_DFL, NULL ); */
+/* sigaction( SIGHUP, SIG_DFL, NULL ); */
+/* sigaction( SIGTERM, SIG_DFL, NULL ); */
 #endif
   HMSG( "INIT SIG" );
   if ( message )
@@ -128,12 +124,12 @@ INIT_HANDLER( mas_sig_init )
 void
 mas_dfl_sig( void )
 {
-  /* signal( SIGPIPE, SIG_DFL );  */
-  /* signal( SIGHUP, SIG_DFL );   */
-  /* signal( SIGWINCH, SIG_DFL ); */
-  /* signal( SIGTERM, SIG_DFL );  */
-  /* signal( SIGINT, SIG_DFL );   */
-  /* signal( SIGQUIT, SIG_DFL );  */
-  /* signal( SIGUSR1, SIG_DFL );  */
-  /* signal( SIGPOLL, SIG_DFL );  */
+/* signal( SIGPIPE, SIG_DFL );  */
+/* signal( SIGHUP, SIG_DFL );   */
+/* signal( SIGWINCH, SIG_DFL ); */
+/* signal( SIGTERM, SIG_DFL );  */
+/* signal( SIGINT, SIG_DFL );   */
+/* signal( SIGQUIT, SIG_DFL );  */
+/* signal( SIGUSR1, SIG_DFL );  */
+/* signal( SIGPOLL, SIG_DFL );  */
 }

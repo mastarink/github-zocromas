@@ -8,7 +8,6 @@
 #include <string.h>
 #include <limits.h>
 
-
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/msg/mas_msg_def.h>
@@ -18,14 +17,11 @@
 
 #include <mastar/types/mas_opts_types.h>
 
-
-
 #include "mas_cliopts_def.h"
 
 #include "mas_longopts_table_object.h"
 
 #include "mas_cliopts_data.h"
-
 
 /*
 this:
@@ -38,8 +34,6 @@ related:
   mas_control.c
 
 */
-
-
 
 mas_optionx_t mas_cli_optx_table[] = {
   {{"test", no_argument, NULL, MAS_CLI_OPT_TEST}
@@ -239,7 +233,6 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_NONE}
 };
 
-
 /* mas_optionx_t *               */
 /* mas_cli_find_optx( int opt )  */
 /* {                             */
@@ -248,15 +241,15 @@ mas_optionx_t mas_cli_optx_table[] = {
 /*   return optx;                */
 /* }                             */
 
-
 /* int                                                                                      */
 /* mas_cliopts_data_init( mas_options_t * popts, const char **message, unsigned flags ) */
 INIT_HANDLER( mas_cliopts_data_init )
 {
+  flags = flags;
   if ( popts )
   {
     popts->cli_longopts_num = sizeof( mas_cli_optx_table ) / sizeof( mas_cli_optx_table[0] );
-    /* popts->cli_longopts = mas_cli_create_longopts_table_old( mas_cli_optx_table, popts->cli_longopts_num ); */
+  /* popts->cli_longopts = mas_cli_create_longopts_table_old( mas_cli_optx_table, popts->cli_longopts_num ); */
     popts->cli_longopts = mas_cli_longopts_table_create( mas_cli_optx_table );
     popts->cli_optxs = &mas_cli_optx_table[0];
   }
@@ -279,7 +272,7 @@ mas_cliopts_data_destroy( mas_options_t * popts )
 void
 mas_cli_print_optx_table( mas_options_t * popts )
 {
-  for ( int indx = 0; indx < sizeof( mas_cli_optx_table ) / sizeof( mas_cli_optx_table[0] ); indx++ )
+  for ( unsigned indx = 0; indx < sizeof( mas_cli_optx_table ) / sizeof( mas_cli_optx_table[0] ); indx++ )
   {
     unsigned shift = 0;
 
@@ -332,7 +325,7 @@ mas_cli_print_optx_table( mas_options_t * popts )
 
           str = ( char ** ) ( ( ( char * ) popts ) + shift );
           val = str ? *str : NULL;
-          /* fprintf( stderr, "@@@@@@@@@@@@@@@@ [%s]='%s'\n", mas_cli_optx_table[indx].longopt.name, str ? *str : NULL ); */
+        /* fprintf( stderr, "@@@@@@@@@@@@@@@@ [%s]='%s'\n", mas_cli_optx_table[indx].longopt.name, str ? *str : NULL ); */
           HMSG( "%c [%s]='%s'", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name, val );
         }
         break;
@@ -341,7 +334,7 @@ mas_cli_print_optx_table( mas_options_t * popts )
           char *str = NULL;
 
           str = ( ( char * ) popts ) + shift;
-          /* fprintf( stderr, "@@@@@@@@@@@@@@@@ [%s]='%s'\n", mas_cli_optx_table[indx].longopt.name, str ? *str : NULL ); */
+        /* fprintf( stderr, "@@@@@@@@@@@@@@@@ [%s]='%s'\n", mas_cli_optx_table[indx].longopt.name, str ? *str : NULL ); */
           HMSG( "%c [%s]='%s'", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name, str );
         }
         break;
@@ -361,7 +354,7 @@ mas_cli_print_optx_table( mas_options_t * popts )
         break;
       case OPTX_TYPE_ZINT:
       case OPTX_TYPE_NONE:
-        /* HMSG( "%c[%s]", mas_cli_optx_table[indx].set?'*':' ', mas_cli_optx_table[indx].longopt.name ); */
+      /* HMSG( "%c[%s]", mas_cli_optx_table[indx].set?'*':' ', mas_cli_optx_table[indx].longopt.name ); */
         break;
       }
   }
@@ -370,6 +363,6 @@ mas_cli_print_optx_table( mas_options_t * popts )
 __attribute__ ( ( constructor( 3011 ) ) )
      static void mas_constructor( void )
 {
-  /* fprintf( stderr, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
+/* fprintf( stderr, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
   mas_common_constructor( IL, 1 );
 }

@@ -3,7 +3,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -18,20 +17,18 @@
 
 #include <mastar/tools/mas_tools.h>
 
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/msg/mas_curses.h>
 
-
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-
 
 #include "mas_init_client.h"
 
 #include "mas_client.h"
 
+#define _uUu_ __attribute__((unused))
 
 /*
 this:
@@ -45,18 +42,16 @@ related:
   mas_server_sig.c
 */
 
-
-
 /* pthread_t *listening_threads = NULL; */
 
 /* typedef void ( *sighandler_t ) ( int ); */
 /* sighandler_t signal( int signum, sighandler_t handler ); */
 
 void
-sigint_han( int s )
+sigint_han( int s _uUu_ )
 {
   CTRL_PREPARE;
-  /* extern int rl_done; */
+/* extern int rl_done; */
   static unsigned long start_time = 0;
   unsigned long cur_time = ( unsigned long ) time( NULL );
 
@@ -89,19 +84,19 @@ sigint_han( int s )
     ctrl.keep_listening = 0;
     ctrl.in_pipe--;
   }
-  /* RL_SETSTATE( RL_STATE_DONE ); */
+/* RL_SETSTATE( RL_STATE_DONE ); */
   if ( ctrl.int_cnt > MAS_MAX_INT_2 )
   {
     exit( 3 );
   }
-  /* rl_done = 1;             */
-  /* rl_reset_after_signal(); */
+/* rl_done = 1;             */
+/* rl_reset_after_signal(); */
   rl_forced_update_display(  );
-  /* rl_reset_line_state(  ); */
+/* rl_reset_line_state(  ); */
 }
 
 void
-sigquit_han( int s )
+sigquit_han( int s _uUu_ )
 {
   CTRL_PREPARE;
   ctrl.in_client = 0;
@@ -124,7 +119,7 @@ sigquit_han( int s )
 /* }                          */
 
 void
-sigterm_han( int s )
+sigterm_han( int s _uUu_ )
 {
   CTRL_PREPARE;
 #ifdef EMSG
@@ -137,7 +132,7 @@ sigterm_han( int s )
 }
 
 void
-sighup_han( int s )
+sighup_han( int s _uUu_ )
 {
   CTRL_PREPARE;
 #ifdef EMSG
@@ -147,21 +142,21 @@ sighup_han( int s )
 }
 
 void
-sigpipe_han( int s )
+sigpipe_han( int s _uUu_ )
 {
   CTRL_PREPARE;
 #ifdef EMSG
   EMSG( "PIPE" );
 #endif
-  /* ctrl.in_client = 1; */
-  /* ctrl.in_pipe--; */
+/* ctrl.in_client = 1; */
+/* ctrl.in_pipe--; */
 }
 
 void
 mas_atexit( void )
 {
   CTRL_PREPARE;
-  /* extern mas_options_t g_opts; */
+/* extern mas_options_t g_opts; */
   extern mas_options_t *gpopts;
 
   mas_destroy_client( gpopts );
@@ -169,10 +164,10 @@ mas_atexit( void )
   extern unsigned long memory_balance;
 
   FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
-  /* if ( print_memlist( ctrl.stderrfile, FL ) < 0 )       */
-  /*   if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 ) */
-  /*     if ( print_memlist( ctrl.msgfile, FL ) < 0 )      */
-  /*       print_memlist( stderr, FL );                    */
+/* if ( print_memlist( ctrl.stderrfile, FL ) < 0 )       */
+/*   if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 ) */
+/*     if ( print_memlist( ctrl.msgfile, FL ) < 0 )      */
+/*       print_memlist( stderr, FL );                    */
   print_memlist_any( FL, 4, ctrl.stderrfile, ctrl.old_stderrfile, ctrl.msgfile, stderr );
 #else
   FMSG( "AT EXIT" );
@@ -194,8 +189,8 @@ __attribute__ ( ( constructor ) )
   atexit( mas_atexit );
   ctrl.is_client = 1;
   ctrl.is_server = 0;
-  /* if ( ctrl.stderrfile )                                                           */
-  /*   fprintf( ctrl.stderrfile, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
+/* if ( ctrl.stderrfile )                                                           */
+/*   fprintf( ctrl.stderrfile, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
   mas_common_constructor( IL, 0 );
 }
 
@@ -203,7 +198,7 @@ __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
   CTRL_PREPARE;
-  /* if ( ctrl.stderrfile )                                                          */
-  /*   fprintf( ctrl.stderrfile, "******************** DESTRUCTOr %s\n", __FILE__ ); */
+/* if ( ctrl.stderrfile )                                                          */
+/*   fprintf( ctrl.stderrfile, "******************** DESTRUCTOr %s\n", __FILE__ ); */
   mas_common_destructor( IL, 0 );
 }

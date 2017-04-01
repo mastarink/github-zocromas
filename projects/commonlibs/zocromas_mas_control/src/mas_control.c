@@ -296,7 +296,7 @@ mas_control_construct_proc( void )
       fd = open( "/proc/self/environ", O_RDONLY );
       if ( fd >= 0 )
       {
-        size_t rsz = 0;
+        ssize_t rsz = 0;
         size_t bufsz = 1024 * 100;
 
         ctrl.cmdenv = mas_malloc( bufsz );

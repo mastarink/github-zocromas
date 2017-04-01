@@ -11,7 +11,7 @@ mas_cli_longopts_table_create_old( const mas_optionx_t * table, size_t num )
   struct option *longtab = NULL;
 
   longtab = mas_malloc( sizeof( struct option ) * num );
-  for ( int i = 0; i < num; i++ )
+  for ( unsigned i = 0; i < num; i++ )
   {
     longtab[i] = table[i].longopt;
     longtab[i].name = mas_strdup( table[i].longopt.name );
@@ -57,7 +57,7 @@ mas_cli_longopts_table_create( const mas_optionx_t * table )
 void
 mas_cli_longopts_table_delete_old( struct option *longtab, size_t num )
 {
-  for ( int i = 0; i < num; i++ )
+  for ( unsigned i = 0; i < num; i++ )
   {
     mas_free( ( char * ) longtab[i].name );
   }

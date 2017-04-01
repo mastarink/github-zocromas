@@ -13,6 +13,8 @@ extern unsigned long __MAS_LINK_DATE__;
 extern unsigned long __MAS_LINK_TIME__;
 extern unsigned long __MAS_LINK_TIMESTAMP__;
 
+#define _uUu_  __attribute__((unused))
+
 /*
 this:
   mas_control_data.c
@@ -152,7 +154,7 @@ mas_control_t ctrl = {
 };
 
 static int
-mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
+mas_error_handler( const char *func, int line, int issys _uUu_, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt _uUu_,
                    const char *msg )
 {
   if ( !ctrl.stderrfile

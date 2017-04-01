@@ -49,6 +49,8 @@ more:
 
 */
 
+#define _uUu_ __attribute__((unused))
+
 int fg_palette[] = { 30, 31, 32, 33, 34, 35, 36, 37, 90, 91, 92, 93, 94, 95, 96, 97 };
 int bg_palette[] = { 40, 41, 42, 43, 44, 45, 46, 47, 100, 101, 102, 103, 104, 105, 106, 107 };
 
@@ -885,7 +887,7 @@ mas_msg_set_file( const char *path, int force )
 }
 
 static int
-__mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, const char *prefix )
+__mas_msg_prefix( mas_msg_type_t msgt, int fdetails _uUu_, const char *prefix_fmt, const char *prefix )
 {
   const char *qprefix;
 
@@ -928,7 +930,7 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
 }
 
 static int
-__mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
+__mas_msg_pid( mas_msg_type_t msgt, int fdetails _uUu_, pid_t pid )
 {
 #ifdef MAS_USE_CURSES
   if ( use_curses )
@@ -960,7 +962,7 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
 }
 
 static int
-__mas_msg_tid( mas_msg_type_t msgt, int fdetails, pid_t tid )
+__mas_msg_tid( mas_msg_type_t msgt, int fdetails _uUu_, pid_t tid )
 {
 #ifdef MAS_USE_CURSES
   if ( use_curses )
@@ -992,7 +994,7 @@ __mas_msg_tid( mas_msg_type_t msgt, int fdetails, pid_t tid )
 }
 
 static int
-__mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
+__mas_msg_pidname( mas_msg_type_t msgt, int fdetails _uUu_, pid_t pid )
 {
   CTRL_PREPARE;
   const char *pidname = NULL;
@@ -1025,7 +1027,7 @@ __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 }
 
 static int
-__mas_msg_tidname( mas_msg_type_t msgt, int fdetails, pid_t tid )
+__mas_msg_tidname( mas_msg_type_t msgt, int fdetails _uUu_, pid_t tid )
 {
   CTRL_PREPARE;
   const char *tidname = NULL;
@@ -1060,7 +1062,7 @@ __mas_msg_tidname( mas_msg_type_t msgt, int fdetails, pid_t tid )
 
 #ifndef MAS_NO_THTOOLS
 static int
-__mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
+__mas_msg_thread_info( mas_msg_type_t msgt, int fdetails _uUu_ )
 {
   th_type_t thtype;
   mas_lcontrol_t *plcontrol = NULL;
@@ -1165,7 +1167,7 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
 #endif
 
 static int
-__mas_msg_code_position( mas_msg_type_t msgt, int fdetails, const char *func, int line )
+__mas_msg_code_position( mas_msg_type_t msgt, int fdetails _uUu_, const char *func, int line )
 {
   if ( MAS_MSG_BIT( msg_funline ) )
   {
@@ -1212,7 +1214,7 @@ __mas_msg_message( mas_msg_type_t msgt, int fdetails, const char *fmt, va_list a
 }
 
 int
-__mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
+__mas_msg_suffix( mas_msg_type_t msgt, int fdetails _uUu_, const char *suffix )
 {
 #ifdef MAS_USE_CURSES
   if ( use_curses )
@@ -1231,7 +1233,7 @@ __mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
 }
 
 int
-__mas_msg_stage( mas_msg_type_t msgt, int fdetails )
+__mas_msg_stage( mas_msg_type_t msgt, int fdetails _uUu_ )
 {
   CTRL_PREPARE;
   if ( &ctrl )
@@ -1244,7 +1246,7 @@ __mas_msg_stage( mas_msg_type_t msgt, int fdetails )
 }
 
 int
-__mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
+__mas_msg_elapsed( mas_msg_type_t msgt, int fdetails _uUu_ )
 {
   CTRL_PREPARE;
   if ( &ctrl && ctrl.stamp.start_time )
@@ -1265,7 +1267,7 @@ __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 }
 
 int
-__mas_msg_errcode( mas_msg_type_t msgt, int fdetails )
+__mas_msg_errcode( mas_msg_type_t msgt _uUu_, int fdetails _uUu_ )
 {
   if ( errno )
   {
@@ -1279,7 +1281,7 @@ __mas_msg_errcode( mas_msg_type_t msgt, int fdetails )
 }
 
 int
-__mas_msg_consume( mas_msg_type_t msgt, int fdetails )
+__mas_msg_consume( mas_msg_type_t msgt _uUu_, int fdetails _uUu_ )
 {
   extern unsigned long memory_balance;
 

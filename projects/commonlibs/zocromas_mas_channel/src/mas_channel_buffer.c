@@ -56,7 +56,7 @@ mas_channel_buffer_strip_to( mas_channel_t * pchannel, size_t sz, int dontcopy )
 {
   if ( !sz )
     sz = pchannel->buffer.length / 2;
-  if ( pchannel->buffer.length > sz )
+  if ( (size_t)pchannel->buffer.length > sz )
   {
     mas_channel_buffer_strip( pchannel, pchannel->buffer.length - sz, dontcopy );
   }

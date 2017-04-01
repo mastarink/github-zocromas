@@ -55,7 +55,7 @@ AC_DEFINE_UNQUOTED( MAS_CONFIG_EXEC_PREFIX, "$exec_prefix", [config_exec_prefix]
 AC_SUBST([MAS_CONFIG_EXEC_PREFIX])
 
 AH_TEMPLATE([MAS_CONFIG_SYSCONFDIR],[mas_config_sysconfdir])
-AC_DEFINE_UNQUOTED( MAS_CONFIG_SYSCONFDIR, "$sysconfdir", [config_sysconfdir])
+AC_DEFINE_UNQUOTED( MAS_CONFIG_SYSCONFDIR, "${sysconfdir}", [config_sysconfdir])
 AC_SUBST([MAS_CONFIG_SYSCONFDIR])
 
 AH_TEMPLATE([MAS_CONFIG_LIBDIR],[mas_config_libdir])

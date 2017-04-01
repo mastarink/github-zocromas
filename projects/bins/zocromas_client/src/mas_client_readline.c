@@ -1,7 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -20,10 +19,8 @@
 
 #include <mastar/options/mas_opts_common.h>
 
-
 #include "mas_client_session.h"
 #include "mas_client.h"
-
 
 #include "mas_client_readline.h"
 
@@ -49,7 +46,6 @@ more:
 
 static char prompt[256];
 
-
 int
 mas_exchange_with_readline( mas_channel_t * pchannel )
 {
@@ -61,22 +57,22 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
     CTRL_PREPARE;
     EVAL_PREPARE;
     ctrl.c.status = MAS_STATUS_SERV_LOOP;
-    /* mas_readline_buffer = readline( " % \x1b[K" ); */
-    /* rl_catch_signals = 0; */
+  /* mas_readline_buffer = readline( " % \x1b[K" ); */
+  /* rl_catch_signals = 0; */
     mas_readline_buffer = readline( prompt );
     ctrl.c.status = MAS_STATUS_WORK;
     {
       HIST_ENTRY *he;
 
-      /* int hp; */
+    /* int hp; */
 
       ( void ) /* hp = */ where_history(  );
-      /* if ( hp >= 0 )          */
-      /* {                       */
-      /*   remove_history( hp ); */
-      /* }                       */
+    /* if ( hp >= 0 )          */
+    /* {                       */
+    /*   remove_history( hp ); */
+    /* }                       */
       he = history_get( history_length );
-      /* mMSG( "HISTORY:%s", he->line ); */
+    /* mMSG( "HISTORY:%s", he->line ); */
 #if 0
       mMSG( "HISTORY ADD:%s {%s} hp:%d", mas_readline_buffer, he ? he->line : "-", hp ? 1 : 0 );
       add_history( mas_readline_buffer );
@@ -85,7 +81,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
       {
         if ( he && 0 != strcmp( he->line, mas_readline_buffer ) )
         {
-          /* mMSG( "HISTORY ADD:%s {%s} hp:%d", mas_readline_buffer, he ? he->line : "-", hp ? 1 : 0 ); */
+        /* mMSG( "HISTORY ADD:%s {%s} hp:%d", mas_readline_buffer, he ? he->line : "-", hp ? 1 : 0 ); */
           add_history( mas_readline_buffer );
         }
         else
@@ -99,7 +95,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 
     if ( mas_readline_buffer )
     {
-      /* HMSG( "readline:%s", mas_readline_buffer ); */
+    /* HMSG( "readline:%s", mas_readline_buffer ); */
       if ( 0 == strcmp( mas_readline_buffer, "bye" ) )
       {
         ctrl.in_pipe--;
@@ -112,7 +108,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
       else
       {
 //      r = mas_client_exchange( pchannel, mas_readline_buffer, "answer\n>\x1b[1;44;33m%s\x1b[0m<\n" );
-        /* r = mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" ); */
+      /* r = mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" ); */
         IEVAL( r, mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" ) );
         mas_other_free( mas_readline_buffer );
         mas_readline_buffer = NULL;
@@ -123,7 +119,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
     {
       MSG( "NIL\x1b[K" );
       usleep( 300 );
-      /* sleep( 1 ); */
+    /* sleep( 1 ); */
       MSG( "\r\x1b[K" );
     }
   }
@@ -133,7 +129,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 int
 mas_client_readline_event( void )
 {
-  /* HMSG( "HOOK" ); */
+/* HMSG( "HOOK" ); */
   return 0;
 }
 
@@ -253,15 +249,17 @@ INIT_HANDLER( mas_client_readline_init )
   CTRL_PREPARE;
   int rh = 0;
 
-  /* rl_add_defun( "quit", mas_client_readline_quit, CTRL( 'q' ) ); */
-  /* rl_parse_and_bind( "\"\\C-q\": \"server_quit\"\n" ); */
+  message = message;
+  flags = flags;
+/* rl_add_defun( "quit", mas_client_readline_quit, CTRL( 'q' ) ); */
+/* rl_parse_and_bind( "\"\\C-q\": \"server_quit\"\n" ); */
   rl_generic_bind( ISMACR, "\x1bq", ( char * ) "server exit\n", rl_get_keymap(  ) );
   rl_generic_bind( ISMACR, "\x1b[21~", ( char * ) "server exit\n", rl_get_keymap(  ) );
   rl_generic_bind( ISMACR, "\x1bi", ( char * ) "get server info\n", rl_get_keymap(  ) );
   rl_generic_bind( ISMACR, "\x1b" "b", ( char * ) "bye\n", rl_get_keymap(  ) );
 
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
-  /* rl_event_hook = mas_client_readline_event; */
+/* rl_event_hook = mas_client_readline_event; */
   WMSG( "HISTORY to LOAD from %s", popts->dir.history );
   if ( popts->dir.history )
   {
@@ -281,7 +279,7 @@ INIT_HANDLER( mas_client_readline_init )
   }
   if ( rh != 0 )
   {
-    /* HMSG( "init readline" ); */
+  /* HMSG( "init readline" ); */
     add_history( "pwd" );
     add_history( "system date" );
     add_history( "system cal" );
@@ -297,7 +295,7 @@ INIT_HANDLER( mas_client_readline_init )
     add_history( "get client info" );
     add_history( "get server info" );
     add_history( "server listener remove zocromas.mastar.lan 5003" );
-    /* HMSG( "/init readline" ); */
+  /* HMSG( "/init readline" ); */
   }
   return 0;
 }

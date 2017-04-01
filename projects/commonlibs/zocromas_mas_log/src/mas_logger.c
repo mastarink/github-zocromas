@@ -18,6 +18,7 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_time.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -43,6 +44,8 @@ more:
   mas_watcher.c
 
 */
+
+#define _uUu_ __attribute__((unused))
 
 static mas_loginfo_list_head_t *logger_list;
 
@@ -117,7 +120,7 @@ mas_logger_clean_queue( void )
 }
 
 int
-mas_logger_delete( int stopever )
+mas_logger_delete( int stopever _uUu_ )
 {
   mas_loginfo_list_head_t *log_list = NULL;
 
@@ -242,7 +245,7 @@ mas_logger_write( mas_loginfo_t * li )
 }
 
 void
-mas_logger_cleanup( void *arg )
+mas_logger_cleanup( void *arg _uUu_ )
 {
   CTRL_PREPARE;
   ctrl.keep_logging = 0;
@@ -257,7 +260,7 @@ mas_logger_cleanup( void *arg )
 
 #ifndef MAS_NO_THREADS
 static void *
-mas_logger_th( void *arg )
+mas_logger_th( void *arg  _uUu_)
 {
   CTRL_PREPARE;
   int rn = 0;
