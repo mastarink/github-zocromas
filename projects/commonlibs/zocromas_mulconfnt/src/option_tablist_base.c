@@ -5,6 +5,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -29,14 +30,14 @@ mucs_config_option_tablist_init( mucs_option_table_list_t * tablist )
 mucs_option_table_list_t *
 mucs_config_option_tablist_create( void )
 {
-  mucs_option_table_list_t *tablist = mas_malloc( sizeof( mucs_option_table_list_t ) );
+  mucs_option_table_list_t *tablist = mas_calloc( 1, sizeof( mucs_option_table_list_t ) );
 
   mucs_config_option_tablist_init( tablist );
   return tablist;
 }
 
 mucs_option_table_list_t *
-mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *name, mucs_option_t * options, size_t count )
+mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_t * options, size_t count )
 {
   if ( tablist )
   {
@@ -47,6 +48,12 @@ mucs_config_option_tablist_add( mucs_option_table_list_t * tablist, const char *
     tb->next = mucs_config_option_tablist_create(  );
     tb->name = mas_strdup( name );
     tb->options = options;
+    if ( !count )
+    {
+      for ( const mucs_option_t * o = options; o->name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
+        count++;
+      WARN( "COUNT:%ld", ( long ) count );
+    }
     tb->count = count;
   }
   else
@@ -64,7 +71,7 @@ mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist )
 {
   while ( tablist )
   {
-    for ( mucs_option_t * opt = tablist->options; opt->name; opt++ )
+    for ( const mucs_option_t * opt = tablist->options; opt->name; opt++ )
     {
       if ( opt && opt->argptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
@@ -89,5 +96,16 @@ void
 mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist )
 {
   mucs_config_option_tablist_reset( tablist );
-  mas_free( tablist );
+  mas_free( tablist->name );
+  {
+    mucs_option_table_list_t *tb = tablist;
+
+    while ( tb )
+    {
+      mucs_option_table_list_t *t = tb;
+
+      tb = tb->next;
+      mas_free( t );
+    }
+  }
 }

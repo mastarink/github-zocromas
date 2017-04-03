@@ -31,7 +31,7 @@ mucs_config_option_init( mucs_option_t * opt )
 mucs_option_t *
 mucs_config_option_create( void )
 {
-  mucs_option_t *opt = mas_malloc( sizeof( mucs_option_t ) );
+  mucs_option_t *opt = mas_calloc( 1,sizeof( mucs_option_t ) );
 
   mucs_config_option_init( opt );
   return opt;

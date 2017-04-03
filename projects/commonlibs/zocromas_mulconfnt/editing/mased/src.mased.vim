@@ -33,6 +33,12 @@ sfind option_tablist_base.c
 tab sfind option_tablist.h
 sfind option_tablist.c
 
+tab sfind option_interface.h
+sfind option_interface.c
+
+tab sfind option_interface_base.h
+sfind option_interface_base.c
+
 tab sfind source_list_base.h
 sfind source_list_base.c
 
@@ -56,6 +62,8 @@ sfind mastest_3q.c
 tab sfind mastest_4.c
 sfind mastest_5.c
 sfind mastest_6.c
+tab sfind mastest_manual.c
+tab sfind mastest_manual_0.c
 
 "tab sfind mulconfnt_error.h
 "sfind mulconfnt_error.c

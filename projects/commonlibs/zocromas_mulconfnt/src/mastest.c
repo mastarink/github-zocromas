@@ -108,6 +108,7 @@ main( int argc, const char *argv[] )
   int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_manual_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
   masexam_do_t funlist[] _uUu_ = {
@@ -128,6 +129,7 @@ main( int argc, const char *argv[] )
     {TRUE, test_4, 4, ""},
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
+    {TRUE, test_manual_0, 7, "manual_0"},
     {TRUE, test_manual, 7, "manual"},
     {0}
   };

@@ -30,7 +30,7 @@ mucs_source_init( mucs_source_t * osrc )
 mucs_source_t *
 mucs_source_create( void )
 {
-  mucs_source_t *osrc = mas_malloc( sizeof( mucs_source_t ) );
+  mucs_source_t *osrc = mas_calloc( 1, sizeof( mucs_source_t ) );
 
   mucs_source_init( osrc );
   return osrc;

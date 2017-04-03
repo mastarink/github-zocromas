@@ -27,7 +27,7 @@
 #include "option_interface.h"
 
 int
-test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
+test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
   long app_flags = 0x00000000ffff0000L;
 
@@ -36,14 +36,23 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
     {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
-    mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options );
+#if 0
+  mucs_option_table_list_t test_tablist = {
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */
+  };
+#else
+  mucs_option_table_list_t *test_tablist = mucs_config_option_tablist_add( NULL, "test-table", options, 0 );
+#endif
+  mucs_source_list_t *plist = mucs_source_list_create(  );
 
-    mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
-    mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv  );
-    mucs_option_interface_lookup_all( interface );
-    INFO( "app_flags (--xor):%lx", app_flags );
-    mucs_config_option_interface_delete( interface );
-    interface = NULL;
+  mucs_source_list_add_source( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
+  mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
+
+  mucs_source_list_lookup_all( plist, test_tablist );
+
+  mucs_source_list_delete( plist );
+  mucs_config_option_tablist_delete( test_tablist );
+  test_tablist = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   INFO( "app_flags (--xor):%lx", app_flags );
   masregerr_print_simple_all_default( NULL, NULL, 0 );

@@ -30,5 +30,6 @@ typedef struct mucs_option_table_list_s mucs_option_table_list_t;
 /* typedef struct mucs_error_s mucs_error_t; */
 
 typedef struct mucs_optscanner_s mucs_optscanner_t;
+typedef struct mucs_option_interface_s mucs_option_interface_t;
 
 #endif

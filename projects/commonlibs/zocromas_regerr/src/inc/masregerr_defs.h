@@ -60,9 +60,11 @@
 #  define RGE RGEX(0, NULL, NULL)
 #  define RGESM(...) RGEX(1, __VA_ARGS__)
 #  define RGES RGESM(RGEMSG)
-#  define RGER(_r)		{ if ( R_BAD((_r)) ) RGE; }
-#  define RGESR(_r)		{ if ( R_BAD((_r)) ) RGES; }
-#  define RGESRM(_r, ...)	{ if ( R_BAD((_r)) ) RGESM(__VA_ARGS__); }
+#  define RGER(_r)		( ( R_BAD((_r)) ) ? RGE : 0 )
+/* #  define RGESR(_r)             { if ( R_BAD((_r)) ) RGES; } */
+#  define RGESR(_r)		( ( R_BAD((_r)) ) ? RGES : 0 )
+/* #  define RGESRM(_r, ...)       { if ( R_BAD((_r)) ) RGESM(__VA_ARGS__); } */
+#  define RGESRM(_r, ...)	( R_BAD((_r)) ? RGESM(__VA_ARGS__) : 0 )
 
 # endif
 /* #define rCALL if (!r) r= */

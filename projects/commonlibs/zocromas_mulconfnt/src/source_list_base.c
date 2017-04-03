@@ -26,7 +26,7 @@ mucs_source_list_init( mucs_source_list_t * source_list )
 mucs_source_list_t *
 mucs_source_list_create( void )
 {
-  mucs_source_list_t *source_list = mas_malloc( sizeof( mucs_source_list_t ) );
+  mucs_source_list_t *source_list = mas_calloc( 1,sizeof( mucs_source_list_t ) );
 
   mucs_source_list_init( source_list );
   return source_list;

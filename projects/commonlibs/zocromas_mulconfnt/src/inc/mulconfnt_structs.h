@@ -90,7 +90,7 @@ struct mucs_option_s
   int val;
   char *desc;
   char *argdesc;
-  void *def_string_value;
+  const char *def_string_value;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   int has_value;
   char *string_value;
@@ -109,7 +109,7 @@ struct mucs_option_table_list_s
   mucs_option_table_list_t *next;
   unsigned count;
   char *name;
-  mucs_option_t *options;
+  const mucs_option_t *options;
 };
 
 struct mucs_optscanner_s
@@ -122,6 +122,12 @@ struct mucs_optscanner_s
   const char *force_value;
   const char *nextarg;
   const mucs_option_t *found_topt;
+};
+
+struct mucs_option_interface_s
+{
+  mucs_option_table_list_t *tablist;
+  mucs_source_list_t *source_list;
 };
 
 #endif

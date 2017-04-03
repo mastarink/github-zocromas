@@ -147,6 +147,7 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
       f_print_ok -= funlist[ntest].f_print_ok;
       variant -= funlist[ntest].variant;
     }
+    /* TODO masregerrs_delete_default( NULL ); */
   }
 #if 0
   masexam_next_group(  );
