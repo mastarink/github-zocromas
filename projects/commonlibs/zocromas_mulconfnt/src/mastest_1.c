@@ -236,8 +236,6 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mucs_source_set_type_callback( osrc, MUCS_RTYP_STRING, scallback_string );
     EXAM( ( osrc ? 1 : 0 ), 1, "osrc: %d ? %d" );
 
-    mucs_source_lookup_all( osrc, &test_tablist );
-    if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
       char fname[128];
@@ -253,6 +251,12 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
         fclose( f );
       }
     }
+#if 1
+    mucs_source_list_lookup_all( plist, &test_tablist );
+#else
+    mucs_source_lookup_all( osrc, &test_tablist );
+#endif
+    if ( osrc && osrc->oldtarg.argc )
 
     masexam_next_group(  );
   /* EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" ); */

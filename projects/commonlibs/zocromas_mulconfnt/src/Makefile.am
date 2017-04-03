@@ -28,6 +28,7 @@ mastest_CFLAGS=@AM_CFLAGS@ @DEPSTEST_CFLAGS@  -pthread
 
 mastest_SOURCES= \
 	mastest.c \
+	mastest_manual.c \
 	mastest_0.c \
 	mastest_1.c \
 	mastest_1s.c \

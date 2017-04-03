@@ -107,7 +107,6 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
     EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 
-    mucs_source_lookup_all( osrc, &test_tablist );
     if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
@@ -124,6 +123,11 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
         fclose( f );
       }
     }
+#if 1
+    mucs_source_list_lookup_all( plist, &test_tablist );
+#else
+    mucs_source_lookup_all( osrc, &test_tablist );
+#endif
 
     masexam_next_group(  );
     const char *ge = getenv( "MASTEST_4" );

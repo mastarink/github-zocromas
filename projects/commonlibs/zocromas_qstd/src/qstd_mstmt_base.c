@@ -47,16 +47,16 @@ mas_qstd_create_setup( const char *host, const char *user, const char *passwd, c
   return qstd;
 }
 
-mas_qstd_t *
-mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+__attribute__ ( ( visibility( "default" ) ) )
+     mas_qstd_t *mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
 {
   if ( !instance )
     instance = mas_qstd_create_setup( host, user, passwd, db, port );
   return instance;
 }
 
-mas_qstd_t *
-mas_qstd_instance( void )
+__attribute__ ( ( visibility( "default" ) ) )
+     mas_qstd_t *mas_qstd_instance( void )
 {
   return instance;
 }
@@ -79,8 +79,7 @@ mas_qstd_delete( mas_qstd_t * qstd )
     mas_free( qstd );
 }
 
-void
-mas_qstd_instance_delete( void )
+void __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_instance_delete( void )
 {
   mas_qstd_delete( instance );
   instance = NULL;
@@ -95,8 +94,8 @@ mas_qstd_mstmt_create_setup( mas_qstd_t * qstd, int nparams, int nresults, const
   return mstmt;
 }
 
-mysqlpfs_mstmt_t *
-mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sqlop )
+__attribute__ ( ( visibility( "default" ) ) )
+     mysqlpfs_mstmt_t *mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sqlop )
 {
   mysqlpfs_mstmt_t *mstmt = NULL;
 
@@ -105,15 +104,13 @@ mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sql
   return mstmt;
 }
 
-void
-mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt )
+void __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt )
 {
   mas_mysqlpfs_mstmt_delete( mstmt );
 }
 
 /**********************************************************************************/
-int
-mas_qstd_create_tables( mas_qstd_t * qstd )
+int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qstd_t * qstd )
 {
   rDECLBAD;
   char *creops[] = {
@@ -217,8 +214,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
   rRET;
 }
 
-int
-mas_qstd_drop_tables( mas_qstd_t * qstd )
+int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_drop_tables( mas_qstd_t * qstd )
 {
   rDECLBAD;
   const char *creops[] = {

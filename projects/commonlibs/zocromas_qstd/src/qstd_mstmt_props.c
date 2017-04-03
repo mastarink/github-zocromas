@@ -98,8 +98,9 @@ mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, c
   return theid;
 }
 
-unsigned long long
-mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
+__attribute__ ( ( visibility( "default" ) ) )
+     unsigned long long
+             mas_qstd_mstmt_selinsget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const masxfs_stat_t * stat )
 {
 /* rDECLBAD; */
   QRGP( qstd );

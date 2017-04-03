@@ -7,7 +7,6 @@
 
 #include <mastar/minierr/minierr.h>
 
-
 #include "mulconfnt_structs.h"
 
 /* #include "mulconfnt_error_base.h" */
@@ -77,7 +76,6 @@ mucs_source_create_setup( mucs_source_type_t source_type, int count, const void 
           if ( osrc->pref_ids[i].string )
             osrc->pref_ids[i].string = mas_strdup( osrc->pref_ids[i].string );
         }
-
         osrc->data_ptr = data_ptr ? data_ptr : defsrc->data_ptr;
         osrc->check_fun = defsrc->check_fun;
         osrc->open_fun = defsrc->open_fun;
@@ -118,7 +116,7 @@ mucs_source_reset( mucs_source_t * osrc )
     mas_argvc_delete( &osrc->targ );
     mas_argvc_delete( &osrc->oldtarg );
     mas_argvc_delete( &osrc->targno );
-    /* mucs_error_reset( &osrc->error ); */
+  /* mucs_error_reset( &osrc->error ); */
   }
 }
 

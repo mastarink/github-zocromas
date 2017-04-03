@@ -109,8 +109,6 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
     EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 
-    mucs_source_lookup_all( osrc, &test_tablist );
-
     if ( osrc && osrc->oldtarg.argc )
     {
       FILE *f;
@@ -127,6 +125,11 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
         fclose( f );
       }
     }
+#if 1
+    mucs_source_list_lookup_all( plist, &test_tablist );
+#else
+    mucs_source_lookup_all( osrc, &test_tablist );
+#endif
 
     masexam_next_group(  );
   /* EXAMX( !mucs_error_source( osrc ),  "mulconfnt_error: %d", mucs_error_source( osrc ) ); */
@@ -178,7 +181,7 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

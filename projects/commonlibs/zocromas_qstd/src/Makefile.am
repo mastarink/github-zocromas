@@ -13,7 +13,7 @@ libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_nodes.c
 
 libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
-libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
+libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@ -fvisibility=hidden
 
 if MAS_TEST
 noinst_PROGRAMS=mastest

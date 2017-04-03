@@ -90,6 +90,7 @@ struct mucs_option_s
   int val;
   char *desc;
   char *argdesc;
+  void *def_string_value;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   int has_value;
   char *string_value;

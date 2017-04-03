@@ -4,6 +4,7 @@
 # include <mastar/regerr/masregerr_defs.h>
 # include <mastar/regerr/masregerr.h>
 
+
 # define QRG(_r) RGESR(_r)
 # define QRGM(_r,  ...) RGESRM(_r, __VA_ARGS__)
 # define QRGSRC(_osrc, _r)  QRG(_r)

@@ -16,6 +16,7 @@
 #include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
+#include "source_defaults.h"
 
 /* #include "mulconfnt_error.h" */
 
@@ -107,25 +108,27 @@ main( int argc, const char *argv[] )
   int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
   masexam_do_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt"},
     {0, test_popt1, 1, "popt"},
-    {0, test_0, 0, ""},
+    {FALSE, test_0, 0, ""},
 
-    {1, test_1, 1, "",.variant = 0},
-    {1, test_1s, 1, "s"},
-    {1, test_1mul, 1, "mul",.f_print_ok = 0},
-    {1, test_1u, 1, "u"},
-    {1, test_1enf, 1, "enf"},
-    {1, test_2, 2, ""},
-    {1, test_2a, 2, "a"},
-    {1, test_3, 3, ""},
-    {1, test_3a, 3, "a"},
-    {1, test_3q, 3, "q"},
-    {1, test_4, 4, ""},
-    {1, test_5, 5, ""},
-    {1, test_6, 6, "",.f_print_ok = 0},
+    {TRUE, test_1, 1, "",.variant = 0},
+    {TRUE, test_1s, 1, "s"},
+    {TRUE, test_1mul, 1, "mul",.f_print_ok = 0},
+    {TRUE, test_1u, 1, "u"},
+    {TRUE, test_1enf, 1, "enf"},
+    {TRUE, test_2, 2, ""},
+    {TRUE, test_2a, 2, "a"},
+    {TRUE, test_3, 3, ""},
+    {TRUE, test_3a, 3, "a"},
+    {TRUE, test_3q, 3, "q"},
+    {TRUE, test_4, 4, ""},
+    {TRUE, test_5, 5, ""},
+    {TRUE, test_6, 6, "",.f_print_ok = 0},
+    {TRUE, test_manual, 7, "manual"},
     {0}
   };
   masexam_test( argc, argv, funlist );
@@ -137,6 +140,10 @@ main( int argc, const char *argv[] )
   WARN( "MAS_CONFIG_SYSCONFDIR:%s;", MAS_CONFIG_SYSCONFDIR );
   WARN( "MAS_SYSCONFDIR:%s;", MAS_SYSCONFDIR );
   WARN( "MAS_DATADIR:%s;", MAS_DATADIR );
+  {
+    const mucs_source_t *osrc = mucs_source_default( MUCS_SOURCE_LIBCONFIG );
+    WARN("MUCS_SOURCE_LIBCONFIG data_ptr:%s", (char *)osrc->data_ptr);
+  }
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

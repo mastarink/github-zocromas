@@ -12,6 +12,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -27,18 +28,22 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
 {
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
-  long bitwise = 0xffff0000;
+  long bitwise_a = 0x00000000ffff0000;
+  long bitwise_b = 0x00000000ffff0000;
+  long bitwise_c = 0x00000000ffff0000;
+  long bitwise_d = 0x00000000ffff0000;
 
   mucs_option_t options[] = {
-    {"bps", 'b', MUCS_RTYP_INT, &speed, 0, "signaling rate in bits-per-second", "BPS"}, /* */
-    {"bwi", 'z', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise, 0, "bitwise", "value"}, /* */
-    {"bwi-", 'z', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise, 0, "bitwise", "value"}, /* */
-    {"bwi+", 'Z', MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise, 0, "bitwise", "value"}, /* */
-    {"crnl", 'c', 0, 0, 'c', "expand cr characters to cr/lf sequences", NULL}, /* */
-    {"hwflow", 'h', 0, 0, 'h', "use hardware (RTS/CTS) flow control", NULL}, /* */
-    {"noflow", 'n', 0, 0, 'n', "use no flow control", NULL},         /* */
-    {"raw", 'r', 0, &raw, 0, "don't perform any character conversions", NULL}, /* */
-    {"swflow", 's', 0, 0, 's', "use software (XON/XOF) flow control", NULL}, /* */
+    {"bps", 'b', MUCS_RTYP_INT, &speed,.val = 0,.desc = "signaling rate in bits-per-second",.argdesc = "BPS"}, /* */
+    {"bwi", 'z', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise_a,.val = 0, "bitwise",.argdesc = "value"}, /* */
+    {"bwi-", 'y', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise_b,.val = 0, "bitwise",.argdesc = "value"}, /* */
+    {"bwi+", 'Y', MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise_c,.val = 0, "bitwise",.argdesc = "value"}, /* */
+    {"bwi_", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &bitwise_d,.val = 0, "bitwise",.argdesc = "value"}, /* */
+    {"crnl", 'c',.restype = 0,.val = 0,.desc = "expand cr characters to cr/lf sequences"}, /* */
+    {"hwflow", 'h',.restype = 0,.val = 0,.desc = "use hardware (RTS/CTS) flow control"}, /* */
+    {"noflow", 'n',.restype = 0,.val = 0,.desc = "use no flow control"}, /* */
+    {"raw", 'r',.restype = 0,.argptr = &raw,.val = 0,.desc = "don't perform any character conversions"}, /* */
+    {"swflow", 's',.restype = 0,.val = 0,.val = 's',.desc = "use software (XON/XOF) flow control"}, /* */
     {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
@@ -46,19 +51,24 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   };
 
   mucs_parse( argc, argv, &test_tablist );
-  if ( variant )
-    fprintf( stderr, "**** Options  chosen: " );
-  if ( raw )
-    if ( variant )
-      fprintf( stderr, "-r - %d", raw );
-  if ( bitwise )
-    if ( variant )
-      fprintf( stderr, "-z - %lx", bitwise );
-  if ( speed )
-    if ( variant )
-      fprintf( stderr, "-b %d ", speed );
+/* if ( variant ) */
+  {
+    INFO( "**** Options  chosen: " );
+    if ( raw )
+      INFO( "-r - %d", raw );
+    if ( bitwise_a )
+      INFO( "-z - %lx", bitwise_a );
+    if ( bitwise_b )
+      INFO( "-y - %lx", bitwise_b );
+    if ( bitwise_c )
+      INFO( "-Y - %lx", bitwise_c );
+    if ( bitwise_d )
+      INFO( "-X - %lx", bitwise_d );
+    if ( speed )
+      INFO( "-b %d ", speed );
+  }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

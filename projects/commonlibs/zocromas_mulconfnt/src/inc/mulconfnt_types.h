@@ -1,6 +1,7 @@
 #ifndef MUCS_TYPES_H
 # define MUCS_TYPES_H
 
+#define MULCONFNT_ETC_CONFIG MAS_SYSCONFDIR "/" PACKAGE_NAME ".conf"
 # include <mastar/tools/mas_argvc_tools.h>
 
 typedef union nvalue_u nvalue_t;

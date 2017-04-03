@@ -463,7 +463,9 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
     rSETGOOD;
     for ( const mucs_option_t * topt = option_table; rGOOD && topt->name; topt++ )
     {
-      int without_value = ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE );
+      int use_def = mucs_config_option_flag( topt, MUCS_FLAG_USE_DEF_VALUE );
+      int opt_val = mucs_config_option_flag( topt, MUCS_FLAG_OPTIONAL_VALUE );
+      int without_value = ( ( ( topt->restype & ~MUCS_RTYP_FLAG_ALL ) == MUCS_RTYP_NONE ) );
       const char *ep = mucs_config_option_match_name( topt, optscan, arg_nopref, eq );
 
       if ( ep )
@@ -482,16 +484,22 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
         {
           while ( *ep && strchr( " \t", *ep ) )
             ep++;
+#if 0
           if ( without_value )
           {
             if ( *ep )
             {
             /* TODO bad: value */
-              QRGOPTM( opt, -1, "unexpected value given for \"-%c\" option (short)", topt->shortn );
+              QRGOPTM( topt, -1, "unexpected value given for \"-%c\" option (short)", topt->shortn );
               optscan->has_value = 1;
               optscan->string_value = ep;
               found = -found;
               rSETBAD;
+            }
+            else if ( use_def )
+            {
+              optscan->has_value = 1;
+              optscan->string_value = topt->def_string_value;
             }
             else
             {
@@ -499,21 +507,71 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
             }
           }
           else                                                       /* need value */
+#endif
           {
             if ( *ep )
             {
-            /* TODO good: possible value, here */
-              optscan->has_value = 1;
-              optscan->string_value = ep;
+              if ( without_value )
+              {
+              /* TODO bad: value */
+                QRGOPTM( topt, -1, "unexpected value given for \"-%c\" option (short)", topt->shortn );
+                optscan->has_value = 1;
+                optscan->string_value = ep;
+                found = -found;
+                rSETBAD;
+              }
+              else
+              {
+              /* TODO good: possible value, here */
+                optscan->has_value = 1;
+                optscan->string_value = ep;
+              }
             }
             else
             {
-              if ( optscan->nextarg )
+              if ( without_value )
+              {
+              }
+              else
+              {
+                if ( optscan->nextarg )
+                {
+                  optscan->has_value = 2;
+                  optscan->string_value = optscan->nextarg;
+                }
+                else if ( opt_val )
+                {
+                  if ( use_def )
+                  {
+                    optscan->has_value = 1;
+                    optscan->string_value = topt->def_string_value;
+                  }
+                  else
+                  {
+                  }
+                }
+                else
+                {
+                  if ( optscan->variantid == MUCS_VARIANT_SHORT )
+                  {
+                    QRGOPTM( opt, -1, "no value given for \"-%c\" option (short)", topt->shortn );
+                    rSETBAD;
+                  }
+                  else if ( optscan->variantid == MUCS_VARIANT_LONG )
+                  {
+                    QRGOPTM( opt, -1, "no value given for \"--%s\" option", topt->name ); /* !without_value && !has_value */
+                    rSETBAD;
+                  }
+                  found = -found;
+                }
+              }
+#if 0
+              if ( !without_value && optscan->nextarg )
               {
                 optscan->has_value = 2;
                 optscan->string_value = optscan->nextarg;
               }
-              else if ( !mucs_config_option_flag( topt, MUCS_FLAG_OPTIONAL_VALUE ) )
+              else if ( !without_value && !opt_val )
               {
                 if ( optscan->variantid == MUCS_VARIANT_SHORT )
                 {
@@ -527,6 +585,7 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
                 }
                 found = -found;
               }
+#endif
             }
           }
         }

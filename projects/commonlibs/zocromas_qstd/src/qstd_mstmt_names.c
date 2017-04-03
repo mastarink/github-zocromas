@@ -56,7 +56,8 @@ mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
 }
 
 unsigned long long
-mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id, const char *sdetype _uUu_ )
+mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id,
+                                const char *sdetype _uUu_ )
 {
   rDECLBAD;
   QRGP( qstd );
@@ -72,7 +73,7 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, np++, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, updir_id, updir_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, data_id, data_id ? FALSE : TRUE ) );
-    /* rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, np++, sdetype ) ); */
+  /* rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, np++, sdetype ) ); */
     assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
     rC( mas_mysqlpfs_mstmt_execute( mstmt ) );
     if ( rCODE )
@@ -85,8 +86,10 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   return theid;
 }
 
-unsigned long long
-mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id, const char *sdetype  _uUu_)
+__attribute__ ( ( visibility( "default" ) ) )
+     unsigned long long
+             mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id,
+                                                const char *sdetype _uUu_ )
 {
 /* rDECLBAD; */
   QRGP( qstd );
@@ -105,7 +108,8 @@ mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned
 }
 
 unsigned long long
-mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id, const char *sdetype  _uUu_)
+mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id,
+                                   const char *sdetype _uUu_ )
 {
 /* rDECLBAD; */
   QRGP( qstd );

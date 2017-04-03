@@ -21,7 +21,7 @@
 #define MULCONFNT_ALLOCATE__SOURCE_LIST
 
 int
-mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tablist )
+mucs_parse( int argc _uUu_, const char *argv[]_uUu_, const mucs_option_table_list_t * tablist _uUu_ )
 {
 #ifdef MULCONFNT_ALLOCATE__SOURCE_LIST
   mucs_source_list_t *plist = mucs_source_list_create(  );
@@ -33,8 +33,8 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
   mucs_source_t *osrc = NULL;
 
   mucs_source_list_init( plist );
-  osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
   osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
+  osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STRING, 0, "first=45 another=37:second=49;third=23", ":", "=", NULL );
 
   const mucs_prefix_encoder_t _uUu_ pref_ids[MUCS_VARIANTS] = {
     {"-", MUCS_VARIANT_SHORT}
@@ -42,7 +42,7 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
     , {NULL, MUCS_VARIANT_NONOPT}
   };
   osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
-  mucs_source_lookup( osrc, tablist );
+  mucs_source_list_lookup_all( plist, tablist );
 
   INFO( "STRING: '%s'\n", mucs_source_load_string( osrc ) );
   mucs_source_list_integrate( plist );
@@ -51,7 +51,7 @@ mucs_parse( int argc, const char *argv[], const mucs_option_table_list_t * tabli
     {
       for ( int i = 0; i < plist->targ.argc; i++ )
       {
-        INFO( "[%d] list.targ >>>> %d : %s;\n", __LINE__, i, plist->targ.argv[i] );
+        WARN( "[%d] list.targ >>>> %d : %s;", __LINE__, i, plist->targ.argv[i] );
       }
     }
   }

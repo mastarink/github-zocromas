@@ -9,6 +9,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -55,7 +56,7 @@ mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_t * osrc )
 
 mucs_source_t *
 mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr,
-                                  const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
+                             const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
   mucs_source_t *osrc = NULL;
 
@@ -65,4 +66,15 @@ mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_
   if ( osrc )
     mucs_source_list_add( source_list, osrc );
   return osrc;
+}
+
+int
+mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option_table_list_t * tablist )
+{
+  rDECLBAD;
+  for ( mucs_source_t * os = source_list->first; os; os = os->next )
+  {
+    mucs_source_lookup_all( os, tablist );
+  }
+  rRET;
 }
