@@ -55,8 +55,8 @@ mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_t * osrc )
 }
 
 mucs_source_t *
-mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr,
-                             const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
+mucs_source_list_add_source_x( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr,
+                               const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
   mucs_source_t *osrc = NULL;
 
@@ -66,6 +66,12 @@ mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_
   if ( osrc )
     mucs_source_list_add( source_list, osrc );
   return osrc;
+}
+
+mucs_source_t *
+mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr )
+{
+  return mucs_source_list_add_source_x( source_list, source_type, count, data_ptr, NULL, NULL, NULL /* , delims, eq, pref_ids */ );
 }
 
 int

@@ -1,0 +1,8 @@
+$ tmux send-keys -R  \; clear-history && MAS_TEST_ENV='xor=0xffff6012' run -X 0x7
+$ cat etc/zocromas_mulconfnt.conf.in 
+#
+xor=0x44
+$ run
+....
+-=INFO=- app_flags (--xor):ffff0044
+....

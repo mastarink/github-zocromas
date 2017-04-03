@@ -143,7 +143,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     EXAMX( osrc ? 1 : 0, "osrc: %p", osrc );
 

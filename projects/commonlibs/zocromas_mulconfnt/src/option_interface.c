@@ -18,7 +18,7 @@
 void
 mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_source_type_t source_type, int count, const void *data_ptr )
 {
-  mucs_source_list_add_source( interface->source_list, source_type, count, data_ptr, NULL, NULL, NULL /* , delims, eq, pref_ids */ );
+  mucs_source_list_add_source( interface->source_list, source_type, count, data_ptr );
 /* interface->test_tablist = mucs_config_option_tablist_add( NULL, "test-table", options, 0 ); */
 }
 

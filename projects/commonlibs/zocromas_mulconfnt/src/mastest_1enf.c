@@ -126,7 +126,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
 
     if ( osrc )
       osrc->flags |= MUCS_FLAG_SILENT;

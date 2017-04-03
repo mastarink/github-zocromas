@@ -36,16 +36,22 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
     {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
-    mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options );
+  mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options );
 
-    mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
-    mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv  );
-    mucs_option_interface_lookup_all( interface );
-    INFO( "app_flags (--xor):%lx", app_flags );
-    mucs_config_option_interface_delete( interface );
-    interface = NULL;
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
+  mucs_option_interface_lookup_all( interface );
+  mucs_config_option_interface_delete( interface );
+  interface = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  {
+    WARN( "MULCONFNT_ETC_CONFIG data_ptr:%s", MULCONFNT_ETC_CONFIG );
+  }
+
   INFO( "app_flags (--xor):%lx", app_flags );
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

@@ -45,16 +45,18 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 
-  mucs_source_list_add_source( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
-  mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
 
   mucs_source_list_lookup_all( plist, test_tablist );
 
   mucs_source_list_delete( plist );
+  plist = NULL;
   mucs_config_option_tablist_delete( test_tablist );
   test_tablist = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   INFO( "app_flags (--xor):%lx", app_flags );
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

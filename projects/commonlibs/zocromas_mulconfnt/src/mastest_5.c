@@ -99,7 +99,7 @@ test_5( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( fcmds ? 1 : 0, "fcmds: %p", fcmds );

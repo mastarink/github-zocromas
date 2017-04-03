@@ -144,7 +144,8 @@ main( int argc, const char *argv[] )
   WARN( "MAS_DATADIR:%s;", MAS_DATADIR );
   {
     const mucs_source_t *osrc = mucs_source_default( MUCS_SOURCE_LIBCONFIG );
-    WARN("MUCS_SOURCE_LIBCONFIG data_ptr:%s", (char *)osrc->data_ptr);
+
+    WARN( "MUCS_SOURCE_LIBCONFIG data_ptr:%s", ( char * ) osrc->data_ptr );
   }
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

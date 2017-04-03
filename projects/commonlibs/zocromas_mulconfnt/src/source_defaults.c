@@ -331,7 +331,7 @@ static mucs_source_t default_sources[] = {
   [MUCS_SOURCE_LIBCONFIG] = {
                         .type = MUCS_SOURCE_LIBCONFIG,
                         .count = 0,
-                        .data_ptr = MAS_SYSCONFDIR "/" PACKAGE_NAME ".conf",
+                        .data_ptr = MAS_SYSCONFDIR "/" PACKAGE_NAME ".cfg",
                         .delim = ':',
                         .delims = ":\n",
                         .eq = "=",
