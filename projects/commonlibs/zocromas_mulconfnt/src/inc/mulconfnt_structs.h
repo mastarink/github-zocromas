@@ -22,6 +22,12 @@ struct mucs_error_s
   char *msg;
 };
 # endif
+struct mucs_source_extra_cb_s
+{
+  size_t callback_called;
+  const mucs_option_table_list_t *tablist;
+  const mucs_source_t *source;
+};
 struct mucs_source_s
 {
   mucs_source_list_t *list;
@@ -45,6 +51,7 @@ struct mucs_source_s
   mucs_source_load_targ_fun_t load_targ_fun;
 
   void *ptr_internal;
+  int error;
   int targ_loaded;                                                   /* sequential number of targ set */
   char *string;
   mas_argvc_t oldtarg;
@@ -54,7 +61,7 @@ struct mucs_source_s
 /* mucs_error_t error; */
   mucs_option_callback_t common_callback;
   mucs_option_callback_t type_callbacks[MUCS_RTYP_MAX + 1];
-  size_t callback_called;
+  mucs_source_extra_cb_t extra_cb;
 };
 
 struct mucs_source_list_s
@@ -99,13 +106,14 @@ struct mucs_option_s
 
   mucs_source_t *source;
   mucs_option_callback_t callback;
-  size_t callback_called;
+  mucs_source_extra_cb_t extra_cb;
   int value_is_set;
 /* mucs_error_t error; */
 };
 
 struct mucs_option_table_list_s
 {
+  unsigned created:1;
   mucs_option_table_list_t *next;
   unsigned count;
   char *name;

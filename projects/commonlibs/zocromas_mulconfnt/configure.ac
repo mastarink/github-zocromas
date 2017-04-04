@@ -60,6 +60,6 @@ m4_include([m4zoc/am_cflags.m4])
 m4_include([m4zoc/vars3.m4])
 m4_include([m4zoc/msg.m4])
 
-AC_CONFIG_FILES([etc/Makefile etc/${PACKAGE}.conf etc/${PACKAGE}.cfg])
+AC_CONFIG_FILES([etc/Makefile etc/${PACKAGE}.cfg etc/plusfile.cfg etc/${PACKAGE}.conf etc/plusfile.conf])
 m4_include([m4zoc/output_l.m4])
 

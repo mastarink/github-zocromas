@@ -21,4 +21,7 @@ int mucs_source_flag( mucs_source_t * osrc, unsigned long mask );
 int mucs_source_set_common_callback( mucs_source_t * osrc, mucs_option_callback_t cb );
 int mucs_source_set_type_callback( mucs_source_t * osrc, mucs_restype_t restype, mucs_option_callback_t cb );
 
+char *mucs_source_wd( const mucs_source_t * osrc );
+char *mucs_source_absfile( const mucs_source_t * osrc, const char *fname );
+
 #endif

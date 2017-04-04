@@ -10,6 +10,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_argvc_tools.h>
 
+#include <mastar/minierr/minierr.h>
+
 #include "mulconfnt_structs.h"
 
 #include "source_defaults.h"
@@ -93,7 +95,7 @@ source_load_targ_margv( mucs_source_t * osrc, mas_argvc_t targ )
 static mas_argvc_t
 source_load__targ_stream( FILE * fin, mucs_source_t * osrc, mas_argvc_t targ, int *peof )
 {
-  if ( fin )
+  if ( fin && osrc && !osrc->error )
   {
     char buffer[1024 * 10];
     char *string = NULL;
@@ -121,7 +123,7 @@ static mas_argvc_t
 source_load_targ_stream( mucs_source_t * osrc, mas_argvc_t targ )
 {
 /* file (FILE *) at osrc->data_ptr */
-  if ( osrc && osrc->data_ptr )
+  if ( osrc && !osrc->error && osrc->data_ptr )
   {
     FILE *fin = ( FILE * ) osrc->data_ptr;
 
@@ -135,16 +137,32 @@ static mas_argvc_t
 source_load_targ_file( mucs_source_t * osrc, mas_argvc_t targ )
 {
 /* file name at osrc->data_ptr */
-  if ( osrc && osrc->data_ptr )
+  if ( osrc && !osrc->error && osrc->data_ptr )
   {
+    const char *filename = ( const char * ) osrc->data_ptr;
     int eof = 0;
 
     if ( !osrc->ptr_internal )
-      osrc->ptr_internal = ( void * ) fopen( ( char * ) osrc->data_ptr, "r" );
-
-    targ = source_load__targ_stream( ( FILE * ) osrc->ptr_internal, osrc, targ, &eof );
-    if ( eof && osrc->ptr_internal )
-      fclose( ( FILE * ) osrc->ptr_internal );
+    {
+      WARN( "OPEN %s", filename );
+      osrc->ptr_internal = ( void * ) fopen( filename, "r" );
+    }
+    if ( !osrc->ptr_internal )
+    {
+      WARN( "ERROR %s", filename );
+      QRGSRC( osrc, -1 );
+      osrc->error = 1;
+    }
+    if ( !osrc->error )
+    {
+      targ = source_load__targ_stream( ( FILE * ) osrc->ptr_internal, osrc, targ, &eof );
+      if ( eof && osrc->ptr_internal )
+      {
+        WARN( "CLOSE %s", filename );
+        fclose( ( FILE * ) osrc->ptr_internal );
+        osrc->ptr_internal = NULL;
+      }
+    }
   }
 
   return targ;

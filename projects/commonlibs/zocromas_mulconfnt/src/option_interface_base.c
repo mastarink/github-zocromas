@@ -13,8 +13,43 @@
 #include "option_tablist_base.h"
 
 #include "option.h"
+#include "source.h"
+#include "source_list.h"
 
 #include "option_interface_base.h"
+
+int
+mucs_config_option_interface_callback( mucs_option_t * opt )
+{
+  if ( opt )
+  {
+    mucs_source_list_t *source_list = mucs_source_list_create(  );
+
+    char *fpath = mucs_source_absfile( opt->extra_cb.source, opt->string_value );
+
+    char *t = canonicalize_file_name( opt->string_value );
+    char *t1 = realpath( opt->string_value, NULL );
+
+    WARN( "oooooooooooooooo:%s = '%s'/'%s'/'%s' :: %s", opt->name, opt->string_value, t, t1, fpath );
+    free( t1 );
+    free( t );
+
+    mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, 0, fpath );
+
+    mucs_source_list_lookup_all( source_list, opt->extra_cb.tablist );
+
+    if ( fpath )
+      mas_free( fpath );
+    mucs_source_list_delete( source_list );
+    source_list = NULL;
+  }
+  return 0;
+}
+
+const mucs_option_t mucs_interface_options[] = {
+  {.name = "mucs-include",.shortn = '\0',.restype = MUCS_RTYP_STRING,.callback = mucs_config_option_interface_callback},
+  {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+};
 
 void
 mucs_config_option_interface_init( mucs_option_interface_t * option_interface )
@@ -37,7 +72,8 @@ mucs_config_option_interface_create_setup( const char *name, const mucs_option_t
   mucs_option_interface_t *interface = mucs_config_option_interface_create(  );
 
   interface->source_list = mucs_source_list_create(  );
-  interface->tablist = mucs_config_option_tablist_add( interface->tablist, name, options, 0 );
+  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */  );
+  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 /* count=<auto> */  );
   return interface;
 }
 

@@ -2,6 +2,7 @@
 #include "mulconfnt_defs.h"
 #include <string.h>
 #include <unistd.h>
+#include <libgen.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -168,6 +169,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt )
   {
     mucs_option_callback_t cb = NULL;
 
+    opt->extra_cb.source = osrc;
     if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->value_is_set ) && osrc->common_callback
          && !mucs_config_option_flag( opt, MUCS_FLAG_NO_COMMON_CB ) )
     {
@@ -175,7 +177,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt )
       if ( cb )
       {
         cb( opt );
-        osrc->callback_called++;
+        osrc->extra_cb.callback_called++;
       }
     }
     if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->value_is_set ) && osrc->type_callbacks
@@ -185,9 +187,10 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt )
       if ( cb )
       {
         cb( opt );
-        osrc->callback_called++;
+        osrc->extra_cb.callback_called++;
       }
     }
+    opt->extra_cb.source = NULL;
   }
   if ( opt->has_value > 0 )
     osrc->curarg += opt->has_value - 1;
@@ -223,8 +226,12 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
           {
             if ( opt->callback && !opt->argptr )
             {
+              opt->extra_cb.tablist = tablist;
+              opt->extra_cb.source = osrc;
               opt->callback( opt );
-              opt->callback_called++;
+              opt->extra_cb.source = NULL;
+              opt->extra_cb.tablist = NULL;
+              opt->extra_cb.callback_called++;
             }
             opt->has_value = optscan->has_value;
           }
@@ -261,11 +268,11 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, mucs_optscanner_t * optscan, c
     if ( osrc->curarg < osrc->targ.argc - 1 )
       optscan->nextarg = osrc->targ.argv[osrc->curarg + 1];
     rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
-    /* TODO if 
-     *       1. unrecognized option
-     *       2. do not stop on error flag
-     *         then -- add unrecognized option as MUCS_VARIANT_NONOPT (or something else !?)
-     * */
+  /* TODO if 
+   *       1. unrecognized option
+   *       2. do not stop on error flag
+   *         then -- add unrecognized option as MUCS_VARIANT_NONOPT (or something else !?)
+   * */
   }
   rRET;
 }
@@ -371,4 +378,110 @@ mucs_source_set_type_callback( mucs_source_t * osrc, mucs_restype_t restype, muc
     osrc->type_callbacks[restype] = cb;
   }
   rRET;
+}
+
+char *
+mucs_source_wd( const mucs_source_t * osrc )
+{
+  rDECLBAD;
+  char *path = NULL;
+
+  if ( osrc )
+  {
+    errno = 0;
+    switch ( osrc->type )
+    {
+    case MUCS_SOURCE_NONE:
+    case MUCS_SOURCE_STRING:
+    case MUCS_SOURCE_ENV:
+    case MUCS_SOURCE_ARGV:
+    case MUCS_SOURCE_MARGV:
+    case MUCS_SOURCE_STREAM:
+    case MUCS_SOURCE_STDIN:
+      {
+        char *p = get_current_dir_name(  );
+        char *p1 = canonicalize_file_name( p );
+
+        if ( errno )
+        {
+          rSETBAD;
+        /* WARN( "(%s) path:%s", strerror( errno ), path ); */
+          QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), p );
+        }
+        else
+        {
+          rSETGOOD;
+          path = mas_strdup( p1 );
+        }
+        if ( p1 )
+          free( p1 );
+        if ( p )
+          free( p );
+      }
+      break;
+    case MUCS_SOURCE_FILE:
+    case MUCS_SOURCE_LIBCONFIG:
+    case MUCS_SOURCE_CONFIG:
+      {
+        char *p = canonicalize_file_name( ( char * ) osrc->data_ptr );
+
+        if ( errno )
+        {
+          rSETBAD;
+        /* WARN( "(%s) path:%s", strerror( errno ), path ); */
+          QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), p );
+        }
+        else
+        {
+          rSETGOOD;
+          path = mas_strdup( dirname( p ) );
+        }
+        if ( p )
+          free( p );
+      }
+      break;
+    }
+  }
+  return path;
+}
+
+char *
+mucs_source_absfile( const mucs_source_t * osrc, const char *fn )
+{
+  rDECLBAD;
+  char *path = NULL;
+
+  if ( osrc && fn )
+  {
+    char *fname = mas_expand_string( fn );
+
+    errno = 0;
+
+    WARN( "fname:%s", fname );
+    if ( *fname == '/' )
+    {
+      char *p = canonicalize_file_name( fname );
+
+      if ( errno )
+      {
+        rSETBAD;
+      /* WARN( "(%s) path:%s", strerror( errno ), path ); */
+        QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), fname );
+      }
+      else
+      {
+        rSETGOOD;
+        path = mas_strdup( p );
+      }
+      free( p );
+    }
+    else
+    {
+      path = mucs_source_wd( osrc );
+      path = mas_strcat_x( path, "/" );
+      path = mas_strcat_x( path, fname );
+    }
+    mas_free( fname );
+  }
+  return path;
 }
