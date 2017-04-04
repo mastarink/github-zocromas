@@ -32,7 +32,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
 
-  if ( !top_depth && depth )
+  if ( !numline_treecb && depth )
     top_depth = depth - 1;
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
 
@@ -56,7 +56,7 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
     {treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
     {NULL}
   };
-  WARN( "******** testtreefromfs *******" );
+  WARN( "******** start *******" );
 
   {
   /* mas_qstd_t *qstd = */ mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
@@ -66,19 +66,22 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
       {
-        masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
+        masxfs_levinfo_flags_t walkflags _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
         masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
+
+      /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
         masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
 
+        walkflags |= MASXFS_CB_MODE_FS;
         numline_treecb = 0;
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , flagsfs | xflags2,
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
                                       maxdepth ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
     }
     mas_qstd_instance_delete(  );
   }
-  WARN( "******** /testtreefromfs *******" );
+  WARN( "******** end *******" );
   rRET;
 }

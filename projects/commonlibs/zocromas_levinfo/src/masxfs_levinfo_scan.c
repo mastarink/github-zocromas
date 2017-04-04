@@ -106,7 +106,7 @@ masxfs_levinfo_scan_entry_single_internal_cbs( masxfs_levinfo_t * liparent, masx
               }
             }
           }
-          assert( lithis->detype > MASXFS_ENTRY_UNKNOWN_NUM );
+          /* assert( lithis->detype > MASXFS_ENTRY_UNKNOWN_NUM ); */
           rC( masxfs_levinfo_scan_entry_single_internal_1cb( lithis, typeflags, cb, data, flags & ~MASXFS_CB_UP_ROOT, reldepth ) );
           if ( ( flags & MASXFS_CB_SINGLE_CB ) || !cb || !cb->fun_simple )
             break;

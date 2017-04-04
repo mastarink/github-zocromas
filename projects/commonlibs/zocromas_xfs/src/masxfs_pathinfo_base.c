@@ -82,6 +82,19 @@ masxfs_pathinfo_create_setup( const char *path, masxfs_depth_t depth_limit, masx
   return pi;
 }
 
+masxfs_pathinfo_t *
+masxfs_pathinfo_create_setup_realpath( const char *real_path, masxfs_depth_t depth_limit, masxfs_levinfo_flags_t flags )
+{
+  masxfs_pathinfo_t *pi = NULL;
+
+  pi = masxfs_pathinfo_create(  );
+  if ( real_path && pi )
+    masxfs_pathinfo_init( pi, real_path, depth_limit, flags );
+  else
+    pi->error = -1;
+  return pi;
+}
+
 void
 masxfs_pathinfo_reset( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 {
