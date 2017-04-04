@@ -137,7 +137,7 @@ main( int argc, const char *argv[] )
 #define TOTAL_TESTS 350 - 1
 /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
   EXAM( masexam_tests_count(  ), TOTAL_TESTS, "tests_count=%d ? %d" );
-
+#if 0
   WARN( "MAS_CONFIG_PREFIX:%s;", MAS_CONFIG_PREFIX );
   WARN( "MAS_CONFIG_SYSCONFDIR:%s;", MAS_CONFIG_SYSCONFDIR );
   WARN( "MAS_SYSCONFDIR:%s;", MAS_SYSCONFDIR );
@@ -147,6 +147,7 @@ main( int argc, const char *argv[] )
 
     WARN( "MUCS_SOURCE_LIBCONFIG data_ptr:%s", ( char * ) osrc->data_ptr );
   }
+#endif
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

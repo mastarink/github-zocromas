@@ -30,7 +30,7 @@ mucs_config_option_interface_callback( mucs_option_t * opt )
     char *t = canonicalize_file_name( opt->string_value );
     char *t1 = realpath( opt->string_value, NULL );
 
-    WARN( "oooooooooooooooo:%s = '%s'/'%s'/'%s' :: %s", opt->name, opt->string_value, t, t1, fpath );
+  /* WARN( "oooooooooooooooo:%s = '%s'/'%s'/'%s' :: %s", opt->name, opt->string_value, t, t1, fpath ); */
     free( t1 );
     free( t );
 
@@ -67,12 +67,15 @@ mucs_config_option_interface_create( void )
 }
 
 mucs_option_interface_t *
-mucs_config_option_interface_create_setup( const char *name, const mucs_option_t * options )
+mucs_config_option_interface_create_setup( const char *name, const mucs_option_t * options, int special_options )
 {
   mucs_option_interface_t *interface = mucs_config_option_interface_create(  );
 
   interface->source_list = mucs_source_list_create(  );
-  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */  );
+  if ( special_options )
+  {
+    interface->tablist = mucs_config_option_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */  );
+  }
   interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 /* count=<auto> */  );
   return interface;
 }

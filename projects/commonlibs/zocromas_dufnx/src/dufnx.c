@@ -1,66 +1,41 @@
 #define R_GOOD(_r) ((_r)>=0)
-
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 #include <mastar/regerr/masregerr_defs.h>
 
 #include <mastar/mulconfnt/mulconfnt_structs.h>
-#include <mastar/mulconfnt/source_defaults.h>
-#include <mastar/mulconfnt/mulconfnt_enums.h>
-#include <mastar/mulconfnt/option_tablist_base.h>
-#include <mastar/mulconfnt/source_list_base.h>
-#include <mastar/mulconfnt/source_list.h>
-#include <mastar/mulconfnt/source.h>
+
+#include <mastar/mulconfnt/option_interface_base.h>
+#include <mastar/mulconfnt/option_interface.h>
 
 #include "dufnx.h"
 
 int
 dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
+  long app_flags = 0x00ffff1111111111L;
+
   INFO( "dufnx" );
-  int v_int0 _uUu_ = 99992;
-
   mucs_option_t options[] = {
-    {"num0", 0, MUCS_RTYP_INT, &v_int0}
+    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_VALUE}, /* */
+    {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  mucs_option_table_list_t gen_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "dufnx-gen-table",.options = options, /* */
-  };
-  mucs_source_list_t *plist = mucs_source_list_create(  );
 
-  {
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL );
+  mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options, TRUE );
 
-    mucs_source_lookup_all( osrc, &gen_tablist );
-    INFO( "v_int0:%d\n", v_int0 );
-  }
-  {
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_LIBCONFIG, 0, NULL, NULL, "=", NULL );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
+  mucs_option_interface_lookup_all( interface );
 
-    WARN( "1 data_ptr:%s", ( char * ) osrc->data_ptr );
-    mucs_source_lookup_all( osrc, &gen_tablist );
-    INFO( "v_int0:%d\n", v_int0 );
-  }
-  {
-    mucs_source_t *osrc = mucs_source_list_add_source( plist, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG, NULL, "=", NULL );
+  /*******/
 
-    WARN( "1 data_ptr:%s", ( char * ) osrc->data_ptr );
-    mucs_source_lookup_all( osrc, &gen_tablist );
-    INFO( "v_int0:%d\n", v_int0 );
-  }
+  /*******/
 
-  mucs_source_list_delete( plist );
-  mucs_config_option_tablist_reset( &gen_tablist );
-
-  WARN( "MAS_CONFIG_PREFIX:%s;", MAS_CONFIG_PREFIX );
-  WARN( "MAS_CONFIG_SYSCONFDIR:%s;", MAS_CONFIG_SYSCONFDIR );
-  WARN( "MAS_SYSCONFDIR:%s;", MAS_SYSCONFDIR );
-  WARN( "MAS_DATADIR:%s;", MAS_DATADIR );
-  {
-    const mucs_source_t *osrc = mucs_source_default( MUCS_SOURCE_LIBCONFIG );
-
-    WARN( "MUCS_SOURCE_LIBCONFIG data_ptr:%s", ( char * ) osrc->data_ptr );
-  }
+  mucs_config_option_interface_delete( interface );
+  interface = NULL;
 
   return 0;
 }

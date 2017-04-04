@@ -457,7 +457,6 @@ mucs_source_absfile( const mucs_source_t * osrc, const char *fn )
 
     errno = 0;
 
-    WARN( "fname:%s", fname );
     if ( *fname == '/' )
     {
       char *p = canonicalize_file_name( fname );
@@ -465,7 +464,6 @@ mucs_source_absfile( const mucs_source_t * osrc, const char *fn )
       if ( errno )
       {
         rSETBAD;
-      /* WARN( "(%s) path:%s", strerror( errno ), path ); */
         QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), fname );
       }
       else

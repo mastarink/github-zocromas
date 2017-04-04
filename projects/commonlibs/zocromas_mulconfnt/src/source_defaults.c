@@ -144,12 +144,12 @@ source_load_targ_file( mucs_source_t * osrc, mas_argvc_t targ )
 
     if ( !osrc->ptr_internal )
     {
-      WARN( "OPEN %s", filename );
+      /* WARN( "OPEN %s", filename ); */
       osrc->ptr_internal = ( void * ) fopen( filename, "r" );
     }
     if ( !osrc->ptr_internal )
     {
-      WARN( "ERROR %s", filename );
+      /* WARN( "ERROR %s", filename ); */
       QRGSRC( osrc, -1 );
       osrc->error = 1;
     }
@@ -158,7 +158,7 @@ source_load_targ_file( mucs_source_t * osrc, mas_argvc_t targ )
       targ = source_load__targ_stream( ( FILE * ) osrc->ptr_internal, osrc, targ, &eof );
       if ( eof && osrc->ptr_internal )
       {
-        WARN( "CLOSE %s", filename );
+        /* WARN( "CLOSE %s", filename ); */
         fclose( ( FILE * ) osrc->ptr_internal );
         osrc->ptr_internal = NULL;
       }

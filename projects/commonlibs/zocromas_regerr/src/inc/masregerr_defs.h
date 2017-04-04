@@ -44,6 +44,7 @@
 #  define rDECLGOOD rDECL(0)
 #  define rDECLBAD rDECL(-1)
 #  define rGOOD (R_GOOD(rCODE))
+#  define rGOOD_OR1 (!rCNT || rGOOD)
 #  define rBAD (R_BAD(rCODE))
 #  if 1
 #   define rSETBAD (rCODE=-1)
@@ -54,7 +55,7 @@
 #  endif
 #  define rSETGOOD rCODE=0
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
-#  define rC(_x)  ((!rCNT || rGOOD) ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
+#  define rC(_x)  (rGOOD_OR1 ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
 
 #  define RGEX(_sys,  ...) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, __VA_ARGS__ )
 #  define RGE RGEX(0, NULL, NULL)

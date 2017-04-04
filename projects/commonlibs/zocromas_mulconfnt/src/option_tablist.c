@@ -28,14 +28,25 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
   optscan->found_topt = NULL;
   if ( tablist )
   {
+#if 0
     rSETGOOD;
     while ( rGOOD && !optscan->found_topt && tablist )
     {
       rC( mucs_config_option_lookup_option_table( tablist->options, arg_nopref, eq, optscan ) );
       tablist = tablist->next;
     }
+#else
+    do
+    {
+      rC( mucs_config_option_lookup_option_table( tablist->options, arg_nopref, eq, optscan ) );
+      tablist = tablist->next;
+    } while ( rGOOD && !optscan->found_topt && tablist );
+#endif
     if ( !optscan->found_topt )
-      QRGSRCM( osrc, -1, "unrecognized option \"%s\"", optscan->arg );
+    {
+      rSETBAD;
+      QRGSRCM( osrc, rCODE, "unrecognized option \"%s\"", optscan->arg );
+    }
   }
   rRET;
 }

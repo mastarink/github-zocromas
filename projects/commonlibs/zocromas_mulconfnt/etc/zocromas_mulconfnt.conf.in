@@ -1,5 +1,7 @@
 #
 # mucs-include=./plusfile.conf
 # mucs-include=$HOME/.config/zocromas_mulconfnt.conf
-mucs-include=/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/etc/zocromas_mulconfnt/plusfile.conf
+mucs-include=$HOME/.mas/lib/big/misc/develop/autotools/zoc/admin/install/default/etc/zocromas_mulconfnt/plusfile.conf
 xor=0x55000000
+mucs-include=plusfile.cfg
+xor=0x5500000000

@@ -48,7 +48,7 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
     {
       for ( const mucs_option_t * o = options; o && o->name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
         count++;
-      WARN( "COUNT:%ld", ( long ) count );
+      /* WARN( "COUNT:%ld", ( long ) count ); */
     }
     if ( tablist )
     {
