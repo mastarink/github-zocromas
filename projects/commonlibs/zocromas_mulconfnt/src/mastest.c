@@ -67,9 +67,9 @@ mastest_print_allocated( const char *msg, int line, const char *func )
   fprintf( stderr, "\n\x1b[0;1;44;35m%s %d bytes at %d:%s\x1b[0m\n", msg, mi.uordblks, line, func );
 }
 
-static void constructor_main( int argc, char **argv, char **envp ) __attribute__ ( ( constructor( 2001 ) ) );
+static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
 static void
-constructor_main( int argc _uUu_, char **argv _uUu_, char **envp _uUu_ )
+constructor_main(  )
 {
   mastest_print_allocated( "Allocated", __LINE__, __func__ );
   mallopt( M_CHECK_ACTION, 1 );

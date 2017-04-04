@@ -29,7 +29,7 @@
 int
 test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
-  long app_flags = 0x00000000ffff0000L;
+  long app_flags = 0x00ffff1111111111L;
 
   mucs_option_t options[] = {
     {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_VALUE}, /* */
@@ -41,6 +41,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
   mucs_option_interface_lookup_all( interface );
   mucs_config_option_interface_delete( interface );

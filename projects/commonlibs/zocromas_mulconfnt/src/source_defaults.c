@@ -274,6 +274,33 @@ static mucs_source_t default_sources[] = {
                                         },
                                        },
                           },
+  [MUCS_SOURCE_STDIN] = {
+                         .type = MUCS_SOURCE_STDIN,
+                         .count = 0,
+                         .data_ptr = NULL,
+                         .delim = ':',
+                         .delims = ":\r\n",
+                         .eq = "=",
+                         .check_fun = NULL,
+                         .open_fun = NULL,
+                         .close_fun = NULL,
+                         .load_string_fun = NULL /*source_load_string_stream */ ,
+                         .load_targ_fun = source_load_targ_stream,
+                         .pref_ids = {
+                                      {
+                                       .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
+                                       },
+                                      {
+                                       .id = MUCS_VARIANT_LONG,.string = "" /* */
+                                       },
+                                      {
+                                       .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
+                                       },
+                                      {
+                                       .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
+                                       },
+                                      },
+                         },
   [MUCS_SOURCE_FILE] = {
                         .type = MUCS_SOURCE_FILE,
                         .count = 0,
@@ -302,60 +329,71 @@ static mucs_source_t default_sources[] = {
                                      },
                         },
   [MUCS_SOURCE_CONFIG] = {
-                        .type = MUCS_SOURCE_CONFIG,
-                        .count = 0,
-                        .data_ptr = NULL,
-                        .delim = ':',
-                        .delims = ":\n",
-                        .eq = "=",
-                        .check_fun = NULL,
-                        .open_fun = NULL,
-                        .close_fun = NULL,
-                        .load_string_fun = NULL /*source_load_string_stream */ ,
-                        .load_targ_fun = source_load_targ_file,
-                        .pref_ids = {
-                                     {
-                                      .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_LONG,.string = "" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
-                                      },
-                                     },
-                        },
+                          .type = MUCS_SOURCE_CONFIG,
+                          .count = 0,
+                          .data_ptr = NULL,
+                          .delim = ':',
+                          .delims = ":\n",
+                          .eq = "=",
+                          .check_fun = NULL,
+                          .open_fun = NULL,
+                          .close_fun = NULL,
+                          .load_string_fun = NULL /*source_load_string_stream */ ,
+                          .load_targ_fun = source_load_targ_file,
+                          .pref_ids = {
+                                       {
+                                        .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
+                                        },
+                                       {
+                                        .id = MUCS_VARIANT_LONG,.string = "" /* */
+                                        },
+                                       {
+                                        .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
+                                        },
+                                       {
+                                        .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
+                                        },
+                                       },
+                          },
   [MUCS_SOURCE_LIBCONFIG] = {
-                        .type = MUCS_SOURCE_LIBCONFIG,
-                        .count = 0,
-                        .data_ptr = MAS_SYSCONFDIR "/" PACKAGE_NAME ".cfg",
-                        .delim = ':',
-                        .delims = ":\n",
-                        .eq = "=",
-                        .check_fun = NULL,
-                        .open_fun = NULL,
-                        .close_fun = NULL,
-                        .load_string_fun = NULL /*source_load_string_stream */ ,
-                        .load_targ_fun = source_load_targ_file,
-                        .pref_ids = {
-                                     {
-                                      .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_LONG,.string = "" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
-                                      },
-                                     {
-                                      .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
-                                      },
-                                     },
-                        },
+                             .type = MUCS_SOURCE_LIBCONFIG,
+                             .count = 0,
+                             .data_ptr = MAS_SYSCONFDIR "/" PACKAGE_NAME ".cfg",
+                             .delim = ':',
+                             .delims = ":\n",
+                             .eq = "=",
+                             .check_fun = NULL,
+                             .open_fun = NULL,
+                             .close_fun = NULL,
+                             .load_string_fun = NULL /*source_load_string_stream */ ,
+                             .load_targ_fun = source_load_targ_file,
+                             .pref_ids = {
+                                          {
+                                           .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
+                                           },
+                                          {
+                                           .id = MUCS_VARIANT_LONG,.string = "" /* */
+                                           },
+                                          {
+                                           .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
+                                           },
+                                          {
+                                           .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
+                                           },
+                                          },
+                             },
 };
+
+static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
+static void
+constructor_main(  )
+{
+  FILE *f = stdin;
+
+  if ( isatty( fileno( f ) ) )
+    f = NULL;
+  default_sources[MUCS_SOURCE_STDIN].data_ptr = ( const void * ) f;
+}
 
 size_t
 mucs_source_defaults_count( void )
