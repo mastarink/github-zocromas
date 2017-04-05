@@ -465,8 +465,9 @@ mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * o
         with_eq = ( eq && 0 == strncmp( argp, eq, leq ) );
         if ( with_eq )
           argp += leq;
-        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
+        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) || !strchr( " \t", *argp ) )
           argp = NULL;
+        /* WARN( "%s -- %s", arg_nopref, argp ); */
       }
       else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
         argp = NULL;
