@@ -34,7 +34,7 @@ struct mucs_source_s
   mucs_source_t *next;
   mucs_source_type_t type;
   mucs_source_mode_t mode;
-  unsigned long flags;
+  mucs_flags_t flags;
   int count;
   int lastoptpos;                                                    /*number of arg with last opt */
   int curarg;                                                        /* number of arg withc current arg */
@@ -93,16 +93,17 @@ struct mucs_option_s
   char *name;
   char shortn;
   mucs_restype_t restype;
-  void *argptr;
+  void *cust_ptr;
   int val;
   char *desc;
   char *argdesc;
   const char *def_string_value;
+  nvalue_t def_nvalue;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   int has_value;
   char *string_value;
   nvalue_t nvalue;
-  unsigned long flags;
+  mucs_flags_t flags;
 
   mucs_source_t *source;
   mucs_option_callback_t callback;
@@ -123,6 +124,7 @@ struct mucs_option_table_list_s
 struct mucs_optscanner_s
 {
   const char *arg;
+  const char *at_arg;
   int preflen;
   mucs_variant_t variantid;
   int has_value;

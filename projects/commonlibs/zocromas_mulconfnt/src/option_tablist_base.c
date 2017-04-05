@@ -78,15 +78,15 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
   {
     for ( const mucs_option_t * opt = tabnode->options; opt && opt->name; opt++ )
     {
-      if ( opt && opt->argptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
+      if ( opt && opt->cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
         switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
         {
         case MUCS_RTYP_STRING:
-          mas_free( *( ( char ** ) opt->argptr ) );
+          mas_free( *( ( char ** ) opt->cust_ptr ) );
           break;
         case MUCS_RTYP_TARG:
-          mas_argvc_delete( ( mas_argvc_t * ) opt->argptr );
+          mas_argvc_delete( ( mas_argvc_t * ) opt->cust_ptr );
           break;
         default:
           break;

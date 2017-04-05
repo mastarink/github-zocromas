@@ -5,6 +5,9 @@
 # include <mastar/tools/mas_argvc_tools.h>
 
 typedef union nvalue_u nvalue_t;
+
+typedef unsigned long mucs_flags_t;
+
 typedef enum mucs_source_type_e mucs_source_type_t;
 
 typedef enum mucs_source_mode_e mucs_source_mode_t;

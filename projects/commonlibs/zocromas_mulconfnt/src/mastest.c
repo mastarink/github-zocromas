@@ -129,7 +129,7 @@ main( int argc, const char *argv[] )
     {TRUE, test_4, 4, ""},
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
-    {TRUE, test_manual_0, 7, "manual_0"},
+    {FALSE, test_manual_0, 7, "manual_0"},
     {TRUE, test_manual, 7, "manual"},
     {0}
   };

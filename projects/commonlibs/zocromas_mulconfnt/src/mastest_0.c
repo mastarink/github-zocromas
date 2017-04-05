@@ -42,9 +42,9 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     {"crnl", 'c',.restype = 0,.val = 0,.desc = "expand cr characters to cr/lf sequences"}, /* */
     {"hwflow", 'h',.restype = 0,.val = 0,.desc = "use hardware (RTS/CTS) flow control"}, /* */
     {"noflow", 'n',.restype = 0,.val = 0,.desc = "use no flow control"}, /* */
-    {"raw", 'r',.restype = 0,.argptr = &raw,.val = 0,.desc = "don't perform any character conversions"}, /* */
+    {"raw", 'r',.restype = 0,.cust_ptr = &raw,.val = 0,.desc = "don't perform any character conversions"}, /* */
     {"swflow", 's',.restype = 0,.val = 0,.val = 's',.desc = "use software (XON/XOF) flow control"}, /* */
-    {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options, /* */

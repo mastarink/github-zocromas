@@ -148,8 +148,8 @@ mucs_source_dealias_opt( mucs_source_t * osrc, const mucs_option_table_list_t * 
 {
   rDECLGOOD;
   optscan->force_value = optscan->string_value;
-  while ( rGOOD && optscan->found_topt && optscan->found_topt->restype == MUCS_RTYP_ALIAS && optscan->found_topt->argptr )
-    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->argptr, osrc->eq, optscan ) );
+  while ( rGOOD && optscan->found_topt && optscan->found_topt->restype == MUCS_RTYP_ALIAS && optscan->found_topt->cust_ptr )
+    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->cust_ptr, osrc->eq, optscan ) );
   optscan->force_value = NULL;
   rRET;
 }
@@ -192,7 +192,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt )
     }
     opt->extra_cb.source = NULL;
   }
-  if ( opt->has_value > 0 )
+  if ( opt->has_value > 0 )                                          /* no matter for opt->has_value == 1 , i.e. may be replaced with "> 1" */
     osrc->curarg += opt->has_value - 1;
 /* TODO additional actions here !! */
   rRET;
@@ -203,9 +203,7 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
 {
   rDECLBAD;
 
-  const char *arg_nopref = optscan->arg + optscan->preflen;
-
-  rC( mucs_config_option_tablist_lookup( tablist, arg_nopref, osrc->eq, optscan ) );
+  rC( mucs_config_option_tablist_lookup( tablist, optscan->at_arg, osrc->eq, optscan ) );
   rC( mucs_source_dealias_opt( osrc, tablist, optscan->found_topt, optscan ) );
   if ( rGOOD )
   {
@@ -224,7 +222,7 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
           rC( mucs_config_option_set_value( opt, optscan->string_value ) );
           if ( rGOOD )
           {
-            if ( opt->callback && !opt->argptr )
+            if ( opt->callback && !opt->cust_ptr )
             {
               opt->extra_cb.tablist = tablist;
               opt->extra_cb.source = osrc;
@@ -247,10 +245,11 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
   rRET;
 }
 
-int
-mucs_source_lookup_optscan( mucs_source_t * osrc, mucs_optscanner_t * optscan, const mucs_option_table_list_t * tablist )
+static int
+mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
+  optscan->at_arg = optscan->arg + optscan->preflen;
   if ( optscan->variantid == MUCS_VARIANT_BAD )
   {
 #if 0
@@ -260,36 +259,38 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, mucs_optscanner_t * optscan, c
   }
   else if ( optscan->variantid == MUCS_VARIANT_NONOPT )
   {
-    mas_add_argvc_arg( &osrc->targno, optscan->arg + optscan->preflen );
+    mas_add_argvc_arg( &osrc->targno, optscan->at_arg );
     rSETGOOD;
   }
   else
   {
     if ( osrc->curarg < osrc->targ.argc - 1 )
       optscan->nextarg = osrc->targ.argv[osrc->curarg + 1];
-    rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
+    do
+    {
+      rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
+    } while ( optscan->at_arg );
   /* TODO if 
    *       1. unrecognized option
    *       2. do not stop on error flag
    *         then -- add unrecognized option as MUCS_VARIANT_NONOPT (or something else !?)
    * */
+
   }
   rRET;
 }
 
-int
-mucs_source_lookup_arg( mucs_source_t * osrc, const char *arg, const mucs_option_table_list_t * tablist )
+static int
+mucs_source_lookup_arg( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
-  mucs_variant_t vid = max_match_id( osrc, arg );
+  mucs_variant_t vid = max_match_id( osrc, optscan->arg );
 
 /* max_match_id: determine variant by prefix */
-  mucs_optscanner_t optscan = {
-    .arg = arg,
-    .variantid = vid,
-    .preflen = osrc->pref_ids[vid].string ? strlen( osrc->pref_ids[vid].string ) : 0,
-  };
-  rC( mucs_source_lookup_optscan( osrc, &optscan, tablist ) );
+
+  optscan->variantid = vid;
+  optscan->preflen = osrc->pref_ids[vid].string ? strlen( osrc->pref_ids[vid].string ) : 0;
+  rC( mucs_source_lookup_optscan( osrc, tablist, optscan ) );
   rRET;
 }
 
@@ -305,7 +306,11 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
   for ( osrc->curarg = 0; osrc && !masregerrs_count_all_default( NULL, TRUE ) && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
   {
     nargs++;
-    rC( mucs_source_lookup_arg( osrc, osrc->targ.argv[osrc->curarg], tablist ) );
+    mucs_optscanner_t optscan = {
+      .arg = osrc->targ.argv[osrc->curarg],
+    };
+
+    rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
   }
   if ( rGOOD )
     rCODE = nargs;
@@ -344,14 +349,14 @@ mucs_source_lookup( mucs_source_t * osrc, const mucs_option_table_list_t * tabli
   rRET;
 }
 
-unsigned long
+mucs_flags_t
 mucs_source_flags( mucs_source_t * osrc )
 {
   return osrc ? osrc->flags : 0L;
 }
 
 int
-mucs_source_flag( mucs_source_t * osrc, unsigned long mask )
+mucs_source_flag( mucs_source_t * osrc, mucs_flags_t mask )
 {
   return osrc && ( ( osrc->flags & mask ) ? 1 : 0 );
 }

@@ -97,11 +97,14 @@ int
 dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
   rDECLGOOD;
+  mucs_flags_t work_opt_flags = 0;
   long app_flags = 0x00ffff1111111111L;
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
     {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_VALUE}, /* */
+    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.argptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB},
+    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.argptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS},
     {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
@@ -127,7 +130,7 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
       mas_free( p );
     }
 #endif
-
+    WARN( "%lx: %d %d", work_opt_flags, ( work_opt_flags & MASXFS_CB_MODE_FS ) ? 1 : 0, ( work_opt_flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
   /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_FS ) ); */
     rC( tree( real_path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil, MASXFS_CB_MODE_DB ) );
   }

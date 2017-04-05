@@ -48,7 +48,7 @@ mucs_config_option_interface_callback( mucs_option_t * opt )
 
 const mucs_option_t mucs_interface_options[] = {
   {.name = "mucs-include",.shortn = '\0',.restype = MUCS_RTYP_STRING,.callback = mucs_config_option_interface_callback},
-  {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+  {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
 };
 
 void

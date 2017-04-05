@@ -165,40 +165,40 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS 4 + 2 + 1
 
   mucs_option_t options[] = {
-    {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING, .argptr= &v_string1}
+    {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string1}
     , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING}
-    , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING, .argptr= &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
+    , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
     , {.name = "string4",.shortn = 'x',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_NO_COMMON_CB | MUCS_FLAG_NO_TYPE_CB}
-    , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG, .argptr= &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "cnum0",.shortn = '\0',.restype = MUCS_RTYP_CHAR, .argptr= &v_char0}
-    , {.name = "snum0",.shortn = '\0',.restype = MUCS_RTYP_SHORT, .argptr= &v_short0}
-    , {.name = "num0",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int0}
-    , {.name = "num1",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int1}
-    , {.name = "num2",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int2}
-    , {.name = "num3",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int3}
-    , {.name = "num4",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_int4}
+    , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG, .cust_ptr= &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "cnum0",.shortn = '\0',.restype = MUCS_RTYP_CHAR, .cust_ptr= &v_char0}
+    , {.name = "snum0",.shortn = '\0',.restype = MUCS_RTYP_SHORT, .cust_ptr= &v_short0}
+    , {.name = "num0",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int0}
+    , {.name = "num1",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int1}
+    , {.name = "num2",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int2}
+    , {.name = "num3",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int3}
+    , {.name = "num4",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int4}
     , {.name = "num5",.shortn = '\0',.restype = MUCS_RTYP_INT,.callback = num5callback}
-    , {.name = "lnum0",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long0}
-    , {.name = "lnum1",.shortn = '\0',.restype = MUCS_RTYP_INT, .argptr= &v_long1}
-    , {.name = "lnum2",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long2}
-    , {.name = "lnum3",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long3}
-    , {.name = "lnum4",.shortn = '\0',.restype = MUCS_RTYP_LONG, .argptr= &v_long4}
-    , {.name = "llnum0",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong0}
-    , {.name = "llnum1",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong1}
-    , {.name = "llnum2",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong2}
-    , {.name = "llnum3",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong3}
-    , {.name = "llnum4",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .argptr= &v_llong4}
-    , {.name = "pi",.shortn = '\0',.restype = MUCS_RTYP_DOUBLE, .argptr= &v_double0}
-    , {.name = "longpi",.shortn = '\0',.restype = MUCS_RTYP_LDOUBLE, .argptr= &v_ldouble0}
-    , {.name = "bwi",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .argptr= &bitwise1, 0, "bitwise", "value"}
-    , {.name = "bwi+",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .argptr= &bitwise2, 0, "bitwise", "value"}
-    , {.name = "bwi-",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .argptr= &bitwise3, 0, "bitwise", "value"}
-    , {.name = "bwix",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .argptr= &bitwise4, 0, "bitwise", "value"}
-    , {.name = "bwix1",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .argptr= &bitwise5, 0, "bitwise", "value"}
+    , {.name = "lnum0",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long0}
+    , {.name = "lnum1",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_long1}
+    , {.name = "lnum2",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long2}
+    , {.name = "lnum3",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long3}
+    , {.name = "lnum4",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long4}
+    , {.name = "llnum0",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong0}
+    , {.name = "llnum1",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong1}
+    , {.name = "llnum2",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong2}
+    , {.name = "llnum3",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong3}
+    , {.name = "llnum4",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong4}
+    , {.name = "pi",.shortn = '\0',.restype = MUCS_RTYP_DOUBLE, .cust_ptr= &v_double0}
+    , {.name = "longpi",.shortn = '\0',.restype = MUCS_RTYP_LDOUBLE, .cust_ptr= &v_ldouble0}
+    , {.name = "bwi",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .cust_ptr= &bitwise1, 0, "bitwise", "value"}
+    , {.name = "bwi+",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .cust_ptr= &bitwise2, 0, "bitwise", "value"}
+    , {.name = "bwi-",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .cust_ptr= &bitwise3, 0, "bitwise", "value"}
+    , {.name = "bwix",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .cust_ptr= &bitwise4, 0, "bitwise", "value"}
+    , {.name = "bwix1",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .cust_ptr= &bitwise5, 0, "bitwise", "value"}
     , {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT}
 
-    , {.name = NULL,.shortn = '\0',.restype = 0,.argptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = '\0',.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 #if 0
   mucs_option_table_list_t *test_tablist = mucs_config_option_tablist_create_setup( "test-table", options, sizeof( options ) / sizeof( options[0] ) );

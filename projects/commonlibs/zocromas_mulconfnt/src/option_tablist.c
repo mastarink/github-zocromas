@@ -26,6 +26,7 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
 {
   rDECLBAD;
   optscan->found_topt = NULL;
+/* optscan->at_arg = NULL; */
   if ( tablist )
   {
 #if 0
@@ -45,7 +46,11 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
     if ( !optscan->found_topt )
     {
       rSETBAD;
-      QRGSRCM( osrc, rCODE, "unrecognized option \"%s\"", optscan->arg );
+      if ( optscan->at_arg )
+        QRGSRCM( osrc, rCODE, "unrecognized option \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
+      else
+        QRGSRCM( osrc, rCODE, "unrecognized option at \"%s\"", optscan->arg );
+      optscan->at_arg = NULL;
     }
   }
   rRET;
