@@ -9,6 +9,9 @@ sfind parse.c
 tab sfind tools.h
 sfind tools.c
 
+tab sfind global.h
+sfind global.c
+
 tab sfind source_defaults.h
 sfind source_defaults.c
 

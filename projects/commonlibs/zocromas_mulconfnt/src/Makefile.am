@@ -5,6 +5,7 @@ lib_LTLIBRARIES = libzocromas_mulconfnt.la
 libzocromas_mulconfnt_la_SOURCES = \
 	parse.c \
 	tools.c \
+	global.c \
 	source_defaults.c \
 	source_list_base.c \
 	source_list.c \

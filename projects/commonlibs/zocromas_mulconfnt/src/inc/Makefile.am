@@ -4,6 +4,8 @@ libzocromas_mulconfntinclude_HEADERS =  \
 	mulconfnt_types.h \
 	mulconfnt_structs.h \
 	mulconfnt_enums.h \
+	tools.h \
+	global.h \
 	source_defaults.h \
 	source_list_base.h \
 	source_list.h \

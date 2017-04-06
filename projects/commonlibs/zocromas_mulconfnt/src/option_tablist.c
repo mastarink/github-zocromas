@@ -10,6 +10,8 @@
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
+
 #include "option.h"
 #include "option_base.h"
 
@@ -51,6 +53,9 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
       else
         QRGSRCM( osrc, rCODE, "unrecognized option at \"%s\"", optscan->arg );
       optscan->at_arg = NULL;
+      if ( mucs_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED ) )
+        rSETGOOD;
+      WARN( "rCODE:%d", rCODE );
     }
   }
   rRET;

@@ -126,6 +126,7 @@ struct mucs_optscanner_s
   const char *arg;
   const char *at_arg;
   int preflen;
+  const mucs_source_t *source;
   mucs_variant_t variantid;
   int has_value;
   const char *string_value;

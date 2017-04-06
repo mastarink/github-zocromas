@@ -250,6 +250,7 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
 {
   rDECLBAD;
   optscan->at_arg = optscan->arg + optscan->preflen;
+  optscan->source = osrc;
   if ( optscan->variantid == MUCS_VARIANT_BAD )
   {
 #if 0
@@ -303,7 +304,7 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
   rC( mucs_source_load_targ( osrc ) );
   osrc->lastoptpos = 0;
 
-  for ( osrc->curarg = 0; osrc && !masregerrs_count_all_default( NULL, TRUE ) && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
+  for ( osrc->curarg = 0; osrc && rGOOD /*!masregerrs_count_all_default( NULL, TRUE ) */  && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
   {
     nargs++;
     mucs_optscanner_t optscan = {
@@ -311,6 +312,7 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
     };
 
     rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
+    WARN( "(%d) arg:%s", rCODE, optscan.arg );
   }
   if ( rGOOD )
     rCODE = nargs;

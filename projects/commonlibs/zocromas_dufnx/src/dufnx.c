@@ -102,10 +102,10 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_VALUE}, /* */
-    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.argptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB},
-    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.argptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS},
-    {.name = NULL,.shortn = 0,.restype = 0,.argptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
+    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB},
+    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS},
+    {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
   mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options, TRUE );
