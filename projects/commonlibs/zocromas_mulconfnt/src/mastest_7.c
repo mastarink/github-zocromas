@@ -34,12 +34,14 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   const char *xargv[] = {
     argv[0],
     "something",
-    "-oO",
-    "-nN",
-  /* "-Aa", */
-    "--and1", "--and2",
+    "-oO",                                                           /* --or2 --or1 */
+    "--wrong",
+    "-n -N",                                                         /* --nand2 --nand1 */
+    "--and1", "--and2",                                              /* -Aa */
     "--and1a --and2a",
+    "-Z",
     "wow",
+    "--and1--and2",
     "--",
     "--nand3",
     "--this-is-not-an-option1=345",
@@ -61,11 +63,11 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
     {"or2", 'o', MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &app_uflags_or,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags_or",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"and1", 'A', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_and",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"and2", 'a', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {"and1a", '\0', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {"and2a", '\0', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"and1a", '1', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"and2a", '2', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand1", 'N', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand2", 'n', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {"nand3", '\0', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0xfff,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"nand3", '3', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0xfff,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT},           /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
@@ -79,16 +81,14 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
 #if 0
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
-#endif
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST7_ENV" );
-#if 0
   mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
 #endif
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, xargc, xargv );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
 
   mucs_option_interface_lookup_all( interface );
-  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
+  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 3, "ERRORS: %d ? %d" );
   mucs_config_option_interface_delete( interface );
   interface = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -100,7 +100,9 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_nand, 0xfffffffffffffafaL, "app_uflags_nand=%lx ? %lx" );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 3, "ERRORS: %d ? %d" );
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
   return 0;
 }

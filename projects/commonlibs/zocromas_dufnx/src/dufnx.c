@@ -102,9 +102,11 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
-    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB},
-    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS},
+    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong =
+     MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
+    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong =
+     MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
@@ -119,8 +121,8 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 
   /*******/
   {
-    const char *real_path = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest";
-    FILE *fil = stdout;
+    const char *real_path _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest";
+    FILE *fil _uUu_ = stdout;
 
 #if 0
     {
@@ -130,9 +132,9 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
       mas_free( p );
     }
 #endif
-    WARN( "%lx: %d %d", work_opt_flags, ( work_opt_flags & MASXFS_CB_MODE_FS ) ? 1 : 0, ( work_opt_flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
+    WARN( "(%d) %lx: %d %d", rCODE, work_opt_flags, ( work_opt_flags & MASXFS_CB_MODE_FS ) ? 1 : 0, ( work_opt_flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
   /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_FS ) ); */
-    rC( tree( real_path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil, MASXFS_CB_MODE_DB ) );
+  /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_DB ) ); */
   }
   /*******/
 

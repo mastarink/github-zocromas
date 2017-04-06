@@ -270,7 +270,7 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
     do
     {
       rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
-    } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg );
+    } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg && !strchr( " \t", *optscan->at_arg ) );
   /* TODO if 
    *       1. unrecognized option
    *       2. do not stop on error flag
@@ -318,7 +318,7 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
         while ( *optscan.at_arg && strchr( " \t", *optscan.at_arg ) )
           optscan.at_arg++;
       rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
-    } while ( optscan.variantid == MUCS_VARIANT_LONG && optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
+    } while (  /*optscan.variantid == MUCS_VARIANT_LONG && */ optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
   }
   if ( rGOOD )
     rCODE = nargs;
