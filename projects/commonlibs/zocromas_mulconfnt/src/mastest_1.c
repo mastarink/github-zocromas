@@ -259,7 +259,6 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     if ( osrc && osrc->oldtarg.argc )
 
     masexam_next_group(  );
-  /* EXAM( ( mucs_error_source( osrc ) ), 0, "osrc: %d ? %d" ); */
     EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
 
     masexam_next_group(  );

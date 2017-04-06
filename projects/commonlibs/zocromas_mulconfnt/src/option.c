@@ -321,7 +321,6 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->string_value );
       v_x.v_ulong_long = 0;
     }
-  /* WARN( "A %lx ::: %lx", opt->nvalue.v_ulong, v_x.v_ulong ); */
     if ( opt->restype & MUCS_RTYP_BW_AND )
       opt->nvalue.v_ulong &= ( unsigned long ) v_x.v_ulong_long;
     else if ( opt->restype & MUCS_RTYP_BW_OR )
@@ -330,7 +329,6 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
       opt->nvalue.v_ulong ^= ( unsigned long ) v_x.v_ulong_long;
     else
       opt->nvalue.v_ulong = ( unsigned long ) v_x.v_ulong_long;
-  /* WARN( "B %lx ::: %lx", opt->nvalue.v_ulong, v_x.v_ulong ); */
     break;
   case MUCS_RTYP_LONG_LONG:
     if ( opt->restype & MUCS_RTYP_BW_AND )
@@ -467,7 +465,6 @@ mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * o
           argp += leq;
         else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) || !strchr( " \t", *argp ) )
           argp = NULL;
-        /* WARN( "%s -- %s", arg_nopref, argp ); */
       }
       else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
         argp = NULL;
@@ -482,7 +479,6 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
   rDECLGOOD;
   const mucs_option_t *topt = optscan->found_topt;
 
-/* found = 1; */
   if ( optscan->force_value )                                        /* use force_value for alias inheritance (only!?) */
   {
   /* B. "--opt" ( + forced value )  */
@@ -496,9 +492,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
     int opt_val = mucs_config_option_flag( topt, MUCS_FLAG_OPTIONAL_VALUE );
     int use_def_string = mucs_config_option_flag( topt, MUCS_FLAG_USE_DEF_SVALUE );
     int use_def_nvalue = mucs_config_option_flag( topt, MUCS_FLAG_USE_DEF_NVALUE );
-
-    while ( *ep && strchr( " \t", *ep ) )
-      ep++;
+    int word _uUu_ = strchr( " \t", *ep ) ? 1 : 0;
 
     if ( *ep )
     {
@@ -509,7 +503,8 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
         QRGOPTM( topt, rCODE, "unexpected value given for \"-%c\" option (short)", topt->shortn );
         optscan->has_value = 1;
         optscan->string_value = ep;
-      /* found = -found; */
+        while ( *optscan->string_value && strchr( " \t", *optscan->string_value ) )
+          optscan->string_value++;
       }
       else
       {
@@ -524,10 +519,10 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
           else if ( use_def_nvalue )
           {
             optscan->has_value = 1;                                  /* ??? */
-            if ( optscan->variantid == MUCS_VARIANT_SHORT /* && strchr( " \t", *ep ) */  )
+            if ( optscan->variantid == MUCS_VARIANT_SHORT || ( optscan->variantid == MUCS_VARIANT_LONG && word ) )
             {
               optscan->at_arg = ep;
-            /* WARN( "** New arg: %s", optscan->arg ); */
+            /* WARN( "** New arg: %s", optscan->at_arg ); */
             }
           }
         }
@@ -576,10 +571,9 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
         {
           rSETBAD;
           if ( optscan->variantid == MUCS_VARIANT_SHORT )
-            QRGOPTM( opt, rCODE, "no value given for \"-%c\" option (short)", topt->shortn );
+            QRGOPTM( optscan->found_topt, rCODE, "no value given for \"-%c\" option (short)", topt->shortn );
           else if ( optscan->variantid == MUCS_VARIANT_LONG )
-            QRGOPTM( opt, rCODE, "no value given for \"--%s\" option", topt->name ); /* !none_value && !has_value */
-        /* found = -found; */
+            QRGOPTM( optscan->found_topt, rCODE, "no value given for \"--%s\" option", topt->name ); /* !none_value && !has_value */
         }
       }
     }
@@ -591,7 +585,6 @@ int
 mucs_config_option_lookup_option_table( const mucs_option_t * option_table, const char *arg_nopref, const char *eq, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
-/* int found = 0; */
 
   if ( option_table )
   {
@@ -604,7 +597,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
 
         if ( ep )
         {
-        /* WARN( "[%p] '%s'=>%d", option_table, arg_nopref, ( ep ? ( int ) ( ep - arg_nopref ) : -1 ) ); */
           optscan->at_arg = NULL;
           optscan->found_topt = topt;
           rC( mucs_config_option_validate( ep, optscan ) );
@@ -612,7 +604,6 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
       }
     }
   }
-/* return optscan->found_topt; */
   rRET;
 }
 

@@ -249,7 +249,7 @@ static int
 mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
-  optscan->at_arg = optscan->arg + optscan->preflen;
+  optscan->at_arg += optscan->preflen;
   optscan->source = osrc;
   if ( optscan->variantid == MUCS_VARIANT_BAD )
   {
@@ -270,7 +270,7 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
     do
     {
       rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
-    } while ( optscan->at_arg );
+    } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg );
   /* TODO if 
    *       1. unrecognized option
    *       2. do not stop on error flag
@@ -285,7 +285,7 @@ static int
 mucs_source_lookup_arg( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan )
 {
   rDECLBAD;
-  mucs_variant_t vid = max_match_id( osrc, optscan->arg );
+  mucs_variant_t vid = max_match_id( osrc, optscan->at_arg );
 
 /* max_match_id: determine variant by prefix */
 
@@ -310,9 +310,15 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
     mucs_optscanner_t optscan = {
       .arg = osrc->targ.argv[osrc->curarg],
     };
-
-    rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
-    WARN( "(%d) arg:%s", rCODE, optscan.arg );
+    optscan.at_arg = optscan.arg;
+    do
+    {
+    /* optscan.at_arg = mas_skip_space_nz( optscan.at_arg ); */
+      if ( optscan.at_arg )
+        while ( *optscan.at_arg && strchr( " \t", *optscan.at_arg ) )
+          optscan.at_arg++;
+      rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
+    } while ( optscan.variantid == MUCS_VARIANT_LONG && optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
   }
   if ( rGOOD )
     rCODE = nargs;
@@ -412,7 +418,6 @@ mucs_source_wd( const mucs_source_t * osrc )
         if ( errno )
         {
           rSETBAD;
-        /* WARN( "(%s) path:%s", strerror( errno ), path ); */
           QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), p );
         }
         else
@@ -435,7 +440,6 @@ mucs_source_wd( const mucs_source_t * osrc )
         if ( errno )
         {
           rSETBAD;
-        /* WARN( "(%s) path:%s", strerror( errno ), path ); */
           QRGSRCM( osrc, rCODE, "%s: %s", strerror( errno ), p );
         }
         else

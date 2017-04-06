@@ -47,6 +47,7 @@ mastest_SOURCES= \
 	mastest_4.c \
 	mastest_5.c \
 	mastest_6.c \
+	mastest_7.c \
 	mastest_popt1.c \
 	mastest_popt.c
 else

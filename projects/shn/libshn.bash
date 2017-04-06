@@ -56,6 +56,7 @@ function shn_code ()
       shift
     ;;
     r)
+      tmux send-keys -R  \; clear-history
       shn_run "$@" || { retcode=$? ; shn_errmsg "shn ${code} r:$retcode" ; }
     ;;
     g)

@@ -49,13 +49,12 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
     {
       rSETBAD;
       if ( optscan->at_arg )
-        QRGSRCM( osrc, rCODE, "unrecognized option \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
+        QRGOPTM( optscan->found_topt, rCODE, "unrecognized option \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
       else
-        QRGSRCM( osrc, rCODE, "unrecognized option at \"%s\"", optscan->arg );
+        QRGOPTM( optscan->found_topt, rCODE, "unrecognized option at \"%s\"", optscan->arg );
       optscan->at_arg = NULL;
       if ( mucs_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED ) )
         rSETGOOD;
-      WARN( "rCODE:%d", rCODE );
     }
   }
   rRET;

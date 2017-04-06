@@ -108,6 +108,7 @@ main( int argc, const char *argv[] )
   int test_4( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_7( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_manual_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
@@ -129,25 +130,16 @@ main( int argc, const char *argv[] )
     {TRUE, test_4, 4, ""},
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
-    {FALSE, test_manual_0, 7, "manual_0"},
-    {TRUE, test_manual, 7, "manual"},
+    {TRUE, test_7, 7, ""},
+    {FALSE, test_manual_0, 8, "manual_0"},
+    {TRUE, test_manual, 8, "manual"},
     {0}
   };
   masexam_test( argc, argv, funlist );
-#define TOTAL_TESTS 350 - 1
+#define TOTAL_TESTS 360 - 1
 /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
   EXAM( masexam_tests_count(  ), TOTAL_TESTS, "tests_count=%d ? %d" );
-#if 0
-  WARN( "MAS_CONFIG_PREFIX:%s;", MAS_CONFIG_PREFIX );
-  WARN( "MAS_CONFIG_SYSCONFDIR:%s;", MAS_CONFIG_SYSCONFDIR );
-  WARN( "MAS_SYSCONFDIR:%s;", MAS_SYSCONFDIR );
-  WARN( "MAS_DATADIR:%s;", MAS_DATADIR );
-  {
-    const mucs_source_t *osrc = mucs_source_default( MUCS_SOURCE_LIBCONFIG );
 
-    WARN( "MUCS_SOURCE_LIBCONFIG data_ptr:%s", ( char * ) osrc->data_ptr );
-  }
-#endif
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

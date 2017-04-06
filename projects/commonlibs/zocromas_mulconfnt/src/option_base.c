@@ -22,6 +22,7 @@
  *
  * */
 
+
 void
 mucs_config_option_init( mucs_option_t * opt )
 {
