@@ -68,6 +68,8 @@ function shn_build_xcommand ()
 	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MSH_SHN_DIRS[error]}" ]] && [[ -d "${MSH_SHN_DIRS[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 #	  echo "$cmd $@ @ $(pwd)" >&2
+	  shn_msg "-=<pwd:$(pwd)>=-"
+	  shn_msg "-=<$cmd $@>=-"
 	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
 	    shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_FULLNAME] ok"
@@ -83,8 +85,8 @@ function shn_build_xcommand ()
 	  shn_errmsg 2 "cmd_base:$cmd_base; cmt:$cmd; errname:$errname; $@ # [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
 	  ! [[ "$cmd" ]]                      && shn_errmsg 2.1 $cmd
 	  ! [[ "$errname" ]]                  && shn_errmsg 2.2 $errname
-	  ! [[ "${MSH_SHN_DIRS[error]}" ]]     && shn_errmsg 2.3 ${MSH_SHN_DIRS[error]}
-	  ! [[ -d "${MSH_SHN_DIRS[error]}" ]]  && shn_errmsg 2.4 ${MSH_SHN_DIRS[error]}
+	  ! [[ "${MSH_SHN_DIRS[error]}" ]]    && shn_errmsg 2.3 ${MSH_SHN_DIRS[error]}
+	  ! [[ -d "${MSH_SHN_DIRS[error]}" ]] && shn_errmsg 2.4 ${MSH_SHN_DIRS[error]}
 	  ! [[ -x "$cmd" ]]                   && shn_errmsg 2.5 $cmd
 	  retcode=1
 	fi
@@ -185,7 +187,11 @@ function shn_installed_list ()
 function shn_build_common_make ()
 {
 # shn_build_xcommand make -s $@ && shn_msgns common make $@ ok || return $?
-  shn_build_xcommand make -s $@ && shn_msgns . || return $?
+  if true ; then
+    shn_build_xcommand make -C "${MSH_SHN_DIRS[build]}" -s $@ || return $?
+  else
+    shn_build_xcommand make -C "${MSH_SHN_DIRS[build]}" -s $@ && shn_msgns "xcommand Ok" || return $?
+  fi
 }
 function shn_build_autoreconf ()
 {
@@ -202,6 +208,8 @@ function shn_build_autoreconf ()
     if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
       shn_dbgmsg start autoreconf -i $MSH_SHN_PROJECT_DIR
       errname="${MSH_SHN_DIRS[error]}/shn_build_autoreconf.${MSH_SHN_PROJECT_NAME}.result"
+      shn_msg "-=<pwd:$(pwd)>=-"
+      shn_msg "-=<autoreconf -i $MSH_SHN_PROJECT_DIR>=-"
       shn_msg "see $errname"
       autoreconf -i $MSH_SHN_PROJECT_DIR &>$errname && shn_msgns autoconf ok || { retcode=$? ; }
       shn_msg "see $errname"
@@ -371,14 +379,14 @@ function shn_build_distclean ()
 function shn_build_install ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:install]=`datemt`
-  shn_build_common_make install && shn_msgns installed
+  shn_build_common_make install && shn_msgns "install ok"
   shn_mark_touch ${FUNCNAME}
   return 0
 }
 function shn_build_uninstall ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:uninstall]=`datemt`
-  shn_build_common_make uninstall && shn_msgns uninstalled
+  shn_build_common_make uninstall && shn_msgns "uninstall ok"
   shn_mark_touch ${FUNCNAME}
   return 0
 }

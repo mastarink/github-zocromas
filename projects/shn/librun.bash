@@ -78,7 +78,7 @@ function shn_human_run ()
   fi
   {
     if pushd $MSH_SHN_CWD  &>/dev/null ; then
-      shn_msg "-=<eval>=-"
+      shn_msg "-=<eval $bin $qargs>=-"
       eval "time $bin $qargs" ; retcode=$?
       shn_msg "-=</eval $retcode>=-"
       popd  &>/dev/null

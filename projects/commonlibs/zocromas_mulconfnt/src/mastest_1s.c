@@ -127,7 +127,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     FILE *f;
     char fname[128];
 
-    snprintf( fname, sizeof( fname ), "mastest_%d%s.commands", nseries, series_suffix );
+    snprintf( fname, sizeof( fname ), "test/mastest_%d%s.commands", nseries, series_suffix );
     f = fopen( fname, "w" );
     if ( f )
     {
@@ -152,7 +152,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       FILE *f;
       char fname[128];
 
-      snprintf( fname, sizeof( fname ), "mastest_%d%s.args", nseries, series_suffix );
+      snprintf( fname, sizeof( fname ), "test/mastest_%d%s.args", nseries, series_suffix );
       f = fopen( fname, "w" );
       if ( f )
       {
