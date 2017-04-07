@@ -113,7 +113,7 @@ main( int argc, const char *argv[] )
   int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
   masexam_do_t funlist[] _uUu_ = {
-    {0, test_popt, 0, "popt"},
+    {0, test_popt, 0, "popt",.stdin_text = NULL},
     {0, test_popt1, 1, "popt"},
     {FALSE, test_0, 0, ""},
 
@@ -130,17 +130,74 @@ main( int argc, const char *argv[] )
     {TRUE, test_4, 4, ""},
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
-    {TRUE, test_7, 7, ""},
+    {TRUE, test_7, 7, "",.stdin_text = "and1b:and2b"}, /* !! */
     {FALSE, test_manual_0, 8, "manual_0"},
     {TRUE, test_manual, 8, "manual"},
     {0}
   };
   masexam_test( argc, argv, funlist );
-#define TOTAL_TESTS 362 - 1
+#define TOTAL_TESTS 363 - 1
 /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
   EXAM( masexam_tests_count(  ), TOTAL_TESTS, "tests_count=%d ? %d" );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+#if 0
+  {
+    int filedes[2];                                                  /* pipe */
+    int file_rd = fileno( stdin );                                   /* filedescriptor = 0 */
+    int file_wr = fileno( stdout );                                  /* filedescriptor = 1 */
+    int pipe_rd;
+    int pipe_wr;
+
+    int saved[2] _uUu_ = { dup( file_rd ), dup( file_wr ) };
+
+    pipe( filedes );
+
+    pipe_wr = filedes[1];
+    pipe_rd = filedes[0];
+  /* */
+
+    if ( fork(  ) )
+    {
+      int saved _uUu_ = dup( file_rd );
+      char ch;
+
+    /* child */
+    /* stdin replaced by pipe output */
+      dup2( pipe_rd, file_rd );
+
+      close( pipe_wr );                                              /* close part of pipe unneeded */
+
+      while ( ( ch = fgetc( stdin ) ) > 0 )
+      {
+      /* fprintf(stderr, "c=%c\n",ch); */
+        fprintf( stdout, "%d : (%c)", fileno( stdout ), ch );
+      }
+
+      close( pipe_rd );
+    /* close(file_rd); */
+    /* close(file_wr); */
+      dup2( saved, file_rd );
+    }
+    else
+    {
+      int saved _uUu_ = dup( file_wr );
+
+    /* parent */
+    /* stdout replaced by pipe input */
+      dup2( pipe_wr, file_wr );
+
+      close( pipe_rd );                                              /* close part of pipe unneeded */
+
+      fprintf( stdout, "%s", "A Hello world\n" );
+      close( pipe_wr );
+    /* close(file_rd); */
+    /* close(file_wr); */
+      fflush( stdout );
+      dup2( saved, file_wr );
+    }
+  }
+#endif
   return 0;
 }

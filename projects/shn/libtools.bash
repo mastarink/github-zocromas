@@ -38,9 +38,9 @@ function shn_msg ()
 	nocolor=yes
       fi
       if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
-        shn_echo "$(date '+%s.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
+        shn_echo "$(date '+%Y%m%d.%H%M%S.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
       else
-        shn_echo "$(date '+%s.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
+        shn_echo "$(date '+%Y%m%d.%H%M%S.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
       fi
     else
       shn_echo >&2
@@ -56,9 +56,9 @@ function shn_msgn ()
 	nocolor=yes
       fi
       if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
-        shn_echon "$(date '+%s.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
+        shn_echon "$(date '+%Y%m%d.%H%M%S.%N') ${MSH_SHN_MSG_PREFIX} $*"  >&2
       else
-        shn_echon "$(date '+%s.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
+        shn_echon "$(date '+%Y%m%d.%H%M%S.%N') ${MSHPR_FBCYAN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBCYAN}${MSHPR_REVERSE}} $* ${MSHPR_ATTROFF}"  >&2
       fi
     else
       shn_echon >&2

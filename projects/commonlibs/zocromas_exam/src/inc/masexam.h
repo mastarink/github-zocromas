@@ -1,7 +1,12 @@
 #ifndef MAS_MASEXAM_H
 # define MAS_MASEXAM_H
 
+# define _uUu_ __attribute__(( unused ))
+
 typedef int ( *masexam_fun_t ) ( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+
+typedef struct masexam_call_s masexam_call_t;
+typedef struct masexam_do_s masexam_do_t;
 
 struct masexam_do_s
 {
@@ -16,8 +21,16 @@ struct masexam_do_s
   int beep_on_error;
   int assert_on_error;
   int variant;
+  const char *stdin_text;
 };
-typedef struct masexam_do_s masexam_do_t;
+struct masexam_call_s
+{
+  int argc;
+  const char **argv;
+  masexam_do_t *fundata;
+  int variant;
+  int iopipe[2];
+};
 
 int masexam_test( int argc, const char *argv[], masexam_do_t * funlist );
 
@@ -28,7 +41,7 @@ void masexam_next( void );
 long masexam_tests_count( void );
 
 /* for special mas_strcmp -- includes NULL's  */
-#include <mastar/tools/mas_arg_tools.h>
+# include <mastar/tools/mas_arg_tools.h>
 
 # define EXAMX( q, fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
     		(q), "OK", "Error", fmt, __VA_ARGS__ )

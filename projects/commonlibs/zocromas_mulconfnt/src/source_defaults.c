@@ -12,6 +12,7 @@
 
 #include <mastar/minierr/minierr.h>
 
+#include "global.h"
 #include "mulconfnt_structs.h"
 
 #include "source_defaults.h"
@@ -127,7 +128,8 @@ source_load_targ_stream( mucs_source_t * osrc, mas_argvc_t targ )
   {
     FILE *fin = ( FILE * ) osrc->data_ptr;
 
-    targ = source_load__targ_stream( fin, osrc, targ, NULL );
+    if ( mucs_global_flag( MUCS_FLAG_USE_TTY ) || !isatty( fileno( fin ) ) )
+      targ = source_load__targ_stream( fin, osrc, targ, NULL );
   }
 
   return targ;
@@ -405,8 +407,13 @@ constructor_main(  )
 {
   FILE *f = stdin;
 
-  if ( isatty( fileno( f ) ) )
+#if 0
+  int is_a_tty = isatty( fileno( f ) );
+
+  WARN( "is_a_tty:%d", is_a_tty );
+  if ( is_a_tty )
     f = NULL;
+#endif
   default_sources[MUCS_SOURCE_STDIN].data_ptr = ( const void * ) f;
 }
 

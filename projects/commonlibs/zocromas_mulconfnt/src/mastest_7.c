@@ -56,6 +56,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   unsigned long app_uflags_or _uUu_ = 0x0L;
   unsigned long app_uflags_and _uUu_ = ~0x0L;
   unsigned long app_uflags_and_a _uUu_ = ~0x0L;
+  unsigned long app_uflags_and_b _uUu_ = ~0x0L;
   unsigned long app_uflags_nand _uUu_ = ~0x0L;
 
   mucs_option_t options[] = {
@@ -65,6 +66,8 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
     {"and2", 'a', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"and1a", '1', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"and2a", '2', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_a,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and_a",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"and1b", '\0', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_b,.def_nvalue.v_ulong = 0x701,.val = 0, "app_uflags_and_b",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"and2b", '\0', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND, &app_uflags_and_b,.def_nvalue.v_ulong = 0x104,.val = 0, "app_uflags_and_b",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand1", 'N', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand2", 'n', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand3", '3', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT, &app_uflags_nand,.def_nvalue.v_ulong = 0xfff,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
@@ -82,8 +85,8 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST7_ENV" );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
 #endif
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, xargc, xargv );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
 
@@ -96,6 +99,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_or, 0x505L, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_and, 0x100L, "app_uflags_and=%lx ? %lx" );
   EXAM( app_uflags_and_a, 0x100L, "app_uflags_and_a=%lx ? %lx" );
+  EXAM( app_uflags_and_b, 0x100L, "app_uflags_and_a=%lx ? %lx" );    /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
   EXAM( app_uflags_nand, ~( ( unsigned long ) 0x505L ), "app_uflags_nand=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xfffffffffffffafaL, "app_uflags_nand=%lx ? %lx" );
 
@@ -104,5 +108,6 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
+  WARN( "app_uflags_and_b:%lx", app_uflags_and_b );
   return 0;
 }
