@@ -426,49 +426,55 @@ mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
 const char *
 mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * optscan, const char *arg_nopref, const char *eq )
 {
-  unsigned lname = 0;
+  rDECLGOOD;
   const char *argp = NULL;
 
-  if ( optscan->variantid == MUCS_VARIANT_SHORT )
+  switch ( optscan->variantid )
   {
-    lname = 1;
-    argp = arg_nopref + lname;
-#if 1
+  case MUCS_VARIANT_SHORT:
     {
+      unsigned lname = 0;
+
+      lname = 1;
+      argp = arg_nopref + lname;
       if ( *arg_nopref != topt->shortn )
         argp = NULL;
-# if 0
-      else if ( strlen( arg_nopref ) != lname && !strchr( " \t", *argp ) )
-        argp = NULL;
-# endif
     }
-#else
+    break;
+  case MUCS_VARIANT_LONG:
     {
-      if ( !( ( *arg_nopref == topt->shortn ) && ( strlen( arg_nopref ) == lname || strchr( " \t", *argp ) ) ) )
-        argp = NULL;
-    }
-#endif
-  }
-  else if ( optscan->variantid == MUCS_VARIANT_LONG )
-  {
-    lname = strlen( topt->name );
-    if ( 0 == strncmp( topt->name, arg_nopref, lname ) )
-    {
-      argp = arg_nopref + lname;
-      if ( *argp )
-      {
-        unsigned leq = strlen( eq );
-        int with_eq = 0;
+      unsigned lname = 0;
 
-        with_eq = ( eq && 0 == strncmp( argp, eq, leq ) );
-        if ( with_eq )
-          argp += leq;
-        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) || !strchr( " \t", *argp ) )
+      lname = strlen( topt->name );
+      if ( 0 == strncmp( topt->name, arg_nopref, lname ) )
+      {
+        argp = arg_nopref + lname;
+        if ( *argp )
+        {
+          unsigned leq = strlen( eq );
+          int with_eq = 0;
+
+          with_eq = ( eq && 0 == strncmp( argp, eq, leq ) );
+          if ( with_eq )
+            argp += leq;
+          else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) || !strchr( " \t", *argp ) )
+            argp = NULL;
+        }
+        else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
           argp = NULL;
       }
-      else if ( mucs_config_option_flag( topt, MUCS_FLAG_NEED_EQ ) )
-        argp = NULL;
     }
+    break;
+  case MUCS_VARIANT_NONOPT:
+    if ( 0 == strcmp( topt->name, MUCS_NONOPT_NAME ) )
+      argp = arg_nopref;
+    break;
+  case MUCS_VARIANT_BAD:
+  case MUCS_VARIANT_IGNORE:
+  case MUCS_VARIANTS:
+    rSETBAD;
+    QRGOPTM( topt, rCODE, "unknown error \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
+    break;
   }
   return argp;
 }
@@ -591,7 +597,7 @@ mucs_config_option_lookup_option_table( const mucs_option_t * option_table, cons
     rSETGOOD;
     for ( const mucs_option_t * topt = option_table; rGOOD && topt->name; topt++ )
     {
-      if ( !optscan->found_topt || strlen( topt->name ) > strlen( optscan->found_topt->name ) )
+      if ( !optscan->found_topt || ( optscan->variantid == MUCS_VARIANT_LONG && strlen( topt->name ) > strlen( optscan->found_topt->name ) ) )
       {
         const char *ep = mucs_config_option_match_name( topt, optscan, arg_nopref, eq );
 

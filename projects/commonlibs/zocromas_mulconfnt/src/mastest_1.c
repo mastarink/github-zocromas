@@ -83,6 +83,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   char *v_string3 _uUu_ = NULL;
 
   mas_argvc_t v_targ0;
+  mas_argvc_t v_targ_n;
 
   char v_char0 = 0;
   short v_short0 = 0;
@@ -120,7 +121,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "--string0=lorem-ipsum",
     "--string1", "lorem ipsum",
     "--string2", "Phasellus congue bibendum magna",
-    /* TODO  "--string3 Something right here" */
+  /* TODO  "--string3 Something right here" */
     "--targ0=asta",
     "--cnum0=107",
     "--snum0=5437",
@@ -131,7 +132,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     "--num3=2147483647",
     "--num4=-2147483648",
     "--num5=1111111111",
-    /* "--num6=235234534253245345345324532453245324532453425324532453245235234534253245", */
+  /* "--num6=235234534253245345345324532453245324532453425324532453245235234534253245", */
     "--targ0=venenatis",
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
@@ -165,37 +166,38 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS 4 + 2 + 1
 
   mucs_option_t options[] = {
-    {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string1}
+    {.name = MUCS_NONOPT_NAME,.shortn = '\0',.restype = MUCS_RTYP_TARG,.cust_ptr = &v_targ_n,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string1}
     , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING}
-    , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING, .cust_ptr= &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
+    , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
     , {.name = "string4",.shortn = 'x',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_NO_COMMON_CB | MUCS_FLAG_NO_TYPE_CB}
-    , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG, .cust_ptr= &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
-    , {.name = "cnum0",.shortn = '\0',.restype = MUCS_RTYP_CHAR, .cust_ptr= &v_char0}
-    , {.name = "snum0",.shortn = '\0',.restype = MUCS_RTYP_SHORT, .cust_ptr= &v_short0}
-    , {.name = "num0",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int0}
-    , {.name = "num1",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int1}
-    , {.name = "num2",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int2}
-    , {.name = "num3",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int3}
-    , {.name = "num4",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_int4}
+    , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG,.cust_ptr = &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
+    , {.name = "cnum0",.shortn = '\0',.restype = MUCS_RTYP_CHAR,.cust_ptr = &v_char0}
+    , {.name = "snum0",.shortn = '\0',.restype = MUCS_RTYP_SHORT,.cust_ptr = &v_short0}
+    , {.name = "num0",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_int0}
+    , {.name = "num1",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_int1}
+    , {.name = "num2",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_int2}
+    , {.name = "num3",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_int3}
+    , {.name = "num4",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_int4}
     , {.name = "num5",.shortn = '\0',.restype = MUCS_RTYP_INT,.callback = num5callback}
-    , {.name = "lnum0",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long0}
-    , {.name = "lnum1",.shortn = '\0',.restype = MUCS_RTYP_INT, .cust_ptr= &v_long1}
-    , {.name = "lnum2",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long2}
-    , {.name = "lnum3",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long3}
-    , {.name = "lnum4",.shortn = '\0',.restype = MUCS_RTYP_LONG, .cust_ptr= &v_long4}
-    , {.name = "llnum0",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong0}
-    , {.name = "llnum1",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong1}
-    , {.name = "llnum2",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong2}
-    , {.name = "llnum3",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong3}
-    , {.name = "llnum4",.shortn = '\0',.restype = MUCS_RTYP_LLONG, .cust_ptr= &v_llong4}
-    , {.name = "pi",.shortn = '\0',.restype = MUCS_RTYP_DOUBLE, .cust_ptr= &v_double0}
-    , {.name = "longpi",.shortn = '\0',.restype = MUCS_RTYP_LDOUBLE, .cust_ptr= &v_ldouble0}
-    , {.name = "bwi",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .cust_ptr= &bitwise1, 0, "bitwise", "value"}
-    , {.name = "bwi+",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .cust_ptr= &bitwise2, 0, "bitwise", "value"}
-    , {.name = "bwi-",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .cust_ptr= &bitwise3, 0, "bitwise", "value"}
-    , {.name = "bwix",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .cust_ptr= &bitwise4, 0, "bitwise", "value"}
-    , {.name = "bwix1",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .cust_ptr= &bitwise5, 0, "bitwise", "value"}
+    , {.name = "lnum0",.shortn = '\0',.restype = MUCS_RTYP_LONG,.cust_ptr = &v_long0}
+    , {.name = "lnum1",.shortn = '\0',.restype = MUCS_RTYP_INT,.cust_ptr = &v_long1}
+    , {.name = "lnum2",.shortn = '\0',.restype = MUCS_RTYP_LONG,.cust_ptr = &v_long2}
+    , {.name = "lnum3",.shortn = '\0',.restype = MUCS_RTYP_LONG,.cust_ptr = &v_long3}
+    , {.name = "lnum4",.shortn = '\0',.restype = MUCS_RTYP_LONG,.cust_ptr = &v_long4}
+    , {.name = "llnum0",.shortn = '\0',.restype = MUCS_RTYP_LLONG,.cust_ptr = &v_llong0}
+    , {.name = "llnum1",.shortn = '\0',.restype = MUCS_RTYP_LLONG,.cust_ptr = &v_llong1}
+    , {.name = "llnum2",.shortn = '\0',.restype = MUCS_RTYP_LLONG,.cust_ptr = &v_llong2}
+    , {.name = "llnum3",.shortn = '\0',.restype = MUCS_RTYP_LLONG,.cust_ptr = &v_llong3}
+    , {.name = "llnum4",.shortn = '\0',.restype = MUCS_RTYP_LLONG,.cust_ptr = &v_llong4}
+    , {.name = "pi",.shortn = '\0',.restype = MUCS_RTYP_DOUBLE,.cust_ptr = &v_double0}
+    , {.name = "longpi",.shortn = '\0',.restype = MUCS_RTYP_LDOUBLE,.cust_ptr = &v_ldouble0}
+    , {.name = "bwi",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT,.cust_ptr = &bitwise1, 0, "bitwise", "value"}
+    , {.name = "bwi+",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR,.cust_ptr = &bitwise2, 0, "bitwise", "value"}
+    , {.name = "bwi-",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND,.cust_ptr = &bitwise3, 0, "bitwise", "value"}
+    , {.name = "bwix",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR,.cust_ptr = &bitwise4, 0, "bitwise", "value"}
+    , {.name = "bwix1",.shortn = '\0',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR,.cust_ptr = &bitwise5, 0, "bitwise", "value"}
     , {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT}
 
     , {.name = NULL,.shortn = '\0',.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
@@ -258,8 +260,8 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #endif
     if ( osrc && osrc->oldtarg.argc )
 
-    masexam_next_group(  );
-    EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), 0, "ERRORS: %d ? %d" );
+      masexam_next_group(  );
+    EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
 
     masexam_next_group(  );
     EXAMS( v_string0, "lorem-ipsum", "v_string0=%s ? %s" );
@@ -303,13 +305,13 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mas_argvc_delete( &v_targ0 );
 #endif
     masexam_next_group(  );
-    EXAM( sizeof( v_char0 ), 1, "sizeof( v_char0 )=%d ? %d" );
+    EXAM( sizeof( v_char0 ), ( unsigned ) 1, "sizeof( v_char0 )=%d ? %d" );
     EXAMZ( 1, v_char0, 107, "char0=%d ? %d" );
-    EXAM( sizeof( v_short0 ), 2, "sizeof( v_short0 )=%d ? %d" );
+    EXAM( sizeof( v_short0 ), ( unsigned ) 2, "sizeof( v_short0 )=%d ? %d" );
     EXAMZ( 2, v_short0, 5437, "short0=%d ? %d" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_int0 ), 4, "sizeof( v_int0 )=%d ? %d" );
+    EXAM( sizeof( v_int0 ), ( unsigned ) 4, "sizeof( v_int0 )=%d ? %d" );
     EXAMZ( 4, v_int0, 5437, "num0=%d ? %d" );
     EXAMZ( 4, v_int1, 0x12, "num1=%d ? %d" );
     EXAMZ( 4, v_int2, 012, "num2=%d ? %d" );
@@ -318,7 +320,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 4, v_int5, 1111111111, "num5=%d ? %d" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_long0 ), 8, "sizeof( v_long0 )=%d ? %d" );
+    EXAM( sizeof( v_long0 ), ( unsigned ) 8, "sizeof( v_long0 )=%d ? %d" );
     EXAMZ( 8, v_long0, 1099511627775L, "long0=%ld ? %ld" );
     EXAMZ( 8, v_long1, 0xffL, "long0=%ld ? %ld" );
     EXAMZ( 8, v_long2, LONG_MAX, "long2=%ld ? %ld" );
@@ -328,7 +330,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 8, v_long4, LONG_MIN, "long4=%ld ? %ld" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_llong0 ), 8, "sizeof( v_llong0 )=%d ? %d" );
+    EXAM( sizeof( v_llong0 ), ( unsigned ) 8, "sizeof( v_llong0 )=%d ? %d" );
     EXAMZ( 8, v_llong0, 5437LL, "llong0=%lld ? %lld" );
     EXAMZ( 8, v_llong1, 0x12LL, "llong1=%lld ? %lld" );
     EXAMZ( 8, v_llong2, 012LL, "llong2=%lld ? %lld" );
@@ -351,32 +353,45 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
         fprintf( stderr, " @@ %d %s\n", i, mucs_source_arg_no( osrc, i ) );
       }
     }
+    {
+      int nn = 0;
 
-    EXAMS( mucs_source_arg_no( osrc, 1 ), "something", "'%s' ? '%s'" );
-    EXAMS( mucs_source_arg_no( osrc, 2 ), "wow", "'%s' ? '%s'" );
-    EXAMS( mucs_source_arg_no( osrc, 3 ), "--this-is-not-an-option1=345", "'%s' ? '%s'" );
-    EXAMS( mucs_source_arg_no( osrc, 4 ), "--this-is-not-an-option2", "'%s' ? '%s'" );
-    EXAMS( mucs_source_arg_no( osrc, 5 ), "--", "'%s' ? '%s'" );
-    EXAMS( mucs_source_arg_no( osrc, 6 ), "abrakadabra", "'%s' ? '%s'" );
+      nn = 0;
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "something", "'%s' ? '%s'" );
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "wow", "'%s' ? '%s'" );
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "--this-is-not-an-option1=345", "'%s' ? '%s'" );
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "--this-is-not-an-option2", "'%s' ? '%s'" );
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "--", "'%s' ? '%s'" );
+      EXAMS( mucs_source_arg_no( osrc, ++nn ), "abrakadabra", "'%s' ? '%s'" );
 
-    EXAMSN( argcno, argvno, 1, "something", "'%s' ? '%s'" );
-    EXAMSN( argcno, argvno, 2, "wow", "'%s' ? '%s'" );
-    EXAMSN( argcno, argvno, 3, "--this-is-not-an-option1=345", "'%s' ? '%s'" );
-    EXAMSN( argcno, argvno, 4, "--this-is-not-an-option2", "'%s' ? '%s'" );
-    EXAMSN( argcno, argvno, 5, "--", "'%s' ? '%s'" );
-    EXAMSN( argcno, argvno, 6, "abrakadabra", "'%s' ? '%s'" );
+      nn = 0;
+      EXAMSN( argcno, argvno, ++nn, "something", "'%s' ? '%s'" );
+      EXAMSN( argcno, argvno, ++nn, "wow", "'%s' ? '%s'" );
+      EXAMSN( argcno, argvno, ++nn, "--this-is-not-an-option1=345", "'%s' ? '%s'" );
+      EXAMSN( argcno, argvno, ++nn, "--this-is-not-an-option2", "'%s' ? '%s'" );
+      EXAMSN( argcno, argvno, ++nn, "--", "'%s' ? '%s'" );
+      EXAMSN( argcno, argvno, ++nn, "abrakadabra", "'%s' ? '%s'" );
 
-    masexam_next_group(  );
-    EXAM( bitwise1, ( long ) 0xfffffffffffff8ffL, "%lx ? %lx" );
-    EXAM( bitwise2, ( long ) 0x10304L, "%lx ? %lx" );
-    EXAM( bitwise3, ( long ) 0x10004L, "%lx ? %lx" );
-    EXAM( bitwise4, ( long ) 0xd04L, "%lx ? %lx" );
-    EXAM( bitwise5, ( long ) 0x10204L, "%lx ? %lx" );
+      masexam_next_group(  );
+      EXAM( bitwise1, ( long ) 0xfffffffffffff8ffL, "%lx ? %lx" );
+      EXAM( bitwise2, ( long ) 0x10304L, "%lx ? %lx" );
+      EXAM( bitwise3, ( long ) 0x10004L, "%lx ? %lx" );
+      EXAM( bitwise4, ( long ) 0xd04L, "%lx ? %lx" );
+      EXAM( bitwise5, ( long ) 0x10204L, "%lx ? %lx" );
 
+      EXAM( v_targ_n.argc, NUM_NOPTS, "spec list size:%d ? %d" );
+      nn = 0;
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "something", "'%s' ? '%s'" );
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "wow", "'%s' ? '%s'" );
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "--this-is-not-an-option1=345", "'%s' ? '%s'" );
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "--this-is-not-an-option2", "'%s' ? '%s'" );
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "--", "'%s' ? '%s'" );
+      EXAMSN( v_targ_n.argc, v_targ_n.argv, ++nn, "abrakadabra", "'%s' ? '%s'" );
+    }
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

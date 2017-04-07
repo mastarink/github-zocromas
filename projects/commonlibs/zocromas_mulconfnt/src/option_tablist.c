@@ -45,7 +45,7 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
       tablist = tablist->next;
     } while ( rGOOD && !optscan->found_topt && tablist );
 #endif
-    if ( !optscan->found_topt )
+    if ( !optscan->found_topt && optscan->variantid != MUCS_VARIANT_NONOPT )
     {
       rSETBAD;
       if ( optscan->at_arg )

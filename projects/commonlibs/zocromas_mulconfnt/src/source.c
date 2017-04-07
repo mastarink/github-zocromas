@@ -263,7 +263,7 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
     mas_add_argvc_arg( &osrc->targno, optscan->at_arg );
     rSETGOOD;
   }
-  else
+/* else */
   {
     if ( osrc->curarg < osrc->targ.argc - 1 )
       optscan->nextarg = osrc->targ.argv[osrc->curarg + 1];
@@ -271,6 +271,8 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
     {
       rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
     } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg && !strchr( " \t", *optscan->at_arg ) );
+    /* if ( optscan->variantid == MUCS_VARIANT_NONOPT ) */
+    /*   WARN( "(%d) '%s'", rCODE, optscan->at_arg );   */
   /* TODO if 
    *       1. unrecognized option
    *       2. do not stop on error flag
@@ -318,7 +320,7 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
         while ( *optscan.at_arg && strchr( " \t", *optscan.at_arg ) )
           optscan.at_arg++;
       rC( mucs_source_lookup_arg( osrc, tablist, &optscan ) );
-    } while (  /*optscan.variantid == MUCS_VARIANT_LONG && */ optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
+    } while ( optscan.variantid != MUCS_VARIANT_NONOPT && optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
   }
   if ( rGOOD )
     rCODE = nargs;
