@@ -305,13 +305,13 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mas_argvc_delete( &v_targ0 );
 #endif
     masexam_next_group(  );
-    EXAM( sizeof( v_char0 ), ( unsigned ) 1, "sizeof( v_char0 )=%d ? %d" );
+    EXAM( sizeof( v_char0 ), 1U, "sizeof( v_char0 )=%d ? %d" );
     EXAMZ( 1, v_char0, 107, "char0=%d ? %d" );
-    EXAM( sizeof( v_short0 ), ( unsigned ) 2, "sizeof( v_short0 )=%d ? %d" );
+    EXAM( sizeof( v_short0 ), 2U, "sizeof( v_short0 )=%d ? %d" );
     EXAMZ( 2, v_short0, 5437, "short0=%d ? %d" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_int0 ), ( unsigned ) 4, "sizeof( v_int0 )=%d ? %d" );
+    EXAM( sizeof( v_int0 ), 4U, "sizeof( v_int0 )=%d ? %d" );
     EXAMZ( 4, v_int0, 5437, "num0=%d ? %d" );
     EXAMZ( 4, v_int1, 0x12, "num1=%d ? %d" );
     EXAMZ( 4, v_int2, 012, "num2=%d ? %d" );
@@ -320,7 +320,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 4, v_int5, 1111111111, "num5=%d ? %d" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_long0 ), ( unsigned ) 8, "sizeof( v_long0 )=%d ? %d" );
+    EXAM( sizeof( v_long0 ), 8U, "sizeof( v_long0 )=%d ? %d" );
     EXAMZ( 8, v_long0, 1099511627775L, "long0=%ld ? %ld" );
     EXAMZ( 8, v_long1, 0xffL, "long0=%ld ? %ld" );
     EXAMZ( 8, v_long2, LONG_MAX, "long2=%ld ? %ld" );
@@ -330,7 +330,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     EXAMZ( 8, v_long4, LONG_MIN, "long4=%ld ? %ld" );
 
     masexam_next_group(  );
-    EXAM( sizeof( v_llong0 ), ( unsigned ) 8, "sizeof( v_llong0 )=%d ? %d" );
+    EXAM( sizeof( v_llong0 ), 8U, "sizeof( v_llong0 )=%d ? %d" );
     EXAMZ( 8, v_llong0, 5437LL, "llong0=%lld ? %lld" );
     EXAMZ( 8, v_llong1, 0x12LL, "llong1=%lld ? %lld" );
     EXAMZ( 8, v_llong2, 012LL, "llong2=%lld ? %lld" );
