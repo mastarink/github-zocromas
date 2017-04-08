@@ -102,22 +102,24 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong =
-     MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
-    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,.def_nvalue.v_ulong =
-     MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
+    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR,.cust_ptr = &app_flags,.def_string_value = "0xfffe0101",
+     .val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
+     .def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
+    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
+     .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
   mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "test-table", options, TRUE );
 
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
+/* mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL ); */
+/* mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG ); */
+/* mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" ); */
+/* mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL ); */
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
-  mucs_option_interface_lookup_all( interface );
+
+  rC( mucs_option_interface_lookup_all( interface ) );
 
   /*******/
   {
@@ -133,7 +135,7 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
     }
 #endif
     WARN( "(%d) %lx: %d %d", rCODE, work_opt_flags, ( work_opt_flags & MASXFS_CB_MODE_FS ) ? 1 : 0, ( work_opt_flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
-  /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_FS ) ); */
+    rC( tree( real_path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil, work_opt_flags ) );
   /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_DB ) ); */
   }
   /*******/
@@ -141,13 +143,16 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
   mucs_config_option_interface_delete( interface );
   interface = NULL;
 
-  return 0;
+  rRET;
 }
 
 int
 main( int argc, char *argv[] )
 {
-  return dufnx( argc, argv );
+  int r = 0;
+
+  r = dufnx( argc, argv );
+  return r;
 }
 
 static void constructor_main(  ) __attribute__ ( ( constructor( 2011 ) ) );

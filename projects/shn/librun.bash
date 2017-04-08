@@ -58,7 +58,7 @@ function shn_run ()
 function shn_human_run ()
 {
   local qargs a
-  shn_msg
+# shn_msg
   ulimit -c unlimited  #### for core dump:
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
@@ -79,7 +79,8 @@ function shn_human_run ()
   {
     if pushd $MSH_SHN_CWD  &>/dev/null ; then
       shn_msg "-=<eval $bin $qargs>=-"
-      eval "time $bin $qargs" ; retcode=$?
+      eval "time $bin $qargs" ; retcode=$?  ## 20170408.0905
+#     time $bin $qargs ; retcode=$?         ## 20170408.0905
       shn_msg "-=</eval $retcode>=-"
       popd  &>/dev/null
     fi

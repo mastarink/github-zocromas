@@ -72,16 +72,16 @@ mucs_source_list_add_source_x( mucs_source_list_t * source_list, mucs_source_typ
 mucs_source_t *
 mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, int count, const void *data_ptr )
 {
-  return mucs_source_list_add_source_x( source_list, source_type, count, data_ptr, NULL, NULL, NULL /* , delims, eq, pref_ids */ );
+  return mucs_source_list_add_source_x( source_list, source_type, count, data_ptr, NULL, NULL, NULL /* , delims, eq, pref_ids */  );
 }
 
 int
 mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option_table_list_t * tablist )
 {
-  rDECLBAD;
-  for ( mucs_source_t * os = source_list->first; os; os = os->next )
+  rDECLGOOD;
+  for ( mucs_source_t * os = source_list->first; rGOOD && os; os = os->next )
   {
-    mucs_source_lookup_all( os, tablist );
+    rC( mucs_source_lookup_all( os, tablist ) );
   }
   rRET;
 }

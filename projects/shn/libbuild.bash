@@ -68,7 +68,7 @@ function shn_build_xcommand ()
 	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MSH_SHN_DIRS[error]}" ]] && [[ -d "${MSH_SHN_DIRS[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 #	  echo "$cmd $@ @ $(pwd)" >&2
-	  shn_msg "-=<pwd:$(pwd)>=-"
+#	  shn_msg "-=<pwd:$(pwd)>=-"
 	  shn_msg "-=<$cmd $@>=-"
 	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
@@ -208,7 +208,7 @@ function shn_build_autoreconf ()
     if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
       shn_dbgmsg start autoreconf -i $MSH_SHN_PROJECT_DIR
       errname="${MSH_SHN_DIRS[error]}/shn_build_autoreconf.${MSH_SHN_PROJECT_NAME}.result"
-      shn_msg "-=<pwd:$(pwd)>=-"
+#     shn_msg "-=<pwd:$(pwd)>=-"
       shn_msg "-=<autoreconf -i $MSH_SHN_PROJECT_DIR>=-"
       shn_msg "see $errname"
       autoreconf -i $MSH_SHN_PROJECT_DIR &>$errname && shn_msgns autoconf ok || { retcode=$? ; }

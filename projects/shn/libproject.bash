@@ -222,12 +222,6 @@ function shn_project_cd ()
   shn_setup_projects
   return 0
 }
-function shn_project_each_control_c ()
-{
-  interrupted=$(( $interrupted +1 ))
-  shn_msg " -----> Ctrl-C"
-# trap - INT
-}
 function shn_project_each ()
 {
 # echo -n "$# - "; for a in "$@" ; do echo -n "'$a' " >&2 ; done ; echo '-=-=-=-=-=-=-=-=-=-=-=-=-' >&2
@@ -235,11 +229,10 @@ function shn_project_each ()
   shift
   local index_from=$1
   shift
-  local project_index=0 interrupted=0
+  local project_index=0
   local projects_realdir prj retcode=0
   if [[ "${MSH_SHN_ENABLED_PROJECTS[@]}" ]]  ; then
     shn_dbgmsg "1 At each `pwd`"
-    trap shn_project_each_control_c INT
     for (( project_index=$index_from ; $project_index < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
       prj=${MSH_SHN_ENABLED_PROJECTS[$project_index]}
 #     wsleep
@@ -269,7 +262,6 @@ function shn_project_each ()
 #     shn_msg " . $project_index"
       shn_msg
     done
-    trap - SIGINT
     shn_msg " (Done $project_index of ${#MSH_SHN_ENABLED_PROJECTS[@]} ; last: $MSH_SHN_PROJECT_NAME : $MSH_SHN_PROJECT_DIR)"
     if [[ "${MSH_SHN_DIRS[status]}" ]] && [[ -d "${MSH_SHN_DIRS[status]}" ]] ; then
       if [[ $project_index -eq ${#MSH_SHN_ENABLED_PROJECTS[@]} ]] ; then

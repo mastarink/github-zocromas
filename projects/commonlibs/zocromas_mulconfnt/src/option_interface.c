@@ -20,13 +20,15 @@ mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_sour
 {
   mucs_source_list_add_source( interface->source_list, source_type, count, data_ptr );
 }
+
 int
-mucs_option_interface_lookup_source_list( mucs_option_interface_t * interface, mucs_source_list_t *source_list)
+mucs_option_interface_lookup_source_list( mucs_option_interface_t * interface, mucs_source_list_t * source_list )
 {
   rDECLBAD;
   rC( mucs_source_list_lookup_all( source_list, interface->tablist ) );
   rRET;
 }
+
 int
 mucs_option_interface_lookup_all( mucs_option_interface_t * interface )
 {

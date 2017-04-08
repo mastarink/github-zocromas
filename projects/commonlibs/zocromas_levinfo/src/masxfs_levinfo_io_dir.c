@@ -26,18 +26,21 @@ exiternal functions used:
 int
 masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
-  rDECLBAD;
+  rDECLGOOD;
+
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_rewinddir( li, flags ) );
+  QRLI( li, rCODE );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_rewinddir( li, flags ) );
+  QRLI( li, rCODE );
   rRET;
 }
 
 int
 masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
-  rDECLBAD;
+  rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_opendir( li, flags ) );
@@ -49,7 +52,7 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 int
 masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
-  rDECLBAD;
+  rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_closedir( li ) );
@@ -77,7 +80,7 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
 int
 masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int *phas_data )
 {
-  rDECLBAD;
+  rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_readdir( li, flags, phas_data ) );

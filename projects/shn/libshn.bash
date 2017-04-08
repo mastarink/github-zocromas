@@ -195,9 +195,16 @@ function shn_code ()
   shn_dbgmsg "-=</shn_code>=-"
   return $retcode
 }
+function shn_control_c ()
+{
+  interrupted=$(( $interrupted +1 ))
+  shn_msg " -----» Ctrl-C «-----"
+  sleep 1
+# trap - INT
+}
 function shn_i ()
 {
-  local retcode=0
+  local retcode=0 interrupted=0
   local code=${1:-l} i
   local in_shift=0
   shift
@@ -209,6 +216,8 @@ function shn_i ()
 # shn_setup_projects || shn_project_cd "${MSH_SHN_PROJECT_NAME:-zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_setup_projects || shn_project_cd                                     || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
   shn_dbgmsg 3 shn
+# shn_msg ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+  trap shn_control_c INT
   if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
     shn_project_each '' 0 shn "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
@@ -217,7 +226,7 @@ function shn_i ()
     shn_project_each "${BASH_REMATCH[1]}" 0 shn "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
   elif [[ "$code" == cont ]] ; then
     if [[ "${MSH_SHN_DIRS[status]}" ]] && [[ -d "${MSH_SHN_DIRS[status]}" ]] ; then
-      shn_msg ">>>>>>>>>>>> $MSH_SHN_STATUS @"
+      shn_msg ">>> $MSH_SHN_STATUS @ <<<"
 #     if [[ -f "${MSH_SHN_DIRS[status]}/last" ]] ; then
 #       read ifr dshn acts < "${MSH_SHN_DIRS[status]}/last"
 #       shn_msg "@@@@@@@@@@@ $ifr -- $dshn -- $acts"
@@ -260,6 +269,8 @@ function shn_i ()
 #   local shn_ignore_error=yes
     shn_code h || { retcode=$? ; shn_errmsg "shn setup r:$retcode" ; return $retcode ; }
   fi
+  trap - INT
+# shn_msg "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
   shn_dbgmsg "shn 5 -- $code"
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MSH_SHN_PROJECT_NAME}
 # shn_pwd
