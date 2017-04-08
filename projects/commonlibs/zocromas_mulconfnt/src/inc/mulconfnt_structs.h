@@ -88,6 +88,7 @@ union nvalue_u
   long double v_ldouble;
 };
 
+# define MUCS_NONOPT_NAME "@NONOPT@"
 struct mucs_option_s
 {
   char *name;

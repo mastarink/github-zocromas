@@ -22,9 +22,10 @@
  *
  * */
 
-static void
+void
 mucs_config_option_ptr_to_nvalue( mucs_option_t * opt )
 {
+  memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
   if ( opt->cust_ptr )
   {
     switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
@@ -85,7 +86,7 @@ mucs_config_option_ptr_to_nvalue( mucs_option_t * opt )
   }
 }
 
-static void
+void
 mucs_config_option_nvalue_to_ptr( mucs_option_t * opt )
 {
   if ( opt->cust_ptr )
@@ -370,7 +371,6 @@ mucs_config_option_set_nvalue( mucs_option_t * opt )
     nvalue_t v_x = { 0 };
 
   /* take old value from "user area" to the opt->nvalue (opt->string_value ?) to be combined with v_x */
-    mucs_config_option_ptr_to_nvalue( opt );
 
     if ( mucs_config_option_flag( opt, MUCS_FLAG_USE_DEF_NVALUE ) )
     {
@@ -389,7 +389,6 @@ mucs_config_option_set_nvalue( mucs_option_t * opt )
     if ( rGOOD )
     {
       mucs_config_option_combine_value( opt, v_x );
-      mucs_config_option_nvalue_to_ptr( opt );
     }
   }
   rRET;
@@ -411,7 +410,6 @@ mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
     if ( string_value )
       opt->string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
-    memset( &opt->nvalue, 0, sizeof( opt->nvalue ) );
     rC( mucs_config_option_set_nvalue( opt ) );
   }
   rRET;

@@ -4,7 +4,6 @@
 # include <mastar/regerr/masregerr_defs.h>
 # include <mastar/regerr/masregerr.h>
 
-# define MUCS_NONOPT_NAME "@NONOPT@"
 
 # define QRG(_r) (RGESR(_r))
 # define QRGM(_r,  ...) (RGESRM(_r, __VA_ARGS__))

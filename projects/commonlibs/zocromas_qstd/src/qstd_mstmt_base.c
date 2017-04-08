@@ -306,7 +306,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         int np = 0;
         int nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" as p ON (fn.parent_id=p.id)" */
-                " WHERE name=? AND fn.parent_id<=>?";
+                " WHERE BINARY name=? AND fn.parent_id<=>?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NAMES_NFIELDS, STD_MSTMT_SELECT_NAMES_NRESULTS, selop );
         QRGP( mstmt );
@@ -465,7 +465,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       {
         int np = 0;
         int nr = 0;
-        char *selop = "SELECT node_id FROM " QSTD_VIEW_DIRS " WHERE parent_id=? AND name=?";
+        char *selop = "SELECT node_id FROM " QSTD_VIEW_DIRS " WHERE parent_id=? AND BINARY name=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NODES_NFIELDS, STD_MSTMT_SELECT_NODES_NRESULTS, selop );
         QRGP( mstmt );

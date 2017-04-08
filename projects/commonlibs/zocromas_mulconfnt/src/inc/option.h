@@ -3,6 +3,9 @@
 
 # include "mulconfnt_types.h"
 
+void mucs_config_option_ptr_to_nvalue( mucs_option_t * opt );
+void mucs_config_option_nvalue_to_ptr( mucs_option_t * opt );
+
 static inline int
 mucs_config_option_check( const mucs_option_t * opt )
 {

@@ -1,5 +1,6 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include <stdio.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_utils_path.h>
@@ -94,20 +95,39 @@ tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo
 }
 
 int
+normit( mucs_option_t * opt _uUu_ )
+{
+  char *path;
+
+  int len;
+
+#if 0
+  path = mas_normalize_path_cwd( opt->string_value );
+#else
+  path = mas_normalize_path_cwd_dots( opt->string_value );
+#endif
+  len = strlen( path );
+  mas_free( opt->string_value );
+  if ( path[0] && path[1] && path[len - 1] == '/' )
+    path[len - 1] = 0;
+  opt->string_value = path;
+  return 0;
+}
+
+int
 dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
   rDECLGOOD;
   mucs_flags_t work_opt_flags = 0;
-  long app_flags = 0x00ffff1111111111L;
+  mas_argvc_t targv = { 0 };
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR,.cust_ptr = &app_flags,.def_string_value = "0xfffe0101",
-     .val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
     {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
+    {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &targv,.callback = normit},
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
@@ -121,6 +141,11 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 
   rC( mucs_option_interface_lookup_all( interface ) );
 
+  WARN( "targv.argc:%d", targv.argc );
+  for ( int i = 0; i < targv.argc; i++ )
+  {
+    WARN( "targv.argv:'%s'", targv.argv[i] );
+  }
   /*******/
   {
     const char *real_path _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest";

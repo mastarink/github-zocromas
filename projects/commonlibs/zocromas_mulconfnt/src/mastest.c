@@ -130,7 +130,7 @@ main( int argc, const char *argv[] )
     {TRUE, test_4, 4, ""},
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
-    {TRUE, test_7, 7, "",.stdin_text = "and1b:and2b"}, /* !! */
+    {TRUE, test_7, 7, "",.stdin_text = "and1b:and2b"},               /* !! */
     {FALSE, test_manual_0, 8, "manual_0"},
     {TRUE, test_manual, 8, "manual"},
     {0}
@@ -199,5 +199,6 @@ main( int argc, const char *argv[] )
     }
   }
 #endif
+
   return 0;
 }

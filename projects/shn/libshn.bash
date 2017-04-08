@@ -217,7 +217,6 @@ function shn_i ()
   shn_setup_projects || shn_project_cd                                     || { retcode=$? ; shn_errmsg shn_i rc:$retcode ; return $retcode ; }
   shn_dbgmsg 3 shn
 # shn_msg ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-  trap shn_control_c INT
   if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
 #   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
     shn_project_each '' 0 shn "$@" || { retcode=$? ; shn_errmsg "shn_i r:$retcode" ; return $retcode ; }
@@ -269,7 +268,6 @@ function shn_i ()
 #   local shn_ignore_error=yes
     shn_code h || { retcode=$? ; shn_errmsg "shn setup r:$retcode" ; return $retcode ; }
   fi
-  trap - INT
 # shn_msg "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
   shn_dbgmsg "shn 5 -- $code"
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MSH_SHN_PROJECT_NAME}
@@ -287,6 +285,7 @@ function shn ()
   shn_dbgmsg "-=<shn>=-"
   MSH_SHN_CWD=`pwd`
   shn_dbgmsg "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
+  trap shn_control_c INT
   if pushd . &>/dev/null ; then
     if [[ $MSH_SHN_DISABLE_TIMING ]] ; then 
       shn_i "$@"
@@ -297,6 +296,7 @@ function shn ()
     fi
     popd &>/dev/null
   fi
+  trap - INT
   shn_dbgmsg "-=</shn>=-"
   return $retcode
 }

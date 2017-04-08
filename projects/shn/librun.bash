@@ -79,6 +79,7 @@ function shn_human_run ()
   {
     if pushd $MSH_SHN_CWD  &>/dev/null ; then
       shn_msg "-=<eval $bin $qargs>=-"
+      # eval currently for "unquoting" args
       eval "time $bin $qargs" ; retcode=$?  ## 20170408.0905
 #     time $bin $qargs ; retcode=$?         ## 20170408.0905
       shn_msg "-=</eval $retcode>=-"

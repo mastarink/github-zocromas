@@ -219,19 +219,25 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
         rSETGOOD;
         if ( optscan->has_value )
         {
+          mucs_config_option_ptr_to_nvalue( opt );
+
           rC( mucs_config_option_set_value( opt, optscan->string_value ) );
+
           if ( rGOOD )
           {
-            if ( opt->callback && !opt->cust_ptr )
+            if ( opt->callback /* && !opt->cust_ptr */ )
             {
               opt->extra_cb.tablist = tablist;
               opt->extra_cb.source = osrc;
-              opt->callback( opt );
+              rC( opt->callback( opt ) );
               opt->extra_cb.source = NULL;
               opt->extra_cb.tablist = NULL;
               opt->extra_cb.callback_called++;
             }
             opt->has_value = optscan->has_value;
+
+            if ( rGOOD )
+              mucs_config_option_nvalue_to_ptr( opt );
           }
         }
 
@@ -271,8 +277,8 @@ mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t
     {
       rC( mucs_source_lookup_opt( osrc, tablist, optscan ) );
     } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg && !strchr( " \t", *optscan->at_arg ) );
-    /* if ( optscan->variantid == MUCS_VARIANT_NONOPT ) */
-    /*   WARN( "(%d) '%s'", rCODE, optscan->at_arg );   */
+  /* if ( optscan->variantid == MUCS_VARIANT_NONOPT ) */
+  /*   WARN( "(%d) '%s'", rCODE, optscan->at_arg );   */
   /* TODO if 
    *       1. unrecognized option
    *       2. do not stop on error flag
