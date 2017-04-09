@@ -35,7 +35,7 @@ static int
 s2callback( mucs_option_t * opt _uUu_, void *userdata )
 {
   EXAMS( opt->string_value, "Phasellus congue bibendum magna", "string_value=%s ? %s" );
-  EXAMS( ( const char * ) userdata, "something to pass", "userdata=%s ? %s" );
+  EXAMS( ( const char * ) userdata, "something to pass: consectetuer adipiscing", "userdata=%s ? %s" );
 /* WARN( "SMTHNG:%s", ( const char * ) userdata ); */
   return 0;
 }
@@ -263,7 +263,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist, ( void * ) "something to pass" );
+    mucs_source_list_lookup_all( plist, &test_tablist, ( void * ) "something to pass: consectetuer adipiscing" );
 #else
     mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif

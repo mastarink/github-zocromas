@@ -15,7 +15,7 @@ typedef signed int masxfs_depth_t;
 
 typedef enum masxfs_cb_flag_e masxfs_cb_flag_t;
 typedef enum masxfs_cb_flag_bit_e masxfs_cb_flag_bit_t;
-typedef unsigned long masxfs_levinfo_flags_t;
+typedef unsigned long long masxfs_levinfo_flags_t;
 typedef unsigned masxfs_type_flags_t;
 
 typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;

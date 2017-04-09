@@ -26,7 +26,9 @@
 #include "dufnx.h"
 
 static int numline_treecb = 0;
-static int _uUu_
+
+/* of type: masxfs_scan_fun_simple_t */
+static int
 treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) data;
@@ -46,7 +48,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 
   numline_treecb++;
 #if 1
-/* tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
+/* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
   fprintf( fil, "%4d\t%s[%-10ld %10ld]  %s\n", numline_treecb, prefix ? prefix : "", inode, size, ename ? ename : "" /*, epath ? epath : "" */  );
 #else
   fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
@@ -55,8 +57,8 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
   return 0;
 }
 
-int
-tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags )
+static int
+mas_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags )
 {
   rDECLGOOD;
 
@@ -94,12 +96,13 @@ tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo
   rRET;
 }
 
-int
-normit( mucs_option_t * opt _uUu_ )
+static int
+arg_process( mucs_option_t * opt _uUu_, void *userdata )
 {
+  rDECLGOOD;
   char *path;
-
   int len;
+  masxfs_levinfo_flags_t work_levinfo_flags = *( ( masxfs_levinfo_flags_t * ) userdata );
 
 #if 0
   path = mas_normalize_path_cwd( opt->string_value );
@@ -111,23 +114,26 @@ normit( mucs_option_t * opt _uUu_ )
   if ( path[0] && path[1] && path[len - 1] == '/' )
     path[len - 1] = 0;
   opt->string_value = path;
-  return 0;
+
+  rC( mas_tree( opt->string_value, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout, work_levinfo_flags ) );
+
+  rRET;
 }
 
 int
 dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
   rDECLGOOD;
-  mucs_flags_t work_opt_flags = 0;
+  masxfs_levinfo_flags_t work_levinfo_flags = 0;
   mas_argvc_t targv = { 0 };
 
   INFO( "dufnx" );
   mucs_option_t options[] = {
-    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
+    {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_levinfo_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
-    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_opt_flags,
+    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &work_levinfo_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},
-    {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &targv,.callback = normit},
+    {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &targv,.callback = arg_process},
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
@@ -139,31 +145,7 @@ dufnx( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unu
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL ); */
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
 
-  rC( mucs_option_interface_lookup_all( interface ) );
-
-  WARN( "targv.argc:%d", targv.argc );
-  for ( int i = 0; i < targv.argc; i++ )
-  {
-    WARN( "targv.argv:'%s'", targv.argv[i] );
-  }
-  /*******/
-  {
-    const char *real_path _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_dufnx/mastest";
-    FILE *fil _uUu_ = stdout;
-
-#if 0
-    {
-      char *p = mas_normalize_path( path );
-
-      WARN( "p:%s", p );
-      mas_free( p );
-    }
-#endif
-    WARN( "(%d) %lx: %d %d", rCODE, work_opt_flags, ( work_opt_flags & MASXFS_CB_MODE_FS ) ? 1 : 0, ( work_opt_flags & MASXFS_CB_MODE_DB ) ? 1 : 0 );
-    rC( tree( real_path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil, work_opt_flags ) );
-  /* rC( tree( real_path, ( masxfs_depth_t ) 0 (* maxdepth OR 0 for all *) , fil, MASXFS_CB_MODE_DB ) ); */
-  }
-  /*******/
+  rC( mucs_option_interface_lookup_all( interface, &work_levinfo_flags ) );
 
   mucs_config_option_interface_delete( interface );
   interface = NULL;
