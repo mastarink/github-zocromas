@@ -37,7 +37,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "something",
     "--string0=lorem-ipsum",
     "wow",
-    "--string1", "lorem ipsum",  /* for string1: MUCS_FLAG_NEED_EQ flag is set, so this should be an error! */
+    "--string1", "lorem ipsum",                                      /* for string1: MUCS_FLAG_NEED_EQ flag is set, so this should be an error! */
     "abrakadabra",
   };
 #define NUM_OPTS 2
@@ -97,9 +97,9 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist );
+    mucs_source_list_lookup_all( plist, &test_tablist, NULL );
 #else
-    mucs_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
 
     masexam_next_group(  );
@@ -136,7 +136,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     char **argvno = mucs_source_argv_no( osrc );
     int argcount = mucs_source_argc_no( osrc );
 
-    /* WARN( "argcount:%d", argcount ); */
+  /* WARN( "argcount:%d", argcount ); */
     EXAMX( argcount > 1 && argvno && argvno[1]
            && 0 == mas_strcmp( "something", argvno[1] ), "'%s' ? '%s'", "something", argvno && argcount > 1 ? argvno[1] : "?" );
     EXAMX( argcount > 2 && argvno && argvno[2]
@@ -147,7 +147,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

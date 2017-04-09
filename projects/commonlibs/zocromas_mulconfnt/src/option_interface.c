@@ -22,17 +22,17 @@ mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_sour
 }
 
 int
-mucs_option_interface_lookup_source_list( mucs_option_interface_t * interface, mucs_source_list_t * source_list )
+mucs_option_interface_lookup_source_list( mucs_option_interface_t * interface, mucs_source_list_t * source_list, void *userdata )
 {
   rDECLBAD;
-  rC( mucs_source_list_lookup_all( source_list, interface->tablist ) );
+  rC( mucs_source_list_lookup_all( source_list, interface->tablist, userdata ) );
   rRET;
 }
 
 int
-mucs_option_interface_lookup_all( mucs_option_interface_t * interface )
+mucs_option_interface_lookup_all( mucs_option_interface_t * interface, void *userdata )
 {
   rDECLBAD;
-  rC( mucs_source_list_lookup_all( interface->source_list, interface->tablist ) );
+  rC( mucs_source_list_lookup_all( interface->source_list, interface->tablist, userdata ) );
   rRET;
 }

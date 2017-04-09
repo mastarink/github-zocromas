@@ -48,7 +48,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
-  mucs_option_interface_lookup_all( interface );
+  mucs_option_interface_lookup_all( interface, NULL );
   mucs_config_option_interface_delete( interface );
   interface = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

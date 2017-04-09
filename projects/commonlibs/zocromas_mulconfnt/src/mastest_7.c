@@ -91,7 +91,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, xargc, xargv );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
 
-  rC( mucs_option_interface_lookup_all( interface ));
+  rC( mucs_option_interface_lookup_all( interface, NULL ));
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 3, "ERRORS: %d ? %d" );
   mucs_config_option_interface_delete( interface );
   interface = NULL;

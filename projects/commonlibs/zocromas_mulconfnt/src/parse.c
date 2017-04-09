@@ -42,7 +42,7 @@ mucs_parse( int argc _uUu_, const char *argv[]_uUu_, const mucs_option_table_lis
     , {NULL, MUCS_VARIANT_NONOPT}
   };
   osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
-  mucs_source_list_lookup_all( plist, tablist );
+  mucs_source_list_lookup_all( plist, tablist, NULL );
 
   INFO( "STRING: '%s'\n", mucs_source_load_string( osrc ) );
   mucs_source_list_integrate( plist );

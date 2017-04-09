@@ -76,12 +76,12 @@ mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_
 }
 
 int
-mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option_table_list_t * tablist )
+mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option_table_list_t * tablist, void *userdata )
 {
   rDECLGOOD;
   for ( mucs_source_t * os = source_list->first; rGOOD && os; os = os->next )
   {
-    rC( mucs_source_lookup_all( os, tablist ) );
+    rC( mucs_source_lookup_all( os, tablist, userdata ) );
   }
   rRET;
 }

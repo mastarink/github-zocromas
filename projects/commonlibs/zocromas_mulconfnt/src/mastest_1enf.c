@@ -152,9 +152,9 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist );
+    mucs_source_list_lookup_all( plist, &test_tablist, NULL );
 #else
-    mucs_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
 
     masexam_next_group(  );
@@ -220,7 +220,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

@@ -12,9 +12,9 @@ mucs_source_check( const mucs_source_t * osrc )
 char *mucs_source_load_string( mucs_source_t * osrc );
 int mucs_source_load_targ( mucs_source_t * osrc );
 
-int mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * tablist );
-int mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * tablist );
-int mucs_source_lookup( mucs_source_t * osrc, const mucs_option_table_list_t * tablist );
+int mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, void *userdata );
+int mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, void *userdata );
+int mucs_source_lookup( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, void *userdata );
 
 int mucs_source_argsno_count( mucs_source_t * osrc );
 char **mucs_source_argv_no( mucs_source_t * osrc );

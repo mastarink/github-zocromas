@@ -64,7 +64,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     "--num2=012",
     "--num3=2147483647",
     "--num4=4294967295",
-    /* "--num4=43465367546365636353463294967295", */
+  /* "--num4=43465367546365636353463294967295", */
     "--lnum0=0xffffffffff",
     "--lnum1=0xff",
     "--lnum2=0xffffffffffffffff",
@@ -153,9 +153,9 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist );
+    mucs_source_list_lookup_all( plist, &test_tablist, NULL );
 #else
-    mucs_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
 
     masexam_next_group(  );
@@ -227,7 +227,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   return 0;

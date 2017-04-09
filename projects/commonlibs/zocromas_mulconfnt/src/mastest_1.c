@@ -31,8 +31,17 @@ static int v_int5 = 0;
 static char *sc_string = NULL;
 static char *cc_string = NULL;
 
-int
-ccallback_string( mucs_option_t * opt )
+static int
+s2callback( mucs_option_t * opt _uUu_, void *userdata )
+{
+  EXAMS( opt->string_value, "Phasellus congue bibendum magna", "string_value=%s ? %s" );
+  EXAMS( ( const char * ) userdata, "something to pass", "userdata=%s ? %s" );
+/* WARN( "SMTHNG:%s", ( const char * ) userdata ); */
+  return 0;
+}
+
+static int
+ccallback_string( mucs_option_t * opt, void *userdata _uUu_ )
 {
   if ( opt )
   {
@@ -56,8 +65,8 @@ ccallback_string( mucs_option_t * opt )
   return 0;
 }
 
-int
-scallback_string( mucs_option_t * opt )
+static int
+scallback_string( mucs_option_t * opt, void *userdata _uUu_ )
 {
   if ( sc_string )
     mas_free( sc_string );
@@ -67,7 +76,7 @@ scallback_string( mucs_option_t * opt )
 }
 
 int
-num5callback( mucs_option_t * opt )
+num5callback( mucs_option_t * opt, void *userdata _uUu_ )
 {
 //fprintf( stderr, "NUM5: %d\n", opt->nvalue.v_int );
   v_int5 = opt->nvalue.v_int;
@@ -169,7 +178,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     {.name = MUCS_NONOPT_NAME,.shortn = '\0',.restype = MUCS_RTYP_TARG,.cust_ptr = &v_targ_n,.flags = MUCS_FLAG_AUTOFREE}
     , {.name = "string0",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string0,.flags = MUCS_FLAG_AUTOFREE}
     , {.name = "string1",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string1}
-    , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING}
+    , {.name = "string2",.shortn = '\0',.restype = MUCS_RTYP_STRING,.callback = s2callback}
     , {.name = "string3",.shortn = 'p',.restype = MUCS_RTYP_STRING,.cust_ptr = &v_string3,.flags = 0 | MUCS_FLAG_NO_CB_IF_VALUE}
     , {.name = "string4",.shortn = 'x',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_NO_COMMON_CB | MUCS_FLAG_NO_TYPE_CB}
     , {.name = "targ0",.shortn = '\0',.restype = MUCS_RTYP_TARG,.cust_ptr = &v_targ0,.flags = MUCS_FLAG_AUTOFREE}
@@ -254,9 +263,9 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist );
+    mucs_source_list_lookup_all( plist, &test_tablist, ( void * ) "something to pass" );
 #else
-    mucs_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
     if ( osrc && osrc->oldtarg.argc )
 

@@ -19,7 +19,7 @@
 #include "option_interface_base.h"
 
 int
-mucs_config_option_interface_callback( mucs_option_t * opt )
+mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_ )
 {
   if ( opt )
   {
@@ -36,7 +36,7 @@ mucs_config_option_interface_callback( mucs_option_t * opt )
 
     mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, 0, fpath );
 
-    mucs_source_list_lookup_all( source_list, opt->extra_cb.tablist );
+    mucs_source_list_lookup_all( source_list, opt->extra_cb.tablist, NULL );
 
     if ( fpath )
       mas_free( fpath );

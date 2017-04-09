@@ -126,9 +126,9 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
       }
     }
 #if 1
-    mucs_source_list_lookup_all( plist, &test_tablist );
+    mucs_source_list_lookup_all( plist, &test_tablist, NULL );
 #else
-    mucs_source_lookup_all( osrc, &test_tablist );
+    mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
 
     masexam_next_group(  );
