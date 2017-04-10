@@ -55,6 +55,36 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   double v_double0 = 0;
   long double v_ldouble0 = 0;
 
+  mucs_option_t options[] = {
+    {.s = {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = 0 | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = 0 | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"num0", 0, MUCS_RTYP_INT, &v_int0}}
+    , {.s = {"num1", 0, MUCS_RTYP_INT, &v_int1}}
+    , {.s = {"num2", 0, MUCS_RTYP_INT, &v_int2}}
+    , {.s = {"num3", 0, MUCS_RTYP_INT, &v_int3}}
+    , {.s = {"num4", 0, MUCS_RTYP_INT, &v_int4}}
+    , {.s = {"lnum0", 0, MUCS_RTYP_LONG, &v_long0}}
+    , {.s = {"lnum1", 0, MUCS_RTYP_INT, &v_long1}}
+    , {.s = {"lnum2", 0, MUCS_RTYP_LONG, &v_long2}}
+    , {.s = {"lnum3", 0, MUCS_RTYP_LONG, &v_long3}}
+    , {.s = {"lnum4", 0, MUCS_RTYP_LONG, &v_long4}}
+    , {.s = {"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}}
+    , {.s = {"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}}
+    , {.s = {"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}}
+    , {.s = {"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}}
+    , {.s = {"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}}
+    , {.s = {"pi", 0, MUCS_RTYP_DOUBLE, &v_double0}}
+    , {.s = {"longpi", 0, MUCS_RTYP_LDOUBLE, &v_ldouble0}}
+    , {.s = {"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}}
+    , {.s = {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}}
+    , {.s = {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}}
+
+    , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
+  };
+  mucs_option_table_list_t test_tablist = {
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
+  };
+
   const char *xargv1[] = {
     "something",
     "--string0=lorem-ipsum",
@@ -94,42 +124,13 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   int argc2 = sizeof( xxargv[1] ) / sizeof( xxargv[1][0] );
   int totargc _uUu_ = argc1 + argc2;
 
-  mucs_option_t options[] = {
-    {.s={"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = 0 | MUCS_FLAG_AUTOFREE}}
-    , {.s={"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = 0 | MUCS_FLAG_AUTOFREE}}
-    , {.s={"num0", 0, MUCS_RTYP_INT, &v_int0}}
-    , {.s={"num1", 0, MUCS_RTYP_INT, &v_int1}}
-    , {.s={"num2", 0, MUCS_RTYP_INT, &v_int2}}
-    , {.s={"num3", 0, MUCS_RTYP_INT, &v_int3}}
-    , {.s={"num4", 0, MUCS_RTYP_INT, &v_int4}}
-    , {.s={"lnum0", 0, MUCS_RTYP_LONG, &v_long0}}
-    , {.s={"lnum1", 0, MUCS_RTYP_INT, &v_long1}}
-    , {.s={"lnum2", 0, MUCS_RTYP_LONG, &v_long2}}
-    , {.s={"lnum3", 0, MUCS_RTYP_LONG, &v_long3}}
-    , {.s={"lnum4", 0, MUCS_RTYP_LONG, &v_long4}}
-    , {.s={"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}}
-    , {.s={"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}}
-    , {.s={"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}}
-    , {.s={"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}}
-    , {.s={"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}}
-    , {.s={"pi", 0, MUCS_RTYP_DOUBLE, &v_double0}}
-    , {.s={"longpi", 0, MUCS_RTYP_LDOUBLE, &v_ldouble0}}
-    , {.s={"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}}
-    , {.s={"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}}
-    , {.s={"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}}
-
-    , {.s={.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
-  };
-  mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
-  };
-
   {
     FILE *f;
     char fname[128];
 
     snprintf( fname, sizeof( fname ), "test/mastest_%d%s.commands", nseries, series_suffix );
     f = fopen( fname, "w" );
+
     if ( f )
     {
       for ( int i = 0; i < xxargc; i++ )

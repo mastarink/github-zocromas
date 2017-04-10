@@ -50,13 +50,6 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   long bitwise2 = 0x10204;
   long bitwise3 = 0x10204;
 
-  const char *string_args = {
-    "num0=5437:num1=0x12:num2=012:num3=2147483647:num4=-2147483648:" /* */
-            "lnum0=0xffffffffff:lnum1=0xff:lnum2=0x7fffffffffffffff:lnum3=-12:lnum4=-0x8000000000000000:" /* */
-            "llnum0=5437:llnum1=0x12:llnum2=012:llnum3=9223372036854775807:llnum4=-9223372036854775808:" /* */
-            "bwi=0x700:bwi+=0x100:bwi-=0x200",
-  };
-
   mucs_option_t options[] = {
     {.s = {"num0", 0, MUCS_RTYP_INT, &v_int0}}
     , {.s = {"num1", 0, MUCS_RTYP_INT, &v_int1}}
@@ -82,6 +75,13 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
   };
+  const char *string_args = {
+    "num0=5437:num1=0x12:num2=012:num3=2147483647:num4=-2147483648:" /* */
+            "lnum0=0xffffffffff:lnum1=0xff:lnum2=0x7fffffffffffffff:lnum3=-12:lnum4=-0x8000000000000000:" /* */
+            "llnum0=5437:llnum1=0x12:llnum2=012:llnum3=9223372036854775807:llnum4=-9223372036854775808:" /* */
+            "bwi=0x700:bwi+=0x100:bwi-=0x200",
+  };
+
   {
     FILE *f;
     char fname[128];

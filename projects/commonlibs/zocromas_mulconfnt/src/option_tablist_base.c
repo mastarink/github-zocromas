@@ -38,44 +38,44 @@ mucs_config_option_tabnode_create( void )
   return tablist;
 }
 
-mucs_option_table_list_t *
-mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_t * options, size_t count )
-{
-  mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );
-
-  if ( tbnew )
-  {
-    if ( !count )
-    {
-      for ( const mucs_option_t * o = options; o && o->s.name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
-        count++;
-    /* WARN( "COUNT:%ld", ( long ) count ); */
-    }
-    if ( tablist )
-    {
-      mucs_option_table_list_t *tb = tablist;
-
-      while ( tb->next )
-        tb = tb->next;
-      tb->next = tbnew;
-    }
-    else
-    {
-      tablist = tbnew;
-    }
-    {
-      if ( tbnew->allocated )
-      {
-        tbnew->name = mas_strdup( name );
-        tbnew->voptions = mucs_config_aoptions_clone( options, count );
-      }
-      else                                                           /* really never happens !? */
-        tbnew->coptions = options;
-      tbnew->count = count;
-    }
-  }
-  return tablist;
-}
+/* mucs_option_table_list_t *                                                                                                          */
+/* mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_t * options, size_t count ) */
+/* {                                                                                                                                   */
+/*   mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );                                                          */
+/*                                                                                                                                     */
+/*   if ( tbnew )                                                                                                                      */
+/*   {                                                                                                                                 */
+/*     if ( !count )                                                                                                                   */
+/*     {                                                                                                                               */
+/*       for ( const mucs_option_t * o = options; o && o->s.name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )      */
+/*         count++;                                                                                                                    */
+/*     (* WARN( "COUNT:%ld", ( long ) count ); *)                                                                                      */
+/*     }                                                                                                                               */
+/*     if ( tablist )                                                                                                                  */
+/*     {                                                                                                                               */
+/*       mucs_option_table_list_t *tb = tablist;                                                                                       */
+/*                                                                                                                                     */
+/*       while ( tb->next )                                                                                                            */
+/*         tb = tb->next;                                                                                                              */
+/*       tb->next = tbnew;                                                                                                             */
+/*     }                                                                                                                               */
+/*     else                                                                                                                            */
+/*     {                                                                                                                               */
+/*       tablist = tbnew;                                                                                                              */
+/*     }                                                                                                                               */
+/*     {                                                                                                                               */
+/*       if ( tbnew->allocated )                                                                                                       */
+/*       {                                                                                                                             */
+/*         tbnew->name = mas_strdup( name );                                                                                           */
+/*         tbnew->voptions = mucs_config_aoptions_clone( options, count );                                                             */
+/*       }                                                                                                                             */
+/*       else                                                           (* really never happens !? *)                                  */
+/*         tbnew->coptions = options;                                                                                                  */
+/*       tbnew->count = count;                                                                                                         */
+/*     }                                                                                                                               */
+/*   }                                                                                                                                 */
+/*   return tablist;                                                                                                                   */
+/* }                                                                                                                                   */
 
 mucs_option_table_list_t *
 mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t count )
@@ -106,7 +106,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
       if ( tbnew->allocated )
       {
         tbnew->name = mas_strdup( name );
-        tbnew->voptions = mucs_config_asoptions_clone( soptions, count );
+        tbnew->voptions = mucs_config_soptions2options( soptions, count );
       }
       else                                                           /* really never happens !? */
       {
@@ -135,6 +135,7 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
         {
         case MUCS_RTYP_STRING:
           mas_free( *( ( char ** ) opt->s.cust_ptr ) );
+          *( ( char ** ) opt->s.cust_ptr ) = NULL;
           break;
         case MUCS_RTYP_TARG:
           mas_argvc_delete( ( mas_argvc_t * ) opt->s.cust_ptr );

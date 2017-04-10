@@ -32,7 +32,7 @@ mucs_config_option_tabnode_aoptions( const mucs_option_table_list_t * tabnode )
 }
 
 mucs_option_t *
-mucs_config_asoptions_clone( const mucs_option_static_t * soptions, size_t count )
+mucs_config_soptions2options( const mucs_option_static_t * soptions, size_t count )
 {
   mucs_option_t *options_clone = mas_calloc( count + 1, sizeof( mucs_option_t ) );
 
@@ -56,7 +56,7 @@ mucs_config_aoptions_clone( const mucs_option_t * options, size_t count )
     options_clone[no].s.name = mas_strdup( options[no].s.name );
   }
 #else
-NO!!  mucs_option_t *options_clone = mucs_config_asoptions_clone( &options->s, count );
+NO!!  mucs_option_t *options_clone = mucs_config_soptions2options( &options->s, count );
 #endif
   return options_clone;
 }

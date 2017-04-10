@@ -66,19 +66,19 @@ mucs_config_option_interface_create( void )
   return option_interface;
 }
 
-mucs_option_interface_t *
-mucs_config_option_interface_create_setup_o( const char *name, const mucs_option_t * options, int special_options )
-{
-  mucs_option_interface_t *interface = mucs_config_option_interface_create(  );
-
-  interface->source_list = mucs_source_list_create(  );
-  if ( special_options )
-  {
-    interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */  );
-  }
-  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 /* count=<auto> */  );
-  return interface;
-}
+/* mucs_option_interface_t *                                                                                                                         */
+/* mucs_config_option_interface_create_setup_o( const char *name, const mucs_option_t * options, int special_options )                               */
+/* {                                                                                                                                                 */
+/*   mucs_option_interface_t *interface = mucs_config_option_interface_create(  );                                                                   */
+/*                                                                                                                                                   */
+/*   interface->source_list = mucs_source_list_create(  );                                                                                           */
+/*   if ( special_options )                                                                                                                          */
+/*   {                                                                                                                                               */
+/*     interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 (* count=<auto> *)  ); */
+/*   }                                                                                                                                               */
+/*   interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 (* count=<auto> *)  );                                */
+/*   return interface;                                                                                                                               */
+/* }                                                                                                                                                 */
 
 mucs_option_interface_t *
 mucs_config_soption_interface_create_setup( const char *name, const mucs_option_static_t * soptions, int special_options )
@@ -94,12 +94,12 @@ mucs_config_soption_interface_create_setup( const char *name, const mucs_option_
   return interface;
 }
 
-mucs_option_interface_t *
-mucs_config_option_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_t * options )
-{
-  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 /* count=<auto> */  );
-  return interface;
-}
+/* mucs_option_interface_t *                                                                                                        */
+/* mucs_config_option_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_t * options ) */
+/* {                                                                                                                                */
+/*   interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 (* count=<auto> *)  );               */
+/*   return interface;                                                                                                              */
+/* }                                                                                                                                */
 
 mucs_option_interface_t *
 mucs_config_soption_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_static_t * soptions )

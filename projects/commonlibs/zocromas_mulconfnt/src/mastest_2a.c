@@ -49,20 +49,6 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
   long bitwise2 = 0x10204;
   long bitwise3 = 0x10204;
 
-  const char *string_args = {
-    "num0=5437\n"
-            "num1=0x12\n"
-            "num2=012\n"
-            "num3=2147483647\n"
-            "num4=-2147483648\n"
-            "lnum0=0xffffffffff:lnum1=0xff\n"
-            "lnum2=0x7fffffffffffffff\n"
-            "lnum3=-12\n"
-            "lnum4=-0x8000000000000000\n"
-            "llnum0=5437\n"
-            "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
-  };
-
   mucs_option_t options[] = {
     {.s = {"num0", 0, MUCS_RTYP_INT, &v_int0}}
     , {.s = {"num1", 0, MUCS_RTYP_INT, &v_int1}}
@@ -88,6 +74,20 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
   };
+  const char *string_args = {
+    "num0=5437\n"
+            "num1=0x12\n"
+            "num2=012\n"
+            "num3=2147483647\n"
+            "num4=-2147483648\n"
+            "lnum0=0xffffffffff:lnum1=0xff\n"
+            "lnum2=0x7fffffffffffffff\n"
+            "lnum3=-12\n"
+            "lnum4=-0x8000000000000000\n"
+            "llnum0=5437\n"
+            "llnum1=0x12\n" "llnum2=012\n" "llnum3=9223372036854775807\n" "llnum4=-9223372036854775808\n" "bwi=0x700\n" "bwi+=0x100\n" "bwi-=0x200\n",
+  };
+
   {
     FILE *f;
     char fname[128];

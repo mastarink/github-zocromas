@@ -2,8 +2,8 @@ num0=5437
 num1=0x12
 num2=012
 num3=2147483647
-num4=-2147483648
-# may be comment
+num4=-2147483648         
+may be comment
 lnum0=0xffffffffff:lnum1=0xff
 lnum2=0x7fffffffffffffff
 

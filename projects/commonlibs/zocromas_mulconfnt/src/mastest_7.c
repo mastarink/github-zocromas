@@ -72,7 +72,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
     {"nand1", 'N', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT,.cust_ptr = &app_uflags_nand,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand2", 'n', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT,.cust_ptr = &app_uflags_nand,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {"nand3", '3', MUCS_RTYP_ULONG | MUCS_RTYP_BW_AND | MUCS_RTYP_BW_NOT,.cust_ptr = &app_uflags_nand,.def_nvalue.v_ulong = 0xfff,.val = 0, "app_uflags_nand",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT},    /* */
+    {.name = "",.shortn = '$',.flags = MUCS_FLAG_LASTOPT},           /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

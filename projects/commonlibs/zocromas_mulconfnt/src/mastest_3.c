@@ -34,6 +34,18 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   char *v_string2 = NULL;
   char *v_string3 = NULL;
 
+  mucs_option_t options[] = {
+    {.s = {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string2", 0, MUCS_RTYP_STRING, &v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string3", 0, MUCS_RTYP_STRING, &v_string3,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
+
+    , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
+  };
+  mucs_option_table_list_t test_tablist = {
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
+  };
+
   const char *xargv[] = {
     argv[0],
     "something",
@@ -48,18 +60,6 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 #define NUM_NOPTS ( sizeof( xargv ) / sizeof( xargv[0] ) - NUM_OPTS )
 
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
-
-  mucs_option_t options[] = {
-    {.s={"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
-    , {.s={"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
-    , {.s={"string2", 0, MUCS_RTYP_STRING, &v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
-    , {.s={"string3", 0, MUCS_RTYP_STRING, &v_string3,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
-
-    , {.s={.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
-  };
-  mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
-  };
 
   {
     FILE *f;
