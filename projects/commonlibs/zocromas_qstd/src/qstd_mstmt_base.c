@@ -2,8 +2,8 @@
 /* #define RGEMSG mysql_error(mas_qstd_mysql(qstd)) */
 #define RGEMSG mas_qstd_mysql_error(qstd)
 #include "qstd_defs.h"
-#include <string.h>
-#include <unistd.h>
+/* #include <string.h> */
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -13,7 +13,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt.h>
-#include <mastar/mysqlpfs/mysqlpfs_query.h>
+/* #include <mastar/mysqlpfs/mysqlpfs_query.h> */
 
 #include "qstd_structs.h"
 #include "qstd_mstmt.h"
