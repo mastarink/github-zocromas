@@ -33,6 +33,9 @@ sfind option_base.c
 tab sfind option.h
 sfind option.c
 
+tab sfind option_ref.h
+sfind option_ref.c
+
 tab sfind option_tablist_base.h
 sfind option_tablist_base.c
 

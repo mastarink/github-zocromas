@@ -1,5 +1,4 @@
 #define R_GOOD(_r) ((_r)>=0)
-/* #include <stdio.h> */
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -9,19 +8,14 @@
 /* #include <mastar/regerr/masregerr.h> */
 #include <mastar/regerr/masregerr_defs.h>
 
+#include <mastar/mulconfnt/mulconfnt_enums.h>
 #include <mastar/mulconfnt/mulconfnt_structs.h>
 
 #include <mastar/mulconfnt/option_interface_base.h>
 #include <mastar/mulconfnt/option_interface.h>
+#include <mastar/mulconfnt/option_ref.h>
 
-#include <mastar/masxfs/masxfs_pathinfo_base.h>
-#include <mastar/masxfs/masxfs_pathinfo.h>
-
-/* #include <mastar/levinfo/masxfs_levinfo_types.h> */
-#include <mastar/levinfo/masxfs_levinfo_structs.h>
-#include <mastar/levinfo/masxfs_levinfo_ref.h>
-
-#include <mastar/qstd/qstd_mstmt_base.h>
+#include <mastar/levinfo/masxfs_levinfo_enums.h>
 
 #include "structs.h"
 #include "mysql.h"
@@ -33,25 +27,24 @@ static int
 arg_process( mucs_option_t * opt, void *userdata )
 {
   rDECLGOOD;
-  if ( opt && opt->npos > 0 ) /* to skip argv[0] */
+  if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
   {
     char *path;
     int len;
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
 
-    /* WARN( "%d. ARG:'%s'", opt->npos, opt->string_value ); */
+  /* WARN( "%d. ARG:'%s'", opt->npos, opt->string_value ); */
 #if 0
     path = mas_normalize_path_cwd( opt->string_value );
 #else
-    path = mas_normalize_path_cwd_dots( opt->string_value );
+    path = mas_normalize_path_cwd_dots( mucs_config_option_string_value( opt ) );
 #endif
     len = strlen( path );
-    mas_free( opt->string_value );
     if ( path[0] && path[1] && path[len - 1] == '/' )
       path[len - 1] = 0;
-    opt->string_value = path;
+    mucs_config_option_set_string_value_na( opt, path );
 
-    rC( mas_tree( opt->string_value, pdufnx_data->max_depth, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
+    rC( mas_tree( mucs_config_option_string_value( opt ), pdufnx_data->max_depth, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
   }
   rRET;
 }
@@ -66,7 +59,7 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
        .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
     , {.name = "max-depth",.shortn = '\0' /* 'd' */ ,.restype = MUCS_RTYP_UINT,.cust_ptr = &pdufnx_data->max_depth}
     , {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,.callback = arg_process}
-    , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
   };
   mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "main-table", options, TRUE );
 

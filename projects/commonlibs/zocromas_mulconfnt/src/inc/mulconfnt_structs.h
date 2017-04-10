@@ -87,9 +87,7 @@ union nvalue_u
   double v_double;
   long double v_ldouble;
 };
-
-# define MUCS_NONOPT_NAME "@NONOPT@"
-struct mucs_option_s
+struct mucs_option_static_s
 {
   char *name;
   char shortn;
@@ -100,19 +98,48 @@ struct mucs_option_s
   char *argdesc;
   const char *def_string_value;
   nvalue_t def_nvalue;
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  mucs_flags_t flags;
+  mucs_option_callback_t callback;
+};
+struct mucs_option_dynamic_s
+{
   int has_value;
   char *string_value;
   nvalue_t nvalue;
-  mucs_flags_t flags;
 
   int npos;
 
   mucs_source_t *source;
-  mucs_option_callback_t callback;
   mucs_source_extra_cb_t extra_cb;
   int value_is_set;
-/* mucs_error_t error; */
+};
+
+# define MUCS_NONOPT_NAME "@NONOPT@"
+struct mucs_option_s
+{
+  /* mucs_option_static_t s; */
+  char *name;
+  char shortn;
+  mucs_restype_t restype;
+  void *cust_ptr;
+  int val;
+  char *desc;
+  char *argdesc;
+  const char *def_string_value;
+  nvalue_t def_nvalue;
+  mucs_flags_t flags;
+  mucs_option_callback_t callback;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+  int has_value;
+  char *string_value;
+  nvalue_t nvalue;
+
+  int npos;
+
+  mucs_source_t *source;
+  mucs_source_extra_cb_t extra_cb;
+  int value_is_set;
 };
 
 struct mucs_option_table_list_s
