@@ -115,11 +115,12 @@ struct mucs_option_s
 
 struct mucs_option_table_list_s
 {
-  unsigned created:1;
+  unsigned allocated:1;
   mucs_option_table_list_t *next;
-  unsigned count;
+  unsigned count;                                                    /* real options number */
   char *name;
-  const mucs_option_t *options;
+/* const */ mucs_option_t *voptions;
+  const mucs_option_t *coptions;
 };
 
 struct mucs_optscanner_s

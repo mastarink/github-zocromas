@@ -12,6 +12,7 @@
 /* #include "mulconfnt_error.h" */
 
 #include "option.h"
+#include "option_tablist.h"
 
 #include "option_tablist_base.h"
 
@@ -20,6 +21,37 @@
  * mucs_config_option_tablist_...
  *
  * */
+
+mucs_option_t *
+mucs_config_aoptions_clone( const mucs_option_t * options, size_t count )
+{
+  mucs_option_t *options_clone = mas_calloc( count + 1, sizeof( mucs_option_t ) );
+
+/* for ( const mucs_option_t * opt = tabnode->options; opt && opt->name; opt++ ) */
+  for ( unsigned no = 0; no < count; no++ )
+  {
+    options_clone[no] = options[no];
+    options_clone[no].name = mas_strdup( options[no].name );
+  }
+  return options_clone;
+}
+
+void
+mucs_config_aoptions_reset( mucs_option_t * options, size_t count )
+{
+  for ( unsigned no = 0; no < count; no++ )
+  {
+    mas_free( options[no].name );
+    options[no].name = NULL;
+  }
+}
+
+void
+mucs_config_aoptions_delete( mucs_option_t * options, size_t count )
+{
+  mucs_config_aoptions_reset( options, count );
+  mas_free( options );
+}
 
 void
 mucs_config_option_tabnode_init( mucs_option_table_list_t * tablist )
@@ -33,7 +65,7 @@ mucs_config_option_tabnode_create( void )
   mucs_option_table_list_t *tablist = mas_calloc( 1, sizeof( mucs_option_table_list_t ) );
 
   mucs_config_option_tabnode_init( tablist );
-  tablist->created = 1;
+  tablist->allocated = 1;
   return tablist;
 }
 
@@ -48,7 +80,7 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
     {
       for ( const mucs_option_t * o = options; o && o->name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
         count++;
-      /* WARN( "COUNT:%ld", ( long ) count ); */
+    /* WARN( "COUNT:%ld", ( long ) count ); */
     }
     if ( tablist )
     {
@@ -63,8 +95,13 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
       tablist = tbnew;
     }
     {
-      tbnew->name = mas_strdup( name );
-      tbnew->options = options;
+      if ( tbnew->allocated )
+      {
+        tbnew->name = mas_strdup( name );
+        tbnew->voptions = mucs_config_aoptions_clone( options, count );
+      }
+      else /* really never happens !? */
+        tbnew->coptions = options;
       tbnew->count = count;
     }
   }
@@ -76,7 +113,8 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
 {
   if ( tabnode )
   {
-    for ( const mucs_option_t * opt = tabnode->options; opt && opt->name; opt++ )
+  /* TODO: tbnew->count */
+    for ( const mucs_option_t * opt = mucs_config_option_tabnode_aoptions( tabnode ); opt && opt->name; opt++ )
     {
       if ( opt && opt->cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
@@ -93,8 +131,9 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
         }
       }
     }
-    if ( tabnode->created && tabnode->name )
+    if ( tabnode->allocated && tabnode->name )
     {
+      mucs_config_aoptions_delete( tabnode->voptions, tabnode->count );
       mas_free( tabnode->name );
       tabnode->name = NULL;
     }

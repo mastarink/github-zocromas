@@ -218,7 +218,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
           mucs_config_option_tabnode_add( NULL, test_tablist, "test-table", options, sizeof( options ) / sizeof( options[0] ) );
 #else
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.options = options,
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options,
   };
 #endif
   {

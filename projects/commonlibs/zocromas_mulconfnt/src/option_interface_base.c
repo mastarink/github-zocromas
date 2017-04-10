@@ -80,6 +80,13 @@ mucs_config_option_interface_create_setup( const char *name, const mucs_option_t
   return interface;
 }
 
+mucs_option_interface_t *
+mucs_config_option_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_t * options )
+{
+  interface->tablist = mucs_config_option_tabnode_add( interface->tablist, name, options, 0 /* count=<auto> */  );
+  return interface;
+}
+
 void
 mucs_config_option_interface_reset( mucs_option_interface_t * interface )
 {

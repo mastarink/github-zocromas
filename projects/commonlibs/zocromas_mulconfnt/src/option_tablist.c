@@ -23,6 +23,18 @@
  *
  * */
 
+const mucs_option_t *
+mucs_config_option_tabnode_aoptions( const mucs_option_table_list_t * tabnode )
+{
+  const mucs_option_t *options = NULL;
+
+  if ( tabnode->allocated )
+    options = tabnode->voptions;
+  else
+    options = tabnode->coptions;
+  return options;
+}
+
 int
 mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, const char *arg_nopref, const char *eq, mucs_optscanner_t * optscan )
 {
@@ -41,7 +53,7 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
 #else
     do
     {
-      rC( mucs_config_option_lookup_option_table( tablist->options, arg_nopref, eq, optscan ) );
+      rC( mucs_config_option_lookup_option_table( mucs_config_option_tabnode_aoptions( tablist ), arg_nopref, eq, optscan ) );
       tablist = tablist->next;
     } while ( rGOOD && !optscan->found_topt && tablist );
 #endif

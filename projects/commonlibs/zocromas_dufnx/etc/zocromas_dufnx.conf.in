@@ -1,2 +1,7 @@
 #
+mysql-user=masdufnt
+mysql-password=i2xV9KrTA54HRpj4e
+mysql-db=masdufntdb
+mysql-server=mysql.mastar.lan
+mysql-port=3306
 
