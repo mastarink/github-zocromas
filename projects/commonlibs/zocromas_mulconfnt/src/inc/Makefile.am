@@ -11,6 +11,7 @@ libzocromas_mulconfntinclude_HEADERS =  \
 	source_list.h \
 	source_base.h \
 	source.h \
+	aoptions.h \
 	option_base.h \
 	option.h \
 	option_tablist_base.h \

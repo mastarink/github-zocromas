@@ -24,6 +24,9 @@ sfind source_base.c
 tab sfind source.h
 sfind source.c
 
+tab sfind aoptions.h
+sfind aoptions.c
+
 tab sfind option_base.h
 sfind option_base.c
 

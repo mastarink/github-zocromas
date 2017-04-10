@@ -12,7 +12,7 @@
 /* #include "mulconfnt_error.h" */
 
 #include "option.h"
-#include "option_tablist.h"
+#include "aoptions.h"
 
 #include "option_tablist_base.h"
 
@@ -21,37 +21,6 @@
  * mucs_config_option_tablist_...
  *
  * */
-
-mucs_option_t *
-mucs_config_aoptions_clone( const mucs_option_t * options, size_t count )
-{
-  mucs_option_t *options_clone = mas_calloc( count + 1, sizeof( mucs_option_t ) );
-
-/* for ( const mucs_option_t * opt = tabnode->options; opt && opt->name; opt++ ) */
-  for ( unsigned no = 0; no < count; no++ )
-  {
-    options_clone[no] = options[no];
-    options_clone[no].name = mas_strdup( options[no].name );
-  }
-  return options_clone;
-}
-
-void
-mucs_config_aoptions_reset( mucs_option_t * options, size_t count )
-{
-  for ( unsigned no = 0; no < count; no++ )
-  {
-    mas_free( options[no].name );
-    options[no].name = NULL;
-  }
-}
-
-void
-mucs_config_aoptions_delete( mucs_option_t * options, size_t count )
-{
-  mucs_config_aoptions_reset( options, count );
-  mas_free( options );
-}
 
 void
 mucs_config_option_tabnode_init( mucs_option_table_list_t * tablist )
@@ -100,7 +69,7 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
         tbnew->name = mas_strdup( name );
         tbnew->voptions = mucs_config_aoptions_clone( options, count );
       }
-      else /* really never happens !? */
+      else                                                           /* really never happens !? */
         tbnew->coptions = options;
       tbnew->count = count;
     }
@@ -113,9 +82,12 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
 {
   if ( tabnode )
   {
-  /* TODO: tbnew->count */
-    for ( const mucs_option_t * opt = mucs_config_option_tabnode_aoptions( tabnode ); opt && opt->name; opt++ )
+    const mucs_option_t *aoptions = mucs_config_option_tabnode_aoptions( tabnode );
+
+    for ( unsigned no = 0; no < tabnode->count; no++ )
     {
+      const mucs_option_t *opt = aoptions + no;
+
       if ( opt && opt->cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
         switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
