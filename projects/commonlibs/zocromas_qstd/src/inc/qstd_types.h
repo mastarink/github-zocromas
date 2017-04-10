@@ -5,7 +5,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 
-typedef struct stat masxfs_stat_t;
+typedef struct stat mas_qstd_stat_t;
 
 # include <mastar/mysqlpfs/mysqlpfs_types.h>
 
