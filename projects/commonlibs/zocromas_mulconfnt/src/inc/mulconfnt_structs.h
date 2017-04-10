@@ -106,6 +106,8 @@ struct mucs_option_s
   nvalue_t nvalue;
   mucs_flags_t flags;
 
+  int npos;
+
   mucs_source_t *source;
   mucs_option_callback_t callback;
   mucs_source_extra_cb_t extra_cb;

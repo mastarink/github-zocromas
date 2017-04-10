@@ -3,6 +3,9 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_dufnx
 
 zocromas_dufnx_SOURCES=\
+	main.c \
+ 	mysql.c \
+ 	tree.c \
 	dufnx.c \
 	dufnx_debug.c
 

@@ -214,6 +214,7 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
       rSETBAD;
 
       opt = mucs_config_option_clone( optscan->found_topt );
+      opt->npos = osrc->curarg;
       if ( opt )
       {
         rSETGOOD;
