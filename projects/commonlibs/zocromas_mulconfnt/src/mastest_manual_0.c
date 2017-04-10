@@ -31,17 +31,17 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 {
   long app_flags = 0x00000000ffff0000L;
 
-  mucs_option_t options[] = {
-    {.s={"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}}, /* */
-    {.s={.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
+  mucs_option_static_t soptions[] = {
+    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
+    {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 
 #if 0
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
+    .next = NULL,.count = ( sizeof( soptions ) / sizeof( soptions[0] ) ),.name = "test-table",.coptions = soptions, /* */
   };
 #else
-  mucs_option_table_list_t *test_tablist = mucs_config_option_tabnode_add( NULL, "test-table", options, 0 );
+  mucs_option_table_list_t *test_tablist = mucs_config_soption_tabnode_add( NULL, "test-table", soptions, 0 );
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 

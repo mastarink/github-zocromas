@@ -52,7 +52,7 @@ arg_process( mucs_option_t * opt, void *userdata )
 mucs_option_interface_t *
 dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
 {
-  mucs_option_t options[] = {
+  mucs_option_static_t soptions[] = {
     {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
     , {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,
@@ -61,7 +61,7 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,.callback = arg_process}
     , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
   };
-  mucs_option_interface_t *interface = mucs_config_option_interface_create_setup( "main-table", options, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "main-table", soptions, TRUE );
 
   return interface;
 }

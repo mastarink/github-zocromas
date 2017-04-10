@@ -620,12 +620,17 @@ mucs_config_option_flags( const mucs_option_t * opt )
 }
 
 int
+mucs_config_soption_flag( const mucs_option_static_t * sopt, mucs_flags_t mask )
+{
+  return sopt ? ( sopt->flags & mask ) : 0;
+}
+
+int
 mucs_config_option_flag( const mucs_option_t * opt, mucs_flags_t mask )
 {
   int osrcflag = opt->d.source ? mucs_source_flag( opt->d.source, mask ) : 0L;
 
-/* return opt ? ( osrcflag | ( opt->s.flags & mask ) ? 1 : 0 ) : 0; */
-  return opt ? ( osrcflag || ( opt->s.flags & mask ) ) : 0;
+  return opt ? ( osrcflag || mucs_config_soption_flag( &opt->s, mask ) ) : 0;
 }
 
 #if 0

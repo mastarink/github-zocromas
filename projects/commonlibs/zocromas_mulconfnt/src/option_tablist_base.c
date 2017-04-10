@@ -77,6 +77,47 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
   return tablist;
 }
 
+mucs_option_table_list_t *
+mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t count )
+{
+  mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );
+
+  if ( tbnew )
+  {
+    if ( !count )
+    {
+      for ( const mucs_option_static_t * so = soptions; so && so->name && !mucs_config_soption_flag( so, MUCS_FLAG_LAST_IN_TABLE ); so++ )
+        count++;
+    /* WARN( "COUNT:%ld", ( long ) count ); */
+    }
+    if ( tablist )
+    {
+      mucs_option_table_list_t *tb = tablist;
+
+      while ( tb->next )
+        tb = tb->next;
+      tb->next = tbnew;
+    }
+    else
+    {
+      tablist = tbnew;
+    }
+    {
+      if ( tbnew->allocated )
+      {
+        tbnew->name = mas_strdup( name );
+        tbnew->voptions = mucs_config_asoptions_clone( soptions, count );
+      }
+      else                                                           /* really never happens !? */
+      {
+        QRGM( -1, "wrong call" );
+      }
+      tbnew->count = count;
+    }
+  }
+  return tablist;
+}
+
 void
 mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
 {
