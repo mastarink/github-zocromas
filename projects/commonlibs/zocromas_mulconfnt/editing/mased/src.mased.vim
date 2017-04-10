@@ -1,4 +1,6 @@
 find mulconfnt_defs.h
+sfind types.h
+sfind structs.h
 sfind mulconfnt_types.h
 sfind mulconfnt_structs.h
 sfind mulconfnt_enums.h

@@ -6,6 +6,7 @@
 
 /* #include <mastar/wrap/mas_std_def.h> */
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mas_arg_tools.h"
 #include "mas_argvc_tools.h"
@@ -202,7 +203,7 @@ mas_normalize_path_cwd( const char *path )
 }
 
 char *
-mas_remove_path_dots( const char *path )
+mas_remove_path_dots( const char *path, int trailing_slash )
 {
   char *npath = NULL;
   int done = 0;
@@ -247,29 +248,32 @@ mas_remove_path_dots( const char *path )
       targ.argc = d;
     }
   } while ( done );
+  if ( trailing_slash )
+    mas_add_argvc_arg( &targ, "" );
   npath = mas_argvc_join( &targ, 0, '/' );
   mas_argvc_delete( &targ );
   return npath;
 }
 
 char *
-mas_normalize_path_dots( const char *path )
+mas_normalize_path_dots( const char *path, int trailing_slash )
 {
   char *npath = NULL;
   char *p = mas_normalize_path( path );
 
-  npath = mas_remove_path_dots( p );
+  npath = mas_remove_path_dots( p, trailing_slash );
   mas_free( p );
   return npath;
 }
 
 char *
-mas_normalize_path_cwd_dots( const char *path )
+mas_normalize_path_cwd_dots( const char *path, int trailing_slash )
 {
   char *npath = NULL;
   char *p = mas_normalize_path_cwd( path );
 
-  npath = mas_remove_path_dots( p );
+  npath = mas_remove_path_dots( p, trailing_slash );                 
   mas_free( p );
+
   return npath;
 }

@@ -10,8 +10,8 @@ char *mas_normalize_path_plus( const char *path, ... );
 char *mas_normalize_path_plus_wd( const char *path, const char *cwd, ... );
 char *mas_normalize_path_cwd( const char *path );
 
-char *mas_remove_path_dots( const char *path );
-char *mas_normalize_path_dots( const char *path );
-char *mas_normalize_path_cwd_dots( const char *path );
+char *mas_remove_path_dots( const char *path, int trailing_slash );
+char *mas_normalize_path_dots( const char *path, int trailing_slash );
+char *mas_normalize_path_cwd_dots( const char *path, int trailing_slash );
 
 #endif

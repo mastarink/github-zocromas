@@ -8,8 +8,7 @@
 /* #include <mastar/regerr/masregerr.h> */
 #include <mastar/regerr/masregerr_defs.h>
 
-#include <mastar/mulconfnt/mulconfnt_enums.h>
-#include <mastar/mulconfnt/mulconfnt_structs.h>
+#include <mastar/mulconfnt/structs.h>
 
 #include <mastar/mulconfnt/option_interface_base.h>
 #include <mastar/mulconfnt/option_interface.h>
@@ -37,7 +36,16 @@ arg_process( mucs_option_t * opt, void *userdata )
 #if 0
     path = mas_normalize_path_cwd( opt->string_value );
 #else
-    path = mas_normalize_path_cwd_dots( mucs_config_option_string_value( opt ) );
+    {
+      char *path;
+
+      path = mas_normalize_path_cwd_dots( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs//.//zocromas_dufnx/mastest/",
+                                          TRUE );
+      WARN( "path:'%s'", path );
+      mas_free( path );
+    }
+    path = mas_normalize_path_cwd_dots( mucs_config_option_string_value( opt ), FALSE );
+    WARN( "path:'%s'", path );
 #endif
     len = strlen( path );
     if ( path[0] && path[1] && path[len - 1] == '/' )

@@ -1,10 +1,11 @@
-#ifndef MUCS_STRUCTS_H
-# define MUCS_STRUCTS_H
+#ifndef MUCS_MULCONFNT_STRUCTS_H
+# define MUCS_MULCONFNT_STRUCTS_H
 
 # include <mastar/tools/mas_argvc_tools.h>
 
 # include "mulconfnt_types.h"
 # include "mulconfnt_enums.h"
+# include "structs.h"
 
 struct mucs_prefix_encoder_s
 {
@@ -72,35 +73,7 @@ struct mucs_source_list_s
 /* mucs_error_t error; */
 };
 
-union nvalue_u
-{
-  char v_char;
-  unsigned char v_uchar;
-  short v_short;
-  unsigned short v_ushort;
-  int v_int;
-  unsigned int v_uint;
-  long v_long;
-  unsigned long v_ulong;
-  long long v_long_long;
-  unsigned long long v_ulong_long;
-  double v_double;
-  long double v_ldouble;
-};
-struct mucs_option_static_s
-{
-  char *name;
-  char shortn;
-  mucs_restype_t restype;
-  void *cust_ptr;
-  int val;
-  char *desc;
-  char *argdesc;
-  const char *def_string_value;
-  nvalue_t def_nvalue;
-  mucs_flags_t flags;
-  mucs_option_callback_t callback;
-};
+
 struct mucs_option_dynamic_s
 {
   int has_value;
@@ -114,7 +87,6 @@ struct mucs_option_dynamic_s
   int value_is_set;
 };
 
-# define MUCS_NONOPT_NAME "@NONOPT@"
 struct mucs_option_s
 {
 # if 1

@@ -1,6 +1,8 @@
 libzocromas_mulconfntincludedir = $(includedir)/mastar/mulconfnt
 libzocromas_mulconfntinclude_HEADERS =  \
 	mulconfnt_defs.h \
+	types.h \
+	structs.h \
 	mulconfnt_types.h \
 	mulconfnt_structs.h \
 	mulconfnt_enums.h \

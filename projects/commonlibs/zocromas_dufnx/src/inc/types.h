@@ -1,5 +1,5 @@
 #ifndef MAS_DUFNX_TYPES_H
-#define MAS_DUFNX_TYPES_H
+# define MAS_DUFNX_TYPES_H
 
 # include <mastar/levinfo/masxfs_levinfo_types.h>
 # include <mastar/tools/mas_argvc_types.h>

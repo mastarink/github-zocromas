@@ -7,5 +7,5 @@ Name: @PACKAGE_NAME@
 Description: @PACKAGE_NAME@ library (@PACKAGE_NAME@).
 # Requires: something-3.0 somethingelse-2.0 somethingmore-1.0
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -l@PACKAGE_NAME@ -lzocromas_mas_arg_tools
+Libs: -L${libdir} -l@PACKAGE_NAME@
 Cflags: -I${includedir}

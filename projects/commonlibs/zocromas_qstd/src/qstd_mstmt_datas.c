@@ -11,7 +11,7 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
-#include <mastar/masxfs/masxfs_types.h>
+/* #include <mastar/masxfs/masxfs_types.h> */
 
 #include <mastar/mysqlpfs/mysqlpfs_base.h>
 #include <mastar/mysqlpfs/mysqlpfs_mstmt_base.h>

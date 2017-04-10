@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "masregerr_structs.h"
 #include "masregerr_base.h"

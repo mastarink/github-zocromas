@@ -1,10 +1,9 @@
-#ifndef MUCS_TYPES_H
-# define MUCS_TYPES_H
+#ifndef MUCS_MULCONFNT_TYPES_H
+# define MUCS_MULCONFNT_TYPES_H
 
 # define MULCONFNT_ETC_CONFIG MAS_SYSCONFDIR "/" PACKAGE_NAME ".conf"
 # include <mastar/tools/mas_argvc_tools.h>
 
-typedef union nvalue_u nvalue_t;
 
 typedef unsigned long mucs_flags_t;
 
@@ -29,7 +28,6 @@ typedef enum mucs_variant_e mucs_variant_t;
 typedef enum mucs_restype_e mucs_restype_t;
 typedef enum mucs_bitwise_e mucs_bitwise_t;
 typedef struct mucs_option_s mucs_option_t;
-typedef struct mucs_option_static_s mucs_option_static_t;
 typedef struct mucs_option_dynamic_s mucs_option_dynamic_t;
 typedef int ( *mucs_option_callback_t ) ( mucs_option_t * opt, void *userdata );
 typedef struct mucs_option_table_list_s mucs_option_table_list_t;
