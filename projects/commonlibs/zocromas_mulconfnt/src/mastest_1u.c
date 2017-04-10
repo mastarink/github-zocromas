@@ -84,29 +84,29 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
   mucs_option_t options[] = {
-    {"num0", 0, MUCS_RTYP_UINT, &v_uint0}
-    , {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}
-    , {"cnum0", 0, MUCS_RTYP_UCHAR, &v_uchar0}
-    , {"snum0", 0, MUCS_RTYP_USHORT, &v_ushort0}
-    , {"num1", 0, MUCS_RTYP_UINT, &v_uint1}
-    , {"num2", 0, MUCS_RTYP_UINT, &v_uint2}
-    , {"num3", 0, MUCS_RTYP_UINT, &v_uint3}
-    , {"num4", 0, MUCS_RTYP_UINT, &v_uint4}
-    , {"lnum0", 0, MUCS_RTYP_ULONG, &v_ulong0}
-    , {"lnum1", 0, MUCS_RTYP_UINT, &v_ulong1}
-    , {"lnum2", 0, MUCS_RTYP_ULONG, &v_ulong2}
-    , {"lnum3", 0, MUCS_RTYP_ULONG, &v_ulong3}
-    , {"lnum4", 0, MUCS_RTYP_ULONG, &v_ulong4}
-    , {"llnum0", 0, MUCS_RTYP_ULLONG, &v_ullong0}
-    , {"llnum1", 0, MUCS_RTYP_ULLONG, &v_ullong1}
-    , {"llnum2", 0, MUCS_RTYP_ULLONG, &v_ullong2}
-    , {"llnum3", 0, MUCS_RTYP_ULLONG, &v_ullong3}
-    , {"llnum4", 0, MUCS_RTYP_ULLONG, &v_ullong4}
-    , {"bwi", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
+    {.s={"num0", 0, MUCS_RTYP_UINT, &v_uint0}}
+    , {.s={"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}}
+    , {.s={"cnum0", 0, MUCS_RTYP_UCHAR, &v_uchar0}}
+    , {.s={"snum0", 0, MUCS_RTYP_USHORT, &v_ushort0}}
+    , {.s={"num1", 0, MUCS_RTYP_UINT, &v_uint1}}
+    , {.s={"num2", 0, MUCS_RTYP_UINT, &v_uint2}}
+    , {.s={"num3", 0, MUCS_RTYP_UINT, &v_uint3}}
+    , {.s={"num4", 0, MUCS_RTYP_UINT, &v_uint4}}
+    , {.s={"lnum0", 0, MUCS_RTYP_ULONG, &v_ulong0}}
+    , {.s={"lnum1", 0, MUCS_RTYP_UINT, &v_ulong1}}
+    , {.s={"lnum2", 0, MUCS_RTYP_ULONG, &v_ulong2}}
+    , {.s={"lnum3", 0, MUCS_RTYP_ULONG, &v_ulong3}}
+    , {.s={"lnum4", 0, MUCS_RTYP_ULONG, &v_ulong4}}
+    , {.s={"llnum0", 0, MUCS_RTYP_ULLONG, &v_ullong0}}
+    , {.s={"llnum1", 0, MUCS_RTYP_ULLONG, &v_ullong1}}
+    , {.s={"llnum2", 0, MUCS_RTYP_ULLONG, &v_ullong2}}
+    , {.s={"llnum3", 0, MUCS_RTYP_ULLONG, &v_ullong3}}
+    , {.s={"llnum4", 0, MUCS_RTYP_ULLONG, &v_ullong4}}
+    , {.s={"bwi", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}}
+    , {.s={"bwi+", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}}
+    , {.s={"bwi-", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}}
 
-    , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.s={.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */

@@ -25,18 +25,18 @@ mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_
   {
     mucs_source_list_t *source_list = mucs_source_list_create(  );
 
-    char *fpath = mucs_source_absfile( opt->extra_cb.source, opt->string_value );
+    char *fpath = mucs_source_absfile( opt->d.extra_cb.source, opt->d.string_value );
 
-    char *t = canonicalize_file_name( opt->string_value );
-    char *t1 = realpath( opt->string_value, NULL );
+    char *t = canonicalize_file_name( opt->d.string_value );
+    char *t1 = realpath( opt->d.string_value, NULL );
 
-  /* WARN( "oooooooooooooooo:%s = '%s'/'%s'/'%s' :: %s", opt->name, opt->string_value, t, t1, fpath ); */
+  /* WARN( "oooooooooooooooo:%s = '%s'/'%s'/'%s' :: %s", opt->s.name, opt->d.string_value, t, t1, fpath ); */
     free( t1 );
     free( t );
 
     mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, 0, fpath );
 
-    mucs_source_list_lookup_all( source_list, opt->extra_cb.tablist, NULL );
+    mucs_source_list_lookup_all( source_list, opt->d.extra_cb.tablist, NULL );
 
     if ( fpath )
       mas_free( fpath );
@@ -47,8 +47,8 @@ mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_
 }
 
 const mucs_option_t mucs_interface_options[] = {
-  {.name = "mucs-include",.shortn = '\0',.restype = MUCS_RTYP_STRING,.callback = mucs_config_option_interface_callback},
-  {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+  {.s = {.name = "mucs-include",.shortn = '\0',.restype = MUCS_RTYP_STRING,.callback = mucs_config_option_interface_callback}},
+  {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
 };
 
 void

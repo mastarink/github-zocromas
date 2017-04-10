@@ -117,7 +117,9 @@ struct mucs_option_dynamic_s
 # define MUCS_NONOPT_NAME "@NONOPT@"
 struct mucs_option_s
 {
-  /* mucs_option_static_t s; */
+# if 1
+  mucs_option_static_t s;
+# else
   char *name;
   char shortn;
   mucs_restype_t restype;
@@ -129,8 +131,11 @@ struct mucs_option_s
   nvalue_t def_nvalue;
   mucs_flags_t flags;
   mucs_option_callback_t callback;
+# endif
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+# if 1
+  mucs_option_dynamic_t d;
+# else
   int has_value;
   char *string_value;
   nvalue_t nvalue;
@@ -140,6 +145,7 @@ struct mucs_option_s
   mucs_source_t *source;
   mucs_source_extra_cb_t extra_cb;
   int value_is_set;
+# endif
 };
 
 struct mucs_option_table_list_s

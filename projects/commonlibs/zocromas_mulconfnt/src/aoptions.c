@@ -39,7 +39,7 @@ mucs_config_aoptions_clone( const mucs_option_t * options, size_t count )
   for ( unsigned no = 0; no < count; no++ )
   {
     options_clone[no] = options[no];
-    options_clone[no].name = mas_strdup( options[no].name );
+    options_clone[no].s.name = mas_strdup( options[no].s.name );
   }
   return options_clone;
 }
@@ -49,8 +49,8 @@ mucs_config_aoptions_reset( mucs_option_t * options, size_t count )
 {
   for ( unsigned no = 0; no < count; no++ )
   {
-    mas_free( options[no].name );
-    options[no].name = NULL;
+    mas_free( options[no].s.name );
+    options[no].s.name = NULL;
   }
 }
 

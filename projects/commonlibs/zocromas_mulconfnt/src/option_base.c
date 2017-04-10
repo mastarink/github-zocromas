@@ -43,14 +43,14 @@ mucs_config_option_reset( mucs_option_t * opt )
 {
   if ( opt )
   {
-    if ( opt->name )
-      mas_free( opt->name );
-    if ( opt->desc )
-      mas_free( opt->desc );
-    if ( opt->argdesc )
-      mas_free( opt->argdesc );
-    if ( opt->string_value )
-      mas_free( opt->string_value );
+    if ( opt->s.name )
+      mas_free( opt->s.name );
+    if ( opt->s.desc )
+      mas_free( opt->s.desc );
+    if ( opt->s.argdesc )
+      mas_free( opt->s.argdesc );
+    if ( opt->d.string_value )
+      mas_free( opt->d.string_value );
     /* mucs_error_reset( &opt->error ); */
   }
 }
@@ -69,9 +69,9 @@ mucs_config_option_clone( const mucs_option_t * topt )
   mucs_option_t *opt = mucs_config_option_create(  );
 
   *opt = *topt;
-  opt->name = mas_strdup( opt->name );
-  opt->desc = mas_strdup( opt->desc );
-  opt->argdesc = mas_strdup( opt->argdesc );
-  opt->string_value = mas_strdup( opt->string_value );
+  opt->s.name = mas_strdup( opt->s.name );
+  opt->s.desc = mas_strdup( opt->s.desc );
+  opt->s.argdesc = mas_strdup( opt->s.argdesc );
+  opt->d.string_value = mas_strdup( opt->d.string_value );
   return opt;
 }

@@ -148,8 +148,8 @@ mucs_source_dealias_opt( mucs_source_t * osrc, const mucs_option_table_list_t * 
 {
   rDECLGOOD;
   optscan->force_value = optscan->string_value;
-  while ( rGOOD && optscan->found_topt && optscan->found_topt->restype == MUCS_RTYP_ALIAS && optscan->found_topt->cust_ptr )
-    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->cust_ptr, osrc->eq, optscan ) );
+  while ( rGOOD && optscan->found_topt && optscan->found_topt->s.restype == MUCS_RTYP_ALIAS && optscan->found_topt->s.cust_ptr )
+    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->s.cust_ptr, osrc->eq, optscan ) );
   optscan->force_value = NULL;
   rRET;
 }
@@ -160,7 +160,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
   rDECLGOOD;
 
   if ( opt && osrc )
-    opt->source = osrc;
+    opt->d.source = osrc;
 
   if ( mucs_config_option_flag( opt, MUCS_FLAG_LASTOPT ) )
     osrc->lastoptpos = osrc->curarg;
@@ -169,8 +169,8 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
   {
     mucs_option_callback_t cb = NULL;
 
-    opt->extra_cb.source = osrc;
-    if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->value_is_set ) && osrc->common_callback
+    opt->d.extra_cb.source = osrc;
+    if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_COMMON_CB_IF_VALUE ) && opt->d.value_is_set ) && osrc->common_callback
          && !mucs_config_option_flag( opt, MUCS_FLAG_NO_COMMON_CB ) )
     {
       cb = osrc->common_callback;
@@ -180,20 +180,20 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
         osrc->extra_cb.callback_called++;
       }
     }
-    if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->value_is_set ) && osrc->type_callbacks
+    if ( !( mucs_config_option_flag( opt, MUCS_FLAG_NO_TYPE_CB_IF_VALUE ) && opt->d.value_is_set ) && osrc->type_callbacks
          && !mucs_config_option_flag( opt, MUCS_FLAG_NO_TYPE_CB ) )
     {
-      cb = osrc->type_callbacks[opt->restype & ~MUCS_RTYP_FLAG_ALL];
+      cb = osrc->type_callbacks[opt->s.restype & ~MUCS_RTYP_FLAG_ALL];
       if ( cb )
       {
         cb( opt, userdata );
         osrc->extra_cb.callback_called++;
       }
     }
-    opt->extra_cb.source = NULL;
+    opt->d.extra_cb.source = NULL;
   }
-  if ( opt->has_value > 0 )                                          /* no matter for opt->has_value == 1 , i.e. may be replaced with "> 1" */
-    osrc->curarg += opt->has_value - 1;
+  if ( opt->d.has_value > 0 )                                          /* no matter for opt->d.has_value == 1 , i.e. may be replaced with "> 1" */
+    osrc->curarg += opt->d.has_value - 1;
 /* TODO additional actions here !! */
   rRET;
 }
@@ -214,7 +214,7 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
       rSETBAD;
 
       opt = mucs_config_option_clone( optscan->found_topt );
-      opt->npos = osrc->curarg;
+      opt->d.npos = osrc->curarg;
       if ( opt )
       {
         rSETGOOD;
@@ -226,16 +226,16 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
 
           if ( rGOOD )
           {
-            if ( opt->callback /* && !opt->cust_ptr */  )
+            if ( opt->s.callback /* && !opt->s.cust_ptr */  )
             {
-              opt->extra_cb.tablist = tablist;
-              opt->extra_cb.source = osrc;
-              rC( opt->callback( opt, userdata ) );
-              opt->extra_cb.source = NULL;
-              opt->extra_cb.tablist = NULL;
-              opt->extra_cb.callback_called++;
+              opt->d.extra_cb.tablist = tablist;
+              opt->d.extra_cb.source = osrc;
+              rC( opt->s.callback( opt, userdata ) );
+              opt->d.extra_cb.source = NULL;
+              opt->d.extra_cb.tablist = NULL;
+              opt->d.extra_cb.callback_called++;
             }
-            opt->has_value = optscan->has_value;
+            opt->d.has_value = optscan->has_value;
 
             if ( rGOOD )
               mucs_config_option_nvalue_to_ptr( opt );

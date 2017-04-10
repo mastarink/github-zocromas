@@ -58,26 +58,26 @@ test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   };
 
   mucs_option_t options[] = {
-    {"num0", 0, MUCS_RTYP_INT, &v_int0}
-    , {"num1", 0, MUCS_RTYP_INT, &v_int1}
-    , {"num2", 0, MUCS_RTYP_INT, &v_int2}
-    , {"num3", 0, MUCS_RTYP_INT, &v_int3}
-    , {"num4", 0, MUCS_RTYP_INT, &v_int4}
-    , {"lnum0", 0, MUCS_RTYP_LONG, &v_long0}
-    , {"lnum1", 0, MUCS_RTYP_INT, &v_long1}
-    , {"lnum2", 0, MUCS_RTYP_LONG, &v_long2}
-    , {"lnum3", 0, MUCS_RTYP_LONG, &v_long3}
-    , {"lnum4", 0, MUCS_RTYP_LONG, &v_long4}
-    , {"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}
-    , {"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}
-    , {"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}
-    , {"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}
-    , {"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}
-    , {"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}
-    , {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}
-    , {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}
+    {.s = {"num0", 0, MUCS_RTYP_INT, &v_int0}}
+    , {.s = {"num1", 0, MUCS_RTYP_INT, &v_int1}}
+    , {.s = {"num2", 0, MUCS_RTYP_INT, &v_int2}}
+    , {.s = {"num3", 0, MUCS_RTYP_INT, &v_int3}}
+    , {.s = {"num4", 0, MUCS_RTYP_INT, &v_int4}}
+    , {.s = {"lnum0", 0, MUCS_RTYP_LONG, &v_long0}}
+    , {.s = {"lnum1", 0, MUCS_RTYP_INT, &v_long1}}
+    , {.s = {"lnum2", 0, MUCS_RTYP_LONG, &v_long2}}
+    , {.s = {"lnum3", 0, MUCS_RTYP_LONG, &v_long3}}
+    , {.s = {"lnum4", 0, MUCS_RTYP_LONG, &v_long4}}
+    , {.s = {"llnum0", 0, MUCS_RTYP_LLONG, &v_llong0}}
+    , {.s = {"llnum1", 0, MUCS_RTYP_LLONG, &v_llong1}}
+    , {.s = {"llnum2", 0, MUCS_RTYP_LLONG, &v_llong2}}
+    , {.s = {"llnum3", 0, MUCS_RTYP_LLONG, &v_llong3}}
+    , {.s = {"llnum4", 0, MUCS_RTYP_LLONG, &v_llong4}}
+    , {.s = {"bwi", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}}
+    , {.s = {"bwi+", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}}
+    , {.s = {"bwi-", 0, MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}}
 
-    , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
+    , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
   mucs_option_table_list_t test_tablist = {
     .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
@@ -120,9 +120,9 @@ test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
         }
       }
 #if 1
-      mucs_source_list_lookup_all( plist, &test_tablist , NULL);
+      mucs_source_list_lookup_all( plist, &test_tablist, NULL );
 #else
-      mucs_source_lookup_all( osrc, &test_tablist , NULL);
+      mucs_source_lookup_all( osrc, &test_tablist, NULL );
 #endif
 
       masexam_next_group(  );

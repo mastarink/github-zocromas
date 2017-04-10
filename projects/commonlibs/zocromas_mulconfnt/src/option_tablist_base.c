@@ -47,7 +47,7 @@ mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *
   {
     if ( !count )
     {
-      for ( const mucs_option_t * o = options; o && o->name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
+      for ( const mucs_option_t * o = options; o && o->s.name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )
         count++;
     /* WARN( "COUNT:%ld", ( long ) count ); */
     }
@@ -88,15 +88,15 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
     {
       const mucs_option_t *opt = aoptions + no;
 
-      if ( opt && opt->cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
+      if ( opt && opt->s.cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
-        switch ( opt->restype & ~MUCS_RTYP_FLAG_ALL )
+        switch ( opt->s.restype & ~MUCS_RTYP_FLAG_ALL )
         {
         case MUCS_RTYP_STRING:
-          mas_free( *( ( char ** ) opt->cust_ptr ) );
+          mas_free( *( ( char ** ) opt->s.cust_ptr ) );
           break;
         case MUCS_RTYP_TARG:
-          mas_argvc_delete( ( mas_argvc_t * ) opt->cust_ptr );
+          mas_argvc_delete( ( mas_argvc_t * ) opt->s.cust_ptr );
           break;
         default:
           break;
