@@ -79,7 +79,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
   EXAM( app_uflags_or, 0x0UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xffffffffffffffffL, "app_uflags_nand=%lx ? %lx" );
-  mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED );
+  mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED   );
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE );
 
 #if 0

@@ -79,10 +79,10 @@ int
 mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option_table_list_t * tablist, void *userdata )
 {
   rDECLGOOD;
-  source_list->pass++;
   for ( mucs_source_t * os = source_list->first; rGOOD && os; os = os->next )
   {
     rC( mucs_source_lookup_all( os, tablist, userdata ) );
   }
+  /* source_list->pass++; */
   rRET;
 }

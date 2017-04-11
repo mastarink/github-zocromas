@@ -9,6 +9,7 @@
 #include <mastar/regerr/masregerr_defs.h>
 
 #include <mastar/mulconfnt/structs.h>
+#include <mastar/mulconfnt/global.h>
 
 #include <mastar/mulconfnt/option_interface_base.h>
 #include <mastar/mulconfnt/option_interface.h>
@@ -66,7 +67,8 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,
        .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
     , {.name = "max-depth",.shortn = '\0' /* 'd' */ ,.restype = MUCS_RTYP_UINT,.cust_ptr = &pdufnx_data->max_depth}
-    , {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,.callback = arg_process}
+    , {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,
+       .callback = arg_process,.cb_pass = 1}
     , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
   };
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "main-table", soptions, TRUE );
@@ -80,6 +82,8 @@ dufnx( int argc, char *argv[] )
   rDECLGOOD;
   mas_dufnx_data_t dufnx_data = { 0 };
 
+  mucs_set_global_flags( MUCS_FLAG_USE_CBPASS );
+
   mucs_option_interface_t *interface = dufnx_config_interface( &dufnx_data );
 
   dufnx_config_mysql( interface, &dufnx_data );
@@ -90,7 +94,7 @@ dufnx( int argc, char *argv[] )
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL ); */
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
 
-  rC( mucs_option_interface_lookup_all( interface, &dufnx_data ) );
+  rC( mucs_option_interface_lookup_all_multipass( interface, &dufnx_data, 2 ) );
 
   mucs_config_option_interface_delete( interface );
   interface = NULL;

@@ -37,13 +37,13 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
     rSETGOOD;
     while ( rGOOD && !optscan->found_topt && tablist )
     {
-      rC( mucs_config_option_lookup_option_table( mucs_config_option_tabnode_aoptions( tablist ), arg_nopref, eq, optscan ) );
+      rC( mucs_config_option_lookup_options( mucs_config_option_tabnode_aoptions( tablist ), tablist->optcount, arg_nopref, eq, optscan ) );
       tablist = tablist->next;
     }
 #else
     do
     {
-      rC( mucs_config_option_lookup_option_table( mucs_config_option_tabnode_aoptions( tablist ), arg_nopref, eq, optscan ) );
+      rC( mucs_config_option_lookup_options( mucs_config_option_tabnode_aoptions( tablist ), tablist->optcount, arg_nopref, eq, optscan ) );
       tablist = tablist->next;
     } while ( rGOOD && !optscan->found_topt && tablist );
 #endif

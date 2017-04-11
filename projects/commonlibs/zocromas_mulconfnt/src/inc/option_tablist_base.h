@@ -12,8 +12,10 @@ mucs_option_table_list_t *mucs_config_soption_tabnode_add( mucs_option_table_lis
 /*                                                           size_t count );                                                                      */
 
 void mucs_config_option_tabnode_delete( mucs_option_table_list_t * tablist );
+void mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode );
 void mucs_config_option_tabnode_reset( mucs_option_table_list_t * tablist );
 
+void mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist );
 void mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist );
 void mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist );
 

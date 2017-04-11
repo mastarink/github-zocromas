@@ -10,6 +10,8 @@
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
+
 #include "tools.h"
 #include "source.h"
 
@@ -605,16 +607,19 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
 }
 
 int
-mucs_config_option_lookup_option_table( const mucs_option_t * option_table, const char *arg_nopref, const char *eq, mucs_optscanner_t * optscan )
+mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optcount _uUu_, const char *arg_nopref, const char *eq,
+                                   mucs_optscanner_t * optscan )
 {
   rDECLBAD;
 
-  if ( option_table )
+  if ( options )
   {
     rSETGOOD;
-    for ( const mucs_option_t * topt = option_table; rGOOD && topt->s.name; topt++ )
+    for ( const mucs_option_t * topt = options; rGOOD /* && topt->s.name */  && ( ( unsigned ) ( topt - options ) ) < optcount; topt++ )
     {
-      if ( !optscan->found_topt || ( optscan->variantid == MUCS_VARIANT_LONG && strlen( topt->s.name ) > strlen( optscan->found_topt->s.name ) ) )
+      if ( topt->s.name                                              /* && ( topt->pass < 0 || topt->pass == optscan->pass ) */
+           && ( !optscan->found_topt
+                || ( optscan->variantid == MUCS_VARIANT_LONG && strlen( topt->s.name ) > strlen( optscan->found_topt->s.name ) ) ) )
       {
         const char *ep = mucs_config_option_match_name( topt, optscan, arg_nopref, eq );
 
@@ -650,6 +655,35 @@ mucs_config_option_flag( const mucs_option_t * opt, mucs_flags_t mask )
   int osrcflag = opt->d.source ? mucs_source_flag( opt->d.source, mask ) : 0L;
 
   return opt ? ( osrcflag || mucs_config_soption_flag( &opt->s, mask ) ) : 0;
+}
+
+int
+mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, void *userdata )
+{
+  rDECLGOOD;
+
+  if ( optscan->has_value )
+  {
+    mucs_config_option_ptr_to_nvalue( opt );
+
+    rC( mucs_config_option_set_value( opt, optscan ) );
+
+    if ( rGOOD )
+    {
+      if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass )
+           && opt->s.callback /* && !opt->s.cust_ptr */  )
+      {
+        rC( opt->s.callback( opt, userdata ) );
+        opt->d.extra_cb.callback_called++;
+      }
+      opt->d.has_value = optscan->has_value;
+
+      if ( rGOOD )
+        mucs_config_option_nvalue_to_ptr( opt );
+    }
+  }
+
+  rRET;
 }
 
 #if 0

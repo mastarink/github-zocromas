@@ -63,16 +63,14 @@ struct mucs_source_s
   mucs_option_callback_t common_callback;
   mucs_option_callback_t type_callbacks[MUCS_RTYP_MAX + 1];
   mucs_source_extra_cb_t extra_cb;
-  
-  unsigned pass;
+
+  int pass;
 };
 
 struct mucs_source_list_s
 {
   mucs_source_t *first;
   mas_argvc_t targ;
-  unsigned pass;
-/* mucs_error_t error; */
 };
 
 struct mucs_option_dynamic_s
@@ -83,7 +81,7 @@ struct mucs_option_dynamic_s
 
   int npos;
 
-  mucs_source_t *source;
+  mucs_source_t *source;                                             /* not really needed, for testing only */
   mucs_source_extra_cb_t extra_cb;
   int value_is_set;
 };
@@ -125,7 +123,7 @@ struct mucs_option_table_list_s
 {
   unsigned allocated:1;
   mucs_option_table_list_t *next;
-  unsigned count;                                                    /* real options number */
+  unsigned optcount;                                                 /* real options number */
   char *name;
 /* const */ mucs_option_t *voptions;
   const mucs_option_t *coptions;
@@ -144,6 +142,8 @@ struct mucs_optscanner_s
   const char *nextarg;
   const mucs_option_t *found_topt;
   mucs_errors_t errors;
+
+  int pass;
 };
 
 struct mucs_option_interface_s

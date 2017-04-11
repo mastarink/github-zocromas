@@ -35,6 +35,8 @@ struct mucs_option_static_s
   nvalue_t def_nvalue;
   mucs_flags_t flags;
   mucs_option_callback_t callback;
+  int cb_pass;
+  int v_pass;
 };
 
 #endif

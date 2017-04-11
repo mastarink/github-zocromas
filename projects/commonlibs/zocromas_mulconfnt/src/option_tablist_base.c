@@ -39,17 +39,17 @@ mucs_config_option_tabnode_create( void )
 }
 
 /* mucs_option_table_list_t *                                                                                                          */
-/* mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_t * options, size_t count ) */
+/* mucs_config_option_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_t * options, size_t optcount ) */
 /* {                                                                                                                                   */
 /*   mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );                                                          */
 /*                                                                                                                                     */
 /*   if ( tbnew )                                                                                                                      */
 /*   {                                                                                                                                 */
-/*     if ( !count )                                                                                                                   */
+/*     if ( !optcount )                                                                                                                   */
 /*     {                                                                                                                               */
 /*       for ( const mucs_option_t * o = options; o && o->s.name && !mucs_config_option_flag( o, MUCS_FLAG_LAST_IN_TABLE ); o++ )      */
-/*         count++;                                                                                                                    */
-/*     (* WARN( "COUNT:%ld", ( long ) count ); *)                                                                                      */
+/*         optcount++;                                                                                                                    */
+/*     (* WARN( "COUNT:%ld", ( long ) optcount ); *)                                                                                      */
 /*     }                                                                                                                               */
 /*     if ( tablist )                                                                                                                  */
 /*     {                                                                                                                               */
@@ -67,28 +67,28 @@ mucs_config_option_tabnode_create( void )
 /*       if ( tbnew->allocated )                                                                                                       */
 /*       {                                                                                                                             */
 /*         tbnew->name = mas_strdup( name );                                                                                           */
-/*         tbnew->voptions = mucs_config_aoptions_clone( options, count );                                                             */
+/*         tbnew->voptions = mucs_config_aoptions_clone( options, optcount );                                                             */
 /*       }                                                                                                                             */
 /*       else                                                           (* really never happens !? *)                                  */
 /*         tbnew->coptions = options;                                                                                                  */
-/*       tbnew->count = count;                                                                                                         */
+/*       tbnew->optcount = optcount;                                                                                                         */
 /*     }                                                                                                                               */
 /*   }                                                                                                                                 */
 /*   return tablist;                                                                                                                   */
 /* }                                                                                                                                   */
 
 mucs_option_table_list_t *
-mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t count )
+mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t optcount )
 {
   mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );
 
   if ( tbnew )
   {
-    if ( !count )
+    if ( !optcount )
     {
       for ( const mucs_option_static_t * so = soptions; so && so->name && !mucs_config_soption_flag( so, MUCS_FLAG_LAST_IN_TABLE ); so++ )
-        count++;
-    /* WARN( "COUNT:%ld", ( long ) count ); */
+        optcount++;
+    /* WARN( "COUNT:%ld", ( long ) optcount ); */
     }
     if ( tablist )
     {
@@ -106,27 +106,27 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
       if ( tbnew->allocated )
       {
         tbnew->name = mas_strdup( name );
-        tbnew->voptions = mucs_config_soptions2options( soptions, count );
+        tbnew->voptions = mucs_config_soptions2options( soptions, optcount );
       }
       else                                                           /* really never happens !? */
       {
         QRGM( -1, "wrong call" );
-        /* optscan->errors |= MUCS_ERROR_WRONG_CALL; */
+      /* optscan->errors |= MUCS_ERROR_WRONG_CALL; */
       }
-      tbnew->count = count;
+      tbnew->optcount = optcount;
     }
   }
   return tablist;
 }
 
 void
-mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
+mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode )
 {
   if ( tabnode )
   {
     const mucs_option_t *aoptions = mucs_config_option_tabnode_aoptions( tabnode );
 
-    for ( unsigned no = 0; no < tabnode->count; no++ )
+    for ( unsigned no = 0; no < tabnode->optcount; no++ )
     {
       const mucs_option_t *opt = aoptions + no;
 
@@ -146,9 +146,18 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
         }
       }
     }
+  }
+}
+
+void
+mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
+{
+  mucs_config_option_tabnode_reset_cust( tabnode );
+  if ( tabnode )
+  {
     if ( tabnode->allocated && tabnode->name )
     {
-      mucs_config_aoptions_delete( tabnode->voptions, tabnode->count );
+      mucs_config_aoptions_delete( tabnode->voptions, tabnode->optcount );
       mas_free( tabnode->name );
       tabnode->name = NULL;
     }
@@ -162,6 +171,18 @@ mucs_config_option_tabnode_delete( mucs_option_table_list_t * tabnode )
   {
     mucs_config_option_tabnode_reset( tabnode );
     mas_free( tabnode );
+  }
+}
+
+void
+mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist )
+{
+  while ( tablist )
+  {
+    mucs_option_table_list_t *t = tablist;
+
+    tablist = tablist->next;
+    mucs_config_option_tabnode_reset_cust( t );
   }
 }
 

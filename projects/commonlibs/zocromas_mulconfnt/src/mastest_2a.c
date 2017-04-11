@@ -72,7 +72,7 @@ test_2a( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *ser
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "table-2a",.coptions = options, /* */
+    .next = NULL,.optcount = ( sizeof( options ) / sizeof( options[0] ) ) - 1,.name = "table-2a",.coptions = options, /* */
   };
   const char *string_args = {
     "num0=5437\n"

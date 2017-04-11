@@ -13,6 +13,8 @@
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
+
 #include "option_base.h"
 #include "option.h"
 #include "option_tablist.h"
@@ -210,44 +212,32 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
   {
     if ( optscan->found_topt )                                       /* TODO : move to mucs_config_option_tablist_lookup */
     {
-      mucs_option_t *opt = NULL;
-
-      rSETBAD;
-
-      opt = mucs_config_option_clone( optscan->found_topt );
-      opt->d.source = osrc;
-      opt->d.npos = osrc->curarg;
-      if ( opt )
+      if ( !mucs_global_flag( MUCS_FLAG_USE_VPASS ) || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) )
       {
-        rSETGOOD;
-        if ( optscan->has_value )
+        mucs_option_t *opt = mucs_config_option_clone( optscan->found_topt );
+
+      /* assert( ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) ); */
+        if ( opt )
         {
-          mucs_config_option_ptr_to_nvalue( opt );
+          opt->d.source = osrc;
+          opt->d.npos = osrc->curarg;
+          opt->d.extra_cb.tablist = tablist;
+          opt->d.extra_cb.source = osrc;
 
-          rC( mucs_config_option_set_value( opt, optscan ) );
+          rC( mucs_config_option_evaluate( opt, optscan, userdata ) );
 
-          if ( rGOOD )
-          {
-            if ( opt->s.callback /* && !opt->s.cust_ptr */  )
-            {
-              opt->d.extra_cb.tablist = tablist;
-              opt->d.extra_cb.source = osrc;
-              rC( opt->s.callback( opt, userdata ) );
-              opt->d.extra_cb.source = NULL;
-              opt->d.extra_cb.tablist = NULL;
-              opt->d.extra_cb.callback_called++;
-            }
-            opt->d.has_value = optscan->has_value;
-
-            if ( rGOOD )
-              mucs_config_option_nvalue_to_ptr( opt );
-          }
-        }
+        /* opt->d.extra_cb.source = NULL;  */
+        /* opt->d.extra_cb.tablist = NULL; */
 
 /* do something for found option */
-        rC( mucs_source_found_opt( osrc, opt, userdata ) );
-        mucs_config_option_delete( opt );
-        opt = NULL;
+          rC( mucs_source_found_opt( osrc, opt, userdata ) );
+          mucs_config_option_delete( opt );
+          opt = NULL;
+        }
+        else
+        {
+          rSETBAD;
+        }
       }
     }
   }
@@ -320,6 +310,7 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
     nargs++;
     mucs_optscanner_t optscan = {
       .arg = osrc->targ.argv[osrc->curarg],
+      .pass = osrc->pass,
     };
     optscan.at_arg = optscan.arg;
     do
@@ -343,7 +334,6 @@ mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * t
   rDECLBAD;
   if ( osrc )
   {
-    osrc->pass++;
     osrc->ngroup = osrc->targ_loaded = 0;
     do
     {
@@ -352,6 +342,7 @@ mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * t
         break;
       osrc->ngroup++;
     } while ( rCODE > 0 );
+    osrc->pass++;
   }
   rRET;
 }

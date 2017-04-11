@@ -12,6 +12,7 @@
 #include "source_list.h"
 
 #include "option.h"
+#include "option_tablist_base.h"
 
 #include "option_interface.h"
 
@@ -34,5 +35,17 @@ mucs_option_interface_lookup_all( mucs_option_interface_t * interface, void *use
 {
   rDECLBAD;
   rC( mucs_source_list_lookup_all( interface->source_list, interface->tablist, userdata ) );
+  rRET;
+}
+
+int
+mucs_option_interface_lookup_all_multipass( mucs_option_interface_t * interface, void *userdata, int passes )
+{
+  rDECLGOOD;
+  for ( int pass = 0; rGOOD && pass < passes; pass++ )
+  {
+    mucs_config_option_tablist_reset_cust( interface->tablist );
+    rC( mucs_option_interface_lookup_all( interface, userdata ) );
+  }
   rRET;
 }
