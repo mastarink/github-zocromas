@@ -58,8 +58,6 @@ mucs_source_load_targ( mucs_source_t * osrc )
   if ( osrc )
   {
     rSETGOOD;
-  /* if ( osrc->type == MUCS_SOURCE_ARGV )                                                                                  */
-  /*   WARN( "[%d] SRC.PASS:%d; argc:%d (%d:%d)", osrc->type, osrc->pass, osrc->targ.argc, osrc->ngroup, osrc->targ_loaded ); */
     if ( osrc->ngroup == osrc->targ_loaded )
     {
       mas_argvc_delete( &osrc->oldtarg );
@@ -303,8 +301,6 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
   rC( mucs_source_load_targ( osrc ) );
   osrc->lastoptpos = 0;
 
-/* if ( osrc->type == MUCS_SOURCE_ARGV )                                                                                                             */
-/*   WARN( "[%d] SRC.PASS:%d; tablist:%s argc:%d", osrc->type, osrc->pass, tablist && tablist->next ? tablist->next->name : NULL, osrc->targ.argc ); */
   for ( osrc->curarg = 0; osrc && rGOOD /*!masregerrs_count_all_default( NULL, TRUE ) */  && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
   {
     nargs++;
@@ -335,13 +331,20 @@ mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * t
   if ( osrc )
   {
     osrc->ngroup = osrc->targ_loaded = 0;
-    do
+    if ( osrc->pass >= osrc->min_pass )
     {
-      rC( mucs_source_lookup_seq( osrc, tablist, userdata ) );
-      if ( rBAD )
-        break;
-      osrc->ngroup++;
-    } while ( rCODE > 0 );
+      do
+      {
+        rC( mucs_source_lookup_seq( osrc, tablist, userdata ) );
+        if ( rBAD )
+          break;
+        osrc->ngroup++;
+      } while ( rCODE > 0 );
+    }
+    else
+    {
+      rSETGOOD;                                                      /* not an error, just skip */
+    }
     osrc->pass++;
   }
   rRET;

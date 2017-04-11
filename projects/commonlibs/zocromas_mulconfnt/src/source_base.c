@@ -37,7 +37,7 @@ mucs_source_create( void )
 }
 
 mucs_source_t *
-mucs_source_create_setup( mucs_source_type_t source_type, int count, const void *data_ptr, const char *delims,
+mucs_source_create_setup( mucs_source_type_t source_type, int count, const void *data_ptr, int min_pass, const char *delims,
                           const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
   mucs_source_t *osrc = NULL;
@@ -57,6 +57,7 @@ mucs_source_create_setup( mucs_source_type_t source_type, int count, const void 
 
         osrc->type = source_type;
         osrc->count = count;
+        osrc->min_pass = min_pass;
 
         osrc->delim = defsrc->delim;
 

@@ -54,7 +54,7 @@ source_load_string_margv( mucs_source_t * osrc )
 {
   return osrc && osrc->data_ptr
           && osrc->ngroup < osrc->count ? mas_argv_join( 0, ( ( char *** ) osrc->data_ptr )[osrc->ngroup], 0 /* osrc->ngroup > 0 ? 1 : 0 */ ,
-                                                       osrc->delim ) : NULL;
+                                                         osrc->delim ) : NULL;
 }
 
 static mas_argvc_t

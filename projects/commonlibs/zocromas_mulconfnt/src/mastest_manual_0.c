@@ -45,8 +45,8 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 
-  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", ":", "=", NULL );
-  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, argc, argv, NULL, "=", NULL /* pref_ids */  );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", 0, ":", "=", NULL );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, argc, argv, 0, NULL, "=", NULL /* pref_ids */  );
 
   mucs_source_list_lookup_all( plist, test_tablist, NULL );
 

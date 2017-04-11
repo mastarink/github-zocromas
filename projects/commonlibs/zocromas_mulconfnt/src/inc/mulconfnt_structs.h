@@ -65,6 +65,7 @@ struct mucs_source_s
   mucs_source_extra_cb_t extra_cb;
 
   int pass;
+  int min_pass;
 };
 
 struct mucs_source_list_s

@@ -117,7 +117,7 @@ bwi-=0x200\n\
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STREAM, 0, fcmds, ":\r\n", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STREAM, 0, fcmds, 0, ":\r\n", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( fcmds ? 1 : 0, "fcmds: %p", fcmds );

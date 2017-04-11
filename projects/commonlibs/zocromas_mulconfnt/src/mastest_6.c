@@ -113,7 +113,7 @@ test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 //  if ( file_exists(fname) )
     {
       mucs_source_list_t *plist = mucs_source_list_create(  );
-      mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_FILE, 0, fname, ":\r\n", "=", NULL );
+      mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_FILE, 0, fname, 0, ":\r\n", "=", NULL );
 
       masexam_next_group(  );
       EXAMX( plist ? 1 : 0, "plist: %p", plist );

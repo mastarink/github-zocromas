@@ -43,11 +43,11 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE );
 
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV" );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv, 0 );
   mucs_option_interface_lookup_all( interface, NULL );
   INFO( "app_flags (--or):%lx", app_uflags );
   INFO( "app_flags (--xor):%lx", app_flags );

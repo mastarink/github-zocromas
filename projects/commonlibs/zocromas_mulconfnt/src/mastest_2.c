@@ -98,7 +98,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, 0, string_args, ":", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, 0, string_args, 0, ":", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

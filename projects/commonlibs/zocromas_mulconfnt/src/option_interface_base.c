@@ -34,7 +34,7 @@ mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_
     free( t1 );
     free( t );
 
-    mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, 0, fpath );
+    mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, 0, fpath, 0 /* min_pass */ );
 
     mucs_source_list_lookup_all( source_list, opt->d.extra_cb.tablist, NULL );
 

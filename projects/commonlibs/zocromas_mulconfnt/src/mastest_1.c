@@ -237,7 +237,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     masexam_next_group(  );
     EXAM( ( plist ? 1 : 0 ), 1, "plist: %d ? %d" );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, 0, NULL, "=", NULL );
 
     mucs_source_set_common_callback( osrc, ccallback_string );
     mucs_source_set_type_callback( osrc, MUCS_RTYP_STRING, scallback_string );
