@@ -80,7 +80,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_or, 0x0UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xffffffffffffffffL, "app_uflags_nand=%lx ? %lx" );
   mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED );
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "test-table", soptions, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE );
 
 #if 0
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
@@ -93,19 +93,42 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
 
   rC( mucs_option_interface_lookup_all( interface, NULL ) );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 3, "ERRORS: %d ? %d" );
-  mucs_config_option_interface_delete( interface );
-  interface = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
   EXAM( app_uflags_or, 0x505UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_and, 0x100UL, "app_uflags_and=%lx ? %lx" );
   EXAM( app_uflags_and_a, 0x100UL, "app_uflags_and_a=%lx ? %lx" );
-  EXAM( app_uflags_and_b, 0x100UL, "app_uflags_and_a=%lx ? %lx" );   /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
+  EXAM( app_uflags_and_b, 0x100UL, "app_uflags_and_b=%lx ? %lx" );   /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
   EXAM( app_uflags_nand, ~0x505UL, "app_uflags_nand=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xfffffffffffffafaUL, "app_uflags_nand=%lx ? %lx" );
 
+  app_uflags_or = 0UL;
+  app_uflags_and = ~0UL;
+  app_uflags_and_a = ~0UL;
+  app_uflags_and_b = ~0UL;
+  app_uflags_nand = ~0UL;
+
+  EXAM( app_uflags_or, 0x0UL, "app_uflags_or=%lx ? %lx" );
+  EXAM( app_uflags_and, ~0x0UL, "app_uflags_and=%lx ? %lx" );
+  EXAM( app_uflags_and_a, ~0x0UL, "app_uflags_and_a=%lx ? %lx" );
+  EXAM( app_uflags_and_b, ~0x0UL, "app_uflags_and_b=%lx ? %lx" );     /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
+  EXAM( app_uflags_nand, ~0x0UL, "app_uflags_nand=%lx ? %lx" );
+#if 1
+  rC( mucs_option_interface_lookup_all( interface, NULL ) );
+  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 6, "ERRORS: %d ? %d" );
+
+  EXAM( app_uflags_or, 0x505UL, "app_uflags_or=%lx ? %lx" );
+  EXAM( app_uflags_and, 0x100UL, "app_uflags_and=%lx ? %lx" );
+  EXAM( app_uflags_and_a, 0x100UL, "app_uflags_and_a=%lx ? %lx" );
+  EXAM( app_uflags_and_b, ~0x0UL, "app_uflags_and_b=%lx ? %lx" );   /* stdin is over, NOTHING from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
+  EXAM( app_uflags_nand, ~0x505UL, "app_uflags_nand=%lx ? %lx" );
+  EXAM( app_uflags_nand, 0xfffffffffffffafaUL, "app_uflags_nand=%lx ? %lx" );
+#endif
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 3, "ERRORS: %d ? %d" );
+  mucs_config_option_interface_delete( interface );
+  interface = NULL;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 6, "ERRORS: %d ? %d" );
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );

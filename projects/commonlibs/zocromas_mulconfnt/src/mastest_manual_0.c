@@ -38,10 +38,10 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 
 #if 0
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( soptions ) / sizeof( soptions[0] ) ),.name = "test-table",.coptions = soptions, /* */
+    .next = NULL,.count = ( sizeof( soptions ) / sizeof( soptions[0] ) ),.name = "table-manual-0",.coptions = soptions, /* */
   };
 #else
-  mucs_option_table_list_t *test_tablist = mucs_config_soption_tabnode_add( NULL, "test-table", soptions, 0 );
+  mucs_option_table_list_t *test_tablist = mucs_config_soption_tabnode_add( NULL, "table-manual-0", soptions, 0 );
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 

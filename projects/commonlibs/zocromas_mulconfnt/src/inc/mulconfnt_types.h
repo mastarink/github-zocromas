@@ -7,6 +7,8 @@
 
 typedef unsigned long mucs_flags_t;
 
+typedef enum mucs_error_e mucs_error_t;
+typedef unsigned mucs_errors_t;
 typedef enum mucs_source_type_e mucs_source_type_t;
 
 typedef enum mucs_source_mode_e mucs_source_mode_t;
@@ -32,7 +34,6 @@ typedef struct mucs_option_dynamic_s mucs_option_dynamic_t;
 typedef int ( *mucs_option_callback_t ) ( mucs_option_t * opt, void *userdata );
 typedef struct mucs_option_table_list_s mucs_option_table_list_t;
 
-/* typedef struct mucs_error_s mucs_error_t; */
 
 typedef struct mucs_optscanner_s mucs_optscanner_t;
 typedef struct mucs_option_interface_s mucs_option_interface_t;

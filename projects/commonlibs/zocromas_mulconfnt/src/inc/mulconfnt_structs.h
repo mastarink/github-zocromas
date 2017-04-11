@@ -39,7 +39,7 @@ struct mucs_source_s
   int count;
   int lastoptpos;                                                    /*number of arg with last opt */
   int curarg;                                                        /* number of arg withc current arg */
-  int npos;
+  int ngroup;
   const void *data_ptr;
   char delim;
   char *delims;
@@ -63,16 +63,17 @@ struct mucs_source_s
   mucs_option_callback_t common_callback;
   mucs_option_callback_t type_callbacks[MUCS_RTYP_MAX + 1];
   mucs_source_extra_cb_t extra_cb;
+  
+  unsigned pass;
 };
 
 struct mucs_source_list_s
 {
   mucs_source_t *first;
   mas_argvc_t targ;
-
+  unsigned pass;
 /* mucs_error_t error; */
 };
-
 
 struct mucs_option_dynamic_s
 {
@@ -142,6 +143,7 @@ struct mucs_optscanner_s
   const char *force_value;
   const char *nextarg;
   const mucs_option_t *found_topt;
+  mucs_errors_t errors;
 };
 
 struct mucs_option_interface_s

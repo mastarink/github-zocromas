@@ -111,6 +111,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
       else                                                           /* really never happens !? */
       {
         QRGM( -1, "wrong call" );
+        /* optscan->errors |= MUCS_ERROR_WRONG_CALL; */
       }
       tbnew->count = count;
     }

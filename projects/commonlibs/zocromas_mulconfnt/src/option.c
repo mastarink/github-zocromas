@@ -190,7 +190,7 @@ mucs_config_option_string_to_nvalue( mucs_option_t * opt )
 }
 
 static int _uUu_
-mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
+mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optscanner_t * optscan )
 {
   rDECLGOOD;
   if ( opt->s.restype & MUCS_RTYP_BW_NOT )
@@ -205,6 +205,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -221,6 +222,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -237,6 +239,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -253,6 +256,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -269,6 +273,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -285,6 +290,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -302,6 +308,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     {
     /*unable to place number into long */
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -319,6 +326,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
     {
     /*unable to place number into long */
       rSETBAD;
+      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -363,13 +371,12 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x )
 }
 
 static int
-mucs_config_option_set_nvalue( mucs_option_t * opt )
+mucs_config_option_set_nvalue( mucs_option_t * opt, mucs_optscanner_t * optscan )
 {
   rDECLGOOD;
   if ( opt )
   {
     nvalue_t v_x = { 0 };
-
   /* take old value from "user area" to the opt->d.nvalue (opt->d.string_value ?) to be combined with v_x */
 
     if ( mucs_config_option_flag( opt, MUCS_FLAG_USE_DEF_NVALUE ) )
@@ -383,23 +390,27 @@ mucs_config_option_set_nvalue( mucs_option_t * opt )
       if ( errno /* || err */  )
       {
         rSETBAD;
+        optscan->errors |= MUCS_ERROR_WRONG_VALUE;
         QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       }
     }
     if ( rGOOD )
     {
-      mucs_config_option_combine_value( opt, v_x );
+      mucs_config_option_combine_value( opt, v_x, optscan );
     }
   }
   rRET;
 }
 
 int
-mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
+mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /* const char *string_value */  )
 {
   rDECLBAD;
+
   if ( opt )
   {
+    const char *string_value = optscan->string_value;
+
     if ( opt->d.string_value )
       mas_free( opt->d.string_value );
     opt->d.string_value = NULL;
@@ -410,7 +421,7 @@ mucs_config_option_set_value( mucs_option_t * opt, const char *string_value )
     if ( string_value )
       opt->d.string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
-    rC( mucs_config_option_set_nvalue( opt ) );
+    rC( mucs_config_option_set_nvalue( opt, optscan ) );
   }
   rRET;
 }
@@ -471,6 +482,7 @@ mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * o
   case MUCS_VARIANT_IGNORE:
   case MUCS_VARIANTS:
     rSETBAD;
+    optscan->errors |= MUCS_ERROR_UNKNOWN;
     QRGOPTM( topt, rCODE, "unknown error \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
     break;
   }
@@ -504,6 +516,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
       {
         rSETBAD;
       /* TODO bad: value */
+        optscan->errors |= MUCS_ERROR_UNEXPECTED_VALUE;
         QRGOPTM( topt, rCODE, "unexpected value given for \"-%c\" option (short)", topt->s.shortn );
         optscan->has_value = 1;
         optscan->string_value = ep;
@@ -575,9 +588,15 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
         {
           rSETBAD;
           if ( optscan->variantid == MUCS_VARIANT_SHORT )
+          {
+            optscan->errors |= MUCS_ERROR_NO_VALUE;
             QRGOPTM( optscan->found_topt, rCODE, "no value given for \"-%c\" option (short)", topt->s.shortn );
+          }
           else if ( optscan->variantid == MUCS_VARIANT_LONG )
+          {
+            optscan->errors |= MUCS_ERROR_NO_VALUE;
             QRGOPTM( optscan->found_topt, rCODE, "no value given for \"--%s\" option", topt->s.name ); /* !none_value && !has_value */
+          }
         }
       }
     }

@@ -54,6 +54,7 @@ mucs_config_option_tablist_lookup( const mucs_option_table_list_t * tablist, con
         QRGOPTM( optscan->found_topt, rCODE, "unrecognized option \"%s\" at \"%s\"", optscan->at_arg, optscan->arg );
       else
         QRGOPTM( optscan->found_topt, rCODE, "unrecognized option at \"%s\"", optscan->arg );
+      optscan->errors |= MUCS_ERROR_UNRECOGNIZED_OPTION;
       optscan->at_arg = NULL;
       if ( mucs_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED ) )
         rSETGOOD;

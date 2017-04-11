@@ -34,33 +34,33 @@ source_check_string( int count _uUu_, const void *data_ptr _uUu_, const char *de
 static char *
 source_load_string_string( mucs_source_t * osrc )
 {
-  return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( osrc->data_ptr ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->ngroup ? mas_strdup( osrc->data_ptr ) : NULL;
 }
 
 static char *
 source_load_string_env( mucs_source_t * osrc )
 {
-  return osrc && osrc->data_ptr && !osrc->npos ? mas_strdup( getenv( ( char * ) osrc->data_ptr ) ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->ngroup ? mas_strdup( getenv( ( char * ) osrc->data_ptr ) ) : NULL;
 }
 
 static char *
 source_load_string_argv( mucs_source_t * osrc )
 {
-  return osrc && osrc->data_ptr && !osrc->npos ? mas_argv_join( osrc->count, ( char ** ) osrc->data_ptr, 0, osrc->delim ) : NULL;
+  return osrc && osrc->data_ptr && !osrc->ngroup ? mas_argv_join( osrc->count, ( char ** ) osrc->data_ptr, 0, osrc->delim ) : NULL;
 }
 
 static char *
 source_load_string_margv( mucs_source_t * osrc )
 {
   return osrc && osrc->data_ptr
-          && osrc->npos < osrc->count ? mas_argv_join( 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */ ,
+          && osrc->ngroup < osrc->count ? mas_argv_join( 0, ( ( char *** ) osrc->data_ptr )[osrc->ngroup], 0 /* osrc->ngroup > 0 ? 1 : 0 */ ,
                                                        osrc->delim ) : NULL;
 }
 
 static mas_argvc_t
 source_load__targ_string( mucs_source_t * osrc, mas_argvc_t targ, const char *string )
 {
-  if ( osrc && osrc->data_ptr && !osrc->npos )
+  if ( osrc && osrc->data_ptr && !osrc->ngroup )
     mas_add_argvc_args_d( &targ, string, 0, osrc->delims );
   return targ;
 }
@@ -80,7 +80,7 @@ source_load_targ_env( mucs_source_t * osrc, mas_argvc_t targ )
 static mas_argvc_t
 source_load_targ_argv( mucs_source_t * osrc, mas_argvc_t targ )
 {
-  if ( osrc && osrc->data_ptr && !osrc->npos )
+  if ( osrc && osrc->data_ptr && !osrc->ngroup )
     mas_add_argvc_argv( &targ, osrc->count, ( char ** ) osrc->data_ptr, 0 );
   return targ;
 }
@@ -88,11 +88,12 @@ source_load_targ_argv( mucs_source_t * osrc, mas_argvc_t targ )
 static mas_argvc_t
 source_load_targ_margv( mucs_source_t * osrc, mas_argvc_t targ )
 {
-  if ( osrc && osrc->data_ptr && osrc->npos < osrc->count )
-    mas_add_argvc_argv( &targ, 0, ( ( char *** ) osrc->data_ptr )[osrc->npos], 0 /* osrc->npos > 0 ? 1 : 0 */  );
+  if ( osrc && osrc->data_ptr && osrc->ngroup < osrc->count )
+    mas_add_argvc_argv( &targ, 0, ( ( char *** ) osrc->data_ptr )[osrc->ngroup], 0 /* osrc->ngroup > 0 ? 1 : 0 */  );
   return targ;
 }
 
+/* source_load__targ_stream: load targ from ONE string at stream */
 static mas_argvc_t
 source_load__targ_stream( FILE * fin, mucs_source_t * osrc, mas_argvc_t targ, int *peof )
 {
@@ -100,7 +101,7 @@ source_load__targ_stream( FILE * fin, mucs_source_t * osrc, mas_argvc_t targ, in
   {
     char buffer[1024 * 10];
     char *string = NULL;
-    const char *ignpref = NULL;
+    const char *ignpref = osrc->pref_ids[MUCS_VARIANT_IGNORE].string;
 
     do
     {
@@ -111,8 +112,8 @@ source_load__targ_stream( FILE * fin, mucs_source_t * osrc, mas_argvc_t targ, in
       if ( string )
       {
         string = mas_chomp( string );
-        ignpref = osrc->pref_ids[MUCS_VARIANT_IGNORE].string;
       }
+    /* skip empty and commented strings right here */
     } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
     if ( string && *string )
       mas_add_argvc_args_d( &targ, string, 0, osrc->delims );
@@ -128,6 +129,7 @@ source_load_targ_stream( mucs_source_t * osrc, mas_argvc_t targ )
   {
     FILE *fin = ( FILE * ) osrc->data_ptr;
 
+/* source_load__targ_stream: load targ from ONE string at stream */
     if ( mucs_global_flag( MUCS_FLAG_USE_TTY ) || !isatty( fileno( fin ) ) )
       targ = source_load__targ_stream( fin, osrc, targ, NULL );
   }
@@ -155,6 +157,7 @@ source_load_targ_file( mucs_source_t * osrc, mas_argvc_t targ )
     }
     if ( !osrc->error )
     {
+/* source_load__targ_stream: load targ from ONE string at stream */
       targ = source_load__targ_stream( ( FILE * ) osrc->ptr_internal, osrc, targ, &eof );
       if ( eof && osrc->ptr_internal )
       {

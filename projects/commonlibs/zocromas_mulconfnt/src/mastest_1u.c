@@ -80,7 +80,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "table-1u",.coptions = options, /* */
   };
 
   const char *xargv[] = {

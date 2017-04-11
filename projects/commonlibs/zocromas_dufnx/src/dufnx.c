@@ -39,7 +39,7 @@ arg_process( mucs_option_t * opt, void *userdata )
     {
       char *path;
 
-      path = mas_normalize_path_cwd_dots( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs//.//zocromas_dufnx/mastest/",
+      path = mas_normalize_path_cwd_dots( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs//..//zocromas_dufnx/mastest/",
                                           TRUE );
       WARN( "path:'%s'", path );
       mas_free( path );

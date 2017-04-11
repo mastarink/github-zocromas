@@ -81,7 +81,7 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
   mucs_option_table_list_t test_tablist = {
-    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "test-table",.coptions = options, /* */
+    .next = NULL,.count = ( sizeof( options ) / sizeof( options[0] ) ),.name = "table-4",.coptions = options, /* */
   };
   setenv( "MASTEST_4", string_args, 1 );                             // allocated 6080 bytes ?!
   {

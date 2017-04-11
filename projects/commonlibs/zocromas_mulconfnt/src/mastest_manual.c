@@ -41,7 +41,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "test-table", soptions, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE );
 
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG );
@@ -49,6 +49,13 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL );
   mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv );
   mucs_option_interface_lookup_all( interface, NULL );
+  INFO( "app_flags (--or):%lx", app_uflags );
+  INFO( "app_flags (--xor):%lx", app_flags );
+  app_flags = 0x00ffff1111111111L;
+  app_uflags = 0x0L;
+
+  mucs_option_interface_lookup_all( interface, NULL );
+
   mucs_config_option_interface_delete( interface );
   interface = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
