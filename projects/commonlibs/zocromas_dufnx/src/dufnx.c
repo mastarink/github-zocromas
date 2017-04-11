@@ -22,7 +22,13 @@
 #include "tree.h"
 
 #include "dufnx.h"
-
+/*
+ * run   mastest <<<treedb:max-depth=32
+ * run  --max-depth=3 --treedb mastest
+ * run mastest/ --max-depth=3 --treedb
+ * echo treedb:max-depth=32 | run  mastest
+ *
+ * */
 static int
 arg_process( mucs_option_t * opt, void *userdata )
 {
