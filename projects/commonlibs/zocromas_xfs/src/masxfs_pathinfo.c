@@ -7,7 +7,7 @@
 #include <mastar/minierr/minierr.h>
 
 #include <mastar/levinfo/masxfs_levinfo_enums.h>
-/* #include <mastar/levinfo/masxfs_levinfo_structs.h> */
+#include <mastar/levinfo/masxfs_levinfo_io_dir.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 #include <mastar/levinfo/masxfs_levinfo_scan.h>
@@ -20,6 +20,16 @@ char *
 masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 {
   return masxfs_levinfo_lia2path( pi->levinfo, pi->pidepth, 0 );
+}
+
+int
+masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
+{
+  rDECLBAD;
+  masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
+
+  rC( masxfs_levinfo_opendir( li, flags ) );
+  rRET;
 }
 
 int
@@ -36,7 +46,7 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
     {
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
-      /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
+    /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
       rC( masxfs_levinfo_scan_tree_cbs( pi->levinfo, typeflags, cbs, data, flags, maxdepth, reldepth ) );
       QRPI( pi, rCODE );
     }

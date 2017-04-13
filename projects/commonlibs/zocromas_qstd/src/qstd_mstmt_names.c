@@ -97,7 +97,6 @@ __attribute__ ( ( visibility( "default" ) ) )
 
   unsigned long long theid = mas_qstd_mstmt_selget_names_id( qstd, name, updir_id );
 
-/* WARN( "SELINS %lld", theid ); */
   if ( !theid )
   {
     assert( updir_id );

@@ -89,8 +89,6 @@ masxfs_test_0_path( int nseries _uUu_, const char *series_suffix _uUu_, int vari
   masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( _path, _maxpath, 0 );
 
   INFO( "A============================================[%ld]======== #%ld", ( long ) pi->pidepth, masexam_tests_count(  ) );
-/* masxfs_pathinfo_scan_depth_cbf( pi, testcb, pi, MASXFS_CB_NAME | MASXFS_CB_MODE_FS ); */
-  INFO( "B====================================================" );
   {
     EXAM( pi->pidepth, _depth, "pidepth=%ld ? %ld" );
 /* +1 */
@@ -252,9 +250,9 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int variant _
   {
     masxfs_entry_callback_t callbacks[] = {
       { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, */ fscallback,.flags =
-       MASXFS_CB_NAME | MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
+       /* MASXFS_CB_OFF_NAME | */ MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_FD | MASXFS_CB_SKIP}
       , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ fscallback2,.flags =
-         MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
+         /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_FD}
       , {NULL}
     };
     WARN( "callbacks: %p", callbacks );

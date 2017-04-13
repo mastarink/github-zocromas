@@ -53,7 +53,7 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {treecb,.flags = MASXFS_CB_NAME | /* MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {treecb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
     {NULL}
   };
   WARN( "******** start *******" );

@@ -24,8 +24,15 @@ masxfs_levinfo_t * __attribute__ ( ( pure ) ) masxfs_levinfo_offset( masxfs_levi
 static inline const struct stat *
         __attribute__ ( ( pure ) ) masxfs_levinfo_stat_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
+  const struct stat *st = NULL;
+
   li = masxfs_levinfo_offset( li, offset );
-  return li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
+  st = li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
+  if ( !st )
+  {
+    WARN( "STAT ERR" );
+  }
+  return st;
 }
 
 #if 1
@@ -40,6 +47,10 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
     rC( masxfs_levinfo_stat( li, tflags ) );
     if ( rGOOD )
       st = masxfs_levinfo_stat_val( li, 0, tflags );
+    else
+    {
+      WARN( "STAT ERR" );
+    }
   }
   return st;
 }
@@ -182,7 +193,7 @@ const char * __attribute__ ( ( pure ) ) masxfs_levinfo_name_ref( masxfs_levinfo_
 
   if ( li )
   {
-    if ( ( tflags & MASXFS_CB_NAME ) )
+    if ( !( tflags & MASXFS_CB_OFF_NAME ) )
     {
       name = masxfs_levinfo_name_val( li, 0 );
     }
@@ -234,7 +245,7 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   {
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
-      WARN( "%d: '%s'", li->detype, li->name );
+    /* WARN( "%d: '%s'", li->detype, li->name ); */
       rC( masxfs_levinfo_stat( li, tflags ) );
       QRLI( li, rCODE );
 
@@ -260,7 +271,7 @@ masxfs_levinfo_set_node_id( masxfs_levinfo_t * li, unsigned long node_id )
 }
 
 unsigned long
-masxfs_levinfo_node_id_ref( masxfs_levinfo_t * li )
+masxfs_levinfo_node_id_val( masxfs_levinfo_t * li )
 {
   return li ? li->db.node_id : 0;
 /* return li ? ( li->lidepth == 0 ? 1 : li->db.node_id ) : 0; */
@@ -279,7 +290,7 @@ masxfs_levinfo_node_id_off( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs
     {
     /* masxfs_levinfo_open( li-offset, tflags ); */
     /* node_id = li[offset].db.node_id; */
-      node_id = masxfs_levinfo_node_id_ref( li + offset );
+      node_id = masxfs_levinfo_node_id_val( li + offset );
     }
   }
   return node_id;

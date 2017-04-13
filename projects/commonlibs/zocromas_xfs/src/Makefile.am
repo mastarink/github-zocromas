@@ -6,6 +6,7 @@ libzocromas_xfs_la_SOURCES = \
 	masxfs_scan.c \
 	masxfs_pathinfo_base.c \
 	masxfs_pathinfo.c \
+	masxfs_pathinfo_ref.c \
 	tools.c
 
 libzocromas_xfs_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@

@@ -21,6 +21,9 @@ sfind masxfs_pathinfo_base.c
 tab sfind masxfs_pathinfo.h
 sfind masxfs_pathinfo.c
 
+tab sfind masxfs_pathinfo_ref.h
+sfind masxfs_pathinfo_ref.c
+
 "tab sfind masxfs_pathinfo_io.h
 "sfind masxfs_pathinfo_io.c
 

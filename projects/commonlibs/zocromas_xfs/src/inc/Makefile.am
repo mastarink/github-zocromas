@@ -7,6 +7,7 @@ libzocromas_xfsinclude_HEADERS =  \
 	masxfs_scan.h \
 	masxfs_pathinfo_base.h \
 	masxfs_pathinfo.h \
+	masxfs_pathinfo_ref.h \
 	tools.h
 
 

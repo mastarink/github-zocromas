@@ -16,8 +16,9 @@
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
+#include <mastar/masxfs/masxfs_pathinfo_ref.h>
 
-/* #include <mastar/levinfo/masxfs_levinfo_types.h> */
+#include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 
@@ -61,28 +62,41 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-mas_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
+dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
 {
   rDECLGOOD;
 
+  masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB | inflags;
+
   masxfs_entry_callback_t callbacks[] = {
-    {treecb,.flags = MASXFS_CB_NAME /* MASXFS_CB_PATH  */  | MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {treecb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
     {NULL}
   };
   mas_qstd_instance_setup( mysql->server, mysql->user, mysql->password, mysql->db, mysql->port );
-  masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
+ masxfs_pathinfo_t *pi =NULL;
+#if 0
+  pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
+  masxfs_pathinfo_open( pi, walkflags );
+  WARN( "pidepth:%d", masxfs_pathinfo_pidepth( pi ) );
+  for ( masxfs_depth_t i = 0; i < masxfs_pathinfo_pidepth( pi ); i++ )
+  {
+    masxfs_levinfo_t *li = masxfs_pathinfo_li( pi, i );
 
-  masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB;
+    WARN( "node_id:%ld %s", masxfs_levinfo_node_id_val( li ), masxfs_levinfo_detype2s( masxfs_levinfo_detype( li, walkflags ) ) );
+  }
+  masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+#endif
+
+  pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
   masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
 /* masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT; */
 
 /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
-  masxfs_levinfo_flags_t xflags2  = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
+  masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
 
-  walkflags |= inflags;
   numline_treecb = 0;
-  WARN("**<TREE>**");
+  WARN( "**<TREE>**" );
   rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
                                 maxdepth ) );
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );

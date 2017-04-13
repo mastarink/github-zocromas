@@ -29,7 +29,7 @@ masxfs_levinfo_scan_li_cbs( masxfs_levinfo_t * li, masxfs_type_flags_t typeflags
     int rc = 0;
 
     rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
-    rc = masxfs_levinfo_closedir( li, flags );
+    rc = masxfs_levinfo_closedir( li, flags ); /* sic! */
     if ( rGOOD )
       rCODE = rc;
     QRLI( li, rCODE );

@@ -15,4 +15,6 @@ int masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fla
 
 int masxfs_levinfo_db_open_at( masxfs_levinfo_t * li, int fdparent );
 
+unsigned long long masxfs_levinfo_db_update( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
+
 #endif

@@ -14,10 +14,17 @@
 #include <mastar/qstd/qstd_mstmt_base.h>
 #include <mastar/qstd/qstd_mstmt_nodes.h>
 
+#include <mastar/qstd/qstd_mstmt_sizes.h>
+#include <mastar/qstd/qstd_mstmt_datas.h>
+#include <mastar/qstd/qstd_mstmt_props.h>
+#include <mastar/qstd/qstd_mstmt_names.h>
+#include <mastar/qstd/qstd_mstmt_parents.h>
+
 #include "masxfs_levinfo_structs.h"
 
 #include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_base.h"
+#include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_fs.h"
 
 #include "masxfs_levinfo_db.h"
@@ -47,6 +54,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         li[-1].detype = MASXFS_ENTRY_DIR_NUM;
 
         rC( masxfs_levinfo_db_open( li - 1, flags ) );
+        assert( li[-1].db.node_id );
         assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
       /* TODO
        * The only unknown type is for starting point, for instance, 'mastest' at:
@@ -59,6 +67,10 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         {
           if ( !li->db.node_id )
             li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
+          if ( !li->db.node_id && ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
+          {
+            li->db.node_id = masxfs_levinfo_db_update( li, flags );
+          }
           if ( !li->db.node_id )
             rSETBAD;
         }
@@ -76,6 +88,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   }
   else
     QRLI( li, rCODE );
+  assert( li->detype != MASXFS_ENTRY_DIR_NUM || li->db.node_id );
   rRET;
 }
 
@@ -92,21 +105,7 @@ int
 masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
-/* TODO */
-#if 0
-  if ( !li->db.stat )
-  {
-    const char *op _uUu_ = "SELECT name, detype, inode, node_id "    /* */
-            ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
 
-    WARN( "li->name:'%s'; li->db.node_id:%lld", li ? li->name : NULL, li && li->lidepth ? li[-1].db.node_id : 0 );
-  }
-  else
-  {
-    ADIE( "DB STAT" );
-  }
-#endif
-  rC( masxfs_levinfo_db_open( li, flags ) );
   if ( li->lidepth )
   {
     rC( masxfs_levinfo_db_opendir( li - 1, flags ) );
@@ -283,6 +282,8 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     else
     {
       rC( masxfs_levinfo_db_open( li, flags ) );
+      assert( li->detype != MASXFS_ENTRY_DIR_NUM || li->db.node_id );
+      /* FIXME */
       assert( li->db.node_id );
       rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
     }
@@ -352,4 +353,69 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   else
     QRLI( li, rCODE );
   rRET;
+}
+
+unsigned long long
+masxfs_levinfo_db_update( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  const char *ename = masxfs_levinfo_name_ref( li, flags );
+  masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
+
+  WARN( "ename:%s", ename );
+  unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
+
+  WARN( "parent_id:%llu", parent_id );
+  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
+
+  WARN( "detype:%u", detype );
+  unsigned long long node_id = 0;
+  unsigned long long dataid = 0;
+  const char *sdetype = masxfs_levinfo_detype2s( detype );
+
+  WARN( "sdetype:%s", sdetype );
+  mas_qstd_t *qstd = mas_qstd_instance(  );
+
+  {
+    size_t size = masxfs_levinfo_size_ref( li, take_flags );
+
+    WARN( "size:%ld", size );
+    size_t thesize _uUu_ = mas_qstd_mstmt_selinsget_sizes_id( qstd, size );
+
+    WARN( "thesize:%ld", thesize );
+  }
+  {
+    const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, take_flags );
+
+    if ( stat )
+    {
+      dataid = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
+      WARN( "dataid:%lld", dataid );
+      unsigned long long props_id _uUu_ = mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetype, stat );
+
+      WARN( "props_id:%lld", props_id );
+    }
+    else
+    {
+      WARN( "No stat" );
+    }
+  }
+  {
+    unsigned long long theid = 0;
+    masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, take_flags );
+
+    if ( lidepth != 0 )
+    {
+      assert( parent_id );
+      assert( dataid );
+      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetype );
+      WARN( "theid:%lld", theid );
+    }
+    if ( detype == MASXFS_ENTRY_DIR_NUM )
+    {
+      node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
+      WARN( "node_id:%lld", node_id );
+      masxfs_levinfo_set_node_id( li, node_id );
+    }
+  }
+  return node_id;
 }

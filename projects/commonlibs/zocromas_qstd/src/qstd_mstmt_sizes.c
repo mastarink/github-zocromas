@@ -76,8 +76,8 @@ __attribute__ ( ( visibility( "default" ) ) )
   return thesize;
 }
 
-unsigned long long
-mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
+__attribute__ ( ( visibility( "default" ) ) )
+     unsigned long long mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );
