@@ -32,16 +32,17 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
   rDECLBAD;
 
   rC( masxfs_levinfo_fs_opendir( li, flags ) );
-  QRLI( li, rCODE );
   if ( rGOOD && li && li->fs.scan.pdir )
   {
     errno = 0;
     rewinddir( li->fs.scan.pdir );
     if ( !errno )
       rSETGOOD;
-    QRLI( li, rCODE );
+    else
+      QRLI( li, rCODE );
   }
-  QRLI( li, rCODE );
+  else
+    QRLI( li, rCODE );
   rRET;
 }
 

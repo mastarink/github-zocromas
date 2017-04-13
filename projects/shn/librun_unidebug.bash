@@ -97,7 +97,7 @@ function shn_debug_run ()
       cmd="$ltscmd"
 #	libtool --mode=execute cgdb -- -q $bin -x $tmpdbgfile
     else
-      shn_errmsg "no file : $tmpdbgfile" >&2
+      shn_errmsg "(ltscmd) no file : $tmpdbgfile" >&2
       return 1
     fi
   else
@@ -106,7 +106,7 @@ function shn_debug_run ()
 #	cgdb --   -q      $bin -x $tmpdbgfile
     else
       cmd="$scmd0"
-      shn_errmsg "no file : $tmpdbgfile" >&2
+      shn_errmsg "(scmd) no file : $tmpdbgfile" >&2
       return 1
 #	cgdb --   -q      $bin
     fi

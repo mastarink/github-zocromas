@@ -59,9 +59,11 @@
 
 #  define RGEX(_sys,  ...) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, __VA_ARGS__ )
 #  define RGE RGEX(0, NULL, NULL)
+#  define RGEM(...) RGEX(0, NULL, NULL, __VA_ARGS__)
 #  define RGESM(...) RGEX(1, __VA_ARGS__)
 #  define RGES RGESM(RGEMSG)
 #  define RGER(_r)		( ( R_BAD((_r)) ) ? RGE : 0 )
+#  define RGERM(_r, ...)	( ( R_BAD((_r)) ) ? RGEM(__VA_ARGS__) : 0 )
 /* #  define RGESR(_r)             { if ( R_BAD((_r)) ) RGES; } */
 #  define RGESR(_r)		( ( R_BAD((_r)) ) ? RGES : 0 )
 /* #  define RGESRM(_r, ...)       { if ( R_BAD((_r)) ) RGESM(__VA_ARGS__); } */

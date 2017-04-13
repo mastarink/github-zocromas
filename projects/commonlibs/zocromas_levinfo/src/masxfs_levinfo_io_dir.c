@@ -30,10 +30,8 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_rewinddir( li, flags ) );
-  QRLI( li, rCODE );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_rewinddir( li, flags ) );
-  QRLI( li, rCODE );
   rRET;
 }
 

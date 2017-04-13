@@ -48,7 +48,6 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
 
     /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
       rC( masxfs_levinfo_scan_tree_cbs( pi->levinfo, typeflags, cbs, data, flags, maxdepth, reldepth ) );
-      QRPI( pi, rCODE );
     }
     else
     {
@@ -59,7 +58,6 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
 #if 1
     /* rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) ); */
       rC( masxfs_levinfo_scan_tree_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
-      QRPI( pi, rCODE );
 #else
       WARN( "AHA" );
       rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
@@ -68,11 +66,12 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
     /* rC( masxfs_levinfo_scan_li_cbs( li, typeflags, cbs, data, flags, maxdepth,  reldepth ) ); */
 #endif
     }
-    QRPI( pi, rCODE );
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( rGOOD )
+    {
       rCODE = rc;
-    QRPI( pi, rCODE );
+      QRPI( pi, rCODE );
+    }
   }
   rRET;
 }

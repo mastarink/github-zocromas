@@ -30,7 +30,7 @@ static inline const struct stat *
   st = li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
   if ( !st )
   {
-    WARN( "STAT ERR" );
+    WARN( "STAT ERR (%s) for '%s'", tflags & MASXFS_CB_MODE_FS ? "FS" : ( tflags & MASXFS_CB_MODE_DB ? "DB" : "??" ), li->name );
   }
   return st;
 }
@@ -247,7 +247,6 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
     {
     /* WARN( "%d: '%s'", li->detype, li->name ); */
       rC( masxfs_levinfo_stat( li, tflags ) );
-      QRLI( li, rCODE );
 
       if ( rGOOD )
         detype = li->detype;
