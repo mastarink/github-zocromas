@@ -25,6 +25,17 @@
 #include "source_list.h"
 /* #include "parse.h" */
 
+
+/*
+ * See also
+ *
+ * dev-libs/argtable
+ * dev-libs/shhopt
+ * dev-libs/popt
+ *
+ * */
+
+
 #if 0
 extern void *__libc_malloc( size_t size );
 

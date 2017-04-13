@@ -85,6 +85,7 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
     WARN( "node_id:%ld %s", masxfs_levinfo_node_id_val( li ), masxfs_levinfo_detype2s( masxfs_levinfo_detype( li, walkflags ) ) );
   }
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+  pi-NULL;
 #endif
 
   pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
