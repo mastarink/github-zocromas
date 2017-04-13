@@ -67,10 +67,13 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         {
           if ( !li->db.node_id )
             li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
+#if 0
           if ( !li->db.node_id && ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
           {
             li->db.node_id = masxfs_levinfo_db_update( li, flags );
+            WARN( "O li->db.node_id: %lld", li->db.node_id );
           }
+#endif
           if ( !li->db.node_id )
           {
             rSETBAD;
@@ -105,7 +108,7 @@ masxfs_levinfo_db_close( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
 
@@ -119,17 +122,35 @@ masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
       rC( masxfs_levinfo_db_readdir( li - 1, flags, &has_data ) );
     }
   }
+  rRET;
+}
+
+int
+masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  rDECLBAD;
+
+  rC( masxfs_levinfo__db_stat( li, flags ) );
   if ( !li->db.stat )
   {
-    if ( !li->db.node_id && ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
+  /* if ( !li->db.node_id ) */
     {
-      li->db.node_id = masxfs_levinfo_db_update( li, flags );
-      WARN("li->db.node_id: %lld",  li->db.node_id);
-    }
-    else
-    {
-      rSETBAD;
-      QRLIM( li, rCODE, "can't dbstat '%s' D%d", li->name, li->lidepth );
+      if ( ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
+      {
+        li->db.node_id = masxfs_levinfo_db_update( li, flags );
+        WARN( "S li->db.node_id: %lld", li->db.node_id );
+
+        /* FIXME  following NOT WORKING */
+#if 0
+	rC( masxfs_levinfo_db_rewinddir( li, flags ) );
+        rC( masxfs_levinfo__db_stat( li, flags ) );
+#endif
+      }
+      else
+      {
+        rSETBAD;
+        QRLIM( li, rCODE, "can't dbstat '%s' D%d", li->name, li->lidepth );
+      }
     }
   }
   rRET;
