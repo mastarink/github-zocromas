@@ -154,7 +154,7 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,
      .callback = arg_process,.cb_pass = 1}
     ,
-    {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags = MUCS_FLAG_OPTIONAL_VALUE,
+    {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags =  0 | MUCS_FLAG_OPTIONAL_VALUE,
      .callback = store_fs2db,.cb_pass = 1}
     ,
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
