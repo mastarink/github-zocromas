@@ -512,6 +512,11 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
     int use_def_nvalue = mucs_config_option_flag( topt, MUCS_FLAG_USE_DEF_NVALUE );
     int word _uUu_ = strchr( " \t", *ep ) ? 1 : 0;
 
+/*
+none_value	option must be without value, value is error
+no_value	use default value, if flag set(use_def_string,use_def_nvalue), otherwise errancy depends on optional flag (opt_val)
+ */
+
     if ( *ep )
     {
       if ( none_value )
@@ -563,6 +568,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
       {
         if ( use_def_string )
         {
+#if 0
           if ( opt_val && optscan->nextarg )
           {
           /* use_def_string && opt_val && next_arg */
@@ -570,6 +576,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
             optscan->string_value = optscan->nextarg;
           }
           else
+#endif
           {
           /* ok, no value, value is optional, but use default value */
             optscan->has_value = 1;
@@ -578,7 +585,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
         }
         else if ( use_def_nvalue )
         {
-          optscan->has_value = 1;                                    /* ??? */
+          optscan->has_value = 1;                                    /* ??? ???????? */
         }
         else if ( optscan->nextarg )
         {
@@ -586,7 +593,7 @@ mucs_config_option_validate( const char *ep, mucs_optscanner_t * optscan )
           optscan->has_value = 2;
           optscan->string_value = optscan->nextarg;
         }
-        else
+        else if ( !opt_val )
         {
           rSETBAD;
           if ( optscan->variantid == MUCS_VARIANT_SHORT )
@@ -667,20 +674,25 @@ mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, v
     mucs_config_option_ptr_to_nvalue( opt );
 
     rC( mucs_config_option_set_value( opt, optscan ) );
+    opt->d.has_value = optscan->has_value;
+  }
+  else
+  /* if ( mucs_config_option_flag( opt, MUCS_FLAG_OPTIONAL_VALUE ) ) */
+  {
+    rSETGOOD;
+  }
 
-    if ( rGOOD )
+  if ( rGOOD )
+  {
+    if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass )
+         && opt->s.callback /* && !opt->s.cust_ptr */  )
     {
-      if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass )
-           && opt->s.callback /* && !opt->s.cust_ptr */  )
-      {
-        rC( opt->s.callback( opt, userdata ) );
-        opt->d.extra_cb.callback_called++;
-      }
-      opt->d.has_value = optscan->has_value;
-
-      if ( rGOOD )
-        mucs_config_option_nvalue_to_ptr( opt );
+      rC( opt->s.callback( opt, userdata ) );
+      opt->d.extra_cb.callback_called++;
     }
+
+    if ( rGOOD && opt->d.has_value )
+      mucs_config_option_nvalue_to_ptr( opt );
   }
 
   rRET;

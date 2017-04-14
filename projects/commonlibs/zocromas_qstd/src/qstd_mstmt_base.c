@@ -155,7 +155,7 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qs
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_NAMES " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES " QSTD_TABLE_PARENTS " (id)" /* */
-            ", name VARCHAR(255) COMMENT 'NULL is root', INDEX name (name)" /* */
+            ", name VARCHAR(255) BINARY COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", data_id INTEGER, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
           /* ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" (* *) */
