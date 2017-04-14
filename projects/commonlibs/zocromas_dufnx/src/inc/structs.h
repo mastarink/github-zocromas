@@ -3,6 +3,7 @@
 
 # include "types.h"
 # include <mastar/mulconfnt/structs.h>
+#include <mastar/qstd/qstd_types.h>
 
 struct mas_dufnx_mysql_data_s
 {
@@ -11,6 +12,7 @@ struct mas_dufnx_mysql_data_s
   char *password;
   char *db;
   unsigned port;
+  mas_qstd_t *qstd;
 };
 
 struct mas_dufnx_data_s

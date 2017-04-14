@@ -25,6 +25,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
     const char *path __attribute__ ( ( unused ) ) = "mastest";
 
     rC( testdropcreate( path ) );
+    return 0;
     rC( testfill( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  ) );
   }
   {

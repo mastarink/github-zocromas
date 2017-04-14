@@ -1,5 +1,6 @@
 libzocromas_qstdincludedir = $(includedir)/mastar/qstd
 libzocromas_qstdinclude_HEADERS =  \
+	qstd_query.h \
 	qstd_mstmt.h \
 	qstd_mstmt_base.h \
 	qstd_mstmt_names.h \

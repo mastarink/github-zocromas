@@ -12,10 +12,12 @@
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo_db.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
+#include <mastar/qstd/qstd_query.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
@@ -25,11 +27,14 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, masxfs_depth_t reldepth _uUu_ )
+testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
-  mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
 
+#if 1
+  masxfs_levinfo_db_store( li, flags );
+#else
   {
+    mas_qstd_t *qstd = ( mas_qstd_t * ) qstdv;
     unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
     masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
     unsigned long long node_id = 0;
@@ -61,16 +66,16 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
 
       if ( lidepth != 0 )
       {
-#if 0
+# if 0
         theid = mas_qstd_mstmt_insget_names_id( qstd, ename, parent_id, sdetypes[detype] );
-#endif
-#if 1
+# endif
+# if 1
         assert( parent_id );
         theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetype );
-#endif
-#if 0
+# endif
+# if 0
         theid = mas_qstd_mstmt_insselget_names_id( qstd, ename, parent_id, dataid, sdetypes[detype] );
-#endif
+# endif
       }
       if ( detype == MASXFS_ENTRY_DIR_NUM )
       {
@@ -85,6 +90,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv, ma
     /*         ( unsigned long long ) parent_id, ( unsigned long long ) node_id );                                       */
     }
   }
+#endif
   return 0;
 }
 

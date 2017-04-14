@@ -9,6 +9,8 @@
 #include <mastar/mulconfnt/option_interface_base.h>
 #include <mastar/mulconfnt/option_interface.h>
 
+#include <mastar/qstd/qstd_mstmt_base.h>
+
 #include "structs.h"
 #include "mysql.h"
 
@@ -24,4 +26,12 @@ dufnx_config_mysql( mucs_option_interface_t * interface, mas_dufnx_data_t * pduf
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_config_soption_interface_tabnode_add( interface, "mysql-table", soptions_mysql );
+}
+
+mas_qstd_t *
+dufnx_qstd( mas_dufnx_mysql_data_t * mysql )
+{
+  if ( !mysql->qstd )
+    mysql->qstd = mas_qstd_instance_setup( mysql->server, mysql->user, mysql->password, mysql->db, mysql->port );
+  return mysql->qstd;
 }

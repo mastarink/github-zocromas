@@ -17,7 +17,6 @@
 #include "mulconfnt_structs.h"
 
 #include "global.h"
-
 #include "option_tablist_base.h"
 
 #include "source.h"
@@ -40,7 +39,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
     {"or2", 'o', MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &app_uflags,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
-  mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
+  mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE );
 
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL, 0 );
@@ -58,6 +57,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
 
   mucs_config_option_interface_delete( interface );
   interface = NULL;
+  mucs_clear_global_flags(  );
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   INFO( "app_flags (--or):%lx", app_uflags );
   INFO( "app_flags (--xor):%lx", app_flags );

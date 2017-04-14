@@ -18,6 +18,7 @@
 
 #include "global.h"
 
+#include "global.h"
 #include "option_tablist_base.h"
 
 #include "source.h"
@@ -79,7 +80,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
   EXAM( app_uflags_or, 0x0UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xffffffffffffffffL, "app_uflags_nand=%lx ? %lx" );
-  mucs_set_global_flags( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED );
+  mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED );
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE );
 
 #if 0
@@ -98,7 +99,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_or, 0x505UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_and, 0x100UL, "app_uflags_and=%lx ? %lx" );
   EXAM( app_uflags_and_a, 0x100UL, "app_uflags_and_a=%lx ? %lx" );
-  EXAM( app_uflags_and_b, ~0x0UL, "app_uflags_and_b=%lx ? %lx" );   /* stdin skipped at pass 0, NOTHING from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
+  EXAM( app_uflags_and_b, ~0x0UL, "app_uflags_and_b=%lx ? %lx" );    /* stdin skipped at pass 0, NOTHING from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
   EXAM( app_uflags_nand, ~0x505UL, "app_uflags_nand=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xfffffffffffffafaUL, "app_uflags_nand=%lx ? %lx" );
 
@@ -120,13 +121,14 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_or, 0x505UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_and, 0x100UL, "app_uflags_and=%lx ? %lx" );
   EXAM( app_uflags_and_a, 0x100UL, "app_uflags_and_a=%lx ? %lx" );
-  EXAM( app_uflags_and_b, 0x100UL, "app_uflags_and_b=%lx ? %lx" );    /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
+  EXAM( app_uflags_and_b, 0x100UL, "app_uflags_and_b=%lx ? %lx" );   /* from .stdin_text = "and1b:and2b"  at  mastest_manual.c */
   EXAM( app_uflags_nand, ~0x505UL, "app_uflags_nand=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xfffffffffffffafaUL, "app_uflags_nand=%lx ? %lx" );
 #endif
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   mucs_config_option_interface_delete( interface );
   interface = NULL;
+  mucs_clear_global_flags(  );
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 6, "ERRORS: %d ? %d" );
   masregerr_print_simple_all_default( NULL, NULL, 0 );

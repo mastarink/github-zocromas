@@ -16,6 +16,7 @@
 /* #include <mastar/mysqlpfs/mysqlpfs_query.h> */
 
 #include "qstd_structs.h"
+#include "qstd_query.h"
 #include "qstd_mstmt.h"
 
 #include "qstd_mstmt_base.h"

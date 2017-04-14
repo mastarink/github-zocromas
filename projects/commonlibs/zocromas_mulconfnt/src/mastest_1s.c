@@ -15,6 +15,7 @@
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
 #include "option_tablist_base.h"
 
 #include "source.h"
@@ -247,6 +248,7 @@ test_1s( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  mucs_clear_global_flags();
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

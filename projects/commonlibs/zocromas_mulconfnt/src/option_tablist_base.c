@@ -86,7 +86,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
   {
     if ( !optcount )
     {
-      for ( const mucs_option_static_t * so = soptions; so && so->name && !mucs_config_soption_flag( so, MUCS_FLAG_LAST_IN_TABLE ); so++ )
+      for ( const mucs_option_static_t * sopt = soptions; sopt && sopt->name && !mucs_config_soption_flag( sopt, MUCS_FLAG_LAST_IN_TABLE ); sopt++ )
         optcount++;
     /* WARN( "COUNT:%ld", ( long ) optcount ); */
     }

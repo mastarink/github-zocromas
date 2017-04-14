@@ -57,13 +57,18 @@
 /* #  define rC(_x) if (!ret_code.cnt || !ret_code.r) { ret_code.r=(_x); ret_code.cnt++; } */
 #  define rC(_x)  (rGOOD_OR1 ? ( rCNT++,(rCODE=(_x)),rGOOD) : rGOOD)
 
-#  define RGEX(_sys,  ...) masregerr_reg(NULL, MAS_FLFFF, MAS_PACKAGE_NAME, &errno, errno?_sys:0, __VA_ARGS__ )
-#  define RGE RGEX(0, NULL, NULL)
-#  define RGEM(...) RGEX(0, NULL, NULL, __VA_ARGS__)
-#  define RGESM(...) RGEX(1, __VA_ARGS__)
+/*                                       1(regerrs),      2,3,4,5,6      7(package)    6(perrno)    7(sys)        8(fmt),...*/
+#  define RGEX(_sys,  ...) masregerr_reg(NULL,            MAS_FLFFF, MAS_PACKAGE_NAME, &errno,      errno?_sys:0, __VA_ARGS__ )
+
+#  define RGE        RGEX(0, NULL, NULL)
 #  define RGES RGESM(RGEMSG)
+
+#  define RGEM(...)  RGEX(0, __VA_ARGS__)
+#  define RGESM(...) RGEX(1, __VA_ARGS__)
+
 #  define RGER(_r)		( ( R_BAD((_r)) ) ? RGE : 0 )
 #  define RGERM(_r, ...)	( ( R_BAD((_r)) ) ? RGEM(__VA_ARGS__) : 0 )
+
 /* #  define RGESR(_r)             { if ( R_BAD((_r)) ) RGES; } */
 #  define RGESR(_r)		( ( R_BAD((_r)) ) ? RGES : 0 )
 /* #  define RGESRM(_r, ...)       { if ( R_BAD((_r)) ) RGESM(__VA_ARGS__); } */

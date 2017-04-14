@@ -128,6 +128,7 @@ struct mucs_option_table_list_s
   char *name;
 /* const */ mucs_option_t *voptions;
   const mucs_option_t *coptions;
+  mucs_flags_t flags;
 };
 
 struct mucs_optscanner_s

@@ -82,6 +82,8 @@ tab sfind mastest_7.c
 
 tab sfind mastest_manual_0.c
 sfind mastest_manual.c
+sfind mastest_static.c
+sfind mastest_static2.c
 
 "tab sfind mulconfnt_error.h
 "sfind mulconfnt_error.c

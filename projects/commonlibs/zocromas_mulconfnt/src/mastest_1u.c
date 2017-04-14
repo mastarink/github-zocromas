@@ -10,10 +10,12 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
 #include "option_tablist_base.h"
 
 #include "source.h"
@@ -219,15 +221,10 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
     EXAMX( bitwise2 == ( unsigned long ) 0x10304UL, "%lx ? %lx", 0x10304ULL, bitwise2 );
     EXAMX( bitwise3 == ( unsigned long ) 0x10004UL, "%lx ? %lx", 0x10004ULL, bitwise3 );
 
-#if 0
-    fprintf( stderr, "\nINT_MIN:%x;UINT_MAX:%x\nLONG_MIN:%lx;ULONG_MAX:%lx\nLLONG_MIN:%llx;ULLONG_MAX:%llx\n", UINT_MIN, UINT_MAX, ULONG_MIN,
-             ULONG_MAX, ULLONG_MIN, ULLONG_MAX );
-    fprintf( stderr, "\nINT_MIN:%d;UINT_MAX:%d\nLONG_MIN:%ld;ULONG_MAX:%ld\nLLONG_MIN:%lld;ULLONG_MAX:%lld\n", UINT_MIN, UINT_MAX, ULONG_MIN,
-             ULONG_MAX, ULLONG_MIN, ULLONG_MAX );
-#endif
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  mucs_clear_global_flags();
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

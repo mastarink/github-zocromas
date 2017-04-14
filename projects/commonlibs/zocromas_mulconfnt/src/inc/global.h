@@ -7,6 +7,8 @@ mucs_flags_t mucs_global_flags( void );
 
 mucs_flags_t mucs_global_flag( mucs_flags_t flag );
 void mucs_set_global_flag( mucs_flags_t flag );
-void mucs_set_global_flags( mucs_flags_t flags );
+
+/* void mucs_set_global_flags( mucs_flags_t flags ); */
+void mucs_clear_global_flags( void );
 
 #endif

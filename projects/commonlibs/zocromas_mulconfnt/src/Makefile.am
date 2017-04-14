@@ -35,6 +35,8 @@ mastest_SOURCES= \
 	mastest.c \
 	mastest_manual_0.c \
 	mastest_manual.c \
+	mastest_static.c \
+	mastest_static2.c \
 	mastest_0.c \
 	mastest_1.c \
 	mastest_1s.c \

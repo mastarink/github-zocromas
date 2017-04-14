@@ -22,7 +22,7 @@
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 
-#include <mastar/qstd/qstd_mstmt_base.h>
+/* #include <mastar/qstd/qstd_mstmt_base.h> */
 
 #include "structs.h"
 #include "mysql.h"
@@ -72,8 +72,9 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
     {treecb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
     {NULL}
   };
-  mas_qstd_instance_setup( mysql->server, mysql->user, mysql->password, mysql->db, mysql->port );
- masxfs_pathinfo_t *pi =NULL;
+  dufnx_qstd( mysql );
+  masxfs_pathinfo_t *pi = NULL;
+
 #if 0
   pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
   masxfs_pathinfo_open( pi, walkflags );
@@ -85,7 +86,7 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
     WARN( "node_id:%ld %s", masxfs_levinfo_node_id_val( li ), masxfs_levinfo_detype2s( masxfs_levinfo_detype( li, walkflags ) ) );
   }
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
-  pi-NULL;
+  pi - NULL;
 #endif
 
   pi = masxfs_pathinfo_create_setup_realpath( real_path, 128 /* depth limit */ , 0 );
@@ -101,6 +102,5 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
   rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
                                 maxdepth ) );
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
-  mas_qstd_instance_delete(  );
   rRET;
 }

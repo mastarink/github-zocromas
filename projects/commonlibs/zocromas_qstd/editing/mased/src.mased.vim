@@ -10,7 +10,10 @@ tab sfind qstd_types.h
 sfind qstd_structs.h
 sfind qstd_defs.h
 
-tab sfind qstd_mstmt.c
+tab sfind qstd_query.c
+sfind qstd_mstmt.h
+
+tab sfind qstd_query.c
 sfind qstd_mstmt.h
 
 tab sfind qstd_mstmt_base.c

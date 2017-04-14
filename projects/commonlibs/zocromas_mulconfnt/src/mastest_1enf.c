@@ -10,10 +10,12 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
 #include "mulconfnt_structs.h"
 
+#include "global.h"
 #include "option_tablist_base.h"
 
 #include "source.h"
@@ -24,15 +26,15 @@
 
 #include "mastest.h"
 
-#define UINT_MIN 0
-#define ULONG_MIN 0
-#define ULLONG_MIN 0
-
 /* test for not found option */
 int
 test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
-  const char *arg _uUu_;
+  const char *arg;
+
+  unsigned char v_uchar0 = 0;
+  unsigned short v_ushort0 = 0;
+
   unsigned int v_uint0 = 0;
   unsigned int v_uint1 = 0;
   unsigned int v_uint2 = 0;
@@ -58,6 +60,8 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   mucs_option_t options[] = {
     {.s = {"num0other", 0, MUCS_RTYP_UINT, &v_uint0}}
     , {.s = {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}}
+    , {.s = {"cnum0", 0, MUCS_RTYP_UCHAR, &v_uchar0}}
+    , {.s = {"snum0", 0, MUCS_RTYP_USHORT, &v_ushort0}}
     , {.s = {"num1", 0, MUCS_RTYP_UINT, &v_uint1}}
     , {.s = {"num2", 0, MUCS_RTYP_UINT, &v_uint2}}
     , {.s = {"num3", 0, MUCS_RTYP_UINT, &v_uint3}}
@@ -108,6 +112,8 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
   };
   int xargc = sizeof( xargv ) / sizeof( xargv[0] );
 
+  EXAMX( !masregerrs_count_all_default( NULL, TRUE ), "mulconfnt_error: %d", masregerrs_count_all_default( NULL, TRUE ) );
+
   {
     FILE *f;
     char fname[128];
@@ -127,10 +133,10 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, 0,  NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, 0, NULL, "=", NULL );
 
     if ( osrc )
-      osrc->flags |= MUCS_FLAG_SILENT;
+      osrc->flags |= MUCS_FLAG_SILENT;                               /* ?????????? */
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
@@ -164,6 +170,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     masexam_next_group(  );
   /* EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0,  "num0=%u ? %u [%d]", v_uint0, 0, mucs_error_source( osrc ) ); */
     EXAMX( sizeof( v_uint0 ) == 4 && v_uint0 == 0, "num0=%u ? %u [%d]", v_uint0, 0, masregerrs_count_all_default( NULL, TRUE ) );
+    WARN( "v_uint1:%u", v_uint1 );
     EXAMX( sizeof( v_uint1 ) == 4 && v_uint1 == 0, "num1=%u ? %u", v_uint1, 0 );
     EXAMX( sizeof( v_uint2 ) == 4 && v_uint2 == 0, "num2=%u ? %u", v_uint2, 0 );
     EXAMX( sizeof( v_uint3 ) == 4 && v_uint3 == 0, "num3=%u ? %u", v_uint3, 0 );
@@ -212,15 +219,10 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
     EXAMX( bitwise2 == ( unsigned long ) 0x10204, "bitwise2=%lx ? %lx", 0x10204, bitwise2 );
     EXAMX( bitwise3 == ( unsigned long ) 0x10204, "bitwise3=%lx ? %lx", 0x10204, bitwise3 );
 
-#if 0
-    fprintf( stderr, "\nINT_MIN:%x;UINT_MAX:%x\nLONG_MIN:%lx;ULONG_MAX:%lx\nLLONG_MIN:%llx;ULLONG_MAX:%llx\n", UINT_MIN, UINT_MAX, ULONG_MIN,
-             ULONG_MAX, ULLONG_MIN, ULLONG_MAX );
-    fprintf( stderr, "\nINT_MIN:%d;UINT_MAX:%d\nLONG_MIN:%ld;ULONG_MAX:%ld\nLLONG_MIN:%lld;ULLONG_MAX:%lld\n", UINT_MIN, UINT_MAX, ULONG_MIN,
-             ULONG_MAX, ULLONG_MIN, ULLONG_MAX );
-#endif
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist );
+  mucs_clear_global_flags();
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

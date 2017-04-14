@@ -20,4 +20,9 @@ mucs_set_global_flag( mucs_flags_t flag )
   mucs_flags |= flag;
 }
 
-void mucs_set_global_flags( mucs_flags_t flags ) __attribute__ ( ( alias( "mucs_set_global_flag" ) ) );
+/* void mucs_set_global_flags( mucs_flags_t flags ) __attribute__ ( ( alias( "mucs_set_global_flag" ) ) ); */
+void
+mucs_clear_global_flags( void )
+{
+  mucs_flags = 0;
+}

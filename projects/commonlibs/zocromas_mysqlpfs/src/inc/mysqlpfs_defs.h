@@ -20,9 +20,9 @@
 # define QRGSM(_r,  ...) (RGESRM(_r, __VA_ARGS__))
 
 
-# define QRGSP(_ptr)   QRGS( _ptr ? 0 : -1 );
-# define QRGP(_ptr)    QRG( _ptr ? 0 : -1 );
-# define QRGPM(_ptr, ...)    QRGM( _ptr ? 0 : -1, __VA_ARGS__ );
+# define QRGSP(_ptr)		QRGS( _ptr ? 0 : -1 );
+# define QRGP(_ptr)		QRG( _ptr ? 0 : -1 );
+# define QRGPM(_ptr, ...)	QRGM( _ptr ? 0 : -1, __VA_ARGS__ );
 
 
 

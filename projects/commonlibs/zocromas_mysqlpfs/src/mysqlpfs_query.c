@@ -31,7 +31,7 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sqlop )
   {
     r = mysql_query( &pfs->mysql, sqlop );
     if ( r )
-      WARN( "(%d) --- %s\n", r, sqlop );
+      WARN( "(%d) --- '%s'\n", r, sqlop );
     QRGS( r );
   }
   return r;
