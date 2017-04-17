@@ -140,7 +140,7 @@ masxfs_levinfo_fd_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   int fd = 0;
 
-  if ( li && ( tflags & MASXFS_CB_FD ) )
+  if ( li && !( tflags & MASXFS_CB_NO_FD ) )
   {
     int r = 0;
 

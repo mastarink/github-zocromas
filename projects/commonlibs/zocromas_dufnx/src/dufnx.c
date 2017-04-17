@@ -1,11 +1,13 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include <string.h>
+#include <openssl/md5.h>
+#include <openssl/sha.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_utils_path.h>
 
 #include <mastar/minierr/minierr.h>
-/* #include <mastar/regerr/masregerr.h> */
+#include <mastar/regerr/masregerr.h>
 #include <mastar/regerr/masregerr_defs.h>
 
 #include <mastar/mulconfnt/structs.h>
@@ -48,9 +50,183 @@
  * */
 
 static int
+sha1( int fd, unsigned char *pdgst )
+{
+  rDECLGOOD;
+  SHA_CTX ctx = { 0 };
+  unsigned long bytes = 0;
+  int mr = 0;
+
+  if ( lseek( fd, 0, SEEK_SET ) < 0 )
+  {
+    rSETBAD;
+    RGESRM( rCODE, "SHA lseek error" );
+  }
+
+  if ( rGOOD )
+  {
+    char buffer[1024 * 10];
+
+    mr = SHA1_Init( &ctx );
+    if ( mr != 1 )
+    {
+      rSETBAD;
+      RGESRM( rCODE, "SHA init error" );
+    }
+    {
+      int ry = 0;
+
+      do
+      {
+        ry = read( fd, buffer, sizeof( buffer ) );
+
+        if ( ry < 0 )
+        {
+          rSETBAD;
+          RGESRM( rCODE, "SHA read error" );
+        }
+        else if ( ry > 0 )
+        {
+          bytes += ry;
+          mr = SHA1_Update( &ctx, buffer, ry );
+          if ( mr != 1 )
+          {
+            rSETBAD;
+            RGESRM( rCODE, "SHA update error" );
+          }
+        }
+      } while ( ry > 0 );
+    }
+  }
+  mr = SHA1_Final( pdgst, &ctx );
+  if ( mr != 1 )
+  {
+    rSETBAD;
+    RGESRM( rCODE, "SHA final error" );
+  }
+  rRET;
+}
+
+static int
+md5( int fd, unsigned char *pdgst )
+{
+  rDECLGOOD;
+  MD5_CTX ctx = { 0 };
+  unsigned long bytes = 0;
+  int mr = 0;
+
+  if ( lseek( fd, 0, SEEK_SET ) < 0 )
+  {
+    rSETBAD;
+    RGESRM( rCODE, "MD5 lseek error" );
+  }
+
+  if ( rGOOD )
+  {
+    char buffer[1024 * 10];
+
+    mr = MD5_Init( &ctx );
+    if ( mr != 1 )
+    {
+      rSETBAD;
+      RGESRM( rCODE, "MD5 init error" );
+    }
+    {
+      int ry = 0;
+
+      do
+      {
+        ry = read( fd, buffer, sizeof( buffer ) );
+
+        if ( ry < 0 )
+        {
+          rSETBAD;
+          RGESRM( rCODE, "MD5 read error" );
+        }
+        else if ( ry > 0 )
+        {
+          bytes += ry;
+          mr = MD5_Update( &ctx, buffer, ry );
+          if ( mr != 1 )
+          {
+            rSETBAD;
+            RGESRM( rCODE, "MD5 update error" );
+          }
+        }
+      } while ( ry > 0 );
+    }
+  }
+  mr = MD5_Final( pdgst, &ctx );
+  if ( mr != 1 )
+  {
+    rSETBAD;
+    RGESRM( rCODE, "MD5 final error" );
+  }
+  rRET;
+}
+
+static int
 fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   masxfs_levinfo_db_store( li, flags );
+
+  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
+
+  if ( detype == MASXFS_ENTRY_REG_NUM )
+  {
+    int fd = masxfs_levinfo_fd_ref( li, flags );
+
+    if ( fd )
+    {
+      if ( 0 )
+      {
+        unsigned char adigest[MD5_DIGEST_LENGTH] = { 0 };
+        char sbuffer[512] = { 0 };
+        char *psbuf = sbuffer;
+
+        md5( fd, adigest );
+
+        for ( unsigned i = 0; i < sizeof( adigest ); i++ )
+        {
+          snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", adigest[i] );
+          psbuf += 2;
+        }
+
+      /* reverse */
+      /* for ( unsigned i = 0; i < sizeof( adigest ) / sizeof( adigest[0] ); i++ ) */
+      /*   pmdr[i] = adigest[sizeof( adigest ) / sizeof( adigest[0] ) - i - 1];    */
+        {
+          const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
+
+          WARN( "FD:%d : %s : '%s' #%ld", fd, sbuffer, epath, sizeof( unsigned long long ) );
+        }
+      }
+      if ( 1 )
+      {
+        unsigned char adigest[SHA_DIGEST_LENGTH] = { 0 };
+        char sbuffer[512] = { 0 };
+        char *psbuf = sbuffer;
+
+        sha1( fd, adigest );
+
+        for ( unsigned i = 0; i < sizeof( adigest ); i++ )
+        {
+          snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", adigest[i] );
+          psbuf += 2;
+        }
+
+      /* reverse */
+      /* for ( unsigned i = 0; i < sizeof( adigest ) / sizeof( adigest[0] ); i++ ) */
+      /*   pmdr[i] = adigest[sizeof( adigest ) / sizeof( adigest[0] ) - i - 1];    */
+        {
+          const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
+
+          WARN( "FD:%d : %s : '%s' #%ld", fd, sbuffer, epath, sizeof( unsigned long long ) );
+        }
+      }
+    }
+  }
+
   return 0;
 }
 
@@ -78,7 +254,8 @@ store_fs2db( mucs_option_t * opt, void *userdata )
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
 
         {
-          masxfs_entry_callback_t callback = { fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */  };
+          masxfs_entry_callback_t callback = { fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
+          };
           rC( mas_qstd_start_transaction( qstd ) );
         /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
           masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
@@ -154,7 +331,7 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,
      .callback = arg_process,.cb_pass = 1}
     ,
-    {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags =  0 | MUCS_FLAG_OPTIONAL_VALUE,
+    {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_OPTIONAL_VALUE,
      .callback = store_fs2db,.cb_pass = 1}
     ,
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
