@@ -43,6 +43,9 @@ sfind masxfs_levinfo_scan.c
 tab sfind masxfs_levinfo_format.h
 sfind masxfs_levinfo_format.c
 
+tab sfind masxfs_levinfo_digest.h
+sfind masxfs_levinfo_digest.c
+
 tab sfind masxfs_levinfo_tools.h
 sfind masxfs_levinfo_tools.c
 

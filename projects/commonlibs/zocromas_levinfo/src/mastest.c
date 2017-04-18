@@ -3,13 +3,21 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <limits.h>
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
+#include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
+
+#include "masxfs_levinfo_digest.h"
 
 void
 mastest_print_allocated( const char *msg, int line, const char *func )
@@ -54,8 +62,74 @@ destructor_main( void )
 /* #include "zocromas_levinfo.h" */
 
 int
+mastest_digest( void )
+{
+  rDECLBAD;
+  int fd = open( "/home/mastar/.mas/lib/big/misc/media/video/video/fordvd/dvd/pre/Lovely/Other/Kin-dza-dza_1.avi", O_RDONLY );
+
+  if ( fd > 0 )
+  {
+    for ( int iter = 0; iter < 1; iter++ )
+    {
+      masxfs_digests_t *digests = masxfs_digests_create_setup( fd, 1024 * 5 );
+
+    /* rC( masxfs_digests_add( digests, MASXFS_DIGEST_MD5 ) ); */
+      rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) );
+      rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) );
+      rC( masxfs_digests_open( digests ) );
+      rC( masxfs_digests_update( digests ) );
+      rC( masxfs_digests_close( digests ) );
+      if ( rGOOD )
+      {
+        {
+          int sz = 0;
+          const unsigned char *dg = NULL;
+          char sbuffer[512] = { 0 };
+          char *psbuf = sbuffer;
+
+          sz = masxfs_digests_getn( digests, 0, &dg );
+          if ( sz )
+          {
+            for ( ssize_t i = 0; i < sz; i++ )
+            {
+              snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
+              psbuf += 2;
+            }
+
+            WARN( "sz:%d - %s", sz, sbuffer );
+          }
+        }
+
+        {
+          int sz = 0;
+          const unsigned char *dg = NULL;
+          char sbuffer[512] = { 0 };
+          char *psbuf = sbuffer;
+
+          sz = masxfs_digests_getn( digests, 1, &dg );
+          if ( sz )
+          {
+            for ( ssize_t i = 0; i < sz; i++ )
+            {
+              snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
+              psbuf += 2;
+            }
+
+            WARN( "sz:%d - %s", sz, sbuffer );
+          }
+        }
+      }
+      masxfs_digests_delete( digests );
+    }
+    close( fd );
+  }
+  rRET;
+}
+
+int
 main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
 {
 /* zocromas_levinfo(); */
+  mastest_digest(  );
   return 0;
 }

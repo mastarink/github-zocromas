@@ -14,6 +14,7 @@ libzocromas_levinfo_la_SOURCES = \
 	masxfs_levinfo.c \
 	masxfs_levinfo_scan.c \
 	masxfs_levinfo_format.c \
+	masxfs_levinfo_digest.c \
 	masxfs_levinfo_tools.c
 
 libzocromas_levinfo_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@

@@ -75,7 +75,6 @@ sha1( int fd, unsigned char *pdgst )
     }
     {
       int ry = 0;
-
       do
       {
         ry = read( fd, buffer, sizeof( buffer ) );
@@ -178,7 +177,7 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
 
     if ( fd )
     {
-      if ( 0 )
+      if ( 1 )
       {
         unsigned char adigest[MD5_DIGEST_LENGTH] = { 0 };
         char sbuffer[512] = { 0 };
@@ -201,7 +200,7 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
           WARN( "FD:%d : %s : '%s' #%ld", fd, sbuffer, epath, sizeof( unsigned long long ) );
         }
       }
-      if ( 1 )
+      if ( 0 )
       {
         unsigned char adigest[SHA_DIGEST_LENGTH] = { 0 };
         char sbuffer[512] = { 0 };
