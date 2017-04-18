@@ -46,7 +46,7 @@ PKG_CHECK_MODULES([DEPSTEST],  [zocromas_exam])
 
 # m4_include([m4zoc/readline.m4])
 # m4_include([m4zoc/exif.m4])
-#m4_include([m4zoc/magic.m4])
+m4_include([m4zoc/magic.m4])
 #m4_include([m4zoc/jpeg.m4])
 # m4_include([m4zoc/z.m4])
 m4_include([m4zoc/vars1.m4])

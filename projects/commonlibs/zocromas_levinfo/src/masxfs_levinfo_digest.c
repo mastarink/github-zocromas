@@ -1,10 +1,10 @@
 #define R_GOOD(_r) ((_r)>=0)
+#include <string.h>
+/* #include <stdio.h> */
 #include <sys/types.h>
 #include <unistd.h>
 
 #include "masxfs_levinfo_defs.h"
-/* #include <stdio.h> */
-#include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -45,6 +45,8 @@ masxfs_digest_create_setup( masxfs_digest_type_t dgtype )
   case MASXFS_DIGEST_SHA1:
     digest->ctx.sha1 = ( SHA_CTX * ) mas_calloc( 1, sizeof( SHA_CTX ) );
     break;
+  case MASXFS_DIGEST_MAGIC:
+    break;
   }
   return digest;
 }
@@ -67,6 +69,12 @@ masxfs_digest_open( masxfs_digest_t * digest )
     case MASXFS_DIGEST_SHA1:
       mr = SHA1_Init( digest->ctx.sha1 );
       break;
+    case MASXFS_DIGEST_MAGIC:
+      mr = 1;
+      /* TODO move to module constructor (magic_close respectively) and mag global instead of placing to ctx ?? */
+      digest->ctx.magic = magic_open(  /* MAGIC_MIME | */ MAGIC_PRESERVE_ATIME );
+      magic_load( digest->ctx.magic, NULL );
+      break;
     }
     if ( mr != 1 )
     {
@@ -87,15 +95,42 @@ masxfs_digest_update( masxfs_digest_t * digest, masxfs_digests_t * digests )
 
   if ( digest )
   {
+    mr = 1;
     switch ( digest->dgtype )
     {
     case MASXFS_DIGEST_NONE:
       break;
     case MASXFS_DIGEST_MD5:
-      mr = MD5_Update( digest->ctx.md5, digests->readbuffer, digests->readbytes );
+      if ( digests->bytes2update )                                   /*  NOT eof */
+        mr = MD5_Update( digest->ctx.md5, digests->readbuffer, digests->bytes2update );
       break;
     case MASXFS_DIGEST_SHA1:
-      mr = SHA1_Update( digest->ctx.sha1, digests->readbuffer, digests->readbytes );
+      if ( digests->bytes2update )                                   /*  NOT eof */
+        mr = SHA1_Update( digest->ctx.sha1, digests->readbuffer, digests->bytes2update );
+      break;
+    case MASXFS_DIGEST_MAGIC:
+    /* magic_setflags(magic,MAGIC_MIME_TYPE ); */
+    /* magic_setflags(magic, MAGIC_MIME ); */
+#if 0
+      magic_setflags( digest->ctx.magic, MAGIC_PRESERVE_ATIME );
+      mime_plus = mas_strdup( magic_descriptor( digest->ctx.magic, duf_levinfo_dfd( H_PDI ) ) );
+#else
+# if 1
+      if ( digests->reads == 1 )
+      {
+        magic_setflags( digest->ctx.magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
+        assert( !digest->sum );
+        digest->sum = ( unsigned char * ) mas_strdup( magic_buffer( digest->ctx.magic, digests->readbuffer, digests->read_bytes ) );
+      }
+# else
+      if ( digests->bytes2update == 0 )                              /*  eof */
+      {
+        magic_setflags( digest->ctx.magic, MAGIC_MIME | MAGIC_PRESERVE_ATIME );
+        assert( !digest->sum );
+        digest->sum = ( unsigned char * ) mas_strdup( magic_descriptor( digest->ctx.magic, digests->fd ) );
+      }
+# endif
+#endif
       break;
     }
 
@@ -120,18 +155,24 @@ masxfs_digest_close( masxfs_digest_t * digest )
   {
     assert( digest->ctx.md5 );
     assert( digest->ctx.sha1 );
-    assert( !digest->sum );
     switch ( digest->dgtype )
     {
     case MASXFS_DIGEST_NONE:
       break;
     case MASXFS_DIGEST_MD5:
+      assert( !digest->sum );
       digest->sum = mas_calloc( 1, MD5_DIGEST_LENGTH );
       mr = MD5_Final( digest->sum, digest->ctx.md5 );
       break;
     case MASXFS_DIGEST_SHA1:
+      assert( !digest->sum );
       digest->sum = mas_calloc( 1, SHA_DIGEST_LENGTH );
       mr = SHA1_Final( digest->sum, digest->ctx.sha1 );
+      break;
+    case MASXFS_DIGEST_MAGIC:
+      mr = 1;
+      magic_close( digest->ctx.magic );
+      digest->ctx.magic = 0;
       break;
     }
     if ( mr != 1 )
@@ -190,11 +231,39 @@ masxfs_digest_get( masxfs_digest_t * digest, const unsigned char **pbuf )
     case MASXFS_DIGEST_SHA1:
       sz = SHA_DIGEST_LENGTH;
       break;
+    case MASXFS_DIGEST_MAGIC:
+      sz = strlen( ( char * ) digest->sum );
+      break;
     }
     if ( pbuf )
       *pbuf = digest->sum;
   }
   return sz;
+}
+
+int
+masxfs_digest_is_string( masxfs_digest_t * digest )
+{
+  int is_string = 0;
+
+  if ( digest )
+  {
+    switch ( digest->dgtype )
+    {
+    case MASXFS_DIGEST_NONE:
+      break;
+    case MASXFS_DIGEST_MD5:
+      is_string = 0;
+      break;
+    case MASXFS_DIGEST_SHA1:
+      is_string = 0;
+      break;
+    case MASXFS_DIGEST_MAGIC:
+      is_string = ( digest->sum ? 1 : 0 );
+      break;
+    }
+  }
+  return is_string;
 }
 
 /*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/
@@ -227,30 +296,40 @@ masxfs_digests_update( masxfs_digests_t * digests )
 {
   rDECLGOOD;
 
-  if ( lseek( digests->fd, 0, SEEK_SET ) < 0 )
+  if ( lseek( digests->fd, digests->from, SEEK_SET ) < 0 )
   {
     rSETBAD;
     RGESRM( rCODE, "digests lseek error" );
   }
   if ( rGOOD )
+  {
+    int ry = 0;
+
     do
     {
       masxfs_digest_t *digest = digests->digest;
 
-      digests->readbytes = read( digests->fd, digests->readbuffer, digests->readbufsize );
-      if ( digests->readbytes < 0 )
+      ry = read( digests->fd, digests->readbuffer, digests->readbufsize );
+      if ( ry < 0 )
       {
         rSETBAD;
         RGESRM( rCODE, "SHA read error" );
       }
-
-      if ( digests->readbytes > 0 )
+      else if ( ry >= 0 )
+      {
+        digests->bytes2update = ry;
+        digests->read_bytes += ry;
+        digests->reads++;
         while ( rGOOD && digest )
         {
           rC( masxfs_digest_update( digest, digests ) );
           digest = digest->next;
         }
-    } while ( rGOOD && digests->readbytes > 0 );
+        if ( digests->max_blocks && digests->read_bytes >= digests->readbufsize * digests->max_blocks )
+          break;
+      }
+    } while ( rGOOD && ry > 0 );
+  }
   rRET;
 }
 
@@ -284,7 +363,7 @@ masxfs_digests_reset( masxfs_digests_t * digests )
   mas_free( digests->readbuffer );
   digests->readbuffer = NULL;
   digests->readbufsize = 0;
-  digests->readbytes = 0;
+  digests->bytes2update = 0;
   digests->fd = 0;
 }
 
@@ -322,15 +401,27 @@ masxfs_digests_add( masxfs_digests_t * digests, masxfs_digest_type_t dgtype )
 }
 
 masxfs_digests_t *
-masxfs_digests_create_setup( int fd, size_t readbufsize )
+masxfs_digests_create_setup( int fd, size_t readbufsize, off_t from, off_t max_blocks )
 {
   masxfs_digests_t *digests = masxfs_digests_create(  );
 
   digests->readbuffer = mas_calloc( 1, readbufsize );
   digests->fd = fd;
+  digests->from = from;
+  digests->max_blocks = max_blocks;
   digests->readbufsize = readbufsize;
 
   return digests;
+}
+
+int
+masxfs_digests_compute( masxfs_digests_t * digests )
+{
+  rDECLBAD;
+  rC( masxfs_digests_open( digests ) );
+  rC( masxfs_digests_update( digests ) );
+  rC( masxfs_digests_close( digests ) );
+  rRET;
 }
 
 int
@@ -366,122 +457,19 @@ masxfs_digests_getn( masxfs_digests_t * digests, int npos, const unsigned char *
   return sz;
 }
 
-#if 0
-static int _uUu_
-md5( masxfs_digests_t * digests, masxfs_digest_t * digest, unsigned char *pdgst )
+int
+masxfs_digests_is_string( masxfs_digests_t * digests, int npos )
 {
-  rDECLGOOD;
-  unsigned long bytes = 0;
-  int mr = 0;
+  int is_string = 0;
+  int n = 0;
+  masxfs_digest_t *digest = digests->digest;
 
-  if ( lseek( digests->fd, 0, SEEK_SET ) < 0 )
+  while ( digest && npos != n )
   {
-    rSETBAD;
-    RGESRM( rCODE, "MD5 lseek error" );
+    digest = digest->next;
+    n++;
   }
-
-  if ( rGOOD )
-  {
-    char buffer[1024 * 10];
-
-    if ( !digest->inited )
-    {
-      mr = MD5_Init( &digest->ctx->md5 );
-      if ( mr != 1 )
-      {
-        rSETBAD;
-        RGESRM( rCODE, "MD5 init error" );
-      }
-    }
-    {
-      int ry = 0;
-
-      do
-      {
-        ry = read( digests->fd, buffer, sizeof( buffer ) );
-
-        if ( ry < 0 )
-        {
-          rSETBAD;
-          RGESRM( rCODE, "MD5 read error" );
-        }
-        else if ( ry > 0 )
-        {
-          bytes += ry;
-          mr = MD5_Update( &digest->ctx->md5, digests->readbuffer, ry );
-          if ( mr != 1 )
-          {
-            rSETBAD;
-            RGESRM( rCODE, "MD5 update error" );
-          }
-        }
-      } while ( ry > 0 );
-    }
-  }
-  mr = MD5_Final( pdgst, &digest->ctx->md5 );
-  if ( mr != 1 )
-  {
-    rSETBAD;
-    RGESRM( rCODE, "MD5 final error" );
-  }
-  rRET;
+  if ( digest )
+    is_string = masxfs_digest_is_string( digest );
+  return is_string;
 }
-
-static int
-sha1( int fd, unsigned char *pdgst )
-{
-  rDECLGOOD;
-  SHA_CTX ctx = { 0 };
-  unsigned long bytes = 0;
-  int mr = 0;
-
-  if ( lseek( fd, 0, SEEK_SET ) < 0 )
-  {
-    rSETBAD;
-    RGESRM( rCODE, "SHA lseek error" );
-  }
-
-  if ( rGOOD )
-  {
-    char buffer[1024 * 10];
-
-    mr = SHA1_Init( &ctx );
-    if ( mr != 1 )
-    {
-      rSETBAD;
-      RGESRM( rCODE, "SHA init error" );
-    }
-    {
-      int ry = 0;
-
-      do
-      {
-        ry = read( fd, buffer, sizeof( buffer ) );
-
-        if ( ry < 0 )
-        {
-          rSETBAD;
-          RGESRM( rCODE, "SHA read error" );
-        }
-        else if ( ry > 0 )
-        {
-          bytes += ry;
-          mr = SHA1_Update( &ctx, buffer, ry );
-          if ( mr != 1 )
-          {
-            rSETBAD;
-            RGESRM( rCODE, "SHA update error" );
-          }
-        }
-      } while ( ry > 0 );
-    }
-  }
-  mr = SHA1_Final( pdgst, &ctx );
-  if ( mr != 1 )
-  {
-    rSETBAD;
-    RGESRM( rCODE, "SHA final error" );
-  }
-  rRET;
-}
-#endif

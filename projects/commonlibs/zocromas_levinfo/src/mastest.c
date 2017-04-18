@@ -71,14 +71,19 @@ mastest_digest( void )
   {
     for ( int iter = 0; iter < 1; iter++ )
     {
-      masxfs_digests_t *digests = masxfs_digests_create_setup( fd, 1024 * 5 );
+      masxfs_digests_t *digests = masxfs_digests_create_setup( fd, 1024 * 25, 0, 0 );
 
     /* rC( masxfs_digests_add( digests, MASXFS_DIGEST_MD5 ) ); */
       rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) );
-      rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) );
+      rC( masxfs_digests_add( digests, MASXFS_DIGEST_MAGIC ) );
+    /* rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) ); */
+#if 1
+      rC( masxfs_digests_compute( digests ) );
+#else
       rC( masxfs_digests_open( digests ) );
       rC( masxfs_digests_update( digests ) );
       rC( masxfs_digests_close( digests ) );
+#endif
       if ( rGOOD )
       {
         {
@@ -105,17 +110,18 @@ mastest_digest( void )
           const unsigned char *dg = NULL;
           char sbuffer[512] = { 0 };
           char *psbuf = sbuffer;
+          int is_string = masxfs_digests_is_string( digests, 1 );
 
           sz = masxfs_digests_getn( digests, 1, &dg );
           if ( sz )
           {
-            for ( ssize_t i = 0; i < sz; i++ )
-            {
-              snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
-              psbuf += 2;
-            }
-
-            WARN( "sz:%d - %s", sz, sbuffer );
+            if ( !is_string )
+              for ( ssize_t i = 0; i < sz; i++ )
+              {
+                snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
+                psbuf += 2;
+              }
+            WARN( "sz:%d - %s - magic:%s", sz, ( !is_string ? sbuffer : "-" ), ( is_string ? ( char * ) dg : "-" ) );
           }
         }
       }
