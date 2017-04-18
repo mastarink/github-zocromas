@@ -1,6 +1,7 @@
 #ifndef MAS_MYSQLPFS_STMT_H
 # define MAS_MYSQLPFS_STMT_H
 
+# include <unistd.h>
 # include "mysqlpfs_types.h"
 
 int mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *op );
@@ -9,10 +10,17 @@ int mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length );
 int mas_mysqlpfs_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length );
 
+int mas_mysqlpfs_mstmt_prepare_param_binary( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length );
+
 int mas_mysqlpfs_mstmt_set_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string );
 int mas_mysqlpfs_mstmt_get_param_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring );
 int mas_mysqlpfs_mstmt_set_result_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *string );
 int mas_mysqlpfs_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const char **pstring );
+
+int mas_mysqlpfs_mstmt_set_param_binary( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char *binary, size_t length );
+int mas_mysqlpfs_mstmt_get_param_binary_na( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char **pbinary );
+int mas_mysqlpfs_mstmt_set_result_binary( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char *binary, size_t length );
+int mas_mysqlpfs_mstmt_get_result_binary_na( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char **pbinary );
 
 int mas_mysqlpfs_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos );
 int mas_mysqlpfs_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos );

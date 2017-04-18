@@ -31,6 +31,9 @@ sfind qstd_mstmt_datas.h
 tab sfind qstd_mstmt_props.c
 sfind qstd_mstmt_props.h
 
+tab sfind qstd_mstmt_sha1.c
+sfind qstd_mstmt_sha1.h
+
 tab sfind qstd_mstmt_parents.c
 sfind qstd_mstmt_parents.h
 

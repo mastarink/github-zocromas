@@ -64,7 +64,7 @@
 #  define RGES RGESM(RGEMSG)
 
 #  define RGEM(...)  RGEX(0, __VA_ARGS__)
-#  define RGESM(...) RGEX(1, __VA_ARGS__)
+#  define RGESM(...) RGEX(1, "SYS: %s", __VA_ARGS__)
 
 #  define RGER(_r)		( ( R_BAD((_r)) ) ? RGE : 0 )
 #  define RGERM(_r, ...)	( ( R_BAD((_r)) ) ? RGEM(__VA_ARGS__) : 0 )

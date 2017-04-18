@@ -7,6 +7,10 @@
 # define QSTD_TABLE_PROPS "qstd_fileprops"
 # define QSTD_TABLE_PARENTS "qstd_parents"
 # define QSTD_TABLE_NAMES "qstd_filenames"
+# define QSTD_TABLE_MD5 "qstd_md5"
+# define QSTD_TABLE_MD5_REF "qstd_md5_ref"
+# define QSTD_TABLE_SHA1 "qstd_sha1"
+# define QSTD_TABLE_SHA1_REF "qstd_sha1_ref"
 
 # define QSTD_VIEW_ALL "qstd_allfull"
 # define QSTD_VIEW_DIRS "qstd_dirfull"

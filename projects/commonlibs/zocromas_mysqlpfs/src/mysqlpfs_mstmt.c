@@ -163,6 +163,15 @@ mas_mysqlpfs_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos, mysq
   rRET;
 }
 
+int
+mas_mysqlpfs_mstmt_prepare_param_binary( mysqlpfs_mstmt_t * mstmt, int pos, mysqlpfs_s_length_t buffer_length )
+{
+  rDECLBAD;
+
+  rC( mas_mysqlpfs_mstmt_prepare_param_gen( mstmt, pos, PFS_BINARY, buffer_length ) );
+  rRET;
+}
+
 static int
 mas_mysqlpfs_mstmt_prepare_result_gen( mysqlpfs_mstmt_t * mstmt, int pos, enum enum_field_types ft, mysqlpfs_s_length_t buffer_length )
 {
@@ -334,6 +343,47 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
   rRET;
 }
 
+int
+mas_mysqlpfs_mstmt_set_bind_binary( mysqlpfs_mbind_t * mbind, int pos, const unsigned char *binary, size_t length )
+{
+  rDECLBAD;
+
+  QRGP( mbind->bind );
+  if ( mbind->bind )
+  {
+    if ( pos < mbind->nbind && mbind->allocated_buffers[pos] && binary && mbind->bind[pos].buffer_length )
+    {
+      unsigned char *s = mbind->allocated_buffers[pos];
+      mysqlpfs_s_length_t *p_length = mbind->length + pos;
+      mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
+
+      if ( binary )
+      {
+        if ( length > mbind->bind[pos].buffer_length )
+          length = mbind->bind[pos].buffer_length;
+        memcpy( s, binary, length );
+        *p_length = length;
+        *p_is_null = ( mysqlpfs_s_bool_t ) 0;
+      }
+      else
+      {
+        *s = 0;
+        *p_length = 0;
+        *p_is_null = ( mysqlpfs_s_bool_t ) 1;
+      }
+      rSETGOOD;
+    }
+    else
+    {
+      WARN( "pos:%d / nbind:%d ab:%p abp:%p\n", pos, mbind->nbind, mbind->allocated_buffers,
+            mbind->allocated_buffers ? mbind->allocated_buffers[pos] : NULL );
+      rSETBAD;
+      QRG( rCODE );
+    }
+  }
+  rRET;
+}
+
 static int
 mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const char **pstring )
 {
@@ -345,6 +395,40 @@ mas_mysqlpfs_mstmt_get_bind_string_na( mysqlpfs_mbind_t * mbind, int pos, const 
     if ( pos < mbind->nbind && mbind->allocated_buffers[pos] && mbind->bind[pos].buffer_length )
     {
       char *s = mbind->allocated_buffers[pos];
+      mysqlpfs_s_length_t *p_length = mbind->length + pos;
+      mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
+
+      if ( pstring )
+      {
+        *pstring = NULL;
+        if ( !*p_is_null && s )
+        {
+          s[*p_length] = 0;
+          *pstring = s;
+        }
+      }
+      rSETGOOD;
+    }
+    else
+    {
+      rSETBAD;
+      QRG( rCODE );
+    }
+  }
+  rRET;
+}
+
+static int
+mas_mysqlpfs_mstmt_get_bind_binary_na( mysqlpfs_mbind_t * mbind, int pos, const unsigned char **pstring )
+{
+  rDECLBAD;
+
+  QRGP( mbind->bind );
+  if ( mbind->bind )
+  {
+    if ( pos < mbind->nbind && mbind->allocated_buffers[pos] && mbind->bind[pos].buffer_length )
+    {
+      unsigned char *s = mbind->allocated_buffers[pos];
       mysqlpfs_s_length_t *p_length = mbind->length + pos;
       mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
 
@@ -412,7 +496,51 @@ mas_mysqlpfs_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, cons
   rRET;
 }
 
+ /**/ int
+mas_mysqlpfs_mstmt_set_param_binary( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char *binary, size_t length )
+{
+  rDECLBAD;
+
+  QRGP( mstmt );
+  if ( mstmt )
+    rC( mas_mysqlpfs_mstmt_set_bind_binary( &mstmt->binds.param, pos, binary, length ) );
+  rRET;
+}
+
 int
+mas_mysqlpfs_mstmt_get_param_binary_na( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char **pbinary )
+{
+  rDECLBAD;
+
+  QRGP( mstmt );
+  if ( mstmt )
+    rC( mas_mysqlpfs_mstmt_get_bind_binary_na( &mstmt->binds.param, pos, pbinary ) );
+  rRET;
+}
+
+int
+mas_mysqlpfs_mstmt_set_result_binary( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char *binary, size_t length )
+{
+  rDECLBAD;
+
+  QRGP( mstmt );
+  if ( mstmt )
+    rC( mas_mysqlpfs_mstmt_set_bind_binary( &mstmt->binds.result, pos, binary, length ) );
+  rRET;
+}
+
+int
+mas_mysqlpfs_mstmt_get_result_binary_na( mysqlpfs_mstmt_t * mstmt, int pos, const unsigned char **pbinary )
+{
+  rDECLBAD;
+
+  QRGP( mstmt );
+  if ( mstmt )
+    rC( mas_mysqlpfs_mstmt_get_bind_binary_na( &mstmt->binds.result, pos, pbinary ) );
+  rRET;
+}
+
+ /**/ int
 mas_mysqlpfs_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
 {
   rDECLBAD;
@@ -514,6 +642,8 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
     {
       rC( mysql_stmt_execute( mstmt->stmt ) );
       QRGS( rCODE );
+      /* if ( rCODE )                                       */
+      /*   WARN( "[%s]", mysql_stmt_error( mstmt->stmt ) ); */
     }
   }
   rRET;

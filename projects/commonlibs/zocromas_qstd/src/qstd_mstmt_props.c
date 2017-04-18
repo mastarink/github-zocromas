@@ -58,7 +58,7 @@ mas_qstd_mstmt_selget_props_id( mas_qstd_t * qstd, unsigned long long data_id )
 }
 
 unsigned long long
-mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const mas_qstd_stat_t * stat _uUu_ )
+mas_qstd_mstmt_insget_props_id( mas_qstd_t * qstd, unsigned long long data_id, const char *sdetype, const mas_qstd_stat_t * stat )
 {
   rDECLBAD;
   QRGP( qstd );

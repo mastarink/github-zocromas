@@ -17,6 +17,7 @@
 #include <mastar/regerr/masregerr_defs.h>
 #include <mastar/exam/masexam.h>
 
+#include "masxfs_levinfo_enums.h"
 #include "masxfs_levinfo_digest.h"
 
 void

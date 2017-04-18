@@ -10,6 +10,7 @@ libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_sizes.c \
 	qstd_mstmt_datas.c \
 	qstd_mstmt_props.c \
+	qstd_mstmt_sha1.c \
 	qstd_mstmt_parents.c \
 	qstd_mstmt_nodes.c
 

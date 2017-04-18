@@ -17,6 +17,7 @@
 #include <mastar/qstd/qstd_mstmt_sizes.h>
 #include <mastar/qstd/qstd_mstmt_datas.h>
 #include <mastar/qstd/qstd_mstmt_props.h>
+#include <mastar/qstd/qstd_mstmt_sha1.h>
 #include <mastar/qstd/qstd_mstmt_names.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
 
@@ -26,6 +27,7 @@
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_fs.h"
+#include "masxfs_levinfo_digest.h"
 
 #include "masxfs_levinfo_db.h"
 
@@ -414,50 +416,72 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, 
   rRET;
 }
 
+static int ncal = 0;
 unsigned long long
 masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
+  unsigned long long sha1_id = 0ULL;
 
-  /* WARN( "ename:%s", ename ); */
+/* WARN( "ename:%s", ename ); */
   unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
 
-  /* WARN( "parent_id:%llu", parent_id ); */
+/* WARN( "parent_id:%llu", parent_id ); */
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
 
-  /* WARN( "detype:%u", detype ); */
+/* WARN( "detype:%u", detype ); */
   unsigned long long node_id = 0;
-  unsigned long long dataid = 0;
+  unsigned long long data_id = 0;
   const char *sdetype = masxfs_levinfo_detype2s( detype );
 
-  /* WARN( "sdetype:%s", sdetype ); */
+/* WARN( "sdetype:%s", sdetype ); */
   mas_qstd_t *qstd = mas_qstd_instance(  );
 
   {
     size_t size = masxfs_levinfo_size_ref( li, take_flags );
 
-    /* WARN( "size:%ld", size ); */
+  /* WARN( "size:%ld", size ); */
     size_t thesize _uUu_ = mas_qstd_mstmt_selinsget_sizes_id( qstd, size );
 
-    /* WARN( "thesize:%ld", thesize ); */
+  /* WARN( "thesize:%ld", thesize ); */
   }
   {
     const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, take_flags );
+    const masxfs_digests_t *digests = li->digests;                   /* TODO masxfs_levinfo_digests_ref */
 
-    if ( stat )
+    if ( stat || digests )
+      data_id = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
+    if ( data_id )
     {
-      dataid = mas_qstd_mstmt_selinsget_datas_id( qstd, stat );
-      /* WARN( "dataid:%lld", dataid ); */
-      unsigned long long props_id _uUu_ = mas_qstd_mstmt_selinsget_props_id( qstd, dataid, sdetype, stat );
+      if ( stat )
+      {
+        unsigned long long props_id _uUu_ = mas_qstd_mstmt_selinsget_props_id( qstd, data_id, sdetype, stat );
+      }
+      else
+      {
+        WARN( "No stat" );
+      }
+      if ( detype == MASXFS_ENTRY_REG_NUM )
+      {
+        if ( digests )
+        {
+          const unsigned char *sha1 = NULL;
 
-      /* WARN( "props_id:%lld", props_id ); */
-    }
-    else
-    {
-      WARN( "No stat" );
+          masxfs_digests_get( digests, MASXFS_DIGEST_SHA1, &sha1 );
+          sha1_id = mas_qstd_mstmt_selinsget_sha1_id( qstd, data_id, sha1 );
+          {
+          /* TODO TODO TODO TODO TODO insert into sha1_ref : data_id, sha1_id */
+          }
+        }
+        else
+        {
+          WARN( "No digests for %s (%d)", li->name, detype );
+        }
+      }
     }
   }
+
   {
     unsigned long long theid = 0;
     masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, take_flags );
@@ -465,16 +489,21 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     if ( lidepth != 0 )
     {
       assert( parent_id );
-      assert( dataid );
-      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, dataid, sdetype );
-      /* WARN( "theid:%lld", theid ); */
+      assert( data_id );
+      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, data_id, sdetype );
+    /* WARN( "theid:%lld", theid ); */
     }
     if ( detype == MASXFS_ENTRY_DIR_NUM )
     {
       node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-      /* WARN( "node_id:%lld", node_id ); */
+    /* WARN( "node_id:%lld", node_id ); */
       masxfs_levinfo_set_node_id( li, node_id );
     }
+  }
+  if ( detype == MASXFS_ENTRY_REG_NUM )
+  {
+    WARN( "%d. sha1_id:%lld => %s (%d)", ncal, sha1_id, li->name, detype );
+    ncal++;
   }
   return node_id;
 }

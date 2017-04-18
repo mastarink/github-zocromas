@@ -71,7 +71,7 @@ masxfs_digest_open( masxfs_digest_t * digest )
       break;
     case MASXFS_DIGEST_MAGIC:
       mr = 1;
-      /* TODO move to module constructor (magic_close respectively) and mag global instead of placing to ctx ?? */
+    /* TODO move to module constructor (magic_close respectively) and mag global instead of placing to ctx ?? */
       digest->ctx.magic = magic_open(  /* MAGIC_MIME | */ MAGIC_PRESERVE_ATIME );
       magic_load( digest->ctx.magic, NULL );
       break;
@@ -93,7 +93,7 @@ masxfs_digest_update( masxfs_digest_t * digest, masxfs_digests_t * digests )
   rDECLBAD;
   int mr = 0;
 
-  if ( digest )
+  if ( digest && digests )
   {
     mr = 1;
     switch ( digest->dgtype )
@@ -281,12 +281,20 @@ int
 masxfs_digests_open( masxfs_digests_t * digests )
 {
   rDECLGOOD;
-  masxfs_digest_t *digest = digests->digest;
-
-  while ( rGOOD && digest )
+  if ( digests )
   {
-    rC( masxfs_digest_open( digest ) );
-    digest = digest->next;
+    masxfs_digest_t *digest = digests->digest;
+
+    while ( rGOOD && digest )
+    {
+      rC( masxfs_digest_open( digest ) );
+      digest = digest->next;
+    }
+  }
+  else
+  {
+    rSETBAD;
+    RGESRM( rCODE, "digests null error" );
   }
   rRET;
 }
@@ -296,39 +304,47 @@ masxfs_digests_update( masxfs_digests_t * digests )
 {
   rDECLGOOD;
 
-  if ( lseek( digests->fd, digests->from, SEEK_SET ) < 0 )
+  if ( digests )
+  {
+    if ( lseek( digests->fd, digests->from, SEEK_SET ) < 0 )
+    {
+      rSETBAD;
+      RGESRM( rCODE, "digests lseek error" );
+    }
+    if ( rGOOD )
+    {
+      int ry = 0;
+
+      do
+      {
+        masxfs_digest_t *digest = digests->digest;
+
+        ry = read( digests->fd, digests->readbuffer, digests->readbufsize );
+        if ( ry < 0 )
+        {
+          rSETBAD;
+          RGESRM( rCODE, "digest read error" );
+        }
+        else if ( ry >= 0 )
+        {
+          digests->bytes2update = ry;
+          digests->read_bytes += ry;
+          digests->reads++;
+          while ( rGOOD && digest )
+          {
+            rC( masxfs_digest_update( digest, digests ) );
+            digest = digest->next;
+          }
+          if ( digests->max_blocks && digests->read_bytes >= digests->readbufsize * digests->max_blocks )
+            break;
+        }
+      } while ( rGOOD && ry > 0 );
+    }
+  }
+  else
   {
     rSETBAD;
-    RGESRM( rCODE, "digests lseek error" );
-  }
-  if ( rGOOD )
-  {
-    int ry = 0;
-
-    do
-    {
-      masxfs_digest_t *digest = digests->digest;
-
-      ry = read( digests->fd, digests->readbuffer, digests->readbufsize );
-      if ( ry < 0 )
-      {
-        rSETBAD;
-        RGESRM( rCODE, "SHA read error" );
-      }
-      else if ( ry >= 0 )
-      {
-        digests->bytes2update = ry;
-        digests->read_bytes += ry;
-        digests->reads++;
-        while ( rGOOD && digest )
-        {
-          rC( masxfs_digest_update( digest, digests ) );
-          digest = digest->next;
-        }
-        if ( digests->max_blocks && digests->read_bytes >= digests->readbufsize * digests->max_blocks )
-          break;
-      }
-    } while ( rGOOD && ry > 0 );
+    RGESRM( rCODE, "digests null error" );
   }
   rRET;
 }
@@ -337,12 +353,20 @@ int
 masxfs_digests_close( masxfs_digests_t * digests )
 {
   rDECLGOOD;
-  masxfs_digest_t *digest = digests->digest;
-
-  while ( rGOOD && digest )
+  if ( digests )
   {
-    rC( masxfs_digest_close( digest ) );
-    digest = digest->next;
+    masxfs_digest_t *digest = digests->digest;
+
+    while ( rGOOD && digest )
+    {
+      rC( masxfs_digest_close( digest ) );
+      digest = digest->next;
+    }
+  }
+  else
+  {
+    rSETBAD;
+    RGESRM( rCODE, "digests null error" );
   }
   rRET;
 }
@@ -350,21 +374,29 @@ masxfs_digests_close( masxfs_digests_t * digests )
 void
 masxfs_digests_reset( masxfs_digests_t * digests )
 {
-  masxfs_digest_t *digest = digests->digest;
-
-  digests->digest = NULL;
-  while ( digest )
+  if ( digests )
   {
-    masxfs_digest_t *next = digest->next;
+    masxfs_digest_t *digest = digests->digest;
 
-    masxfs_digest_delete( digest );
-    digest = next;
+    digests->digest = NULL;
+    while ( digest )
+    {
+      masxfs_digest_t *next = digest->next;
+
+      masxfs_digest_delete( digest );
+      digest = next;
+    }
+    mas_free( digests->readbuffer );
+    digests->readbuffer = NULL;
+    digests->readbufsize = 0;
+    digests->bytes2update = 0;
+    digests->fd = 0;
   }
-  mas_free( digests->readbuffer );
-  digests->readbuffer = NULL;
-  digests->readbufsize = 0;
-  digests->bytes2update = 0;
-  digests->fd = 0;
+  else
+  {
+  /* rSETBAD;                               */
+  /* RGESRM( rCODE, "digests null error" ); */
+  }
 }
 
 void
@@ -378,25 +410,33 @@ int
 masxfs_digests_add( masxfs_digests_t * digests, masxfs_digest_type_t dgtype )
 {
   rDECLBAD;
-  masxfs_digest_t *digest = NULL, *prev_digest = NULL;
+  if ( digests )
+  {
+    masxfs_digest_t *digest = NULL, *prev_digest = NULL;
 
-  prev_digest = digests->digest;
-  if ( prev_digest )
-  {
-    while ( prev_digest->next )
-      prev_digest = prev_digest->next;
-  }
-  digest = masxfs_digest_create_setup( dgtype );
-  if ( digest )
-  {
+    prev_digest = digests->digest;
     if ( prev_digest )
-      prev_digest->next = digest;
+    {
+      while ( prev_digest->next )
+        prev_digest = prev_digest->next;
+    }
+    digest = masxfs_digest_create_setup( dgtype );
+    if ( digest )
+    {
+      if ( prev_digest )
+        prev_digest->next = digest;
+      else
+        digests->digest = digest;
+      rSETGOOD;
+    }
     else
-      digests->digest = digest;
-    rSETGOOD;
+      rSETBAD;
   }
   else
+  {
     rSETBAD;
+    RGESRM( rCODE, "digests null error" );
+  }
   rRET;
 }
 
@@ -425,7 +465,7 @@ masxfs_digests_compute( masxfs_digests_t * digests )
 }
 
 int
-masxfs_digests_get( masxfs_digests_t * digests, masxfs_digest_type_t dgtype, const unsigned char **pbuf )
+masxfs_digests_get( const masxfs_digests_t * digests, masxfs_digest_type_t dgtype, const unsigned char **pbuf )
 {
   int sz = 0;
   masxfs_digest_t *digest = digests->digest;
@@ -440,7 +480,7 @@ masxfs_digests_get( masxfs_digests_t * digests, masxfs_digest_type_t dgtype, con
 }
 
 int
-masxfs_digests_getn( masxfs_digests_t * digests, int npos, const unsigned char **pbuf )
+masxfs_digests_getn( const masxfs_digests_t * digests, int npos, const unsigned char **pbuf )
 {
   int sz = 0;
   int n = 0;

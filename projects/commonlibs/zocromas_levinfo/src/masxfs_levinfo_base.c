@@ -12,6 +12,8 @@
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 
+#include "masxfs_levinfo_digest.h"
+
 #include "masxfs_levinfo_base.h"
 
 masxfs_levinfo_t *
@@ -103,6 +105,10 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     if ( li->prefix )
       mas_free( li->prefix );
     li->prefix = NULL;
+    
+    masxfs_digests_delete( li->digests );
+
+    li->digests = NULL;
     memset( li, 0, sizeof( masxfs_levinfo_t ) );
   }
 }
