@@ -185,18 +185,18 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qs
             ")",
     "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id" /*", fp.detype" */ ", fd.inode " /* */
-            "     , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
-            "     , fs.nsame AS nsamesize"                           /* */
-            "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
+            "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
+            "  , fs.nsame AS nsamesize"                              /* */
+            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
           /* */
-            "     , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
-            "     , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
-            "   LEFT JOIN " QSTD_TABLE_PARENTS " AS  p ON (fn.id=p.dir_id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_DATAS "   AS fd ON (fn.data_id=fd.id) " /* */
-            "   JOIN " QSTD_TABLE_PROPS "        AS fp ON (fp.data_id=fd.id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_SIZES "   AS fs ON (fp.size=fs.size) ", /* */
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES "  AS "                /* */
+            "  , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "  , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
+            "      FROM " QSTD_TABLE_NAMES "   AS fn "               /* */
+            " LEFT JOIN " QSTD_TABLE_PARENTS " AS  p ON (fn.id=p.dir_id) " /* */
+            " LEFT JOIN " QSTD_TABLE_DATAS "   AS fd ON (fn.data_id=fd.id) " /* */
+            "      JOIN " QSTD_TABLE_PROPS "   AS fp ON (fp.data_id=fd.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SIZES "   AS fs ON (fp.size=fs.size) ", /* */
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
             " SELECT  "                                              /* */
             " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size, sha.nsame AS nsamesha1 " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
@@ -253,7 +253,9 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_drop_tables( mas_qstd
     "DROP TABLE IF EXISTS " QSTD_TABLE_NAMES,
     "DROP TABLE IF EXISTS " QSTD_TABLE_PARENTS,
     "DROP TABLE IF EXISTS " QSTD_TABLE_PROPS,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_MD5DREF,
     "DROP TABLE IF EXISTS " QSTD_TABLE_MD5,
+    "DROP TABLE IF EXISTS " QSTD_TABLE_SHA1DREF,
     "DROP TABLE IF EXISTS " QSTD_TABLE_SHA1,
     "DROP TABLE IF EXISTS " QSTD_TABLE_DATAS,
     "DROP TABLE IF EXISTS " QSTD_TABLE_SIZES,
