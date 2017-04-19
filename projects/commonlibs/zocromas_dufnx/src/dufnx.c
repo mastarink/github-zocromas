@@ -46,6 +46,8 @@
  * run mastest/ --max-depth=3 --treedb
  * echo treedb:max-depth=32 | run  mastest
  *
+ * run   --store=mastest --disable-warn
+ * run   --drop-tables
  * */
 
 static int
@@ -98,7 +100,7 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
 }
 
 static int
-store_fs2db( mucs_option_t * opt, void *userdata )
+dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata )
 {
   rDECLGOOD;
   if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
@@ -109,7 +111,6 @@ store_fs2db( mucs_option_t * opt, void *userdata )
     const char *path = mucs_config_option_string_value( opt );
 
     assert( qstd );
-  /* rC( mas_qstd_drop_tables( qstd ) ); */
     rC( mas_qstd_create_tables( qstd ) );
     WARN( "________________________ %p '%s'", pdufnx_data, path );
 
@@ -144,7 +145,28 @@ store_fs2db( mucs_option_t * opt, void *userdata )
 }
 
 static int
-arg_process( mucs_option_t * opt, void *userdata )
+dufnx_config_drop_tables( mucs_option_t * opt _uUu_, void *userdata )
+{
+  rDECLGOOD;
+  mas_dufnx_data_t *pdufnx_data _uUu_ = ( mas_dufnx_data_t * ) userdata;
+
+  mas_qstd_t *qstd = dufnx_qstd( &pdufnx_data->mysql );
+
+  assert( qstd );
+  rC( mas_qstd_drop_tables( qstd ) );
+  rRET;
+}
+
+static int
+dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_ )
+{
+  rDECLGOOD;
+  minierr_disable( MAS_MIER_TYPE_WARN );
+  rRET;
+}
+
+static int
+dufnx_config_arg_process( mucs_option_t * opt, void *userdata )
 {
   rDECLGOOD;
   if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
@@ -185,22 +207,20 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   mucs_option_static_t soptions[] = {
     {.name = "treedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,
      .def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
-    ,
-    {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,
-     .def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
-    ,
-  /* {.name = "updatedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags, */
+    , {.name = "treefs",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags,.def_nvalue.v_ulong =
+       MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}
+
+  /* , {.name = "updatedb",.shortn = '\0',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &pdufnx_data->levinfo_flags, */
   /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}                   */
   /* ,                                                                                                                        */
-    {.name = "max-depth",.shortn = '\0' /* 'd' */ ,.restype = MUCS_RTYP_UINT,.cust_ptr = &pdufnx_data->max_depth}
-    ,
-    {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,
-     .callback = arg_process,.cb_pass = 1}
-    ,
-    {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_OPTIONAL_VALUE,
-     .callback = store_fs2db,.cb_pass = 1}
-    ,
-    {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
+    , {.name = "max-depth",.shortn = '\0' /* 'd' */ ,.restype = MUCS_RTYP_UINT,.cust_ptr = &pdufnx_data->max_depth}
+    , {.name = MUCS_NONOPT_NAME,.restype = MUCS_RTYP_TARG,.flags = MUCS_FLAG_AUTOFREE,.cust_ptr = &pdufnx_data->targv,.callback =
+       dufnx_config_arg_process,.cb_pass = 1}
+    , {.name = "store",.shortn = '\0',.restype = MUCS_RTYP_STRING,.flags = 0 | MUCS_FLAG_OPTIONAL_VALUE,.callback =
+       dufnx_config_store_fs2db,.cb_pass = 1}
+    , {.name = "drop-tables",.shortn = '\0',.restype = MUCS_RTYP_NONE,.callback = dufnx_config_drop_tables}
+    , {.name = "disable-warn",.shortn = '\0',.restype = MUCS_RTYP_NONE,.callback = dufnx_config_disable_warn}
+    , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL}
   };
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "main-table", soptions, TRUE );
 

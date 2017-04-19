@@ -10,6 +10,7 @@
 #include <mastar/minierr/minierr.h>
 
 #include <mastar/qstd/qstd_defs.h>
+#include <mastar/qstd/qstd_enums.h>
 #include <mastar/qstd/qstd_mstmt.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
 #include <mastar/qstd/qstd_mstmt_nodes.h>
@@ -172,61 +173,79 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 
     if ( !( *pmstmt ) )
     {
-      const char *op;
-
-      if ( name )
-        op = "SELECT name, inode, node_id "                          /* */
-                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? AND name=? ORDER BY name_id";
-      else
-        op = "SELECT name, inode, node_id "                          /* */
-                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev FROM " QSTD_VIEW_ALL " WHERE parent_id=? ORDER BY name_id";
-      int numpar = 1 + ( name ? 1 : 0 );
-      int numres = 15;                                               /* just fool-proof  */
-      int nr = 0;
-      int np = 0;
-
-      ( *pmstmt ) = mas_qstd_instance_mstmt_create_setup( numpar, numres, op );
-      rC( mas_qstd_mstmt_prepare_param_longlong( ( *pmstmt ), np++ ) ); /* parent_id */
-      QRLI( li, rCODE );
-      if ( name )
+#if 1
+      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHING_PN : STD_MSTMT_SELECT_EVERYTHING_P );
+#else
       {
-        rC( mas_qstd_mstmt_prepare_param_string( ( *pmstmt ), np++ ) ); /* name */
+        const char *op;
+
+        if ( name )
+          op = "SELECT "                                             /* */
+                  "  name, inode, node_id "                          /* */
+                  ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev " /* */
+                  "   FROM " QSTD_VIEW_ALL                           /* */
+                  "    WHERE parent_id=? AND name=? "                /* */
+                /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
+                  "   ORDER BY name_id";
+        else
+          op = "SELECT "                                             /* */
+                  "  name, inode, node_id "                          /* */
+                  ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev " /* */
+                  "   FROM " QSTD_VIEW_ALL                           /* */
+                  "    WHERE parent_id=? "                           /* */
+                /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
+                  "   ORDER BY name_id";
+        int numpar = 1 + ( name ? 1 : 0 );
+        int numres = 15;                                             /* just fool-proof  */
+        int nr = 0;
+        int np = 0;
+
+        ( *pmstmt ) = mas_qstd_instance_mstmt_create_setup( numpar, numres, op );
+        rC( mas_qstd_mstmt_prepare_param_longlong( ( *pmstmt ), np++ ) ); /* parent_id */
+        QRLI( li, rCODE );
+        if ( name )
+        {
+          rC( mas_qstd_mstmt_prepare_param_string( ( *pmstmt ), np++ ) ); /* name */
+          QRLI( li, rCODE );
+        }
+        assert( np == numpar );
+
+        rC( mas_qstd_mstmt_bind_param( ( *pmstmt ) ) );
+        rC( mas_qstd_mstmt_prepare_result_string( ( *pmstmt ), nr++ ) ); /* name */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* inode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* node_id */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* dev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* mode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* nlink */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* uid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* gid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* size */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* blksize */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* blocks */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* rdev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* atim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* mtim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* ctim */
+        QRLI( li, rCODE );
+      /* assert( nr == numres ); */
+        rC( mas_qstd_mstmt_bind_result( ( *pmstmt ) ) );
         QRLI( li, rCODE );
       }
-      assert( np == numpar );
-
-      rC( mas_qstd_mstmt_bind_param( ( *pmstmt ) ) );
-      rC( mas_qstd_mstmt_prepare_result_string( ( *pmstmt ), nr++ ) ); /* name */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* inode */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* node_id */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* dev */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* mode */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* nlink */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* uid */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* gid */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* size */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* blksize */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* blocks */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* rdev */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* atim */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* mtim */
-      rC( mas_qstd_mstmt_prepare_result_longlong( ( *pmstmt ), nr++ ) ); /* ctim */
-      QRLI( li, rCODE );
-      assert( nr == numres );
-      rC( mas_qstd_mstmt_bind_result( ( *pmstmt ) ) );
-      QRLI( li, rCODE );
-
-      np = 0;
-      rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, node_id, FALSE ) );
-      QRLI( li, rCODE );
-      if ( name )
+#endif
       {
-        rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, name ) );
+        int np = 0;
+
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, node_id, FALSE ) );
+        QRLI( li, rCODE );
+        if ( name )
+        {
+          rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, name ) );
+          QRLI( li, rCODE );
+        }
+      /* assert( np == numpar ); */
+        rC( mas_qstd_mstmt_execute_store( ( *pmstmt ) ) );
         QRLI( li, rCODE );
       }
-      assert( np == numpar );
-      rC( mas_qstd_mstmt_execute_store( ( *pmstmt ) ) );
-      QRLI( li, rCODE );
     }
   }
   QRLI( li, rCODE );
@@ -416,13 +435,11 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, 
   rRET;
 }
 
-static int ncal = 0;
 unsigned long long
 masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
-  unsigned long long sha1_id = 0ULL;
 
 /* WARN( "ename:%s", ename ); */
   unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
@@ -468,13 +485,12 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         {
           const unsigned char *sha1 = NULL;
 
+        /* TODO mode: calc. digest only if there is no digest by this data_id */
           masxfs_digests_get( digests, MASXFS_DIGEST_SHA1, &sha1 );
-          sha1_id = mas_qstd_mstmt_selinsget_sha1_id( qstd, data_id, sha1 );
           {
+            unsigned long long sha1_id = mas_qstd_mstmt_selinsget_sha1_id( qstd, data_id, sha1 );
 
-          /* TODO TODO TODO TODO TODO insert into sha1_ref : data_id, sha1_id
-	   * */
-	    mas_qstd_mstmt_selinsget_sha1dref( qstd, data_id, sha1_id );
+            mas_qstd_mstmt_selinsget_sha1dref( qstd, data_id, sha1_id );
           }
         }
         else
@@ -482,31 +498,24 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
           WARN( "No digests for %s (%d)", li->name, detype );
         }
       }
+      {
+        unsigned long long name_id = 0;
+        masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, take_flags );
+
+        if ( lidepth != 0 )
+        {
+          assert( parent_id );
+          assert( data_id );
+          name_id = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, data_id, sdetype );
+        }
+        if ( detype == MASXFS_ENTRY_DIR_NUM )
+        {
+          node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, name_id );
+          masxfs_levinfo_set_node_id( li, node_id );
+        }
+      }
     }
   }
 
-  {
-    unsigned long long theid = 0;
-    masxfs_depth_t lidepth = masxfs_levinfo_depth_ref( li, take_flags );
-
-    if ( lidepth != 0 )
-    {
-      assert( parent_id );
-      assert( data_id );
-      theid = mas_qstd_mstmt_selinsget_names_id( qstd, ename, parent_id, data_id, sdetype );
-    /* WARN( "theid:%lld", theid ); */
-    }
-    if ( detype == MASXFS_ENTRY_DIR_NUM )
-    {
-      node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, theid );
-    /* WARN( "node_id:%lld", node_id ); */
-      masxfs_levinfo_set_node_id( li, node_id );
-    }
-  }
-  if ( detype == MASXFS_ENTRY_REG_NUM )
-  {
-    WARN( "%d. sha1_id:%lld => %s (%d)", ncal, sha1_id, li->name, detype );
-    ncal++;
-  }
   return node_id;
 }

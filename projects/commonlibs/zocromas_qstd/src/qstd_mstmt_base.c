@@ -16,6 +16,7 @@
 /* #include <mastar/mysqlpfs/mysqlpfs_query.h> */
 
 #include "qstd_structs.h"
+#include "qstd_enums.h"
 #include "qstd_query.h"
 #include "qstd_mstmt.h"
 
@@ -184,33 +185,44 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qs
             ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
-            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id" /*", fp.detype" */ ", fd.inode " /* */
+            " SELECT "                                               /* */
+            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
             "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "  , fs.nsame AS nsamesize"                              /* */
-            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
-          /* */
-            "  , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
-            "  , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "      FROM " QSTD_TABLE_NAMES "   AS fn "               /* */
-            " LEFT JOIN " QSTD_TABLE_PARENTS " AS  p ON (fn.id=p.dir_id) " /* */
-            " LEFT JOIN " QSTD_TABLE_DATAS "   AS fd ON (fn.data_id=fd.id) " /* */
-            "      JOIN " QSTD_TABLE_PROPS "   AS fp ON (fp.data_id=fd.id) " /* */
-            " LEFT JOIN " QSTD_TABLE_SIZES "   AS fs ON (fp.size=fs.size) ", /* */
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
-            " SELECT  "                                              /* */
-            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size, sha.nsame AS nsamesha1 " /* */
+            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
+            "  , sha.nsame AS nsamesha1, HEX(sha.sum) AS hex_sha1"   /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "        , p.id AS node_id "                             /* */
-            "        , HEX(sha.sum) AS hex_sha1"                     /* */
+            "      FROM " QSTD_TABLE_NAMES "    AS fn "              /* */
+            " LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p ON (fn.id=p.dir_id) " /* */
+            " LEFT JOIN " QSTD_TABLE_DATAS "    AS fd ON (fn.data_id=fd.id) " /* */
+            "      JOIN " QSTD_TABLE_PROPS "    AS fp ON (fp.data_id=fd.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SIZES "    AS fs ON (fp.size=fs.size) " /* */
+            " LEFT JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.sum_id=sha.id) " /* */
+            ,
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES_OLD " AS "             /* */
+            " SELECT  "                                              /* */
+            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
+            "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
+            "  , fs.nsame AS nsamesize"                              /* */
+            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
+            "  , sha.nsame AS nsamesha1, HEX(sha.sum) AS hex_sha1"   /* */
+            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
             "   LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p  ON (fn.id=p.dir_id) " /* */
             "   LEFT JOIN " QSTD_TABLE_DATAS "    AS fd  ON (fn.data_id=fd.id) " /* */
             "        JOIN " QSTD_TABLE_PROPS "    AS fp  ON (fp.data_id=fd.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
             "        JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
             "	LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.sum_id=sha.id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
-            " WHERE p.id IS NULL",
+            " WHERE p.id IS NULL"                                    /* */
+          /* " HAVING node_id IS NULL"                                    (* *) */
+            ,
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
+            " SELECT * FROM " QSTD_VIEW_ALL " HAVING node_id IS NULL" /* */
+            ,
   /* " WHERE fp.detype='REG'", */
     "CREATE OR REPLACE VIEW " QSTD_VIEW_DIRS " AS "                  /* */
             " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
@@ -249,6 +261,7 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_drop_tables( mas_qstd
     "START TRANSACTION",
     "DROP VIEW  IF EXISTS " QSTD_VIEW_ALL,
     "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES,
+    "DROP VIEW  IF EXISTS " QSTD_VIEW_FILES_OLD,
     "DROP VIEW  IF EXISTS " QSTD_VIEW_DIRS,
     "DROP TABLE IF EXISTS " QSTD_TABLE_NAMES,
     "DROP TABLE IF EXISTS " QSTD_TABLE_PARENTS,
@@ -270,7 +283,7 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_drop_tables( mas_qstd
       if ( rBAD )
       {
         WARN( "(%d) %s", rCODE, creops[i] );
-        mas_qstd_query( qstd, "ROLLBACK" );
+        mas_qstd_query( qstd, "ROLLBACK" );                          /* ????????? */
         break;
       }
     }
@@ -304,8 +317,8 @@ mas_qstd_mstmt_delete_array( mysqlpfs_mstmt_t ** mstmts )
   mas_free( mstmts );
 }
 
-mysqlpfs_mstmt_t *
-mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
+__attribute__ ( ( visibility( "default" ) ) )
+     mysqlpfs_mstmt_t *mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
   rDECLBAD;
   mysqlpfs_mstmt_t *mstmt = NULL;
@@ -573,6 +586,79 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
         assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
+      }
+      break;
+    case STD_MSTMT_SELECT_EVERYTHING_PN:
+      {
+        int np = 0;
+        int nr = 0;
+        char *selop = "SELECT "                                      /* */
+                "  name, inode, node_id "                            /* */
+                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev " /* */
+                "   FROM " QSTD_VIEW_ALL                             /* */
+                "    WHERE parent_id=? AND name=? "                  /* */
+              /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
+                "   ORDER BY name_id";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
+        rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
+        assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN );
+
+        rC( mas_qstd_mstmt_bind_param( mstmt ) );
+        rC( mas_qstd_mstmt_prepare_result_string( mstmt, nr++ ) );   /* name */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* inode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* node_id */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* dev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* nlink */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* uid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* gid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* size */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* blksize */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* blocks */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* rdev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* atim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mtim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* ctim */
+        assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+        rC( mas_qstd_mstmt_bind_result( mstmt ) );
+      }
+      break;
+    case STD_MSTMT_SELECT_EVERYTHING_P:
+      {
+        int np = 0;
+        int nr = 0;
+        char *selop = "SELECT "                                      /* */
+                "  name, inode, node_id "                            /* */
+                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev " /* */
+                "   FROM " QSTD_VIEW_ALL                             /* */
+                "    WHERE parent_id=? "                             /* */
+              /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
+                "   ORDER BY name_id";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
+        assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P );
+
+        rC( mas_qstd_mstmt_bind_param( mstmt ) );
+        rC( mas_qstd_mstmt_prepare_result_string( mstmt, nr++ ) );   /* name */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* inode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* node_id */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* dev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mode */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* nlink */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* uid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* gid */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* size */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* blksize */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* blocks */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* rdev */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* atim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mtim */
+        rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* ctim */
+        assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+        rC( mas_qstd_mstmt_bind_result( mstmt ) );
       }
       break;
     case STD_MSTMT_MAX:

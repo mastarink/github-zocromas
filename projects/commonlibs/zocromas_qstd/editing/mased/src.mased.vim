@@ -8,6 +8,7 @@ sfind mastest_drop_tables.c
 
 tab sfind qstd_types.h
 sfind qstd_structs.h
+sfind qstd_enums.h
 sfind qstd_defs.h
 
 tab sfind qstd_query.c

@@ -19,6 +19,7 @@
 #include <mastar/mysqlpfs/mysqlpfs_defs.h>
 
 #include "qstd_structs.h"
+#include "qstd_enums.h"
 /* #include "qstd_mstmt.h" */
 #include "qstd_mstmt_base.h"
 

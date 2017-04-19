@@ -15,6 +15,7 @@ void mas_qstd_instance_delete( void );
 
 mysqlpfs_mstmt_t *mas_qstd_mstmt_create_setup( mas_qstd_t * qstd, int nparams, int nresults, const char *sqlop );
 mysqlpfs_mstmt_t *mas_qstd_instance_mstmt_create_setup( int nparams, int nresults, const char *sqlop );
+mysqlpfs_mstmt_t *mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid );
 void mas_qstd_mstmt_delete( mysqlpfs_mstmt_t * mstmt );
 
 /***/

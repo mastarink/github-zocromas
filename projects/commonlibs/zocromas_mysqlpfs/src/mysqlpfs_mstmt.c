@@ -125,8 +125,8 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
         }
         else
         {
-          QRG( -1 );
-          ADIE( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
+          QRGM( rCODE, "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
+          /* ADIE( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind ); */
         }
       }
     }
@@ -642,8 +642,8 @@ mas_mysqlpfs_mstmt_execute( mysqlpfs_mstmt_t * mstmt )
     {
       rC( mysql_stmt_execute( mstmt->stmt ) );
       QRGS( rCODE );
-      /* if ( rCODE )                                       */
-      /*   WARN( "[%s]", mysql_stmt_error( mstmt->stmt ) ); */
+    /* if ( rCODE )                                       */
+    /*   WARN( "[%s]", mysql_stmt_error( mstmt->stmt ) ); */
     }
   }
   rRET;

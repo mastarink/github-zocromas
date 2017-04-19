@@ -12,6 +12,7 @@ libzocromas_qstdinclude_HEADERS =  \
 	qstd_mstmt_nodes.h \
 	qstd_defs.h \
 	qstd_types.h \
+	qstd_enums.h \
 	qstd_structs.h
 #
 #
