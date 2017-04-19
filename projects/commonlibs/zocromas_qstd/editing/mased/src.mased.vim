@@ -12,9 +12,9 @@ sfind qstd_enums.h
 sfind qstd_defs.h
 
 tab sfind qstd_query.c
-sfind qstd_mstmt.h
+sfind qstd_query.h
 
-tab sfind qstd_query.c
+tab sfind qstd_mstmt.c
 sfind qstd_mstmt.h
 
 tab sfind qstd_mstmt_base.c

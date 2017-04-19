@@ -22,4 +22,7 @@ int mas_qstd_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, cons
 int mas_qstd_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt );
 int mas_qstd_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt );
 
+int
+mas_qstd_mstmt_free_result( mysqlpfs_mstmt_t * mstmt );
+
 #endif

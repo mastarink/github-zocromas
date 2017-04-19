@@ -106,3 +106,8 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_mstmt_bind_result( my
 {
   return mas_mysqlpfs_mstmt_bind_result( mstmt );
 }
+
+int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_mstmt_free_result( mysqlpfs_mstmt_t * mstmt )
+{
+  return mas_mysqlpfs_mstmt_free_result( mstmt );
+}

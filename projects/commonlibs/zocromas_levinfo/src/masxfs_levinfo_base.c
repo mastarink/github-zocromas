@@ -69,7 +69,7 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 
 void
 masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type /*, ino_t d_inode */ ,
-                     unsigned long long node_id, masxfs_stat_t * stat )
+                     masxfs_stat_t * stat, unsigned long long node_id )
 {
   masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat );
 }
@@ -105,7 +105,7 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     if ( li->prefix )
       mas_free( li->prefix );
     li->prefix = NULL;
-    
+
     masxfs_digests_delete( li->digests );
 
     li->digests = NULL;

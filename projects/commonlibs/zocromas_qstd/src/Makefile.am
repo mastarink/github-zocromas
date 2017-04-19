@@ -4,8 +4,8 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_qstd.la
 libzocromas_qstd_la_SOURCES = \
 	qstd_query.c \
-	qstd_mstmt_base.c \
 	qstd_mstmt.c \
+	qstd_mstmt_base.c \
 	qstd_mstmt_names.c \
 	qstd_mstmt_sizes.c \
 	qstd_mstmt_datas.c \
