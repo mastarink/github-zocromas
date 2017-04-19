@@ -28,7 +28,9 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
   int r = 0;
   MYSQL *mysql = NULL;
 
-  mysql = mysql_real_connect( &pfs->mysql, host, user, passwd, db, port, NULL, 0 );
+  /* client_flag |= CLIENT_MULTI_STATEMENTS; */
+
+  mysql = mysql_real_connect( &pfs->mysql, host, user, passwd, db, port, NULL /* unix_socket */ , 0 /* client_flag */  );
   QRGSP( mysql );
   if ( !mysql )
   {

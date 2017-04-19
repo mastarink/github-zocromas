@@ -471,7 +471,10 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
           masxfs_digests_get( digests, MASXFS_DIGEST_SHA1, &sha1 );
           sha1_id = mas_qstd_mstmt_selinsget_sha1_id( qstd, data_id, sha1 );
           {
-          /* TODO TODO TODO TODO TODO insert into sha1_ref : data_id, sha1_id */
+
+          /* TODO TODO TODO TODO TODO insert into sha1_ref : data_id, sha1_id
+	   * */
+	    mas_qstd_mstmt_selinsget_sha1dref( qstd, data_id, sha1_id );
           }
         }
         else

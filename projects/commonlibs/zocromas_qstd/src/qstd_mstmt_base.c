@@ -166,20 +166,22 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qs
             ", sum BINARY(20), UNIQUE INDEX sum (sum)"               /* */
             ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1_REF " ("           /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1DREF " ("           /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", data_id INTEGER NOT NULL, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
             ", sum_id INTEGER NOT NULL, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_SHA1 " (id)" /* */
+            ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5 " ("                /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", sum BINARY(16), UNIQUE INDEX sum (sum)"               /* */
             ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
             ")",
-    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5_REF " ("           /* */
+    "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5DREF " ("            /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", data_id INTEGER NOT NULL, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
             ", sum_id INTEGER NOT NULL, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_MD5 " (id)" /* */
+            ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
             " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id" /*", fp.detype" */ ", fd.inode " /* */
@@ -187,22 +189,27 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_create_tables( mas_qs
             "     , fs.nsame AS nsamesize"                           /* */
             "     , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev "
           /* */
-            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
-            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
+            "     , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "     , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
-            "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
-            "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_SIZES "  AS fs ON (fp.size=fs.size) ", /* */
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
-            " SELECT fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size " /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS " AS  p ON (fn.id=p.dir_id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "   AS fd ON (fn.data_id=fd.id) " /* */
+            "   JOIN " QSTD_TABLE_PROPS "        AS fp ON (fp.data_id=fd.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "   AS fs ON (fp.size=fs.size) ", /* */
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES "  AS "                /* */
+            " SELECT  "                                              /* */
+            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim, fs.nsame AS nsamesize, fp.size AS size, sha.nsame AS nsamesha1 " /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "        , p.id AS node_id" "   FROM " QSTD_TABLE_NAMES " AS fn " /* */
-            "   LEFT JOIN " QSTD_TABLE_PARENTS "    AS  p ON (fn.id=p.dir_id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_DATAS "  AS fd ON (fn.data_id=fd.id) " /* */
-            "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_SIZES "  AS fs ON (fp.size=fs.size) " /* */
+            "        , p.id AS node_id "                             /* */
+            "        , HEX(sha.sum) AS hex_sha1"                     /* */
+            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p  ON (fn.id=p.dir_id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "    AS fd  ON (fn.data_id=fd.id) " /* */
+            "        JOIN " QSTD_TABLE_PROPS "    AS fp  ON (fp.data_id=fd.id) " /* */
+            "        JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
+            "	LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.sum_id=sha.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
             " WHERE p.id IS NULL",
   /* " WHERE fp.detype='REG'", */
     "CREATE OR REPLACE VIEW " QSTD_VIEW_DIRS " AS "                  /* */
@@ -492,10 +499,23 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-      /* rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) ); */
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         assert( np == STD_MSTMT_INSERT_SHA1_NFIELDS );
+      }
+      break;
+    case STD_MSTMT_INSERT_SHA1DREF:
+      {
+        int np = 0;
+
+        char *insop = "INSERT  INTO " QSTD_TABLE_SHA1DREF "(data_id,sum_id) VALUES (?,?)";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1DREF_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_INSERT_SHA1DREF_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_SHA1_ID:
@@ -508,6 +528,24 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         QRGP( mstmt );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
+        rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+        assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
+
+        rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
+        rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+        assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
+      }
+      break;
+    case STD_MSTMT_SELECT_SHA1DREF:
+      {
+        int np = 0;
+        int nr = 0;
+        char *selop = "SELECT id FROM " QSTD_TABLE_SHA1DREF " WHERE data_id=?";
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
+        QRGP( mstmt );
+
+        rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
 
