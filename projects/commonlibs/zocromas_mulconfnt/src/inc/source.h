@@ -9,6 +9,9 @@ mucs_source_check( const mucs_source_t * osrc )
   return osrc ? 1 : 0;
 }
 
+int mucs_source_open( mucs_source_t * osrc );
+int mucs_source_close( mucs_source_t * osrc );
+
 char *mucs_source_load_string( mucs_source_t * osrc );
 int mucs_source_load_targ( mucs_source_t * osrc );
 

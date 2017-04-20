@@ -8,10 +8,10 @@
 #include <unistd.h>
 #include <malloc.h>
 
-#include <popt.h>
+/* #include <popt.h> */
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
 #include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
 
@@ -24,6 +24,8 @@
 #include "source_list_base.h"
 #include "source_list.h"
 /* #include "parse.h" */
+
+#include "mastest.h"
 
 /*
  * See also
@@ -118,10 +120,11 @@ tests( int argc, const char *argv[] )
   int test_5( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_6( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_7( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
-  int test_manual_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
-  int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_static( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
   int test_static2( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_manual_0( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_manual( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
+  int test_manual_1( int argc, const char *argv[], int nseries, const char *series_suffix, int variant );
 
   masexam_do_t funlist[] _uUu_ = {
     {0, test_popt, 0, "popt",.stdin_text = NULL},
@@ -142,15 +145,24 @@ tests( int argc, const char *argv[] )
     {TRUE, test_5, 5, ""},
     {TRUE, test_6, 6, "",.f_print_ok = 0},
     {TRUE, test_7, 7, "",.stdin_text = "and1b:and2b"},               /* !! */
-    {FALSE, test_manual_0, 8, "manual_0"},
-    {TRUE, test_manual, 8, "manual"},
     {TRUE, test_static, 8, "static"},
-    {TRUE, test_static2, 8, "static"},
+    {TRUE, test_static2, 8, "static2"},
+    {FALSE, test_manual_0, 9, "manual_0"},
+    {TRUE, test_manual, 9, "manual"},
+    {FALSE, test_manual_1, 10, "manual_1"},
     {0}
   };
+  WARN( "### FDs:%d", mastest_fds(  ) );
   masexam_test( argc, argv, funlist );
+  WARN( "### FDs:%d", mastest_fds(  ) );
 
   return 0;
+}
+
+int
+mastest_fds( void )
+{
+  return masexam_fds(  );
 }
 
 int
@@ -158,10 +170,12 @@ main( int argc, const char *argv[] )
 {
   int repeat = 3;
 
+  WARN( "### FDs:%d", mastest_fds(  ) );
+
   for ( int ir = 0; ir < repeat; ir++ )
     tests( argc, argv );
 
-#define TOTAL_TESTS (  387 +63 +63 - 1) *repeat
+#define TOTAL_TESTS (  387 +63 +63 - 1 + 17) *repeat
 /* EXAMX( masexam_tests_count(  ) == TOTAL_TESTS, "tests_count=%d ? %d", masexam_tests_count(  ), TOTAL_TESTS ); */
   EXAM( masexam_tests_count(  ), TOTAL_TESTS, "tests_count=%d ? %d" );
 

@@ -10,8 +10,8 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
-#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -30,6 +30,7 @@
 int
 test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   const char *arg;
 
   unsigned char v_uchar0 = 0;
@@ -133,7 +134,7 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, 0, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name*/, xargc, xargv, 0, NULL, "=", NULL );
 
     /* if ( osrc )                                                                       */
     /*   osrc->flags |= MUCS_FLAG_SILENT;                               (* ?????????? *) */
@@ -226,5 +227,6 @@ test_1enf( int argc _uUu_, const char *argv[], int nseries, const char *series_s
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

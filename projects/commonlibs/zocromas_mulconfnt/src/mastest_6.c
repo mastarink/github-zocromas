@@ -11,6 +11,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -28,6 +29,7 @@
 int
 test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   int v_int0 = 0;
   int v_int1 = 0;
   int v_int2 = 0;
@@ -114,7 +116,7 @@ test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 //  if ( file_exists(fname) )
     {
       mucs_source_list_t *plist = mucs_source_list_create(  );
-      mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_FILE, 0, fname, 0, ":\r\n", "=", NULL );
+      mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_FILE, fname, 0, fname, 0, ":\r\n", "=", NULL );
 
       masexam_next_group(  );
       EXAMX( plist ? 1 : 0, "plist: %p", plist );
@@ -193,9 +195,10 @@ test_6( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
     }
   }
   mucs_config_option_tablist_reset( &test_tablist );
-  mucs_clear_global_flags();
+  mucs_clear_global_flags(  );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

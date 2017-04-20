@@ -43,7 +43,7 @@ PKG_CHECK_MODULES([DEPSTEST],  [zocromas_exam popt])
 
 # AC_CHECK_LIB([readline], [readline])
 
-# m4_include([m4zoc/readline.m4])
+m4_include([m4zoc/readline.m4])
 # m4_include([m4zoc/exif.m4])
 #m4_include([m4zoc/magic.m4])
 #m4_include([m4zoc/jpeg.m4])

@@ -11,8 +11,8 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -53,6 +53,7 @@ num5callback( mucs_option_t * opt, void *userdata _uUu_ )
 int
 test_static2( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   char *v_string0 = NULL;
   char *v_string1 = NULL;
   char *v_string2 _uUu_ = NULL;
@@ -198,7 +199,7 @@ test_static2( int argc _uUu_, const char *argv[], int nseries, const char *serie
     }
   }
   {
-    mucs_source_t *osrc = mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, xargc, xargv, 0 );
+    mucs_source_t *osrc = mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 );
 
     {
       FILE *f;
@@ -341,11 +342,12 @@ test_static2( int argc _uUu_, const char *argv[], int nseries, const char *serie
 
   mucs_config_option_interface_delete( interface );
   interface = NULL;
-  mucs_clear_global_flags();
+  mucs_clear_global_flags(  );
   EXAMX( v_string0 == NULL, "v_string0 %s", v_string0 );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  WARN("### FDs:%d" ,mastest_fds(  ));
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }
-

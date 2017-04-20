@@ -5,6 +5,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -122,6 +125,33 @@ source_load__targ_stream( FILE * fin, mucs_source_t * osrc, mas_argvc_t targ, in
 }
 
 static mas_argvc_t
+source_load__targ_readline( mucs_source_t * osrc, mas_argvc_t targ, int *peof )
+{
+  if ( osrc && !osrc->error )
+  {
+  /* char buffer[1024 * 10]; */
+    char *string = NULL;
+    const char *ignpref = osrc->pref_ids[MUCS_VARIANT_IGNORE].string;
+
+    do
+    {
+      string = readline( " > " );
+      if ( peof )
+        *peof = !string;
+
+      if ( string )
+      {
+        string = mas_chomp( string );
+      }
+    /* skip empty and commented strings right here */
+    } while ( ( string && !*string ) || ( ignpref && string && 0 == strncmp( ignpref, string, strlen( ignpref ) ) ) );
+    if ( string && *string )
+      mas_add_argvc_args_d( &targ, string, 0, osrc->delims );
+  }
+  return targ;
+}
+
+static mas_argvc_t
 source_load_targ_stream( mucs_source_t * osrc, mas_argvc_t targ )
 {
 /* file (FILE *) at osrc->data_ptr */
@@ -137,34 +167,69 @@ source_load_targ_stream( mucs_source_t * osrc, mas_argvc_t targ )
   return targ;
 }
 
+static void *
+source_open_file( const char *name )
+{
+  void *ptr = NULL;
+
+  if ( name )
+    ptr = ( void * ) fopen( name, "r" );
+  return ptr;
+}
+
+static int
+source_close_file( void *ptr )
+{
+  int r = 0;
+
+  if ( ptr )
+    r = fclose( ( FILE * ) ptr );
+  return r;
+}
+
 static mas_argvc_t
 source_load_targ_file( mucs_source_t * osrc, mas_argvc_t targ )
 {
 /* file name at osrc->data_ptr */
   if ( osrc && !osrc->error && osrc->data_ptr )
   {
-    const char *filename = ( const char * ) osrc->data_ptr;
+  /* const char *filename = ( const char * ) osrc->data_ptr; */
     int eof = 0;
 
-    if ( !osrc->ptr_internal )
-    {
-      osrc->ptr_internal = ( void * ) fopen( filename, "r" );
-    }
+  /* assert( osrc->name && 0 == strcmp( filename, osrc->name ) ); */
+  /* if ( !osrc->ptr_internal )                                */
+  /*   osrc->ptr_internal = ( void * ) fopen( filename, "r" ); */
     if ( !osrc->ptr_internal )
     {
       QRGSRC( osrc, -1 );
       osrc->error = 1;
     }
+    assert( osrc->ptr_internal );
     if ( !osrc->error )
     {
 /* source_load__targ_stream: load targ from ONE string at stream */
       targ = source_load__targ_stream( ( FILE * ) osrc->ptr_internal, osrc, targ, &eof );
-      if ( eof && osrc->ptr_internal )
-      {
-        fclose( ( FILE * ) osrc->ptr_internal );
-        osrc->ptr_internal = NULL;
-      }
+    /* if ( eof && osrc->ptr_internal )             */
+    /* {                                            */
+    /*   if ( osrc->close_fun )                     */
+    /*     osrc->close_fun( osrc->ptr_internal );   */
+    /*   else                                       */
+    /*     fclose( ( FILE * ) osrc->ptr_internal ); */
+    /*   osrc->ptr_internal = NULL;                 */
+    /* }                                            */
     }
+  }
+
+  return targ;
+}
+
+static mas_argvc_t
+source_load_targ_readline( mucs_source_t * osrc, mas_argvc_t targ )
+{
+/* file (FILE *) at osrc->data_ptr */
+  if ( osrc && !osrc->error && osrc->data_ptr )
+  {
+    targ = source_load__targ_readline( osrc, targ, NULL );
   }
 
   return targ;
@@ -329,8 +394,8 @@ static mucs_source_t default_sources[] = {
                         .delims = ":\n",
                         .eq = "=",
                         .check_fun = NULL,
-                        .open_fun = NULL,
-                        .close_fun = NULL,
+                        .open_fun = source_open_file,
+                        .close_fun = source_close_file,
                         .load_string_fun = NULL /*source_load_string_stream */ ,
                         .load_targ_fun = source_load_targ_file,
                         .pref_ids = {
@@ -356,8 +421,8 @@ static mucs_source_t default_sources[] = {
                           .delims = ":\n",
                           .eq = "=",
                           .check_fun = NULL,
-                          .open_fun = NULL,
-                          .close_fun = NULL,
+                          .open_fun = source_open_file,
+                          .close_fun = source_close_file,
                           .load_string_fun = NULL /*source_load_string_stream */ ,
                           .load_targ_fun = source_load_targ_file,
                           .pref_ids = {
@@ -378,13 +443,13 @@ static mucs_source_t default_sources[] = {
   [MUCS_SOURCE_LIBCONFIG] = {
                              .type = MUCS_SOURCE_LIBCONFIG,
                              .count = 0,
+                             .name = MAS_SYSCONFDIR "/" PACKAGE_NAME ".cfg",
                              .data_ptr = MAS_SYSCONFDIR "/" PACKAGE_NAME ".cfg",
                              .delim = ':',
                              .delims = ":\n",
                              .eq = "=",
-                             .check_fun = NULL,
-                             .open_fun = NULL,
-                             .close_fun = NULL,
+                             .open_fun = source_open_file,
+                             .close_fun = source_close_file,
                              .load_string_fun = NULL /*source_load_string_stream */ ,
                              .load_targ_fun = source_load_targ_file,
                              .pref_ids = {
@@ -402,6 +467,32 @@ static mucs_source_t default_sources[] = {
                                            },
                                           },
                              },
+  [MUCS_SOURCE_READLINE] = {
+                            .type = MUCS_SOURCE_READLINE,
+                            .count = 0,
+                            .delim = ';',
+                            .delims = ";\n",
+                            .eq = "=",
+                            .check_fun = NULL,
+                            .open_fun = NULL,
+                            .close_fun = NULL,
+                            .load_string_fun = NULL /*source_load_string_stream */ ,
+                            .load_targ_fun = source_load_targ_readline,
+                            .pref_ids = {
+                                         {
+                                          .id = MUCS_VARIANT_SHORT,.string = "@short@" /* */
+                                          },
+                                         {
+                                          .id = MUCS_VARIANT_LONG,.string = "" /* */
+                                          },
+                                         {
+                                          .id = MUCS_VARIANT_NONOPT,.string = "@@@@" /* */
+                                          },
+                                         {
+                                          .id = MUCS_VARIANT_IGNORE,.string = "#" /* */
+                                          },
+                                         },
+                            },
 };
 
 static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );

@@ -24,9 +24,13 @@
 #include "source_list.h"
 #include "parse.h"
 
+#include "mastest.h"
+
+
 int
 test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   int speed = 0;                                                     /* used in argument parsing to set speed */
   int raw = 0;                                                       /* raw mode? */
   long bitwise_a = 0x00000000ffff0000;
@@ -73,5 +77,6 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

@@ -43,11 +43,45 @@ mucs_source_set_string_ptr( mucs_source_t * osrc, char *string )
   }
 }
 
+int
+mucs_source_open( mucs_source_t * osrc )
+{
+  rDECLGOOD;
+
+  if ( osrc )
+  {
+    if ( !osrc->ptr_internal && osrc->open_fun )
+      osrc->ptr_internal = osrc->open_fun( osrc->name );
+  }
+  else
+    rSETBAD;
+  rRET;
+}
+
+int
+mucs_source_close( mucs_source_t * osrc )
+{
+  rDECLGOOD;
+
+  if ( osrc )
+  {
+    if ( osrc->ptr_internal && osrc->close_fun )
+      osrc->close_fun( osrc->ptr_internal );
+    osrc->ptr_internal = NULL;
+  }
+  else
+    rSETBAD;
+  rRET;
+}
+
 char *
 mucs_source_load_string( mucs_source_t * osrc )
 {
   if ( osrc && osrc->load_string_fun )
+  {
+    mucs_source_open( osrc );
     mucs_source_set_string_ptr( osrc, osrc->load_string_fun( osrc ) );
+  }
   return osrc ? osrc->string : NULL;
 }
 
@@ -67,7 +101,9 @@ mucs_source_load_targ( mucs_source_t * osrc )
 //    mas_argvc_delete( &osrc->targ );
       if ( osrc && osrc->load_targ_fun )
       {
-        osrc->targ = osrc->load_targ_fun( osrc, osrc->targ );
+        /* rC( */ mucs_source_open( osrc ) /* ) */ ;
+        if ( rGOOD )
+          osrc->targ = osrc->load_targ_fun( osrc, osrc->targ );
       }
       osrc->targ_loaded++;
     }
@@ -420,6 +456,7 @@ mucs_source_wd( const mucs_source_t * osrc )
     case MUCS_SOURCE_MARGV:
     case MUCS_SOURCE_STREAM:
     case MUCS_SOURCE_STDIN:
+    case MUCS_SOURCE_READLINE:
       {
         char *p = get_current_dir_name(  );
         char *p1 = canonicalize_file_name( p );

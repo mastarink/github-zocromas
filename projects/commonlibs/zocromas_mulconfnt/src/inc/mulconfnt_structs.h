@@ -33,6 +33,7 @@ struct mucs_source_s
 {
   mucs_source_list_t *list;
   mucs_source_t *next;
+  char *name;
   mucs_source_type_t type;
   mucs_source_mode_t mode;
   mucs_flags_t flags;
@@ -45,6 +46,7 @@ struct mucs_source_s
   char *delims;
   char *eq;
   mucs_prefix_encoder_t pref_ids[MUCS_VARIANTS];
+  mucs_source_eof_fun_t eof_fun;
   mucs_source_check_fun_t check_fun;
   mucs_source_open_fun_t open_fun;
   mucs_source_close_fun_t close_fun;

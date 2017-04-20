@@ -22,7 +22,7 @@ libzocromas_mulconfnt_la_SOURCES = \
 #	mulconfnt_error_base.c
 #	mulconfnt_error.c
 
-libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
+libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @READLINE_LIBS@
 libzocromas_mulconfnt_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@
 
 if MAS_TEST
@@ -35,6 +35,7 @@ mastest_SOURCES= \
 	mastest.c \
 	mastest_manual_0.c \
 	mastest_manual.c \
+	mastest_manual_1.c \
 	mastest_static.c \
 	mastest_static2.c \
 	mastest_0.c \

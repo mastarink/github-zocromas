@@ -26,9 +26,13 @@
 #include "option_interface_base.h"
 #include "option_interface.h"
 
+#include "mastest.h"
+
+
 int
 test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   long app_flags = 0x00000000ffff0000L;
 
   mucs_option_static_t soptions[] = {
@@ -45,8 +49,8 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 
-  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, 0, "MAS_TEST_ENV", 0, ":", "=", NULL );
-  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, argc, argv, 0, NULL, "=", NULL /* pref_ids */  );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, NULL /*name */ , 0, "MAS_TEST_ENV", 0, ":", "=", NULL );
+  mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , argc, argv, 0, NULL, "=", NULL /* pref_ids */  );
 
   mucs_source_list_lookup_all( plist, test_tablist, NULL );
 
@@ -59,5 +63,7 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  WARN("### FDs:%d" ,mastest_fds(  ));
+  /* EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" ); */
   return 0;
 }

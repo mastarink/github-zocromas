@@ -10,6 +10,10 @@
 #include <libgen.h>
 #include <pthread.h>
 
+#include <time.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+
 #include <popt.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -24,6 +28,9 @@
 #include <mastar/minierr/minierr.h>
 
 #include "masexam.h"
+
+#define MX_CLOSE(_fd) { int r=0;if ( _fd ) r = close( _fd ); _fd=0; if ( r < 0 ) WARN( "close error %s", strerror( errno ) ); }
+#define MX_FPUTS_O(_text) { int r=0; if (_text) r=fputs(_text, stdout); if ( r == EOF ) WARN( "fputs error %s", strerror( errno ) ); }
 
 int variant = 0;
 int beep_on_error = 1;
@@ -147,31 +154,38 @@ masexam_test_fork( int argc, const char *argv[], masexam_fun_t func, int nseries
 
   if ( fork(  ) )
   {
+    int r = 0;
+
   /* child */
   /* stdin replaced by pipe output */
-    dup2( pipe_rd, file_rd );
+    r = dup2( pipe_rd, file_rd );
+    if ( r < 0 )
+      WARN( "dup2 error %s", strerror( errno ) );
 
-    close( pipe_wr );                                                /* close part of pipe unneeded */
+    MX_CLOSE( pipe_wr );                                             /* close part of pipe unneeded */
 
     r = func( argc, argv, nseries, series_suffix, variant );
 
-    close( pipe_rd );
+    MX_CLOSE( pipe_rd );                                             /* close part of pipe unneeded */
   /* close(file_rd); */
   /* close(file_wr); */
   }
   else
   {
+    int r = 0;
+
     exam_silent = 1;
   /* parent */
   /* stdout replaced by pipe input */
-    dup2( pipe_wr, file_wr );
+    r = dup2( pipe_wr, file_wr );
+    if ( r < 0 )
+      WARN( "dup2 error %s", strerror( errno ) );
 
-    close( pipe_rd );                                                /* close part of pipe unneeded */
+    MX_CLOSE( pipe_rd );                                             /* close part of pipe unneeded */
 
-    if ( stdin_text )
-      fputs( stdin_text, stdout );
+    MX_FPUTS_O( stdin_text );
 
-    close( pipe_wr );
+    MX_CLOSE( pipe_wr );                                             /* close part of pipe unneeded */
   /* close(file_rd); */
   /* close(file_wr); */
     masregerrs_delete_default( NULL );
@@ -182,26 +196,74 @@ masexam_test_fork( int argc, const char *argv[], masexam_fun_t func, int nseries
 int
 masexam_test_call( int argc, const char *argv[], masexam_fun_t func, int nseries, const char *series_suffix, int variant )
 {
-  return func( argc, argv, nseries, series_suffix, variant );
+  int r = 0;
+  int ifds = masexam_fds(  );
+
+  if ( ifds != 2 )
+    WARN( "--- FDs:%d", ifds );
+  r = func( argc, argv, nseries, series_suffix, variant );
+  int ifds2 = masexam_fds(  );
+
+  if ( ifds2 != 2 )
+    WARN( "--- FDs:%d", ifds2 );
+  if ( ifds2 != ifds )
+  {
+    WARN( "Unbalanced open/close" );
+  }
+  return r;
 }
 
 void *
 masexam_test_call_th( void *ptr )
 {
   int saved = 0;
+  int ifds = masexam_fds(  );
 
-  masexam_call_t *call = ( masexam_call_t * ) ptr;
-
-  if ( call->fundata->stdin_text )
+  if ( 1 )
   {
-    saved = dup( STDIN_FILENO );
-    dup2( call->iopipe[0], STDIN_FILENO );
+    /* FIXME This is WRONG; needs something like mutex */
+/* struct timespec ts={0,999999999}; */
+    struct timespec ts = { 0, 100000 };
+    struct timespec tsr = { 0 };
+    nanosleep( &ts, &tsr );
   }
-  masexam_test_call( call->argc, call->argv, call->fundata->func, call->fundata->nseries, call->fundata->series_suffix, call->variant );
-  if ( call->fundata->stdin_text )
   {
-    close( call->iopipe[0] );
-    dup2( saved, STDIN_FILENO );
+    masexam_call_t *call = ( masexam_call_t * ) ptr;
+
+    if ( ifds != 2 )
+      WARN( "--- FDs:%d", ifds );
+
+    if ( call->fundata->stdin_text )
+    {
+      int r = 0;
+
+      if ( ifds != 2 )
+        WARN( "--- FDs:%d", ifds );
+
+      saved = dup( STDIN_FILENO );
+      if ( saved < 0 )
+        WARN( "dup error %s", strerror( errno ) );
+      r = dup2( call->iopipe[0], STDIN_FILENO );
+      if ( r < 0 )
+        WARN( "dup2 error %s", strerror( errno ) );
+    }
+    ifds = masexam_fds(  );
+    if ( ifds != 2 )
+      WARN( "--- FDs:%d", ifds );
+    masexam_test_call( call->argc, call->argv, call->fundata->func, call->fundata->nseries, call->fundata->series_suffix, call->variant );
+    ifds = masexam_fds(  );
+    if ( ifds != 2 )
+      WARN( "--- FDs:%d", ifds );
+    if ( call->fundata->stdin_text )
+    {
+      int r = 0;
+
+      MX_CLOSE( call->iopipe[0] );                                   /* close part of pipe unneeded */
+      r = dup2( saved, STDIN_FILENO );
+      if ( r < 0 )
+        WARN( "dup2 error %s", strerror( errno ) );
+      MX_CLOSE( saved );
+    }
   }
   return ptr;
 }
@@ -211,17 +273,40 @@ masexam_test_wtext_th( void *ptr )
 {
   int saved = 0;
 
-  masexam_call_t *call = ( masexam_call_t * ) ptr;
-
-  if ( call->fundata->stdin_text )
+#if 0
+  if ( 0 )
   {
-    saved = dup( STDOUT_FILENO );
-    dup2( call->iopipe[1], STDOUT_FILENO );
+/* struct timespec ts={0,999999999}; */
+    struct timespec ts = { 0, 20000000 };
+    struct timespec tsr = { 0 };
+    nanosleep( &ts, &tsr );
+  }
+#endif
+  {
+    masexam_call_t *call = ( masexam_call_t * ) ptr;
 
-    fputs( call->fundata->stdin_text, stdout );
-    fflush( stdout );
-    close( call->iopipe[1] );
-    dup2( saved, STDOUT_FILENO );
+    if ( call->fundata->stdin_text )
+    {
+      int r = 0;
+
+      saved = dup( STDOUT_FILENO );
+      if ( saved < 0 )
+        WARN( "dup error %s", strerror( errno ) );
+      r = dup2( call->iopipe[1], STDOUT_FILENO );
+      if ( r < 0 )
+        WARN( "dup2 error %s", strerror( errno ) );
+
+      MX_FPUTS_O( call->fundata->stdin_text );
+      r = fflush( stdout );
+      if ( r == EOF )
+        WARN( "fflush error %s", strerror( errno ) );
+      MX_CLOSE( call->iopipe[1] );
+      r = dup2( saved, STDOUT_FILENO );
+      if ( r < 0 )
+        WARN( "dup2 error %s", strerror( errno ) );
+      r = 0;
+      MX_CLOSE( saved );
+    }
   }
   return ptr;
 }
@@ -269,6 +354,8 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
 
           r1 = pthread_join( thread1, NULL );
           RGESRM( r1, "pthread_join %s", strerror( r1 ) );
+          MX_CLOSE( joint_data.iopipe[0] );
+          MX_CLOSE( joint_data.iopipe[1] );
 
           r2 = pthread_join( thread2, NULL );
           RGESRM( r1, "pthread_join %s", strerror( r2 ) );
@@ -291,4 +378,26 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
   masexam_exam( 0, tests_count == TOTAL_TESTS, "OK", "Error", "tests_count=%d ? %d", tests_count, TOTAL_TESTS );
 #endif
   return tests_count;
+}
+
+int
+masexam_fds( void )
+{
+  int fdcnt = 0;
+  int max_fd_number = 0;
+
+/* struct rlimit rlimits; */
+
+  max_fd_number = getdtablesize(  );
+/* getrlimit( RLIMIT_NOFILE, &rlimits ); */
+  for ( int i = 3; i <= max_fd_number; i++ )
+  {
+    int r = 0;
+    struct stat st = { 0 };
+    errno = 0;
+    r = fstat( i, &st );
+    if ( !r && errno != EBADF )
+      fdcnt++;
+  }
+  return fdcnt;
 }

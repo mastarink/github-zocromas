@@ -18,5 +18,3 @@ fi
 AC_SUBST(READLINE_LIBS)
 AM_CONDITIONAL(ENABLE_READLINE, test "x$enable_readline" = xyes)
 
-
-

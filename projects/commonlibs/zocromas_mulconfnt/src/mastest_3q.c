@@ -11,6 +11,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
@@ -28,6 +29,7 @@
 int
 test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const char _uUu_ * series_suffix, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
   masexam_next_group(  );
   {
     const char *strings[] = {
@@ -87,5 +89,6 @@ test_3q( int argc _uUu_, const char _uUu_ * argv[], int _uUu_ nseries, const cha
   
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

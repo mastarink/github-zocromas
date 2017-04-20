@@ -11,11 +11,10 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/minierr/minierr.h>
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
-
 
 #include "global.h"
 #include "option_tablist_base.h"
@@ -88,6 +87,8 @@ num5callback( mucs_option_t * opt, void *userdata _uUu_ )
 int
 test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suffix, int variant _uUu_ )
 {
+  int ifds _uUu_ = mastest_fds(  );
+
   char *v_string0 = NULL;
   char *v_string1 = NULL;
   char *v_string2 _uUu_ = NULL;
@@ -239,7 +240,7 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
 
     masexam_next_group(  );
     EXAM( ( plist ? 1 : 0 ), 1, "plist: %d ? %d" );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, xargc, xargv, 0, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , xargc, xargv, 0, NULL, "=", NULL );
 
     mucs_source_set_common_callback( osrc, ccallback_string );
     mucs_source_set_type_callback( osrc, MUCS_RTYP_STRING, scallback_string );
@@ -401,12 +402,14 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   EXAMX( v_string0 != NULL, "v_string0 %s", v_string0 );
 /* WARN("v_string0:%p",v_string0); */
   mucs_config_option_tablist_reset( &test_tablist );
-  mucs_clear_global_flags();
+  mucs_clear_global_flags(  );
   EXAMX( v_string0 == NULL, "v_string0 %s", v_string0 );
 
   WARN( "v_string0:%p", v_string0 );
 
+
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

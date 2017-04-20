@@ -12,6 +12,7 @@
 #include <popt.h>
 
 #include <mastar/exam/masexam.h>
+#include <mastar/minierr/minierr.h>
 
 #include "mastest.h"
 

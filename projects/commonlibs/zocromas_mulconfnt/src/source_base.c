@@ -13,6 +13,7 @@
 /* #include "mulconfnt_error.h" */
 
 #include "source_defaults.h"
+#include "source.h"
 #include "source_base.h"
 
 /*
@@ -37,7 +38,7 @@ mucs_source_create( void )
 }
 
 mucs_source_t *
-mucs_source_create_setup( mucs_source_type_t source_type, int count, const void *data_ptr, int min_pass, const char *delims,
+mucs_source_create_setup( mucs_source_type_t source_type, const char *name, int count, const void *data_ptr, int min_pass, const char *delims,
                           const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
   mucs_source_t *osrc = NULL;
@@ -55,6 +56,16 @@ mucs_source_create_setup( mucs_source_type_t source_type, int count, const void 
       {
         osrc = mucs_source_create(  );
 
+        {
+          const char *n = NULL;
+
+          if ( name )
+            n = name;
+          else if ( defsrc->name )
+            n = defsrc->name;
+          if ( n )
+            osrc->name = mas_strdup( n );
+        }
         osrc->type = source_type;
         osrc->count = count;
         osrc->min_pass = min_pass;
@@ -78,6 +89,7 @@ mucs_source_create_setup( mucs_source_type_t source_type, int count, const void 
             osrc->pref_ids[i].string = mas_strdup( osrc->pref_ids[i].string );
         }
         osrc->data_ptr = data_ptr ? data_ptr : defsrc->data_ptr;
+        osrc->eof_fun = defsrc->eof_fun;
         osrc->check_fun = defsrc->check_fun;
         osrc->open_fun = defsrc->open_fun;
         osrc->close_fun = defsrc->close_fun;
@@ -101,6 +113,9 @@ mucs_source_reset( mucs_source_t * osrc )
 {
   if ( osrc )
   {
+    mucs_source_close( osrc );
+    if ( osrc->name )
+      mas_free( osrc->name );
     if ( osrc->delims )
       mas_free( osrc->delims );
     if ( osrc->eq )

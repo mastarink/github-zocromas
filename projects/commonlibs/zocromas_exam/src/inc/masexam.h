@@ -32,6 +32,7 @@ struct masexam_call_s
   int iopipe[2];
 };
 
+int masexam_count( void );
 int masexam_test( int argc, const char *argv[], masexam_do_t * funlist );
 
 int masexam_vexam( const char *func, int line, const char *file, int cond, const char *goodmsg, const char *badmsg, const char *fmt, va_list args );
@@ -39,6 +40,8 @@ int masexam_exam( const char *func, int line, const char *file, int cond, const 
 void masexam_next_group( void );
 void masexam_next( void );
 long masexam_tests_count( void );
+
+int masexam_fds( void );
 
 /* for special mas_strcmp -- includes NULL's  */
 # include <mastar/tools/mas_arg_tools.h>
@@ -57,7 +60,7 @@ long masexam_tests_count( void );
 # define EXAM( _var, _val, _fmt )  EXAMT( 1, _var, _val, _fmt )
 
 # define EXAMZ(sz, var, val, _fmt ) EXAMX( sizeof(var)==sz && var == val, _fmt, var, val )
-  	/* masexam_exam( __func__, __LINE__, __FILE__, sizeof(var)==sz && var == val, "OK", "Error", _fmt, var, val ) */
+   /* masexam_exam( __func__, __LINE__, __FILE__, sizeof(var)==sz && var == val, "OK", "Error", _fmt, var, val ) */
 # define EXAMTS(_cond, _vars, _vals, _fmt) \
 	{ \
 	  typeof( _vars ) vars=(_cond)?(_vars):((typeof(_vars)) 0 ); \

@@ -29,10 +29,14 @@
 #include "option_interface_base.h"
 #include "option_interface.h"
 
+#include "mastest.h"
+
+
 int
 test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
   rDECLGOOD;
+  int ifds _uUu_ = mastest_fds(  );
   const char *xargv[] = {
     argv[0],
     "something",
@@ -84,17 +88,20 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE );
 
 #if 0
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_TEST7_ENV", 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_TEST7_ENV", 0 );
 #endif
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL, 1 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, xargc, xargv, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
 
+  WARN("### FDs:%d" ,mastest_fds(  ));
   rC( mucs_option_interface_lookup_all( interface, NULL ) );
+  WARN("### FDs:%d" ,mastest_fds(  ));
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 3, "ERRORS: %d ? %d" );
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  WARN("### FDs:%d" ,mastest_fds(  ));
 
   EXAM( app_uflags_or, 0x505UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_and, 0x100UL, "app_uflags_and=%lx ? %lx" );
@@ -125,15 +132,20 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_nand, ~0x505UL, "app_uflags_nand=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xfffffffffffffafaUL, "app_uflags_nand=%lx ? %lx" );
 #endif
+  WARN("### FDs:%d" ,mastest_fds(  ));
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   mucs_config_option_interface_delete( interface );
   interface = NULL;
   mucs_clear_global_flags(  );
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 6, "ERRORS: %d ? %d" );
+  WARN("### FDs:%d" ,mastest_fds(  ));
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
+  WARN("### FDs:%d" ,mastest_fds(  ));
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
 /* WARN( "app_uflags_and_b:%lx", app_uflags_and_b ); */
+  
+  EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   rRET;
 }

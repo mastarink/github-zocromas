@@ -2,5 +2,6 @@
 # define MASTEST_H
 
 void mastest_print_allocated( const char *msg, int line, const char *func );
+int mastest_fds( void );
 
 #endif
