@@ -240,10 +240,10 @@ dufnx( int argc, char *argv[] )
   dufnx_config_mysql( interface, &dufnx_data );
 
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL ); */
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, 0, MULCONFNT_ETC_CONFIG, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, 0, "MAS_DUFNX", 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, 0, NULL, 1 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, argc, argv, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */, 0, MULCONFNT_ETC_CONFIG, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */, 0, "MAS_DUFNX", 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */, 0, NULL, 1 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */, argc, argv, 0 );
 
   rC( mucs_option_interface_lookup_all_multipass( interface, &dufnx_data, 2 ) );
 
