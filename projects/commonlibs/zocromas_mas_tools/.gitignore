@@ -4,3 +4,4 @@ mtest
 config.h.in~
 m4zoc
 .localrc 
+/.localmish

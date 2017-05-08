@@ -8,3 +8,4 @@ mastest
 config.h.in*
 .localrc
 m4zoc
+/.localmish
