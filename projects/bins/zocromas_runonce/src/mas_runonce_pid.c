@@ -21,8 +21,8 @@ pids_t runonce_pids = {.size = 32767,.array = NULL };
 static const char *
 cbcmdline( pid_t pid, const char *line, const char *etext )
 {
-  /* printf( "CMD %s\n", line ); */
-  /* pidarray[pid].cmdline = mas_strdup( line ); */
+/* printf( "CMD %s\n", line ); */
+/* pidarray[pid].cmdline = mas_strdup( line ); */
   runonce_pids.array[pid].argc = mas_add_argv_cmdline( runonce_pids.array[pid].argc, &runonce_pids.array[pid].argv, line, etext - line );
   return NULL;
 }
@@ -51,11 +51,11 @@ cbstatus( pid_t pid, const char *line, const char *etext __attribute__ ( ( unuse
   if ( 0 == strncmp( ( const char * ) match1, ( const char * ) line, lmatch1 ) )
   {
     runonce_pids.array[pid].progname = mas_strndup( pline, eline - pline );
-    /* printf( "STATUS '%s'\n", runonce_pids.array[pid].progname ); */
+  /* printf( "STATUS '%s'\n", runonce_pids.array[pid].progname ); */
   }
   if ( 0 == strncmp( ( const char * ) match2, ( const char * ) line, lmatch2 ) )
   {
-    /* printf( "STATUS %s\n", line ); */
+  /* printf( "STATUS %s\n", line ); */
     sscanf( pline, "%u", ( unsigned * ) &runonce_pids.array[pid].ppid );
   }
   return eline;
@@ -130,7 +130,7 @@ runonce_pids_create( void )
   fproc = opendir( "/proc" );
   if ( fproc )
   {
-    /* int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result); */
+  /* int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result); */
     struct dirent de;
     struct dirent *pde;
 
@@ -197,11 +197,11 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
 
     if ( runonce_pids.array[pid].progname && name )
     {
-      /* printf( "%d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname ); */
-      /* 15 !!! */
-      /* speech-dispatch(er) */
-      /* notification-da(emon) */
-      /* 123456789012345 */
+    /* printf( "%d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname ); */
+    /* 15 !!! */
+    /* speech-dispatch(er) */
+    /* notification-da(emon) */
+    /* 123456789012345 */
       if ( flags.verbose > 1 )
         printf( "? PidOf %u [%s:%s:%s] argc:%d\n", pid, name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
       if ( 0 == strncmp( name, runonce_pids.array[pid].progname, maxcmp ) )
@@ -231,8 +231,8 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
               slen = strlen( s );
               {
                 sublen = strlen( subname );
-                /* printf( ">%d [%s:%s:%s] %d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname,                         */
-                /*         runonce_pids.array[pid].argc, runonce_pids.array[pid].argv[0], runonce_pids.array[pid].argv[1], s + slen - sublen ); */
+              /* printf( ">%d [%s:%s:%s] %d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname,                         */
+              /*         runonce_pids.array[pid].argc, runonce_pids.array[pid].argv[0], runonce_pids.array[pid].argv[1], s + slen - sublen ); */
                 if ( 0 == strcmp( subname, s + slen - sublen ) )
                 {
                   if ( path )
@@ -265,21 +265,27 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
         {
           fpid = pid;
         }
-        /* printf( "oooooooooooooooooo %s : %d\n", name, argc ); */
+      /* printf( "oooooooooooooooooo %s : %d\n", name, argc ); */
         if ( argc && runonce_pids.array[pid].argc /* && argv && runonce_pids.array[pid].argv */  )
         {
           for ( int i = 0; i < argc && i < runonce_pids.array[pid].argc; i++ )
           {
-            /* printf( "OOOO %s ? %s\n", argv[i], runonce_pids.array[pid].argv[i] ); */
+            if ( flags.verbose > 1 )
+              printf( "x [%u] PidOf [%s:%s:%s] i:%d [%s:%s]\n", fpid, name, subname, runonce_pids.array[fpid].progname,
+                      i, argv[i], runonce_pids.array[pid].argv[i] );
+          /* printf( "OOOO %s ? %s\n", argv[i], runonce_pids.array[pid].argv[i] ); */
             if ( 0 != strcmp( argv[i], runonce_pids.array[pid].argv[i] ) )
             {
               fpid = 0;
             }
           }
-          /* compare args -- runonce_pids.array[pid].argv */
+        /* compare args -- runonce_pids.array[pid].argv */
         }
       }
     }
+    if ( flags.verbose > 1 )
+      printf( "f [%u] PidOf [%s:%s:%s] argc:%d (%ld;%ld)\n", fpid, name, subname, runonce_pids.array[fpid].progname, runonce_pids.array[fpid].argc,
+              cnt, num );
     if ( cnt < num && fpid )
     {
       *pids++ = fpid;

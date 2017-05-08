@@ -393,7 +393,7 @@ function shn_initial_mased_vim
 	  fi
 	fi
       else
-	shn_errmsg ${MSH_SHN_DIRS[files]}/mased/$fn
+	shn_errmsg "\${MSH_SHN_DIRS[files]}/mased/\$fn: ${MSH_SHN_DIRS[files]}/mased/$fn"
 	retval=1
 	break
       fi
@@ -439,7 +439,7 @@ function shn_create_links_01 ()
 	shn_dbgmsg "created link $link (01)"
       fi
     else
-      shn_errmsg ${MSH_SHN_PROJECTS_DIR}/$fn
+      shn_errmsg "$FUNCNAME \${MSH_SHN_PROJECTS_DIR}/\$fn: ${MSH_SHN_PROJECTS_DIR}/$fn"
       return 1
     fi
   done
@@ -457,7 +457,7 @@ function shn_create_links_02 ()
 	shn_dbgmsg "created link $link (02)"
       fi
     else
-      shn_errmsg ${MSH_SHN_PROJECTS_DIR}/$fn
+      shn_errmsg "$FUNCNAME \${MSH_SHN_PROJECTS_DIR}/\$fn: ${MSH_SHN_PROJECTS_DIR}/$fn"
       return 1
     fi
   done

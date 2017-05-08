@@ -1,8 +1,8 @@
-datem () 
+function datem () 
 { 
     /bin/date '+%Y%m%d' "$@"
 }
-datemt () 
+function datemt () 
 { 
     /bin/date '+%Y%m%d.%H%M%S' "$@"
 }
