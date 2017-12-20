@@ -11,8 +11,8 @@ for lib in tools project shn zocserver zocgrep edit uuid wraped nomased inedit l
   then
     false && shn_msg "Loaded lib $lib" >&2
   else
-    shn_errmsg "fail loading environment ${MSH_SHN_DIR:-shn}/lib${lib}.bash"
-    shn_errmsg lib not found $lib
+    echo "fail loading environment ${MSH_SHN_DIR:-shn}/lib${lib}.bash" >&2
+    echo "lib not found $lib" >&2
     return 1
   fi
   shn_dbgmsg "loaded lib${lib}" >&2

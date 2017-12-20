@@ -73,6 +73,7 @@ int print_memlist_any( const char *func, int line, int cnt, ... );
 int print_memlist( const char *func, int line, FILE * f );
 int print_memlist_msg( const char *func, int line, FILE * f, const char *msg1a, const char *msg1b, const char *msg2, const char *msg3,
                        const char *msg4 );
+#include "mas_std_def.h"
 
 #  define mas_calloc(...)  _mas_calloc(FL, __VA_ARGS__)
 #  define mas_malloc(...)  _mas_malloc(FL, __VA_ARGS__)

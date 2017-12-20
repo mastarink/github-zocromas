@@ -1,0 +1,13 @@
+# --disble-mas-test, No --enable-mas-test
+ 1. zocromas_mas_wrap
+ 2. zocromas_minierr
+ 3. zocromas_mas_tools (zocromas_mas_wrap)
+ 4. zocromas_regerr
+ 5. zocromas_exam (zocromas_regerr zocromas_minierr)
+ 6. zocromas_mulconfnt
+
+ 7. zocromas_mysqlpfs (zocromas_regerr zocromas_mas_tools zocromas_mas_wrap)
+ 8. zocromas_qstd (zocromas_regerr zocromas_mas_tools zocromas_mas_tools zocromas_mas_wrap zocromas_mysqlpfs)
+ 9. zocromas_levinfo (zocromas_regerr zocromas_mas_tools zocromas_mas_wrap zocromas_qstd)
+10. zocromas_xfs (zocromas_regerr zocromas_mas_tools zocromas_mas_wrap zocromas_levinfo)
+11. zocromas_dufnx (zocromas_regerr zocromas_mas_tools zocromas_mas_wrap zocromas_qstd zocromas_xfs zocromas_levinfo zocromas_mulconfnt)

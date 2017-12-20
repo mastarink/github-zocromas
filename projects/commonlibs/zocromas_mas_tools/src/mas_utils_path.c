@@ -6,7 +6,7 @@
 
 /* #include <mastar/wrap/mas_std_def.h> */
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/minierr/minierr.h>
+//#include <mastar/minierr/minierr.h>
 
 #include "mas_arg_tools.h"
 #include "mas_argvc_tools.h"

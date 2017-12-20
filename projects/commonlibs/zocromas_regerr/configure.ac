@@ -36,7 +36,7 @@ m4_include([m4zoc/varscheck.m4])
 # PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap  zocromas_minierr])
+PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap  ])
 
 # if test "x$enable_mas_test" = "xyes"; then
 #  PKG_CHECK_MODULES([DEPSTEST],  [zocromas_exam])

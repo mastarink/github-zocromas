@@ -1,8 +1,9 @@
-# echo  "${BASH_SOURCE[0]}: \${MISHDIRS[working-ws]}: '${MISHDIRS[working-ws]}'" >&2
-echo  "$( basename "${BASH_SOURCE[0]}" ): \${MISHDIRS[working-ws]}: '${MISHDIRS[working-ws]}'" >&2
+# echo  "${BASH_SOURCE[0]}: \${WMISHDIRS[working-ws]}: '${WMISHDIRS[working-ws]}'" >&2
+echo  "$( basename "${BASH_SOURCE[0]}" ): \${WMISHDIRS[working-ws]}: '${WMISHDIRS[working-ws]}'" >&2
 if [[ -f shn/libwork.bash ]] ; then
-  export MSH_SHN_PROJECTS_DIR=${MISHDIRS[working-ws]}
+  export MSH_SHN_PROJECTS_DIR=${WMISHDIRS[working-ws]}
   [[ $MSH_SHN_PROJECTS_DIR ]] && source shn/libwork.bash
+  return 0
 fi
 
 # vi: ft=sh
