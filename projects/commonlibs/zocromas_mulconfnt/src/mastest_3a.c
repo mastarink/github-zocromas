@@ -148,7 +148,7 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
     mucs_source_list_delete( plist );
   }
-  mucs_config_option_tablist_reset( &test_tablist );
+  mucs_config_option_tablist_reset( &test_tablist, 1 );
   mucs_clear_global_flags();
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );

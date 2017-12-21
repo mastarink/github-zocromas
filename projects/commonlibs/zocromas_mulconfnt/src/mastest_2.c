@@ -101,7 +101,7 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, NULL /*name*/, 0, string_args, 0, ":", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, NULL /*name */ , 0, string_args, 0, ":", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
@@ -179,8 +179,8 @@ test_2( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 #endif
     mucs_source_list_delete( plist );
   }
-  mucs_config_option_tablist_reset( &test_tablist );
-  mucs_clear_global_flags();
+  mucs_config_option_tablist_reset( &test_tablist, 1 );
+  mucs_clear_global_flags(  );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

@@ -3,6 +3,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr_defs.h>
 
 #include <mastar/mulconfnt/mulconfnt_structs.h>

@@ -56,7 +56,7 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 
   mucs_source_list_delete( plist );
   plist = NULL;
-  mucs_config_option_tablist_delete( test_tablist );
+  mucs_config_option_tablist_delete( test_tablist, 1 );
   test_tablist = NULL;
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   INFO( "app_flags (--xor):%lx", app_flags );

@@ -120,7 +120,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
 }
 
 void
-mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode )
+mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode, int fautofree )
 {
   if ( tabnode )
   {
@@ -130,7 +130,7 @@ mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode )
     {
       const mucs_option_t *opt = aoptions + no;
 
-      if ( opt && opt->s.cust_ptr && ( mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
+      if ( opt && opt->s.cust_ptr && ( fautofree && mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
         switch ( opt->s.restype & ~MUCS_RTYP_FLAG_ALL )
         {
@@ -150,9 +150,9 @@ mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode )
 }
 
 void
-mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
+mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode, int fautofree )
 {
-  mucs_config_option_tabnode_reset_cust( tabnode );
+  mucs_config_option_tabnode_reset_cust( tabnode, fautofree );
   if ( tabnode )
   {
     if ( tabnode->allocated && tabnode->name )
@@ -165,47 +165,47 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode )
 }
 
 void
-mucs_config_option_tabnode_delete( mucs_option_table_list_t * tabnode )
+mucs_config_option_tabnode_delete( mucs_option_table_list_t * tabnode, int fautofree )
 {
   if ( tabnode )
   {
-    mucs_config_option_tabnode_reset( tabnode );
+    mucs_config_option_tabnode_reset( tabnode, fautofree );
     mas_free( tabnode );
   }
 }
 
 void
-mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist )
+mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist, int fautofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_reset_cust( t );
+    mucs_config_option_tabnode_reset_cust( t, fautofree );
   }
 }
 
 void
-mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist )
+mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist, int fautofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_reset( t );
+    mucs_config_option_tabnode_reset( t, fautofree );
   }
 }
 
 void
-mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist )
+mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist, int fautofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_delete( t );
+    mucs_config_option_tabnode_delete( t, fautofree );
   }
 }

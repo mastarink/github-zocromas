@@ -17,7 +17,8 @@
 #include "option_interface.h"
 
 mucs_source_t *
-mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_source_type_t source_type, const char *name, int count, const void *data_ptr, int min_pass )
+mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_source_type_t source_type, const char *name, int count,
+                                  const void *data_ptr, int min_pass )
 {
   return mucs_source_list_add_source( interface->source_list, source_type, name, count, data_ptr, min_pass );
 }
@@ -44,7 +45,7 @@ mucs_option_interface_lookup_all_multipass( mucs_option_interface_t * interface,
   rDECLGOOD;
   for ( int pass = 0; rGOOD && pass < passes; pass++ )
   {
-    mucs_config_option_tablist_reset_cust( interface->tablist );
+    mucs_config_option_tablist_reset_cust( interface->tablist, 0 );
     rC( mucs_option_interface_lookup_all( interface, userdata ) );
   }
   rRET;

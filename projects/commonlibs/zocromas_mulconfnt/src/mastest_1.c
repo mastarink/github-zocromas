@@ -401,12 +401,11 @@ test_1( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   }
   EXAMX( v_string0 != NULL, "v_string0 %s", v_string0 );
 /* WARN("v_string0:%p",v_string0); */
-  mucs_config_option_tablist_reset( &test_tablist );
+  mucs_config_option_tablist_reset( &test_tablist, 1 );
   mucs_clear_global_flags(  );
   EXAMX( v_string0 == NULL, "v_string0 %s", v_string0 );
 
   WARN( "v_string0:%p", v_string0 );
-
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

@@ -26,7 +26,6 @@
 
 #include "mastest.h"
 
-
 int
 test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
@@ -72,8 +71,8 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
     if ( speed )
       INFO( "-b %d ", speed );
   }
-  mucs_config_option_tablist_reset( &test_tablist );
-  mucs_clear_global_flags();
+  mucs_config_option_tablist_reset( &test_tablist, 1 );
+  mucs_clear_global_flags(  );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

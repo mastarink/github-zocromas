@@ -120,7 +120,7 @@ bwi-=0x200\n\
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STREAM, NULL /*name*/, 0, fcmds, 0, ":\r\n", "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STREAM, NULL /*name */ , 0, fcmds, 0, ":\r\n", "=", NULL );
 
     masexam_next_group(  );
     EXAMX( fcmds ? 1 : 0, "fcmds: %p", fcmds );
@@ -199,8 +199,8 @@ bwi-=0x200\n\
     mucs_source_list_delete( plist );
   }
   fclose( fcmds );
-  mucs_config_option_tablist_reset( &test_tablist );
-  mucs_clear_global_flags();
+  mucs_config_option_tablist_reset( &test_tablist, 1 );
+  mucs_clear_global_flags(  );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );

@@ -114,7 +114,7 @@ mucs_config_option_interface_reset( mucs_option_interface_t * interface )
   if ( interface )
   {
     mucs_source_list_delete( interface->source_list );
-    mucs_config_option_tablist_delete( interface->tablist );
+    mucs_config_option_tablist_delete( interface->tablist, 1 );
   }
 }
 
