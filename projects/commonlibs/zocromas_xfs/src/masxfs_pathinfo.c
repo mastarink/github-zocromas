@@ -7,6 +7,7 @@
 #include <mastar/minierr/minierr.h>
 
 #include <mastar/levinfo/masxfs_levinfo_enums.h>
+#include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_io_dir.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
@@ -33,8 +34,8 @@ masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 }
 
 int
-masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *data,
-                          masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
+                           masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
 {
   rDECLBAD;
   int rc = 0;
@@ -47,7 +48,7 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
     /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
-      rC( masxfs_levinfo_scan_tree_cbs( pi->levinfo, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+      rC( masxfs_levinfo_scanf_tree_cbs( pi->levinfo, entry_pfilter, cbs, userdata, flags, maxdepth, reldepth ) );
     }
     else
     {
@@ -56,13 +57,13 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
 
       flags |= pi->flags;
 #if 1
-    /* rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) ); */
-      rC( masxfs_levinfo_scan_tree_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
+    /* rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, userdata, flags, maxdepth, reldepth ) ); */
+      rC( masxfs_levinfo_scanf_tree_cbs( li, entry_pfilter, cbs, userdata, flags, maxdepth, reldepth ) );
 #else
-      rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, data, flags, maxdepth, reldepth ) );
-    /* rC( masxfs_levinfo_scan_entry_single_cbs( li, typeflags, cbs, data, flags, reldepth ) ); */
+      rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, userdata, flags, maxdepth, reldepth ) );
+    /* rC( masxfs_levinfo_scan_entry_single_cbs( li, typeflags, cbs, userdata, flags, reldepth ) ); */
 
-    /* rC( masxfs_levinfo_scan_li_cbs( li, typeflags, cbs, data, flags, maxdepth,  reldepth ) ); */
+    /* rC( masxfs_levinfo_scan_li_cbs( li, typeflags, cbs, userdata, flags, maxdepth,  reldepth ) ); */
 #endif
     }
   /* rc = masxfs_pathinfo_closedir_all( pi ); */
@@ -73,6 +74,14 @@ masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags,
     }
   }
   rRET;
+}
+
+int
+masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata,
+                          masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+{
+  masxfs_entry_filter_t entry_filter = {.typeflags = typeflags };
+  return masxfs_pathinfo_scanf_cbs( pi, &entry_filter, cbs, userdata, flags, maxdepth );
 }
 
 masxfs_levinfo_t *

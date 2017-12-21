@@ -24,11 +24,12 @@ typedef unsigned long masxfs_levinfo_flags_t;
 typedef unsigned masxfs_type_flags_t;
 
 typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
+typedef struct masxfs_entry_filter_s masxfs_entry_filter_t;
 
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
-typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *data, masxfs_depth_t reldepth );
-typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *data, masxfs_levinfo_flags_t flags );
+typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, masxfs_depth_t reldepth );
+typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *userdata, masxfs_levinfo_flags_t flags );
 
 typedef int ( *masxfs_li_handler_t ) ( masxfs_levinfo_t * li );
 

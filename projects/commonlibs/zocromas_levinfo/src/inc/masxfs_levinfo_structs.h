@@ -11,7 +11,6 @@ typedef struct mysqlpfs_mstmt_s mysqlpfs_mstmt_t;
 # include "masxfs_levinfo_types.h"
 # include "masxfs_levinfo_enums.h"
 
-
 union masxfs_digest_ctx_u
 {
   void *any;
@@ -40,7 +39,11 @@ struct masxfs_digest_s
   masxfs_digest_ctx_t ctx;
   unsigned char *sum;
 };
-
+struct masxfs_entry_filter_s
+{
+  masxfs_type_flags_t typeflags;
+  masxfs_depth_t maxdepth;
+};
 struct masxfs_entry_callback_s
 {
 /* unsigned types; */

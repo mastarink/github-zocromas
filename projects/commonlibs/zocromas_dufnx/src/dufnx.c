@@ -100,12 +100,12 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
 }
 
 static int
-dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata )
+dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _uUu_ )
 {
   rDECLGOOD;
   if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
   {
-    mas_dufnx_data_t *pdufnx_data _uUu_ = ( mas_dufnx_data_t * ) userdata;
+    mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
 
     mas_qstd_t *qstd = dufnx_qstd( &pdufnx_data->mysql );
     const char *path = mucs_config_option_string_value( opt );
@@ -120,7 +120,9 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata )
       {
         masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
-        masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
+
+//      masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
+        masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR };
 
         masxfs_entry_callback_t callback = {
           fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
@@ -131,7 +133,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata )
         masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
 
         WARN( "(%d) ******** fill scan *******", rCODE );
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callback, qstd, flagsfs | xflags1, pdufnx_data->max_depth ) );
+        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1, pdufnx_data->max_depth ) );
         WARN( "******** /fill scan *******" );
         rC( mas_qstd_end_transaction( qstd ) );
 
@@ -145,7 +147,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata )
 }
 
 static int
-dufnx_config_drop_tables( mucs_option_t * opt _uUu_, void *userdata )
+dufnx_config_drop_tables( mucs_option_t * opt _uUu_, void *userdata, void *extradata _uUu_ )
 {
   rDECLGOOD;
   mas_dufnx_data_t *pdufnx_data _uUu_ = ( mas_dufnx_data_t * ) userdata;
@@ -158,7 +160,7 @@ dufnx_config_drop_tables( mucs_option_t * opt _uUu_, void *userdata )
 }
 
 static int
-dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_ )
+dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
 {
   rDECLGOOD;
   minierr_disable( MAS_MIER_TYPE_WARN );
@@ -166,7 +168,7 @@ dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_ )
 }
 
 static int
-dufnx_config_arg_process( mucs_option_t * opt, void *userdata )
+dufnx_config_arg_process( mucs_option_t * opt, void *userdata, void *extradata _uUu_ )
 {
   rDECLGOOD;
   if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
@@ -196,7 +198,7 @@ dufnx_config_arg_process( mucs_option_t * opt, void *userdata )
     mucs_config_option_set_string_value_na( opt, path );
 
     rC( dufnx_tree( mucs_config_option_string_value( opt ), pdufnx_data->max_depth, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
-    WARN( "######################## %p [%d]", pdufnx_data, pdufnx_data->targv.argc );
+//    WARN( "######################## %p [%d]", pdufnx_data, pdufnx_data->targv.argc );
   }
   rRET;
 }
@@ -240,10 +242,10 @@ dufnx( int argc, char *argv[] )
   dufnx_config_mysql( interface, &dufnx_data );
 
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL ); */
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */, 0, MULCONFNT_ETC_CONFIG, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */, 0, "MAS_DUFNX", 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */, 0, NULL, 1 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */, argc, argv, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_DUFNX", 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , argc, argv, 0 );
 
   rC( mucs_option_interface_lookup_all_multipass( interface, &dufnx_data, 2 ) );
 

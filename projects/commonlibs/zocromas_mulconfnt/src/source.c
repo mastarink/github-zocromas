@@ -214,7 +214,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
       cb = osrc->common_callback;
       if ( cb )
       {
-        cb( opt, userdata );
+        cb( opt, userdata, opt->s.extra_data );
         osrc->extra_cb.callback_called++;
       }
     }
@@ -224,7 +224,7 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
       cb = osrc->type_callbacks[opt->s.restype & ~MUCS_RTYP_FLAG_ALL];
       if ( cb )
       {
-        cb( opt, userdata );
+        cb( opt, userdata, opt->s.extra_data );
         osrc->extra_cb.callback_called++;
       }
     }

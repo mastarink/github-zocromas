@@ -33,7 +33,7 @@ static char *sc_string = NULL;
 static char *cc_string = NULL;
 
 static int
-s2callback( mucs_option_t * opt _uUu_, void *userdata )
+s2callback( mucs_option_t * opt _uUu_, void *userdata , void *extradata _uUu_)
 {
   EXAMS( opt->d.string_value, "Phasellus congue bibendum magna", "string_value=%s ? %s" );
   EXAMS( ( const char * ) userdata, "something to pass: consectetuer adipiscing", "userdata=%s ? %s" );
@@ -42,7 +42,7 @@ s2callback( mucs_option_t * opt _uUu_, void *userdata )
 }
 
 static int
-ccallback_string( mucs_option_t * opt, void *userdata _uUu_ )
+ccallback_string( mucs_option_t * opt, void *userdata _uUu_, void *extradata _uUu_ )
 {
   if ( opt )
   {
@@ -67,7 +67,7 @@ ccallback_string( mucs_option_t * opt, void *userdata _uUu_ )
 }
 
 static int
-scallback_string( mucs_option_t * opt, void *userdata _uUu_ )
+scallback_string( mucs_option_t * opt, void *userdata _uUu_, void *extradata _uUu_ )
 {
   if ( sc_string )
     mas_free( sc_string );
@@ -77,7 +77,7 @@ scallback_string( mucs_option_t * opt, void *userdata _uUu_ )
 }
 
 static int
-num5callback( mucs_option_t * opt, void *userdata _uUu_ )
+num5callback( mucs_option_t * opt, void *userdata _uUu_, void *extradata _uUu_ )
 {
 //fprintf( stderr, "NUM5: %d\n", opt->d.nvalue.v_int );
   v_int5 = opt->d.nvalue.v_int;

@@ -19,7 +19,7 @@
 #include "option_interface_base.h"
 
 int
-mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_ )
+mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_, void *extradata _uUu_ )
 {
   if ( opt )
   {

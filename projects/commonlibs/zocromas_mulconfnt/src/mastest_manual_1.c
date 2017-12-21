@@ -29,9 +29,8 @@
 
 #include "mastest.h"
 
-
 static int
-readline_test( mucs_option_t * opt _uUu_, void *userdata _uUu_ )
+readline_test( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
 {
   rDECLGOOD;
   WARN( "WOW" );
@@ -72,7 +71,7 @@ test_manual_1( int argc, const char *argv[], int nseries _uUu_, const char *seri
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
-  WARN("### FDs:%d" ,mastest_fds(  ));
-  /* EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" ); */
+  WARN( "### FDs:%d", mastest_fds(  ) );
+/* EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" ); */
   return 0;
 }

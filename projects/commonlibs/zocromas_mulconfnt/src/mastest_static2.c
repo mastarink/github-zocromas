@@ -34,7 +34,7 @@ static int _variant = 0;
 static int v_int5 = 0;
 
 static int
-s2callback( mucs_option_t * opt _uUu_, void *userdata )
+s2callback( mucs_option_t * opt _uUu_, void *userdata, void *extradata _uUu_ )
 {
   EXAMS( opt->d.string_value, "Phasellus congue bibendum magna", "string_value=%s ? %s" );
   EXAMS( ( const char * ) userdata, "something to pass: consectetuer adipiscing", "userdata=%s ? %s" );
@@ -43,7 +43,7 @@ s2callback( mucs_option_t * opt _uUu_, void *userdata )
 }
 
 static int
-num5callback( mucs_option_t * opt, void *userdata _uUu_ )
+num5callback( mucs_option_t * opt, void *userdata _uUu_, void *extradata _uUu_ )
 {
 //fprintf( stderr, "NUM5: %d\n", opt->d.nvalue.v_int );
   v_int5 = opt->d.nvalue.v_int;
@@ -347,7 +347,7 @@ test_static2( int argc _uUu_, const char *argv[], int nseries, const char *serie
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
-  WARN("### FDs:%d" ,mastest_fds(  ));
+  WARN( "### FDs:%d", mastest_fds(  ) );
   EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

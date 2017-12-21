@@ -37,6 +37,7 @@ struct mucs_option_static_s
   mucs_option_callback_t callback;
   int cb_pass;
   int v_pass;
+  void *extra_data;
 };
 
 #endif

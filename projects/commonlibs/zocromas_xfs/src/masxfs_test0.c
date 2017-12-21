@@ -35,14 +35,14 @@ struct rlimit lim = { 0 };
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
 /* INFO(  "entry directory: '%s'\n   -- %s",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -60,7 +60,7 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data 
 }
 
 static int _uUu_
-fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* INFO( "a. %-2d. -- '%s%s'", num, ename ? ename : "", epath ? epath : "" ); */

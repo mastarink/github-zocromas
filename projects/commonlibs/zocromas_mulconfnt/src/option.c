@@ -687,7 +687,7 @@ mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, v
     if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass )
          && opt->s.callback /* && !opt->s.cust_ptr */  )
     {
-      rC( opt->s.callback( opt, userdata ) );
+      rC( opt->s.callback( opt, userdata, opt->s.extra_data ) );
       opt->d.extra_cb.callback_called++;
     }
 
