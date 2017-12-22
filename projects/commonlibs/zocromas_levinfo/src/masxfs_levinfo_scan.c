@@ -156,10 +156,14 @@ masxfs_levinfo_scano_entry_single_internal_cbs( masxfs_levinfo_t * liparent, mas
 }*/
 
 static int
-masxfs_levinfo_scanf_entry_single_cbs( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
-                                       masxfs_levinfo_flags_t flags, masxfs_depth_t reldepth )
+masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, void *userdata, masxfs_depth_t reldepth )
 {
   rDECLBAD;
+  masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
+  masxfs_entry_callback_t *cbs = scanner->cbs;
+  masxfs_levinfo_flags_t flags = scanner->flags;
+
+//masxfs_depth_t maxdepth = scanner->maxdepth;
   if ( li )
   {
     assert( li->lidepth );
@@ -168,6 +172,14 @@ masxfs_levinfo_scanf_entry_single_cbs( masxfs_levinfo_t * li, masxfs_entry_filte
   else
     QRLI( li, rCODE );
   rRET;
+}
+
+static int
+masxfs_levinfo_scanf_entry_single_cbs( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
+                                       masxfs_levinfo_flags_t flags, masxfs_depth_t reldepth )
+{
+  masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags/*,.maxdepth = maxdepth */};
+  return masxfs_levinfo_scanf_entry_single_scanner( li, &scanner, userdata, reldepth );
 }
 
 /*static int
