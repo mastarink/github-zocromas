@@ -69,14 +69,14 @@ int test_drop_tables( void );
 /* int test7( void ); */
 
 int
-main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unused ) ) )
+main( int argc _uUu_, char *argv[] _uUu_ )
 {
 /* test_drop_tables(); */
 /* test_create_tables(); */
 /* test6(  ); */
 /* test6(  ); */
   INFO( "POINT" );
-  /* test7(  ); */
-  /* test7(  ); */
+/* test7(  ); */
+/* test7(  ); */
   return 0;
 }

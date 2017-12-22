@@ -21,6 +21,9 @@
 #include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_xstat.h>
+
+#include <mastar/levinfo/masxfs_levinfo_digest.h>
 
 /* #include <mastar/qstd/qstd_mstmt_base.h> */
 
@@ -33,36 +36,57 @@ static int numline_treecb = 0;
 
 /* of type: masxfs_scan_fun_simple_t */
 static int
-treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *userdata _uUu_, masxfs_depth_t reldepth _uUu_ )
+treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
   static masxfs_depth_t top_depth = 0;
 
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
   size_t size = masxfs_levinfo_size_ref( li, flags );
-  int fd _uUu_ = masxfs_levinfo_fd_ref( li, flags );
+
+/*int fd _uUu_ = masxfs_levinfo_fd_ref( li, flags );*/
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
-  const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
+  const char *sha1 = masxfs_levinfo_hexsha1_ref( li, flags );
+
+/*const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );*/
 
   if ( !numline_treecb && depth )
     top_depth = depth - 1;
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
 
-  numline_treecb++;
+  {
+    /**
+    const masxfs_digests_t *digests = li->digests;
+    const unsigned char *dg = NULL;
+
+    int sz =                                                         // masxfs_digests_getn( li->digests, 0, NULL ); //
+            masxfs_digests_get( digests, MASXFS_DIGEST_SHA1, &dg );
+
+    char sbuffer[512] = { 0 };
+    char *psbuf = sbuffer;
+
+    for ( ssize_t i = 0; i < sz; i++ )
+    {
+      snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
+      psbuf += 2;
+    } **/
+    numline_treecb++;
 #if 1
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-  fprintf( fil, "%4d\t%s[%-10ld %10ld]  %s\n", numline_treecb, prefix ? prefix : "", inode, size, ename ? ename : "" /*, epath ? epath : "" */  );
+    fprintf( fil, "%4d\t%s[%-10ld %10ld]  %-30s  \t%-40s\n", numline_treecb, prefix ? prefix : "", inode, size,
+             ename ? ename : "" /*, epath ? epath : "" */, sha1?sha1:""  );
 #else
-  fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
-           ename ? ename : "" /*, epath ? epath : "" */  );
+    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
+             ename ? ename : "" /*, epath ? epath : "" */  );
 #endif
+  }
   return 0;
 }
 
 int
-dufnx_tree( const char *real_path, masxfs_depth_t maxdepth _uUu_, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
+dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
 {
   rDECLGOOD;
 

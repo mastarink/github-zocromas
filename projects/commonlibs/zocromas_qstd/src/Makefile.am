@@ -15,14 +15,33 @@ libzocromas_qstd_la_SOURCES = \
 	qstd_mstmt_nodes.c
 
 libzocromas_qstd_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
-libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@ -fvisibility=hidden
+libzocromas_qstd_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
+# -fvisibility=hidden
+
+lib_LIBRARIES = libzocromas_qstd.a
+libzocromas_qstd_a_SOURCES = \
+	qstd_query.c \
+	qstd_mstmt.c \
+	qstd_mstmt_base.c \
+	qstd_mstmt_names.c \
+	qstd_mstmt_sizes.c \
+	qstd_mstmt_datas.c \
+	qstd_mstmt_props.c \
+	qstd_mstmt_sha1.c \
+	qstd_mstmt_parents.c \
+	qstd_mstmt_nodes.c
+
+# libzocromas_qstd_a_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @MYSQL_CLIENT_LIBS@
+libzocromas_qstd_a_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@ @MYSQL_CLIENT_CFLAGS@
+# -fvisibility=hidden
+
 
 if MAS_TEST
 noinst_PROGRAMS=mastest
 
 
 
-mastest_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.la @DEPSTEST_LIBS@ @MYSQL_CLIENT_LIBS@
+mastest_LDFLAGS=@AM_LDFLAGS@  lib@PACKAGE_NAME@.a @DEPSTEST_LIBS@ @MYSQL_CLIENT_LIBS@
 mastest_CFLAGS=@AM_CFLAGS@  @DEPSTEST_CFLAGS@ @MYSQL_CLIENT_CFLAGS@  -pthread
 
 mastest_SOURCES= \

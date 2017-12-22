@@ -82,8 +82,8 @@ mas_qstd_mstmt_insget_datas_id( mas_qstd_t * qstd, const mas_qstd_stat_t * stat 
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selinsget_datas_id( mas_qstd_t * qstd, const mas_qstd_stat_t * stat )
+unsigned long long
+mas_qstd_mstmt_selinsget_datas_id( mas_qstd_t * qstd, const mas_qstd_stat_t * stat )
 {
 /* rDECLBAD; */
   QRGP( qstd );

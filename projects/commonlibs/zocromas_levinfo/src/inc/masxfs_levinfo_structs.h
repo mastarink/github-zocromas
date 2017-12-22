@@ -50,6 +50,18 @@ struct masxfs_entry_callback_s
   masxfs_scan_fun_simple_t fun_simple;
   masxfs_levinfo_flags_t flags;
 };
+struct masxfs_xstatc_s
+{
+  unsigned long nsamesize;
+  unsigned long nsamesha1;
+  const char *hex_sha1;
+};
+struct masxfs_xstat_s
+{
+  unsigned long nsamesize;
+  unsigned long nsamesha1;
+  char *hex_sha1;
+};
 
 struct masxfs_levinfo_s
 {
@@ -80,6 +92,7 @@ struct masxfs_levinfo_s
     } scan;
     unsigned long long node_id;
     masxfs_stat_t *stat;
+    masxfs_xstat_t *xstat;
   } db;
   masxfs_digests_t *digests;
   char *path;

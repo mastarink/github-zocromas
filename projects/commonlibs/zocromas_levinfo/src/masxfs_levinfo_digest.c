@@ -468,14 +468,18 @@ int
 masxfs_digests_get( const masxfs_digests_t * digests, masxfs_digest_type_t dgtype, const unsigned char **pbuf )
 {
   int sz = 0;
-  masxfs_digest_t *digest = digests->digest;
 
-  while ( digest && digest->dgtype != dgtype )
+  if ( digests )
   {
-    digest = digest->next;
+    masxfs_digest_t *digest = digests->digest;
+
+    while ( digest && digest->dgtype != dgtype )
+    {
+      digest = digest->next;
+    }
+    if ( digest )
+      sz = masxfs_digest_get( digest, pbuf );
   }
-  if ( digest )
-    sz = masxfs_digest_get( digest, pbuf );
   return sz;
 }
 
@@ -484,16 +488,19 @@ masxfs_digests_getn( const masxfs_digests_t * digests, int npos, const unsigned 
 {
   int sz = 0;
   int n = 0;
-  masxfs_digest_t *digest = digests->digest;
 
-  while ( digest && npos != n )
+  if ( digests )
   {
-    digest = digest->next;
-    n++;
-  }
-  if ( digest )
-    sz = masxfs_digest_get( digest, pbuf );
+    masxfs_digest_t *digest = digests->digest;
 
+    while ( digest && npos != n )
+    {
+      digest = digest->next;
+      n++;
+    }
+    if ( digest )
+      sz = masxfs_digest_get( digest, pbuf );
+  }
   return sz;
 }
 
@@ -502,14 +509,18 @@ masxfs_digests_is_string( masxfs_digests_t * digests, int npos )
 {
   int is_string = 0;
   int n = 0;
-  masxfs_digest_t *digest = digests->digest;
 
-  while ( digest && npos != n )
+  if ( digests )
   {
-    digest = digest->next;
-    n++;
+    masxfs_digest_t *digest = digests->digest;
+
+    while ( digest && npos != n )
+    {
+      digest = digest->next;
+      n++;
+    }
+    if ( digest )
+      is_string = masxfs_digest_is_string( digest );
   }
-  if ( digest )
-    is_string = masxfs_digest_is_string( digest );
   return is_string;
 }

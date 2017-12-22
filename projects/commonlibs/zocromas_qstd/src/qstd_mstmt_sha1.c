@@ -106,8 +106,8 @@ mas_qstd_mstmt_insget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id _uU
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_insget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, unsigned long long sha1_id )
+unsigned long long
+mas_qstd_mstmt_insget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, unsigned long long sha1_id )
 {
   rDECLBAD;
   QRGP( qstd );
@@ -130,8 +130,8 @@ __attribute__ ( ( visibility( "default" ) ) )
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selinsget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id, const unsigned char *sha1 )
+unsigned long long
+mas_qstd_mstmt_selinsget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id, const unsigned char *sha1 )
 {
 /* rDECLBAD; */
   QRGP( qstd );
@@ -145,8 +145,8 @@ __attribute__ ( ( visibility( "default" ) ) )
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selinsget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, unsigned long long sha1_id )
+unsigned long long
+mas_qstd_mstmt_selinsget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, unsigned long long sha1_id )
 {
 /* rDECLBAD; */
   QRGP( qstd );

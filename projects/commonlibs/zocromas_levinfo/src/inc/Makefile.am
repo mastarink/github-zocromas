@@ -13,6 +13,7 @@ libzocromas_xfsinclude_HEADERS =  \
 	masxfs_levinfo_db.h \
 	masxfs_levinfo_path.h \
 	masxfs_levinfo_ref.h \
+	masxfs_levinfo_ref_xstat.h \
 	masxfs_levinfo.h \
 	masxfs_levinfo_scan.h \
 	masxfs_levinfo_format.h \

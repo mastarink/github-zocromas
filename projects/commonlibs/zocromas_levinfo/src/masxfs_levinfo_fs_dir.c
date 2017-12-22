@@ -143,7 +143,7 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       if ( rGOOD && de )
       {
       /* have de->d_name, de->d_type and de->d_ino */
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ) /*, de->d_ino */ , NULL, 0 );
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ) /*, de->d_ino */ , NULL, NULL, 0 );
         assert( li[0].lidepth + 1 == li[1].lidepth );
         has_data = de ? 1 : 0;
       }

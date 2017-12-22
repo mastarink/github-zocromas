@@ -51,8 +51,8 @@ mas_qstd_mstmt_selget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
   return thesize;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
+unsigned long long
+mas_qstd_mstmt_insget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
 {
   rDECL( 0 );
   QRGP( qstd );
@@ -77,8 +77,8 @@ __attribute__ ( ( visibility( "default" ) ) )
   return thesize;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
+unsigned long long
+mas_qstd_mstmt_selinsget_sizes_id( mas_qstd_t * qstd, unsigned long long size )
 {
 /* rDECL( 0 ); */
   QRGP( qstd );

@@ -76,8 +76,8 @@ mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
+unsigned long long
+mas_qstd_mstmt_selinsget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
 {
 /* rDECLBAD; */
   QRGP( qstd );

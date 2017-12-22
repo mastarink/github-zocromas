@@ -45,7 +45,8 @@ mas_qstd_query( mas_qstd_t * qstd, const char *op )
   rRET;
 }
 
-int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_update_summary( mas_qstd_t * qstd )
+int
+mas_qstd_update_summary( mas_qstd_t * qstd )
 {
   rDECLGOOD;
   const char *updop[] = {
@@ -92,12 +93,14 @@ int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_update_summary( mas_q
   rRET;
 }
 
-int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_start_transaction( mas_qstd_t * qstd )
+int
+mas_qstd_start_transaction( mas_qstd_t * qstd )
 {
   return mas_qstd_query( qstd, "START TRANSACTION" );
 }
 
-int __attribute__ ( ( visibility( "default" ) ) ) mas_qstd_end_transaction( mas_qstd_t * qstd )
+int
+mas_qstd_end_transaction( mas_qstd_t * qstd )
 {
   return mas_qstd_query( qstd, "COMMIT" );
 }

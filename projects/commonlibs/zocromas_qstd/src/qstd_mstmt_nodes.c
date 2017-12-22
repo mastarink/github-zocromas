@@ -20,8 +20,8 @@
 
 #include "qstd_mstmt_nodes.h"
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, const char *name )
+unsigned long long
+mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, const char *name )
 {
   rDECLBAD;
   unsigned long long theid = 0;

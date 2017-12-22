@@ -173,7 +173,7 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 
     if ( !( *pmstmt ) )
     {
-      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHING_PN : STD_MSTMT_SELECT_EVERYTHING_P );
+      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGX_PN : STD_MSTMT_SELECT_EVERYTHINGX_P );
 
       {
         int np = 0;
@@ -198,7 +198,7 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 /* TODO move to qstd */
 /* allocates stat */
 static int
-masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, unsigned long long *pnode_id,
+masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstat, unsigned long long *pnode_id,
                          masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
 {
   rDECLBAD;
@@ -222,6 +222,10 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long atim_tv_sec = 0;
     unsigned long long mtim_tv_sec = 0;
     unsigned long long ctim_tv_sec = 0;
+    unsigned long long nsamesize = 0;
+    unsigned long long nsamesha1 = 0;
+
+    const char *hex_sha1 = NULL;
 
     rC( mas_qstd_mstmt_fetch( mstmt, &has_data ) );
     if ( phas_data )
@@ -246,7 +250,10 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &atim_tv_sec, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &mtim_tv_sec, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &ctim_tv_sec, &is_null ) );
-      assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesize, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesha1, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_sha1 ) );
+      assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
 
       if ( rGOOD && stat )
       {
@@ -265,6 +272,12 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
         stat->st_atim.tv_sec = atim_tv_sec;
         stat->st_mtim.tv_sec = mtim_tv_sec;
         stat->st_ctim.tv_sec = ctim_tv_sec;
+      }
+      if ( rGOOD && xstat )
+      {
+        xstat->nsamesize = nsamesize;
+        xstat->nsamesha1 = nsamesha1;
+        xstat->hex_sha1 = hex_sha1;
       }
       if ( pname )
         *pname = name;
@@ -346,9 +359,9 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, 
     unsigned long long node_id = 0;
     const char *dename = NULL;
     masxfs_stat_t stat = { 0 };
+    masxfs_xstatc_t xstat = { 0 };
 
-    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &node_id, flags, phas_data ) );
-
+    rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstat, &node_id, flags, phas_data ) );
     if ( rGOOD )
     {
       if ( *phas_data )
@@ -360,7 +373,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, 
       /* rC( mas_qstd_mstmt_get_result_string_na( li->db.scan.mstmt, 0, &name ) ); */
         QRLI( li, rCODE );
         assert( !li[1].db.stat );
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype /*, stat.st_ino */ , &stat, node_id );
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype /*, stat.st_ino */ , &stat, &xstat, node_id );
         assert( li[1].db.stat );
       }
       else if ( dename )

@@ -26,6 +26,9 @@ typedef unsigned masxfs_type_flags_t;
 typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
 typedef struct masxfs_entry_filter_s masxfs_entry_filter_t;
 
+typedef struct masxfs_xstat_s masxfs_xstat_t;
+typedef struct masxfs_xstatc_s masxfs_xstatc_t;
+
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
 
 typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, masxfs_depth_t reldepth );

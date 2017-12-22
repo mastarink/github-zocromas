@@ -41,7 +41,7 @@ masxfs_levinfo_create( void )
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len,
                        masxfs_entry_type_t d_type /*, ino_t d_inode _uUu_ */ ,
-                       unsigned long long node_id, masxfs_stat_t * stat )
+                       unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstat _uUu_ )
 {
   if ( li && name )
   {
@@ -62,6 +62,20 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
       li->db.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
       *( li->db.stat ) = *stat;                                      /* memcpy */
     }
+    if ( li->db.xstat )
+    {
+      if ( li->db.xstat->hex_sha1 )
+        mas_free( li->db.xstat->hex_sha1 );
+      mas_free( li->db.xstat );
+      li->db.xstat = NULL;
+    }
+    if ( xstat )
+    {
+      li->db.xstat = mas_malloc( sizeof( masxfs_xstat_t ) );
+      li->db.xstat->nsamesize = xstat->nsamesize;
+      li->db.xstat->nsamesha1 = xstat->nsamesha1;
+      li->db.xstat->hex_sha1 = mas_strdup( xstat->hex_sha1 );
+    }
   }
   else
     QRLI( li, -1 );
@@ -69,9 +83,9 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 
 void
 masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type /*, ino_t d_inode */ ,
-                     masxfs_stat_t * stat, unsigned long long node_id )
+                     masxfs_stat_t * stat, masxfs_xstatc_t * xstat, unsigned long long node_id )
 {
-  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat );
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat, xstat );
 }
 
 void
@@ -97,6 +111,13 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         if ( li->db.stat )
           mas_free( li->db.stat );
         li->db.stat = NULL;
+      }
+      if ( li->db.xstat )
+      {
+        if ( li->db.xstat->hex_sha1 )
+          mas_free( li->db.xstat->hex_sha1 );
+        mas_free( li->db.xstat );
+        li->db.xstat = NULL;
       }
     }
     if ( li->path )

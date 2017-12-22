@@ -87,10 +87,8 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   return theid;
 }
 
-__attribute__ ( ( visibility( "default" ) ) )
-     unsigned long long
-             mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id,
-                                                const char *sdetype _uUu_ )
+unsigned long long
+mas_qstd_mstmt_selinsget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id, const char *sdetype )
 {
 /* rDECLBAD; */
   QRGP( qstd );
@@ -108,8 +106,7 @@ __attribute__ ( ( visibility( "default" ) ) )
 }
 
 unsigned long long
-mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id,
-                                   const char *sdetype _uUu_ )
+mas_qstd_mstmt_insselget_names_id( mas_qstd_t * qstd, const char *name, unsigned long long updir_id, unsigned long long data_id, const char *sdetype )
 {
 /* rDECLBAD; */
   QRGP( qstd );
