@@ -38,7 +38,7 @@ MYSQL_CLIENT([10.0.0], [client])
 
 PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools  zocromas_minierr zocromas_regerr])
 AS_IF([test "x$enable_mas_test" = "xyes"], [
-PKG_CHECK_MODULES([DEPSTEST],  [zocromas_xfs zocromas_exam])
+PKG_CHECK_MODULES([DEPSTEST],  [zocromas_xfs zocromas_exam zocromas_levinfo])
 ])
 
 # AC_CHECK_LIB([readline], [readline])
