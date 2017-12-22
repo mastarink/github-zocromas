@@ -49,7 +49,16 @@ struct masxfs_entry_callback_s
 /* unsigned types; */
   masxfs_scan_fun_simple_t fun_simple;
   masxfs_levinfo_flags_t flags;
+  masxfs_entry_filter_t entry_filter;
 };
+struct masxfs_scanner_s
+{ /* TODO */
+  masxfs_entry_filter_t *entry_pfilter;
+  masxfs_entry_callback_t *cbs;
+  masxfs_levinfo_flags_t flags;
+  masxfs_depth_t maxdepth;
+};
+
 struct masxfs_xstatc_s
 {
   unsigned long nsamesize;

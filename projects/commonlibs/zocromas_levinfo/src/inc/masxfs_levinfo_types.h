@@ -30,9 +30,10 @@ typedef struct masxfs_xstat_s masxfs_xstat_t;
 typedef struct masxfs_xstatc_s masxfs_xstatc_t;
 
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;
+typedef struct masxfs_scanner_s masxfs_scanner_t;
 
 typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, masxfs_depth_t reldepth );
-typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *userdata, masxfs_levinfo_flags_t flags );
+// ?? typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *userdata, masxfs_levinfo_flags_t flags );
 
 typedef int ( *masxfs_li_handler_t ) ( masxfs_levinfo_t * li );
 

@@ -122,7 +122,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
 
 //      masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
-        masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR };
+        masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR /*, .maxdepth=pdufnx_data->max_depth*/};
 
         masxfs_entry_callback_t callback = {
           fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
@@ -133,7 +133,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
 
         WARN( "(%d) ******** fill scan *******", rCODE );
-        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1, pdufnx_data->max_depth ) );
+        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1, 0 ) );
         WARN( "******** /fill scan *******" );
         rC( mas_qstd_end_transaction( qstd ) );
 

@@ -49,6 +49,7 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, mas
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   const char *sha1 = masxfs_levinfo_hexsha1_ref( li, flags );
+  unsigned long nsamesha1 = masxfs_levinfo_nsamesha1_ref( li, flags );
 
 /*const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );*/
 
@@ -74,9 +75,19 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, mas
     } **/
     numline_treecb++;
 #if 1
+    char hh[32];
+
+    memset( hh, 0, sizeof( hh ) );
+    if ( nsamesha1 == 0 )
+      hh[0] = 0;
+    else if ( nsamesha1 > 31 )
+      sprintf( hh, "# %lu", nsamesha1 );
+    else
+      for ( unsigned long i = 0; i < nsamesha1; i++ )
+        hh[i] = '+';
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-    fprintf( fil, "%4d\t%s[%-10ld %10ld]  %-30s  \t%-40s\n", numline_treecb, prefix ? prefix : "", inode, size,
-             ename ? ename : "" /*, epath ? epath : "" */, sha1?sha1:""  );
+    fprintf( fil, "%4d\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", numline_treecb, prefix ? prefix : "", inode, size,
+             ename ? ename : "" /*, epath ? epath : "" */ , sha1 ? sha1 : "", hh );
 #else
     fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
              ename ? ename : "" /*, epath ? epath : "" */  );
@@ -93,7 +104,9 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
   masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB | inflags;
 
   masxfs_entry_callback_t callbacks[] = {
-    {treecb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {treecb,.flags =
+     /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ ,.entry_filter =
+     {.maxdepth = 0}},
     {NULL}
   };
   dufnx_qstd( mysql );

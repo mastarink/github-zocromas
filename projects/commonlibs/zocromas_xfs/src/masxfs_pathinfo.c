@@ -34,21 +34,24 @@ masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 }
 
 int
-masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
-                           masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanner, void *userdata )
 {
   rDECLBAD;
   int rc = 0;
 
+//masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
+//masxfs_entry_callback_t *cbs = scanner->cbs;
+  masxfs_levinfo_flags_t flags = scanner->flags;
+//masxfs_depth_t maxdepth = scanner->maxdepth; 
+
 /* if ( r >= 0 ) */
   {
-    maxdepth = maxdepth ? pi->pidepth + maxdepth : 0;
+//  maxdepth = maxdepth ? pi->pidepth + maxdepth : 0;
     if ( ( pi->flags | flags ) & MASXFS_CB_FROM_ROOT )
     {
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
-    /* WARN( "D%d; '%s'",  masxfs_levinfo_depth_val( pi->levinfo, 0 ), masxfs_levinfo_name_val( pi->levinfo, 0 ) ); */
-      rC( masxfs_levinfo_scanf_tree_cbs( pi->levinfo, entry_pfilter, cbs, userdata, flags, maxdepth, reldepth ) );
+      rC( masxfs_levinfo_scanf_tree_scanner( pi->levinfo, scanner, userdata, reldepth ) );
     }
     else
     {
@@ -56,17 +59,8 @@ masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry
       masxfs_depth_t reldepth = 0;
 
       flags |= pi->flags;
-#if 1
-    /* rC( masxfs_levinfo_scan_dirn_cbs( li, typeflags, cbs, userdata, flags, maxdepth, reldepth ) ); */
-      rC( masxfs_levinfo_scanf_tree_cbs( li, entry_pfilter, cbs, userdata, flags, maxdepth, reldepth ) );
-#else
-      rC( masxfs_levinfo_scan_entry_cbs( li, typeflags, cbs, userdata, flags, maxdepth, reldepth ) );
-    /* rC( masxfs_levinfo_scan_entry_single_cbs( li, typeflags, cbs, userdata, flags, reldepth ) ); */
-
-    /* rC( masxfs_levinfo_scan_li_cbs( li, typeflags, cbs, userdata, flags, maxdepth,  reldepth ) ); */
-#endif
+      rC( masxfs_levinfo_scanf_tree_scanner( li, scanner, userdata, reldepth ) );
     }
-  /* rc = masxfs_pathinfo_closedir_all( pi ); */
     if ( rGOOD )
     {
       rCODE = rc;
@@ -75,6 +69,15 @@ masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry
   }
   rRET;
 }
+
+int
+masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
+                           masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+{
+  masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags,.maxdepth = maxdepth };
+  return masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
+}
+
 
 int
 masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata,

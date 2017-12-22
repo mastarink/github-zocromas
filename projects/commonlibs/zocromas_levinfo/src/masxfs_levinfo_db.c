@@ -57,7 +57,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         li[-1].detype = MASXFS_ENTRY_DIR_NUM;
 
         rC( masxfs_levinfo_db_open( li - 1, flags ) );
-        assert( li[-1].db.node_id );
+//      assert( li[-1].db.node_id );
         assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
       /* TODO
        * The only unknown type is for starting point, for instance, 'mastest' at:
