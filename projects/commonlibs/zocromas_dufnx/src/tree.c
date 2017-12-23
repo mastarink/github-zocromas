@@ -32,7 +32,6 @@
 
 #include "tree.h"
 
-
 /* of type: masxfs_scan_fun_simple_t */
 static int _uUu_
 treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, unsigned long serial, masxfs_depth_t reldepth _uUu_ )
@@ -54,7 +53,7 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
 
   if ( !serial && depth )
     top_depth = depth - 1;
-  const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
+  const char *treeprefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
 
   {
     /**
@@ -84,10 +83,10 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
       for ( unsigned long i = 0; i < nsamesha1; i++ )
         hh[i] = '+';
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", serial, prefix ? prefix : "", inode, size,
+    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", serial, treeprefix ? treeprefix : "", inode, size,
              ename ? ename : "" /*, epath ? epath : "" */ , sha1 ? sha1 : "", hh );
 #else
-    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, prefix ? prefix : "", size, fd, ( long ) depth, inode,
+    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, treeprefix ? treeprefix : "", size, fd, ( long ) depth, inode,
              ename ? ename : "" /*, epath ? epath : "" */  );
 #endif
   }
@@ -95,24 +94,14 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
 }
 
 static int _uUu_
-treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _uUu_, unsigned long serial, const char *prefix, masxfs_depth_t reldepth _uUu_ )
+treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _uUu_, unsigned long serial, const char *treeprefix,
+            masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
-  static unsigned top_depth _uUu_ = 0;
-  size_t size = st->st_size;
-  ino_t inode = st->st_ino;
 
-
-  {
-#if 1
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s\n", serial, prefix ? prefix : "?", inode, size,
-             ename ? ename : "" /*, epath ? epath : "" */  );
-#else
-    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, prefix ? prefix : "", size, fd, ( long ) depth, inode,
-             ename ? ename : "" /*, epath ? epath : "" */  );
-#endif
-  }
+  fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s\n", serial, treeprefix ? treeprefix : "", st->st_ino, st->st_size,
+           ename ? ename : "" /*, epath ? epath : "" */  );
   return 0;
 }
 
@@ -124,13 +113,10 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
   masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB | inflags;
 
   masxfs_entry_callback_t callbacks[] = {
-#if 0
     {.fun_simple = treecb,.flags =
      /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ ,.entry_filter =
      {.maxdepth = 0}},
-#else
     {.fun_stat = treestatcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT,.entry_filter = {.maxdepth = 0}},
-#endif
     {NULL}
   };
   dufnx_qstd( mysql );
