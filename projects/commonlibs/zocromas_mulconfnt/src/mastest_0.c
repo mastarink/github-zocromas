@@ -38,11 +38,11 @@ test_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suff
   long bitwise_d = 0x00000000ffff0000;
 
   mucs_option_t options[] = {
-    {.s = {"bps", 'b', MUCS_RTYP_INT, &speed,.val = 0,.desc = "signaling rate in bits-per-second",.argdesc = "BPS"}}, /* */
-    {.s = {"bwi", 'z', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, &bitwise_a,.val = 0, "bitwise",.argdesc = "value"}}, /* */
-    {.s = {"bwi-", 'y', MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise_b,.val = 0, "bitwise",.argdesc = "value"}}, /* */
-    {.s = {"bwi+", 'Y', MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, &bitwise_c,.val = 0, "bitwise",.argdesc = "value"}}, /* */
-    {.s = {"bwi_", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &bitwise_d,.val = 0, "bitwise",.argdesc = "value"}}, /* */
+    {.s = {"bps", 'b',.restype = MUCS_RTYP_INT, .p=&speed,.val = 0,.desc = "signaling rate in bits-per-second",.argdesc = "BPS"}}, /* */
+    {.s = {"bwi", 'z',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .p=&bitwise_a,.val = 0, "bitwise",.argdesc = "value"}}, /* */
+    {.s = {"bwi-", 'y',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .p=&bitwise_b,.val = 0, "bitwise",.argdesc = "value"}}, /* */
+    {.s = {"bwi+", 'Y',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .p=&bitwise_c,.val = 0, "bitwise",.argdesc = "value"}}, /* */
+    {.s = {"bwi_", 'X',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .p=&bitwise_d,.val = 0, "bitwise",.argdesc = "value"}}, /* */
     {.s = {"crnl", 'c',.restype = 0,.val = 0,.desc = "expand cr characters to cr/lf sequences"}}, /* */
     {.s = {"hwflow", 'h',.restype = 0,.val = 0,.desc = "use hardware (RTS/CTS) flow control"}}, /* */
     {.s = {"noflow", 'n',.restype = 0,.val = 0,.desc = "use no flow control"}}, /* */

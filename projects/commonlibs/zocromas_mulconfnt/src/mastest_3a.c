@@ -35,8 +35,8 @@ test_3a( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   char *v_string1 = NULL;
 
   mucs_option_t options[] = {
-    {.s = {"string0", 0, MUCS_RTYP_STRING, &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
-    , {.s = {"string1", 0, MUCS_RTYP_STRING, &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    {.s = {"string0", 0,.restype= MUCS_RTYP_STRING, .p=&v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string1", 0,.restype= MUCS_RTYP_STRING, .p=&v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
 
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };

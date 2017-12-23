@@ -58,27 +58,27 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
   unsigned long bitwise3 = 0x10204;
 
   mucs_option_t options[] = {
-    {.s = {"num0", 0, MUCS_RTYP_UINT, &v_uint0}}
-    , {.s = {"aliasnum0", 0, MUCS_RTYP_ALIAS, "num0"}}
-    , {.s = {"cnum0", 0, MUCS_RTYP_UCHAR, &v_uchar0}}
-    , {.s = {"snum0", 0, MUCS_RTYP_USHORT, &v_ushort0}}
-    , {.s = {"num1", 0, MUCS_RTYP_UINT, &v_uint1}}
-    , {.s = {"num2", 0, MUCS_RTYP_UINT, &v_uint2}}
-    , {.s = {"num3", 0, MUCS_RTYP_UINT, &v_uint3}}
-    , {.s = {"num4", 0, MUCS_RTYP_UINT, &v_uint4}}
-    , {.s = {"lnum0", 0, MUCS_RTYP_ULONG, &v_ulong0}}
-    , {.s = {"lnum1", 0, MUCS_RTYP_UINT, &v_ulong1}}
-    , {.s = {"lnum2", 0, MUCS_RTYP_ULONG, &v_ulong2}}
-    , {.s = {"lnum3", 0, MUCS_RTYP_ULONG, &v_ulong3}}
-    , {.s = {"lnum4", 0, MUCS_RTYP_ULONG, &v_ulong4}}
-    , {.s = {"llnum0", 0, MUCS_RTYP_ULLONG, &v_ullong0}}
-    , {.s = {"llnum1", 0, MUCS_RTYP_ULLONG, &v_ullong1}}
-    , {.s = {"llnum2", 0, MUCS_RTYP_ULLONG, &v_ullong2}}
-    , {.s = {"llnum3", 0, MUCS_RTYP_ULLONG, &v_ullong3}}
-    , {.s = {"llnum4", 0, MUCS_RTYP_ULLONG, &v_ullong4}}
-    , {.s = {"bwi", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT, &bitwise1, 0, "bitwise", "value"}}
-    , {.s = {"bwi+", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &bitwise2, 0, "bitwise", "value"}}
-    , {.s = {"bwi-", 0, MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, &bitwise3, 0, "bitwise", "value"}}
+    {.s = {"num0", 0,.restype= MUCS_RTYP_UINT, .p=&v_uint0}}
+    , {.s = {"aliasnum0", 0,.restype= MUCS_RTYP_ALIAS,.p= "num0"}}
+    , {.s = {"cnum0", 0,.restype= MUCS_RTYP_UCHAR, .p=&v_uchar0}}
+    , {.s = {"snum0", 0,.restype= MUCS_RTYP_USHORT, .p=&v_ushort0}}
+    , {.s = {"num1", 0,.restype= MUCS_RTYP_UINT, .p=&v_uint1}}
+    , {.s = {"num2", 0,.restype= MUCS_RTYP_UINT, .p=&v_uint2}}
+    , {.s = {"num3", 0,.restype= MUCS_RTYP_UINT, .p=&v_uint3}}
+    , {.s = {"num4", 0,.restype= MUCS_RTYP_UINT, .p=&v_uint4}}
+    , {.s = {"lnum0", 0,.restype= MUCS_RTYP_ULONG, .p=&v_ulong0}}
+    , {.s = {"lnum1", 0,.restype= MUCS_RTYP_UINT, .p=&v_ulong1}}
+    , {.s = {"lnum2", 0,.restype= MUCS_RTYP_ULONG, .p=&v_ulong2}}
+    , {.s = {"lnum3", 0,.restype= MUCS_RTYP_ULONG, .p=&v_ulong3}}
+    , {.s = {"lnum4", 0,.restype= MUCS_RTYP_ULONG, .p=&v_ulong4}}
+    , {.s = {"llnum0", 0,.restype= MUCS_RTYP_ULLONG, .p=&v_ullong0}}
+    , {.s = {"llnum1", 0,.restype= MUCS_RTYP_ULLONG, .p=&v_ullong1}}
+    , {.s = {"llnum2", 0,.restype= MUCS_RTYP_ULLONG, .p=&v_ullong2}}
+    , {.s = {"llnum3", 0,.restype= MUCS_RTYP_ULLONG, .p=&v_ullong3}}
+    , {.s = {"llnum4", 0,.restype= MUCS_RTYP_ULLONG, .p=&v_ullong4}}
+    , {.s = {"bwi", 0,.restype= MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT, .p=&bitwise1, 0, "bitwise", "value"}}
+    , {.s = {"bwi+", 0,.restype= MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, .p=&bitwise2, 0, "bitwise", "value"}}
+    , {.s = {"bwi-", 0,.restype= MUCS_RTYP_ULONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .p=&bitwise3, 0, "bitwise", "value"}}
 
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };

@@ -35,7 +35,7 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
   long app_flags = 0x00000000ffff0000L;
 
   mucs_option_static_t soptions[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
+    {"xor", 'X', .restype=MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .p=&app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
 

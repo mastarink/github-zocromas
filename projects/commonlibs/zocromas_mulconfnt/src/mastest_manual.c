@@ -38,9 +38,9 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   unsigned long app_uflags = 0x0L;
 
   mucs_option_static_t soptions[] = {
-    {"xor", 'X', MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
-    {"or1", 'O', MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &app_uflags,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {"or2", 'o', MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, &app_uflags,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"xor", 'X', .restype=MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .p=&app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
+    {"or1", 'O', .restype=MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, .p=&app_uflags,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"or2", 'o', .restype=MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, .p=&app_uflags,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );

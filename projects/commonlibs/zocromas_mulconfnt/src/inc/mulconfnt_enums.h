@@ -88,7 +88,6 @@ enum mucs_restypei_e
   MUCS_RTYPI_ALIAS,
   MUCS_RTYPI_MAX = MUCS_RTYPI_ALIAS,
   MUCS_RTYPI_ULONG_OR = MUCS_RTYPI_ULONG,
-  MUCS_RTYPI_XXX = 0x1ULL << 63ULL,
 };
 enum mucs_restype_e
 {
@@ -112,7 +111,6 @@ enum mucs_restype_e
   MUCS_RTYP_ALIAS = MUCS_RTYPI_ALIAS << 8UL,
   MUCS_RTYP_MAX = MUCS_RTYPI_MAX << 8UL,
   MUCS_RTYP_ULONG_OR = MUCS_RTYPI_ULONG_OR << 8UL | MUCS_RTYP_BW_OR,
-  MUCS_RTYP_XXX = MUCS_RTYPI_XXX << 8UL,
 };
 enum mucs_flag_id_e
 {

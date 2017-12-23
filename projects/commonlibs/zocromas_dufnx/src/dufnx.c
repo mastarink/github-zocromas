@@ -210,16 +210,16 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   mas_dufnx_data_t *d = pdufnx_data;
 
   mucs_option_static_t soptions[] = {
-    {.name = "treedb",.restype = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
   /* MUCS_FLAG_ONLY_DEF_NVALUE : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
-    , {.name = "treefs",.restype = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "max-depth",.restype = 'u',.cust_ptr = &d->max_depth}
-    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.cust_ptr = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
-    , {.name = "store",.restype = 'S',.flags = MUCS_FLAG_OPTIONAL_VALUE,.callback = dufnx_config_store_fs2db,.cb_pass = 1}
-    , {.name = "drop-tables",.shortn = '\0',.callback = dufnx_config_drop_tables}
-    , {.name = "disable-warn",.callback = dufnx_config_disable_warn}
-  /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.cust_ptr = &d->levinfo_flags, */
-  /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
+    , {.name = "treefs",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "max-depth",.restype = 'u',.p = &d->max_depth}
+    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.cb = dufnx_config_arg_process,.cb_pass = 1}
+    , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
+    , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
+    , {.name = "disable-warn",.cb = dufnx_config_disable_warn}
+  /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &d->levinfo_flags, */
+  /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.f = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
     , {NULL}
   };
   mucs_option_interface_t *interface =

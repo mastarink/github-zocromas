@@ -26,15 +26,31 @@ struct mucs_option_static_s
 {
   char *name;
   char shortn;
-  mucs_restypex_t restype;
-  void *cust_ptr;
+  union
+  {
+    mucs_restypex_t restype;
+    mucs_restypex_t rt;
+  };
+  union
+  {
+    void *cust_ptr;
+    void *p;
+  };
   int val;
   char *desc;
   char *argdesc;
   const char *def_string_value;
   nvalue_t def_nvalue;
-  mucs_flags_t flags;
-  mucs_option_callback_t callback;
+  union
+  {
+    mucs_flags_t flags;
+    mucs_flags_t f;
+  };
+  union
+  {
+    mucs_option_callback_t callback;
+    mucs_option_callback_t cb;
+  };
   int cb_pass;
   int v_pass;
   void *extra_data;
