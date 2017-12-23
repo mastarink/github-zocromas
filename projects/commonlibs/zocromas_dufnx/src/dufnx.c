@@ -208,13 +208,18 @@ mucs_option_interface_t *
 dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
 {
   mas_dufnx_data_t *d = pdufnx_data;
-
+/*
+ * .p same as .cust_ptr
+ * .rt same as .restype
+ * .f same as .flags
+ * .cb same as .callback
+ */
   mucs_option_static_t soptions[] = {
     {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
   /* MUCS_FLAG_ONLY_DEF_NVALUE : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
-    , {.name = "treefs",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
     , {.name = "max-depth",.restype = 'u',.p = &d->max_depth}
-    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.cb = dufnx_config_arg_process,.cb_pass = 1}
+    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
     , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
     , {.name = "disable-warn",.cb = dufnx_config_disable_warn}
