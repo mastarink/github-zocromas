@@ -42,7 +42,7 @@ masxfs_levinfo_db_open_at( masxfs_levinfo_t * li _uUu_, int fdparent _uUu_ )
 }
 
 int
-masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_db_open( masxfs_levinfo_t * li )
 {
   rDECLBAD;
   if ( li )
@@ -56,7 +56,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
       {
         li[-1].detype = MASXFS_ENTRY_DIR_NUM;
 
-        rC( masxfs_levinfo_db_open( li - 1, flags ) );
+        rC( masxfs_levinfo_db_open( li - 1 ) );
 //      assert( li[-1].db.node_id );
         assert( !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || detype_tmp == li->detype );
       /* TODO
@@ -117,7 +117,7 @@ masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
   if ( li->lidepth )
   {
-    rC( masxfs_levinfo_db_opendir( li - 1, flags ) );
+    rC( masxfs_levinfo_db_opendir( li - 1 ) );
     if ( !li->db.stat )
     {
       int has_data = 0;                                              /* or just pass NULL instead of &has_data */
@@ -162,9 +162,8 @@ masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 }
 
 /* TODO move to qstd */
-int
-masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long node_id,
-                                         masxfs_levinfo_flags_t flags _uUu_ )
+static int
+masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long node_id )
 {
   rDECLBAD;
   if ( pmstmt )
@@ -293,7 +292,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
 }
 
 int
-masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_db_opendir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
@@ -307,13 +306,13 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     else
     {
     /* WARN( "real open 1 '%s' %lld", li->name, li->db.node_id ); */
-      rC( masxfs_levinfo_db_open( li, flags ) );
+      rC( masxfs_levinfo_db_open( li ) );
     /* WARN( "(%d) real open 2 '%s' %lld", rCODE, li->name, li->db.node_id ); */
     /* assert( li->detype != MASXFS_ENTRY_DIR_NUM || li->db.node_id ); */
     /* FIXME */
     /* assert( li->db.node_id ); */
     /* WARN("prepare '%s'", li[1].name); */
-      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, flags ) );
+      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id ) );
     }
   }
   else
@@ -339,11 +338,11 @@ masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo_db_opendir( li, flags ) );
+  rC( masxfs_levinfo_db_opendir( li ) );
   if ( li )
     rC( mas_qstd_mstmt_data_seek( li->db.scan.mstmt, 0 ) );
   rRET;

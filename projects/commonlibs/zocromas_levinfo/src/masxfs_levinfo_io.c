@@ -51,9 +51,9 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 /* WARN( "%d: '%s'", li->detype, li->name ); */
 #if 1
   if ( flags & MASXFS_CB_MODE_FS )
-    rC( masxfs_levinfo_fs_open( li, flags ) );
+    rC( masxfs_levinfo_fs_open( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_open( li, flags ) );
+    rC( masxfs_levinfo_db_open( li ) );
 #else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
@@ -73,7 +73,7 @@ masxfs_levinfo_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 #endif
   rRET;
 }
-
+/* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
 int
 masxfs_levinfo_close( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
@@ -127,7 +127,7 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   rDECLBAD;
 #if 1
   if ( flags & MASXFS_CB_MODE_FS )
-    rC( masxfs_levinfo_fs_stat( li, flags ) );
+    rC( masxfs_levinfo_fs_stat( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_stat( li, flags ) );
 #else

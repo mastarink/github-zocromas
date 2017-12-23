@@ -89,35 +89,35 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
 }
 
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_ )
 {
   if ( li )
   {
-    masxfs_levinfo_closedir( li, flags | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
-    masxfs_levinfo_close( li, flags | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+    masxfs_levinfo_closedir( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  );
+    masxfs_levinfo_close( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  );
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
     li->name = NULL;
     {
-    /* if ( flags & MASXFS_CB_MODE_FS ) */
+      if ( flags & MASXFS_CB_MODE_FS )
       {
         if ( li->fs.stat )
           mas_free( li->fs.stat );
         li->fs.stat = NULL;
       }
-    /* if ( flags & MASXFS_CB_MODE_DB ) */
+      if ( flags & MASXFS_CB_MODE_DB )
       {
         if ( li->db.stat )
           mas_free( li->db.stat );
         li->db.stat = NULL;
-      }
-      if ( li->db.xstat )
-      {
-        if ( li->db.xstat->hex_sha1 )
-          mas_free( li->db.xstat->hex_sha1 );
-        mas_free( li->db.xstat );
-        li->db.xstat = NULL;
+        if ( li->db.xstat )
+        {
+          if ( li->db.xstat->hex_sha1 )
+            mas_free( li->db.xstat->hex_sha1 );
+          mas_free( li->db.xstat );
+          li->db.xstat = NULL;
+        }
       }
     }
     if ( li->path )

@@ -66,10 +66,14 @@ int
 mastest_digest( void )
 {
   rDECLBAD;
-  int fd = open( "/home/mastar/.mas/lib/big/misc/media/video/video/fordvd/dvd/pre/Lovely/Other/Kin-dza-dza_1.avi", O_RDONLY );
+  const char *fname = "/home/mastar/.mas/lib/big/misc/media/video/video/fordvd/dvd/pre/Lovely/Other/Kin-dza-dza_1.avi";
+
+  INFO( "Open %s", fname );
+  int fd = open( fname, O_RDONLY );
 
   if ( fd > 0 )
   {
+    INFO( "OK opened %s", fname );
     for ( int iter = 0; iter < 1; iter++ )
     {
       masxfs_digests_t *digests = masxfs_digests_create_setup( fd, 1024 * 25, 0, 0 );
@@ -79,6 +83,7 @@ mastest_digest( void )
       rC( masxfs_digests_add( digests, MASXFS_DIGEST_MAGIC ) );
     /* rC( masxfs_digests_add( digests, MASXFS_DIGEST_SHA1 ) ); */
 #if 1
+      INFO( "Wait, computing digests for %s", fname );
       rC( masxfs_digests_compute( digests ) );
 #else
       rC( masxfs_digests_open( digests ) );
@@ -87,13 +92,15 @@ mastest_digest( void )
 #endif
       if ( rGOOD )
       {
+        for ( int nn = 0; nn < 2; nn++ )
         {
-          int sz = 0;
-          const unsigned char *dg = NULL;
           char sbuffer[512] = { 0 };
           char *psbuf = sbuffer;
+          const unsigned char *dg = NULL;
+          int sz = 0;
 
-          sz = masxfs_digests_getn( digests, 0, &dg );
+          *psbuf = 0;
+          sz = masxfs_digests_getn( digests, nn, &dg );
           if ( sz )
           {
             for ( ssize_t i = 0; i < sz; i++ )
@@ -106,23 +113,29 @@ mastest_digest( void )
           }
         }
 
+        for ( int nn = 0; nn < 2; nn++ )
         {
           int sz = 0;
           const unsigned char *dg = NULL;
           char sbuffer[512] = { 0 };
           char *psbuf = sbuffer;
-          int is_string = masxfs_digests_is_string( digests, 1 );
+          int is_string = masxfs_digests_is_string( digests, nn );
 
-          sz = masxfs_digests_getn( digests, 1, &dg );
+          *psbuf = 0;
+          sz = masxfs_digests_getn( digests, nn, &dg );
           if ( sz )
           {
-            if ( !is_string )
+            if ( is_string )
+              WARN( "sz:%d - %s", sz, ( char * ) dg );
+            else
+            {
               for ( ssize_t i = 0; i < sz; i++ )
               {
                 snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
                 psbuf += 2;
               }
-            WARN( "sz:%d - %s - magic:%s", sz, ( !is_string ? sbuffer : "-" ), ( is_string ? ( char * ) dg : "-" ) );
+              WARN( "sz:%d - %s", sz, sbuffer );
+            }
           }
         }
       }

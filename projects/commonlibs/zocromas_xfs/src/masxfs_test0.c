@@ -314,7 +314,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int variant _
               masxfs_pathinfo_create_setup( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest",
                                             128, 0 );
 
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
     char *tpath = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest";
     char *tpathe _uUu_ = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastes";
@@ -354,7 +354,7 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int variant _
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( tpathe, 128, 0 );
 
       EXAM( pi ? pi->error : -1, -1, "should be error: %d ? %d" );
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
   /* +6 +4* */
   }

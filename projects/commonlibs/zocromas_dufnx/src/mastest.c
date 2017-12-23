@@ -20,12 +20,13 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 {
   rDECLBAD;
 /* dufnx( argc, argv ); */
+  INFO( "mastest - main" );
   if ( 1 )
   {
     const char *path __attribute__ ( ( unused ) ) = "mastest";
 
     rC( testdropcreate( path ) );
-    return 0;
+    /* return 0; */
     rC( testfill( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */  ) );
   }
   {
@@ -46,16 +47,18 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
       }
     }
     {
-      if ( 0 )
+      if ( 1 )
       {
         const char *path __attribute__ ( ( unused ) ) = "mastest";
 
+        INFO( "testtreefromdb" );
         rC( testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout ) );
       }
-      if ( 0 )
+      if ( 1 )
       {
         const char *path __attribute__ ( ( unused ) ) = "mastest/tree/config.h.in";
 
+        INFO( "testtreefromdb" );
         rC( testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , stdout ) );
       }
     }
@@ -82,6 +85,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
       if ( fil )
       {
+        INFO( "testtreefromdb" );
         rC( testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil ) );
         fclose( fil );
       }
@@ -109,6 +113,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 
       if ( fil )
       {
+        INFO( "testtreefromdb" );
         rC( testtreefromdb( path, ( masxfs_depth_t ) 0 /* maxdepth OR 0 for all */ , fil ) );
         fclose( fil );
       }

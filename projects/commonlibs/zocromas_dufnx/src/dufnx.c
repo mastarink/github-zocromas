@@ -138,7 +138,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         rC( mas_qstd_end_transaction( qstd ) );
 
         rC( mas_qstd_update_summary( qstd ) );
-        masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+        masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
       }
       rC( mas_qstd_end_transaction( qstd ) );
     }

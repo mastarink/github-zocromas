@@ -45,7 +45,7 @@ testdropcreate( const char *path _uUu_ )
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
 #endif
     mas_qstd_instance_delete(  );

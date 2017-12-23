@@ -78,7 +78,7 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
         rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
                                       maxdepth ) );
       }
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
     mas_qstd_instance_delete(  );
   }

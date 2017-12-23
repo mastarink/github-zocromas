@@ -73,7 +73,7 @@ test5( void )
       EXAMS( path, path0, "%s : %s" );
       INFO( "restored path:%s", path );
       mas_free( path );
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
     mysqlpfs_delete( pfs );
   }

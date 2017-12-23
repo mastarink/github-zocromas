@@ -67,13 +67,13 @@ masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
 }
 
 int
-masxfs_levinfo_fs_open( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
 {
   rDECLBAD;
   if ( li )
   {
     if ( li->lidepth > 0 )
-      rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1, flags ) ) );
+      rC( masxfs_levinfo_fs_open_at( li, masxfs_levinfo_fs_open( li - 1 ) ) );
     else if ( !li->fd && li->name && !*li->name )
     {
       errno = 0;
@@ -118,7 +118,7 @@ masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
@@ -130,9 +130,9 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
       li->fs.stat = mas_calloc( 1, sizeof( masxfs_stat_t ) );
 
       if ( !li->fd /*masxfs_levinfo_fd_val( li, 0 ) */  && li->lidepth > 0 )
-        rC( fstatat( masxfs_levinfo_fs_open( li - 1, flags ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
+        rC( fstatat( masxfs_levinfo_fs_open( li - 1 ), li->name, li->fs.stat, AT_SYMLINK_NOFOLLOW ) );
       else
-        rC( fstat( masxfs_levinfo_fs_open( li, flags ), li->fs.stat ) );
+        rC( fstat( masxfs_levinfo_fs_open( li ), li->fs.stat ) );
       if ( rGOOD && li->fs.stat )
         li->detype = masxfs_levinfo_stat2entry( li->fs.stat );
     }

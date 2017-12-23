@@ -27,11 +27,11 @@ exiternal functions used:
 */
 
 int
-masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo_fs_opendir( li, flags ) );
+  rC( masxfs_levinfo_fs_opendir( li ) );
   if ( rGOOD && li && li->fs.scan.pdir )
   {
     errno = 0;
@@ -47,7 +47,7 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags
 }
 
 int
-masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
@@ -57,7 +57,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 
     if ( !li->fs.scan.pdir )
     {
-      int fd = masxfs_levinfo_fs_open( li, flags );
+      int fd = masxfs_levinfo_fs_open( li );
 
       if ( fd > 0 )
       {
@@ -69,7 +69,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         if ( rGOOD && li->fs.scan.pdir )
         {
           li->detype = MASXFS_ENTRY_DIR_NUM;
-          rC( masxfs_levinfo_fs_rewinddir( li, flags ) );
+          rC( masxfs_levinfo_fs_rewinddir( li ) );
         }
         else
         {

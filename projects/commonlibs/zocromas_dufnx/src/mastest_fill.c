@@ -134,7 +134,7 @@ testfill( const char *path, masxfs_depth_t maxdepth )
 
         rC( mas_qstd_update_summary( qstd ) );
       }
-      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB );
+      masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }
     mas_qstd_instance_delete(  );
   }
