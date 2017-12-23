@@ -50,7 +50,7 @@ test_manual_1( int argc, const char *argv[], int nseries _uUu_, const char *seri
     , {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE , 0 /* more_flags */  );
 
   mucs_option_interface_add_source( interface, MUCS_SOURCE_READLINE, NULL /* name */ , argc, argv, 0 );
   mucs_option_interface_lookup_all( interface, NULL );

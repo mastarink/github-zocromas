@@ -39,7 +39,8 @@ mucs_config_option_tabnode_create( void )
 }
 
 mucs_option_table_list_t *
-mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t optcount )
+mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char *name, const mucs_option_static_t * soptions, size_t optcount,
+                                 mucs_flags_t more_flags )
 {
   mucs_option_table_list_t *tbnew = mucs_config_option_tabnode_create(  );
 
@@ -66,7 +67,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
       if ( tbnew->allocated )
       {
         tbnew->name = mas_strdup( name );
-        tbnew->voptions = mucs_config_soptions2options( soptions, optcount );
+        tbnew->voptions = mucs_config_soptions2options( soptions, optcount, more_flags );
       }
       else                                                           /* really never happens !? */
       {
@@ -80,7 +81,7 @@ mucs_config_soption_tabnode_add( mucs_option_table_list_t * tablist, const char 
 }
 
 void
-mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode, int fautofree )
+mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode, int fcan_autofree )
 {
   if ( tabnode )
   {
@@ -90,7 +91,7 @@ mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode, int f
     {
       const mucs_option_t *opt = aoptions + no;
 
-      if ( opt && opt->s.cust_ptr && ( fautofree && mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
+      if ( opt && opt->s.cust_ptr && ( fcan_autofree && mucs_config_option_flag( opt, MUCS_FLAG_AUTOFREE ) ) )
       {
         switch ( opt->s.restype & ~MUCS_RTYP_FLAG_ALL )
         {
@@ -110,9 +111,9 @@ mucs_config_option_tabnode_reset_cust( mucs_option_table_list_t * tabnode, int f
 }
 
 void
-mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode, int fautofree )
+mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode, int fcan_autofree )
 {
-  mucs_config_option_tabnode_reset_cust( tabnode, fautofree );
+  mucs_config_option_tabnode_reset_cust( tabnode, fcan_autofree );
   if ( tabnode )
   {
     if ( tabnode->allocated && tabnode->name )
@@ -125,47 +126,47 @@ mucs_config_option_tabnode_reset( mucs_option_table_list_t * tabnode, int fautof
 }
 
 void
-mucs_config_option_tabnode_delete( mucs_option_table_list_t * tabnode, int fautofree )
+mucs_config_option_tabnode_delete( mucs_option_table_list_t * tabnode, int fcan_autofree )
 {
   if ( tabnode )
   {
-    mucs_config_option_tabnode_reset( tabnode, fautofree );
+    mucs_config_option_tabnode_reset( tabnode, fcan_autofree );
     mas_free( tabnode );
   }
 }
 
 void
-mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist, int fautofree )
+mucs_config_option_tablist_reset_cust( mucs_option_table_list_t * tablist, int fcan_autofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_reset_cust( t, fautofree );
+    mucs_config_option_tabnode_reset_cust( t, fcan_autofree );
   }
 }
 
 void
-mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist, int fautofree )
+mucs_config_option_tablist_reset( mucs_option_table_list_t * tablist, int fcan_autofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_reset( t, fautofree );
+    mucs_config_option_tabnode_reset( t, fcan_autofree );
   }
 }
 
 void
-mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist, int fautofree )
+mucs_config_option_tablist_delete( mucs_option_table_list_t * tablist, int fcan_autofree )
 {
   while ( tablist )
   {
     mucs_option_table_list_t *t = tablist;
 
     tablist = tablist->next;
-    mucs_config_option_tabnode_delete( t, fautofree );
+    mucs_config_option_tabnode_delete( t, fcan_autofree );
   }
 }

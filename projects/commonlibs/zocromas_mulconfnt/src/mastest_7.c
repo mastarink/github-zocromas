@@ -85,7 +85,7 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   EXAM( app_uflags_or, 0x0UL, "app_uflags_or=%lx ? %lx" );
   EXAM( app_uflags_nand, 0xffffffffffffffffL, "app_uflags_nand=%lx ? %lx" );
   mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED );
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE , 0 /* more_flags */  );
 
 #if 0
   mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 );

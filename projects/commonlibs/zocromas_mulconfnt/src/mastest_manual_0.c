@@ -28,7 +28,6 @@
 
 #include "mastest.h"
 
-
 int
 test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
@@ -45,7 +44,7 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
     .next = NULL,.count = ( sizeof( soptions ) / sizeof( soptions[0] ) ),.name = "table-manual-0",.coptions = soptions, /* */
   };
 #else
-  mucs_option_table_list_t *test_tablist = mucs_config_soption_tabnode_add( NULL, "table-manual-0", soptions, 0 );
+  mucs_option_table_list_t *test_tablist = mucs_config_soption_tabnode_add( NULL, "table-manual-0", soptions, 0, 0 /* more_flags */  );
 #endif
   mucs_source_list_t *plist = mucs_source_list_create(  );
 
@@ -63,7 +62,7 @@ test_manual_0( int argc, const char *argv[], int nseries _uUu_, const char *seri
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
-  WARN("### FDs:%d" ,mastest_fds(  ));
-  /* EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" ); */
+  WARN( "### FDs:%d", mastest_fds(  ) );
+/* EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" ); */
   return 0;
 }

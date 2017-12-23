@@ -32,7 +32,7 @@ mucs_config_option_tabnode_aoptions( const mucs_option_table_list_t * tabnode )
 }
 
 mucs_option_t *
-mucs_config_soptions2options( const mucs_option_static_t * soptions, size_t count )
+mucs_config_soptions2options( const mucs_option_static_t * soptions, size_t count, mucs_flags_t more_flags )
 {
   mucs_option_t *options_clone = mas_calloc( count + 1, sizeof( mucs_option_t ) );
 
@@ -40,6 +40,44 @@ mucs_config_soptions2options( const mucs_option_static_t * soptions, size_t coun
   {
     options_clone[no].s = soptions[no];
     options_clone[no].s.name = mas_strdup( soptions[no].name );
+    {
+      char c _uUu_ = options_clone[no].s.restype & 0xff;
+
+      switch ( c )
+      {
+      case 'c':
+        options_clone[no].s.restype = MUCS_RTYP_CHAR;
+        break;
+      case 'u':
+        options_clone[no].s.restype = MUCS_RTYP_UINT;
+        break;
+      case 'U':
+        options_clone[no].s.restype = MUCS_RTYP_ULONG;
+        break;
+      case 'L':
+        options_clone[no].s.restype = MUCS_RTYP_LONG;
+        break;
+      case 'S':
+      case 's':
+        options_clone[no].s.restype = MUCS_RTYP_STRING;
+        break;
+      case 'T':
+      case 't':
+        options_clone[no].s.restype = MUCS_RTYP_TARG;
+        break;
+      case 'O':
+        options_clone[no].s.restype = MUCS_RTYP_ULONG_OR;
+        break;
+      default:
+        if ( c )
+        {
+          WARN( "'%s' c: x%02x : %c -- %08x", options_clone[no].s.name, c, c > 0x20 && c <= 'z' ? c : '?', MUCS_RTYP_UINT );
+          options_clone[no].s.restype = MUCS_RTYP_NONE;
+        }
+        break;
+      }
+    }
+    options_clone[no].s.flags |= more_flags;
   }
   return options_clone;
 }
@@ -56,7 +94,7 @@ mucs_config_aoptions_clone( const mucs_option_t * options, size_t count )
     options_clone[no].s.name = mas_strdup( options[no].s.name );
   }
 #else
-NO!!  mucs_option_t *options_clone = mucs_config_soptions2options( &options->s, count );
+  NO ! !mucs_option_t * options_clone = mucs_config_soptions2options( &options->s, count );
 #endif
   return options_clone;
 }

@@ -26,7 +26,7 @@ struct mucs_option_static_s
 {
   char *name;
   char shortn;
-  mucs_restype_t restype;
+  mucs_restypex_t restype;
   void *cust_ptr;
   int val;
   char *desc;

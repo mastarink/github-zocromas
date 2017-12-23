@@ -181,7 +181,7 @@ test_static2( int argc _uUu_, const char *argv[], int nseries, const char *serie
 
 #define NUM_NOPTS 4 + 2 + 1
 
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE, 0 /* more_flags */  );
 
   {
     FILE *f;

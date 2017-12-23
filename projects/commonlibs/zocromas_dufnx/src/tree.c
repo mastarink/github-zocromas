@@ -143,7 +143,7 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
 /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
   masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
 
-  WARN( "**<TREE>**" );
+  /* WARN( "**<TREE>**" ); */
 #if 0
   masxfs_scanner_t scanner = {
     .entry_pfilter = {

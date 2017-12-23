@@ -427,10 +427,10 @@ mucs_source_set_common_callback( mucs_source_t * osrc, mucs_option_callback_t cb
 }
 
 int
-mucs_source_set_type_callback( mucs_source_t * osrc, mucs_restype_t restype, mucs_option_callback_t cb )
+mucs_source_set_type_callback( mucs_source_t * osrc, mucs_restypex_t restype, mucs_option_callback_t cb )
 {
   rDECLBAD;
-  if ( osrc && restype >= 0 && restype <= MUCS_RTYP_MAX )
+  if ( osrc && /* restype >= 0 && */ restype <= MUCS_RTYP_MAX )
   {
     rSETGOOD;
     osrc->type_callbacks[restype] = cb;

@@ -50,45 +50,45 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
   {
     masxfs_entry_type_bit_t entry_bit = 1 << lithis->detype;
 
-    if ( entry_pfilter && ( entry_pfilter->typeflags & entry_bit ) )
+    if ( entry_pfilter && ( entry_pfilter->typeflags & entry_bit ) && cb )
     {
+      masxfs_depth_t maxdepthc = cb->entry_filter.maxdepth;
+
       if ( lithis->lidepth )
-      {
         lithis[-1].child_count_pair[( flags & MASXFS_CB_COUNT ) ? 1 : 0]++;
-      }
+
+      if ( maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) )
       {
-        masxfs_depth_t maxdepthc = cb->entry_filter.maxdepth;
+        masxfs_levinfo_flags_t tflags = flags | cb->flags;
 
-        if ( maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) )
+        if ( !( tflags & MASXFS_CB_SKIP ) )
         {
-          masxfs_levinfo_flags_t tflags = flags | cb->flags;
+          int fun_called = 0;
+          masxfs_depth_t depth = masxfs_levinfo_depth_ref( lithis, flags );
 
-          if ( !( tflags & MASXFS_CB_SKIP ) && cb )
+          if ( !cb->fun_counter && depth )
+            cb->fun_top_depth = depth - 1;
+
+          if ( cb && cb->fun_simple )
           {
-            int fun_called = 0;
-            masxfs_depth_t depth = masxfs_levinfo_depth_ref( lithis, flags );
-
-            if ( !cb->fun_counter && depth )
-              cb->fun_top_depth = depth - 1;
-
-            if ( cb && cb->fun_simple )
-            {
-              masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+            masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
 
 //            const char *prefix = NULL;
 //            prefix = masxfs_levinfo_prefix_ref( lithis, "    ", "└── ", "│   ", "├── ", cb->fun_top_depth + 1, tflags );
 
-              rC( fun_simple( lithis, tflags, userdata, cb->fun_counter, reldepth ) );
-              fun_called++;
-            }
-            else
-              rSETGOOD;
-            if ( rGOOD && cb && cb->fun_stat )
-            {
-              masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
-              struct stat *st = NULL;
+            rC( fun_simple( lithis, tflags, userdata, cb->fun_counter, reldepth ) );
+            fun_called++;
+          }
+          else
+            rSETGOOD;
+          if ( rGOOD && cb && cb->fun_stat )
+          {
+            masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
+            struct stat *st = NULL;
 
-              masxfs_levinfo_stat( lithis, tflags );
+            rC( masxfs_levinfo_stat( lithis, tflags ) );
+            if ( rGOOD )
+            {
               if ( flags & MASXFS_CB_MODE_DB )
                 st = lithis->db.stat;
               else if ( flags & MASXFS_CB_MODE_FS )
@@ -102,17 +102,17 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
                 fun_called++;
               }
             }
-            else
-              rSETGOOD;
-            if ( fun_called )
-              cb->fun_counter++;
           }
           else
             rSETGOOD;
+          if ( fun_called )
+            cb->fun_counter++;
         }
         else
           rSETGOOD;
       }
+      else
+        rSETGOOD;
     }
     else
       rSETGOOD;
