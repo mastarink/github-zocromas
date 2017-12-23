@@ -27,7 +27,7 @@
 #include <mastar/qstd/qstd_mstmt_props.h>
 
 static int
-testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, masxfs_depth_t reldepth _uUu_ )
+testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
 
 #if 1

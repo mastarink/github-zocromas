@@ -32,11 +32,10 @@
 
 #include "tree.h"
 
-static int numline_treecb = 0;
 
 /* of type: masxfs_scan_fun_simple_t */
-static int
-treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, masxfs_depth_t reldepth _uUu_ )
+static int _uUu_
+treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, unsigned long serial, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
   static masxfs_depth_t top_depth = 0;
@@ -53,7 +52,7 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, mas
 
 /*const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );*/
 
-  if ( !numline_treecb && depth )
+  if ( !serial && depth )
     top_depth = depth - 1;
   const char *prefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
 
@@ -73,7 +72,6 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, mas
       snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
       psbuf += 2;
     } **/
-    numline_treecb++;
 #if 1
     char hh[32];
 
@@ -86,10 +84,32 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, mas
       for ( unsigned long i = 0; i < nsamesha1; i++ )
         hh[i] = '+';
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-    fprintf( fil, "%4d\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", numline_treecb, prefix ? prefix : "", inode, size,
+    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", serial, prefix ? prefix : "", inode, size,
              ename ? ename : "" /*, epath ? epath : "" */ , sha1 ? sha1 : "", hh );
 #else
-    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", numline_treecb, prefix ? prefix : "", size, fd, ( long ) depth, inode,
+    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, prefix ? prefix : "", size, fd, ( long ) depth, inode,
+             ename ? ename : "" /*, epath ? epath : "" */  );
+#endif
+  }
+  return 0;
+}
+
+static int _uUu_
+treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _uUu_, unsigned long serial, const char *prefix, masxfs_depth_t reldepth _uUu_ )
+{
+  FILE *fil = ( FILE * ) userdata;
+  static unsigned top_depth _uUu_ = 0;
+  size_t size = st->st_size;
+  ino_t inode = st->st_ino;
+
+
+  {
+#if 1
+/* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
+    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s\n", serial, prefix ? prefix : "?", inode, size,
+             ename ? ename : "" /*, epath ? epath : "" */  );
+#else
+    fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, prefix ? prefix : "", size, fd, ( long ) depth, inode,
              ename ? ename : "" /*, epath ? epath : "" */  );
 #endif
   }
@@ -104,9 +124,13 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
   masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB | inflags;
 
   masxfs_entry_callback_t callbacks[] = {
-    {treecb,.flags =
+#if 0
+    {.fun_simple = treecb,.flags =
      /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ ,.entry_filter =
      {.maxdepth = 0}},
+#else
+    {.fun_stat = treestatcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT,.entry_filter = {.maxdepth = 0}},
+#endif
     {NULL}
   };
   dufnx_qstd( mysql );
@@ -132,12 +156,22 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
 
 /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
   masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
-  masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR,.maxdepth = maxdepth };
 
-  numline_treecb = 0;
   WARN( "**<TREE>**" );
+#if 0
+  masxfs_scanner_t scanner = {
+    .entry_pfilter = {
+                      .typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR,.maxdepth = maxdepth /* */
+                      }
+    ,.cbs = cbs,.flags = flags,.maxdepth = maxdepth
+  };
+  masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
+
+#else
+  masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR,.maxdepth = maxdepth };
   rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2,
                                  0 ) );
+#endif
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
   rRET;
 }

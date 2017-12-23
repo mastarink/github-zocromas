@@ -14,7 +14,6 @@
 #include "masxfs_levinfo_io.h"
 
 #include "masxfs_levinfo_fs.h"
-
 #include "masxfs_levinfo_fs_dir.h"
 
 /*
@@ -142,8 +141,11 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
     /* WARN( "%p D%d (%d) X HAS DATA:%d '%s' :: '%s'", li, li->lidepth, li->no_more, has_data, li->name, de ? de->d_name : NULL ); */
       if ( rGOOD && de )
       {
+        const char *dename = de->d_name;
+        masxfs_entry_type_t detype = masxfs_levinfo_de2entry( de->d_type );
+
       /* have de->d_name, de->d_type and de->d_ino */
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, de->d_name, masxfs_levinfo_de2entry( de->d_type ) /*, de->d_ino */ , NULL, NULL, 0 );
+        masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, NULL, NULL, 0 );
         assert( li[0].lidepth + 1 == li[1].lidepth );
         has_data = de ? 1 : 0;
       }

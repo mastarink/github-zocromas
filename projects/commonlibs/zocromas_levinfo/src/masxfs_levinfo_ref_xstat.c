@@ -27,6 +27,7 @@ static inline const masxfs_xstat_t *
   if ( !xst )
   {
     WARN( "STAT ERR (%s) for '%s'", tflags & MASXFS_CB_MODE_FS ? "FS" : ( tflags & MASXFS_CB_MODE_DB ? "DB" : "??" ), li->name );
+    /* assert( 0 ); */
   }
   return xst;
 }
@@ -50,7 +51,7 @@ masxfs_levinfo_nsamesize_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
   rDECLBAD;
   unsigned long nsamesize = 0;
 
-  if ( li )
+  if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
     rC( masxfs_levinfo_stat( li, tflags ) );
     if ( rGOOD )
@@ -78,7 +79,7 @@ masxfs_levinfo_nsamesha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
   rDECLBAD;
   unsigned long nsamesha1 = 0;
 
-  if ( li )
+  if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
     rC( masxfs_levinfo_stat( li, tflags ) );
     if ( rGOOD )
@@ -106,7 +107,7 @@ masxfs_levinfo_hexsha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags
   rDECLBAD;
   const char *hex_sha1 = 0;
 
-  if ( li )
+  if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
     rC( masxfs_levinfo_stat( li, tflags ) );
     if ( rGOOD )

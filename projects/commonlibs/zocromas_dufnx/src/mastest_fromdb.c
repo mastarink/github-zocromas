@@ -19,7 +19,7 @@
 
 static int numline_treecb = 0;
 static int _uUu_
-treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, masxfs_depth_t reldepth _uUu_ )
+treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, unsigned long serial _uUu_ , masxfs_depth_t reldepth _uUu_)
 {
   FILE *fil = ( FILE * ) data;
   static masxfs_depth_t top_depth = 0;

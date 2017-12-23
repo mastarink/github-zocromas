@@ -11,6 +11,9 @@
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_io_dir.h"
 #include "masxfs_levinfo_ref.h"
+
+#include "masxfs_levinfo_io.h"
+
 #include "masxfs_levinfo_scan.h"
 
 static int
@@ -60,11 +63,49 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
         {
           masxfs_levinfo_flags_t tflags = flags | cb->flags;
 
-          if ( cb && cb->fun_simple && !( tflags & MASXFS_CB_SKIP ) )
+          if ( !( tflags & MASXFS_CB_SKIP ) && cb )
           {
-            masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+            int fun_called = 0;
+            masxfs_depth_t depth = masxfs_levinfo_depth_ref( lithis, flags );
 
-            rC( fun_simple( lithis, tflags, userdata, reldepth ) );
+            if ( !cb->fun_counter && depth )
+              cb->fun_top_depth = depth - 1;
+
+            if ( cb && cb->fun_simple )
+            {
+              masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+
+//            const char *prefix = NULL;
+//            prefix = masxfs_levinfo_prefix_ref( lithis, "    ", "└── ", "│   ", "├── ", cb->fun_top_depth + 1, tflags );
+
+              rC( fun_simple( lithis, tflags, userdata, cb->fun_counter, reldepth ) );
+              fun_called++;
+            }
+            else
+              rSETGOOD;
+            if ( rGOOD && cb && cb->fun_stat )
+            {
+              masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
+              struct stat *st = NULL;
+
+              masxfs_levinfo_stat( lithis, tflags );
+              if ( flags & MASXFS_CB_MODE_DB )
+                st = lithis->db.stat;
+              else if ( flags & MASXFS_CB_MODE_FS )
+                st = lithis->fs.stat;
+              if ( st )
+              {
+                const char *prefix = NULL;
+
+                prefix = masxfs_levinfo_prefix_ref( lithis, "    ", "└── ", "│   ", "├── ", cb->fun_top_depth + 1, tflags );
+                rC( fun_stat( masxfs_levinfo_name_ref( lithis, flags ), st, userdata, ( unsigned ) depth, cb->fun_counter, prefix, reldepth ) );
+                fun_called++;
+              }
+            }
+            else
+              rSETGOOD;
+            if ( fun_called )
+              cb->fun_counter++;
           }
           else
             rSETGOOD;
@@ -357,6 +398,14 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
 
   if ( scanner )
   {
+    masxfs_entry_callback_t *cb = scanner->cbs;
+
+    for ( int ncb = 0; rGOOD; cb++, ncb++ )
+    {
+      cb->fun_counter = 0;
+      if ( ( flags & MASXFS_CB_SINGLE_CB ) || !cb || ( !cb->fun_simple && !cb->fun_stat ) )
+        break;
+    }
     if ( li )
     {
       do

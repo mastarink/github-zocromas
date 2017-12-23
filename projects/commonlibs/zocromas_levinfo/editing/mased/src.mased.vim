@@ -28,11 +28,17 @@ sfind masxfs_levinfo_fs.c
 tab sfind masxfs_levinfo_db.h
 sfind masxfs_levinfo_db.c
 
+tab sfind masxfs_levinfo_db_dir.h
+sfind masxfs_levinfo_db_dir.c
+
 tab sfind masxfs_levinfo_path.h
 sfind masxfs_levinfo_path.c
 
 tab sfind masxfs_levinfo_ref.h
 sfind masxfs_levinfo_ref.c
+
+tab sfind masxfs_levinfo_ref_xstat.h
+sfind masxfs_levinfo_ref_xstat.c
 
 tab sfind masxfs_levinfo.h
 sfind masxfs_levinfo.c
