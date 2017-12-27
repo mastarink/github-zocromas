@@ -11,32 +11,32 @@ sfind qstd_structs.h
 sfind qstd_enums.h
 sfind qstd_defs.h
 
-tab sfind qstd_query.c
-sfind qstd_query.h
+tab sfind qstd_query.h
+sfind qstd_query.c
 
-tab sfind qstd_mstmt.c
-sfind qstd_mstmt.h
+tab sfind qstd_mstmt.h
+sfind qstd_mstmt.c
 
-tab sfind qstd_mstmt_base.c
-sfind qstd_mstmt_base.h
+tab sfind qstd_mstmt_base.h
+sfind qstd_mstmt_base.c
 
-tab sfind qstd_mstmt_names.c
-sfind qstd_mstmt_names.h
+tab sfind qstd_mstmt_names.h
+sfind qstd_mstmt_names.c
 
-tab sfind qstd_mstmt_sizes.c
-sfind qstd_mstmt_sizes.h
+tab sfind qstd_mstmt_sizes.h
+sfind qstd_mstmt_sizes.c
 
-tab sfind qstd_mstmt_datas.c
-sfind qstd_mstmt_datas.h
+tab sfind qstd_mstmt_datas.h
+sfind qstd_mstmt_datas.c
 
-tab sfind qstd_mstmt_props.c
-sfind qstd_mstmt_props.h
+tab sfind qstd_mstmt_props.h
+sfind qstd_mstmt_props.c
 
-tab sfind qstd_mstmt_sha1.c
-sfind qstd_mstmt_sha1.h
+tab sfind qstd_mstmt_sha1.h
+sfind qstd_mstmt_sha1.c
 
-tab sfind qstd_mstmt_parents.c
-sfind qstd_mstmt_parents.h
+tab sfind qstd_mstmt_parents.h
+sfind qstd_mstmt_parents.c
 
-tab sfind qstd_mstmt_nodes.c
-sfind qstd_mstmt_nodes.h
+tab sfind qstd_mstmt_nodes.h
+sfind qstd_mstmt_nodes.c

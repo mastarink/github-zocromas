@@ -311,7 +311,7 @@ mas_mysqlpfs_mstmt_set_bind_string( mysqlpfs_mbind_t * mbind, int pos, const cha
   QRGP( mbind->bind );
   if ( mbind->bind )
   {
-    if ( pos < mbind->nbind && mbind->allocated_buffers[pos] && string && mbind->bind[pos].buffer_length )
+    if ( pos < mbind->nbind && mbind->allocated_buffers[pos] && mbind->bind[pos].buffer_length )
     {
       char *s = mbind->allocated_buffers[pos];
       mysqlpfs_s_length_t *p_length = mbind->length + pos;

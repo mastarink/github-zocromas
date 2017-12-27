@@ -1,21 +1,21 @@
-find main.c
-sfind main.h
+find types.h
+sfind structs.h
 
-tab sfind mysql.c
-sfind mysql.h
+tab sfind main.h
+sfind main.c
 
-tab sfind types.h
-tab sfind structs.h
+tab sfind mysql.h
+sfind mysql.c
 
-tab sfind dufnx.c
-sfind dufnx.h
+tab sfind dufnx.h
+sfind dufnx.c
 sfind dufnx_debug.c
 
-tab sfind tree.c
-sfind tree.h
+tab sfind tree.h
+sfind tree.c
 
-tab sfind mastest.c
-sfind mastest.h
+tab sfind mastest.h
+sfind mastest.c
 
 tab sfind mastest_0.c
 sfind mastest_fill.c

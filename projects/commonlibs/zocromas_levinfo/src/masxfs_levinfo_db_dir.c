@@ -44,8 +44,11 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 
     if ( !( *pmstmt ) )
     {
+#if 0
       ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGX_PN : STD_MSTMT_SELECT_EVERYTHINGX_P );
-
+#else
+      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGXX_PN : STD_MSTMT_SELECT_EVERYTHINGXX_P );
+#endif
       {
         int np = 0;
 
@@ -56,6 +59,16 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
           rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, name ) );
           QRLI( li, rCODE );
         }
+#if 0
+        assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P ) );
+#else
+	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesize */ 
+	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesize */ 
+	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesha1 */ 
+	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesha1 */ 
+	rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, "" /* "^.*\\.(sh|conf)$" */ ) ); /* regexp */ 
+        assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P ) );
+#endif
       /* assert( np == numpar ); */
         rC( mas_qstd_mstmt_execute_store( ( *pmstmt ) ) );
         QRLI( li, rCODE );
