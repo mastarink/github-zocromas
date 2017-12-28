@@ -835,6 +835,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     OR ("                                          /* */
                 "          ( nsamesize>? AND nsamesize<=? ) "        /* */
                 "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
+                "         AND ( size>? AND size<=? ) "               /* */
+                "         AND ( inode>? AND inode<=? ) "               /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -846,7 +848,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesha1 */
-        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesha1 */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesha1 */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_size */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_size */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_inode */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_inode */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         if ( rGOOD )
         {
@@ -872,6 +878,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     OR ("                                          /* */
                 "          ( nsamesize>? AND nsamesize<=? ) "        /* */
                 "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
+                "         AND ( size>? AND size<=? ) "               /* */
+                "         AND ( inode>? AND inode<=? ) "               /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -882,7 +890,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesha1 */
-        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesha1 */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesha1 */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_size */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_size */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_inode */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_inode */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P );
 

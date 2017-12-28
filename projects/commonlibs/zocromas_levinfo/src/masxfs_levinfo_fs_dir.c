@@ -130,6 +130,7 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       do
       {
         errno = 0;
+	/* TODO filter here ?! 20171228.144707 */
         de = readdir( li->fs.scan.pdir );
 
         if ( de || !errno )

@@ -59,14 +59,20 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
           rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, name ) );
           QRLI( li, rCODE );
         }
+      /* TODO filter here ! 20171228.144707 */
 #if 0
         assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P ) );
 #else
-	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesize */ 
-	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesize */ 
-	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesha1 */ 
-	rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesha1 */ 
-	rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, "" /* "^.*\\.(sh|conf)$" */ ) ); /* regexp */ 
+	/* TODO add atim,ctim,mtim,nlink,parent_id (via parent path),uid,gid,dev */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesize */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesize */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesha1 */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesha1 */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_size */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_size */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_inode */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_inode */
+        rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, "" /* "^.*\\.(sh|conf)$" */  ) ); /* regexp */
         assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P ) );
 #endif
       /* assert( np == numpar ); */
