@@ -359,8 +359,8 @@ masxfs_levinfo_scanf_dir_rest_scanner( masxfs_levinfo_t * li, masxfs_scanner_t *
   {
     rSETGOOD;
     masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
-
-    while ( rGOOD && rC( masxfs_levinfo_readdir( li, flags, &has_data ) ) && has_data )
+/* TODO filter here ?! 20171229.122350 */
+    while ( rGOOD && rC( masxfs_levinfo_readdir( li, scanner->entry_pfilter, flags, &has_data ) ) && has_data )
     {
       rC( masxfs_levinfo_scanf_down_scanner( li, scanner, more_flags, userdata, reldepth ) );
       QRLI( li, rCODE );

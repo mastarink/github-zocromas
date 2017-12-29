@@ -3,7 +3,7 @@
 
 int masxfs_levinfo_db_open( masxfs_levinfo_t * li );
 
-int masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
+int masxfs_levinfo_db_stat( masxfs_levinfo_t * li );
 int masxfs_levinfo_db_close( masxfs_levinfo_t * li );
 
 int masxfs_levinfo_db_open_at( masxfs_levinfo_t * li, int fdparent );

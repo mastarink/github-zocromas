@@ -13,4 +13,6 @@ unsigned char masxfs_levinfo_entry2de( masxfs_entry_type_t detype );
 masxfs_entry_type_t masxfs_levinfo_stat2entry( masxfs_stat_t * stat );
 masxfs_entry_type_t masxfs_levinfo_statmode2entry( mode_t m );
 
+int masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_entry_filter_t * entry_pfilter );
+
 #endif

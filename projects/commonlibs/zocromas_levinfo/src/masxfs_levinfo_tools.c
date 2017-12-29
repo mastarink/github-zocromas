@@ -1,6 +1,7 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
+#include <fnmatch.h>
 /* #include <unistd.h> */
 /* #include <sys/types.h> */
 /* #include <sys/stat.h> */
@@ -199,4 +200,26 @@ masxfs_levinfo_stat2entry( masxfs_stat_t * stat )
   if ( stat )
     c = masxfs_levinfo_statmode2entry( stat->st_mode );
   return c;
+}
+
+int
+masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_entry_filter_t * entry_pfilter )
+{
+  int b = 0;
+
+  b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
+  if ( b && ( detype == MASXFS_ENTRY_REG_NUM || detype == MASXFS_ENTRY_LNK_NUM ) && entry_pfilter->glob )
+  {
+    int m = fnmatch( entry_pfilter->glob, name, FNM_PATHNAME | FNM_PERIOD );
+
+    if ( m == FNM_NOMATCH )
+      b = 0;
+    else if ( m == 0 )
+      b = 1;
+    else
+    {
+      WARN( "fnmatch error %d for %s : %s", b, entry_pfilter->glob, name );
+    }
+  }
+  return b;
 }

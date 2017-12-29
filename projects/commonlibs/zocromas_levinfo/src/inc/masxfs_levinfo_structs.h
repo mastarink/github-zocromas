@@ -43,6 +43,10 @@ struct masxfs_entry_filter_s
 {
   masxfs_type_flags_t typeflags;
   masxfs_depth_t maxdepth;
+  unsigned long min_size;
+  unsigned long max_size;
+  char *glob;
+  char *regexp;
 };
 struct masxfs_entry_callback_s
 {
@@ -55,11 +59,11 @@ struct masxfs_entry_callback_s
   masxfs_depth_t fun_top_depth;
 };
 struct masxfs_scanner_s
-{ /* TODO */
+{                                                                    /* TODO */
   masxfs_entry_filter_t *entry_pfilter;
   masxfs_entry_callback_t *cbs;
   masxfs_levinfo_flags_t flags;
-  masxfs_depth_t maxdepth;  
+  masxfs_depth_t maxdepth;
 };
 
 struct masxfs_xstatc_s

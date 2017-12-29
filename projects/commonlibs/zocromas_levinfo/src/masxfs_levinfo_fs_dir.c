@@ -107,17 +107,8 @@ masxfs_levinfo_fs_closedir( masxfs_levinfo_t * li )
   rRET;
 }
 
-static inline int
-name_valid( const char *name )
-{
-  int b = 0;
-
-  b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
-  return b;
-}
-
 int
-masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_, int *phas_data )
+masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter, int *phas_data )
 {
   rDECLBAD;
   masxfs_dirent_t *de = NULL;
@@ -127,23 +118,21 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
   {
     if ( li->fs.scan.pdir )
     {
+      masxfs_entry_type_t detype = MASXFS_ENTRY_NONE_NUM;
+
       do
       {
+        rSETBAD;
         errno = 0;
-	/* TODO filter here ?! 20171228.144707 */
         de = readdir( li->fs.scan.pdir );
 
         if ( de || !errno )
           rSETGOOD;
-      /* TODO #include <fnmatch.h>                                             */
-      /* int fnmatch(const char *pattern, const char *string, int flags); */
-      } while ( de && !name_valid( de->d_name ) );
-    /* WARN( "%s", de ? de->d_name : NULL ); */
-    /* WARN( "%p D%d (%d) X HAS DATA:%d '%s' :: '%s'", li, li->lidepth, li->no_more, has_data, li->name, de ? de->d_name : NULL ); */
+        detype = de && rGOOD ? masxfs_levinfo_de2entry( de->d_type ) : MASXFS_ENTRY_UNKNOWN_NUM;
+      } while ( de && !masxfs_levinfo_name_valid( de->d_name, detype, entry_pfilter ) );
       if ( rGOOD && de )
       {
         const char *dename = de->d_name;
-        masxfs_entry_type_t detype = masxfs_levinfo_de2entry( de->d_type );
 
       /* have de->d_name, de->d_type and de->d_ino */
         masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, NULL, NULL, 0 );
@@ -152,12 +141,12 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _
       }
       QRLI( li, rCODE );
     }
-  /* if ( !has_data )     */
-  /*   WARN( "NO DATA" ); */
-    if ( phas_data )
-      *phas_data = has_data;
+    else
+      QRLI( li, rCODE );
   }
   else
     QRLI( li, rCODE );
+  if ( phas_data )
+    *phas_data = has_data;
   rRET;
 }

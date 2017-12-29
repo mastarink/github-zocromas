@@ -129,7 +129,7 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_stat( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_stat( li, flags ) );
+    rC( masxfs_levinfo_db_stat( li) );
 #else
   masxfs_scan_mode_t mode = masxfs_levinfo_flags_mode( flags );
 
@@ -143,7 +143,7 @@ masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rC( masxfs_levinfo_fs_stat( li, flags ) );
     break;
   case MASXFS_SCAN__MODE_DB:
-    rC( masxfs_levinfo_db_stat( li, flags ) );
+    rC( masxfs_levinfo_db_stat( li) );
     break;
   }
 #endif

@@ -112,7 +112,7 @@ masxfs_levinfo_db_close( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo__db_stat( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
@@ -123,18 +123,18 @@ masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     {
       int has_data = 0;                                              /* or just pass NULL instead of &has_data */
 
-      rC( masxfs_levinfo_db_readdir( li - 1, flags, &has_data ) );
+      rC( masxfs_levinfo_db_readdir( li - 1, NULL /* filter */, &has_data ) );
     }
   }
   rRET;
 }
 
 int
-masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_db_stat( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo__db_stat( li, flags ) );
+  rC( masxfs_levinfo__db_stat( li ) );
 #if 0
   if ( !li->db.stat )
   {
@@ -168,27 +168,21 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
 
-/* WARN( "ename:%s", ename ); */
-  unsigned long long parent_id = masxfs_levinfo_parent_id( li, flags );
+  unsigned long long parent_id = masxfs_levinfo_parent_id( li );
 
-/* WARN( "parent_id:%llu", parent_id ); */
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
 
-/* WARN( "detype:%u", detype ); */
   unsigned long long node_id = 0;
   unsigned long long data_id = 0;
   const char *sdetype = masxfs_levinfo_detype2s( detype );
 
-/* WARN( "sdetype:%s", sdetype ); */
   mas_qstd_t *qstd = mas_qstd_instance(  );
 
   {
     size_t size = masxfs_levinfo_size_ref( li, take_flags );
 
-  /* WARN( "size:%ld", size ); */
     size_t thesize _uUu_ = mas_qstd_mstmt_selinsget_sizes_id( qstd, size );
 
-  /* WARN( "thesize:%ld", thesize ); */
   }
   {
     const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, take_flags );

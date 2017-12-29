@@ -64,8 +64,15 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 int
 masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
+#if 1
+  rDECLGOOD;
+  while ( li->lidepth && rGOOD )
+  {
+    rC( masxfs_levinfo_closedir( li, flags ) );
+    li--;
+  }
+#else
   rDECLBAD;
-
   do
   {
     rC( masxfs_levinfo_closedir( li, flags ) );
@@ -73,18 +80,18 @@ masxfs_levinfo_closedir_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
       break;
     li--;
   } while ( rGOOD );
-
+#endif
   rRET;
 }
 
 int
-masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int *phas_data )
+masxfs_levinfo_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t *entry_pfilter , masxfs_levinfo_flags_t flags, int *phas_data )
 {
   rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
-    rC( masxfs_levinfo_fs_readdir( li, flags, phas_data ) );
+    rC( masxfs_levinfo_fs_readdir( li, entry_pfilter, phas_data ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_readdir( li, flags, phas_data ) );
+    rC( masxfs_levinfo_db_readdir( li, entry_pfilter, phas_data ) );
   rRET;
 }

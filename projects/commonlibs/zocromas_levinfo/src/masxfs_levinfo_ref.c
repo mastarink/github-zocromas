@@ -277,7 +277,7 @@ masxfs_levinfo_node_id_val( masxfs_levinfo_t * li )
 }
 
 static unsigned long
-masxfs_levinfo_node_id_off( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags _uUu_ )
+masxfs_levinfo_node_id_off( masxfs_levinfo_t * li, masxfs_depth_t offset )
 {
   unsigned long node_id = 0;
 
@@ -296,7 +296,7 @@ masxfs_levinfo_node_id_off( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs
 }
 
 int
-masxfs_levinfo_parent_id( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_parent_id( masxfs_levinfo_t * li )
 {
-  return masxfs_levinfo_node_id_off( li, -1, tflags );
+  return masxfs_levinfo_node_id_off( li, -1 );
 }
