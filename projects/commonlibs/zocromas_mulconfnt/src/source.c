@@ -248,29 +248,37 @@ mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * t
     {
       if ( !mucs_global_flag( MUCS_FLAG_USE_VPASS ) || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) )
       {
-        mucs_option_t *opt = mucs_config_option_clone( optscan->found_topt );
-
-      /* assert( ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) ); */
-        if ( opt )
+        if ( !optscan->found_topt || ( !mucs_config_option_flag( optscan->found_topt, MUCS_FLAG_USE_VPASS )
+                                       || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) ) )
         {
-          opt->d.source = osrc;
-          opt->d.npos = osrc->curarg;
-          opt->d.extra_cb.tablist = tablist;
-          opt->d.extra_cb.source = osrc;
+          mucs_option_t *opt = mucs_config_option_clone( optscan->found_topt );
 
-          rC( mucs_config_option_evaluate( opt, optscan, userdata ) );
+        /* assert( ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) ); */
+          if ( opt )
+          {
+            if ( mucs_config_option_flag( opt, MUCS_FLAG_USE_VPASS ) )
+            {
+              WARN( "%s :: %s", opt->s.name, optscan->arg );
+            }
+            opt->d.source = osrc;
+            opt->d.npos = osrc->curarg;
+            opt->d.extra_cb.tablist = tablist;
+            opt->d.extra_cb.source = osrc;
 
-        /* opt->d.extra_cb.source = NULL;  */
-        /* opt->d.extra_cb.tablist = NULL; */
+            rC( mucs_config_option_evaluate( opt, optscan, userdata ) );
+
+          /* opt->d.extra_cb.source = NULL;  */
+          /* opt->d.extra_cb.tablist = NULL; */
 
 /* do something for found option */
-          rC( mucs_source_found_opt( osrc, opt, userdata ) );
-          mucs_config_option_delete( opt );
-          opt = NULL;
-        }
-        else
-        {
-          rSETBAD;
+            rC( mucs_source_found_opt( osrc, opt, userdata ) );
+            mucs_config_option_delete( opt );
+            opt = NULL;
+          }
+          else
+          {
+            rSETBAD;
+          }
         }
       }
     }
@@ -367,7 +375,7 @@ mucs_source_lookup_all( mucs_source_t * osrc, const mucs_option_table_list_t * t
   if ( osrc )
   {
     osrc->ngroup = osrc->targ_loaded = 0;
-    if ( osrc->pass >= osrc->min_pass )
+    if ( osrc->pass >= osrc->min_pass && ( !osrc->npasses || ( osrc->pass < osrc->min_pass + osrc->npasses ) ) )
     {
       do
       {

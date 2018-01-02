@@ -33,15 +33,17 @@ mucs_parse( int argc _uUu_, const char *argv[]_uUu_, const mucs_option_table_lis
   mucs_source_t *osrc = NULL;
 
   mucs_source_list_init( plist );
-  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, NULL /*name*/, 0, "MAS_TEST_ENV", 0, ":", "=", NULL );
-  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, NULL /*name*/, 0, "first=45 another=37:second=49;third=23", 0, ":", "=", NULL );
+  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, NULL /*name */ , 0, "MAS_TEST_ENV", 0 /* min_pass */ , 0 /* npasses */ , ":", "=",
+                                        NULL );
+  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_STRING, NULL /*name */ , 0, "first=45 another=37:second=49;third=23", 0 /* min_pass */ ,
+                                        0 /* npasses */ , ":", "=", NULL );
 
   const mucs_prefix_encoder_t _uUu_ pref_ids[MUCS_VARIANTS] = {
     {"-", MUCS_VARIANT_SHORT}
     , {"--", MUCS_VARIANT_LONG}
     , {NULL, MUCS_VARIANT_NONOPT}
   };
-  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name*/, argc, argv, 0, NULL, "=", NULL /* pref_ids */  );
+  osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , argc, argv, 0 /* min_pass */, 0 /* npasses */, NULL, "=", NULL /* pref_ids */  );
   mucs_source_list_lookup_all( plist, tablist, NULL );
 
   INFO( "STRING: '%s'\n", mucs_source_load_string( osrc ) );

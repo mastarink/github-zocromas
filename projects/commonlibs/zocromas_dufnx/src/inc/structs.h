@@ -20,7 +20,8 @@ struct mas_dufnx_data_s
   masxfs_levinfo_flags_t levinfo_flags;
   mas_argvc_t targv;
   mas_dufnx_mysql_data_t mysql;
-  masxfs_depth_t max_depth;                                          /* maxdepth OR 0 for all */
+//  masxfs_depth_t max_depth;                                          /* maxdepth OR 0 for all */
+  masxfs_entry_filter_t entry_filter;
 };
 
 #endif

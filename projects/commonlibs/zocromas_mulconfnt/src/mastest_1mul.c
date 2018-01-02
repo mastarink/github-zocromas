@@ -148,7 +148,7 @@ test_1mul( int argc _uUu_, const char _uUu_ * argv[], int nseries, const char *s
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_MARGV, NULL /*name */ , xxargc, xxargv, 0, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_MARGV, NULL /*name */ , xxargc, xxargv, 0 /* min_pass */ , 0 /* npasses */, NULL, "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

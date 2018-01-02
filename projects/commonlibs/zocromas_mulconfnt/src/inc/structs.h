@@ -53,6 +53,7 @@ struct mucs_option_static_s
   };
   int cb_pass;
   int v_pass;
+  int pass;
   void *extra_data;
 };
 

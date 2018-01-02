@@ -134,7 +134,7 @@ test_1u( int argc _uUu_, const char *argv[], int nseries, const char *series_suf
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , xargc, xargv, 0, NULL, "=", NULL );
+    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , xargc, xargv, 0 /* min_pass */ , 0 /* npasses */, NULL, "=", NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

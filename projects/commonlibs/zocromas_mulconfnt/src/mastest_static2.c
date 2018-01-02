@@ -199,7 +199,7 @@ test_static2( int argc _uUu_, const char *argv[], int nseries, const char *serie
     }
   }
   {
-    mucs_source_t *osrc = mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 );
+    mucs_source_t *osrc = mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 /* min_pass */, 0 /* npasses */ );
 
     {
       FILE *f;

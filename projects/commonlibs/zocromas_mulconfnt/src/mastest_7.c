@@ -88,12 +88,13 @@ test_7( _uUu_ int argc, const char *argv[], int nseries _uUu_, const char *serie
   mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-7", soptions, TRUE, 0 /* more_flags */  );
 
 #if 0
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_TEST7_ENV", 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 /* min_pass */ , 0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 /* min_pass */ ,
+                                    0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_TEST7_ENV", 0 /* min_pass */ , 0 /* npasses */  );
 #endif
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 /* min_pass */ , 0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , xargc, xargv, 0 /* min_pass */ , 0 /* npasses */  );
   EXAM( ( masregerrs_count_all_default( NULL, FALSE ) ), ( unsigned ) 0, "ERRORS: %d ? %d" );
 
   WARN( "### FDs:%d", mastest_fds(  ) );

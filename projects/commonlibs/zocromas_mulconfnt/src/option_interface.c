@@ -18,9 +18,9 @@
 
 mucs_source_t *
 mucs_option_interface_add_source( mucs_option_interface_t * interface, mucs_source_type_t source_type, const char *name, int count,
-                                  const void *data_ptr, int min_pass )
+                                  const void *data_ptr, int min_pass, int npasses )
 {
-  return mucs_source_list_add_source( interface->source_list, source_type, name, count, data_ptr, min_pass );
+  return mucs_source_list_add_source( interface->source_list, source_type, name, count, data_ptr, min_pass, npasses );
 }
 
 int

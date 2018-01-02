@@ -106,7 +106,7 @@ treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _
 }
 
 int
-dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
+dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
 {
   rDECLGOOD;
 
@@ -154,7 +154,8 @@ dufnx_tree( const char *real_path, masxfs_depth_t maxdepth, FILE * fil, masxfs_l
   masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
 
 #else
-  masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR,.maxdepth = maxdepth /* ,.glob = "*" */  };
+  masxfs_entry_filter_t entry_filter = *pentry_filter;
+  entry_filter.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
   rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2,
                                  0 ) );
 #endif

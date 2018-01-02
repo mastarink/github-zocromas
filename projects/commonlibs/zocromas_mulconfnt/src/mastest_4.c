@@ -63,24 +63,24 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
   };
 
   mucs_option_t options[] = {
-    {.s = {"num0", 0,.restype= MUCS_RTYP_INT, .p=&v_int0}}
-    , {.s = {"num1", 0,.restype= MUCS_RTYP_INT, .p=&v_int1}}
-    , {.s = {"num2", 0,.restype= MUCS_RTYP_INT, .p=&v_int2}}
-    , {.s = {"num3", 0,.restype= MUCS_RTYP_INT, .p=&v_int3}}
-    , {.s = {"num4", 0,.restype= MUCS_RTYP_INT, .p=&v_int4}}
-    , {.s = {"lnum0", 0,.restype= MUCS_RTYP_LONG, .p=&v_long0}}
-    , {.s = {"lnum1", 0,.restype= MUCS_RTYP_INT, .p=&v_long1}}
-    , {.s = {"lnum2", 0,.restype= MUCS_RTYP_LONG, .p=&v_long2}}
-    , {.s = {"lnum3", 0,.restype= MUCS_RTYP_LONG, .p=&v_long3}}
-    , {.s = {"lnum4", 0,.restype= MUCS_RTYP_LONG, .p=&v_long4}}
-    , {.s = {"llnum0", 0,.restype= MUCS_RTYP_LLONG, .p=&v_llong0}}
-    , {.s = {"llnum1", 0,.restype= MUCS_RTYP_LLONG, .p=&v_llong1}}
-    , {.s = {"llnum2", 0,.restype= MUCS_RTYP_LLONG, .p=&v_llong2}}
-    , {.s = {"llnum3", 0,.restype= MUCS_RTYP_LLONG, .p=&v_llong3}}
-    , {.s = {"llnum4", 0,.restype= MUCS_RTYP_LLONG, .p=&v_llong4}}
-    , {.s = {"bwi", 0,.restype= MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT, .p=&bitwise1, 0, "bitwise", "value"}}
-    , {.s = {"bwi+", 0,.restype= MUCS_RTYP_LONG | MUCS_RTYP_BW_OR, .p=&bitwise2, 0, "bitwise", "value"}}
-    , {.s = {"bwi-", 0,.restype= MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND, .p=&bitwise3, 0, "bitwise", "value"}}
+    {.s = {"num0", 0,.restype = MUCS_RTYP_INT,.p = &v_int0}}
+    , {.s = {"num1", 0,.restype = MUCS_RTYP_INT,.p = &v_int1}}
+    , {.s = {"num2", 0,.restype = MUCS_RTYP_INT,.p = &v_int2}}
+    , {.s = {"num3", 0,.restype = MUCS_RTYP_INT,.p = &v_int3}}
+    , {.s = {"num4", 0,.restype = MUCS_RTYP_INT,.p = &v_int4}}
+    , {.s = {"lnum0", 0,.restype = MUCS_RTYP_LONG,.p = &v_long0}}
+    , {.s = {"lnum1", 0,.restype = MUCS_RTYP_INT,.p = &v_long1}}
+    , {.s = {"lnum2", 0,.restype = MUCS_RTYP_LONG,.p = &v_long2}}
+    , {.s = {"lnum3", 0,.restype = MUCS_RTYP_LONG,.p = &v_long3}}
+    , {.s = {"lnum4", 0,.restype = MUCS_RTYP_LONG,.p = &v_long4}}
+    , {.s = {"llnum0", 0,.restype = MUCS_RTYP_LLONG,.p = &v_llong0}}
+    , {.s = {"llnum1", 0,.restype = MUCS_RTYP_LLONG,.p = &v_llong1}}
+    , {.s = {"llnum2", 0,.restype = MUCS_RTYP_LLONG,.p = &v_llong2}}
+    , {.s = {"llnum3", 0,.restype = MUCS_RTYP_LLONG,.p = &v_llong3}}
+    , {.s = {"llnum4", 0,.restype = MUCS_RTYP_LLONG,.p = &v_llong4}}
+    , {.s = {"bwi", 0,.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT,.p = &bitwise1, 0, "bitwise", "value"}}
+    , {.s = {"bwi+", 0,.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_OR,.p = &bitwise2, 0, "bitwise", "value"}}
+    , {.s = {"bwi-", 0,.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_NOT | MUCS_RTYP_BW_AND,.p = &bitwise3, 0, "bitwise", "value"}}
 
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
@@ -104,7 +104,9 @@ test_4( int _uUu_ argc, const char _uUu_ * argv[], int nseries, const char *seri
 
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, NULL /*name */ , 0, "MASTEST_4", 0, ":", "=", NULL );
+    mucs_source_t *osrc =
+            mucs_source_list_add_source_x( plist, MUCS_SOURCE_ENV, NULL /*name */ , 0, "MASTEST_4", 0 /* min_pass */ , 0 /* npasses */ , ":", "=",
+                                           NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );

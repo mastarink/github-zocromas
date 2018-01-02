@@ -68,6 +68,7 @@ struct mucs_source_s
 
   int pass;
   int min_pass;
+  int npasses;
 };
 
 struct mucs_source_list_s

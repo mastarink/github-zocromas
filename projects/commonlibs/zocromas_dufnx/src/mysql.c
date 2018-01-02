@@ -10,6 +10,8 @@
 #include <mastar/mulconfnt/option_interface_base.h>
 #include <mastar/mulconfnt/option_interface.h>
 
+#include <mastar/levinfo/masxfs_levinfo_structs.h>
+
 #include <mastar/qstd/qstd_mstmt_base.h>
 
 #include "structs.h"

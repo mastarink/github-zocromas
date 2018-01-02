@@ -198,7 +198,7 @@ dufnx_config_arg_process( mucs_option_t * opt, void *userdata, void *extradata _
       path[len - 1] = 0;
     mucs_config_option_set_string_value_na( opt, path );
 
-    rC( dufnx_tree( mucs_config_option_string_value( opt ), pdufnx_data->max_depth, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
+    rC( dufnx_tree( mucs_config_option_string_value( opt ), &pdufnx_data->entry_filter, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
 //    WARN( "######################## %p [%d]", pdufnx_data, pdufnx_data->targv.argc );
   }
   rRET;
@@ -208,6 +208,7 @@ mucs_option_interface_t *
 dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
 {
   mas_dufnx_data_t *d = pdufnx_data;
+
 /*
  * .p same as .cust_ptr
  * .rt same as .restype
@@ -218,9 +219,10 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
   /* MUCS_FLAG_ONLY_DEF_NVALUE : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
     , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "max-depth",.restype = 'u',.p = &d->max_depth}
+    , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
     , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
+    , {.name = "name",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &d->entry_filter.glob /*,.flags = MUCS_FLAG_AUTOFREE|MUCS_FLAG_USE_VPASS */ }
     , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
     , {.name = "disable-warn",.cb = dufnx_config_disable_warn}
   /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &d->levinfo_flags, */
@@ -236,7 +238,7 @@ int
 dufnx( int argc, char *argv[] )
 {
   rDECLGOOD;
-  mas_dufnx_data_t dufnx_data = {.levinfo_flags = 0 };
+  mas_dufnx_data_t dufnx_data = {.levinfo_flags = 0,.entry_filter = {0} };
 
   mucs_set_global_flag( MUCS_FLAG_USE_CBPASS );
 
@@ -245,10 +247,10 @@ dufnx( int argc, char *argv[] )
   dufnx_config_mysql( interface, &dufnx_data );
 
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL ); */
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_DUFNX", 0 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , argc, argv, 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 /* min_pass */ , 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_DUFNX", 0 /* min_pass */ , 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 1 /* min_pass */ , 0 );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , argc, argv, 0 /* min_pass */ , 0 );
 
   rC( mucs_option_interface_lookup_all_multipass( interface, &dufnx_data, 2 ) );
 

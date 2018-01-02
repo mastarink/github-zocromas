@@ -3,8 +3,8 @@
 
 # include "mulconfnt_types.h"
 
-void mucs_config_option_ptr_to_nvalue( mucs_option_t * opt );
-void mucs_config_option_nvalue_to_ptr( mucs_option_t * opt );
+/* void mucs_config_option_ptr_to_nvalue( mucs_option_t * opt ); */
+/* void mucs_config_option_nvalue_to_ptr( mucs_option_t * opt ); */
 
 static inline int
 mucs_config_option_check( const mucs_option_t * opt )
@@ -12,7 +12,7 @@ mucs_config_option_check( const mucs_option_t * opt )
   return opt ? 1 : 0;
 }
 
-int mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /* const char *string_value */  );
+/* int mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan (* const char *string_value *)  ); */
 
 mucs_flags_t mucs_config_option_flags( const mucs_option_t * opt );
 

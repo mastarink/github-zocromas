@@ -24,7 +24,7 @@
  *
  * */
 
-void
+static void
 mucs_config_option_ptr_to_nvalue( mucs_option_t * opt )
 {
   memset( &opt->d.nvalue, 0, sizeof( opt->d.nvalue ) );
@@ -88,7 +88,7 @@ mucs_config_option_ptr_to_nvalue( mucs_option_t * opt )
   }
 }
 
-void
+static void
 mucs_config_option_nvalue_to_ptr( mucs_option_t * opt )
 {
   if ( opt->s.cust_ptr )
@@ -98,7 +98,13 @@ mucs_config_option_nvalue_to_ptr( mucs_option_t * opt )
     case MUCS_RTYP_NONE:
       break;
     case MUCS_RTYP_STRING:
-      *( ( char ** ) opt->s.cust_ptr ) = mas_strdup( opt->d.string_value );
+      {
+        char **dst = ( ( char ** ) opt->s.cust_ptr );
+
+        if ( *dst )
+          mas_free( *dst );
+        *dst = mas_strdup( opt->d.string_value );
+      }
       break;
     case MUCS_RTYP_TARG:
       {
@@ -404,7 +410,7 @@ mucs_config_option_set_nvalue( mucs_option_t * opt, mucs_optscanner_t * optscan 
   rRET;
 }
 
-int
+static int
 mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /* const char *string_value */  )
 {
   rDECLBAD;
@@ -434,7 +440,7 @@ mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /
  * else
  *   returns NULL
  * */
-const char *
+static const char *
 mucs_config_option_match_name( const mucs_option_t * topt, mucs_optscanner_t * optscan, const char *arg_nopref, const char *eq )
 {
   rDECLGOOD;
@@ -668,7 +674,6 @@ int
 mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, void *userdata )
 {
   rDECLGOOD;
-
   if ( optscan->has_value )
   {
     mucs_config_option_ptr_to_nvalue( opt );

@@ -56,12 +56,12 @@ mucs_source_list_add( mucs_source_list_t * source_list, mucs_source_t * osrc )
 }
 
 mucs_source_t *
-mucs_source_list_add_source_x( mucs_source_list_t * source_list, mucs_source_type_t source_type, const char *name, int count, const void *data_ptr, int min_pass,
-                               const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
+mucs_source_list_add_source_x( mucs_source_list_t * source_list, mucs_source_type_t source_type, const char *name, int count, const void *data_ptr,
+                               int min_pass, int npasses, const char *delims, const char *eq, const mucs_prefix_encoder_t * pref_ids )
 {
   mucs_source_t *osrc = NULL;
 
-  osrc = mucs_source_create_setup( source_type, name, count, data_ptr, min_pass, delims, eq, pref_ids );
+  osrc = mucs_source_create_setup( source_type, name, count, data_ptr, min_pass, npasses, delims, eq, pref_ids );
 /*if ( !osrc )
     DIE( "FATAL ERROR: can't create \"source\" - %d; %d; %p; %s; %s; %p\n", source_type, count, data_ptr, delims, eq, pref_ids  ); */
   if ( osrc )
@@ -70,9 +70,11 @@ mucs_source_list_add_source_x( mucs_source_list_t * source_list, mucs_source_typ
 }
 
 mucs_source_t *
-mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, const char *name, int count, const void *data_ptr, int min_pass )
+mucs_source_list_add_source( mucs_source_list_t * source_list, mucs_source_type_t source_type, const char *name, int count, const void *data_ptr,
+                             int min_pass, int npasses )
 {
-  return mucs_source_list_add_source_x( source_list, source_type, name, count, data_ptr, min_pass, NULL, NULL, NULL /* , delims, eq, pref_ids */  );
+  return mucs_source_list_add_source_x( source_list, source_type, name, count, data_ptr, min_pass, npasses, NULL, NULL,
+                                        NULL /* , delims, eq, pref_ids */  );
 }
 
 int
@@ -83,6 +85,6 @@ mucs_source_list_lookup_all( mucs_source_list_t * source_list, const mucs_option
   {
     rC( mucs_source_lookup_all( osrc, tablist, userdata ) );
   }
-  /* source_list->pass++; */
+/* source_list->pass++; */
   rRET;
 }

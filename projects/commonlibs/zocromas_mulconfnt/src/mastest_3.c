@@ -37,10 +37,10 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   char *v_string3 = NULL;
 
   mucs_option_t options[] = {
-    {.s = {"string0", 0,.restype= MUCS_RTYP_STRING, .p=&v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
-    , {.s = {"string1", 0,.restype= MUCS_RTYP_STRING, .p=&v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
-    , {.s = {"string2", 0,.restype= MUCS_RTYP_STRING, .p=&v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
-    , {.s = {"string3", 0,.restype= MUCS_RTYP_STRING, .p=&v_string3,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
+    {.s = {"string0", 0,.restype = MUCS_RTYP_STRING,.p = &v_string0,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string1", 0,.restype = MUCS_RTYP_STRING,.p = &v_string1,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string2", 0,.restype = MUCS_RTYP_STRING,.p = &v_string2,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
+    , {.s = {"string3", 0,.restype = MUCS_RTYP_STRING,.p = &v_string3,.flags = MUCS_FLAG_NEED_EQ | MUCS_FLAG_UNQUOTE | MUCS_FLAG_AUTOFREE}}
 
     , {.s = {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.val = 0,.desc = NULL,.argdesc = NULL}} /* */
   };
@@ -81,7 +81,9 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
   }
   {
     mucs_source_list_t *plist = mucs_source_list_create(  );
-    mucs_source_t *osrc = mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name*/, xargc, xargv, 0, NULL, "=", NULL );
+    mucs_source_t *osrc =
+            mucs_source_list_add_source_x( plist, MUCS_SOURCE_ARGV, NULL /*name */ , xargc, xargv, 0 /* min_pass */ , 0 /* npasses */ , NULL, "=",
+                                           NULL );
 
     masexam_next_group(  );
     EXAMX( plist ? 1 : 0, "plist: %p", plist );
@@ -170,7 +172,7 @@ test_3( int argc _uUu_, const char *argv[], int nseries, const char *series_suff
     mucs_source_list_delete( plist );
   }
   mucs_config_option_tablist_reset( &test_tablist, 1 );
-  mucs_clear_global_flags();
+  mucs_clear_global_flags(  );
 
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
