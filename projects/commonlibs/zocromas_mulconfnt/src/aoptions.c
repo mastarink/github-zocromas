@@ -68,6 +68,9 @@ mucs_config_soptions2options( const mucs_option_static_t * soptions, size_t coun
       case 'O':
         options_clone[no].s.restype = MUCS_RTYP_ULONG_OR;
         break;
+      case 'N':
+        options_clone[no].s.restype = MUCS_RTYP_ULONG_NOR;
+        break;
       default:
         if ( c )
         {

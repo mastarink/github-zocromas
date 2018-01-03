@@ -218,13 +218,15 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
       v_x.v_long_long = 0;
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
-      opt->d.nvalue.v_char &= ( char ) v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
-      opt->d.nvalue.v_char |= ( char ) v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
-      opt->d.nvalue.v_char ^= ( char ) v_x.v_long_long;
+      opt->d.nvalue.v_char &= ( char ) ( v_x.v_long_long & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
+      opt->d.nvalue.v_char |= ( char ) ( v_x.v_long_long & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_char |= ( char ) ( ~v_x.v_long_long & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_XOR )                    // invert bits
+      opt->d.nvalue.v_char ^= ( char ) ( v_x.v_long_long & 0xff );
     else
-      opt->d.nvalue.v_char = ( char ) v_x.v_long_long;
+      opt->d.nvalue.v_char = ( char ) ( v_x.v_long_long & 0xff );
     break;
   case MUCS_RTYP_UCHAR:
     if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
@@ -235,13 +237,15 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
       v_x.v_ulong_long = 0;
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
-      opt->d.nvalue.v_uchar &= ( char ) v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
-      opt->d.nvalue.v_uchar |= ( char ) v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
-      opt->d.nvalue.v_uchar ^= ( char ) v_x.v_ulong_long;
+      opt->d.nvalue.v_uchar &= ( char ) ( v_x.v_ulong_long & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
+      opt->d.nvalue.v_uchar |= ( char ) ( v_x.v_ulong_long & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_uchar &= ( char ) ( ( ~v_x.v_ulong_long ) & 0xff );
+    else if ( opt->s.restype & MUCS_RTYP_BW_XOR )                    // invert bits
+      opt->d.nvalue.v_uchar ^= ( char ) ( v_x.v_ulong_long & 0xff );
     else
-      opt->d.nvalue.v_uchar = ( char ) v_x.v_ulong_long;
+      opt->d.nvalue.v_uchar = ( char ) ( v_x.v_ulong_long & 0xff );
     break;
   case MUCS_RTYP_SHORT:
     if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
@@ -253,8 +257,10 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_short &= ( short ) v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_short |= ( short ) v_x.v_long_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_short &= ( short ) ( ~v_x.v_long_long );
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_short ^= ( short ) v_x.v_long_long;
     else
@@ -270,8 +276,10 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_ushort &= ( short ) v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_ushort |= ( short ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_ushort &= ( short ) ( ~v_x.v_ulong_long );
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_ushort ^= ( short ) v_x.v_ulong_long;
     else
@@ -287,8 +295,10 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_int &= ( int ) v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_int |= ( int ) v_x.v_long_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_int &= ( int ) ( ~v_x.v_long_long );
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_int ^= ( int ) v_x.v_long_long;
     else
@@ -303,13 +313,15 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
       v_x.v_ulong_long = 0;
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
-      opt->d.nvalue.v_uint &= ( int ) v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
-      opt->d.nvalue.v_uint |= ( int ) v_x.v_ulong_long;
+      opt->d.nvalue.v_uint &= ( unsigned int ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
+      opt->d.nvalue.v_uint |= ( unsigned int ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_uint &= ( unsigned int ) ( ~v_x.v_long_long );
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
-      opt->d.nvalue.v_uint ^= ( int ) v_x.v_ulong_long;
+      opt->d.nvalue.v_uint ^= ( unsigned int ) v_x.v_ulong_long;
     else
-      opt->d.nvalue.v_uint = ( int ) v_x.v_ulong_long;
+      opt->d.nvalue.v_uint = ( unsigned int ) v_x.v_ulong_long;
     break;
   case MUCS_RTYP_LONG:
     if ( ( long long ) ( long ) v_x.v_long_long != v_x.v_long_long )
@@ -322,8 +334,10 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_long &= ( long ) v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_long |= ( long ) v_x.v_long_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_long &= ( long ) ( ~v_x.v_long_long );
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_long ^= ( long ) v_x.v_long_long;
     else
@@ -340,8 +354,14 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     }
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_ulong &= ( unsigned long ) v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_ulong |= ( unsigned long ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+    {
+      WARN("F1: %llx : %lx", v_x.v_long_long, opt->d.nvalue.v_ulong);
+      opt->d.nvalue.v_ulong &= ( unsigned long ) ( ~v_x.v_long_long );
+      WARN("F2: %llx : %lx", v_x.v_long_long, opt->d.nvalue.v_ulong);
+    }
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_ulong ^= ( unsigned long ) v_x.v_ulong_long;
     else
@@ -350,8 +370,10 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
   case MUCS_RTYP_LONG_LONG:
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
       opt->d.nvalue.v_long_long &= v_x.v_long_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_long_long |= v_x.v_long_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_long_long &= ~v_x.v_long_long;
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_long_long ^= v_x.v_long_long;
     else
@@ -359,13 +381,15 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     break;
   case MUCS_RTYP_ULONG_LONG:
     if ( opt->s.restype & MUCS_RTYP_BW_AND )
-      opt->d.nvalue.v_ulong_long &= v_x.v_ulong_long;
-    else if ( opt->s.restype & MUCS_RTYP_BW_OR )
-      opt->d.nvalue.v_ulong_long |= v_x.v_ulong_long;
+      opt->d.nvalue.v_ulong_long &= ( unsigned long long ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
+      opt->d.nvalue.v_ulong_long |= ( unsigned long long ) v_x.v_ulong_long;
+    else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
+      opt->d.nvalue.v_ulong_long &= ( unsigned long long ) ~v_x.v_long_long;
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
-      opt->d.nvalue.v_ulong_long ^= v_x.v_ulong_long;
+      opt->d.nvalue.v_ulong_long ^= ( unsigned long long ) v_x.v_ulong_long;
     else
-      opt->d.nvalue.v_ulong_long = v_x.v_ulong_long;
+      opt->d.nvalue.v_ulong_long = ( unsigned long long ) v_x.v_ulong_long;
     break;
   case MUCS_RTYP_DOUBLE:
     opt->d.nvalue.v_double = v_x.v_double;

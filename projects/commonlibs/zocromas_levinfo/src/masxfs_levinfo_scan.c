@@ -56,19 +56,18 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
 
       if ( lithis->lidepth )
       {
+        int indx = ( flags & MASXFS_CB_COUNT ) ? 1 : 0;
+
         if ( flags & MASXFS_CB_COUNT )
         {
           if ( lithis->detype != MASXFS_ENTRY_DIR_NUM )
             lithis[-1].leaf_count++;
           else
             lithis[-1].leaf_count += lithis->leaf_count;
-          if ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->leaf_count || lithis->detype != MASXFS_ENTRY_DIR_NUM )
-            lithis[-1].child_count_pair[1]++;
         }
-        else
         {
           if ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->leaf_count || lithis->detype != MASXFS_ENTRY_DIR_NUM )
-            lithis[-1].child_count_pair[0]++;
+            lithis[-1].child_count_pair[indx]++;
         }
       }
 

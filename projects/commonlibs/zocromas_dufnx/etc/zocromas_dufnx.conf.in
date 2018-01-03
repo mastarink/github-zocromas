@@ -5,3 +5,4 @@ mysql-db=masdufntdb
 mysql-server=mysql.mastar.lan
 mysql-port=3306
 
+no-empty-dirs
