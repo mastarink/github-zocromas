@@ -83,8 +83,9 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
       for ( unsigned long i = 0; i < nsamesha1; i++ )
         hh[i] = '+';
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-    fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", serial, treeprefix ? treeprefix : "", inode, size,
+    fprintf( fil, "(%4ld) %4ld\t%s[%-10ld %10ld]  %-30s  \t%-40s \t%s\n", li->leaf_count, serial, treeprefix ? treeprefix : "", inode, size,
              ename ? ename : "" /*, epath ? epath : "" */ , sha1 ? sha1 : "", hh );
+//  fprintf(fil, "#(%5ld) %s\n", li->leaf_count, li->name);
 #else
     fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, treeprefix ? treeprefix : "", size, fd, ( long ) depth, inode,
              ename ? ename : "" /*, epath ? epath : "" */  );
@@ -141,7 +142,7 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
 /* masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT; */
 
 /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
-  masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
+  masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF | MASXFS_CB_SKIP_EMPTY;
 
 /* WARN( "**<TREE>**" ); */
 #if 0
@@ -155,6 +156,7 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
 
 #else
   masxfs_entry_filter_t entry_filter = *pentry_filter;
+
   entry_filter.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
   rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2,
                                  0 ) );

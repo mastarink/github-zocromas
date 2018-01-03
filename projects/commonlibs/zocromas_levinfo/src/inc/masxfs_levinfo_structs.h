@@ -89,6 +89,7 @@ struct masxfs_levinfo_s
   masxfs_depth_t lidepth;
   int error;
   size_t child_count_pair[2];
+  size_t leaf_count;
 
   struct
   {
