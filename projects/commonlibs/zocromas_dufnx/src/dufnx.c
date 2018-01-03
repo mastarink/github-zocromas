@@ -221,6 +221,10 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
     , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}

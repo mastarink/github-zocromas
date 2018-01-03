@@ -71,6 +71,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
         }
       }
 
+      /* WARN( "SKIP: %d %d", flags & MASXFS_CB_SKIP ? 1 : 0, flags & MASXFS_CB_SKIP_EMPTY ? 1 : 0 ); */
       if ( maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) )
       {
         masxfs_levinfo_flags_t tflags = flags | cb->flags;
@@ -137,7 +138,8 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
 
 static int
 masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * liparent, masxfs_levinfo_t * lithis, masxfs_scanner_t * scanner,
-                                                    masxfs_levinfo_flags_t more_flags, void *userdata, masxfs_depth_t reldepth )
+                                                    masxfs_levinfo_flags_t more_flags, masxfs_levinfo_flags_t no_flags, void *userdata,
+                                                    masxfs_depth_t reldepth )
 {
   rDECLBAD;
 /* lithis never NULL */
@@ -148,7 +150,7 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * liparent,
     rSETGOOD;
     masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
     masxfs_entry_callback_t *cbs = scanner->cbs;
-    masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
+    masxfs_levinfo_flags_t flags = ( scanner->flags | more_flags ) & ~no_flags;
 
     if ( cbs )
     {
@@ -200,7 +202,7 @@ masxfs_levinfo_scanf_entry_single_internal_cbs( masxfs_levinfo_t * liparent, mas
 
 static int
 masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags,
-                                           void *userdata, masxfs_depth_t reldepth )
+                                           masxfs_levinfo_flags_t no_flags, void *userdata, masxfs_depth_t reldepth )
 {
   rDECLBAD;
 /* masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter; */
@@ -210,7 +212,8 @@ masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner
   if ( li )
   {
     assert( li->lidepth );
-    rC( masxfs_levinfo_scanf_entry_single_internal_scanner( li->lidepth > 0 ? li - 1 : NULL, li, scanner, more_flags, userdata, reldepth ) );
+    rC( masxfs_levinfo_scanf_entry_single_internal_scanner
+        ( li->lidepth > 0 ? li - 1 : NULL, li, scanner, more_flags, no_flags, userdata, reldepth ) );
   }
   else
     QRLI( li, rCODE );
@@ -230,7 +233,7 @@ masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sc
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
       QRLI( li, rCODE );
     }
-    rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, more_flags, userdata, reldepth ) );
+    rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, more_flags, 0, userdata, reldepth ) );
     QRLI( li, rCODE );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
@@ -428,16 +431,39 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
     }
     if ( li )
     {
+/*
+    this `do' currently does ... what?
+   TRY:
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --empty-dirs    ## OK with `head` and self XXX
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --empty-dirs --cb-from-root --cb-up --cb-self    ## OK with `head` and self XXX
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-from-root --cb-up --cb-self    ## OK with `head` and self XXX
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --empty-dirs --cb-from-root --cb-up ## OK with `head` but without (skipped) self?
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root                        ## OK, without head, but with self
+
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root  ## OK, but FIXME without `head`, with self XXX
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh'   --cb-up-root   --cb-self ## XXX BAD - FIXME
+
+         Attention  :  	  --cb-up-root with  --cb-from-root  breaks!
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up  --cb-from-root --cb-up-root --empty-dirs # XXX multi-headed - useless?
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root  --cb-up --cb-from-root ## XXX BADLY - FIXME
+          run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --empty-dirs --cb-from-root --cb-self    ## XXX double-headed!! XXX
+*/
       do
       {
         if ( li->lidepth )
         {
-          rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
+          rC( masxfs_levinfo_scanf_entry_single_scanner
+              ( li, scanner, MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, MASXFS_CB_SKIP_EMPTY, userdata, reldepth ) );
           QRLI( li, rCODE );
 
         // XXX XXX
-          rC( masxfs_levinfo_scanf_entry_single_scanner
-              ( li, scanner, ( flags & ( reldepth == 0 ? MASXFS_CB_SELF : MASXFS_CB_UP ) ) ? 0 : MASXFS_CB_SKIP, userdata, reldepth ) );
+          masxfs_levinfo_flags_t xflags = ( flags & ( reldepth == 0 ? MASXFS_CB_SELF : MASXFS_CB_UP ) );
+
+#if 0
+          WARN( "%lx : %lx - %s %s %s - %s rd:%d", flags, xflags, flags & MASXFS_CB_SELF ? "SELF" : "", flags & MASXFS_CB_UP ? "UP" :
+                "", flags & MASXFS_CB_FROM_ROOT ? "FROM_ROOT" : "", li->name, reldepth );
+#endif
+          rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, xflags ? 0 : MASXFS_CB_SKIP, MASXFS_CB_SKIP_EMPTY, userdata, reldepth ) );
           QRLI( li, rCODE );
         }
         if ( reldepth <= 0 )
@@ -446,6 +472,7 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
           reldepth++;
         }
       } while ( reldepth <= 0 );
+      /* WARN( "==================================================" ); */
       reldepth--;
       li--;
 

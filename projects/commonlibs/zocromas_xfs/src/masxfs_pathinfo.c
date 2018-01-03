@@ -42,6 +42,7 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
 //masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
 //masxfs_entry_callback_t *cbs = scanner->cbs;
   masxfs_levinfo_flags_t flags = scanner->flags;
+
 //masxfs_depth_t maxdepth = scanner->maxdepth; 
 
 /* if ( r >= 0 ) */
@@ -77,7 +78,6 @@ masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry
   masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags,.maxdepth = maxdepth };
   return masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
 }
-
 
 int
 masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata,

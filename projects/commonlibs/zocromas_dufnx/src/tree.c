@@ -144,7 +144,7 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
 /* masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT; */
 
 /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
-  masxfs_levinfo_flags_t xflags2 = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
+  masxfs_levinfo_flags_t xflags2 = 0;
 
 /* WARN( "**<TREE>**" ); */
 #if 0
@@ -161,7 +161,7 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
 
   entry_filter.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
   rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2,
-                                 0 ) );
+                                 0 /* maxdepth */  ) );
 #endif
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
   rRET;
