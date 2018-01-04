@@ -253,32 +253,46 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
     masxfs_stat_t stat = { 0 };
     masxfs_xstatc_t xstat = { 0 };
     masxfs_entry_type_t detype = MASXFS_ENTRY_NONE_NUM;
+    int validx = 1;
 
     do
     {
-      rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstat, &node_id, &has_data ) );
-      detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
-    } while ( has_data && !masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) );
-    if ( rGOOD )
-    {
-      if ( has_data )
+      do
       {
-        li->db.scan.node_id = node_id;
-        QRLI( li, rCODE );
-        assert( !li[1].db.stat );
-        masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, &stat, &xstat, node_id );
-        assert( li[1].db.stat );
-      }
-      else if ( dename )
+        rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstat, &node_id, &has_data ) );
+        detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
+      } while ( dename && has_data && !( masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) ) );
+      if ( rGOOD )
       {
-      /* QRLI( li, rCODE ); */
+        validx = 1;
+        if ( has_data )
+        {
+          li->db.scan.node_id = node_id;
+          QRLI( li, rCODE );
+          assert( !li[1].db.stat );
+          masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, &stat, &xstat, node_id );
+          assert( li[1].db.stat );
+          {
+            validx = masxfs_levinfo_stat_valid( li + 1, entry_pfilter, MASXFS_CB_MODE_DB )
+                    && masxfs_levinfo_xstat_valid( li + 1, entry_pfilter, MASXFS_CB_MODE_DB );
+            if ( !validx )
+            {
+              masxfs_levinfo_reset( li + 1, MASXFS_CB_MODE_DB );     /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
+              continue;
+            }
+          }
+        }
+        else if ( dename )
+        {
+        /* QRLI( li, rCODE ); */
 //20171229.133341 - not good when filtered: WARN( "[%p] NO DATA for %s", li->db.scan.mstmt, dename );
+        }
+        else
+        {
+        /* WARN( "[%p] NO DATA for %s", li->db.scan.mstmt, dename ); */
+        }
       }
-      else
-      {
-      /* WARN( "[%p] NO DATA for %s", li->db.scan.mstmt, dename ); */
-      }
-    }
+    } while ( has_data && !validx );
   }
   else
     QRLI( li, rCODE );

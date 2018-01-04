@@ -119,6 +119,7 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
     if ( li->fs.scan.pdir )
     {
       masxfs_entry_type_t detype = MASXFS_ENTRY_NONE_NUM;
+      const char *dename = NULL;
 
       do
       {
@@ -129,7 +130,8 @@ masxfs_levinfo_fs_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
         if ( de || !errno )
           rSETGOOD;
         detype = de && rGOOD ? masxfs_levinfo_de2entry( de->d_type ) : MASXFS_ENTRY_UNKNOWN_NUM;
-      } while ( de && !masxfs_levinfo_name_valid( de->d_name, detype, entry_pfilter ) );
+        dename = de ? de->d_name : NULL;
+      } while ( dename && !( masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) ) );
       if ( rGOOD && de )
       {
         const char *dename = de->d_name;

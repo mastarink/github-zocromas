@@ -44,7 +44,7 @@ masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
-    rC( masxfs_levinfo_stat( li, tflags ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
     if ( rGOOD )
       st = masxfs_levinfo_stat_val( li, 0, tflags );
     else
@@ -80,7 +80,7 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
   {
   /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
   /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
-    rC( masxfs_levinfo_stat( li, tflags ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
   /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
   /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
     if ( rGOOD )
@@ -112,7 +112,7 @@ masxfs_levinfo_inode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags _
 
   if ( li )
   {
-    rC( masxfs_levinfo_stat( li, tflags ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
     if ( rGOOD )
       inode = masxfs_levinfo_inode_val( li, 0, tflags );
   }
@@ -246,7 +246,7 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
     /* WARN( "%d: '%s'", li->detype, li->name ); */
-      rC( masxfs_levinfo_stat( li, tflags ) );
+      rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
 
       if ( rGOOD )
         detype = li->detype;

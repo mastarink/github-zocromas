@@ -215,17 +215,28 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
  * .f same as .flags
  * .cb same as .callback
  */
+
+  /*
+   * run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --min-size=5000
+   * run    --treedb mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --max-size=100
+   * run    --treedb mastest/  --no-empty-dirs  --cb-up-root --min-nsame=13
+   * */
+#define FDV MUCS_FLAG_ONLY_DEF_NVALUE
   mucs_option_static_t soptions[] = {
-    {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = MUCS_FLAG_ONLY_DEF_NVALUE}
-  /* MUCS_FLAG_ONLY_DEF_NVALUE : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
-    , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
-    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = MUCS_FLAG_ONLY_DEF_NVALUE}
+    {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
+  /* FDV : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
+    , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
+    , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
+    , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
+    , {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = FDV}
+    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = FDV}
+    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = FDV}
+    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
+    , {.name = "min-size",.restype = 'u',.p = &d->entry_filter.min_size}
+    , {.name = "max-size",.restype = 'u',.p = &d->entry_filter.max_size}
+    , {.name = "min-nsame",.restype = 'u',.p = &d->entry_filter.min_nsame_digest}
+    , {.name = "max-nsame",.restype = 'u',.p = &d->entry_filter.max_nsame_digest}
     , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
     , {.name = "name",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &d->entry_filter.glob /*,.flags = MUCS_FLAG_AUTOFREE|MUCS_FLAG_USE_VPASS */ }

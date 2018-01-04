@@ -11,6 +11,7 @@
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_io_dir.h"
 #include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_tools.h"
 
 #include "masxfs_levinfo_io.h"
 
@@ -71,12 +72,13 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
         }
       }
 
-      /* WARN( "SKIP: %d %d", flags & MASXFS_CB_SKIP ? 1 : 0, flags & MASXFS_CB_SKIP_EMPTY ? 1 : 0 ); */
+    /* WARN( "SKIP: %d %d", flags & MASXFS_CB_SKIP ? 1 : 0, flags & MASXFS_CB_SKIP_EMPTY ? 1 : 0 ); */
       if ( maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) )
       {
         masxfs_levinfo_flags_t tflags = flags | cb->flags;
 
-        if ( !( flags & MASXFS_CB_SKIP ) && ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->detype != MASXFS_ENTRY_DIR_NUM || lithis->leaf_count ) )
+        if ( !( flags & MASXFS_CB_SKIP ) && ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->detype != MASXFS_ENTRY_DIR_NUM || lithis->leaf_count )
+             && masxfs_levinfo_stat_valid( lithis, entry_pfilter, flags ) && masxfs_levinfo_xstat_valid( lithis, entry_pfilter, flags ) )
         {
           int fun_called = 0;
           masxfs_depth_t depth = masxfs_levinfo_depth_ref( lithis, flags );
@@ -101,13 +103,15 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
             masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
             struct stat *st = NULL;
 
-            rC( masxfs_levinfo_stat( lithis, tflags ) );
+            rC( masxfs_levinfo_stat( lithis, tflags, &st /* stat */  ) );
             if ( rGOOD )
             {
+#if 0
               if ( flags & MASXFS_CB_MODE_DB )
                 st = lithis->db.stat;
               else if ( flags & MASXFS_CB_MODE_FS )
                 st = lithis->fs.stat;
+#endif
               if ( st )
               {
                 const char *prefix = NULL;
@@ -472,7 +476,7 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
           reldepth++;
         }
       } while ( reldepth <= 0 );
-      /* WARN( "==================================================" ); */
+    /* WARN( "==================================================" ); */
       reldepth--;
       li--;
 

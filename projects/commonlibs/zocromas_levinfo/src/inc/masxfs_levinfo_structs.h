@@ -43,8 +43,10 @@ struct masxfs_entry_filter_s
 {
   masxfs_type_flags_t typeflags;
   masxfs_depth_t maxdepth;
-  unsigned long min_size;
-  unsigned long max_size;
+  off_t min_size;
+  off_t max_size;
+  unsigned long min_nsame_digest;
+  unsigned long max_nsame_digest;
   char *glob;
   char *regexp;
 };

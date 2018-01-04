@@ -88,13 +88,14 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
   masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat, xstat );
 }
 
+/* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
 void
 masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_ )
 {
   if ( li )
   {
-    masxfs_levinfo_closedir( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  );
-    masxfs_levinfo_close( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  );
+    masxfs_levinfo_closedir( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  ); /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
+    masxfs_levinfo_close( li, flags /* | MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB */  ); /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
     li->fd = 0;
     if ( li->name )
       mas_free( li->name );
@@ -140,7 +141,7 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levi
   if ( lia )
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
     {
-      masxfs_levinfo_reset( lia + il, flags );
+      masxfs_levinfo_reset( lia + il, flags );                       /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
     /* if ( il < sz - 1 )                   */
     /*   li->detype = MASXFS_ENTRY_DIR_NUM; */
     }

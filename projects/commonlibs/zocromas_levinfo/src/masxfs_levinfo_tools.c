@@ -15,6 +15,10 @@
 
 #include "masxfs_levinfo_structs.h"
 
+#include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_ref_xstat.h"
+#include "masxfs_levinfo_io.h"
+
 #include "masxfs_levinfo_tools.h"
 
 static const char *std_sdetypes[] = {
@@ -220,6 +224,50 @@ masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_
     {
       WARN( "fnmatch error %d for %s : %s", b, entry_pfilter->glob, name );
     }
+  }
+  return b;
+}
+
+int
+masxfs_levinfo_stat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t * entry_pfilter _uUu_, masxfs_levinfo_flags_t flags )
+{
+  rDECLBAD;
+  int b = 1;
+
+  if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_size || entry_pfilter->max_size ) )
+  {
+    struct stat *st = NULL;
+
+    b = 0;
+    rC( masxfs_levinfo_stat( li, flags, &st /* stat */  ) );
+    if ( rGOOD )
+    {
+      off_t size = masxfs_levinfo_size_ref( li, flags );
+
+      b = 1;
+      if ( entry_pfilter->min_size && size < entry_pfilter->min_size )
+        b = 0;
+      if ( entry_pfilter->max_size && size > entry_pfilter->max_size )
+        b = 0;
+    }
+  }
+  return b;
+}
+
+int
+masxfs_levinfo_xstat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t * entry_pfilter _uUu_, masxfs_levinfo_flags_t flags _uUu_ )
+{
+  int b = 1;
+
+  if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_nsame_digest || entry_pfilter->max_nsame_digest ) )
+  {
+    unsigned long ns = masxfs_levinfo_nsamesha1_ref( li, flags );
+
+    b = 1;
+    if ( entry_pfilter->min_nsame_digest && ns < entry_pfilter->min_nsame_digest )
+      b = 0;
+    if ( entry_pfilter->max_nsame_digest && ns > entry_pfilter->max_nsame_digest )
+      b = 0;
   }
   return b;
 }

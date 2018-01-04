@@ -8,8 +8,7 @@ int masxfs_levinfo_close( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 
 int masxfs_levinfo_close_all_up( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 
-int masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
+int masxfs_levinfo_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags , masxfs_stat_t ** pstat);
 
-/* int masxfs_levinfo_fs_stat( masxfs_levinfo_t * li ); */
 
 #endif

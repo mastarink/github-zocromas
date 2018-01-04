@@ -118,7 +118,7 @@ masxfs_levinfo_fs_close( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
+masxfs_levinfo_fs_stat( masxfs_levinfo_t * li, masxfs_stat_t ** pstat )
 {
   rDECLBAD;
 
@@ -135,6 +135,8 @@ masxfs_levinfo_fs_stat( masxfs_levinfo_t * li )
         rC( fstat( masxfs_levinfo_fs_open( li ), li->fs.stat ) );
       if ( rGOOD && li->fs.stat )
         li->detype = masxfs_levinfo_stat2entry( li->fs.stat );
+      if ( pstat )
+        *pstat = li->fs.stat;
     }
   }
   else
